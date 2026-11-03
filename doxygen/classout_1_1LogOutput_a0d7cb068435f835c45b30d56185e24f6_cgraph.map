@@ -1,0 +1,8 @@
+<map id="out::LogOutput::writeHeader" name="out::LogOutput::writeHeader">
+<area shape="rect" id="Node000001" title="write header title" alt="" coords="5,56,211,84"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="259,29,458,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,56,246,55,241,56,212,62"/>
+<area shape="rect" id="Node000003" href="$namespaceout.html#af3c90da056b95356a82f5aa2f9f24905" title="construct header title" alt="" coords="311,81,406,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="211,78,298,89,293,89,211,83"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="315,28,309,20,314,11,331,5,358,3,388,5,405,14,400,14,386,10,358,8,332,10,318,15,314,20,321,30"/>
+</map>

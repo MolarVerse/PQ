@@ -1,0 +1,7 @@
+<map id="molsys::Molecule::getPartialCharges" name="molsys::Molecule::getPartialCharges">
+<area shape="rect" id="Node000001" title="returns the partial charges of the atoms in the molecule" alt="" coords="5,40,211,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="259,5,475,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,46,246,44,241,45,212,51"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a8e2b05b1085c969eabb42295b4d6318d" title="returns the partial charge of the atom by index" alt="" coords="264,75,470,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,73,251,81,246,81,211,79"/>
+</map>

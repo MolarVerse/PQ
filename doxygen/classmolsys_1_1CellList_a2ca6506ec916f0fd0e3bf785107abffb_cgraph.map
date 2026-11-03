@@ -1,0 +1,11 @@
+<map id="molsys::CellList::addNeighbouringCellPointers" name="molsys::CellList::addNeighbouringCellPointers">
+<area shape="rect" id="Node000001" title="add neighbouring cell pointers to a cell" alt="" coords="5,80,249,124"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Cell.html#a8f6a283f7ddcf88fc78c398ec93ff4ac" title="adds a neighbour cell to the neighbourCells vector" alt="" coords="297,5,522,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,76,296,43,331,36,326,38,297,48,194,81"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Cell.html#aacc58146e5c8cc7d63cb01665dbd0158" title="returns the cell index" alt="" coords="314,57,505,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="248,86,300,82,295,84,250,91"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1CellList.html#a8d22ab012b615cf397d6854f212cddff" title="get linearized cell index" alt="" coords="320,109,498,154"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="249,112,307,120,302,121,249,117"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Cell.html#a371217ad01db0ccdb519c7aa884e49d3" title="returns the number of neighbour cells" alt="" coords="311,178,508,223"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="186,122,298,163,321,173,316,173,296,168,186,127"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="configurator::HybridConfigurator::shiftAtomsBackToInitialPositions" name="configurator::HybridConfigurator::shiftAtomsBackToInitialPositions">
+<area shape="rect" id="Node000001" title="Shift all atoms back to their original positions before centering." alt="" coords="5,75,247,119"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="332,5,504,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,71,319,50,315,53,224,77"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a792f81ab0c393ca662ba553fd930e163" title="calculate center of mass of all molecules" alt="" coords="295,75,541,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,94,282,96,276,98,247,100"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="332,144,504,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="223,117,320,142,314,143,223,123"/>
+</map>

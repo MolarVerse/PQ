@@ -1,0 +1,7 @@
+<map id="opt::Optimizer::maxHistoryLength" name="opt::Optimizer::maxHistoryLength">
+<area shape="rect" id="Node000001" title=" " alt="" coords="370,5,568,50"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html#a380419c44f8bde259b7bba499a5d8675" title="update the optimizer history" alt="" coords="108,14,322,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="352,28,322,30,322,25,357,28"/>
+<area shape="rect" id="Node000003" href="$perfOptimizerHistory_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,14,60,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,29,61,30,60,25,95,27"/>
+</map>

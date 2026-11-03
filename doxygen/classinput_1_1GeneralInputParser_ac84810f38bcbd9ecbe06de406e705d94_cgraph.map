@@ -1,0 +1,15 @@
+<map id="input::GeneralInputParser::parseJobTypeForEngine" name="input::GeneralInputParser::parseJobTypeForEngine">
+<area shape="rect" id="Node000001" title="parse jobtype of simulation and set it in settings and reset engine unique_ptr" alt="" coords="5,57,192,102"/>
+<area shape="rect" id="Node000002" href="$namespaceinput.html#a138d19fbcd81f2cbd6267b52e9f95ea1" title="check if command array has exactly 3 elements" alt="" coords="260,5,427,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,54,239,42,271,36,266,38,240,47,193,59"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="251,57,436,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="192,77,237,78,232,80,193,82"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="240,126,447,171"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="180,100,250,121,245,122,180,105"/>
+<area shape="rect" id="Node000003" href="$namespaceinput.html#a8fc649b2b4f96d20ce57f574e388bf8f" title="check if parameter is &quot;=&quot;" alt="" coords="514,5,679,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="427,17,501,19,496,20,428,22"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="503,57,690,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="436,77,490,79,485,79,437,82"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="495,126,698,171"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="428,100,501,122,496,122,427,105"/>
+</map>

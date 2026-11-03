@@ -1,0 +1,21 @@
+<map id="input::InputRegistry" name="input::InputRegistry">
+<area shape="rect" id="Node000001" title="owns a set of InputKey&lt;T&gt; instances for one InputFileParser subclass: register once with defaults,..." alt="" coords="149,1002,335,1186"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="252,447,445,570"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="354,568,358,652,354,756,341,868,330,924,315,979,312,988,307,985,310,977,325,923,336,867,349,755,352,652,352,573"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,271,174,343"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="173,334,222,374,284,434,279,436,219,378,175,339"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="31,806,242,929"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="100,345,65,391,48,419,35,448,14,526,9,590,20,654,44,732,58,762,76,792,71,793,53,765,39,734,14,655,4,590,9,525,30,446,43,416,60,388,101,340"/>
+<area shape="rect" id="Node000009" href="$classinput_1_1DeprecatedInputKey.html" title="placeholder for deprecated input keys" alt="" coords="45,450,228,567"/>
+<area shape="poly" id="edge10_Node000009_Node000003" title=" " alt="" coords="137,340,139,433,134,433,136,346"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="73,53,200,142"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="137,154,139,271,134,271,136,159"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="271,262,426,352"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="349,349,351,431,346,430,348,354"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1InputKeyBase.html" title="type&#45;erased base for InputKey&lt;T&gt;, so keys of different T can live in the same InputRegistry" alt="" coords="278,5,419,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="349,186,351,246,346,245,348,191"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="166,926,195,987,189,987,164,931"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="54,643,219,733"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="137,730,139,789,134,788,136,735"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="137,564,139,627,134,626,136,570"/>
+</map>

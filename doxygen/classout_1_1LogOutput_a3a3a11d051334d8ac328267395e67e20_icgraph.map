@@ -1,0 +1,15 @@
+<map id="out::LogOutput::writeOptWarning" name="out::LogOutput::writeOptWarning">
+<area shape="rect" id="Node000001" title="write a warning message to the log file if the optimization did not converge" alt="" coords="811,40,992,85"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HessianEngine.html#a3c185cf6dccb69e19f7d7e3a79ddea91" title=" " alt="" coords="585,5,763,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="793,46,763,44,763,39,798,46"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1OptEngine.html#a638838ee020cecfa63619febf684f008" title="take a step" alt="" coords="600,75,748,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="798,78,749,88,748,83,793,79"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1HessianEngine.html#a7cb3ae0150c662886e24f3aeee0e54a2" title=" " alt="" coords="368,5,537,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="567,28,538,30,538,25,573,27"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1HessianEngine.html#a6aab0fbfa97a93ee0eb0c236db640c4a" title=" " alt="" coords="122,14,320,42"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="350,28,321,30,320,25,355,27"/>
+<area shape="rect" id="Node000005" href="$testOptimizerSetup_8cpp.html#add470e00111eb6b85ec2aa3e032d9634" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="104,29,75,30,73,25,109,26"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1OptEngine.html#ad8f53038037a343b41cdc75d1d47382d" title="run the optimizer" alt="" coords="368,83,537,111"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="582,97,538,100,538,94,587,97"/>
+</map>

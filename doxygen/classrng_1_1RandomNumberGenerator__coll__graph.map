@@ -1,0 +1,7 @@
+<map id="rng::RandomNumberGenerator" name="rng::RandomNumberGenerator">
+<area shape="rect" id="Node000001" title="class to handle generation of random numbers" alt="" coords="25,151,241,268"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,116,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,75,59,102,64,126,68,136,63,136,59,128,54,102,55,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="172,5,240,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,76,179,128,175,137,171,134,174,126,194,80"/>
+</map>

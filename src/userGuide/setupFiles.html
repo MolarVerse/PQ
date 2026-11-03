@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Setup Files &mdash; PQ [] documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
 
@@ -66,11 +66,13 @@
 <li class="toctree-l3"><a class="reference internal" href="outputFiles.html">Output Files</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="pqBot.html">PQ Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developerGuide/developerGuide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../apiReference/apiReference.html">API Reference</a></li>
 </ul>
 
         </div>
@@ -130,7 +132,9 @@ system and/or pressure coupling is enabled <em>via</em> the <a class="reference 
 provided, the element symbol (as given by the <a class="reference internal" href="outputFiles.html#restartfile"><span class="std std-ref">Restart File</span></a>) will be printed to the output files instead of the
 atom type name. In case of a pure QM calculation the charge of the moltype, the atom_type_index as well as the point_charge can be
 set to 0 and the global_vdW_type can be omitted. For MM calculations that utilize just the <a class="reference internal" href="#guffdatfile"><span class="std std-ref">GUFF File</span></a>, the
-point_charge can be set to 0 and the global_vdW_type can be omitted.</p>
+point_charge can be set to 0 and the global_vdW_type can be omitted.
+QM atoms with moltype 0 in the <a class="reference internal" href="outputFiles.html#restartfile"><span class="std std-ref">Restart File</span></a> have no moldescriptor entry and always count as neutral in the
+total QM charge. Give charged QM atoms their own moltype in the moldescriptor file.</p>
 </div>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
@@ -142,6 +146,18 @@ point_charge can be set to 0 and the global_vdW_type can be omitted.</p>
 <p>where the <em>moltype_number</em> integer denotes the moltype number corresponding to the water molecules. Additionally, the specified water moltype
 must contain exactly three atoms, namely “O”, “H” and “H”, in this specific order. Furthermore, if an <a class="reference internal" href="inputFile.html#interwatermodelkey"><span class="std std-ref">intermolecular water model</span></a> has
 been selected, the <em>charge</em> of each atom must coincide with the partial charge defined by the associate intermolecular water potential.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For QM/MM calculations, each moltype may contain an optional line between its first line and its last atom line:</p>
+<div class="line-block">
+<div class="line">qm_reference_energy energy</div>
+</div>
+<p>where <em>energy</em> is the QM energy of the isolated, geometry-optimized moltype in kcal/mol, computed with the same QM method. After every
+QM calculation, this energy is summed once for each moltype molecule in the QM region and subtracted from the total energy and the
+reported QM energy; the subtracted sum is printed as E(QM-REF) in the <code class="docutils literal notranslate"><span class="pre">.info</span></code> and <code class="docutils literal notranslate"><span class="pre">.en</span></code> files. Without it, the total energy
+jumps by the QM energy of a molecule whenever the molecule enters or leaves the QM region. With exact smoothing, the sum is formed for every configuration and weighted with its global smoothing factor.
+Once one moltype has this line, every moltype needs it, and QM-only molecules with moltype 0 are not allowed.</p>
 </div>
 </section>
 <section id="guff-file">
@@ -314,7 +330,7 @@ the atom names of the referenced molecule type.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Jakob Gamper.</p>
+    <p>&#169; Copyright 2023-now, Jakob Gamper.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

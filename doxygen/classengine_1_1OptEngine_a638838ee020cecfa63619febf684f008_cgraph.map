@@ -1,0 +1,20 @@
+<map id="engine::OptEngine::takeStep" name="engine::OptEngine::takeStep">
+<area shape="rect" id="Node000001" title="take a step" alt="" coords="5,128,154,172"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Engine.html#aa3a13549f23d2bfcce13db72f6e929b1" title="get the number of steps" alt="" coords="209,5,408,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,125,143,83,171,62,200,43,220,37,216,40,203,48,174,66,147,87,103,129"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Engine.html#ae9a099a3f3efbb693a6760acf92984f6" title="set the current step" alt="" coords="218,57,399,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,125,201,95,231,88,226,91,203,100,130,129"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Engine.html#a9ed91c2ff4463ac8d3e5686a24905352" title="get the reference to the log output" alt="" coords="202,109,415,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,139,188,136,184,139,155,144"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1Engine.html#ae2c9118351767468ac7aeaffe8150621" title=" " alt="" coords="221,161,396,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="154,155,208,163,203,165,155,161"/>
+<area shape="rect" id="Node000006" href="$classout_1_1LogOutput.html#a3a3a11d051334d8ac328267395e67e20" title="write a warning message to the log file if the optimization did not converge" alt="" coords="218,213,399,258"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="133,170,203,198,223,207,218,208,201,203,133,175"/>
+<area shape="rect" id="Node000008" href="$classout_1_1StdoutOutput.html#ab78e9496f0695a97cf31668a520aa551" title="write a warning message to the stdout if the optimization did not converge" alt="" coords="236,282,380,327"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="99,170,144,219,172,245,203,268,225,281,219,280,200,272,169,249,140,223,97,175"/>
+<area shape="rect" id="Node000007" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="463,221,662,249"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="399,233,450,235,445,236,400,238"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="519,220,512,212,518,203,535,197,563,195,592,197,610,206,605,206,591,202,563,200,536,202,521,207,518,212,524,222"/>
+<area shape="rect" id="Node000009" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="488,282,637,327"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="381,302,476,304,470,305,381,307"/>
+</map>

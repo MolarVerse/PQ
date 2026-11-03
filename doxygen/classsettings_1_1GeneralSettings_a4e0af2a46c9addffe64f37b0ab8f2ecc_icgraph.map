@@ -1,0 +1,23 @@
+<map id="settings::GeneralSettings::setVirialType" name="settings::GeneralSettings::setVirialType">
+<area shape="rect" id="Node000001" title="sets the virial type" alt="" coords="440,221,625,266"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1VirialInputParser.html#a214e2a1b180de9888b58a110708f6456" title="adds virial key metadata" alt="" coords="223,5,392,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="509,208,461,137,428,98,390,64,374,53,373,48,394,60,432,95,465,134,514,208"/>
+<area shape="rect" id="Node000004" href="$perfVirial_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="280,74,334,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="500,209,452,163,422,138,391,117,362,104,336,96,334,90,364,99,393,112,425,134,455,159,505,210"/>
+<area shape="rect" id="Node000005" href="$classTestVirial.html#a72e2dad3d47668f8bf28e4f019ffa9b8" title=" " alt="" coords="243,126,372,154"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="479,214,391,169,359,157,359,151,393,164,485,213"/>
+<area shape="rect" id="Node000006" href="$testMMEvaluator_8cpp.html#a7ed82e2b24e1ade2eba803ca09bc3cdc" title=" " alt="" coords="281,178,334,206"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="422,220,335,200,334,195,427,218"/>
+<area shape="rect" id="Node000007" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="273,230,342,258"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="422,245,343,246,342,241,427,243"/>
+<area shape="rect" id="Node000008" href="$testManostatRegressions_8cpp.html#a988dea1ca49601ae00feda8f4da17fd1" title=" " alt="" coords="273,282,342,310"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="422,270,343,290,341,285,427,268"/>
+<area shape="rect" id="Node000009" href="$testManostat_8cpp.html#af466a3fabd9249b6a372a9b0a9714c58" title="tests function to change virial to atomic" alt="" coords="273,334,342,362"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="485,273,393,323,343,341,341,336,391,319,480,275"/>
+<area shape="rect" id="Node000010" href="$testManostatSetup_8cpp.html#ae7afbfbe849ed457e2382eee955f012c" title=" " alt="" coords="273,386,342,414"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="505,277,455,329,425,354,393,375,368,387,343,395,341,390,366,382,391,371,422,349,452,325,500,279"/>
+<area shape="rect" id="Node000011" href="$testVirial_8cpp.html#a3f808b9097955b88831241b497715a7e" title=" " alt="" coords="273,438,342,466"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="515,278,466,355,433,394,393,427,369,440,343,448,341,443,366,435,391,423,429,390,462,352,510,281"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1VirialInputParser.html#a0b94d06d6f4337c0f00486ffb13eed4b" title="Construct a new Input File Parser Virial:: Input File Parser Virial object." alt="" coords="5,5,175,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,29,176,30,174,25,209,26"/>
+</map>

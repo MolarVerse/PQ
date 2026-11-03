@@ -1,0 +1,5 @@
+<map id="TestCellList" name="TestCellList">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,126,133,220"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="24,5,114,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,90,72,126,67,125,68,95"/>
+</map>

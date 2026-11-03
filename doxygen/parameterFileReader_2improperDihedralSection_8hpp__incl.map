@@ -1,0 +1,12 @@
+<map id="/home/runner/work/PQ/PQ/include/input/parameterFileReader/improperDihedralSection.hpp" name="/home/runner/work/PQ/PQ/include/input/parameterFileReader/improperDihedralSection.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,290,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="76,191,134,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,65,110,116,106,146,105,176,100,174,100,146,105,114,126,70"/>
+<area shape="rect" id="Node000003" href="$parameterFileSection_8hpp.html" title=" " alt="" coords="120,115,308,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,65,198,102,193,102,169,70"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="197,142,138,184,136,179,192,144"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="170,191,234,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="214,141,209,177,205,174,210,145"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="258,191,320,218"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="229,141,267,180,262,179,227,146"/>
+</map>

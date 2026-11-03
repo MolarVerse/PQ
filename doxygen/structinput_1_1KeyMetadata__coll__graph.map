@@ -1,0 +1,12 @@
+<map id="input::KeyMetadata" name="input::KeyMetadata">
+<area shape="rect" id="Node000001" title="everything needed to describe a key to a human – the input&#45;file token itself plus documentation field..." alt="" coords="182,457,319,529"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="31,144,107,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,219,52,249,48,286,50,325,62,360,82,390,108,416,138,437,169,457,164,458,135,442,105,420,78,394,57,363,45,326,43,286,47,248,58,214"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="163,289,338,362"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="107,208,196,278,191,280,107,214"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,133,95"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,107,72,144,67,144,69,112"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="362,289,520,362"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="405,360,323,435,307,449,304,444,319,431,400,363"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="252,359,253,441,248,439,249,363"/>
+</map>

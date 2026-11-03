@@ -1,0 +1,19 @@
+<map id="input::ThermostatInputParser::addThermostatCouplingFrequencyKey" name="input::ThermostatInputParser::addThermostatCouplingFrequencyKey">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,156,282,201"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="377,5,536,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,154,242,107,329,60,364,49,360,51,331,65,245,111,176,158"/>
+<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="407,74,506,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,153,329,110,394,97,389,100,330,116,204,158"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="377,125,536,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="282,162,364,156,359,158,283,167"/>
+<area shape="rect" id="Node000007" href="$namespaceinput.html#a1f945c4feefb2836a8ea8c5a59d7d2c5" title="Create a shared pointer for the given validator." alt="" coords="385,194,528,222"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="282,189,372,199,367,200,283,194"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="382,245,531,290"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="221,199,330,230,370,243,364,244,329,236,221,204"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1ThermostatSettings.html#a90a2950915f93836c36d3cab565bb035" title="set the nose hoover coupling frequency" alt="" coords="330,315,583,359"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="173,199,243,250,286,276,331,300,348,309,343,309,329,305,283,281,240,254,172,204"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="659,61,810,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="506,84,646,84,641,86,507,90"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="631,131,838,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="536,147,618,150,613,151,536,152"/>
+</map>

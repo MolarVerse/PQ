@@ -1,0 +1,7 @@
+<map id="benchSetup::MoleculeParams" name="benchSetup::MoleculeParams">
+<area shape="rect" id="Node000001" title="Parameters for a molecule to be constructed by makeMolecule()." alt="" coords="5,151,207,223"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="32,5,81,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,75,56,102,61,126,66,137,60,137,56,128,51,102,52,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="130,5,184,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="147,76,130,128,127,136,123,133,125,126,143,79"/>
+</map>

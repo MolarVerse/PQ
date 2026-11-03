@@ -1,0 +1,5 @@
+<map id="ff::AngleForceField::setIsLinker" name="ff::AngleForceField::setIsLinker">
+<area shape="rect" id="Node000001" title="set if angle is a linker angle" alt="" coords="5,5,147,50"/>
+<area shape="rect" id="Node000002" href="$classff_1_1AngleForceField.html#a78c42e358ec2a6b0e33f3459bb05fdb3" title="get if angle is a linker angle" alt="" coords="195,5,336,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,25,182,27,177,28,147,30"/>
+</map>

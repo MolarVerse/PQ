@@ -1,0 +1,9 @@
+<map id="virial::calculateVirial" name="virial::calculateVirial">
+<area shape="rect" id="Node000001" title="Calculate virial tensor and reset shift forces to zero in simulation box." alt="" coords="5,44,161,72"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="209,5,380,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,44,195,42,190,43,161,50"/>
+<area shape="rect" id="Node000003" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="242,74,347,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,66,229,78,224,79,161,72"/>
+<area shape="rect" id="Node000004" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="428,65,605,110"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="347,85,415,88,410,88,347,90"/>
+</map>

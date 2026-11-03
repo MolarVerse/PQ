@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,44,59,72"/>
+<area shape="rect" id="Node000002" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="107,5,284,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,51,94,46,89,49,60,56"/>
+<area shape="rect" id="Node000003" href="$testOutputBase_8hpp.html#a6aceb76e11f9c6e96cfbe08dc825c019" title="Reads the entire contents of a file into a string." alt="" coords="169,74,222,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,60,155,78,152,83,59,66"/>
+</map>

@@ -1,0 +1,81 @@
+<map id="input::FilesInputParser::FilesInputParser" name="input::FilesInputParser::FilesInputParser">
+<area shape="rect" id="Node000001" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="5,611,171,655"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1FilesInputParser.html#a510068c8179ed4147725f56973b55854" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="219,611,384,655"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,631,205,631,201,635,172,635"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1FilesInputParser.html#acc9f6936b3912213b8ea395e55ccf84b" title="Adds the dftb_file keyword to the parser." alt="" coords="456,403,622,447"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="311,609,357,535,390,493,430,458,444,451,441,455,434,462,394,497,361,538,316,612"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1FilesInputParser.html#ae054f77e9599eda5109e2bd67980b625" title="Adds the guffdat_file keyword to the parser." alt="" coords="456,195,622,239"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="301,609,308,540,328,444,344,392,366,341,395,292,430,250,444,241,441,245,434,254,399,295,371,343,349,394,333,446,313,541,306,611"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1FilesInputParser.html#a6f9968e306ec9d0bed8f7f3d19b975c8" title="Adds the deprecated guff_path keyword to the parser." alt="" coords="456,264,622,309"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="310,609,356,510,390,448,430,389,463,350,501,317,497,321,467,354,434,392,395,451,361,513,314,611"/>
+<area shape="rect" id="Node000015" href="$classinput_1_1FilesInputParser.html#ab4cb17cdc2b0a6f2057109562de8bea8" title="Adds the intra&#45;nonBonded_file keyword to the parser." alt="" coords="436,472,642,517"/>
+<area shape="poly" id="edge16_Node000002_Node000015" title=" " alt="" coords="324,609,371,567,431,527,446,521,442,525,433,531,374,571,328,612"/>
+<area shape="rect" id="Node000019" href="$classinput_1_1FilesInputParser.html#a06fd70e09154ca58d3cc1897af700a47" title="Adds the moldescriptor_file keyword to the parser." alt="" coords="444,541,634,586"/>
+<area shape="poly" id="edge21_Node000002_Node000019" title=" " alt="" coords="379,608,447,589,443,593,382,612"/>
+<area shape="rect" id="Node000021" href="$classinput_1_1FilesInputParser.html#a542352234f9ed5e24796e930f7f22c8a" title="Adds the mshake_file keyword to the parser." alt="" coords="456,611,622,655"/>
+<area shape="poly" id="edge24_Node000002_Node000021" title=" " alt="" coords="383,631,443,632,439,634,385,635"/>
+<area shape="rect" id="Node000023" href="$classinput_1_1FilesInputParser.html#ab37f1bccd2aac0379e279cf697df66ac" title="Adds the parameter_file keyword to the parser." alt="" coords="456,680,623,725"/>
+<area shape="poly" id="edge27_Node000002_Node000023" title=" " alt="" coords="380,653,448,674,443,676,381,658"/>
+<area shape="rect" id="Node000026" href="$classinput_1_1FilesInputParser.html#af7b53fa1572224d2c555a509359dabb0" title="Adds the ring_polymer_start_file keyword to the parser." alt="" coords="432,749,646,794"/>
+<area shape="poly" id="edge31_Node000002_Node000026" title=" " alt="" coords="325,653,374,695,433,735,446,742,441,743,431,739,371,699,326,658"/>
+<area shape="rect" id="Node000029" href="$classinput_1_1FilesInputParser.html#a1161d7bf07f0fc6e8175ca91339e9fd2" title="Adds the start_file keyword to the parser." alt="" coords="456,819,622,863"/>
+<area shape="poly" id="edge35_Node000002_Node000029" title=" " alt="" coords="314,653,361,728,394,769,434,804,445,813,440,813,430,808,390,773,357,731,313,658"/>
+<area shape="rect" id="Node000031" href="$classinput_1_1FilesInputParser.html#a96ec39d39dc6c1b757d34b4f6ed5e36b" title="Adds the tm_file keyword to the parser." alt="" coords="456,888,622,933"/>
+<area shape="poly" id="edge38_Node000002_Node000031" title=" " alt="" coords="309,653,326,701,351,760,386,821,409,849,434,874,445,883,440,884,430,878,405,853,382,824,346,762,321,703,308,658"/>
+<area shape="rect" id="Node000033" href="$classinput_1_1FilesInputParser.html#a1fd1f556d6f8d87418a724dc7b75732b" title="Adds the topology_file keyword to the parser." alt="" coords="456,1061,622,1106"/>
+<area shape="poly" id="edge41_Node000002_Node000033" title=" " alt="" coords="310,653,358,781,393,863,434,944,472,1000,510,1050,505,1049,467,1003,430,946,388,865,353,783,309,658"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="744,611,902,655"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="622,440,648,458,662,476,669,494,673,529,676,564,683,580,696,596,712,608,732,619,727,620,709,613,692,600,678,583,671,565,667,530,664,495,657,478,645,462,623,446"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1FileSettings.html#a6d1d13ef53f32e6312047fa4fffc002b" title="set the DFTB setup file name" alt="" coords="744,264,902,309"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="566,400,623,359,693,319,731,306,727,309,695,323,626,363,570,404"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="622,230,648,250,664,273,675,295,684,340,681,383,672,427,663,469,660,511,669,554,680,575,696,597,712,610,732,622,727,622,709,614,692,600,676,578,664,556,655,512,658,468,667,425,676,383,679,340,670,297,660,275,644,254,623,236"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1FileSettings.html#a654cfc14a40b5b92a1e778f4eca9acb1" title="set the guff dat file name" alt="" coords="742,5,904,50"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="554,193,611,127,650,91,693,60,730,45,726,49,696,65,653,95,615,131,559,196"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="572,307,613,343,632,365,649,389,662,419,667,448,666,500,665,524,668,548,678,572,696,596,712,609,732,620,726,621,709,614,692,600,673,574,663,549,660,524,660,500,661,448,656,421,644,392,628,368,609,347,572,312"/>
+<area shape="rect" id="Node000009" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="773,74,873,102"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="620,266,644,250,657,233,664,216,667,181,670,146,678,128,693,111,723,93,760,86,756,89,725,98,696,115,682,131,675,147,672,181,669,217,662,236,648,254,624,270"/>
+<area shape="rect" id="Node000011" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="744,125,902,170"/>
+<area shape="poly" id="edge12_Node000008_Node000011" title=" " alt="" coords="621,264,645,250,660,233,668,216,676,198,693,180,732,163,728,166,696,184,680,201,673,218,664,236,648,254,624,268"/>
+<area shape="rect" id="Node000013" href="$classinput_1_1InputRegistry.html#a57ac04983b7018c1dde7f8adb6f7bf58" title="Registers a deprecated input key." alt="" coords="734,195,912,239"/>
+<area shape="poly" id="edge14_Node000008_Node000013" title=" " alt="" coords="621,264,721,241,716,244,624,268"/>
+<area shape="rect" id="Node000010" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="1028,56,1179,101"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="872,84,1014,80,1009,83,874,88"/>
+<area shape="rect" id="Node000012" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="1000,125,1207,170"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="902,145,987,146,982,149,904,150"/>
+<area shape="rect" id="Node000014" href="$classinput_1_1DeprecatedInputKey.html#a88a2d6571f80cda6a5ba93e546dd2c03" title="returns the key of the deprecated input key" alt="" coords="1006,195,1200,239"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="912,215,993,216,988,218,914,219"/>
+<area shape="poly" id="edge17_Node000015_Node000004" title=" " alt="" coords="626,514,648,527,664,545,673,563,680,580,696,596,732,616,727,617,693,600,676,583,668,565,660,548,645,531,627,520"/>
+<area shape="rect" id="Node000016" href="$classsettings_1_1GeneralSettings.html#aa3a756dbf032ca69d4c428de6a62ad61" title="activate intra non&#45;bonded interactions" alt="" coords="729,333,917,378"/>
+<area shape="poly" id="edge18_Node000015_Node000016" title=" " alt="" coords="625,470,645,458,660,441,668,424,676,406,693,388,717,376,713,380,696,392,680,409,673,426,664,444,648,462,628,474"/>
+<area shape="rect" id="Node000017" href="$classsettings_1_1FileSettings.html#a59c166026fe03e5f7013a2c8400f01c1" title="set the intra non bonded file name" alt="" coords="715,403,931,447"/>
+<area shape="poly" id="edge19_Node000015_Node000017" title=" " alt="" coords="632,469,716,450,712,453,635,474"/>
+<area shape="rect" id="Node000018" href="$classsettings_1_1FileSettings.html#a53a79c3c0d0dda2ca78dd5f54f125b40" title="set the intra non bonded file name flag to is set" alt="" coords="699,472,947,517"/>
+<area shape="poly" id="edge20_Node000015_Node000018" title=" " alt="" coords="641,492,686,493,681,496,643,497"/>
+<area shape="poly" id="edge22_Node000019_Node000004" title=" " alt="" coords="633,584,731,609,726,611,634,589"/>
+<area shape="rect" id="Node000020" href="$classsettings_1_1FileSettings.html#a324e98d13c3d3552a3be2ec9b6d75635" title="set the mol descriptor file name" alt="" coords="722,541,924,586"/>
+<area shape="poly" id="edge23_Node000019_Node000020" title=" " alt="" coords="633,561,708,562,704,565,635,566"/>
+<area shape="poly" id="edge25_Node000021_Node000004" title=" " alt="" coords="621,630,731,632,726,634,623,636"/>
+<area shape="rect" id="Node000022" href="$classsettings_1_1FileSettings.html#a22b9d5ca873fa60d0024ef4d6cc7f495" title="set the mShake file name" alt="" coords="742,680,904,725"/>
+<area shape="poly" id="edge26_Node000021_Node000022" title=" " alt="" coords="622,651,729,678,724,680,623,656"/>
+<area shape="poly" id="edge28_Node000023_Node000004" title=" " alt="" coords="622,680,731,655,726,657,625,684"/>
+<area shape="rect" id="Node000024" href="$classsettings_1_1FileSettings.html#a1503331c7222d91c784272237a551666" title="set the parameter file name flag to is set" alt="" coords="718,819,928,863"/>
+<area shape="poly" id="edge29_Node000023_Node000024" title=" " alt="" coords="623,721,648,735,664,753,673,771,680,788,696,804,707,812,701,813,693,808,676,791,668,773,660,756,645,739,624,726"/>
+<area shape="rect" id="Node000025" href="$classsettings_1_1FileSettings.html#a8ccb6d833646570242642e4e33874108" title="set the parameter file name" alt="" coords="734,749,912,794"/>
+<area shape="poly" id="edge30_Node000023_Node000025" title=" " alt="" coords="623,720,721,746,716,747,624,725"/>
+<area shape="poly" id="edge32_Node000026_Node000004" title=" " alt="" coords="625,747,645,735,660,718,668,701,676,683,693,666,732,648,727,651,696,670,680,686,673,703,664,721,648,739,628,751"/>
+<area shape="rect" id="Node000027" href="$classsettings_1_1FileSettings.html#aa6576c2a889a14c5595fd2fac7507d18" title="set the ring polymer start file name flag to is set" alt="" coords="694,957,952,1002"/>
+<area shape="poly" id="edge33_Node000026_Node000027" title=" " alt="" coords="631,792,648,804,662,822,669,840,673,876,676,910,683,927,696,943,701,949,695,948,692,947,678,930,671,912,667,876,664,842,657,825,644,808,631,797"/>
+<area shape="rect" id="Node000028" href="$classsettings_1_1FileSettings.html#a4a3032fb24555cf378625219f8bfc20b" title="set the ring polymer start file name" alt="" coords="710,888,936,933"/>
+<area shape="poly" id="edge34_Node000026_Node000028" title=" " alt="" coords="627,792,648,804,664,822,673,840,680,857,696,874,704,881,699,880,693,878,676,860,668,842,660,825,645,808,627,797"/>
+<area shape="poly" id="edge36_Node000029_Node000004" title=" " alt="" coords="621,821,645,804,657,788,664,771,667,736,671,701,678,683,692,666,709,653,732,645,727,648,712,658,696,670,683,686,676,702,673,737,669,772,662,790,648,808,624,825"/>
+<area shape="rect" id="Node000030" href="$classsettings_1_1FileSettings.html#ab9d6df0284199e5902141b5fd7891dbd" title="set the start file name" alt="" coords="744,1027,902,1071"/>
+<area shape="poly" id="edge37_Node000029_Node000030" title=" " alt="" coords="623,856,648,874,662,892,669,910,673,945,676,980,683,996,696,1012,712,1024,733,1036,727,1036,710,1029,692,1016,678,999,671,981,667,946,664,911,657,894,645,878,622,862"/>
+<area shape="poly" id="edge39_Node000031_Node000004" title=" " alt="" coords="621,891,644,874,662,848,669,823,670,797,667,771,664,745,665,719,674,692,692,666,709,652,731,644,727,647,712,657,696,669,678,695,671,720,670,745,672,771,675,797,674,824,666,851,648,878,624,896"/>
+<area shape="rect" id="Node000032" href="$classsettings_1_1FileSettings.html#a5eda2537280c1615c182310c986383ed" title="set the TM setup file name" alt="" coords="744,1096,902,1141"/>
+<area shape="poly" id="edge40_Node000031_Node000032" title=" " alt="" coords="555,931,612,1006,651,1047,696,1081,732,1100,727,1100,693,1086,647,1051,607,1009,554,936"/>
+<area shape="poly" id="edge42_Node000033_Node000004" title=" " alt="" coords="562,1059,605,1009,626,977,644,944,657,903,660,866,655,798,653,766,656,733,668,700,692,666,709,652,731,643,727,646,712,657,696,669,673,703,661,734,658,766,660,798,666,866,662,905,649,946,631,980,609,1012,565,1063"/>
+<area shape="rect" id="Node000034" href="$classsettings_1_1FileSettings.html#a9a60c94e1cf1fe20f039c517a5d2d30c" title="set the topology file name flag to is set" alt="" coords="722,1235,924,1279"/>
+<area shape="poly" id="edge43_Node000033_Node000034" title=" " alt="" coords="560,1104,618,1163,655,1194,696,1220,710,1229,705,1228,693,1225,652,1198,614,1166,559,1109"/>
+<area shape="rect" id="Node000035" href="$classsettings_1_1FileSettings.html#a62962799861b24ef934922a4c7bda483" title="set the topology file name" alt="" coords="738,1165,908,1210"/>
+<area shape="poly" id="edge44_Node000033_Node000035" title=" " alt="" coords="587,1104,695,1151,726,1163,721,1162,693,1155,586,1109"/>
+</map>

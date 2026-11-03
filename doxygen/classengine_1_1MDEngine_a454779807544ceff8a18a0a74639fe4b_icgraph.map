@@ -1,0 +1,5 @@
+<map id="engine::MDEngine::_getHybridConfigurator" name="engine::MDEngine::_getHybridConfigurator">
+<area shape="rect" id="Node000001" title="get the reference to the hybrid configurator" alt="" coords="239,5,411,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,5,191,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,28,191,30,191,25,225,27"/>
+</map>

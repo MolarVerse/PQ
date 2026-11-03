@@ -1,0 +1,20 @@
+<map id="cli::ValidationResult" name="cli::ValidationResult">
+<area shape="rect" id="Node000001" title=" " alt="" coords="322,597,461,669"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="166,443,204,516"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,507,217,522,243,549,273,571,309,594,304,594,270,575,240,553,214,526,204,512"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="363,144,439,216"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="421,213,431,240,444,325,443,393,437,461,433,548,434,561,433,574,429,584,425,580,428,572,429,561,428,548,431,461,438,393,439,326,426,241,420,219"/>
+<area shape="rect" id="Node000007" href="$structcli_1_1ValidationDiagnostic.html" title=" " alt="" coords="165,289,333,362"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="368,218,323,267,308,280,304,277,319,263,371,214"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="337,5,465,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="402,107,403,145,398,143,400,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="486,443,601,516"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="520,514,469,575,454,589,451,584,466,571,516,516"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="228,435,411,524"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="324,521,331,548,340,572,346,585,341,583,335,574,325,549,321,526"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="266,359,295,420,290,419,264,364"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="5,144,135,216"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="97,213,148,263,169,279,164,281,144,267,98,219"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="159,144,291,216"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="223,213,228,265,230,274,225,273,223,266,222,219"/>
+</map>

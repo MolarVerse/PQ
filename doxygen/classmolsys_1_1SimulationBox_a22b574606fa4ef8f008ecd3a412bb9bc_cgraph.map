@@ -1,0 +1,7 @@
+<map id="molsys::SimulationBox::calculateMaxForceOld" name="molsys::SimulationBox::calculateMaxForceOld">
+<area shape="rect" id="Node000001" title="calculate max force old of simulationBox" alt="" coords="5,36,179,81"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#acc7f775c8404767c8b71def79dc367c2" title="get atomic scalar forces old" alt="" coords="227,5,427,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,44,214,42,209,43,180,50"/>
+<area shape="rect" id="Node000003" href="$namespacestl.html#a8f55666471d5f6d14aaa9a739217ff7e" title="Calculates the maximum of all elements in a vector." alt="" coords="290,74,364,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,67,277,81,271,82,179,72"/>
+</map>

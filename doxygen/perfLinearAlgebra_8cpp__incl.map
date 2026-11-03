@@ -1,0 +1,31 @@
+<map id="/home/runner/work/PQ/PQ/benchmarks/perf/perfLinearAlgebra.cpp" name="/home/runner/work/PQ/PQ/benchmarks/perf/perfLinearAlgebra.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="194,5,421,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,71,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,70,86,114,83,110,219,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="94,115,155,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,69,166,110,163,106,248,65"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="179,115,244,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="274,69,238,106,234,102,277,66"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="268,115,347,143"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="308,65,310,100,305,98,306,70"/>
+<area shape="rect" id="Node000006" href="$perfAlloc_8hpp.html" title=" " alt="" coords="371,115,478,143"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="347,65,398,105,393,106,346,70"/>
+<area shape="rect" id="Node000008" href="$staticMatrix_8hpp.html" title=" " alt="" coords="502,115,630,143"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="394,65,516,109,511,110,394,70"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="721,342,827,370"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="421,41,476,50,534,63,591,84,643,113,684,146,710,179,751,265,763,296,771,328,766,325,758,298,746,267,705,181,681,149,641,117,589,89,532,69,475,55,422,46"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="283,191,348,218"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="407,142,349,184,346,179,403,145"/>
+<area shape="rect" id="Node000009" href="$staticMatrix3x3_8hpp.html" title=" " alt="" coords="372,191,605,218"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="554,142,515,182,512,178,550,145"/>
+<area shape="rect" id="Node000011" href="$staticMatrix3x3Class_8hpp.html" title=" " alt="" coords="550,266,736,294"/>
+<area shape="poly" id="edge14_Node000008_Node000011" title=" " alt="" coords="581,141,602,163,620,189,633,221,641,253,636,250,628,222,616,192,598,166,580,146"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="278,266,353,294"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="460,218,361,263,359,258,455,220"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="517,216,605,259,599,259,516,222"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="377,266,526,294"/>
+<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="484,217,467,255,463,251,480,220"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="667,292,740,335,735,334,666,297"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="513,342,696,370"/>
+<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="639,293,620,330,617,326,634,296"/>
+</map>

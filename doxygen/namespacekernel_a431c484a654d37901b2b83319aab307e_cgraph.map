@@ -1,0 +1,5 @@
+<map id="kernel::distSquared" name="kernel::distSquared">
+<area shape="rect" id="Node000001" title="calculate the squared distance between two particles" alt="" coords="5,14,152,42"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="200,5,371,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,25,186,27,181,28,152,30"/>
+</map>

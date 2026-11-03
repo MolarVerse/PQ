@@ -1,0 +1,13 @@
+<map id="virial::calculateQMVirial" name="virial::calculateQMVirial">
+<area shape="rect" id="Node000001" title="Calculate virial contribution from QM atoms only without side effects." alt="" coords="5,104,183,132"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBoxView.html#a7e7040ddbbd5836394efe83bf9f8210a" title="get all QM atoms using range&#45;based filtering" alt="" coords="231,65,434,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,104,218,102,212,103,184,110"/>
+<area shape="rect" id="Node000005" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="280,134,385,162"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="183,127,267,139,261,140,183,132"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBoxView.html#a37eacc94c194852f38efa830630d5fff" title="Get the Atoms vector reference." alt="" coords="482,5,685,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="428,62,475,53,470,55,429,67"/>
+<area shape="rect" id="Node000004" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="527,74,640,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="434,85,514,87,509,88,435,90"/>
+<area shape="rect" id="Node000006" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="495,125,672,170"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="385,145,482,148,477,148,385,150"/>
+</map>

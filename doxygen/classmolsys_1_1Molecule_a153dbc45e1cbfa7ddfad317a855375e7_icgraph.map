@@ -1,0 +1,17 @@
+<map id="molsys::Molecule::getAtoms" name="molsys::Molecule::getAtoms">
+<area shape="rect" id="Node000001" title="returns the atoms of the molecule" alt="" coords="859,83,1065,111"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#a9e734e236a41f9592b42dcb4ced9c92e" title="Dispatch QM&#45;force redistribution for smoothing&#45;zone molecules. Not used in the code yet,..." alt="" coords="554,5,811,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="885,79,775,53,775,48,891,79"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a905672c539b4a3547e6d201112710012" title="activates the molecule and it&#39;s atoms for hybrid calculations" alt="" coords="584,75,781,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="841,97,781,100,781,94,846,97"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Molecule.html#ae1f0a770d75d97d2b9f3fefbf63d1781" title="deactivates the molecule and it&#39;s atoms for hybrid calculations" alt="" coords="576,144,789,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="891,115,776,146,775,141,885,116"/>
+<area shape="rect" id="Node000005" href="$namespacebenchQMRunner.html#a81476c9e79c08085280b73044f57bd0f" title=" " alt="" coords="313,126,506,154"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="558,155,507,152,507,146,563,154"/>
+<area shape="rect" id="Node000008" href="$testQMMMEnergies_8cpp.html#a0f05979669631667122a5e75df1934b2" title=" " alt="" coords="376,178,444,206"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="564,177,445,191,444,186,558,178"/>
+<area shape="rect" id="Node000006" href="$namespacebenchQMRunner.html#af59b6188cd23f4db67b6f50ab362d11d" title=" " alt="" coords="108,126,265,154"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="295,140,266,142,265,137,300,139"/>
+<area shape="rect" id="Node000007" href="$perfDftbRunnerFiles_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,126,60,154"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="90,141,61,142,60,137,94,138"/>
+</map>

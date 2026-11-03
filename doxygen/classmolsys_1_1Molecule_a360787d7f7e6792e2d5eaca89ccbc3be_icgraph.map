@@ -1,0 +1,5 @@
+<map id="molsys::Molecule::isActive" name="molsys::Molecule::isActive">
+<area shape="rect" id="Node000001" title=" " alt="" coords="291,5,486,33"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#ad2e3a0f831cc6cf2c09e10964e542a9b" title="Determines if this molecule should be treated as a MM molecule." alt="" coords="5,5,243,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="273,19,243,22,243,17,278,19"/>
+</map>

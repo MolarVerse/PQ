@@ -1,0 +1,17 @@
+<map id="setup::PotentialSetup::writeSetupInfo" name="setup::PotentialSetup::writeSetupInfo">
+<area shape="rect" id="Node000001" title="writes setup information to log file" alt="" coords="5,179,166,223"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1PotentialSetup.html#ab24617db825d5f31891a700a8137fd56" title="writes coulomb potential setup information to log file" alt="" coords="219,144,380,189"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,186,206,181,201,183,167,190"/>
+<area shape="rect" id="Node000008" href="$classsetup_1_1PotentialSetup.html#a7d2e0b4cc82493eb2ab059f6b21afc18" title="writes non&#45;coulomb potential setup information to log file" alt="" coords="214,213,385,258"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="166,211,201,218,195,220,166,217"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#a6a7f2c90130118e100aeb3902a15684d" title="get the Coulomb long range type" alt="" coords="435,5,645,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="323,141,371,101,432,60,447,55,443,58,434,65,374,105,326,146"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="444,75,637,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="378,141,448,123,443,125,380,146"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1PotentialSettings.html#a32f804b035c3b138bac5c4ab67839707" title="get the reaction field epsilon" alt="" coords="444,144,636,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="380,164,431,166,426,167,380,169"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1PotentialSettings.html#abb9e0c8cd4f032abfc0127ff0c9c801d" title="get the Wolf parameter" alt="" coords="444,213,636,258"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="379,187,448,208,443,209,379,192"/>
+<area shape="rect" id="Node000007" href="$structCoulombLongRangeTypeMeta.html#ae7bc0ca0e5330b68f05294d9de480a97" title=" " alt="" coords="433,283,647,327"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="368,187,387,199,403,217,411,235,419,252,435,268,442,275,437,274,431,272,415,255,406,237,398,220,383,203,367,192"/>
+</map>

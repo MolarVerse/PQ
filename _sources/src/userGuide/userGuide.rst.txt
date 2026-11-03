@@ -13,4 +13,5 @@ This page explains in detail how to set up and use the PQ application. Please re
     generalUsage.rst
     examples.rst
     referenceManual.rst
+    pqBot.rst
     troubleshooting.rst

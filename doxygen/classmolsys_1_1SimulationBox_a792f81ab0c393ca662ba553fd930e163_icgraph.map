@@ -1,0 +1,13 @@
+<map id="molsys::SimulationBox::calculateCenterOfMassMolecules" name="molsys::SimulationBox::calculateCenterOfMassMolecules">
+<area shape="rect" id="Node000001" title="calculate center of mass of all molecules" alt="" coords="528,40,774,85"/>
+<area shape="rect" id="Node000002" href="$classconfigurator_1_1HybridConfigurator.html#a02cd8c06c2ffeb773d6e18109847555e" title="Shift all atoms back to their original positions before centering." alt="" coords="239,5,480,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="510,46,481,45,481,39,515,46"/>
+<area shape="rect" id="Node000005" href="$classconfigurator_1_1HybridConfigurator.html#af3e5ae4c2c4f932ddd65de95134435e6" title="Shift all atoms so that the inner region center is at the origin." alt="" coords="242,75,476,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="515,79,477,86,477,80,510,79"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,8,191,53"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="220,30,192,32,191,27,226,28"/>
+<area shape="rect" id="Node000004" href="$testHybridConfigurator_8cpp.html#adc4f0c4a4e2f4641f0283792f764c076" title=" " alt="" coords="71,79,125,107"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="253,57,126,89,124,84,253,52"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="252,71,188,56,189,51,257,70"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="224,96,125,96,125,91,229,94"/>
+</map>

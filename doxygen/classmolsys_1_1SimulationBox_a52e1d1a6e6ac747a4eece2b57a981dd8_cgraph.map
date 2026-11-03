@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::calcBoxDimFromDensity" name="molsys::SimulationBox::calcBoxDimFromDensity">
+<area shape="rect" id="Node000001" title="calculate box dimensions from density" alt="" coords="5,5,196,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1OrthorhombicBox.html#a805523cea304f1f2243824a24517e229" title="Calculate the box dimensions from the density." alt="" coords="244,5,434,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,25,231,27,226,28,196,30"/>
+</map>

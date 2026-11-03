@@ -1,0 +1,16 @@
+<map id="/home/runner/work/PQ/PQ/include/output/energyOutput.hpp" name="/home/runner/work/PQ/PQ/include/output/energyOutput.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,267,50"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="49,174,119,201"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,50,95,160,91,158,126,51"/>
+<area shape="rect" id="Node000003" href="$output_8hpp.html" title=" " alt="" coords="177,98,268,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,48,200,87,195,88,158,53"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="200,126,123,169,121,164,195,127"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="142,174,215,201"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="217,125,196,162,192,158,213,128"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="239,174,297,201"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="232,124,254,161,249,160,230,129"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="321,174,418,201"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="250,124,333,166,327,167,248,129"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="441,174,500,201"/>
+<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="268,124,429,172,423,173,267,129"/>
+</map>

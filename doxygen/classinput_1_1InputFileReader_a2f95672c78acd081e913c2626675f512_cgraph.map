@@ -1,0 +1,21 @@
+<map id="input::InputFileReader::_validateQM" name="input::InputFileReader::_validateQM">
+<area shape="rect" id="Node000001" title="validates QM keyword dependencies" alt="" coords="5,283,170,327"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileReader.html#af74f54a09652205d1b5187cf08384d47" title="get whether the keyword has been set in input" alt="" coords="230,5,394,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,281,108,236,133,176,168,115,191,86,216,60,223,57,220,61,219,64,195,89,173,118,137,179,113,237,97,283"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#afe3751a4a4c3d1d21148bdd4c537b173" title="returns the maceModel" alt="" coords="234,75,390,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="98,281,143,207,177,166,216,130,226,125,222,129,219,134,181,169,148,210,103,283"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#a8386306cb5ec3d9f0116594627e1bde9" title=" " alt="" coords="234,144,390,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="110,280,157,239,216,199,230,194,226,197,219,203,161,244,114,284"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1QMSettings.html#a392002c6312680d946422a22711bee71" title="returns the qmMethod" alt="" coords="234,213,390,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="161,280,225,261,221,265,164,284"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1QMSettings.html#aa2201dfe866327a292fce9b2537fe6b7" title="returns the slakosType" alt="" coords="234,283,390,327"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="169,303,220,304,216,306,171,307"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="219,352,404,397"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="162,325,225,346,220,348,163,331"/>
+<area shape="rect" id="Node000008" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="218,420,406,448"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="111,325,159,367,219,407,233,414,228,415,216,411,156,371,111,330"/>
+<area shape="rect" id="Node000009" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="228,472,396,517"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="103,325,150,391,183,426,219,458,227,464,222,464,216,462,179,430,146,394,102,330"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="234,541,390,586"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="96,325,115,369,140,423,175,479,196,504,219,527,225,533,220,532,216,531,192,508,171,482,135,425,110,371,96,330"/>
+</map>

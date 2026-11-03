@@ -1,0 +1,15 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,118,59,146"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a1ded6a85b70b5f22c1ed717809d9a00a" title="Returns true if only MM simulations are activated." alt="" coords="107,75,292,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,124,93,118,89,121,60,129"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="107,144,292,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="58,135,93,142,89,145,60,140"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="349,5,534,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="279,72,349,54,344,56,281,77"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="349,75,534,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="292,94,336,96,331,98,293,100"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="348,144,535,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="292,164,335,166,329,167,293,169"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="340,213,543,258"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="280,187,349,208,344,209,280,192"/>
+</map>

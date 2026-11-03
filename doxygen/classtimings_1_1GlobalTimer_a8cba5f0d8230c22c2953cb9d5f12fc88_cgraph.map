@@ -1,0 +1,17 @@
+<map id="timings::GlobalTimer::GlobalTimer" name="timings::GlobalTimer::GlobalTimer">
+<area shape="rect" id="Node000001" title="Construct a new Global Timer:: Global Timer object." alt="" coords="5,75,164,119"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a5d1c218e7806d9acf4c151efc983b722" title="Get the Simulation Timer object." alt="" coords="232,5,398,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,72,226,54,221,56,162,77"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#aa2d5c8f539268225f48e96098200cae4" title="starts a new timer with default name" alt="" coords="212,75,418,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,94,199,96,193,98,165,100"/>
+<area shape="rect" id="Node000008" href="$structTimerIdMeta.html#ad76505069449f930df35a92ef1838459" title=" " alt="" coords="218,143,412,171"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="164,116,212,129,242,139,237,139,211,134,164,122"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1Timer.html#ae560e1495809d5305500b64d63f2d95b" title="find timeManager by name" alt="" coords="477,45,677,90"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="418,83,464,80,459,81,419,88"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1Timer.html#aa6d43c22ede0bc08e71e9a18f20ab1b5" title="get timer name" alt="" coords="466,114,688,142"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="418,106,453,113,448,113,418,112"/>
+<area shape="rect" id="Node000006" href="$timerId_8cpp.html#ac8b582a9479dec276bd0b124b0658e2a" title="convert TimerId to string" alt="" coords="736,114,809,142"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="689,125,723,128,718,128,689,130"/>
+<area shape="rect" id="Node000007" href="$structTimerIdMeta.html#a0875bc66f116737c97a26fde58b45be0" title=" " alt="" coords="857,114,1020,142"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="809,125,844,128,838,128,809,130"/>
+</map>

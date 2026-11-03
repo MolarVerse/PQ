@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,65,59,93"/>
+<area shape="rect" id="Node000002" href="$namespacetestSettings.html#a9d5aea37b6c36e577dabe1e7b67d5468" title="start a builder for the settings struct SettingsT" alt="" coords="110,5,254,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,64,106,42,124,37,119,40,108,47,61,68"/>
+<area shape="rect" id="Node000003" href="$classConstraintSettings.html#aee85549fee0a25c184abc25ae970c380" title="set the maximum number of iterations for the shake algorithm" alt="" coords="111,57,252,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,77,98,77,94,81,60,82"/>
+<area shape="rect" id="Node000004" href="$classConstraintSettings.html#a565463ef1e0bde1283e14c5f04fe107b" title="set the tolerance for the shake algorithm" alt="" coords="107,126,257,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,89,108,111,121,119,115,119,106,116,59,94"/>
+</map>

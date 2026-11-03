@@ -1,0 +1,5 @@
+<map id="TestTopologySection" name="TestTopologySection">
+<area shape="rect" id="Node000001" title="Fixture class for testing the TopologySection class." alt="" coords="5,126,158,265"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="37,5,127,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,90,84,127,79,126,81,95"/>
+</map>

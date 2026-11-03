@@ -1,0 +1,76 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,342,74,370"/>
+<area shape="rect" id="Node000002" href="$namespaceinput_1_1guffdat.html#a06c3126a46b9729b8a7e81d7fa1e21cb" title="Construct a new Guff Dat Reader:: Guff Dat Reader object." alt="" coords="122,212,317,240"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,340,187,247,185,252,62,343"/>
+<area shape="rect" id="Node000034" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="127,463,312,507"/>
+<area shape="poly" id="edge36_Node000001_Node000034" title=" " alt="" coords="60,367,177,452,172,455,60,373"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#ad970770c2ec54ea28b227ce1a9417fa7" title="Get the guff dat file name." alt="" coords="390,144,552,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="279,210,377,187,373,191,282,214"/>
+<area shape="rect" id="Node000004" href="$namespaceinput_1_1guffdat.html#a9bb390792aa642105b6ff2aff1085a9f" title="checks wether reading the guff.dat is necessary or not" alt="" coords="382,212,560,240"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="316,224,369,225,365,228,319,229"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1guffdat_1_1GuffDatReader.html#af0821624a7c229b5c59844666a15fd25" title="post process guff.dat reading" alt="" coords="365,264,577,309"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="280,238,362,259,358,261,281,243"/>
+<area shape="rect" id="Node000017" href="$classinput_1_1guffdat_1_1GuffDatReader.html#af82daebbb2e11e30c85f2ed88d19ef36" title="reads the guff.dat file" alt="" coords="365,393,577,438"/>
+<area shape="poly" id="edge18_Node000002_Node000017" title=" " alt="" coords="240,238,430,383,425,385,239,243"/>
+<area shape="rect" id="Node000030" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a49fd4bf04dddd7a9a822eaa3bb8cf039" title="constructs the guff dat 4d vectors" alt="" coords="365,5,577,50"/>
+<area shape="poly" id="edge32_Node000002_Node000030" title=" " alt="" coords="227,211,279,139,318,97,363,60,375,55,371,59,367,65,322,101,283,143,232,214"/>
+<area shape="rect" id="Node000032" href="$classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="399,75,543,119"/>
+<area shape="poly" id="edge34_Node000002_Node000032" title=" " alt="" coords="237,210,292,171,364,129,387,121,383,125,366,134,295,175,241,214"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="639,125,824,170"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="537,210,576,198,624,180,648,174,643,177,626,185,578,204,540,214"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a1957ed885e0023ec6d6204b8285e0ebb" title="calculates the partial charges of the molecule types from the guff.dat coulomb coefficients" alt="" coords="625,195,838,239"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="557,261,633,243,628,245,559,266"/>
+<area shape="rect" id="Node000010" href="$classinput_1_1guffdat_1_1GuffDatReader.html#aeb619cf0f3482833171ccced2cfb72fd" title="check if all necessary guff pairs are set" alt="" coords="625,333,838,378"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="558,307,633,328,628,329,558,312"/>
+<area shape="rect" id="Node000012" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a63fe7778deb9a21fd6f73da58521852e" title="checks if the partial charges are in accordance with all guff.dat entries." alt="" coords="625,264,838,309"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="577,284,612,285,607,287,578,289"/>
+<area shape="rect" id="Node000008" href="$namespaceutilities.html#a752bb70809a2fb9f8f59d58545fd5320" title="calculates the sign of a number" alt="" coords="942,102,1047,130"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="812,192,836,180,850,170,859,159,869,149,884,139,929,125,924,127,887,143,873,153,863,163,854,174,839,185,815,196"/>
+<area shape="rect" id="Node000009" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="1190,172,1325,200"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1047,125,1104,138,1198,167,1192,168,1102,144,1047,130"/>
+<area shape="rect" id="Node000011" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a042de94cd3d7fe5789bb0d06dfa15a2b" title="Determine if both provided molecule types are of the water molecule type." alt="" coords="888,393,1100,438"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="832,376,881,389,876,390,832,381"/>
+<area shape="poly" id="edge13_Node000012_Node000009" title=" " alt="" coords="838,287,966,281,1035,273,1102,258,1165,235,1218,210,1223,207,1168,240,1104,264,1036,278,966,287,839,292"/>
+<area shape="poly" id="edge12_Node000012_Node000011" title=" " alt="" coords="817,306,839,319,855,334,864,350,872,365,887,379,896,386,890,386,884,383,868,368,859,352,851,338,836,323,817,312"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1Molecule.html#a54409a25ca26663368192d66a4dcbe1d" title=" " alt="" coords="886,222,1103,250"/>
+<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="837,263,906,252,901,254,839,268"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1Molecule.html#a4329388299d04f733cf8ad92e00f7d4a" title="finds number of different atom types in molecule" alt="" coords="886,324,1102,369"/>
+<area shape="poly" id="edge15_Node000012_Node000014" title=" " alt="" coords="832,307,881,320,876,320,833,312"/>
+<area shape="rect" id="Node000016" href="$classmolsys_1_1Molecule.html#a8e2b05b1085c969eabb42295b4d6318d" title="returns the partial charge of the atom by index" alt="" coords="892,153,1097,198"/>
+<area shape="poly" id="edge17_Node000012_Node000016" title=" " alt="" coords="812,261,836,249,850,239,860,229,869,219,884,208,899,203,894,206,887,213,873,223,864,233,854,243,839,254,814,266"/>
+<area shape="rect" id="Node000015" href="$namespaceutilities.html#aaf583bdaf439d7b207cfd5aa4b5715d3" title="returns sorted unique elements from a vector copy" alt="" coords="1154,294,1360,322"/>
+<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="1102,328,1146,324,1141,325,1104,333"/>
+<area shape="rect" id="Node000018" href="$namespaceutilities.html#a21ee0515bf8768bf6673fd0b376c9b3e" title="get commands from a line" alt="" coords="631,454,832,482"/>
+<area shape="poly" id="edge19_Node000017_Node000018" title=" " alt="" coords="577,434,646,450,641,451,578,440"/>
+<area shape="rect" id="Node000019" href="$classinput_1_1guffdat_1_1GuffDatReader.html#aefc4bd9acdb570b516dfe4ad689f54f8" title="parses a line from the guff.dat file" alt="" coords="625,505,838,550"/>
+<area shape="poly" id="edge20_Node000017_Node000019" title=" " alt="" coords="553,436,579,448,594,459,603,470,613,480,627,491,639,499,633,499,624,495,609,484,599,473,590,463,576,453,553,441"/>
+<area shape="rect" id="Node000029" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="632,402,831,430"/>
+<area shape="poly" id="edge31_Node000017_Node000029" title=" " alt="" coords="577,413,619,415,614,416,578,418"/>
+<area shape="poly" id="edge28_Node000019_Node000011" title=" " alt="" coords="806,502,837,491,936,446,941,444,839,495,807,507"/>
+<area shape="rect" id="Node000020" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a5d03fbe772187c126727b9daade27d23" title="checks which nonCoulombic type is given and adds the corresponding nonCoulombic pair" alt="" coords="888,484,1100,529"/>
+<area shape="poly" id="edge21_Node000019_Node000020" title=" " alt="" coords="838,516,875,516,870,517,839,522"/>
+<area shape="rect" id="Node000027" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="898,553,1091,598"/>
+<area shape="poly" id="edge29_Node000019_Node000027" title=" " alt="" coords="838,544,885,555,879,555,838,550"/>
+<area shape="rect" id="Node000028" href="$classmolsys_1_1MoleculeType.html#aab97d83442c07c4d276810957607fb14" title="get the internal atom type of an atom" alt="" coords="912,623,1077,667"/>
+<area shape="poly" id="edge30_Node000019_Node000028" title=" " alt="" coords="771,548,825,578,887,608,905,617,899,617,885,613,823,583,770,553"/>
+<area shape="rect" id="Node000021" href="$classinput_1_1guffdat_1_1GuffDatReader.html#ae7302112e21e6d20d7ed89ab71927a84" title="adds a buckingham pair to the guffNonCoulombic potential" alt="" coords="1151,484,1363,529"/>
+<area shape="poly" id="edge22_Node000020_Node000021" title=" " alt="" coords="1101,504,1138,506,1133,507,1101,509"/>
+<area shape="rect" id="Node000022" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a844c28cbab8adc69d5bc94a350588d57" title="adds a guff pair to the guffNonCoulombic potential" alt="" coords="1151,553,1363,598"/>
+<area shape="poly" id="edge23_Node000020_Node000022" title=" " alt="" coords="1082,527,1158,549,1152,549,1082,532"/>
+<area shape="rect" id="Node000023" href="$classinput_1_1guffdat_1_1GuffDatReader.html#af506f33b2d94a518918e39c31fbbabad" title="adds a lennard jones pair to the guffNonCoulombic potential" alt="" coords="1151,623,1363,667"/>
+<area shape="poly" id="edge24_Node000020_Node000023" title=" " alt="" coords="1084,527,1105,539,1121,557,1129,575,1137,592,1153,608,1160,615,1155,614,1149,612,1133,595,1125,577,1117,560,1101,543,1083,532"/>
+<area shape="rect" id="Node000024" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a22e6e5ac1b7601c85b2f5be4227c764a" title="adds a morse pair to the guffNonCoulombic potential" alt="" coords="1151,692,1363,737"/>
+<area shape="poly" id="edge25_Node000020_Node000024" title=" " alt="" coords="1088,527,1105,539,1119,557,1126,575,1130,610,1133,644,1140,661,1153,678,1157,683,1152,682,1149,681,1135,664,1128,646,1124,611,1121,576,1114,560,1101,543,1087,532"/>
+<area shape="rect" id="Node000025" href="$classsettings_1_1PotentialSettings.html#af2c3c43e59617c43ae4b2820a86644ee" title="get the nonCoulomb type" alt="" coords="1161,345,1353,390"/>
+<area shape="poly" id="edge26_Node000020_Node000025" title=" " alt="" coords="1046,481,1101,448,1115,436,1124,424,1134,412,1150,400,1158,398,1163,396,1152,405,1138,416,1129,427,1119,439,1105,452,1048,486"/>
+<area shape="rect" id="Node000026" href="$structNonCoulombTypeMeta.html#a30edecd996fb63bba4198e2023b17025" title=" " alt="" coords="1173,415,1341,459"/>
+<area shape="poly" id="edge27_Node000020_Node000026" title=" " alt="" coords="1081,481,1155,464,1161,462,1083,486"/>
+<area shape="rect" id="Node000031" href="$classpot_1_1GuffNonCoulomb.html#a42d3f9180fe420ada0fe44368a96f4bf" title="resizes the outermost vector of the 4d vector _guffNonCoulombPairs" alt="" coords="651,5,812,50"/>
+<area shape="poly" id="edge33_Node000030_Node000031" title=" " alt="" coords="577,25,638,26,633,29,579,30"/>
+<area shape="rect" id="Node000033" href="$namespaceout.html#ae21e45a9e56a9f34636a6df12ee3e2f2" title="Message to inform about reading a file." alt="" coords="663,74,800,102"/>
+<area shape="poly" id="edge35_Node000032_Node000033" title=" " alt="" coords="543,92,650,89,645,92,545,97"/>
+<area shape="rect" id="Node000035" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="378,463,565,507"/>
+<area shape="poly" id="edge37_Node000034_Node000035" title=" " alt="" coords="312,482,364,484,360,486,313,488"/>
+<area shape="rect" id="Node000036" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="370,532,573,577"/>
+<area shape="poly" id="edge38_Node000034_Node000036" title=" " alt="" coords="303,505,376,527,371,528,303,511"/>
+</map>

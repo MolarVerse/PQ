@@ -1,0 +1,39 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="setup the reaction&#45;field Coulomb potential" alt="" coords="5,100,74,128"/>
+<area shape="rect" id="Node000002" href="$namespacetest.html#ab09419253c0f5065befb052c858b9c63" title="check that the dynamic type of obj matches expectedType" alt="" coords="165,5,288,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="51,98,81,69,120,42,152,31,149,35,123,47,85,73,56,101"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#adfe157a2e78a8d225559ff523de28007" title="Set the Coulomb long range type in the PotentialSettings class." alt="" coords="122,57,331,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,105,108,100,104,103,76,110"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1PotentialSettings.html#a61998dfb3ec5fb9a4ba173eac8829308" title="Set the reaction field epsilon in the PotentialSettings class." alt="" coords="130,126,322,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,118,117,126,113,129,75,123"/>
+<area shape="rect" id="Node000005" href="$classsetup_1_1PotentialSetup.html#a71ed47e4d9e8be974de6b349f5b36964" title="sets all nonBonded potential types" alt="" coords="146,196,306,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="54,125,85,154,123,181,135,188,130,190,120,185,82,158,54,131"/>
+<area shape="rect" id="Node000006" href="$classsetup_1_1PotentialSetup.html#a588f8aebcf80ece735f0a764770aded8" title="sets coulomb potential type" alt="" coords="641,92,802,136"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="303,193,330,181,353,163,363,154,378,146,441,127,506,116,569,110,629,110,623,111,569,115,506,121,442,132,380,151,366,158,356,167,332,185,305,197"/>
+<area shape="rect" id="Node000011" href="$classsetup_1_1PotentialSetup.html#a55554f3b1dde84b6e97ea29c742bfd84" title="sets nonCoulomb potential type" alt="" coords="394,230,555,275"/>
+<area shape="poly" id="edge10_Node000005_Node000011" title=" " alt="" coords="307,226,382,239,377,240,307,232"/>
+<area shape="rect" id="Node000012" href="$classsetup_1_1PotentialSetup.html#af9e9fcf5a32583dcdb896e0be53e19c7" title="sets up nonCoulombic pairs in the ForceFieldNonCoulomb potential" alt="" coords="379,300,570,344"/>
+<area shape="poly" id="edge11_Node000005_Node000012" title=" " alt="" coords="276,238,380,285,397,294,392,293,378,290,275,243"/>
+<area shape="rect" id="Node000014" href="$classsetup_1_1PotentialSetup.html#a50b8c4ec570848a3079763c88bf43ccd" title="writes setup information to log file" alt="" coords="394,161,555,206"/>
+<area shape="poly" id="edge13_Node000005_Node000014" title=" " alt="" coords="306,204,382,196,377,197,308,209"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1PotentialSettings.html#a6a7f2c90130118e100aeb3902a15684d" title="get the Coulomb long range type" alt="" coords="875,92,1085,136"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="802,111,861,113,856,114,803,116"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="883,161,1076,206"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="802,133,882,156,876,156,802,138"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1PotentialSettings.html#a32f804b035c3b138bac5c4ab67839707" title="get the reaction field epsilon" alt="" coords="884,230,1076,275"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="803,132,826,146,843,164,851,182,859,199,874,216,882,223,877,222,871,220,854,202,846,184,838,167,823,151,802,138"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1PotentialSettings.html#abb9e0c8cd4f032abfc0127ff0c9c801d" title="get the Wolf parameter" alt="" coords="884,22,1076,67"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="802,90,882,71,876,72,803,95"/>
+<area shape="rect" id="Node000013" href="$classpot_1_1ForceFieldNonCoulomb.html#a6a03b6f7fc252b91bd374752647eeb07" title="calculates and sets energy and force cutoff for all non&#45;coulombic pairs in _nonCoulPairsVec" alt="" coords="618,300,825,344"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="571,319,605,322,600,322,571,324"/>
+<area shape="rect" id="Node000015" href="$classsetup_1_1PotentialSetup.html#ab24617db825d5f31891a700a8137fd56" title="writes coulomb potential setup information to log file" alt="" coords="641,161,802,206"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="555,181,628,183,623,184,556,186"/>
+<area shape="rect" id="Node000017" href="$classsetup_1_1PotentialSetup.html#a7d2e0b4cc82493eb2ab059f6b21afc18" title="writes non&#45;coulomb potential setup information to log file" alt="" coords="636,230,807,275"/>
+<area shape="poly" id="edge20_Node000014_Node000017" title=" " alt="" coords="555,203,628,225,622,226,555,208"/>
+<area shape="poly" id="edge15_Node000015_Node000007" title=" " alt="" coords="802,159,876,141,882,140,803,164"/>
+<area shape="poly" id="edge16_Node000015_Node000008" title=" " alt="" coords="802,181,870,183,865,183,803,186"/>
+<area shape="poly" id="edge17_Node000015_Node000009" title=" " alt="" coords="803,202,882,226,876,225,802,207"/>
+<area shape="poly" id="edge18_Node000015_Node000010" title=" " alt="" coords="801,159,823,146,838,130,846,113,854,95,871,77,877,76,882,74,874,81,859,98,851,115,843,133,826,151,803,164"/>
+<area shape="rect" id="Node000016" href="$structCoulombLongRangeTypeMeta.html#ae7bc0ca0e5330b68f05294d9de480a97" title=" " alt="" coords="873,300,1087,344"/>
+<area shape="poly" id="edge19_Node000015_Node000016" title=" " alt="" coords="803,202,826,216,843,234,851,251,859,269,874,285,882,292,877,291,871,289,854,272,846,254,838,237,823,220,802,207"/>
+</map>

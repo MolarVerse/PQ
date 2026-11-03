@@ -1,0 +1,22 @@
+<map id="/home/runner/work/PQ/PQ/src/potential/nonCoulomb/nonCoulombPotential.cpp" name="/home/runner/work/PQ/PQ/src/potential/nonCoulomb/nonCoulombPotential.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="76,5,291,67"/>
+<area shape="rect" id="Node000002" href="$nonCoulombPotential_8hpp.html" title=" " alt="" coords="89,115,278,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,65,186,100,181,99,183,70"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,191,82,218"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="157,145,83,185,80,181,160,141"/>
+<area shape="rect" id="Node000004" href="$nonCoulombPair_8hpp.html" title=" " alt="" coords="106,191,261,218"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="185,141,186,176,181,174,182,146"/>
+<area shape="rect" id="Node000007" href="$strongTypes_8hpp.html" title=" " alt="" coords="236,266,363,294"/>
+<area shape="poly" id="edge10_Node000002_Node000007" title=" " alt="" coords="212,141,246,161,275,189,291,220,299,252,294,250,286,222,271,192,242,165,212,146"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="14,266,129,294"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="162,221,105,260,102,256,165,217"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="152,266,212,294"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="185,217,185,252,180,250,182,221"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="205,216,269,257,263,258,204,222"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="173,342,242,370"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="286,294,237,335,234,330,281,295"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="267,342,332,370"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="301,293,302,328,297,325,298,296"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="356,342,478,370"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="321,292,386,334,381,334,320,297"/>
+</map>

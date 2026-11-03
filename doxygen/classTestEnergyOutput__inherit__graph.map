@@ -1,0 +1,5 @@
+<map id="TestEnergyOutput" name="TestEnergyOutput">
+<area shape="rect" id="Node000001" title="test suite for energy output" alt="" coords="5,126,159,310"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="38,5,127,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,90,85,126,80,126,82,95"/>
+</map>

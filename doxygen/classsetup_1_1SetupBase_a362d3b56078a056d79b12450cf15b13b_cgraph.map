@@ -1,0 +1,10 @@
+<map id="setup::SetupBase::_writeSetupWarning" name="setup::SetupBase::_writeSetupWarning">
+<area shape="rect" id="Node000001" title="Writes a setup warning to the log and stdout." alt="" coords="5,56,157,100"/>
+<area shape="rect" id="Node000002" href="$classout_1_1LogOutput.html#a5deed49b92569a735e96b4ad626cb2c7" title="write a message to issue a warning about the setup" alt="" coords="205,21,400,66"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,63,192,60,187,62,158,69"/>
+<area shape="rect" id="Node000004" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="230,90,374,135"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="157,87,217,98,212,99,157,92"/>
+<area shape="rect" id="Node000003" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="448,29,647,57"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="400,41,435,43,430,43,401,46"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="506,28,499,20,504,11,521,5,548,3,576,5,593,14,588,14,575,10,548,8,522,10,508,15,504,20,511,30"/>
+</map>

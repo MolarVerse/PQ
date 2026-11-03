@@ -1,0 +1,28 @@
+<map id="setup::PotentialSetup::setupNonCoulomb" name="setup::PotentialSetup::setupNonCoulomb">
+<area shape="rect" id="Node000001" title="sets nonCoulomb potential type" alt="" coords="1267,152,1428,196"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1PotentialSetup.html#a71ed47e4d9e8be974de6b349f5b36964" title="sets all nonBonded potential types" alt="" coords="1059,70,1219,115"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1271,145,1198,118,1199,113,1277,146"/>
+<area shape="rect" id="Node000012" href="$namespacesetup.html#a14246f6b1d636d4ca87aa4f06cc4b591" title="wrapper to create the non&#45;Coulomb potential of the correct concrete type before any files are read" alt="" coords="530,135,804,162"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1249,171,804,156,804,151,1255,170"/>
+<area shape="rect" id="Node000013" href="$testPotentialSetup_8cpp.html#a1b21869b1acbca790efbeed4ce673ec9" title="setup the non coulomb potential" alt="" coords="1105,211,1173,238"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="1255,197,1174,219,1173,214,1250,197"/>
+<area shape="rect" id="Node000003" href="$namespacesetup.html#a90b9aef783ce6435dd1bf2b4c94bef87" title="wrapper to create PotentialSetup object and call setup" alt="" coords="852,5,1011,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1060,64,1010,48,976,36,976,31,1012,43,1065,65"/>
+<area shape="rect" id="Node000010" href="$testPotentialSetup_8cpp.html#a7534243d4718f4d2a87020eaa6e9034f" title="setup the coulomb potential" alt="" coords="897,57,966,85"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="1041,83,966,77,966,72,1046,83"/>
+<area shape="rect" id="Node000011" href="$testPotentialSetup_8cpp.html#a5b1a590a064027b63e58ce86d9bab3d7" title="setup the reaction&#45;field Coulomb potential" alt="" coords="897,109,966,137"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="1046,106,966,121,965,116,1041,107"/>
+<area shape="rect" id="Node000004" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="594,5,740,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="833,20,740,22,740,17,839,19"/>
+<area shape="rect" id="Node000009" href="$testPotentialSetup_8cpp.html#a8f080ec12d70064b272ba31ceaa42fdd" title="dummy test for setupPotential &#45; all single components are tested individually &#45; should not throw anyt..." alt="" coords="633,57,701,85"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="841,37,804,47,702,67,701,62,803,42,846,36"/>
+<area shape="rect" id="Node000005" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,83,482,110"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="577,35,531,48,425,85,423,80,530,43,582,33"/>
+<area shape="rect" id="Node000006" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,83,244,110"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="274,97,245,99,244,94,279,96"/>
+<area shape="rect" id="Node000007" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,56,60,84"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="90,82,61,77,59,72,94,79"/>
+<area shape="rect" id="Node000008" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,108,60,136"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="90,113,62,119,59,115,94,109"/>
+<area shape="poly" id="edge12_Node000012_Node000005" title=" " alt="" coords="571,132,466,114,466,108,576,131"/>
+</map>

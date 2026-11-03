@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="tests setting output filename" alt="" coords="5,5,59,33"/>
+<area shape="rect" id="Node000002" href="$structTestOutputUtils.html#a2c9ad78557db183a63c6a349036c092e" title=" " alt="" coords="107,5,291,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,17,94,18,88,20,59,22"/>
+<area shape="rect" id="Node000003" href="$classout_1_1Output.html#a9a08c675b2c324bc35868587de8df6fe" title="Opens the output file." alt="" coords="339,5,503,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,17,326,19,320,19,291,22"/>
+</map>

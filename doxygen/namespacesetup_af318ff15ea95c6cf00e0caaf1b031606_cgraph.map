@@ -1,0 +1,13 @@
+<map id="setup::setupResetKinetics" name="setup::setupResetKinetics">
+<area shape="rect" id="Node000001" title="constructs a new Reset Kinetics Setup:: Reset Kinetics Setup object and calls setup" alt="" coords="5,83,196,111"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a9a3a3fbd228c5d1603d240de99a868e0" title="Returns true if the jobtype performs an MD simulation." alt="" coords="247,5,432,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,80,247,53,243,56,152,85"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1ResetKineticsSetup.html#a41b7138e45b169907967c72e4db870e3" title="setup nscale, fscale, nreset, freset" alt="" coords="244,75,435,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,94,230,96,225,98,197,100"/>
+<area shape="rect" id="Node000005" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="267,144,412,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="151,109,255,140,250,142,150,114"/>
+<area shape="rect" id="Node000004" href="$classsetup_1_1ResetKineticsSetup.html#a7dfd3bb15c1fb0d11f695c6913d0c8f5" title="writes setup info to log file" alt="" coords="483,75,674,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="435,94,470,97,464,97,436,100"/>
+<area shape="rect" id="Node000006" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="506,152,651,180"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="412,164,494,166,488,166,412,169"/>
+</map>

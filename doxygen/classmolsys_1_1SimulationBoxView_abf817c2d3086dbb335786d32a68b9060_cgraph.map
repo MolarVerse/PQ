@@ -1,0 +1,7 @@
+<map id="molsys::SimulationBoxView::getWaterTypeMolecules" name="molsys::SimulationBoxView::getWaterTypeMolecules">
+<area shape="rect" id="Node000001" title="Get molecules of the configured water type." alt="" coords="5,36,209,81"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="257,5,460,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,43,244,41,238,43,210,49"/>
+<area shape="rect" id="Node000003" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="302,74,415,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,68,289,79,283,80,209,73"/>
+</map>

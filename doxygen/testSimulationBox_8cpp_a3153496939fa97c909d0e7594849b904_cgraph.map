@@ -1,0 +1,7 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests setPartialChargesOfMoleculesFromMoleculeTypes function" alt="" coords="5,52,74,80"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="148,5,320,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,57,135,46,131,50,75,62"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a565fed6627953edebc7a9c4a0fc8f6aa" title="set partial charges of molecules from molecule types" alt="" coords="122,74,346,136"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,70,109,78,104,81,74,76"/>
+</map>

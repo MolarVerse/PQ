@@ -1,0 +1,7 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#ab06f21ee699cf03ab5b1e1f5bf04231c" title="returns if the third order is set" alt="" coords="122,5,279,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,109,46,105,49,75,58"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="122,75,278,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,67,109,76,104,78,74,72"/>
+</map>

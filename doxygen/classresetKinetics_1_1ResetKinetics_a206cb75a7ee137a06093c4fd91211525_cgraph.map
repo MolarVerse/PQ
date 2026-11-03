@@ -1,0 +1,13 @@
+<map id="resetKinetics::ResetKinetics::resetAngularMomentum" name="resetKinetics::ResetKinetics::resetAngularMomentum">
+<area shape="rect" id="Node000001" title="reset the angular momentum of the system" alt="" coords="5,125,209,170"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ad4727b1fadb1c321684918232354f80c" title="calculate center of mass of simulationBox" alt="" coords="257,5,437,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,123,196,91,255,60,272,55,267,58,258,65,198,96,146,127"/>
+<area shape="rect" id="Node000003" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="265,74,428,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,122,276,104,272,107,200,127"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="261,125,432,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="209,145,248,147,243,149,210,150"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a3ea3b976bb6613f293cfacbdecedf2a0" title="get the center of mass" alt="" coords="261,195,432,239"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="187,168,255,189,250,191,187,173"/>
+<area shape="rect" id="Node000006" href="$namespacelinalg.html#a6956373f12f0d2dfaa86aa5dd049949c" title=" " alt="" coords="298,263,396,291"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="136,168,191,209,258,249,286,262,281,262,255,254,188,214,134,173"/>
+</map>

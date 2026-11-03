@@ -1,0 +1,19 @@
+<map id="timings::GlobalTimer::stopAndRestartSimulationTimer" name="timings::GlobalTimer::stopAndRestartSimulationTimer">
+<area shape="rect" id="Node000001" title="stop and restart the simulation timer" alt="" coords="5,75,243,119"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a5d1c218e7806d9acf4c151efc983b722" title="Get the Simulation Timer object." alt="" coords="311,5,476,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,71,299,51,294,54,215,77"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#aa2d5c8f539268225f48e96098200cae4" title="starts a new timer with default name" alt="" coords="291,144,497,189"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,117,292,139,287,140,214,123"/>
+<area shape="rect" id="Node000008" href="$classtimings_1_1Timer.html#af91abf63dabd1bd439f2e54a46e07701" title="stops a timer with default name" alt="" coords="292,75,496,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="243,94,279,96,273,98,244,100"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1Timer.html#ae560e1495809d5305500b64d63f2d95b" title="find timeManager by name" alt="" coords="556,77,756,122"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="484,141,548,127,554,126,485,146"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1Timer.html#aa6d43c22ede0bc08e71e9a18f20ab1b5" title="get timer name" alt="" coords="545,148,767,176"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="497,162,532,164,527,164,498,167"/>
+<area shape="rect" id="Node000006" href="$timerId_8cpp.html#ac8b582a9479dec276bd0b124b0658e2a" title="convert TimerId to string" alt="" coords="815,148,888,176"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="768,160,802,162,797,162,768,165"/>
+<area shape="rect" id="Node000007" href="$structTimerIdMeta.html#a0875bc66f116737c97a26fde58b45be0" title=" " alt="" coords="936,148,1099,176"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="888,160,923,162,917,162,888,165"/>
+<area shape="poly" id="edge8_Node000008_Node000004" title=" " alt="" coords="496,95,543,98,538,99,496,101"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="487,117,586,144,580,144,486,123"/>
+</map>

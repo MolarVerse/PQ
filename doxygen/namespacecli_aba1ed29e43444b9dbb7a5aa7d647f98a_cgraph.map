@@ -1,0 +1,22 @@
+<map id="cli::writeCapabilities" name="cli::writeCapabilities">
+<area shape="rect" id="Node000001" title="Writes the versioned machine&#45;readable PQ capabilities." alt="" coords="5,88,160,116"/>
+<area shape="rect" id="Node000002" href="$classcli_1_1JsonWriter.html#a9d4f26d97671f00976fcdf3dfbdd84e3" title=" " alt="" coords="208,9,405,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,85,207,50,242,41,237,43,209,55,119,90"/>
+<area shape="rect" id="Node000006" href="$classcli_1_1JsonWriter.html#aac5a9817a60351669c8a2f8102fec482" title=" " alt="" coords="214,145,399,173"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="140,114,237,140,232,142,139,119"/>
+<area shape="rect" id="Node000008" href="$classcli_1_1JsonWriter.html#a12815508bc6fe0ac22b8c5e45031ba68" title=" " alt="" coords="229,88,384,116"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="160,99,216,101,211,103,160,104"/>
+<area shape="rect" id="Node000003" href="$classcli_1_1JsonWriter.html#a32d29d9bc208fb8b6d7b353708f669d3" title=" " alt="" coords="453,5,678,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="405,19,440,21,435,22,406,24"/>
+<area shape="rect" id="Node000004" href="$classcli_1_1JsonWriter.html#a8343f4bee7a7af5c5c389e1e96516d28" title=" " alt="" coords="749,48,917,92"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="643,31,736,51,731,51,642,36"/>
+<area shape="rect" id="Node000005" href="$classcli_1_1JsonWriter.html#a878bba6e56d974f069f50a49df18bd18" title=" " alt="" coords="988,107,1155,134"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="918,85,991,103,985,103,917,90"/>
+<area shape="rect" id="Node000007" href="$classcli_1_1JsonWriter.html#aef7ab88810414089215197d523aee1bb" title=" " alt="" coords="726,136,940,164"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="399,155,714,152,708,152,400,160"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="940,134,969,133,975,132,940,139"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="384,94,735,74,731,77,385,100"/>
+<area shape="poly" id="edge10_Node000008_Node000008" title=" " alt="" coords="268,87,262,79,267,69,282,63,306,61,333,64,348,73,343,73,331,69,306,67,283,69,270,73,267,79,273,88"/>
+<area shape="rect" id="Node000009" href="$namespacecli.html#afdf8c1239a1f642516f42f5718368df4" title=" " alt="" coords="494,107,637,134"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="384,105,482,114,476,115,384,110"/>
+</map>

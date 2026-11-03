@@ -1,0 +1,19 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,172,74,200"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#aec7e6c06db696807a1d6a9e17ba0b53d" title="determines which nonCoulombic type is processed" alt="" coords="128,117,308,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,177,115,169,111,172,76,181"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1PotentialSettings.html#a6935a9847e4069ed5d2f14bba7a09f00" title="Set the nonCoulomb type as enum in the PotentialSettings class." alt="" coords="122,203,314,247"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="74,191,109,199,104,202,75,196"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#af2c3c43e59617c43ae4b2820a86644ee" title="get the nonCoulomb type" alt="" coords="362,5,554,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,114,361,60,378,55,373,58,363,65,268,119"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#a9b389a106d12641273f70722cd3e82de" title="processes the buckingham nonCoulombics section of the parameter file and adds the buckingham pair to ..." alt="" coords="368,74,548,136"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="307,129,356,123,351,125,309,134"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#abe1cc5b51c61b60df9d68dd8a5a310af" title="processes the LJ nonCoulombics section of the parameter file and adds the LJ pair to the nonCoulombic..." alt="" coords="368,160,548,221"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="308,161,356,171,351,172,308,166"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#a3cdf7a6638f194c63373e55a5a350170" title="processes the morse nonCoulombics section of the parameter file and adds the morse pair to the nonCou..." alt="" coords="368,245,548,306"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="295,176,316,188,340,210,364,231,371,237,366,237,360,235,336,214,312,192,295,182"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="602,168,796,213"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="547,134,622,162,617,162,547,139"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="548,188,589,190,584,191,548,193"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="546,242,617,219,622,218,548,247"/>
+</map>

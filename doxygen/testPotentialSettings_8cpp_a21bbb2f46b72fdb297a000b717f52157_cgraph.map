@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="tests reaction&#45;field settings" alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a32f804b035c3b138bac5c4ab67839707" title="get the reaction field epsilon" alt="" coords="107,5,299,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,55,93,49,89,52,60,59"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#a61998dfb3ec5fb9a4ba173eac8829308" title="Set the reaction field epsilon in the PotentialSettings class." alt="" coords="107,75,299,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,65,94,73,89,76,59,70"/>
+</map>

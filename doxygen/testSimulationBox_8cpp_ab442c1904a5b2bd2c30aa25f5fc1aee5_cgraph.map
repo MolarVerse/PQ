@@ -1,0 +1,11 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests setup external to internal global vdw types map" alt="" coords="5,118,74,146"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1MoleculeType.html#a46ce282ecb946cfd7fb071941504efb8" title="adds an external global VDW type to the externalGlobalVDWTypes vector" alt="" coords="129,5,340,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,116,82,88,120,60,135,55,131,58,123,65,85,92,56,119"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a9d8116d22c2313859e88fe94176aff21" title="Add a molecule type to the simulation box." alt="" coords="149,75,320,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,123,135,113,132,117,75,128"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#ac43347a77ee574d6a2a7f7755851cdd6" title="get the external global VDW types" alt="" coords="129,144,340,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,135,115,143,111,146,75,140"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a0caeed6f519b68710f9070d947897675" title="make external to internal global vdw types map" alt="" coords="122,213,347,274"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="55,143,86,171,123,199,132,205,127,206,120,203,82,176,54,149"/>
+</map>

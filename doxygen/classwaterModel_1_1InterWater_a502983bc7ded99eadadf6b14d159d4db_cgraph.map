@@ -1,0 +1,7 @@
+<map id="waterModel::InterWater::calculateHotspotSmoothingMMForces" name="waterModel::InterWater::calculateHotspotSmoothingMMForces">
+<area shape="rect" id="Node000001" title="Dispatch inter&#45;water hotspot smoothing force calculations." alt="" coords="5,5,281,50"/>
+<area shape="rect" id="Node000002" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="329,14,434,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="281,25,315,28,310,28,281,30"/>
+<area shape="rect" id="Node000003" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="482,5,659,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="435,25,469,28,464,28,435,30"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="opt::Optimizer::hasConverged" name="opt::Optimizer::hasConverged">
+<area shape="rect" id="Node000001" title="check if the optimizer has converged" alt="" coords="5,57,221,85"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html#ad3b3ec28457d5db84595e7a780f4e111" title="get the last energy in the history" alt="" coords="278,5,466,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,54,287,36,282,38,186,59"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1Optimizer.html#a08ac28964168e780cbd50321eeb9d753" title="get the last max force in the history" alt="" coords="269,57,476,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,69,256,71,251,72,222,74"/>
+<area shape="rect" id="Node000004" href="$classopt_1_1Optimizer.html#a8dadd3c59fd7bb74dd3d48296bfd7a9e" title="get the last RMS force in the history" alt="" coords="269,109,476,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,83,287,105,282,106,186,88"/>
+</map>

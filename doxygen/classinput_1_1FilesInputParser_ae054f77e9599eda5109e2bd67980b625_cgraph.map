@@ -1,0 +1,7 @@
+<map id="input::FilesInputParser::addGuffDatFileKey" name="input::FilesInputParser::addGuffDatFileKey">
+<area shape="rect" id="Node000001" title="Adds the guffdat_file keyword to the parser." alt="" coords="5,40,171,85"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="220,5,378,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,46,207,42,202,44,172,51"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#a654cfc14a40b5b92a1e778f4eca9acb1" title="set the guff dat file name" alt="" coords="219,75,380,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,73,206,81,200,81,171,79"/>
+</map>

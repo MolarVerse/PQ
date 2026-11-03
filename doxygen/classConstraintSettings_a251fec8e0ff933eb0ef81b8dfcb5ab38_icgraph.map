@@ -1,0 +1,5 @@
+<map id="ConstraintSettings::getMShakeMaxIter" name="ConstraintSettings::getMShakeMaxIter">
+<area shape="rect" id="Node000001" title="get the maximum number of iterations for the MShake algorithm" alt="" coords="122,5,273,50"/>
+<area shape="rect" id="Node000002" href="$testConstraintsParser_8cpp.html#ac3a879274c5cf52cf8a539129032fe2a" title="tests parsing the &quot;mshake&#45;iter&quot; command" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,75,30,74,25,109,27"/>
+</map>

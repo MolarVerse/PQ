@@ -1,0 +1,11 @@
+<map id="exc::PQException" name="exc::PQException">
+<area shape="rect" id="Node000001" title="Base class for all custom exceptions in the application." alt="" coords="102,289,238,451"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,144,108,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,226,125,289,119,290,85,232"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="132,144,208,216"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,214,173,273,167,272,169,219"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="106,5,234,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="171,107,173,145,167,144,169,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="232,144,364,216"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="284,214,256,267,249,278,245,274,252,264,280,218"/>
+</map>

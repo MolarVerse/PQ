@@ -1,0 +1,18 @@
+<map id="pot::GuffPair" name="pot::GuffPair">
+<area shape="rect" id="Node000001" title="inherits from NonCoulombPair represents a pair of Guff types (full guff formula)" alt="" coords="346,766,442,883"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1NonCoulombPair.html" title="base class representing a pair of non&#45;coulombic types" alt="" coords="228,397,384,693"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="359,704,379,767,374,765,356,709"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,190,167,279"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,277,95,325,102,349,112,372,133,404,159,433,217,484,212,486,155,437,129,407,108,374,97,351,90,327,86,282"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="16,5,156,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="86,92,89,174,84,173,86,97"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="190,190,331,279"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="261,277,263,303,262,338,263,373,264,380,259,380,258,373,256,338,258,303,260,282"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="191,5,331,95"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="261,92,263,174,258,173,260,97"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="436,198,491,271"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="435,259,415,280,395,305,367,382,362,380,391,302,412,276,438,255"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="432,492,583,598"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="488,268,505,303,514,347,518,392,517,476,512,474,513,392,509,347,500,304,487,273"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="489,596,426,752,422,749,484,599"/>
+</map>

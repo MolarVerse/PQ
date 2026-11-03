@@ -1,0 +1,26 @@
+var classengine_1_1OptEngine =
+[
+    [ "Engine", "classengine_1_1OptEngine.html#ae5554ba050be8bff6676b0e3bba84fc6", null ],
+    [ "getConvergence", "classengine_1_1OptEngine.html#abea58aca563f5a441473d59b59115742", null ],
+    [ "getEvaluator", "classengine_1_1OptEngine.html#ac1aff2946a7843bc146904bebf6e1d3c", null ],
+    [ "getLearningRate", "classengine_1_1OptEngine.html#ae50ac92a7095bd58a7d2ad7a97dded08", null ],
+    [ "getOptimizer", "classengine_1_1OptEngine.html#a4cb72b947d0f1ec6dc8ab53052ec560a", null ],
+    [ "getOptOutput", "classengine_1_1OptEngine.html#a0d4184b88cbb8badea96f8632d4c18fa", null ],
+    [ "getPhysicalDataOld", "classengine_1_1OptEngine.html#ab12b4ca82470cb11120da5c6fef40ac5", null ],
+    [ "getSharedEvaluator", "classengine_1_1OptEngine.html#a19a12228aa2615d59850d4c4cb5b9fc2", null ],
+    [ "getSharedLearningRate", "classengine_1_1OptEngine.html#a3e5a5254864a1ea6d4108f19fd9a468e", null ],
+    [ "getSharedOptimizer", "classengine_1_1OptEngine.html#ab5296fac9d03e6a802d815ad5578641f", null ],
+    [ "getSharedPhysicalDataOld", "classengine_1_1OptEngine.html#a64892ec8925671d4b5d0b685711aea3c", null ],
+    [ "run", "classengine_1_1OptEngine.html#ad8f53038037a343b41cdc75d1d47382d", null ],
+    [ "setEvaluator", "classengine_1_1OptEngine.html#a6ef6c4da9cb050502e81178063ba804f", null ],
+    [ "setLearningRateStrategy", "classengine_1_1OptEngine.html#a1d1f8ee7dc6c4f94ffc45714a6cb8e1b", null ],
+    [ "setOptimizer", "classengine_1_1OptEngine.html#ad500124a7d17889e7bc39384429cb970", null ],
+    [ "takeStep", "classengine_1_1OptEngine.html#a638838ee020cecfa63619febf684f008", null ],
+    [ "writeOutput", "classengine_1_1OptEngine.html#a11e761e6a2b3a0137798a01d49ab545d", null ],
+    [ "_converged", "classengine_1_1OptEngine.html#a7c6b1b852b19ebced4ddd2b1ef8abc88", null ],
+    [ "_evaluator", "classengine_1_1OptEngine.html#a77b5bc428d9873426f65171b2987cb9b", null ],
+    [ "_learningRateStrategy", "classengine_1_1OptEngine.html#a9289f3654cc4cd1e10156f657bfa260b", null ],
+    [ "_optimizer", "classengine_1_1OptEngine.html#ac6005f8a367cf28ee618f1e1eecee4df", null ],
+    [ "_optStopped", "classengine_1_1OptEngine.html#ad969793bb3ca2757feb83189665782e6", null ],
+    [ "_physicalDataOld", "classengine_1_1OptEngine.html#ad2f496c9fc78ac6f6a1fa656f677ce77", null ]
+];

@@ -1,0 +1,7 @@
+<map id="pot::LennardJonesPair::LennardJonesPair" name="pot::LennardJonesPair::LennardJonesPair">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,167,50"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1LennardJonesPair.html#ac2e09e009fb5c7df2e7ea050fa33e34f" title="Construct a new Lennard Jones Pair:: Lennard Jones Pair object." alt="" coords="215,5,376,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,25,202,27,197,28,167,30"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1NonCoulombPair.html#a02d9cc8b3c50e5b8721430e90d9a46d1" title="Construct a new Non Coulomb Pair:: Non Coulomb Pair object." alt="" coords="424,5,582,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="377,25,411,28,406,28,377,30"/>
+</map>

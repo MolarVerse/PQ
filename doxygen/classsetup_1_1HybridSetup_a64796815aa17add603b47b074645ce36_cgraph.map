@@ -1,0 +1,11 @@
+<map id="setup::HybridSetup::checkZoneRadii" name="setup::HybridSetup::checkZoneRadii">
+<area shape="rect" id="Node000001" title="Validate zone radii configuration for hybrid calculations." alt="" coords="5,109,151,154"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1HybridSettings.html#aa8d4ebfd9525772b278d57e61c65469d" title="get the coreRadius" alt="" coords="225,5,402,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,107,152,83,198,60,217,54,213,57,200,65,155,87,115,111"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#a012ead724b28803dad533a139ddd0749" title="get the layerRadius" alt="" coords="225,75,402,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="150,118,212,111,208,114,152,123"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1HybridSettings.html#a062e2f0295a32ac267132bba10163e58" title="get the pointChargeThickness" alt="" coords="217,144,411,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="151,140,204,149,199,151,152,145"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1HybridSettings.html#abee55e05df21480e2376937354bd582a" title="get the smoothingRegionThickness" alt="" coords="199,213,429,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="114,152,155,176,200,199,218,208,212,208,198,203,152,181,113,157"/>
+</map>

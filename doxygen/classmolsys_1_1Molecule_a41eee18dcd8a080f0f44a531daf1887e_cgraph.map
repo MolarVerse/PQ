@@ -1,0 +1,11 @@
+<map id="molsys::Molecule::scaleVelocity" name="molsys::Molecule::scaleVelocity">
+<area shape="rect" id="Node000001" title="scales the center&#45;of&#45;mass velocity of the molecule" alt="" coords="5,100,235,128"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Box.html#a98d364d3b62df674f97b5f7da26149c8" title=" " alt="" coords="297,5,490,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,97,282,60,308,54,303,56,283,65,167,102"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a13e3cc374b6593dea84c949c72416abb" title="returns the molecular mass of the molecule" alt="" coords="283,74,505,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,101,270,99,264,101,236,106"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Box.html#a160bdd91407b7610b45761e33f192344" title=" " alt="" coords="295,126,492,154"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="235,122,282,129,277,130,235,128"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Box.html#a2298a98d6a33af885fa8464870a8fedf" title=" " alt="" coords="301,178,487,206"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="165,126,283,162,318,174,313,174,282,168,164,131"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="physicalData::KineticEnergyVirialTensor" name="physicalData::KineticEnergyVirialTensor">
+<area shape="rect" id="Node000001" title="KineticEnergyVirialTensor is a struct for storing kinetic energy and virial tensors." alt="" coords="5,173,199,262"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,5,196,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,75,105,157,100,156,101,80"/>
+</map>

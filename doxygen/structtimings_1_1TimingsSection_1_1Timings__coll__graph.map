@@ -1,0 +1,7 @@
+<map id="timings::TimingsSection::Timings" name="timings::TimingsSection::Timings">
+<area shape="rect" id="Node000001" title="Timings struct to store timing information." alt="" coords="100,190,267,279"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,180,95"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,92,157,175,152,176,113,97"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="205,14,343,86"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,84,215,176,210,173,255,88"/>
+</map>

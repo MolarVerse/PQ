@@ -1,0 +1,13 @@
+<map id="thermostat::Thermostat::_requireDegreesOfFreedom" name="thermostat::Thermostat::_requireDegreesOfFreedom">
+<area shape="rect" id="Node000001" title="throw if the system has no degrees of freedom" alt="" coords="614,109,822,154"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1NoseHooverThermostat.html#aecf021dd5e429590015d255f232dee08" title="throw if the Nose&#45;Hoover equations divide by zero" alt="" coords="310,75,566,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="596,117,567,116,567,110,601,117"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1VelocityRescalingThermostat.html#a0c78a478f5c153332a6c1d5bd42eff1f" title="apply thermostat &#45; Velocity Rescaling" alt="" coords="330,144,546,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="601,146,547,156,546,150,596,147"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1NoseHooverThermostat.html#acfd67b9b8239efb85592928ed1d2bce1" title="applies the Nose&#45;Hoover thermostat on the velocities" alt="" coords="5,5,262,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="319,71,235,53,235,48,324,70"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1NoseHooverThermostat.html#a9d96197913c151a95e7ea548a93463d1" title="applies the Nose&#45;Hoover thermostat on the forces" alt="" coords="5,75,262,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="291,98,262,100,262,94,297,96"/>
+<area shape="rect" id="Node000006" href="$classthermostat_1_1VelocityRescalingThermostat.html#ad35bf41454e4bc11d0800cd17d325c7f" title=" " alt="" coords="25,144,242,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="312,167,242,169,242,164,317,166"/>
+</map>

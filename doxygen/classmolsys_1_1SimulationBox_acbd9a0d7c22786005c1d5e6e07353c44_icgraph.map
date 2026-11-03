@@ -1,0 +1,32 @@
+<map id="molsys::SimulationBox::getWaterType" name="molsys::SimulationBox::getWaterType">
+<area shape="rect" id="Node000001" title="Get the water type." alt="" coords="597,333,768,378"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Cell.html#a95b2a6e343becf5ea1754528c15a9811" title="assigns the indices of water molecules in the cell" alt="" coords="315,5,504,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="673,317,659,262,635,193,599,123,575,92,547,64,527,51,505,42,504,36,529,46,551,60,579,88,603,120,640,191,664,260,678,319"/>
+<area shape="rect" id="Node000003" href="$classwaterModel_1_1InterWaterStrategyCellList.html#a5dbb2adf94a0ca4087d011d226616f1f" title="Evaluate intermolecular water interactions via cell list." alt="" coords="295,75,524,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="667,318,650,276,624,226,590,176,547,134,525,120,524,115,551,130,594,172,629,223,655,274,672,319"/>
+<area shape="rect" id="Node000004" href="$classpot_1_1PotentialBruteForce.html#ae05c909a87a1b927a2a6465eda0078dc" title="calculates Coulomb forces between core zone molecules and all MM molecules" alt="" coords="304,144,514,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="658,320,612,260,582,229,548,203,516,188,515,182,550,199,585,225,616,257,663,320"/>
+<area shape="rect" id="Node000005" href="$classwaterModel_1_1InterWaterStrategyBruteForce.html#a5a3a8b728d79223187da44adc44d5fdf" title="Compute core&#45;to&#45;outer Coulomb interactions by brute force." alt="" coords="290,213,528,274"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="627,326,548,289,520,278,519,272,550,284,632,325"/>
+<area shape="rect" id="Node000006" href="$classpot_1_1PotentialBruteForce.html#a6fb3c0cc128aaa7fdc01ed0a70f62b02" title="calculates forces, coulombic and non&#45;coulombic energy for brute force routine" alt="" coords="320,299,498,343"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="579,344,500,335,498,330,584,342"/>
+<area shape="rect" id="Node000010" href="$classpot_1_1PotentialCellList.html#a026f84c4d5d9bd2d7c464466cd6c813a" title="calculates forces, coulombic and non&#45;coulombic energy for cell list routine" alt="" coords="331,368,488,413"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="579,370,489,383,487,378,584,367"/>
+<area shape="rect" id="Node000011" href="$classpot_1_1PotentialBruteForce.html#a62917ded88d7c109922d8de0dd947979" title="calculates forces between smoothing&#45;zone molecules and all others" alt="" coords="272,437,547,482"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="628,387,550,427,515,439,513,434,548,423,633,385"/>
+<area shape="rect" id="Node000012" href="$classwaterModel_1_1InterWaterStrategyBruteForce.html#ad417b6decdb9bf84f12d5f9df38a3eda" title="Compute smoothing&#45;zone interactions against MM molecules." alt="" coords="270,506,549,568"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="659,389,612,446,583,473,550,497,529,508,527,503,548,492,579,469,608,442,654,392"/>
+<area shape="rect" id="Node000013" href="$classpot_1_1PotentialBruteForce.html#a8af2b0f01b18dd3a599a77acd978b16f" title="calculates forces between layer and outer molecules" alt="" coords="301,592,518,637"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="672,391,655,437,629,488,594,539,551,582,519,599,517,594,547,578,590,536,624,486,650,435,668,395"/>
+<area shape="rect" id="Node000014" href="$classwaterModel_1_1InterWaterStrategyBruteForce.html#a5218b9b7bd5e70a38caaae29740717b6" title="Compute layer&#45;to&#45;outer Coulomb and non&#45;Coulomb interactions." alt="" coords="287,661,532,722"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="677,391,663,451,639,520,602,590,578,622,551,651,533,664,531,659,547,647,574,619,598,587,634,518,658,449,673,395"/>
+<area shape="rect" id="Node000007" href="$classpot_1_1PotentialBruteForce.html#ae0428af2e8ad4fbd7e3e3d18cb9abac2" title="calculates forces between outer&#45;zone molecules" alt="" coords="5,277,222,322"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="302,315,223,310,221,305,307,312"/>
+<area shape="rect" id="Node000008" href="$testBruteForceCellListEquivalence_8cpp.html#a5fdfa81292ff9f75e2f1093c684d073f" title=" " alt="" coords="87,346,140,374"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="303,337,141,359,139,354,306,333"/>
+<area shape="rect" id="Node000009" href="$testWaterModels_8cpp.html#a5eb7cb8c232608ccbf38fd3f31cff889" title=" " alt="" coords="87,398,140,426"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="303,345,271,358,247,373,223,387,180,401,142,410,139,405,179,396,221,383,244,368,269,353,307,341"/>
+<area shape="poly" id="edge10_Node000010_Node000008" title=" " alt="" coords="314,383,141,365,140,360,317,379"/>
+<area shape="poly" id="edge11_Node000010_Node000009" title=" " alt="" coords="314,399,141,412,140,407,317,395"/>
+<area shape="poly" id="edge13_Node000011_Node000009" title=" " alt="" coords="255,437,141,418,140,413,259,433"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classpot_1_1Potential.html" title="base class for all potential routines" alt="" coords="5,32,114,60"/>
+<area shape="rect" id="Node000001" href="$classpot_1_1PotentialBruteForce.html" title="brute force implementation of the potential" alt="" coords="162,5,340,33"/>
+<area shape="poly" id="edge128_Node000000_Node000001" title=" " alt="" coords="128,34,164,31,159,32,129,39"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1PotentialCellList.html" title="cell list implementation of the potential" alt="" coords="173,57,329,85"/>
+<area shape="poly" id="edge129_Node000000_Node000002" title=" " alt="" coords="129,52,175,60,170,61,129,58"/>
+</map>

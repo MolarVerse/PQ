@@ -1,0 +1,5 @@
+<map id="kernel::distVecAndDist2" name="kernel::distVecAndDist2">
+<area shape="rect" id="Node000001" title="Calculate the distance vector and the squared distance between two particles." alt="" coords="5,14,181,42"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="229,5,400,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,25,216,27,210,28,181,30"/>
+</map>

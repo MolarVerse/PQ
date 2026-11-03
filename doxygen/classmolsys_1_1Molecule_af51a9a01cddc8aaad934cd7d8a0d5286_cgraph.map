@@ -1,0 +1,5 @@
+<map id="molsys::Molecule::getAtomMasses" name="molsys::Molecule::getAtomMasses">
+<area shape="rect" id="Node000001" title="returns the atom masses of the atoms in the molecule" alt="" coords="5,5,205,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="253,5,469,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,25,240,27,235,28,205,30"/>
+</map>

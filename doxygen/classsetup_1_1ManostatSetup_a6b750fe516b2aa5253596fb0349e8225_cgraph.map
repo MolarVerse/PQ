@@ -1,0 +1,7 @@
+<map id="setup::ManostatSetup::validateIsotropyFixedAxisCombination" name="setup::ManostatSetup::validateIsotropyFixedAxisCombination">
+<area shape="rect" id="Node000001" title="validate isotropy and fixed_axis combination" alt="" coords="5,15,203,77"/>
+<area shape="rect" id="Node000002" href="$config_2enums_2manostat_8cpp.html#a5d6bf4c590db5571d69c04ba4901f947" title="gets the anisotropic axis for a given semi&#45;isotropic isotropy" alt="" coords="251,5,412,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,32,238,30,232,31,204,37"/>
+<area shape="rect" id="Node000003" href="$config_2enums_2manostat_8cpp.html#a86ff207a2166821895e9eea08300c499" title="checks if the given isotropy is semi&#45;isotropic" alt="" coords="271,57,392,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,54,258,63,253,63,203,60"/>
+</map>

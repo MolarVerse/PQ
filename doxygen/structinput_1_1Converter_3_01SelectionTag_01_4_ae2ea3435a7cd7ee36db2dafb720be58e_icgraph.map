@@ -1,0 +1,6 @@
+<map id="input::Converter&lt; SelectionTag &gt;::_parseSelectionNoPython" name="input::Converter&lt; SelectionTag &gt;::_parseSelectionNoPython">
+<area shape="rect" id="Node000001" title="parses a selection string without using Python" alt="" coords="255,29,487,74"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="413,14,398,10,371,8,346,10,330,15,324,21,325,30,321,27,319,19,328,10,345,5,371,3,399,5,418,14"/>
+<area shape="rect" id="Node000002" href="$structinput_1_1Converter_3_01SelectionTag_01_4.html#a66b666c8a77e44b41ef66cd0ab4334ec" title="attempts to parse a SelectionTag from a raw input&#45;file token" alt="" coords="5,29,207,74"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="236,52,207,54,207,49,242,51"/>
+</map>

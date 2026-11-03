@@ -1,0 +1,5 @@
+<map id="TestTopologyReader" name="TestTopologyReader">
+<area shape="rect" id="Node000001" title="Fixture class for testing the TopologyReader class." alt="" coords="5,126,146,243"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="31,5,120,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,90,78,126,73,125,75,95"/>
+</map>

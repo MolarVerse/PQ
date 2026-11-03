@@ -1,0 +1,7 @@
+<map id="resetKinetics::ResetKinetics::resetMomentum" name="resetKinetics::ResetKinetics::resetMomentum">
+<area shape="rect" id="Node000001" title="reset the momentum of the system" alt="" coords="5,40,209,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="257,5,428,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,45,244,42,239,43,210,50"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a24ac3c9aa6ebdbd6e94217858fc196a6" title="get the total mass" alt="" coords="257,75,428,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,75,244,82,239,82,209,80"/>
+</map>

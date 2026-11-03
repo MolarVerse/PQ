@@ -1,0 +1,15 @@
+<map id="configurator::HybridConfigurator::calculateSmoothingFactors" name="configurator::HybridConfigurator::calculateSmoothingFactors">
+<area shape="rect" id="Node000001" title="Calculate smoothing factors for molecules in the smoothing region." alt="" coords="5,109,236,154"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="313,5,484,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,106,283,60,306,54,302,56,285,65,173,111"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#a012ead724b28803dad533a139ddd0749" title="get the layerRadius" alt="" coords="310,75,488,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,115,297,109,292,111,237,120"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBoxView.html#a296966f2d8061b780b5cd28fea32585a" title="get all molecules in the specified hybrid zone using range&#45;based filtering" alt="" coords="297,144,500,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="236,143,284,151,279,152,236,149"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1HybridSettings.html#abee55e05df21480e2376937354bd582a" title="get the smoothingRegionThickness" alt="" coords="284,213,514,258"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="172,152,285,199,307,208,301,208,283,203,171,157"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="562,115,765,159"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="501,152,549,150,544,150,502,158"/>
+<area shape="rect" id="Node000006" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="607,183,720,211"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="501,175,594,189,589,189,501,181"/>
+</map>

@@ -1,0 +1,15 @@
+<map id="input::parameterFile::NonCoulombicsSection::processSection" name="input::parameterFile::NonCoulombicsSection::processSection">
+<area shape="rect" id="Node000001" title="determines which nonCoulombic type is processed" alt="" coords="5,117,185,178"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#af2c3c43e59617c43ae4b2820a86644ee" title="get the nonCoulomb type" alt="" coords="233,5,425,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,114,183,86,231,60,248,55,243,58,234,65,186,91,143,118"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#a9b389a106d12641273f70722cd3e82de" title="processes the buckingham nonCoulombics section of the parameter file and adds the buckingham pair to ..." alt="" coords="239,74,418,136"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="184,129,226,123,221,126,186,134"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#abe1cc5b51c61b60df9d68dd8a5a310af" title="processes the LJ nonCoulombics section of the parameter file and adds the LJ pair to the nonCoulombic..." alt="" coords="239,160,418,221"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="185,161,226,170,221,172,185,167"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#a3cdf7a6638f194c63373e55a5a350170" title="processes the morse nonCoulombics section of the parameter file and adds the morse pair to the nonCou..." alt="" coords="239,245,418,306"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="143,176,234,231,244,238,239,237,231,235,142,181"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="473,168,666,213"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="418,134,493,162,488,163,418,139"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="419,188,460,190,455,191,419,193"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="417,242,488,219,493,218,419,247"/>
+</map>

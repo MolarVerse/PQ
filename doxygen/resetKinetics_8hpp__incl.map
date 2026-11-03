@@ -1,0 +1,19 @@
+<map id="/home/runner/work/PQ/PQ/include/resetKinetics/resetKinetics.hpp" name="/home/runner/work/PQ/PQ/include/resetKinetics/resetKinetics.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="68,5,252,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="82,191,152,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,65,122,116,118,146,117,176,112,175,113,146,117,114,139,70"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,266,128,294"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,70,102,124,85,157,73,191,68,222,67,252,62,250,63,221,68,190,81,155,97,121,137,65"/>
+<area shape="rect" id="Node000004" href="$resetKineticsSettings_8hpp.html" title=" " alt="" coords="132,115,319,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="182,65,209,102,204,102,181,70"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="343,115,449,143"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="238,65,350,108,345,110,238,70"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="204,145,150,184,147,180,208,142"/>
+<area shape="rect" id="Node000005" href="$setting_8hpp.html" title=" " alt="" coords="177,191,271,218"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="226,141,227,176,222,174,223,145"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="198,219,109,262,107,257,193,219"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="279,266,353,294"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="241,216,291,257,285,257,239,221"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="164,266,255,294"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="223,217,217,253,213,249,219,221"/>
+</map>

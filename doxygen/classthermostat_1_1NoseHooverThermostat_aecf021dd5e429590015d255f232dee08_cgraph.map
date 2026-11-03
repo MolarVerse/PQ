@@ -1,0 +1,9 @@
+<map id="thermostat::NoseHooverThermostat::_requireCoupling" name="thermostat::NoseHooverThermostat::_requireCoupling">
+<area shape="rect" id="Node000001" title="throw if the Nose&#45;Hoover equations divide by zero" alt="" coords="5,40,262,85"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html#a26fb0d7a4c3963b728c80d2855e6eb30" title="throw if the system has no degrees of freedom" alt="" coords="310,5,518,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,44,297,42,291,43,263,49"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1Thermostat.html#a964bb4a1a5668c8986503793e73dcf2f" title="get target temperature" alt="" coords="326,75,502,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,76,313,84,308,84,262,81"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a2c10e2ba2e99e7ebd66e68966d45f0b6" title="Get degrees of freedom." alt="" coords="566,5,742,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="518,25,553,27,547,28,519,30"/>
+</map>

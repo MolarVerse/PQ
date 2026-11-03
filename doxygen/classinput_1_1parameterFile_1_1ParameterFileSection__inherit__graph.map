@@ -1,0 +1,17 @@
+<map id="input::parameterFile::ParameterFileSection" name="input::parameterFile::ParameterFileSection">
+<area shape="rect" id="Node000001" title="base class for reading parameter file sections" alt="" coords="502,5,688,229"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1parameterFile_1_1AngleSection.html" title="reads angle section of parameter file" alt="" coords="5,310,148,444"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="486,142,412,164,327,193,241,231,161,279,124,312,121,309,158,275,239,227,326,188,411,159,491,139"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1parameterFile_1_1BondSection.html" title="reads bond section of parameter file" alt="" coords="172,310,315,444"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="488,171,408,220,328,279,294,312,291,308,324,275,406,215,492,168"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1parameterFile_1_1DihedralSection.html" title="reads dihedral section of parameter file" alt="" coords="339,310,481,444"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="510,239,459,312,455,308,505,242"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1parameterFile_1_1ImproperDihedralSection.html" title="reads improper dihedral section of parameter file" alt="" coords="505,310,686,444"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="597,242,598,312,593,309,594,246"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1parameterFile_1_1JCouplingSection.html" title="reads j&#45;coupling section of parameter file" alt="" coords="709,310,852,444"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="684,238,736,311,731,310,682,243"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html" title="reads non&#45;coulombics section of parameter file" alt="" coords="876,277,1045,478"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="701,169,784,218,866,275,879,287,874,286,863,279,782,222,700,174"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1parameterFile_1_1TypesSection.html" title="reads types line section of parameter file" alt="" coords="1069,299,1212,455"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="703,135,785,156,877,185,971,224,1058,274,1086,300,1081,299,1055,279,968,229,875,190,784,161,703,141"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="TestTopologyReader::SetUp" name="TestTopologyReader::SetUp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,28,157,72"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="205,5,407,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,37,192,34,187,36,158,42"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#a9a60c94e1cf1fe20f039c517a5d2d30c" title="set the topology file name flag to is set" alt="" coords="205,57,406,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="157,57,192,64,187,64,157,62"/>
+</map>

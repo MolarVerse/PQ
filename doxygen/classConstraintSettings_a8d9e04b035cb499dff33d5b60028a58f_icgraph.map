@@ -1,0 +1,5 @@
+<map id="ConstraintSettings::activateShakeForWaterModel" name="ConstraintSettings::activateShakeForWaterModel">
+<area shape="rect" id="Node000001" title="activate the shake algorithm only for the water model" alt="" coords="195,5,414,50"/>
+<area shape="rect" id="Node000002" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="5,5,147,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,28,147,30,147,25,182,27"/>
+</map>

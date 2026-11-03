@@ -1,0 +1,13 @@
+<map id="/home/runner/work/PQ/PQ/include/thermostat/thermostat.hpp" name="/home/runner/work/PQ/PQ/include/thermostat/thermostat.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="43,5,213,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,75,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,70,66,105,61,102,100,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,115,157,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,65,131,100,125,98,127,70"/>
+<area shape="rect" id="Node000004" href="$config_2enums_2thermostat_8hpp.html" title=" " alt="" coords="181,115,350,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="174,65,236,106,230,107,173,70"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="173,191,238,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="257,142,227,181,224,176,252,144"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="262,191,386,218"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="277,141,307,179,302,178,275,146"/>
+</map>

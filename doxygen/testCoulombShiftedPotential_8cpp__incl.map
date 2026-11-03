@@ -1,0 +1,22 @@
+<map id="/home/runner/work/PQ/PQ/tests/src/potential/coulomb/testCoulombShiftedPotential.cpp" name="/home/runner/work/PQ/PQ/tests/src/potential/coulomb/testCoulombShiftedPotential.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="89,5,388,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,124,109,151"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,70,96,118,92,114,184,65"/>
+<area shape="rect" id="Node000003" href="$internalConversionFactors_8hpp.html" title=" " alt="" coords="133,115,344,160"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,65,241,100,236,99,237,70"/>
+<area shape="rect" id="Node000007" href="$coulombShiftedPotential_8hpp.html" title=" " alt="" coords="368,124,576,151"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="310,65,430,116,425,118,310,70"/>
+<area shape="rect" id="Node000004" href="$conversionFactors_8hpp.html" title=" " alt="" coords="62,208,228,235"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="212,162,173,199,169,195,216,158"/>
+<area shape="rect" id="Node000006" href="$natureConstants_8hpp.html" title=" " alt="" coords="183,283,339,311"/>
+<area shape="poly" id="edge7_Node000003_Node000006" title=" " alt="" coords="243,158,260,268,254,267,240,162"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="171,359,234,387"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="149,234,173,310,189,346,184,345,168,312,146,238"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="166,233,230,274,225,275,165,239"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="253,310,224,349,221,345,248,313"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="415,283,475,311"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="461,150,442,178,426,208,424,224,425,239,434,271,429,268,420,240,418,223,421,207,437,175,457,153"/>
+<area shape="rect" id="Node000009" href="$coulombPotential_8hpp.html" title=" " alt="" coords="435,208,599,235"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="480,149,505,195,500,193,478,154"/>
+<area shape="poly" id="edge11_Node000009_Node000008" title=" " alt="" coords="506,235,470,274,467,270,502,237"/>
+</map>

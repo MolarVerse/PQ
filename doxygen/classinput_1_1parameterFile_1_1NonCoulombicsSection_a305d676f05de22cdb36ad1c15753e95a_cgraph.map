@@ -1,0 +1,7 @@
+<map id="input::parameterFile::NonCoulombicsSection::processHeader" name="input::parameterFile::NonCoulombicsSection::processHeader">
+<area shape="rect" id="Node000001" title="processes the nonCoulombics header of the parameter file" alt="" coords="5,28,185,89"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a6935a9847e4069ed5d2f14bba7a09f00" title="Set the nonCoulomb type as enum in the PotentialSettings class." alt="" coords="233,5,425,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,44,220,42,214,43,186,49"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="247,74,410,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,67,234,75,229,76,185,72"/>
+</map>

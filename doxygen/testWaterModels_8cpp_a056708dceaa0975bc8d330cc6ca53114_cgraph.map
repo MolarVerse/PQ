@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,59,111"/>
+<area shape="rect" id="Node000002" href="$classwaterModel_1_1SPCFwIntraWater.html#af769d83e1626b3aabc23d6f81167a3e4" title=" " alt="" coords="107,5,325,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,82,106,60,127,54,123,57,108,65,61,86"/>
+<area shape="rect" id="Node000003" href="$classwaterModel_1_1SPCFwIntraWater.html#a53a1743d3301ddea37642b4f91c4bbec" title=" " alt="" coords="107,75,325,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,94,93,95,89,99,60,100"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1HybridSettings.html#a0c47f38d42531459cb1413e944e90ca2" title="set the smoothing method in the settings" alt="" coords="127,144,304,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,108,108,129,127,138,122,139,106,134,59,113"/>
+</map>

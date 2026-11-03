@@ -1,0 +1,5 @@
+<map id="input::InputRegistry::registerDeprecatedKey" name="input::InputRegistry::registerDeprecatedKey">
+<area shape="rect" id="Node000001" title="Registers a deprecated input key." alt="" coords="5,5,184,50"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1DeprecatedInputKey.html#a88a2d6571f80cda6a5ba93e546dd2c03" title="returns the key of the deprecated input key" alt="" coords="232,5,426,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,25,219,27,213,28,184,30"/>
+</map>

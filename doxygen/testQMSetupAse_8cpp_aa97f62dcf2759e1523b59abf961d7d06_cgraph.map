@@ -1,0 +1,9 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a2671605035a4dc70a47f92420e241791" title="sets the slakosPath in settings" alt="" coords="122,5,278,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,52,109,46,105,49,75,57"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#a5240619fa30e80decda4cb0c87adbec6" title="sets the slakosType to enum in settings" alt="" coords="122,75,278,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,67,109,76,104,78,74,72"/>
+<area shape="rect" id="Node000003" href="$structSlakosTypeMeta.html#a0e6a1eceb0020c75fb0008b839b6845b" title=" " alt="" coords="326,14,511,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="278,25,313,27,308,28,279,30"/>
+</map>

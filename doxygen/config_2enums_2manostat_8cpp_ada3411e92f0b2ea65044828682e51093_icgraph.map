@@ -1,0 +1,9 @@
+<map id="get2DIsotropicAxes" name="get2DIsotropicAxes">
+<area shape="rect" id="Node000001" title="gets the isotropic axes for a given semi&#45;isotropic isotropy" alt="" coords="419,48,566,76"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1SemiIsotropicBerendsenManostat.html#a8b89563b256cb7dae1a2c3059606a98a" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="122,5,371,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="401,50,371,48,371,43,406,50"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="123,75,370,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="406,74,371,82,370,77,401,75"/>
+<area shape="rect" id="Node000004" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="5,83,74,111"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="105,98,74,100,74,94,110,96"/>
+</map>

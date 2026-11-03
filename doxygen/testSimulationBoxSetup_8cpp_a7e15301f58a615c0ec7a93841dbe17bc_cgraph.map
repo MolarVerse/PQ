@@ -1,0 +1,27 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,133,74,161"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a5b9c06df8d1c8f7cf0f20e1e0268df9d" title="Set the Coulomb radius cut off in the PotentialSettings class." alt="" coords="124,56,316,100"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,131,121,110,140,104,137,108,123,115,75,135"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#ab9d6df0284199e5902141b5fd7891dbd" title="set the start file name" alt="" coords="142,125,299,170"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,145,128,145,124,149,75,150"/>
+<area shape="rect" id="Node000004" href="$classsetup_1_1SimulationBoxSetup.html#a2edff668bc866fab74ccd9783bb3c646" title="write setup info to log file" alt="" coords="122,194,319,239"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,159,123,179,141,187,136,189,121,184,74,164"/>
+<area shape="rect" id="Node000005" href="$classsetup_1_1SetupBase.html#a362d3b56078a056d79b12450cf15b13b" title="Writes a setup warning to the log and stdout." alt="" coords="390,56,541,100"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="299,191,317,180,333,163,341,146,349,128,365,110,374,108,378,105,369,115,353,131,345,148,337,166,321,184,301,196"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="369,125,562,170"/>
+<area shape="poly" id="edge9_Node000004_Node000009" title=" " alt="" coords="301,191,372,173,367,175,303,196"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1FileSettings.html#ac98cb135ddaf0981954b758332fae25a" title="Get the start file name." alt="" coords="387,194,544,239"/>
+<area shape="poly" id="edge10_Node000004_Node000010" title=" " alt="" coords="319,214,374,216,369,217,320,219"/>
+<area shape="rect" id="Node000011" href="$classsetup_1_1SimulationBoxSetup.html#aefee9580f5dfc37bcbb810a262f7cf09" title="returns if the velocities in the start file are zero" alt="" coords="612,284,810,328"/>
+<area shape="poly" id="edge11_Node000004_Node000011" title=" " alt="" coords="313,237,368,249,599,289,594,291,366,254,313,242"/>
+<area shape="rect" id="Node000012" href="$classsetup_1_1SimulationBoxSetup.html#a0069b7e639b1dae75014cadb59afc028" title="Initialize the velocities of the simulation box." alt="" coords="367,314,564,359"/>
+<area shape="poly" id="edge12_Node000004_Node000012" title=" " alt="" coords="262,237,368,293,397,308,392,307,366,298,261,242"/>
+<area shape="rect" id="Node000006" href="$classout_1_1LogOutput.html#a5deed49b92569a735e96b4ad626cb2c7" title="write a message to issue a warning about the setup" alt="" coords="613,21,809,66"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="541,65,600,58,595,60,543,70"/>
+<area shape="rect" id="Node000008" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="639,90,783,135"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="542,86,626,100,621,101,542,91"/>
+<area shape="rect" id="Node000007" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="858,29,1057,57"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="809,41,845,43,839,44,809,46"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="915,28,909,20,914,11,930,5,957,3,986,5,1003,14,998,14,985,10,957,8,932,10,917,15,914,20,920,30"/>
+<area shape="poly" id="edge13_Node000012_Node000011" title=" " alt="" coords="564,322,594,320,599,320,565,327"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="settings::FileSettings::setIsParameterFileNameSet" name="settings::FileSettings::setIsParameterFileNameSet">
+<area shape="rect" id="Node000001" title="set the parameter file name flag to is set" alt="" coords="663,187,874,231"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1FilesInputParser.html#ab37f1bccd2aac0379e279cf697df66ac" title="Adds the parameter_file keyword to the parser." alt="" coords="440,5,607,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="736,174,683,120,650,90,614,65,593,53,594,48,617,60,653,86,687,116,741,175"/>
+<area shape="rect" id="Node000005" href="$classTestParameterFileReader.html#a5312cd73e7ee88284591f2dfeb178904" title=" " alt="" coords="432,75,615,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="709,179,614,134,587,122,587,117,616,129,714,179"/>
+<area shape="rect" id="Node000006" href="$testParameterFileReader_8cpp.html#a6819237f01bb071aa5688ee6bd63d60b" title="tests that reading a non&#45;existent file does not throw and simply leaves all sections unconsumed,..." alt="" coords="490,143,558,171"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="645,184,558,167,558,161,651,183"/>
+<area shape="rect" id="Node000007" href="$testParameterFileReader_8cpp.html#a02f9f3f7ba65c4f6e1d9230da68405aa" title="tests read function successfully parses all sections and that every section is consumed exactly once ..." alt="" coords="490,195,558,223"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="645,209,558,212,558,206,650,209"/>
+<area shape="rect" id="Node000008" href="$testParameterFileReader_8cpp.html#a2d5647659099e6f18fc8f4891e81d442" title="tests that reading a parameter file with a duplicated section keyword throws, since the section is de..." alt="" coords="490,247,558,275"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="645,235,559,256,558,251,651,234"/>
+<area shape="rect" id="Node000009" href="$testParameterFileReader_8cpp.html#a9892375c477340abfc53b206455ab3a5" title="tests that reading a parameter file with an unknown section keyword throws" alt="" coords="490,299,558,327"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="717,238,616,289,559,307,557,302,614,284,712,240"/>
+<area shape="rect" id="Node000010" href="$testParameterFileReader_8cpp.html#a56f336f74c6094ed4ba8415e07041a1d" title="tests that lines starting with a comment character are ignored and the rest of the line is still pars..." alt="" coords="490,351,558,379"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="738,242,684,294,651,319,617,341,588,353,559,361,558,356,586,348,614,336,648,315,680,290,733,244"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1FilesInputParser.html#a510068c8179ed4147725f56973b55854" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="219,5,384,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="422,29,385,30,384,25,427,27"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1FilesInputParser.html#ae5d451f65ab02a0d717850cc3c8e8f89" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="5,5,171,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="201,29,173,30,170,25,206,26"/>
+</map>

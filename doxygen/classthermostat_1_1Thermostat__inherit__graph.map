@@ -1,0 +1,11 @@
+<map id="thermostat::Thermostat" name="thermostat::Thermostat">
+<area shape="rect" id="Node000001" title="Thermostat is a base class for all thermostats." alt="" coords="397,5,613,413"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1BerendsenThermostat.html" title="BerendsenThermostat." alt="" coords="5,572,240,756"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="385,319,320,388,254,462,213,518,177,574,172,571,209,515,250,459,316,384,389,315"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1LangevinThermostat.html" title=" " alt="" coords="264,494,488,834"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="445,424,427,496,422,493,442,429"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1NoseHooverThermostat.html" title="this class implements the Nose&#45;Hoover thermostat" alt="" coords="512,461,758,868"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="568,424,579,462,574,460,566,429"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1VelocityRescalingThermostat.html" title="this class implements the velocity rescaling thermostat and inherits from the Thermostat class" alt="" coords="781,497,1019,832"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="625,309,700,381,771,459,800,498,795,497,767,462,697,385,624,315"/>
+</map>

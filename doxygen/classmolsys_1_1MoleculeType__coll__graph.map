@@ -1,0 +1,38 @@
+<map id="molsys::MoleculeType" name="molsys::MoleculeType">
+<area shape="rect" id="Node000001" title="containing all information about a molecule type" alt="" coords="626,491,845,804"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="31,152,107,225"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,227,31,264,17,308,13,331,14,353,19,374,29,394,55,427,85,458,152,509,227,551,307,582,388,606,468,623,542,634,612,642,607,643,542,639,467,628,387,611,305,588,225,555,149,514,81,462,51,431,25,397,14,376,9,354,8,330,12,307,26,262,48,222"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="96,315,271,387"/>
+<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="94,222,152,300,146,302,94,227"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,133,95"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,107,72,153,67,153,69,112"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="295,306,435,396"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="384,393,406,431,433,465,474,502,520,535,614,591,608,592,517,539,471,506,429,469,402,434,383,398"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="459,315,591,387"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="516,385,513,427,515,447,521,466,539,497,561,525,615,575,610,575,557,528,534,500,516,468,509,448,507,427,513,389"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="615,315,643,387"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="641,385,669,466,672,476,667,474,664,468,639,390"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="667,315,805,387"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="737,384,738,475,733,473,734,389"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="209,384,248,426,293,465,371,511,454,551,536,583,613,611,608,612,534,588,452,556,369,516,290,469,244,430,210,389"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="828,315,1003,387"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="914,385,907,427,892,468,857,523,854,519,887,466,902,426,910,389"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="934,144,1074,233"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="978,231,963,259,941,301,937,298,959,256,974,235"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="1027,306,1200,396"/>
+<area shape="poly" id="edge19_Node000017_Node000010" title=" " alt="" coords="1034,231,1077,293,1071,292,1033,236"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="1223,315,1419,387"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="1303,385,1271,430,1229,469,1140,523,1043,566,948,599,862,623,861,618,947,594,1041,561,1137,518,1226,465,1267,427,1298,388"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="1174,144,1314,233"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1266,231,1299,300,1294,299,1264,236"/>
+<area shape="poly" id="edge18_Node000017_Node000012" title=" " alt="" coords="1211,232,1161,295,1158,291,1206,235"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="1443,315,1632,387"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="1514,386,1476,431,1452,452,1427,469,1357,506,1283,537,1207,563,1131,585,986,617,862,636,861,631,985,612,1130,580,1206,558,1281,532,1354,501,1424,465,1449,447,1472,427,1510,388"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="1467,144,1607,233"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1539,231,1539,299,1535,296,1536,235"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="1655,315,1809,387"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="1725,385,1707,431,1693,452,1675,469,1647,487,1612,503,1526,533,1421,559,1305,582,1067,616,863,638,862,633,1066,611,1304,576,1420,554,1524,528,1610,498,1644,482,1672,465,1689,448,1702,428,1721,388"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="1704,152,1759,225"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="1733,223,1734,299,1730,296,1730,227"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="1077,394,1003,469,933,523,861,573,858,568,929,519,999,465,1073,397"/>
+</map>

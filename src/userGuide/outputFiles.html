@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Output Files &mdash; PQ [] documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
 
@@ -22,7 +22,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
+    <link rel="next" title="PQ Bot" href="pqBot.html" />
     <link rel="prev" title="Setup Files" href="setupFiles.html" /> 
 </head>
 
@@ -78,11 +78,13 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="pqBot.html">PQ Bot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developerGuide/developerGuide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../apiReference/apiReference.html">API Reference</a></li>
 </ul>
 
         </div>
@@ -154,7 +156,7 @@ of the atom type (as given in the <a class="reference internal" href="setupFiles
 <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">timestep</span> <span class="pre">=</span> <span class="pre">&lt;value&gt;</span> <span class="pre">fs</span></code> comment. By default, the first line remains numeric.</p>
 <p>Stores information about the energy and various other quantities of the system for every frame in the following format:</p>
 <blockquote>
-<div><p>step_number <em>T</em> <em>P</em> <em>E</em><sub>tot</sub> <em>E</em><sub>QM</sub> <em>N</em><sub>QM-atoms</sub> <em>E</em><sub>kin</sub> <em>E</em><sub>intra</sub> <em>E</em><sub>Coulomb</sub> <em>E</em><sub>non-Coulomb</sub> <em>E</em><sub>bond</sub> <em>E</em><sub>angle</sub> <em>E</em><sub>dihedral</sub> <em>E</em><sub>improper</sub> <em>V</em> <em>ρ</em> <em>E</em><sub>p-NH</sub> <em>E</em><sub>χ-NH</sub> <em>r</em><sub>lower</sub> <em>r</em><sub>upper</sub> <em>p</em> looptime</p>
+<div><p>step_number <em>T</em> <em>P</em> <em>E</em><sub>tot</sub> <em>E</em><sub>QM</sub> <em>N</em><sub>QM-atoms</sub> <em>E</em><sub>kin</sub> <em>E</em><sub>intra</sub> <em>E</em><sub>Coulomb</sub> <em>E</em><sub>non-Coulomb</sub> <em>E</em><sub>bond</sub> <em>E</em><sub>angle</sub> <em>E</em><sub>dihedral</sub> <em>E</em><sub>improper</sub> <em>N</em><sub>SM-mol</sub> <em>E</em><sub>QM-ref</sub> <em>V</em> <em>ρ</em> <em>P</em><sub>coupled</sub> <em>E</em><sub>p-NH</sub> <em>E</em><sub>χ-NH</sub> <em>r</em><sub>lower</sub> <em>r</em><sub>upper</sub> <em>p</em> looptime</p>
 </div></blockquote>
 <table class="docutils align-default">
 <colgroup>
@@ -192,7 +194,7 @@ of the atom type (as given in the <a class="reference internal" href="setupFiles
 <td><p>A</p></td>
 </tr>
 <tr class="row-even"><td><p><em>E</em><sub>QM</sub></p></td>
-<td><p>quantum mechanical energy</p></td>
+<td><p>quantum mechanical energy minus <em>E</em><sub>QM-ref</sub></p></td>
 <td><p>kcal/mol</p></td>
 <td><p>QM</p></td>
 </tr>
@@ -241,6 +243,16 @@ of the atom type (as given in the <a class="reference internal" href="setupFiles
 <td><p>kcal/mol</p></td>
 <td><p>MM*</p></td>
 </tr>
+<tr class="row-even"><td><p><em>N</em><sub>SM-mol</sub></p></td>
+<td><p>number of molecules in the smoothing region</p></td>
+<td><p>-</p></td>
+<td><p>QM/MM</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>E</em><sub>QM-ref</sub></p></td>
+<td><p>sum of the subtracted QM reference energies (see <a class="reference internal" href="setupFiles.html#moldescriptorfile"><span class="std std-ref">Moldescriptor</span></a>)</p></td>
+<td><p>kcal/mol</p></td>
+<td><p>QM/MM</p></td>
+</tr>
 <tr class="row-even"><td><p><em>V</em></p></td>
 <td><p>volume</p></td>
 <td><p>Å³</p></td>
@@ -251,32 +263,37 @@ of the atom type (as given in the <a class="reference internal" href="setupFiles
 <td><p>g/cm³</p></td>
 <td><p>P</p></td>
 </tr>
-<tr class="row-even"><td><p><em>E</em><sub>p-NH</sub></p></td>
+<tr class="row-even"><td><p><em>P</em><sub>coupled</sub></p></td>
+<td><p>pressure of the non-fixed (coupled) axes</p></td>
+<td><p>bar</p></td>
+<td><p>P*</p></td>
+</tr>
+<tr class="row-odd"><td><p><em>E</em><sub>p-NH</sub></p></td>
 <td><p>momentum energy of the Nose Hoover chain thermostat</p></td>
 <td><p>kcal/mol</p></td>
 <td><p>NH</p></td>
 </tr>
-<tr class="row-odd"><td><p><em>E</em><sub>χ-NH</sub></p></td>
+<tr class="row-even"><td><p><em>E</em><sub>χ-NH</sub></p></td>
 <td><p>friction energy of the Nose Hoover chain thermostat</p></td>
 <td><p>kcal/mol</p></td>
 <td><p>NH</p></td>
 </tr>
-<tr class="row-even"><td><p><em>r</em><sub>lower</sub></p></td>
+<tr class="row-odd"><td><p><em>r</em><sub>lower</sub></p></td>
 <td><p>lower bound of the distance constraints</p></td>
 <td><p>Å</p></td>
 <td><p>DC</p></td>
 </tr>
-<tr class="row-odd"><td><p><em>r</em><sub>upper</sub></p></td>
+<tr class="row-even"><td><p><em>r</em><sub>upper</sub></p></td>
 <td><p>upper bound of the distance constraints</p></td>
 <td><p>Å</p></td>
 <td><p>DC</p></td>
 </tr>
-<tr class="row-even"><td><p><em>p</em></p></td>
+<tr class="row-odd"><td><p><em>p</em></p></td>
 <td><p>total momentum</p></td>
 <td><p>amu Å/fs</p></td>
 <td><p>A</p></td>
 </tr>
-<tr class="row-odd"><td><p>looptime</p></td>
+<tr class="row-even"><td><p>looptime</p></td>
 <td><p>time taken to complete the full MD simulation step</p></td>
 <td><p>s</p></td>
 <td><p>A</p></td>
@@ -291,8 +308,10 @@ of the atom type (as given in the <a class="reference internal" href="setupFiles
 <div class="line"><strong>A</strong>:   Always printed</div>
 <div class="line"><strong>QM</strong>:  Only printed if QM atoms are present</div>
 <div class="line"><strong>MM</strong>:  Only printed if MM atoms are present</div>
+<div class="line"><strong>QM/MM</strong>: Only printed for QM/MM calculations</div>
 <div class="line"><strong>MM*</strong>: Only printed if MM atoms are present, which are not treated by the <a class="reference internal" href="setupFiles.html#guffdatfile"><span class="std std-ref">GUFF File</span></a></div>
 <div class="line"><strong>P</strong>:   Only printed if pressure coupling is enabled <em>via</em> the <a class="reference internal" href="inputFile.html#pressurecouplingkeys"><span class="std std-ref">Pressure Coupling Keys</span></a> in the <code class="docutils literal notranslate"><span class="pre">.in</span></code> file</div>
+<div class="line"><strong>P*</strong>:  Only printed if pressure coupling is enabled and at least one axis is fixed (<em>via</em> the <a class="reference internal" href="inputFile.html#fixedaxiskey"><span class="std std-ref">Fixed Axis</span></a> key in the <code class="docutils literal notranslate"><span class="pre">.in</span></code> file)</div>
 <div class="line"><strong>NH</strong>:  Only printed if the Nose Hoover chain thermostat is enabled <em>via</em> the <a class="reference internal" href="inputFile.html#thermostatkey"><span class="std std-ref">Thermostat</span></a> key in the <code class="docutils literal notranslate"><span class="pre">.in</span></code> file</div>
 <div class="line"><strong>DC</strong>:  Only printed if distance constraints are applied</div>
 </div>
@@ -491,13 +510,13 @@ of the index denotes the lattice parameter (<em>a</em>, <em>b</em>, <em>c</em>),
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="setupFiles.html" class="btn btn-neutral float-left" title="Setup Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pqBot.html" class="btn btn-neutral float-right" title="PQ Bot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Jakob Gamper.</p>
+    <p>&#169; Copyright 2023-now, Jakob Gamper.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

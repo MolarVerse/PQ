@@ -1,0 +1,5 @@
+<map id="input::checkCommand" name="input::checkCommand">
+<area shape="rect" id="Node000001" title="check if command array has exactly 3 elements" alt="" coords="5,5,173,33"/>
+<area shape="rect" id="Node000002" href="$namespaceinput.html#a8fc649b2b4f96d20ce57f574e388bf8f" title="check if parameter is &quot;=&quot;" alt="" coords="221,5,385,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,17,208,19,203,19,173,22"/>
+</map>

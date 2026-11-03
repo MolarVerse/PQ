@@ -1,0 +1,27 @@
+<map id="setup::ConstraintsSetup::setupMShake" name="setup::ConstraintsSetup::setupMShake">
+<area shape="rect" id="Node000001" title="setup M&#45;SHAKE" alt="" coords="1171,154,1348,199"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1ConstraintsSetup.html#a2372d212b6be4df2d94fbe99c60280ed" title="sets constraints data in constraints object" alt="" coords="947,154,1123,199"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1153,177,1124,179,1124,174,1159,176"/>
+<area shape="rect" id="Node000003" href="$namespacesetup.html#a840c32566a76797a3f7a62301f16ce32" title="constructs a new Constraints Setup:: Constraints Setup object and calls setup" alt="" coords="724,84,899,112"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="961,148,898,127,861,115,861,110,900,122,966,148"/>
+<area shape="rect" id="Node000011" href="$testConstraintsSetup_8cpp.html#a9dc71578fbcd6ab8f0ce05e24b9efdfb" title="tests that setup() calculates the shake reference bond vector and reduces the degrees of freedom by t..." alt="" coords="777,136,846,164"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="929,164,846,157,846,151,934,164"/>
+<area shape="rect" id="Node000012" href="$testConstraintsSetup_8cpp.html#a5b9c0f01b3bd8bcf8ab21ceb655b0d7c" title="tests that setup() is a no&#45;op with respect to constraints and degrees of freedom when neither shake n..." alt="" coords="777,188,846,216"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="934,188,846,201,846,195,929,188"/>
+<area shape="rect" id="Node000013" href="$testConstraintsSetup_8cpp.html#a440b20ee4eabeb795e86f00e7f3d2d9b" title="tests that setup() reads the M&#45;Shake file, initializes M&#45;Shake and reduces the degrees of freedom by ..." alt="" coords="777,240,846,268"/>
+<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="963,204,900,230,847,247,846,241,898,225,958,205"/>
+<area shape="rect" id="Node000004" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="530,32,676,60"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="735,80,662,63,662,58,741,79"/>
+<area shape="rect" id="Node000009" href="$testConstraintsSetup_8cpp.html#a595a9e04e542de4ee20fc89f57dd3e91" title="tests that the setupConstraints wrapper function delegates to ConstraintsSetup and reduces the degree..." alt="" coords="569,84,637,112"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="706,98,638,100,637,95,711,97"/>
+<area shape="rect" id="Node000010" href="$testConstraintsSetup_8cpp.html#a022f23a342130a76a7ffee2bbe251e35" title="tests that the setupConstraints wrapper function does not touch the degrees of freedom when no constr..." alt="" coords="569,136,637,164"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="741,115,638,144,637,139,735,117"/>
+<area shape="rect" id="Node000005" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,32,482,60"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="512,46,483,48,482,43,518,45"/>
+<area shape="rect" id="Node000006" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,32,244,60"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="274,47,245,48,244,43,279,45"/>
+<area shape="rect" id="Node000007" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="90,32,61,27,59,22,94,29"/>
+<area shape="rect" id="Node000008" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,57,60,85"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="90,63,62,69,59,64,94,59"/>
+</map>

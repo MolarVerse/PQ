@@ -1,0 +1,8 @@
+<map id="/home/runner/work/PQ/PQ/include/potential/coulomb/coulombShiftedPotential.hpp" name="/home/runner/work/PQ/PQ/include/potential/coulomb/coulombShiftedPotential.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,278,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="112,191,171,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,65,111,104,109,123,111,142,126,178,121,177,106,143,103,123,106,103,121,70"/>
+<area shape="rect" id="Node000003" href="$coulombPotential_8hpp.html" title=" " alt="" coords="120,115,283,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,65,187,102,182,102,161,70"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="193,142,164,180,160,176,188,144"/>
+</map>

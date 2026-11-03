@@ -1,0 +1,5 @@
+<map id="thermostat::NoseHooverThermostat" name="thermostat::NoseHooverThermostat">
+<area shape="rect" id="Node000001" title="this class implements the Nose&#45;Hoover thermostat" alt="" coords="5,461,251,868"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="20,5,236,413"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,425,131,461,126,460,128,430"/>
+</map>

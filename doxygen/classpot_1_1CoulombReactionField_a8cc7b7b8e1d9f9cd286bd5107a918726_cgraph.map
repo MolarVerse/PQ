@@ -1,0 +1,7 @@
+<map id="pot::CoulombReactionField::CoulombReactionField" name="pot::CoulombReactionField::CoulombReactionField">
+<area shape="rect" id="Node000001" title="Construct a new Coulomb Reaction Field object." alt="" coords="5,5,202,50"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1CoulombPotential.html#a0f86b1d930429618bce35173b3be9c93" title="Construct a new Coulomb Potential:: Coulomb Potential object." alt="" coords="250,5,416,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,25,237,27,231,28,202,30"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1CoulombPotential.html#a08407ee16c41911dfbcbe7c820c0ee4d" title="sets the coulombRadiusCutOff and calculates the energy and force cutoff &#45; equivalent to the construct..." alt="" coords="464,5,656,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="416,25,451,28,446,28,417,30"/>
+</map>

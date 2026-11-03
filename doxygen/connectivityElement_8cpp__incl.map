@@ -1,0 +1,17 @@
+<map id="/home/runner/work/PQ/PQ/src/connectivity/connectivityElement.cpp" name="/home/runner/work/PQ/PQ/src/connectivity/connectivityElement.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="81,5,268,67"/>
+<area shape="rect" id="Node000002" href="$connectivityElement_8hpp.html" title=" " alt="" coords="83,115,266,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,65,177,100,172,98,173,70"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,191,120,218"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="153,145,96,184,93,180,156,141"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="143,191,206,218"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="176,141,177,176,172,174,173,145"/>
+<area shape="rect" id="Node000005" href="$strongTypes_8hpp.html" title=" " alt="" coords="230,191,357,218"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="196,141,262,182,257,183,195,146"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="166,266,236,294"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="279,218,230,259,228,254,274,220"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="260,266,326,294"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="295,217,295,252,291,249,291,221"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="349,266,472,294"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="315,216,380,258,375,258,313,221"/>
+</map>

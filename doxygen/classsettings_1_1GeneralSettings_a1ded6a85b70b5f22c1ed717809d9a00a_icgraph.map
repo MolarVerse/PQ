@@ -1,0 +1,5 @@
+<map id="settings::GeneralSettings::isMMOnlyActivated" name="settings::GeneralSettings::isMMOnlyActivated">
+<area shape="rect" id="Node000001" title="Returns true if only MM simulations are activated." alt="" coords="107,5,292,50"/>
+<area shape="rect" id="Node000002" href="$testSettings_8cpp.html#a54f9c37d1c454f773eef6e948c80fc31" title=" " alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,29,59,30,59,25,93,27"/>
+</map>

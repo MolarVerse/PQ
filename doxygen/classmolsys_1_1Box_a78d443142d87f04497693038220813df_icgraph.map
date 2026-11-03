@@ -1,0 +1,18 @@
+<map id="molsys::Box::getVolume" name="molsys::Box::getVolume">
+<area shape="rect" id="Node000001" title=" " alt="" coords="798,83,977,111"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a7f019934b3be402d7e32a152fb7ed491" title="Scale and validate a candidate cell." alt="" coords="593,40,748,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="780,80,748,77,749,72,785,80"/>
+<area shape="rect" id="Node000008" href="$classQM_1_1DFTBPlusRunner.html#aa11b2998959eb698a81de604fa66d5e2" title="reads the stress tensor and adds it to the physical data" alt="" coords="591,109,750,154"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="785,114,751,122,750,116,779,114"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#a0f72c206ae03884de00e8c46932f6cbe" title="Validate a resize without changing the live cell or atoms." alt="" coords="391,40,543,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="575,63,544,65,543,60,580,62"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="122,5,343,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="373,49,344,47,344,41,378,49"/>
+<area shape="rect" id="Node000006" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="122,75,343,119"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="373,76,344,83,343,78,378,75"/>
+<area shape="rect" id="Node000005" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="5,23,74,51"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="104,35,75,38,73,33,109,32"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="142,71,74,50,74,45,146,68"/>
+<area shape="rect" id="Node000007" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="5,83,74,111"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="104,98,75,100,74,94,109,96"/>
+</map>

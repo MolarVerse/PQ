@@ -1,0 +1,7 @@
+<map id="opt::Optimizer" name="opt::Optimizer">
+<area shape="rect" id="Node000001" title="Base class for all optimizers." alt="" coords="94,5,254,480"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Adam.html" title=" " alt="" coords="5,528,162,846"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,492,119,529,114,527,122,497"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1SteepestDescent.html" title="Steepest Descent optimizer." alt="" coords="186,606,344,768"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,492,252,606,246,606,225,497"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="setup::CellListSetup::setup" name="setup::CellListSetup::setup">
+<area shape="rect" id="Node000001" title="setup cell list" alt="" coords="5,40,156,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#afa4f232b151dd8e16e21c4b26f84fcc8" title="gets the number of cells for the cell list" alt="" coords="204,5,389,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,48,191,44,186,46,156,53"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a8798c619607f4dd45507427feab904d8" title="Returns true if the cell list is activated." alt="" coords="204,75,389,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,72,191,79,186,80,156,77"/>
+</map>

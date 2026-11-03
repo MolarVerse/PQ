@@ -1,0 +1,7 @@
+<map id="pot::Potential" name="pot::Potential">
+<area shape="rect" id="Node000001" title="base class for all potential routines" alt="" coords="109,5,373,340"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1PotentialBruteForce.html" title="brute force implementation of the potential" alt="" coords="5,388,229,612"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,352,162,390,157,387,171,357"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1PotentialCellList.html" title="cell list implementation of the potential" alt="" coords="253,388,477,612"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="311,352,326,389,321,388,309,357"/>
+</map>

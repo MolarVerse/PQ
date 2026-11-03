@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,59,111"/>
+<area shape="rect" id="Node000002" href="$structTestTriclinicBox.html#a912821194fd30a6058c6702711b30b9d" title=" " alt="" coords="143,5,318,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,81,106,60,131,53,126,56,108,65,61,86"/>
+<area shape="rect" id="Node000003" href="$structTestTriclinicBox.html#a47b20e3a1270c6b313e057c4afeeafb1" title=" " alt="" coords="107,75,355,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,94,93,95,89,99,60,100"/>
+<area shape="rect" id="Node000004" href="$structTestTriclinicBox.html#a909ade9cbe6e29f2f1a41a6db4a0953c" title=" " alt="" coords="144,144,318,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,108,108,129,131,139,126,140,106,134,59,113"/>
+</map>

@@ -1,0 +1,27 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,192,59,220"/>
+<area shape="rect" id="Node000002" href="$structTestTriclinicBox.html#ac5cf4d5c4b5466d59dde72835328282e" title=" " alt="" coords="114,26,302,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="36,191,60,137,80,106,105,79,142,58,139,62,108,83,84,110,65,140,41,193"/>
+<area shape="rect" id="Node000004" href="$structTestTriclinicBox.html#a2620170d9d153e0dd3fe85e6b4426534" title=" " alt="" coords="118,92,299,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="46,190,73,167,105,144,150,124,147,128,108,149,76,171,50,194"/>
+<area shape="rect" id="Node000006" href="$structTestTriclinicBox.html#a5f6948bf1dc92b5fb8c09632bc8d0c03" title=" " alt="" coords="107,158,310,186"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="58,199,122,187,118,191,61,203"/>
+<area shape="rect" id="Node000008" href="$structTestTriclinicBox.html#a6ea00ddfc40ded8e080c758841ac8a55" title=" " alt="" coords="116,218,301,246"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="58,208,102,214,98,218,60,213"/>
+<area shape="rect" id="Node000010" href="$structTestTriclinicBox.html#adc4eb62271ef0bb6d105b2e2594cbe31" title=" " alt="" coords="119,283,298,311"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="51,218,108,255,153,276,148,278,105,259,51,223"/>
+<area shape="rect" id="Node000012" href="$structTestTriclinicBox.html#a5f8383b07f2cf0950343493b6d86541e" title=" " alt="" coords="108,343,308,371"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="39,218,65,269,85,296,108,320,133,336,128,337,105,324,81,300,61,272,38,223"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1TriclinicBox.html#a2f438905ad311a17cf5bc8d6fbd8b261" title="calculate cos of alpha" alt="" coords="358,5,508,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,32,345,31,340,34,304,37"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1TriclinicBox.html#a340ec34f24f2c4a061394bb903bb5966" title="calculate cos of beta" alt="" coords="358,75,508,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="298,100,345,100,340,102,300,105"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1TriclinicBox.html#a4aada74067510af4e59ed68ed04061da" title="calculate cos of gamma" alt="" coords="358,144,508,189"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="310,167,345,168,340,169,311,172"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1TriclinicBox.html#a834d4b1d81a97b9742ce66711f08a525" title="calculate sin of alpha" alt="" coords="358,213,508,258"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="301,231,345,233,340,235,302,236"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1TriclinicBox.html#a28cfb71b0232c781130da817c950ed1e" title="calculate sin of beta" alt="" coords="358,283,508,327"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="298,298,345,301,340,302,298,303"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1TriclinicBox.html#aef7b46f92837d6a293b427c5b2cb9f1a" title="calculate sin of gamma" alt="" coords="358,352,508,397"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="309,362,346,367,340,367,309,367"/>
+</map>

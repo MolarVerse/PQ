@@ -1,0 +1,26 @@
+<map id="timings::TimingsSectionGuard" name="timings::TimingsSectionGuard">
+<area shape="rect" id="Node000001" title="RAII guard that starts a named timings section on construction and stops it on destruction &#45; includin..." alt="" coords="130,1548,336,1732"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1Timer.html" title="Stores all timings information." alt="" coords="64,1068,261,1475"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,1473,215,1532,210,1531,200,1478"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,914,66,986"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="49,984,78,1052,73,1053,50,989"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="90,906,234,995"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="163,992,165,1051,160,1051,162,997"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1TimingsSection.html" title="Stores all timings information." alt="" coords="52,515,265,833"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="161,830,164,889,159,888,160,835"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="166,361,242,433"/>
+<area shape="poly" id="edge12_Node000001_Node000006" title=" " alt="" coords="231,430,257,464,285,518,299,563,304,611,305,672,305,1273,303,1344,298,1400,273,1525,271,1533,266,1530,268,1524,293,1399,298,1344,300,1273,300,672,299,612,294,565,280,520,252,467,232,436"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="198,436,190,499,185,498,198,430"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="138,190,266,279"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="203,292,206,361,201,361,203,297"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="93,361,141,433"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="116,430,121,490,122,498,116,498,115,491,116,436"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="272,352,466,442"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="335,444,277,522,272,520,337,439"/>
+<area shape="rect" id="Node000010" href="$structtimings_1_1TimingsSection_1_1Timings.html" title="Timings struct to store timing information." alt="" coords="290,190,458,279"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="373,277,374,336,368,335,372,282"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="196,5,371,95"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="305,92,348,175,343,176,305,97"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="396,14,534,86"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="447,89,406,176,401,174,449,83"/>
+</map>

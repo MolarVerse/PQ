@@ -1,0 +1,7 @@
+<map id="TestIntraNonBondedReader::SetUp" name="TestIntraNonBondedReader::SetUp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,40,204,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#aa3a756dbf032ca69d4c428de6a62ad61" title="activate intra non&#45;bonded interactions" alt="" coords="282,5,470,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,47,269,41,264,42,204,52"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#a53a79c3c0d0dda2ca78dd5f54f125b40" title="set the intra non bonded file name flag to is set" alt="" coords="252,75,500,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="204,72,239,79,234,79,204,78"/>
+</map>

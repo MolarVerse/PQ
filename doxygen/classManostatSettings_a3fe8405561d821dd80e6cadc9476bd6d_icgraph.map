@@ -1,0 +1,7 @@
+<map id="ManostatSettings::setManostatType" name="ManostatSettings::setManostatType">
+<area shape="rect" id="Node000001" title="sets the manostatType to enum in settings" alt="" coords="107,32,361,60"/>
+<area shape="rect" id="Node000002" href="$testManostatSettings_8cpp.html#ad449ced7be1ca062f29ccc8e51d85ca3" title="finalize() must add the reference file matching the configured manostat type." alt="" coords="5,5,59,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,31,59,25,59,20,112,28"/>
+<area shape="rect" id="Node000003" href="$testManostatSettings_8cpp.html#a2e9bacf8d8b53ede70d1fb4a71a923d5" title=" " alt="" coords="5,57,59,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="102,64,59,71,59,65,106,61"/>
+</map>

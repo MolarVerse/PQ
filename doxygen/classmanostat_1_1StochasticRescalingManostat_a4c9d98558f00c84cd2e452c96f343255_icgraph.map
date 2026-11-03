@@ -1,0 +1,9 @@
+<map id="manostat::StochasticRescalingManostat::calculateMu" name="manostat::StochasticRescalingManostat::calculateMu">
+<area shape="rect" id="Node000001" title="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)" alt="" coords="391,24,612,68"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="122,24,343,68"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="373,46,343,48,343,43,378,46"/>
+<area shape="rect" id="Node000003" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="5,5,74,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,30,75,26,74,21,109,27"/>
+<area shape="rect" id="Node000004" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="104,63,75,69,74,64,109,62"/>
+</map>

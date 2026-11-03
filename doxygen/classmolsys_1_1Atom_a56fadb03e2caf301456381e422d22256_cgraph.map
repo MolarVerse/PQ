@@ -1,0 +1,7 @@
+<map id="molsys::Atom::initMass" name="molsys::Atom::initMass">
+<area shape="rect" id="Node000001" title="sets the mass of the atom" alt="" coords="5,32,180,60"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Atom.html#abeddc12e21be3eab37154830868d9ee4" title="set the mass of the atom" alt="" coords="228,5,401,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,33,215,31,210,32,180,38"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="233,57,396,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,53,220,60,215,60,180,58"/>
+</map>

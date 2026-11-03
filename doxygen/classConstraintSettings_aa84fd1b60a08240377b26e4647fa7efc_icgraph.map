@@ -1,0 +1,5 @@
+<map id="ConstraintSettings::getRattleTolerance" name="ConstraintSettings::getRattleTolerance">
+<area shape="rect" id="Node000001" title="get the tolerance for the rattle algorithm" alt="" coords="122,5,273,50"/>
+<area shape="rect" id="Node000002" href="$testConstraintsParser_8cpp.html#a4c83ff742a50844a15e3896e6f31f9fa" title="tests parsing the &quot;rattle&#45;tolerance&quot; command" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,75,30,74,25,109,27"/>
+</map>

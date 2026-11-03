@@ -1,0 +1,5 @@
+<map id="input::guffdat::GuffDatReader::checkNecessaryGuffPairs" name="input::guffdat::GuffDatReader::checkNecessaryGuffPairs">
+<area shape="rect" id="Node000001" title="check if all necessary guff pairs are set" alt="" coords="5,5,218,50"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a042de94cd3d7fe5789bb0d06dfa15a2b" title="Determine if both provided molecule types are of the water molecule type." alt="" coords="266,5,478,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,25,253,28,247,28,218,30"/>
+</map>

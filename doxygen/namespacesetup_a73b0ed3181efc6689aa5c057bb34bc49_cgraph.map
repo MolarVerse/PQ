@@ -1,0 +1,7 @@
+<map id="setup::endSetup" name="setup::endSetup">
+<area shape="rect" id="Node000001" title="end the setup" alt="" coords="5,14,132,42"/>
+<area shape="rect" id="Node000002" href="$classout_1_1StdoutOutput.html#abf0b74191547e014ca45683b06cf3755" title="write a message to the stdout to inform that the setup is completed" alt="" coords="180,5,342,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,25,167,27,161,28,132,30"/>
+<area shape="rect" id="Node000003" href="$namespaceout.html#a326d515b74b2bf226877f502a8746d89" title="Message to inform about completed setup." alt="" coords="390,14,605,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="342,25,377,28,371,28,342,30"/>
+</map>

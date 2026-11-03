@@ -1,0 +1,7 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests parsing the &quot;coupling_frequency&quot; command" alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="167,5,331,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,153,42,150,46,75,59"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#a0a92303bc2f5aa533b3ac799fb940474" title="get the nose hoover coupling frequency" alt="" coords="122,75,376,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,65,109,72,104,74,74,71"/>
+</map>

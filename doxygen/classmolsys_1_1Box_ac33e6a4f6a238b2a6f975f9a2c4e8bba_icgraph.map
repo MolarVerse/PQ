@@ -1,0 +1,9 @@
+<map id="molsys::Box::Box" name="molsys::Box::Box">
+<area shape="rect" id="Node000001" title="Construct a new Box object." alt="" coords="482,48,616,76"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1OrthorhombicBox.html#af2c98f3225e49b2b5a28c34fd362fd85" title="Construct a new Orthorhombic Box object." alt="" coords="244,5,434,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="464,49,435,46,435,41,469,49"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1TriclinicBox.html#a46f8a3fc36e49942d989900cf80b547e" title="Construct a new Triclinic Box object." alt="" coords="264,75,414,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="469,76,415,87,414,82,464,76"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1OrthorhombicBox.html#adb8e913a4fc244468be4d716ba5bf5e2" title="Create a vacuum box with default dimensions." alt="" coords="5,5,196,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="225,28,196,30,196,25,231,27"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="timings::Timer::getTimerName" name="timings::Timer::getTimerName">
+<area shape="rect" id="Node000001" title="get timer name" alt="" coords="793,83,1016,111"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1Timer.html#aa2d5c8f539268225f48e96098200cae4" title="starts a new timer with default name" alt="" coords="539,40,745,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="777,81,746,79,746,73,783,81"/>
+<area shape="rect" id="Node000006" href="$classtimings_1_1Timer.html#af91abf63dabd1bd439f2e54a46e07701" title="stops a timer with default name" alt="" coords="540,109,744,154"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="783,113,745,121,745,115,777,114"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1GlobalTimer.html#a8cba5f0d8230c22c2953cb9d5f12fc88" title="Construct a new Global Timer:: Global Timer object." alt="" coords="293,5,452,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="521,48,452,41,452,35,526,47"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1GlobalTimer.html#a61929e5d6c8bb044a137852fe536b59c" title="stop and restart the simulation timer" alt="" coords="254,75,491,119"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="521,78,492,84,491,79,526,77"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1GlobalTimer.html#a4fd7c1c7b8acb2ec7c2c6f957339ee14" title=" " alt="" coords="5,5,206,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="275,29,207,30,205,25,280,27"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="522,117,492,115,492,110,527,116"/>
+<area shape="rect" id="Node000007" href="$classtimings_1_1GlobalTimer.html#ad0fa4ece5803f18413253eba2771df27" title="stop the simulation timer" alt="" coords="290,144,455,189"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="527,147,456,158,455,153,522,147"/>
+</map>

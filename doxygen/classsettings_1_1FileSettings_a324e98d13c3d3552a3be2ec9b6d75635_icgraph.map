@@ -1,0 +1,33 @@
+<map id="settings::FileSettings::setMolDescriptorFileName" name="settings::FileSettings::setMolDescriptorFileName">
+<area shape="rect" id="Node000001" title="set the mol descriptor file name" alt="" coords="669,300,872,345"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1FilesInputParser.html#a06fd70e09154ca58d3cc1897af700a47" title="Adds the moldescriptor_file keyword to the parser." alt="" coords="432,5,621,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="755,284,735,236,707,177,668,117,645,89,620,64,604,53,604,48,623,60,649,85,672,113,711,174,740,234,760,286"/>
+<area shape="rect" id="Node000005" href="$namespacebenchInputReaders.html#a2b22fa7b51c3adbf281069cdc81de4e1" title=" " alt="" coords="439,74,614,102"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="751,286,730,247,700,201,663,155,620,117,598,105,598,99,623,112,667,152,705,198,734,245,756,287"/>
+<area shape="rect" id="Node000007" href="$testFileSettings_8cpp.html#a69bcbbd301f309b700ebda187e79124f" title=" " alt="" coords="500,126,553,154"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="742,287,691,227,657,196,620,169,586,154,554,146,553,141,588,149,623,164,660,191,695,223,748,288"/>
+<area shape="rect" id="Node000008" href="$testMoldescriptorReader_8cpp.html#a969bc5cfc7edc4ca46bf6e5b89ae6748" title="tests if line entry has at least 2 elements" alt="" coords="492,178,561,206"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="728,290,679,255,620,221,562,201,561,196,622,216,682,250,733,290"/>
+<area shape="rect" id="Node000009" href="$testMoldescriptorReader_8cpp.html#a91c781b3809f934e0588468f91f9d8bf" title="tests number of entries for molecule section in moldescriptor" alt="" coords="492,230,561,258"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="690,295,621,273,562,255,561,250,622,268,695,294"/>
+<area shape="rect" id="Node000010" href="$testMoldescriptorReader_8cpp.html#a220293b62d5008c1c7d8c75220da09f5" title="tests constructor of input::molDescriptor::MoldescriptorReader" alt="" coords="492,282,561,310"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="651,310,561,302,561,297,657,309"/>
+<area shape="rect" id="Node000011" href="$testMoldescriptorReader_8cpp.html#a6db341149231cf584ab954b8db613751" title="tests if non coulombic force field is activated but no global can der Waals parameter given" alt="" coords="492,334,561,362"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="651,335,562,347,560,342,656,334"/>
+<area shape="rect" id="Node000012" href="$testMoldescriptorReader_8cpp.html#a2a2fe3320189f394eb8cc6742c94ff64" title="test reading of moldescriptor.dat" alt="" coords="492,386,561,414"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="688,351,622,376,562,393,561,388,621,370,693,349"/>
+<area shape="rect" id="Node000013" href="$testMoldescriptorReader_8cpp.html#a13aadd66e4fe1a9c111a8d622d1f411f" title="tests the optional QM reference energy line of a molecule" alt="" coords="492,438,561,466"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="733,353,682,393,622,427,562,447,561,442,620,423,679,389,728,356"/>
+<area shape="rect" id="Node000014" href="$testMoldescriptorReader_8cpp.html#ab8a9487e27dca72252c84a9f3640d235" title="test reading of special types" alt="" coords="492,490,561,518"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="747,356,694,420,660,452,623,479,592,493,562,501,561,496,591,488,620,475,657,448,691,417,743,358"/>
+<area shape="rect" id="Node000015" href="$testMoldescriptorReader_8cpp.html#a9110fdd090e8bc7e31d3aaac7f2ecb47" title="tests if there are to many atoms per moltype" alt="" coords="492,542,561,570"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="755,357,734,400,704,446,667,492,623,531,593,546,562,554,561,549,591,541,620,527,663,488,700,443,729,397,751,360"/>
+<area shape="rect" id="Node000016" href="$testRestartFileReader_8cpp.html#adfbc630ae1d431fbc9bcafd81f973417" title="test full read restart file function" alt="" coords="492,594,561,622"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="760,358,742,411,713,471,673,531,650,559,623,583,593,599,562,607,561,602,591,594,620,579,646,555,669,528,708,468,737,409,756,362"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1FilesInputParser.html#a510068c8179ed4147725f56973b55854" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="219,5,384,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,29,386,30,383,25,419,26"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1FilesInputParser.html#ae5d451f65ab02a0d717850cc3c8e8f89" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="5,5,171,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="201,29,173,30,170,25,206,26"/>
+<area shape="rect" id="Node000006" href="$perfInputReadersN100_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="274,74,328,102"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="421,89,330,90,328,85,426,86"/>
+</map>

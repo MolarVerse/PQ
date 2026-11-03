@@ -1,0 +1,5 @@
+<map id="thermostat::VelocityRescalingThermostat" name="thermostat::VelocityRescalingThermostat">
+<area shape="rect" id="Node000001" title="this class implements the velocity rescaling thermostat and inherits from the Thermostat class" alt="" coords="5,461,243,796"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="16,5,232,413"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,425,127,461,122,460,124,430"/>
+</map>

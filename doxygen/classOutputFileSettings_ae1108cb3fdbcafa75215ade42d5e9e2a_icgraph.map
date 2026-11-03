@@ -1,0 +1,5 @@
+<map id="OutputFileSettings::getRPMDTrajFileName" name="OutputFileSettings::getRPMDTrajFileName">
+<area shape="rect" id="Node000001" title="get the ring polymer trajectory file name" alt="" coords="122,5,296,50"/>
+<area shape="rect" id="Node000002" href="$testOutputParser_8cpp.html#acb2e3f2bdad33d3014662a623de41ac2" title="tests parsing the &quot;rpmd_traj_file&quot; command" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,28,74,30,74,25,109,27"/>
+</map>

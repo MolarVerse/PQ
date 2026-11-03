@@ -1,0 +1,10 @@
+<map id="input::Converter&lt; mstd::File &gt;" name="input::Converter&lt; mstd::File &gt;">
+<area shape="rect" id="Node000001" title="Converter specialization for File." alt="" coords="5,517,169,629"/>
+<area shape="rect" id="Node000002" href="$structinput_1_1ConverterBase.html" title=" " alt="" coords="13,312,161,468"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,480,81,518,76,517,77,485"/>
+<area shape="poly" id="edge4_Node000001_Node000002" title=" " alt="" coords="97,480,98,518,93,517,95,485"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="49,144,125,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,214,90,295,85,295,87,219"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="23,5,151,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="87,107,90,144,85,144,87,112"/>
+</map>

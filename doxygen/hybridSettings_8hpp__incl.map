@@ -1,0 +1,13 @@
+<map id="/home/runner/work/PQ/PQ/include/settings/hybridSettings.hpp" name="/home/runner/work/PQ/PQ/include/settings/hybridSettings.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="51,5,218,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,80,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,70,69,106,65,102,105,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,115,166,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,65,137,100,132,98,133,70"/>
+<area shape="rect" id="Node000004" href="$hybrid_8hpp.html" title=" " alt="" coords="189,115,328,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="176,65,231,105,226,106,175,70"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="166,191,231,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="250,142,220,181,217,176,245,144"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="256,191,379,218"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="270,141,300,179,295,178,268,146"/>
+</map>

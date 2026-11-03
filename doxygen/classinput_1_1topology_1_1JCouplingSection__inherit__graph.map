@@ -1,0 +1,5 @@
+<map id="input::topology::JCouplingSection" name="input::topology::JCouplingSection">
+<area shape="rect" id="Node000001" title="reads j coupling section of topology file" alt="" coords="5,277,182,411"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1topology_1_1TopologySection.html" title="base class for reading topology file sections" alt="" coords="7,5,180,229"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,241,96,277,91,276,93,246"/>
+</map>

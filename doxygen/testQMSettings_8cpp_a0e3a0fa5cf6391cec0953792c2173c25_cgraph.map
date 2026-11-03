@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a8386306cb5ec3d9f0116594627e1bde9" title=" " alt="" coords="107,5,263,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,54,94,47,90,51,60,59"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a5444c6d2cdfacedfdc7d05d612167e05" title="sets the maceModelType to enum in settings" alt="" coords="107,75,263,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,66,94,75,89,77,59,71"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="TestAtomSection::_processAtomLine" name="TestAtomSection::_processAtomLine">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,28,201,72"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#a7e86322a9eef35651fbb4590adad182d" title="processes a line of the atom section of the rst file" alt="" coords="249,28,488,72"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,47,236,49,230,50,201,52"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="536,5,738,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="488,34,523,32,518,33,489,39"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="552,57,723,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="488,60,538,68,533,68,488,66"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="opt::ExpDecayLR" name="opt::ExpDecayLR">
+<area shape="rect" id="Node000001" title="Exponential decay learning rate strategy." alt="" coords="16,662,184,801"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1LearningRateStrategy.html" title="Learning Rate Strategy." alt="" coords="5,5,194,614"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,626,102,663,97,661,99,631"/>
+</map>

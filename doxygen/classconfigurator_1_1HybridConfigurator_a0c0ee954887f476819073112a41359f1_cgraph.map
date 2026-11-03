@@ -1,0 +1,11 @@
+<map id="configurator::HybridConfigurator::calculateInnerRegionCenter" name="configurator::HybridConfigurator::calculateInnerRegionCenter">
+<area shape="rect" id="Node000001" title="Calculate the center of mass of the inner region center atoms." alt="" coords="5,109,236,154"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a5efbb4148bf8da480902ff1400077c7b" title="calculate shift vector for a given position" alt="" coords="324,5,496,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,106,283,60,312,53,307,55,285,65,172,111"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="324,75,496,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,115,311,108,306,110,237,120"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a3a90d81c739d9cd0cebc596eb2c95127" title="get the indices of the atoms marking the center of the inner region for hybrid type calculations" alt="" coords="284,144,536,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="236,143,271,149,266,150,236,148"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Atom.html#aceeba752fe1b92c1b3b0fa0fad5ad498" title=" " alt="" coords="314,212,506,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="169,152,224,176,284,198,313,209,308,208,283,204,222,181,168,157"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,152,74,180"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="124,75,310,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,151,145,123,142,128,76,155"/>
+<area shape="rect" id="Node000005" href="$namespacesetup.html#af318ff15ea95c6cf00e0caaf1b031606" title="constructs a new Reset Kinetics Setup:: Reset Kinetics Setup object and calls setup" alt="" coords="122,187,312,215"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="74,170,130,182,126,185,75,176"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="368,5,555,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="297,72,368,53,364,56,300,76"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="360,75,563,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="309,94,347,96,342,98,311,100"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a9a3a3fbd228c5d1603d240de99a868e0" title="Returns true if the jobtype performs an MD simulation." alt="" coords="369,144,554,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="312,185,356,181,351,182,313,190"/>
+<area shape="rect" id="Node000007" href="$classsetup_1_1ResetKineticsSetup.html#a41b7138e45b169907967c72e4db870e3" title="setup nscale, fscale, nreset, freset" alt="" coords="366,213,557,258"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="312,212,353,220,348,220,313,217"/>
+<area shape="rect" id="Node000009" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="390,283,534,327"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="245,213,361,268,379,277,374,277,359,273,244,218"/>
+<area shape="rect" id="Node000008" href="$classsetup_1_1ResetKineticsSetup.html#a7dfd3bb15c1fb0d11f695c6913d0c8f5" title="writes setup info to log file" alt="" coords="611,213,803,258"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="558,233,598,235,593,236,558,238"/>
+<area shape="rect" id="Node000010" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="635,291,779,319"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="534,302,622,305,617,305,535,308"/>
+</map>

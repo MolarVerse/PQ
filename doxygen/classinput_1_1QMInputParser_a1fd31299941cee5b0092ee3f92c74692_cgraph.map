@@ -1,0 +1,19 @@
+<map id="input::QMInputParser::addSlakosTypeKey" name="input::QMInputParser::addSlakosTypeKey">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,160,163,205"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="211,5,369,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,158,149,110,209,60,220,56,216,60,212,64,152,114,107,161"/>
+<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="240,74,340,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,157,210,111,228,105,223,109,212,115,124,162"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="211,125,369,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="162,167,197,162,193,165,165,171"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="215,195,364,239"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="163,193,203,201,198,203,164,198"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1QMSettings.html#a113ce24a68a36e8561ffa78d7fac1409" title="sets the custom Hubbard Derivative dictionary" alt="" coords="212,264,368,309"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="125,202,212,249,224,257,219,257,209,254,124,208"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1QMSettings.html#a5240619fa30e80decda4cb0c87adbec6" title="sets the slakosType to enum in settings" alt="" coords="212,333,368,378"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="102,203,149,260,179,291,212,319,220,326,214,325,209,323,175,295,145,264,100,208"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="445,61,596,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="339,84,432,84,427,86,341,89"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="417,131,624,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="368,147,404,149,398,151,370,152"/>
+</map>

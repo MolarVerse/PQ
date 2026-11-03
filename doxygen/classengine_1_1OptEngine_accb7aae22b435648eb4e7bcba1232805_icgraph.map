@@ -1,0 +1,19 @@
+<map id="engine::OptEngine::throwOnFailure" name="engine::OptEngine::throwOnFailure">
+<area shape="rect" id="Node000001" title="throw if the optimization did not end successfully" alt="" coords="585,144,734,189"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HessianEngine.html#a7cb3ae0150c662886e24f3aeee0e54a2" title=" " alt="" coords="368,5,537,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="623,133,583,99,536,65,515,53,515,48,539,60,587,95,628,134"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1OptEngine.html#ad8f53038037a343b41cdc75d1d47382d" title="run the optimizer" alt="" coords="368,74,537,102"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="592,138,536,117,502,105,502,99,538,112,597,137"/>
+<area shape="rect" id="Node000006" href="$testOptEngine_8cpp.html#a17a31f9478c34f61edb4d21c12d1da98" title=" " alt="" coords="426,126,479,154"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="567,155,480,146,479,140,573,154"/>
+<area shape="rect" id="Node000007" href="$testOptEngine_8cpp.html#ad5219737e50389a661b0a25e494743cc" title=" " alt="" coords="426,178,479,206"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="568,178,480,191,479,186,573,177"/>
+<area shape="rect" id="Node000008" href="$testOptEngine_8cpp.html#ae6bdc88200fc756c384f5890f5b95569" title=" " alt="" coords="426,230,479,258"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="595,194,538,220,480,239,479,233,536,214,590,196"/>
+<area shape="rect" id="Node000009" href="$testOptEngine_8cpp.html#aed2e2060b9ffca513413e330e9402769" title=" " alt="" coords="426,282,479,310"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="629,198,588,238,539,271,509,284,480,293,479,288,507,279,536,267,584,233,624,200"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1HessianEngine.html#a6aab0fbfa97a93ee0eb0c236db640c4a" title=" " alt="" coords="122,14,320,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="350,29,321,30,319,25,355,27"/>
+<area shape="rect" id="Node000004" href="$testOptimizerSetup_8cpp.html#add470e00111eb6b85ec2aa3e032d9634" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,29,75,30,73,25,108,26"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="opt::SteepestDescent" name="opt::SteepestDescent">
+<area shape="rect" id="Node000001" title="Steepest Descent optimizer." alt="" coords="6,528,164,689"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html" title="Base class for all optimizers." alt="" coords="5,5,165,480"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,492,88,528,83,527,85,497"/>
+</map>

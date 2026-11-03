@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classresetKinetics_1_1ResetKinetics.html#a1dc83729626654fc1fa63a97672098c4" title="reset the momentum of the system" alt="" coords="107,40,310,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,60,93,61,89,64,60,65"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="358,5,529,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,45,345,42,340,43,311,50"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a24ac3c9aa6ebdbd6e94217858fc196a6" title="get the total mass" alt="" coords="358,75,529,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="310,75,345,82,340,82,310,80"/>
+</map>

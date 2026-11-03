@@ -1,0 +1,11 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,74,111"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a62a365fa2f7baa766b07736bf189bf86" title="sets the qmMethod to enum in settings" alt="" coords="129,5,285,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,80,121,60,138,55,134,58,123,65,76,85"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a5240619fa30e80decda4cb0c87adbec6" title="sets the slakosType to enum in settings" alt="" coords="129,75,285,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,94,115,95,111,99,75,100"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#a6bb00508ab531e43a21e180f3424e43f" title="sets if third order DFTB should be used" alt="" coords="122,144,292,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,109,123,129,139,138,133,138,121,134,74,114"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="340,144,496,189"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="292,164,327,166,322,166,293,169"/>
+</map>

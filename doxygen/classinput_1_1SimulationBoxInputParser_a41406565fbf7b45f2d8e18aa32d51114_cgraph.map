@@ -1,0 +1,43 @@
+<map id="input::SimulationBoxInputParser::SimulationBoxInputParser" name="input::SimulationBoxInputParser::SimulationBoxInputParser">
+<area shape="rect" id="Node000001" title="Construct a new Input File Parser Simulation Box:: Input File Parser Simulation Box object." alt="" coords="5,179,243,223"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1SimulationBoxInputParser.html#ab3af052c0eedc134fc0f44f0d6b1fa36" title="adds the coulomb radius key to the key registry" alt="" coords="304,75,523,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,176,290,129,315,123,310,126,292,134,177,180"/>
+<area shape="rect" id="Node000011" href="$classinput_1_1SimulationBoxInputParser.html#a2e3302ff6df11b6c50948517da9e8d07" title="adds the density key to the key registry" alt="" coords="318,213,508,258"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="243,213,306,221,301,223,244,218"/>
+<area shape="rect" id="Node000012" href="$classinput_1_1SimulationBoxInputParser.html#ad8236ef0f11230808f609d66af1cf4e5" title="adds the initialize velocities key to the key registry" alt="" coords="295,144,532,189"/>
+<area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="242,184,282,181,277,184,244,189"/>
+<area shape="rect" id="Node000013" href="$classinput_1_1SimulationBoxInputParser.html#a12e6379dffe52b55809a55fa544a9501" title="adds the non&#45;coulomb radius key to the key registry" alt="" coords="291,283,536,327"/>
+<area shape="poly" id="edge21_Node000001_Node000013" title=" " alt="" coords="176,221,292,268,315,277,310,278,290,273,176,227"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="614,264,772,309"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="520,117,538,130,551,145,558,160,563,191,567,221,574,235,586,250,603,264,598,263,582,254,569,238,562,223,558,192,553,162,546,148,534,134,519,122"/>
+<area shape="rect" id="Node000004" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="644,143,743,171"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="520,117,631,143,626,144,521,123"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="614,75,772,119"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="523,94,601,96,596,98,524,100"/>
+<area shape="rect" id="Node000008" href="$namespaceinput.html#a1f945c4feefb2836a8ea8c5a59d7d2c5" title="Create a shared pointer for the given validator." alt="" coords="622,332,765,360"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="522,117,538,130,555,154,563,179,564,203,562,227,560,251,561,274,569,297,586,319,610,337,605,336,582,323,564,299,556,275,555,251,557,227,559,203,558,179,550,156,534,133,521,122"/>
+<area shape="rect" id="Node000009" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="618,195,768,239"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="513,117,537,129,553,142,562,155,571,168,585,180,607,193,602,193,583,185,567,172,558,158,549,146,535,134,513,123"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1PotentialSettings.html#a5b9c06df8d1c8f7cf0f20e1e0268df9d" title="Set the Coulomb radius cut off in the PotentialSettings class." alt="" coords="597,5,789,50"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="506,72,588,53,583,55,508,76"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="878,140,1030,185"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="743,155,865,160,860,161,743,161"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="850,71,1058,115"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="772,93,837,94,832,95,773,98"/>
+<area shape="poly" id="edge11_Node000011_Node000003" title=" " alt="" coords="509,250,601,269,596,270,509,256"/>
+<area shape="poly" id="edge12_Node000011_Node000004" title=" " alt="" coords="498,210,535,198,583,180,631,169,626,171,585,185,537,204,499,215"/>
+<area shape="poly" id="edge13_Node000011_Node000006" title=" " alt="" coords="508,213,534,199,550,183,558,165,566,147,582,130,598,123,602,120,586,134,570,150,563,168,554,186,538,203,510,218"/>
+<area shape="poly" id="edge14_Node000011_Node000008" title=" " alt="" coords="509,254,537,268,553,281,562,294,571,307,585,319,609,332,604,331,583,323,567,311,558,297,549,285,535,273,509,260"/>
+<area shape="poly" id="edge15_Node000011_Node000009" title=" " alt="" coords="508,227,605,222,600,224,509,232"/>
+<area shape="poly" id="edge17_Node000012_Node000003" title=" " alt="" coords="513,187,537,199,553,212,562,225,571,237,586,249,602,261,597,260,582,254,567,241,558,228,549,215,535,203,513,192"/>
+<area shape="poly" id="edge18_Node000012_Node000004" title=" " alt="" coords="531,160,630,158,625,160,532,165"/>
+<area shape="poly" id="edge19_Node000012_Node000006" title=" " alt="" coords="506,141,601,119,596,121,507,146"/>
+<area shape="poly" id="edge20_Node000012_Node000009" title=" " alt="" coords="532,185,606,200,601,201,532,190"/>
+<area shape="poly" id="edge22_Node000013_Node000003" title=" " alt="" coords="536,294,601,292,596,293,537,299"/>
+<area shape="poly" id="edge23_Node000013_Node000004" title=" " alt="" coords="516,280,534,268,551,247,557,225,564,202,582,180,604,168,631,162,626,164,606,173,586,184,569,205,562,227,556,250,538,272,519,285"/>
+<area shape="poly" id="edge24_Node000013_Node000006" title=" " alt="" coords="519,280,534,268,547,252,554,236,558,201,561,166,568,148,582,130,598,121,603,118,586,134,573,150,566,167,563,202,560,237,552,255,538,272,521,285"/>
+<area shape="poly" id="edge25_Node000013_Node000008" title=" " alt="" coords="537,321,609,333,604,334,537,326"/>
+<area shape="poly" id="edge26_Node000013_Node000009" title=" " alt="" coords="498,280,535,268,583,249,602,245,607,244,585,254,537,273,499,285"/>
+<area shape="rect" id="Node000014" href="$classsettings_1_1PotentialSettings.html#a90d04ed3f7c52d728041d688f233bacd" title="Set the non&#45;Coulomb radius cut off in the PotentialSettings class." alt="" coords="584,384,802,429"/>
+<area shape="poly" id="edge27_Node000013_Node000014" title=" " alt="" coords="471,325,585,369,607,379,602,378,583,374,470,331"/>
+</map>

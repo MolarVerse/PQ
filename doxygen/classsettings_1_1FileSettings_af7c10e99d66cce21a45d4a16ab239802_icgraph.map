@@ -1,0 +1,37 @@
+<map id="settings::FileSettings::getMolDescriptorFileName" name="settings::FileSettings::getMolDescriptorFileName">
+<area shape="rect" id="Node000001" title="Get the mol descriptor file name." alt="" coords="952,218,1155,263"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#a230b790657752791fe8d0e85529c0e6b" title="constructor" alt="" coords="721,15,886,77"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1023,205,971,149,938,118,902,91,885,80,886,75,906,86,941,114,975,145,1028,207"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1HybridInputParser.html#a3bc48b15937566b281cb3ae1bc767895" title="parse selection string" alt="" coords="714,101,892,146"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="988,211,852,149,853,143,993,211"/>
+<area shape="rect" id="Node000007" href="$namespaceinput_1_1molDescriptor.html#a37d86ab1a1c0a46847e55180c09ae352" title="wrapper to construct MoldescriptorReader and read moldescriptor file" alt="" coords="726,188,880,232"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="934,226,881,222,881,217,939,226"/>
+<area shape="rect" id="Node000016" href="$testFileSettings_8cpp.html#a69bcbbd301f309b700ebda187e79124f" title=" " alt="" coords="777,256,830,284"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="934,255,831,269,830,264,939,254"/>
+<area shape="rect" id="Node000017" href="$testFilesParser_8cpp.html#a78f3098de2338d96eb8de05e4040adf5" title="tests parsing the &quot;moldescriptor_file&quot; command" alt="" coords="769,308,838,336"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="982,268,905,298,839,316,837,311,903,293,977,269"/>
+<area shape="rect" id="Node000018" href="$structinput_1_1Converter_3_01SelectionTag_01_4.html#a66b666c8a77e44b41ef66cd0ab4334ec" title="attempts to parse a SelectionTag from a raw input&#45;file token" alt="" coords="703,360,904,404"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="1016,272,965,313,905,350,879,362,877,356,903,345,962,309,1011,274"/>
+<area shape="rect" id="Node000004" href="$testHybridSetup_8cpp.html#ad6aca80776d2d87268f0b307649200e8" title=" " alt="" coords="558,5,627,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="710,94,701,91,677,70,653,48,627,34,627,29,656,44,680,66,704,86,715,94"/>
+<area shape="rect" id="Node000005" href="$testHybridSetup_8cpp.html#a86151615b3b6df92fbfe60034bef7fec" title=" " alt="" coords="558,57,627,85"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="696,98,627,82,627,77,702,97"/>
+<area shape="rect" id="Node000006" href="$testHybridSetup_8cpp.html#a18dbe8dba88d0ce0d558ca08ff890a03" title=" " alt="" coords="558,109,627,137"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="696,124,628,126,627,121,701,123"/>
+<area shape="rect" id="Node000008" href="$namespacesetup.html#ad4db282b92cbef07595e5279159209c7" title="reads all the files needed for the simulation" alt="" coords="530,161,655,189"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="708,195,655,188,655,183,713,194"/>
+<area shape="rect" id="Node000013" href="$testMoldescriptorReader_8cpp.html#a6db341149231cf584ab954b8db613751" title="tests if non coulombic force field is activated but no global can der Waals parameter given" alt="" coords="558,213,627,241"/>
+<area shape="poly" id="edge12_Node000007_Node000013" title=" " alt="" coords="708,218,628,227,627,222,713,217"/>
+<area shape="rect" id="Node000014" href="$testMoldescriptorReader_8cpp.html#a13aadd66e4fe1a9c111a8d622d1f411f" title="tests the optional QM reference energy line of a molecule" alt="" coords="558,265,627,293"/>
+<area shape="poly" id="edge13_Node000007_Node000014" title=" " alt="" coords="721,237,628,271,626,266,716,238"/>
+<area shape="rect" id="Node000015" href="$testMoldescriptorReader_8cpp.html#ab8a9487e27dca72252c84a9f3640d235" title="test reading of special types" alt="" coords="558,317,627,345"/>
+<area shape="poly" id="edge14_Node000007_Node000015" title=" " alt="" coords="715,237,704,247,689,261,681,275,672,291,656,307,628,323,626,318,653,302,668,288,676,273,685,258,701,242,710,239"/>
+<area shape="rect" id="Node000009" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,161,482,189"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="512,176,483,178,482,173,517,175"/>
+<area shape="rect" id="Node000010" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,161,244,189"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="274,176,245,178,244,173,279,174"/>
+<area shape="rect" id="Node000011" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,135,60,162"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="90,161,61,156,59,151,94,158"/>
+<area shape="rect" id="Node000012" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,187,60,214"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="90,192,62,198,59,194,94,188"/>
+</map>

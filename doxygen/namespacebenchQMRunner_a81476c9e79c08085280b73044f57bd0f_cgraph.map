@@ -1,0 +1,19 @@
+<map id="benchQMRunner::buildBox" name="benchQMRunner::buildBox">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,204,199,232"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="265,5,468,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,202,128,169,158,125,198,80,245,42,258,38,254,41,248,47,201,84,162,128,132,172,113,205"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="281,57,452,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="117,201,172,157,208,133,245,111,268,104,264,107,248,116,210,137,175,162,121,205"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="281,126,452,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="156,201,268,173,264,177,159,206"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Molecule.html#ae1f0a770d75d97d2b9f3fefbf63d1781" title="deactivates the molecule and it&#39;s atoms for hybrid calculations" alt="" coords="260,196,472,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="198,215,247,217,242,219,200,220"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#a071637632228934195f9355e5ddb22e1" title=" " alt="" coords="281,265,452,310"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="157,230,268,260,264,262,158,235"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1Molecule.html#a45a0d95a0f0e9f0838c4d5d0e91db61b" title="set the Hybrid zone of the molecule" alt="" coords="247,333,486,361"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="119,229,174,275,210,299,248,319,266,328,261,328,246,324,207,303,171,279,118,235"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1Molecule.html#a8ab76a7328d90fa8b6bd04883184fd17" title="set the moltype of the molecule" alt="" coords="258,385,474,413"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="113,230,165,298,204,338,248,370,263,380,257,379,245,375,200,342,161,302,111,235"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1Molecule.html#a153dbc45e1cbfa7ddfad317a855375e7" title="returns the atoms of the molecule" alt="" coords="534,204,740,232"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="472,215,521,217,516,218,473,220"/>
+</map>

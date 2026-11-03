@@ -1,0 +1,5 @@
+<map id="input::topology::ImproperDihedralSection::endedNormally" name="input::topology::ImproperDihedralSection::endedNormally">
+<area shape="rect" id="Node000001" title="checks if improper dihedral sections ends normally" alt="" coords="122,5,354,50"/>
+<area shape="rect" id="Node000002" href="$testImproperDihedralSection_8cpp.html#a69b58fcbee414fc4894ad664b5e23cbd" title="test if endedNormally throws exception" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

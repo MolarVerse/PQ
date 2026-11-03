@@ -1,0 +1,13 @@
+<map id="virial::intraMolecularVirialCorrection" name="virial::intraMolecularVirialCorrection">
+<area shape="rect" id="Node000001" title="Calculate intramolecular virial correction tensor without side effects." alt="" coords="5,109,196,154"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="251,5,422,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,106,243,60,261,55,256,58,245,65,147,111"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="251,75,422,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,115,238,111,233,113,197,120"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="244,144,429,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="196,143,231,150,225,151,196,148"/>
+<area shape="rect" id="Node000005" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="284,212,389,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="143,152,192,176,245,199,272,210,266,209,243,203,190,181,143,157"/>
+<area shape="rect" id="Node000006" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="477,204,654,249"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="389,224,464,226,459,226,389,229"/>
+</map>

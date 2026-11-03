@@ -1,0 +1,7 @@
+<map id="input::restartFile::RestartFileSection::_getFilePointer" name="input::restartFile::RestartFileSection::_getFilePointer">
+<area shape="rect" id="Node000001" title=" " alt="" coords="499,5,646,67"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#a3e4f463d70b53c2ec76db06f89c9fae9" title="checks if the next line of the rst file exists &#45; if not an exception is thrown" alt="" coords="224,14,451,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="481,36,452,39,451,34,486,36"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1restartFile_1_1AtomSection.html#aac27a04235e5b4ddaa34b013e9fb060b" title="processes the atom section of the rst file" alt="" coords="5,14,176,58"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,36,176,39,176,34,211,36"/>
+</map>

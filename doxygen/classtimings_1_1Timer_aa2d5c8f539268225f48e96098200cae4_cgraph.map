@@ -1,0 +1,11 @@
+<map id="timings::Timer::startTimingsSection" name="timings::Timer::startTimingsSection">
+<area shape="rect" id="Node000001" title="starts a new timer with default name" alt="" coords="5,36,212,81"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1Timer.html#ae560e1495809d5305500b64d63f2d95b" title="find timeManager by name" alt="" coords="271,5,471,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,44,258,41,253,42,213,49"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#aa6d43c22ede0bc08e71e9a18f20ab1b5" title="get timer name" alt="" coords="260,74,482,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,67,247,73,241,74,212,73"/>
+<area shape="rect" id="Node000004" href="$timerId_8cpp.html#ac8b582a9479dec276bd0b124b0658e2a" title="convert TimerId to string" alt="" coords="530,74,602,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="483,85,517,88,512,88,483,90"/>
+<area shape="rect" id="Node000005" href="$structTimerIdMeta.html#a0875bc66f116737c97a26fde58b45be0" title=" " alt="" coords="650,74,814,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="603,85,637,88,632,88,603,90"/>
+</map>

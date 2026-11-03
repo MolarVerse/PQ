@@ -1,0 +1,5 @@
+<map id="input::topology::JCouplingSection::keyword" name="input::topology::JCouplingSection::keyword">
+<area shape="rect" id="Node000001" title="returns the keyword of the j&#45;coupling section" alt="" coords="122,5,309,50"/>
+<area shape="rect" id="Node000002" href="$testJCouplingSection_8cpp.html#aa410a5a95b5aafd3c8f742f3f86089cc" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,28,74,30,74,25,109,27"/>
+</map>

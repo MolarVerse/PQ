@@ -1,0 +1,83 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="testing full setup of simulation box" alt="" coords="5,308,74,336"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="126,5,328,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="38,308,39,258,49,187,59,148,74,109,94,74,120,43,126,39,124,44,124,46,98,77,79,112,64,149,54,188,45,258,43,308"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1MoleculeType.html#a01c9405e4cde289fbb616c5b461a9b2b" title="adds an atom name to the atomNames vector" alt="" coords="145,57,310,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="40,307,46,269,59,216,83,161,100,135,120,112,133,104,130,108,124,116,104,138,88,163,64,218,51,270,45,308"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1MoleculeType.html#a0aefbab8fe400ee04f222a9481531db4" title="adds an atom type to the atomTypes vector" alt="" coords="145,126,310,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="43,307,69,246,91,211,120,181,132,174,130,179,123,185,95,215,74,249,48,308"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1MoleculeType.html#adaa5ee08c79fe30771633cb3c07ec8f0" title="adds an external atom type to the externalAtomTypes vector" alt="" coords="141,196,314,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="51,307,82,278,120,250,134,245,131,249,123,255,85,282,56,309"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1MoleculeType.html#a46ce282ecb946cfd7fb071941504efb8" title="adds an external global VDW type to the externalGlobalVDWTypes vector" alt="" coords="122,265,333,310"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="72,314,108,308,105,312,76,317"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1MoleculeType.html#addc730b483a5f6e4eafc57fdffb762d5" title="adds a partial charge to the partialCharges vector" alt="" coords="145,334,310,379"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="72,326,132,337,128,340,75,330"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1PotentialSettings.html#a5b9c06df8d1c8f7cf0f20e1e0268df9d" title="Set the Coulomb radius cut off in the PotentialSettings class." alt="" coords="131,404,324,448"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="53,333,85,362,123,389,134,395,130,398,120,393,82,366,55,338"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1MoleculeType.html#ae7f03f01e7f27ccc4d18324bbe37bc83" title="sets the number of atoms in the molecule" alt="" coords="145,473,310,518"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="45,334,74,395,95,429,123,458,134,466,129,468,120,463,91,432,69,397,46,339"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1Molecule.html#a22883d80e6a6a35c951dc3731869a7d7" title="sets the partial charges of the atoms in the molecule" alt="" coords="125,542,330,587"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="42,334,51,374,64,426,88,480,104,506,124,528,127,532,122,534,120,532,100,509,83,483,59,427,46,375,42,339"/>
+<area shape="rect" id="Node000012" href="$namespacesetup.html#ab6f3cc208f89f307946eb1b7dd095572" title="wrapper to create SetupSimulationBox object and call setup" alt="" coords="129,615,326,642"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="40,334,45,386,55,456,65,494,79,532,99,567,124,597,133,606,128,608,120,601,94,570,75,534,60,496,50,457,40,386,40,339"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="381,537,597,582"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="329,560,368,560,363,563,331,565"/>
+<area shape="rect" id="Node000013" href="$classsetup_1_1SimulationBoxSetup.html#a2a233804d10e257473d4e9dbbc4dcb93" title="setup simulation box" alt="" coords="390,856,588,900"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="244,640,456,843,451,845,243,646"/>
+<area shape="rect" id="Node000037" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="417,606,561,651"/>
+<area shape="poly" id="edge42_Node000012_Node000037" title=" " alt="" coords="325,626,403,627,399,630,327,631"/>
+<area shape="rect" id="Node000014" href="$classsetup_1_1SimulationBoxSetup.html#a12e7804741a4189ca25c549bf4d3837d" title="Calculates the total charge of the simulation box." alt="" coords="645,485,843,530"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="501,853,543,770,595,662,606,627,612,597,621,569,643,540,650,537,647,541,647,544,626,572,617,598,612,628,600,664,548,772,505,856"/>
+<area shape="rect" id="Node000015" href="$classsetup_1_1SimulationBoxSetup.html#a3fa0b56ee97daedf0c064952f9994dca" title="Checks if the box dimensions and density are set and calculates the missing values." alt="" coords="645,554,843,599"/>
+<area shape="poly" id="edge14_Node000013_Node000015" title=" " alt="" coords="499,853,565,723,607,654,643,609,653,605,649,609,647,613,611,657,570,726,503,856"/>
+<area shape="rect" id="Node000018" href="$classsetup_1_1SimulationBoxSetup.html#afa84cebd5a7ef7af3b477d77c1f012e5" title="Checks if the cutoff radius is larger than half of the minimal box dimension." alt="" coords="645,786,843,831"/>
+<area shape="poly" id="edge17_Node000013_Node000018" title=" " alt="" coords="573,852,647,834,643,837,575,857"/>
+<area shape="rect" id="Node000020" href="$classsetup_1_1SimulationBoxSetup.html#a6528e27ec9a4f5e6bedf11592ed320a8" title="Check if all velocities of the simulation box are 0." alt="" coords="645,624,843,668"/>
+<area shape="poly" id="edge19_Node000013_Node000020" title=" " alt="" coords="501,853,523,816,555,769,596,721,644,678,654,674,650,678,647,683,600,724,559,772,527,819,505,857"/>
+<area shape="rect" id="Node000022" href="$classsetup_1_1SimulationBoxSetup.html#a0069b7e639b1dae75014cadb59afc028" title="Initialize the velocities of the simulation box." alt="" coords="891,1045,1088,1090"/>
+<area shape="poly" id="edge21_Node000013_Node000022" title=" " alt="" coords="492,898,500,977,509,1028,522,1084,542,1140,568,1194,603,1242,647,1281,697,1307,720,1313,742,1315,789,1305,841,1281,866,1265,889,1244,927,1197,955,1147,974,1105,978,1102,959,1149,931,1200,893,1248,870,1269,844,1286,790,1310,742,1320,719,1319,695,1312,644,1285,599,1245,564,1196,537,1142,517,1085,504,1030,495,978,490,903"/>
+<area shape="rect" id="Node000024" href="$classsetup_1_1SimulationBoxSetup.html#aca83e94af7b1d1c05e7ace5ea7f0bc18" title="Sets the atomic number of each atom in the simulation box." alt="" coords="645,717,843,762"/>
+<area shape="poly" id="edge23_Node000013_Node000024" title=" " alt="" coords="518,853,575,813,644,771,660,766,656,769,647,776,578,817,521,857"/>
+<area shape="rect" id="Node000026" href="$classsetup_1_1SimulationBoxSetup.html#a9e517425af318b53380423f5c9d55774" title="Sets the mass of each atom in the simulation box." alt="" coords="645,949,843,994"/>
+<area shape="poly" id="edge26_Node000013_Node000026" title=" " alt="" coords="552,898,669,942,664,944,552,903"/>
+<area shape="rect" id="Node000027" href="$classsetup_1_1SimulationBoxSetup.html#af7a5d0c733ba18354f29a017ed68eaa5" title="set all atomNames in atoms from moleculeTypes" alt="" coords="645,1018,843,1063"/>
+<area shape="poly" id="edge28_Node000013_Node000027" title=" " alt="" coords="513,898,572,951,608,979,647,1004,659,1012,653,1011,644,1008,605,983,568,955,512,903"/>
+<area shape="rect" id="Node000028" href="$classsetup_1_1SimulationBoxSetup.html#a192bf17850bfee581939857c52458a76" title="set all external and internal atom types for _atoms from _moleculeTypes" alt="" coords="645,1088,843,1132"/>
+<area shape="poly" id="edge29_Node000013_Node000028" title=" " alt="" coords="503,898,527,937,559,984,600,1031,647,1073,654,1080,649,1079,644,1077,596,1035,555,987,523,940,502,903"/>
+<area shape="rect" id="Node000029" href="$classsetup_1_1SimulationBoxSetup.html#a20e636321b16ade92b16ae4812f464a1" title="set all external van der Waals types in atoms from moleculeTypes" alt="" coords="645,1157,843,1202"/>
+<area shape="poly" id="edge30_Node000013_Node000029" title=" " alt="" coords="499,898,519,950,549,1015,592,1083,618,1115,647,1142,653,1149,648,1148,644,1147,614,1118,588,1086,545,1017,514,952,497,903"/>
+<area shape="rect" id="Node000030" href="$classsetup_1_1SimulationBoxSetup.html#a3a8c467bfbc82592fd700c09c6ca8794" title="set all partial charges in atoms from _moleculeTypes" alt="" coords="645,1226,843,1271"/>
+<area shape="poly" id="edge31_Node000013_Node000030" title=" " alt="" coords="496,898,512,962,540,1045,560,1090,584,1134,613,1175,647,1212,652,1218,647,1216,643,1216,609,1179,580,1137,555,1092,535,1047,507,963,494,903"/>
+<area shape="rect" id="Node000031" href="$classsetup_1_1SimulationBoxSetup.html#a2edff668bc866fab74ccd9783bb3c646" title="write setup info to log file" alt="" coords="645,856,843,900"/>
+<area shape="poly" id="edge32_Node000013_Node000031" title=" " alt="" coords="588,875,632,877,627,879,589,880"/>
+<area shape="rect" id="Node000016" href="$classout_1_1StdoutOutput.html#af4713bb1061ff99252d0d3973c1a2bc4" title="write a warning message to the stdout if density and box dimensions are set" alt="" coords="911,554,1068,599"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="842,574,898,576,893,577,844,579"/>
+<area shape="rect" id="Node000017" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="1160,554,1309,599"/>
+<area shape="poly" id="edge16_Node000016_Node000017" title=" " alt="" coords="1068,574,1147,576,1142,577,1069,579"/>
+<area shape="rect" id="Node000019" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="893,786,1086,831"/>
+<area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="842,806,879,808,874,809,844,811"/>
+<area shape="rect" id="Node000021" href="$classsetup_1_1SimulationBoxSetup.html#a47e2a8dd736aee135a41b2e153391976" title="sets if the velocities in the start file are zero" alt="" coords="891,624,1088,668"/>
+<area shape="poly" id="edge20_Node000020_Node000021" title=" " alt="" coords="842,643,878,645,873,647,844,648"/>
+<area shape="rect" id="Node000023" href="$classsetup_1_1SimulationBoxSetup.html#aefee9580f5dfc37bcbb810a262f7cf09" title="returns if the velocities in the start file are zero" alt="" coords="1136,1002,1333,1047"/>
+<area shape="poly" id="edge22_Node000022_Node000023" title=" " alt="" coords="1088,1047,1123,1044,1118,1045,1089,1053"/>
+<area shape="poly" id="edge24_Node000024_Node000024" title=" " alt="" coords="697,715,696,707,704,698,720,692,744,690,771,693,788,701,783,702,769,698,744,695,721,697,707,702,701,708,702,717"/>
+<area shape="rect" id="Node000025" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="908,725,1071,753"/>
+<area shape="poly" id="edge25_Node000024_Node000025" title=" " alt="" coords="842,737,895,738,889,740,844,742"/>
+<area shape="poly" id="edge27_Node000026_Node000026" title=" " alt="" coords="697,947,696,939,704,930,720,924,744,922,771,925,788,934,783,934,769,930,744,927,721,929,707,934,701,940,702,949"/>
+<area shape="poly" id="edge38_Node000031_Node000019" title=" " alt="" coords="825,852,896,835,891,837,827,857"/>
+<area shape="poly" id="edge41_Node000031_Node000022" title=" " alt="" coords="827,898,844,911,857,925,864,940,870,968,875,996,881,1010,893,1024,906,1037,900,1036,889,1028,877,1013,870,998,864,969,859,941,852,928,841,914,827,903"/>
+<area shape="poly" id="edge40_Node000031_Node000023" title=" " alt="" coords="824,898,844,910,860,929,868,947,876,964,892,980,946,1005,1005,1020,1064,1028,1123,1033,1118,1033,1064,1034,1004,1026,945,1010,889,984,872,968,863,949,856,932,841,915,823,903"/>
+<area shape="rect" id="Node000032" href="$classsetup_1_1SetupBase.html#a362d3b56078a056d79b12450cf15b13b" title="Writes a setup warning to the log and stdout." alt="" coords="914,856,1065,900"/>
+<area shape="poly" id="edge33_Node000031_Node000032" title=" " alt="" coords="842,875,901,877,896,879,844,880"/>
+<area shape="rect" id="Node000036" href="$classsettings_1_1FileSettings.html#ac98cb135ddaf0981954b758332fae25a" title="Get the start file name." alt="" coords="911,925,1068,970"/>
+<area shape="poly" id="edge39_Node000031_Node000036" title=" " alt="" coords="826,898,899,921,893,921,826,903"/>
+<area shape="rect" id="Node000033" href="$classout_1_1LogOutput.html#a5deed49b92569a735e96b4ad626cb2c7" title="write a message to issue a warning about the setup" alt="" coords="1137,838,1332,883"/>
+<area shape="poly" id="edge34_Node000032_Node000033" title=" " alt="" coords="1065,870,1124,868,1119,869,1066,875"/>
+<area shape="rect" id="Node000035" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="1162,908,1307,952"/>
+<area shape="poly" id="edge37_Node000032_Node000035" title=" " alt="" coords="1065,891,1150,911,1145,912,1066,897"/>
+<area shape="rect" id="Node000034" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="1381,847,1581,874"/>
+<area shape="poly" id="edge35_Node000033_Node000034" title=" " alt="" coords="1332,858,1368,860,1363,861,1333,863"/>
+<area shape="poly" id="edge36_Node000034_Node000034" title=" " alt="" coords="1439,845,1432,838,1438,828,1454,822,1481,820,1510,822,1527,831,1522,831,1509,828,1481,825,1455,827,1441,832,1438,837,1444,847"/>
+<area shape="rect" id="Node000038" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="672,433,816,461"/>
+<area shape="poly" id="edge43_Node000037_Node000038" title=" " alt="" coords="560,613,579,604,596,592,607,577,614,563,618,532,623,501,630,486,644,471,659,462,656,466,647,474,635,489,628,503,624,533,619,564,612,580,599,596,582,608,564,617"/>
+</map>

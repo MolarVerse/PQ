@@ -1,0 +1,5 @@
+<map id="pot::MorsePair" name="pot::MorsePair">
+<area shape="rect" id="Node000001" title="inherits from NonCoulombPair represents a pair of Morse types" alt="" coords="27,438,141,622"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1NonCoulombPair.html" title="base class representing a pair of non&#45;coulombic types" alt="" coords="5,5,162,390"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,403,86,439,81,438,83,408"/>
+</map>

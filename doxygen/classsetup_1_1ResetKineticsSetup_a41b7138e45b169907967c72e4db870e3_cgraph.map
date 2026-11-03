@@ -1,0 +1,5 @@
+<map id="setup::ResetKineticsSetup::setup" name="setup::ResetKineticsSetup::setup">
+<area shape="rect" id="Node000001" title="setup nscale, fscale, nreset, freset" alt="" coords="5,5,197,50"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1ResetKineticsSetup.html#a7dfd3bb15c1fb0d11f695c6913d0c8f5" title="writes setup info to log file" alt="" coords="245,5,436,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,25,231,27,226,28,197,30"/>
+</map>

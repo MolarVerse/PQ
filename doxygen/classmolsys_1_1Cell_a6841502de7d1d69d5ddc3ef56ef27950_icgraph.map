@@ -1,0 +1,7 @@
+<map id="molsys::Cell::getNumberOfMolecules" name="molsys::Cell::getNumberOfMolecules">
+<area shape="rect" id="Node000001" title="returns the number of molecules in the cell" alt="" coords="264,40,461,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Cell.html#ad735903ebccde1df32a6980d1c685b3f" title="Assign molecule indices to hybrid&#45;zone and active/inactive buckets." alt="" coords="5,5,216,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,47,216,45,216,40,251,46"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Cell.html#a95b2a6e343becf5ea1754528c15a9811" title="assigns the indices of water molecules in the cell" alt="" coords="16,75,205,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,78,206,87,205,81,251,78"/>
+</map>

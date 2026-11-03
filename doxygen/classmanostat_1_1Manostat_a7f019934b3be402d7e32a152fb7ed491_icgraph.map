@@ -1,0 +1,14 @@
+<map id="manostat::Manostat::_validateCandidate" name="manostat::Manostat::_validateCandidate">
+<area shape="rect" id="Node000001" title="Scale and validate a candidate cell." alt="" coords="591,40,747,85"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a0f72c206ae03884de00e8c46932f6cbe" title="Validate a resize without changing the live cell or atoms." alt="" coords="391,40,543,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="573,62,544,65,544,60,579,62"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="122,5,343,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="373,49,344,47,344,41,378,49"/>
+<area shape="rect" id="Node000005" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="122,75,343,119"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="378,75,344,83,343,78,373,76"/>
+<area shape="rect" id="Node000004" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="5,23,74,51"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,35,75,38,73,33,109,32"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="142,71,74,50,74,45,146,68"/>
+<area shape="rect" id="Node000006" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="5,83,74,111"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="104,98,74,100,74,94,109,96"/>
+</map>

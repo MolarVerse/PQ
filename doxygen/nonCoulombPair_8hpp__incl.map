@@ -1,0 +1,15 @@
+<map id="/home/runner/work/PQ/PQ/include/potential/nonCoulomb/nonCoulombPair.hpp" name="/home/runner/work/PQ/PQ/include/potential/nonCoulomb/nonCoulombPair.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="51,5,295,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,120,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,70,92,107,88,103,138,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="144,115,203,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,65,176,100,171,98,172,70"/>
+<area shape="rect" id="Node000004" href="$strongTypes_8hpp.html" title=" " alt="" coords="227,115,354,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="213,65,264,105,259,106,212,70"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="164,191,233,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="277,142,228,183,225,179,272,144"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="258,191,323,218"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="292,141,293,176,288,173,289,145"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="347,191,469,218"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="312,141,377,183,372,182,311,146"/>
+</map>

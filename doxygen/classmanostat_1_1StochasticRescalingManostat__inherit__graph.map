@@ -1,0 +1,19 @@
+<map id="manostat::StochasticRescalingManostat" name="manostat::StochasticRescalingManostat">
+<area shape="rect" id="Node000001" title="StochasticRescalingManostat inherits from Manostat." alt="" coords="347,416,557,595"/>
+<area shape="rect" id="Node000003" href="$classTestableStochasticRescalingManostat.html" title=" " alt="" coords="5,643,200,754"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="332,573,201,646,198,642,335,569"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html" title="AnisotropicStochasticRescalingManostat inherits from StochasticRescalingManostat." alt="" coords="224,654,445,743"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="392,605,363,656,359,652,388,609"/>
+<area shape="rect" id="Node000006" href="$classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html" title="FullAnisotropicStochasticRescalingManostat inherits from StochasticRescalingManostat." alt="" coords="468,654,670,743"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="515,604,545,654,540,653,513,609"/>
+<area shape="rect" id="Node000008" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html" title="SemiIsotropicStochasticRescalingManostat inherits from Manostat." alt="" coords="696,654,933,743"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="571,566,735,654,730,654,570,571"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="370,5,534,368"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="453,380,455,417,449,415,451,385"/>
+<area shape="rect" id="Node000005" href="$classTestableAnisotropicStochasticRescalingManostat.html" title=" " alt="" coords="227,802,432,892"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="334,756,333,804,329,801,331,760"/>
+<area shape="rect" id="Node000007" href="$classTestableFullAnisotropicStochasticRescalingManostat.html" title=" " alt="" coords="456,802,683,892"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="571,756,571,804,567,801,568,760"/>
+<area shape="rect" id="Node000009" href="$classTestableSemiIsotropicStochasticRescalingManostat.html" title=" " alt="" coords="707,802,928,892"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="818,756,819,804,814,801,814,760"/>
+</map>

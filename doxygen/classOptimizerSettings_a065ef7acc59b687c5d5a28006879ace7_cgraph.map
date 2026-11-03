@@ -1,0 +1,7 @@
+<map id="OptimizerSettings::validateLearningRateStrategy" name="OptimizerSettings::validateLearningRateStrategy">
+<area shape="rect" id="Node000001" title="validates the selected learning&#45;rate strategy" alt="" coords="5,40,221,85"/>
+<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#adb74cf3a35dd7e21580183e13142c72e" title="returns the learning rate strategy as string" alt="" coords="269,5,452,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,45,256,42,251,43,222,50"/>
+<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#a0c71f944d34e7725d6ad9de0fed0dff9" title="returns whether the learning rate decay has been set" alt="" coords="270,75,450,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,75,258,82,252,82,221,80"/>
+</map>

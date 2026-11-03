@@ -1,0 +1,29 @@
+<map id="input::guffdat::GuffDatReader::read" name="input::guffdat::GuffDatReader::read">
+<area shape="rect" id="Node000001" title="reads the guff.dat file" alt="" coords="5,283,218,327"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a21ee0515bf8768bf6673fd0b376c9b3e" title="get commands from a line" alt="" coords="272,231,472,259"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,280,296,262,291,264,212,285"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1guffdat_1_1GuffDatReader.html#aefc4bd9acdb570b516dfe4ad689f54f8" title="parses a line from the guff.dat file" alt="" coords="266,283,478,327"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,302,253,304,248,306,219,308"/>
+<area shape="rect" id="Node000014" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="272,351,472,379"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="211,325,296,346,291,348,211,331"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a5d03fbe772187c126727b9daade27d23" title="checks which nonCoulombic type is given and adds the corresponding nonCoulombic pair" alt="" coords="526,179,738,223"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="451,280,477,268,500,251,525,233,536,231,541,229,527,238,504,255,479,273,453,285"/>
+<area shape="rect" id="Node000011" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a042de94cd3d7fe5789bb0d06dfa15a2b" title="Determine if both provided molecule types are of the water molecule type." alt="" coords="526,248,738,293"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="478,288,513,286,508,287,479,293"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="536,317,729,362"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="478,316,523,325,518,325,478,322"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1MoleculeType.html#aab97d83442c07c4d276810957607fb14" title="get the internal atom type of an atom" alt="" coords="550,387,715,431"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="452,325,479,337,504,355,527,372,541,381,536,380,525,377,500,359,477,342,451,331"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1guffdat_1_1GuffDatReader.html#ae7302112e21e6d20d7ed89ab71927a84" title="adds a buckingham pair to the guffNonCoulombic potential" alt="" coords="786,5,999,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="651,176,708,119,745,87,785,60,794,58,799,56,788,65,748,92,711,123,655,180"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a844c28cbab8adc69d5bc94a350588d57" title="adds a guff pair to the guffNonCoulombic potential" alt="" coords="786,75,999,119"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="679,176,785,129,807,124,802,126,787,134,681,181"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1guffdat_1_1GuffDatReader.html#af506f33b2d94a518918e39c31fbbabad" title="adds a lennard jones pair to the guffNonCoulombic potential" alt="" coords="786,144,999,189"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="738,184,773,182,768,183,739,189"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a22e6e5ac1b7601c85b2f5be4227c764a" title="adds a morse pair to the guffNonCoulombic potential" alt="" coords="786,213,999,258"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="739,212,773,219,768,220,739,218"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1PotentialSettings.html#af2c3c43e59617c43ae4b2820a86644ee" title="get the nonCoulomb type" alt="" coords="796,283,989,327"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="712,221,740,233,764,251,788,268,802,277,796,276,785,273,761,255,737,238,712,227"/>
+<area shape="rect" id="Node000010" href="$structNonCoulombTypeMeta.html#a30edecd996fb63bba4198e2023b17025" title=" " alt="" coords="808,352,977,397"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="722,221,740,234,752,247,759,261,765,287,771,313,777,325,788,338,798,347,792,346,785,342,773,328,766,315,760,288,754,262,748,250,737,238,721,227"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="OutputFileSettings::getIncludeOutputMetadata" name="OutputFileSettings::getIncludeOutputMetadata">
+<area shape="rect" id="Node000001" title="returns if output files should include metadata" alt="" coords="122,5,325,50"/>
+<area shape="rect" id="Node000002" href="$testOutputParser_8cpp.html#a5ec220bd941b532872d2c30f1f0618f1" title="tests parsing the &quot;include_output_metadata&quot; command" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

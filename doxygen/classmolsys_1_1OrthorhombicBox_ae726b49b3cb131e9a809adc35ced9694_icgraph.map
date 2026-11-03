@@ -1,0 +1,5 @@
+<map id="molsys::OrthorhombicBox::scaleBox" name="molsys::OrthorhombicBox::scaleBox">
+<area shape="rect" id="Node000001" title="scales the cell dimensions and recalculates the volume" alt="" coords="122,5,312,50"/>
+<area shape="rect" id="Node000002" href="$testMolecule_8cpp.html#a7db12602d6e23d2e3568288b194f0fa1" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,28,74,30,74,25,108,27"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="molsys::Molecule::getDegreesOfFreedom" name="molsys::Molecule::getDegreesOfFreedom">
+<area shape="rect" id="Node000001" title="returns the number of degrees of freedom of the molecule" alt="" coords="5,5,224,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="272,5,488,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,25,259,28,254,28,224,30"/>
+</map>

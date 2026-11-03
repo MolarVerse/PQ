@@ -1,0 +1,5 @@
+<map id="timings::Timer::getTimingDetails" name="timings::Timer::getTimingDetails">
+<area shape="rect" id="Node000001" title="get the sorted timings details" alt="" coords="5,5,196,50"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1TimingsSection.html#a9a02e2d7838e5c06b7f5712516473d50" title="calculates the elapsed time in ms" alt="" coords="244,5,422,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,25,231,27,225,28,196,30"/>
+</map>

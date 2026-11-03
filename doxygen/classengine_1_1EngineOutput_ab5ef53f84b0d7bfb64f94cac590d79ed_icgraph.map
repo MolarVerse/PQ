@@ -1,0 +1,5 @@
+<map id="engine::EngineOutput::getVirialOutput" name="engine::EngineOutput::getVirialOutput">
+<area shape="rect" id="Node000001" title="getter for virial output" alt="" coords="256,5,417,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1MDEngine.html#a04db079872ae4c96f09d9cee04b9ab8b" title="get the reference to the virial output" alt="" coords="5,5,208,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,28,208,30,208,25,243,27"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="/home/runner/work/PQ/PQ/include/settings/optimizerSettings.hpp" name="/home/runner/work/PQ/PQ/include/settings/optimizerSettings.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="154,5,322,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,115,78,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,70,86,110,84,106,174,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="252,191,327,218"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="254,65,274,114,288,177,283,175,268,116,251,70"/>
+<area shape="rect" id="Node000004" href="$config_2enums_2optimizer_8hpp.html" title=" " alt="" coords="101,115,260,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="221,66,199,104,195,100,217,69"/>
+<area shape="rect" id="Node000007" href="$setting_8hpp.html" title=" " alt="" coords="341,115,436,143"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="288,65,356,106,351,107,287,70"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="153,191,218,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="183,141,186,176,181,174,180,145"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,191,129,218"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="163,143,101,184,98,180,157,144"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="373,142,320,184,318,179,368,144"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="466,191,588,218"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="414,141,492,183,486,183,412,146"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="351,191,442,218"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="392,141,395,176,391,173,388,145"/>
+</map>

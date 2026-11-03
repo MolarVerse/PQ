@@ -1,0 +1,15 @@
+<map id="input::guffdat::GuffDatReader::checkPartialCharges" name="input::guffdat::GuffDatReader::checkPartialCharges">
+<area shape="rect" id="Node000001" title="checks if the partial charges are in accordance with all guff.dat entries." alt="" coords="5,117,218,162"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a042de94cd3d7fe5789bb0d06dfa15a2b" title="Determine if both provided molecule types are of the water molecule type." alt="" coords="268,5,480,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,115,265,60,285,54,280,57,267,65,155,119"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="307,74,442,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,116,294,103,289,105,219,121"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Molecule.html#a54409a25ca26663368192d66a4dcbe1d" title=" " alt="" coords="266,126,483,154"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="218,137,253,139,248,141,219,142"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Molecule.html#a4329388299d04f733cf8ad92e00f7d4a" title="finds number of different atom types in molecule" alt="" coords="266,177,482,222"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="212,160,261,173,256,174,212,165"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1Molecule.html#a8e2b05b1085c969eabb42295b4d6318d" title="returns the partial charge of the atom by index" alt="" coords="272,247,477,291"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="145,160,201,196,267,232,284,241,278,241,265,237,198,201,144,165"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#aaf583bdaf439d7b207cfd5aa4b5715d3" title="returns sorted unique elements from a vector copy" alt="" coords="531,186,737,214"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="483,197,518,199,513,200,483,202"/>
+</map>

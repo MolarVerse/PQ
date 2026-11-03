@@ -1,0 +1,9 @@
+<map id="input::FilesInputParser::addParameterFileKey" name="input::FilesInputParser::addParameterFileKey">
+<area shape="rect" id="Node000001" title="Adds the parameter_file keyword to the parser." alt="" coords="5,75,173,119"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="247,5,405,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,72,235,54,230,56,169,77"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#a1503331c7222d91c784272237a551666" title="set the parameter file name flag to is set" alt="" coords="221,75,431,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,94,207,96,202,98,173,100"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1FileSettings.html#a8ccb6d833646570242642e4e33874108" title="set the parameter file name" alt="" coords="237,144,415,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="168,117,235,138,230,140,167,123"/>
+</map>

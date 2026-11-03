@@ -1,0 +1,9 @@
+<map id="molsys::Atom::isActive" name="molsys::Atom::isActive">
+<area shape="rect" id="Node000001" title="return if the atom is active" alt="" coords="243,57,414,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Atom.html#a2764d2618b320cf0b0d8aa39ce3bb2f1" title="determine if an atom should be treated as MM" alt="" coords="5,5,195,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="247,54,164,36,164,31,252,52"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Atom.html#ae4b2473e62c12772516ea371612fbc3c" title="determine if an atom should be treated as QM" alt="" coords="6,57,194,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="224,72,194,74,194,69,230,71"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Atom.html#a7c22dfff160f08c9de708783ee92eea9" title="set if the atom is active" alt="" coords="10,109,190,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="252,89,165,111,164,106,247,89"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="thermostat::Thermostat::_requireDegreesOfFreedom" name="thermostat::Thermostat::_requireDegreesOfFreedom">
+<area shape="rect" id="Node000001" title="throw if the system has no degrees of freedom" alt="" coords="5,5,214,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a2c10e2ba2e99e7ebd66e68966d45f0b6" title="Get degrees of freedom." alt="" coords="262,5,438,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,25,248,27,243,28,214,30"/>
+</map>

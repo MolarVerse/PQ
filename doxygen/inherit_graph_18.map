@@ -1,0 +1,21 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classconnectivity_1_1ConnectivityElement.html" title="Represents a connectivity element between n atoms." alt="" coords="5,101,196,146"/>
+<area shape="rect" id="Node000001" href="$classconnectivity_1_1Angle.html" title="Represents an angle between three atoms." alt="" coords="253,32,398,60"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="181,93,285,58,281,62,183,98"/>
+<area shape="rect" id="Node000003" href="$classconnectivity_1_1Bond.html" title="Represents a bond between two atoms." alt="" coords="255,109,396,137"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="211,121,257,122,252,124,212,126"/>
+<area shape="rect" id="Node000007" href="$classconnectivity_1_1Dihedral.html" title="dihedral object containing all dihedral information" alt="" coords="244,213,407,241"/>
+<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="165,150,295,211,291,214,164,155"/>
+<area shape="rect" id="Node000002" href="$classff_1_1AngleForceField.html" title="BondForceField inherits from Bond." alt="" coords="497,5,638,33"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="413,34,499,26,494,28,414,39"/>
+<area shape="rect" id="Node000004" href="$classconstraints_1_1BondConstraint.html" title="BondConstraint inherits from Bond." alt="" coords="467,57,668,85"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="407,103,502,85,497,87,409,108"/>
+<area shape="rect" id="Node000005" href="$classconstraints_1_1DistanceConstraint.html" title="DistanceConstraint inherits from Bond." alt="" coords="455,109,680,137"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="411,121,457,123,452,124,412,126"/>
+<area shape="rect" id="Node000006" href="$classff_1_1BondForceField.html" title="BondForceField inherits from Bond." alt="" coords="499,161,636,189"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="408,138,502,160,497,161,408,144"/>
+<area shape="rect" id="Node000008" href="$classff_1_1DihedralForceField.html" title="Represents a dihedral between four atoms." alt="" coords="488,213,647,241"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="422,225,490,227,485,227,422,230"/>
+<area shape="rect" id="Node000009" href="$classff_1_1JCouplingForceField.html" title=" " alt="" coords="485,265,650,293"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="408,242,502,265,497,265,408,248"/>
+</map>

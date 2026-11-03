@@ -1,0 +1,7 @@
+<map id="settings::GeneralSettings::deactivateIntraNonBonded" name="settings::GeneralSettings::deactivateIntraNonBonded">
+<area shape="rect" id="Node000001" title="deactivate intra non&#45;bonded interactions" alt="" coords="122,24,325,68"/>
+<area shape="rect" id="Node000002" href="$testIntraNonBondedReader_8cpp.html#ac44e14061c5232805633c841df321b72" title=" " alt="" coords="5,5,74,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,30,74,27,74,21,109,28"/>
+<area shape="rect" id="Node000003" href="$testIntraNonBondedSetup_8cpp.html#a1d068294dfd6a2ad6f1b140139806896" title="tests the setup of the intra non bonded interactions" alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,63,74,69,74,64,109,61"/>
+</map>

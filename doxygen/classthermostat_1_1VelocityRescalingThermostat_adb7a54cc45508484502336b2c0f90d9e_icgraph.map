@@ -1,0 +1,13 @@
+<map id="thermostat::VelocityRescalingThermostat::VelocityRescalingThermostat" name="thermostat::VelocityRescalingThermostat::VelocityRescalingThermostat">
+<area shape="rect" id="Node000001" title=" " alt="" coords="359,144,653,189"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1VelocityRescalingThermostat.html#ae3bb1545c124a45b3d46e5a805945027" title="Copy assignment operator for Velocity Rescaling Thermostat." alt="" coords="50,5,266,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="453,136,387,100,310,65,267,51,266,46,312,60,390,95,459,135"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1VelocityRescalingThermostat.html#ad35bf41454e4bc11d0800cd17d325c7f" title=" " alt="" coords="50,75,266,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="373,141,267,121,266,116,378,139"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1VelocityRescalingThermostat.html#af9840595352ac2a5f4f46246770fd0d1" title="Copy constructor for Velocity Rescaling Thermostat." alt="" coords="11,144,305,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="340,167,306,169,305,164,345,166"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1VelocityRescalingThermostat.html#ad64d3cba76f64b609d5f254e838a0d1f" title=" " alt="" coords="11,213,305,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="373,193,274,215,273,210,378,191"/>
+<area shape="rect" id="Node000006" href="$classthermostat_1_1VelocityRescalingThermostat.html#aa44e24766d3e4d84cbe593fa30d1d61a" title=" " alt="" coords="5,283,311,327"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="458,196,390,237,312,273,275,285,274,279,310,268,387,233,453,198"/>
+</map>

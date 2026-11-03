@@ -1,0 +1,9 @@
+<map id="/home/runner/work/PQ/PQ/include/setup/simulationBoxSetup.hpp" name="/home/runner/work/PQ/PQ/include/setup/simulationBoxSetup.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="202,5,409,67"/>
+<area shape="rect" id="Node000002" href="$setup_8cpp.html" title=" " alt="" coords="5,124,179,168"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,74,136,125,134,121,229,75"/>
+<area shape="rect" id="Node000003" href="$simulationBoxSetup_8cpp.html" title=" " alt="" coords="203,115,408,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="307,81,308,116,303,113,304,85"/>
+<area shape="rect" id="Node000004" href="$testSimulationBoxSetup_8cpp.html" title=" " alt="" coords="431,115,673,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="389,71,485,114,480,115,388,76"/>
+</map>

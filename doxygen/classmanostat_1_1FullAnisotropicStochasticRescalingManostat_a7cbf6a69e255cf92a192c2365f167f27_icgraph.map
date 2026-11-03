@@ -1,0 +1,5 @@
+<map id="manostat::FullAnisotropicStochasticRescalingManostat::calculateMu" name="manostat::FullAnisotropicStochasticRescalingManostat::calculateMu">
+<area shape="rect" id="Node000001" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="122,5,334,67"/>
+<area shape="rect" id="Node000002" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="5,22,74,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,37,74,39,74,34,108,35"/>
+</map>

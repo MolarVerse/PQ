@@ -1,0 +1,5 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="tests a customParser alias resolving a token the generated from_string doesn&#39;t know about" alt="" coords="5,14,59,42"/>
+<area shape="rect" id="Node000002" href="$structTestJobTypeMeta.html#a6530f0d6dedabd1d8a105b6d3c913913" title=" " alt="" coords="107,5,276,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,25,94,27,89,29,59,30"/>
+</map>

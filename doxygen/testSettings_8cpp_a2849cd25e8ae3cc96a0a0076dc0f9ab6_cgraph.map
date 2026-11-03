@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,59,111"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a1862423df5853a9d58a116a6c9fd577a" title="get the floating point string representation used in pybind11 bindings" alt="" coords="107,5,325,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,82,106,60,127,54,123,57,108,65,61,86"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="123,75,308,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,94,109,95,106,99,60,100"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#aa051a6d49ac857b16cc55b39975ab087" title="sets the floating point type" alt="" coords="123,144,308,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,108,108,129,127,138,122,139,106,134,59,113"/>
+</map>

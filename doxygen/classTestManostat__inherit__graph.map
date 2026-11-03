@@ -1,0 +1,5 @@
+<map id="TestManostat" name="TestManostat">
+<area shape="rect" id="Node000001" title="Fixture for manostat tests." alt="" coords="5,126,103,265"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,5,99,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,90,57,126,52,126,54,95"/>
+</map>

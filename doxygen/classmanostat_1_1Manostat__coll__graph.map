@@ -1,0 +1,9 @@
+<map id="manostat::Manostat" name="manostat::Manostat">
+<area shape="rect" id="Node000001" title="Manostat is a base class for all manostats." alt="" coords="256,151,419,469"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,219,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,75,248,199,243,200,141,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="244,5,431,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="339,75,340,135,335,133,336,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="460,5,514,78"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="479,75,460,128,430,182,426,178,455,126,475,80"/>
+</map>

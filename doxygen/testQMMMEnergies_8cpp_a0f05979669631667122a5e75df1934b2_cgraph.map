@@ -1,0 +1,9 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#ae1f0a770d75d97d2b9f3fefbf63d1781" title="deactivates the molecule and it&#39;s atoms for hybrid calculations" alt="" coords="122,5,334,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,108,49,104,52,75,59"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1MoleculeType.html#ae1df49140290274134a3d3e99ca48109" title="sets the QM reference energy of the molecule type" alt="" coords="137,75,319,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,66,123,76,119,79,74,71"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a153dbc45e1cbfa7ddfad317a855375e7" title="returns the atoms of the molecule" alt="" coords="382,14,588,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,25,369,27,363,28,335,30"/>
+</map>

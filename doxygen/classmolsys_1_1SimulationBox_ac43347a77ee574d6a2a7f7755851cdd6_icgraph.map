@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::getExternalGlobalVdwTypes" name="molsys::SimulationBox::getExternalGlobalVdwTypes">
+<area shape="rect" id="Node000001" title="get the external global VDW types" alt="" coords="122,5,333,50"/>
+<area shape="rect" id="Node000002" href="$testSimulationBox_8cpp.html#ab442c1904a5b2bd2c30aa25f5fc1aee5" title="tests setup external to internal global vdw types map" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

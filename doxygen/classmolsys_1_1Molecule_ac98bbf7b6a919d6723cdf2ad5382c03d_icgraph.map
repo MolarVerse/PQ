@@ -1,0 +1,5 @@
+<map id="molsys::Molecule::reconstructAtomsAroundCenterOfMass" name="molsys::Molecule::reconstructAtomsAroundCenterOfMass">
+<area shape="rect" id="Node000001" title="reconstructs atom positions around the current center&#45;of&#45;mass image" alt="" coords="107,5,323,50"/>
+<area shape="rect" id="Node000002" href="$testHybridConfigurator_8cpp.html#af101c1804efd9bcaf35f7299c6e4b295" title=" " alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,29,59,30,59,25,93,27"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="utilities::sign" name="utilities::sign">
+<area shape="rect" id="Node000001" title="calculates the sign of a number" alt="" coords="5,5,111,33"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="159,5,294,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,17,146,19,140,19,111,22"/>
+</map>

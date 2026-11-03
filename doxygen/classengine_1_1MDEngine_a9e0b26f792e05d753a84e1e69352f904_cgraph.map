@@ -1,0 +1,7 @@
+<map id="engine::MDEngine::getChargeOutput" name="engine::MDEngine::getChargeOutput">
+<area shape="rect" id="Node000001" title="get the reference to the charge output" alt="" coords="5,40,220,85"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1EngineOutput.html#aa82d7ac6e0cec0ccb1245a0811df5659" title="getter for charge output" alt="" coords="282,5,444,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,45,269,40,264,42,221,50"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Engine.html#a97961d6c869076d7df7995e7f77cfbc9" title="get the reference to the engine output" alt="" coords="268,75,458,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,75,255,82,250,82,220,80"/>
+</map>

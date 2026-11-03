@@ -1,0 +1,5 @@
+<map id="manostat::SemiIsotropicStochasticRescalingManostat::calculateMu" name="manostat::SemiIsotropicStochasticRescalingManostat::calculateMu">
+<area shape="rect" id="Node000001" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="122,5,369,50"/>
+<area shape="rect" id="Node000002" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

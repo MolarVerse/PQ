@@ -1,0 +1,5 @@
+<map id="ff::BondForceField::isLinker" name="ff::BondForceField::isLinker">
+<area shape="rect" id="Node000001" title="get if bond is a linker bond" alt="" coords="191,5,328,50"/>
+<area shape="rect" id="Node000002" href="$classff_1_1BondForceField.html#a9c227b68cd8b45e166b59f092b161a54" title="set if bond is a linker bond" alt="" coords="5,5,143,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,28,143,30,143,25,178,27"/>
+</map>

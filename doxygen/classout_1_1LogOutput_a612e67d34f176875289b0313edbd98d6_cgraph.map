@@ -1,0 +1,6 @@
+<map id="out::LogOutput::writeInfo" name="out::LogOutput::writeInfo">
+<area shape="rect" id="Node000001" title="write a message to the log file" alt="" coords="5,29,189,57"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="237,29,436,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,41,224,43,218,43,189,46"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="295,28,289,20,294,11,310,5,336,3,364,5,381,14,376,14,363,10,336,8,311,10,298,15,294,20,300,30"/>
+</map>

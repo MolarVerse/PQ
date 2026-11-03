@@ -1,0 +1,9 @@
+<map id="TestRandomNumberGenerator::SetUp" name="TestRandomNumberGenerator::SetUp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,40,224,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#ae256e11db193b48e1e286ec300ca3034" title="sets if the random seed value has been set" alt="" coords="272,5,457,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,45,259,42,254,43,225,50"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a2b91ce3c3386cb4315c8aafa2fb1f300" title="sets the random seed value" alt="" coords="272,75,457,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="224,75,259,82,254,82,224,80"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ae333019b7750ca73befd75830280ab38" title="get if the random seed value has been set" alt="" coords="505,5,690,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="457,25,492,27,487,28,458,30"/>
+</map>

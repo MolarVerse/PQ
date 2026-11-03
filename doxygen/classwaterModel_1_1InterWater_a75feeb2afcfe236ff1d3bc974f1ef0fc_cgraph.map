@@ -1,0 +1,11 @@
+<map id="waterModel::InterWater::_initState" name="waterModel::InterWater::_initState">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,40,180,85"/>
+<area shape="rect" id="Node000002" href="$classwaterModel_1_1InterWater.html#a53639d6022b2b5f32e07fad8f07a4219" title="Initialize the non&#45;Coulomb pairs for the configured inter&#45;water model." alt="" coords="248,5,422,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,47,235,41,230,43,181,52"/>
+<area shape="rect" id="Node000003" href="$classwaterModel_1_1InterWater.html#a647af93c879326310307e60c0e77977a" title="Apply radial cutoffs to configured inter&#45;water non&#45;Coulomb pairs." alt="" coords="228,75,442,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,72,215,79,210,80,180,77"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="503,40,696,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="442,80,490,77,485,77,443,86"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1PotentialSettings.html#a9284c5e4ea50f86f9a93ea58f9df009f" title="get the non&#45;Coulomb radius cut off" alt="" coords="490,109,709,154"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="443,108,477,115,472,115,442,114"/>
+</map>

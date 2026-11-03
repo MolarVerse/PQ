@@ -1,0 +1,5 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="tests the allowed&#45;values restriction rejects an otherwise valid value that is outside the given subse..." alt="" coords="5,5,59,33"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputKey.html#a726f05613b1dd7d7cb98efbe08f8eab7" title="parses a line from the input file and sets the value of the key" alt="" coords="107,5,269,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,17,94,18,89,20,59,22"/>
+</map>

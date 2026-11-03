@@ -1,0 +1,36 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,295,59,322"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="121,5,323,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="30,294,31,247,39,179,48,142,61,106,80,72,105,43,111,40,108,44,109,46,85,75,66,108,53,143,44,180,36,247,35,295"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="136,57,308,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="32,294,37,258,49,209,71,157,86,133,105,112,123,100,121,105,108,116,90,136,75,160,54,211,42,259,37,295"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a1ac3cb7dca62bcd4372f9294bd413a15" title="adds all atomIndices to _innerRegionCenterAtomIndices vector" alt="" coords="114,126,330,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="35,293,59,239,79,208,105,181,114,177,111,181,108,185,83,211,64,241,40,295"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="136,196,308,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="50,293,105,257,136,244,133,248,108,262,54,296"/>
+<area shape="rect" id="Node000006" href="$classconfigurator_1_1HybridConfigurator.html#a7d5a38c3c71c2cb8394caa9b47e91a14" title="Assign hybrid zones to all molecules based on their distance from the inner region center." alt="" coords="107,316,337,360"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="58,310,93,316,89,319,60,315"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="414,148,586,192"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="58,303,203,283,281,268,336,250,350,239,359,227,368,215,384,202,402,195,398,198,386,207,372,218,363,231,354,243,338,255,283,273,204,289,60,308"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1Molecule.html#a1d8501c9f767d7cc5aed34db3cb696e9" title="returns the center of mass of the molecule" alt="" coords="118,385,326,430"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="45,320,74,346,108,370,121,377,116,379,105,375,71,350,47,325"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1SimulationBox.html#a76153d2760d3319d21127959bd0556b8" title="get molecule by index" alt="" coords="136,454,308,499"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="37,320,63,379,82,412,108,440,125,452,120,453,105,444,78,415,58,382,37,326"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1Molecule.html#ac98bbf7b6a919d6723cdf2ad5382c03d" title="reconstructs atom positions around the current center&#45;of&#45;mass image" alt="" coords="114,524,330,568"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="34,320,42,360,53,410,75,463,90,488,109,509,113,514,108,515,105,513,85,491,70,466,48,412,36,361,34,325"/>
+<area shape="rect" id="Node000017" href="$classmolsys_1_1SimulationBox.html#a071637632228934195f9355e5ddb22e1" title=" " alt="" coords="136,593,308,638"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="33,320,36,371,45,440,54,477,67,514,85,548,109,579,125,593,120,593,105,582,80,551,62,516,49,478,39,441,31,371,33,325"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="307,313,335,295,352,272,358,249,365,226,383,203,403,192,399,196,387,206,370,228,363,251,357,275,339,298,310,317"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1HybridSettings.html#aa8d4ebfd9525772b278d57e61c65469d" title="get the coreRadius" alt="" coords="412,217,589,262"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="288,313,336,294,384,271,406,265,402,268,386,276,338,299,291,317"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1HybridSettings.html#a012ead724b28803dad533a139ddd0749" title="get the layerRadius" alt="" coords="412,286,589,331"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="336,323,398,318,393,321,338,328"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="414,356,586,400"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="337,352,401,362,396,364,338,357"/>
+<area shape="rect" id="Node000011" href="$classsettings_1_1HybridSettings.html#a062e2f0295a32ac267132bba10163e58" title="get the pointChargeThickness" alt="" coords="403,425,597,470"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="311,358,338,370,353,380,363,391,372,401,386,410,400,418,394,419,384,415,369,405,359,394,350,384,336,375,311,363"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1HybridSettings.html#abee55e05df21480e2376937354bd582a" title="get the smoothingRegionThickness" alt="" coords="385,494,615,539"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="320,358,339,371,351,384,358,399,364,427,369,454,375,467,387,480,392,486,387,485,383,484,371,470,364,456,358,428,353,400,347,387,335,374,320,363"/>
+<area shape="rect" id="Node000016" href="$classmolsys_1_1Box.html#a9fe76e2c1b3e4fa8b66ec54e5bc37f3d" title=" " alt="" coords="398,563,603,590"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="330,555,385,563,380,564,331,560"/>
+</map>

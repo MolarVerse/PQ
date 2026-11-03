@@ -1,0 +1,3 @@
+<map id="input::InputKeyBase" name="input::InputKeyBase">
+<area shape="rect" id="Node000001" title="type&#45;erased base for InputKey&lt;T&gt;, so keys of different T can live in the same InputRegistry" alt="" coords="5,5,146,189"/>
+</map>

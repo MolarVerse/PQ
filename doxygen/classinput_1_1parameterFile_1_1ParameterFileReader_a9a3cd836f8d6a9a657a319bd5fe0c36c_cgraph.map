@@ -1,0 +1,15 @@
+<map id="input::parameterFile::ParameterFileReader::read" name="input::parameterFile::ParameterFileReader::read">
+<area shape="rect" id="Node000001" title="reads parameter file" alt="" coords="5,176,208,221"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1parameterFile_1_1ParameterFileReader.html#a90adb3c8577e3e253f6050fe205ed20e" title="deletes section from _parameterFileSections" alt="" coords="273,5,438,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,174,185,127,254,77,265,73,261,76,257,81,188,131,133,178"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1parameterFile_1_1ParameterFileReader.html#a3cd02b328761f70bc35509289561a31c" title="determines which section of the parameter file the header line belongs to" alt="" coords="273,91,438,152"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,173,260,150,255,153,182,178"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1FileSettings.html#ae9f73a9c3dcd65bf30755ebc59133b47" title="Check if the parameter file name is set." alt="" coords="260,176,450,221"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="208,196,247,198,242,200,209,201"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="256,245,455,273"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="202,219,283,240,277,242,202,224"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="283,297,428,325"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="142,219,196,251,257,282,280,292,274,292,255,287,193,256,141,224"/>
+<area shape="rect" id="Node000004" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="503,99,710,144"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="438,119,490,121,485,122,439,124"/>
+</map>

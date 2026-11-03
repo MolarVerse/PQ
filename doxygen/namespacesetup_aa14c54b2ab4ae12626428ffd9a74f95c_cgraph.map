@@ -1,0 +1,65 @@
+<map id="setup::setupHybrid" name="setup::setupHybrid">
+<area shape="rect" id="Node000001" title="wrapper to build HybridSetup object and call setup" alt="" coords="5,515,150,543"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a5b6c55783018fc3a9a8234ec902ca594" title="Returns true if the jobtype is a hybrid type simulation." alt="" coords="198,437,383,482"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,513,207,485,203,490,124,517"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1HybridSetup.html#a81c880d06d1396655908b6eb0fa21af5" title="setup Hybrid&#45;MD" alt="" coords="218,507,363,551"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,527,204,527,200,531,151,531"/>
+<area shape="rect" id="Node000027" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="218,675,362,719"/>
+<area shape="poly" id="edge34_Node000001_Node000027" title=" " alt="" coords="97,541,251,663,246,666,96,546"/>
+<area shape="rect" id="Node000004" href="$classsetup_1_1HybridSetup.html#a64796815aa17add603b47b074645ce36" title="Validate zone radii configuration for hybrid calculations." alt="" coords="472,368,617,413"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="357,504,382,492,406,476,429,457,494,419,490,423,433,462,409,480,384,497,360,508"/>
+<area shape="rect" id="Node000009" href="$classsetup_1_1HybridSetup.html#a40f232fc8068755436c9f73e54f0ada7" title="setup forced core list" alt="" coords="464,472,625,517"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="363,517,450,506,446,509,365,522"/>
+<area shape="rect" id="Node000011" href="$classsetup_1_1HybridSetup.html#af8f7d99fb8edb0d2ea2beab7485b621d" title="setup forced layer list" alt="" coords="460,31,628,75"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="361,509,381,493,398,468,409,444,419,398,416,352,408,307,399,261,395,213,403,164,413,138,429,111,443,95,464,81,461,86,447,99,433,115,418,140,408,165,400,213,404,260,413,306,422,351,424,398,414,446,402,471,385,496,365,513"/>
+<area shape="rect" id="Node000013" href="$classsetup_1_1HybridSetup.html#a8c9f739c5fc204b6d88511f139e7cd2a" title="setup forced outer list" alt="" coords="460,611,628,655"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="333,549,432,596,452,605,446,606,430,601,333,554"/>
+<area shape="rect" id="Node000015" href="$classsetup_1_1HybridSetup.html#ab91347d94f50301b5e911ae7d3ab49ae" title="setup inner region center" alt="" coords="451,680,637,725"/>
+<area shape="poly" id="edge14_Node000003_Node000015" title=" " alt="" coords="309,549,361,608,395,639,432,665,443,673,438,673,430,670,392,643,357,611,308,554"/>
+<area shape="rect" id="Node000017" href="$classsetup_1_1HybridSetup.html#a73b86c42ad0da4cf1b4619e0996c99cf" title="write info about the hybrid setup" alt="" coords="472,541,617,586"/>
+<area shape="poly" id="edge16_Node000003_Node000017" title=" " alt="" coords="363,536,458,551,453,553,364,542"/>
+<area shape="rect" id="Node000022" href="$classsetup_1_1HybridSetup.html#adf2ffba3e76851ae4d46d9e4b567486a" title="Validate the compatibility between QM charge settings and moltype 0 presence." alt="" coords="442,749,646,794"/>
+<area shape="poly" id="edge28_Node000003_Node000022" title=" " alt="" coords="309,549,385,661,406,702,415,718,433,735,440,742,435,741,429,739,411,722,401,704,381,664,307,555"/>
+<area shape="rect" id="Node000023" href="$classsetup_1_1HybridSetup.html#aece3f9da46049f09c2c0a60cdfbc0741" title="Check if chosen QM method is available for hybrid type calculations." alt="" coords="468,125,621,170"/>
+<area shape="poly" id="edge30_Node000003_Node000023" title=" " alt="" coords="362,508,381,493,399,467,408,443,412,419,412,396,412,345,417,316,429,285,465,227,510,179,507,183,470,230,433,288,422,318,417,345,417,396,417,420,414,444,404,470,385,496,365,512"/>
+<area shape="rect" id="Node000026" href="$classsetup_1_1HybridSetup.html#a1baf2452f17066e85f1831b067dc5a0a" title="Validate that no moltype 0 atoms are present when QM reference energies are used." alt="" coords="431,299,657,343"/>
+<area shape="poly" id="edge33_Node000003_Node000026" title=" " alt="" coords="362,507,381,492,394,475,400,459,404,424,408,389,415,371,429,354,436,351,432,355,433,357,420,374,413,391,409,425,406,460,399,478,385,496,365,511"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1HybridSettings.html#aa8d4ebfd9525772b278d57e61c65469d" title="get the coreRadius" alt="" coords="732,264,909,309"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="616,370,656,353,680,336,704,319,721,313,717,316,707,323,683,340,659,358,619,374"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1HybridSettings.html#a012ead724b28803dad533a139ddd0749" title="get the layerRadius" alt="" coords="732,333,909,378"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="616,379,719,367,714,370,618,384"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1HybridSettings.html#a062e2f0295a32ac267132bba10163e58" title="get the pointChargeThickness" alt="" coords="723,403,918,447"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="617,397,711,410,706,412,618,402"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1HybridSettings.html#abee55e05df21480e2376937354bd582a" title="get the smoothingRegionThickness" alt="" coords="705,195,936,239"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="616,376,637,366,656,354,667,341,673,329,679,303,685,276,692,263,703,250,712,246,708,250,707,254,696,266,690,278,684,304,678,331,671,344,659,358,640,371,618,380"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1HybridSettings.html#a66d1bc8d6c2a364c3cf88b5d4d973bb1" title="get the forcedCoreList" alt="" coords="732,472,909,517"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="625,492,719,493,714,495,626,497"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1HybridSettings.html#a356850feb4cb57311e815268ba32c5ff" title="get the forcedLayerList" alt="" coords="732,5,909,50"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="627,43,719,36,714,39,630,48"/>
+<area shape="rect" id="Node000014" href="$classsettings_1_1HybridSettings.html#ae4bf4bf9eaf0891e6957b44047d0e85d" title="get the forcedOuterList" alt="" coords="732,749,909,794"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="628,649,659,666,676,683,684,701,692,718,707,735,721,745,715,745,704,739,687,721,679,703,671,686,656,670,628,654"/>
+<area shape="rect" id="Node000016" href="$classsettings_1_1HybridSettings.html#abe8d7065b3006e32a22f990f24d44ecf" title="get the innerRegionCenter as list of int" alt="" coords="732,819,909,863"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="638,723,659,735,676,753,684,771,692,788,707,804,721,815,715,814,704,808,687,791,679,773,671,756,656,739,637,728"/>
+<area shape="poly" id="edge17_Node000017_Node000005" title=" " alt="" coords="616,551,638,541,655,527,673,502,680,477,681,451,679,425,676,399,677,373,685,346,703,319,720,308,716,312,707,323,690,348,682,373,681,399,684,425,686,451,686,477,678,504,659,531,640,546,619,556"/>
+<area shape="poly" id="edge22_Node000017_Node000006" title=" " alt="" coords="616,550,637,540,655,527,669,511,675,494,679,459,682,424,689,406,703,388,716,382,721,378,707,392,694,409,687,425,684,460,681,495,673,513,659,531,640,545,618,555"/>
+<area shape="poly" id="edge23_Node000017_Node000007" title=" " alt="" coords="616,547,656,527,671,510,679,493,687,475,704,458,710,457,714,454,707,462,692,478,684,495,676,513,659,531,619,551"/>
+<area shape="poly" id="edge25_Node000017_Node000008" title=" " alt="" coords="616,552,638,542,655,527,677,493,685,459,684,425,679,391,673,356,672,321,680,286,703,250,705,252,709,248,707,253,685,288,677,322,678,356,684,390,690,424,691,459,682,495,659,531,640,546,619,556"/>
+<area shape="poly" id="edge18_Node000017_Node000010" title=" " alt="" coords="616,543,720,519,715,521,618,548"/>
+<area shape="poly" id="edge19_Node000017_Node000014" title=" " alt="" coords="617,572,640,582,659,596,673,614,681,632,684,667,687,702,694,719,707,735,721,748,716,747,703,739,689,721,682,703,679,668,675,633,669,617,655,600,637,587,617,578"/>
+<area shape="poly" id="edge20_Node000017_Node000016" title=" " alt="" coords="617,571,640,582,659,597,678,623,686,650,686,676,684,703,681,728,682,754,690,779,707,805,721,818,716,817,703,808,685,781,677,755,676,728,679,702,681,676,680,651,673,626,655,600,638,586,618,577"/>
+<area shape="rect" id="Node000018" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="728,541,913,586"/>
+<area shape="poly" id="edge21_Node000017_Node000018" title=" " alt="" coords="617,561,715,563,710,564,618,566"/>
+<area shape="rect" id="Node000019" href="$classsettings_1_1HybridSettings.html#a4a3a2ff456a1d0c2f29a041158a9bdcd" title="get the smoothing method" alt="" coords="732,611,909,655"/>
+<area shape="poly" id="edge24_Node000017_Node000019" title=" " alt="" coords="617,579,720,607,715,608,618,585"/>
+<area shape="rect" id="Node000020" href="$classsettings_1_1HybridSettings.html#a64461a9aed9cce379595a293a0536478" title="get the useQMCharges" alt="" coords="732,888,909,933"/>
+<area shape="poly" id="edge26_Node000017_Node000020" title=" " alt="" coords="617,571,640,581,659,597,682,632,691,668,690,703,684,738,678,772,677,806,685,840,707,874,721,888,716,887,703,877,680,842,672,806,673,771,679,737,684,702,685,668,677,634,655,600,638,586,617,576"/>
+<area shape="rect" id="Node000021" href="$structSmoothingMethodMeta.html#adf64bf9c91a4bb1018f517db0e11e217" title=" " alt="" coords="734,680,907,725"/>
+<area shape="poly" id="edge27_Node000017_Node000021" title=" " alt="" coords="618,576,659,596,676,614,684,632,692,649,707,666,722,677,717,676,704,670,687,652,679,634,671,617,656,600,617,581"/>
+<area shape="poly" id="edge29_Node000022_Node000020" title=" " alt="" coords="638,792,659,804,676,822,684,840,692,857,707,874,721,884,715,883,704,878,687,860,679,842,671,825,656,808,637,797"/>
+<area shape="rect" id="Node000024" href="$classsettings_1_1QMSettings.html#a392002c6312680d946422a22711bee71" title="returns the qmMethod" alt="" coords="742,125,899,170"/>
+<area shape="poly" id="edge31_Node000023_Node000024" title=" " alt="" coords="620,145,729,146,724,149,622,150"/>
+<area shape="rect" id="Node000025" href="$structQMMethodMeta.html#ac7b17240ca445e36d9a8ba58d5ed7a7c" title=" " alt="" coords="728,74,913,102"/>
+<area shape="poly" id="edge32_Node000023_Node000025" title=" " alt="" coords="620,129,741,104,736,107,623,133"/>
+<area shape="rect" id="Node000028" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="472,818,616,846"/>
+<area shape="poly" id="edge35_Node000027_Node000028" title=" " alt="" coords="315,717,367,762,398,785,432,804,460,816,455,816,430,809,396,789,363,766,314,723"/>
+</map>

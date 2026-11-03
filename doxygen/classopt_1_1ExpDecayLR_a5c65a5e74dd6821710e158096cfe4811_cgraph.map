@@ -1,0 +1,7 @@
+<map id="opt::ExpDecayLR::updateLearningRate" name="opt::ExpDecayLR::updateLearningRate">
+<area shape="rect" id="Node000001" title="Update the learning rate." alt="" coords="5,48,276,76"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1LearningRateStrategy.html#ab6c7f943c79885b4714a66cd5342bf56" title="Get the initial learning rate." alt="" coords="324,5,515,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,45,311,41,305,42,257,51"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1LearningRateStrategy.html#a7c0fee23f7069da8dbb05721623c258e" title="Set the learning rate." alt="" coords="324,75,515,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="257,74,311,83,305,83,257,79"/>
+</map>

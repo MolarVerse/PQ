@@ -1,0 +1,7 @@
+<map id="input::parameterFile::TypesSection::processSection" name="input::parameterFile::TypesSection::processSection">
+<area shape="rect" id="Node000001" title="process types section and sets the scale factors for the 1&#45;4 interactions in potentialSettings" alt="" coords="5,40,226,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#af964035d9a1195110a4cbe480c2c603e" title="Set the 1&#45;4 Coulomb scaling factor in the PotentialSettings class." alt="" coords="274,5,466,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,45,261,42,256,43,227,50"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#a3862d5108656cd7fe1b451f9c9bbc8dc" title="Set the 1&#45;4 Van der Waals scaling factor in the PotentialSettings class." alt="" coords="274,75,466,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="226,75,261,82,256,82,226,80"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,74,111"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a885998448fce2ba2627bfc7ce0cc60b3" title="sets the maceModel to enum in settings" alt="" coords="122,5,278,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,80,134,54,131,59,75,85"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a5444c6d2cdfacedfdc7d05d612167e05" title="sets the maceModelType to enum in settings" alt="" coords="122,75,278,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,94,109,96,104,98,75,100"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#a62a365fa2f7baa766b07736bf189bf86" title="sets the qmMethod to enum in settings" alt="" coords="122,144,278,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,109,135,136,130,139,73,114"/>
+</map>

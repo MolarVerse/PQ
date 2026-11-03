@@ -1,0 +1,11 @@
+<map id="TestGuffDatReader::SetUp" name="TestGuffDatReader::SetUp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,109,157,154"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="205,5,398,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,107,203,60,221,55,217,58,206,65,120,111"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#a5b9c06df8d1c8f7cf0f20e1e0268df9d" title="Set the Coulomb radius cut off in the PotentialSettings class." alt="" coords="205,75,398,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,117,192,113,187,116,158,122"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1FileSettings.html#a654cfc14a40b5b92a1e778f4eca9acb1" title="set the guff dat file name" alt="" coords="221,144,382,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="157,141,207,150,202,152,158,146"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1PotentialSettings.html#a6935a9847e4069ed5d2f14bba7a09f00" title="Set the nonCoulomb type as enum in the PotentialSettings class." alt="" coords="205,213,398,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="120,152,206,199,222,207,216,207,203,203,118,157"/>
+</map>

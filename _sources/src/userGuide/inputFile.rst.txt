@@ -983,6 +983,13 @@ Possible options are:
 
    3. **stochastic_rescaling** - stochastic cell rescaling manostat
 
+Berendsen and stochastic cell rescaling move molecular centers while preserving
+internal molecular coordinates. Use ``virial = molecular`` for consistent
+pressure coupling of multi-atom molecules. Selecting ``virial = atomic`` for
+these systems prints a warning during setup and remains allowed for backward
+compatibility. For monatomic systems, both pressure estimators coincide.
+Atomic virial is also available when pressure coupling is disabled.
+
 .. _pressureRelaxationKey:
 
 Pressure Relaxation
@@ -1040,6 +1047,58 @@ Possible options are:
    5. **anisotropic** - all axes are coupled in an anisotropic way
 
    6. **full_anisotropic** - all axes are coupled in an anisotropic way and the box angles are also scaled
+
+.. _fixedAxisKey:
+
+Fixed Axis
+==========
+
+.. admonition:: Key
+    :class: tip
+
+    fixed_axis = {string} -> "none" (with manostat) / "all" (without manostat)
+
+With the ``fixed_axis`` keyword, individual cell axes can be kept fixed (*i.e.* not scaled by the manostat) during the simulation.
+
+Possible options are:
+
+   1. **none** - no axis is fixed (all axes are coupled according to the chosen isotropy)
+
+   2. **x** - fix the x-axis
+
+   3. **y** - fix the y-axis
+
+   4. **z** - fix the z-axis
+
+   5. **xy** / **yx** - fix the x- and y-axes (1D scaling along z)
+
+   6. **xz** / **zx** - fix the x- and z-axes (1D scaling along y)
+
+   7. **yz** / **zy** - fix the y- and z-axes (1D scaling along x)
+
+   8. **all** / **xyz** - fix all three axes
+
+.. Note::
+    **Default values:**
+
+    * When **no manostat** is selected (``manostat = none``), the default is ``all`` (*i.e.* all three axes remain fixed and no volume scaling occurs).
+    * When a **manostat is selected**, the default is ``none`` (*i.e.* all axes are free to scale unless explicitly specified otherwise).
+
+For Berendsen coupling, the scalar compressibility controls volume relaxation
+over the free axes. Length increments are normalized by the number of free
+axes, so fixing an axis does not reduce the first-order hydrostatic volume
+response of the remaining axes.
+
+.. Note::
+    **Target Pressure and Energy Output:**
+
+    When one or more axes are fixed, the target pressure specified by :ref:`pressureKey` is applied exclusively to the remaining non-fixed (coupled) axes. In the :ref:`energyFile` (``.en``) and :ref:`infoFile` (``.info``), the instantaneous average pressure of the non-fixed axes is additionally reported as :math:`P_{\text{coupled}}` (or ``P(COUPLED)``), which is the quantity that approaches the target pressure. The total 3D scalar pressure :math:`P` continues to be reported as usual.
+
+.. Warning::
+    **Disallowed keyword combinations:**
+
+    * **Manostat with all axes fixed:** Setting ``fixed_axis = all`` (or ``xyz``) while a manostat is active is disallowed and throws an error, as fixing all axes contradicts active pressure coupling.
+    * **Semi-isotropic pressure coupling:** For semi-isotropic coupling (``isotropy = xy``, ``xz``, or ``yz``), the only allowed ``fixed_axis`` settings are ``none`` or the respective out-of-plane anisotropic axis. Fixing axes within the isotropically coupled 2D plane is disallowed.
 
 .. _resetKineticsKeys:
 
@@ -1603,7 +1662,8 @@ Remove Net Force
     remove_net_force = {bool} -> false
 
 With the ``remove_net_force`` keyword the user can request the removal of the net force after reading in forces from the QM program.
-Removal is achieved by distributing the total net force evenly across all atoms in the system.
+Removal is achieved by distributing the net force of the QM atoms evenly across the QM atoms. In QM/MM runs these are the atoms of the
+active QM region; MM atoms are not touched.
 This can increase momentum conservation when using a QM program with limited numerical precision.
 
 .. centered:: *default value* = false
@@ -1855,10 +1915,10 @@ Forced Core List
 .. admonition:: Key
     :class: tip
 
-    forced_core_list = {selection}
+    forced_core_list = {molecule indices}
 
 With the ``forced_core_list`` keyword the user can specify a list of molecules which will always be part of the ``CORE`` region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _forcedLayerListKey:
@@ -1869,10 +1929,10 @@ Forced Layer List
 .. admonition:: Key
     :class: tip
 
-    forced_layer_list = {selection}
+    forced_layer_list = {molecule indices}
 
 With the ``forced_layer_list`` keyword the user can specify a list of molecules which will always be part of the ``LAYER`` region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _forcedOuterListKey:
@@ -1883,10 +1943,10 @@ Forced Outer List
 .. admonition:: Key
     :class: tip
 
-    forced_outer_list = {selection}
+    forced_outer_list = {molecule indices}
 
 With the ``forced_outer_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the outer region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _qmChargesKey:
@@ -1983,32 +2043,6 @@ With the ``point_charge_thickness`` keyword the user can specify the distance fr
 The default value is 0.0 Å, which means that no point charges are included.
 
 .. centered:: *default value* = 0.0 Å
-
-.. _qmForceDistributionKey:
-
-QM Force Distribution
-=====================
-
-.. admonition:: Key
-    :class: tip
-
-    qm_force_distribution = {string} -> "none"
-
-With the ``qm_force_distribution`` keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing QM molecules.
-Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.
-
-.. Note::
-    This keyword is only relevant if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``.
-
-Possible options are:
-
-   1. **none** (default) - No distribution of deficient smoothing molecules forces.
-
-   2. **equal** - Deficient smoothing molecule forces are distributed equally among all non-smoothing QM molecules.
-
-   3. **random** - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.
-
-   4. **distance-weighted** - Deficient smoothing molecule forces are distributed distance-weighted among all non-smoothing QM molecules.
 
 
 .. image:: hybrid_zones.png

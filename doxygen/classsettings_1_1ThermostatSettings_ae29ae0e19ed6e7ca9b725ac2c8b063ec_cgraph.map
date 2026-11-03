@@ -1,0 +1,5 @@
+<map id="settings::ThermostatSettings::setThermostatType" name="settings::ThermostatSettings::setThermostatType">
+<area shape="rect" id="Node000001" title="sets the thermostatType to enum in settings" alt="" coords="5,5,215,50"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="263,5,470,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,25,249,28,244,28,215,30"/>
+</map>

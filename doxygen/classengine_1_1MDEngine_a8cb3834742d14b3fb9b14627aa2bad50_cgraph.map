@@ -1,0 +1,7 @@
+<map id="engine::MDEngine::getInstantEnergyOutput" name="engine::MDEngine::getInstantEnergyOutput">
+<area shape="rect" id="Node000001" title="get the reference to the instant energy output" alt="" coords="5,40,219,85"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Engine.html#a97961d6c869076d7df7995e7f77cfbc9" title="get the reference to the engine output" alt="" coords="267,5,457,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,45,254,42,249,44,220,50"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1EngineOutput.html#aa07ae483dd9a38b83cc75590bfe28a7a" title="getter for instant energy output" alt="" coords="270,75,454,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,75,257,82,251,82,219,80"/>
+</map>

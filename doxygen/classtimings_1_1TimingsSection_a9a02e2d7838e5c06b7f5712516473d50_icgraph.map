@@ -1,0 +1,9 @@
+<map id="timings::TimingsSection::calculateElapsedTime" name="timings::TimingsSection::calculateElapsedTime">
+<area shape="rect" id="Node000001" title="calculates the elapsed time in ms" alt="" coords="255,75,433,119"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1Timer.html#a19264ce7c9955ab8967fbfc55d564654" title="get the sorted timings details" alt="" coords="11,5,201,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="248,71,185,53,185,48,253,69"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1TimingsSection.html#a11f66306307a90af5a515870c325a2a5" title=" " alt="" coords="17,75,195,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="237,98,196,100,195,94,242,96"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1Timer.html#abe10135bcbe09c28c309747d2b1e44a3" title="sort the timings sections" alt="" coords="5,144,207,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="253,124,186,146,185,141,248,125"/>
+</map>

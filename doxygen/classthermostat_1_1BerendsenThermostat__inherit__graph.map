@@ -1,0 +1,5 @@
+<map id="thermostat::BerendsenThermostat" name="thermostat::BerendsenThermostat">
+<area shape="rect" id="Node000001" title="BerendsenThermostat." alt="" coords="5,461,240,645"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="15,5,231,413"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,425,125,462,120,460,122,430"/>
+</map>

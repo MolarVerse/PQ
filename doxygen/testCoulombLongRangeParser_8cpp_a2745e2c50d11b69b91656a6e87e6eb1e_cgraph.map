@@ -1,0 +1,7 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests parsing the &quot;long&#45;range&quot; command" alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a6a7f2c90130118e100aeb3902a15684d" title="get the Coulomb long range type" alt="" coords="122,5,332,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,108,49,104,52,75,59"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="145,75,309,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,66,132,78,128,81,74,71"/>
+</map>

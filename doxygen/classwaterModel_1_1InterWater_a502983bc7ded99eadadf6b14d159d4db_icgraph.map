@@ -1,0 +1,13 @@
+<map id="waterModel::InterWater::calculateHotspotSmoothingMMForces" name="waterModel::InterWater::calculateHotspotSmoothingMMForces">
+<area shape="rect" id="Node000001" title="Dispatch inter&#45;water hotspot smoothing force calculations." alt="" coords="713,65,989,110"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#ad105ce5b4a1146271a41b143dcd14ce7" title="Apply hotspot smoothing algorithm for QM/MM boundary treatment." alt="" coords="472,5,665,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="725,61,666,51,666,46,730,62"/>
+<area shape="rect" id="Node000005" href="$testWaterModels_8cpp.html#aa8d9e4a500f26a153480717ed26c2311" title=" " alt="" coords="542,74,595,102"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="695,88,596,90,596,85,700,87"/>
+<area shape="rect" id="Node000006" href="$testWaterModels_8cpp.html#a3fc0894747cf69286de28a3599013861" title=" " alt="" coords="542,126,595,154"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="714,113,596,138,595,132,709,114"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMMMMDEngine.html#a58d17897c3573c25f6a815086f36ada1" title="Apply the selected smoothing method for QM/MM boundary treatment." alt="" coords="239,5,424,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="454,28,425,30,424,25,459,27"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,5,191,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="221,29,192,30,191,25,226,27"/>
+</map>

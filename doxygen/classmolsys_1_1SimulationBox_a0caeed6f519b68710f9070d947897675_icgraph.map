@@ -1,0 +1,7 @@
+<map id="molsys::SimulationBox::setupExternalToInternalGlobalVdwTypesMap" name="molsys::SimulationBox::setupExternalToInternalGlobalVdwTypesMap">
+<area shape="rect" id="Node000001" title="make external to internal global vdw types map" alt="" coords="122,15,347,77"/>
+<area shape="rect" id="Node000002" href="$testSimulationBox_8cpp.html#a445a8c416f539d0ed64fdb3c43fa58ba" title=" " alt="" coords="5,5,74,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,29,74,26,74,21,109,27"/>
+<area shape="rect" id="Node000003" href="$testSimulationBox_8cpp.html#ab442c1904a5b2bd2c30aa25f5fc1aee5" title="tests setup external to internal global vdw types map" alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,63,74,69,74,64,109,62"/>
+</map>

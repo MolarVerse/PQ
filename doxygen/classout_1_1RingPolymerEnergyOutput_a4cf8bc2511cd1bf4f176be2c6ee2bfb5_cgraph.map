@@ -1,0 +1,10 @@
+<map id="out::RingPolymerEnergyOutput::write" name="out::RingPolymerEnergyOutput::write">
+<area shape="rect" id="Node000001" title="write the energy output of each ring polymer" alt="" coords="5,81,228,126"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="287,29,486,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,78,309,60,304,62,221,83"/>
+<area shape="rect" id="Node000003" href="$classout_1_1RingPolymerEnergyOutput.html#a0f9b1399ca1d278503112af278036cbe" title="maximum ring polymer spring energy" alt="" coords="276,81,498,126"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="228,101,263,103,258,104,229,106"/>
+<area shape="rect" id="Node000004" href="$classout_1_1RingPolymerEnergyOutput.html#aa77ea6aa7739dc8f5ba99c9b04b998db" title="sum of all ring polymer spring energies" alt="" coords="276,150,498,195"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="207,124,285,145,280,146,206,129"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="341,28,334,20,339,11,357,5,387,3,418,5,437,14,432,14,417,10,387,8,358,10,343,15,339,20,346,29"/>
+</map>

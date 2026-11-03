@@ -1,0 +1,31 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,282,59,310"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBoxView.html#a3a651ab2a9108b5ed146d80c69628c95" title="get all active molecules using range&#45;based filtering" alt="" coords="124,75,328,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="33,281,40,250,53,209,74,166,105,130,113,126,110,130,109,134,79,169,58,211,45,251,38,282"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Molecule.html#a811f99e9973ce5a490ea38ed1bcc89d0" title="returns the atom by index" alt="" coords="126,282,326,310"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="58,293,113,294,109,298,60,298"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1Atom.html#a689561f74d59c515e2c77136a33d77da" title=" " alt="" coords="107,334,345,362"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="58,303,107,318,143,328,138,331,106,324,60,308"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBoxView.html#ad07bc974df69b2e05a485dc88f63977d" title="get all inactive molecules using range&#45;based filtering" alt="" coords="124,144,328,189"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="38,280,64,240,83,218,105,199,116,194,113,198,108,203,87,221,68,243,43,282"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a76153d2760d3319d21127959bd0556b8" title="get molecule by index" alt="" coords="140,385,312,430"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="43,307,71,340,108,371,128,382,123,384,105,375,68,344,43,312"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1SimulationBoxView.html#aa87886354cf5df73f59b01c707239742" title="get all molecules outside the specified hybrid zone using range&#45;based filtering" alt="" coords="124,213,328,258"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="57,284,106,268,132,261,128,265,107,273,61,288"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1SimulationBoxView.html#abf817c2d3086dbb335786d32a68b9060" title="Get molecules of the configured water type." alt="" coords="124,5,328,50"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="31,281,34,238,44,179,66,116,83,86,105,60,113,55,110,60,109,64,88,89,71,118,49,181,39,239,36,281"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1SimulationBox.html#a071637632228934195f9355e5ddb22e1" title=" " alt="" coords="140,455,312,499"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="37,308,61,373,81,409,108,440,129,454,123,456,105,444,76,412,56,375,36,313"/>
+<area shape="rect" id="Node000012" href="$classmolsys_1_1SimulationBox.html#a160a56125d62d59d3e0e745e9f5efb5b" title="set the water type" alt="" coords="140,524,312,569"/>
+<area shape="poly" id="edge17_Node000001_Node000012" title=" " alt="" coords="34,307,40,350,51,403,73,460,89,487,108,510,129,526,124,526,105,514,84,490,68,463,46,405,35,350,34,313"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="393,77,596,122"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="327,96,380,97,375,100,329,100"/>
+<area shape="rect" id="Node000004" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="438,148,551,176"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="320,117,425,144,420,146,321,123"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="317,141,389,125,385,128,320,146"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="327,162,425,162,420,165,329,167"/>
+<area shape="poly" id="edge11_Node000009_Node000003" title=" " alt="" coords="322,211,343,199,359,184,367,168,375,152,391,135,406,128,402,131,395,139,380,155,372,171,363,187,347,203,326,215"/>
+<area shape="poly" id="edge12_Node000009_Node000004" title=" " alt="" coords="309,210,429,179,424,182,311,215"/>
+<area shape="poly" id="edge14_Node000010_Node000003" title=" " alt="" coords="311,48,396,72,392,74,313,53"/>
+<area shape="poly" id="edge15_Node000010_Node000004" title=" " alt="" coords="324,48,347,60,363,79,371,97,379,115,395,132,426,149,420,150,391,136,374,118,366,99,359,81,343,64,326,53"/>
+</map>

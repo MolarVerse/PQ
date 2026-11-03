@@ -1,0 +1,5 @@
+<map id="input::restartFile::AtomSection::_checkAtomLine" name="input::restartFile::AtomSection::_checkAtomLine">
+<area shape="rect" id="Node000001" title="checks if the next line of the rst file exists &#45; if not an exception is thrown" alt="" coords="224,5,451,50"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#aac27a04235e5b4ddaa34b013e9fb060b" title="processes the atom section of the rst file" alt="" coords="5,5,176,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,28,176,30,176,25,211,27"/>
+</map>

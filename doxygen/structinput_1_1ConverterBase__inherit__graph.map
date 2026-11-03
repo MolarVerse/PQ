@@ -1,0 +1,9 @@
+<map id="input::ConverterBase&lt; T &gt;" name="input::ConverterBase&lt; T &gt;">
+<area shape="rect" id="Node000001" title="Base class for all Converter specializations." alt="" coords="5,5,191,167"/>
+<area shape="rect" id="Node000002" href="$structinput_1_1Converter_3_01T_01_4.html" title="Converter specialization for plain integral types (size_t, int, unsigned, ...), excluding bool." alt="" coords="21,215,175,377"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,179,66,216,60,215,62,185"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="81,179,83,216,78,215,80,185"/>
+<area shape="poly" id="edge3_Node000001_Node000002" title=" " alt="" coords="99,179,101,216,96,215,97,185"/>
+<area shape="poly" id="edge4_Node000001_Node000002" title=" " alt="" coords="117,179,118,216,113,215,115,184"/>
+<area shape="poly" id="edge5_Node000001_Node000002" title=" " alt="" coords="135,180,136,216,131,215,133,184"/>
+</map>

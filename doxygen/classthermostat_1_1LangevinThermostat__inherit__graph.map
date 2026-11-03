@@ -1,0 +1,5 @@
+<map id="thermostat::LangevinThermostat" name="thermostat::LangevinThermostat">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,461,230,801"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="10,5,226,413"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,425,120,461,115,460,117,430"/>
+</map>

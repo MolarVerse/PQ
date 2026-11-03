@@ -1,0 +1,15 @@
+<map id="settings::FileSettings::setGuffDatFileName" name="settings::FileSettings::setGuffDatFileName">
+<area shape="rect" id="Node000001" title="set the guff dat file name" alt="" coords="645,105,807,150"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1FilesInputParser.html#ae054f77e9599eda5109e2bd67980b625" title="Adds the guffdat_file keyword to the parser." alt="" coords="432,5,597,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="666,98,596,65,571,53,572,48,598,60,671,98"/>
+<area shape="rect" id="Node000005" href="$classTestGuffDatReader.html#a5d187cc42f8e73a8a54cb7c671fc6589" title=" " alt="" coords="439,75,590,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="628,114,591,111,591,105,633,114"/>
+<area shape="rect" id="Node000006" href="$testFileSettings_8cpp.html#afa5d3465d75ab17843ef8e4b29f65192" title=" " alt="" coords="488,143,541,171"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="633,141,542,156,541,151,628,141"/>
+<area shape="rect" id="Node000007" href="$testGuffDatReader_8cpp.html#ae0485960e13529eb6a1a10c3b7152098" title="readGuffdat function testing" alt="" coords="480,195,549,223"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="663,156,598,185,550,201,549,196,596,180,658,157"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1FilesInputParser.html#a510068c8179ed4147725f56973b55854" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="219,5,384,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,28,385,30,384,25,419,27"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1FilesInputParser.html#ae5d451f65ab02a0d717850cc3c8e8f89" title="Construct a new Input File Parser Non Coulomb Type:: Input File Parser Non Coulomb Type object." alt="" coords="5,5,171,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="201,29,172,30,170,25,206,26"/>
+</map>

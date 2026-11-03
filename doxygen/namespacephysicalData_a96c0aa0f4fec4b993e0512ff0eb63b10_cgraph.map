@@ -1,0 +1,61 @@
+<map id="physicalData::mean" name="physicalData::mean">
+<area shape="rect" id="Node000001" title="calculate the mean of a vector of physicalData" alt="" coords="5,880,157,908"/>
+<area shape="rect" id="Node000002" href="$classphysicalData_1_1PhysicalData.html#a8fbc44b84f9ec69efe3dd7544166f2e8" title="calculates the average of all physicalData of last steps" alt="" coords="205,837,404,882"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,881,191,876,187,879,159,885"/>
+<area shape="rect" id="Node000003" href="$classphysicalData_1_1PhysicalData.html#a9c550945194ee248f4c5842b1c65aad7" title="calculates the sum of all physicalData of last steps" alt="" coords="205,907,404,951"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,904,191,910,187,913,159,908"/>
+<area shape="rect" id="Node000004" href="$classphysicalData_1_1PhysicalData.html#a248b069f7188776a6b9974349c753eea" title="get the angle energy" alt="" coords="479,5,678,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="390,905,402,893,419,861,431,821,437,775,439,722,435,604,423,477,412,350,408,232,411,180,419,133,431,93,450,61,467,47,465,52,454,64,436,95,424,134,417,180,414,232,418,350,429,477,440,604,445,722,442,775,436,823,424,863,406,896,394,908"/>
+<area shape="rect" id="Node000005" href="$classphysicalData_1_1PhysicalData.html#ae4d2a135867cabc022840014b789831e" title="get the angular momentum" alt="" coords="479,75,678,119"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="390,905,402,893,418,864,428,828,435,785,437,737,433,628,424,512,414,395,411,287,414,239,421,196,433,159,450,130,467,116,465,121,454,133,437,162,426,197,419,240,416,287,419,395,429,511,439,628,442,737,440,785,434,829,423,866,406,896,394,908"/>
+<area shape="rect" id="Node000006" href="$classphysicalData_1_1PhysicalData.html#acf49883e27b32778fabc7a1e611a3995" title="get the bond energy" alt="" coords="479,144,678,189"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="390,905,402,893,416,867,426,834,432,795,435,751,432,653,424,547,416,441,414,342,417,299,423,259,434,226,450,199,467,186,464,191,454,203,439,228,428,261,422,299,419,343,421,440,429,546,437,652,440,751,437,795,432,835,421,869,406,896,394,908"/>
+<area shape="rect" id="Node000007" href="$classphysicalData_1_1PhysicalData.html#ae89062eb0a79c622c082be46147ba87c" title="get the coulomb energy" alt="" coords="479,213,678,258"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="390,905,402,893,415,869,424,840,432,765,430,677,424,581,418,486,416,397,425,323,435,293,450,269,467,256,464,260,454,272,440,295,431,324,422,398,423,486,429,581,436,677,437,765,429,841,420,871,406,896,394,908"/>
+<area shape="rect" id="Node000008" href="$classphysicalData_1_1PhysicalData.html#a0537022d194681d8f1a739ef0e566388" title="get the coupled pressure" alt="" coords="479,283,678,327"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="390,905,402,893,414,872,422,846,430,780,429,701,424,616,419,531,419,453,428,386,437,359,450,338,467,325,464,329,454,341,442,362,433,387,424,453,425,531,429,616,434,701,435,780,427,847,419,874,406,896,394,908"/>
+<area shape="rect" id="Node000009" href="$classphysicalData_1_1PhysicalData.html#a178dabb8badbdab0448278cf91baf793" title="get the density" alt="" coords="479,352,678,397"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="389,905,402,893,423,861,436,830,444,800,446,770,439,710,423,651,408,591,402,531,405,500,413,470,428,439,450,407,467,394,464,399,454,411,432,441,418,471,410,501,407,531,413,590,428,649,444,709,451,770,449,801,441,832,427,864,406,896,394,908"/>
+<area shape="rect" id="Node000010" href="$classphysicalData_1_1PhysicalData.html#abd20e33764adc489155c201bf0be8ad2" title="get the dihedral energy" alt="" coords="479,421,678,466"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="389,905,402,893,420,866,432,840,439,814,441,788,436,736,424,685,412,634,407,582,410,556,417,530,431,503,450,477,467,464,464,468,454,480,435,506,422,532,415,557,412,583,417,633,429,684,441,736,446,788,444,814,437,841,425,869,406,896,394,908"/>
+<area shape="rect" id="Node000011" href="$classphysicalData_1_1PhysicalData.html#a1bb9ab8866ed729ee61c3771a988363a" title="get the improper energy" alt="" coords="479,491,678,535"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="389,905,402,893,417,871,428,849,436,806,433,763,424,720,415,677,412,634,422,590,433,568,450,546,467,533,464,538,454,549,438,571,427,592,418,634,420,677,429,719,438,762,441,806,433,850,422,873,406,896,394,908"/>
+<area shape="rect" id="Node000012" href="$classphysicalData_1_1PhysicalData.html#a457db1e74c0cc44b70e3390d4526491d" title="get the intra coulomb energy" alt="" coords="479,560,678,605"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="389,905,402,893,423,858,431,823,430,789,424,755,419,721,418,686,427,651,450,615,467,603,464,607,454,619,432,653,423,686,424,720,429,754,435,789,436,824,428,860,406,896,393,908"/>
+<area shape="rect" id="Node000013" href="$classphysicalData_1_1PhysicalData.html#a6a9cbe3b74a48a612480bcf628e0f083" title="get the intra non coulomb energy" alt="" coords="474,629,683,674"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="388,904,402,893,419,867,426,841,427,816,424,790,422,764,423,737,431,711,450,685,462,676,459,681,454,688,436,713,428,738,427,764,430,789,432,815,432,842,424,869,406,896,393,908"/>
+<area shape="rect" id="Node000014" href="$classphysicalData_1_1PhysicalData.html#a025a2fa6e3cb083db0b6d3c59e682810" title="get the kinetic energy" alt="" coords="479,699,678,743"/>
+<area shape="poly" id="edge13_Node000003_Node000014" title=" " alt="" coords="387,905,402,892,415,876,422,859,425,824,428,789,436,771,450,754,467,743,464,747,454,758,440,774,433,790,430,825,427,860,420,878,406,896,391,908"/>
+<area shape="rect" id="Node000015" href="$classphysicalData_1_1PhysicalData.html#a07db9ccf05a57e5683f10a204b1dd7f4" title="get the loop time" alt="" coords="479,768,678,813"/>
+<area shape="poly" id="edge14_Node000003_Node000015" title=" " alt="" coords="383,905,402,892,418,875,425,858,434,840,450,823,467,815,463,819,454,827,438,843,430,860,422,878,406,896,387,908"/>
+<area shape="rect" id="Node000016" href="$classphysicalData_1_1PhysicalData.html#af7731f71a2d68db21152d12dc81ef0f9" title="get the lower distance constraints energy" alt="" coords="468,837,689,882"/>
+<area shape="poly" id="edge15_Node000003_Node000016" title=" " alt="" coords="394,904,475,885,471,888,397,908"/>
+<area shape="rect" id="Node000017" href="$classphysicalData_1_1PhysicalData.html#ab499fd92802a6eb46925515835c6c9ad" title="get the linear momentum" alt="" coords="479,907,678,951"/>
+<area shape="poly" id="edge16_Node000003_Node000017" title=" " alt="" coords="403,927,466,927,461,931,406,931"/>
+<area shape="rect" id="Node000018" href="$classphysicalData_1_1PhysicalData.html#a78d98b11bb2e9674f2f87a45d8767a35" title="get the non coulomb energy" alt="" coords="479,976,678,1021"/>
+<area shape="poly" id="edge17_Node000003_Node000018" title=" " alt="" coords="395,950,475,970,470,973,397,954"/>
+<area shape="rect" id="Node000019" href="$classphysicalData_1_1PhysicalData.html#a842b657f0679713ddf2699b77a74e43c" title="get the nose hoover friction energy" alt="" coords="467,1045,690,1090"/>
+<area shape="poly" id="edge18_Node000003_Node000019" title=" " alt="" coords="331,949,387,991,453,1031,469,1038,464,1040,451,1035,384,995,332,955"/>
+<area shape="rect" id="Node000020" href="$classphysicalData_1_1PhysicalData.html#acab4821e622ca70c0274b38dda417e76" title="get the nose hoover momentum energy" alt="" coords="454,1115,704,1159"/>
+<area shape="poly" id="edge19_Node000003_Node000020" title=" " alt="" coords="318,949,342,984,373,1025,410,1065,454,1100,463,1107,458,1108,450,1105,406,1069,369,1028,338,987,319,955"/>
+<area shape="rect" id="Node000021" href="$classphysicalData_1_1PhysicalData.html#a5d5dd8c18245c9b2e2b5283780bdff18" title="get the number of qm atoms" alt="" coords="479,1184,678,1229"/>
+<area shape="poly" id="edge20_Node000003_Node000021" title=" " alt="" coords="313,949,333,997,362,1056,402,1118,426,1145,454,1170,468,1180,463,1181,450,1174,423,1149,398,1121,357,1059,328,999,313,954"/>
+<area shape="rect" id="Node000022" href="$classphysicalData_1_1PhysicalData.html#a9f3e29e60b47590ceb6fe51e5b986386" title="get the number of smoothing molecules" alt="" coords="452,1253,705,1298"/>
+<area shape="poly" id="edge21_Node000003_Node000022" title=" " alt="" coords="310,949,326,1009,352,1087,371,1129,394,1169,421,1206,454,1239,459,1244,454,1245,450,1243,417,1210,390,1172,366,1131,347,1089,321,1011,309,954"/>
+<area shape="rect" id="Node000023" href="$classphysicalData_1_1PhysicalData.html#aaf0047505bc542559142f21c52804880" title="get the pressure" alt="" coords="479,1323,678,1367"/>
+<area shape="poly" id="edge22_Node000003_Node000023" title=" " alt="" coords="308,949,320,1021,343,1118,362,1169,386,1220,417,1267,454,1308,468,1320,463,1321,450,1312,412,1271,381,1223,357,1171,338,1119,315,1022,307,954"/>
+<area shape="rect" id="Node000024" href="$classphysicalData_1_1PhysicalData.html#a2b1133f5dac0162cd85c1797f8fdb2b3" title="get the qm energy" alt="" coords="479,1392,678,1437"/>
+<area shape="poly" id="edge23_Node000003_Node000024" title=" " alt="" coords="306,949,314,1032,322,1087,335,1147,353,1209,378,1271,411,1328,454,1378,468,1390,463,1390,450,1382,407,1331,373,1273,348,1211,329,1148,317,1088,309,1033,305,954"/>
+<area shape="rect" id="Node000025" href="$classphysicalData_1_1PhysicalData.html#a452c8726f4803e76f9ff98e5e48cf942" title="get the qm reference energy" alt="" coords="479,1461,678,1506"/>
+<area shape="poly" id="edge24_Node000003_Node000025" title=" " alt="" coords="305,949,309,1043,315,1106,326,1176,344,1249,370,1321,406,1388,429,1419,454,1447,468,1460,463,1460,450,1451,424,1422,402,1391,365,1323,339,1250,321,1177,310,1107,304,1043,304,954"/>
+<area shape="rect" id="Node000026" href="$classphysicalData_1_1PhysicalData.html#ab02929236922bf40ac771b6c0159fe2e" title="get the ring polymer energy" alt="" coords="479,1531,678,1575"/>
+<area shape="poly" id="edge25_Node000003_Node000026" title=" " alt="" coords="309,949,327,1069,356,1240,376,1327,399,1407,425,1473,439,1498,454,1516,468,1529,463,1529,450,1520,435,1501,420,1475,394,1409,371,1328,351,1241,321,1070,308,954"/>
+<area shape="rect" id="Node000027" href="$classphysicalData_1_1PhysicalData.html#aab5e28bf53e05591d047c1f8ffdef28f" title="get the temperature" alt="" coords="479,1600,678,1645"/>
+<area shape="poly" id="edge26_Node000003_Node000027" title=" " alt="" coords="308,949,324,1082,352,1273,372,1372,395,1462,423,1536,438,1565,454,1586,468,1599,462,1599,450,1590,433,1567,418,1538,390,1464,366,1373,347,1274,319,1082,307,954"/>
+<area shape="rect" id="Node000028" href="$classphysicalData_1_1PhysicalData.html#a210788511e7988c5e5ea3d148a110047" title="get the upper distance constraints energy" alt="" coords="468,1669,689,1714"/>
+<area shape="poly" id="edge27_Node000003_Node000028" title=" " alt="" coords="308,949,322,1094,348,1306,367,1416,391,1517,420,1600,436,1631,454,1655,459,1662,454,1661,450,1659,432,1634,415,1602,386,1518,362,1417,342,1307,316,1094,307,954"/>
+<area shape="rect" id="Node000029" href="$classphysicalData_1_1PhysicalData.html#a973ecc349f579b8bce7b6ab87d1bd2ba" title="get the virial" alt="" coords="479,1739,678,1783"/>
+<area shape="poly" id="edge28_Node000003_Node000029" title=" " alt="" coords="307,949,319,1105,344,1338,363,1460,387,1571,417,1663,435,1698,454,1725,468,1739,463,1738,450,1728,430,1701,412,1665,382,1573,357,1461,338,1339,314,1106,306,954"/>
+<area shape="rect" id="Node000030" href="$classphysicalData_1_1PhysicalData.html#a8b6e71b213bc5e0589cdeee41f67feb9" title="get the volume" alt="" coords="479,1808,678,1853"/>
+<area shape="poly" id="edge29_Node000003_Node000030" title=" " alt="" coords="307,949,317,1118,326,1239,339,1371,358,1504,383,1626,415,1726,433,1765,454,1794,468,1808,463,1807,450,1797,429,1768,410,1728,378,1627,353,1505,334,1372,321,1240,312,1118,306,955"/>
+</map>

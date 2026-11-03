@@ -1,0 +1,5 @@
+<map id="OutputFileSettings::getInstantEnergyFileName" name="OutputFileSettings::getInstantEnergyFileName">
+<area shape="rect" id="Node000001" title="get the instant energy file name" alt="" coords="122,5,324,50"/>
+<area shape="rect" id="Node000002" href="$testOutputParser_8cpp.html#ab1c380a636e85033798d0f08e2e66eec" title="tests parsing the &quot;instant_energy_file&quot; command" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,28,74,30,74,25,108,27"/>
+</map>

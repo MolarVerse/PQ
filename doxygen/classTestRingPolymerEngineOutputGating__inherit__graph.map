@@ -1,0 +1,5 @@
+<map id="TestRingPolymerEngineOutputGating" name="TestRingPolymerEngineOutputGating">
+<area shape="rect" id="Node000001" title="Fixture building a minimal, directly&#45;usable RingPolymerQMMDEngine (no QM runner invoked) with exactly..." alt="" coords="5,126,213,260"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="64,5,154,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,91,112,126,107,125,108,95"/>
+</map>

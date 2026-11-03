@@ -1,0 +1,7 @@
+<map id="ff::DihedralForceField" name="ff::DihedralForceField">
+<area shape="rect" id="Node000001" title="Represents a dihedral between four atoms." alt="" coords="5,330,213,581"/>
+<area shape="rect" id="Node000002" href="$classconnectivity_1_1Dihedral.html" title="dihedral object containing all dihedral information" alt="" coords="23,210,196,282"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,294,112,330,107,330,109,300"/>
+<area shape="rect" id="Node000003" href="$classconnectivity_1_1ConnectivityElement.html" title="Represents a connectivity element between n atoms." alt="" coords="20,5,199,162"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,174,112,210,107,210,109,179"/>
+</map>

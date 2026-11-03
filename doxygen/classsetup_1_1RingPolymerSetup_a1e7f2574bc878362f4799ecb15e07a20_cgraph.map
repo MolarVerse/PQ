@@ -1,0 +1,22 @@
+<map id="setup::RingPolymerSetup::initializeBeads" name="setup::RingPolymerSetup::initializeBeads">
+<area shape="rect" id="Node000001" title="initialize beads for ring polymer simulation" alt="" coords="5,106,191,151"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a4cc844ab19b237498424a240da79e629" title="Get the ring polymer start file name." alt="" coords="544,42,770,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,104,169,60,202,38,238,22,281,11,326,5,416,6,502,18,576,37,571,38,501,23,416,11,326,10,282,16,240,27,205,43,173,64,122,108"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1RingPolymerSetup.html#abaef154e347777d4db758c99e52a6008" title="initialize velocities of beads with maxwell boltzmann distribution" alt="" coords="256,37,459,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,103,259,85,254,88,186,108"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1FileSettings.html#a11df0744ca1d01fbc20b77b45c57f814" title="Check if the ring polymer start file name is set." alt="" coords="239,106,476,151"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="191,126,226,128,221,130,192,131"/>
+<area shape="rect" id="Node000005" href="$namespaceinput_1_1ringPolymer.html#a459613872ca249a38d942c2f0846f94f" title="wrapper function to construct a RingPolymerRestartFileReader object and call the read function" alt="" coords="252,176,463,220"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="184,149,259,170,254,172,184,154"/>
+<area shape="rect" id="Node000009" href="$classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="285,245,430,290"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="125,149,177,191,240,230,273,246,268,246,237,235,173,195,124,154"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="443,173,475,161,544,128,604,96,609,94,547,133,477,166,445,178"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1ringPolymer_1_1RingPolymerRestartFileReader.html#a9a9c77f65fd88daea68743a24f430373" title="Reads a .rpmd.rst file sets the ring polymer beads in the engine." alt="" coords="524,176,789,220"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="463,195,511,198,506,198,463,201"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="837,159,1037,187"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="790,183,824,183,819,183,790,189"/>
+<area shape="rect" id="Node000008" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="865,211,1009,239"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="790,208,852,216,847,217,790,213"/>
+<area shape="rect" id="Node000010" href="$namespaceout.html#ae21e45a9e56a9f34636a6df12ee3e2f2" title="Message to inform about reading a file." alt="" coords="588,254,725,281"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="430,265,575,267,570,268,430,270"/>
+</map>

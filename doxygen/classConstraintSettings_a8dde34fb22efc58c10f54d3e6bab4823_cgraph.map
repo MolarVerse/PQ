@@ -1,0 +1,9 @@
+<map id="ConstraintSettings::finalize" name="ConstraintSettings::finalize">
+<area shape="rect" id="Node000001" title="finalize the constraint settings" alt="" coords="5,75,147,119"/>
+<area shape="rect" id="Node000002" href="$classConstraintSettings.html#a8d9e04b035cb499dff33d5b60028a58f" title="activate the shake algorithm only for the water model" alt="" coords="195,5,414,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,73,216,54,212,57,148,78"/>
+<area shape="rect" id="Node000003" href="$classReferenceSettings.html#a9d05a4e5b5aa7f2b28fb059d33ab00e4" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="230,75,378,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="146,94,217,96,212,98,147,100"/>
+<area shape="rect" id="Node000004" href="$classWaterModelSettings.html#a7fc657364d6c1f19ba35a4eb776e4bfa" title="Get the rigid geometry parameters for a water model." alt="" coords="211,144,398,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="147,116,216,138,211,140,147,121"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="manostat::BerendsenManostat::Manostat" name="manostat::BerendsenManostat::Manostat">
+<area shape="rect" id="Node000001" title="Construct a new Manostat:: Manostat object." alt="" coords="5,126,227,171"/>
+<area shape="rect" id="Node000002" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="286,5,449,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,124,202,82,274,42,292,37,287,40,276,47,205,87,148,128"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="282,57,453,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,123,272,105,267,107,201,128"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="275,126,460,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="227,146,262,148,256,149,228,151"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="282,196,453,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="200,169,272,190,267,192,200,174"/>
+<area shape="rect" id="Node000006" href="$config_2enums_2manostat_8cpp.html#a5fd9e28e7868b07d8deb9ee7ebfc47be" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="320,264,414,292"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="146,169,205,210,276,250,308,264,303,264,274,255,202,215,145,174"/>
+</map>

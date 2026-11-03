@@ -1,0 +1,5 @@
+<map id="setup::SimulationBoxSetup::checkZeroVelocities" name="setup::SimulationBoxSetup::checkZeroVelocities">
+<area shape="rect" id="Node000001" title="Check if all velocities of the simulation box are 0." alt="" coords="5,5,203,50"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1SimulationBoxSetup.html#a47e2a8dd736aee135a41b2e153391976" title="sets if the velocities in the start file are zero" alt="" coords="251,5,448,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,25,238,27,232,28,203,30"/>
+</map>

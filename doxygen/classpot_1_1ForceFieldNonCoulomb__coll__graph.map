@@ -1,0 +1,33 @@
+<map id="pot::ForceFieldNonCoulomb" name="pot::ForceFieldNonCoulomb">
+<area shape="rect" id="Node000001" title=" " alt="" coords="215,1174,441,1526"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1NonCoulombPotential.html" title="NonCoulombPotential is a base class for guff as well as force field non coulomb potentials." alt="" coords="5,962,195,1101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,1111,218,1192,213,1193,158,1116"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="58,808,142,880"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,878,103,945,98,945,100,883"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="220,987,437,1076"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="329,1074,331,1158,326,1157,327,1079"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="254,800,398,889"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="327,886,330,971,325,970,326,892"/>
+<area shape="rect" id="Node000006" href="$classpot_1_1NonCoulombPair.html" title="base class representing a pair of non&#45;coulombic types" alt="" coords="244,431,400,727"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="324,724,327,784,322,783,323,729"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="66,207,228,296"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="148,293,158,350,176,406,202,451,235,493,230,494,198,454,171,408,153,351,148,299"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="77,5,217,95"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="147,92,150,190,144,190,147,97"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="251,207,392,296"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="322,293,324,337,324,415,319,414,319,337,321,299"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="252,5,392,95"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="322,92,324,190,319,190,321,97"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="430,216,485,288"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="455,285,449,345,431,408,410,452,405,450,426,406,443,344,454,290"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="468,978,637,1085"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="517,1083,453,1178,449,1174,514,1087"/>
+<area shape="rect" id="Node000013" href="$structpot_1_1ForceFieldNonCoulomb_1_1matrix.html" title="struct to hold the non&#45;coulombic pairs matrix" alt="" coords="471,800,660,889"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="564,887,560,963,555,961,561,891"/>
+<area shape="rect" id="Node000014" href="$classlinalg_1_1Matrix.html" title=" " alt="" coords="484,448,700,710"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="580,708,574,784,569,783,578,713"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="568,216,617,288"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="593,285,595,431,590,430,592,290"/>
+<area shape="rect" id="Node000016" href="$classEigen_1_1Matrix_3_01std_1_1shared__ptr_3_01pot_1_1NonCoulombPair_01_4_00_01Eigen_1_1Dynamic_00_01Eigen_1_1Dynamic_01_4.html" title=" " alt="" coords="641,190,829,313"/>
+<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="710,311,659,433,654,431,707,316"/>
+</map>

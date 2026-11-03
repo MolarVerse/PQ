@@ -1,0 +1,22 @@
+<map id="/home/runner/work/PQ/PQ/include/output/trajectoryOutput.hpp" name="/home/runner/work/PQ/PQ/include/output/trajectoryOutput.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="214,5,421,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="280,191,349,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="319,66,317,177,313,174,315,69"/>
+<area shape="rect" id="Node000003" href="$hybridConfigurator_8hpp.html" title=" " alt="" coords="110,115,279,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="279,66,226,108,223,103,274,69"/>
+<area shape="rect" id="Node000006" href="$output_8hpp.html" title=" " alt="" coords="401,115,492,143"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="361,65,418,106,413,106,360,70"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,191,120,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="174,143,100,185,98,180,168,144"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="144,191,250,218"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="197,141,198,176,194,174,193,145"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="425,143,352,185,350,180,420,144"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="456,191,528,218"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="456,141,478,178,473,176,453,146"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="552,191,610,218"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="471,141,547,183,542,183,470,146"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="634,191,731,218"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="489,141,629,186,623,186,488,146"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="373,191,432,218"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="441,142,420,179,417,175,436,145"/>
+</map>

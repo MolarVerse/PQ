@@ -1,0 +1,33 @@
+<map id="settings::PotentialSettings::getWolfParameter" name="settings::PotentialSettings::getWolfParameter">
+<area shape="rect" id="Node000001" title="get the Wolf parameter" alt="" coords="1556,45,1748,90"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1PotentialSetup.html#a588f8aebcf80ece735f0a764770aded8" title="sets coulomb potential type" alt="" coords="1139,5,1300,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1538,47,1508,45,1399,36,1300,32,1300,26,1400,31,1508,40,1543,47"/>
+<area shape="rect" id="Node000013" href="$testCoulombLongRangeParser_8cpp.html#a939c52f8079f0aa26a06bd677d86ebef" title="tests parsing the &quot;wolf_param&quot; command" alt="" coords="1394,54,1462,82"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="1538,68,1462,70,1462,65,1543,68"/>
+<area shape="rect" id="Node000014" href="$classsetup_1_1PotentialSetup.html#ab24617db825d5f31891a700a8137fd56" title="writes coulomb potential setup information to log file" alt="" coords="1348,105,1508,150"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="1555,94,1509,109,1508,104,1549,95"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1PotentialSetup.html#a71ed47e4d9e8be974de6b349f5b36964" title="sets all nonBonded potential types" alt="" coords="931,65,1091,110"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1128,54,1092,67,1091,62,1122,55"/>
+<area shape="rect" id="Node000011" href="$testPotentialSetup_8cpp.html#a7534243d4718f4d2a87020eaa6e9034f" title="setup the coulomb potential" alt="" coords="769,15,838,43"/>
+<area shape="poly" id="edge12_Node000002_Node000011" title=" " alt="" coords="1121,28,838,32,838,26,1127,28"/>
+<area shape="rect" id="Node000004" href="$namespacesetup.html#a90b9aef783ce6435dd1bf2b4c94bef87" title="wrapper to create PotentialSetup object and call setup" alt="" coords="724,71,883,99"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="913,87,884,89,883,83,918,86"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="913,61,837,41,838,36,919,61"/>
+<area shape="rect" id="Node000012" href="$testPotentialSetup_8cpp.html#a5b1a590a064027b63e58ce86d9bab3d7" title="setup the reaction&#45;field Coulomb potential" alt="" coords="769,123,838,151"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="918,110,838,132,837,126,913,111"/>
+<area shape="rect" id="Node000005" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="530,46,676,74"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="706,73,676,71,676,66,711,73"/>
+<area shape="rect" id="Node000010" href="$testPotentialSetup_8cpp.html#a8f080ec12d70064b272ba31ceaa42fdd" title="dummy test for setupPotential &#45; all single components are tested individually &#45; should not throw anyt..." alt="" coords="569,98,637,126"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="711,97,638,110,637,105,706,98"/>
+<area shape="rect" id="Node000006" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,46,482,74"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="512,60,483,62,483,57,518,59"/>
+<area shape="rect" id="Node000007" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,46,244,74"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="274,60,245,62,244,57,279,59"/>
+<area shape="rect" id="Node000008" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,19,60,47"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="90,46,61,41,60,35,94,43"/>
+<area shape="rect" id="Node000009" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,71,60,99"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="90,76,61,83,59,78,94,73"/>
+<area shape="rect" id="Node000015" href="$classsetup_1_1PotentialSetup.html#a50b8c4ec570848a3079763c88bf43ccd" title="writes setup information to log file" alt="" coords="1139,85,1300,130"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="1330,118,1300,118,1300,113,1335,119"/>
+<area shape="poly" id="edge16_Node000015_Node000003" title=" " alt="" coords="1121,98,1092,98,1092,93,1127,99"/>
+</map>

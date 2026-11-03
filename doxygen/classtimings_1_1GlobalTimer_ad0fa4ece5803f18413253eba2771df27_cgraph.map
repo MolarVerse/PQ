@@ -1,0 +1,15 @@
+<map id="timings::GlobalTimer::stopSimulationTimer" name="timings::GlobalTimer::stopSimulationTimer">
+<area shape="rect" id="Node000001" title="stop the simulation timer" alt="" coords="5,40,171,85"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a5d1c218e7806d9acf4c151efc983b722" title="Get the Simulation Timer object." alt="" coords="238,5,404,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,47,225,41,220,43,172,53"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#af91abf63dabd1bd439f2e54a46e07701" title="stops a timer with default name" alt="" coords="219,75,423,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,72,206,79,201,80,171,77"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1Timer.html#ae560e1495809d5305500b64d63f2d95b" title="find timeManager by name" alt="" coords="482,44,682,89"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="423,82,470,80,464,80,424,88"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1Timer.html#aa6d43c22ede0bc08e71e9a18f20ab1b5" title="get timer name" alt="" coords="471,112,693,140"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="424,106,458,112,453,112,424,111"/>
+<area shape="rect" id="Node000006" href="$timerId_8cpp.html#ac8b582a9479dec276bd0b124b0658e2a" title="convert TimerId to string" alt="" coords="741,112,814,140"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="694,124,728,126,723,126,694,129"/>
+<area shape="rect" id="Node000007" href="$structTimerIdMeta.html#a0875bc66f116737c97a26fde58b45be0" title=" " alt="" coords="862,112,1025,140"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="814,124,849,126,843,126,814,129"/>
+</map>

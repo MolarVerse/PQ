@@ -1,0 +1,9 @@
+<map id="connectivity::Dihedral" name="connectivity::Dihedral">
+<area shape="rect" id="Node000001" title="dihedral object containing all dihedral information" alt="" coords="139,210,312,282"/>
+<area shape="rect" id="Node000003" href="$classff_1_1DihedralForceField.html" title="Represents a dihedral between four atoms." alt="" coords="5,442,213,693"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,293,157,443,152,441,207,298"/>
+<area shape="rect" id="Node000004" href="$classff_1_1JCouplingForceField.html" title=" " alt="" coords="237,330,445,804"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="243,293,258,330,253,330,243,299"/>
+<area shape="rect" id="Node000002" href="$classconnectivity_1_1ConnectivityElement.html" title="Represents a connectivity element between n atoms." alt="" coords="136,5,315,162"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,174,228,210,223,209,225,179"/>
+</map>

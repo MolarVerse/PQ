@@ -1,0 +1,10 @@
+<map id="input::Converter&lt; std::string &gt;" name="input::Converter&lt; std::string &gt;">
+<area shape="rect" id="Node000001" title="Converter specialization for std::string." alt="" coords="5,517,156,607"/>
+<area shape="rect" id="Node000002" href="$structinput_1_1ConverterBase.html" title=" " alt="" coords="7,312,154,468"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,481,75,518,70,517,71,486"/>
+<area shape="poly" id="edge4_Node000001_Node000002" title=" " alt="" coords="91,481,91,518,86,517,88,485"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="43,144,118,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,214,83,295,78,295,80,219"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="17,5,144,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="81,107,83,144,78,144,80,112"/>
+</map>

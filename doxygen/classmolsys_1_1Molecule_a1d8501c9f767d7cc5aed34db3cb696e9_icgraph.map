@@ -1,0 +1,7 @@
+<map id="molsys::Molecule::getCenterOfMass" name="molsys::Molecule::getCenterOfMass">
+<area shape="rect" id="Node000001" title="returns the center of mass of the molecule" alt="" coords="122,24,329,68"/>
+<area shape="rect" id="Node000002" href="$testHybridConfigurator_8cpp.html#af101c1804efd9bcaf35f7299c6e4b295" title=" " alt="" coords="13,5,66,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,30,67,26,66,20,108,27"/>
+<area shape="rect" id="Node000003" href="$testManostatRegressions_8cpp.html#a31ffaa77e4996a8f202dd0b2812fc557" title=" " alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,63,75,69,74,64,109,61"/>
+</map>

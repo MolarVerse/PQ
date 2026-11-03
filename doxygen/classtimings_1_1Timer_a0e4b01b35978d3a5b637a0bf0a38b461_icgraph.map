@@ -1,0 +1,7 @@
+<map id="timings::Timer::Timer" name="timings::Timer::Timer">
+<area shape="rect" id="Node000001" title="Construct a new Timer:: Timer object." alt="" coords="237,32,399,60"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1Timer.html#aa920763ecb27b09f41ca59e252d31d21" title="get timer" alt="" coords="5,5,189,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,35,189,33,189,28,224,34"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#a88a3522afb1c15989d32fd1e2dc25539" title=" " alt="" coords="16,57,178,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,57,179,64,178,59,224,57"/>
+</map>

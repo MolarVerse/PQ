@@ -1,0 +1,9 @@
+<map id="opt::Convergence" name="opt::Convergence">
+<area shape="rect" id="Node000001" title="Convergence class." alt="" coords="120,307,313,603"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,44,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="22,75,23,120,26,173,35,229,53,282,78,324,111,364,106,365,74,328,48,284,29,230,20,173,18,120,21,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="189,5,244,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,75,219,291,214,290,215,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="402,5,501,78"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="456,75,459,121,456,174,445,231,424,284,405,314,381,342,328,389,325,385,378,338,401,311,420,282,440,229,450,174,453,121,454,80"/>
+</map>

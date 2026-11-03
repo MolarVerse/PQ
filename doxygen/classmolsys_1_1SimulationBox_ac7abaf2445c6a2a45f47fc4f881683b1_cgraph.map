@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::getFlattenedQMPositions" name="molsys::SimulationBox::getFlattenedQMPositions">
+<area shape="rect" id="Node000001" title="flattens positions of each QM atom into a single vector of doubles" alt="" coords="5,5,199,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBoxView.html#a7e7040ddbbd5836394efe83bf9f8210a" title=" " alt="" coords="247,5,486,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,25,234,27,229,28,199,30"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,56,59,84"/>
+<area shape="rect" id="Node000002" href="$namespacecli.html#add2bb3d95adab35616525d7d833713b1" title=" " alt="" coords="107,5,321,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,60,148,35,146,40,60,65"/>
+<area shape="rect" id="Node000003" href="$namespacecli.html#a41673b72fe3597bc6d8f92debd8c3e8e" title=" " alt="" coords="369,81,533,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,69,354,87,353,92,59,74"/>
+<area shape="rect" id="Node000004" href="$namespacecli.html#a338171a14addd338b740b0b17d6b38fb" title=" " alt="" coords="130,107,298,134"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,74,149,100,145,104,59,80"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="298,109,351,106,356,105,299,114"/>
+</map>

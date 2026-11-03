@@ -1,0 +1,11 @@
+<map id="pot::NonCoulombPair" name="pot::NonCoulombPair">
+<area shape="rect" id="Node000001" title="base class representing a pair of non&#45;coulombic types" alt="" coords="226,5,383,390"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1BuckinghamPair.html" title="inherits from NonCoulombPair represents a pair of Buckingham types" alt="" coords="5,438,150,622"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,324,142,440,138,437,216,328"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1GuffPair.html" title="inherits from NonCoulombPair represents a pair of Guff types (full guff formula)" alt="" coords="174,472,283,589"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,403,244,473,239,471,255,407"/>
+<area shape="rect" id="Node000004" href="$classpot_1_1LennardJonesPair.html" title="inherits from NonCoulombPair and represents a pair of Lennard&#45;Jones types" alt="" coords="306,438,457,622"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="354,403,363,440,358,438,351,407"/>
+<area shape="rect" id="Node000005" href="$classpot_1_1MorsePair.html" title="inherits from NonCoulombPair represents a pair of Morse types" alt="" coords="481,438,595,622"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="393,320,484,449,478,449,390,325"/>
+</map>

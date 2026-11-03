@@ -1,0 +1,21 @@
+<map id="ReferenceSettings::addReferenceFile" name="ReferenceSettings::addReferenceFile">
+<area shape="rect" id="Node000001" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="537,178,686,223"/>
+<area shape="rect" id="Node000002" href="$classManostatSettings.html#a9a5f9c461380cb265bbabde942ee0546" title="adds the appropriate reference file for the current manostat type to the given reference settings" alt="" coords="346,49,489,94"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="570,168,532,139,488,108,469,97,469,91,491,104,535,135,576,169"/>
+<area shape="rect" id="Node000007" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="347,118,488,163"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="520,173,488,165,489,160,526,173"/>
+<area shape="rect" id="Node000008" href="$testReferencesOutput_8cpp.html#a5d0150df0ba9dd45a503298b00f231f4" title=" " alt="" coords="391,187,444,214"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="519,201,445,203,444,198,524,200"/>
+<area shape="rect" id="Node000009" href="$testReferencesOutput_8cpp.html#a886042122d4b3d0cf7382336d422447b" title=" " alt="" coords="391,239,444,266"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="525,224,445,248,444,243,520,225"/>
+<area shape="rect" id="Node000010" href="$testReferencesOutput_8cpp.html#a21e498ed61e2d3514958024f012ec8b3" title=" " alt="" coords="391,291,444,318"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="569,231,491,280,446,299,444,294,488,275,563,233"/>
+<area shape="rect" id="Node000003" href="$classManostatSettings.html#a55e37d5bcc2e78da3a0d95690a7f8d9b" title="finalizes the settings by setting the fixed axis if it was not explicitly set" alt="" coords="108,57,298,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="328,72,299,74,297,69,333,70"/>
+<area shape="rect" id="Node000004" href="$perfBerendsenManostat_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="138,54,61,30,59,25,142,51"/>
+<area shape="rect" id="Node000005" href="$testManostatSettings_8cpp.html#ad449ced7be1ca062f29ccc8e51d85ca3" title="finalize() must add the reference file matching the configured manostat type." alt="" coords="6,57,59,85"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="90,73,61,73,58,69,94,69"/>
+<area shape="rect" id="Node000006" href="$testManostatSettings_8cpp.html#a2e9bacf8d8b53ede70d1fb4a71a923d5" title=" " alt="" coords="6,109,59,137"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="139,92,61,117,58,113,142,88"/>
+</map>

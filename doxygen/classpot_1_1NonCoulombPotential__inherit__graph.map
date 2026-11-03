@@ -1,0 +1,7 @@
+<map id="pot::NonCoulombPotential" name="pot::NonCoulombPotential">
+<area shape="rect" id="Node000001" title="NonCoulombPotential is a base class for guff as well as force field non coulomb potentials." alt="" coords="135,5,325,145"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1ForceFieldNonCoulomb.html" title=" " alt="" coords="5,193,231,567"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,156,189,194,185,192,199,161"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1GuffNonCoulomb.html" title="inherits NonCoulombPotential" alt="" coords="255,232,429,528"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,156,291,232,285,232,260,161"/>
+</map>

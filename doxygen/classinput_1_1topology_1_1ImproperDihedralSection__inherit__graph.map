@@ -1,0 +1,5 @@
+<map id="input::topology::ImproperDihedralSection" name="input::topology::ImproperDihedralSection">
+<area shape="rect" id="Node000001" title="reads improper dihedral section of topology file" alt="" coords="5,277,180,411"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1topology_1_1TopologySection.html" title="base class for reading topology file sections" alt="" coords="6,5,180,229"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,241,95,277,90,276,92,246"/>
+</map>

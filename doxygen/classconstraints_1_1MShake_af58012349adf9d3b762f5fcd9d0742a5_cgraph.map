@@ -1,0 +1,11 @@
+<map id="constraints::MShake::initMShakeReferences" name="constraints::MShake::initMShakeReferences">
+<area shape="rect" id="Node000001" title="init M &#45; Shake references" alt="" coords="5,49,180,94"/>
+<area shape="rect" id="Node000002" href="$namespacekernel.html#af7ad1d9be265abf580d5717b5b7f13eb" title="Calculate the distance vector between two particles." alt="" coords="257,5,374,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,48,245,35,240,37,181,53"/>
+<area shape="rect" id="Node000003" href="$namespacekernel.html#ac6b8f2a0c0ee09683605dfcffef55704" title="Calculate the distance vector and the squared distance between two particles." alt="" coords="228,57,403,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,69,215,71,210,72,181,74"/>
+<area shape="rect" id="Node000004" href="$classlinalg_1_1Matrix.html#afdfdfee7fc63b0625a852715e9d17f1c" title=" " alt="" coords="234,109,397,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,89,241,105,235,106,180,94"/>
+<area shape="rect" id="Node000005" href="$classlinalg_1_1Matrix.html#a3fc5ac8aaaf2c6b0d154f7b66dd90cc7" title=" " alt="" coords="451,109,608,137"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="397,121,438,123,432,123,397,126"/>
+</map>

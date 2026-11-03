@@ -1,0 +1,9 @@
+<map id="timings::Timer::startTimingsSection" name="timings::Timer::startTimingsSection">
+<area shape="rect" id="Node000001" title="starts a new timer with default name" alt="" coords="539,40,745,85"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a8cba5f0d8230c22c2953cb9d5f12fc88" title="Construct a new Global Timer:: Global Timer object." alt="" coords="293,5,452,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="521,47,452,41,452,35,526,47"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1GlobalTimer.html#a61929e5d6c8bb044a137852fe536b59c" title="stop and restart the simulation timer" alt="" coords="254,75,491,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="526,77,492,84,491,79,521,78"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1GlobalTimer.html#a4fd7c1c7b8acb2ec7c2c6f957339ee14" title=" " alt="" coords="5,5,206,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="275,28,206,30,206,25,280,27"/>
+</map>

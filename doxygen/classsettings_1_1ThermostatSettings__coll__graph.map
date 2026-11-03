@@ -1,0 +1,15 @@
+<map id="settings::ThermostatSettings" name="settings::ThermostatSettings">
+<area shape="rect" id="Node000001" title="static class to store settings of the thermostat" alt="" coords="312,427,532,768"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,194,161,266"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,264,77,298,78,333,85,369,99,402,139,451,189,493,243,526,299,554,294,555,240,531,186,497,135,455,95,405,80,370,73,333,72,297,77,269"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="217,194,256,266"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,263,228,331,231,368,241,402,267,451,303,496,298,497,263,454,236,404,226,368,222,331,229,268"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="479,5,528,78"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="477,74,456,109,437,152,422,215,412,281,408,347,408,411,403,410,403,347,407,281,416,214,432,150,452,106,480,69"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="652,194,840,266"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="528,59,690,183,685,185,527,64"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="809,5,864,78"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="860,75,871,101,887,138,896,154,901,172,902,195,896,224,880,262,853,311,825,353,791,391,753,426,713,457,629,510,548,551,546,546,626,506,710,453,750,422,787,387,820,349,849,308,876,260,891,222,897,194,896,173,891,156,882,140,866,103,858,80"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="811,70,791,103,774,141,761,179,756,176,769,139,786,100,808,74"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="718,264,545,461,541,458,713,267"/>
+</map>

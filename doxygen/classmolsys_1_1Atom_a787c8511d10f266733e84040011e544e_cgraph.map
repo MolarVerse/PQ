@@ -1,0 +1,9 @@
+<map id="molsys::Atom::scaleVelocityOrthogonalSpace" name="molsys::Atom::scaleVelocityOrthogonalSpace">
+<area shape="rect" id="Node000001" title="scales the velocities of the atom in orthogonal space" alt="" coords="5,65,211,110"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Box.html#a98d364d3b62df674f97b5f7da26149c8" title=" " alt="" coords="261,5,454,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,62,249,53,244,55,204,67"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html#a160bdd91407b7610b45761e33f192344" title=" " alt="" coords="259,74,456,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,85,245,87,240,88,211,90"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Box.html#a2298a98d6a33af885fa8464870a8fedf" title=" " alt="" coords="264,126,450,154"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="211,106,275,122,270,122,211,112"/>
+</map>

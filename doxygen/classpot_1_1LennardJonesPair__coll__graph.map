@@ -1,0 +1,18 @@
+<map id="pot::LennardJonesPair" name="pot::LennardJonesPair">
+<area shape="rect" id="Node000001" title="inherits from NonCoulombPair and represents a pair of Lennard&#45;Jones types" alt="" coords="319,766,470,950"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1NonCoulombPair.html" title="base class representing a pair of non&#45;coulombic types" alt="" coords="238,397,394,693"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="358,705,374,767,369,765,355,710"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,190,167,279"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,276,95,325,102,349,112,372,135,405,163,436,226,488,221,490,160,440,131,409,108,374,97,351,90,326,86,281"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="16,5,156,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="86,92,89,173,84,173,86,97"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="190,190,331,279"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="261,276,263,303,261,338,263,373,264,381,259,380,258,373,256,338,258,303,260,282"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="191,5,331,95"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="261,92,263,174,258,173,260,97"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="436,198,491,271"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="435,258,415,279,395,305,369,382,364,380,390,302,411,276,438,254"/>
+<area shape="rect" id="Node000008" href="$structLJParams.html" title="Struct to hold Lennard&#45;Jones parameters c6 and c12." alt="" coords="445,509,559,581"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="488,268,505,303,514,352,517,403,512,493,507,491,512,403,509,353,500,304,488,273"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="492,579,433,751,429,749,488,582"/>
+</map>

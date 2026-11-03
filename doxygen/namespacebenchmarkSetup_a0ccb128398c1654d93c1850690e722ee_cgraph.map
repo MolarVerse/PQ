@@ -1,0 +1,8 @@
+<map id="benchmarkSetup::resetForces" name="benchmarkSetup::resetForces">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,60,220,88"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="268,5,439,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,57,255,46,250,48,188,63"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a48f501659deea078822b6cb0e2306e7f" title="reset forces of all atoms" alt="" coords="268,99,439,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,86,255,101,250,102,187,91"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="308,97,306,89,314,80,330,74,353,72,379,75,396,84,391,83,378,80,353,77,331,79,317,84,311,90,312,100"/>
+</map>

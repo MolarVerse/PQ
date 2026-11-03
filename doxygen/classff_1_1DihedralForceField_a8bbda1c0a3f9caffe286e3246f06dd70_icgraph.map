@@ -1,0 +1,5 @@
+<map id="ff::DihedralForceField::setIsLinker" name="ff::DihedralForceField::setIsLinker">
+<area shape="rect" id="Node000001" title="set if dihedral is a linker dihedral" alt="" coords="122,5,281,50"/>
+<area shape="rect" id="Node000002" href="$testForceField_8cpp.html#acb3c465b34f94e270cdb3b7f825eb8b2" title="tests calculateBondedInteractions" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

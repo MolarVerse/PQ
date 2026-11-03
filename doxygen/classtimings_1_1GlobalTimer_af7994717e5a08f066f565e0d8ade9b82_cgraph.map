@@ -1,0 +1,7 @@
+<map id="timings::GlobalTimer::calculateLoopTime" name="timings::GlobalTimer::calculateLoopTime">
+<area shape="rect" id="Node000001" title="calculates the loop time of the simulation" alt="" coords="5,40,164,85"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a5d1c218e7806d9acf4c151efc983b722" title="Get the Simulation Timer object." alt="" coords="221,5,386,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,47,208,42,203,44,165,52"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#aadba36ed9a51c1d92bd4b3665f41a2ff" title="calculates the loop time in s" alt="" coords="212,75,395,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,72,199,80,194,80,164,78"/>
+</map>

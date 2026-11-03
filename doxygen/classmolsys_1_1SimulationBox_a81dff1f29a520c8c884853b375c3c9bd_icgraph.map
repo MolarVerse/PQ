@@ -1,0 +1,56 @@
+<map id="molsys::SimulationBox::calculateMomentum" name="molsys::SimulationBox::calculateMomentum">
+<area shape="rect" id="Node000001" title="calculate momentum of simulationBox" alt="" coords="564,793,735,838"/>
+<area shape="rect" id="Node000002" href="$classmaxwellBoltzmann_1_1MaxwellBoltzmann.html#a9495d2dc3908e3cd6ea7dc7eab65ac21" title="generate boltzmann distributed velocities for all atoms in the simulation box" alt="" coords="298,180,516,224"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="631,779,415,227,419,222,637,778"/>
+<area shape="rect" id="Node000010" href="$classresetKinetics_1_1ResetKinetics.html#a4ab078b63f9fa805dcf35809abd6b4af" title="checks to reset angular momentum" alt="" coords="305,793,508,838"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="546,816,510,818,508,813,551,814"/>
+<area shape="rect" id="Node000027" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="93,1217,162,1245"/>
+<area shape="poly" id="edge27_Node000001_Node000027" title=" " alt="" coords="625,849,567,927,481,1024,429,1074,373,1123,314,1168,251,1207,206,1224,162,1231,161,1226,204,1219,248,1202,311,1164,370,1119,426,1071,477,1020,563,924,621,852"/>
+<area shape="rect" id="Node000003" href="$testMaxwellBoltzmann_8cpp.html#ae5d279e3c53416174686c7d7e25b0da4" title=" " alt="" coords="101,5,154,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="378,168,324,106,288,75,248,48,200,31,156,23,153,18,201,25,251,43,291,70,327,103,383,167"/>
+<area shape="rect" id="Node000004" href="$testMaxwellBoltzmann_8cpp.html#abf087284517407e7b36fad4c5731c165" title=" " alt="" coords="101,57,154,85"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="364,170,311,134,249,100,199,85,156,76,153,72,200,80,251,95,314,129,368,168"/>
+<area shape="rect" id="Node000005" href="$testMaxwellBoltzmann_8cpp.html#a8d42ba56679bbc7e94d09a8fdfc001be" title=" " alt="" coords="101,109,154,137"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="325,176,249,152,156,130,153,126,250,147,330,173"/>
+<area shape="rect" id="Node000006" href="$testMaxwellBoltzmann_8cpp.html#a80f92f11299c5554eb495ec09bba00e1" title=" " alt="" coords="101,161,154,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="281,192,156,180,153,175,285,188"/>
+<area shape="rect" id="Node000007" href="$testMaxwellBoltzmann_8cpp.html#a86218b36b32af867abee6bd2f7e9d9c4" title=" " alt="" coords="101,213,154,241"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="281,215,156,227,153,223,284,211"/>
+<area shape="rect" id="Node000008" href="$testMaxwellBoltzmann_8cpp.html#a0f5bdfd8c4a714e15bf86130696ccb95" title=" " alt="" coords="101,265,154,293"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="324,231,250,255,156,276,153,272,249,250,327,227"/>
+<area shape="rect" id="Node000009" href="$testMaxwellBoltzmann_8cpp.html#a9aefdecab1219b23ba4fbf35c2a27b76" title=" " alt="" coords="101,317,154,345"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="364,236,314,273,251,307,200,323,156,330,153,326,199,317,249,302,311,269,367,232"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1RingPolymerQMMDEngine.html#abf2a1b83ebf163c6eec06c0a99883815" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="5,369,250,414"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="399,777,386,704,359,609,339,560,314,512,284,467,248,428,234,416,232,411,251,424,288,464,319,509,344,558,364,608,391,703,404,778"/>
+<area shape="rect" id="Node000012" href="$testResetKinetics_8cpp.html#a9fe794a7fd5abe8c22fafc9857709afc" title=" " alt="" coords="101,437,154,465"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="397,777,381,713,353,632,334,590,310,549,281,512,248,480,226,467,201,459,156,453,153,448,203,454,228,462,251,476,285,508,314,546,338,587,358,630,386,711,402,778"/>
+<area shape="rect" id="Node000013" href="$testResetKinetics_8cpp.html#ac9e4b727240d3efa900b63ed69610a86" title=" " alt="" coords="101,489,154,517"/>
+<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="393,777,375,723,345,656,303,588,278,558,248,532,226,519,201,511,156,505,153,501,202,506,228,514,251,528,281,554,308,585,350,653,380,721,399,778"/>
+<area shape="rect" id="Node000014" href="$testResetKinetics_8cpp.html#a2f6a6502c97189ccc4c50ade23a57d82" title=" " alt="" coords="101,541,154,569"/>
+<area shape="poly" id="edge13_Node000010_Node000014" title=" " alt="" coords="389,778,368,734,337,680,297,628,274,604,248,584,225,572,201,564,156,558,153,553,202,559,227,567,251,580,277,600,301,624,342,677,372,731,394,778"/>
+<area shape="rect" id="Node000015" href="$testResetKinetics_8cpp.html#adae4da4d91c0e616958ed0958418d501" title=" " alt="" coords="101,593,154,621"/>
+<area shape="poly" id="edge14_Node000010_Node000015" title=" " alt="" coords="382,780,359,746,328,706,291,668,248,636,225,625,200,618,156,610,153,606,201,613,227,620,251,632,294,664,332,703,364,743,388,780"/>
+<area shape="rect" id="Node000016" href="$testResetKinetics_8cpp.html#a77cf952920d5173e22f87590c63b376e" title=" " alt="" coords="101,645,154,673"/>
+<area shape="poly" id="edge15_Node000010_Node000016" title=" " alt="" coords="372,782,318,734,284,709,249,688,199,672,156,664,153,659,201,666,251,683,287,705,321,730,377,781"/>
+<area shape="rect" id="Node000017" href="$testResetKinetics_8cpp.html#a3d82952ac51149267a8f2f02aabc8922" title=" " alt="" coords="101,697,154,725"/>
+<area shape="poly" id="edge16_Node000010_Node000017" title=" " alt="" coords="350,786,302,763,249,740,199,726,156,717,154,713,200,721,251,735,305,758,355,784"/>
+<area shape="rect" id="Node000018" href="$testResetKinetics_8cpp.html#a2bd816d6ddcd15ef4790d40f51d1b119" title=" " alt="" coords="101,749,154,777"/>
+<area shape="poly" id="edge17_Node000010_Node000018" title=" " alt="" coords="288,795,155,770,154,765,292,792"/>
+<area shape="rect" id="Node000019" href="$testResetKinetics_8cpp.html#a8a89e20ab4fdad80122a07d1564e2bc9" title=" " alt="" coords="101,801,154,829"/>
+<area shape="poly" id="edge18_Node000010_Node000019" title=" " alt="" coords="288,817,155,818,153,813,292,813"/>
+<area shape="rect" id="Node000020" href="$testResetKinetics_8cpp.html#a6a33f2f929e6132e9a642fc0224e996d" title=" " alt="" coords="101,853,154,881"/>
+<area shape="poly" id="edge19_Node000010_Node000020" title=" " alt="" coords="288,839,156,865,153,860,292,835"/>
+<area shape="rect" id="Node000021" href="$testResetKinetics_8cpp.html#a203e1a82083ccba8e68b3e72ff3b63a2" title=" " alt="" coords="101,905,154,933"/>
+<area shape="poly" id="edge20_Node000010_Node000021" title=" " alt="" coords="351,847,305,873,251,895,200,909,156,918,153,913,199,904,249,890,302,868,355,844"/>
+<area shape="rect" id="Node000022" href="$testResetKinetics_8cpp.html#a0c29b3e622f5ebd51c436f9b72aaf7c3" title=" " alt="" coords="101,957,154,985"/>
+<area shape="poly" id="edge21_Node000010_Node000022" title=" " alt="" coords="373,850,321,901,287,926,251,947,201,964,156,971,153,967,199,959,249,942,284,921,318,897,377,846"/>
+<area shape="rect" id="Node000023" href="$testResetKinetics_8cpp.html#a38f2d750d39e716b73bdcf84f3ed94a9" title=" " alt="" coords="101,1009,154,1037"/>
+<area shape="poly" id="edge22_Node000010_Node000023" title=" " alt="" coords="387,849,364,888,332,927,294,966,251,999,227,1010,201,1018,156,1025,153,1020,200,1013,225,1005,248,994,291,962,328,924,359,884,383,853"/>
+<area shape="rect" id="Node000024" href="$testResetKinetics_8cpp.html#ab72f547b71bae0583378fcbaed0ba995" title=" " alt="" coords="101,1061,154,1089"/>
+<area shape="poly" id="edge23_Node000010_Node000024" title=" " alt="" coords="393,850,372,899,342,953,301,1006,277,1030,251,1051,227,1063,202,1071,156,1077,154,1072,201,1066,225,1058,248,1046,274,1026,297,1003,337,950,368,897,390,854"/>
+<area shape="rect" id="Node000025" href="$testResetKinetics_8cpp.html#a9cd975a6ad632cff4b5430559dc43d3d" title=" " alt="" coords="101,1113,154,1141"/>
+<area shape="poly" id="edge24_Node000010_Node000025" title=" " alt="" coords="390,849,316,998,278,1066,251,1102,228,1116,202,1124,155,1130,154,1125,201,1119,226,1111,248,1099,273,1063,311,996,386,853"/>
+<area shape="rect" id="Node000026" href="$testResetKinetics_8cpp.html#a648e86d68afee17709d382dc5186aa4e" title=" " alt="" coords="101,1165,154,1193"/>
+<area shape="poly" id="edge25_Node000010_Node000026" title=" " alt="" coords="389,850,300,1035,289,1070,284,1100,275,1127,251,1155,228,1169,203,1177,155,1183,154,1178,202,1172,226,1164,248,1150,270,1124,279,1098,284,1068,295,1033,385,853"/>
+<area shape="poly" id="edge26_Node000010_Node000027" title=" " alt="" coords="387,849,345,935,300,1035,292,1061,289,1084,287,1127,280,1166,269,1186,251,1206,231,1220,208,1229,163,1235,162,1230,207,1224,229,1216,248,1203,265,1183,275,1164,282,1126,284,1084,287,1059,295,1033,340,933,383,853"/>
+</map>

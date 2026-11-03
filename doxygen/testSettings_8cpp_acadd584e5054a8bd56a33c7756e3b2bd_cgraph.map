@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#ade3975d6567d7a025db21128a8f71682" title="get the dimensionality" alt="" coords="107,5,292,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,54,93,48,89,52,60,59"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a0585ec48454df7aa8723f7a8754e8475" title="sets the dimensionality" alt="" coords="107,75,292,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,65,94,73,89,76,59,70"/>
+</map>

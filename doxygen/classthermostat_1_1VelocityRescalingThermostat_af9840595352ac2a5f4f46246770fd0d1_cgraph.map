@@ -1,0 +1,7 @@
+<map id="thermostat::VelocityRescalingThermostat::VelocityRescalingThermostat" name="thermostat::VelocityRescalingThermostat::VelocityRescalingThermostat">
+<area shape="rect" id="Node000001" title="Copy constructor for Velocity Rescaling Thermostat." alt="" coords="5,40,300,85"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html#ac8a1806922be9fff6e5720c723eee1d9" title="Construct a new Thermostat:: Thermostat object." alt="" coords="407,5,583,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,45,394,38,389,39,300,50"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1VelocityRescalingThermostat.html#adb7a54cc45508484502336b2c0f90d9e" title=" " alt="" coords="348,75,642,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="300,75,335,80,329,81,300,80"/>
+</map>

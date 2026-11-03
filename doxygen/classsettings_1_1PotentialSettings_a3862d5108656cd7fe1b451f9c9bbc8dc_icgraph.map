@@ -1,0 +1,21 @@
+<map id="settings::PotentialSettings::setScale14VanDerWaals" name="settings::PotentialSettings::setScale14VanDerWaals">
+<area shape="rect" id="Node000001" title="Set the 1&#45;4 Van der Waals scaling factor in the PotentialSettings class." alt="" coords="610,169,803,214"/>
+<area shape="rect" id="Node000002" href="$perfBondedForces_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="425,5,479,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="678,156,629,100,596,71,561,47,519,31,480,24,479,18,521,26,564,42,600,67,632,96,683,157"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1parameterFile_1_1TypesSection.html#a225f80f033b45312935ba4a36c364b30" title="process types section and sets the scale factors for the 1&#45;4 interactions in potentialSettings" alt="" coords="342,57,562,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="652,161,561,116,531,105,531,99,563,111,658,161"/>
+<area shape="rect" id="Node000006" href="$testDihedralForceField_8cpp.html#a68352588edaad60fc90618468a26facf" title=" " alt="" coords="418,125,486,153"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="592,169,487,149,487,143,598,168"/>
+<area shape="rect" id="Node000007" href="$testForceField_8cpp.html#acb3c465b34f94e270cdb3b7f825eb8b2" title="tests calculateBondedInteractions" alt="" coords="418,177,486,205"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="592,192,487,194,486,189,598,191"/>
+<area shape="rect" id="Node000008" href="$testForceField_8cpp.html#a975ce5a42fe354c58f79212db423799a" title="test correctLinker" alt="" coords="418,229,486,257"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="593,215,487,239,486,234,598,213"/>
+<area shape="rect" id="Node000009" href="$testIntraNonBonded_8cpp.html#abf63d62481d7771e86b6e1cb70a6ee1f" title="test calculate method" alt="" coords="418,281,486,309"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="659,221,613,249,563,271,487,292,486,287,561,266,610,244,654,222"/>
+<area shape="rect" id="Node000010" href="$testIntraNonBondedMap_8cpp.html#a4e6603ad06584aba90b6867c56ef011f" title="Test fixture class for the IntraNonBondedMap class." alt="" coords="418,333,486,361"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="679,224,628,277,597,302,564,323,525,338,487,346,487,341,523,333,561,318,594,298,625,273,674,227"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1parameterFile_1_1TypesSection.html#a1b9b9c2e85020f967dd5ced42e2862bb" title="Overwrites process function of ParameterFileSection base class. It just forwards the call to processS..." alt="" coords="122,57,294,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="324,80,295,82,293,77,329,78"/>
+<area shape="rect" id="Node000005" href="$testTypesSection_8cpp.html#a3640a4c3ca68f101c6364fcbae5cac1b" title="test types section processing one line" alt="" coords="5,65,74,93"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="104,81,75,81,73,77,108,77"/>
+</map>

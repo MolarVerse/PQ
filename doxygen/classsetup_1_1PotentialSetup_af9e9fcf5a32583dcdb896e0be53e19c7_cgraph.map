@@ -1,0 +1,5 @@
+<map id="setup::PotentialSetup::setupNonCoulombicPairs" name="setup::PotentialSetup::setupNonCoulombicPairs">
+<area shape="rect" id="Node000001" title="sets up nonCoulombic pairs in the ForceFieldNonCoulomb potential" alt="" coords="5,5,197,50"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1ForceFieldNonCoulomb.html#a6a03b6f7fc252b91bd374752647eeb07" title="calculates and sets energy and force cutoff for all non&#45;coulombic pairs in _nonCoulPairsVec" alt="" coords="245,5,451,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,25,232,27,226,28,197,30"/>
+</map>

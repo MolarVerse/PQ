@@ -1,0 +1,11 @@
+<map id="setup::setupIntraNonBonded" name="setup::setupIntraNonBonded">
+<area shape="rect" id="Node000001" title="wrapper to construct IntraNonBondedSetup object and setup the intra non bonded interactions" alt="" coords="5,83,212,111"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a34e65d220f84e2579e5ca8a7c010d385" title="Returns true if the intra non&#45;bonded interactions are activated." alt="" coords="260,5,467,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,80,266,53,262,56,163,85"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1IntraNonBondedSetup.html#a119e0f938e83ba4fad9bfbd8674393a4" title="Setup intra non bonded interactions." alt="" coords="260,75,467,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,94,247,96,242,98,212,100"/>
+<area shape="rect" id="Node000004" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="291,144,436,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="162,109,278,141,274,144,162,114"/>
+<area shape="rect" id="Node000005" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="515,152,659,180"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="436,164,502,166,497,166,436,169"/>
+</map>

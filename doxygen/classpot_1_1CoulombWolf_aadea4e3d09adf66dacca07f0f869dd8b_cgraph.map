@@ -1,0 +1,7 @@
+<map id="pot::CoulombWolf::CoulombWolf" name="pot::CoulombWolf::CoulombWolf">
+<area shape="rect" id="Node000001" title="Construct a new Coulomb Wolf:: Coulomb Wolf object." alt="" coords="5,14,237,42"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1CoulombPotential.html#a0f86b1d930429618bce35173b3be9c93" title="Construct a new Coulomb Potential:: Coulomb Potential object." alt="" coords="285,5,451,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,25,272,28,266,28,237,30"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1CoulombPotential.html#a08407ee16c41911dfbcbe7c820c0ee4d" title="sets the coulombRadiusCutOff and calculates the energy and force cutoff &#45; equivalent to the construct..." alt="" coords="499,5,691,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="451,25,486,28,481,28,452,30"/>
+</map>

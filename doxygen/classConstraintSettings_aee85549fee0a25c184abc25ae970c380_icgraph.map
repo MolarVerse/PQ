@@ -1,0 +1,17 @@
+<map id="ConstraintSettings::setShakeMaxIter" name="ConstraintSettings::setShakeMaxIter">
+<area shape="rect" id="Node000001" title="set the maximum number of iterations for the shake algorithm" alt="" coords="122,153,263,198"/>
+<area shape="rect" id="Node000002" href="$testSettingsBuilder_8cpp.html#a661fcb7142b97720e7dc9cab5bfe5f60" title=" " alt="" coords="13,5,66,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,141,119,96,72,48,60,36,59,31,75,44,123,93,165,140"/>
+<area shape="rect" id="Node000003" href="$testSettingsBuilder_8cpp.html#a7f96b65d9819ef363df3ad2a0c7716de" title=" " alt="" coords="13,57,66,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,145,62,88,62,83,148,142"/>
+<area shape="rect" id="Node000004" href="$testSettingsBuilder_8cpp.html#a90ab2e469d250995e52c0b94ff4258fc" title=" " alt="" coords="13,109,66,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="108,149,67,135,66,130,113,146"/>
+<area shape="rect" id="Node000005" href="$testSettingsBuilder_8cpp.html#a572fba25a429da8cb2869b647ff48ff9" title=" " alt="" coords="13,161,66,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="104,177,68,178,66,173,108,173"/>
+<area shape="rect" id="Node000006" href="$testConstraints_8cpp.html#ad548d1a5e4b4c0b3c76def32133c3a76" title="test apply shake algorithm to all bond constraints" alt="" coords="5,213,74,241"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="108,205,76,218,73,213,112,201"/>
+<area shape="rect" id="Node000007" href="$testConstraints_8cpp.html#a1b53baaa8f11d6c143541fc6bc397746" title="test apply shake algorithm to all bond constraints and it does not converge" alt="" coords="5,265,74,293"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="146,209,63,267,60,263,146,204"/>
+<area shape="rect" id="Node000008" href="$testConstraints_8cpp.html#a456ede8db33f7f1d2260d696990865ed" title="test apply shake algorithm to all bond constraints and it does not converge but is deactivated" alt="" coords="5,317,74,345"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="164,208,123,258,75,306,61,319,58,315,72,303,119,254,160,211"/>
+</map>

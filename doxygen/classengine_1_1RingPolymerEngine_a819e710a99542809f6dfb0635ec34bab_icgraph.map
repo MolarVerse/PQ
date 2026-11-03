@@ -1,0 +1,5 @@
+<map id="engine::RingPolymerEngine::coupleRingPolymerBeads" name="engine::RingPolymerEngine::coupleRingPolymerBeads">
+<area shape="rect" id="Node000001" title="coupling step of ring polymers" alt="" coords="298,5,498,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1RingPolymerQMMDEngine.html#abf2a1b83ebf163c6eec06c0a99883815" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="5,5,250,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="279,28,250,30,250,25,285,28"/>
+</map>

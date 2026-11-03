@@ -1,0 +1,27 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,222,74,250"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a113ce24a68a36e8561ffa78d7fac1409" title="sets the custom Hubbard Derivative dictionary" alt="" coords="149,5,305,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,221,49,188,64,145,87,100,120,60,137,50,134,55,123,64,92,103,69,147,54,190,46,222"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a8d44d152590d92fd8e55c8844aec1d5f" title="sets if the Hubbard Derivative dictionary is set by the user" alt="" coords="138,75,316,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="46,220,75,176,96,151,120,130,131,125,127,129,123,134,99,155,79,179,51,223"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1QMSettings.html#af511c42a8672eefc62ef24e854be186e" title="sets if the third order is set" alt="" coords="138,144,316,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="71,219,121,199,142,192,138,196,123,203,75,223"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1QMSettings.html#a2671605035a4dc70a47f92420e241791" title="sets the slakosPath in settings" alt="" coords="149,213,305,258"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="73,233,135,234,131,238,75,238"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1QMSettings.html#a5240619fa30e80decda4cb0c87adbec6" title="sets the slakosType to enum in settings" alt="" coords="149,283,305,327"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="72,248,123,268,142,276,137,278,121,273,73,253"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1QMSettings.html#a9791215b092f3c47b729d7fcba38b9b3" title="sets if the dispersion correction should be used" alt="" coords="122,352,332,397"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="48,247,79,292,99,317,123,338,132,344,126,345,120,342,96,320,75,296,48,253"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1QMSettings.html#a6bb00508ab531e43a21e180f3424e43f" title="sets if third order DFTB should be used" alt="" coords="142,421,312,466"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="44,247,54,282,69,324,92,369,124,407,131,415,126,414,120,411,87,372,64,326,49,283,43,253"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#acacc3738bf0a0bb0e6a27fb02616e9b0" title="returns if the Hubbard derivatives are set by the user" alt="" coords="394,75,552,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="316,94,380,96,375,98,318,100"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1QMSettings.html#ab06f21ee699cf03ab5b1e1f5bf04231c" title="returns if the third order is set" alt="" coords="394,144,551,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="315,164,380,165,376,167,317,169"/>
+<area shape="rect" id="Node000008" href="$structSlakosTypeMeta.html#a0e6a1eceb0020c75fb0008b839b6845b" title=" " alt="" coords="380,222,565,250"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="305,233,367,235,362,237,306,238"/>
+<area shape="rect" id="Node000011" href="$classsettings_1_1QMSettings.html#ab324126741d9b3eecb6e7886d364178e" title="returns if the dispersion correction should be used" alt="" coords="394,352,551,397"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="332,372,382,374,377,375,333,377"/>
+<area shape="rect" id="Node000013" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="394,421,551,466"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="312,441,382,444,376,444,313,446"/>
+</map>

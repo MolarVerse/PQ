@@ -1,0 +1,11 @@
+<map id="physicalData::PhysicalData::setIntraCoulombEnergy" name="physicalData::PhysicalData::setIntraCoulombEnergy">
+<area shape="rect" id="Node000001" title="set the intra coulomb energy" alt="" coords="982,5,1181,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#a3c8a7b4aaa0693d20ba43888f106bac1" title="Transfer internal accumulated energies from the QM/MM PhysicalData object to PhysicalData and reset t..." alt="" coords="705,5,934,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="964,28,934,30,934,25,969,28"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMMMMDEngine.html#a8d924cf4a3d0acb33ca0440533d416de" title="Apply exact smoothing algorithm for QM/MM boundary treatment." alt="" coords="472,5,657,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="687,28,658,30,658,25,692,28"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1QMMMMDEngine.html#a58d17897c3573c25f6a815086f36ada1" title="Apply the selected smoothing method for QM/MM boundary treatment." alt="" coords="239,5,424,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="454,28,425,30,424,25,459,28"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,5,191,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="221,28,191,30,191,25,226,27"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="molsys::TriclinicBox::_calculateTransformationMatrix" name="molsys::TriclinicBox::_calculateTransformationMatrix">
+<area shape="rect" id="Node000001" title="Calculate the rotation matrix." alt="" coords="5,144,241,189"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1TriclinicBox.html#a2f438905ad311a17cf5bc8d6fbd8b261" title="calculate cos of alpha" alt="" coords="289,5,439,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,141,216,102,287,60,300,56,296,59,290,65,219,107,159,146"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1TriclinicBox.html#a340ec34f24f2c4a061394bb903bb5966" title="calculate cos of beta" alt="" coords="289,75,439,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,141,276,121,272,124,204,146"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1TriclinicBox.html#a4aada74067510af4e59ed68ed04061da" title="calculate cos of gamma" alt="" coords="289,144,439,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="241,164,276,165,271,167,242,169"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1TriclinicBox.html#aef7b46f92837d6a293b427c5b2cb9f1a" title="calculate sin of gamma" alt="" coords="289,213,439,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="203,187,277,209,272,211,203,192"/>
+<area shape="rect" id="Node000006" href="$namespacelinalg.html#a8b09ed67f3c2927e7d78dd44342b9f72" title=" " alt="" coords="320,306,408,334"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="161,187,330,296,325,298,159,192"/>
+<area shape="poly" id="edge6_Node000006_Node000006" title=" " alt="" coords="323,304,316,297,321,287,338,281,364,279,392,282,409,291,404,290,391,287,364,284,339,286,325,291,321,297,327,306"/>
+</map>

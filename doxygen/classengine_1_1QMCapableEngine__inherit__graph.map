@@ -1,0 +1,11 @@
+<map id="engine::QMCapableEngine" name="engine::QMCapableEngine">
+<area shape="rect" id="Node000001" title="Mixin class providing QM functionality to engines." alt="" coords="182,5,364,145"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HybridMDEngine.html" title="HybridMDEngine." alt="" coords="20,193,292,669"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,161,237,194,232,192,247,156"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1QMMDEngine.html" title="Contains all the information needed to run a QM MD simulation." alt="" coords="326,372,477,489"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="304,156,383,372,378,373,303,161"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMMMMDEngine.html" title="class QMMMMDEngine" alt="" coords="5,717,269,1057"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="146,682,147,718,142,717,145,687"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1RingPolymerQMMDEngine.html" title=" " alt="" coords="294,806,528,968"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="405,503,412,807,406,806,401,506"/>
+</map>

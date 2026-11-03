@@ -1,0 +1,13 @@
+<map id="WaterModelSettings::setWaterInterModel" name="WaterModelSettings::setWaterInterModel">
+<area shape="rect" id="Node000001" title="sets the waterInterModel to enum in settings" alt="" coords="330,76,487,120"/>
+<area shape="rect" id="Node000002" href="$perfInterWater_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="168,5,222,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="339,69,281,48,222,29,222,24,283,43,344,69"/>
+<area shape="rect" id="Node000003" href="$namespacebenchWaterScaling.html#a3372b0ab1c542bdc9fb149f57bdabb63" title=" " alt="" coords="108,57,282,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="312,87,283,85,282,79,318,86"/>
+<area shape="rect" id="Node000005" href="$testWaterModels_8cpp.html#aa8d9e4a500f26a153480717ed26c2311" title=" " alt="" coords="168,109,222,137"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="312,110,223,123,222,117,318,108"/>
+<area shape="rect" id="Node000006" href="$testWaterModels_8cpp.html#a5eb7cb8c232608ccbf38fd3f31cff889" title=" " alt="" coords="168,161,222,189"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="342,126,283,151,223,170,221,165,281,146,337,127"/>
+<area shape="rect" id="Node000004" href="$perfInterWaterN1728_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,57,60,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,73,61,74,59,69,94,69"/>
+</map>

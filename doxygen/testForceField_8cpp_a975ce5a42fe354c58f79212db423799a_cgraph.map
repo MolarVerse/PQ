@@ -1,0 +1,9 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="test correctLinker" alt="" coords="5,65,74,93"/>
+<area shape="rect" id="Node000002" href="$namespaceff.html#aae34fa693ba30e17b8eb5b4820a9a615" title=" " alt="" coords="157,5,279,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,63,121,42,145,36,141,39,123,47,73,67"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#af964035d9a1195110a4cbe480c2c603e" title="Set the 1&#45;4 Coulomb scaling factor in the PotentialSettings class." alt="" coords="122,57,314,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,77,108,78,104,81,75,82"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1PotentialSettings.html#a3862d5108656cd7fe1b451f9c9bbc8dc" title="Set the 1&#45;4 Van der Waals scaling factor in the PotentialSettings class." alt="" coords="122,126,314,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,91,123,111,141,120,136,121,121,116,73,96"/>
+</map>

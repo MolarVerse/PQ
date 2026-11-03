@@ -1,0 +1,9 @@
+<map id="input::parameterFile::TypesSection::process" name="input::parameterFile::TypesSection::process">
+<area shape="rect" id="Node000001" title="Overwrites process function of ParameterFileSection base class. It just forwards the call to processS..." alt="" coords="5,40,178,85"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1parameterFile_1_1TypesSection.html#a225f80f033b45312935ba4a36c364b30" title="process types section and sets the scale factors for the 1&#45;4 interactions in potentialSettings" alt="" coords="226,40,446,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,60,212,62,207,63,178,65"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#af964035d9a1195110a4cbe480c2c603e" title="Set the 1&#45;4 Coulomb scaling factor in the PotentialSettings class." alt="" coords="494,5,686,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="446,45,481,42,476,43,447,50"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1PotentialSettings.html#a3862d5108656cd7fe1b451f9c9bbc8dc" title="Set the 1&#45;4 Van der Waals scaling factor in the PotentialSettings class." alt="" coords="494,75,686,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="447,75,481,82,476,82,446,80"/>
+</map>

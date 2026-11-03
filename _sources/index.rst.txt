@@ -13,3 +13,4 @@ Welcome to PQ's documentation!
     src/userGuide/userGuide
     src/installation/installation
     src/developerGuide/developerGuide
+    src/apiReference/apiReference

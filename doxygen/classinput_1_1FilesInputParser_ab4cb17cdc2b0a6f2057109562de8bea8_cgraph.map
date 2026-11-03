@@ -1,0 +1,11 @@
+<map id="input::FilesInputParser::addIntraNonBondedFileKey" name="input::FilesInputParser::addIntraNonBondedFileKey">
+<area shape="rect" id="Node000001" title="Adds the intra&#45;nonBonded_file keyword to the parser." alt="" coords="5,109,211,154"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="304,5,462,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,106,258,60,291,51,287,53,260,65,155,111"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#aa3a756dbf032ca69d4c428de6a62ad61" title="activate intra non&#45;bonded interactions" alt="" coords="289,75,476,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,116,276,110,272,112,212,121"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1FileSettings.html#a59c166026fe03e5f7013a2c8400f01c1" title="set the intra non bonded file name" alt="" coords="275,144,491,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="211,142,262,150,257,152,211,147"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1FileSettings.html#a53a79c3c0d0dda2ca78dd5f54f125b40" title="set the intra non bonded file name flag to is set" alt="" coords="259,213,507,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="154,152,260,199,282,208,277,208,258,203,153,157"/>
+</map>

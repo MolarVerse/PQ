@@ -1,0 +1,7 @@
+<map id="molsys::Molecule::calculateCenterOfMass" name="molsys::Molecule::calculateCenterOfMass">
+<area shape="rect" id="Node000001" title="calculates the center of mass of the molecule" alt="" coords="5,24,208,68"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Box.html#a9fe76e2c1b3e4fa8b66ec54e5bc37f3d" title=" " alt="" coords="264,5,470,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,33,251,31,246,32,209,38"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a13e3cc374b6593dea84c949c72416abb" title="returns the molecular mass of the molecule" alt="" coords="256,57,478,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,53,243,59,237,59,208,58"/>
+</map>

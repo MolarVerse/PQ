@@ -1,0 +1,21 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests calculateBondedInteractions" alt="" coords="5,222,74,250"/>
+<area shape="rect" id="Node000002" href="$classff_1_1AngleForceField.html#aaf157b69c6eb1c74e8170e277270b97a" title="set if angle is a linker angle" alt="" coords="147,5,288,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,221,49,188,64,145,87,100,120,60,135,51,132,56,124,64,92,103,69,148,54,190,46,222"/>
+<area shape="rect" id="Node000004" href="$classff_1_1DihedralForceField.html#a8bbda1c0a3f9caffe286e3246f06dd70" title="set if dihedral is a linker dihedral" alt="" coords="138,75,298,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="46,220,75,176,96,151,120,130,130,125,127,129,123,134,100,155,79,179,51,223"/>
+<area shape="rect" id="Node000006" href="$classff_1_1AngleForceField.html#a8086ad36d676b4435037310026a4d264" title="set angle parameters" alt="" coords="147,144,288,189"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="72,219,121,199,140,193,137,196,123,203,75,223"/>
+<area shape="rect" id="Node000007" href="$classff_1_1BondForceField.html#a01a0fde083b0cc75f06e409eac6ccc7e" title="set bond parameters" alt="" coords="149,213,286,258"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="73,233,135,234,132,238,75,238"/>
+<area shape="rect" id="Node000008" href="$classff_1_1DihedralForceField.html#aad9270b86dc9f264ff8e7780dbbda879" title="set dihedral parameters" alt="" coords="138,283,298,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="73,247,123,268,141,276,136,278,121,273,74,253"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1PotentialSettings.html#af964035d9a1195110a4cbe480c2c603e" title="Set the 1&#45;4 Coulomb scaling factor in the PotentialSettings class." alt="" coords="122,352,314,397"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="48,247,79,292,100,316,123,338,131,344,126,344,120,342,96,320,75,295,48,252"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1PotentialSettings.html#a3862d5108656cd7fe1b451f9c9bbc8dc" title="Set the 1&#45;4 Van der Waals scaling factor in the PotentialSettings class." alt="" coords="122,421,314,466"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="44,247,54,282,69,324,92,368,124,407,128,413,123,412,120,411,87,371,64,326,49,283,43,253"/>
+<area shape="rect" id="Node000003" href="$classff_1_1AngleForceField.html#a78c42e358ec2a6b0e33f3459bb05fdb3" title="get if angle is a linker angle" alt="" coords="371,5,512,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="288,25,358,26,353,29,290,30"/>
+<area shape="rect" id="Node000005" href="$classff_1_1DihedralForceField.html#a69a43f7d5e351a14c2beee3921951c2c" title="get if dihedral is a linker dihedral" alt="" coords="362,75,521,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="297,95,349,96,344,98,299,99"/>
+</map>

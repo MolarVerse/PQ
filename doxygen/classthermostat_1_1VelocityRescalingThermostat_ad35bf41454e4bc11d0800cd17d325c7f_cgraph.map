@@ -1,0 +1,34 @@
+<map id="thermostat::VelocityRescalingThermostat::operator=" name="thermostat::VelocityRescalingThermostat::operator=">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,403,222,447"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1VelocityRescalingThermostat.html#a0c78a478f5c153332a6c1d5bd42eff1f" title="apply thermostat &#45; Velocity Rescaling" alt="" coords="309,264,525,309"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,400,197,358,269,319,296,310,292,313,271,323,200,363,144,404"/>
+<area shape="rect" id="Node000013" href="$classthermostat_1_1VelocityRescalingThermostat.html#a317e2a9a86cd9c4be17cfddf1d53dbe2" title="Get the tau (relaxation time) of the Velocity Rescaling thermostat." alt="" coords="309,333,525,378"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="214,400,304,381,299,383,216,404"/>
+<area shape="rect" id="Node000014" href="$classthermostat_1_1VelocityRescalingThermostat.html#a5ee37a00502a2e523e399b35a3b97da5" title="Get thermostat type." alt="" coords="302,403,532,447"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="222,422,288,424,283,426,223,428"/>
+<area shape="rect" id="Node000015" href="$classthermostat_1_1VelocityRescalingThermostat.html#af99298171322b4d5d5ff999b5c1f2949" title="Set the tau (relaxation time) of the Velocity Rescaling thermostat." alt="" coords="309,472,525,517"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="215,445,304,467,299,469,215,451"/>
+<area shape="rect" id="Node000016" href="$classthermostat_1_1VelocityRescalingThermostat.html#adb7a54cc45508484502336b2c0f90d9e" title=" " alt="" coords="270,541,564,586"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="143,445,200,487,271,527,290,536,284,536,269,531,197,492,142,450"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1Thermostat.html#a26fb0d7a4c3963b728c80d2855e6eb30" title="throw if the system has no degrees of freedom" alt="" coords="612,5,820,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="431,262,460,221,502,169,553,115,610,67,634,56,630,59,614,71,556,119,506,173,464,224,435,265"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a2c10e2ba2e99e7ebd66e68966d45f0b6" title="Get degrees of freedom." alt="" coords="869,36,1045,81"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="434,262,464,228,505,186,555,144,611,111,655,96,716,84,856,67,851,69,717,89,656,102,613,115,558,149,509,190,468,231,438,266"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="630,125,802,170"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="455,261,526,221,611,180,630,175,625,177,613,185,529,226,458,266"/>
+<area shape="rect" id="Node000006" href="$classthermostat_1_1Thermostat.html#a964bb4a1a5668c8986503793e73dcf2f" title="get target temperature" alt="" coords="628,195,804,239"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="516,261,616,240,611,242,517,266"/>
+<area shape="rect" id="Node000007" href="$classthermostat_1_1Thermostat.html#aa93c6a179212d3ddc5961bb940fa450b" title="get temperature" alt="" coords="628,264,804,309"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="525,284,615,286,610,287,526,289"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1TimingsSettings.html#ac990af6a43bd3d7be96c36edf50eb5a0" title="get the time step" alt="" coords="623,333,809,378"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="516,307,610,330,605,331,517,312"/>
+<area shape="rect" id="Node000009" href="$namespaceutilities.html#aaae9b2dbd3ac275d4268ad9f73baa500" title="check whether a number is exactly zero" alt="" coords="656,402,776,430"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="526,300,566,319,582,336,590,355,598,372,614,388,644,405,639,405,610,392,594,375,586,357,578,339,562,323,526,305"/>
+<area shape="rect" id="Node000010" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="664,454,769,482"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="526,297,547,306,566,319,579,334,586,349,591,380,595,411,602,425,614,439,631,450,651,460,646,460,628,455,610,443,597,428,590,412,586,381,581,351,575,337,562,323,545,311,526,302"/>
+<area shape="rect" id="Node000012" href="$classthermostat_1_1Thermostat.html#a757ca5314503e952e2964a1a453b3c73" title="set temperature" alt="" coords="628,505,804,550"/>
+<area shape="poly" id="edge12_Node000002_Node000012" title=" " alt="" coords="525,295,547,305,566,319,583,341,591,362,592,406,592,449,599,470,614,491,618,497,613,496,610,495,594,473,587,450,586,406,585,363,578,343,562,323,545,310,525,300"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="820,38,856,45,851,46,821,44"/>
+<area shape="rect" id="Node000011" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="868,445,1046,490"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="769,465,856,467,850,468,769,470"/>
+</map>

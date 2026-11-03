@@ -1,0 +1,25 @@
+<map id="input::guffdat::GuffDatReader::postProcessSetup" name="input::guffdat::GuffDatReader::postProcessSetup">
+<area shape="rect" id="Node000001" title="post process guff.dat reading" alt="" coords="5,75,218,119"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a1957ed885e0023ec6d6204b8285e0ebb" title="calculates the partial charges of the molecule types from the guff.dat coulomb coefficients" alt="" coords="266,5,478,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,72,273,53,269,56,200,76"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1guffdat_1_1GuffDatReader.html#aeb619cf0f3482833171ccced2cfb72fd" title="check if all necessary guff pairs are set" alt="" coords="266,75,478,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="217,95,253,96,248,98,219,99"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a63fe7778deb9a21fd6f73da58521852e" title="checks if the partial charges are in accordance with all guff.dat entries." alt="" coords="266,160,478,205"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="182,117,290,153,285,156,182,123"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#a752bb70809a2fb9f8f59d58545fd5320" title="calculates the sign of a number" alt="" coords="582,14,687,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="478,25,569,27,564,29,479,30"/>
+<area shape="rect" id="Node000004" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="827,74,962,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="687,37,819,69,814,70,687,42"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1guffdat_1_1GuffDatReader.html#a042de94cd3d7fe5789bb0d06dfa15a2b" title="Determine if both provided molecule types are of the water molecule type." alt="" coords="528,65,741,110"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="478,91,516,91,511,93,479,96"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="478,165,743,120,823,105,817,106,744,125,479,170"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="435,157,559,115,554,117,437,162"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1Molecule.html#a54409a25ca26663368192d66a4dcbe1d" title=" " alt="" coords="526,184,743,212"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="478,186,513,190,508,191,479,191"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1Molecule.html#a4329388299d04f733cf8ad92e00f7d4a" title="finds number of different atom types in molecule" alt="" coords="526,236,743,281"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="452,203,543,231,538,231,451,208"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Molecule.html#a8e2b05b1085c969eabb42295b4d6318d" title="returns the partial charge of the atom by index" alt="" coords="532,305,737,350"/>
+<area shape="poly" id="edge12_Node000007_Node000011" title=" " alt="" coords="400,203,457,247,527,291,542,300,537,299,525,295,454,251,398,208"/>
+<area shape="rect" id="Node000010" href="$namespaceutilities.html#aaf583bdaf439d7b207cfd5aa4b5715d3" title="returns sorted unique elements from a vector copy" alt="" coords="791,244,998,272"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="743,256,778,258,773,259,743,261"/>
+</map>

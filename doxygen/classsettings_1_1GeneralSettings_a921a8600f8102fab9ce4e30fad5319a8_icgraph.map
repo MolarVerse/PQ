@@ -1,0 +1,11 @@
+<map id="settings::GeneralSettings::isMMOnlyJobtype" name="settings::GeneralSettings::isMMOnlyJobtype">
+<area shape="rect" id="Node000001" title="Returns true if the jobtype does not use any QM type simulations." alt="" coords="291,76,476,120"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Atom.html#a2764d2618b320cf0b0d8aa39ce3bb2f1" title="determine if an atom should be treated as MM" alt="" coords="29,5,219,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,70,242,48,196,36,196,31,243,43,314,69"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#ad2e3a0f831cc6cf2c09e10964e542a9b" title="Determines if this molecule should be treated as a MM molecule." alt="" coords="5,57,243,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="272,87,243,86,243,81,277,86"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Atom.html#ae4b2473e62c12772516ea371612fbc3c" title="determine if an atom should be treated as QM" alt="" coords="30,109,218,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="272,109,218,117,217,111,278,108"/>
+<area shape="rect" id="Node000005" href="$testSettings_8cpp.html#aecf6ecf07e33b9c1e526847b9e959a69" title=" " alt="" coords="97,161,151,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="312,126,243,151,152,173,151,168,242,146,307,127"/>
+</map>

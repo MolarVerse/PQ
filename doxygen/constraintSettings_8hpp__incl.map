@@ -1,0 +1,15 @@
+<map id="/home/runner/work/PQ/PQ/include/settings/constraintSettings.hpp" name="/home/runner/work/PQ/PQ/include/settings/constraintSettings.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="74,5,246,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,75,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,70,71,108,67,104,121,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,115,222,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,65,163,100,157,98,159,70"/>
+<area shape="rect" id="Node000004" href="$setting_8hpp.html" title=" " alt="" coords="246,115,340,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="205,65,264,105,259,106,204,70"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="110,191,232,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="274,143,207,185,204,180,269,144"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="256,191,330,218"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="295,141,296,177,291,173,291,145"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="354,191,446,218"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="313,141,371,182,366,182,312,146"/>
+</map>

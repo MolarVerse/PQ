@@ -1,0 +1,5 @@
+<map id="molsys::OrthorhombicBox" name="molsys::OrthorhombicBox">
+<area shape="rect" id="Node000001" title="This class represents the unit cell of an orthorhombic box." alt="" coords="18,483,224,890"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Box.html" title="This class represents the unit cell of a general triclinic box." alt="" coords="5,5,237,435"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,447,124,484,119,483,121,453"/>
+</map>

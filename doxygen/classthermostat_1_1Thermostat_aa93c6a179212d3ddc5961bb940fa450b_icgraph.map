@@ -1,0 +1,11 @@
+<map id="thermostat::Thermostat::getTemperature" name="thermostat::Thermostat::getTemperature">
+<area shape="rect" id="Node000001" title="get temperature" alt="" coords="574,75,750,119"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1BerendsenThermostat.html#a8e5dc93aed0fc32ffc999ee0ed0dd5f0" title="apply thermostat &#45; Berendsen" alt="" coords="275,5,520,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="557,70,486,53,486,48,562,70"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1NoseHooverThermostat.html#acfd67b9b8239efb85592928ed1d2bce1" title="applies the Nose&#45;Hoover thermostat on the velocities" alt="" coords="270,75,526,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="556,97,526,100,526,94,561,97"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1VelocityRescalingThermostat.html#a0c78a478f5c153332a6c1d5bd42eff1f" title="apply thermostat &#45; Velocity Rescaling" alt="" coords="290,144,506,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="562,123,486,146,485,141,557,124"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1VelocityRescalingThermostat.html#ad35bf41454e4bc11d0800cd17d325c7f" title=" " alt="" coords="5,144,222,189"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="271,167,222,169,222,164,277,166"/>
+</map>

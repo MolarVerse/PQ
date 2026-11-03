@@ -1,0 +1,8 @@
+<map id="out::LogOutput::writeSetupCompleted" name="out::LogOutput::writeSetupCompleted">
+<area shape="rect" id="Node000001" title="write a message to the stdout to inform that the setup is completed" alt="" coords="5,48,201,92"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="257,29,456,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,57,244,55,239,56,202,62"/>
+<area shape="rect" id="Node000003" href="$namespaceout.html#a326d515b74b2bf226877f502a8746d89" title="Message to inform about completed setup." alt="" coords="249,81,464,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="201,77,236,83,231,83,201,82"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="313,28,306,20,312,11,329,5,356,3,386,5,404,14,398,14,385,10,356,8,330,10,315,15,312,20,318,30"/>
+</map>

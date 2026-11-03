@@ -1,0 +1,6 @@
+<map id="timings::TimingsSection::beginTimer" name="timings::TimingsSection::beginTimer">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,184,74"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="51,28,50,19,57,10,72,5,95,3,119,5,135,14,130,14,118,10,94,8,73,10,60,15,55,21,56,29"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1TimingsSection.html#adf8297130402fe5666118eb15866818e" title="Construct a new Timings Section:: Timings Section object." alt="" coords="232,29,410,74"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="184,49,218,51,213,52,184,54"/>
+</map>

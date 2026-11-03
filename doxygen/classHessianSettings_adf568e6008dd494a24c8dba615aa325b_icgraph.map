@@ -1,0 +1,16 @@
+<map id="HessianSettings::optimizeBeforeHessian" name="HessianSettings::optimizeBeforeHessian">
+<area shape="rect" id="Node000001" title="Check whether to optimize before Hessian calculations." alt="" coords="849,91,1040,135"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HessianEngine.html#a3fadfd984543b95d8c424974628f8eaf" title=" " alt="" coords="585,5,801,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="860,85,761,53,761,48,865,85"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1HessianEngine.html#a6aab0fbfa97a93ee0eb0c236db640c4a" title=" " alt="" coords="122,44,320,72"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="832,107,320,68,320,63,834,102"/>
+<area shape="rect" id="Node000006" href="$testHessianSettings_8cpp.html#ad989c3cdc0dc1a12dc57d5609273874b" title=" " alt="" coords="666,124,720,152"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="836,124,720,138,720,133,831,124"/>
+<area shape="rect" id="Node000007" href="$testHessianParser_8cpp.html#a228a39ea4d8f8de1e9fbabc4a89a23aa" title=" " alt="" coords="659,176,727,204"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="871,141,801,166,728,185,727,180,800,161,866,141"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1HessianEngine.html#a12d4af4d469c1e64fa96a679345aae96" title=" " alt="" coords="368,5,537,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="567,28,538,30,537,25,572,27"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="350,42,321,48,320,43,355,40"/>
+<area shape="rect" id="Node000005" href="$testOptimizerSetup_8cpp.html#add470e00111eb6b85ec2aa3e032d9634" title=" " alt="" coords="5,44,74,72"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="104,60,75,61,73,56,108,57"/>
+</map>

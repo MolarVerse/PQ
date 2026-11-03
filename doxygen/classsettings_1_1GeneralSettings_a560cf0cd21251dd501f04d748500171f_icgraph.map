@@ -1,0 +1,7 @@
+<map id="settings::GeneralSettings::setNumberOfCells" name="settings::GeneralSettings::setNumberOfCells">
+<area shape="rect" id="Node000001" title="sets the number of cells for the cell list" alt="" coords="468,5,653,50"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1CellListInputParser.html#a235db88ba5fc8fe690d33015a2bdf3de" title="Adds the keyword for specifying the number of cells." alt="" coords="237,5,420,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="450,28,420,30,420,25,455,28"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1CellListInputParser.html#aa78f94553dbd5a807e1faa1eac0ea82a" title="Construct a new Input File Parser Cell List:: Input File Parser Cell List object." alt="" coords="5,5,189,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="219,28,189,30,189,25,224,27"/>
+</map>

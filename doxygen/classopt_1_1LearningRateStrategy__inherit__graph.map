@@ -1,0 +1,9 @@
+<map id="opt::LearningRateStrategy" name="opt::LearningRateStrategy">
+<area shape="rect" id="Node000001" title="Learning Rate Strategy." alt="" coords="241,5,430,614"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1ConstantDecayLRStrategy.html" title="Constant Decay Learning Rate Strategy." alt="" coords="5,662,223,846"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,511,162,663,157,661,233,514"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1ConstantLRStrategy.html" title="Constant Learning Rate Strategy." alt="" coords="247,673,424,834"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="337,626,338,674,333,672,334,630"/>
+<area shape="rect" id="Node000004" href="$classopt_1_1ExpDecayLR.html" title="Exponential decay learning rate strategy." alt="" coords="448,684,616,823"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="438,535,504,685,499,684,435,539"/>
+</map>

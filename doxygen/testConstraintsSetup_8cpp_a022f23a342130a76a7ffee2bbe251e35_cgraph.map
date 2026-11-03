@@ -1,0 +1,61 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests that the setupConstraints wrapper function does not touch the degrees of freedom when no constr..." alt="" coords="5,487,74,515"/>
+<area shape="rect" id="Node000002" href="$namespacesetup.html#a840c32566a76797a3f7a62301f16ce32" title="constructs a new Constraints Setup:: Constraints Setup object and calls setup" alt="" coords="122,487,297,515"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,498,108,499,104,503,75,504"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1ConstraintsSetup.html#a2372d212b6be4df2d94fbe99c60280ed" title="sets constraints data in constraints object" alt="" coords="345,415,521,459"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="259,484,340,463,335,465,261,489"/>
+<area shape="rect" id="Node000027" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="361,513,505,558"/>
+<area shape="poly" id="edge30_Node000002_Node000027" title=" " alt="" coords="297,512,348,522,343,523,298,517"/>
+<area shape="rect" id="Node000004" href="$classsetup_1_1ConstraintsSetup.html#a4ebbd4c69ceb8c9d7d4cb814f3d1382f" title="corrects the number of degrees of freedom for the constraints" alt="" coords="569,484,761,529"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="510,457,576,479,571,479,510,463"/>
+<area shape="rect" id="Node000005" href="$classsetup_1_1ConstraintsSetup.html#a1d89079b3c78f08f4359e061d311316b" title="setup M&#45;SHAKE" alt="" coords="577,247,753,291"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="462,412,568,331,614,302,619,299,571,335,464,416"/>
+<area shape="rect" id="Node000020" href="$classsetup_1_1ConstraintsSetup.html#af9d039aad1f50610a1181a3dcef03edb" title="sets constraints reference bond lengths" alt="" coords="577,345,753,390"/>
+<area shape="poly" id="edge23_Node000003_Node000020" title=" " alt="" coords="509,412,576,394,571,396,511,417"/>
+<area shape="rect" id="Node000021" href="$classsetup_1_1ConstraintsSetup.html#afb90e42e2aaff0a63bc00e48cc1f541b" title="write setup information to log output" alt="" coords="577,415,753,459"/>
+<area shape="poly" id="edge24_Node000003_Node000021" title=" " alt="" coords="521,434,564,437,558,437,522,440"/>
+<area shape="rect" id="Node000006" href="$namespaceinput_1_1mShake.html#a08672b685400c24c4040a33406010079" title="Wrapper to construct MShakeReader and read mShake file." alt="" coords="809,239,1011,267"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="753,261,795,260,790,261,754,266"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1mShake_1_1MShakeReader.html#a032e0451766bac0cc781b47f7fdd9a8d" title="reads mShake file" alt="" coords="1059,231,1278,275"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1011,250,1046,253,1041,253,1012,256"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1mShake_1_1MShakeReader.html#a6fbd2be6c54e7311a264e34f0099f9cd" title="processes atom line" alt="" coords="1326,145,1546,190"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1240,227,1347,196,1352,194,1242,233"/>
+<area shape="rect" id="Node000011" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="1603,212,1802,240"/>
+<area shape="poly" id="edge21_Node000007_Node000011" title=" " alt="" coords="1278,245,1590,232,1585,233,1279,250"/>
+<area shape="rect" id="Node000013" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="1631,264,1775,292"/>
+<area shape="poly" id="edge22_Node000007_Node000013" title=" " alt="" coords="1279,256,1618,274,1613,275,1279,261"/>
+<area shape="rect" id="Node000014" href="$classinput_1_1mShake_1_1MShakeReader.html#a9ed522769a7b95f77c9658ae5b870a37" title="processes comment line" alt="" coords="1326,337,1546,382"/>
+<area shape="poly" id="edge13_Node000007_Node000014" title=" " alt="" coords="1227,273,1367,331,1361,331,1226,279"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1MoleculeType.html#aa60e195262b62b4e1ffa8e90ee9506a8" title="get the atom names of the molecule" alt="" coords="1620,5,1786,50"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1465,142,1522,101,1592,60,1605,57,1610,55,1595,65,1525,106,1467,147"/>
+<area shape="rect" id="Node000010" href="$classconstraints_1_1MShakeReference.html#a2edd271ffa16991a55d1c2fb3ff48c86" title="get the molecule type" alt="" coords="1594,75,1812,119"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="1522,142,1604,123,1599,125,1524,147"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="1541,188,1624,209,1619,209,1541,193"/>
+<area shape="rect" id="Node000012" href="$classconstraints_1_1MShakeReference.html#a520684247a261cd2de27926b31149d40" title="Set the atoms object." alt="" coords="1594,144,1812,189"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="1546,164,1580,167,1575,167,1547,170"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="1474,188,1530,219,1595,249,1620,260,1615,260,1593,254,1528,224,1473,193"/>
+<area shape="poly" id="edge16_Node000014_Node000011" title=" " alt="" coords="1463,334,1520,292,1593,251,1611,246,1616,244,1595,255,1523,296,1465,339"/>
+<area shape="poly" id="edge18_Node000014_Node000013" title=" " alt="" coords="1498,334,1593,302,1622,297,1627,296,1594,308,1499,339"/>
+<area shape="rect" id="Node000015" href="$namespaceutilities.html#a4336aad931ffaf5387444bbc8af3a539" title="adds leading and trailing spaces to a string" alt="" coords="1629,316,1777,344"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="1546,345,1616,340,1610,341,1547,350"/>
+<area shape="rect" id="Node000016" href="$namespaceutilities.html#a21ee0515bf8768bf6673fd0b376c9b3e" title="get commands from a line" alt="" coords="1603,368,1803,396"/>
+<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="1546,366,1590,372,1584,373,1546,372"/>
+<area shape="rect" id="Node000017" href="$classconstraints_1_1MShakeReference.html#af31e20825bd4ec98d815feb1931b6d8f" title="Set the molecule type object as a unique pointer." alt="" coords="1594,420,1812,465"/>
+<area shape="poly" id="edge17_Node000014_Node000017" title=" " alt="" coords="1511,380,1616,415,1611,415,1510,385"/>
+<area shape="rect" id="Node000018" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="1621,488,1784,516"/>
+<area shape="poly" id="edge19_Node000014_Node000018" title=" " alt="" coords="1462,380,1520,428,1556,453,1595,475,1611,484,1606,483,1593,479,1554,458,1517,433,1460,385"/>
+<area shape="rect" id="Node000019" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="1629,540,1777,585"/>
+<area shape="poly" id="edge20_Node000014_Node000019" title=" " alt="" coords="1453,380,1511,452,1551,491,1595,525,1617,539,1612,538,1592,530,1547,495,1507,455,1451,385"/>
+<area shape="rect" id="Node000022" href="$classsetup_1_1ConstraintsSetup.html#a1c83ea605610576b100fd3765b7c32e2" title="write degrees of freedom message to log output" alt="" coords="822,429,998,474"/>
+<area shape="poly" id="edge25_Node000021_Node000022" title=" " alt="" coords="754,440,809,445,803,446,754,445"/>
+<area shape="rect" id="Node000023" href="$classsetup_1_1ConstraintsSetup.html#ab53ac713e5b62065485c46d42a83b753" title="write enabled message to log output" alt="" coords="822,499,998,543"/>
+<area shape="poly" id="edge26_Node000021_Node000023" title=" " alt="" coords="733,457,831,493,825,493,732,463"/>
+<area shape="rect" id="Node000024" href="$classsetup_1_1ConstraintsSetup.html#ae47492de0cd1473e326716901724e11e" title="write max iterations message to log output" alt="" coords="822,568,998,613"/>
+<area shape="poly" id="edge27_Node000021_Node000024" title=" " alt="" coords="744,457,762,470,780,491,787,513,794,534,811,554,816,560,811,559,807,558,789,536,782,515,775,494,759,474,743,462"/>
+<area shape="rect" id="Node000025" href="$classsetup_1_1ConstraintsSetup.html#a0d5b9dc6be0b3699e7c399f45511092a" title="write number of constraint bonds to log output" alt="" coords="820,291,1000,335"/>
+<area shape="poly" id="edge28_Node000021_Node000025" title=" " alt="" coords="739,412,759,400,774,387,782,373,792,360,807,346,814,344,819,342,810,350,796,363,787,376,778,390,762,404,741,417"/>
+<area shape="rect" id="Node000026" href="$classsetup_1_1ConstraintsSetup.html#a2a50068bac1e8092bbe6fe2b6090276f" title="write tolerances message to log output" alt="" coords="822,360,998,405"/>
+<area shape="poly" id="edge29_Node000021_Node000026" title=" " alt="" coords="753,415,809,405,804,406,754,420"/>
+<area shape="rect" id="Node000028" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="593,552,737,580"/>
+<area shape="poly" id="edge31_Node000027_Node000028" title=" " alt="" coords="506,543,580,555,575,555,506,548"/>
+</map>

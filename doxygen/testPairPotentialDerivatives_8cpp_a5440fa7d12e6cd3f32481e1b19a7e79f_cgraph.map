@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,59,111"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1BuckinghamPair.html#a142c6b9266de2f9c4e93743c9d788c9b" title="calculates the energy and force of a BuckinghamPair" alt="" coords="120,5,275,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,82,106,60,123,55,119,58,108,65,61,86"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1LennardJonesPair.html#a290f427767cc2ebba1d829fa51d09655" title="calculates the energy and force of a LennardJonesPair" alt="" coords="117,75,278,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,94,103,95,99,99,60,100"/>
+<area shape="rect" id="Node000004" href="$classpot_1_1MorsePair.html#a7f67f1f77678ba6917c760bb174d4fb8" title="calculates the energy and force of a MorsePair" alt="" coords="107,143,288,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,108,108,129,128,138,122,138,106,134,59,113"/>
+</map>

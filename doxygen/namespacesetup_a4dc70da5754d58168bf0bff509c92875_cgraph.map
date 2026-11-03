@@ -1,0 +1,21 @@
+<map id="setup::setupForceField" name="setup::setupForceField">
+<area shape="rect" id="Node000001" title="wrapper to construct ForceFieldSetup object and setup the force field" alt="" coords="5,320,173,348"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1ForceFieldSetup.html#aa3f0e3fdc7722b04cc74f428675c72bf" title="setup force field" alt="" coords="221,213,389,258"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,318,242,263,239,267,123,322"/>
+<area shape="rect" id="Node000009" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="233,347,377,391"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="173,345,220,354,214,356,173,350"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="438,5,623,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="316,211,362,138,396,96,435,60,445,56,441,60,439,64,400,100,366,141,320,214"/>
+<area shape="rect" id="Node000004" href="$classsetup_1_1ForceFieldSetup.html#a3df32ce52f71f4198debdfdaf6b0bec8" title="setup all angles for force field" alt="" coords="446,75,614,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="328,211,376,170,436,129,449,125,445,128,438,134,379,174,332,215"/>
+<area shape="rect" id="Node000005" href="$classsetup_1_1ForceFieldSetup.html#aa325bfa717a7f78e0208b313ccf14c60" title="setup all bonds for force field" alt="" coords="446,144,614,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="379,210,443,193,438,195,381,215"/>
+<area shape="rect" id="Node000006" href="$classsetup_1_1ForceFieldSetup.html#a3ee2f9e159302588c568fb8a0915bb89" title="setup all dihedrals for force field" alt="" coords="446,213,614,258"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="389,233,433,235,428,236,390,238"/>
+<area shape="rect" id="Node000007" href="$classsetup_1_1ForceFieldSetup.html#aebfced35d1f8e34f07697cab442bacf0" title="setup all improper dihedrals for force field" alt="" coords="437,283,623,327"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="380,256,443,277,438,278,380,261"/>
+<area shape="rect" id="Node000008" href="$classsetup_1_1ForceFieldSetup.html#a3d1f1c466c064a9fd8ef25bce19c5cfd" title="write setup information to log output" alt="" coords="446,352,614,397"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="331,256,379,297,438,337,450,345,445,345,436,342,376,301,329,261"/>
+<area shape="rect" id="Node000010" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="458,420,602,448"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="378,389,438,406,464,416,458,416,436,412,377,394"/>
+</map>

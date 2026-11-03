@@ -1,0 +1,7 @@
+<map id="waterModel::InterWater::calculateQMMMForces" name="waterModel::InterWater::calculateQMMMForces">
+<area shape="rect" id="Node000001" title="Dispatch inter&#45;water QMMM force calculations via the active strategy." alt="" coords="5,5,182,50"/>
+<area shape="rect" id="Node000002" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="230,14,335,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,25,217,27,212,28,182,30"/>
+<area shape="rect" id="Node000003" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="383,5,560,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="336,25,370,28,365,28,336,30"/>
+</map>

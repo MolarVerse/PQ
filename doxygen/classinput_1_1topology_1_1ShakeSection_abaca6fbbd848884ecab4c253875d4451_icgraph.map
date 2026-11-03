@@ -1,0 +1,5 @@
+<map id="input::topology::ShakeSection::endedNormally" name="input::topology::ShakeSection::endedNormally">
+<area shape="rect" id="Node000001" title="checks if shake sections ends normally" alt="" coords="122,5,335,50"/>
+<area shape="rect" id="Node000002" href="$testShakeSection_8cpp.html#a6ee6a20bf9ad807f6f2e4301eff90991" title="test if endedNormally throws exception" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

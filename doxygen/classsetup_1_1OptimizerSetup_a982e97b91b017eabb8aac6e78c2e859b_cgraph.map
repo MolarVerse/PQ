@@ -1,0 +1,9 @@
+<map id="setup::OptimizerSetup::writeSetupInfo" name="setup::OptimizerSetup::writeSetupInfo">
+<area shape="rect" id="Node000001" title="write setup info" alt="" coords="5,49,172,94"/>
+<area shape="rect" id="Node000002" href="$structConvStrategyMeta.html#af35642c30fc2e0b6378ae30048399e28" title=" " alt="" coords="220,5,421,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,50,243,36,238,38,173,55"/>
+<area shape="rect" id="Node000003" href="$structLearningRateMeta.html#a081efb8513b1bd789c11f4740d9ccef5" title=" " alt="" coords="221,57,420,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,69,208,70,202,72,172,74"/>
+<area shape="rect" id="Node000004" href="$structOptimizerTypeMeta.html#a8a83a110443c1a6fef2b4e7e3aa41834" title=" " alt="" coords="242,109,398,154"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="172,90,230,107,225,108,172,95"/>
+</map>

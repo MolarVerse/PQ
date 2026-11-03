@@ -1,0 +1,5 @@
+<map id="QM::AseQMRunner::buildAseAtoms" name="QM::AseQMRunner::buildAseAtoms">
+<area shape="rect" id="Node000001" title="build the ASE Atoms object" alt="" coords="226,5,433,50"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseQMRunner.html#afcbff55049c8cdb7ab89153e016f0793" title="run the ASE QM calculation" alt="" coords="5,14,178,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,28,178,30,178,25,213,27"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="input::topology::ShakeSection" name="input::topology::ShakeSection">
+<area shape="rect" id="Node000001" title="reads shake section of topology file" alt="" coords="5,277,208,394"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1topology_1_1TopologySection.html" title="base class for reading topology file sections" alt="" coords="20,5,194,229"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,241,109,278,104,276,106,246"/>
+</map>

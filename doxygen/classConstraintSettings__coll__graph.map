@@ -1,0 +1,17 @@
+<map id="ConstraintSettings" name="ConstraintSettings">
+<area shape="rect" id="Node000001" title="static class to store settings of the constraints" alt="" coords="226,452,452,748"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="5,173,139,335"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,332,73,382,79,405,89,427,114,461,144,491,177,517,213,541,208,543,174,522,140,495,110,464,85,430,74,407,67,383,65,337"/>
+<area shape="rect" id="Node000003" href="$classstd_1_1optional_3_01bool_01_4.html" title=" " alt="" coords="12,5,133,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,75,75,156,70,156,72,80"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="192,173,326,335"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="253,332,256,381,262,428,264,436,259,435,257,429,250,381,251,337"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="193,5,325,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="260,75,262,156,256,156,258,80"/>
+<area shape="rect" id="Node000006" href="$classSetting.html" title=" " alt="" coords="351,173,485,335"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="406,332,388,429,386,437,382,434,383,428,403,337"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="349,5,486,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="419,75,420,157,415,155,417,80"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="560,218,598,290"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="579,288,569,357,557,395,540,430,507,474,467,513,464,509,503,471,535,427,552,393,563,356,576,292"/>
+</map>

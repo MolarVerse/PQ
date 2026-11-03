@@ -1,0 +1,7 @@
+<map id="constraints::BondConstraint" name="constraints::BondConstraint">
+<area shape="rect" id="Node000001" title="BondConstraint inherits from Bond." alt="" coords="5,352,223,626"/>
+<area shape="rect" id="Node000002" href="$classconnectivity_1_1Bond.html" title="Represents a bond between two atoms." alt="" coords="28,210,201,304"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,317,117,353,112,352,114,322"/>
+<area shape="rect" id="Node000003" href="$classconnectivity_1_1ConnectivityElement.html" title="Represents a connectivity element between n atoms." alt="" coords="24,5,204,162"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,174,117,210,112,209,114,179"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="molsys::Atom::isMMAtom" name="molsys::Atom::isMMAtom">
+<area shape="rect" id="Node000001" title="determine if an atom should be treated as MM" alt="" coords="5,65,195,93"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Atom.html#afad95fb5f956c8284ee428587995f5fd" title="return if the atom is active" alt="" coords="250,5,421,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,62,265,36,261,39,158,67"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a921a8600f8102fab9ce4e30fad5319a8" title="Returns true if the jobtype does not use any QM type simulations." alt="" coords="243,57,428,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,77,230,78,225,80,196,82"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a4d0d8545547f29fe2e664956c3157327" title="Returns true if the jobtype does not use any MM type simulations." alt="" coords="243,126,428,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="150,91,245,120,240,122,149,96"/>
+</map>

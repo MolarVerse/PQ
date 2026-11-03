@@ -1,0 +1,5 @@
+<map id="manostat::MonteCarloManostat" name="manostat::MonteCarloManostat">
+<area shape="rect" id="Node000001" title="MonteCarloManostat inherits from Manostat." alt="" coords="5,416,222,511"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="32,5,195,368"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,381,116,417,111,416,112,385"/>
+</map>

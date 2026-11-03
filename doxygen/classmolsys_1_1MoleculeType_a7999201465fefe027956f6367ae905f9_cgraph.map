@@ -1,0 +1,5 @@
+<map id="molsys::MoleculeType::getNumberOfAtomTypes" name="molsys::MoleculeType::getNumberOfAtomTypes">
+<area shape="rect" id="Node000001" title="finds number of different atom types in molecule" alt="" coords="5,5,195,50"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#aaf583bdaf439d7b207cfd5aa4b5715d3" title="returns sorted unique elements from a vector copy" alt="" coords="243,14,449,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,25,230,27,225,28,195,30"/>
+</map>

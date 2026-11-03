@@ -1,0 +1,11 @@
+<map id="settings::PotentialSettings::setReactionFieldEpsilon" name="settings::PotentialSettings::setReactionFieldEpsilon">
+<area shape="rect" id="Node000001" title="Set the reaction field epsilon in the PotentialSettings class." alt="" coords="626,65,818,110"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1CoulombLongRangeInputParser.html#aab5ddf9cf7f6d2cc4ac9878dc8af1bd6" title="Add the &quot;rf_epsilon&quot; key to the input file parser." alt="" coords="326,5,578,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="608,63,556,53,556,48,614,63"/>
+<area shape="rect" id="Node000004" href="$testPotentialSettings_8cpp.html#a21bbb2f46b72fdb297a000b717f52157" title="tests reaction&#45;field settings" alt="" coords="425,74,478,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="608,88,479,90,479,85,613,87"/>
+<area shape="rect" id="Node000005" href="$testPotentialSetup_8cpp.html#a5b1a590a064027b63e58ce86d9bab3d7" title="setup the reaction&#45;field Coulomb potential" alt="" coords="418,126,486,154"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="613,109,487,136,486,131,608,109"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1CoulombLongRangeInputParser.html#a8b67df26a1e47ccc8f1545fafa954ffe" title="Construct a new Input File Parser Coulomb Long Range:: Input File Parser Coulomb Long Range object." alt="" coords="5,5,278,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="308,28,278,30,277,25,313,27"/>
+</map>

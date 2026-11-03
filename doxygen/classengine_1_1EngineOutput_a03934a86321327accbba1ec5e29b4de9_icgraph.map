@@ -1,0 +1,5 @@
+<map id="engine::EngineOutput::getRingPolymerVelOutput" name="engine::EngineOutput::getRingPolymerVelOutput">
+<area shape="rect" id="Node000001" title="getter for ring polymer trajectory velocity output" alt="" coords="251,5,448,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1MDEngine.html#ab3fb0afcb1fa5a1cd1191fcea6689389" title="get the reference to the ring polymer vel output" alt="" coords="5,5,203,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,28,203,30,203,25,238,27"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="TestSetup::TearDown" name="TestSetup::TearDown">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,118,162,146"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a22a4e718daabca8a201c84d24f1562d4" title="deactivate cell list" alt="" coords="222,5,407,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,115,153,88,209,60,227,54,223,57,211,65,155,93,109,119"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#abdc47caa557d6147fed7910c60c2e95a" title="set the end temperature set" alt="" coords="210,75,419,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,117,197,114,192,116,163,122"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#a430a5017f3026c15f297c0223ebfa2ef" title="set the start temperature set" alt="" coords="210,144,419,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="162,141,197,147,192,149,162,146"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1ThermostatSettings.html#ab14dab1c6bcdc947f6228793489e3a48" title="set the temperature set" alt="" coords="210,213,419,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="108,143,155,171,211,199,228,207,222,207,209,203,153,175,107,149"/>
+</map>

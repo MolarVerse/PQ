@@ -1,0 +1,16 @@
+<map id="thermostat::VelocityRescalingThermostat" name="thermostat::VelocityRescalingThermostat">
+<area shape="rect" id="Node000001" title="this class implements the velocity rescaling thermostat and inherits from the Thermostat class" alt="" coords="73,586,311,899"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="84,195,300,513"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,525,195,587,189,586,191,531"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="14,5,69,78"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="33,80,21,158,10,267,8,328,11,390,19,453,34,513,48,549,67,586,62,587,43,552,29,514,14,454,5,391,3,328,4,267,16,157,33,75"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="43,75,53,122,67,170,79,196,73,197,62,172,47,123,44,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="225,5,274,78"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="244,75,227,180,222,178,242,80"/>
+<area shape="rect" id="Node000005" href="$classrng_1_1RandomNumberGenerator.html" title="class to handle generation of random numbers" alt="" coords="324,296,540,413"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="398,411,300,574,295,571,395,415"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="371,5,482,78"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="428,75,430,171,433,280,427,278,425,171,426,80"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="538,5,606,78"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="568,75,561,124,545,172,517,230,485,283,481,280,513,228,540,170,555,122,566,80"/>
+</map>

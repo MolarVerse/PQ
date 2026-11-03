@@ -1,0 +1,173 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Releases and Hotfixes &mdash; PQ [] documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://molarverse.github.io/PQ/src/developerGuide/releasesAndHotfixes.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CLI fallback" href="releaseCli.html" />
+    <link rel="prev" title="Branches and Releases" href="branchesAndReleases.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PQ
+              <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developerGuide.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cmakeOptions.html">Build Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="staticChecks.html">Static Checks and Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuousIntegration.html">Continuous Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ciMetrics.html">CI Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="localBuildTimes.html">Local Build Times</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codeStatistics.html">Code Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="branchesAndReleases.html">Branches and Releases</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Releases and Hotfixes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#normal-release">Normal release</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hotfix">Hotfix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check-a-run">Check a run</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="releaseCli.html">CLI fallback</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#software-tests">Software Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#coding-style">Coding Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#how-to-contribute">How to Contribute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../apiReference/apiReference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PQ</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="developerGuide.html">Developer Guide</a></li>
+      <li class="breadcrumb-item active">Releases and Hotfixes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/src/developerGuide/releasesAndHotfixes.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="releases-and-hotfixes">
+<span id="releasesandhotfixes"></span><h1>Releases and Hotfixes<a class="headerlink" href="#releases-and-hotfixes" title="Link to this heading"></a></h1>
+<p>These steps use the GitHub website.</p>
+<section id="normal-release">
+<h2>Normal release<a class="headerlink" href="#normal-release" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Open <strong>Actions</strong> and select <strong>Create Release PR</strong>.</p></li>
+<li><p>Click <strong>Run workflow</strong>. Choose <code class="docutils literal notranslate"><span class="pre">main</span></code>, enter an unused version such as
+<code class="docutils literal notranslate"><span class="pre">v1.2.3</span></code>, leave <strong>restore</strong> unchecked, then click <strong>Run workflow</strong> again.</p></li>
+<li><p>Open the generated PR to <code class="docutils literal notranslate"><span class="pre">main</span></code>. Link its issue, review and merge once
+checks pass. The release branch starts from <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></li>
+</ol>
+</section>
+<section id="hotfix">
+<h2>Hotfix<a class="headerlink" href="#hotfix" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>On <strong>Code</strong>, select <code class="docutils literal notranslate"><span class="pre">main</span></code>. Use the branch dropdown to create
+<code class="docutils literal notranslate"><span class="pre">hotfix/short-description</span></code> from it.</p></li>
+<li><p>Make the correction and add a fragment such as
+<code class="docutils literal notranslate"><span class="pre">changes/user/bugfix.short-description.md</span></code>.</p></li>
+<li><p>Open <strong>New pull request</strong> with <strong>base</strong> <code class="docutils literal notranslate"><span class="pre">main</span></code> and <strong>compare</strong> your hotfix
+branch. Link its issue, review and merge once checks pass.</p></li>
+</ol>
+<p>Opening the PR starts <strong>Release Lifecycle</strong> automatically. It selects and
+keeps the patch version. After merge, publication waits for BUILD and LINT.</p>
+</section>
+<section id="check-a-run">
+<h2>Check a run<a class="headerlink" href="#check-a-run" title="Link to this heading"></a></h2>
+<p>Open <strong>Actions</strong>, then <strong>Release Lifecycle</strong>. Fixing code on the PR branch
+starts a new run. For temporary failures, use <strong>Re-run failed jobs</strong>.
+Check the version and commit under <strong>Releases</strong> after success.</p>
+<p>The <strong>Run workflow</strong> button requires write access and the workflow on <code class="docutils literal notranslate"><span class="pre">main</span></code>.
+Use <a class="reference internal" href="releaseCli.html"><span class="doc">CLI fallback</span></a> if the GitHub interface is unavailable.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="branchesAndReleases.html" class="btn btn-neutral float-left" title="Branches and Releases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="releaseCli.html" class="btn btn-neutral float-right" title="CLI fallback" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-now, Jakob Gamper.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

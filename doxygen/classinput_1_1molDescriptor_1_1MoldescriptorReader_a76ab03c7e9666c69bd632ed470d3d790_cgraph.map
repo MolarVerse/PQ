@@ -1,0 +1,5 @@
+<map id="input::molDescriptor::MoldescriptorReader::_processQMReferenceEnergy" name="input::molDescriptor::MoldescriptorReader::_processQMReferenceEnergy">
+<area shape="rect" id="Node000001" title="process the optional QM reference energy line of a molecule" alt="" coords="5,5,225,67"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1MoleculeType.html#ae1df49140290274134a3d3e99ca48109" title="sets the QM reference energy of the molecule type" alt="" coords="273,14,455,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,34,259,36,254,36,225,39"/>
+</map>

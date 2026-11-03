@@ -1,0 +1,9 @@
+<map id="molsys::TriclinicBox::_cosGamma" name="molsys::TriclinicBox::_cosGamma">
+<area shape="rect" id="Node000001" title="calculate cos of gamma" alt="" coords="390,36,540,81"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1TriclinicBox.html#ab073618163fc9ab0647647d482a449a3" title="Calculate the rotation matrix." alt="" coords="107,5,342,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="372,47,343,45,343,40,377,47"/>
+<area shape="rect" id="Node000003" href="$structTestTriclinicBox.html#a5f6948bf1dc92b5fb8c09632bc8d0c03" title=" " alt="" coords="123,74,326,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="378,69,327,78,326,73,372,70"/>
+<area shape="rect" id="Node000004" href="$testTriclinicBox_8cpp.html#a9468f1666c86e103d13ae7cbb833963e" title=" " alt="" coords="5,74,59,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="105,89,59,90,59,85,109,86"/>
+</map>

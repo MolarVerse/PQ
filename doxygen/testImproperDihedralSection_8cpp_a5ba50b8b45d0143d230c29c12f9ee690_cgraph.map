@@ -1,0 +1,5 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="test impropers section processing one line" alt="" coords="5,14,74,42"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1topology_1_1ImproperDihedralSection.html#a47f9df89f7bf7ca691e2ea47131ad5d6" title="processes the improper section of the topology file" alt="" coords="122,5,352,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,25,109,27,104,28,75,30"/>
+</map>

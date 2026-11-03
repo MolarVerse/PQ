@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::setupForcedCoreMolecules" name="molsys::SimulationBox::setupForcedCoreMolecules">
+<area shape="rect" id="Node000001" title="marks molecules with the given indices as forced&#45;core molecules" alt="" coords="122,5,326,50"/>
+<area shape="rect" id="Node000002" href="$testSimulationBox_8cpp.html#af5f3ebcdaf2a6c6a64a867c76a0cf28a" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,28,74,30,74,25,108,27"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="TestTrajectoryOutput" name="TestTrajectoryOutput">
+<area shape="rect" id="Node000001" title="test suite for trajectory output" alt="" coords="5,126,150,243"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="33,5,122,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,90,80,126,75,125,77,95"/>
+</map>

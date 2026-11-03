@@ -1,0 +1,7 @@
+<map id="opt::ForceDifferenceHessianBuilder::_restorePositions" name="opt::ForceDifferenceHessianBuilder::_restorePositions">
+<area shape="rect" id="Node000001" title="restore the original positions of the atoms in the simulation box" alt="" coords="5,36,210,81"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="268,5,439,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,43,255,40,250,41,211,48"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Atom.html#a1a1169f3fe0db4650b2bf09eaf7128fe" title="set the position of the atom" alt="" coords="258,74,449,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,68,245,74,239,75,210,73"/>
+</map>

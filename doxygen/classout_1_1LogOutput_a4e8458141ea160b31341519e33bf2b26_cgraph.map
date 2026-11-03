@@ -1,0 +1,8 @@
+<map id="out::LogOutput::writeSetup" name="out::LogOutput::writeSetup">
+<area shape="rect" id="Node000001" title="write a message to inform about the start of the setup" alt="" coords="5,56,201,84"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="249,29,448,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,57,236,55,231,56,202,62"/>
+<area shape="rect" id="Node000003" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="276,81,420,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="201,77,263,86,258,86,201,83"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="306,28,300,20,305,11,322,5,348,3,377,5,394,14,389,14,376,10,348,8,323,10,309,15,305,20,311,30"/>
+</map>

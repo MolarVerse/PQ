@@ -1,0 +1,5 @@
+<map id="molsys::Molecule::deactivateMolecule" name="molsys::Molecule::deactivateMolecule">
+<area shape="rect" id="Node000001" title="deactivates the molecule and it&#39;s atoms for hybrid calculations" alt="" coords="5,5,218,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a153dbc45e1cbfa7ddfad317a855375e7" title="returns the atoms of the molecule" alt="" coords="266,14,472,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,25,252,28,247,28,218,30"/>
+</map>

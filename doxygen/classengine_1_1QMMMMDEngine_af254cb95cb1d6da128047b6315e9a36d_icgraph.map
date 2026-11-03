@@ -1,0 +1,5 @@
+<map id="engine::QMMMMDEngine::_moltypeCheck" name="engine::QMMMMDEngine::_moltypeCheck">
+<area shape="rect" id="Node000001" title="Validates that all non&#45;core molecules have a non&#45;zero moltype." alt="" coords="239,5,424,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,5,191,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,28,191,30,191,25,226,27"/>
+</map>

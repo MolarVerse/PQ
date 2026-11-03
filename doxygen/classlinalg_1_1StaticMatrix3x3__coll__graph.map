@@ -1,0 +1,14 @@
+<map id="linalg::StaticMatrix3x3&lt; T &gt;" name="linalg::StaticMatrix3x3&lt; T &gt;">
+<area shape="rect" id="Node000001" title="template Matrix class with 3 rows and 3 columns" alt="" coords="41,810,237,1128"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,469,153,542"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,539,113,786,114,794,108,793,108,787,81,544"/>
+<area shape="rect" id="Node000003" href="$classlinalg_1_1Vector3D.html" title=" " alt="" coords="177,296,342,715"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,712,202,787,199,795,195,793,197,786,216,717"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="196,151,322,223"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="260,220,262,280,257,279,259,225"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="156,5,175,78"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="162,75,159,151,156,187,159,223,175,290,169,290,154,223,151,187,154,150,162,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="175,54,230,136,224,137,176,60"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="346,151,839,223"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="555,225,356,416,352,413,558,220"/>
+</map>

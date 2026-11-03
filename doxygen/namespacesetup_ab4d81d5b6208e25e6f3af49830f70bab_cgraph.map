@@ -1,0 +1,14 @@
+<map id="setup::setupCellList" name="setup::setupCellList">
+<area shape="rect" id="Node000001" title="wrapper to build SetupCellList object and call setup" alt="" coords="5,74,155,102"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a8798c619607f4dd45507427feab904d8" title="Returns true if the cell list is activated." alt="" coords="401,5,586,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,71,202,50,296,37,388,31,383,33,296,42,203,56,125,76"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1CellListSetup.html#ac866e0250758192e841f7c528cb89323" title="setup cell list" alt="" coords="203,65,353,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,85,190,87,185,89,156,90"/>
+<area shape="rect" id="Node000005" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="206,135,350,179"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="122,99,200,128,195,130,121,105"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="352,64,399,54,394,55,354,69"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#afa4f232b151dd8e16e21c4b26f84fcc8" title="gets the number of cells for the cell list" alt="" coords="401,75,586,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="353,88,388,92,383,93,353,94"/>
+<area shape="rect" id="Node000006" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="422,143,566,171"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="350,154,408,157,403,157,350,160"/>
+</map>

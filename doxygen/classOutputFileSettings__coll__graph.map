@@ -1,0 +1,15 @@
+<map id="OutputFileSettings" name="OutputFileSettings">
+<area shape="rect" id="Node000001" title="class to store settings of the output files" alt="" coords="113,631,352,1262"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="5,173,139,335"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,332,80,463,88,535,101,606,111,646,105,646,95,608,82,536,74,463,71,337"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="6,5,138,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="72,75,75,156,70,156,72,80"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="165,173,299,335"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="233,332,235,614,230,614,232,337"/>
+<area shape="rect" id="Node000005" href="$classstd_1_1optional_3_01bool_01_4.html" title=" " alt="" coords="172,5,293,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="233,75,235,156,230,156,232,80"/>
+<area shape="rect" id="Node000006" href="$classSetting.html" title=" " alt="" coords="360,173,512,335"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="439,332,435,464,426,537,410,608,388,670,361,732,357,729,383,668,404,606,420,536,430,464,438,337"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="357,5,516,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="437,75,439,156,434,156,436,80"/>
+</map>

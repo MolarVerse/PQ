@@ -1,0 +1,7 @@
+<map id="timings::Timer::stopTimingsSection" name="timings::Timer::stopTimingsSection">
+<area shape="rect" id="Node000001" title="stops a timer with default name" alt="" coords="291,40,495,85"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a61929e5d6c8bb044a137852fe536b59c" title="stop and restart the simulation timer" alt="" coords="5,5,243,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="272,48,243,46,243,40,278,47"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1GlobalTimer.html#ad0fa4ece5803f18413253eba2771df27" title="stop the simulation timer" alt="" coords="41,75,207,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="273,78,207,89,207,84,278,77"/>
+</map>

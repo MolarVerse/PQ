@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,74,59,102"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Convergence.html#ada8bf2e4ad854950aad2642096773163" title="calculate the energy convergence" alt="" coords="128,5,342,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,76,106,60,134,53,130,56,107,65,61,81"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1Convergence.html#ac7b87bc95dd3e2be7705b1969e02e07c" title="get if absolute energy convergence is achieved" alt="" coords="107,74,363,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,85,93,86,89,89,60,90"/>
+<area shape="rect" id="Node000004" href="$classopt_1_1Convergence.html#abc5d138255066da3194f3e7d0ae20431" title="get if relative energy convergence is achieved" alt="" coords="108,126,362,154"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,95,107,110,145,121,140,122,106,116,59,100"/>
+</map>

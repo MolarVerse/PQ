@@ -1,0 +1,7 @@
+<map id="input::guffdat::GuffDatReader::calculatePartialCharges" name="input::guffdat::GuffDatReader::calculatePartialCharges">
+<area shape="rect" id="Node000001" title="calculates the partial charges of the molecule types from the guff.dat coulomb coefficients" alt="" coords="5,5,218,50"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a752bb70809a2fb9f8f59d58545fd5320" title="calculates the sign of a number" alt="" coords="266,14,371,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,25,253,28,247,28,218,30"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="419,14,554,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="372,25,406,28,401,28,372,30"/>
+</map>

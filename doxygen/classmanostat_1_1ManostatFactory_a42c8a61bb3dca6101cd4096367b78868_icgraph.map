@@ -1,0 +1,5 @@
+<map id="manostat::ManostatFactory::_setupStochasticRescalingManostat" name="manostat::ManostatFactory::_setupStochasticRescalingManostat">
+<area shape="rect" id="Node000001" title="setup stochastic rescaling manostat" alt="" coords="253,5,516,50"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1ManostatFactory.html#a54327cc272ec9f451f9816875d54d21c" title="Creates a Manostat instance based on the provided settings." alt="" coords="5,5,205,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,28,205,30,205,25,240,27"/>
+</map>

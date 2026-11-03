@@ -1,0 +1,7 @@
+<map id="setup::SimulationBoxSetup::checkBoxSettings" name="setup::SimulationBoxSetup::checkBoxSettings">
+<area shape="rect" id="Node000001" title="Checks if the box dimensions and density are set and calculates the missing values." alt="" coords="5,5,203,50"/>
+<area shape="rect" id="Node000002" href="$classout_1_1StdoutOutput.html#af4713bb1061ff99252d0d3973c1a2bc4" title="write a warning message to the stdout if density and box dimensions are set" alt="" coords="251,5,408,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,25,238,27,232,28,203,30"/>
+<area shape="rect" id="Node000003" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="456,5,604,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="408,25,443,28,438,28,408,30"/>
+</map>

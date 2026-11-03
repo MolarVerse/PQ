@@ -1,0 +1,7 @@
+<map id="WaterModelSettings::setWaterIntraModel" name="WaterModelSettings::setWaterIntraModel">
+<area shape="rect" id="Node000001" title="sets the waterIntraModel to enum in settings" alt="" coords="107,24,264,68"/>
+<area shape="rect" id="Node000002" href="$testConstraintSettings_8cpp.html#a5033ec7f99e31fff88f7a3e536bb90e3" title="finalize() must activate shake when the configured water model has a rigid geometry (e...." alt="" coords="5,5,59,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,31,59,26,59,21,93,28"/>
+<area shape="rect" id="Node000003" href="$testConstraintSettings_8cpp.html#afb8026e7188d76cd46dcf321461c1ce9" title="finalize() must not activate shake for a water model without a rigid geometry (e.g...." alt="" coords="5,57,59,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,62,60,69,59,64,94,61"/>
+</map>

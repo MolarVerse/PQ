@@ -1,0 +1,7 @@
+<map id="waterModel::InterWaterStrategy::calculateSingleCoulombInteraction" name="waterModel::InterWaterStrategy::calculateSingleCoulombInteraction">
+<area shape="rect" id="Node000001" title=" " alt="" coords="312,52,568,97"/>
+<area shape="rect" id="Node000002" href="$classwaterModel_1_1InterWaterStrategyBruteForce.html#a5a3a8b728d79223187da44adc44d5fdf" title="Compute core&#45;to&#45;outer Coulomb interactions by brute force." alt="" coords="15,5,254,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="293,57,254,54,254,49,299,56"/>
+<area shape="rect" id="Node000003" href="$classwaterModel_1_1InterWaterStrategyCellList.html#a142dc2e9d4b2777074411c78a3e12054" title="Compute core&#45;to&#45;outer Coulomb interactions using the cell list." alt="" coords="5,91,264,136"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="293,93,264,100,264,94,299,93"/>
+</map>

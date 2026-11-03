@@ -1,0 +1,24 @@
+<map id="QM::AseQMRunner::collectData" name="QM::AseQMRunner::collectData">
+<area shape="rect" id="Node000001" title="collect the data from the ASE QM calculation" alt="" coords="5,152,231,180"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseQMRunner.html#a29cc2ea2597d927b941455b4eb73ec82" title="collect the energy from the ASE QM calculation" alt="" coords="279,75,473,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,150,278,122,274,126,173,154"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a34118d4ef9785c7696bb0b087043ed04" title="collect the forces from the ASE QM calculation" alt="" coords="279,144,473,189"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,164,265,165,260,167,232,169"/>
+<area shape="rect" id="Node000010" href="$classQM_1_1AseQMRunner.html#a430f5cbd90020a14e23dbb41fd5ec703" title="collect the stress from the ASE QM calculation" alt="" coords="279,248,473,293"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="155,178,307,240,302,243,154,183"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="521,5,692,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="453,141,471,130,487,113,495,96,503,78,519,60,524,60,529,57,523,64,508,81,500,98,491,116,475,134,455,146"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="521,75,692,119"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="452,141,518,123,513,125,453,146"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1QMSettings.html#aaf3f2e0e4daef76119cee8abd5b5a74e" title="returns if the net force should be removed after reading in the QM forces" alt="" coords="526,144,688,189"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="473,164,512,166,507,167,474,169"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#a87856cff7732b8ef707bbe3e98ec1ee1" title="Remove net force from the QM atoms." alt="" coords="521,213,692,258"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="453,187,518,208,513,208,452,192"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a7c89dc9cef58e06b5735141047af95d7" title="Get the number of QM atoms." alt="" coords="740,184,922,229"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="692,222,727,220,722,221,693,227"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1SimulationBoxView.html#a7e7040ddbbd5836394efe83bf9f8210a" title=" " alt="" coords="970,215,1209,259"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="693,237,740,238,957,240,951,241,740,244,693,242"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="922,214,957,221,952,221,922,220"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="521,283,692,327"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="473,282,508,290,503,290,473,288"/>
+</map>

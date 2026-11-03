@@ -1,0 +1,19 @@
+<map id="/home/runner/work/PQ/PQ/include/exceptions/exceptions.hpp" name="/home/runner/work/PQ/PQ/include/exceptions/exceptions.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="64,5,233,67"/>
+<area shape="rect" id="Node000002" href="$baseException_8hpp.html" title=" " alt="" coords="139,115,283,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,65,196,102,191,102,169,70"/>
+<area shape="rect" id="Node000003" href="$color_8hpp.html" title=" " alt="" coords="39,191,119,218"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="138,66,93,177,88,175,134,69"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,145,117,185,114,181,189,141"/>
+<area shape="rect" id="Node000006" href="$exceptionTypes_8hpp.html" title=" " alt="" coords="144,191,294,218"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="214,141,218,176,213,174,211,146"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="318,191,459,218"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="243,141,345,184,340,185,242,146"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="105,266,170,294"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="91,216,120,254,115,254,88,221"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,266,81,294"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="75,217,58,254,54,251,70,221"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="207,218,165,258,162,254,202,220"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="195,266,318,294"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="227,217,245,253,240,252,224,221"/>
+</map>

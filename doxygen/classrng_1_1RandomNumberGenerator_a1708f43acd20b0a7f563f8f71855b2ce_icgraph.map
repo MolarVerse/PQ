@@ -1,0 +1,5 @@
+<map id="rng::RandomNumberGenerator::getUniformRealDistribution" name="rng::RandomNumberGenerator::getUniformRealDistribution">
+<area shape="rect" id="Node000001" title="get a random double from a uniform real distribution" alt="" coords="225,5,446,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#aa3cba4efe89e2f96dad3fd1f42876aa9" title="initialize positions of all atoms" alt="" coords="5,5,177,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,28,177,30,177,25,212,27"/>
+</map>

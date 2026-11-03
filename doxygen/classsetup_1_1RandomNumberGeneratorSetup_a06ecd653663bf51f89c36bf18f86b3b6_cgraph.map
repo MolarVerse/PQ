@@ -1,0 +1,7 @@
+<map id="setup::RandomNumberGeneratorSetup::setupWriteInfo" name="setup::RandomNumberGeneratorSetup::setupWriteInfo">
+<area shape="rect" id="Node000001" title="write info about the random number generator setup" alt="" coords="5,40,242,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a38414ccaea96531641020968a7b85685" title="get the random seed value" alt="" coords="290,5,475,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="242,44,277,42,272,43,243,49"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ae333019b7750ca73befd75830280ab38" title="get if the random seed value has been set" alt="" coords="290,75,475,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="242,76,277,82,272,83,242,81"/>
+</map>

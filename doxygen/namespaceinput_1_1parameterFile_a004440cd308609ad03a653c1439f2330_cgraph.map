@@ -1,0 +1,23 @@
+<map id="input::parameterFile::readParameterFile" name="input::parameterFile::readParameterFile">
+<area shape="rect" id="Node000001" title="constructs a ParameterFileReader and reads parameter file" alt="" coords="5,207,159,252"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a6f721f7419872824b585f6366381c6de" title="Get the parameter file name." alt="" coords="219,138,396,182"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,204,220,186,216,189,158,209"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1parameterFile_1_1ParameterFileReader.html#a9a3cd836f8d6a9a657a319bd5fe0c36c" title="reads parameter file" alt="" coords="207,207,409,252"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,227,193,228,188,231,160,232"/>
+<area shape="rect" id="Node000010" href="$classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="236,294,380,338"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="143,250,236,287,231,289,142,255"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1parameterFile_1_1ParameterFileReader.html#a90adb3c8577e3e253f6050fe205ed20e" title="deletes section from _parameterFileSections" alt="" coords="474,5,639,67"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="392,204,407,193,419,179,426,165,431,137,436,108,443,92,455,77,460,76,464,73,459,81,448,95,441,109,436,138,431,167,423,182,411,197,394,209"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1parameterFile_1_1ParameterFileReader.html#a3cd02b328761f70bc35509289561a31c" title="determines which section of the parameter file the header line belongs to" alt="" coords="474,91,639,152"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="380,204,408,192,432,178,456,162,464,161,468,158,458,166,435,182,410,197,383,209"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1FileSettings.html#ae9f73a9c3dcd65bf30755ebc59133b47" title="Check if the parameter file name is set." alt="" coords="462,176,652,221"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="409,214,449,212,443,213,410,220"/>
+<area shape="rect" id="Node000008" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="457,245,656,273"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="409,239,444,245,439,246,410,244"/>
+<area shape="rect" id="Node000009" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="484,297,629,325"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="368,250,458,282,487,293,482,292,456,287,367,255"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="704,99,912,144"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="639,119,691,121,686,122,640,124"/>
+<area shape="rect" id="Node000011" href="$namespaceout.html#ae21e45a9e56a9f34636a6df12ee3e2f2" title="Message to inform about reading a file." alt="" coords="488,349,625,377"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="381,327,476,347,470,347,380,332"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="QM::QMRunner::_getPeriodicity" name="QM::QMRunner::_getPeriodicity">
+<area shape="rect" id="Node000001" title="get the periodicity of the QM runner" alt="" coords="481,48,705,76"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseQMRunner.html#a9dcc0c5806d0ba94cd8523f3f35edac4" title="build the ASE Atoms object" alt="" coords="226,5,433,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="465,46,434,44,433,39,471,46"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1DFTBPlusRunner.html#ae778855a68ec0f16627ab247cce74b92" title="writes the coords file in order to run the external qm program" alt="" coords="250,75,408,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="470,79,409,89,409,84,465,79"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#afcbff55049c8cdb7ab89153e016f0793" title="run the ASE QM calculation" alt="" coords="5,14,178,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,28,179,30,178,25,213,27"/>
+</map>

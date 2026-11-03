@@ -1,0 +1,23 @@
+<map id="ManostatSettings" name="ManostatSettings">
+<area shape="rect" id="Node000001" title="class to store settings of the manosta constt" alt="" coords="382,430,541,748"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="13,173,190,335"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,332,230,404,300,466,372,522,367,523,297,470,226,408,163,337"/>
+<area shape="rect" id="Node000003" href="$classstd_1_1optional_3_01ManostatType_01_4.html" title=" " alt="" coords="5,5,190,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,75,102,156,97,156,98,80"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="221,173,361,335"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="332,332,377,418,372,418,331,337"/>
+<area shape="rect" id="Node000005" href="$classstd_1_1optional_3_01Isotropy_01_4.html" title=" " alt="" coords="214,5,360,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="288,75,292,157,287,156,287,80"/>
+<area shape="rect" id="Node000006" href="$classSetting.html" title=" " alt="" coords="387,173,536,335"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="463,332,464,414,459,412,460,337"/>
+<area shape="rect" id="Node000007" href="$classstd_1_1optional_3_01FixedAxis_01_4.html" title=" " alt="" coords="384,5,540,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="463,75,464,157,459,155,461,80"/>
+<area shape="rect" id="Node000008" href="$classSetting.html" title=" " alt="" coords="561,173,695,335"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="591,332,550,417,546,413,587,336"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="564,5,701,78"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="633,75,633,157,628,155,631,80"/>
+<area shape="rect" id="Node000010" href="$classSetting.html" title=" " alt="" coords="721,173,855,335"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="752,332,729,373,702,408,668,443,632,475,557,531,554,527,628,471,665,439,698,404,725,370,748,336"/>
+<area shape="rect" id="Node000011" href="$classstd_1_1optional_3_01Time_01_4.html" title=" " alt="" coords="725,5,852,78"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="790,75,791,157,786,155,787,80"/>
+</map>

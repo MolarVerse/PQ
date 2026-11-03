@@ -1,0 +1,7 @@
+<map id="molsys::CellList::_hasBoxSizeChanged" name="molsys::CellList::_hasBoxSizeChanged">
+<area shape="rect" id="Node000001" title="checks if the box size has changed" alt="" coords="5,40,166,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ae545f6de8888eae2f552ed72a5497b2d" title="gets the box angles" alt="" coords="214,5,385,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,47,201,43,195,45,167,52"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a81c7ee944222547e6e980e8325a08757" title="gets the box dimensions" alt="" coords="214,75,385,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,73,201,80,195,81,166,78"/>
+</map>

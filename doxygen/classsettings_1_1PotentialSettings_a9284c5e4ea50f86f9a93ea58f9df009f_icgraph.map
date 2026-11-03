@@ -1,0 +1,9 @@
+<map id="settings::PotentialSettings::getNonCoulombRadiusCutOff" name="settings::PotentialSettings::getNonCoulombRadiusCutOff">
+<area shape="rect" id="Node000001" title="get the non&#45;Coulomb radius cut off" alt="" coords="712,5,932,50"/>
+<area shape="rect" id="Node000002" href="$classwaterModel_1_1InterWater.html#a647af93c879326310307e60c0e77977a" title="Apply radial cutoffs to configured inter&#45;water non&#45;Coulomb pairs." alt="" coords="450,5,664,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="694,28,665,30,665,25,699,28"/>
+<area shape="rect" id="Node000003" href="$classwaterModel_1_1InterWater.html#a75feeb2afcfe236ff1d3bc974f1ef0fc" title=" " alt="" coords="228,5,402,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="432,28,403,30,402,25,437,28"/>
+<area shape="rect" id="Node000004" href="$classwaterModel_1_1InterWater.html#adc90588c03308579a80970554db38483" title="Construct an inter&#45;water handler from a state and a strategy." alt="" coords="5,5,180,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="210,28,180,30,180,25,215,27"/>
+</map>

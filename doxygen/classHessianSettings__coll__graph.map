@@ -1,0 +1,19 @@
+<map id="HessianSettings" name="HessianSettings">
+<area shape="rect" id="Node000001" title="Class representing the settings for Hessian calculations." alt="" coords="224,447,436,743"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="12,190,163,352"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,349,120,387,138,422,173,466,214,507,209,508,169,469,134,424,115,389,104,354"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,14,164,86"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,83,89,173,83,173,85,89"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="188,190,322,352"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="258,349,269,423,270,431,265,430,263,423,256,354"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="188,14,326,86"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="257,83,259,174,253,173,256,88"/>
+<area shape="rect" id="Node000006" href="$classSetting.html" title=" " alt="" coords="347,190,481,352"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="395,349,375,432,370,429,392,354"/>
+<area shape="rect" id="Node000007" href="$classstd_1_1optional_3_01bool_01_4.html" title=" " alt="" coords="353,14,475,86"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="415,83,417,174,411,173,413,88"/>
+<area shape="rect" id="Node000008" href="$classSetting.html" title=" " alt="" coords="505,190,720,352"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="599,349,587,390,567,425,542,455,513,483,451,530,449,526,510,479,538,451,562,421,582,387,596,353"/>
+<area shape="rect" id="Node000009" href="$classstd_1_1optional_3_01HessianBuilderType_01_4.html" title=" " alt="" coords="524,5,701,95"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="614,92,615,174,610,172,612,97"/>
+</map>

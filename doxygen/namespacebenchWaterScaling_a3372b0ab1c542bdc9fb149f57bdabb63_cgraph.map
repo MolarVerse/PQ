@@ -1,0 +1,97 @@
+<map id="benchWaterScaling::run" name="benchWaterScaling::run">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,563,180,591"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a906d404e50caafbe10a9141c8184c28b" title="activate cell list" alt="" coords="243,5,428,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,562,108,463,136,312,154,234,175,161,199,102,226,61,232,57,229,62,230,64,204,104,181,163,159,235,141,314,113,464,98,563"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="235,74,437,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="91,563,92,484,96,426,106,362,122,295,147,228,181,165,202,137,226,111,232,108,229,113,230,115,206,140,185,168,152,230,128,296,111,363,102,427,97,484,96,563"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="250,125,422,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="92,563,98,495,117,393,134,336,157,280,187,227,226,180,238,172,235,177,230,184,192,230,162,282,139,338,122,394,103,496,97,563"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a9d8116d22c2313859e88fe94176aff21" title="Add a molecule type to the simulation box." alt="" coords="250,195,422,239"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="93,562,103,505,125,421,142,375,165,330,192,287,226,250,238,242,235,247,230,254,197,290,169,332,147,377,130,423,108,506,98,563"/>
+<area shape="rect" id="Node000006" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="278,263,394,291"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="94,562,107,514,132,445,171,371,196,337,226,307,264,288,261,292,229,311,200,340,175,374,137,447,112,515,99,563"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1CellList.html#a293d8227afa00ac29279f48aeabbf48d" title="resize cells" alt="" coords="518,347,689,391"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="97,562,115,527,142,483,179,437,202,418,226,401,259,386,294,374,366,359,438,354,504,356,500,359,438,359,367,364,296,379,261,391,229,406,205,422,183,441,146,486,119,530,103,563"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a071637632228934195f9355e5ddb22e1" title=" " alt="" coords="250,485,422,530"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="142,561,242,533,239,537,145,565"/>
+<area shape="rect" id="Node000009" href="$classpot_1_1CoulombPotential.html#a0581178f6e449fe4fa6bda4fdfabf8aa" title="set the coulombEnergyCutOff" alt="" coords="239,555,432,599"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="179,575,226,575,221,579,182,579"/>
+<area shape="rect" id="Node000010" href="$classpot_1_1CoulombPotential.html#affde99883be627e8eafdf6c3bc4ac420" title="set the coulombForceCutOff" alt="" coords="244,624,428,669"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="143,589,243,618,238,621,145,594"/>
+<area shape="rect" id="Node000011" href="$classpot_1_1CoulombPotential.html#a08407ee16c41911dfbcbe7c820c0ee4d" title="sets the coulombRadiusCutOff and calculates the energy and force cutoff &#45; equivalent to the construct..." alt="" coords="240,693,432,738"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="108,589,161,633,194,657,229,679,243,686,238,688,226,683,191,662,157,637,109,594"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1PotentialSettings.html#a5b9c06df8d1c8f7cf0f20e1e0268df9d" title="Set the Coulomb radius cut off in the PotentialSettings class." alt="" coords="240,763,432,807"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="101,589,122,623,150,665,186,710,229,748,238,754,233,756,226,752,182,713,145,668,117,625,101,594"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1Molecule.html#a8ab76a7328d90fa8b6bd04883184fd17" title="set the moltype of the molecule" alt="" coords="228,831,444,859"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="97,588,113,635,139,697,177,762,201,792,229,818,236,823,231,824,226,822,197,796,173,765,134,699,108,637,97,594"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1MoleculeType.html#a413e6947c98d953eba635d11a082f6e5" title="sets the moltype of the molecule" alt="" coords="253,883,418,927"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="96,588,110,642,134,717,151,758,173,798,199,836,229,868,242,879,237,880,226,872,194,839,168,801,146,760,129,719,105,644,96,594"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1MoleculeType.html#ae7f03f01e7f27ccc4d18324bbe37bc83" title="sets the number of atoms in the molecule" alt="" coords="253,952,418,997"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="95,588,105,653,126,747,143,798,165,849,194,896,230,938,243,949,237,950,226,942,190,899,160,851,138,800,121,748,100,654,95,594"/>
+<area shape="rect" id="Node000016" href="$classmolsys_1_1CellList.html#a5caa65813ec6b99f007c50be8d7f91c3" title="set number of cells" alt="" coords="234,1021,438,1066"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="94,589,100,664,107,717,118,775,134,837,158,899,189,956,230,1007,233,1011,228,1011,226,1011,185,959,153,901,129,839,112,777,102,717,95,665,94,594"/>
+<area shape="rect" id="Node000017" href="$classmolsys_1_1CellList.html#aa6c3f294f896e45848ac3adca4fa8364" title="setup cell list" alt="" coords="519,295,687,323"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="95,562,110,521,136,465,174,407,199,381,226,359,247,348,275,340,346,326,506,312,502,315,347,331,277,345,249,353,229,363,202,384,179,410,141,467,115,523,100,564"/>
+<area shape="rect" id="Node000033" href="$classWaterModelSettings.html#a026d306484da2d6128b209c3a921e77e" title="sets the waterInterModel to enum in settings" alt="" coords="257,1091,414,1135"/>
+<area shape="poly" id="edge34_Node000001_Node000033" title=" " alt="" coords="96,589,114,688,142,834,160,911,181,980,205,1038,230,1077,246,1091,241,1091,226,1080,200,1040,176,982,155,912,137,835,108,689,96,594"/>
+<area shape="rect" id="Node000034" href="$classmolsys_1_1SimulationBox.html#a160a56125d62d59d3e0e745e9f5efb5b" title="set the water type" alt="" coords="250,1160,422,1205"/>
+<area shape="poly" id="edge35_Node000001_Node000034" title=" " alt="" coords="96,589,111,700,138,867,156,954,177,1035,202,1101,216,1127,230,1146,239,1157,234,1155,226,1149,211,1130,197,1103,172,1037,151,956,132,868,106,700,95,594"/>
+<area shape="rect" id="Node000035" href="$classmolsys_1_1CellList.html#af3d889d9f9c2f2e5aae46d4823e1ae73" title="update cell list after during simulation" alt="" coords="247,416,424,461"/>
+<area shape="poly" id="edge36_Node000001_Node000035" title=" " alt="" coords="106,561,157,517,191,492,226,471,242,465,238,469,229,475,194,497,161,521,111,564"/>
+<area shape="rect" id="Node000018" href="$classmolsys_1_1CellList.html#a9860fed9e6d58d712befce7b79c16eed" title="add neighbouring cells" alt="" coords="762,79,1006,123"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="611,293,634,261,668,217,711,172,761,133,774,128,770,132,764,138,714,176,672,221,638,264,615,296"/>
+<area shape="rect" id="Node000025" href="$classmolsys_1_1CellList.html#a6a831b778871c7e7e5568a0012167325" title="check if coulomb cutoff is smaller than half of the largest cell size" alt="" coords="770,148,998,193"/>
+<area shape="poly" id="edge24_Node000017_Node000025" title=" " alt="" coords="620,293,681,249,720,224,761,203,780,197,776,200,763,207,723,229,684,253,624,296"/>
+<area shape="rect" id="Node000026" href="$classmolsys_1_1CellList.html#a20a989903db4523563b6b50f5bc8c48a" title="determine cell boundaries" alt="" coords="1076,347,1275,391"/>
+<area shape="poly" id="edge25_Node000017_Node000026" title=" " alt="" coords="667,321,763,341,918,357,1062,366,1057,368,917,362,762,346,669,326"/>
+<area shape="rect" id="Node000027" href="$classmolsys_1_1CellList.html#ace71eed31700954fb3d3f53aa4b9c0d9" title="determine cell size" alt="" coords="784,287,984,331"/>
+<area shape="poly" id="edge27_Node000017_Node000027" title=" " alt="" coords="687,307,771,308,766,310,689,311"/>
+<area shape="rect" id="Node000030" href="$classmolsys_1_1SimulationBox.html#ae545f6de8888eae2f552ed72a5497b2d" title="gets the box angles" alt="" coords="798,407,970,451"/>
+<area shape="poly" id="edge31_Node000017_Node000030" title=" " alt="" coords="687,320,716,332,732,345,741,359,750,372,764,386,787,399,781,400,761,390,745,376,736,362,728,349,713,337,688,325"/>
+<area shape="rect" id="Node000031" href="$classmolsys_1_1SimulationBox.html#a81c7ee944222547e6e980e8325a08757" title="gets the box dimensions" alt="" coords="798,476,970,521"/>
+<area shape="poly" id="edge32_Node000017_Node000031" title=" " alt="" coords="687,316,716,332,730,348,738,365,741,398,745,431,752,446,764,462,787,478,781,479,761,466,747,449,740,432,736,399,732,366,726,351,713,336,688,321"/>
+<area shape="rect" id="Node000032" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="787,217,981,262"/>
+<area shape="poly" id="edge33_Node000017_Node000032" title=" " alt="" coords="661,292,778,265,774,268,664,297"/>
+<area shape="rect" id="Node000019" href="$classmolsys_1_1CellList.html#a098a451e4a94a1e35246207fd9a2fb11" title="add cell to cell list" alt="" coords="1085,147,1266,175"/>
+<area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="995,121,1092,143,1087,144,996,127"/>
+<area shape="rect" id="Node000020" href="$classmolsys_1_1CellList.html#a2ca6506ec916f0fd0e3bf785107abffb" title="add neighbouring cell pointers to a cell" alt="" coords="1054,79,1297,123"/>
+<area shape="poly" id="edge19_Node000018_Node000020" title=" " alt="" coords="1005,99,1041,100,1036,102,1007,103"/>
+<area shape="rect" id="Node000021" href="$classmolsys_1_1Cell.html#a8f6a283f7ddcf88fc78c398ec93ff4ac" title="adds a neighbour cell to the neighbourCells vector" alt="" coords="1345,87,1570,115"/>
+<area shape="poly" id="edge20_Node000020_Node000021" title=" " alt="" coords="1296,98,1332,100,1327,102,1298,104"/>
+<area shape="rect" id="Node000022" href="$classmolsys_1_1Cell.html#aacc58146e5c8cc7d63cb01665dbd0158" title="returns the cell index" alt="" coords="1362,139,1553,167"/>
+<area shape="poly" id="edge21_Node000020_Node000022" title=" " alt="" coords="1297,121,1366,135,1361,136,1298,126"/>
+<area shape="rect" id="Node000023" href="$classmolsys_1_1CellList.html#a8d22ab012b615cf397d6854f212cddff" title="get linearized cell index" alt="" coords="1368,347,1547,391"/>
+<area shape="poly" id="edge22_Node000020_Node000023" title=" " alt="" coords="1277,121,1299,134,1348,179,1389,232,1421,286,1444,333,1438,332,1416,288,1385,235,1344,183,1295,138,1277,127"/>
+<area shape="rect" id="Node000024" href="$classmolsys_1_1Cell.html#a371217ad01db0ccdb519c7aa884e49d3" title="returns the number of neighbour cells" alt="" coords="1359,19,1556,63"/>
+<area shape="poly" id="edge23_Node000020_Node000024" title=" " alt="" coords="1282,76,1346,64,1341,66,1285,80"/>
+<area shape="poly" id="edge26_Node000026_Node000023" title=" " alt="" coords="1275,366,1356,368,1351,370,1276,372"/>
+<area shape="rect" id="Node000028" href="$namespacelinalg.html#a3c68bcb069b08372c949e4006d9884e5" title=" " alt="" coords="1119,484,1232,512"/>
+<area shape="poly" id="edge28_Node000027_Node000028" title=" " alt="" coords="920,329,1142,475,1137,476,920,334"/>
+<area shape="rect" id="Node000029" href="$namespacelinalg.html#abf47879a207af36da15519f001493c6d" title=" " alt="" coords="1111,295,1240,323"/>
+<area shape="poly" id="edge29_Node000027_Node000029" title=" " alt="" coords="983,306,1098,308,1093,310,985,312"/>
+<area shape="poly" id="edge30_Node000029_Node000029" title=" " alt="" coords="1127,294,1120,286,1126,276,1145,271,1175,269,1209,271,1228,280,1223,281,1208,276,1175,274,1146,276,1129,281,1125,286,1132,295"/>
+<area shape="poly" id="edge49_Node000035_Node000007" title=" " alt="" coords="423,413,504,393,500,397,426,418"/>
+<area shape="rect" id="Node000036" href="$classmolsys_1_1CellList.html#aa1e33f283dd5ded00f82bc5095cf6a22" title="checks if the box size has changed" alt="" coords="523,485,683,530"/>
+<area shape="poly" id="edge37_Node000035_Node000036" title=" " alt="" coords="424,459,510,482,505,484,426,464"/>
+<area shape="rect" id="Node000037" href="$classmolsys_1_1CellList.html#ab4bcdb067dfffba3d1798f4d2fd2e0da" title="add molecules and atom pointers to cells" alt="" coords="492,615,714,659"/>
+<area shape="poly" id="edge40_Node000035_Node000037" title=" " alt="" coords="424,459,446,471,463,488,472,504,480,522,494,541,528,574,563,605,557,606,524,578,490,544,476,524,468,507,459,491,442,475,425,464"/>
+<area shape="rect" id="Node000042" href="$classsettings_1_1GeneralSettings.html#a8798c619607f4dd45507427feab904d8" title="Returns true if the cell list is activated." alt="" coords="510,416,696,461"/>
+<area shape="poly" id="edge48_Node000035_Node000042" title=" " alt="" coords="424,436,497,437,493,440,426,441"/>
+<area shape="rect" id="Node000043" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="550,782,656,810"/>
+<area shape="poly" id="edge50_Node000035_Node000043" title=" " alt="" coords="425,456,446,471,464,496,474,520,478,544,478,567,478,616,483,642,494,670,512,699,533,726,576,771,571,771,529,729,508,702,490,673,478,643,473,616,473,567,473,544,469,522,460,499,442,475,426,461"/>
+<area shape="poly" id="edge38_Node000036_Node000030" title=" " alt="" coords="683,483,789,455,785,457,685,488"/>
+<area shape="poly" id="edge39_Node000036_Node000031" title=" " alt="" coords="683,503,785,501,780,503,685,508"/>
+<area shape="poly" id="edge42_Node000037_Node000023" title=" " alt="" coords="689,657,759,670,839,680,923,681,1005,669,1093,644,1159,614,1220,575,1295,522,1368,460,1425,404,1429,401,1371,464,1299,526,1223,580,1161,619,1095,649,1006,674,923,686,838,685,758,676,690,663"/>
+<area shape="poly" id="edge41_Node000037_Node000031" title=" " alt="" coords="632,612,690,571,761,531,786,523,781,526,763,535,693,575,635,616"/>
+<area shape="rect" id="Node000038" href="$classmolsys_1_1CellList.html#ab60d59e74c7c9f504b2df5f730c157e8" title="get cell index of atom" alt="" coords="795,545,973,590"/>
+<area shape="poly" id="edge43_Node000037_Node000038" title=" " alt="" coords="696,612,782,592,777,595,698,616"/>
+<area shape="rect" id="Node000039" href="$classmolsys_1_1SimulationBox.html#a76153d2760d3319d21127959bd0556b8" title="get molecule by index" alt="" coords="798,735,970,779"/>
+<area shape="poly" id="edge45_Node000037_Node000039" title=" " alt="" coords="647,657,763,713,799,729,794,729,761,718,647,663"/>
+<area shape="rect" id="Node000040" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="776,804,992,849"/>
+<area shape="poly" id="edge46_Node000037_Node000040" title=" " alt="" coords="622,657,681,723,720,759,764,789,776,797,770,797,761,794,717,763,677,727,621,662"/>
+<area shape="rect" id="Node000041" href="$classmolsys_1_1SimulationBox.html#a4813c266533817dd1f70bd1e987d7bda" title="Get the number of molecules." alt="" coords="792,615,976,659"/>
+<area shape="poly" id="edge47_Node000037_Node000041" title=" " alt="" coords="714,634,779,636,774,638,716,640"/>
+<area shape="poly" id="edge44_Node000038_Node000028" title=" " alt="" coords="973,544,1106,514,1102,516,975,549"/>
+<area shape="rect" id="Node000044" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="795,873,973,918"/>
+<area shape="poly" id="edge51_Node000043_Node000044" title=" " alt="" coords="636,807,763,858,787,868,782,868,761,864,636,813"/>
+</map>

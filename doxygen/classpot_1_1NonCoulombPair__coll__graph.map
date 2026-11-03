@@ -1,0 +1,13 @@
+<map id="pot::NonCoulombPair" name="pot::NonCoulombPair">
+<area shape="rect" id="Node000001" title="base class representing a pair of non&#45;coulombic types" alt="" coords="182,397,338,693"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,190,167,279"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,277,99,325,115,372,141,416,173,457,168,458,136,419,110,374,94,326,89,282"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="16,5,156,95"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,92,89,174,84,173,86,97"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="190,190,331,279"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="261,277,263,303,263,381,258,380,258,303,260,282"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="191,5,331,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="262,92,263,174,258,173,260,97"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="370,198,424,271"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="394,268,386,321,370,374,348,419,344,416,365,372,381,319,392,273"/>
+</map>

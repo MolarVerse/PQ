@@ -1,0 +1,5 @@
+<map id="engine::QMMMMDEngine::_scaleAndAccumulateEnergies" name="engine::QMMMMDEngine::_scaleAndAccumulateEnergies">
+<area shape="rect" id="Node000001" title="Scale current PhysicalData energies and add them to the internal QM/MM PhyscialData object...." alt="" coords="5,5,234,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Engine.html#aade21e1cb3cd8535890fbd914d3b79d9" title="get the pointer to the physical data" alt="" coords="282,5,482,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,25,269,28,264,28,234,30"/>
+</map>

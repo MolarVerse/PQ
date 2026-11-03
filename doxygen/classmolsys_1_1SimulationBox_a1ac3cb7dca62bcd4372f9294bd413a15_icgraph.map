@@ -1,0 +1,7 @@
+<map id="molsys::SimulationBox::addInnerRegionCenterAtoms" name="molsys::SimulationBox::addInnerRegionCenterAtoms">
+<area shape="rect" id="Node000001" title="adds all atomIndices to _innerRegionCenterAtomIndices vector" alt="" coords="107,24,323,68"/>
+<area shape="rect" id="Node000002" href="$testHybridConfigurator_8cpp.html#adc4f0c4a4e2f4641f0283792f764c076" title=" " alt="" coords="5,5,59,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,29,59,26,59,20,93,26"/>
+<area shape="rect" id="Node000003" href="$testHybridConfigurator_8cpp.html#af101c1804efd9bcaf35f7299c6e4b295" title=" " alt="" coords="5,57,59,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,64,60,70,59,65,94,62"/>
+</map>

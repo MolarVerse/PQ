@@ -1,0 +1,11 @@
+<map id="setup::setupRandomNumberGenerator" name="setup::setupRandomNumberGenerator">
+<area shape="rect" id="Node000001" title="wrapper to build randomNumberGeneratorSetup object and call setup" alt="" coords="5,40,213,85"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1RandomNumberGeneratorSetup.html#af048cadf44c6c9f49912945f3ca5b4b5" title="setup the random number generator" alt="" coords="261,40,497,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,60,248,62,243,63,214,65"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1RandomNumberGeneratorSetup.html#a06ecd653663bf51f89c36bf18f86b3b6" title="write info about the random number generator setup" alt="" coords="545,40,781,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="497,60,532,62,527,62,498,65"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a38414ccaea96531641020968a7b85685" title="get the random seed value" alt="" coords="829,5,1015,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="781,44,811,42,817,42,782,49"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#ae333019b7750ca73befd75830280ab38" title="get if the random seed value has been set" alt="" coords="829,75,1015,119"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="782,76,817,83,811,82,782,81"/>
+</map>

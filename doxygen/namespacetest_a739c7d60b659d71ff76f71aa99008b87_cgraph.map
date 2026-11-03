@@ -1,0 +1,5 @@
+<map id="test::checkType&lt; std::shared_ptr&lt; pot::Potential &gt; &gt;" name="test::checkType&lt; std::shared_ptr&lt; pot::Potential &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,236,50"/>
+<area shape="rect" id="Node000002" href="$namespacetest.html#ab09419253c0f5065befb052c858b9c63" title="check that the dynamic type of obj matches expectedType" alt="" coords="284,14,406,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,25,271,28,265,28,236,30"/>
+</map>

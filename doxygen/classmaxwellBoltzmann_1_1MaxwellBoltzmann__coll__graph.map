@@ -1,0 +1,9 @@
+<map id="maxwellBoltzmann::MaxwellBoltzmann" name="maxwellBoltzmann::MaxwellBoltzmann">
+<area shape="rect" id="Node000001" title="class to initialize velocities of particles with a random maxwell boltzmann distribution" alt="" coords="33,341,232,430"/>
+<area shape="rect" id="Node000002" href="$classrng_1_1RandomNumberGenerator.html" title="class to handle generation of random numbers" alt="" coords="25,151,241,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,265,135,325,130,323,131,270"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,116,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="56,75,59,102,64,126,68,136,63,136,59,128,54,102,56,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="172,5,240,78"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="196,75,179,128,175,136,170,134,174,126,194,80"/>
+</map>

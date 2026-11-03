@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::copy" name="molsys::SimulationBox::copy">
+<area shape="rect" id="Node000001" title="copy simulationBox object this" alt="" coords="5,5,177,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a402307a5f0c8952a53c373ee55937bcc" title="Construct a new Simulation Box object." alt="" coords="225,5,396,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,25,212,27,206,28,177,30"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="setup::HybridSetup::validateQMChargeSettings" name="setup::HybridSetup::validateQMChargeSettings">
+<area shape="rect" id="Node000001" title="Validate the compatibility between QM charge settings and moltype 0 presence." alt="" coords="5,5,209,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1HybridSettings.html#a64461a9aed9cce379595a293a0536478" title="get the useQMCharges" alt="" coords="257,5,434,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,25,244,27,238,28,209,30"/>
+</map>

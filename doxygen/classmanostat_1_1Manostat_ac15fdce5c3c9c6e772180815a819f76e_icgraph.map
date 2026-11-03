@@ -1,0 +1,38 @@
+<map id="manostat::Manostat::_getSettings" name="manostat::Manostat::_getSettings">
+<area shape="rect" id="Node000001" title="get the manostat settings" alt="" coords="984,229,1136,274"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1StochasticRescalingManostat.html#aad7ece15659bb3cf54c50f44d5d34f30" title="Check if a specific axis is fixed." alt="" coords="700,119,922,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1007,221,935,185,888,167,888,161,937,180,1012,221"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html#a542d1f74440916dd1520692cf879a2c8" title="calculate mu as scaling factor for Stochastic Rescaling manostat (anisotropic)" alt="" coords="398,5,631,50"/>
+<area shape="poly" id="edge13_Node000001_Node000003" title=" " alt="" coords="1043,214,1026,180,1002,141,972,103,934,73,899,54,861,40,782,23,704,16,632,17,631,12,704,11,783,17,863,35,901,50,937,68,976,99,1007,138,1031,178,1047,216"/>
+<area shape="rect" id="Node000005" href="$classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html#a7cbf6a69e255cf92a192c2365f167f27" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="408,74,621,136"/>
+<area shape="poly" id="edge18_Node000001_Node000005" title=" " alt="" coords="1038,215,1020,189,997,158,968,130,934,109,897,94,857,84,774,74,694,76,622,84,620,79,694,70,775,69,858,78,898,89,937,104,971,126,1001,155,1025,186,1043,217"/>
+<area shape="rect" id="Node000006" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="391,160,638,205"/>
+<area shape="poly" id="edge20_Node000001_Node000006" title=" " alt="" coords="966,238,935,236,639,199,639,193,936,230,971,237"/>
+<area shape="rect" id="Node000007" href="$classmanostat_1_1StochasticRescalingManostat.html#a4c9d98558f00c84cd2e452c96f343255" title="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)" alt="" coords="404,229,625,274"/>
+<area shape="poly" id="edge21_Node000001_Node000007" title=" " alt="" coords="965,253,626,254,626,249,970,251"/>
+<area shape="rect" id="Node000011" href="$classmanostat_1_1AnisotropicBerendsenManostat.html#afed794443d827672d3cca75eb1a30b54" title="calculate mu as scaling factor for Berendsen manostat (anisotropic)" alt="" coords="694,359,928,403"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="1026,283,985,319,937,349,909,361,907,356,934,344,982,315,1021,286"/>
+<area shape="rect" id="Node000012" href="$classmanostat_1_1BerendsenManostat.html#ab77ba17bb56e8faab976e937fccd191b" title="calculate mu as scaling factor for Berendsen manostat (isotropic)" alt="" coords="700,289,922,334"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="966,274,907,291,906,286,971,273"/>
+<area shape="rect" id="Node000014" href="$classmanostat_1_1FullAnisotropicBerendsenManostat.html#a95fea8967742c6cf9b45031500d31962" title="calculate mu as scaling factor for Berendsen manostat (full anisotropic including angles)" alt="" coords="692,428,930,473"/>
+<area shape="poly" id="edge17_Node000001_Node000014" title=" " alt="" coords="1043,286,1001,355,971,389,937,418,915,430,914,425,934,413,968,385,996,352,1038,289"/>
+<area shape="rect" id="Node000015" href="$classmanostat_1_1SemiIsotropicBerendsenManostat.html#a8b89563b256cb7dae1a2c3059606a98a" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="686,497,936,542"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="1051,287,1036,335,1013,388,980,442,960,466,937,487,919,499,917,494,934,483,956,462,976,438,1008,386,1031,333,1047,291"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="749,112,637,65,604,53,603,48,639,60,754,111"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="683,126,622,121,621,115,688,125"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="682,159,640,168,638,162,687,158"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="747,172,639,219,604,231,602,226,637,215,751,169"/>
+<area shape="rect" id="Node000004" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="198,91,266,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="414,57,268,98,266,93,418,53"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="391,107,268,108,266,102,395,103"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="414,157,267,117,267,112,418,154"/>
+<area shape="rect" id="Node000008" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="122,227,343,271"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="386,251,344,253,343,247,391,249"/>
+<area shape="rect" id="Node000009" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="5,295,74,323"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="142,279,75,301,72,296,146,274"/>
+<area shape="rect" id="Node000010" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="5,235,74,263"/>
+<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="104,251,76,251,73,247,108,247"/>
+<area shape="rect" id="Node000013" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="122,296,343,341"/>
+<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="683,315,344,320,343,314,686,311"/>
+<area shape="poly" id="edge16_Node000013_Node000009" title=" " alt="" coords="104,314,75,313,73,308,108,311"/>
+</map>

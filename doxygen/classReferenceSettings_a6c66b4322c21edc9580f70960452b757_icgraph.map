@@ -1,0 +1,33 @@
+<map id="ReferenceSettings::getReferenceFileNames" name="ReferenceSettings::getReferenceFileNames">
+<area shape="rect" id="Node000001" title="Retrieves the set of reference file names." alt="" coords="122,361,299,406"/>
+<area shape="rect" id="Node000002" href="$testConstraintSettings_8cpp.html#a5033ec7f99e31fff88f7a3e536bb90e3" title="finalize() must activate shake when the configured water model has a rigid geometry (e...." alt="" coords="13,5,66,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,346,181,285,155,208,119,125,72,47,63,36,61,31,76,44,123,123,160,206,186,284,203,346"/>
+<area shape="rect" id="Node000003" href="$testConstraintSettings_8cpp.html#af3fc37cbe37365e72650a604844937c2" title="finalize() must add the rattle reference whenever shake ends up active, regardless of whether that ca..." alt="" coords="13,57,66,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,346,176,295,149,231,114,163,72,100,62,88,60,83,76,96,119,160,154,229,181,293,200,346"/>
+<area shape="rect" id="Node000004" href="$testConstraintSettings_8cpp.html#afb8026e7188d76cd46dcf321461c1ce9" title="finalize() must not activate shake for a water model without a rigid geometry (e.g...." alt="" coords="13,109,66,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="190,347,143,255,109,202,72,152,62,140,60,135,76,148,114,199,147,252,196,346"/>
+<area shape="rect" id="Node000005" href="$testManostatSettings_8cpp.html#a7d481268e1d0fe5495603b34ef679bcd" title="finalize() must not add any reference file when the manostat type is explicitly NONE." alt="" coords="13,161,66,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="184,349,135,280,72,204,61,192,59,187,76,200,140,277,189,348"/>
+<area shape="rect" id="Node000006" href="$testManostatSettings_8cpp.html#acf38d779295e8d112f41475e4ba85724" title="finalize() must not add any reference file when no manostat type has been set." alt="" coords="13,213,66,241"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="173,351,72,256,60,244,58,239,75,252,178,349"/>
+<area shape="rect" id="Node000007" href="$testManostatSettings_8cpp.html#ad449ced7be1ca062f29ccc8e51d85ca3" title="finalize() must add the reference file matching the configured manostat type." alt="" coords="13,265,66,293"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="157,354,65,296,64,291,161,351"/>
+<area shape="rect" id="Node000008" href="$testWaterModelSettings_8cpp.html#afe0eb2cad705dbd6723de33575d827b5" title="finalize() must add both references when both an intra&#45; and an inter&#45;molecular model are set,..." alt="" coords="13,317,66,345"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="118,357,68,342,66,337,123,354"/>
+<area shape="rect" id="Node000009" href="$testWaterModelSettings_8cpp.html#a0c1ec382489b5f4ee4846d797ca6b8b1" title="finalize() must add a reference file for the intermolecular water model even when no intramolecular m..." alt="" coords="13,369,66,397"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="105,385,68,385,65,381,108,381"/>
+<area shape="rect" id="Node000010" href="$testWaterModelSettings_8cpp.html#a6cac4b38dff60f8bec7643b6045ff307" title="finalize() must add a reference file for the intramolecular water model even when no intermolecular m..." alt="" coords="13,421,66,449"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="119,413,69,429,65,425,122,408"/>
+<area shape="rect" id="Node000011" href="$testWaterModelSettings_8cpp.html#a29801c687a6ef18c8d0715da97f55237" title="finalize() must not add any reference file when neither water model has been set." alt="" coords="13,473,66,501"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="158,416,66,475,62,471,160,412"/>
+<area shape="rect" id="Node000012" href="$testQMParser_8cpp.html#afa85e3ef97625e605b9dac3b0561e701" title=" " alt="" coords="5,525,74,553"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="175,419,75,514,61,526,57,523,72,511,177,414"/>
+<area shape="rect" id="Node000013" href="$testQMParser_8cpp.html#a587845f99a11c2a884bc5ea1ab81b83d" title=" " alt="" coords="5,577,74,605"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="185,421,140,490,76,566,62,578,58,575,72,563,135,486,188,416"/>
+<area shape="rect" id="Node000014" href="$testQMParser_8cpp.html#ae0bfbc861474782364c7d6c55ff178a7" title=" " alt="" coords="5,629,74,657"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="194,417,147,514,114,568,76,618,63,630,59,627,72,615,109,565,143,512,192,422"/>
+<area shape="rect" id="Node000015" href="$testIntegratorParser_8cpp.html#a1bd6f60f797eb4b221e9f224f6f2dab8" title="tests parsing the &quot;integrator&quot; command" alt="" coords="5,681,74,709"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="198,418,181,473,154,538,119,606,76,670,63,683,59,679,72,667,114,603,149,535,176,471,196,423"/>
+<area shape="rect" id="Node000016" href="$testThermostatParser_8cpp.html#a1c9a1f59aeb04a7d03870be292cb6c4d" title="tests parsing the &quot;thermostat&quot; command" alt="" coords="5,733,74,761"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="202,418,186,483,160,560,123,644,76,722,63,735,60,731,72,719,119,641,155,558,181,481,199,423"/>
+</map>

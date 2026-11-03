@@ -1,0 +1,15 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,187,59,215"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1HybridSettings.html#a66d1bc8d6c2a364c3cf88b5d4d973bb1" title="get the forcedCoreList" alt="" coords="107,5,284,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="35,186,58,126,78,91,105,60,112,57,109,61,109,64,83,94,63,129,40,188"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#a356850feb4cb57311e815268ba32c5ff" title="get the forcedLayerList" alt="" coords="107,75,284,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="43,185,70,157,105,129,117,125,113,129,108,134,74,161,48,188"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1HybridSettings.html#ae4bf4bf9eaf0891e6957b44047d0e85d" title="get the forcedOuterList" alt="" coords="107,144,284,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,193,93,186,90,190,61,198"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1HybridSettings.html#a6005f58fca94d4816938b987cb9ee3c3" title="set the _forcedCoreList in the settings" alt="" coords="107,213,284,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="58,204,94,212,89,215,60,209"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1HybridSettings.html#a886fb48380a792dbfeb249437826a028" title="set the _forcedLayerList in the settings" alt="" coords="107,283,284,327"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="45,213,74,241,108,268,117,275,112,276,105,273,70,245,46,218"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1HybridSettings.html#ad0f39da55d8da1ef0a181440eba2a679" title="set the _forcedOuterList in the settings" alt="" coords="107,352,284,397"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="38,213,63,273,83,308,109,338,113,343,108,343,105,342,78,311,58,276,37,218"/>
+</map>

@@ -1,0 +1,15 @@
+<map id="timings::GlobalTimer::_getSimulationTimer" name="timings::GlobalTimer::_getSimulationTimer">
+<area shape="rect" id="Node000001" title="Get the Simulation Timer object." alt="" coords="539,144,704,189"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a3119bc55709d0730bc64e808f5b72c25" title="calculates the elapsed time of the simulation" alt="" coords="286,5,458,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="584,133,542,99,490,65,459,51,458,46,492,60,545,94,590,134"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1GlobalTimer.html#af7994717e5a08f066f565e0d8ade9b82" title="calculates the loop time of the simulation" alt="" coords="293,75,452,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="521,140,452,122,452,116,527,139"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1GlobalTimer.html#a8cba5f0d8230c22c2953cb9d5f12fc88" title="Construct a new Global Timer:: Global Timer object." alt="" coords="293,144,452,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="521,167,452,169,452,164,526,166"/>
+<area shape="rect" id="Node000006" href="$classtimings_1_1GlobalTimer.html#a61929e5d6c8bb044a137852fe536b59c" title="stop and restart the simulation timer" alt="" coords="254,213,491,258"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="526,193,456,215,455,210,521,194"/>
+<area shape="rect" id="Node000007" href="$classtimings_1_1GlobalTimer.html#ad0fa4ece5803f18413253eba2771df27" title="stop the simulation timer" alt="" coords="290,283,455,327"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="590,198,545,238,492,273,456,288,455,283,490,268,542,234,585,200"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1GlobalTimer.html#a4fd7c1c7b8acb2ec7c2c6f957339ee14" title=" " alt="" coords="5,144,206,189"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="275,167,207,169,205,164,280,165"/>
+</map>

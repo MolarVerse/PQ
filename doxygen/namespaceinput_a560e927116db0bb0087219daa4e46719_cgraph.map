@@ -1,0 +1,29 @@
+<map id="input::readJobType" name="input::readJobType">
+<area shape="rect" id="Node000001" title="checks if in the input file jobtype keyword is set and calls the corresponding parser" alt="" coords="5,194,147,222"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="202,5,388,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,192,124,129,156,92,193,60,204,56,200,60,196,64,160,96,129,132,87,195"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#a21ee0515bf8768bf6673fd0b376c9b3e" title="get commands from a line" alt="" coords="195,74,395,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,191,133,151,162,129,193,111,210,105,206,109,196,115,165,134,137,155,93,195"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1GeneralInputParser.html#ac84810f38bcbd9ecbe06de406e705d94" title="parse jobtype of simulation and set it in settings and reset engine unique_ptr" alt="" coords="202,125,388,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="128,191,198,173,195,176,130,196"/>
+<area shape="rect" id="Node000011" href="$namespaceinput.html#ae2b974d43747843e3a201173d37513ec" title="process equal sign" alt="" coords="207,194,383,222"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="146,205,194,206,189,209,148,210"/>
+<area shape="rect" id="Node000012" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="195,246,394,274"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="137,219,221,240,216,243,138,225"/>
+<area shape="rect" id="Node000013" href="$classexc_1_1PQException.html#a1b12b6c573a7b30df0ab21f7da85b22c" title="Set the line number for the exception." alt="" coords="200,297,390,342"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="96,219,141,251,196,283,210,291,205,291,193,287,138,255,96,225"/>
+<area shape="rect" id="Node000014" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="223,366,367,394"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="86,219,127,285,159,321,196,352,211,362,205,361,193,357,155,325,123,288,84,224"/>
+<area shape="rect" id="Node000005" href="$namespaceinput.html#a138d19fbcd81f2cbd6267b52e9f95ea1" title="check if command array has exactly 3 elements" alt="" coords="463,74,630,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="388,123,473,105,468,107,390,128"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="454,125,639,170"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="388,145,441,147,436,148,389,150"/>
+<area shape="rect" id="Node000010" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="443,195,650,239"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="379,168,451,190,446,191,379,173"/>
+<area shape="rect" id="Node000006" href="$namespaceinput.html#a8fc649b2b4f96d20ce57f574e388bf8f" title="check if parameter is &quot;=&quot;" alt="" coords="718,74,882,102"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="630,85,705,87,699,88,631,90"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="706,125,894,170"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="639,145,693,147,688,148,640,150"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="698,195,902,239"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="631,168,704,190,699,190,631,173"/>
+</map>

@@ -1,0 +1,35 @@
+<map id="setup::ConstraintsSetup::setupMShake" name="setup::ConstraintsSetup::setupMShake">
+<area shape="rect" id="Node000001" title="setup M&#45;SHAKE" alt="" coords="5,231,182,275"/>
+<area shape="rect" id="Node000002" href="$namespaceinput_1_1mShake.html#a08672b685400c24c4040a33406010079" title="Wrapper to construct MShakeReader and read mShake file." alt="" coords="230,239,432,267"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,251,216,252,212,254,183,255"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1mShake_1_1MShakeReader.html#a032e0451766bac0cc781b47f7fdd9a8d" title="reads mShake file" alt="" coords="480,231,699,275"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="432,250,467,252,462,254,433,256"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1mShake_1_1MShakeReader.html#a6fbd2be6c54e7311a264e34f0099f9cd" title="processes atom line" alt="" coords="747,145,967,190"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="661,228,773,194,768,196,663,232"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="1024,212,1224,240"/>
+<area shape="poly" id="edge17_Node000003_Node000007" title=" " alt="" coords="699,245,1011,231,1006,233,700,250"/>
+<area shape="rect" id="Node000009" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="1052,264,1196,292"/>
+<area shape="poly" id="edge18_Node000003_Node000009" title=" " alt="" coords="700,256,1039,273,1034,275,700,261"/>
+<area shape="rect" id="Node000010" href="$classinput_1_1mShake_1_1MShakeReader.html#a9ed522769a7b95f77c9658ae5b870a37" title="processes comment line" alt="" coords="747,337,967,382"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="648,273,788,331,782,331,648,279"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1MoleculeType.html#aa60e195262b62b4e1ffa8e90ee9506a8" title="get the atom names of the molecule" alt="" coords="1041,5,1206,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="885,143,943,101,1013,60,1031,55,1026,57,1016,65,946,106,888,147"/>
+<area shape="rect" id="Node000006" href="$classconstraints_1_1MShakeReference.html#a2edd271ffa16991a55d1c2fb3ff48c86" title="get the molecule type" alt="" coords="1015,75,1233,119"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="943,142,1025,123,1020,125,945,147"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="961,188,1045,208,1040,209,962,193"/>
+<area shape="rect" id="Node000008" href="$classconstraints_1_1MShakeReference.html#a520684247a261cd2de27926b31149d40" title="Set the atoms object." alt="" coords="1015,144,1233,189"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="967,165,1001,166,996,168,968,170"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="895,188,951,219,1016,249,1041,260,1036,260,1014,254,949,224,894,193"/>
+<area shape="poly" id="edge12_Node000010_Node000007" title=" " alt="" coords="884,334,941,292,1014,251,1032,246,1037,244,1016,255,944,296,887,339"/>
+<area shape="poly" id="edge14_Node000010_Node000009" title=" " alt="" coords="919,334,1014,302,1043,297,1048,296,1015,308,920,339"/>
+<area shape="rect" id="Node000011" href="$namespaceutilities.html#a4336aad931ffaf5387444bbc8af3a539" title="adds leading and trailing spaces to a string" alt="" coords="1050,316,1198,344"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="967,345,1037,340,1031,341,968,350"/>
+<area shape="rect" id="Node000012" href="$namespaceutilities.html#a21ee0515bf8768bf6673fd0b376c9b3e" title="get commands from a line" alt="" coords="1024,368,1224,396"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="967,366,1011,372,1005,373,967,372"/>
+<area shape="rect" id="Node000013" href="$classconstraints_1_1MShakeReference.html#af31e20825bd4ec98d815feb1931b6d8f" title="Set the molecule type object as a unique pointer." alt="" coords="1015,420,1233,465"/>
+<area shape="poly" id="edge13_Node000010_Node000013" title=" " alt="" coords="932,380,1037,415,1032,415,931,385"/>
+<area shape="rect" id="Node000014" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="1042,488,1206,516"/>
+<area shape="poly" id="edge15_Node000010_Node000014" title=" " alt="" coords="882,380,941,428,977,453,1016,475,1032,484,1027,483,1014,479,975,458,938,433,881,385"/>
+<area shape="rect" id="Node000015" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="1050,540,1198,585"/>
+<area shape="poly" id="edge16_Node000010_Node000015" title=" " alt="" coords="874,380,932,452,972,491,1016,525,1038,539,1033,538,1013,530,968,495,928,455,872,385"/>
+</map>

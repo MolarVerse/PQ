@@ -1,0 +1,7 @@
+<map id="engine::QMRunnerManager::createAseXtbRunner" name="engine::QMRunnerManager::createAseXtbRunner">
+<area shape="rect" id="Node000001" title="Create an ASE xTB QM runner." alt="" coords="5,36,204,81"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a060329b7e58cfbb9c02c722b561fcdc5" title="returns the xTBMethod" alt="" coords="266,5,422,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,43,253,39,248,40,205,48"/>
+<area shape="rect" id="Node000003" href="$structXtbMethodMeta.html#a0ca84f339c82f9e42ceb579ec0b7d4d6" title=" " alt="" coords="252,74,436,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="204,68,239,74,234,75,204,73"/>
+</map>

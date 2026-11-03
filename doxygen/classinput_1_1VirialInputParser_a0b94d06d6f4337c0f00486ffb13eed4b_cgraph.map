@@ -1,0 +1,19 @@
+<map id="input::VirialInputParser::VirialInputParser" name="input::VirialInputParser::VirialInputParser">
+<area shape="rect" id="Node000001" title="Construct a new Input File Parser Virial:: Input File Parser Virial object." alt="" coords="5,125,175,170"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1VirialInputParser.html#a214e2a1b180de9888b58a110708f6456" title="adds virial key metadata" alt="" coords="223,125,392,170"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,145,210,147,205,149,176,150"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="454,5,612,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="338,123,384,91,439,60,454,55,449,58,441,65,387,96,341,127"/>
+<area shape="rect" id="Node000004" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="483,74,582,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="391,123,471,104,466,106,393,128"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="454,125,612,170"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="392,145,440,147,435,148,393,150"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="458,195,607,239"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="382,168,446,189,440,190,382,173"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a4e0af2a46c9addffe64f37b0ab8f2ecc" title="sets the virial type" alt="" coords="440,264,625,309"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="333,168,382,209,441,249,453,258,448,257,439,254,379,213,332,173"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="701,61,853,106"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="583,84,689,85,683,86,583,89"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="673,131,881,175"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="612,147,660,150,655,151,613,152"/>
+</map>

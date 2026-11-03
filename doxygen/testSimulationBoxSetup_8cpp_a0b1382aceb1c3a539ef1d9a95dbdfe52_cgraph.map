@@ -1,0 +1,11 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,65,74,93"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="123,5,325,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,63,121,42,146,36,142,39,123,47,72,67"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1SimulationBoxSetup.html#a12e7804741a4189ca25c549bf4d3837d" title="Calculates the total charge of the simulation box." alt="" coords="125,57,322,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,77,112,78,107,81,75,82"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Molecule.html#a22883d80e6a6a35c951dc3731869a7d7" title="sets the partial charges of the atoms in the molecule" alt="" coords="122,126,326,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,91,123,111,142,120,137,121,121,116,73,96"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="374,126,590,171"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="327,146,361,148,356,149,327,151"/>
+</map>

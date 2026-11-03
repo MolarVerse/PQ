@@ -1,0 +1,5 @@
+<map id="pot::GuffPair" name="pot::GuffPair">
+<area shape="rect" id="Node000001" title="inherits from NonCoulombPair represents a pair of Guff types (full guff formula)" alt="" coords="29,438,138,555"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1NonCoulombPair.html" title="base class representing a pair of non&#45;coulombic types" alt="" coords="5,5,162,390"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,403,86,439,81,438,83,408"/>
+</map>

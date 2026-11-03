@@ -1,0 +1,12 @@
+<map id="/home/runner/work/PQ/PQ/include/input/parameterFileReader/jCouplingSection.hpp" name="/home/runner/work/PQ/PQ/include/input/parameterFileReader/jCouplingSection.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,237,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="49,191,108,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,65,84,116,79,146,79,176,74,175,74,146,78,114,100,70"/>
+<area shape="rect" id="Node000003" href="$parameterFileSection_8hpp.html" title=" " alt="" coords="94,115,282,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,65,172,102,166,103,143,70"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="171,142,112,184,109,179,166,144"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="144,191,207,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="187,141,182,177,178,174,184,145"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="231,191,294,218"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="202,141,241,180,236,179,200,146"/>
+</map>

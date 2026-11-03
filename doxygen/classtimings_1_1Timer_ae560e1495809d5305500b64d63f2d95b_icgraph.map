@@ -1,0 +1,22 @@
+<map id="timings::Timer::findTimingsSectionIndex" name="timings::Timer::findTimingsSectionIndex">
+<area shape="rect" id="Node000001" title="find timeManager by name" alt="" coords="800,144,1001,189"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1Timer.html#aa56197e36e245fe783ab520895e59eec" title="starts a new timer" alt="" coords="539,5,752,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="858,134,809,99,751,65,725,53,725,48,754,60,812,95,863,134"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#a1be6682b2c127e648e3a1e0db9b675bd" title="stops a timer" alt="" coords="540,75,751,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="799,140,730,123,730,117,804,139"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1Timer.html#af0898ab98a8e9f2272dcd5b7b568c86c" title="get TimingsSection by name" alt="" coords="547,144,744,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="782,167,745,169,745,164,788,166"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1Timer.html#aa2d5c8f539268225f48e96098200cae4" title="starts a new timer with default name" alt="" coords="542,213,749,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="804,193,731,215,730,210,799,194"/>
+<area shape="rect" id="Node000009" href="$classtimings_1_1Timer.html#af91abf63dabd1bd439f2e54a46e07701" title="stops a timer with default name" alt="" coords="544,283,748,327"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="863,198,812,238,754,273,726,285,724,280,751,268,809,233,858,200"/>
+<area shape="rect" id="Node000006" href="$classtimings_1_1GlobalTimer.html#a8cba5f0d8230c22c2953cb9d5f12fc88" title="Construct a new Global Timer:: Global Timer object." alt="" coords="293,179,452,223"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="524,221,452,214,452,208,529,220"/>
+<area shape="rect" id="Node000008" href="$classtimings_1_1GlobalTimer.html#a61929e5d6c8bb044a137852fe536b59c" title="stop and restart the simulation timer" alt="" coords="254,248,491,293"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="524,251,492,258,491,253,529,250"/>
+<area shape="rect" id="Node000007" href="$classtimings_1_1GlobalTimer.html#a4fd7c1c7b8acb2ec7c2c6f957339ee14" title=" " alt="" coords="5,179,206,223"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="275,202,207,204,205,198,280,200"/>
+<area shape="poly" id="edge9_Node000009_Node000008" title=" " alt="" coords="525,290,492,288,492,283,531,290"/>
+<area shape="rect" id="Node000010" href="$classtimings_1_1GlobalTimer.html#ad0fa4ece5803f18413253eba2771df27" title="stop the simulation timer" alt="" coords="290,317,455,362"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="531,320,456,332,455,327,525,320"/>
+</map>

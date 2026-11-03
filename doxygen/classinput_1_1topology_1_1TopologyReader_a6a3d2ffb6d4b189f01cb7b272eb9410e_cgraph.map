@@ -1,0 +1,5 @@
+<map id="input::topology::TopologyReader::determineSection" name="input::topology::TopologyReader::determineSection">
+<area shape="rect" id="Node000001" title="determines which section of the topology file the header line belongs to" alt="" coords="5,5,196,50"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="244,5,451,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,25,231,27,226,28,196,30"/>
+</map>

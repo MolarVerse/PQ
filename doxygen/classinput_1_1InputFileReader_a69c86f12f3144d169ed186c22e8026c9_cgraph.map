@@ -1,0 +1,7 @@
+<map id="input::InputFileReader::_validateRingPolymer" name="input::InputFileReader::_validateRingPolymer">
+<area shape="rect" id="Node000001" title="validates ring&#45;polymer keyword dependencies" alt="" coords="5,40,178,85"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileReader.html#af74f54a09652205d1b5187cf08384d47" title="get whether the keyword has been set in input" alt="" coords="247,5,412,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,47,234,41,229,43,178,52"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a80529ce88f2148fc94cea22db0fd9ae5" title="Returns true if the ring polymer MD simulations are activated." alt="" coords="226,75,433,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,72,213,79,208,80,178,78"/>
+</map>

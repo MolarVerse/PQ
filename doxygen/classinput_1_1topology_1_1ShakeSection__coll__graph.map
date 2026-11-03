@@ -1,0 +1,15 @@
+<map id="input::topology::ShakeSection" name="input::topology::ShakeSection">
+<area shape="rect" id="Node000001" title="reads shake section of topology file" alt="" coords="5,944,208,1061"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1topology_1_1TopologySection.html" title="base class for reading topology file sections" alt="" coords="20,671,194,895"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,907,109,945,104,944,106,912"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="60,526,154,598"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,595,109,655,104,655,106,601"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="39,387,174,477"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="107,489,109,526,104,526,106,494"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="42,249,172,338"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="107,350,109,388,104,387,106,355"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="27,127,186,199"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="107,211,109,249,104,249,106,217"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="59,5,154,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="107,90,109,127,104,127,107,95"/>
+</map>

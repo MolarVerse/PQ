@@ -1,0 +1,13 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="Test optional step metadata in the hybrid center xyz comment line." alt="" coords="5,118,74,146"/>
+<area shape="rect" id="Node000002" href="$classconfigurator_1_1HybridConfigurator.html#a0c0ee954887f476819073112a41359f1" title="Calculate the center of mass of the inner region center atoms." alt="" coords="122,109,352,154"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,129,108,130,104,133,75,134"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a5efbb4148bf8da480902ff1400077c7b" title="calculate shift vector for a given position" alt="" coords="440,5,612,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="286,106,399,60,428,53,423,55,401,65,288,111"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="440,75,612,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="352,115,428,108,423,110,353,120"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a3a90d81c739d9cd0cebc596eb2c95127" title="get the indices of the atoms marking the center of the inner region for hybrid type calculations" alt="" coords="400,144,652,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="352,143,388,149,382,150,352,148"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1Atom.html#aceeba752fe1b92c1b3b0fa0fad5ad498" title=" " alt="" coords="430,212,622,240"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="285,152,340,176,401,198,430,209,424,208,399,204,338,181,284,157"/>
+</map>

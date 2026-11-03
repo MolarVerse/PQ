@@ -1,0 +1,7 @@
+<map id="settings::HybridSettings::setQMForceDist" name="settings::HybridSettings::setQMForceDist">
+<area shape="rect" id="Node000001" title="set the type of QM force distribtion in hotspot smoothing" alt="" coords="264,36,441,81"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1HybridInputParser.html#a51569b09b47f9777d4ff850284996313" title="not yet read from the input file as this requires a new smoothing method, see issue #1012 https://git..." alt="" coords="5,5,216,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,45,216,44,216,38,251,45"/>
+<area shape="rect" id="Node000003" href="$testHybridSettings_8cpp.html#a43a2354f16e4eb8e84299d8bbbe1fa12" title=" " alt="" coords="84,74,137,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,71,138,87,137,82,251,71"/>
+</map>

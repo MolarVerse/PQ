@@ -1,0 +1,7 @@
+<map id="pot::NonCoulombPair::operator==" name="pot::NonCoulombPair::operator==">
+<area shape="rect" id="Node000001" title="operator overload for the comparison of two NonCoulombPair objects" alt="" coords="5,28,164,72"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="223,5,358,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,35,211,31,206,32,165,41"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1NonCoulombPair.html#a02d9cc8b3c50e5b8721430e90d9a46d1" title="Construct a new Non Coulomb Pair:: Non Coulomb Pair object." alt="" coords="212,57,370,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,58,199,65,193,66,164,64"/>
+</map>

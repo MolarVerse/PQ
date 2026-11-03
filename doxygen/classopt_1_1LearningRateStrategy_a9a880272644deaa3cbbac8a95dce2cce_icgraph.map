@@ -1,0 +1,11 @@
+<map id="opt::LearningRateStrategy::LearningRateStrategy" name="opt::LearningRateStrategy::LearningRateStrategy">
+<area shape="rect" id="Node000001" title="Construct a new LearningRateStrategy object." alt="" coords="274,109,465,154"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1ConstantDecayLRStrategy.html#ab252126c8e3103ba509ba032c8ceded5" title="Construct a new Constant Decay L R Strategy:: Constant Decay L R Strategy object." alt="" coords="5,5,226,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,103,225,65,194,53,193,48,227,60,314,101"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1ConstantDecayLRStrategy.html#ac68934880bfc386f056c190e119aa179" title="Construct a new Constant Decay L R Strategy:: Constant Decay L R Strategy object." alt="" coords="5,75,226,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="256,117,227,115,226,109,261,116"/>
+<area shape="rect" id="Node000004" href="$classopt_1_1ConstantLRStrategy.html#a164e48686aff75b59068fc2480750e88" title="Construct a new ConstantLRStrategy::ConstantLRStrategy object." alt="" coords="26,144,205,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="255,148,206,157,205,151,260,146"/>
+<area shape="rect" id="Node000005" href="$classopt_1_1ExpDecayLR.html#af95dfb72c535f1b3eb11894e16c8c8e0" title="Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy object." alt="" coords="5,212,226,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="317,161,227,204,190,215,188,209,225,198,311,162"/>
+</map>

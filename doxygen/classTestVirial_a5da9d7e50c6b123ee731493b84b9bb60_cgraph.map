@@ -1,0 +1,9 @@
+<map id="TestVirial::TearDown" name="TestVirial::TearDown">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,159,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="207,40,392,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,60,193,62,188,63,159,65"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="448,5,635,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="392,46,435,43,430,44,393,52"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="440,75,643,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="393,73,427,80,422,80,393,78"/>
+</map>

@@ -1,0 +1,35 @@
+<map id="molsys::CellList::setup" name="molsys::CellList::setup">
+<area shape="rect" id="Node000001" title="setup cell list" alt="" coords="5,247,174,274"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1CellList.html#a9860fed9e6d58d712befce7b79c16eed" title="add neighbouring cells" alt="" coords="222,49,465,94"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,245,143,177,179,137,220,104,232,99,229,103,223,108,182,141,147,180,101,247"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1CellList.html#a6a831b778871c7e7e5568a0012167325" title="check if coulomb cutoff is smaller than half of the largest cell size" alt="" coords="229,118,458,163"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="110,244,159,213,221,179,255,167,251,170,223,184,162,217,113,248"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1CellList.html#a20a989903db4523563b6b50f5bc8c48a" title="determine cell boundaries" alt="" coords="535,178,734,223"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="135,244,221,223,377,206,522,200,517,203,377,211,222,228,138,248"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1CellList.html#ace71eed31700954fb3d3f53aa4b9c0d9" title="determine cell size" alt="" coords="244,238,443,283"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="173,258,230,259,226,262,175,263"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1SimulationBox.html#ae545f6de8888eae2f552ed72a5497b2d" title="gets the box angles" alt="" coords="258,308,429,352"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="143,272,247,301,242,304,143,278"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1SimulationBox.html#a81c7ee944222547e6e980e8325a08757" title="gets the box dimensions" alt="" coords="258,377,429,422"/>
+<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="105,272,156,317,188,341,223,362,246,374,240,374,220,367,185,345,152,321,105,277"/>
+<area shape="rect" id="Node000016" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="247,446,440,491"/>
+<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="98,272,117,306,144,349,180,394,223,432,235,441,230,440,220,436,176,397,140,352,113,309,97,277"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1CellList.html#a098a451e4a94a1e35246207fd9a2fb11" title="add cell to cell list" alt="" coords="544,27,725,54"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="464,56,531,50,526,53,466,61"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1CellList.html#a2ca6506ec916f0fd0e3bf785107abffb" title="add neighbouring cell pointers to a cell" alt="" coords="513,78,756,123"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="465,81,500,86,495,88,466,86"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Cell.html#a8f6a283f7ddcf88fc78c398ec93ff4ac" title="adds a neighbour cell to the neighbourCells vector" alt="" coords="804,5,1030,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="719,75,755,63,803,43,836,36,831,38,805,48,757,68,721,80"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1Cell.html#aacc58146e5c8cc7d63cb01665dbd0158" title="returns the cell index" alt="" coords="821,57,1013,85"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="756,85,808,82,803,84,757,90"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1CellList.html#a8d22ab012b615cf397d6854f212cddff" title="get linearized cell index" alt="" coords="828,178,1006,223"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="692,121,805,163,828,173,822,173,803,168,692,126"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1Cell.html#a371217ad01db0ccdb519c7aa884e49d3" title="returns the number of neighbour cells" alt="" coords="818,109,1016,154"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="756,111,805,118,800,119,757,116"/>
+<area shape="poly" id="edge10_Node000010_Node000007" title=" " alt="" coords="735,198,815,200,810,201,735,203"/>
+<area shape="rect" id="Node000012" href="$namespacelinalg.html#a3c68bcb069b08372c949e4006d9884e5" title=" " alt="" coords="578,247,691,274"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="443,258,565,260,560,261,444,263"/>
+<area shape="rect" id="Node000013" href="$namespacelinalg.html#abf47879a207af36da15519f001493c6d" title=" " alt="" coords="570,323,699,350"/>
+<area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="432,281,566,318,561,319,432,286"/>
+<area shape="poly" id="edge14_Node000013_Node000013" title=" " alt="" coords="587,321,579,314,585,304,604,298,635,296,668,299,688,308,682,308,667,304,635,301,605,303,588,308,584,313,592,323"/>
+</map>

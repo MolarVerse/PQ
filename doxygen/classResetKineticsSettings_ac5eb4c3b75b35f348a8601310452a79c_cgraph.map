@@ -1,0 +1,5 @@
+<map id="ResetKineticsSettings::finalize" name="ResetKineticsSettings::finalize">
+<area shape="rect" id="Node000001" title="Finalize the reset kinetics settings by setting default values for certain fields if they are zero." alt="" coords="5,5,169,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1TimingsSettings.html#a58a13b00fa1ceae44281aed2a416e959" title="get the number of steps" alt="" coords="217,5,403,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,25,204,27,198,28,169,30"/>
+</map>

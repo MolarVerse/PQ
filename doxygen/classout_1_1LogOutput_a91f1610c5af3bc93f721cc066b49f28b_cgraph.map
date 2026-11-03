@@ -1,0 +1,10 @@
+<map id="out::LogOutput::writeEndedNormally" name="out::LogOutput::writeEndedNormally">
+<area shape="rect" id="Node000001" title="write a message to the log file if the simulation ended normally" alt="" coords="5,73,204,118"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="252,29,451,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,72,270,60,265,62,205,77"/>
+<area shape="rect" id="Node000003" href="$namespaceout.html#ad537bb54d1cb319d4c26e7bcf6655e96" title="construct elapsed time message" alt="" coords="255,81,448,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="204,93,242,95,237,96,204,98"/>
+<area shape="rect" id="Node000004" href="$namespaceout.html#ab5b9f64c9754bfc1c06a9dd51526a37f" title="construct ended normally message" alt="" coords="276,133,426,161"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="204,113,270,129,265,130,204,119"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="309,28,302,20,308,11,324,5,351,3,380,5,397,14,392,14,379,10,351,8,326,10,311,15,308,20,314,29"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="engine::QMMMMDEngine::_setNumberOfQMAtoms" name="engine::QMMMMDEngine::_setNumberOfQMAtoms">
+<area shape="rect" id="Node000001" title="Set the number of QM atoms in physical data for output purposes." alt="" coords="5,179,193,223"/>
+<area shape="rect" id="Node000002" href="$classconfigurator_1_1HybridConfigurator.html#a2bbd9f697976ad7bcdbbd56b97e2a97c" title="Activate all molecules in the simulation box." alt="" coords="246,5,476,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,177,166,118,201,87,239,60,253,55,249,58,242,65,204,91,170,122,119,180"/>
+<area shape="rect" id="Node000004" href="$classconfigurator_1_1HybridConfigurator.html#a8313f354c9244f8defdd5378e3ac9ca2" title="Deactivate molecules in the outer regions (POINT_CHARGE, OUTER)." alt="" coords="246,75,476,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,176,240,129,262,123,258,126,242,134,143,180"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a7c89dc9cef58e06b5735141047af95d7" title="Get the number of QM atoms." alt="" coords="271,144,452,189"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="192,186,257,179,253,182,194,191"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1Engine.html#aade21e1cb3cd8535890fbd914d3b79d9" title="get the pointer to the physical data" alt="" coords="261,213,462,258"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="193,211,248,219,244,221,193,216"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1Engine.html#a3de2559488f0ddc5db3af0dd8cc73a52" title="get the reference to the simulation box" alt="" coords="241,282,482,310"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="140,221,188,246,242,268,267,277,261,278,240,273,186,251,140,226"/>
+<area shape="rect" id="Node000009" href="$classphysicalData_1_1PhysicalData.html#a2380d38b8b3e3ffa4db0b3affc47ae61" title="set the number of qm atoms" alt="" coords="262,333,461,378"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="122,221,174,271,207,296,242,319,255,327,250,327,239,323,204,301,171,275,120,226"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="564,40,735,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="476,39,551,49,546,51,477,44"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="476,81,551,73,546,75,478,86"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBoxView.html#a7e7040ddbbd5836394efe83bf9f8210a" title=" " alt="" coords="530,144,769,189"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="452,164,517,166,512,167,453,169"/>
+</map>

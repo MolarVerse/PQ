@@ -1,0 +1,5 @@
+<map id="pot::CoulombPotential::getCoulombForceCutOff" name="pot::CoulombPotential::getCoulombForceCutOff">
+<area shape="rect" id="Node000001" title=" " alt="" coords="107,5,291,50"/>
+<area shape="rect" id="Node000002" href="$testCoulombPotential_8cpp.html#a09db84693467015fc31eb4ca91ae35fc" title="tests the setCoulombRadiusCutOff function" alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,29,59,30,59,25,94,27"/>
+</map>

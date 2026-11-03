@@ -1,0 +1,8 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,14,59,42"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#ae333019b7750ca73befd75830280ab38" title="get if the random seed value has been set" alt="" coords="340,5,525,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,23,107,20,219,18,327,22,322,24,219,24,107,25,60,28"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ae256e11db193b48e1e286ec300ca3034" title="sets if the random seed value has been set" alt="" coords="107,35,292,79"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,30,94,37,89,39,59,35"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="292,43,322,42,327,41,293,48"/>
+</map>

@@ -1,0 +1,23 @@
+<map id="benchmarkSetup::makeLattice" name="benchmarkSetup::makeLattice">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,239,225,266"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="280,5,482,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,237,140,198,173,145,217,89,243,64,271,42,282,38,279,42,274,47,246,68,221,93,177,148,145,200,125,239"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="295,57,466,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,237,185,177,226,142,271,112,285,107,281,110,274,116,229,146,189,181,131,240"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="295,126,466,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="145,236,272,181,294,175,289,178,274,186,148,240"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#ad4727b1fadb1c321684918232354f80c" title="calculate center of mass of simulationBox" alt="" coords="291,196,471,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="224,236,278,230,273,233,226,241"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#ae0489f2bacf7e95ff3ba726938810192" title="calculate degrees of freedom" alt="" coords="274,265,488,310"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="225,264,261,270,256,272,226,269"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1SimulationBox.html#a5f318135bd1b5145fee7cda14d2142a6" title="calculate total mass of simulationBox" alt="" coords="295,334,466,379"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="147,264,274,319,294,328,289,329,272,324,146,270"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1SimulationBox.html#a071637632228934195f9355e5ddb22e1" title=" " alt="" coords="295,404,466,448"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="129,264,189,324,229,359,274,389,286,397,280,397,271,393,226,363,185,328,128,269"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Molecule.html#a8ab76a7328d90fa8b6bd04883184fd17" title="set the moltype of the molecule" alt="" coords="273,472,489,500"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="123,264,145,305,177,357,221,412,246,437,274,458,283,466,278,465,271,463,243,441,217,416,173,360,140,307,122,269"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#ade3975d6567d7a025db21128a8f71682" title="get the dimensionality" alt="" coords="537,230,722,275"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="488,270,524,267,519,268,489,275"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="544,300,715,344"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="488,299,531,307,526,308,489,305"/>
+</map>

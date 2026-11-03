@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1OptEngine.html#accb7aae22b435648eb4e7bcba1232805" title="throw if the optimization did not end successfully" alt="" coords="107,5,255,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,54,94,47,90,50,60,59"/>
+<area shape="rect" id="Node000003" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="107,75,255,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,66,94,75,89,77,59,71"/>
+</map>

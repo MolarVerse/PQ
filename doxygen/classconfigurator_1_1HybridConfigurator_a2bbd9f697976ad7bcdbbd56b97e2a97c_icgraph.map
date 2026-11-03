@@ -1,0 +1,19 @@
+<map id="configurator::HybridConfigurator::activateMolecules" name="configurator::HybridConfigurator::activateMolecules">
+<area shape="rect" id="Node000001" title="Activate all molecules in the simulation box." alt="" coords="949,116,1179,161"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#a8d924cf4a3d0acb33ca0440533d416de" title="Apply exact smoothing algorithm for QM/MM boundary treatment." alt="" coords="476,5,661,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="991,110,900,82,776,57,662,40,662,35,777,51,901,77,996,110"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1QMMMMDEngine.html#ad105ce5b4a1146271a41b143dcd14ce7" title="Apply hotspot smoothing algorithm for QM/MM boundary treatment." alt="" coords="472,75,665,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="952,112,900,106,778,98,666,97,666,91,779,92,901,101,958,112"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1QMMMMDEngine.html#a4439f3326d08dfe4dcdcbaa9b6b6d1fa" title="Set the number of QM atoms in physical data for output purposes." alt="" coords="713,116,901,161"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="930,139,901,141,901,136,936,138"/>
+<area shape="rect" id="Node000007" href="$perfHybridZones_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="780,184,834,212"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="953,164,835,195,834,190,948,165"/>
+<area shape="rect" id="Node000008" href="$testHybridConfigurator_8cpp.html#ae6c6cf43b503bf06099e377b621fa432" title=" " alt="" coords="780,236,834,264"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="1014,168,960,199,902,226,835,247,834,242,900,221,957,195,1009,170"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMMMMDEngine.html#a58d17897c3573c25f6a815086f36ada1" title="Apply the selected smoothing method for QM/MM boundary treatment." alt="" coords="239,40,424,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="458,44,425,51,424,46,463,43"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,40,191,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="221,64,192,65,190,60,226,61"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="454,81,425,79,424,73,459,80"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="695,120,666,116,666,111,701,119"/>
+</map>

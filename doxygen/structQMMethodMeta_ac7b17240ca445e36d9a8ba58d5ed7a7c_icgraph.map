@@ -1,0 +1,67 @@
+<map id="QMMethodMeta::toString" name="QMMethodMeta::toString">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1443,310,1627,338"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1ExternalQMRunner.html#a8866c6717bea24a4208e75749bbb6a28" title="reads the charge file (qm_charges) and sets the _qmCharge of the atoms" alt="" coords="1194,61,1367,106"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1519,294,1500,257,1473,209,1437,161,1393,120,1367,106,1368,100,1396,116,1441,158,1477,206,1505,254,1524,297"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1ExternalQMRunner.html#a9bef40ef45e2f95ac8d4efeb74a0c4dc" title="reads the force file (including qm energy) and sets the forces of the atoms" alt="" coords="1194,131,1367,175"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1507,298,1457,253,1393,205,1343,178,1344,173,1396,200,1461,249,1512,299"/>
+<area shape="rect" id="Node000007" href="$classQM_1_1DFTBPlusRunner.html#aa11b2998959eb698a81de604fa66d5e2" title="reads the stress tensor and adds it to the physical data" alt="" coords="1201,215,1360,259"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="1480,304,1394,274,1358,263,1359,257,1396,269,1486,304"/>
+<area shape="rect" id="Node000008" href="$namespacebenchQMRunner.html#af59b6188cd23f4db67b6f50ab362d11d" title=" " alt="" coords="1202,283,1359,311"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="1425,313,1360,308,1359,303,1430,312"/>
+<area shape="rect" id="Node000010" href="$classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="1166,335,1395,363"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="1425,335,1395,340,1395,335,1430,334"/>
+<area shape="rect" id="Node000024" href="$testQMSettings_8cpp.html#ac5574a16f7c6101550a4551672cf4a9c" title=" " alt="" coords="1254,387,1307,415"/>
+<area shape="poly" id="edge24_Node000001_Node000024" title=" " alt="" coords="1486,343,1395,377,1308,398,1307,393,1394,372,1481,344"/>
+<area shape="rect" id="Node000025" href="$testHybridSetup_8cpp.html#a4c26b017d03173c83e3b0dc6c7fdc1a7" title=" " alt="" coords="1246,439,1315,467"/>
+<area shape="poly" id="edge25_Node000001_Node000025" title=" " alt="" coords="1510,347,1459,391,1396,429,1355,443,1316,451,1315,446,1353,438,1394,424,1456,386,1505,349"/>
+<area shape="rect" id="Node000026" href="$classsetup_1_1HybridSetup.html#aece3f9da46049f09c2c0a60cdfbc0741" title="Check if chosen QM method is available for hybrid type calculations." alt="" coords="1204,516,1357,561"/>
+<area shape="poly" id="edge26_Node000001_Node000026" title=" " alt="" coords="1517,349,1466,414,1432,449,1396,480,1366,501,1334,518,1333,513,1363,496,1393,476,1429,445,1462,411,1512,351"/>
+<area shape="rect" id="Node000003" href="$classExternalQMRunnerTest.html#a59e5d440eccada3e2a4e0f4b0ff0499e" title=" " alt="" coords="932,5,1102,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1176,62,1103,48,1102,43,1181,62"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1ExternalQMRunner.html#aba331cf87a2e37ef6d081075f24e2bf1" title="run the qm engine" alt="" coords="916,74,1118,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="1176,86,1119,89,1118,84,1181,85"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="1176,128,1076,105,1076,99,1181,127"/>
+<area shape="rect" id="Node000006" href="$classExternalQMRunnerTest.html#a3bc2072bc953c4ce966664117a680ced" title=" " alt="" coords="932,125,1102,170"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1176,151,1103,152,1102,147,1181,150"/>
+<area shape="rect" id="Node000009" href="$perfDftbRunnerFiles_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="990,194,1044,222"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="1184,280,1165,274,1150,265,1140,255,1131,246,1117,237,1080,223,1045,214,1045,209,1081,218,1120,232,1134,242,1144,251,1154,261,1168,269,1189,280"/>
+<area shape="rect" id="Node000011" href="$classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="933,246,1101,274"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="1182,330,1165,325,1141,307,1117,289,1086,277,1086,271,1120,284,1144,302,1168,320,1188,330"/>
+<area shape="rect" id="Node000019" href="$testQMSetup_8cpp.html#ade72ba39a7b2972913cc838febc6199e" title=" " alt="" coords="990,298,1044,326"/>
+<area shape="poly" id="edge19_Node000010_Node000019" title=" " alt="" coords="1160,333,1045,318,1044,313,1166,332"/>
+<area shape="rect" id="Node000020" href="$testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="990,350,1044,378"/>
+<area shape="poly" id="edge20_Node000010_Node000020" title=" " alt="" coords="1148,357,1045,365,1044,360,1154,356"/>
+<area shape="rect" id="Node000021" href="$testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="990,402,1044,430"/>
+<area shape="poly" id="edge21_Node000010_Node000021" title=" " alt="" coords="1204,366,1167,378,1119,392,1045,411,1044,406,1118,386,1166,373,1199,368"/>
+<area shape="rect" id="Node000022" href="$testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="990,454,1044,482"/>
+<area shape="poly" id="edge22_Node000010_Node000022" title=" " alt="" coords="1180,368,1168,378,1153,393,1145,409,1136,427,1120,443,1082,460,1045,468,1044,463,1080,455,1117,439,1132,423,1140,407,1148,390,1165,374,1175,370"/>
+<area shape="rect" id="Node000023" href="$testQMSetup_8cpp.html#af11b99e79f557ca87e47ad129721b524" title=" " alt="" coords="990,506,1044,534"/>
+<area shape="poly" id="edge23_Node000010_Node000023" title=" " alt="" coords="1175,370,1168,378,1156,391,1149,405,1145,435,1140,465,1133,480,1120,495,1102,507,1083,515,1045,522,1044,516,1081,509,1100,502,1117,491,1129,477,1135,463,1139,434,1144,403,1151,388,1165,374,1170,372"/>
+<area shape="rect" id="Node000012" href="$namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="734,255,858,283"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="915,264,859,269,858,264,920,263"/>
+<area shape="rect" id="Node000013" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="530,324,676,352"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="739,290,645,326,643,322,743,287"/>
+<area shape="rect" id="Node000018" href="$testQMSetup_8cpp.html#a6bf1e0efafea3b7125043e2c9ca94645" title=" " alt="" coords="576,255,630,283"/>
+<area shape="poly" id="edge18_Node000012_Node000018" title=" " alt="" coords="716,270,631,272,630,266,721,268"/>
+<area shape="rect" id="Node000014" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,324,482,352"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="512,339,484,341,482,336,517,338"/>
+<area shape="rect" id="Node000015" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,324,244,352"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="274,340,245,341,243,336,279,337"/>
+<area shape="rect" id="Node000016" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,298,60,326"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="90,324,61,319,59,314,94,321"/>
+<area shape="rect" id="Node000017" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,350,60,378"/>
+<area shape="poly" id="edge17_Node000015_Node000017" title=" " alt="" coords="90,355,62,361,59,357,94,351"/>
+<area shape="rect" id="Node000027" href="$classsetup_1_1HybridSetup.html#a81c880d06d1396655908b6eb0fa21af5" title="setup Hybrid&#45;MD" alt="" coords="944,557,1090,602"/>
+<area shape="poly" id="edge27_Node000026_Node000027" title=" " alt="" coords="1191,552,1091,571,1090,566,1186,553"/>
+<area shape="rect" id="Node000028" href="$namespacesetup.html#aa14c54b2ab4ae12626428ffd9a74f95c" title="wrapper to build HybridSetup object and call setup" alt="" coords="724,419,868,447"/>
+<area shape="poly" id="edge28_Node000027_Node000028" title=" " alt="" coords="928,552,915,547,881,524,851,497,808,450,810,445,855,493,885,519,917,543,933,553"/>
+<area shape="rect" id="Node000031" href="$testHybridSetup_8cpp.html#a4db0516f187aecb7b7a04f9ae48a8ff0" title=" " alt="" coords="762,539,830,567"/>
+<area shape="poly" id="edge32_Node000027_Node000031" title=" " alt="" coords="926,569,830,560,830,554,932,569"/>
+<area shape="rect" id="Node000032" href="$testHybridSetup_8cpp.html#a3d25e7eba3274502eac43b1c7330efed" title=" " alt="" coords="762,591,830,619"/>
+<area shape="poly" id="edge33_Node000027_Node000032" title=" " alt="" coords="932,590,831,604,830,598,926,590"/>
+<area shape="poly" id="edge29_Node000028_Node000013" title=" " alt="" coords="749,412,632,355,633,350,755,412"/>
+<area shape="rect" id="Node000029" href="$testHybridSetup_8cpp.html#ae59a994b2f7816e301e777ab6fa597d9" title=" " alt="" coords="569,411,637,439"/>
+<area shape="poly" id="edge30_Node000028_Node000029" title=" " alt="" coords="705,430,638,429,637,424,710,429"/>
+<area shape="rect" id="Node000030" href="$testHybridSetup_8cpp.html#a1f12b2aed7f3a7dbd63d9dfcdcbfeca4" title=" " alt="" coords="569,463,637,491"/>
+<area shape="poly" id="edge31_Node000028_Node000030" title=" " alt="" coords="715,451,638,472,637,467,720,450"/>
+</map>

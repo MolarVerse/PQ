@@ -1,0 +1,5 @@
+<map id="engine::HybridMDEngine::_calculateGlobalSmoothingFactor" name="engine::HybridMDEngine::_calculateGlobalSmoothingFactor">
+<area shape="rect" id="Node000001" title="Calculate the global smoothing factor for &quot;exact&quot; smoothing." alt="" coords="5,5,252,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Engine.html#a3de2559488f0ddc5db3af0dd8cc73a52" title="get the reference to the simulation box" alt="" coords="300,14,541,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="252,25,287,28,281,28,252,30"/>
+</map>

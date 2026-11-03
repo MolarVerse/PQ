@@ -1,0 +1,9 @@
+<map id="configurator::HybridConfigurator::deactivateSmoothingMolecules" name="configurator::HybridConfigurator::deactivateSmoothingMolecules">
+<area shape="rect" id="Node000001" title="Deactivate specific smoothing molecules by their indices." alt="" coords="5,36,240,81"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBoxView.html#a296966f2d8061b780b5cd28fea32585a" title="get all molecules in the specified hybrid zone using range&#45;based filtering" alt="" coords="288,36,491,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,56,274,58,269,59,240,61"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="539,5,742,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="491,43,521,42,526,42,492,49"/>
+<area shape="rect" id="Node000004" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="584,74,697,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="492,68,571,79,566,79,491,73"/>
+</map>

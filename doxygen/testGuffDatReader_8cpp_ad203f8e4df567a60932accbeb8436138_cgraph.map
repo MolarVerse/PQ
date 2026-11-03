@@ -1,0 +1,13 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests the isNeeded function" alt="" coords="5,54,74,82"/>
+<area shape="rect" id="Node000002" href="$namespaceinput_1_1guffdat.html#a9bb390792aa642105b6ff2aff1085a9f" title="checks wether reading the guff.dat is necessary or not" alt="" coords="126,19,303,47"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,59,128,49,124,52,75,63"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="122,75,307,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,71,109,77,104,80,75,76"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="364,5,549,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="303,28,351,29,346,31,304,34"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="363,75,550,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="307,94,350,97,344,97,308,100"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="355,144,558,189"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="295,117,364,139,359,139,295,123"/>
+</map>

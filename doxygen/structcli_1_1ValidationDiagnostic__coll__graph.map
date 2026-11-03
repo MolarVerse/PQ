@@ -1,0 +1,11 @@
+<map id="cli::ValidationDiagnostic" name="cli::ValidationDiagnostic">
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,289,281,362"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,144,135,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,214,104,240,122,264,135,278,130,278,117,267,99,243,86,219"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="159,144,235,216"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,214,199,273,194,271,195,218"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="133,5,261,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="198,107,199,145,194,143,196,112"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="259,144,391,216"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="313,214,300,243,283,267,269,281,266,277,279,264,296,240,309,218"/>
+</map>

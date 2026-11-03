@@ -1,0 +1,13 @@
+<map id="/home/runner/work/PQ/PQ/include/input/parameterFileReader/nonCoulombicsSection.hpp" name="/home/runner/work/PQ/PQ/include/input/parameterFileReader/nonCoulombicsSection.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="7,5,278,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,191,64,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,70,58,90,38,116,30,146,31,176,26,175,25,145,33,114,54,87,83,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="221,191,283,218"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,65,231,87,252,114,260,145,259,177,255,174,255,146,247,116,227,90,202,70"/>
+<area shape="rect" id="Node000004" href="$parameterFileSection_8hpp.html" title=" " alt="" coords="48,115,237,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,65,145,100,140,98,141,70"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="126,143,68,184,65,180,121,143"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="163,141,222,181,217,182,161,146"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="111,191,174,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="144,141,145,176,140,174,141,145"/>
+</map>

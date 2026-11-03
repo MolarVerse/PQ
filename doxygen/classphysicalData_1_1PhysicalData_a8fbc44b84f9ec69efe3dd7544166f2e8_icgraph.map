@@ -1,0 +1,21 @@
+<map id="physicalData::PhysicalData::makeAverages" name="physicalData::PhysicalData::makeAverages">
+<area shape="rect" id="Node000001" title="calculates the average of all physicalData of last steps" alt="" coords="858,88,1057,132"/>
+<area shape="rect" id="Node000002" href="$namespacephysicalData.html#a96c0aa0f4fec4b993e0512ff0eb63b10" title="calculate the mean of a vector of physicalData" alt="" coords="622,5,773,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="895,80,809,47,771,36,772,31,811,42,900,81"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1HessianEngine.html#ab27e35829fa761f109759cbb70c1e4d0" title="Writes output files for the Hessian engine." alt="" coords="613,57,782,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="839,96,783,92,783,86,845,96"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1MDEngine.html#a9dbec16e825f8e48ade490939cac623f" title="Writes output files." alt="" coords="585,125,810,153"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="840,123,810,129,810,124,845,122"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1OptEngine.html#a11e761e6a2b3a0137798a01d49ab545d" title="Writes output files." alt="" coords="623,177,772,222"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="885,138,811,167,772,180,771,174,809,162,880,139"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1HessianEngine.html#a7cb3ae0150c662886e24f3aeee0e54a2" title=" " alt="" coords="368,57,537,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="595,80,538,82,537,77,600,79"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1HessianEngine.html#a6aab0fbfa97a93ee0eb0c236db640c4a" title=" " alt="" coords="122,65,320,93"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="350,80,321,82,320,77,355,79"/>
+<area shape="rect" id="Node000006" href="$testOptimizerSetup_8cpp.html#add470e00111eb6b85ec2aa3e032d9634" title=" " alt="" coords="5,65,74,93"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="104,81,75,82,73,77,108,78"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1MDEngine.html#a1b12dc16a8437145f083928cbc9a8148" title="Run the simulation for numberOfSteps steps." alt="" coords="368,125,537,153"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="567,139,538,142,537,137,573,139"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1OptEngine.html#ad8f53038037a343b41cdc75d1d47382d" title="run the optimizer" alt="" coords="368,185,537,213"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="605,199,538,202,538,197,611,199"/>
+</map>

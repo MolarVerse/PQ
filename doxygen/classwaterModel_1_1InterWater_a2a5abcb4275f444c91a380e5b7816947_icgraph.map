@@ -1,0 +1,16 @@
+<map id="waterModel::InterWater::calculateQMMMForces" name="waterModel::InterWater::calculateQMMMForces">
+<area shape="rect" id="Node000001" title="Dispatch inter&#45;water QMMM force calculations via the active strategy." alt="" coords="713,105,890,150"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#a8d924cf4a3d0acb33ca0440533d416de" title="Apply exact smoothing algorithm for QM/MM boundary treatment." alt="" coords="476,5,661,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="740,98,664,65,636,53,636,48,666,60,745,98"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1QMMMMDEngine.html#ad105ce5b4a1146271a41b143dcd14ce7" title="Apply hotspot smoothing algorithm for QM/MM boundary treatment." alt="" coords="472,75,665,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="696,114,666,112,666,107,701,114"/>
+<area shape="rect" id="Node000006" href="$testWaterModels_8cpp.html#aa8d9e4a500f26a153480717ed26c2311" title=" " alt="" coords="542,143,595,171"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="701,140,596,156,596,151,696,141"/>
+<area shape="rect" id="Node000007" href="$testWaterModels_8cpp.html#a3fc0894747cf69286de28a3599013861" title=" " alt="" coords="542,195,595,223"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="736,156,666,185,596,205,595,200,664,180,731,157"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMMMMDEngine.html#a58d17897c3573c25f6a815086f36ada1" title="Apply the selected smoothing method for QM/MM boundary treatment." alt="" coords="239,40,424,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="458,44,425,51,424,46,463,43"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,40,191,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="221,63,192,65,190,60,226,61"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="454,81,425,79,424,73,459,80"/>
+</map>

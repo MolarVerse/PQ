@@ -1,0 +1,10 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,57,59,85"/>
+<area shape="rect" id="Node000002" href="$namespacekernel.html#af7ad1d9be265abf580d5717b5b7f13eb" title="Calculate the distance vector between two particles." alt="" coords="136,5,252,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,60,106,43,133,37,129,40,108,48,60,64"/>
+<area shape="rect" id="Node000003" href="$namespacekernel.html#ac6b8f2a0c0ee09683605dfcffef55704" title="Calculate the distance vector and the squared distance between two particles." alt="" coords="107,57,282,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,69,93,70,89,73,60,74"/>
+<area shape="rect" id="Node000004" href="$namespacelinalg.html#ab23afb58a7b1eab127cd10bdfbbb0597" title=" " alt="" coords="118,133,270,161"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="60,81,152,125,148,128,58,86"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="166,132,161,124,165,115,176,109,194,107,214,109,226,118,220,118,212,114,194,112,178,114,169,119,167,124,171,134"/>
+</map>

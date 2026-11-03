@@ -1,0 +1,13 @@
+<map id="/home/runner/work/PQ/PQ/tests/src/potential/coulomb/testCoulombPotential.cpp" name="/home/runner/work/PQ/PQ/tests/src/potential/coulomb/testCoulombPotential.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="20,5,273,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,109,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,70,83,105,78,102,118,65"/>
+<area shape="rect" id="Node000003" href="$coulombPotential_8hpp.html" title=" " alt="" coords="87,191,251,218"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="152,65,168,176,163,175,149,70"/>
+<area shape="rect" id="Node000005" href="$coulombShiftedPotential_8hpp.html" title=" " alt="" coords="184,115,392,143"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="194,65,257,106,252,107,193,70"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="198,266,257,294"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="181,216,210,254,205,254,178,221"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="269,142,204,185,201,180,264,145"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="287,141,279,178,265,219,246,255,243,251,260,217,274,177,283,145"/>
+</map>

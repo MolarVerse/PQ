@@ -1,0 +1,5 @@
+<map id="TestIntegrator" name="TestIntegrator">
+<area shape="rect" id="Node000001" title="Fixture for integrator tests." alt="" coords="5,126,107,243"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="12,5,101,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,90,59,126,54,125,56,95"/>
+</map>

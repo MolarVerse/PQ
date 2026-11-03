@@ -1,0 +1,7 @@
+<map id="TestableStochasticRescalingManostat" name="TestableStochasticRescalingManostat">
+<area shape="rect" id="Node000001" title=" " alt="" coords="13,643,208,754"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1StochasticRescalingManostat.html" title="StochasticRescalingManostat inherits from Manostat." alt="" coords="5,416,216,595"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,607,113,644,108,642,109,612"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="29,5,192,368"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,380,113,417,108,416,110,386"/>
+</map>

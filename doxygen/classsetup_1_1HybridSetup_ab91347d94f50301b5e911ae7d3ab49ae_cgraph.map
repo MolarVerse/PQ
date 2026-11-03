@@ -1,0 +1,5 @@
+<map id="setup::HybridSetup::setupInnerRegionCenter" name="setup::HybridSetup::setupInnerRegionCenter">
+<area shape="rect" id="Node000001" title="setup inner region center" alt="" coords="5,5,192,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1HybridSettings.html#abe8d7065b3006e32a22f990f24d44ecf" title="get the innerRegionCenter as list of int" alt="" coords="240,5,417,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,25,226,27,221,28,192,30"/>
+</map>

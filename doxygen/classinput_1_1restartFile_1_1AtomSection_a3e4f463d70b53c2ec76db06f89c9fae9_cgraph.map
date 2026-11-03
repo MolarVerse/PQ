@@ -1,0 +1,11 @@
+<map id="input::restartFile::AtomSection::_checkAtomLine" name="input::restartFile::AtomSection::_checkAtomLine">
+<area shape="rect" id="Node000001" title="checks if the next line of the rst file exists &#45; if not an exception is thrown" alt="" coords="5,122,233,166"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1RestartFileSection.html#a73b836ed71579596ce9cb165a83489b2" title=" " alt="" coords="315,5,462,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,119,280,76,303,69,299,72,282,81,177,124"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="281,91,497,136"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,129,268,127,263,128,234,134"/>
+<area shape="rect" id="Node000004" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="289,160,488,187"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="233,154,276,161,271,161,233,159"/>
+<area shape="rect" id="Node000005" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="317,212,461,239"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="184,164,281,196,314,207,308,207,280,201,183,170"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="opt::Optimizer::getPositions" name="opt::Optimizer::getPositions">
+<area shape="rect" id="Node000001" title="get the position in history with negative index offset" alt="" coords="5,14,208,42"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html#a7c69cb7b5eb67f9b5c519e32a516cb0c" title="get history index" alt="" coords="256,5,446,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,25,243,27,237,28,208,30"/>
+</map>

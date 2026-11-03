@@ -1,0 +1,81 @@
+<map id="out::readMessage" name="out::readMessage">
+<area shape="rect" id="Node000001" title="Message to inform about reading a file." alt="" coords="1713,565,1850,593"/>
+<area shape="rect" id="Node000002" href="$classout_1_1LogOutput.html#a0c355f18e511c007ef9ff89a09a429a8" title="write a message to inform about starting to read a file" alt="" coords="1474,535,1665,562"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1695,567,1666,565,1665,560,1700,567"/>
+<area shape="rect" id="Node000003" href="$classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="1497,586,1642,631"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1695,591,1642,601,1642,596,1700,590"/>
+<area shape="rect" id="Node000004" href="$classsetup_1_1RingPolymerSetup.html#a1e7f2574bc878362f4799ecb15e07a20" title="initialize beads for ring polymer simulation" alt="" coords="1215,264,1400,308"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1481,583,1472,576,1454,550,1445,525,1442,500,1443,476,1443,427,1437,401,1423,374,1390,338,1353,311,1354,306,1394,334,1428,371,1442,399,1449,426,1448,476,1448,500,1450,524,1459,547,1476,572,1487,584"/>
+<area shape="rect" id="Node000013" href="$namespaceinput_1_1guffdat.html#a06c3126a46b9729b8a7e81d7fa1e21cb" title="Construct a new Guff Dat Reader:: Guff Dat Reader object." alt="" coords="1210,109,1405,137"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="1481,583,1472,576,1445,534,1434,495,1432,457,1436,419,1441,381,1444,341,1439,299,1423,252,1402,217,1376,186,1327,140,1328,135,1380,182,1406,214,1428,250,1444,297,1449,341,1447,381,1441,420,1437,457,1439,494,1450,532,1476,572,1486,584"/>
+<area shape="rect" id="Node000017" href="$namespaceinput.html#aca17e7eee014a70cfa8a822976c3c85f" title="wrapper function to construct InputFileReader and call read() and postProcess()" alt="" coords="1234,384,1381,412"/>
+<area shape="poly" id="edge17_Node000003_Node000017" title=" " alt="" coords="1480,579,1472,576,1421,536,1377,490,1318,415,1319,410,1381,486,1425,532,1475,572,1486,580"/>
+<area shape="rect" id="Node000021" href="$namespaceinput_1_1intraNonBondedReader.html#a21a6f65fde55ed3433bfa28ed9944910" title="construct IntraNonBondedReader object and read the file" alt="" coords="1201,552,1414,596"/>
+<area shape="poly" id="edge22_Node000003_Node000021" title=" " alt="" coords="1480,597,1415,591,1415,585,1485,597"/>
+<area shape="rect" id="Node000024" href="$namespaceinput_1_1molDescriptor.html#a37d86ab1a1c0a46847e55180c09ae352" title="wrapper to construct MoldescriptorReader and read moldescriptor file" alt="" coords="1230,621,1385,666"/>
+<area shape="poly" id="edge26_Node000003_Node000024" title=" " alt="" coords="1479,621,1386,636,1385,630,1484,620"/>
+<area shape="rect" id="Node000028" href="$namespaceinput_1_1parameterFile.html#a004440cd308609ad03a653c1439f2330" title="constructs a ParameterFileReader and reads parameter file" alt="" coords="1231,698,1384,743"/>
+<area shape="poly" id="edge31_Node000003_Node000028" title=" " alt="" coords="1513,637,1427,680,1376,700,1375,695,1425,675,1508,639"/>
+<area shape="rect" id="Node000031" href="$namespaceinput_1_1restartFile.html#a10304bceba95a767d00655f9bd722f01" title="wrapper function to construct a RestartFileReader object and call the read function" alt="" coords="1243,782,1372,827"/>
+<area shape="poly" id="edge35_Node000003_Node000031" title=" " alt="" coords="1544,641,1493,701,1461,731,1427,757,1373,786,1371,781,1424,753,1458,727,1489,697,1539,644"/>
+<area shape="rect" id="Node000035" href="$namespaceinput_1_1topology.html#a3d1f97a3ae5763b555062e9edfb7481e" title="wrapper to construct a TopologyReader and reads topology file" alt="" coords="1189,881,1426,909"/>
+<area shape="poly" id="edge40_Node000003_Node000035" title=" " alt="" coords="1555,644,1535,690,1507,742,1471,794,1427,841,1392,866,1354,883,1353,878,1389,861,1424,837,1466,791,1502,739,1530,688,1551,647"/>
+<area shape="rect" id="Node000005" href="$classsetup_1_1RingPolymerSetup.html#a1166b6fa13b3ce6d5d2498b09571d739" title="setup a ring polymer simulation" alt="" coords="956,212,1141,256"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1197,265,1142,255,1142,250,1202,264"/>
+<area shape="rect" id="Node000006" href="$namespacesetup.html#a6701b2ab9d77ba5e89b591ed352dce0a" title="wrapper to build RingPolymerSetup object and call setup" alt="" coords="724,239,908,266"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="938,244,909,248,908,243,943,241"/>
+<area shape="rect" id="Node000007" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="530,239,676,266"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="706,254,677,255,675,250,711,251"/>
+<area shape="rect" id="Node000012" href="$testRingPolymerSetup_8cpp.html#ae2bb46737d48ec0fef282b3f6d2b573f" title=" " alt="" coords="569,291,637,318"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="739,272,639,299,636,294,743,269"/>
+<area shape="rect" id="Node000008" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,333,482,361"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="545,274,531,282,418,335,415,331,529,277,549,271"/>
+<area shape="rect" id="Node000009" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,409,244,437"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="330,369,218,411,215,407,334,365"/>
+<area shape="rect" id="Node000010" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,383,60,410"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="90,409,62,404,59,399,94,406"/>
+<area shape="rect" id="Node000011" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,435,60,462"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="91,440,62,446,58,442,94,436"/>
+<area shape="poly" id="edge13_Node000013_Node000008" title=" " alt="" coords="1197,141,1142,151,1048,161,967,164,828,163,763,166,694,176,618,196,531,230,491,253,454,281,402,334,398,331,451,277,488,248,529,225,617,191,693,171,762,161,828,158,967,159,1047,156,1141,146,1202,139"/>
+<area shape="rect" id="Node000014" href="$testGuffDatReader_8cpp.html#ae0485960e13529eb6a1a10c3b7152098" title="readGuffdat function testing" alt="" coords="1014,109,1083,137"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1192,124,1084,126,1082,121,1197,122"/>
+<area shape="rect" id="Node000015" href="$testGuffDatReader_8cpp.html#a06b0f294d1aa10fa96a6e60f62cc5037" title=" " alt="" coords="1014,5,1083,33"/>
+<area shape="poly" id="edge15_Node000013_Node000015" title=" " alt="" coords="1263,102,1206,76,1140,48,1084,30,1083,25,1142,43,1208,71,1268,101"/>
+<area shape="rect" id="Node000016" href="$testGuffDatReader_8cpp.html#a0a56c765263e849c5a5e62c37a6ee88e" title=" " alt="" coords="1014,57,1083,85"/>
+<area shape="poly" id="edge16_Node000013_Node000016" title=" " alt="" coords="1217,106,1084,81,1083,75,1222,105"/>
+<area shape="poly" id="edge18_Node000017_Node000009" title=" " alt="" coords="1216,413,1034,439,926,448,817,451,602,451,407,445,245,432,243,427,407,439,602,446,817,446,925,442,1034,433,1221,412"/>
+<area shape="rect" id="Node000018" href="$testInputFileReader_8cpp.html#a6c0709af0c4df98cd557a673d9cfb142" title=" " alt="" coords="1014,332,1083,360"/>
+<area shape="poly" id="edge19_Node000017_Node000018" title=" " alt="" coords="1217,381,1083,355,1083,350,1223,380"/>
+<area shape="rect" id="Node000019" href="$testInputFileReader_8cpp.html#a1d0e9f7baa236db4118595ab07d460ad" title=" " alt="" coords="1014,384,1083,412"/>
+<area shape="poly" id="edge20_Node000017_Node000019" title=" " alt="" coords="1216,399,1084,400,1083,395,1221,397"/>
+<area shape="rect" id="Node000020" href="$testInputFileReader_8cpp.html#a4b66b7ef72f02329266cae4f2741b06c" title=" " alt="" coords="1014,280,1083,308"/>
+<area shape="poly" id="edge21_Node000017_Node000020" title=" " alt="" coords="1262,377,1206,351,1140,323,1084,305,1083,300,1142,318,1208,346,1268,376"/>
+<area shape="rect" id="Node000022" href="$namespacesetup.html#ad4db282b92cbef07595e5279159209c7" title="reads all the files needed for the simulation" alt="" coords="986,745,1111,773"/>
+<area shape="poly" id="edge23_Node000021_Node000022" title=" " alt="" coords="1195,604,1191,610,1179,625,1172,640,1168,671,1164,703,1156,719,1143,735,1112,752,1110,747,1140,730,1152,716,1159,701,1163,670,1167,638,1174,622,1187,607,1191,607"/>
+<area shape="rect" id="Node000023" href="$testIntraNonBondedReader_8cpp.html#a7336adc80c06905f7b3381897a0fa8b0" title=" " alt="" coords="1014,485,1083,513"/>
+<area shape="poly" id="edge25_Node000021_Node000023" title=" " alt="" coords="1210,547,1083,511,1083,506,1216,546"/>
+<area shape="poly" id="edge24_Node000022_Node000008" title=" " alt="" coords="971,740,955,735,866,689,778,638,615,528,484,430,405,364,405,359,488,425,618,524,781,633,868,685,957,730,976,740"/>
+<area shape="poly" id="edge27_Node000024_Node000022" title=" " alt="" coords="1219,671,1191,688,1177,700,1168,711,1158,723,1143,735,1112,748,1110,743,1140,730,1154,719,1163,708,1173,696,1188,684,1214,673"/>
+<area shape="rect" id="Node000025" href="$testMoldescriptorReader_8cpp.html#a6db341149231cf584ab954b8db613751" title="tests if non coulombic force field is activated but no global can der Waals parameter given" alt="" coords="1014,537,1083,565"/>
+<area shape="poly" id="edge28_Node000024_Node000025" title=" " alt="" coords="1213,619,1188,611,1164,595,1140,580,1083,561,1083,556,1142,575,1167,591,1191,606,1219,619"/>
+<area shape="rect" id="Node000026" href="$testMoldescriptorReader_8cpp.html#a13aadd66e4fe1a9c111a8d622d1f411f" title="tests the optional QM reference energy line of a molecule" alt="" coords="1014,589,1083,617"/>
+<area shape="poly" id="edge29_Node000024_Node000026" title=" " alt="" coords="1213,629,1083,611,1083,606,1218,629"/>
+<area shape="rect" id="Node000027" href="$testMoldescriptorReader_8cpp.html#ab8a9487e27dca72252c84a9f3640d235" title="test reading of special types" alt="" coords="1014,641,1083,669"/>
+<area shape="poly" id="edge30_Node000024_Node000027" title=" " alt="" coords="1212,648,1084,656,1083,651,1217,647"/>
+<area shape="poly" id="edge32_Node000028_Node000022" title=" " alt="" coords="1213,735,1112,753,1111,747,1218,734"/>
+<area shape="rect" id="Node000029" href="$testParameterFileReader_8cpp.html#acb32022574e0a9a910f7967b2a268aca" title=" " alt="" coords="1014,797,1083,825"/>
+<area shape="poly" id="edge33_Node000028_Node000029" title=" " alt="" coords="1239,748,1142,787,1084,805,1083,800,1140,782,1234,750"/>
+<area shape="rect" id="Node000030" href="$testParameterFileReader_8cpp.html#a74b5878252bf400064c98ec2b6cc7e01" title="tests the free readParameterFile function end to end, including that it is a no&#45;op when the force fie..." alt="" coords="1014,693,1083,721"/>
+<area shape="poly" id="edge34_Node000028_Node000030" title=" " alt="" coords="1212,716,1084,712,1083,706,1218,715"/>
+<area shape="poly" id="edge36_Node000031_Node000022" title=" " alt="" coords="1225,791,1111,773,1111,767,1230,791"/>
+<area shape="rect" id="Node000032" href="$namespacebenchInputReaders.html#a2b22fa7b51c3adbf281069cdc81de4e1" title=" " alt="" coords="961,901,1136,929"/>
+<area shape="poly" id="edge37_Node000031_Node000032" title=" " alt="" coords="1256,834,1201,865,1142,891,1106,903,1105,898,1140,886,1199,860,1251,835"/>
+<area shape="rect" id="Node000034" href="$testRestartFileReader_8cpp.html#adfbc630ae1d431fbc9bcafd81f973417" title="test full read restart file function" alt="" coords="1014,849,1083,877"/>
+<area shape="poly" id="edge39_Node000031_Node000034" title=" " alt="" coords="1231,822,1084,858,1083,853,1226,823"/>
+<area shape="rect" id="Node000033" href="$perfInputReadersN100_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="789,901,843,929"/>
+<area shape="poly" id="edge38_Node000032_Node000033" title=" " alt="" coords="943,915,843,918,843,913,949,915"/>
+<area shape="poly" id="edge41_Node000035_Node000022" title=" " alt="" coords="1250,874,1219,861,1188,841,1173,827,1164,813,1155,800,1140,788,1111,775,1112,769,1143,784,1159,797,1168,810,1177,823,1191,837,1222,857,1255,875"/>
+<area shape="poly" id="edge42_Node000035_Node000032" title=" " alt="" coords="1176,905,1137,911,1137,906,1171,906"/>
+<area shape="rect" id="Node000036" href="$testTopologyReader_8cpp.html#a862f69f732782622a8993b25e3d1a0d2" title="tests the readTopologyFile function" alt="" coords="1014,953,1083,981"/>
+<area shape="poly" id="edge43_Node000035_Node000036" title=" " alt="" coords="1243,913,1084,960,1083,955,1238,914"/>
+</map>

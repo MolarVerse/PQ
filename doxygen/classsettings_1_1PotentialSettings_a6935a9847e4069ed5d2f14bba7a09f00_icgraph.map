@@ -1,0 +1,19 @@
+<map id="settings::PotentialSettings::setNonCoulombType" name="settings::PotentialSettings::setNonCoulombType">
+<area shape="rect" id="Node000001" title="Set the nonCoulomb type as enum in the PotentialSettings class." alt="" coords="452,191,644,235"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1MMInputParser.html#acf655768e2dcdccac80b0eb87d69ee27" title="Add the key for specifying the non&#45;Coulombic interaction type." alt="" coords="213,5,404,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="519,178,469,121,437,91,403,65,383,53,382,48,405,60,441,87,473,118,524,179"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#a305d676f05de22cdb36ad1c15753e95a" title="processes the nonCoulombics header of the parameter file" alt="" coords="219,74,398,136"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="481,184,403,150,379,139,379,134,405,145,486,184"/>
+<area shape="rect" id="Node000006" href="$classTestGuffDatReader.html#a5d187cc42f8e73a8a54cb7c671fc6589" title=" " alt="" coords="233,160,384,205"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="434,199,385,195,384,189,439,198"/>
+<area shape="rect" id="Node000007" href="$testGuffDatReader_8cpp.html#aff5190694261227c04001a648648560e" title=" " alt="" coords="274,228,342,256"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="434,227,344,241,343,236,439,226"/>
+<area shape="rect" id="Node000008" href="$testGuffDatReader_8cpp.html#a78c2f51ab5b428dff32783682abca19b" title="tests parseLine function" alt="" coords="274,280,342,308"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="479,241,405,270,344,288,342,283,403,265,474,242"/>
+<area shape="rect" id="Node000009" href="$testNonCoulombicTypesSection_8cpp.html#a2622761368e1646441702d52a2476432" title=" " alt="" coords="274,332,342,360"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="514,245,464,286,405,322,374,334,344,343,343,337,372,329,403,317,461,282,509,247"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1MMInputParser.html#acfbb7a825009ee3fab7ccb5bd864bcf9" title="Construct a new Input File Parser Force Field:: Input File Parser Force Field object." alt="" coords="5,5,165,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="195,29,166,30,164,25,199,26"/>
+<area shape="rect" id="Node000005" href="$testNonCoulombicTypesSection_8cpp.html#a534c67cb63fcb3169b46f56bac461604" title=" " alt="" coords="51,91,119,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="201,107,121,107,119,103,205,103"/>
+</map>

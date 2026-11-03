@@ -1,0 +1,5 @@
+<map id="input::InputKeyBase" name="input::InputKeyBase">
+<area shape="rect" id="Node000001" title="type&#45;erased base for InputKey&lt;T&gt;, so keys of different T can live in the same InputRegistry" alt="" coords="8,5,149,189"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputKey.html" title="owns key identity, default/actual value storage, and the allowed&#45;values restriction for a single inpu..." alt="" coords="5,237,152,712"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,202,81,238,76,237,78,207"/>
+</map>

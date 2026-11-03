@@ -1,0 +1,7 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests parsing the &quot;box_file&quot; command" alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classOutputFileSettings.html#a60bc7efdaef6cea666966a07d0a56905" title="get the box file name" alt="" coords="133,5,274,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,120,44,116,47,75,58"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="122,75,286,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,67,109,75,104,77,74,72"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="linalg::cos" name="linalg::cos">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,68,93,96"/>
+<area shape="rect" id="Node000002" href="$namespacelinalg.html#a8b09ed67f3c2927e7d78dd44342b9f72" title=" " alt="" coords="141,29,228,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,67,128,59,123,61,94,72"/>
+<area shape="rect" id="Node000003" href="$namespacelinalg.html#a7814c037de499470217a0b8e09a8a5d1" title=" " alt="" coords="141,105,228,133"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="93,91,129,103,123,104,93,97"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="160,28,156,20,159,11,169,5,184,3,200,5,211,14,205,14,198,10,184,8,171,10,164,14,162,20,165,29"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="160,104,156,96,159,87,169,81,184,79,200,81,210,90,205,89,198,86,184,84,171,86,164,90,162,96,165,106"/>
+</map>

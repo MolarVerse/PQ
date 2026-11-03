@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1HybridSettings.html#abe8d7065b3006e32a22f990f24d44ecf" title="get the innerRegionCenter as list of int" alt="" coords="107,5,284,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,54,94,48,90,52,60,59"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#a6118741318c8a4ed3e475383aa676ee7" title="set the innerRegionCenter in the settings" alt="" coords="107,75,284,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,65,94,74,89,76,59,71"/>
+</map>

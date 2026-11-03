@@ -1,0 +1,53 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests if there are to many atoms per moltype" alt="" coords="5,789,74,817"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#ab208caefa91969057370734e127646b5" title="read moldescriptor file" alt="" coords="122,746,324,790"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,794,109,788,105,792,75,799"/>
+<area shape="rect" id="Node000024" href="$classsettings_1_1FileSettings.html#a324e98d13c3d3552a3be2ec9b6d75635" title="set the mol descriptor file name" alt="" coords="122,815,324,860"/>
+<area shape="poly" id="edge27_Node000001_Node000024" title=" " alt="" coords="73,807,109,814,104,817,74,812"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#afdb75904b30e77149b5650fbfa625b03" title="checks that either no moltype or every moltype has a QM reference energy" alt="" coords="372,395,590,456"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="227,744,243,689,271,615,313,536,339,499,370,466,376,464,373,468,374,470,344,502,317,539,276,617,248,691,232,747"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#a522982c6c3b2a68d36a37ad66db3f8ec" title="process molecule in moldescriptor file" alt="" coords="399,480,563,542"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="245,743,435,553,440,553,249,747"/>
+<area shape="rect" id="Node000017" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="648,729,848,757"/>
+<area shape="poly" id="edge23_Node000002_Node000017" title=" " alt="" coords="323,761,635,746,631,750,324,766"/>
+<area shape="rect" id="Node000021" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="676,781,820,809"/>
+<area shape="poly" id="edge24_Node000002_Node000021" title=" " alt="" coords="324,771,662,788,658,792,324,776"/>
+<area shape="rect" id="Node000022" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="644,832,852,877"/>
+<area shape="poly" id="edge26_Node000002_Node000022" title=" " alt="" coords="324,782,631,834,627,837,323,787"/>
+<area shape="rect" id="Node000023" href="$namespaceutilities.html#ae318e9709a69a1fc3f460347a5fbfcc7" title="converts a string to an unsigned long long int" alt="" coords="404,881,558,909"/>
+<area shape="poly" id="edge25_Node000002_Node000023" title=" " alt="" coords="304,788,326,801,341,816,350,832,359,847,374,861,397,875,392,874,370,865,354,850,346,834,337,819,322,805,303,794"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#a5b19fbaab30cb8c795c42bb110ba8565" title="convert external to internal atom types" alt="" coords="646,626,850,705"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="526,540,580,576,640,613,648,619,642,619,637,617,577,581,526,545"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1MoleculeType.html#a37952fab44ed1faa6bf1331ed71fa7a5" title="get the number of atoms in the molecule" alt="" coords="926,290,1092,334"/>
+<area shape="poly" id="edge16_Node000004_Node000010" title=" " alt="" coords="562,488,588,466,603,445,612,423,619,379,614,335,604,292,595,249,593,207,597,187,605,167,618,147,637,127,664,107,690,94,716,88,743,87,770,92,798,100,859,127,904,157,941,196,971,237,993,277,988,276,967,240,937,199,900,161,856,132,796,105,768,97,742,93,717,93,692,99,667,112,640,132,622,150,610,169,602,188,598,208,600,249,609,291,619,334,624,379,617,424,607,447,592,470,565,492"/>
+<area shape="rect" id="Node000011" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#a76ab03c7e9666c69bd632ed470d3d790" title="process the optional QM reference energy line of a molecule" alt="" coords="638,5,858,67"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="562,488,588,466,605,442,616,418,625,370,622,324,613,278,604,232,600,184,609,135,620,110,636,84,647,76,643,80,640,87,625,112,614,137,605,185,609,231,618,277,628,324,631,371,621,419,609,444,592,470,566,492"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1MoleculeType.html#a01c9405e4cde289fbb616c5b461a9b2b" title="adds an atom name to the atomNames vector" alt="" coords="665,142,831,186"/>
+<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="562,488,588,466,609,432,616,399,616,366,611,333,606,300,605,266,614,232,636,197,654,185,650,189,640,201,619,234,611,267,611,299,616,332,621,365,622,400,614,434,592,470,565,492"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1MoleculeType.html#adaa5ee08c79fe30771633cb3c07ec8f0" title="adds an external atom type to the externalAtomTypes vector" alt="" coords="662,211,834,256"/>
+<area shape="poly" id="edge13_Node000004_Node000014" title=" " alt="" coords="562,487,588,466,605,441,612,417,613,392,611,368,609,343,610,317,618,292,636,266,651,257,647,261,640,270,623,294,616,318,614,343,616,367,618,392,617,418,609,444,592,470,565,491"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1MoleculeType.html#a46ce282ecb946cfd7fb071941504efb8" title="adds an external global VDW type to the externalGlobalVDWTypes vector" alt="" coords="642,280,854,325"/>
+<area shape="poly" id="edge14_Node000004_Node000015" title=" " alt="" coords="562,485,588,466,601,450,607,434,611,402,615,369,623,352,636,336,644,332,640,336,640,339,627,355,621,370,616,403,612,436,605,453,592,470,565,490"/>
+<area shape="rect" id="Node000016" href="$classmolsys_1_1MoleculeType.html#addc730b483a5f6e4eafc57fdffb762d5" title="adds a partial charge to the partialCharges vector" alt="" coords="665,350,831,394"/>
+<area shape="poly" id="edge15_Node000004_Node000016" title=" " alt="" coords="562,482,589,466,603,451,612,436,621,420,637,405,653,397,649,401,640,409,625,423,616,438,608,454,592,470,565,486"/>
+<area shape="poly" id="edge17_Node000004_Node000017" title=" " alt="" coords="498,540,522,581,554,628,593,675,640,714,652,723,646,722,637,718,589,679,549,631,518,584,497,545"/>
+<area shape="rect" id="Node000018" href="$classmolsys_1_1MoleculeType.html#a783b830b3f523dd1fb949fb27f739697" title="sets the charge of the molecule" alt="" coords="665,419,831,464"/>
+<area shape="poly" id="edge18_Node000004_Node000018" title=" " alt="" coords="563,487,653,466,648,468,565,492"/>
+<area shape="rect" id="Node000019" href="$classmolsys_1_1MoleculeType.html#a413e6947c98d953eba635d11a082f6e5" title="sets the moltype of the molecule" alt="" coords="665,488,831,533"/>
+<area shape="poly" id="edge19_Node000004_Node000019" title=" " alt="" coords="563,508,653,510,648,512,565,513"/>
+<area shape="rect" id="Node000020" href="$classmolsys_1_1MoleculeType.html#ae7f03f01e7f27ccc4d18324bbe37bc83" title="sets the number of atoms in the molecule" alt="" coords="665,558,831,602"/>
+<area shape="poly" id="edge20_Node000004_Node000020" title=" " alt="" coords="564,530,653,554,648,556,564,535"/>
+<area shape="poly" id="edge21_Node000004_Node000021" title=" " alt="" coords="493,540,515,591,545,652,587,714,612,742,640,766,664,781,659,780,637,770,608,746,582,717,540,655,510,593,491,545"/>
+<area shape="poly" id="edge22_Node000004_Node000022" title=" " alt="" coords="491,540,510,600,539,675,582,752,609,787,640,818,645,825,640,823,637,822,605,791,577,755,534,677,504,602,489,545"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1MoleculeType.html#a0aefbab8fe400ee04f222a9481531db4" title="adds an atom type to the atomTypes vector" alt="" coords="926,527,1092,572"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="836,623,856,613,880,597,904,582,917,579,922,577,907,587,883,601,859,617,838,628"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1MoleculeType.html#acd986de6e980302a2b75e99ac7924566" title="adds an element to the externalToInternalAtomTypes map" alt="" coords="906,596,1112,658"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="850,648,893,644,888,645,851,653"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1MoleculeType.html#a58b1dcfde69ba589282e4cc50babbd94" title="get the external atom type of an atom" alt="" coords="924,682,1094,726"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="850,678,911,689,906,690,850,683"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1MoleculeType.html#aab97d83442c07c4d276810957607fb14" title="get the internal atom type of an atom" alt="" coords="926,751,1092,796"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="833,703,907,736,925,746,920,745,905,741,832,708"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="843,624,856,613,875,589,884,568,891,543,903,514,987,350,991,347,908,516,896,545,889,569,879,592,860,617,846,628"/>
+<area shape="rect" id="Node000012" href="$classmolsys_1_1MoleculeType.html#ae1df49140290274134a3d3e99ca48109" title="sets the QM reference energy of the molecule type" alt="" coords="918,14,1100,58"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="857,34,905,35,900,37,859,39"/>
+</map>

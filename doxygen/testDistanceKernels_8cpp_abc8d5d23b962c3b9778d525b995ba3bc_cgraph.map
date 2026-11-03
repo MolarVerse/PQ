@@ -1,0 +1,14 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,92,59,120"/>
+<area shape="rect" id="Node000002" href="$namespacekernel.html#a431c484a654d37901b2b83319aab307e" title="calculate the squared distance between two particles" alt="" coords="121,14,268,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="48,91,74,71,105,52,125,45,121,49,108,57,77,75,52,94"/>
+<area shape="rect" id="Node000004" href="$namespacekernel.html#af7ad1d9be265abf580d5717b5b7f13eb" title="Calculate the distance vector between two particles." alt="" coords="136,66,252,94"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,100,122,90,119,94,60,104"/>
+<area shape="rect" id="Node000005" href="$namespacekernel.html#ac6b8f2a0c0ee09683605dfcffef55704" title="Calculate the distance vector and the squared distance between two particles." alt="" coords="107,118,282,146"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="58,108,94,114,89,117,60,113"/>
+<area shape="rect" id="Node000006" href="$namespacelinalg.html#ab23afb58a7b1eab127cd10bdfbbb0597" title=" " alt="" coords="118,194,270,222"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="54,118,108,155,157,185,152,186,105,159,52,123"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="330,5,501,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="267,25,317,27,312,29,269,30"/>
+<area shape="poly" id="edge6_Node000006_Node000006" title=" " alt="" coords="166,192,161,185,165,175,176,169,194,167,214,170,226,179,220,178,212,175,194,172,178,174,169,179,167,185,171,194"/>
+</map>

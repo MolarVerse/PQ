@@ -1,0 +1,17 @@
+<map id="exc::BaseException&lt; colorCode, exceptionType &gt;" name="exc::BaseException&lt; colorCode, exceptionType &gt;">
+<area shape="rect" id="Node000001" title="Base class for custom exceptions." alt="" coords="181,524,388,680"/>
+<area shape="rect" id="Node000002" href="$classexc_1_1PQException.html" title="Base class for all custom exceptions in the application." alt="" coords="102,289,238,451"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,462,249,524,244,524,215,467"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,144,108,216"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,226,125,289,119,290,86,232"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="132,144,208,216"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="171,214,173,273,167,272,169,219"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="106,5,234,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="170,107,173,145,167,144,170,112"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="232,144,364,216"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="283,214,256,267,249,277,244,275,252,264,280,219"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="263,334,306,406"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="286,404,287,508,282,506,283,408"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="330,334,543,406"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="416,405,347,512,343,508,411,408"/>
+</map>

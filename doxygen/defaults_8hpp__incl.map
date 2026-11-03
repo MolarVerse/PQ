@@ -1,0 +1,17 @@
+<map id="/home/runner/work/PQ/PQ/include/config/defaults.hpp" name="/home/runner/work/PQ/PQ/include/config/defaults.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="78,5,300,50"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,98,75,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,53,78,93,75,88,151,48"/>
+<area shape="rect" id="Node000003" href="$config_2enums_2convergence_8hpp.html" title=" " alt="" coords="99,98,280,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,48,192,83,187,81,188,53"/>
+<area shape="rect" id="Node000006" href="$unit__types_8hpp.html" title=" " alt="" coords="304,98,421,126"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="236,48,324,90,318,92,235,53"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="45,174,110,201"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="172,126,111,167,108,163,167,127"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="134,174,258,201"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="192,124,196,159,191,157,189,128"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="296,174,414,201"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="363,124,360,160,356,156,359,128"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="438,174,544,201"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="386,124,458,166,452,166,385,129"/>
+</map>

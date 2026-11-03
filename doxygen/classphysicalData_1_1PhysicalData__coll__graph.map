@@ -1,0 +1,12 @@
+<map id="physicalData::PhysicalData" name="physicalData::PhysicalData">
+<area shape="rect" id="Node000001" title="PhysicalData is a class for output data storage." alt="" coords="207,559,439,1145"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,182,60,254"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="28,256,26,310,25,381,33,458,41,497,53,534,81,590,117,644,156,693,198,739,193,740,152,697,112,647,77,593,49,536,36,498,27,459,19,381,20,309,28,251"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="170,182,314,254"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="240,251,238,378,239,456,246,534,247,542,242,541,241,535,234,456,232,378,239,256"/>
+<area shape="rect" id="Node000004" href="$structphysicalData_1_1KineticEnergyVirialTensor.html" title="KineticEnergyVirialTensor is a struct for storing kinetic energy and virial tensors." alt="" coords="530,173,724,262"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="608,260,449,595,444,593,605,264"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="334,5,521,78"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="426,75,390,535,389,543,384,541,385,534,423,79"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="467,75,567,161,562,163,468,80"/>
+</map>

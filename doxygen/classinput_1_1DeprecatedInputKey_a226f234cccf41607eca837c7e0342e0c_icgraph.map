@@ -1,0 +1,5 @@
+<map id="input::DeprecatedInputKey::deprecated" name="input::DeprecatedInputKey::deprecated">
+<area shape="rect" id="Node000001" title="marks the deprecated key as used and prints the deprecation message" alt="" coords="153,5,347,50"/>
+<area shape="rect" id="Node000002" href="$namespaceinput.html#afcc909bda881935add1e11a67d65ce90" title="Adapts a DeprecatedInputKey into an InputFileParser::ParseFunc." alt="" coords="5,14,105,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,28,106,30,105,25,140,27"/>
+</map>

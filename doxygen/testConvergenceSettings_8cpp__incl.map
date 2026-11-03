@@ -1,0 +1,21 @@
+<map id="/home/runner/work/PQ/PQ/tests/src/settings/testConvergenceSettings.cpp" name="/home/runner/work/PQ/PQ/tests/src/settings/testConvergenceSettings.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="73,5,288,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="45,115,148,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,70,121,105,117,102,154,65"/>
+<area shape="rect" id="Node000003" href="$convergenceSettings_8hpp.html" title=" " alt="" coords="172,115,357,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,65,245,103,240,104,208,70"/>
+<area shape="rect" id="Node000004" href="$config_2enums_2convergence_8hpp.html" title=" " alt="" coords="66,191,247,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="248,142,190,184,187,180,243,145"/>
+<area shape="rect" id="Node000007" href="$setting_8hpp.html" title=" " alt="" coords="324,191,418,218"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="284,141,343,182,337,182,283,146"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,266,71,294"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="138,219,73,260,70,256,133,218"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="95,266,218,294"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="158,217,159,252,154,249,155,221"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="242,266,364,294"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="362,218,327,257,324,253,357,220"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="389,266,463,294"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="382,216,410,255,405,253,380,221"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="487,266,578,294"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="401,216,493,260,488,260,400,221"/>
+</map>

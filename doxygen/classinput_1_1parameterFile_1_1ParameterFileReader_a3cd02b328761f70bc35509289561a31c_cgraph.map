@@ -1,0 +1,5 @@
+<map id="input::parameterFile::ParameterFileReader::determineSection" name="input::parameterFile::ParameterFileReader::determineSection">
+<area shape="rect" id="Node000001" title="determines which section of the parameter file the header line belongs to" alt="" coords="5,5,171,67"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="219,14,426,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,34,206,36,200,36,171,39"/>
+</map>

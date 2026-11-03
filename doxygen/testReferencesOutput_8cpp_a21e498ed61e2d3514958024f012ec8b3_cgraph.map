@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,44,59,72"/>
+<area shape="rect" id="Node000002" href="$classReferenceSettings.html#a9d05a4e5b5aa7f2b28fb059d33ab00e4" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="107,5,255,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,50,93,45,89,48,60,55"/>
+<area shape="rect" id="Node000003" href="$testOutputBase_8hpp.html#a6aceb76e11f9c6e96cfbe08dc825c019" title="Reads the entire contents of a file into a string." alt="" coords="154,74,208,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,61,141,77,137,82,59,66"/>
+</map>

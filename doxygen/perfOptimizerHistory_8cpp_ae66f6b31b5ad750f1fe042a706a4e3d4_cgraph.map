@@ -1,0 +1,24 @@
+<map id="main" name="main">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,170,60,197"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html#a8dadd3c59fd7bb74dd3d48296bfd7a9e" title="get the last RMS force in the history" alt="" coords="393,15,600,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="35,169,43,142,57,110,78,78,106,52,142,33,180,20,220,11,260,5,338,4,410,11,405,13,338,9,260,11,221,16,182,25,144,38,109,56,82,81,62,113,48,144,40,170"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1Optimizer.html#ada4f29d3288e27ad4d0f6b277030a293" title="check if the optimizer has converged" alt="" coords="119,66,334,93"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="41,168,68,135,106,104,124,97,120,101,109,109,72,139,46,170"/>
+<area shape="rect" id="Node000006" href="$namespacebenchOptimizers.html#a08b42dfbe10baefb7ce6becffcbd9800" title=" " alt="" coords="126,118,326,145"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="59,172,107,156,143,148,139,151,108,161,62,176"/>
+<area shape="rect" id="Node000007" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="168,170,284,197"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="59,181,154,182,151,186,61,186"/>
+<area shape="rect" id="Node000008" href="$classopt_1_1Optimizer.html#ac0affba81fd6592660e13e58bbd9860c" title="set physical data shared pointer" alt="" coords="113,222,340,249"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="60,191,108,206,143,217,139,219,107,211,61,196"/>
+<area shape="rect" id="Node000009" href="$classopt_1_1Optimizer.html#a6f66eb824810f842e8aac2efb27a1b9a" title="set simulation box shared pointer" alt="" coords="108,274,345,301"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="44,195,72,228,109,259,124,267,119,268,106,263,68,232,43,201"/>
+<area shape="rect" id="Node000010" href="$classopt_1_1Optimizer.html#a380419c44f8bde259b7bba499a5d8675" title="update the optimizer history" alt="" coords="119,326,334,353"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="39,195,63,253,83,285,109,311,119,319,114,318,106,315,79,288,58,256,37,200"/>
+<area shape="poly" id="edge5_Node000003_Node000002" title=" " alt="" coords="303,63,406,45,402,48,305,68"/>
+<area shape="rect" id="Node000004" href="$classopt_1_1Optimizer.html#ad3b3ec28457d5db84595e7a780f4e111" title="get the last energy in the history" alt="" coords="402,67,591,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="334,78,389,79,384,81,335,83"/>
+<area shape="rect" id="Node000005" href="$classopt_1_1Optimizer.html#a08ac28964168e780cbd50321eeb9d753" title="get the last max force in the history" alt="" coords="394,119,600,147"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="300,91,411,115,406,117,300,97"/>
+<area shape="rect" id="Node000011" href="$classopt_1_1Optimizer.html#aef58755ff515583ea26b4c6170ae6c4f" title=" " alt="" coords="398,317,596,362"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="334,337,385,339,379,340,334,342"/>
+</map>

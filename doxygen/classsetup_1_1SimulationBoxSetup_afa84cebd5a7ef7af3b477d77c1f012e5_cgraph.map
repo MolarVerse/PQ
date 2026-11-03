@@ -1,0 +1,5 @@
+<map id="setup::SimulationBoxSetup::checkRcCutoff" name="setup::SimulationBoxSetup::checkRcCutoff">
+<area shape="rect" id="Node000001" title="Checks if the cutoff radius is larger than half of the minimal box dimension." alt="" coords="5,5,203,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="251,5,444,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,25,237,27,232,28,203,30"/>
+</map>

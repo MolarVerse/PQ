@@ -1,0 +1,7 @@
+<map id="ManostatSettings::finalize" name="ManostatSettings::finalize">
+<area shape="rect" id="Node000001" title="finalizes the settings by setting the fixed axis if it was not explicitly set" alt="" coords="5,14,196,42"/>
+<area shape="rect" id="Node000002" href="$classManostatSettings.html#a9a5f9c461380cb265bbabde942ee0546" title="adds the appropriate reference file for the current manostat type to the given reference settings" alt="" coords="244,5,387,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,25,231,27,226,28,196,30"/>
+<area shape="rect" id="Node000003" href="$classReferenceSettings.html#a9d05a4e5b5aa7f2b28fb059d33ab00e4" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="435,5,583,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="387,25,422,28,417,28,387,30"/>
+</map>

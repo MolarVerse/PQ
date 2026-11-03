@@ -1,0 +1,35 @@
+<map id="setup::setupWaterModel" name="setup::setupWaterModel">
+<area shape="rect" id="Node000001" title="Set up the configured water model for an MD engine." alt="" coords="5,480,185,508"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1WaterModelSetup.html#ab13cf853bfe44bea15324dfd43710af5" title="Perform all water model setup steps." alt="" coords="233,373,413,418"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,478,257,422,254,427,130,482"/>
+<area shape="rect" id="Node000015" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="251,507,395,551"/>
+<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="185,505,238,515,233,517,186,511"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1WaterModelSetup.html#a2f7cd1a65723abf3258c2e4f830f3906" title="Verify that water molecules do not appear in the topology file bonds/angles." alt="" coords="472,75,652,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="329,371,346,326,374,267,411,203,459,146,490,125,486,129,463,150,416,206,379,269,351,328,334,374"/>
+<area shape="rect" id="Node000005" href="$structWaterIntraModelMeta.html#aef0b401a0a3436a42158e3b56cdd882d" title=" " alt="" coords="754,75,916,119"/>
+<area shape="poly" id="edge15_Node000002_Node000005" title=" " alt="" coords="336,371,386,305,420,267,459,234,527,192,601,159,673,133,741,116,737,118,675,138,603,164,530,197,463,238,424,271,390,308,340,375"/>
+<area shape="rect" id="Node000006" href="$classsetup_1_1WaterModelSetup.html#a91dd674b5b7355a4b9ed3756133ffb12" title="Set up the intermolecular water interaction model." alt="" coords="472,248,652,293"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="366,370,507,299,502,302,369,375"/>
+<area shape="rect" id="Node000009" href="$structWaterInterModelMeta.html#acad7239964ad80dacb9d6216f1eb9521" title=" " alt="" coords="1028,277,1190,322"/>
+<area shape="poly" id="edge14_Node000002_Node000009" title=" " alt="" coords="413,387,704,365,851,351,958,337,1021,326,1015,327,959,342,852,356,704,370,414,392"/>
+<area shape="rect" id="Node000012" href="$classsetup_1_1WaterModelSetup.html#ac3e8813c97b11872bff068127de09809" title="Set up the intramolecular water model." alt="" coords="472,403,652,447"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="413,404,459,412,454,413,414,409"/>
+<area shape="rect" id="Node000013" href="$classsetup_1_1WaterModelSetup.html#a1968e0b3280eeb422917334eb9e4c6d1" title="Construct and add SHAKE&#45;style bond constraints for rigid water molecules." alt="" coords="461,472,663,517"/>
+<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="370,416,462,457,480,466,475,466,460,462,370,421"/>
+<area shape="rect" id="Node000014" href="$classsettings_1_1GeneralSettings.html#a4d0d8545547f29fe2e664956c3157327" title="Returns true if the jobtype does not use any MM type simulations." alt="" coords="470,541,655,586"/>
+<area shape="poly" id="edge13_Node000002_Node000014" title=" " alt="" coords="343,416,394,472,427,501,462,527,472,534,467,534,460,531,423,505,390,475,341,421"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1FileSettings.html#a4c2b04e603fd626b185cf40f7e566c2d" title="Get the topology file name." alt="" coords="750,5,920,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="652,72,737,52,733,54,654,77"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="652,94,741,96,736,98,653,100"/>
+<area shape="rect" id="Node000007" href="$classsetup_1_1WaterModelSetup.html#a9e0f3443adb29cd25d9cc5a473c17fb1" title="Validate water molecule partial charges against the inter&#45;water model." alt="" coords="711,144,959,189"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="606,245,710,199,734,193,729,195,712,203,609,250"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a8798c619607f4dd45507427feab904d8" title="Returns true if the cell list is activated." alt="" coords="742,213,928,258"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="652,256,729,248,724,250,653,261"/>
+<area shape="rect" id="Node000011" href="$namespacewaterModel.html#a14e80a9d0cd4c2c40f594dbb72ac3970" title=" " alt="" coords="730,283,940,327"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="652,279,717,289,712,290,653,284"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1Molecule.html#a8e2b05b1085c969eabb42295b4d6318d" title="returns the partial charge of the atom by index" alt="" coords="1007,144,1212,189"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="958,164,993,166,988,167,960,169"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="929,187,960,199,1018,231,1070,268,1065,267,1015,235,958,203,929,192"/>
+<area shape="rect" id="Node000016" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="490,610,634,638"/>
+<area shape="poly" id="edge17_Node000015_Node000016" title=" " alt="" coords="364,549,411,573,462,596,483,605,478,605,460,601,408,578,363,554"/>
+</map>

@@ -1,0 +1,28 @@
+<map id="input::restartFile::AtomSection::process" name="input::restartFile::AtomSection::process">
+<area shape="rect" id="Node000001" title="processes the atom section of the rst file" alt="" coords="5,292,176,337"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#a3e4f463d70b53c2ec76db06f89c9fae9" title="checks if the next line of the rst file exists &#45; if not an exception is thrown" alt="" coords="241,138,468,182"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,290,157,241,188,215,222,193,237,187,233,191,225,197,191,219,161,245,113,294"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1restartFile_1_1AtomSection.html#ac5a01ba6d6d0e01802ff921eb009cf87" title="checks if the number of elements in the line is correct. The atom section must have 12 or 21 elements..." alt="" coords="246,207,463,268"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="168,289,234,272,230,275,171,294"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1restartFile_1_1AtomSection.html#a7e86322a9eef35651fbb4590adad182d" title="processes a line of the atom section of the rst file" alt="" coords="235,292,474,337"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="176,312,221,314,217,316,177,317"/>
+<area shape="rect" id="Node000011" href="$classinput_1_1restartFile_1_1AtomSection.html#a99c4712b5e8c39f0ff3ff3eb9af81dd1" title="adds a single atom with moltype 0 to the simulation box" alt="" coords="224,362,485,406"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="176,335,255,356,250,358,176,340"/>
+<area shape="rect" id="Node000013" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="280,431,428,476"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="115,335,164,377,225,416,268,435,262,435,222,421,161,381,114,340"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1restartFile_1_1RestartFileSection.html#a73b836ed71579596ce9cb165a83489b2" title=" " alt="" coords="568,5,715,67"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="403,135,532,76,555,69,551,72,534,81,405,140"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Molecule.html#a0123c054d621d9e22feef324082fff4c" title="returns the number of atoms in the molecule" alt="" coords="533,91,749,136"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="467,139,520,133,515,135,469,144"/>
+<area shape="rect" id="Node000005" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="542,160,741,187"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="468,163,529,167,523,169,469,168"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="569,212,713,239"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="455,180,565,207,560,208,456,186"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="540,289,742,317"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="474,307,527,307,522,308,475,312"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="556,340,727,385"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="474,332,543,346,537,346,475,338"/>
+<area shape="poly" id="edge11_Node000011_Node000010" title=" " alt="" coords="485,372,543,370,537,371,486,377"/>
+<area shape="rect" id="Node000012" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="556,410,727,454"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="485,403,543,415,538,415,485,409"/>
+</map>

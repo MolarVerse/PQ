@@ -1,0 +1,17 @@
+<map id="settings::GeneralSettings" name="settings::GeneralSettings">
+<area shape="rect" id="Node000001" title=" " alt="" coords="357,218,592,513"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,106,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,75,76,135,89,165,107,192,159,239,218,277,281,306,343,331,338,332,278,311,215,281,155,243,103,195,84,168,71,137,59,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="130,5,227,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="178,75,188,134,197,164,211,192,239,226,271,256,307,282,345,306,339,307,304,286,268,260,235,230,207,195,192,167,182,135,177,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="273,5,409,78"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="344,75,353,132,370,193,373,203,368,201,364,195,348,133,342,80"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="455,5,494,78"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="476,75,477,202,472,200,473,79"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="679,5,728,78"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="705,75,699,135,690,166,677,195,645,239,606,278,603,273,641,235,672,192,685,164,693,134,702,80"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="794,5,909,78"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="855,75,850,136,840,167,824,195,779,243,724,281,666,311,609,333,607,328,664,306,722,276,775,238,820,192,836,165,845,135,852,80"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="933,5,1077,78"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="993,76,962,138,939,169,912,196,841,245,762,285,683,315,609,338,607,333,681,310,760,280,838,241,909,192,935,165,957,135,989,79"/>
+</map>

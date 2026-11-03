@@ -1,0 +1,25 @@
+<map id="TestQMSetupAse::TearDown" name="TestQMSetupAse::TearDown">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,222,208,250"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a113ce24a68a36e8561ffa78d7fac1409" title="sets the custom Hubbard Derivative dictionary" alt="" coords="283,5,439,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,220,167,144,207,99,254,60,270,53,267,57,257,65,211,103,171,148,119,223"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a8d44d152590d92fd8e55c8844aec1d5f" title="sets if the Hubbard Derivative dictionary is set by the user" alt="" coords="272,75,450,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,220,179,176,254,129,270,124,266,127,257,134,182,180,126,223"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1QMSettings.html#af511c42a8672eefc62ef24e854be186e" title="sets if the third order is set" alt="" coords="272,144,450,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="159,219,263,191,260,195,161,224"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1QMSettings.html#a62a365fa2f7baa766b07736bf189bf86" title="sets the qmMethod to enum in settings" alt="" coords="283,213,439,258"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="207,233,269,234,265,237,209,238"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1QMSettings.html#a5240619fa30e80decda4cb0c87adbec6" title="sets the slakosType to enum in settings" alt="" coords="283,283,439,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="160,247,270,278,265,281,160,253"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1QMSettings.html#a9791215b092f3c47b729d7fcba38b9b3" title="sets if the dispersion correction should be used" alt="" coords="256,352,466,397"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="125,247,182,291,257,337,271,346,266,346,254,342,179,295,124,253"/>
+<area shape="rect" id="Node000011" href="$classsettings_1_1QMSettings.html#a6bb00508ab531e43a21e180f3424e43f" title="sets if third order DFTB should be used" alt="" coords="276,421,446,466"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="117,248,171,324,211,368,257,407,267,415,261,414,254,411,207,372,167,327,115,253"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#acacc3738bf0a0bb0e6a27fb02616e9b0" title="returns if the Hubbard derivatives are set by the user" alt="" coords="514,75,672,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="450,94,501,96,496,98,451,100"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1QMSettings.html#ab06f21ee699cf03ab5b1e1f5bf04231c" title="returns if the third order is set" alt="" coords="514,144,672,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="449,164,501,165,496,167,450,169"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1QMSettings.html#ab324126741d9b3eecb6e7886d364178e" title="returns if the dispersion correction should be used" alt="" coords="515,352,671,397"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="466,372,502,374,497,375,467,377"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="515,421,671,466"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="446,441,502,444,497,444,446,446"/>
+</map>

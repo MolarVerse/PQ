@@ -1,0 +1,9 @@
+<map id="molsys::Molecule::getHybridZone" name="molsys::Molecule::getHybridZone">
+<area shape="rect" id="Node000001" title="return the Hybrid zone of the molecule" alt="" coords="107,57,347,85"/>
+<area shape="rect" id="Node000002" href="$testHybridConfigurator_8cpp.html#aac423197af99488b7aece4a2775f44f3" title=" " alt="" coords="5,5,59,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,55,59,29,59,23,159,51"/>
+<area shape="rect" id="Node000003" href="$testHybridConfigurator_8cpp.html#a38d9b03c5a49a3662c87536d6be2e956" title=" " alt="" coords="5,57,59,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="89,73,60,74,58,69,94,70"/>
+<area shape="rect" id="Node000004" href="$testHybridConfigurator_8cpp.html#ab9f03a37906a792ae9a1b4463144f118" title=" " alt="" coords="5,109,59,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="158,92,60,119,58,114,157,87"/>
+</map>

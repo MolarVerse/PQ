@@ -1,0 +1,7 @@
+<map id="input::restartFile::BoxSection::process" name="input::restartFile::BoxSection::process">
+<area shape="rect" id="Node000001" title="processes the box section of the rst file" alt="" coords="5,28,166,72"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="239,5,374,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,36,226,30,221,31,167,41"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="214,57,399,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,58,201,65,195,65,166,63"/>
+</map>

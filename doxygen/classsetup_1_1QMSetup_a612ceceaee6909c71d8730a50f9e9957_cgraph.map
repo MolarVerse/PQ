@@ -1,0 +1,5 @@
+<map id="setup::QMSetup::setupQMMethod" name="setup::QMSetup::setupQMMethod">
+<area shape="rect" id="Node000001" title="setup the &quot;QM&quot; method of the system" alt="" coords="5,14,245,42"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a392002c6312680d946422a22711bee71" title="returns the qmMethod" alt="" coords="293,5,449,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,25,280,28,274,28,245,30"/>
+</map>

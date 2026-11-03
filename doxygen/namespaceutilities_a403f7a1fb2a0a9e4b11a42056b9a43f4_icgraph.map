@@ -1,0 +1,5 @@
+<map id="utilities::firstLetterToUpperCaseCopy" name="utilities::firstLetterToUpperCaseCopy">
+<area shape="rect" id="Node000001" title="converts the first letter of a string to upper case and the rest to lower case" alt="" coords="107,5,262,50"/>
+<area shape="rect" id="Node000002" href="$testStringUtilities_8cpp.html#a09f7d9e969650db6a945413431ce6282" title="test firstLetterToUpperCaseCopy function" alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,29,59,30,59,25,94,27"/>
+</map>

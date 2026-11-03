@@ -1,0 +1,18 @@
+<map id="/home/runner/work/PQ/PQ/include/settings/waterModelSettings.hpp" name="/home/runner/work/PQ/PQ/include/settings/waterModelSettings.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="99,5,283,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,191,129,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,70,113,91,91,116,78,146,71,176,66,174,73,144,86,114,109,87,139,66"/>
+<area shape="rect" id="Node000003" href="$waterModels_8hpp.html" title=" " alt="" coords="100,115,282,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,65,193,100,189,98,190,70"/>
+<area shape="rect" id="Node000005" href="$setting_8hpp.html" title=" " alt="" coords="341,115,436,143"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="257,65,348,108,343,109,256,70"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="171,143,103,185,101,180,166,144"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="156,191,221,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="192,141,192,176,187,174,189,145"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="244,191,367,218"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="376,142,333,183,330,178,371,144"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="391,191,466,218"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="397,141,416,178,411,176,394,146"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="489,191,581,218"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="415,141,498,184,493,183,414,146"/>
+</map>

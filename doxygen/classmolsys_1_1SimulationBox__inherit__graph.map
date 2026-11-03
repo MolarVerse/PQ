@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox" name="molsys::SimulationBox">
+<area shape="rect" id="Node000001" title="contains all particles and the simulation box" alt="" coords="5,344,259,986"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBoxView.html" title=" " alt="" coords="29,5,236,296"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,308,135,344,130,343,132,313"/>
+</map>

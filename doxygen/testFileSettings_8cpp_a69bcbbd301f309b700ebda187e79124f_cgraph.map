@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#af7c10e99d66cce21a45d4a16ab239802" title="Get the mol descriptor file name." alt="" coords="107,5,310,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,55,94,49,89,52,60,60"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#a324e98d13c3d3552a3be2ec9b6d75635" title="set the mol descriptor file name" alt="" coords="107,75,310,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,65,94,73,89,75,59,70"/>
+</map>

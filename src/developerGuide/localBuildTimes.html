@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Build Times &mdash; PQ [] documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://molarverse.github.io/PQ/src/developerGuide/localBuildTimes.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Code Statistics" href="codeStatistics.html" />
+    <link rel="prev" title="CI Metrics" href="ciMetrics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PQ
+              <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developerGuide.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cmakeOptions.html">Build Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="staticChecks.html">Static Checks and Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuousIntegration.html">Continuous Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ciMetrics.html">CI Metrics</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Local Build Times</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-improvement-loop">The improvement loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#series-and-baseline">Series and baseline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reading-compare">Reading <code class="docutils literal notranslate"><span class="pre">compare</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#keep-the-machine-quiet">Keep the machine quiet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#reading-detail">Reading <code class="docutils literal notranslate"><span class="pre">detail</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clang-trace-data">Clang trace data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#habits-that-work">Habits that work</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="codeStatistics.html">Code Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="branchesAndReleases.html">Branches and Releases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releasesAndHotfixes.html">Releases and Hotfixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#software-tests">Software Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#coding-style">Coding Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#how-to-contribute">How to Contribute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../apiReference/apiReference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PQ</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="developerGuide.html">Developer Guide</a></li>
+      <li class="breadcrumb-item active">Local Build Times</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/src/developerGuide/localBuildTimes.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="local-build-times">
+<span id="buildtimes"></span><h1>Local Build Times<a class="headerlink" href="#local-build-times" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">scripts/pq_build_times</span></code> measures and explains how long <strong>your</strong> machine needs to build PQ, so that a change that is
+meant to speed up the build can be judged by numbers. It uses only the Python standard library, keeps its data outside
+the repository and has no connection to the <a class="reference internal" href="ciMetrics.html"><span class="doc">CI metrics</span></a>. The README next to the scripts
+(<code class="docutils literal notranslate"><span class="pre">scripts/pq_build_times/README.md</span></code>) is the complete reference; this page shows the workflow.</p>
+<section id="the-improvement-loop">
+<h2>The improvement loop<a class="headerlink" href="#the-improvement-loop" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>snapshot<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;baseline&quot;</span><span class="w">     </span><span class="c1"># measure and store</span>
+$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>baseline<span class="w"> </span><span class="nb">set</span><span class="w">                   </span><span class="c1"># pin it as the reference</span>
+<span class="c1"># ... change something ...</span>
+$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>snapshot<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;forward-declare X in a.hpp&quot;</span>
+$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>compare<span class="w">                        </span><span class="c1"># baseline against the latest</span>
+$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>report<span class="w">                         </span><span class="c1"># table and HTML graph</span>
+$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>detail<span class="w">                         </span><span class="c1"># where does the time go?</span>
+</pre></div>
+</div>
+<p>A snapshot configures and builds in a directory the tool owns (<code class="docutils literal notranslate"><span class="pre">build-times/</span></code>, ignored by git) and runs five
+scenarios:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24.0%" />
+<col style="width: 76.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Scenario</p></th>
+<th class="head"><p>What it answers</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cold</span></code></p></td>
+<td><p>Configure and build everything from nothing. The dependencies come from a cache, so the network is not timed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">noop</span></code></p></td>
+<td><p>What does “nothing to do” cost?</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">touch_leaf</span></code></p></td>
+<td><p>A median source file changed: the everyday edit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">touch_header_top</span></code></p></td>
+<td><p>The most widely included project header changed: the worst case.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">touch_header_median</span></code></p></td>
+<td><p>A median shared header changed.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Besides the wall time it stores the <strong>steps rebuilt</strong>, which is deterministic and does not depend on the speed of the
+machine, the CPU time, the parallelism, the link time, the run-to-run spread and the exact include graph. ccache is
+off unless you pass <code class="docutils literal notranslate"><span class="pre">--ccache</span></code>, because cache hits hide the compile time.</p>
+<p>Useful options of <code class="docutils literal notranslate"><span class="pre">snapshot</span></code>:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--target</span></code></p></td>
+<td><p>Build only one ninja target. A different series (the target is part of the fingerprint); good for trying an
+idea quickly.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--scenarios</span></code></p></td>
+<td><p>A comma separated subset, for example <code class="docutils literal notranslate"><span class="pre">cold,touch_leaf</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--repeat</span></code>, <code class="docutils literal notranslate"><span class="pre">--cold-runs</span></code></p></td>
+<td><p>Repetitions of the cheap scenarios (default 3, the median is stored) and of the cold build.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--compiler</span> <span class="pre">clang++-20</span></code></p></td>
+<td><p>Build with clang and <code class="docutils literal notranslate"><span class="pre">-ftime-trace</span></code>; see <a class="reference internal" href="#buildtimesclang"><span class="std std-ref">below</span></a>. A separate series.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--cmake-arg=-DX=Y</span></code></p></td>
+<td><p>Extra CMake argument, recorded in the fingerprint. Write it <strong>with an equals sign</strong>: argparse takes a value
+that starts with a dash for an option.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--note</span></code></p></td>
+<td><p>What changed since the last snapshot. It becomes a marker in the graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--force</span></code></p></td>
+<td><p>Measure although the machine looks busy or a submodule is not at its recorded commit.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="series-and-baseline">
+<h2>Series and baseline<a class="headerlink" href="#series-and-baseline" title="Link to this heading"></a></h2>
+<p>Every snapshot carries a fingerprint: architecture, CPU model, number of threads, compiler, build type, ninja target,
+CMake arguments, <code class="docutils literal notranslate"><span class="pre">-j</span></code> and ccache. <strong>Only snapshots with the same fingerprint are compared or plotted together.</strong>
+Change the compiler or a flag and you start a new series with its own baseline (<code class="docutils literal notranslate"><span class="pre">pqbt.py</span> <span class="pre">list</span></code> shows them, and
+<code class="docutils literal notranslate"><span class="pre">compare</span></code> names the keys that differ if you try to mix two). The touched files are chosen from the include graph and
+pinned to the first snapshot of a series.</p>
+<p>The data is stored in <code class="docutils literal notranslate"><span class="pre">$PQ_BUILD_TIMES_DIR</span></code>, else <code class="docutils literal notranslate"><span class="pre">$XDG_DATA_HOME/pq-build-times</span></code>, else
+<code class="docutils literal notranslate"><span class="pre">~/.local/share/pq-build-times</span></code> (<code class="docutils literal notranslate"><span class="pre">--data-dir</span></code> overrides all of them). The baseline is pinned explicitly and never
+overwritten by itself.</p>
+<p>A snapshot is refused while a submodule that the build uses (for example <code class="docutils literal notranslate"><span class="pre">external/mstd</span></code>) is not at the commit that
+the repository records, because the build would fail or measure something else:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>external/mstd
+</pre></div>
+</div>
+</section>
+<section id="reading-compare">
+<h2>Reading <code class="docutils literal notranslate"><span class="pre">compare</span></code><a class="headerlink" href="#reading-compare" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Deterministic figures (independent of machine speed)
+                       before        after         change
+---------------------  ------------  ------------  ---------
+objects                59            59            +0.0%
+include pairs          18,028        18,028        +0.0%
+project include pairs  1,010         1,010         +0.0%
+include graph          0b5e44c6bb5f  0b5e44c6bb5f  identical
+
+Scenarios (steps are deterministic, times are judged against the noise)
+scenario             steps     wall            change  cpu                   change  noise  verdict
+-------------------  --------  --------------  ------  --------------------  ------  -----  ---------
+touch source file    12 -&gt; 12  0.50s -&gt; 0.46s  -7.9%   0.54s -&gt; 0.50s        -7.9%   +-8%   unchanged
+touch top header     43 -&gt; 43  6.31s -&gt; 5.82s  -7.7%   1m 23.2s -&gt; 1m 17.2s  -7.3%   +-91%  unchanged
+touch median header  15 -&gt; 15  4.08s -&gt; 4.15s  +1.8%   18.5s -&gt; 18.6s        +0.6%   +-6%   unchanged
+</pre></div>
+</div>
+<p>The first block is <strong>fact</strong>: the sizes of the include graph and a digest of it (<code class="docutils literal notranslate"><span class="pre">identical</span></code> means no include was
+added or removed). The second block combines two kinds of evidence:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">improved</span></code> or <code class="docutils literal notranslate"><span class="pre">regressed</span></code> needs <strong>fewer or more steps and</strong> a timing change beyond the noise threshold.</p></li>
+<li><p>A timing change with the same steps, or a change in the other direction, is <code class="docutils literal notranslate"><span class="pre">check</span> <span class="pre">noise</span></code> and is <em>not</em>
+reported as an effect of your change.</p></li>
+<li><p>The noise threshold is twice the larger run-to-run spread of the two snapshots, at least 5% (10% for a single
+run), and a change below 0.05 s is never a change.</p></li>
+</ul>
+</div></blockquote>
+<p>In the example nothing changed, and the tool says so although the numbers moved by up to 8%.</p>
+<p>If you have two snapshots of a cold build with details, <code class="docutils literal notranslate"><span class="pre">compare</span></code> also lists <strong>what changed in the detail</strong>: first
+the exact changes (translation units that now include more or fewer repository files, headers whose fan-in changed),
+then the compile CPU per module after removing the drift of the whole build.</p>
+<section id="keep-the-machine-quiet">
+<h3>Keep the machine quiet<a class="headerlink" href="#keep-the-machine-quiet" title="Link to this heading"></a></h3>
+<p>The tool refuses to start while the machine is busy (a load of more than 25% of the threads) and measures <strong>how much CPU
+other processes used while the build ran</strong>. On an idle machine that is about 2% of the build’s CPU. Above 5% and 10 s
+<code class="docutils literal notranslate"><span class="pre">compare</span></code> and <code class="docutils literal notranslate"><span class="pre">detail</span></code> print a warning like this one:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>warning: other processes used about 76 s of CPU during the touch top header of 20261027T191639Z (99% of the
+build&#39;s CPU); its timings are inflated, repeat it on an idle machine
+</pre></div>
+</div>
+<p>Take that warning seriously. In a test, four busy loops during a cold build moved the timing by only +6.6%, which is
+inside the band of a single run, so without the warning nobody could have told. The example above is why the
+<code class="docutils literal notranslate"><span class="pre">touch</span> <span class="pre">top</span> <span class="pre">header</span></code> row says <code class="docutils literal notranslate"><span class="pre">+-91%</span></code> noise and <code class="docutils literal notranslate"><span class="pre">unchanged</span></code>: another job on the same host was running.</p>
+</section>
+</section>
+<section id="reading-detail">
+<h2>Reading <code class="docutils literal notranslate"><span class="pre">detail</span></code><a class="headerlink" href="#reading-detail" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">detail</span></code> explains one snapshot. It is made from what Ninja recorded (when every step ran, which files every object
+includes) and from git (how often a file changed in the last 180 days):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>== Build at a glance ==
+cold build: wall 9.5s, CPU 2m 04s, 78 steps (59 compiles), 32 parallel jobs
+parallelism: 13.1 running steps on average = 40.8% of the 32 job slots
+the wall time is bound by idle cores: a serial phase or a few long steps limit the wall time
+precompiled header pq_test_pch: 3.3s, ready after 4.3s (45.6% of the wall time)
+tail: steps still running in the last 10% of the build: gtest-all.cc.o (9.4s); testThermostat (0.04s)
+
+== Where the CPU goes ==
+                      steps     CPU  share
+--------------------  -----  ------  -----
+src (project)            54  1m 36s  78.1%
+  src/molsys              7   27.7s  22.4%
+  src/settings           19   22.9s  18.4%
+  src/thermostat          5   15.3s  12.4%
+
+== Slowest compile steps ==
+time  % CPU    ran  repo files  PRs  file
+9.4s   7.6%  0-9s*          33    -  external/googletest/googletest/src/gtest-all.cc
+6.9s   5.5%  0-7s          164   16  src/molsys/simulationBox.cpp
+concentration: 13 files (22.0%) make up half of the compile CPU, 25 files (42.4%) four fifths
+</pre></div>
+</div>
+<p>(This is a build of the target <code class="docutils literal notranslate"><span class="pre">testThermostat</span></code> only, to keep the example short.) How to read the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Build at a glance</strong> tells you whether <em>fewer includes</em> help (the cores are busy: the build is CPU-bound) or
+<em>a long step</em> does (the cores idle: a serial phase such as the precompiled header, or a long tail).</p></li>
+<li><p><strong>Where the CPU goes</strong> splits the compile CPU into project modules, third party code, precompiled headers, tests
+and linking.</p></li>
+<li><p><strong>Slowest compile steps</strong> shows the time, the share, the number of repository files the file pulls in and the number
+of merged pull requests that touched it (<code class="docutils literal notranslate"><span class="pre">PRs</span></code> over the history window). A slow file that is also edited often is
+worth more than a slow file nobody touches.</p></li>
+<li><p>The sections after these rank headers by their <strong>burden</strong> (rebuild cost times how often they change) and by their
+<strong>rebuild cost</strong> (what a single edit makes you wait for), and list the slowest links. A header with a high cost that
+never changes costs nothing; work through the burden list.</p></li>
+</ul>
+</div></blockquote>
+<p>Per-file times come from one parallel build, so they contain contention for cores and caches: read them as a relative
+cost, not as the time of the file alone.</p>
+</section>
+<section id="clang-trace-data">
+<span id="buildtimesclang"></span><h2>Clang trace data<a class="headerlink" href="#clang-trace-data" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>clang-20
+$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>snapshot<span class="w"> </span>--compiler<span class="w"> </span>clang++-20<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;clang baseline&quot;</span>
+$<span class="w"> </span>python3<span class="w"> </span>scripts/pq_build_times/pqbt.py<span class="w"> </span>baseline<span class="w"> </span><span class="nb">set</span>
+</pre></div>
+</div>
+<p>The clang series builds with <code class="docutils literal notranslate"><span class="pre">-ftime-trace</span></code>. After the cold build the tool reads the trace of every object and
+<code class="docutils literal notranslate"><span class="pre">detail</span></code> gains a section <strong>Compiler time</strong>: the compiler CPU split into frontend (parsing, semantic analysis, template
+instantiation) and backend (optimisation, code generation), per module, and the headers and templates that cost the most.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The <strong>own time</strong> of a header is the time clang spent in it without what it includes; “with includes” contains the
+nested includes. The own time of a template is its instantiation without nested instantiations.</p></li>
+<li><p>Header and template time overlap: an instantiation that happens while a header is parsed counts in both.</p></li>
+<li><p>Clang leaves events shorter than 0.5 ms out of the trace, so <strong>event counts are not exact</strong> (about 5% of the
+headers differ between identical builds). <code class="docutils literal notranslate"><span class="pre">compare</span></code> therefore compares only times, after removing the drift of
+the whole build, and lists a header or template only if it moved by more than 1 s and 15% beyond that drift. These
+thresholds come from three builds of identical code, where nothing was listed.</p></li>
+</ul>
+</div></blockquote>
+<p>This is the view that used to be posted as a comment on every pull request. It is now only available locally, where the
+build can be pinned to one core and compared on an otherwise idle machine.</p>
+</section>
+<section id="habits-that-work">
+<h2>Habits that work<a class="headerlink" href="#habits-that-work" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>One change per snapshot, each with a <code class="docutils literal notranslate"><span class="pre">--note</span></code>.</p></li>
+<li><p>Trust the include numbers (exact) before the seconds (noisy), and the steps rebuilt before the wall time.</p></li>
+<li><p>Do not compare a Release number with a Debug number or a GCC number with a clang number: they are different series
+on purpose.</p></li>
+<li><p>When a result matters, take the snapshot twice on an idle machine.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ciMetrics.html" class="btn btn-neutral float-left" title="CI Metrics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="codeStatistics.html" class="btn btn-neutral float-right" title="Code Statistics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-now, Jakob Gamper.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

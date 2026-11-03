@@ -1,0 +1,9 @@
+<map id="settings::GeneralSettings::setIntegratorType" name="settings::GeneralSettings::setIntegratorType">
+<area shape="rect" id="Node000001" title="sets the integrator type" alt="" coords="500,36,685,81"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1IntegratorInputParser.html#a05200b674a35f6b83bf27468c3b0eefd" title="Add the integrator key to the input file parser." alt="" coords="253,5,452,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="482,45,452,43,452,38,487,45"/>
+<area shape="rect" id="Node000004" href="$testIntegratorParser_8cpp.html#a1bd6f60f797eb4b221e9f224f6f2dab8" title="tests parsing the &quot;integrator&quot; command" alt="" coords="318,74,386,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="487,71,387,86,386,81,482,72"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1IntegratorInputParser.html#af45f53e29c4221235c4b79ba40b6cb61" title="Construct a new Input File Parser Integrator:: Input File Parser Integrator object." alt="" coords="5,5,205,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="235,28,205,30,205,25,240,27"/>
+</map>

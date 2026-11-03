@@ -1,0 +1,11 @@
+<map id="WaterModelSettings" name="WaterModelSettings">
+<area shape="rect" id="Node000001" title="static class to store settings of the water model" alt="" coords="118,425,312,676"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="20,173,203,352"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,349,156,400,159,409,154,408,151,402,137,354"/>
+<area shape="rect" id="Node000003" href="$classstd_1_1optional_3_01WaterIntraModel_01_4.html" title=" " alt="" coords="5,5,207,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,75,112,156,106,156,107,80"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="236,173,419,352"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="300,349,283,402,280,410,275,408,278,400,297,354"/>
+<area shape="rect" id="Node000005" href="$classstd_1_1optional_3_01WaterInterModel_01_4.html" title=" " alt="" coords="231,5,432,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="332,75,332,157,327,156,330,80"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="ff::DihedralType" name="ff::DihedralType">
+<area shape="rect" id="Node000001" title="represents a dihedral type" alt="" coords="68,358,190,475"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,195,145,285"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,282,109,342,103,342,87,287"/>
+<area shape="rect" id="Node000003" href="$structDihedralParams.html" title=" " alt="" coords="169,204,283,276"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,274,171,345,167,342,204,278"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="198,5,253,78"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="227,75,228,188,223,187,225,80"/>
+</map>

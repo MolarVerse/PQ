@@ -1,0 +1,5 @@
+<map id="pot::CoulombShiftedPotential" name="pot::CoulombShiftedPotential">
+<area shape="rect" id="Node000001" title="CoulombShiftedPotential inherits CoulombPotential CoulombShiftedPotential is a class for the shifted ..." alt="" coords="15,371,216,466"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1CoulombPotential.html" title="CoulombPotential is a base class for all coulomb type potentials." alt="" coords="5,5,225,323"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,336,118,372,113,371,114,341"/>
+</map>

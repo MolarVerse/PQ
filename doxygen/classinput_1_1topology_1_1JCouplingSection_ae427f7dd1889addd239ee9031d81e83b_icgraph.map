@@ -1,0 +1,5 @@
+<map id="input::topology::JCouplingSection::endedNormally" name="input::topology::JCouplingSection::endedNormally">
+<area shape="rect" id="Node000001" title="checks if j&#45;coupling section ends normally" alt="" coords="122,5,309,50"/>
+<area shape="rect" id="Node000002" href="$testJCouplingSection_8cpp.html#ab0b02ffab741a6058ef8bc9c6f7fc90b" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,28,74,30,74,25,109,27"/>
+</map>

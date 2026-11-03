@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::scaleBox" name="molsys::SimulationBox::scaleBox">
+<area shape="rect" id="Node000001" title="scales the box" alt="" coords="5,5,177,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a6f269d92cc137a6ce63523470429be8c" title="calculate density of simulationBox" alt="" coords="225,5,396,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,25,212,27,206,28,177,30"/>
+</map>

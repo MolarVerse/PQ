@@ -1,0 +1,7 @@
+<map id="ff::AngleForceField::isLinker" name="ff::AngleForceField::isLinker">
+<area shape="rect" id="Node000001" title="get if angle is a linker angle" alt="" coords="311,5,452,50"/>
+<area shape="rect" id="Node000002" href="$classff_1_1AngleForceField.html#aaf157b69c6eb1c74e8170e277270b97a" title="set if angle is a linker angle" alt="" coords="122,5,263,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="293,28,263,30,263,25,298,28"/>
+<area shape="rect" id="Node000003" href="$testForceField_8cpp.html#acb3c465b34f94e270cdb3b7f825eb8b2" title="tests calculateBondedInteractions" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

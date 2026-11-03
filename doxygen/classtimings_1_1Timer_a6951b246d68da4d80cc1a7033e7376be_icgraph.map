@@ -1,0 +1,5 @@
+<map id="timings::Timer::scoped" name="timings::Timer::scoped">
+<area shape="rect" id="Node000001" title="get a timings section guard" alt="" coords="212,14,382,42"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#aaa7912edadf2a5cd235eea17d348ee8a" title="get a scoped timer for a specific timer id and section name" alt="" coords="5,5,164,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,28,164,30,164,25,199,27"/>
+</map>

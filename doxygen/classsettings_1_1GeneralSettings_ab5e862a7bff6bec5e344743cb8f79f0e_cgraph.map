@@ -1,0 +1,7 @@
+<map id="settings::GeneralSettings::isQMOnlyActivated" name="settings::GeneralSettings::isQMOnlyActivated">
+<area shape="rect" id="Node000001" title="Returns true if only QM simulations are activated." alt="" coords="5,40,191,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="239,5,424,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,46,226,43,221,44,192,51"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="239,75,424,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,73,226,81,220,81,191,79"/>
+</map>

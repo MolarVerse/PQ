@@ -1,0 +1,11 @@
+<map id="setup::ThermostatSetup::writeTemperatureRampInfo" name="setup::ThermostatSetup::writeTemperatureRampInfo">
+<area shape="rect" id="Node000001" title="write temperature ramp info" alt="" coords="5,109,213,154"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a12fc02ff1c82da409f3349a94ba07fce" title="get the start temperature" alt="" coords="275,5,484,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,106,260,60,283,54,278,57,262,65,157,111"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="275,75,484,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,116,261,111,257,113,214,121"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#a0786537f4e83807e41559fe8742e6b7a" title="get the temperature ramp frequency" alt="" coords="261,144,498,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="213,142,248,149,243,150,213,148"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1ThermostatSettings.html#ade610dff301fc75e257a1048c1052cdb" title="get the temperature ramp steps" alt="" coords="275,213,484,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="156,152,262,199,283,208,278,208,260,203,155,157"/>
+</map>

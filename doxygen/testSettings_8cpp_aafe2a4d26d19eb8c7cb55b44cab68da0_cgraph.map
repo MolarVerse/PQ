@@ -1,0 +1,11 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a80529ce88f2148fc94cea22db0fd9ae5" title="Returns true if the ring polymer MD simulations are activated." alt="" coords="107,5,314,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,55,93,49,90,53,60,60"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="118,75,303,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,65,104,74,100,78,60,70"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="370,40,557,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="303,82,357,77,352,78,304,87"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="362,109,565,154"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="304,107,349,116,344,116,304,112"/>
+</map>

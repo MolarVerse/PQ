@@ -1,0 +1,5 @@
+<map id="molsys::MoleculeType::setPartialCharges" name="molsys::MoleculeType::setPartialCharges">
+<area shape="rect" id="Node000001" title="sets the partial charges of the molecule" alt="" coords="122,5,287,50"/>
+<area shape="rect" id="Node000002" href="$testSimulationBox_8cpp.html#a73086d365764bde6f7de0f38e3992d86" title="tests setPartialChargesOfMoleculesFromMoleculeTypes function" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

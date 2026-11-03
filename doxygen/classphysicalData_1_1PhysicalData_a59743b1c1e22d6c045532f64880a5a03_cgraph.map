@@ -1,0 +1,13 @@
+<map id="physicalData::PhysicalData::calculateKinetics" name="physicalData::PhysicalData::calculateKinetics">
+<area shape="rect" id="Node000001" title="Calculates kinetic energy and momentum of the system." alt="" coords="5,75,205,119"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ad8c77c782c3758cc7ae205f01ff31d67" title="calculate angular momentum of simulationBox" alt="" coords="253,5,466,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,71,263,53,258,56,191,77"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="274,75,445,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="205,94,261,96,256,98,205,100"/>
+<area shape="rect" id="Node000005" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="307,143,412,171"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="203,117,294,141,289,142,202,123"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#ad4727b1fadb1c321684918232354f80c" title="calculate center of mass of simulationBox" alt="" coords="514,5,694,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="466,25,501,27,496,28,467,30"/>
+<area shape="rect" id="Node000006" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="516,135,693,179"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="413,154,503,157,497,157,413,160"/>
+</map>

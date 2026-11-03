@@ -1,0 +1,5 @@
+<map id="TestConstraints" name="TestConstraints">
+<area shape="rect" id="Node000001" title="Fixture for constraint tests." alt="" coords="5,126,228,243"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="72,5,162,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,90,119,126,114,125,116,95"/>
+</map>

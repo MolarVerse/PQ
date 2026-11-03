@@ -1,0 +1,40 @@
+<map id="setup::setupOutputFiles" name="setup::setupOutputFiles">
+<area shape="rect" id="Node000001" title="wrapper function to setup output files" alt="" coords="5,510,181,538"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1OutputFilesSetup.html#aa2bdb326111628138806cb62f429a210" title="setup output files" alt="" coords="229,333,405,378"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,507,273,385,273,391,115,511"/>
+<area shape="rect" id="Node000017" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="245,536,389,581"/>
+<area shape="poly" id="edge19_Node000001_Node000017" title=" " alt="" coords="181,535,232,544,227,546,182,540"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1MDEngine.html#a8cb3834742d14b3fb9b14627aa2bad50" title="get the reference to the instant energy output" alt="" coords="453,333,666,378"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="405,353,440,355,435,357,406,358"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="467,403,652,447"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="398,376,467,397,462,399,398,381"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1HessianEngine.html#a188fc9194e8767215ba1d0ff159a19f3" title=" " alt="" coords="475,264,644,309"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="397,330,467,312,462,315,399,335"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1OptEngine.html#a0d4184b88cbb8badea96f8632d4c18fa" title="get the optimizer output" alt="" coords="486,195,634,239"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="340,331,390,290,452,249,473,241,469,245,454,254,393,294,344,335"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1TimingsSettings.html#ac990af6a43bd3d7be96c36edf50eb5a0" title="get the time step" alt="" coords="466,472,653,517"/>
+<area shape="poly" id="edge12_Node000002_Node000010" title=" " alt="" coords="342,376,393,417,454,457,468,465,462,466,452,462,390,421,342,381"/>
+<area shape="rect" id="Node000011" href="$classsettings_1_1GeneralSettings.html#a5b6c55783018fc3a9a8234ec902ca594" title="Returns true if the jobtype is a hybrid type simulation." alt="" coords="467,541,652,586"/>
+<area shape="poly" id="edge13_Node000002_Node000011" title=" " alt="" coords="331,376,379,451,414,492,455,527,463,534,458,534,451,531,410,495,375,454,329,381"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1GeneralSettings.html#a9a3a3fbd228c5d1603d240de99a868e0" title="Returns true if the jobtype performs an MD simulation." alt="" coords="467,611,652,655"/>
+<area shape="poly" id="edge14_Node000002_Node000012" title=" " alt="" coords="331,376,397,503,432,564,455,596,461,603,456,602,451,600,427,567,393,505,328,381"/>
+<area shape="rect" id="Node000013" href="$classsettings_1_1GeneralSettings.html#a9c908292d55f625254723bd6051d6460" title="Returns true if the jobtype does is based on optimization." alt="" coords="467,5,652,50"/>
+<area shape="poly" id="edge15_Node000002_Node000013" title=" " alt="" coords="320,332,333,277,357,205,375,166,396,127,421,92,451,60,459,57,455,61,455,64,426,95,401,130,380,168,362,206,338,279,325,334"/>
+<area shape="rect" id="Node000014" href="$classsettings_1_1GeneralSettings.html#a80529ce88f2148fc94cea22db0fd9ae5" title="Returns true if the ring polymer MD simulations are activated." alt="" coords="456,75,663,119"/>
+<area shape="poly" id="edge16_Node000002_Node000014" title=" " alt="" coords="323,332,340,289,367,235,404,178,426,152,451,130,460,126,456,130,455,134,430,156,408,182,372,237,345,291,328,334"/>
+<area shape="rect" id="Node000015" href="$classout_1_1Output.html#a50279a963a07a60d126dd39df6e60f6d" title="Sets the filename of the output file." alt="" coords="468,143,651,171"/>
+<area shape="poly" id="edge17_Node000002_Node000015" title=" " alt="" coords="327,332,346,298,374,257,409,215,451,180,463,176,459,179,455,185,413,219,378,260,351,301,331,335"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1Engine.html#a97961d6c869076d7df7995e7f77cfbc9" title="get the reference to the engine output" alt="" coords="714,264,905,309"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="642,330,714,312,709,314,644,335"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1EngineOutput.html#aa07ae483dd9a38b83cc75590bfe28a7a" title="getter for instant energy output" alt="" coords="717,333,902,378"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="666,353,704,355,699,356,667,358"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="644,284,701,286,696,287,645,289"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1EngineOutput.html#a457c8c2c791ed1940cfac67e6753fd7e" title="getter for optimizer output" alt="" coords="729,195,890,239"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="642,261,717,242,712,245,644,266"/>
+<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="634,235,714,259,709,260,635,240"/>
+<area shape="poly" id="edge11_Node000009_Node000008" title=" " alt="" coords="634,214,716,216,711,218,635,220"/>
+<area shape="rect" id="Node000016" href="$classout_1_1Output.html#a9a08c675b2c324bc35868587de8df6fe" title="Opens the output file." alt="" coords="727,143,892,171"/>
+<area shape="poly" id="edge18_Node000015_Node000016" title=" " alt="" coords="650,154,714,156,709,158,652,160"/>
+<area shape="rect" id="Node000018" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="488,679,632,707"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="341,579,391,623,421,646,454,665,476,676,470,676,452,670,418,651,387,628,339,584"/>
+</map>

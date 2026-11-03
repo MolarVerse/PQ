@@ -1,0 +1,9 @@
+<map id="ManostatSettings::setIsotropy" name="ManostatSettings::setIsotropy">
+<area shape="rect" id="Node000001" title="sets the isotropy to enum in settings" alt="" coords="122,57,338,85"/>
+<area shape="rect" id="Node000002" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="5,5,74,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,54,74,31,74,26,164,51"/>
+<area shape="rect" id="Node000003" href="$testManostat_8cpp.html#a3ce02d2aa5ff0321dd74b7af70130c61" title=" " alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,73,75,74,74,69,109,70"/>
+<area shape="rect" id="Node000004" href="$testManostat_8cpp.html#a77acda8f6f92611170476c38495c3d40" title=" " alt="" coords="5,109,74,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="162,92,75,117,73,111,161,87"/>
+</map>

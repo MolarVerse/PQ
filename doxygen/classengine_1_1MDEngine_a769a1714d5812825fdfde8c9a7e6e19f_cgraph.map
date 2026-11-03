@@ -1,0 +1,7 @@
+<map id="engine::MDEngine::getRingPolymerChargeOutput" name="engine::MDEngine::getRingPolymerChargeOutput">
+<area shape="rect" id="Node000001" title="get the reference to the ring polymer charge output" alt="" coords="5,40,203,85"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Engine.html#a97961d6c869076d7df7995e7f77cfbc9" title="get the reference to the engine output" alt="" coords="267,5,458,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,46,254,42,249,43,204,52"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1EngineOutput.html#a33de3d60e8662980afeaa1ef9c4ec231" title="getter for ring polymer trajectory charge output" alt="" coords="251,75,474,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,73,238,80,232,80,203,78"/>
+</map>

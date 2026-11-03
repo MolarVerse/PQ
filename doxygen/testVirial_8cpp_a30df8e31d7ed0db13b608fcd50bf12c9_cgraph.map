@@ -1,0 +1,21 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,164,74,192"/>
+<area shape="rect" id="Node000002" href="$namespacevirial.html#afca4152a72f9218bb75edbc7757f73d7" title="Calculate virial contribution from QM atoms only without side effects." alt="" coords="126,134,303,162"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,170,119,163,115,167,75,175"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="122,185,307,230"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="73,181,109,188,104,191,75,187"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBoxView.html#a7e7040ddbbd5836394efe83bf9f8210a" title="get all QM atoms using range&#45;based filtering" alt="" coords="355,65,558,110"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="272,131,351,113,347,115,274,136"/>
+<area shape="rect" id="Node000006" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="404,134,509,162"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="303,145,391,147,386,148,304,150"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBoxView.html#a37eacc94c194852f38efa830630d5fff" title="Get the Atoms vector reference." alt="" coords="606,5,810,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="552,62,600,53,595,55,554,67"/>
+<area shape="rect" id="Node000005" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="651,74,765,102"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="558,85,638,87,633,88,559,90"/>
+<area shape="rect" id="Node000007" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="619,125,797,170"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="509,145,606,147,601,148,510,150"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="363,185,550,230"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="307,205,350,207,344,208,308,210"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="355,255,558,299"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="295,228,364,250,359,250,295,233"/>
+</map>

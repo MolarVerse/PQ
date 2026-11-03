@@ -1,0 +1,5 @@
+<map id="input::checkCommandArray" name="input::checkCommandArray">
+<area shape="rect" id="Node000001" title="check if command array has at least 3 elements" alt="" coords="122,5,324,33"/>
+<area shape="rect" id="Node000002" href="$testInputFileParser_8cpp.html#a22c48f80d77a5a1c176a0c4f02efb51f" title="tests checkCommandArray function" alt="" coords="5,5,74,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,20,74,22,74,17,109,19"/>
+</map>

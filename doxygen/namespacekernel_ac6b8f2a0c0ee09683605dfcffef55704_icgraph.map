@@ -1,0 +1,17 @@
+<map id="kernel::distVecAndDist2" name="kernel::distVecAndDist2">
+<area shape="rect" id="Node000001" title="Calculate the distance vector and the squared distance between two particles." alt="" coords="428,170,603,198"/>
+<area shape="rect" id="Node000002" href="$classconstraints_1_1MShake.html#aa0ec5dd53cd0d0fc05d4835b0a431815" title="applies the mShake algorithm to all bond constraints" alt="" coords="217,5,369,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="489,158,441,112,379,65,358,53,358,48,381,60,444,108,494,158"/>
+<area shape="rect" id="Node000003" href="$classconstraints_1_1MShake.html#af58012349adf9d3b762f5fcd9d0742a5" title="init M &#45; Shake references" alt="" coords="206,75,380,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="461,164,352,123,353,117,467,163"/>
+<area shape="rect" id="Node000005" href="$testDistanceKernels_8cpp.html#aa9acc6a59dede34d4155aaf877911f3c" title=" " alt="" coords="266,143,320,171"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="410,172,320,163,320,157,415,171"/>
+<area shape="rect" id="Node000006" href="$testDistanceKernels_8cpp.html#a87455264a408fa2845d655bc59b3d25e" title=" " alt="" coords="266,195,320,223"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="410,196,320,209,319,203,415,195"/>
+<area shape="rect" id="Node000007" href="$testDistanceKernels_8cpp.html#abc8d5d23b962c3b9778d525b995ba3bc" title=" " alt="" coords="266,247,320,275"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="467,203,381,237,321,256,319,251,379,232,461,204"/>
+<area shape="rect" id="Node000008" href="$testDistanceKernels_8cpp.html#afd877d563dcdeec0ba259667e88b7a08" title=" " alt="" coords="266,299,320,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="491,207,441,250,381,289,350,302,320,310,319,305,348,296,379,284,438,246,486,209"/>
+<area shape="rect" id="Node000004" href="$classconstraints_1_1MShake.html#a83747d6e75bff4f95ddf2faa88ac9192" title="init M &#45; Shake" alt="" coords="5,75,158,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="188,98,159,99,157,95,192,96"/>
+</map>

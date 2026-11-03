@@ -1,0 +1,9 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests writing energy output file with fixed axis" alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="122,40,307,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,60,108,61,104,64,75,65"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="363,5,550,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="307,46,350,43,345,44,308,52"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="355,75,558,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="308,73,342,80,337,80,308,78"/>
+</map>

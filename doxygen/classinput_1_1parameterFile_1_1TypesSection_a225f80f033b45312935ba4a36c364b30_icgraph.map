@@ -1,0 +1,7 @@
+<map id="input::parameterFile::TypesSection::processSection" name="input::parameterFile::TypesSection::processSection">
+<area shape="rect" id="Node000001" title="process types section and sets the scale factors for the 1&#45;4 interactions in potentialSettings" alt="" coords="342,5,562,50"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1parameterFile_1_1TypesSection.html#a1b9b9c2e85020f967dd5ced42e2862bb" title="Overwrites process function of ParameterFileSection base class. It just forwards the call to processS..." alt="" coords="122,5,294,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="324,28,294,30,294,25,329,28"/>
+<area shape="rect" id="Node000003" href="$testTypesSection_8cpp.html#a3640a4c3ca68f101c6364fcbae5cac1b" title="test types section processing one line" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,28,74,30,74,25,109,27"/>
+</map>

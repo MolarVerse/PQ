@@ -1,0 +1,5 @@
+<map id="pot::LennardJonesPair" name="pot::LennardJonesPair">
+<area shape="rect" id="Node000001" title="inherits from NonCoulombPair and represents a pair of Lennard&#45;Jones types" alt="" coords="8,438,159,622"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1NonCoulombPair.html" title="base class representing a pair of non&#45;coulombic types" alt="" coords="5,5,162,390"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,403,86,439,81,438,83,408"/>
+</map>

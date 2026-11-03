@@ -1,0 +1,7 @@
+<map id="setup::WaterModelSetup::_checkTopologyFile" name="setup::WaterModelSetup::_checkTopologyFile">
+<area shape="rect" id="Node000001" title="Verify that water molecules do not appear in the topology file bonds/angles." alt="" coords="5,40,186,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a4c2b04e603fd626b185cf40f7e566c2d" title="Get the topology file name." alt="" coords="234,5,404,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,46,221,43,216,44,187,51"/>
+<area shape="rect" id="Node000003" href="$structWaterIntraModelMeta.html#aef0b401a0a3436a42158e3b56cdd882d" title=" " alt="" coords="238,75,400,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,74,225,82,220,82,186,79"/>
+</map>

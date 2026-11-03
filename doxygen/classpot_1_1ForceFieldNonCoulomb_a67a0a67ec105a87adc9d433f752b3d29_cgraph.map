@@ -1,0 +1,32 @@
+<map id="pot::ForceFieldNonCoulomb::operator=" name="pot::ForceFieldNonCoulomb::operator=">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,349,206,394"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1ForceFieldNonCoulomb.html#aba76bc150bc0d614af330e3195a5032f" title="adds a non&#45;coulombic pair to the vector of non&#45;coulombic pairs" alt="" coords="280,5,480,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,348,122,290,149,213,168,171,191,131,219,93,252,60,268,51,265,55,255,64,223,97,196,134,173,174,154,215,127,292,113,350"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1ForceFieldNonCoulomb.html#a1468b1aed25817545877cd7ac2db2d23" title="determines internal global van der Waals types and sets them in the NonCoulombPair objects" alt="" coords="254,75,507,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,348,130,302,159,243,200,182,224,154,252,130,262,125,258,129,255,134,228,158,204,185,164,245,135,304,117,350"/>
+<area shape="rect" id="Node000004" href="$classpot_1_1ForceFieldNonCoulomb.html#afbc2ba26f78dec57424d294278366b3e" title="fills the diagonal elements of the non&#45;coulombic pairs matrix" alt="" coords="271,144,490,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="119,348,172,278,210,239,252,205,278,193,275,197,255,210,213,243,176,281,123,351"/>
+<area shape="rect" id="Node000005" href="$classpot_1_1ForceFieldNonCoulomb.html#a09f8219e231e220781461ba2f7681522" title="sorts the elements of a non&#45;coulombic pairs vector" alt="" coords="555,175,755,219"/>
+<area shape="poly" id="edge16_Node000001_Node000005" title=" " alt="" coords="125,347,179,296,214,270,253,249,305,234,377,221,542,204,537,207,378,226,306,239,255,254,217,275,182,300,129,350"/>
+<area shape="rect" id="Node000006" href="$classpot_1_1ForceFieldNonCoulomb.html#a341d4f3f529dded50d6671b0627fa516" title="fills the off&#45;diagonal elements of the non&#45;coulombic pairs matrix" alt="" coords="262,264,499,309"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="179,346,293,312,290,316,182,351"/>
+<area shape="rect" id="Node000007" href="$classpot_1_1ForceFieldNonCoulomb.html#a8d7d47fe86d6b76ee9ddb9d3b2300934" title="fills one off&#45;diagonal element of the non&#45;coulombic pairs matrix" alt="" coords="555,309,755,354"/>
+<area shape="poly" id="edge14_Node000001_Node000007" title=" " alt="" coords="205,362,541,338,538,342,207,367"/>
+<area shape="rect" id="Node000008" href="$classpot_1_1ForceFieldNonCoulomb.html#aaf802f2edcf528b4a7217faa22c28513" title="finds a non coulombic pair by internal types" alt="" coords="803,375,1040,419"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="206,372,789,390,787,395,206,377"/>
+<area shape="rect" id="Node000010" href="$classpot_1_1ForceFieldNonCoulomb.html#a4f6824635660ae9c4a84d4bd20005f71" title="constructor" alt="" coords="280,435,480,479"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="180,392,294,428,289,431,181,397"/>
+<area shape="rect" id="Node000011" href="$classpot_1_1ForceFieldNonCoulomb.html#aa99863b73d3b155450383ce826f984c4" title="Get the Non Coulomb Pairs Vector object." alt="" coords="277,504,484,549"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="128,392,184,441,218,467,255,489,270,497,264,499,252,494,215,472,181,446,129,397"/>
+<area shape="rect" id="Node000012" href="$classpot_1_1ForceFieldNonCoulomb.html#af6fea8aa656d527ea10969feae9a1fea" title="gets a shared pointer to a NonCoulombPair object" alt="" coords="280,573,480,618"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="118,391,141,429,171,474,210,520,255,559,269,568,264,569,252,563,206,524,167,478,137,432,118,397"/>
+<area shape="rect" id="Node000013" href="$classpot_1_1ForceFieldNonCoulomb.html#a405ae981d6c088617ea8f4a445e6122f" title="finds all non&#45;coulombic pairs that are self&#45;interaction pairs" alt="" coords="265,643,496,687"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="113,392,133,443,161,506,202,572,227,602,255,628,262,635,256,634,252,632,223,606,197,575,156,509,128,445,113,397"/>
+<area shape="rect" id="Node000014" href="$classpot_1_1ForceFieldNonCoulomb.html#a6a03b6f7fc252b91bd374752647eeb07" title="calculates and sets energy and force cutoff for all non&#45;coulombic pairs in _nonCoulPairsVec" alt="" coords="277,712,484,757"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="111,392,126,455,152,537,170,581,194,623,222,663,255,698,266,708,261,707,252,702,218,667,189,626,166,583,147,539,121,456,110,397"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="489,176,542,183,537,185,491,181"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="499,303,542,312,537,313,500,309"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="749,352,816,370,810,371,749,357"/>
+<area shape="rect" id="Node000009" href="$classpot_1_1NonCoulombPotential.html#ab636bc73b68c8478abd462da132fc372" title="get the mixing rule" alt="" coords="825,305,1018,350"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="755,328,813,329,807,330,756,333"/>
+</map>

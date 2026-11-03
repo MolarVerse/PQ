@@ -1,0 +1,5 @@
+<map id="input::CoulombLongRangeInputParser" name="input::CoulombLongRangeInputParser">
+<area shape="rect" id="Node000001" title="CoulombLongRangeInputParser inherits from InputFileParser." alt="" coords="5,304,245,461"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html" title="Base class for parsing the input file." alt="" coords="25,5,225,256"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,269,128,305,123,304,124,274"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="molsys::TriclinicBox::applyPBC" name="molsys::TriclinicBox::applyPBC">
+<area shape="rect" id="Node000001" title="applies the periodic boundary conditions" alt="" coords="5,5,156,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1TriclinicBox.html#a2ff796d0f68a1a91153afcf8aa0fc829" title="get the minimal box dimension" alt="" coords="204,5,402,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,25,191,27,185,28,156,30"/>
+</map>

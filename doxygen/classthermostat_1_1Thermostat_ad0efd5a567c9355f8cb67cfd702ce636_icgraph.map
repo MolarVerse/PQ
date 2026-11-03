@@ -1,0 +1,5 @@
+<map id="thermostat::Thermostat::getRampingStepsLeft" name="thermostat::Thermostat::getRampingStepsLeft">
+<area shape="rect" id="Node000001" title="get ramping steps left" alt="" coords="122,5,298,50"/>
+<area shape="rect" id="Node000002" href="$testThermostatSetup_8cpp.html#a09f796f72d8208cc800faa604521c398" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,75,30,74,25,109,27"/>
+</map>

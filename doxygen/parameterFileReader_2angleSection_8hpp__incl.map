@@ -1,0 +1,12 @@
+<map id="/home/runner/work/PQ/PQ/include/input/parameterFileReader/angleSection.hpp" name="/home/runner/work/PQ/PQ/include/input/parameterFileReader/angleSection.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,212,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="37,191,95,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,65,71,116,67,146,66,176,61,175,61,146,66,114,88,70"/>
+<area shape="rect" id="Node000003" href="$parameterFileSection_8hpp.html" title=" " alt="" coords="81,115,269,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,65,159,102,154,103,130,70"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="158,143,99,184,97,179,153,144"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="132,191,195,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="175,141,170,177,166,174,171,145"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="219,191,281,218"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="190,141,228,180,223,179,188,146"/>
+</map>

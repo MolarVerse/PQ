@@ -1,0 +1,7 @@
+<map id="setup::WaterModelSetup::_checkMoldescriptorWaterCharge" name="setup::WaterModelSetup::_checkMoldescriptorWaterCharge">
+<area shape="rect" id="Node000001" title="Validate water molecule partial charges against the inter&#45;water model." alt="" coords="5,40,253,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a8e2b05b1085c969eabb42295b4d6318d" title="returns the partial charge of the atom by index" alt="" coords="301,5,506,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="253,44,288,42,283,43,254,49"/>
+<area shape="rect" id="Node000003" href="$structWaterInterModelMeta.html#acad7239964ad80dacb9d6216f1eb9521" title=" " alt="" coords="322,75,484,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="253,75,310,85,304,85,253,81"/>
+</map>

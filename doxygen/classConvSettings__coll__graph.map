@@ -1,0 +1,15 @@
+<map id="ConvSettings" name="ConvSettings">
+<area shape="rect" id="Node000001" title="stores all information about the optimizer" alt="" coords="144,519,322,815"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="7,173,141,335"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,332,87,413,96,455,109,494,137,548,132,549,104,496,91,456,81,414,75,337"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,143,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,75,77,156,72,156,74,80"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="166,173,300,335"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="234,332,235,503,230,502,232,337"/>
+<area shape="rect" id="Node000005" href="$classstd_1_1optional_3_01bool_01_4.html" title=" " alt="" coords="172,5,294,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="233,75,235,156,230,156,232,80"/>
+<area shape="rect" id="Node000006" href="$classSetting.html" title=" " alt="" coords="324,173,499,335"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="413,332,405,415,395,456,381,496,360,534,334,570,330,566,355,532,376,494,390,455,400,414,410,337"/>
+<area shape="rect" id="Node000007" href="$classstd_1_1optional_3_01ConvStrategy_01_4.html" title=" " alt="" coords="321,5,502,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="412,75,414,157,409,155,411,80"/>
+</map>

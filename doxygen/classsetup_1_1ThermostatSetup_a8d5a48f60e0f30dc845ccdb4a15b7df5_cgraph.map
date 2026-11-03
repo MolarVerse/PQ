@@ -1,0 +1,7 @@
+<map id="setup::ThermostatSetup::setupVelocityRescalingThermostat" name="setup::ThermostatSetup::setupVelocityRescalingThermostat">
+<area shape="rect" id="Node000001" title="setup velocity rescaling thermostat" alt="" coords="5,40,261,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a10c19eac5a4d4e66873c7619269b2328" title="get the relaxation time" alt="" coords="309,5,518,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,44,296,42,291,43,261,49"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="309,75,518,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,75,296,82,291,82,261,81"/>
+</map>

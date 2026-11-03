@@ -1,0 +1,9 @@
+<map id="ff::BondType" name="ff::BondType">
+<area shape="rect" id="Node000001" title="represents a bond type" alt="" coords="76,335,182,452"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,173,145,262"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,259,109,319,103,320,87,264"/>
+<area shape="rect" id="Node000003" href="$structBondParams.html" title=" " alt="" coords="169,182,283,254"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,252,171,322,167,319,204,256"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="198,5,253,78"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="227,75,228,165,223,164,225,80"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="input::InputFileReader::_validateCellList" name="input::InputFileReader::_validateCellList">
+<area shape="rect" id="Node000001" title="validates cell&#45;list dependencies" alt="" coords="5,75,170,119"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="218,5,411,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,72,226,54,222,57,164,77"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a8798c619607f4dd45507427feab904d8" title="Returns true if the cell list is activated." alt="" coords="222,75,407,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,94,208,96,203,98,170,100"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#ab5e862a7bff6bec5e344743cb8f79f0e" title="Returns true if only QM simulations are activated." alt="" coords="222,144,407,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,117,227,138,222,140,163,123"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="459,109,644,154"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="407,150,446,147,441,148,408,155"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="459,179,644,223"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="408,177,446,185,441,185,407,183"/>
+</map>

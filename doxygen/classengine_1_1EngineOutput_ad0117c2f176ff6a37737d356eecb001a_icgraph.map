@@ -1,0 +1,5 @@
+<map id="engine::EngineOutput::getRingPolymerXyzOutput" name="engine::EngineOutput::getRingPolymerXyzOutput">
+<area shape="rect" id="Node000001" title="getter for ring polymer trajectory xyz output" alt="" coords="251,5,452,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1MDEngine.html#a35c824fa92e16f14cc8b78683bf91d00" title="get the reference to the ring polymer xyz output" alt="" coords="5,5,203,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,28,203,30,203,25,237,27"/>
+</map>

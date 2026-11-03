@@ -1,0 +1,8 @@
+<map id="molsys::calcBoxDimAndAnglesFromBoxMatrix" name="molsys::calcBoxDimAndAnglesFromBoxMatrix">
+<area shape="rect" id="Node000001" title="determine box dimensions and angles from box matrix (angles are in RAD)" alt="" coords="305,36,528,81"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1TriclinicBox.html#af20f84883f6968593bf0d2d59dc8d99a" title="scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume" alt="" coords="107,5,257,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="287,42,258,40,258,35,292,42"/>
+<area shape="rect" id="Node000003" href="$testTriclinicBox_8cpp.html#a340d5369d7ced0adf82b9aa812db3a7f" title=" " alt="" coords="5,44,59,72"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="289,65,107,65,59,63,59,57,107,60,290,60"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,48,60,55,59,50,94,45"/>
+</map>

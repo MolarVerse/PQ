@@ -1,0 +1,5 @@
+<map id="thermostat::NoseHooverThermostat::NoseHooverThermostat" name="thermostat::NoseHooverThermostat::NoseHooverThermostat">
+<area shape="rect" id="Node000001" title="Construct a new Nose Hoover Thermostat:: Nose Hoover Thermostat object." alt="" coords="5,5,262,50"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html#ac8a1806922be9fff6e5720c723eee1d9" title="Construct a new Thermostat:: Thermostat object." alt="" coords="310,5,486,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,25,297,28,291,28,262,30"/>
+</map>

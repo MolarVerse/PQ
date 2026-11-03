@@ -1,0 +1,7 @@
+<map id="pot::BuckinghamPair::BuckinghamPair" name="pot::BuckinghamPair::BuckinghamPair">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,161,50"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1BuckinghamPair.html#a726366d707503d40c0fecdbd0f7010f3" title="Construct a new Buckingham Pair:: Buckingham Pair object." alt="" coords="209,5,364,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,25,196,27,190,28,161,30"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1NonCoulombPair.html#a02d9cc8b3c50e5b8721430e90d9a46d1" title="Construct a new Non Coulomb Pair:: Non Coulomb Pair object." alt="" coords="412,5,570,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="364,25,399,28,394,28,364,30"/>
+</map>

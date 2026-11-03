@@ -1,0 +1,7 @@
+<map id="TestVirial::SetUp" name="TestVirial::SetUp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,134,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="182,5,367,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,49,169,45,164,47,135,54"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a4e0af2a46c9addffe64f37b0ab8f2ecc" title="sets the virial type" alt="" coords="182,75,367,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,71,169,78,164,79,134,76"/>
+</map>

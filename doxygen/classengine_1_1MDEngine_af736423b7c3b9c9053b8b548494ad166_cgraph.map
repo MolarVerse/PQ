@@ -1,0 +1,7 @@
+<map id="engine::MDEngine::getBoxFileOutput" name="engine::MDEngine::getBoxFileOutput">
+<area shape="rect" id="Node000001" title="get the reference to the box file output" alt="" coords="5,40,199,85"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1EngineOutput.html#a84f486348ee4eec3a3d0ac61acafb6cd" title="getter for box file output" alt="" coords="261,5,422,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,46,248,41,243,42,200,51"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Engine.html#a97961d6c869076d7df7995e7f77cfbc9" title="get the reference to the engine output" alt="" coords="247,75,437,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,74,234,81,229,81,199,79"/>
+</map>

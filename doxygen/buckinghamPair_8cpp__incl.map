@@ -1,0 +1,23 @@
+<map id="/home/runner/work/PQ/PQ/src/potential/nonCoulomb/buckinghamPair.cpp" name="/home/runner/work/PQ/PQ/src/potential/nonCoulomb/buckinghamPair.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="108,5,322,67"/>
+<area shape="rect" id="Node000002" href="$buckinghamPair_8hpp.html" title=" " alt="" coords="74,115,226,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,70,170,104,166,101,195,65"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="250,115,313,143"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="238,65,266,102,260,103,237,70"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,266,65,294"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,145,90,165,62,192,48,222,41,252,35,251,43,220,58,189,87,161,122,141"/>
+<area shape="rect" id="Node000004" href="$nonCoulombPair_8hpp.html" title=" " alt="" coords="72,191,227,218"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="151,141,152,176,147,174,149,146"/>
+<area shape="rect" id="Node000006" href="$strongTypes_8hpp.html" title=" " alt="" coords="227,266,355,294"/>
+<area shape="poly" id="edge10_Node000002_Node000006" title=" " alt="" coords="175,141,209,161,241,189,264,220,282,253,277,252,260,223,237,192,206,166,175,146"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="128,221,70,260,66,256,130,217"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="88,266,203,294"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="150,217,150,252,145,250,148,221"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="175,216,255,258,250,260,175,222"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="164,342,234,370"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="277,294,228,335,226,330,272,295"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="258,342,324,370"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="293,293,293,328,289,325,289,296"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="347,342,470,370"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="313,292,378,334,372,334,311,297"/>
+</map>

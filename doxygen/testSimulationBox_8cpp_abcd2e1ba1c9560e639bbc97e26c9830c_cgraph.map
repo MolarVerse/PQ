@@ -1,0 +1,17 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,168,74,196"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a58abf4bc35857b4a93aa4fb0caa77140" title="copy simulationBox object this" alt="" coords="136,5,307,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,167,72,115,94,86,120,60,129,56,126,60,123,64,98,89,77,118,49,169"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Molecule.html#a811f99e9973ce5a490ea38ed1bcc89d0" title="returns the atom by index" alt="" coords="122,74,321,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="51,166,81,138,120,111,136,105,132,109,123,115,85,142,56,169"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="136,125,307,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="73,174,122,165,119,169,76,178"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a76153d2760d3319d21127959bd0556b8" title="get molecule by index" alt="" coords="136,195,307,239"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="73,186,123,196,118,199,75,191"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="136,264,307,309"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="54,194,85,222,123,249,134,257,129,258,120,254,82,226,54,199"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a4813c266533817dd1f70bd1e987d7bda" title="Get the number of molecules." alt="" coords="130,333,313,378"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="46,194,74,255,96,289,123,319,130,325,124,325,120,323,91,293,69,258,45,199"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a402307a5f0c8952a53c373ee55937bcc" title="Construct a new Simulation Box object." alt="" coords="369,5,540,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="306,25,356,26,351,29,308,30"/>
+</map>

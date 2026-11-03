@@ -1,0 +1,11 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,118,59,146"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a48d588d8fe59fd485990cafd2cc85296" title="Get the DFTB setup file name." alt="" coords="110,5,267,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="43,116,70,88,105,60,116,56,112,60,108,65,74,92,48,119"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#a27761dbd329886589d62d7bf986af40c" title="Get the mShake file name." alt="" coords="107,75,270,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,124,93,117,90,120,60,128"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1FileSettings.html#a6d1d13ef53f32e6312047fa4fffc002b" title="set the DFTB setup file name" alt="" coords="110,144,267,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,135,97,144,92,147,60,140"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1FileSettings.html#a22b9d5ca873fa60d0024ef4d6cc7f495" title="set the mShake file name" alt="" coords="107,213,270,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="46,143,74,171,108,199,117,206,112,206,105,203,70,175,45,149"/>
+</map>

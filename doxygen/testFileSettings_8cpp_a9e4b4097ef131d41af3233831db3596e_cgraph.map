@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#aea1bcb90e1f96470c37ea0258fe09348" title="Get the intra non bonded file name." alt="" coords="107,5,324,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,55,93,50,89,53,60,60"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#a59c166026fe03e5f7013a2c8400f01c1" title="set the intra non bonded file name" alt="" coords="107,75,324,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,65,94,72,90,75,59,70"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="ff::DihedralForceField::setIsLinker" name="ff::DihedralForceField::setIsLinker">
+<area shape="rect" id="Node000001" title="set if dihedral is a linker dihedral" alt="" coords="5,5,165,50"/>
+<area shape="rect" id="Node000002" href="$classff_1_1DihedralForceField.html#a69a43f7d5e351a14c2beee3921951c2c" title="get if dihedral is a linker dihedral" alt="" coords="213,5,372,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,25,200,27,195,28,165,30"/>
+</map>

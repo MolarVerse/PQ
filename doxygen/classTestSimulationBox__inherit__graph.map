@@ -1,0 +1,5 @@
+<map id="TestSimulationBox" name="TestSimulationBox">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,126,137,198"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="26,5,116,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,90,74,126,69,125,70,95"/>
+</map>

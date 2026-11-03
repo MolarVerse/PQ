@@ -1,0 +1,94 @@
+<map id="engine::Engine::getSimulationBox" name="engine::Engine::getSimulationBox">
+<area shape="rect" id="Node000001" title="get the reference to the simulation box" alt="" coords="1108,1000,1349,1028"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HybridMDEngine.html#a4116181e5130b630dda59ae99c59b5d4" title="Accumulate current forces to inner force storage and reset forces." alt="" coords="791,932,1051,976"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1136,997,1040,980,1038,974,1141,996"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMMMMDEngine.html#ad105ce5b4a1146271a41b143dcd14ce7" title="Apply hotspot smoothing algorithm for QM/MM boundary treatment." alt="" coords="516,724,709,768"/>
+<area shape="poly" id="edge13_Node000001_Node000003" title=" " alt="" coords="1136,1032,1059,1041,966,1040,918,1035,871,1026,825,1011,781,991,749,969,720,942,673,880,640,819,621,772,622,766,644,816,678,878,724,939,752,965,784,986,826,1006,872,1021,919,1030,967,1035,1058,1036,1141,1030"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,136,191,180"/>
+<area shape="poly" id="edge36_Node000001_Node000005" title=" " alt="" coords="1223,984,1210,825,1198,713,1182,593,1160,475,1132,367,1116,321,1098,280,1079,248,1058,224,1022,214,943,205,701,187,192,164,190,159,701,182,943,199,1023,209,1061,220,1083,245,1103,278,1121,319,1137,366,1165,474,1187,593,1203,713,1216,825,1228,986"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1HybridMDEngine.html#adf403c9da2384863573f22c62ab85adc" title="Accumulate current forces to outer force storage and reset forces." alt="" coords="790,585,1052,630"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1220,984,1205,915,1175,822,1154,774,1128,726,1096,682,1058,644,1043,633,1042,628,1061,640,1100,679,1132,723,1159,771,1180,820,1210,913,1225,985"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1HybridMDEngine.html#a0e41ef6eaf7862b273ebca91e9d43f09" title="Accumulate scaled forces to inner force storage and reset forces." alt="" coords="801,430,1041,492"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="1224,984,1216,893,1206,832,1192,764,1171,695,1142,626,1105,562,1058,505,1042,492,1041,486,1062,502,1109,559,1147,624,1176,693,1197,763,1212,831,1221,892,1229,986"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1QMMMMDEngine.html#a8d924cf4a3d0acb33ca0440533d416de" title="Apply exact smoothing algorithm for QM/MM boundary treatment." alt="" coords="520,361,705,406"/>
+<area shape="poly" id="edge12_Node000001_Node000008" title=" " alt="" coords="1223,984,1209,832,1197,726,1180,612,1158,500,1131,399,1097,317,1078,287,1058,265,1024,242,991,228,960,222,929,223,862,239,783,266,740,285,699,310,638,362,633,359,696,306,737,280,781,261,861,234,929,218,961,217,993,223,1026,237,1061,261,1083,284,1102,315,1136,397,1163,499,1185,611,1202,725,1215,832,1228,986"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1HybridMDEngine.html#abee1b37815e8f7fefb7a40871bcc45ab" title="Accumulate scaled forces to outer force storage and reset forces." alt="" coords="799,275,1043,337"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="1221,984,1202,850,1167,659,1145,562,1119,473,1090,400,1074,372,1058,351,1043,337,1043,332,1062,347,1078,369,1094,398,1124,471,1150,561,1173,658,1207,849,1226,985"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1HybridMDEngine.html#a29bff6bfffb46f5451afa8ea0409a39b" title="Calculate the global smoothing factor for &quot;exact&quot; smoothing." alt="" coords="798,361,1044,406"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="1220,984,1200,863,1164,693,1141,606,1116,527,1088,463,1073,438,1058,420,1045,409,1044,404,1062,416,1077,435,1093,460,1121,525,1147,604,1169,691,1205,862,1225,986"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1QMMMMDEngine.html#a14e51c186d75bc641c2bf5d599249678" title="Store the summed QM reference energies of all QM molecules in PhysicalData; they are subtracted from ..." alt="" coords="807,516,1035,560"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="1222,984,1211,903,1200,850,1185,792,1163,733,1136,675,1101,621,1058,575,1036,559,1035,554,1061,571,1105,618,1140,672,1168,731,1190,790,1205,849,1216,902,1227,985"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1HybridMDEngine.html#a2656a9e043ef205bbc4d247034f2feea" title="Combine inner (QM) and outer (MM) forces into final atomic forces." alt="" coords="239,36,442,80"/>
+<area shape="poly" id="edge19_Node000001_Node000012" title=" " alt="" coords="1224,984,1214,808,1203,682,1188,546,1166,411,1138,287,1121,234,1102,188,1081,150,1058,123,1024,96,988,73,949,54,909,39,824,19,737,9,651,9,569,15,495,26,433,37,430,33,494,20,569,10,651,4,737,4,825,13,910,34,951,49,990,68,1027,91,1062,119,1085,147,1107,185,1126,232,1143,286,1172,410,1193,545,1209,682,1219,808,1229,986"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1QMMMMDEngine.html#a9e734e236a41f9592b42dcb4ced9c92e" title="Dispatch QM&#45;force redistribution for smoothing&#45;zone molecules. Not used in the code yet,..." alt="" coords="793,724,1049,768"/>
+<area shape="poly" id="edge21_Node000001_Node000013" title=" " alt="" coords="1212,986,1190,942,1156,887,1112,830,1086,805,1058,783,1039,772,1038,766,1061,779,1090,801,1116,827,1160,884,1195,940,1218,987"/>
+<area shape="rect" id="Node000014" href="$classengine_1_1QMMMMDEngine.html#af254cb95cb1d6da128047b6315e9a36d" title="Validates that all non&#45;core molecules have a non&#45;zero moltype." alt="" coords="248,105,433,150"/>
+<area shape="poly" id="edge22_Node000001_Node000014" title=" " alt="" coords="1223,984,1212,815,1201,696,1185,567,1164,440,1136,324,1119,274,1101,231,1080,196,1058,171,1038,157,1013,146,947,128,867,118,777,112,591,113,435,122,432,117,591,108,777,107,867,112,948,123,1015,141,1041,153,1061,167,1085,193,1105,229,1124,272,1141,323,1169,439,1191,566,1207,695,1218,815,1228,985"/>
+<area shape="rect" id="Node000015" href="$classengine_1_1HybridMDEngine.html#afb12a6766301f51776e753c89c86dcec" title="Scale forces of smoothing zone molecules by their smoothing factor for inner contribution." alt="" coords="784,654,1058,699"/>
+<area shape="poly" id="edge24_Node000001_Node000015" title=" " alt="" coords="1217,984,1198,928,1166,854,1145,815,1120,778,1091,743,1058,714,1041,702,1040,697,1061,709,1095,740,1124,775,1149,812,1171,851,1203,926,1222,986"/>
+<area shape="rect" id="Node000016" href="$classengine_1_1HybridMDEngine.html#ad25b26e48ce67090c3248df8ab0963e4" title="Scale forces of smoothing zone molecules by complementary smoothing factor for outer contribution." alt="" coords="782,793,1060,838"/>
+<area shape="poly" id="edge26_Node000001_Node000016" title=" " alt="" coords="1205,988,1145,920,1104,883,1058,852,1035,841,1034,836,1061,848,1107,879,1149,917,1210,988"/>
+<area shape="rect" id="Node000017" href="$classengine_1_1QMMMMDEngine.html#a4439f3326d08dfe4dcdcbaa9b6b6d1fa" title="Set the number of QM atoms in physical data for output purposes." alt="" coords="827,862,1015,907"/>
+<area shape="poly" id="edge28_Node000001_Node000017" title=" " alt="" coords="1191,992,1131,957,1059,922,1016,907,1014,902,1061,917,1134,952,1196,991"/>
+<area shape="rect" id="Node000018" href="$classengine_1_1HessianEngine.html#ab0c9bbc29efb78c084d724876e9ad736" title=" " alt="" coords="832,1121,1010,1166"/>
+<area shape="poly" id="edge30_Node000001_Node000018" title=" " alt="" coords="1191,1038,1134,1076,1061,1111,1012,1127,1009,1122,1059,1106,1131,1071,1196,1035"/>
+<area shape="rect" id="Node000020" href="$classengine_1_1HessianEngine.html#a6aab0fbfa97a93ee0eb0c236db640c4a" title=" " alt="" coords="241,1130,440,1157"/>
+<area shape="poly" id="edge42_Node000001_Node000020" title=" " alt="" coords="1223,1041,1207,1105,1176,1182,1154,1222,1128,1259,1097,1292,1061,1319,1013,1342,963,1357,911,1364,858,1365,805,1360,752,1350,649,1318,554,1277,471,1232,404,1191,361,1160,360,1155,407,1186,473,1227,556,1272,651,1313,753,1345,806,1355,858,1360,911,1359,962,1352,1011,1337,1058,1314,1094,1288,1124,1256,1150,1219,1171,1180,1202,1103,1220,1045"/>
+<area shape="rect" id="Node000022" href="$classengine_1_1MMMDEngine.html#a7a20825c3fd225c38de78654ec10966c" title="calculate MM forces" alt="" coords="839,1190,1003,1235"/>
+<area shape="poly" id="edge34_Node000001_Node000022" title=" " alt="" coords="1210,1039,1149,1112,1107,1149,1061,1180,1033,1193,1004,1202,1002,1197,1031,1188,1058,1176,1104,1145,1145,1108,1206,1042"/>
+<area shape="rect" id="Node000023" href="$classengine_1_1QMMDEngine.html#a0744d9c731f6ced9d6fe9cb5abcbc898" title="calculate QM forces" alt="" coords="840,1260,1002,1304"/>
+<area shape="poly" id="edge35_Node000001_Node000023" title=" " alt="" coords="1217,1040,1195,1088,1160,1145,1116,1201,1090,1227,1061,1250,1033,1264,1003,1274,1001,1269,1031,1260,1058,1245,1086,1223,1112,1198,1156,1142,1190,1086,1213,1044"/>
+<area shape="rect" id="Node000024" href="$classengine_1_1MDEngine.html#ad80990e75804aa2788abb5cffa642194" title=" " alt="" coords="818,1449,1024,1494"/>
+<area shape="poly" id="edge37_Node000001_Node000024" title=" " alt="" coords="1226,1041,1215,1123,1187,1229,1166,1286,1138,1342,1104,1394,1061,1439,1026,1460,1023,1455,1058,1435,1099,1390,1134,1339,1161,1284,1182,1228,1210,1122,1223,1046"/>
+<area shape="rect" id="Node000026" href="$classengine_1_1MDEngine.html#a1b12dc16a8437145f083928cbc9a8148" title="Run the simulation for numberOfSteps steps." alt="" coords="256,1707,424,1735"/>
+<area shape="poly" id="edge43_Node000001_Node000026" title=" " alt="" coords="1226,1041,1212,1185,1180,1386,1158,1488,1131,1581,1099,1655,1081,1684,1061,1704,1027,1717,966,1726,791,1733,593,1732,425,1727,425,1722,593,1726,791,1728,965,1720,1025,1712,1058,1700,1077,1680,1094,1653,1126,1579,1153,1487,1175,1385,1206,1185,1223,1046"/>
+<area shape="rect" id="Node000027" href="$classengine_1_1RingPolymerEngine.html#ae282321f05969b8574a27d6f4c7e8525" title="combining all beads into one simulation box" alt="" coords="821,1588,1021,1632"/>
+<area shape="poly" id="edge40_Node000001_Node000027" title=" " alt="" coords="1229,1041,1226,1145,1219,1213,1205,1288,1184,1366,1154,1443,1114,1515,1089,1547,1061,1577,1043,1591,1022,1601,1021,1596,1040,1586,1058,1573,1085,1544,1110,1512,1150,1441,1179,1365,1200,1287,1213,1212,1221,1144,1226,1046"/>
+<area shape="rect" id="Node000028" href="$classengine_1_1RingPolymerQMMDEngine.html#abf2a1b83ebf163c6eec06c0a99883815" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="490,1613,734,1658"/>
+<area shape="poly" id="edge44_Node000001_Node000028" title=" " alt="" coords="1225,1041,1209,1175,1177,1359,1154,1452,1128,1536,1097,1603,1080,1628,1061,1647,1016,1674,966,1690,913,1698,860,1698,807,1693,757,1684,674,1661,674,1656,759,1679,808,1688,860,1693,913,1693,965,1685,1014,1669,1058,1643,1076,1625,1092,1600,1123,1534,1149,1450,1171,1358,1204,1174,1222,1045"/>
+<area shape="rect" id="Node000029" href="$classengine_1_1MDEngine.html#aca524b22f3c7c10ee43a9d8bfbcd2748" title="MD Loop after force calculation." alt="" coords="819,1518,1023,1563"/>
+<area shape="poly" id="edge45_Node000001_Node000029" title=" " alt="" coords="1228,1041,1221,1134,1211,1194,1196,1259,1175,1327,1146,1393,1109,1454,1061,1508,1044,1521,1025,1530,1023,1525,1041,1516,1058,1504,1105,1451,1142,1390,1170,1325,1191,1258,1206,1193,1215,1133,1225,1046"/>
+<area shape="rect" id="Node000030" href="$classengine_1_1MDEngine.html#ab9b1faff658c5428b47d78c27ecd493f" title="MD Loop before force calculation." alt="" coords="819,1380,1023,1424"/>
+<area shape="poly" id="edge47_Node000001_Node000030" title=" " alt="" coords="1223,1041,1207,1109,1176,1195,1154,1241,1128,1285,1097,1327,1061,1363,1025,1385,1022,1380,1058,1359,1093,1323,1124,1282,1149,1238,1171,1193,1202,1108,1220,1045"/>
+<area shape="rect" id="Node000031" href="$classengine_1_1HessianEngine.html#ab27e35829fa761f109759cbb70c1e4d0" title="Writes output files for the Hessian engine." alt="" coords="836,1052,1006,1096"/>
+<area shape="poly" id="edge49_Node000001_Node000031" title=" " alt="" coords="1136,1033,1007,1060,1005,1055,1141,1030"/>
+<area shape="rect" id="Node000033" href="$classengine_1_1MDEngine.html#a9dbec16e825f8e48ade490939cac623f" title="Writes output files." alt="" coords="500,1758,724,1785"/>
+<area shape="poly" id="edge52_Node000001_Node000033" title=" " alt="" coords="1226,1041,1213,1191,1182,1403,1160,1511,1133,1609,1100,1689,1082,1719,1061,1741,1037,1756,1004,1766,918,1779,819,1782,725,1781,724,1775,819,1777,917,1773,1002,1761,1035,1751,1058,1737,1077,1716,1095,1687,1128,1608,1155,1510,1177,1402,1207,1191,1223,1045"/>
+<area shape="rect" id="Node000034" href="$classengine_1_1OptEngine.html#a11e761e6a2b3a0137798a01d49ab545d" title="Writes output files." alt="" coords="847,1809,995,1854"/>
+<area shape="poly" id="edge54_Node000001_Node000034" title=" " alt="" coords="1226,1041,1212,1198,1180,1423,1157,1538,1130,1644,1099,1732,1081,1766,1062,1792,1032,1814,996,1827,995,1822,1029,1809,1058,1788,1076,1763,1094,1730,1125,1643,1152,1537,1175,1422,1206,1198,1223,1046"/>
+<area shape="rect" id="Node000036" href="$classengine_1_1RingPolymerEngine.html#abffa1714d9c76611fb3c3d926dfce11c" title="writes the ring polymer output files." alt="" coords="821,1878,1021,1923"/>
+<area shape="poly" id="edge56_Node000001_Node000036" title=" " alt="" coords="1227,1041,1215,1212,1186,1460,1164,1588,1136,1705,1102,1802,1083,1839,1062,1868,1044,1882,1022,1893,1021,1888,1041,1878,1058,1864,1078,1837,1097,1800,1131,1704,1159,1587,1181,1459,1210,1211,1224,1046"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="791,926,781,922,732,887,688,845,629,771,629,766,692,841,735,882,784,917,796,925"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1QMMMMDEngine.html#a58d17897c3573c25f6a815086f36ada1" title="Apply the selected smoothing method for QM/MM boundary treatment." alt="" coords="248,361,433,406"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="582,712,358,409,359,403,588,710"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="301,351,124,184,123,178,306,349"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="798,637,783,645,708,684,646,725,642,721,705,680,781,640,802,633"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="783,428,705,409,703,404,788,426"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="502,385,435,386,432,381,506,382"/>
+<area shape="poly" id="edge11_Node000009_Node000008" title=" " alt="" coords="783,342,706,363,702,358,787,338"/>
+<area shape="poly" id="edge15_Node000010_Node000008" title=" " alt="" coords="780,385,707,386,704,381,784,382"/>
+<area shape="poly" id="edge18_Node000011_Node000003" title=" " alt="" coords="791,569,784,575,735,610,692,651,631,725,627,722,688,647,732,606,781,570,795,565"/>
+<area shape="poly" id="edge17_Node000011_Node000008" title=" " alt="" coords="795,511,781,506,740,484,700,458,640,409,639,404,703,453,742,479,783,501,800,509"/>
+<area shape="poly" id="edge20_Node000012_Node000005" title=" " alt="" coords="254,88,240,95,147,137,142,134,238,90,257,84"/>
+<area shape="poly" id="edge23_Node000014_Node000005" title=" " alt="" coords="230,143,193,148,189,144,234,139"/>
+<area shape="poly" id="edge25_Node000015_Node000003" title=" " alt="" coords="801,705,711,727,708,722,806,701"/>
+<area shape="poly" id="edge27_Node000016_Node000003" title=" " alt="" coords="801,790,710,770,708,765,806,788"/>
+<area shape="poly" id="edge29_Node000017_Node000003" title=" " alt="" coords="810,862,781,853,705,813,645,772,644,766,708,808,783,848,815,860"/>
+<area shape="rect" id="Node000019" href="$classengine_1_1HessianEngine.html#a12d4af4d469c1e64fa96a679345aae96" title=" " alt="" coords="528,1121,697,1166"/>
+<area shape="poly" id="edge31_Node000018_Node000019" title=" " alt="" coords="814,1145,698,1146,696,1141,819,1142"/>
+<area shape="poly" id="edge32_Node000019_Node000020" title=" " alt="" coords="510,1145,441,1146,439,1141,514,1142"/>
+<area shape="rect" id="Node000021" href="$testOptimizerSetup_8cpp.html#add470e00111eb6b85ec2aa3e032d9634" title=" " alt="" coords="64,1130,132,1157"/>
+<area shape="poly" id="edge33_Node000020_Node000021" title=" " alt="" coords="224,1145,134,1146,131,1141,228,1142"/>
+<area shape="rect" id="Node000025" href="$classengine_1_1MDEngine.html#a4d40f20d184f691921ba80b10935c0dd" title="Takes one step in the simulation." alt="" coords="510,1492,714,1520"/>
+<area shape="poly" id="edge38_Node000024_Node000025" title=" " alt="" coords="800,1486,716,1497,714,1492,805,1484"/>
+<area shape="poly" id="edge39_Node000025_Node000026" title=" " alt="" coords="582,1528,492,1603,361,1708,358,1704,488,1599,578,1531"/>
+<area shape="poly" id="edge41_Node000027_Node000028" title=" " alt="" coords="803,1620,735,1628,734,1623,808,1619"/>
+<area shape="poly" id="edge46_Node000029_Node000025" title=" " alt="" coords="801,1528,715,1520,714,1515,806,1527"/>
+<area shape="poly" id="edge48_Node000030_Node000025" title=" " alt="" coords="805,1430,783,1439,709,1467,646,1494,643,1489,707,1462,781,1434,810,1428"/>
+<area shape="rect" id="Node000032" href="$classengine_1_1HessianEngine.html#a7cb3ae0150c662886e24f3aeee0e54a2" title=" " alt="" coords="528,1052,697,1096"/>
+<area shape="poly" id="edge50_Node000031_Node000032" title=" " alt="" coords="819,1075,698,1077,696,1072,823,1073"/>
+<area shape="poly" id="edge51_Node000032_Node000020" title=" " alt="" coords="511,1101,399,1131,396,1127,515,1098"/>
+<area shape="poly" id="edge53_Node000033_Node000026" title=" " alt="" coords="517,1755,419,1738,418,1733,522,1754"/>
+<area shape="rect" id="Node000035" href="$classengine_1_1OptEngine.html#ad8f53038037a343b41cdc75d1d47382d" title="run the optimizer" alt="" coords="528,1818,697,1845"/>
+<area shape="poly" id="edge55_Node000034_Node000035" title=" " alt="" coords="829,1832,697,1834,697,1829,834,1831"/>
+</map>

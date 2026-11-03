@@ -1,0 +1,13 @@
+<map id="OptimizerSettings::getOptimizer" name="OptimizerSettings::getOptimizer">
+<area shape="rect" id="Node000001" title="returns the optimizer as string" alt="" coords="812,36,958,81"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HessianEngine.html#ab0c9bbc29efb78c084d724876e9ad736" title=" " alt="" coords="585,5,764,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="794,45,764,43,764,38,799,46"/>
+<area shape="rect" id="Node000006" href="$testOptParser_8cpp.html#a80f5d9b33904237465c93624947708fa" title="test parsing the optimizer input key" alt="" coords="640,74,709,102"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="799,70,709,86,709,80,794,71"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1HessianEngine.html#a12d4af4d469c1e64fa96a679345aae96" title=" " alt="" coords="368,5,537,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="567,28,538,30,538,25,573,27"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1HessianEngine.html#a6aab0fbfa97a93ee0eb0c236db640c4a" title=" " alt="" coords="122,14,320,42"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="350,28,321,30,320,25,356,27"/>
+<area shape="rect" id="Node000005" href="$testOptimizerSetup_8cpp.html#add470e00111eb6b85ec2aa3e032d9634" title=" " alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="104,29,75,30,73,25,109,26"/>
+</map>

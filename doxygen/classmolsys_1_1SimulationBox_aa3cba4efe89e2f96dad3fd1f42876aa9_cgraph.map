@@ -1,0 +1,7 @@
+<map id="molsys::SimulationBox::initPositions" name="molsys::SimulationBox::initPositions">
+<area shape="rect" id="Node000001" title="initialize positions of all atoms" alt="" coords="5,40,177,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="250,5,421,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,48,237,41,232,43,178,53"/>
+<area shape="rect" id="Node000003" href="$classrng_1_1RandomNumberGenerator.html#a1708f43acd20b0a7f563f8f71855b2ce" title="get a random double from a uniform real distribution" alt="" coords="225,75,446,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,72,212,79,207,79,177,77"/>
+</map>

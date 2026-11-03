@@ -1,0 +1,5 @@
+<map id="pot::CoulombWolf" name="pot::CoulombWolf">
+<area shape="rect" id="Node000001" title="CoulombWolf inherits CoulombPotential CoulombWolf is a class for the Coulomb potential with Wolf summ..." alt="" coords="34,371,196,712"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1CoulombPotential.html" title="CoulombPotential is a base class for all coulomb type potentials." alt="" coords="5,5,225,323"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,336,118,372,113,372,115,341"/>
+</map>

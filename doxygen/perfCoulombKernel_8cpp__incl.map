@@ -1,0 +1,26 @@
+<map id="/home/runner/work/PQ/PQ/benchmarks/perf/perfCoulombKernel.cpp" name="/home/runner/work/PQ/PQ/benchmarks/perf/perfCoulombKernel.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="185,5,430,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,71,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,70,86,114,84,109,218,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="94,115,155,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,69,166,110,163,106,248,66"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="179,115,244,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="277,66,238,106,234,102,273,69"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="268,115,347,143"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="309,65,310,100,305,98,306,70"/>
+<area shape="rect" id="Node000006" href="$coulombShiftedPotential_8hpp.html" title=" " alt="" coords="371,115,580,143"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="364,65,440,107,435,108,363,70"/>
+<area shape="rect" id="Node000009" href="$coulombWolf_8hpp.html" title=" " alt="" coords="603,115,737,143"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="429,65,605,110,600,112,429,70"/>
+<area shape="rect" id="Node000010" href="$perfAlloc_8hpp.html" title=" " alt="" coords="760,115,868,143"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="431,56,747,113,743,116,431,61"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="543,266,602,294"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="474,141,472,179,475,199,482,217,503,241,531,262,526,261,499,245,477,220,469,200,467,179,471,145"/>
+<area shape="rect" id="Node000008" href="$coulombPotential_8hpp.html" title=" " alt="" coords="491,191,654,218"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="493,141,546,182,541,181,492,146"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="575,217,575,252,571,249,571,221"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="675,141,678,179,676,200,668,220,646,245,617,264,616,259,642,241,664,217,671,199,673,179,671,145"/>
+<area shape="poly" id="edge11_Node000009_Node000008" title=" " alt="" coords="655,142,603,184,601,179,650,144"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="781,191,847,218"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="816,141,816,177,812,173,812,145"/>
+</map>

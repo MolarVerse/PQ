@@ -1,0 +1,19 @@
+<map id="/home/runner/work/PQ/PQ/src/settings/simulationBoxSettings.cpp" name="/home/runner/work/PQ/PQ/src/settings/simulationBoxSettings.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="142,5,337,67"/>
+<area shape="rect" id="Node000002" href="$simulationBoxSettings_8hpp.html" title=" " alt="" coords="141,115,338,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,65,242,100,237,98,238,70"/>
+<area shape="rect" id="Node000003" href="$config_2enums_2simulationBox_8hpp.html" title=" " alt="" coords="61,191,252,218"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="227,142,184,182,181,178,222,145"/>
+<area shape="rect" id="Node000006" href="$setting_8hpp.html" title=" " alt="" coords="327,191,421,218"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="264,141,340,183,335,184,263,146"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,266,71,294"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="138,219,73,260,70,256,133,218"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="95,266,218,294"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="158,217,159,252,154,249,155,221"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="242,266,364,294"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="364,218,328,257,325,253,359,220"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="389,266,463,294"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="385,217,411,255,406,253,382,221"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="487,266,578,294"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="403,216,493,260,488,259,402,221"/>
+</map>

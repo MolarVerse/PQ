@@ -1,0 +1,5 @@
+<map id="opt::Optimizer::getEnergy" name="opt::Optimizer::getEnergy">
+<area shape="rect" id="Node000001" title="get the energy in history with negative index offset" alt="" coords="5,14,194,42"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html#a7c69cb7b5eb67f9b5c519e32a516cb0c" title="get history index" alt="" coords="242,5,432,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,25,229,27,224,28,194,30"/>
+</map>

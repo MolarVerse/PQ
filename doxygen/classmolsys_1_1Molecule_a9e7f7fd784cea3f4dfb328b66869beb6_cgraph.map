@@ -1,0 +1,5 @@
+<map id="molsys::Molecule::setForcedOuter" name="molsys::Molecule::setForcedOuter">
+<area shape="rect" id="Node000001" title="set if the molecule is forced to be in the outer region for hybrid calculations" alt="" coords="5,5,212,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a601b1af5487ef1e2ea9670d03b0c2471" title="return if the molecule is forced to be in the outer region for hybrid calculations" alt="" coords="260,5,457,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,25,246,27,241,28,212,30"/>
+</map>

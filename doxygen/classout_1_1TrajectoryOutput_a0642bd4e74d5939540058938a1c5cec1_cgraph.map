@@ -1,0 +1,12 @@
+<map id="out::TrajectoryOutput::writeHeader" name="out::TrajectoryOutput::writeHeader">
+<area shape="rect" id="Node000001" title="Write the header of a trajectory files." alt="" coords="5,116,164,160"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="212,29,411,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,113,163,89,211,66,232,61,227,63,213,71,165,93,123,117"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#ae545f6de8888eae2f552ed72a5497b2d" title="gets the box angles" alt="" coords="226,81,397,126"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="163,123,213,117,208,120,165,128"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a81c7ee944222547e6e980e8325a08757" title="gets the box dimensions" alt="" coords="226,150,397,195"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="164,147,213,156,208,158,165,153"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="226,220,397,264"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="124,158,213,205,229,214,224,213,211,210,123,163"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="272,29,266,20,271,11,287,5,311,3,338,5,354,14,349,14,337,10,311,8,288,10,275,15,272,20,277,29"/>
+</map>

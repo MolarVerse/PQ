@@ -1,0 +1,14 @@
+<map id="/home/runner/work/PQ/PQ/src/forceField/jCouplingType.cpp" name="/home/runner/work/PQ/PQ/src/forceField/jCouplingType.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,205,67"/>
+<area shape="rect" id="Node000002" href="$jCouplingType_8hpp.html" title=" " alt="" coords="35,115,175,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,65,108,100,102,99,104,70"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="24,266,93,294"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,141,82,192,66,252,61,250,77,190,97,145"/>
+<area shape="rect" id="Node000004" href="$strongTypes_8hpp.html" title=" " alt="" coords="92,191,219,218"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="115,141,141,177,135,178,113,146"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="141,218,89,259,86,255,136,220"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="120,266,186,294"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="157,217,156,252,152,249,153,221"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="209,266,332,294"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="177,216,240,257,235,258,175,221"/>
+</map>

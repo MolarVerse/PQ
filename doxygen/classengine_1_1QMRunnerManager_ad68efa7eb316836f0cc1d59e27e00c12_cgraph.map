@@ -1,0 +1,11 @@
+<map id="engine::QMRunnerManager::createAseDftbRunner" name="engine::QMRunnerManager::createAseDftbRunner">
+<area shape="rect" id="Node000001" title="Create an ASE DFTB+ QM runner." alt="" coords="5,109,204,154"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#abc2badd548c139029b3475780817e981" title="returns the Hubbard Derivative dictionary" alt="" coords="252,5,408,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,107,251,60,266,55,261,58,253,65,154,111"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a743d73b10017eca6a17215df472bf87a" title="returns the slakosPath" alt="" coords="252,75,408,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,114,239,110,234,112,205,119"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#ab324126741d9b3eecb6e7886d364178e" title="returns if the dispersion correction should be used" alt="" coords="252,144,408,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="204,144,239,151,234,153,204,150"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="252,213,408,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="154,152,253,199,266,207,261,206,251,203,152,157"/>
+</map>

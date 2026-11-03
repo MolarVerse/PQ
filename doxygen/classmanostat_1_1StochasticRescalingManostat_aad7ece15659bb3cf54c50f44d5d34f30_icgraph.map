@@ -1,0 +1,21 @@
+<map id="manostat::StochasticRescalingManostat::_hasFixedAxis" name="manostat::StochasticRescalingManostat::_hasFixedAxis">
+<area shape="rect" id="Node000001" title="Check if a specific axis is fixed." alt="" coords="686,121,908,166"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html#a542d1f74440916dd1520692cf879a2c8" title="calculate mu as scaling factor for Stochastic Rescaling manostat (anisotropic)" alt="" coords="398,5,631,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="741,113,692,89,637,65,605,53,605,48,639,60,694,85,746,113"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html#a7cbf6a69e255cf92a192c2365f167f27" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="408,74,621,136"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="668,127,621,122,621,117,674,126"/>
+<area shape="rect" id="Node000005" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="391,160,638,205"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="668,161,639,168,638,163,674,160"/>
+<area shape="rect" id="Node000006" href="$classmanostat_1_1StochasticRescalingManostat.html#a4c9d98558f00c84cd2e452c96f343255" title="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)" alt="" coords="404,229,625,274"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="741,173,639,219,604,231,603,226,637,215,735,174"/>
+<area shape="rect" id="Node000003" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="198,91,266,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,56,268,98,266,93,418,53"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="391,106,267,108,266,102,396,104"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="413,156,267,117,267,112,418,154"/>
+<area shape="rect" id="Node000007" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="122,229,343,274"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="386,252,344,254,343,249,391,251"/>
+<area shape="rect" id="Node000008" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="5,211,74,239"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="104,235,75,232,74,227,109,233"/>
+<area shape="rect" id="Node000009" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="5,263,74,291"/>
+<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="104,269,75,275,74,270,109,268"/>
+</map>

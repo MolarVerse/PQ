@@ -1,0 +1,5 @@
+<map id="setup::SimulationBoxSetup" name="setup::SimulationBoxSetup">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,148,192,578"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1SetupBase.html" title="Base class for setup&#45;related classes." alt="" coords="15,5,182,100"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,112,101,149,96,148,98,117"/>
+</map>

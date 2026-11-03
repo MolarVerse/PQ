@@ -1,0 +1,9 @@
+<map id="settings::FileSettings" name="settings::FileSettings">
+<area shape="rect" id="Node000001" title="static class to store settings of the files" alt="" coords="43,513,277,920"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="31,144,107,216"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,213,61,337,64,413,73,488,75,496,69,496,68,489,58,413,56,337,65,219"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,133,95"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,107,72,144,67,144,69,112"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="232,144,271,216"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="251,214,245,338,225,489,224,497,219,495,220,488,240,337,250,219"/>
+</map>

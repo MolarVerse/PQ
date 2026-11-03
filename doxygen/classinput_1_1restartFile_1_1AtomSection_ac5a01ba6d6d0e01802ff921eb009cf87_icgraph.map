@@ -1,0 +1,5 @@
+<map id="input::restartFile::AtomSection::_checkNumberOfLineArguments" name="input::restartFile::AtomSection::_checkNumberOfLineArguments">
+<area shape="rect" id="Node000001" title="checks if the number of elements in the line is correct. The atom section must have 12 or 21 elements..." alt="" coords="224,5,441,67"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#aac27a04235e5b4ddaa34b013e9fb060b" title="processes the atom section of the rst file" alt="" coords="5,14,176,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,36,176,39,176,34,211,36"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="opt::ConstantLRStrategy::ConstantLRStrategy" name="opt::ConstantLRStrategy::ConstantLRStrategy">
+<area shape="rect" id="Node000001" title="Construct a new ConstantLRStrategy::ConstantLRStrategy object." alt="" coords="5,5,185,50"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1LearningRateStrategy.html#a9a880272644deaa3cbbac8a95dce2cce" title="Construct a new LearningRateStrategy object." alt="" coords="233,5,424,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,25,220,27,214,28,185,30"/>
+</map>

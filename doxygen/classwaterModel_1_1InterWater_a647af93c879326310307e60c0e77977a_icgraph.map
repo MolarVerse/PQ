@@ -1,0 +1,7 @@
+<map id="waterModel::InterWater::_setNonCoulombCutOffRadii" name="waterModel::InterWater::_setNonCoulombCutOffRadii">
+<area shape="rect" id="Node000001" title="Apply radial cutoffs to configured inter&#45;water non&#45;Coulomb pairs." alt="" coords="450,5,664,50"/>
+<area shape="rect" id="Node000002" href="$classwaterModel_1_1InterWater.html#a75feeb2afcfe236ff1d3bc974f1ef0fc" title=" " alt="" coords="228,5,402,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="432,28,403,30,402,25,437,28"/>
+<area shape="rect" id="Node000003" href="$classwaterModel_1_1InterWater.html#adc90588c03308579a80970554db38483" title="Construct an inter&#45;water handler from a state and a strategy." alt="" coords="5,5,180,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="210,28,180,30,180,25,215,27"/>
+</map>

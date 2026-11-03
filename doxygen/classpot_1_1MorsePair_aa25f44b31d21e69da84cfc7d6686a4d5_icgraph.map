@@ -1,0 +1,7 @@
+<map id="pot::MorsePair::MorsePair" name="pot::MorsePair::MorsePair">
+<area shape="rect" id="Node000001" title="Construct a new Morse Pair:: Morse Pair object." alt="" coords="253,32,439,60"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1MorsePair.html#a353fdcd1e2daeea65cbd3521e753015f" title=" " alt="" coords="12,5,198,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,34,199,32,199,27,240,33"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1MorsePair.html#aa7b034a791316b953fa348f5801f792e" title="operator overload for the comparison of two MorsePair objects" alt="" coords="5,57,205,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,58,205,63,205,58,240,57"/>
+</map>

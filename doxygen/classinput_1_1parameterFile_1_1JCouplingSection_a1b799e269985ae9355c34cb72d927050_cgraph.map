@@ -1,0 +1,5 @@
+<map id="input::parameterFile::JCouplingSection::processSection" name="input::parameterFile::JCouplingSection::processSection">
+<area shape="rect" id="Node000001" title="processes one line of the j&#45;coupling section of the parameter file and adds the j&#45;coupling type to th..." alt="" coords="5,5,202,67"/>
+<area shape="rect" id="Node000002" href="$classff_1_1JCouplingType.html#a69300f804e9614ccf36092fdc99e193f" title="set if the upper symmetry should be used" alt="" coords="250,14,398,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,34,237,36,232,36,202,39"/>
+</map>

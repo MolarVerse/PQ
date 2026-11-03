@@ -1,0 +1,17 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests the setup of the intra non bonded interactions" alt="" coords="5,83,74,111"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#aa3a756dbf032ca69d4c428de6a62ad61" title="activate intra non&#45;bonded interactions" alt="" coords="131,5,318,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,80,121,60,142,54,137,57,123,65,74,85"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ab852b64c213d1497a6ca79b268aa7f5b" title="deactivate intra non&#45;bonded interactions" alt="" coords="123,75,326,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,95,110,95,105,99,75,99"/>
+<area shape="rect" id="Node000004" href="$namespacesetup.html#a9ae67951d333dc90d570d847808e5dfa" title="wrapper to construct IntraNonBondedSetup object and setup the intra non bonded interactions" alt="" coords="122,143,328,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="71,109,123,129,147,138,142,139,121,134,71,114"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a34e65d220f84e2579e5ca8a7c010d385" title="Returns true if the intra non&#45;bonded interactions are activated." alt="" coords="376,65,583,110"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="285,140,327,129,390,114,385,116,329,134,287,145"/>
+<area shape="rect" id="Node000006" href="$classsetup_1_1IntraNonBondedSetup.html#a119e0f938e83ba4fad9bfbd8674393a4" title="Setup intra non bonded interactions." alt="" coords="376,135,583,179"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="328,154,363,157,358,157,329,160"/>
+<area shape="rect" id="Node000007" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="408,204,552,249"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="279,169,395,202,390,203,278,174"/>
+<area shape="rect" id="Node000008" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="631,212,776,240"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="552,224,618,226,613,226,552,229"/>
+</map>

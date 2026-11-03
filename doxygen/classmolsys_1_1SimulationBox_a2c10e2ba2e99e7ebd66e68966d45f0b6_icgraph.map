@@ -1,0 +1,18 @@
+<map id="molsys::SimulationBox::getDegreesOfFreedom" name="molsys::SimulationBox::getDegreesOfFreedom">
+<area shape="rect" id="Node000001" title="Get degrees of freedom." alt="" coords="870,85,1047,130"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html#a26fb0d7a4c3963b728c80d2855e6eb30" title="throw if the system has no degrees of freedom" alt="" coords="614,55,822,99"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="852,94,823,93,823,88,857,94"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1NoseHooverThermostat.html#acfd67b9b8239efb85592928ed1d2bce1" title="applies the Nose&#45;Hoover thermostat on the velocities" alt="" coords="5,5,262,50"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="905,77,866,60,822,45,749,30,673,20,523,10,381,10,262,17,261,12,381,5,523,4,674,14,750,25,823,40,868,55,911,78"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1NoseHooverThermostat.html#a9d96197913c151a95e7ea548a93463d1" title="applies the Nose&#45;Hoover thermostat on the forces" alt="" coords="5,85,262,130"/>
+<area shape="poly" id="edge9_Node000001_Node000005" title=" " alt="" coords="852,111,822,114,566,117,310,114,263,114,262,108,310,109,566,111,822,109,857,111"/>
+<area shape="rect" id="Node000006" href="$classthermostat_1_1VelocityRescalingThermostat.html#a0c78a478f5c153332a6c1d5bd42eff1f" title="apply thermostat &#45; Velocity Rescaling" alt="" coords="330,175,546,219"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="891,135,823,158,752,172,679,183,547,195,546,190,679,177,751,167,822,153,886,136"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1NoseHooverThermostat.html#aecf021dd5e429590015d255f232dee08" title="throw if the Nose&#45;Hoover equations divide by zero" alt="" coords="310,55,566,99"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="596,77,567,80,566,74,601,77"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="653,105,493,177,491,171,648,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="291,54,262,51,261,46,297,53"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="291,92,263,97,261,92,296,91"/>
+<area shape="rect" id="Node000007" href="$classthermostat_1_1VelocityRescalingThermostat.html#ad35bf41454e4bc11d0800cd17d325c7f" title=" " alt="" coords="25,175,242,219"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="312,197,242,200,242,194,317,197"/>
+</map>

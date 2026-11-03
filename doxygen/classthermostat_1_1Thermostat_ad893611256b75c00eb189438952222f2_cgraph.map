@@ -1,0 +1,7 @@
+<map id="thermostat::Thermostat::applyTemperatureRamping" name="thermostat::Thermostat::applyTemperatureRamping">
+<area shape="rect" id="Node000001" title="Apply temperature ramping." alt="" coords="5,40,211,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="259,5,471,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,46,246,43,241,45,212,51"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1Thermostat.html#ac10a06698a451c686e0d86720326d2c6" title="set target temperature" alt="" coords="277,75,453,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,74,264,83,259,83,211,79"/>
+</map>

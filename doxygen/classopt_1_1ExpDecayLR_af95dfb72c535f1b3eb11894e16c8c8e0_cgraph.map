@@ -1,0 +1,5 @@
+<map id="opt::ExpDecayLR::ExpDecayLR" name="opt::ExpDecayLR::ExpDecayLR">
+<area shape="rect" id="Node000001" title="Construct a new Exp Decay L R Strategy:: Exp Decay L R Strategy object." alt="" coords="5,14,226,42"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1LearningRateStrategy.html#a9a880272644deaa3cbbac8a95dce2cce" title="Construct a new LearningRateStrategy object." alt="" coords="274,5,465,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,25,261,28,255,28,226,30"/>
+</map>

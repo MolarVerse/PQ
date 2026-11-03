@@ -1,0 +1,5 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="test splitString by whitespace" alt="" coords="5,5,59,33"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="107,5,251,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,17,93,18,88,20,59,22"/>
+</map>

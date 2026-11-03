@@ -1,0 +1,15 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="test types section processing one line" alt="" coords="5,83,74,111"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a679301f5dbe9461c199de68683937a12" title="get the 1&#45;4 Coulomb scaling factor" alt="" coords="122,5,314,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,80,121,60,140,54,136,58,123,65,75,85"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#a0d72acaaadbb6350e7d7535bf565b1b8" title="get the 1&#45;4 Van der Waals scaling factor" alt="" coords="122,75,314,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,95,108,95,104,99,75,99"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1parameterFile_1_1TypesSection.html#a1b9b9c2e85020f967dd5ced42e2862bb" title="Overwrites process function of ParameterFileSection base class. It just forwards the call to processS..." alt="" coords="132,144,304,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,109,123,129,141,138,136,139,121,134,73,114"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1parameterFile_1_1TypesSection.html#a225f80f033b45312935ba4a36c364b30" title="process types section and sets the scale factors for the 1&#45;4 interactions in potentialSettings" alt="" coords="362,144,582,189"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="304,164,349,166,344,167,305,169"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1PotentialSettings.html#af964035d9a1195110a4cbe480c2c603e" title="Set the 1&#45;4 Coulomb scaling factor in the PotentialSettings class." alt="" coords="630,109,823,154"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="582,149,612,147,618,147,583,154"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1PotentialSettings.html#a3862d5108656cd7fe1b451f9c9bbc8dc" title="Set the 1&#45;4 Van der Waals scaling factor in the PotentialSettings class." alt="" coords="630,179,823,223"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="583,179,618,186,612,186,583,184"/>
+</map>

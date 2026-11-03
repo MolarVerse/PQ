@@ -1,0 +1,13 @@
+<map id="/home/runner/work/PQ/PQ/src/forceField/dihedralType.cpp" name="/home/runner/work/PQ/PQ/src/forceField/dihedralType.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="36,5,228,67"/>
+<area shape="rect" id="Node000002" href="$dihedralType_8hpp.html" title=" " alt="" coords="66,115,198,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,65,135,100,129,99,131,70"/>
+<area shape="rect" id="Node000003" href="$strongTypes_8hpp.html" title=" " alt="" coords="68,191,196,218"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,141,135,176,129,174,131,146"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,266,75,294"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,218,70,259,66,255,113,220"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="99,266,165,294"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="134,217,134,252,130,250,130,221"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="188,266,310,294"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="154,216,219,258,213,259,152,221"/>
+</map>

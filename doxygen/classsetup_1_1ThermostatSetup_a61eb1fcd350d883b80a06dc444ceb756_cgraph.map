@@ -1,0 +1,9 @@
+<map id="setup::ThermostatSetup::writeNoseHooverInfo" name="setup::ThermostatSetup::writeNoseHooverInfo">
+<area shape="rect" id="Node000001" title="write nose hoover thermostat info" alt="" coords="5,75,183,119"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#ad5bc1fa2ddebf943baac0b805c73ab14" title="get the nose hoover chain length" alt="" coords="252,5,464,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,72,258,53,253,56,183,77"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#a0a92303bc2f5aa533b3ac799fb940474" title="get the nose hoover coupling frequency" alt="" coords="231,75,485,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,94,217,96,212,98,184,100"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="253,144,462,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="182,117,258,139,253,140,182,123"/>
+</map>

@@ -1,0 +1,27 @@
+var classmolsys_1_1TriclinicBox =
+[
+    [ "BoxCache", "classmolsys_1_1TriclinicBox.html#a365f2e0b6773f99eb96cdcb581bffc1b", null ],
+    [ "Self", "classmolsys_1_1TriclinicBox.html#a2cb0ca89d857e3c5810a2c45699243a1", null ],
+    [ "TensorCache", "classmolsys_1_1TriclinicBox.html#a1476d9fec28627dfd1cd487aa57bb1ff", null ],
+    [ "TriclinicBox", "classmolsys_1_1TriclinicBox.html#a46f8a3fc36e49942d989900cf80b547e", null ],
+    [ "allowChangeOfAngles", "classmolsys_1_1TriclinicBox.html#ab88f24c610fce8cdd700bacd1a93cd7b", null ],
+    [ "applyPBC", "classmolsys_1_1TriclinicBox.html#a0edad1ad526d4bd8a92ef038be5eadfd", null ],
+    [ "calcShiftVector", "classmolsys_1_1TriclinicBox.html#a37f88cde502dbb1c4f9e5af94569c41f", null ],
+    [ "clone", "classmolsys_1_1TriclinicBox.html#a5a67983566d38d1a8efeb46c5ad49fea", null ],
+    [ "getBoxMatrix", "classmolsys_1_1TriclinicBox.html#ad4505a93c6303c09b03e1b66bfc01bc5", null ],
+    [ "getMinimalBoxDimension", "classmolsys_1_1TriclinicBox.html#a2ff796d0f68a1a91153afcf8aa0fc829", null ],
+    [ "getVolume", "classmolsys_1_1TriclinicBox.html#a1539af6fbca0f20710dae60e4fed71f6", null ],
+    [ "scaleBox", "classmolsys_1_1TriclinicBox.html#af20f84883f6968593bf0d2d59dc8d99a", null ],
+    [ "toOrthoSpace", "classmolsys_1_1TriclinicBox.html#a347899f888610fc3caf3132f6317d414", null ],
+    [ "toOrthoSpace", "classmolsys_1_1TriclinicBox.html#ad00eb8a446fe54c3fc79e8905f01bf2b", null ],
+    [ "toSimSpace", "classmolsys_1_1TriclinicBox.html#ad4ab6dec6bbc65fe1123a98a4a256a58", null ],
+    [ "toSimSpace", "classmolsys_1_1TriclinicBox.html#abd2419620557ca929cb9858a4e7cc07c", null ],
+    [ "wrapPositionIntoBox", "classmolsys_1_1TriclinicBox.html#aa2e4aa350f55cb3d1cfe9b1d424f73e5", null ],
+    [ "::TestTriclinicBox", "classmolsys_1_1TriclinicBox.html#af570b5a0447023d23ead9c2d802c0f0b", null ],
+    [ "_allowChangeOfAngles", "classmolsys_1_1TriclinicBox.html#a32fbe7ba215e46c818b9ee140ac402fb", null ],
+    [ "_boxMatrix", "classmolsys_1_1TriclinicBox.html#a457997573be3ed36d3faaed861fff12a", null ],
+    [ "_inverse", "classmolsys_1_1TriclinicBox.html#ac0c79f8c6bea6b744660e0be42a0d21d", null ],
+    [ "_invTrafoMatrix", "classmolsys_1_1TriclinicBox.html#aa67c60638549876edd023fd342b377b3", null ],
+    [ "_trafoMatrix", "classmolsys_1_1TriclinicBox.html#a4d9077327242a69565639681ff312a7e", null ],
+    [ "_volume", "classmolsys_1_1TriclinicBox.html#a9f5ee5b8d20cff7856afc54599855626", null ]
+];

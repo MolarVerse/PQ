@@ -1,0 +1,5 @@
+<map id="input::ThermostatInputParser" name="input::ThermostatInputParser">
+<area shape="rect" id="Node000001" title="ThermostatInputParser inherits from InputFileParser." alt="" coords="5,304,255,668"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html" title="Base class for parsing the input file." alt="" coords="30,5,230,256"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,268,133,305,128,305,130,274"/>
+</map>

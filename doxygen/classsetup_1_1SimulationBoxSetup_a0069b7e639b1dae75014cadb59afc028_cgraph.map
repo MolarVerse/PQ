@@ -1,0 +1,5 @@
+<map id="setup::SimulationBoxSetup::initVelocities" name="setup::SimulationBoxSetup::initVelocities">
+<area shape="rect" id="Node000001" title="Initialize the velocities of the simulation box." alt="" coords="5,5,203,50"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1SimulationBoxSetup.html#aefee9580f5dfc37bcbb810a262f7cf09" title="returns if the velocities in the start file are zero" alt="" coords="251,5,448,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,25,238,27,232,28,203,30"/>
+</map>

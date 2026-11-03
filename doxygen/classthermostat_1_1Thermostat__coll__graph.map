@@ -1,0 +1,7 @@
+<map id="thermostat::Thermostat" name="thermostat::Thermostat">
+<area shape="rect" id="Node000001" title="Thermostat is a base class for all thermostats." alt="" coords="18,195,234,513"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,60,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="29,75,30,122,37,171,39,179,33,180,31,172,25,123,29,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="195,5,244,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,75,193,172,190,180,185,178,187,171,211,80"/>
+</map>

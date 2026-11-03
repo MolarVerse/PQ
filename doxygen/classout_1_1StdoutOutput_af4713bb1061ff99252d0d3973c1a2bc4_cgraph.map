@@ -1,0 +1,5 @@
+<map id="out::StdoutOutput::writeDensityWarning" name="out::StdoutOutput::writeDensityWarning">
+<area shape="rect" id="Node000001" title="write a warning message to the stdout if density and box dimensions are set" alt="" coords="5,5,163,50"/>
+<area shape="rect" id="Node000002" href="$classexc_1_1BaseException.html#a2258989a5b44af646fdaa2de145f822d" title=" " alt="" coords="211,5,359,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,25,198,27,193,28,163,30"/>
+</map>

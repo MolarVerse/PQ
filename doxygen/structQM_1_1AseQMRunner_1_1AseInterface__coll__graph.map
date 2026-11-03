@@ -1,0 +1,7 @@
+<map id="QM::AseQMRunner::AseInterface" name="QM::AseQMRunner::AseInterface">
+<area shape="rect" id="Node000001" title="PIMPL Interface to the ASE QM calculator." alt="" coords="5,195,228,268"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="22,5,73,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,75,41,123,44,147,51,170,58,182,52,182,46,172,38,149,35,123,40,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="121,5,251,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,75,175,123,159,172,154,183,150,179,154,170,170,122,180,79"/>
+</map>

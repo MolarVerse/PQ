@@ -1,0 +1,9 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a1db479eaf0e22f7360878526e43d2fd1" title="set the temperature ramp frequency" alt="" coords="122,5,358,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,109,49,104,52,75,59"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#ae29ae0e19ed6e7ca9b725ac2c8b063ec" title="sets the thermostatType to enum in settings" alt="" coords="135,75,344,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,65,122,75,118,78,74,71"/>
+<area shape="rect" id="Node000004" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="406,75,613,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="345,94,393,97,388,97,345,100"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="rng::RandomNumberGenerator::RandomNumberGenerator" name="rng::RandomNumberGenerator::RandomNumberGenerator">
+<area shape="rect" id="Node000001" title="constructor" alt="" coords="5,40,227,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a38414ccaea96531641020968a7b85685" title="get the random seed value" alt="" coords="275,5,460,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,44,262,42,257,43,228,50"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ae333019b7750ca73befd75830280ab38" title="get if the random seed value has been set" alt="" coords="275,75,460,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,75,262,82,257,82,227,80"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="timings::Timer::calculateElapsedTime" name="timings::Timer::calculateElapsedTime">
+<area shape="rect" id="Node000001" title="calculates the elapsed time in ms" alt="" coords="226,40,409,85"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a3119bc55709d0730bc64e808f5b72c25" title="calculates the elapsed time of the simulation" alt="" coords="5,5,178,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,46,178,44,178,38,213,45"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1GlobalTimer.html#acf19f2672cc5a6e5bf874de7a4785d36" title="sorts the timers" alt="" coords="12,75,171,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,79,171,87,171,82,213,78"/>
+</map>

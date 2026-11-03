@@ -1,0 +1,7 @@
+<map id="out::StdoutOutput::writeEndedNormally" name="out::StdoutOutput::writeEndedNormally">
+<area shape="rect" id="Node000001" title="write a message to the stdout if the simulation ended normally" alt="" coords="5,24,160,68"/>
+<area shape="rect" id="Node000002" href="$namespaceout.html#ad537bb54d1cb319d4c26e7bcf6655e96" title="construct elapsed time message" alt="" coords="208,5,400,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,34,195,32,189,33,161,39"/>
+<area shape="rect" id="Node000003" href="$namespaceout.html#ab5b9f64c9754bfc1c06a9dd51526a37f" title="construct ended normally message" alt="" coords="229,57,379,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,52,216,61,210,61,160,57"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::calculateAngularMomentum" name="molsys::SimulationBox::calculateAngularMomentum">
+<area shape="rect" id="Node000001" title="calculate angular momentum of simulationBox" alt="" coords="5,5,219,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#ad4727b1fadb1c321684918232354f80c" title="calculate center of mass of simulationBox" alt="" coords="267,5,447,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,25,254,28,248,28,219,30"/>
+</map>

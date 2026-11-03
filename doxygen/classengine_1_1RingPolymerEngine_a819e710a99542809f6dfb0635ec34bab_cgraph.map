@@ -1,0 +1,5 @@
+<map id="engine::RingPolymerEngine::coupleRingPolymerBeads" name="engine::RingPolymerEngine::coupleRingPolymerBeads">
+<area shape="rect" id="Node000001" title="coupling step of ring polymers" alt="" coords="5,5,206,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a8f899f6bc6879407100993fe6a0d9f54" title="get the actual target temperature" alt="" coords="254,5,467,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,25,241,27,235,28,206,30"/>
+</map>

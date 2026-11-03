@@ -1,0 +1,5 @@
+<map id="molsys::TriclinicBox::allowChangeOfAngles" name="molsys::TriclinicBox::allowChangeOfAngles">
+<area shape="rect" id="Node000001" title="indicate whether the box allows change of angles" alt="" coords="204,5,376,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1TriclinicBox.html#a46f8a3fc36e49942d989900cf80b547e" title="Construct a new Triclinic Box object." alt="" coords="5,5,156,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,28,156,30,156,25,191,27"/>
+</map>

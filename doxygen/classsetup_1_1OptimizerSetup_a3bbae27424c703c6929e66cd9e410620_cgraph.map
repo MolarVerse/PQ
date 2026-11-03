@@ -1,0 +1,5 @@
+<map id="setup::OptimizerSetup::setupEvaluator" name="setup::OptimizerSetup::setupEvaluator">
+<area shape="rect" id="Node000001" title="Setup the evaluator." alt="" coords="5,5,172,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="220,5,405,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,25,207,27,202,28,172,30"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="TestInputValidation" name="TestInputValidation">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,126,151,310"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="34,5,123,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,90,81,126,76,126,78,95"/>
+</map>

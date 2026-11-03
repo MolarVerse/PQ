@@ -1,0 +1,5 @@
+<map id="molsys::Cell::assignMoleculeHybridZoneIndices" name="molsys::Cell::assignMoleculeHybridZoneIndices">
+<area shape="rect" id="Node000001" title="Assign molecule indices to hybrid&#45;zone and active/inactive buckets." alt="" coords="5,5,216,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Cell.html#a6841502de7d1d69d5ddc3ef56ef27950" title="returns the number of molecules in the cell" alt="" coords="264,5,461,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,25,251,28,246,28,216,30"/>
+</map>

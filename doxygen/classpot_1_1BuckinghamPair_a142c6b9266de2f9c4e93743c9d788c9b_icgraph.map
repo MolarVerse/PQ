@@ -1,0 +1,9 @@
+<map id="pot::BuckinghamPair::calculate" name="pot::BuckinghamPair::calculate">
+<area shape="rect" id="Node000001" title="calculates the energy and force of a BuckinghamPair" alt="" coords="108,49,263,94"/>
+<area shape="rect" id="Node000002" href="$perfNonCoulombPairs_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,45,61,31,60,26,106,42"/>
+<area shape="rect" id="Node000003" href="$testBuckinghamPair_8cpp.html#aab0a7d75d4dcb5194b1912d8944e9e36" title="tests the calculation of the energy and force of a BuckinghamPair" alt="" coords="6,57,59,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="90,73,60,74,59,69,94,70"/>
+<area shape="rect" id="Node000004" href="$testPairPotentialDerivatives_8cpp.html#a5440fa7d12e6cd3f32481e1b19a7e79f" title=" " alt="" coords="6,109,59,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="101,100,60,117,59,112,106,98"/>
+</map>

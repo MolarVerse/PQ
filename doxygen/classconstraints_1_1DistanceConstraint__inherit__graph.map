@@ -1,0 +1,7 @@
+<map id="constraints::DistanceConstraint" name="constraints::DistanceConstraint">
+<area shape="rect" id="Node000001" title="DistanceConstraint inherits from Bond." alt="" coords="5,352,220,715"/>
+<area shape="rect" id="Node000002" href="$classconnectivity_1_1Bond.html" title="Represents a bond between two atoms." alt="" coords="26,210,199,304"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,317,115,353,110,352,112,322"/>
+<area shape="rect" id="Node000003" href="$classconnectivity_1_1ConnectivityElement.html" title="Represents a connectivity element between n atoms." alt="" coords="23,5,202,162"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,174,115,210,110,209,112,179"/>
+</map>

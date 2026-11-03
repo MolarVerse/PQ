@@ -1,0 +1,21 @@
+<map id="main" name="main">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,152,60,180"/>
+<area shape="rect" id="Node000002" href="$namespacevirial.html#ab6e158e7243acca5bab837457f9b817d" title="Calculate virial tensor and reset shift forces to zero in simulation box." alt="" coords="146,74,301,102"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="48,150,75,130,107,112,133,104,129,107,109,117,78,135,52,154"/>
+<area shape="rect" id="Node000006" href="$namespacebenchSetup.html#a7caf324d4d5d597918acf92d7ed8bd2a" title=" " alt="" coords="108,126,339,154"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="59,160,107,154,103,158,61,165"/>
+<area shape="rect" id="Node000009" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="165,178,282,206"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="60,167,151,180,148,184,60,173"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a4e0af2a46c9addffe64f37b0ab8f2ecc" title="sets the virial type" alt="" coords="131,229,316,274"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="51,178,78,197,109,215,125,223,119,224,106,219,76,201,51,183"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="402,5,574,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="287,71,390,49,385,52,288,76"/>
+<area shape="rect" id="Node000004" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="436,74,541,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="301,85,422,87,418,89,302,90"/>
+<area shape="rect" id="Node000005" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="637,65,815,110"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="541,85,624,87,619,88,541,90"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="387,126,589,154"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="339,137,374,139,369,140,340,142"/>
+<area shape="rect" id="Node000008" href="$namespacebenchSetup.html#ae5c4061d20e04bf2803b833823ddd3b9" title=" " alt="" coords="388,178,588,206"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="298,151,402,174,396,175,298,157"/>
+</map>

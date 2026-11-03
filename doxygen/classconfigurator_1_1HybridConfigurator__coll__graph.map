@@ -1,0 +1,7 @@
+<map id="configurator::HybridConfigurator" name="configurator::HybridConfigurator">
+<area shape="rect" id="Node000001" title=" " alt="" coords="38,151,287,491"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,149,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,75,81,126,83,134,78,134,76,127,75,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="230,5,268,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="240,75,223,136,218,134,237,80"/>
+</map>

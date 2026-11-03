@@ -1,0 +1,15 @@
+<map id="configurator::HybridConfigurator::assignHybridZones" name="configurator::HybridConfigurator::assignHybridZones">
+<area shape="rect" id="Node000001" title="Assign hybrid zones to all molecules based on their distance from the inner region center." alt="" coords="5,179,236,223"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="313,5,484,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,176,201,118,240,87,282,60,301,53,297,57,285,65,243,91,204,122,145,180"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#aa8d4ebfd9525772b278d57e61c65469d" title="get the coreRadius" alt="" coords="310,75,488,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,176,283,129,306,123,302,126,285,134,173,180"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1HybridSettings.html#a012ead724b28803dad533a139ddd0749" title="get the layerRadius" alt="" coords="310,144,488,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="235,184,297,178,292,181,237,189"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="313,213,484,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="236,213,300,222,295,224,236,218"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1HybridSettings.html#a062e2f0295a32ac267132bba10163e58" title="get the pointChargeThickness" alt="" coords="302,283,496,327"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="172,221,285,268,307,277,301,278,283,273,171,227"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1HybridSettings.html#abee55e05df21480e2376937354bd582a" title="get the smoothingRegionThickness" alt="" coords="284,352,514,397"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="143,221,204,280,243,311,285,337,298,346,293,345,282,342,240,315,201,284,142,227"/>
+</map>

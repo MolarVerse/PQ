@@ -1,0 +1,32 @@
+<map id="input::InputKey&lt; T &gt;" name="input::InputKey&lt; T &gt;">
+<area shape="rect" id="Node000001" title="owns key identity, default/actual value storage, and the allowed&#45;values restriction for a single inpu..." alt="" coords="565,736,712,1032"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputKeyBase.html" title="type&#45;erased base for InputKey&lt;T&gt;, so keys of different T can live in the same InputRegistry" alt="" coords="18,457,158,641"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,638,277,711,384,771,484,818,568,855,563,856,482,823,382,775,274,715,170,643"/>
+<area shape="rect" id="Node000003" href="$structinput_1_1KeyMetadata.html" title="everything needed to describe a key to a human – the input&#45;file token itself plus documentation field..." alt="" coords="182,513,319,585"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="264,582,296,647,317,680,343,710,391,753,445,789,500,820,553,848,547,848,497,825,442,794,388,757,339,714,313,683,291,649,263,587"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="31,144,107,216"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="58,219,54,249,50,286,51,324,62,361,84,393,109,412,139,429,172,455,213,499,208,501,169,459,136,433,106,417,80,397,57,363,46,325,44,285,48,248,58,214"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="163,289,338,362"/>
+<area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="106,208,196,278,191,280,107,214"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,5,133,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="69,107,72,144,67,144,69,112"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="362,289,520,362"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="410,364,294,502,289,499,413,359"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="251,359,253,496,248,495,250,364"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="344,513,445,585"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="403,582,424,646,438,679,456,711,502,767,555,818,550,818,498,771,452,714,433,682,419,647,401,587"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="470,513,559,585"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="516,582,523,645,539,711,560,761,555,760,534,713,518,646,514,587"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="583,513,684,585"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="635,583,638,720,633,718,632,587"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="708,504,854,594"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="779,591,770,652,752,713,722,771,719,768,747,711,765,650,776,596"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="878,496,1052,602"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="925,601,827,714,726,810,723,806,823,710,921,603"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="956,289,974,362"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="967,359,968,480,963,478,964,364"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="1076,504,1254,594"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="1122,592,1065,643,980,704,890,758,728,844,726,839,887,754,977,699,1062,639,1118,595"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="1279,513,1318,585"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="1295,583,1286,615,1269,643,1209,697,1141,742,1069,780,995,810,921,834,850,853,729,875,728,870,849,847,919,829,993,805,1067,775,1139,738,1205,693,1264,639,1281,613,1291,587"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="setup::SimulationBoxSetup::writeSetupInfo" name="setup::SimulationBoxSetup::writeSetupInfo">
+<area shape="rect" id="Node000001" title="write setup info to log file" alt="" coords="5,194,203,239"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1SetupBase.html#a362d3b56078a056d79b12450cf15b13b" title="Writes a setup warning to the log and stdout." alt="" coords="274,56,425,100"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,192,184,151,249,110,265,105,260,108,252,115,187,155,134,196"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="253,125,446,170"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="185,191,256,173,251,176,187,196"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1FileSettings.html#ac98cb135ddaf0981954b758332fae25a" title="Get the start file name." alt="" coords="271,194,428,239"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="202,214,258,215,253,218,204,219"/>
+<area shape="rect" id="Node000008" href="$classsetup_1_1SimulationBoxSetup.html#aefee9580f5dfc37bcbb810a262f7cf09" title="returns if the velocities in the start file are zero" alt="" coords="496,284,693,328"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="197,237,251,249,483,288,479,292,250,254,197,242"/>
+<area shape="rect" id="Node000009" href="$classsetup_1_1SimulationBoxSetup.html#a0069b7e639b1dae75014cadb59afc028" title="Initialize the velocities of the simulation box." alt="" coords="251,314,448,359"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="146,237,252,293,281,308,275,308,249,298,144,242"/>
+<area shape="rect" id="Node000003" href="$classout_1_1LogOutput.html#a5deed49b92569a735e96b4ad626cb2c7" title="write a message to issue a warning about the setup" alt="" coords="497,21,692,66"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="425,65,484,58,479,60,426,70"/>
+<area shape="rect" id="Node000005" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="522,90,667,135"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="425,86,510,99,505,101,426,91"/>
+<area shape="rect" id="Node000004" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="741,29,941,57"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="692,41,728,43,723,44,693,46"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="799,28,792,20,798,11,814,5,841,3,870,5,887,14,882,14,869,10,841,8,815,10,801,15,798,20,804,29"/>
+<area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="448,322,478,320,483,320,449,327"/>
+</map>

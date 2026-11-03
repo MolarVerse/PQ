@@ -1,0 +1,5 @@
+<map id="setup::setupNonCoulombPotentialType" name="setup::setupNonCoulombPotentialType">
+<area shape="rect" id="Node000001" title="wrapper to create the non&#45;Coulomb potential of the correct concrete type before any files are read" alt="" coords="5,14,279,42"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1PotentialSetup.html#a55554f3b1dde84b6e97ea29c742bfd84" title="sets nonCoulomb potential type" alt="" coords="327,5,487,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="279,25,314,28,308,28,279,30"/>
+</map>

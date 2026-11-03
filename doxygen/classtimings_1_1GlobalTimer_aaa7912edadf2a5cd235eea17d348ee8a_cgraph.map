@@ -1,0 +1,10 @@
+<map id="timings::GlobalTimer::scoped" name="timings::GlobalTimer::scoped">
+<area shape="rect" id="Node000001" title="get a scoped timer for a specific timer id and section name" alt="" coords="5,36,164,81"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1GlobalTimer.html#a53c4aef287e9fed74c33405fd796d8bd" title="Get the Timer object for a specific TimerId." alt="" coords="218,5,376,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,44,205,41,200,42,165,50"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1Timer.html#a6951b246d68da4d80cc1a7033e7376be" title="get a timings section guard" alt="" coords="212,74,382,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,67,199,73,193,74,164,72"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1Timer.html#aa0c563de41d88fa65ff6bd79fbae20b5" title=" " alt="" coords="430,65,654,110"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="382,85,417,88,412,88,382,90"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="496,63,494,55,502,46,518,41,542,39,569,41,586,50,581,50,567,46,542,44,519,46,505,51,499,57,500,66"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="opt::Optimizer::getHistoryIndex" name="opt::Optimizer::getHistoryIndex">
+<area shape="rect" id="Node000001" title="get history index" alt="" coords="261,101,451,146"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html#a1215529e73a2e277cd82c22e2b4da7b1" title="get the energy in history with negative index offset" alt="" coords="15,5,203,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="303,93,260,70,212,48,176,36,175,31,214,43,262,66,308,92"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1Optimizer.html#a3d194d388e5f12b43a8cff7cfda5b7df" title="get the force in history with negative index offset" alt="" coords="16,57,202,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,101,179,88,178,83,248,99"/>
+<area shape="rect" id="Node000004" href="$classopt_1_1Optimizer.html#ad7bc07f467b30149de27ec51ab6153bf" title="get the max force in history with negative index offset" alt="" coords="6,109,212,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="242,124,213,126,212,121,248,122"/>
+<area shape="rect" id="Node000005" href="$classopt_1_1Optimizer.html#a52f89daeb575fbb08981dd385f8b288a" title="get the position in history with negative index offset" alt="" coords="8,161,210,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="243,147,179,163,178,158,248,145"/>
+<area shape="rect" id="Node000006" href="$classopt_1_1Optimizer.html#a44f9f5e4a782e2f76cad872149a042a6" title="get the RMS force in history with negative index offset" alt="" coords="5,213,213,241"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="308,153,262,181,214,203,176,215,175,210,212,198,260,176,303,155"/>
+</map>

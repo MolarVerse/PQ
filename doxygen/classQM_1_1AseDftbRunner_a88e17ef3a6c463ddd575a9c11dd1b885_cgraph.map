@@ -1,0 +1,13 @@
+<map id="QM::AseDftbRunner::~AseDftbRunner" name="QM::AseDftbRunner::~AseDftbRunner">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,75,162,119"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseDftbRunner.html#acb44aa4fde7386287148d991dbb0ae99" title="Construct a new AseDftbRunner::AseDftbRunner object." alt="" coords="210,75,366,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,94,197,96,192,98,163,100"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1AseDftbRunner.html#a382b224f6d5792db6471a71d76d66648" title="get the 3ob Hubbard derivatives as dict" alt="" coords="437,5,593,50"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="159,72,209,60,319,43,424,34,419,35,320,48,210,65,161,77"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1AseDftbRunner.html#a8362c666305316110412e4e51376b5fb" title="set the 3ob Hubbard derivatives as dict" alt="" coords="437,144,593,189"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="160,117,210,129,320,146,424,159,419,160,319,151,209,134,160,122"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="414,75,616,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="366,94,401,97,396,97,367,100"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="363,72,427,54,422,56,364,77"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="364,117,427,139,422,139,363,123"/>
+</map>

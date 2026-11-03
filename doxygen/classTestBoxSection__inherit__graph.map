@@ -1,0 +1,5 @@
+<map id="TestBoxSection" name="TestBoxSection">
+<area shape="rect" id="Node000001" title="Test fixture for testing the BoxSection class." alt="" coords="5,126,196,265"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="56,5,146,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,90,103,127,98,126,100,95"/>
+</map>

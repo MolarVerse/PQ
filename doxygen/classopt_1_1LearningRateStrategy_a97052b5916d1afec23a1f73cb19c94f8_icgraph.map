@@ -1,0 +1,5 @@
+<map id="opt::LearningRateStrategy::getLearningRate" name="opt::LearningRateStrategy::getLearningRate">
+<area shape="rect" id="Node000001" title="Get the learning rate." alt="" coords="274,5,465,50"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1ConstantDecayLRStrategy.html#a41f549ec9f948bdec7e16863f3634123" title="Update the learning rate." alt="" coords="5,5,226,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="255,28,226,30,226,25,260,28"/>
+</map>

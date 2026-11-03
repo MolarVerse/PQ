@@ -1,0 +1,5 @@
+<map id="input::topology::DistanceConstraintsSection" name="input::topology::DistanceConstraintsSection">
+<area shape="rect" id="Node000001" title="reads the distance constraints section of the topology file" alt="" coords="6,277,178,411"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1topology_1_1TopologySection.html" title="base class for reading topology file sections" alt="" coords="5,5,179,229"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,241,95,277,90,276,91,246"/>
+</map>

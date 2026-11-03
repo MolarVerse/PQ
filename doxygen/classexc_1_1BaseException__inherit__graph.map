@@ -1,0 +1,7 @@
+<map id="exc::BaseException&lt; colorCode, exceptionType &gt;" name="exc::BaseException&lt; colorCode, exceptionType &gt;">
+<area shape="rect" id="Node000001" title="Base class for custom exceptions." alt="" coords="5,358,213,536"/>
+<area shape="rect" id="Node000002" href="$classexc_1_1PQException.html" title="Base class for all custom exceptions in the application." alt="" coords="41,126,178,310"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,322,112,358,107,357,108,327"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="58,5,160,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,90,112,126,107,126,109,95"/>
+</map>

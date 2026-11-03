@@ -1,0 +1,17 @@
+<map id="input::HybridInputParser::addQMForceDistributionKey" name="input::HybridInputParser::addQMForceDistributionKey">
+<area shape="rect" id="Node000001" title="not yet read from the input file as this requires a new smoothing method, see issue #1012 https://git..." alt="" coords="5,125,216,170"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="273,5,432,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,123,262,60,279,55,274,58,265,65,151,127"/>
+<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="303,74,402,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,122,290,102,285,105,204,127"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="273,125,432,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="215,145,260,147,255,149,217,150"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="278,195,427,239"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="191,168,265,191,260,192,191,173"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1HybridSettings.html#a3f10060b5d60e120c5b59267b13219fb" title="set the type of QM force distribtion in hotspot smoothing" alt="" coords="264,264,441,309"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="141,168,198,208,265,249,277,257,272,257,262,254,195,213,140,173"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="517,61,668,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="402,84,504,84,499,86,403,89"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="489,131,696,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="432,147,476,150,471,151,433,152"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="molsys::Box::calcShiftVector" name="molsys::Box::calcShiftVector">
+<area shape="rect" id="Node000001" title=" " alt="" coords="371,48,576,76"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a53ce1e0fe4f4afee117ae80d4b577650" title="calculates the center of mass of the molecule" alt="" coords="114,5,316,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="353,47,317,44,316,39,358,46"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#ac98bbf7b6a919d6723cdf2ad5382c03d" title="reconstructs atom positions around the current center&#45;of&#45;mass image" alt="" coords="107,75,323,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="358,78,324,85,323,80,353,78"/>
+<area shape="rect" id="Node000004" href="$testHybridConfigurator_8cpp.html#af101c1804efd9bcaf35f7299c6e4b295" title=" " alt="" coords="5,83,59,111"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="88,98,59,100,59,94,93,96"/>
+</map>

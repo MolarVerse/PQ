@@ -1,0 +1,21 @@
+<map id="/home/runner/work/PQ/PQ/include/forceField/dihedralForceField.hpp" name="/home/runner/work/PQ/PQ/include/forceField/dihedralForceField.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="78,5,251,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,266,68,294"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,70,104,117,81,153,63,192,45,252,40,250,58,190,76,150,100,113,139,65"/>
+<area shape="rect" id="Node000003" href="$dihedral_8hpp.html" title=" " alt="" coords="113,115,216,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,65,167,100,162,99,164,70"/>
+<area shape="rect" id="Node000006" href="$strongTypes_8hpp.html" title=" " alt="" coords="230,266,358,294"/>
+<area shape="poly" id="edge10_Node000001_Node000006" title=" " alt="" coords="191,65,229,113,253,150,271,190,290,252,285,250,266,192,248,153,225,117,191,70"/>
+<area shape="rect" id="Node000004" href="$connectivityElement_8hpp.html" title=" " alt="" coords="73,191,256,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="166,141,167,176,162,174,163,146"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="140,221,74,261,71,256,143,217"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="91,266,206,294"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="163,217,157,252,152,250,160,221"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="188,216,260,258,255,259,187,222"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="167,342,236,370"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="280,294,231,335,228,330,275,295"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="261,342,326,370"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="296,293,296,328,292,325,292,296"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="350,342,472,370"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="316,292,381,334,375,334,314,297"/>
+</map>

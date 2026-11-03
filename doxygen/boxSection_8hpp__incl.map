@@ -1,0 +1,12 @@
+<map id="/home/runner/work/PQ/PQ/include/input/restartFileReader/boxSection.hpp" name="/home/runner/work/PQ/PQ/include/input/restartFileReader/boxSection.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,207,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="33,191,91,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,65,75,116,66,176,61,175,70,114,89,70"/>
+<area shape="rect" id="Node000003" href="$restartFileSection_8hpp.html" title=" " alt="" coords="84,115,248,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,65,151,102,146,102,125,70"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="150,142,94,184,91,179,145,144"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="122,191,194,218"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="166,141,163,176,159,174,163,145"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="219,191,281,218"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="182,141,226,180,221,180,180,146"/>
+</map>

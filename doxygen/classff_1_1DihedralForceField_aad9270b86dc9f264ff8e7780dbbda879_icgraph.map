@@ -1,0 +1,9 @@
+<map id="ff::DihedralForceField::setParams" name="ff::DihedralForceField::setParams">
+<area shape="rect" id="Node000001" title="set dihedral parameters" alt="" coords="122,49,281,94"/>
+<area shape="rect" id="Node000002" href="$perfBondedForces_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="12,5,67,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,45,67,30,67,25,118,42"/>
+<area shape="rect" id="Node000003" href="$testDihedralForceField_8cpp.html#a68352588edaad60fc90618468a26facf" title=" " alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,73,75,74,74,69,109,70"/>
+<area shape="rect" id="Node000004" href="$testForceField_8cpp.html#acb3c465b34f94e270cdb3b7f825eb8b2" title="tests calculateBondedInteractions" alt="" coords="5,109,74,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="113,100,75,115,73,110,118,98"/>
+</map>

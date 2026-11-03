@@ -1,0 +1,7 @@
+<map id="molsys::SimulationBox::calculateDegreesOfFreedom" name="molsys::SimulationBox::calculateDegreesOfFreedom">
+<area shape="rect" id="Node000001" title="calculate degrees of freedom" alt="" coords="5,40,220,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#ade3975d6567d7a025db21128a8f71682" title="get the dimensionality" alt="" coords="268,5,453,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,45,255,42,250,43,221,50"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="275,75,446,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,75,262,83,257,83,220,80"/>
+</map>

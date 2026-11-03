@@ -1,0 +1,5 @@
+<map id="input::intraNonBondedReader::isNeeded" name="input::intraNonBondedReader::isNeeded">
+<area shape="rect" id="Node000001" title="checks if the intra non bonded interactions are needed" alt="" coords="5,5,219,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a34e65d220f84e2579e5ca8a7c010d385" title="Returns true if the intra non&#45;bonded interactions are activated." alt="" coords="267,5,474,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,25,253,28,248,28,219,30"/>
+</map>

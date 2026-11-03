@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CI Metrics &mdash; PQ [] documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://molarverse.github.io/PQ/src/developerGuide/ciMetrics.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Local Build Times" href="localBuildTimes.html" />
+    <link rel="prev" title="Continuous Integration" href="continuousIntegration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PQ
+              <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userGuide/userGuide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developerGuide.html">Developer Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cmakeOptions.html">Build Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="staticChecks.html">Static Checks and Conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuousIntegration.html">Continuous Integration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CI Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-recorded">What is recorded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-collector">The collector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-overview">The overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-clang-job">The clang job</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-job-to-the-metrics">Adding a job to the metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="localBuildTimes.html">Local Build Times</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codeStatistics.html">Code Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="branchesAndReleases.html">Branches and Releases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releasesAndHotfixes.html">Releases and Hotfixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#software-tests">Software Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#coding-style">Coding Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developerGuide.html#how-to-contribute">How to Contribute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../apiReference/apiReference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PQ</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="developerGuide.html">Developer Guide</a></li>
+      <li class="breadcrumb-item active">CI Metrics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/src/developerGuide/ciMetrics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ci-metrics">
+<span id="cimetrics"></span><h1>CI Metrics<a class="headerlink" href="#ci-metrics" title="Link to this heading"></a></h1>
+<p>The CI metrics are a durable record of how long the CI jobs take and why, so that speed-ups are measured and not
+guessed. They consist of a collector that stores one record per CI job, an overview page that is generated from the
+records. This page tells you how to use them and what
+to be careful about. The complete reference (record fields, derivations, decisions) is in the repository:
+<code class="docutils literal notranslate"><span class="pre">.github/ci-metrics/README.md</span></code> and <code class="docutils literal notranslate"><span class="pre">.github/ci-metrics/SCHEMA.md</span></code>.</p>
+<p>For build times on <em>your</em> machine, which are independent of all of this, see <a class="reference internal" href="localBuildTimes.html"><span class="doc">Local Build Times</span></a>.</p>
+<section id="what-is-recorded">
+<h2>What is recorded<a class="headerlink" href="#what-is-recorded" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Job records.</strong> For every finished job of the recorded workflows (BUILD, LINT, Performance Gate, DevOps C++
+Check, Clang Format Check, License Header Check, Changelog Fragment Check, Check PR Has Linked Issue, Dismiss Stale
+Approvals, Docs): duration, queue time, conclusion, event, branch, the pull request, whether it was a re-run and
+whether it failed because of the infrastructure.</p></li>
+<li><p><strong>Build analysis records.</strong> The jobs that build the project run the action
+<code class="docutils literal notranslate"><span class="pre">.github/actions/upload-build-timings</span></code> as their last step. It summarises the Ninja log (wall and CPU time,
+parallelism, the slowest steps, the time spent linking at the end), the ccache statistics (hit rate and the reasons
+why calls were not cacheable), the exact include graph of the build (from <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">-t</span> <span class="pre">deps</span></code>, deterministic), and
+the CPU model of the runner.</p></li>
+</ul>
+</div></blockquote>
+<p>The data is stored in weekly files <code class="docutils literal notranslate"><span class="pre">.github/ci-metrics/data/&lt;year&gt;-W&lt;week&gt;.jsonl</span></code> that are <strong>committed to</strong> <code class="docutils literal notranslate"><span class="pre">dev</span></code>.
+That is the one documented exception to the rule that nobody pushes to <code class="docutils literal notranslate"><span class="pre">dev</span></code>: only the collector writes there, only
+below <code class="docutils literal notranslate"><span class="pre">.github/ci-metrics/data/</span></code>, and nothing in that directory is edited by hand.</p>
+</section>
+<section id="the-collector">
+<h2>The collector<a class="headerlink" href="#the-collector" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">.github/workflows/ci_metrics.yml</span></code> runs <code class="docutils literal notranslate"><span class="pre">collect.py</span></code> daily at 04:30 UTC, looks back three days and commits the new
+records. You can run the same script yourself (it needs the <code class="docutils literal notranslate"><span class="pre">gh</span></code> command line tool to be logged in):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>.github/ci-metrics/collect.py<span class="w">                       </span><span class="c1"># the last 3 days, incremental</span>
+$<span class="w"> </span>python3<span class="w"> </span>.github/ci-metrics/collect.py<span class="w"> </span>--since-days<span class="w"> </span><span class="m">90</span><span class="w">       </span><span class="c1"># backfill</span>
+$<span class="w"> </span>python3<span class="w"> </span>.github/ci-metrics/collect.py<span class="w"> </span>--dry-run<span class="w">             </span><span class="c1"># write nothing</span>
+$<span class="w"> </span>python3<span class="w"> </span>.github/ci-metrics/collect.py<span class="w"> </span>--data-dir<span class="w"> </span>/tmp/x<span class="w">     </span><span class="c1"># try it without touching data/</span>
+</pre></div>
+</div>
+<p>It is idempotent: jobs that are already recorded are never written again. A workflow’s <code class="docutils literal notranslate"><span class="pre">GITHUB_TOKEN</span></code> may make about
+1,000 API requests per hour; a backfill of three months needs more than that and stops on the rate limit (use
+<code class="docutils literal notranslate"><span class="pre">--rate-limit-wait</span></code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>The scheduled collection only starts when</strong> <code class="docutils literal notranslate"><span class="pre">ci_metrics.yml</span></code> <strong>is on</strong> <code class="docutils literal notranslate"><span class="pre">main</span></code>. GitHub runs a <code class="docutils literal notranslate"><span class="pre">schedule</span></code> (and
+a <code class="docutils literal notranslate"><span class="pre">workflow_dispatch</span></code>) only for the workflow file of the default branch. Until a release brings the file to
+<code class="docutils literal notranslate"><span class="pre">main</span></code> the data stops at the last manual collection. A manual run on another ref never pushes; it is a dry run.</p>
+</div>
+</section>
+<section id="the-overview">
+<h2>The overview<a class="headerlink" href="#the-overview" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">.github/ci-metrics/data/CI_TIMINGS.md</span></code> is generated from the records (<code class="docutils literal notranslate"><span class="pre">report.py</span></code>) after every collection and
+rendered by GitHub. It shows, per workflow:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the median and the 90th percentile of the job durations in the current window (14 days) next to the previous
+window, split into pushes to <code class="docutils literal notranslate"><span class="pre">dev</span></code> and pull requests, with the queue time apart from the duration;</p></li>
+<li><p><strong>regressions</strong>: a median that rose by more than 20% <em>and</em> 30 seconds, with at least five samples in both windows;</p></li>
+<li><p>the time a pull request really waits for a workflow (first job created to last job finished) and the job that
+usually finishes last;</p></li>
+<li><p>the weekly trend of the BUILD duration;</p></li>
+<li><p>the <strong>build analysis</strong>: the ccache hit rate and what blocks it, the Ninja figures of complete builds, the slowest
+steps on <code class="docutils literal notranslate"><span class="pre">dev</span></code>, and a table of the build time per runner CPU model;</p></li>
+<li><p>the <strong>include graph</strong>: how many include pairs and project header pairs the latest builds have, and the headers
+with the highest fan-in.</p></li>
+</ul>
+</div></blockquote>
+<p>Read it with these cautions in mind:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Compare pushes and pull requests separately: they read different cache scopes.</p></li>
+<li><p>A job that is slower is first a question of the <strong>ccache hit rate</strong>: the same job takes about 2.5 minutes with a
+99% hit rate and about 10 minutes with less than 50%.</p></li>
+<li><p>The runner CPU changes the time of identical code by up to 1.8 times. Look at the CPU table before you call
+something a regression.</p></li>
+<li><p>The include graph numbers are exact. Everything measured in seconds is noisy.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="the-clang-job">
+<span id="cimetricsclangjob"></span><h2>The clang job<a class="headerlink" href="#the-clang-job" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Clang</span> <span class="pre">Build</span></code> workflow builds the project with clang 20 (Debug) and runs the tests. It is <strong>not a gate</strong> and not
+a required check; it exists to keep the project building with clang and to record the Ninja build analysis and the
+include graph of a clang build for the metrics above. There used to be a comment on every pull request with the clang
+build times (from <code class="docutils literal notranslate"><span class="pre">-ftime-trace</span></code>); it was removed (#935), because compile times on shared runners are too noisy to
+read a pull request’s effect from them. For compile-time questions use the exact include graph numbers, or measure on
+your own machine with <a class="reference internal" href="localBuildTimes.html"><span class="doc">Local Build Times</span></a>, where the build can be pinned to one core.</p>
+</section>
+<section id="adding-a-job-to-the-metrics">
+<h2>Adding a job to the metrics<a class="headerlink" href="#adding-a-job-to-the-metrics" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>A new workflow is recorded when its name is in <code class="docutils literal notranslate"><span class="pre">.github/ci-metrics/config.json</span></code> (<code class="docutils literal notranslate"><span class="pre">workflows</span></code>).</p></li>
+<li><p>A job that builds the project and should have a build analysis runs <code class="docutils literal notranslate"><span class="pre">./.github/actions/upload-build-timings</span></code> as a
+step with <code class="docutils literal notranslate"><span class="pre">if:</span> <span class="pre">always()</span></code> and passes the outcome of its build step as <code class="docutils literal notranslate"><span class="pre">build-status</span></code>, so that a partial build is
+not mistaken for a full one. The workflow must be listed in <code class="docutils literal notranslate"><span class="pre">build_analysis_workflows</span></code>.</p></li>
+<li><p>The artifacts of the build analysis are kept for 14 days. They are what the collector ingests, so a job that
+uploads them can be recorded the next day at the latest.</p></li>
+<li><p>The scripts have offline tests in <code class="docutils literal notranslate"><span class="pre">scripts/tests/test_ci_metrics_*.py</span></code>. They run together with the other script
+tests in the Changelog Fragment Check.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="continuousIntegration.html" class="btn btn-neutral float-left" title="Continuous Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="localBuildTimes.html" class="btn btn-neutral float-right" title="Local Build Times" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-now, Jakob Gamper.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

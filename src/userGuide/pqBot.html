@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PQ Bot &mdash; PQ [] documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=2ce43b59" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+    <link rel="canonical" href="https://molarverse.github.io/PQ/src/userGuide/pqBot.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=590adc1f"></script>
+      <script src="../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
+    <link rel="prev" title="Output Files" href="outputFiles.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            PQ
+              <img src="../../_static/PQ.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../featureList/featureList.html">Feature List</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="userGuide.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="quickStart.html">Quick Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalUsage.html">General Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="referenceManual.html">Reference Manual</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PQ Bot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#commands">Commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pull-request-reviews">Pull request reviews</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-driven-fixes">Test-driven fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model-choice">Model choice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-to-expect">What to expect</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developerGuide/developerGuide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../apiReference/apiReference.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PQ</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="userGuide.html">User Guide</a></li>
+      <li class="breadcrumb-item active">PQ Bot</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/src/userGuide/pqBot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pq-bot">
+<span id="pqbot"></span><h1>PQ Bot<a class="headerlink" href="#pq-bot" title="Link to this heading"></a></h1>
+<p>PQ Bot handles small repository tasks and pull request reviews. GitHub may not
+offer the App account in the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> autocomplete list; typing <code class="docutils literal notranslate"><span class="pre">&#64;pq-bot</span></code> still
+works.</p>
+<p>Requesters must have repository write access. Coworker changes arrive
+as draft pull requests for human review. PQ Bot runs only while the
+repository is public. The bot never merges.</p>
+<section id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Link to this heading"></a></h2>
+<blockquote>
+<div><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&#64;pq-bot</span> <span class="pre">test</span> <span class="pre">&lt;area&gt;</span></code> - add or extend unit tests.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&#64;pq-bot</span> <span class="pre">fix</span> <span class="pre">#&lt;n&gt;</span></code> - propose a small fix for an open issue.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">&#64;pq-bot</span> <span class="pre">repro</span> <span class="pre">#&lt;n&gt;</span></code> - reproduce and repair a small open issue.</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">/pq-bot</span> <span class="pre">review</span></code> - advisory review of the current pull request.</div>
+</div>
+</div></blockquote>
+<p>Start a comment line with the command. Commands inside quoted text or
+code fences are ignored. Coworker commands run from issue comments; reviews
+run from pull request comments. Other commands are ignored.</p>
+</section>
+<section id="pull-request-reviews">
+<h2>Pull request reviews<a class="headerlink" href="#pull-request-reviews" title="Link to this heading"></a></h2>
+<p>On a pull request, start a comment line with <code class="docutils literal notranslate"><span class="pre">/pq-bot</span> <span class="pre">review</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&#64;pq-bot</span> <span class="pre">review</span></code>. Requesters need write access to the repository.
+PQ Bot reads a bounded text diff and posts an
+advisory <code class="docutils literal notranslate"><span class="pre">COMMENT</span></code> review from the existing GitHub App account. It
+does not approve, request changes, or alter the pull request branch.
+Reviews use <code class="docutils literal notranslate"><span class="pre">PQ_BOT_MODEL_REVIEW</span></code> by default.</p>
+</section>
+<section id="test-driven-fixes">
+<h2>Test-driven fixes<a class="headerlink" href="#test-driven-fixes" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">fix</span></code> and <code class="docutils literal notranslate"><span class="pre">repro</span></code> use two separate model runs. The first may edit only a
+single supported unit-test family. The trusted runner verifies that the
+repository passes before the test and fails after it. The second run receives
+the failure output, may not alter the frozen test, and writes the smallest
+implementation that makes it pass. The trusted runner then requires the same
+test suite to pass before publication.</p>
+<p>The model never runs tests or Git commands. C++ unit tests under <code class="docutils literal notranslate"><span class="pre">tests/</span></code> and
+Python unit tests under <code class="docutils literal notranslate"><span class="pre">scripts/tests/</span></code> are supported by this flow. Tasks
+that cannot express the behavior in one of those suites stop without a pull
+request. C++ coverage extends an existing registered test source; Python test
+files may be added because the Python suite discovers them automatically.</p>
+<p><code class="docutils literal notranslate"><span class="pre">test</span></code> uses one model run and accepts only added C++ or Python unit-test
+coverage plus one changelog fragment. The trusted runner requires the
+corresponding test suite to pass before publication.</p>
+</section>
+<section id="model-choice">
+<h2>Model choice<a class="headerlink" href="#model-choice" title="Link to this heading"></a></h2>
+<p>Append <code class="docutils literal notranslate"><span class="pre">with</span> <span class="pre">&lt;name&gt;</span></code> to pick a model, e.g.
+<code class="docutils literal notranslate"><span class="pre">&#64;pq-bot</span> <span class="pre">fix</span> <span class="pre">#123</span> <span class="pre">with</span> <span class="pre">smart</span></code> or <code class="docutils literal notranslate"><span class="pre">/pq-bot</span> <span class="pre">review</span> <span class="pre">with</span> <span class="pre">smart</span></code>.
+Names map to repository variables. Reviews without a model name use
+<code class="docutils literal notranslate"><span class="pre">PQ_BOT_MODEL_REVIEW</span></code>. Coworker tasks use <code class="docutils literal notranslate"><span class="pre">PQ_BOT_MODEL_CHEAP</span></code>
+by default. Unknown model names are rejected.</p>
+</section>
+<section id="what-to-expect">
+<h2>What to expect<a class="headerlink" href="#what-to-expect" title="Link to this heading"></a></h2>
+<p>The workflow must exist on the default branch to receive comment events.
+It needs <code class="docutils literal notranslate"><span class="pre">OPENCODE_API_KEY</span></code>, <code class="docutils literal notranslate"><span class="pre">PQ_BOT_APP_ID</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">PQ_BOT_PRIVATE_KEY</span></code> secrets and the model variables above. OpenCode
+can edit only a disposable copy without a GitHub write token. A
+separate validator limits the diff to 12 files and 100 changed lines,
+runs the applicable trusted tests, and exports only the validated file
+contents and task context. A second job starts on a fresh runner, checks
+that bundle again against the original comment and unchanged <code class="docutils literal notranslate"><span class="pre">dev</span></code>
+commit, and only then creates the GitHub App token used to open a draft PR
+from a <code class="docutils literal notranslate"><span class="pre">pq-bot/</span></code> branch. Model-generated code and repository write
+credentials therefore never share a runner. Human review and CI decide
+whether the change merges.
+The performance gate is skipped for bot branches; a human must run that
+check on a trusted branch before merging a performance-related change. The
+required changelog fragment supplies the plain-language summary in a short,
+structured PR description. Larger tasks need a human contributor.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="outputFiles.html" class="btn btn-neutral float-left" title="Output Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-now, Jakob Gamper.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

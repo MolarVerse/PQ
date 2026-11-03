@@ -1,0 +1,5 @@
+<map id="molsys::Molecule::activateMolecule" name="molsys::Molecule::activateMolecule">
+<area shape="rect" id="Node000001" title="activates the molecule and it&#39;s atoms for hybrid calculations" alt="" coords="5,5,202,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a153dbc45e1cbfa7ddfad317a855375e7" title="returns the atoms of the molecule" alt="" coords="250,14,456,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,25,236,27,231,28,202,30"/>
+</map>

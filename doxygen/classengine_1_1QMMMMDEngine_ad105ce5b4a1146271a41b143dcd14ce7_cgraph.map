@@ -1,0 +1,142 @@
+<map id="engine::QMMMMDEngine::_applyHotspotSmoothing" name="engine::QMMMMDEngine::_applyHotspotSmoothing">
+<area shape="rect" id="Node000001" title="Apply hotspot smoothing algorithm for QM/MM boundary treatment." alt="" coords="5,1139,199,1183"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HybridMDEngine.html#a4116181e5130b630dda59ae99c59b5d4" title="Accumulate current forces to inner force storage and reset forces." alt="" coords="256,5,515,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,1138,101,933,106,779,116,609,133,438,159,280,176,211,195,150,218,99,245,61,249,58,247,63,249,64,223,102,200,152,181,212,164,281,138,439,121,610,111,779,106,934,106,1138"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Engine.html#a3de2559488f0ddc5db3af0dd8cc73a52" title="get the reference to the simulation box" alt="" coords="572,166,813,194"/>
+<area shape="poly" id="edge69_Node000001_Node000003" title=" " alt="" coords="100,1138,101,950,105,811,115,658,132,506,158,367,175,306,195,254,218,211,245,180,268,167,300,158,383,150,478,153,573,162,569,165,478,158,383,156,301,163,270,172,248,184,223,215,200,256,180,308,163,368,138,507,121,659,111,811,106,950,106,1138"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1HybridMDEngine.html#adf403c9da2384863573f22c62ab85adc" title="Accumulate current forces to outer force storage and reset forces." alt="" coords="254,75,516,119"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="101,1138,104,946,111,803,122,646,140,487,165,341,181,277,199,220,221,173,245,137,258,126,256,131,249,140,225,175,204,222,186,278,170,342,145,488,127,646,116,803,110,947,106,1138"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1QMMMMDEngine.html#a14e51c186d75bc641c2bf5d599249678" title="Store the summed QM reference energies of all QM molecules in PhysicalData; they are subtracted from ..." alt="" coords="271,333,500,378"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="102,1138,112,990,137,767,156,651,180,544,209,456,226,421,245,395,259,384,257,389,249,399,231,424,214,458,185,545,161,652,142,768,118,990,107,1138"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1Engine.html#aade21e1cb3cd8535890fbd914d3b79d9" title="get the pointer to the physical data" alt="" coords="592,287,793,331"/>
+<area shape="poly" id="edge65_Node000001_Node000007" title=" " alt="" coords="102,1138,112,997,137,787,156,678,180,579,209,497,226,465,245,442,278,416,311,404,344,401,377,403,446,408,483,403,523,388,537,377,546,366,555,353,571,341,584,336,581,340,573,346,559,357,550,369,541,381,525,393,484,408,446,413,377,408,344,406,313,409,281,421,249,446,231,468,214,499,185,580,161,679,142,788,118,998,107,1138"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1Engine.html#a5a13fd814eae5c9eb568a7f9b37027bd" title="get the reference to the inter water model" alt="" coords="294,1104,477,1149"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="197,1147,280,1137,276,1141,201,1151"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1Engine.html#a9320386bcbde856c694bd79e26d99e16" title="get the reference to the intra water model" alt="" coords="294,1173,477,1218"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="198,1171,280,1181,276,1184,201,1175"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1HybridMDEngine.html#afb12a6766301f51776e753c89c86dcec" title="Scale forces of smoothing zone molecules by their smoothing factor for inner contribution." alt="" coords="248,195,522,239"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="101,1138,107,965,115,837,127,698,145,558,170,429,185,372,203,322,222,281,245,250,250,247,248,252,249,253,227,284,208,324,190,374,175,430,150,558,132,698,120,837,112,965,106,1138"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1HybridMDEngine.html#ad25b26e48ce67090c3248df8ab0963e4" title="Scale forces of smoothing zone molecules by complementary smoothing factor for outer contribution." alt="" coords="247,264,524,309"/>
+<area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="101,1138,109,977,131,730,149,602,174,483,205,386,224,348,245,319,250,316,248,321,249,323,228,351,210,388,179,485,155,603,136,731,114,977,107,1138"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1QMMMMDEngine.html#a4439f3326d08dfe4dcdcbaa9b6b6d1fa" title="Set the number of QM atoms in physical data for output purposes." alt="" coords="292,504,479,549"/>
+<area shape="poly" id="edge18_Node000001_Node000013" title=" " alt="" coords="103,1138,118,1019,147,848,167,759,189,678,215,612,230,586,245,566,279,543,276,548,249,570,234,589,220,614,194,680,172,761,153,849,124,1020,108,1139"/>
+<area shape="rect" id="Node000014" href="$classconfigurator_1_1HybridConfigurator.html#a2bbd9f697976ad7bcdbbd56b97e2a97c" title="Activate all molecules in the simulation box." alt="" coords="578,564,808,609"/>
+<area shape="poly" id="edge28_Node000001_Node000014" title=" " alt="" coords="103,1138,118,1026,146,867,166,786,188,712,215,653,229,630,245,614,268,600,299,591,379,579,471,575,564,577,560,580,471,580,379,584,300,596,270,605,248,618,233,634,219,655,193,714,171,787,151,868,123,1027,108,1139"/>
+<area shape="rect" id="Node000016" href="$classconfigurator_1_1HybridConfigurator.html#a8313f354c9244f8defdd5378e3ac9ca2" title="Deactivate molecules in the outer regions (POINT_CHARGE, OUTER)." alt="" coords="578,356,808,401"/>
+<area shape="poly" id="edge59_Node000001_Node000016" title=" " alt="" coords="102,1138,114,1005,141,810,160,709,183,617,211,541,227,512,245,490,278,463,310,448,342,442,374,442,443,444,481,442,523,432,571,411,595,404,591,408,573,415,525,437,482,447,443,450,374,447,342,447,312,453,281,468,249,494,232,515,216,543,188,618,165,710,146,811,120,1006,108,1138"/>
+<area shape="rect" id="Node000020" href="$classconfigurator_1_1HybridConfigurator.html#a8f2860771defe03b12bd7cc0e7f5fe32" title="Activate molecules within hybrid zone SMOOTHING." alt="" coords="270,1243,500,1287"/>
+<area shape="poly" id="edge29_Node000001_Node000020" title=" " alt="" coords="144,1182,194,1205,248,1228,271,1236,266,1239,246,1233,192,1210,146,1186"/>
+<area shape="rect" id="Node000024" href="$classmolsys_1_1CellList.html#a25db09b505ef22da1f7f231f4a03c2d0" title="Assign molecule hybrid&#45;zone indices for all cells." alt="" coords="284,1312,486,1357"/>
+<area shape="poly" id="edge33_Node000001_Node000024" title=" " alt="" coords="120,1181,175,1240,209,1271,248,1297,272,1309,267,1312,245,1302,206,1275,171,1244,121,1187"/>
+<area shape="rect" id="Node000025" href="$classmolsys_1_1CellList.html#a233b88eb72ca3d5731a9c6ee2891fc0d" title="Assign water molecule indices for all cells." alt="" coords="298,1381,472,1426"/>
+<area shape="poly" id="edge34_Node000001_Node000025" title=" " alt="" coords="112,1181,134,1223,163,1273,201,1324,223,1347,248,1367,286,1386,281,1389,245,1371,220,1351,197,1327,158,1276,129,1225,113,1186"/>
+<area shape="rect" id="Node000026" href="$classintraNonBonded_1_1IntraNonBonded.html#a0770ff364ccaa2ce0491d3395125fea9" title="calculate the intra non bonded interactions for each intraNonBondedMap" alt="" coords="290,795,480,839"/>
+<area shape="poly" id="edge35_Node000001_Node000026" title=" " alt="" coords="104,1138,118,1079,143,1002,162,960,185,920,212,882,245,850,277,832,274,837,248,854,216,886,189,922,167,962,148,1003,123,1081,110,1139"/>
+<area shape="rect" id="Node000029" href="$classwaterModel_1_1IntraWater.html#a08c1b56f11682f96844d914f628913f0" title=" " alt="" coords="298,1451,472,1495"/>
+<area shape="poly" id="edge38_Node000001_Node000029" title=" " alt="" coords="108,1181,126,1236,153,1304,171,1341,193,1376,219,1408,248,1436,286,1457,281,1459,245,1440,215,1412,188,1379,166,1343,148,1307,121,1237,109,1186"/>
+<area shape="rect" id="Node000030" href="$classff_1_1ForceField.html#a1d1d21cd5c761ec0b812e6891f4d429e" title="calculates all bonded interactions for: 1) bonds 2) angles 3) dihedrals 4) improper dihedrals" alt="" coords="300,1520,471,1565"/>
+<area shape="poly" id="edge39_Node000001_Node000030" title=" " alt="" coords="106,1181,119,1247,143,1335,162,1381,185,1427,214,1469,248,1506,266,1518,287,1528,282,1530,263,1522,245,1510,209,1473,180,1430,157,1384,138,1336,114,1249,106,1186"/>
+<area shape="rect" id="Node000035" href="$classpot_1_1Potential.html#aa67369b02046a09a929819f07300071b" title=" " alt="" coords="281,1589,490,1634"/>
+<area shape="poly" id="edge44_Node000001_Node000035" title=" " alt="" coords="104,1181,114,1259,134,1365,153,1422,177,1478,209,1530,248,1575,270,1590,265,1592,245,1579,204,1533,172,1480,148,1424,129,1366,108,1260,104,1187"/>
+<area shape="rect" id="Node000036" href="$classwaterModel_1_1InterWater.html#a502983bc7ded99eadadf6b14d159d4db" title="Dispatch inter&#45;water hotspot smoothing force calculations." alt="" coords="248,864,523,909"/>
+<area shape="poly" id="edge45_Node000001_Node000036" title=" " alt="" coords="108,1137,125,1091,153,1032,193,971,218,943,245,919,254,914,252,919,248,923,221,947,197,974,158,1034,130,1093,113,1139"/>
+<area shape="rect" id="Node000037" href="$classpot_1_1Potential.html#aaa527838f34ba739ed570901afe7c849" title="calculates QMMM forces by invoking core&#45;to&#45;outer, layer&#45;to&#45;outer, and outer&#45;to&#45;outer force calculatio..." alt="" coords="298,1659,473,1703"/>
+<area shape="poly" id="edge47_Node000001_Node000037" title=" " alt="" coords="103,1181,108,1270,115,1329,126,1394,143,1462,169,1528,203,1590,249,1644,265,1657,285,1668,281,1670,262,1661,245,1648,199,1593,164,1531,138,1463,121,1395,109,1330,103,1270,103,1186"/>
+<area shape="rect" id="Node000041" href="$classwaterModel_1_1InterWater.html#a2a5abcb4275f444c91a380e5b7816947" title="Dispatch inter&#45;water QMMM force calculations via the active strategy." alt="" coords="297,933,474,978"/>
+<area shape="poly" id="edge51_Node000001_Node000041" title=" " alt="" coords="113,1137,135,1103,165,1063,202,1022,245,988,284,971,281,976,248,993,205,1026,169,1066,139,1106,118,1139"/>
+<area shape="rect" id="Node000042" href="$namespacevirial.html#afca4152a72f9218bb75edbc7757f73d7" title="Calculate virial contribution from QM atoms only without side effects." alt="" coords="297,743,474,771"/>
+<area shape="poly" id="edge53_Node000001_Node000042" title=" " alt="" coords="102,1138,110,1068,132,970,151,918,175,867,206,820,245,780,262,769,283,762,280,766,264,774,248,784,210,824,180,870,156,920,137,972,115,1069,107,1139"/>
+<area shape="rect" id="Node000043" href="$namespacevirial.html#ab6e158e7243acca5bab837457f9b817d" title="Calculate virial tensor and reset shift forces to zero in simulation box." alt="" coords="308,1002,463,1030"/>
+<area shape="poly" id="edge56_Node000001_Node000043" title=" " alt="" coords="123,1137,176,1090,210,1066,246,1045,294,1029,291,1033,248,1050,213,1070,180,1094,128,1140"/>
+<area shape="rect" id="Node000044" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="607,1019,778,1063"/>
+<area shape="poly" id="edge60_Node000001_Node000044" title=" " alt="" coords="139,1137,189,1111,246,1089,336,1068,428,1054,594,1041,590,1045,429,1059,337,1073,247,1094,192,1116,144,1140"/>
+<area shape="rect" id="Node000045" href="$classengine_1_1Engine.html#a0c867bc08924f1b060f4a83190dcd78d" title="get the shared pointer to the cell list" alt="" coords="288,1727,482,1755"/>
+<area shape="poly" id="edge61_Node000001_Node000045" title=" " alt="" coords="106,1181,124,1296,153,1456,172,1539,195,1613,220,1674,234,1697,248,1714,276,1732,271,1733,245,1718,230,1700,216,1676,190,1615,167,1540,148,1458,119,1297,106,1186"/>
+<area shape="rect" id="Node000046" href="$classengine_1_1Engine.html#ad9e138650f21ad97b85322940aff993a" title="get the reference to the force field" alt="" coords="295,1779,476,1823"/>
+<area shape="poly" id="edge62_Node000001_Node000046" title=" " alt="" coords="106,1181,123,1305,151,1480,170,1570,193,1652,219,1720,233,1745,249,1764,264,1777,282,1787,277,1789,261,1781,245,1768,229,1748,214,1722,188,1654,165,1571,146,1481,118,1305,106,1187"/>
+<area shape="rect" id="Node000047" href="$classengine_1_1Engine.html#af28294b078a9d0d6c8e206d4f43c735c" title="get the reference to the intra non bonded interactions" alt="" coords="297,1848,474,1893"/>
+<area shape="poly" id="edge63_Node000001_Node000047" title=" " alt="" coords="105,1181,120,1316,146,1513,166,1614,189,1707,216,1783,232,1812,249,1834,265,1847,285,1858,280,1860,262,1851,245,1838,228,1815,212,1785,184,1709,160,1615,141,1514,115,1317,105,1186"/>
+<area shape="rect" id="Node000048" href="$classengine_1_1Engine.html#a91f48b211a0c14ea3d065b9949f65a18" title="get the reference to the physical data" alt="" coords="270,1916,501,1944"/>
+<area shape="poly" id="edge64_Node000001_Node000048" title=" " alt="" coords="104,1181,117,1329,141,1547,159,1660,183,1763,213,1847,230,1879,249,1903,259,1912,254,1914,245,1907,225,1882,208,1850,178,1765,154,1661,135,1548,111,1330,104,1186"/>
+<area shape="rect" id="Node000049" href="$classengine_1_1Engine.html#a500709831283f00ea056762824e637ce" title="get the reference to the potential" alt="" coords="283,1968,488,1996"/>
+<area shape="poly" id="edge66_Node000001_Node000049" title=" " alt="" coords="104,1181,115,1338,138,1571,156,1692,180,1803,211,1894,229,1928,249,1954,271,1971,266,1972,245,1958,224,1931,206,1896,175,1804,151,1693,132,1572,110,1338,104,1186"/>
+<area shape="rect" id="Node000050" href="$classengine_1_1QMCapableEngine.html#a8994a56466dfbd077aa992e40e16da87" title="Get the QM runner." alt="" coords="289,2020,482,2065"/>
+<area shape="poly" id="edge67_Node000001_Node000050" title=" " alt="" coords="104,1181,114,1346,123,1465,136,1594,154,1724,179,1843,210,1940,228,1978,249,2006,277,2027,272,2028,245,2010,224,1981,205,1942,174,1844,149,1725,131,1595,118,1466,109,1347,104,1187"/>
+<area shape="rect" id="Node000051" href="$classengine_1_1Engine.html#a898232c118e972e1f7bcbaeaa08c348b" title="get the reference to the settings" alt="" coords="286,2088,485,2116"/>
+<area shape="poly" id="edge68_Node000001_Node000051" title=" " alt="" coords="104,1181,111,1359,118,1488,130,1629,148,1770,173,1899,188,1956,206,2005,226,2045,249,2075,274,2094,269,2095,245,2079,222,2048,201,2007,183,1957,167,1900,142,1770,125,1629,113,1488,106,1359,103,1186"/>
+<area shape="rect" id="Node000052" href="$classphysicalData_1_1PhysicalData.html#a973ecc349f579b8bce7b6ab87d1bd2ba" title="get the virial" alt="" coords="286,2140,485,2185"/>
+<area shape="poly" id="edge70_Node000001_Node000052" title=" " alt="" coords="104,1181,110,1367,117,1502,129,1651,147,1800,172,1937,187,1997,205,2050,226,2093,249,2126,274,2146,269,2147,245,2130,221,2096,200,2052,182,1999,167,1938,141,1801,124,1651,112,1503,105,1367,103,1187"/>
+<area shape="rect" id="Node000053" href="$namespacevirial.html#a42c6953cdd58c5e5e5c70b567fa741ab" title="Calculate intramolecular virial correction tensor without side effects." alt="" coords="290,675,480,719"/>
+<area shape="poly" id="edge71_Node000001_Node000053" title=" " alt="" coords="101,1138,107,1060,115,1008,128,950,146,891,171,832,203,777,245,730,277,711,274,715,248,734,208,780,175,834,151,892,133,952,120,1009,113,1061,106,1139"/>
+<area shape="rect" id="Node000056" href="$classsettings_1_1GeneralSettings.html#a8798c619607f4dd45507427feab904d8" title="Returns true if the cell list is activated." alt="" coords="293,2209,478,2254"/>
+<area shape="poly" id="edge76_Node000001_Node000056" title=" " alt="" coords="103,1181,108,1378,114,1523,125,1683,142,1844,168,1992,184,2056,203,2113,224,2160,249,2195,263,2207,281,2219,275,2219,260,2212,245,2199,220,2163,198,2115,179,2058,162,1993,137,1844,120,1684,109,1524,103,1378,103,1186"/>
+<area shape="rect" id="Node000057" href="$classQM_1_1QMRunner.html#af8a7dcb550be92a6cdb6b0dcd32cbf17" title="run the qm engine with default periodicity XYZ (3d)" alt="" coords="311,2302,460,2330"/>
+<area shape="poly" id="edge77_Node000001_Node000057" title=" " alt="" coords="103,1181,108,1388,114,1542,125,1712,142,1884,167,2043,184,2113,203,2175,224,2226,249,2265,271,2284,300,2300,294,2300,268,2289,245,2268,219,2228,198,2176,179,2114,162,2044,137,1885,119,1713,109,1543,103,1388,103,1186"/>
+<area shape="rect" id="Node000058" href="$classphysicalData_1_1PhysicalData.html#aceeb18b85b91e6a9b7e3fba2f55c549b" title="set the virial" alt="" coords="286,2353,485,2398"/>
+<area shape="poly" id="edge79_Node000001_Node000058" title=" " alt="" coords="105,1181,122,1417,152,1787,172,1976,195,2143,221,2271,234,2314,249,2339,275,2361,269,2360,245,2343,230,2316,215,2272,189,2144,166,1976,146,1787,117,1418,104,1186"/>
+<area shape="rect" id="Node000059" href="$classconfigurator_1_1HybridConfigurator.html#a37693d2a46289c5b1c659171fb890026" title="Toggle the activation state of all molecules in the simulation box." alt="" coords="578,633,808,678"/>
+<area shape="poly" id="edge80_Node000001_Node000059" title=" " alt="" coords="104,1138,120,1034,149,889,168,815,191,749,216,695,230,675,245,660,286,635,331,618,379,608,427,605,475,606,522,610,606,628,602,630,521,616,475,611,427,610,379,614,333,623,289,640,248,664,234,678,221,698,196,751,173,817,154,890,125,1035,109,1139"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="493,48,525,60,550,76,574,95,660,156,655,158,570,99,547,80,523,65,495,53"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a48f501659deea078822b6cb0e2306e7f" title="reset forces of all atoms" alt="" coords="607,40,778,85"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="514,40,594,49,589,53,517,45"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="638,39,637,30,646,21,665,15,693,13,723,16,743,23,738,26,722,21,693,19,666,21,649,25,642,31,643,40"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="470,118,626,160,621,163,472,122"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="515,80,594,72,590,75,518,84"/>
+<area shape="poly" id="edge10_Node000006_Node000003" title=" " alt="" coords="498,335,522,319,534,306,541,292,545,262,550,232,557,217,570,203,577,200,575,204,574,207,562,220,555,234,550,263,546,293,539,308,526,323,502,338"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="498,336,579,325,575,328,502,340"/>
+<area shape="rect" id="Node000008" href="$classphysicalData_1_1PhysicalData.html#a30ec124d1d7656cf0a927ac0d5141fde" title="set the qm reference energy" alt="" coords="593,217,792,262"/>
+<area shape="poly" id="edge11_Node000006_Node000008" title=" " alt="" coords="497,331,523,319,537,308,546,296,555,284,571,272,584,267,581,271,573,277,559,288,550,299,541,312,525,323,501,334"/>
+<area shape="poly" id="edge15_Node000011_Node000003" title=" " alt="" coords="521,198,560,194,556,198,525,202"/>
+<area shape="poly" id="edge17_Node000012_Node000003" title=" " alt="" coords="497,262,523,249,537,238,546,227,555,214,571,203,586,197,582,201,573,207,559,218,550,230,541,242,525,254,501,265"/>
+<area shape="poly" id="edge26_Node000013_Node000003" title=" " alt="" coords="416,502,471,453,498,423,522,389,533,363,538,338,538,292,538,270,542,248,552,225,570,203,576,200,573,205,574,207,556,228,547,249,544,270,544,292,543,339,538,364,526,392,503,426,475,457,421,505"/>
+<area shape="poly" id="edge25_Node000013_Node000007" title=" " alt="" coords="430,502,478,471,522,433,537,409,544,386,552,364,570,342,581,336,578,341,574,346,556,367,549,388,542,411,526,436,481,476,434,505"/>
+<area shape="poly" id="edge19_Node000013_Node000014" title=" " alt="" coords="478,542,564,559,560,562,481,547"/>
+<area shape="poly" id="edge21_Node000013_Node000016" title=" " alt="" coords="477,506,522,483,538,466,546,448,554,429,570,411,580,406,577,411,574,415,558,432,550,450,542,469,526,487,482,510"/>
+<area shape="rect" id="Node000017" href="$classmolsys_1_1SimulationBox.html#a7c89dc9cef58e06b5735141047af95d7" title="Get the number of QM atoms." alt="" coords="602,495,783,539"/>
+<area shape="poly" id="edge23_Node000013_Node000017" title=" " alt="" coords="478,521,589,518,585,522,481,526"/>
+<area shape="rect" id="Node000019" href="$classphysicalData_1_1PhysicalData.html#a2380d38b8b3e3ffa4db0b3affc47ae61" title="set the number of qm atoms" alt="" coords="593,425,792,470"/>
+<area shape="poly" id="edge27_Node000013_Node000019" title=" " alt="" coords="474,501,589,473,586,476,477,505"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="895,599,1067,643"/>
+<area shape="poly" id="edge20_Node000014_Node000015" title=" " alt="" coords="807,598,882,608,878,610,809,603"/>
+<area shape="poly" id="edge22_Node000016_Node000015" title=" " alt="" coords="791,399,815,411,863,450,904,497,938,543,963,585,958,585,933,546,900,500,859,454,812,415,793,404"/>
+<area shape="rect" id="Node000018" href="$classmolsys_1_1SimulationBoxView.html#a7e7040ddbbd5836394efe83bf9f8210a" title=" " alt="" coords="861,748,1101,793"/>
+<area shape="poly" id="edge24_Node000017_Node000018" title=" " alt="" coords="783,531,815,550,835,575,843,600,849,626,864,654,901,698,941,737,936,738,897,702,859,657,844,627,838,601,831,577,812,554,785,536"/>
+<area shape="rect" id="Node000021" href="$classmolsys_1_1SimulationBoxView.html#a296966f2d8061b780b5cd28fea32585a" title="get all molecules in the specified hybrid zone using range&#45;based filtering" alt="" coords="591,1243,794,1287"/>
+<area shape="poly" id="edge30_Node000020_Node000021" title=" " alt="" coords="500,1263,577,1263,573,1267,502,1267"/>
+<area shape="rect" id="Node000022" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="879,1273,1083,1318"/>
+<area shape="poly" id="edge31_Node000021_Node000022" title=" " alt="" coords="794,1273,866,1282,862,1284,796,1278"/>
+<area shape="rect" id="Node000023" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="924,1222,1038,1250"/>
+<area shape="poly" id="edge32_Node000021_Node000023" title=" " alt="" coords="793,1252,911,1242,906,1244,796,1257"/>
+<area shape="rect" id="Node000027" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="640,942,745,970"/>
+<area shape="poly" id="edge36_Node000026_Node000027" title=" " alt="" coords="480,828,526,850,543,868,551,887,558,905,574,922,599,935,628,946,623,948,596,940,570,926,553,908,546,889,538,871,522,854,482,833"/>
+<area shape="rect" id="Node000028" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="892,933,1070,978"/>
+<area shape="poly" id="edge37_Node000027_Node000028" title=" " alt="" coords="744,953,879,954,875,957,747,958"/>
+<area shape="rect" id="Node000031" href="$classff_1_1ForceField.html#ad8209e4eaedf584fcb17667d68649128" title="calculates all angle interactions" alt="" coords="607,1451,778,1495"/>
+<area shape="poly" id="edge40_Node000030_Node000031" title=" " alt="" coords="470,1521,594,1494,590,1497,473,1525"/>
+<area shape="rect" id="Node000032" href="$classff_1_1ForceField.html#a3767cd413cbd94bd2b957a16fcdd1887" title="calculates all bond interactions" alt="" coords="607,1520,778,1565"/>
+<area shape="poly" id="edge41_Node000030_Node000032" title=" " alt="" coords="470,1540,593,1541,589,1544,473,1545"/>
+<area shape="rect" id="Node000033" href="$classff_1_1ForceField.html#a0e154ff73968dd77b095987b5093e89a" title="calculates all dihedral interactions" alt="" coords="607,1589,778,1634"/>
+<area shape="poly" id="edge42_Node000030_Node000033" title=" " alt="" coords="471,1559,594,1588,589,1590,472,1564"/>
+<area shape="rect" id="Node000034" href="$classff_1_1ForceField.html#a733ee8b0b68be0d3b0959f844527ee8b" title="calculates all improper dihedral interactions" alt="" coords="586,1381,799,1426"/>
+<area shape="poly" id="edge43_Node000030_Node000034" title=" " alt="" coords="470,1529,498,1519,522,1506,538,1489,546,1472,554,1454,570,1436,581,1432,577,1435,574,1440,558,1457,551,1474,542,1492,526,1510,500,1524,473,1533"/>
+<area shape="poly" id="edge46_Node000036_Node000027" title=" " alt="" coords="487,907,627,939,623,942,489,912"/>
+<area shape="rect" id="Node000038" href="$classpot_1_1Potential.html#aaad1a1f27407901e3a01d9628d3d0bd8" title=" " alt="" coords="605,1659,780,1703"/>
+<area shape="poly" id="edge48_Node000037_Node000038" title=" " alt="" coords="473,1679,592,1680,587,1682,475,1683"/>
+<area shape="rect" id="Node000039" href="$classpot_1_1Potential.html#a69fc1a2f833e4da7a1e0ed680ca3b9b0" title=" " alt="" coords="605,1728,780,1773"/>
+<area shape="poly" id="edge49_Node000037_Node000039" title=" " alt="" coords="473,1698,593,1726,588,1728,474,1703"/>
+<area shape="rect" id="Node000040" href="$classpot_1_1Potential.html#a51a2a8ed6e03bcc54c8e0508f0660c30" title=" " alt="" coords="605,1797,780,1842"/>
+<area shape="poly" id="edge50_Node000037_Node000040" title=" " alt="" coords="473,1690,501,1700,526,1714,542,1731,551,1749,558,1766,574,1783,593,1796,588,1797,570,1787,554,1769,546,1751,538,1734,522,1718,499,1705,474,1695"/>
+<area shape="poly" id="edge52_Node000041_Node000027" title=" " alt="" coords="473,953,627,954,623,957,475,958"/>
+<area shape="poly" id="edge54_Node000042_Node000018" title=" " alt="" coords="473,758,502,767,526,780,538,792,544,805,550,832,555,857,562,868,574,877,605,895,634,905,662,910,688,910,744,898,812,877,849,863,884,843,946,801,943,805,887,848,852,867,814,882,746,903,689,915,661,915,633,910,603,900,570,882,558,871,550,859,544,833,539,807,533,795,522,784,499,771,476,763"/>
+<area shape="poly" id="edge55_Node000042_Node000027" title=" " alt="" coords="473,757,502,765,526,780,541,798,548,816,551,852,554,888,560,905,574,922,598,938,627,949,622,951,595,942,570,926,556,908,549,889,546,852,543,817,536,800,522,784,500,770,476,762"/>
+<area shape="poly" id="edge58_Node000043_Node000027" title=" " alt="" coords="462,1000,523,988,626,968,622,972,525,993,465,1004"/>
+<area shape="poly" id="edge57_Node000043_Node000044" title=" " alt="" coords="462,1020,594,1031,589,1034,465,1024"/>
+<area shape="poly" id="edge73_Node000053_Node000015" title=" " alt="" coords="480,703,554,706,638,706,726,701,813,688,870,671,925,649,922,653,872,676,814,693,727,706,638,712,554,712,482,708"/>
+<area shape="poly" id="edge75_Node000053_Node000027" title=" " alt="" coords="480,705,505,715,526,730,541,748,549,766,554,803,556,840,562,858,574,878,607,909,645,934,640,936,604,913,570,881,557,861,551,841,548,803,544,768,537,751,522,734,503,720,482,710"/>
+<area shape="rect" id="Node000054" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="607,823,778,867"/>
+<area shape="poly" id="edge72_Node000053_Node000054" title=" " alt="" coords="480,708,505,717,526,730,543,749,551,770,558,790,574,808,595,822,590,824,570,812,553,792,546,772,539,752,522,734,502,722,482,713"/>
+<area shape="rect" id="Node000055" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="600,753,785,798"/>
+<area shape="poly" id="edge74_Node000053_Node000055" title=" " alt="" coords="477,718,525,729,592,747,587,750,523,734,480,722"/>
+<area shape="poly" id="edge78_Node000057_Node000057" title=" " alt="" coords="337,2301,330,2293,336,2283,355,2277,385,2275,419,2278,438,2287,433,2287,418,2283,385,2280,356,2282,339,2287,335,2293,342,2302"/>
+<area shape="poly" id="edge81_Node000059_Node000015" title=" " alt="" coords="807,640,882,632,878,635,810,644"/>
+</map>

@@ -1,0 +1,43 @@
+<map id="molsys::Molecule::getNumberOfAtoms" name="molsys::Molecule::getNumberOfAtoms">
+<area shape="rect" id="Node000001" title="returns the number of atoms in the molecule" alt="" coords="858,264,1074,309"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#a3e4f463d70b53c2ec76db06f89c9fae9" title="checks if the next line of the rst file exists &#45; if not an exception is thrown" alt="" coords="582,91,810,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="932,252,878,201,844,173,808,150,785,139,785,133,811,145,847,169,881,197,937,253"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1CellList.html#ab4bcdb067dfffba3d1798f4d2fd2e0da" title="add molecules and atom pointers to cells" alt="" coords="585,160,807,205"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="901,257,809,219,776,208,776,203,811,215,906,257"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1Molecule.html#af51a9a01cddc8aaad934cd7d8a0d5286" title="returns the atom masses of the atoms in the molecule" alt="" coords="596,229,796,274"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="840,271,796,267,796,262,845,270"/>
+<area shape="rect" id="Node000016" href="$classmolsys_1_1Molecule.html#a7025f4ebf7233f0e00a79a4cc5740134" title="returns the number of degrees of freedom of the molecule" alt="" coords="587,299,805,343"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="840,303,806,310,805,304,845,302"/>
+<area shape="rect" id="Node000017" href="$classmolsys_1_1Molecule.html#a9e49f5f0cee71d64d55fa0b54c98ff94" title="returns the partial charges of the atoms in the molecule" alt="" coords="593,368,799,413"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="906,315,811,358,776,370,775,365,809,353,901,316"/>
+<area shape="rect" id="Node000019" href="$classmolsys_1_1Molecule.html#a22883d80e6a6a35c951dc3731869a7d7" title="sets the partial charges of the atoms in the molecule" alt="" coords="594,437,798,482"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="937,319,881,376,847,404,811,427,786,439,784,434,808,423,844,399,878,372,932,322"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1restartFile_1_1AtomSection.html#aac27a04235e5b4ddaa34b013e9fb060b" title="processes the atom section of the rst file" alt="" coords="360,91,531,135"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="564,114,532,116,530,110,569,112"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1CellList.html#af3d889d9f9c2f2e5aae46d4823e1ae73" title="update cell list after during simulation" alt="" coords="357,160,534,205"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="567,183,536,185,534,180,572,182"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1MMMDEngine.html#a7a20825c3fd225c38de78654ec10966c" title="calculate MM forces" alt="" coords="127,5,290,50"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="358,151,355,150,338,127,331,106,324,85,307,64,291,53,290,47,311,60,328,82,336,104,343,125,359,146,364,151"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="116,75,301,119"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="367,155,308,134,277,123,275,117,310,129,372,153"/>
+<area shape="rect" id="Node000008" href="$classopt_1_1MMEvaluator.html#a29e6d2f1346ca599c47057fe233ad7ab" title="update forces" alt="" coords="108,143,309,171"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="339,172,310,170,309,165,344,170"/>
+<area shape="rect" id="Node000011" href="$perfInterWater_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="181,195,236,223"/>
+<area shape="poly" id="edge10_Node000005_Node000011" title=" " alt="" coords="340,196,237,208,235,204,344,192"/>
+<area shape="rect" id="Node000012" href="$namespacebenchWaterScaling.html#a3372b0ab1c542bdc9fb149f57bdabb63" title=" " alt="" coords="121,247,296,275"/>
+<area shape="poly" id="edge11_Node000005_Node000012" title=" " alt="" coords="373,212,310,237,269,249,266,244,308,232,377,209"/>
+<area shape="rect" id="Node000014" href="$testBruteForceCellListEquivalence_8cpp.html#a5fdfa81292ff9f75e2f1093c684d073f" title=" " alt="" coords="182,299,235,327"/>
+<area shape="poly" id="edge13_Node000005_Node000014" title=" " alt="" coords="412,213,365,255,310,289,272,303,237,311,234,307,270,298,308,284,362,250,408,217"/>
+<area shape="rect" id="Node000009" href="$testMMEvaluator_8cpp.html#a7fd03c2846f56212268c3129609874ed" title=" " alt="" coords="6,118,59,146"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="91,142,61,138,58,133,95,139"/>
+<area shape="rect" id="Node000010" href="$testMMEvaluator_8cpp.html#a7ed82e2b24e1ade2eba803ca09bc3cdc" title=" " alt="" coords="6,170,59,198"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="96,176,61,182,58,178,100,172"/>
+<area shape="rect" id="Node000013" href="$perfInterWaterN1728_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,247,60,275"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="104,263,62,263,59,259,108,259"/>
+<area shape="rect" id="Node000018" href="$testSimulationBox_8cpp.html#a73086d365764bde6f7de0f38e3992d86" title="tests setPartialChargesOfMoleculesFromMoleculeTypes function" alt="" coords="412,376,480,404"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="575,391,480,393,480,388,580,390"/>
+<area shape="rect" id="Node000020" href="$testSimulationBoxSetup_8cpp.html#a91b158391305633fb3d8774de4f4ab84" title="testing full setup of simulation box" alt="" coords="412,436,480,464"/>
+<area shape="poly" id="edge19_Node000019_Node000020" title=" " alt="" coords="575,455,480,454,480,449,581,455"/>
+<area shape="rect" id="Node000021" href="$testSimulationBoxSetup_8cpp.html#a0b1382aceb1c3a539ef1d9a95dbdfe52" title=" " alt="" coords="412,488,480,516"/>
+<area shape="poly" id="edge20_Node000019_Node000021" title=" " alt="" coords="581,479,481,499,480,494,576,480"/>
+</map>

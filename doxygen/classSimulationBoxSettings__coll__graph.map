@@ -1,0 +1,11 @@
+<map id="SimulationBoxSettings" name="SimulationBoxSettings">
+<area shape="rect" id="Node000001" title="SimulationBoxSettings." alt="" coords="71,408,256,592"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="8,173,142,335"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,332,128,392,122,392,104,337"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,143,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,75,78,156,72,156,74,80"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="169,173,340,335"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="226,332,206,393,201,390,223,337"/>
+<area shape="rect" id="Node000005" href="$classstd_1_1optional_3_01InitVelocities_01_4.html" title=" " alt="" coords="167,5,344,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="256,75,257,157,252,156,254,80"/>
+</map>

@@ -1,0 +1,46 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,354,59,382"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="142,5,313,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="32,353,40,291,55,203,76,118,90,84,105,61,129,44,126,49,109,64,94,86,81,119,60,204,45,292,38,354"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a1ac3cb7dca62bcd4372f9294bd413a15" title="adds all atomIndices to _innerRegionCenterAtomIndices vector" alt="" coords="119,75,336,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="31,353,35,312,45,254,67,192,84,162,105,136,120,126,118,130,109,140,88,165,72,194,50,255,40,312,36,354"/>
+<area shape="rect" id="Node000004" href="$classconfigurator_1_1HybridConfigurator.html#a0c0ee954887f476819073112a41359f1" title="Calculate the center of mass of the inner region center atoms." alt="" coords="112,195,342,239"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="37,353,62,305,81,279,105,256,126,244,123,249,108,260,85,283,66,308,42,354"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="436,73,608,118"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="32,353,37,318,49,271,71,222,86,200,105,180,422,114,420,119,108,185,90,203,75,225,54,273,42,319,37,354"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1Atom.html#aceeba752fe1b92c1b3b0fa0fad5ad498" title=" " alt="" coords="426,280,618,308"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="42,352,68,324,86,310,106,300,146,287,187,277,272,268,354,269,427,277,423,279,353,274,272,274,188,283,147,292,108,305,89,315,72,328,46,355"/>
+<area shape="rect" id="Node000009" href="$classconfigurator_1_1HybridConfigurator.html#a29900596fb77842d9a4a1d68d4fa9072" title="get the inner region center coordinates" alt="" coords="112,315,342,359"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="58,362,99,356,95,360,61,366"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1Atom.html#a56fadb03e2caf301456381e422d22256" title="sets the mass of the atom" alt="" coords="140,383,314,411"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="58,369,127,380,123,383,61,374"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1SimulationBox.html#a071637632228934195f9355e5ddb22e1" title=" " alt="" coords="142,435,313,479"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="48,380,77,401,108,420,129,430,124,432,105,425,74,405,50,385"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1Atom.html#a3dadc7b58463c698f53e234249e56ed2" title="set the name of the atom (element name)" alt="" coords="138,503,316,531"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="37,379,63,435,83,465,108,490,126,500,121,502,105,494,79,468,58,437,38,384"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1Atom.html#a1a1169f3fe0db4650b2bf09eaf7128fe" title="set the position of the atom" alt="" coords="132,555,323,583"/>
+<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="35,379,44,415,56,458,77,503,91,523,108,540,121,550,115,551,105,544,87,526,72,505,51,460,38,416,35,385"/>
+<area shape="rect" id="Node000016" href="$classconfigurator_1_1HybridConfigurator.html#a02cd8c06c2ffeb773d6e18109847555e" title="Shift all atoms back to their original positions before centering." alt="" coords="107,607,348,651"/>
+<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="34,379,40,423,50,480,72,540,88,568,109,592,112,597,107,598,105,596,84,571,67,542,45,481,34,423,34,384"/>
+<area shape="rect" id="Node000020" href="$classconfigurator_1_1HybridConfigurator.html#af3e5ae4c2c4f932ddd65de95134435e6" title="Shift all atoms so that the inner region center is at the origin." alt="" coords="110,676,344,721"/>
+<area shape="poly" id="edge21_Node000001_Node000020" title=" " alt="" coords="35,379,46,442,61,526,82,609,95,641,109,662,112,666,106,666,105,665,90,643,77,610,56,528,41,443,35,384"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a5efbb4148bf8da480902ff1400077c7b" title="calculate shift vector for a given position" alt="" coords="436,212,608,257"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="342,221,423,227,419,230,344,226"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="308,192,347,173,361,162,370,151,379,139,395,128,424,116,420,120,397,133,383,143,374,154,364,166,349,178,312,196"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#a3a90d81c739d9cd0cebc596eb2c95127" title="get the indices of the atoms marking the center of the inner region for hybrid type calculations" alt="" coords="396,143,648,187"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="341,194,383,188,379,191,344,199"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="296,237,397,266,431,276,426,278,395,272,298,243"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Atom.html#abeddc12e21be3eab37154830868d9ee4" title="set the mass of the atom" alt="" coords="436,418,609,446"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="315,405,423,419,418,421,316,410"/>
+<area shape="rect" id="Node000012" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="440,366,604,394"/>
+<area shape="poly" id="edge13_Node000010_Node000012" title=" " alt="" coords="314,389,427,384,423,387,316,394"/>
+<area shape="rect" id="Node000017" href="$classmolsys_1_1SimulationBox.html#ab6a19f8084dc848848a4a6bfd253a220" title="applies periodic boundary conditions to a position" alt="" coords="436,572,608,617"/>
+<area shape="poly" id="edge18_Node000016_Node000017" title=" " alt="" coords="348,612,424,605,419,607,349,617"/>
+<area shape="rect" id="Node000018" href="$classmolsys_1_1SimulationBox.html#a792f81ab0c393ca662ba553fd930e163" title="calculate center of mass of all molecules" alt="" coords="399,641,645,686"/>
+<area shape="poly" id="edge19_Node000016_Node000018" title=" " alt="" coords="348,641,386,647,381,648,349,646"/>
+<area shape="rect" id="Node000019" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="436,711,608,755"/>
+<area shape="poly" id="edge20_Node000016_Node000019" title=" " alt="" coords="320,649,349,661,374,679,397,696,425,709,419,709,395,701,370,683,347,666,320,655"/>
+<area shape="poly" id="edge22_Node000020_Node000017" title=" " alt="" coords="319,673,347,661,370,644,395,627,419,619,424,617,397,631,374,648,349,666,321,678"/>
+<area shape="poly" id="edge23_Node000020_Node000018" title=" " alt="" coords="345,682,386,680,381,680,345,687"/>
+<area shape="poly" id="edge24_Node000020_Node000019" title=" " alt="" coords="345,709,424,721,418,721,345,715"/>
+</map>

@@ -1,0 +1,29 @@
+<map id="TestTimer" name="TestTimer">
+<area shape="rect" id="Node000001" title="Fixture for Timer tests." alt="" coords="34,1711,110,1783"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,1557,95,1629"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,1642,69,1711,64,1711,55,1646"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="119,1548,291,1638"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,1636,115,1700,111,1696,164,1639"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1Timer.html" title="Stores all timings information." alt="" coords="106,1068,303,1475"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="206,1473,207,1532,202,1531,204,1478"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="144,914,204,986"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="178,984,186,1051,181,1051,177,989"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="229,906,373,995"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="289,992,273,1052,268,1051,287,997"/>
+<area shape="rect" id="Node000007" href="$classtimings_1_1TimingsSection.html" title="Stores all timings information." alt="" coords="194,515,407,833"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="301,830,303,889,298,888,300,835"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="175,361,251,433"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="222,430,241,490,244,498,238,499,236,491,222,436"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="149,190,277,279"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="213,292,215,361,210,361,213,297"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="276,361,325,433"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="301,430,303,498,298,498,301,436"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="349,352,543,442"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="422,444,395,501,390,499,424,439"/>
+<area shape="rect" id="Node000012" href="$structtimings_1_1TimingsSection_1_1Timings.html" title="Timings struct to store timing information." alt="" coords="362,190,530,279"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="447,277,449,336,444,335,446,282"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="268,5,443,95"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="377,92,420,175,415,176,377,97"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="468,14,606,86"/>
+<area shape="poly" id="edge13_Node000012_Node000014" title=" " alt="" coords="519,88,478,176,473,174,521,84"/>
+</map>

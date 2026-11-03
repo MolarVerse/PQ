@@ -1,0 +1,5 @@
+<map id="input::guffdat::isNeeded" name="input::guffdat::isNeeded">
+<area shape="rect" id="Node000001" title="checks wether reading the guff.dat is necessary or not" alt="" coords="5,14,183,42"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="231,5,416,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,25,218,27,212,28,183,30"/>
+</map>

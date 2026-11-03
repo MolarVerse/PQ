@@ -1,0 +1,17 @@
+<map id="timings::TimingsSection::TimingsSection" name="timings::TimingsSection::TimingsSection">
+<area shape="rect" id="Node000001" title="Construct a new Timings Section:: Timings Section object." alt="" coords="458,184,636,229"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1TimingsSection.html#a7dbfba30c6c38b2f1eee1827ccb20bd8" title=" " alt="" coords="232,29,410,74"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="509,173,463,135,409,95,376,77,376,72,411,91,466,131,514,173"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1TimingsSection.html#a11f66306307a90af5a515870c325a2a5" title=" " alt="" coords="5,60,184,105"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="493,176,453,157,409,140,352,123,293,110,185,93,184,88,294,105,353,118,411,134,455,153,498,176"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1TimingsSection.html#a578d0bc1c6dabab2ba1e44ac93ebe0d5" title="Copy assignment operator for TimingsSection." alt="" coords="232,149,410,194"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="440,191,411,188,410,183,445,190"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1TimingsSection.html#afa4c97910e05a1e7029dfb8cfb801473" title="Copy constructor for TimingsSection." alt="" coords="232,219,410,263"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="440,223,411,230,410,225,445,222"/>
+<area shape="rect" id="Node000006" href="$classtimings_1_1TimingsSection.html#a283d01dbac0c38a54432782dbbf6062a" title=" " alt="" coords="232,288,410,333"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="493,235,411,278,383,290,382,285,409,273,488,237"/>
+<area shape="rect" id="Node000007" href="$classtimings_1_1TimingsSection.html#a3f9cbde91cbfc179cb445870cb72c4f4" title=" " alt="" coords="232,357,410,402"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="522,240,473,295,444,323,411,347,390,359,388,354,409,343,440,319,470,292,517,242"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="356,15,344,10,321,8,300,10,287,15,281,21,283,29,278,28,276,19,284,10,299,5,321,3,345,5,361,14"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="214,67,186,72,183,68,218,64"/>
+</map>

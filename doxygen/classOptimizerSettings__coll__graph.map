@@ -1,0 +1,19 @@
+<map id="OptimizerSettings" name="OptimizerSettings">
+<area shape="rect" id="Node000001" title="OptimizerSettings." alt="" coords="268,475,499,770"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="13,173,194,335"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,332,235,449,260,480,254,481,231,452,152,337"/>
+<area shape="rect" id="Node000003" href="$classstd_1_1optional_3_01OptimizerType_01_4.html" title=" " alt="" coords="5,5,193,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,75,104,156,99,156,100,80"/>
+<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="222,173,395,335"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="319,332,339,450,341,459,336,457,334,451,316,337"/>
+<area shape="rect" id="Node000005" href="$classstd_1_1optional_3_01LearningRate_01_4.html" title=" " alt="" coords="217,5,397,78"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="308,75,311,157,305,156,307,80"/>
+<area shape="rect" id="Node000006" href="$classSetting.html" title=" " alt="" coords="420,173,554,335"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="466,333,432,460,427,457,463,337"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="421,5,553,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="488,75,490,157,485,155,486,80"/>
+<area shape="rect" id="Node000008" href="$classSetting.html" title=" " alt="" coords="579,173,713,335"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="645,332,634,394,624,424,609,452,589,480,566,506,514,550,511,545,562,502,585,477,605,449,619,422,629,393,641,337"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="577,5,715,78"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="647,75,648,157,643,155,645,80"/>
+</map>

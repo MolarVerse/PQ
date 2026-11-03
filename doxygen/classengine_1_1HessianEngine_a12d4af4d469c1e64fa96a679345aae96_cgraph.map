@@ -1,0 +1,44 @@
+<map id="engine::HessianEngine::_setupOptimization" name="engine::HessianEngine::_setupOptimization">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,532,175,577"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1HessianEngine.html#ab0c9bbc29efb78c084d724876e9ad736" title=" " alt="" coords="241,317,420,362"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,530,294,370,292,375,119,533"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1Engine.html#a898232c118e972e1f7bcbaeaa08c348b" title="get the reference to the settings" alt="" coords="507,540,706,568"/>
+<area shape="poly" id="edge23_Node000001_Node000006" title=" " alt="" coords="174,552,493,552,490,557,176,557"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1HessianEngine.html#a3fadfd984543b95d8c424974628f8eaf" title=" " alt="" coords="223,661,438,706"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="133,574,276,652,271,655,133,580"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="521,5,692,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="335,316,353,263,383,194,426,122,453,89,484,60,509,47,505,51,488,64,457,93,431,125,388,197,358,265,340,318"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1TimingsSettings.html#a58a13b00fa1ceae44281aed2a416e959" title="get the number of steps" alt="" coords="514,75,700,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="340,316,361,276,393,225,434,174,484,130,501,122,498,125,488,134,438,177,397,228,366,278,345,318"/>
+<area shape="rect" id="Node000005" href="$classOptimizerSettings.html#aa26ae36ac8167d2929bb25eab446c591" title="returns the optimizer as string" alt="" coords="534,144,680,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="349,315,406,257,444,226,485,199,521,185,517,188,487,203,447,230,409,261,353,319"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="344,360,368,398,399,444,440,489,487,527,498,534,492,534,485,531,436,493,395,447,363,401,343,365"/>
+<area shape="rect" id="Node000007" href="$classengine_1_1Engine.html#ae3168adfa5b8346680b3babd5ff5d295" title="get the shared pointer to the physical data" alt="" coords="511,213,702,258"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="377,315,485,268,509,262,504,265,487,273,380,319"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1HessianEngine.html#a24d278bcd11b7568a295431e71925174" title=" " alt="" coords="506,283,708,327"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="419,326,492,318,488,321,421,331"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1Engine.html#a144502b577b52ede4c4cb2a37d8f2da3" title="get the shared pointer to the simulation box" alt="" coords="511,352,702,397"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="419,348,498,359,493,362,421,353"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1Engine.html#a3de2559488f0ddc5db3af0dd8cc73a52" title="get the reference to the simulation box" alt="" coords="486,420,727,448"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="375,360,429,384,487,406,514,416,509,417,485,412,427,389,376,365"/>
+<area shape="rect" id="Node000011" href="$structOptimizerTypeMeta.html#a8a83a110443c1a6fef2b4e7e3aa41834" title=" " alt="" coords="528,472,685,517"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="355,360,414,409,449,435,487,457,516,471,511,472,485,462,446,439,410,413,355,365"/>
+<area shape="poly" id="edge14_Node000012_Node000006" title=" " alt="" coords="357,659,413,617,448,595,485,577,506,572,501,574,487,582,451,600,416,621,360,663"/>
+<area shape="poly" id="edge17_Node000012_Node000011" title=" " alt="" coords="346,659,402,594,441,558,485,527,516,514,511,517,487,531,445,562,406,598,350,663"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1Engine.html#a97961d6c869076d7df7995e7f77cfbc9" title="get the reference to the engine output" alt="" coords="512,592,702,637"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="421,658,502,640,498,642,423,663"/>
+<area shape="rect" id="Node000014" href="$classengine_1_1EngineOutput.html#a863fad207e3cf9b4ea21e490e8e333ad" title="getter for log output" alt="" coords="526,661,687,706"/>
+<area shape="poly" id="edge13_Node000012_Node000014" title=" " alt="" coords="438,681,513,683,508,684,439,686"/>
+<area shape="rect" id="Node000015" href="$classHessianSettings.html#adf568e6008dd494a24c8dba615aa325b" title="Check whether to optimize before Hessian calculations." alt="" coords="511,731,702,775"/>
+<area shape="poly" id="edge15_Node000012_Node000015" title=" " alt="" coords="422,704,503,726,497,727,422,709"/>
+<area shape="rect" id="Node000016" href="$structLearningRateMeta.html#a081efb8513b1bd789c11f4740d9ccef5" title=" " alt="" coords="507,799,706,827"/>
+<area shape="poly" id="edge16_Node000012_Node000016" title=" " alt="" coords="359,704,416,746,451,767,487,785,506,794,501,794,485,790,448,772,413,750,358,709"/>
+<area shape="rect" id="Node000017" href="$classout_1_1LogOutput.html#a2bf59bc4357dc7321cece79879c6c2e5" title="write an empty line to the log file" alt="" coords="493,851,720,879"/>
+<area shape="poly" id="edge18_Node000012_Node000017" title=" " alt="" coords="349,704,406,771,444,806,487,836,503,846,498,845,485,841,441,811,402,775,347,709"/>
+<area shape="rect" id="Node000019" href="$classout_1_1LogOutput.html#a797231974b127371153b962fd85ce2a9" title="write a message to inform about the setup" alt="" coords="496,903,717,931"/>
+<area shape="poly" id="edge21_Node000012_Node000019" title=" " alt="" coords="343,704,365,746,397,795,438,846,462,869,487,888,499,897,494,896,485,893,458,873,434,850,392,799,361,748,341,709"/>
+<area shape="rect" id="Node000018" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="775,878,975,906"/>
+<area shape="poly" id="edge19_Node000017_Node000018" title=" " alt="" coords="721,874,762,880,757,880,721,879"/>
+<area shape="poly" id="edge20_Node000018_Node000018" title=" " alt="" coords="829,876,822,869,828,859,846,853,875,851,906,854,925,863,920,862,905,859,875,856,847,858,831,863,827,869,834,878"/>
+<area shape="poly" id="edge22_Node000019_Node000018" title=" " alt="" coords="717,904,757,903,762,902,717,909"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="engine::QMMMMDEngine::_calculateQMReferenceEnergy" name="engine::QMMMMDEngine::_calculateQMReferenceEnergy">
+<area shape="rect" id="Node000001" title="Store the summed QM reference energies of all QM molecules in PhysicalData; they are subtracted from ..." alt="" coords="5,65,234,110"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Engine.html#aade21e1cb3cd8535890fbd914d3b79d9" title="get the pointer to the physical data" alt="" coords="302,5,502,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,62,289,51,285,53,229,67"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1Engine.html#a3de2559488f0ddc5db3af0dd8cc73a52" title="get the reference to the simulation box" alt="" coords="282,74,523,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,85,269,87,263,88,234,90"/>
+<area shape="rect" id="Node000004" href="$classphysicalData_1_1PhysicalData.html#a30ec124d1d7656cf0a927ac0d5141fde" title="set the qm reference energy" alt="" coords="303,125,502,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="228,108,290,123,285,124,228,113"/>
+</map>

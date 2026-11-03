@@ -1,0 +1,7 @@
+<map id="configurator::HybridConfigurator::shiftAtomsToInnerRegionCenter" name="configurator::HybridConfigurator::shiftAtomsToInnerRegionCenter">
+<area shape="rect" id="Node000001" title="Shift all atoms so that the inner region center is at the origin." alt="" coords="239,36,473,81"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMMMMDEngine.html#adf7180044c6cfd11237da9914a9d4652" title="calculate QM/MM forces" alt="" coords="5,5,191,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,43,191,41,191,36,226,42"/>
+<area shape="rect" id="Node000003" href="$testHybridConfigurator_8cpp.html#adc4f0c4a4e2f4641f0283792f764c076" title=" " alt="" coords="71,74,125,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,74,125,87,125,82,226,73"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="input::adapt" name="input::adapt">
+<area shape="rect" id="Node000001" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="5,14,105,42"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="153,5,304,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,25,140,27,135,28,105,30"/>
+</map>

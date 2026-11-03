@@ -1,0 +1,25 @@
+<map id="/home/runner/work/PQ/PQ/src/settings/fileSettings.cpp" name="/home/runner/work/PQ/PQ/src/settings/fileSettings.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="23,5,249,50"/>
+<area shape="rect" id="Node000002" href="$fileSettings_8hpp.html" title=" " alt="" coords="75,98,197,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,48,138,83,133,82,135,53"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,174,64,201"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,129,67,166,63,163,119,124"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="88,174,184,201"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="137,124,138,159,133,157,135,129"/>
+<area shape="rect" id="Node000005" href="$defaults_8hpp.html" title=" " alt="" coords="209,174,311,201"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="158,124,227,165,222,166,158,129"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="76,249,145,277"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="231,203,152,245,149,240,235,200"/>
+<area shape="rect" id="Node000007" href="$config_2enums_2convergence_8hpp.html" title=" " alt="" coords="170,249,350,277"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="261,200,262,235,257,232,258,204"/>
+<area shape="rect" id="Node000010" href="$unit__types_8hpp.html" title=" " alt="" coords="374,249,492,277"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="291,199,391,243,386,244,290,205"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="115,325,180,353"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="242,277,181,319,179,314,237,278"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="205,325,328,353"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="263,276,266,311,262,308,259,280"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="366,325,484,353"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="434,276,430,311,426,308,430,279"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="508,325,614,353"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="457,275,528,317,523,317,455,280"/>
+</map>

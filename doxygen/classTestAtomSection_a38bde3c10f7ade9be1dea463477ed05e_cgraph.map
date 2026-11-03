@@ -1,0 +1,9 @@
+<map id="TestAtomSection::_processQMAtomLine" name="TestAtomSection::_processQMAtomLine">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,40,201,85"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#a99c4712b5e8c39f0ff3ff3eb9af81dd1" title="adds a single atom with moltype 0 to the simulation box" alt="" coords="249,40,510,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,60,236,62,230,63,201,65"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="558,5,729,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="510,43,545,41,540,41,511,48"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="558,75,729,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="510,77,545,84,540,84,510,82"/>
+</map>

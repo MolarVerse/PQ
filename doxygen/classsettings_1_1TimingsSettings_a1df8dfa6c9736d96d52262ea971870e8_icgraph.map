@@ -1,0 +1,13 @@
+<map id="settings::TimingsSettings::setStepCount" name="settings::TimingsSettings::setStepCount">
+<area shape="rect" id="Node000001" title="Set the step count." alt="" coords="217,135,403,180"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1StepCountSection.html#a134fcd5b163aa45f9c5723f52738dfe7" title="processes the step count section of the rst file" alt="" coords="11,5,163,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="252,128,167,83,146,70,145,65,170,78,257,126"/>
+<area shape="rect" id="Node000003" href="$classTestEngine.html#a7a36614bf77d545d2c0fc3a67b5cd9a2" title=" " alt="" coords="5,92,169,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="200,133,150,123,149,117,204,131"/>
+<area shape="rect" id="Node000004" href="$testEngine_8cpp.html#ac926d5e5b96d1bb5a6ef0408d46147e8" title="tests calculateTotalSimulationTime with a fresh engine (step 1, no restart offset)" alt="" coords="53,144,121,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,159,122,160,121,155,203,156"/>
+<area shape="rect" id="Node000005" href="$testEngine_8cpp.html#a0efe4fd68dfbf769d0d3b484841cf38e" title="tests that calculateTotalSimulationTime folds in the restart step offset (settings::TimingsSettings::..." alt="" coords="53,196,121,223"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="200,184,122,204,121,199,204,181"/>
+<area shape="rect" id="Node000006" href="$testEngine_8cpp.html#ab08cd2a044a64414bc3b1bd3e8ed0bc4" title="tests calculateTotalSimulationTime scales linearly with the time step" alt="" coords="53,248,121,275"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="261,188,170,237,122,254,121,249,168,232,256,189"/>
+</map>

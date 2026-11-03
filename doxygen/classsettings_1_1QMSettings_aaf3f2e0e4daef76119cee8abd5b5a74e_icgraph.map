@@ -1,0 +1,21 @@
+<map id="settings::QMSettings::getRemoveNetForce" name="settings::QMSettings::getRemoveNetForce">
+<area shape="rect" id="Node000001" title="returns if the net force should be removed after reading in the QM forces" alt="" coords="741,160,904,205"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1ExternalQMRunner.html#a9bef40ef45e2f95ac8d4efeb74a0c4dc" title="reads the force file (including qm energy) and sets the forces of the atoms" alt="" coords="510,56,683,101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="767,152,692,115,665,104,665,99,694,111,772,152"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1AseQMRunner.html#a34118d4ef9785c7696bb0b087043ed04" title="collect the forces from the ASE QM calculation" alt="" coords="499,125,693,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="723,168,694,165,694,160,729,168"/>
+<area shape="rect" id="Node000008" href="$classExternalQMRunnerTest.html#a697768b4bb7eb2a2d7f4f59ebc071710" title=" " alt="" coords="512,195,681,239"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="729,197,682,207,681,201,724,197"/>
+<area shape="rect" id="Node000010" href="$testQMParser_8cpp.html#a8c539238db9b60e7649562f61188c7b6" title=" " alt="" coords="562,263,630,291"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="774,212,694,254,631,273,630,268,692,249,769,213"/>
+<area shape="rect" id="Node000003" href="$classExternalQMRunnerTest.html#a3bc2072bc953c4ce966664117a680ced" title=" " alt="" coords="254,5,423,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="492,59,424,47,423,42,497,58"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1ExternalQMRunner.html#aba331cf87a2e37ef6d081075f24e2bf1" title="run the qm engine" alt="" coords="237,74,440,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="491,83,441,87,440,81,496,81"/>
+<area shape="rect" id="Node000006" href="$classQM_1_1AseQMRunner.html#ac90c651d7b04e11e6396ebcffd518282" title="collect the data from the ASE QM calculation" alt="" coords="226,134,451,162"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="480,148,452,150,451,145,486,147"/>
+<area shape="rect" id="Node000007" href="$classQM_1_1AseQMRunner.html#afcbff55049c8cdb7ab89153e016f0793" title="run the ASE QM calculation" alt="" coords="5,134,178,162"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="208,149,179,150,177,145,212,147"/>
+<area shape="rect" id="Node000009" href="$classQMWriterTest.html#a174f5b6ba28def21f508a1a51a03f76e" title=" " alt="" coords="260,203,416,231"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="493,217,417,220,417,214,498,217"/>
+</map>

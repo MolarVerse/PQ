@@ -1,0 +1,22 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests full process function TODO: think of a clever way to test this" alt="" coords="5,294,74,322"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#a454cc6f09bfcb1657d0e43a9e322ad46" title="reads a general parameter file section" alt="" coords="122,235,289,296"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,297,108,289,104,293,76,302"/>
+<area shape="rect" id="Node000010" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#aa5389a2e9753ea7e416b70cf81804101" title="set file pointer" alt="" coords="122,320,289,382"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="74,314,109,324,104,327,75,320"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#a7e869bcea585b8af8c796d25eceb72ed" title="check if section ended normally" alt="" coords="353,29,520,91"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="223,232,269,167,300,132,335,101,344,98,340,101,339,105,304,136,273,171,227,236"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#aa68b107f2d0cf0d4518d6ebf1a250d77" title=" " alt="" coords="353,115,520,176"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="255,232,336,186,349,182,344,185,338,191,257,237"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#a30ba0d94fb2b2276224cf046ed7e4484" title=" " alt="" coords="353,200,520,262"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="288,250,340,245,335,247,290,256"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="337,286,536,314"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="289,275,328,283,322,284,289,281"/>
+<area shape="rect" id="Node000008" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="364,338,509,366"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="270,294,338,323,364,333,358,333,336,328,269,300"/>
+<area shape="rect" id="Node000009" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="355,390,518,418"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="275,294,291,306,306,325,314,343,323,359,339,375,349,384,344,383,335,380,318,363,310,345,302,328,287,310,274,299"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="391,28,392,19,401,10,416,5,437,3,461,5,477,15,472,15,460,11,437,8,417,10,404,15,397,21,396,30"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#ab5a903c20182ea9b944a512791539512" title=" " alt="" coords="584,29,752,91"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="520,58,571,59,566,61,521,63"/>
+</map>

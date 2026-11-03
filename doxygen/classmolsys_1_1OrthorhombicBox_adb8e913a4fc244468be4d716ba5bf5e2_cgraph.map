@@ -1,0 +1,7 @@
+<map id="molsys::OrthorhombicBox::makeVacuumBox" name="molsys::OrthorhombicBox::makeVacuumBox">
+<area shape="rect" id="Node000001" title="Create a vacuum box with default dimensions." alt="" coords="5,5,196,50"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1OrthorhombicBox.html#af2c98f3225e49b2b5a28c34fd362fd85" title="Construct a new Orthorhombic Box object." alt="" coords="244,5,434,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,25,231,27,226,28,196,30"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html#ac33e6a4f6a238b2a6f975f9a2c4e8bba" title="Construct a new Box object." alt="" coords="482,14,616,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="434,25,469,28,464,28,434,30"/>
+</map>

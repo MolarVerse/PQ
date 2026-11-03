@@ -1,0 +1,20 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,118,74,146"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a212b5c413fa034fc67c458978ec169b2" title="Add an atom to the simulation box." alt="" coords="129,5,300,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,116,82,88,120,60,133,55,129,59,123,65,86,92,57,119"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="122,75,307,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,123,108,117,104,120,76,127"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a87856cff7732b8ef707bbe3e98ec1ee1" title="Remove net force from the QM atoms." alt="" coords="129,144,300,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,136,115,145,111,148,75,141"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="122,213,307,258"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="54,143,86,171,123,199,134,206,129,207,120,203,82,176,55,149"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a7c89dc9cef58e06b5735141047af95d7" title="Get the number of QM atoms." alt="" coords="366,87,547,131"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="300,144,353,133,349,135,301,149"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBoxView.html#a7e7040ddbbd5836394efe83bf9f8210a" title=" " alt="" coords="606,117,846,162"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="300,159,593,145,589,149,301,165"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="548,117,593,124,588,125,548,122"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="363,211,550,255"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="307,232,350,234,344,235,308,237"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="355,280,558,325"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="298,256,361,275,356,275,298,261"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="out::StdoutOutput::writeSetup" name="out::StdoutOutput::writeSetup">
+<area shape="rect" id="Node000001" title="write a message to the stdout to inform about the setup" alt="" coords="5,5,150,50"/>
+<area shape="rect" id="Node000002" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="198,14,342,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,25,185,27,180,28,150,30"/>
+</map>

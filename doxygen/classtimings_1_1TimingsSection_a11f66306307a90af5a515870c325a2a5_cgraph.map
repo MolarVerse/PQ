@@ -1,0 +1,19 @@
+<map id="timings::TimingsSection::operator=" name="timings::TimingsSection::operator=">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,219,184,263"/>
+<area shape="rect" id="Node000002" href="$classtimings_1_1TimingsSection.html#a7dbfba30c6c38b2f1eee1827ccb20bd8" title=" " alt="" coords="245,29,424,74"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,217,159,155,193,121,230,91,253,79,250,83,233,95,196,125,163,159,114,220"/>
+<area shape="rect" id="Node000003" href="$classtimings_1_1TimingsSection.html#adf8297130402fe5666118eb15866818e" title="Construct a new Timings Section:: Timings Section object." alt="" coords="485,60,663,105"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="116,217,166,174,197,152,231,135,290,113,352,99,472,84,467,87,353,104,292,119,233,139,200,157,169,178,120,220"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1TimingsSection.html#a7adecd489dff329a3ab02296cd90032e" title=" " alt="" coords="232,149,437,194"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="173,216,242,197,238,201,175,220"/>
+<area shape="rect" id="Node000005" href="$classtimings_1_1TimingsSection.html#a9a02e2d7838e5c06b7f5712516473d50" title="calculates the elapsed time in ms" alt="" coords="245,219,424,263"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="183,238,232,240,227,242,185,244"/>
+<area shape="rect" id="Node000006" href="$classtimings_1_1TimingsSection.html#a0627f723cfa158bb3a54bef19089db46" title="calculates the loop time in s" alt="" coords="245,288,424,333"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="174,261,243,282,238,284,174,267"/>
+<area shape="rect" id="Node000007" href="$classtimings_1_1TimingsSection.html#a6a061d14d84b6e55b8455e9b78a85918" title="end the timer" alt="" coords="245,357,424,402"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="120,261,171,302,233,343,246,351,241,351,230,347,168,307,120,266"/>
+<area shape="rect" id="Node000008" href="$classtimings_1_1TimingsSection.html#acdfd9201b7ffff06e771a80282990257" title="get the name of the timings section" alt="" coords="245,427,424,471"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="109,261,158,336,193,377,233,412,242,419,236,419,230,416,189,380,154,339,107,266"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="289,28,287,19,295,10,311,5,334,3,360,5,377,13,372,15,359,10,334,8,312,10,298,15,292,21,294,29"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="423,61,472,68,467,70,425,66"/>
+</map>

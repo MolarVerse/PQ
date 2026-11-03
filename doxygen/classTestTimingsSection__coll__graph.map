@@ -1,0 +1,23 @@
+<map id="TestTimingsSection" name="TestTimingsSection">
+<area shape="rect" id="Node000001" title="Fixture for TimingsSection tests." alt="" coords="5,1068,142,1140"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,914,97,986"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,999,71,1068,66,1068,58,1003"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="121,906,293,995"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,993,118,1057,114,1053,167,997"/>
+<area shape="rect" id="Node000004" href="$classtimings_1_1TimingsSection.html" title="Stores all timings information." alt="" coords="100,515,314,833"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="208,830,210,889,204,888,206,835"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="81,361,157,433"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="128,430,147,490,150,498,144,499,142,491,128,436"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="55,190,183,279"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="119,292,122,361,116,361,119,297"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="183,361,231,433"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="207,430,210,498,204,497,207,436"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="256,352,449,442"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="328,444,301,501,296,499,331,439"/>
+<area shape="rect" id="Node000009" href="$structtimings_1_1TimingsSection_1_1Timings.html" title="Timings struct to store timing information." alt="" coords="268,190,436,279"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="353,277,355,336,350,335,352,282"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="174,5,349,95"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="283,92,326,175,321,176,283,97"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="374,14,512,86"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="425,88,384,176,379,174,427,84"/>
+</map>

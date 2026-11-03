@@ -1,0 +1,7 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests parsing the &quot;instant_energy_file&quot; command" alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classOutputFileSettings.html#a505efa5435e948009ebdd155ae9d108d" title="get the instant energy file name" alt="" coords="122,5,324,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,108,48,104,51,75,58"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="141,75,305,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,66,128,77,123,80,74,71"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="manostat::ManostatFactory::createManostat" name="manostat::ManostatFactory::createManostat">
+<area shape="rect" id="Node000001" title="Creates a Manostat instance based on the provided settings." alt="" coords="5,40,205,85"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1ManostatFactory.html#a84e47947b282c20cdeb331f75af23ff0" title="setup berendsen manostat" alt="" coords="283,5,486,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,47,270,41,265,43,206,53"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1ManostatFactory.html#a42c8a61bb3dca6101cd4096367b78868" title="setup stochastic rescaling manostat" alt="" coords="253,75,516,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="205,72,240,79,235,79,205,77"/>
+</map>

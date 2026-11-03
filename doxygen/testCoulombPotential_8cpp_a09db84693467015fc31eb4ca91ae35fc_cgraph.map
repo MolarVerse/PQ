@@ -1,0 +1,11 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="tests the setCoulombRadiusCutOff function" alt="" coords="5,118,59,146"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1CoulombPotential.html#ac8e186d9467aa056453db752f1bfd1f2" title=" " alt="" coords="107,5,301,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="43,116,70,88,105,60,117,55,114,59,108,65,73,92,47,119"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1CoulombPotential.html#adf5b7f0038d45b8b93319dacf1d7d516" title=" " alt="" coords="112,75,296,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,124,98,117,95,121,60,129"/>
+<area shape="rect" id="Node000004" href="$classpot_1_1CoulombPotential.html#a0f55c4179f8e8c25cf49c5042df61bcc" title=" " alt="" coords="107,144,300,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,134,94,142,89,145,60,140"/>
+<area shape="rect" id="Node000005" href="$classpot_1_1CoulombPotential.html#a08407ee16c41911dfbcbe7c820c0ee4d" title="sets the coulombRadiusCutOff and calculates the energy and force cutoff &#45; equivalent to the construct..." alt="" coords="108,213,300,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="45,143,73,171,108,199,118,206,113,206,105,203,70,175,45,148"/>
+</map>

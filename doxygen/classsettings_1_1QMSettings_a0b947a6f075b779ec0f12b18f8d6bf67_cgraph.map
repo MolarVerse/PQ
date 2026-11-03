@@ -1,0 +1,5 @@
+<map id="settings::QMSettings::setUseGPUPreprocessing" name="settings::QMSettings::setUseGPUPreprocessing">
+<area shape="rect" id="Node000001" title="sets if the GPU pre&#45;processing should be enabled for FeNNol" alt="" coords="5,5,199,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a0b0110319c83f7c67ec0b8a9582f2ad2" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="247,5,418,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,25,233,27,228,28,199,30"/>
+</map>

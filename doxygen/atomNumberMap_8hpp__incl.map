@@ -1,0 +1,15 @@
+<map id="/home/runner/work/PQ/PQ/include/config/atomNumberMap.hpp" name="/home/runner/work/PQ/PQ/include/config/atomNumberMap.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,233,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="15,115,66,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,70,64,105,59,102,94,65"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="90,115,148,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,65,122,100,116,98,118,70"/>
+<area shape="rect" id="Node000004" href="$strongTypes_8hpp.html" title=" " alt="" coords="173,115,300,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,65,210,105,205,106,158,70"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="110,191,179,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="222,142,174,183,171,179,217,144"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="204,191,269,218"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="238,141,239,176,234,174,234,145"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="292,191,415,218"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="258,141,323,182,318,182,257,146"/>
+</map>

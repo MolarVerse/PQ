@@ -1,0 +1,5 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="finalize() must not add any reference file when the manostat type is explicitly NONE." alt="" coords="5,14,59,42"/>
+<area shape="rect" id="Node000002" href="$classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="107,5,284,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,25,94,27,89,29,59,30"/>
+</map>

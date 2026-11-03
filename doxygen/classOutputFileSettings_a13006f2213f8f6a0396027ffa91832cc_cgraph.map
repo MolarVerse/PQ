@@ -1,0 +1,9 @@
+<map id="OutputFileSettings::finalize" name="OutputFileSettings::finalize">
+<area shape="rect" id="Node000001" title="finalizes the output file settings by determining the file prefix and replacing default file names wi..." alt="" coords="5,75,147,119"/>
+<area shape="rect" id="Node000002" href="$classOutputFileSettings.html#a94fb950f31ccbb760fcf834bb7888c5b" title="determines the most common prefix of all output files" alt="" coords="195,5,426,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,74,220,53,216,56,148,79"/>
+<area shape="rect" id="Node000003" href="$classOutputFileSettings.html#ae1ee4c26c0e189f946f360ef801b47a8" title="replaces the default restart file name" alt="" coords="223,75,398,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="146,94,210,96,205,98,147,100"/>
+<area shape="rect" id="Node000004" href="$classOutputFileSettings.html#ab77508f857d04d62f57a929902f5e5cd" title="determine if the file prefix is set" alt="" coords="240,144,381,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="147,115,227,140,222,142,147,120"/>
+</map>

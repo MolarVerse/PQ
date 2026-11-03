@@ -1,0 +1,5 @@
+<map id="molsys::TriclinicBox::scaleBox" name="molsys::TriclinicBox::scaleBox">
+<area shape="rect" id="Node000001" title="scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume" alt="" coords="107,5,257,50"/>
+<area shape="rect" id="Node000002" href="$testTriclinicBox_8cpp.html#a340d5369d7ced0adf82b9aa812db3a7f" title=" " alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,29,60,30,59,25,93,27"/>
+</map>

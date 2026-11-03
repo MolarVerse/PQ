@@ -1,0 +1,5 @@
+<map id="test::checkType&lt; std::unique_ptr&lt; engine::Engine &gt; &gt;" name="test::checkType&lt; std::unique_ptr&lt; engine::Engine &gt; &gt;">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,163,67"/>
+<area shape="rect" id="Node000002" href="$namespacetest.html#ab09419253c0f5065befb052c858b9c63" title="check that the dynamic type of obj matches expectedType" alt="" coords="211,22,333,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,34,198,36,192,36,164,39"/>
+</map>

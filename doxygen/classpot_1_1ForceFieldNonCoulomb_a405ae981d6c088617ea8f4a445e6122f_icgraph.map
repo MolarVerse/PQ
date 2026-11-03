@@ -1,0 +1,5 @@
+<map id="pot::ForceFieldNonCoulomb::getSelfInteractionNonCoulPairs" name="pot::ForceFieldNonCoulomb::getSelfInteractionNonCoulPairs">
+<area shape="rect" id="Node000001" title="finds all non&#45;coulombic pairs that are self&#45;interaction pairs" alt="" coords="254,5,485,50"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1ForceFieldNonCoulomb.html#a67a0a67ec105a87adc9d433f752b3d29" title=" " alt="" coords="5,5,206,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,28,206,30,206,25,241,27"/>
+</map>

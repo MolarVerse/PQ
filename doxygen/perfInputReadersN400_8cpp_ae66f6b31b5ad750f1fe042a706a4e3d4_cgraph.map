@@ -1,0 +1,96 @@
+<map id="main" name="main">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,1143,60,1171"/>
+<area shape="rect" id="Node000002" href="$namespacebenchInputReaders.html#a2b22fa7b51c3adbf281069cdc81de4e1" title=" " alt="" coords="108,1143,283,1171"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,1155,94,1155,90,1159,62,1159"/>
+<area shape="rect" id="Node000003" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="391,748,507,776"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="195,1142,201,1077,220,981,237,928,261,876,291,827,329,786,351,772,378,765,374,768,353,777,333,790,295,831,265,878,242,930,225,982,206,1078,200,1143"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#ab208caefa91969057370734e127646b5" title="read moldescriptor file" alt="" coords="348,800,550,845"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="205,1141,422,854,422,860,210,1144"/>
+<area shape="rect" id="Node000026" href="$namespaceinput_1_1restartFile.html#a10304bceba95a767d00655f9bd722f01" title="wrapper function to construct a RestartFileReader object and call the read function" alt="" coords="385,1009,513,1054"/>
+<area shape="poly" id="edge29_Node000002_Node000026" title=" " alt="" coords="214,1141,265,1106,330,1069,373,1054,368,1057,332,1074,268,1110,218,1145"/>
+<area shape="rect" id="Node000032" href="$namespaceinput_1_1topology.html#a3d1f97a3ae5763b555062e9edfb7481e" title="wrapper to construct a TopologyReader and reads topology file" alt="" coords="331,1083,567,1111"/>
+<area shape="poly" id="edge38_Node000002_Node000032" title=" " alt="" coords="250,1140,330,1120,367,1113,362,1116,332,1125,252,1145"/>
+<area shape="rect" id="Node000038" href="$classsettings_1_1FileSettings.html#a9a60c94e1cf1fe20f039c517a5d2d30c" title="set the topology file name flag to is set" alt="" coords="348,1135,550,1179"/>
+<area shape="poly" id="edge48_Node000002_Node000038" title=" " alt="" coords="283,1154,335,1156,331,1158,284,1160"/>
+<area shape="rect" id="Node000039" href="$classsettings_1_1FileSettings.html#a324e98d13c3d3552a3be2ec9b6d75635" title="set the mol descriptor file name" alt="" coords="348,1204,550,1249"/>
+<area shape="poly" id="edge49_Node000002_Node000039" title=" " alt="" coords="248,1169,353,1198,348,1200,249,1174"/>
+<area shape="rect" id="Node000040" href="$classsettings_1_1FileSettings.html#ab9d6df0284199e5902141b5fd7891dbd" title="set the start file name" alt="" coords="370,1273,528,1318"/>
+<area shape="poly" id="edge50_Node000002_Node000040" title=" " alt="" coords="211,1169,263,1213,297,1237,332,1259,358,1272,353,1272,330,1263,294,1242,260,1217,211,1174"/>
+<area shape="rect" id="Node000041" href="$classsettings_1_1FileSettings.html#a62962799861b24ef934922a4c7bda483" title="set the topology file name" alt="" coords="364,1343,534,1387"/>
+<area shape="poly" id="edge51_Node000002_Node000041" title=" " alt="" coords="204,1168,224,1202,252,1245,289,1290,333,1328,353,1341,347,1341,329,1333,285,1294,248,1248,219,1205,203,1174"/>
+<area shape="rect" id="Node000042" href="$namespacebenchInputReaders.html#a18ff3b8b042eeefe9d458d320addcf7b" title=" " alt="" coords="372,1412,526,1457"/>
+<area shape="poly" id="edge52_Node000002_Node000042" title=" " alt="" coords="201,1168,217,1214,243,1276,281,1341,305,1371,333,1398,360,1416,355,1415,329,1402,301,1375,277,1344,238,1278,212,1216,200,1174"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#afdb75904b30e77149b5650fbfa625b03" title="checks that either no moltype or every moltype has a QM reference energy" alt="" coords="615,420,834,481"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="549,800,565,786,589,750,597,714,596,678,590,642,584,606,582,568,590,530,613,491,618,490,614,494,618,495,595,532,588,569,589,605,596,641,602,678,603,714,594,752,569,789,552,804"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#a522982c6c3b2a68d36a37ad66db3f8ec" title="process molecule in moldescriptor file" alt="" coords="642,505,807,566"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="546,797,566,786,588,757,623,703,697,582,700,578,627,705,592,760,569,790,550,802"/>
+<area shape="rect" id="Node000019" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="892,828,1091,856"/>
+<area shape="poly" id="edge25_Node000004_Node000019" title=" " alt="" coords="549,816,685,815,834,820,880,825,875,827,834,825,685,820,551,821"/>
+<area shape="rect" id="Node000023" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="919,880,1064,908"/>
+<area shape="poly" id="edge26_Node000004_Node000023" title=" " alt="" coords="512,843,563,858,616,870,691,881,767,888,906,894,901,896,767,893,690,886,615,876,562,863,513,848"/>
+<area shape="rect" id="Node000024" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="1149,855,1356,899"/>
+<area shape="poly" id="edge28_Node000004_Node000024" title=" " alt="" coords="549,805,663,794,802,788,953,793,1028,801,1102,814,1148,828,1194,848,1189,848,1147,833,1100,820,1027,806,952,798,802,793,664,799,551,810"/>
+<area shape="rect" id="Node000025" href="$namespaceutilities.html#ae318e9709a69a1fc3f460347a5fbfcc7" title="converts a string to an unsigned long long int" alt="" coords="648,834,801,862"/>
+<area shape="poly" id="edge27_Node000004_Node000025" title=" " alt="" coords="550,829,635,838,630,840,551,834"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#a5b19fbaab30cb8c795c42bb110ba8565" title="convert external to internal atom types" alt="" coords="890,212,1093,291"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="805,512,832,491,847,469,855,447,857,402,859,354,866,329,882,306,885,301,871,331,864,355,863,402,860,448,852,471,836,495,809,516"/>
+<area shape="rect" id="Node000012" href="$classmolsys_1_1MoleculeType.html#a37952fab44ed1faa6bf1331ed71fa7a5" title="get the number of atoms in the molecule" alt="" coords="1170,440,1335,485"/>
+<area shape="poly" id="edge18_Node000006_Node000012" title=" " alt="" coords="806,533,945,527,1023,520,1100,508,1179,489,1174,491,1102,513,1024,525,945,532,808,538"/>
+<area shape="rect" id="Node000013" href="$classinput_1_1molDescriptor_1_1MoldescriptorReader.html#a76ab03c7e9666c69bd632ed470d3d790" title="process the optional QM reference energy line of a molecule" alt="" coords="882,573,1101,634"/>
+<area shape="poly" id="edge12_Node000006_Node000013" title=" " alt="" coords="807,554,869,571,864,573,808,559"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1MoleculeType.html#a01c9405e4cde289fbb616c5b461a9b2b" title="adds an atom name to the atomNames vector" alt="" coords="909,659,1074,703"/>
+<area shape="poly" id="edge14_Node000006_Node000015" title=" " alt="" coords="763,564,819,605,883,644,898,652,892,653,880,649,816,610,763,570"/>
+<area shape="rect" id="Node000016" href="$classmolsys_1_1MoleculeType.html#adaa5ee08c79fe30771633cb3c07ec8f0" title="adds an external atom type to the externalAtomTypes vector" alt="" coords="905,5,1078,50"/>
+<area shape="poly" id="edge15_Node000006_Node000016" title=" " alt="" coords="805,513,832,491,850,463,862,436,868,409,871,382,865,329,853,277,841,224,836,171,839,144,847,116,860,89,880,61,894,50,890,54,884,64,865,91,852,118,845,145,842,171,846,223,858,276,871,328,876,382,874,410,867,438,854,466,836,495,809,517"/>
+<area shape="rect" id="Node000017" href="$classmolsys_1_1MoleculeType.html#a46ce282ecb946cfd7fb071941504efb8" title="adds an external global VDW type to the externalGlobalVDWTypes vector" alt="" coords="886,75,1097,119"/>
+<area shape="poly" id="edge16_Node000006_Node000017" title=" " alt="" coords="805,513,832,491,847,468,858,445,866,400,863,356,853,312,844,267,842,222,851,177,863,153,880,130,885,127,882,132,884,133,867,156,856,179,847,223,850,267,859,311,868,355,871,400,863,447,852,471,836,495,809,517"/>
+<area shape="rect" id="Node000018" href="$classmolsys_1_1MoleculeType.html#addc730b483a5f6e4eafc57fdffb762d5" title="adds a partial charge to the partialCharges vector" alt="" coords="909,144,1074,189"/>
+<area shape="poly" id="edge17_Node000006_Node000018" title=" " alt="" coords="805,513,832,491,853,454,861,418,860,382,854,346,848,309,847,273,856,236,880,198,897,186,893,190,884,201,861,238,852,273,853,309,859,345,865,381,867,418,858,456,836,495,809,517"/>
+<area shape="poly" id="edge19_Node000006_Node000019" title=" " alt="" coords="744,564,802,656,841,708,884,758,920,790,958,820,952,820,916,795,880,762,837,712,798,659,743,570"/>
+<area shape="rect" id="Node000020" href="$classmolsys_1_1MoleculeType.html#a783b830b3f523dd1fb949fb27f739697" title="sets the charge of the molecule" alt="" coords="909,315,1074,359"/>
+<area shape="poly" id="edge20_Node000006_Node000020" title=" " alt="" coords="805,510,832,491,843,476,850,462,855,431,860,401,867,385,880,370,897,360,893,363,884,374,871,388,865,402,860,432,855,463,848,479,836,495,809,514"/>
+<area shape="rect" id="Node000021" href="$classmolsys_1_1MoleculeType.html#a413e6947c98d953eba635d11a082f6e5" title="sets the moltype of the molecule" alt="" coords="909,384,1074,429"/>
+<area shape="poly" id="edge21_Node000006_Node000021" title=" " alt="" coords="805,506,832,491,846,478,855,465,865,452,880,439,897,432,892,435,883,443,869,456,860,468,850,482,835,495,808,510"/>
+<area shape="rect" id="Node000022" href="$classmolsys_1_1MoleculeType.html#ae7f03f01e7f27ccc4d18324bbe37bc83" title="sets the number of atoms in the molecule" alt="" coords="909,453,1074,498"/>
+<area shape="poly" id="edge22_Node000006_Node000022" title=" " alt="" coords="806,515,896,496,892,499,809,520"/>
+<area shape="poly" id="edge23_Node000006_Node000023" title=" " alt="" coords="732,564,749,630,777,711,797,754,821,795,850,833,883,866,907,881,902,881,880,870,846,836,817,798,792,756,772,713,744,631,730,569"/>
+<area shape="poly" id="edge24_Node000006_Node000024" title=" " alt="" coords="745,564,770,600,802,640,840,680,883,713,913,729,940,739,989,746,1041,751,1070,758,1102,771,1163,805,1216,845,1211,845,1160,810,1100,775,1068,763,1040,756,989,751,939,744,911,734,880,718,836,684,798,644,766,603,744,570"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1MoleculeType.html#a0aefbab8fe400ee04f222a9481531db4" title="adds an atom type to the atomTypes vector" alt="" coords="1170,333,1335,378"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1078,289,1150,319,1169,327,1164,328,1148,323,1079,294"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1MoleculeType.html#acd986de6e980302a2b75e99ac7924566" title="adds an element to the externalToInternalAtomTypes map" alt="" coords="1150,109,1356,170"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="1080,210,1148,180,1163,176,1159,179,1150,185,1083,214"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1MoleculeType.html#a58b1dcfde69ba589282e4cc50babbd94" title="get the external atom type of an atom" alt="" coords="1168,195,1337,239"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="1092,236,1155,229,1151,231,1095,241"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1MoleculeType.html#aab97d83442c07c4d276810957607fb14" title="get the internal atom type of an atom" alt="" coords="1170,264,1335,309"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="1093,263,1157,272,1152,274,1094,268"/>
+<area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="1088,289,1103,300,1120,323,1129,344,1136,366,1151,389,1174,410,1200,431,1195,431,1170,414,1147,392,1131,368,1124,346,1116,326,1099,304,1088,294"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1MoleculeType.html#ae1df49140290274134a3d3e99ca48109" title="sets the QM reference energy of the molecule type" alt="" coords="1162,581,1344,626"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="1101,601,1148,603,1143,605,1102,606"/>
+<area shape="rect" id="Node000027" href="$classsettings_1_1FileSettings.html#ac98cb135ddaf0981954b758332fae25a" title="Get the start file name." alt="" coords="646,1005,803,1050"/>
+<area shape="poly" id="edge30_Node000026_Node000027" title=" " alt="" coords="513,1028,633,1028,628,1030,514,1033"/>
+<area shape="rect" id="Node000028" href="$classinput_1_1restartFile_1_1RestartFileReader.html#aad6cd58ccfec9733eec32086eccb5e6d" title="Reads a restart file and calls the process function of the corresponding section." alt="" coords="633,936,816,981"/>
+<area shape="poly" id="edge31_Node000026_Node000028" title=" " alt="" coords="513,1012,626,984,621,986,515,1017"/>
+<area shape="rect" id="Node000030" href="$classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="652,1144,797,1189"/>
+<area shape="poly" id="edge36_Node000026_Node000030" title=" " alt="" coords="513,1043,543,1055,569,1070,585,1085,594,1100,602,1115,617,1130,641,1144,636,1144,614,1134,598,1119,589,1103,581,1088,566,1074,540,1059,514,1049"/>
+<area shape="poly" id="edge34_Node000028_Node000019" title=" " alt="" coords="758,933,814,899,881,867,907,860,902,862,883,871,816,904,761,938"/>
+<area shape="poly" id="edge35_Node000028_Node000023" title=" " alt="" coords="815,934,918,911,913,913,817,939"/>
+<area shape="rect" id="Node000029" href="$classinput_1_1restartFile_1_1RestartFileReader.html#aa6b623548ffe77154a7eb51ed886b5ed" title="Determines which section of the .rst file the line belongs to." alt="" coords="919,933,1064,994"/>
+<area shape="poly" id="edge32_Node000028_Node000029" title=" " alt="" coords="815,958,906,961,900,963,817,963"/>
+<area shape="poly" id="edge33_Node000029_Node000024" title=" " alt="" coords="1063,937,1171,904,1166,906,1065,942"/>
+<area shape="rect" id="Node000031" href="$namespaceout.html#ae21e45a9e56a9f34636a6df12ee3e2f2" title="Message to inform about reading a file." alt="" coords="923,1156,1060,1184"/>
+<area shape="poly" id="edge37_Node000030_Node000031" title=" " alt="" coords="797,1165,909,1169,904,1170,798,1170"/>
+<area shape="poly" id="edge47_Node000032_Node000030" title=" " alt="" coords="520,1109,568,1120,640,1141,635,1142,567,1125,521,1114"/>
+<area shape="rect" id="Node000033" href="$classsettings_1_1FileSettings.html#a4c2b04e603fd626b185cf40f7e566c2d" title="Get the topology file name." alt="" coords="639,1264,810,1309"/>
+<area shape="poly" id="edge39_Node000032_Node000033" title=" " alt="" coords="551,1109,569,1120,583,1136,591,1153,595,1186,598,1219,605,1234,617,1250,628,1261,623,1260,613,1254,600,1237,593,1220,589,1186,586,1154,579,1139,566,1124,551,1114"/>
+<area shape="rect" id="Node000034" href="$namespaceinput_1_1topology.html#ac926c9f9d78ae8899010491cea8465bc" title="checks if reading topology file is needed" alt="" coords="631,1212,818,1240"/>
+<area shape="poly" id="edge40_Node000032_Node000034" title=" " alt="" coords="548,1109,569,1120,587,1140,594,1161,601,1181,617,1199,624,1205,618,1205,614,1203,596,1183,589,1162,582,1143,566,1124,548,1114"/>
+<area shape="rect" id="Node000035" href="$classinput_1_1topology_1_1TopologyReader.html#a034670481fb19048b1a96a26113a86c0" title="reads topology file" alt="" coords="632,1075,817,1119"/>
+<area shape="poly" id="edge41_Node000032_Node000035" title=" " alt="" coords="567,1094,619,1096,614,1098,568,1100"/>
+<area shape="poly" id="edge45_Node000035_Node000019" title=" " alt="" coords="816,1073,832,1061,848,1037,855,1013,856,989,854,965,852,941,854,916,862,891,880,867,884,867,888,863,884,871,866,894,859,917,858,941,859,965,862,989,860,1014,853,1039,836,1064,819,1078"/>
+<area shape="poly" id="edge46_Node000035_Node000023" title=" " alt="" coords="816,1073,832,1060,845,1043,852,1026,854,991,858,955,865,937,880,919,903,908,907,905,883,923,870,939,863,956,860,991,857,1028,850,1046,836,1064,819,1077"/>
+<area shape="rect" id="Node000036" href="$classinput_1_1topology_1_1TopologyReader.html#a6a3d2ffb6d4b189f01cb7b272eb9410e" title="determines which section of the topology file the header line belongs to" alt="" coords="896,1019,1086,1063"/>
+<area shape="poly" id="edge42_Node000035_Node000036" title=" " alt="" coords="816,1075,884,1063,879,1065,818,1080"/>
+<area shape="rect" id="Node000037" href="$classsettings_1_1FileSettings.html#a5080d86c62c100774b8252c87393b3c0" title="Check if the topology file name is set." alt="" coords="901,1088,1082,1133"/>
+<area shape="poly" id="edge44_Node000035_Node000037" title=" " alt="" coords="817,1099,887,1104,882,1106,818,1104"/>
+<area shape="poly" id="edge43_Node000036_Node000024" title=" " alt="" coords="1075,1016,1100,1004,1133,982,1165,958,1218,912,1222,909,1169,962,1136,987,1102,1009,1077,1020"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="molsys::Box::toOrthoSpace" name="molsys::Box::toOrthoSpace">
+<area shape="rect" id="Node000001" title=" " alt="" coords="283,57,480,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#abee124f582397abcf5138175a35a8c00" title="scales the positions of the molecule by shifting the center of mass" alt="" coords="31,5,209,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="290,55,193,36,193,31,295,53"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a41eee18dcd8a080f0f44a531daf1887e" title="scales the center&#45;of&#45;mass velocity of the molecule" alt="" coords="5,57,235,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="264,72,236,74,235,69,270,71"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Atom.html#a787c8511d10f266733e84040011e544e" title="scales the velocities of the atom in orthogonal space" alt="" coords="17,109,223,154"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="306,88,221,111,220,106,301,90"/>
+</map>

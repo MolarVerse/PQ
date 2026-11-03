@@ -1,0 +1,11 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,118,74,146"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1HybridSettings.html#a38efffad1d974f178ceace14aa54536f" title="set the coreRadius in the settings" alt="" coords="148,5,325,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,116,82,88,120,60,135,55,132,58,123,65,85,92,56,119"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#a3f8a3d856a5d9b25ca80377738a5967e" title="set the layerRadius in the settings" alt="" coords="148,75,325,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,123,135,113,131,117,75,128"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1HybridSettings.html#a58ce74daff0671d03f606f6d4d9705c2" title="set the pointChargeThickness in the settings" alt="" coords="140,144,333,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,135,126,145,122,148,75,140"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1HybridSettings.html#a681b2c57ec3dfd7c521465ebe41a0942" title="set the smoothingRegionThickness in the settings" alt="" coords="122,213,351,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="54,143,85,172,123,199,135,207,130,207,120,203,82,176,53,149"/>
+</map>

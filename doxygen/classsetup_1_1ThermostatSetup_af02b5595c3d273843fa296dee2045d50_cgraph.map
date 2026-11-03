@@ -1,0 +1,7 @@
+<map id="setup::ThermostatSetup::setupLangevinThermostat" name="setup::ThermostatSetup::setupLangevinThermostat">
+<area shape="rect" id="Node000001" title="setup langevin thermostat" alt="" coords="5,40,205,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a3a2010208a837ade08e86cd0cd0924db" title="get the friction" alt="" coords="253,5,462,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,46,240,43,235,45,206,51"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="253,75,462,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="205,73,240,80,234,81,205,79"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="setup::ManostatSetup::_writeManostatSelection" name="setup::ManostatSetup::_writeManostatSelection">
+<area shape="rect" id="Node000001" title="write manostat selection" alt="" coords="5,49,196,94"/>
+<area shape="rect" id="Node000002" href="$classManostatSettings.html#a7a5438c42b47c8109378b736fa6dc1f5" title="get the manostatType" alt="" coords="244,5,499,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,50,283,35,278,37,197,55"/>
+<area shape="rect" id="Node000003" href="$classout_1_1LogOutput.html#a2bf59bc4357dc7321cece79879c6c2e5" title="write an empty line to the log file" alt="" coords="258,57,485,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,69,245,71,240,72,196,74"/>
+<area shape="rect" id="Node000005" href="$classout_1_1LogOutput.html#a797231974b127371153b962fd85ce2a9" title="write a message to inform about the setup" alt="" coords="261,109,482,137"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="196,87,283,105,278,106,196,92"/>
+<area shape="rect" id="Node000004" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="547,84,746,112"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="486,80,534,87,529,87,486,85"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="600,82,592,75,598,65,617,59,647,57,679,60,698,69,692,68,678,65,647,63,618,65,602,70,598,75,605,84"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="482,110,529,109,534,108,482,116"/>
+</map>

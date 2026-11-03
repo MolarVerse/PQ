@@ -1,0 +1,15 @@
+<map id="input::parameterFile::DihedralSection" name="input::parameterFile::DihedralSection">
+<area shape="rect" id="Node000001" title="reads dihedral section of parameter file" alt="" coords="27,944,170,1078"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html" title="base class for reading parameter file sections" alt="" coords="5,671,191,895"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,907,101,945,96,944,97,912"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="52,526,145,598"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,595,101,655,96,655,98,601"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="31,387,166,477"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="99,489,101,526,96,526,98,494"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="34,249,163,338"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="99,350,101,388,96,387,98,355"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="19,127,178,199"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="98,211,101,249,96,249,98,217"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="50,5,146,78"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="98,90,101,127,96,127,98,95"/>
+</map>

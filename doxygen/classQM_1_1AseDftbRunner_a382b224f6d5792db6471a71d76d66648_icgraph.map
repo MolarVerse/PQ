@@ -1,0 +1,8 @@
+<map id="QM::AseDftbRunner::getHubbDerivDict" name="QM::AseDftbRunner::getHubbDerivDict">
+<area shape="rect" id="Node000001" title="get the 3ob Hubbard derivatives as dict" alt="" coords="414,36,570,81"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseDftbRunner.html#acb44aa4fde7386287148d991dbb0ae99" title="Construct a new AseDftbRunner::AseDftbRunner object." alt="" coords="210,5,366,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="396,44,366,42,366,37,401,44"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseDftbRunner.html#a88e17ef3a6c463ddd575a9c11dd1b885" title=" " alt="" coords="5,36,162,81"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="396,62,366,65,210,65,162,64,162,59,210,60,366,60,401,62"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="191,42,162,49,161,44,197,41"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="opt::Optimizer::getRMSForce" name="opt::Optimizer::getRMSForce">
+<area shape="rect" id="Node000001" title="get the last RMS force in the history" alt="" coords="371,31,578,58"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1Optimizer.html#ada4f29d3288e27ad4d0f6b277030a293" title="check if the optimizer has converged" alt="" coords="108,5,323,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="353,33,323,32,323,27,358,33"/>
+<area shape="rect" id="Node000003" href="$perfOptimizerHistory_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,31,60,58"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="356,47,60,47,60,42,356,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,37,61,43,60,38,99,35"/>
+</map>

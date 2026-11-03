@@ -1,0 +1,5 @@
+<map id="opt::ConstantDecayLRStrategy" name="opt::ConstantDecayLRStrategy">
+<area shape="rect" id="Node000001" title="Constant Decay Learning Rate Strategy." alt="" coords="5,662,223,846"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1LearningRateStrategy.html" title="Learning Rate Strategy." alt="" coords="20,5,209,614"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,626,117,662,112,661,114,631"/>
+</map>

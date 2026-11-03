@@ -1,0 +1,7 @@
+<map id="input::InputFileReader::_validateReactionFieldCoulomb" name="input::InputFileReader::_validateReactionFieldCoulomb">
+<area shape="rect" id="Node000001" title="validates cross&#45;keyword dependencies for the reaction field long range coulomb correction" alt="" coords="5,40,241,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#a6a7f2c90130118e100aeb3902a15684d" title="get the Coulomb long range type" alt="" coords="289,5,499,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,45,276,42,271,44,242,50"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileReader.html#af74f54a09652205d1b5187cf08384d47" title="get whether the keyword has been set in input" alt="" coords="312,75,476,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,75,299,84,294,85,241,80"/>
+</map>

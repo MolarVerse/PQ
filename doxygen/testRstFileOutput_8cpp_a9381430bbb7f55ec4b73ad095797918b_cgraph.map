@@ -1,0 +1,7 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="tests writing the restart file" alt="" coords="5,14,74,42"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#ae29ae0e19ed6e7ca9b725ac2c8b063ec" title="sets the thermostatType to enum in settings" alt="" coords="122,5,331,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,25,109,27,104,28,74,30"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="379,5,586,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,25,366,28,360,28,332,30"/>
+</map>

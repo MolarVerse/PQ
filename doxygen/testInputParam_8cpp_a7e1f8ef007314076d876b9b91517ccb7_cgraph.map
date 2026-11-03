@@ -1,0 +1,17 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="tests input::InputRegistry: registration, dispatch by key name, unknown key error,..." alt="" coords="5,104,59,132"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputRegistry.html#aad69cffb169e7f0b4868cb9940ebac80" title="Provides a full inventory of every registered key in this registry, e.g. for a startup configuration ..." alt="" coords="121,5,270,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,102,74,81,105,60,118,55,114,59,108,65,77,85,51,106"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputRegistry.html#a24f1fef19aba33533a35e8e519f8565e" title=" " alt="" coords="107,74,284,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,111,105,103,102,107,60,116"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputRegistry.html#a77378aedf0945bea8810f04450fd001a" title="Parses a line from the input file and updates the corresponding key&#39;s value." alt="" coords="121,125,270,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,120,107,130,103,133,60,126"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="121,195,270,239"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="47,130,75,155,108,180,118,187,113,187,105,185,72,160,47,135"/>
+<area shape="rect" id="Node000005" href="$namespaceinput.html#a138d19fbcd81f2cbd6267b52e9f95ea1" title="check if command array has exactly 3 elements" alt="" coords="352,104,519,132"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="270,136,339,130,334,131,271,141"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="332,156,539,201"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="270,155,319,163,314,163,271,160"/>
+<area shape="rect" id="Node000006" href="$namespaceinput.html#a8fc649b2b4f96d20ce57f574e388bf8f" title="check if parameter is &quot;=&quot;" alt="" coords="587,104,752,132"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="520,116,574,118,569,119,520,121"/>
+</map>

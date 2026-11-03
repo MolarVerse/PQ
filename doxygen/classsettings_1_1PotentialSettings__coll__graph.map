@@ -1,0 +1,11 @@
+<map id="settings::PotentialSettings" name="settings::PotentialSettings">
+<area shape="rect" id="Node000001" title="static class to store settings of the potential" alt="" coords="291,240,517,580"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,216,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,75,152,143,171,180,193,214,234,263,281,310,276,311,230,267,189,218,166,183,147,145,122,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="240,5,405,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="320,75,320,142,327,216,328,224,323,223,321,216,314,142,318,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="458,5,513,78"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="482,75,459,217,457,225,452,222,453,215,479,80"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="608,5,746,78"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="679,75,672,145,661,182,645,217,621,251,594,281,532,334,529,330,590,278,617,247,640,215,656,181,666,144,676,80"/>
+</map>
