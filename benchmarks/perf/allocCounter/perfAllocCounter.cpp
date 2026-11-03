@@ -21,13 +21,15 @@
 ******************************************************************************/
 
 // Counts the heap allocations of a perf benchmark, from the call of
-// pq_perf_alloc_begin() (perfAlloc.hpp) to the end of the process.
+// pq_perf_alloc_begin() (perfAlloc.hpp) to the end of the process, and the peak
+// of the heap in use (usable bytes of all live blocks, also those allocated
+// before the call) from then on.
 //
 // Not linked into the benchmarks: scripts/perf_gate.sh preloads it with
 // LD_PRELOAD in a plain run next to the callgrind run, so the instruction
 // counts are not influenced. It replaces the C allocation functions (which
-// operator new uses) and prints "PQ_PERF_ALLOCS <calls> <bytes>" to stderr at
-// exit. Allocation counts are exact and do not depend on the CPU.
+// operator new uses) and prints "PQ_PERF_ALLOCS <calls> <bytes> <peak>" to
+// stderr at exit. The numbers are exact and do not depend on the CPU.
 //
 // Linux with glibc only (it calls the __libc_* allocators directly).
 
@@ -45,10 +47,12 @@
 // NOLINTBEGIN(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 extern "C"
 {
-    void *__libc_malloc(std::size_t size);
-    void *__libc_calloc(std::size_t count, std::size_t size);
-    void *__libc_realloc(void *pointer, std::size_t size);
-    void *__libc_memalign(std::size_t alignment, std::size_t size);
+    void       *__libc_malloc(std::size_t size);
+    void       *__libc_calloc(std::size_t count, std::size_t size);
+    void       *__libc_realloc(void *pointer, std::size_t size);
+    void       *__libc_memalign(std::size_t alignment, std::size_t size);
+    void        __libc_free(void *pointer);
+    std::size_t malloc_usable_size(void *pointer);
 }
 // NOLINTEND(bugprone-reserved-identifier,cert-dcl37-c,cert-dcl51-cpp)
 
@@ -58,6 +62,8 @@ namespace
     {
         std::atomic<std::uint64_t> calls{0};
         std::atomic<std::uint64_t> bytes{0};
+        std::atomic<std::int64_t>  live{0};
+        std::atomic<std::int64_t>  peak{0};
         std::atomic<bool>          active{false};
     };
 
@@ -78,6 +84,41 @@ namespace
 
         state.calls.fetch_add(1, std::memory_order_relaxed);
         state.bytes.fetch_add(size, std::memory_order_relaxed);
+    }
+
+    // heap in use: every block is accounted with its usable size from the
+    // start of the process, the peak only from the marker on
+    void changeLive(std::int64_t delta)
+    {
+        auto &state = counters();
+
+        const auto now =
+            state.live.fetch_add(delta, std::memory_order_relaxed) + delta;
+
+        if (delta <= 0 || !state.active.load(std::memory_order_relaxed))
+            return;
+
+        auto peak = state.peak.load(std::memory_order_relaxed);
+        while (now > peak && !state.peak.compare_exchange_weak(
+                                 peak,
+                                 now,
+                                 std::memory_order_relaxed
+                             ))
+        {
+        }
+    }
+
+    std::int64_t usable(void *pointer)
+    {
+        return pointer == nullptr
+                   ? 0
+                   : static_cast<std::int64_t>(malloc_usable_size(pointer));
+    }
+
+    void *track(void *pointer)
+    {
+        changeLive(usable(pointer));
+        return pointer;
     }
 
     void append(
@@ -117,6 +158,14 @@ namespace
         append(line, length, state.calls.load(std::memory_order_relaxed));
         append(line, length, " ");
         append(line, length, state.bytes.load(std::memory_order_relaxed));
+        append(line, length, " ");
+        append(
+            line,
+            length,
+            static_cast<std::uint64_t>(
+                state.peak.load(std::memory_order_relaxed)
+            )
+        );
         append(line, length, "\n");
 
         [[maybe_unused]] const auto written =
@@ -132,43 +181,54 @@ extern "C"
 
         state.calls.store(0, std::memory_order_relaxed);
         state.bytes.store(0, std::memory_order_relaxed);
+        state.peak.store(
+            state.live.load(std::memory_order_relaxed),
+            std::memory_order_relaxed
+        );
         state.active.store(true, std::memory_order_relaxed);
     }
 
     void *malloc(std::size_t size)
     {
         count(size);
-        return __libc_malloc(size);
+        return track(__libc_malloc(size));
+    }
+
+    void free(void *pointer)
+    {
+        changeLive(-usable(pointer));
+        __libc_free(pointer);
     }
 
     void *calloc(std::size_t number, std::size_t size)
     {
         count(number * size);
-        return __libc_calloc(number, size);
+        return track(__libc_calloc(number, size));
     }
 
     void *realloc(void *pointer, std::size_t size)
     {
         count(size);
-        return __libc_realloc(pointer, size);
+        changeLive(-usable(pointer));
+        return track(__libc_realloc(pointer, size));
     }
 
     void *memalign(std::size_t alignment, std::size_t size)
     {
         count(size);
-        return __libc_memalign(alignment, size);
+        return track(__libc_memalign(alignment, size));
     }
 
     void *aligned_alloc(std::size_t alignment, std::size_t size)
     {
         count(size);
-        return __libc_memalign(alignment, size);
+        return track(__libc_memalign(alignment, size));
     }
 
     int posix_memalign(void **result, std::size_t alignment, std::size_t size)
     {
         count(size);
-        *result = __libc_memalign(alignment, size);
+        *result = track(__libc_memalign(alignment, size));
         return *result == nullptr ? 12 : 0;
     }
 }

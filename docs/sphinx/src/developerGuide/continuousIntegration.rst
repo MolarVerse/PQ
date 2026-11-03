@@ -74,7 +74,8 @@ Workflows
       - Builds ``benchmarks/perf`` for the pull request and its base, runs both under ``callgrind`` and fails if an
         instruction count grew beyond the threshold. Instruction counts are deterministic, so this check is not
         flaky. The comment also lists the heap allocations of the measured loop (exact; a rise fails the check as
-        well) and the cache misses and branch mispredictions of a simulated 32 KiB L1 cache, 8 MiB last level cache
+        well), the peak heap in use (exact, report only; bytes per molecule for the size series) and the cache
+        misses and branch mispredictions of a simulated 32 KiB L1 cache, 8 MiB last level cache
         and branch predictor (report only). The simulated numbers depend only on the binary, not on the machine, but
         on the program path and the environment, so the gate runs every binary through a path of the same length
         with an empty environment. The simulation makes the runs about three times slower, so pull requests skip it
