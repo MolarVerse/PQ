@@ -1,4 +1,2 @@
-- Require successful BUILD and LINT runs for the exact main commit before publishing a release, and validate release tooling again after merge.
-- Preserve chosen hotfix versions and refresh prepared changelogs when later fragments are added; validate opening and reopening release pull requests.
-- Make publication retries verify the tag commit and stable release state; handle annotated tags and interrupted changelog preparation without replacing tags or duplicating entries.
-- Stop release-branch creation when Git lookups fail, and cover duplicate requests and lost creation responses with local Git and HTTP fixtures.
+- Require successful BUILD and LINT runs for the release commit before publication.
+- Keep hotfix versions fixed and allow preparation and publication to be retried after failures.

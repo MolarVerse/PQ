@@ -1,1 +1,1 @@
-- Document normal releases, hotfix version pinning, publication verification, recovery commands and local testing in the developer guide.
+- Add GitHub instructions for releases and hotfixes, with CLI commands on a fallback page.
