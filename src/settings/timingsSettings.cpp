@@ -36,7 +36,10 @@ namespace settings
      *
      * @param timeStep
      */
-    void TimingsSettings::setTimeStep(double timeStep) { _timeStep = timeStep; }
+    void TimingsSettings::setTimeStep(const Time& timeStep)
+    {
+        _timeStep = timeStep;
+    }
 
     /**
      * @brief Set the step count
@@ -60,16 +63,16 @@ namespace settings
 
     /********************
      *                  *
-     * standard setters *
+     * standard getters *
      *                  *
      ********************/
 
     /**
      * @brief get the time step
      *
-     * @return double
+     * @return const Time&
      */
-    double TimingsSettings::getTimeStep() { return _timeStep; }
+    const Time& TimingsSettings::getTimeStep() { return _timeStep; }
 
     /**
      * @brief get the step count

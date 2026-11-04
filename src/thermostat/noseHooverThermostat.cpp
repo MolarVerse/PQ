@@ -32,6 +32,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -145,10 +146,10 @@ namespace thermostat
         const auto couplingFreqSquared =
             _couplingFrequency * _couplingFrequency;
 
-        const auto timeStep          = settings::TimingsSettings::getTimeStep();
+        const auto timestep =
+            settings::TimingsSettings::getTimeStep().numerical_value_in(s);
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-        const auto timestep      = timeStep * FS_TO_S;
         const auto thermalEnergy = boltzmannConstant * getTemperature();
         const auto thermalEnergyTarget =
             boltzmannConstant * getTargetTemperature();

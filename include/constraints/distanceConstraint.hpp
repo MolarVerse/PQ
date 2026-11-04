@@ -25,6 +25,7 @@
 
 #include "bond.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -66,7 +67,10 @@ namespace constraints
             double            dSpringConstantDt
         );
 
-        void applyDistanceConstraint(const molsys::SimulationBox &, double);
+        void applyDistanceConstraint(
+            const molsys::SimulationBox &,
+            const Time &
+        );
 
         [[nodiscard]] double getLowerDistance() const;
         [[nodiscard]] double getUpperDistance() const;

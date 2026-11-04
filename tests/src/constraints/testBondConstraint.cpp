@@ -30,6 +30,7 @@
 #include "exceptions.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests calculation of bond constraint ref bond length
@@ -71,7 +72,7 @@ TEST_F(TestBondConstraint, applyShake)
         delta / (1.0 + 0.5) / normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
     const auto dPos     = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0);
     const auto timestep = 2.0;
-    settings::TimingsSettings::setTimeStep(timestep);
+    settings::TimingsSettings::setTimeStep(timestep * fs);
 
     EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0));
 

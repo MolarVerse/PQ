@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -46,7 +48,7 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    settings::TimingsSettings::setTimeStep(0.001 * fs);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});

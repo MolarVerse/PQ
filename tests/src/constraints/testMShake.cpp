@@ -37,6 +37,7 @@
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief regression test for the M-SHAKE inner-loop bound (3-atom molecule).
@@ -124,7 +125,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
     const auto maxIter   = 100;
     const auto tolerance = 1.0e-5;
 
@@ -297,7 +298,7 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     molecule.addAtom(atom3);
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
     const auto maxIter   = 1;
     const auto tolerance = -1.0;
 
