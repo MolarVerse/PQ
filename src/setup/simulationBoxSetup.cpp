@@ -340,7 +340,7 @@ namespace setup
         auto &simBox = _engine.getSimulationBox();
 
         const auto isDensitySet =
-            _engine.getSettings().simulationBoxSettings.isDensitySet();
+            _engine.getSettings().simulationBoxSettings.isDensitySetByUser();
         const auto isBoxSet = simBox.wasBoxSetViaStartFile();
 
         if (!isDensitySet && !isBoxSet)

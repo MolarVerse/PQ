@@ -69,7 +69,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](size_t value)
-        { settings.get().setNScale(value); };
+        { settings.get().setNScaleByUser(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -97,7 +97,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](size_t value)
-        { settings.get().setFScale(value); };
+        { settings.get().setFScaleByUser(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -126,7 +126,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](size_t value)
-        { settings.get().setNReset(value); };
+        { settings.get().setNResetByUser(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -154,7 +154,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](size_t value)
-        { settings.get().setFReset(value); };
+        { settings.get().setFResetByUser(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -183,7 +183,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](size_t value)
-        { settings.get().setNResetAngular(value); };
+        { settings.get().setNResetAngularByUser(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -212,7 +212,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](size_t value)
-        { settings.get().setFResetAngular(value); };
+        { settings.get().setFResetAngularByUser(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -240,7 +240,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](size_t value)
-        { settings.get().setFResetForces(value); };
+        { settings.get().setFResetForcesByUser(value); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<size_t>{

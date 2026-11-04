@@ -29,54 +29,54 @@
 TEST(ConstraintSettingsTest, ShakeMaxIterRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setShakeMaxIter(500U);
+    settings.setShakeMaxIterByUser(500U);
     EXPECT_EQ(settings.getShakeMaxIter(), 500U);
 
-    settings.setShakeMaxIter(1U);
+    settings.setShakeMaxIterByUser(1U);
     EXPECT_EQ(settings.getShakeMaxIter(), 1U);
 }
 
 TEST(ConstraintSettingsTest, RattleMaxIterRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setRattleMaxIter(750U);
+    settings.setRattleMaxIterByUser(750U);
     EXPECT_EQ(settings.getRattleMaxIter(), 750U);
 }
 
 TEST(ConstraintSettingsTest, MShakeMaxIterRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setMShakeMaxIter(5U);
+    settings.setMShakeMaxIterByUser(5U);
     EXPECT_EQ(settings.getMShakeMaxIter(), 5U);
 
-    settings.setMShakeMaxIter(2U);
+    settings.setMShakeMaxIterByUser(2U);
     EXPECT_EQ(settings.getMShakeMaxIter(), 2U);
 }
 
 TEST(ConstraintSettingsTest, ShakeToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setShakeTolerance(1.0e-4);
+    settings.setShakeToleranceByUser(1.0e-4);
     EXPECT_DOUBLE_EQ(settings.getShakeTolerance(), 1.0e-4);
 
-    settings.setShakeTolerance(1.0e-12);
+    settings.setShakeToleranceByUser(1.0e-12);
     EXPECT_DOUBLE_EQ(settings.getShakeTolerance(), 1.0e-12);
 }
 
 TEST(ConstraintSettingsTest, RattleToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setRattleTolerance(1.0e-6);
+    settings.setRattleToleranceByUser(1.0e-6);
     EXPECT_DOUBLE_EQ(settings.getRattleTolerance(), 1.0e-6);
 }
 
 TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setMShakeTolerance(3.0e-5);
+    settings.setMShakeToleranceByUser(3.0e-5);
     EXPECT_DOUBLE_EQ(settings.getMShakeTolerance(), 3.0e-5);
 
-    settings.setMShakeTolerance(1.1e-10);
+    settings.setMShakeToleranceByUser(1.1e-10);
     EXPECT_DOUBLE_EQ(settings.getMShakeTolerance(), 1.1e-10);
 }
 
@@ -91,7 +91,7 @@ TEST(ConstraintSettingsTest, FinalizeActivatesShakeForRigidWaterModel)
     ASSERT_FALSE(settings.isShakeActivated());
 
     WaterModelSettings waterModelSettings;
-    waterModelSettings.setWaterIntraModel(WaterIntraModel::SPC);
+    waterModelSettings.setWaterIntraModelByUser(WaterIntraModel::SPC);
     ASSERT_TRUE(waterModelSettings.getRigidWaterGeometry().has_value());
 
     ReferenceSettings referenceSettings;
@@ -112,7 +112,7 @@ TEST(ConstraintSettingsTest, FinalizeDoesNotActivateShakeForFlexibleWaterModel)
     ConstraintSettings settings;
 
     WaterModelSettings waterModelSettings;
-    waterModelSettings.setWaterIntraModel(WaterIntraModel::SPC_FW);
+    waterModelSettings.setWaterIntraModelByUser(WaterIntraModel::SPC_FW);
     ASSERT_FALSE(waterModelSettings.getRigidWaterGeometry().has_value());
 
     ReferenceSettings referenceSettings;
@@ -130,7 +130,7 @@ TEST(ConstraintSettingsTest, FinalizeDoesNotActivateShakeForFlexibleWaterModel)
 TEST(ConstraintSettingsTest, FinalizeAddsRattleReferenceForExplicitShake)
 {
     ConstraintSettings settings;
-    settings.activateShake();
+    settings.activateShakeByUser();
 
     WaterModelSettings waterModelSettings;
 

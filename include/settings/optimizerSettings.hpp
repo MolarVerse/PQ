@@ -57,17 +57,17 @@ class OptimizerSettings
      * standard setter methods *
      ***************************/
 
-    void setOptimizer(OptimizerType optimizer);
-    void setLearningRateStrategy(LearningRate);
+    void setOptimizerByUser(OptimizerType optimizer);
+    void setLearningRateStrategyByUser(LearningRate);
 
-    void setNumberOfEpochs(size_t);
-    void setLRUpdateFrequency(size_t);
+    void setNumberOfEpochsByUser(size_t);
+    void setLRUpdateFrequencyByUser(size_t);
 
-    void setInitialLearningRate(double);
-    void setLearningRateDecay(double);
+    void setInitialLearningRateByUser(double);
+    void setLearningRateDecayByUser(double);
 
-    void setMaxLearningRate(double);
-    void setMinLearningRate(double);
+    void setMaxLearningRateByUser(double);
+    void setMinLearningRateByUser(double);
 
     /******************************
      * validation helper methods *
@@ -92,8 +92,8 @@ class OptimizerSettings
     [[nodiscard]] double                getLearningRateDecay() const;
     [[nodiscard]] std::optional<double> getMaxLearningRate() const;
 
-    [[nodiscard]] bool isLearningRateDecaySet() const;
-    [[nodiscard]] bool isMaxLearningRateSet() const;
+    [[nodiscard]] bool isLearningRateDecaySetByUser() const;
+    [[nodiscard]] bool isMaxLearningRateSetByUser() const;
 };
 
 #endif   // SETTINGS__OPTIMIZER_SETTINGS_HPP

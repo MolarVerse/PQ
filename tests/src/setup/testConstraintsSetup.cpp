@@ -142,7 +142,7 @@ namespace
  */
 TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 {
-    _settings->constraintSettings.activateShake();
+    _settings->constraintSettings.activateShakeByUser();
 
     addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
     addBondConstraintToLastMolecule(*_engine, 1.0);
@@ -169,7 +169,7 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
  */
 TEST_F(TestSetup, constraintsSetupRunsMShakeAndReducesDegreesOfFreedom)
 {
-    _settings->constraintSettings.activateMShake();
+    _settings->constraintSettings.activateMShakeByUser();
 
     setupMShakeMoleculeType(*_engine);
 
@@ -226,7 +226,7 @@ TEST_F(TestSetup, setupConstraintsWrapperSkipsWhenInactive)
  */
 TEST_F(TestSetup, setupConstraintsWrapperRunsWhenShakeActive)
 {
-    _settings->constraintSettings.activateShake();
+    _settings->constraintSettings.activateShakeByUser();
 
     addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
     addBondConstraintToLastMolecule(*_engine, 1.0);

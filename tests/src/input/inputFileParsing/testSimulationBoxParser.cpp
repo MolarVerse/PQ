@@ -38,7 +38,7 @@
 TEST_F(TestInputFileReader, parseDensity)
 {
     SimulationBoxSettings settings;
-    EXPECT_EQ(settings.isDensitySet(), false);
+    EXPECT_EQ(settings.isDensitySetByUser(), false);
     input::SimulationBoxInputParser parser{settings};
     const auto                      funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("density"));
@@ -47,7 +47,7 @@ TEST_F(TestInputFileReader, parseDensity)
     const std::vector<std::string> lineElements = {"density", "=", "1.0"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(settings.getDensity(), 1.0);
-    EXPECT_EQ(settings.isDensitySet(), true);
+    EXPECT_EQ(settings.isDensitySetByUser(), true);
 
     _clearParser(parser);
 

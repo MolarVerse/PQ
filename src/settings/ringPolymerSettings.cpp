@@ -27,9 +27,9 @@
  *
  * @param numberOfBeads
  */
-void RingPolymerSettings::setNumberOfBeads(size_t numberOfBeads)
+void RingPolymerSettings::setNumberOfBeadsByUser(size_t numberOfBeads)
 {
-    _numberOfBeads.set(numberOfBeads);
+    _numberOfBeads.setByUser(numberOfBeads);
 }
 
 /**

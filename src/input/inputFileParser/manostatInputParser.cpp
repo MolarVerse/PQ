@@ -73,7 +73,7 @@ namespace input
         };
 
         const auto setValue = [this](ManostatType manostatType)
-        { _manostatSettings->setManostatType(manostatType); };
+        { _manostatSettings->setManostatTypeByUser(manostatType); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ManostatType>{
@@ -101,7 +101,7 @@ namespace input
         };
 
         const auto setValue = [this](double pressure)
-        { _manostatSettings->setTargetPressure(pressure); };
+        { _manostatSettings->setTargetPressureByUser(pressure); };
 
         const RangeValidator<double> validator{std::nullopt, std::nullopt};
 
@@ -133,7 +133,7 @@ namespace input
         };
 
         const auto setValue = [this](double relaxationTime)
-        { _manostatSettings->setTau(relaxationTime * ps); };
+        { _manostatSettings->setTauByUser(relaxationTime * ps); };
 
         const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
             0.0,
@@ -172,7 +172,7 @@ namespace input
         };
 
         const auto setValue = [this](double compressibility)
-        { _manostatSettings->setCompressibility(compressibility); };
+        { _manostatSettings->setCompressibilityByUser(compressibility); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -204,7 +204,7 @@ namespace input
         };
 
         const auto setValue = [this](Isotropy isotropy)
-        { _manostatSettings->setIsotropy(isotropy); };
+        { _manostatSettings->setIsotropyByUser(isotropy); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<Isotropy>{
@@ -232,7 +232,7 @@ namespace input
         };
 
         const auto setValue = [this](FixedAxis fixedAxis)
-        { _manostatSettings->setFixedAxis(fixedAxis); };
+        { _manostatSettings->setFixedAxisByUser(fixedAxis); };
 
         auto &fixedAxisKey = _getRegistry().registerKey(
             KeyRegistry<FixedAxis>{
