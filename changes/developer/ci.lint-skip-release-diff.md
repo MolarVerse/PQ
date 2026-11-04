@@ -1,0 +1,1 @@
+- Skip the lint job for release pull requests and pushes to main: it linted every file of the release (812 files, serially) and was killed after half an hour.
