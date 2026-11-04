@@ -90,7 +90,8 @@ Workflows
       - ``clang_build.yml``
       - pull requests that touch C++ or build files
       - Not a gate. Builds and tests the project with clang 20 and records the build analysis for the
-        :ref:`CI metrics <ciMetricsClangJob>`.
+        :ref:`CI metrics <ciMetricsClangJob>`. Pull requests use ccache; a push to ``dev`` compiles everything and
+        refreshes the cache.
     * - Docs
       - ``jekyll-gh-pages.yml``
       - pull requests to ``main`` and ``dev`` that touch ``docs``, ``include`` or ``src``; pushes to ``main``
