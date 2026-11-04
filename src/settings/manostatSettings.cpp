@@ -104,11 +104,13 @@ void ManostatSettings::setTargetPressureByUser(double targetPressure)
 void ManostatSettings::setTauByUser(const Time& tau) { _tau.setByUser(tau); }
 
 /**
- * @brief sets the compressibility to double in settings
+ * @brief sets the compressibility in settings
  *
  * @param compressibility
  */
-void ManostatSettings::setCompressibilityByUser(double compressibility)
+void ManostatSettings::setCompressibilityByUser(
+    const Compressibility& compressibility
+)
 {
     _compressibility.setByUser(compressibility);
 }
@@ -176,9 +178,9 @@ const Time& ManostatSettings::getTau() const { return _tau.get(); }
 /**
  * @brief get the compressibility
  *
- * @return double
+ * @return const Compressibility&
  */
-double ManostatSettings::getCompressibility() const
+const Compressibility& ManostatSettings::getCompressibility() const
 {
     return _compressibility.get();
 }

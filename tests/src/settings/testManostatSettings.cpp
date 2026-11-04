@@ -36,8 +36,8 @@ TEST(ManostatSettingsTest, DoubleSettersAndGetters)
     settings.setTauByUser(1.5 * ps);
     EXPECT_EQ(settings.getTau(), 1.5 * ps);
 
-    settings.setCompressibilityByUser(4.5e-5);
-    EXPECT_DOUBLE_EQ(settings.getCompressibility(), 4.5e-5);
+    settings.setCompressibilityByUser(4.5e-5 / bar);
+    EXPECT_EQ(settings.getCompressibility(), 4.5e-5 / bar);
 }
 
 TEST(ManostatSettingsTest, SetFixedAxisViaEnum)

@@ -41,5 +41,7 @@ inline constexpr auto deg = mstd::units::deg;
 inline constexpr auto ps = mstd::units::ps;
 inline constexpr auto fs = mstd::units::fs;
 
+inline constexpr auto bar = mstd::units::bar;
+
 // NOLINTEND(readability-identifier-length)
 #endif   // CONFIG__UNITS_HPP
