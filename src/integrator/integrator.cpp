@@ -23,10 +23,10 @@
 #include "integrator.hpp"
 
 #include "atom.hpp"
-#include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace integrator
 {
@@ -37,10 +37,11 @@ namespace integrator
      */
     void Integrator::integrateVelocities(molsys::Atom *atom)
     {
-        auto       velocity  = atom->getVelocity();
-        const auto force     = atom->getForce();
-        const auto mass      = atom->getMass();
-        const auto timeStamp = settings::TimingsSettings::getTimeStep();
+        auto       velocity = atom->getVelocity();
+        const auto force    = atom->getForce();
+        const auto mass     = atom->getMass();
+        const auto timeStamp =
+            settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
 
         velocity += timeStamp * force / mass * V_VERLET_VELOCITY_FACTOR;
 
@@ -64,7 +65,8 @@ namespace integrator
         const auto velocity = atom->getVelocity();
 
         position +=
-            settings::TimingsSettings::getTimeStep() * velocity * FS_TO_S;
+            settings::TimingsSettings::getTimeStep().numerical_value_in(s) *
+            velocity;
 
         simulationBox.applyPBC(position);
 

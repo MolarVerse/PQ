@@ -26,6 +26,7 @@
 
 #include "exceptions.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests that no force is applied while the distance is within bounds
@@ -35,7 +36,7 @@ TEST_F(TestDistanceConstraint, withinBoundsAppliesNoForce)
 {
     // atom1 = (1,1,1), atom2 = (1,2,3) -> distance = sqrt(5) ~= 2.236,
     // within [1.0, 3.0]
-    _distanceConstraint->applyDistanceConstraint(*_box, 1.0);
+    _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
     EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), 0.0);
@@ -55,7 +56,7 @@ TEST_F(TestDistanceConstraint, belowLowerBoundAppliesRestoringForce)
     _atom2->setPosition(linalg::Vec3D(1.0, 1.5, 1.0));
 
     // dPos = (0, 0.5, 0), distance = 0.5, below lowerDistance = 1.0
-    _distanceConstraint->applyDistanceConstraint(*_box, 1.0);
+    _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
     const auto delta          = _lowerDistance - 0.5;
     const auto expectedEnergy = 0.5 * _springConstant * delta * delta;
@@ -80,7 +81,7 @@ TEST_F(TestDistanceConstraint, aboveUpperBoundAppliesRestoringForce)
     _atom2->setPosition(linalg::Vec3D(1.0, 5.0, 1.0));
 
     // dPos = (0, 4, 0), distance = 4.0, above upperDistance = 3.0
-    _distanceConstraint->applyDistanceConstraint(*_box, 1.0);
+    _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
     const auto delta          = 4.0 - _upperDistance;
     const auto expectedEnergy = 0.5 * _springConstant * delta * delta;
@@ -103,7 +104,9 @@ TEST_F(TestDistanceConstraint, negativeTimeIntervalIsNoOp)
 {
     _atom2->setPosition(linalg::Vec3D(1.0, 5.0, 1.0));
 
-    EXPECT_NO_THROW(_distanceConstraint->applyDistanceConstraint(*_box, -1.0));
+    EXPECT_NO_THROW(
+        _distanceConstraint->applyDistanceConstraint(*_box, -1.0 * fs)
+    );
 
     EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), 0.0);
@@ -121,7 +124,7 @@ TEST_F(TestDistanceConstraint, rejectsZeroLengthViolatingSeparation)
     _atom2->setPosition(_atom1->getPosition());
 
     EXPECT_THROW_MSG(
-        _distanceConstraint->applyDistanceConstraint(*_box, 1.0),
+        _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs),
         exc::ShakeException,
         "Degenerate distance-constraint separation - the atom separation is "
         "zero-length or non-finite, the simulation has become unstable"

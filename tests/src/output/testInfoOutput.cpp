@@ -35,6 +35,7 @@
 #include "settings.hpp"
 #include "testEnergyOutput.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -59,7 +60,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -147,7 +148,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -247,7 +248,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -342,7 +343,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -443,7 +444,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _settings->manostatSettings.setManostatType(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -532,7 +533,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     );
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -620,7 +621,7 @@ TEST_F(TestEnergyOutput, writeInfoQmmmSubtractsQMReferenceEnergy)
     settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");

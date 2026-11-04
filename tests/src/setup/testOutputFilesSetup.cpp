@@ -32,6 +32,7 @@
 #include "outputFilesSetup.hpp"
 #include "testSetup.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -110,7 +111,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefix(PREFIX);
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -136,7 +137,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefix(PREFIX);
     _settings->outputFiles.setIncludeOutputMetadata(true);
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);

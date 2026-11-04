@@ -72,9 +72,9 @@ namespace engine
     /**
      * @brief Calculate total simulation time.
      *
-     * @return double
+     * @return Time
      */
-    double Engine::calculateTotalSimulationTime() const
+    Time Engine::calculateTotalSimulationTime() const
     {
         const auto step0    = settings::TimingsSettings::getStepCount();
         const auto timeStep = settings::TimingsSettings::getTimeStep();

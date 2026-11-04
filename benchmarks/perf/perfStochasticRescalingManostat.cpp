@@ -51,7 +51,7 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    settings::TimingsSettings::setTimeStep(0.001 * fs);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);

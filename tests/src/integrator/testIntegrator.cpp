@@ -26,6 +26,7 @@
 
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests function integrate velocities of velocity verlet integrator
@@ -133,7 +134,7 @@ TEST_F(TestIntegrator, secondStep)
 
 TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
 {
-    settings::TimingsSettings::setTimeStep(0.2);
+    settings::TimingsSettings::setTimeStep(0.2 * fs);
 
     auto *atom = _box->getAtoms()[1].get();
     atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));

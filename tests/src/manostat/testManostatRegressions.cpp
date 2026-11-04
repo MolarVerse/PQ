@@ -70,7 +70,7 @@ namespace
             _settings->manostatSettings.setTargetPressure(1.0);
             _settings->manostatSettings.setTau(1.0 * fs);
             _settings->manostatSettings.setCompressibility(0.03);
-            settings::TimingsSettings::setTimeStep(1.0);
+            settings::TimingsSettings::setTimeStep(1.0 * fs);
             settings::ThermostatSettings::setActualTargetTemperature(0.0);
             settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
             _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
