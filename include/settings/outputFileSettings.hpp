@@ -77,43 +77,43 @@ class OutputFileSettings
    public:
     void finalize();
 
-    void setOutputFrequency(size_t outputFreq);
-    void setFilePrefix(const std::string &prefix);
+    void setOutputFrequencyByUser(size_t outputFreq);
+    void setFilePrefixByUser(const std::string &prefix);
 
     /***************************
      * standard setter methods *
      ***************************/
 
-    void setRestartFileName(const std::string &);
-    void setEnergyFileName(const std::string &);
-    void setInstantEnergyFileName(const std::string &);
-    void setMomentumFileName(const std::string &);
-    void setTrajectoryFileName(const std::string &);
-    void setHybridCenterFileName(const std::string &);
-    void setVelocityFileName(const std::string &);
-    void setForceFileName(const std::string &);
-    void setChargeFileName(const std::string &);
-    void setLogFileName(const std::string &);
-    void setRefFileName(const std::string &);
-    void setInfoFileName(const std::string &);
+    void setRestartFileNameByUser(const std::string &);
+    void setEnergyFileNameByUser(const std::string &);
+    void setInstantEnergyFileNameByUser(const std::string &);
+    void setMomentumFileNameByUser(const std::string &);
+    void setTrajectoryFileNameByUser(const std::string &);
+    void setHybridCenterFileNameByUser(const std::string &);
+    void setVelocityFileNameByUser(const std::string &);
+    void setForceFileNameByUser(const std::string &);
+    void setChargeFileNameByUser(const std::string &);
+    void setLogFileNameByUser(const std::string &);
+    void setRefFileNameByUser(const std::string &);
+    void setInfoFileNameByUser(const std::string &);
 
-    void setVirialFileName(const std::string &);
-    void setStressFileName(const std::string &);
-    void setBoxFileName(const std::string &);
+    void setVirialFileNameByUser(const std::string &);
+    void setStressFileNameByUser(const std::string &);
+    void setBoxFileNameByUser(const std::string &);
 
-    void setOptFileName(const std::string &);
+    void setOptFileNameByUser(const std::string &);
 
-    void setRingPolymerRestartFileName(const std::string &);
-    void setRingPolymerTrajectoryFileName(const std::string &);
-    void setRingPolymerVelocityFileName(const std::string &);
-    void setRingPolymerForceFileName(const std::string &);
-    void setRingPolymerChargeFileName(const std::string &);
-    void setRingPolymerEnergyFileName(const std::string &);
+    void setRingPolymerRestartFileNameByUser(const std::string &);
+    void setRingPolymerTrajectoryFileNameByUser(const std::string &);
+    void setRingPolymerVelocityFileNameByUser(const std::string &);
+    void setRingPolymerForceFileNameByUser(const std::string &);
+    void setRingPolymerChargeFileNameByUser(const std::string &);
+    void setRingPolymerEnergyFileNameByUser(const std::string &);
 
-    void setTimingsFileName(const std::string &);
+    void setTimingsFileNameByUser(const std::string &);
 
-    void setOverwriteOutputFiles(bool);
-    void setIncludeOutputMetadata(bool);
+    void setOverwriteOutputFilesByUser(bool);
+    void setIncludeOutputMetadataByUser(bool);
 
     /***************************
      * standard getter methods *
@@ -121,7 +121,6 @@ class OutputFileSettings
 
     [[nodiscard]] size_t             getOutputFrequency() const;
     [[nodiscard]] const std::string &getFilePrefix() const;
-    [[nodiscard]] bool               isFilePrefixSet() const;
 
     [[nodiscard]] const std::string &getRestartFileName() const;
     [[nodiscard]] const std::string &getEnergyFileName() const;

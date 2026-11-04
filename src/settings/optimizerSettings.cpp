@@ -54,9 +54,9 @@ OptimizerSettings::OptimizerSettings()
  *
  * @param optimizer
  */
-void OptimizerSettings::setOptimizer(OptimizerType optimizer)
+void OptimizerSettings::setOptimizerByUser(OptimizerType optimizer)
 {
-    _optimizer.set(optimizer);
+    _optimizer.setByUser(optimizer);
 }
 
 /**
@@ -64,9 +64,9 @@ void OptimizerSettings::setOptimizer(OptimizerType optimizer)
  *
  * @param method
  */
-void OptimizerSettings::setLearningRateStrategy(LearningRate method)
+void OptimizerSettings::setLearningRateStrategyByUser(LearningRate method)
 {
-    _lRStrategy.set(method);
+    _lRStrategy.setByUser(method);
 }
 
 /**
@@ -74,9 +74,9 @@ void OptimizerSettings::setLearningRateStrategy(LearningRate method)
  *
  * @param nEpochs
  */
-void OptimizerSettings::setNumberOfEpochs(size_t nEpochs)
+void OptimizerSettings::setNumberOfEpochsByUser(size_t nEpochs)
 {
-    _nEpochs.set(nEpochs);
+    _nEpochs.setByUser(nEpochs);
 }
 
 /**
@@ -84,9 +84,9 @@ void OptimizerSettings::setNumberOfEpochs(size_t nEpochs)
  *
  * @param frequency
  */
-void OptimizerSettings::setLRUpdateFrequency(size_t frequency)
+void OptimizerSettings::setLRUpdateFrequencyByUser(size_t frequency)
 {
-    _lRupdateFrequency.set(frequency);
+    _lRupdateFrequency.setByUser(frequency);
 }
 
 /**
@@ -94,9 +94,9 @@ void OptimizerSettings::setLRUpdateFrequency(size_t frequency)
  *
  * @param learningRate
  */
-void OptimizerSettings::setInitialLearningRate(double learningRate)
+void OptimizerSettings::setInitialLearningRateByUser(double learningRate)
 {
-    _initialLearningRate.set(learningRate);
+    _initialLearningRate.setByUser(learningRate);
 }
 
 /**
@@ -104,9 +104,9 @@ void OptimizerSettings::setInitialLearningRate(double learningRate)
  *
  * @param decay
  */
-void OptimizerSettings::setLearningRateDecay(double decay)
+void OptimizerSettings::setLearningRateDecayByUser(double decay)
 {
-    _learningRateDecay.set(decay);
+    _learningRateDecay.setByUser(decay);
 }
 
 /**
@@ -114,9 +114,9 @@ void OptimizerSettings::setLearningRateDecay(double decay)
  *
  * @param minLearningRate
  */
-void OptimizerSettings::setMinLearningRate(double minLearningRate)
+void OptimizerSettings::setMinLearningRateByUser(double minLearningRate)
 {
-    _minLearningRate.set(minLearningRate);
+    _minLearningRate.setByUser(minLearningRate);
 }
 
 /**
@@ -124,9 +124,9 @@ void OptimizerSettings::setMinLearningRate(double minLearningRate)
  *
  * @param maxLearningRate
  */
-void OptimizerSettings::setMaxLearningRate(double maxLearningRate)
+void OptimizerSettings::setMaxLearningRateByUser(double maxLearningRate)
 {
-    _maxLearningRate.set(maxLearningRate);
+    _maxLearningRate.setByUser(maxLearningRate);
 }
 
 /*****************************
@@ -153,7 +153,7 @@ void OptimizerSettings::validateLearningRateStrategy() const
     const auto needsDecay = strategy == LearningRate::CONSTANT_DECAY ||
                             strategy == LearningRate::EXPONENTIAL_DECAY;
 
-    if (needsDecay && !isLearningRateDecaySet())
+    if (needsDecay && !isLearningRateDecaySetByUser())
     {
         throw exc::UserInputException(
             std::format(
@@ -270,7 +270,7 @@ double OptimizerSettings::getLearningRateDecay() const
  */
 std::optional<double> OptimizerSettings::getMaxLearningRate() const
 {
-    if (!isMaxLearningRateSet())
+    if (!isMaxLearningRateSetByUser())
         return std::nullopt;
 
     return _maxLearningRate.get();
@@ -281,9 +281,9 @@ std::optional<double> OptimizerSettings::getMaxLearningRate() const
  *
  * @return true if learning rate decay is set, false otherwise
  */
-bool OptimizerSettings::isLearningRateDecaySet() const
+bool OptimizerSettings::isLearningRateDecaySetByUser() const
 {
-    return _learningRateDecay.isSet();
+    return _learningRateDecay.isSetByUser();
 }
 
 /**
@@ -291,7 +291,7 @@ bool OptimizerSettings::isLearningRateDecaySet() const
  *
  * @return true if max learning rate is set, false otherwise
  */
-bool OptimizerSettings::isMaxLearningRateSet() const
+bool OptimizerSettings::isMaxLearningRateSetByUser() const
 {
-    return _maxLearningRate.isSet();
+    return _maxLearningRate.isSetByUser();
 }

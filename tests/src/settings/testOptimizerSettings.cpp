@@ -31,16 +31,17 @@ TEST(TestOptimizerSettings, MaxLearningRateIsOptional)
 {
     const OptimizerSettings settings;
 
-    EXPECT_FALSE(settings.isMaxLearningRateSet());
+    EXPECT_FALSE(settings.isMaxLearningRateSetByUser());
     EXPECT_EQ(std::nullopt, settings.getMaxLearningRate());
 }
 
 TEST(TestOptimizerSettings, MaxLearningRateReturnsTheValueWhenSet)
 {
-    const auto settings = testSettings::make<OptimizerSettings>()
-                              .with(&OptimizerSettings::setMaxLearningRate, 0.5)
-                              .build();
+    const auto settings =
+        testSettings::make<OptimizerSettings>()
+            .with(&OptimizerSettings::setMaxLearningRateByUser, 0.5)
+            .build();
 
-    EXPECT_TRUE(settings.isMaxLearningRateSet());
+    EXPECT_TRUE(settings.isMaxLearningRateSetByUser());
     EXPECT_EQ(std::optional<double>{0.5}, settings.getMaxLearningRate());
 }

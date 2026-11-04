@@ -50,7 +50,7 @@ std::optional<RigidWaterGeometry> WaterModelSettings::getRigidWaterGeometry(
 {
     using enum WaterIntraModel;
 
-    if (!_waterIntraModel.isSet())
+    if (!_waterIntraModel.isSetBySomeone())
         return std::nullopt;
 
     switch (_waterIntraModel.get())
@@ -98,9 +98,16 @@ std::optional<RigidWaterGeometry> WaterModelSettings::getRigidWaterGeometry(
  *
  * @return true if water model is set
  */
-bool WaterModelSettings::isWaterModelSet() const
+bool WaterModelSettings::isWaterModelSetAndNotNone() const
 {
-    return _waterIntraModel.isSet() || _waterInterModel.isSet();
+    if (_waterIntraModel.isSetBySomeone() &&
+        _waterIntraModel.get() != WaterIntraModel::NONE)
+        return true;
+
+    if (isInterWaterModelSetAndNotNone())
+        return true;
+
+    return false;
 }
 
 /**
@@ -108,9 +115,10 @@ bool WaterModelSettings::isWaterModelSet() const
  *
  * @return true if intermolecular water model is set
  */
-bool WaterModelSettings::isInterWaterModelSet() const
+bool WaterModelSettings::isInterWaterModelSetAndNotNone() const
 {
-    return _waterInterModel.isSet();
+    return _waterInterModel.isSetBySomeone() &&
+           _waterInterModel.get() != WaterInterModel::NONE;
 }
 
 /**
@@ -142,9 +150,9 @@ WaterInterModel WaterModelSettings::getWaterInterModel() const
  *
  * @param model
  */
-void WaterModelSettings::setWaterIntraModel(WaterIntraModel model)
+void WaterModelSettings::setWaterIntraModelByUser(WaterIntraModel model)
 {
-    _waterIntraModel.set(model);
+    _waterIntraModel.setByUser(model);
 }
 
 /**
@@ -152,9 +160,9 @@ void WaterModelSettings::setWaterIntraModel(WaterIntraModel model)
  *
  * @param model
  */
-void WaterModelSettings::setWaterInterModel(WaterInterModel model)
+void WaterModelSettings::setWaterInterModelByUser(WaterInterModel model)
 {
-    _waterInterModel.set(model);
+    _waterInterModel.setByUser(model);
 }
 
 /**
@@ -165,7 +173,7 @@ void WaterModelSettings::setWaterInterModel(WaterInterModel model)
  */
 void WaterModelSettings::_addReferences(ReferenceSettings &references) const
 {
-    if (_waterIntraModel.isSet())
+    if (_waterIntraModel.isSetBySomeone())
     {
         switch (_waterIntraModel.get())
         {
@@ -204,7 +212,7 @@ void WaterModelSettings::_addReferences(ReferenceSettings &references) const
         }
     }
 
-    if (_waterInterModel.isSet())
+    if (_waterInterModel.isSetBySomeone())
     {
         switch (_waterInterModel.get())
         {

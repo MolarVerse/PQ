@@ -46,15 +46,15 @@ class SimulationBoxSettings
      * standard setters *
      ********************/
 
-    void setDensity(double density);
-    void setInitializeVelocities(InitVelocities initializeVelocities);
+    void setDensityByUser(double density);
+    void setInitializeVelocsByUser(InitVelocities initializeVelocities);
 
     /********************
      * standard getters *
      ********************/
 
     [[nodiscard]] double         getDensity() const;
-    [[nodiscard]] bool           isDensitySet() const;
+    [[nodiscard]] bool           isDensitySetByUser() const;
     [[nodiscard]] InitVelocities getInitializeVelocities() const;
 };
 

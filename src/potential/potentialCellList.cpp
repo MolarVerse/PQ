@@ -72,7 +72,7 @@ namespace pot
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
         const auto isWaterInterModelSet =
-            waterModelSettings.isInterWaterModelSet();
+            waterModelSettings.isInterWaterModelSetAndNotNone();
 
         double totalCoulombEnergy    = 0.0;
         double totalNonCoulombEnergy = 0.0;

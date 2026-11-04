@@ -161,7 +161,7 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
  */
 TEST_F(TestMoldescriptorReader, globalVdwTypes)
 {
-    _settings->forceFieldSettings.setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
 
     settings::FileSettings::setMolDescriptorFileName(
         "data/moldescriptorReader/moldescriptor_withGlobalVdwTypes.dat"

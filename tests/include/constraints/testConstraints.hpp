@@ -93,7 +93,7 @@ class TestConstraints : public ::testing::Test
         _box->setBox(orthoBox, false);
 
         Settings settings;
-        settings.constraintSettings.activateShake();
+        settings.constraintSettings.activateShakeByUser();
         _constraints = std::make_unique<constraints::Constraints>(
             settings.constraintSettings
         );

@@ -43,11 +43,11 @@ TEST_F(TestTopologyReader, isNeeded)
     Settings settings;
     EXPECT_FALSE(input::topology::isNeeded(settings));
 
-    settings.constraintSettings.activateShake();
+    settings.constraintSettings.activateShakeByUser();
     EXPECT_TRUE(input::topology::isNeeded(settings));
 
-    settings.constraintSettings.deactivateShake();
-    settings.forceFieldSettings.setType(ForceFieldType::ON);
+    settings.constraintSettings.deactivateShakeByUser();
+    settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     EXPECT_TRUE(input::topology::isNeeded(settings));
 }
 
@@ -75,7 +75,7 @@ TEST_F(TestTopologyReader, read)
 {
     EXPECT_NO_THROW(_topologyReader->read());
 
-    _settings.constraintSettings.activateShake();
+    _settings.constraintSettings.activateShakeByUser();
     engine::MMMDEngine engine{_settings};
     _topologyReader = std::make_unique<input::topology::TopologyReader>(
         settings::FileSettings::getTopologyFileName(),

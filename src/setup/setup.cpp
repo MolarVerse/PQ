@@ -181,7 +181,7 @@ namespace setup
         if (settings.forceFieldSettings.isActive())
             setupForceField(engine);
 
-        if (settings.waterModelSettings.isWaterModelSet())
+        if (settings.waterModelSettings.isWaterModelSetAndNotNone())
             setupWaterModel(engine);
 
         setupConstraints(engine);

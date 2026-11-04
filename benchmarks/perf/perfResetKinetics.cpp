@@ -57,13 +57,13 @@ int main()
 
     // step <= n is always true here, so every reset runs in every iteration
     ResetKineticsSettings settings;
-    settings.setNScale(ITERATIONS);
-    settings.setFScale(1);
-    settings.setNReset(ITERATIONS);
-    settings.setFReset(1);
-    settings.setNResetAngular(ITERATIONS);
-    settings.setFResetAngular(1);
-    settings.setFResetForces(1);
+    settings.setNScaleByUser(ITERATIONS);
+    settings.setFScaleByUser(1);
+    settings.setNResetByUser(ITERATIONS);
+    settings.setFResetByUser(1);
+    settings.setNResetAngularByUser(ITERATIONS);
+    settings.setFResetAngularByUser(1);
+    settings.setFResetForcesByUser(1);
     const auto resetKinetics = resetKinetics::ResetKinetics(settings);
 
     perfAllocBegin();
