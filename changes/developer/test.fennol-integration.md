@@ -1,0 +1,1 @@
+- Add a FeNNol integration test (malondialdehyde, ANI-1x model, 2 MD steps, CPU) and install `fennol` and `jax` for the integration tests in CI.
