@@ -254,7 +254,7 @@ namespace engine
 
             const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
+            const auto simTime       = effStepDouble * timeStep;
 
             getEngineOutput().writeEnergyFile(
                 effStep,
@@ -266,7 +266,7 @@ namespace engine
                 getPhysicalData(),
                 getSettings()
             );
-            getEngineOutput().writeInfoFile(
+            getEngineOutput().getInfoOutput().write(
                 simTime,
                 getAveragePhysicalData(),
                 getSettings()

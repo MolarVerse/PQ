@@ -122,11 +122,6 @@ namespace engine
         void writeVelFile(molsys::SimulationBox &, size_t);
         void writeForceFile(molsys::SimulationBox &, size_t);
         void writeChargeFile(molsys::SimulationBox &, size_t);
-        void writeInfoFile(
-            double simulationTime,
-            const physicalData::PhysicalData &,
-            const Settings &
-        );
         void writeRstFile(
             molsys::SimulationBox &,
             const thermostat::Thermostat &,

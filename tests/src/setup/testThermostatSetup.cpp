@@ -36,13 +36,14 @@
 #include "thermostatSetup.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 #include "velocityRescalingThermostat.hpp"
 
 TEST_F(TestSetup, setupThermostatNoThermostat)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
     EXPECT_NO_THROW(thermostatSetup.setup());
 }
 
@@ -259,7 +260,7 @@ TEST_F(TestSetup, setupThermostatLangevin)
     const auto sigma = std::sqrt(
         4.0 * langevinThermostat.getFriction() * conversionFactor *
         settings::ThermostatSettings::getTargetTemperature() /
-        settings::TimingsSettings::getTimeStep()
+        settings::TimingsSettings::getTimeStep().numerical_value_in(fs)
     );
 
     EXPECT_EQ(langevinThermostat.getSigma(), sigma);

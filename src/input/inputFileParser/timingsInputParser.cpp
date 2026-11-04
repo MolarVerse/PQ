@@ -27,6 +27,7 @@
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -63,7 +64,7 @@ namespace input
         const RangeValidator<double, Greater::GT> validator{0.0, std::nullopt};
 
         const auto setTimeStep = [&](double value)
-        { settings::TimingsSettings::setTimeStep(value); };
+        { settings::TimingsSettings::setTimeStep(value * fs); };
 
         auto &timeStep = _getRegistry().registerKey(
             KeyRegistry<double>{

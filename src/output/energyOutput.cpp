@@ -32,6 +32,7 @@
 #include "physicalData.hpp"
 #include "settings.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -41,9 +42,9 @@ namespace out
      *
      * @param timeStep simulation timestep in fs
      */
-    void EnergyOutput::writeHeader(double timeStep)
+    void EnergyOutput::writeHeader(const Time &timeStep)
     {
-        _getFilePointer() << std::format("# timestep = {} fs\n", timeStep);
+        _getFilePointer() << std::format("# timestep = {}\n", timeStep.in(fs));
     }
 
     /**

@@ -27,6 +27,7 @@
 
 #include "benchmarkSetup.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 namespace
@@ -36,7 +37,7 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        settings::TimingsSettings::setTimeStep(0.001);
+        settings::TimingsSettings::setTimeStep(0.001 * fs);
         integrator::VelocityVerlet integrator;
 
         for (auto _ : state)
@@ -56,7 +57,7 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        settings::TimingsSettings::setTimeStep(0.001);
+        settings::TimingsSettings::setTimeStep(0.001 * fs);
         integrator::VelocityVerlet integrator;
 
         for (auto _ : state)

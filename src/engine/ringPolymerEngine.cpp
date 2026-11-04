@@ -150,7 +150,7 @@ namespace engine
                     effStep,
                     getAveragePhysicalData()
                 );
-                getEngineOutput().writeInfoFile(
+                getEngineOutput().getInfoOutput().write(
                     simTime,
                     getAveragePhysicalData(),
                     getSettings()

@@ -30,6 +30,7 @@
 #include "throwWithMessage.hpp"
 #include "timingsInputParser.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "timestep" command
@@ -44,7 +45,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
 
     std::vector<std::string> lineElements = {"timestep", "=", "1"};
     timeStepFunc(lineElements, 0);
-    EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
+    EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0 * fs);
 
     _clearParser(parser);
 

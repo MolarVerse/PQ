@@ -30,6 +30,7 @@
 #include "bondConstraint.hpp"
 #include "distanceConstraint.hpp"
 #include "mShakeReference.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -65,7 +66,7 @@ namespace constraints
 
         std::unique_ptr<MShake> _mShake;
 
-        double _startTime = 0.0;
+        Time _startTime;
 
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
@@ -85,7 +86,7 @@ namespace constraints
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            double
+            const Time &time
         );
 
         /************************
@@ -117,7 +118,7 @@ namespace constraints
          * standard setter methods *
          ***************************/
 
-        void setStartTime(const double startTime) { _startTime = startTime; }
+        void setStartTime(const Time &startTime) { _startTime = startTime; }
 
        private:
         void _applyShake(molsys::SimulationBox &simulationBox);

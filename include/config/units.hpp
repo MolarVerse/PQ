@@ -35,11 +35,14 @@
 
 // NOLINTBEGIN(readability-identifier-length)
 
+inline constexpr auto one = mstd::units::one;
+
 inline constexpr auto rad = mstd::units::rad;
 inline constexpr auto deg = mstd::units::deg;
 
-inline constexpr auto ps = mstd::units::ps;
 inline constexpr auto fs = mstd::units::fs;
+inline constexpr auto ps = mstd::units::ps;
+inline constexpr auto s  = mstd::units::s;
 
 inline constexpr auto bar = mstd::units::bar;
 

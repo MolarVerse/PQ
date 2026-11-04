@@ -31,6 +31,7 @@
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -40,7 +41,7 @@
 TEST_F(TestEnergyOutput, writeHeader)
 {
     _energyOutput->setFilename("default.en", false);
-    _energyOutput->writeHeader(0.5);
+    _energyOutput->writeHeader(0.5 * fs);
     _energyOutput->close();
 
     std::ifstream file("default.en");

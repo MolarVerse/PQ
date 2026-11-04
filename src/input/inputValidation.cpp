@@ -281,7 +281,9 @@ namespace input
             const auto relaxationTime =
                 settings::ThermostatSettings::getRelaxationTime() * PS_TO_FS;
 
-            if (settings::TimingsSettings::getTimeStep() > relaxationTime)
+            if (settings::TimingsSettings::getTimeStep().numerical_value_in(
+                    fs
+                ) > relaxationTime)
             {
                 throw exc::InputFileException(
                     "The timestep must not exceed the thermostat relaxation "
@@ -322,7 +324,7 @@ namespace input
             const auto sigmaSquared =
                 4.0 * settings::ThermostatSettings::getFriction() *
                 conversionFactor * maxTemperature /
-                settings::TimingsSettings::getTimeStep();
+                settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
 
             if (!std::isfinite(sigmaSquared))
             {
@@ -416,10 +418,8 @@ namespace input
             );
         }
 
-        const auto relaxationTime =
-            manostatSettings.getTau().numerical_value_in(fs);
-
-        if (settings::TimingsSettings::getTimeStep() > relaxationTime)
+        if (settings::TimingsSettings::getTimeStep() >
+            manostatSettings.getTau())
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );

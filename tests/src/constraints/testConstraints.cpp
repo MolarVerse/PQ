@@ -29,6 +29,7 @@
 #include "testSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests calculation of all bond constraints ref bond lengths
@@ -63,7 +64,7 @@ TEST_F(TestConstraints, applyShakeConverged)
     _addDefaultBondConstraints(constraints);
     constraints.calculateConstraintBondRefs(*_box);
 
-    settings::TimingsSettings::setTimeStep(2.0);
+    settings::TimingsSettings::setTimeStep(2.0 * fs);
 
     EXPECT_NO_THROW(constraints.applyShake(*_box));
 
@@ -120,7 +121,7 @@ TEST_F(TestConstraints, applyShakeNotConverged)
     _addDefaultBondConstraints(constraints);
     constraints.calculateConstraintBondRefs(*_box);
 
-    settings::TimingsSettings::setTimeStep(2.0);
+    settings::TimingsSettings::setTimeStep(2.0 * fs);
 
     EXPECT_THROW_MSG(
         constraints.applyShake(*_box),
@@ -145,7 +146,7 @@ TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
     _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
 
-    settings::TimingsSettings::setTimeStep(2.0);
+    settings::TimingsSettings::setTimeStep(2.0 * fs);
 
     EXPECT_NO_THROW(_constraints->applyShake(*_box));
 }

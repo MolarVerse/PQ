@@ -94,11 +94,12 @@ namespace manostat
         if (fixedAxis == FixedAxis::ALL)
             return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-        const auto tau = _getSettings().getTau().numerical_value_in(fs);
-        const auto compressibility = _getSettings().getCompressibility();
-        const auto preFactor =
-            compressibility * settings::TimingsSettings::getTimeStep() / tau;
-        const auto p_xyz = diagonal(_getPressureTensor());
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
+        const auto compressibility  = _getSettings().getCompressibility();
+        const auto preFactor        = compressibility * tauTimeStepRatio;
+        const auto p_xyz            = diagonal(_getPressureTensor());
 
         size_t numFree = 0;
         double p_avg   = 0.0;
@@ -155,13 +156,14 @@ namespace manostat
         const auto p_xy            = (p_x + p_y) / 2.0;
         const auto p_z             = p_xyz[anisotropicAxis];
 
-        const auto tau = _getSettings().getTau().numerical_value_in(fs);
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto dimension =
             3.0 -
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
-        const auto preFactor = _getSettings().getCompressibility() *
-                               settings::TimingsSettings::getTimeStep() /
-                               (tau * dimension);
+        const auto preFactor =
+            _getSettings().getCompressibility() * tauTimeStepRatio / dimension;
 
         const auto targetPressure = _getSettings().getTargetPressure();
 
@@ -192,14 +194,15 @@ namespace manostat
      */
     linalg::tensor3D AnisotropicBerendsenManostat::calculateMu() const
     {
-        const auto tau  = _getSettings().getTau().numerical_value_in(fs);
-        const auto pxyz = diagonal(_getPressureTensor());
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
+        const auto pxyz             = diagonal(_getPressureTensor());
         const auto dimension =
             3.0 -
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
-        const auto preFactor = _getSettings().getCompressibility() *
-                               settings::TimingsSettings::getTimeStep() /
-                               (tau * dimension);
+        const auto preFactor =
+            _getSettings().getCompressibility() * tauTimeStepRatio / dimension;
 
         auto mu = 1.0 - preFactor * (_getSettings().getTargetPressure() - pxyz);
 
@@ -223,15 +226,16 @@ namespace manostat
      */
     linalg::tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
     {
-        const auto tau = _getSettings().getTau().numerical_value_in(fs);
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto pTarget =
             linalg::diagonalMatrix(_getSettings().getTargetPressure());
         const auto dimension =
             3.0 -
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
-        const auto preFactor = _getSettings().getCompressibility() *
-                               settings::TimingsSettings::getTimeStep() /
-                               (tau * dimension);
+        const auto preFactor =
+            _getSettings().getCompressibility() * tauTimeStepRatio / dimension;
         const auto kronecker = linalg::kroneckerDeltaMatrix<double>();
 
         auto mu = kronecker - (preFactor * (pTarget - _getPressureTensor()));

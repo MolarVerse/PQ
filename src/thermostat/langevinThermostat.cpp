@@ -31,6 +31,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -100,7 +101,7 @@ namespace thermostat
         const auto force =
             4.0 * friction * conversionFactor * targetTemperature;
 
-        _sigma = std::sqrt(force / timeStep);
+        _sigma = std::sqrt(force / timeStep.numerical_value_in(fs));
     }
 
     /**
@@ -118,7 +119,8 @@ namespace thermostat
             const auto mass     = atom->getMass();
             const auto timeStep = settings::TimingsSettings::getTimeStep();
 
-            const auto propagationFactor = 0.5 * timeStep * FS_TO_S / mass;
+            const auto propagationFactor =
+                0.5 * timeStep.numerical_value_in(s) / mass;
 
             const linalg::Vec3D randomFactor = {
                 _randomNumberGenerator.getNormalDistribution(0.0, 1.0),

@@ -90,7 +90,7 @@ class TestInputValidation : public ::testing::Test
         settings::PotentialSettings::setCoulombRadiusCutOff(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
-        settings::TimingsSettings::setTimeStep(0.5);
+        settings::TimingsSettings::setTimeStep(0.5 * fs);
 
         settings::QMSettings::setQMMethod(QMMethod::NONE);
         settings::QMSettings::setMaceModel(MaceModel::MEDIUM);
