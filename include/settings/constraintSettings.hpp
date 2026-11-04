@@ -52,8 +52,6 @@ class ConstraintSettings
     Setting<double> _rattleTolerance;
     Setting<double> _mshakeTolerance;
 
-    bool _shakeOnlyWaterModel = false;
-
    public:
     ConstraintSettings();
 
@@ -71,18 +69,18 @@ class ConstraintSettings
     bool isShakeLikeActive() const;
 
     [[nodiscard]]
-    bool isShakeOnlyWaterModel() const;
+    bool isShakeSetBySystem() const;
 
     /*****************************
      * standard activate methods *
      *****************************/
 
-    void activateShake();
-    void deactivateShake();
-    void activateMShake();
-    void deactivateMShake();
-    void activateDistanceConstraints();
-    void deactivateDistanceConstraints();
+    void activateShakeByUser();
+    void deactivateShakeByUser();
+    void activateMShakeByUser();
+    void deactivateMShakeByUser();
+    void activateDistanceConstraintsByUser();
+    void deactivateDistanceConstraintsByUser();
 
     /***************************
      * standard getter methods *
@@ -103,12 +101,12 @@ class ConstraintSettings
      * standard setter methods *
      ***************************/
 
-    void setShakeMaxIter(size_t shakeMaxIter);
-    void setRattleMaxIter(size_t rattleMaxIter);
-    void setMShakeMaxIter(size_t mshakeMaxIter);
-    void setShakeTolerance(double shakeTolerance);
-    void setRattleTolerance(double rattleTolerance);
-    void setMShakeTolerance(double mshakeTolerance);
+    void setShakeMaxIterByUser(size_t shakeMaxIter);
+    void setRattleMaxIterByUser(size_t rattleMaxIter);
+    void setMShakeMaxIterByUser(size_t mshakeMaxIter);
+    void setShakeToleranceByUser(double shakeTolerance);
+    void setRattleToleranceByUser(double rattleTolerance);
+    void setMShakeToleranceByUser(double mshakeTolerance);
 };
 
 #endif   // SETTINGS__CONSTRAINT_SETTINGS_HPP

@@ -31,8 +31,8 @@ TEST(TestSettingsBuilder, OverridesAreAppliedAndTheRestKeepsItsDefault)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setShakeMaxIter, 100)
-            .with(&ConstraintSettings::setShakeTolerance, 1.0e-8)
+            .with(&ConstraintSettings::setShakeMaxIterByUser, 100)
+            .with(&ConstraintSettings::setShakeToleranceByUser, 1.0e-8)
             .build();
 
     EXPECT_EQ(100U, settings.getShakeMaxIter());
@@ -49,8 +49,8 @@ TEST(TestSettingsBuilder, ApplyReachesEverythingThatIsNotAPlainSetter)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .apply([](auto &config) { config.activateShake(); })
-            .apply([](auto &config) { config.activateMShake(); })
+            .apply([](auto &config) { config.activateShakeByUser(); })
+            .apply([](auto &config) { config.activateMShakeByUser(); })
             .build();
 
     EXPECT_TRUE(settings.isShakeActivated());
@@ -60,10 +60,11 @@ TEST(TestSettingsBuilder, ApplyReachesEverythingThatIsNotAPlainSetter)
 
 TEST(TestSettingsBuilder, LaterOverridesWin)
 {
-    const auto settings = testSettings::make<ConstraintSettings>()
-                              .with(&ConstraintSettings::setShakeMaxIter, 10)
-                              .with(&ConstraintSettings::setShakeMaxIter, 20)
-                              .build();
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setShakeMaxIterByUser, 10)
+            .with(&ConstraintSettings::setShakeMaxIterByUser, 20)
+            .build();
 
     EXPECT_EQ(20U, settings.getShakeMaxIter());
 }
@@ -71,11 +72,11 @@ TEST(TestSettingsBuilder, LaterOverridesWin)
 TEST(TestSettingsBuilder, BuildReturnsACopyAndTheBuilderCanBeReused)
 {
     auto builder = testSettings::make<ConstraintSettings>().with(
-        &ConstraintSettings::setShakeMaxIter,
+        &ConstraintSettings::setShakeMaxIterByUser,
         10
     );
     const auto first = builder.build();
-    builder.with(&ConstraintSettings::setShakeMaxIter, 99);
+    builder.with(&ConstraintSettings::setShakeMaxIterByUser, 99);
     const auto second = builder.build();
 
     EXPECT_EQ(10U, first.getShakeMaxIter());
@@ -89,8 +90,8 @@ TEST(TestSettingsBuilder, TheRootSettingsAreBuiltTheSameWay)
             .apply(
                 [](auto &config)
                 {
-                    config.constraintSettings.setShakeMaxIter(7);
-                    config.constraintSettings.activateShake();
+                    config.constraintSettings.setShakeMaxIterByUser(7);
+                    config.constraintSettings.activateShakeByUser();
                 }
             )
             .build();
@@ -102,7 +103,7 @@ TEST(TestSettingsBuilder, TheRootSettingsAreBuiltTheSameWay)
 TEST(TestSettingsBuilder, TwoBuildersDoNotShareState)
 {
     const auto first = testSettings::make<ConstraintSettings>()
-                           .with(&ConstraintSettings::setShakeMaxIter, 1)
+                           .with(&ConstraintSettings::setShakeMaxIterByUser, 1)
                            .build();
     const auto second = testSettings::make<ConstraintSettings>().build();
 

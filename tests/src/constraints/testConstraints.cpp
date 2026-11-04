@@ -56,9 +56,9 @@ TEST_F(TestConstraints, applyShakeConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setShakeMaxIter, 1000)
-            .with(&ConstraintSettings::setShakeTolerance, 1.0e-8)
-            .apply([](auto &config) { config.activateShake(); })
+            .with(&ConstraintSettings::setShakeMaxIterByUser, 1000)
+            .with(&ConstraintSettings::setShakeToleranceByUser, 1.0e-8)
+            .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     constraints::Constraints constraints(settings);
     _addDefaultBondConstraints(constraints);
@@ -113,9 +113,9 @@ TEST_F(TestConstraints, applyShakeNotConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setShakeMaxIter, 10)
-            .with(&ConstraintSettings::setShakeTolerance, 0.0)
-            .apply([](auto &config) { config.activateShake(); })
+            .with(&ConstraintSettings::setShakeMaxIterByUser, 10)
+            .with(&ConstraintSettings::setShakeToleranceByUser, 0.0)
+            .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     constraints::Constraints constraints(settings);
     _addDefaultBondConstraints(constraints);
@@ -137,10 +137,11 @@ TEST_F(TestConstraints, applyShakeNotConverged)
  */
 TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
 {
-    const auto settings = testSettings::make<ConstraintSettings>()
-                              .with(&ConstraintSettings::setShakeMaxIter, 10)
-                              .with(&ConstraintSettings::setShakeTolerance, 0.0)
-                              .build();
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .with(&ConstraintSettings::setShakeMaxIterByUser, 10)
+            .with(&ConstraintSettings::setShakeToleranceByUser, 0.0)
+            .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
@@ -158,9 +159,9 @@ TEST_F(TestConstraints, applyRattleConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setRattleMaxIter, 1000)
-            .with(&ConstraintSettings::setRattleTolerance, 1.0e-4)
-            .apply([](auto &config) { config.activateShake(); })
+            .with(&ConstraintSettings::setRattleMaxIterByUser, 1000)
+            .with(&ConstraintSettings::setRattleToleranceByUser, 1.0e-4)
+            .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
@@ -196,9 +197,9 @@ TEST_F(TestConstraints, applyRattleNotConverged)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setRattleMaxIter, 10)
-            .with(&ConstraintSettings::setRattleTolerance, 0.0)
-            .apply([](auto &config) { config.activateShake(); })
+            .with(&ConstraintSettings::setRattleMaxIterByUser, 10)
+            .with(&ConstraintSettings::setRattleToleranceByUser, 0.0)
+            .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);
@@ -220,8 +221,8 @@ TEST_F(TestConstraints, applyRattleNotConvergedDeactivated)
 {
     const auto settings =
         testSettings::make<ConstraintSettings>()
-            .with(&ConstraintSettings::setRattleMaxIter, 10)
-            .with(&ConstraintSettings::setRattleTolerance, 0.0)
+            .with(&ConstraintSettings::setRattleMaxIterByUser, 10)
+            .with(&ConstraintSettings::setRattleToleranceByUser, 0.0)
             .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);

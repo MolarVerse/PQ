@@ -57,9 +57,9 @@ int main()
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto             physicalData = physicalData::PhysicalData();
     ManostatSettings manostatSettings;
-    manostatSettings.setTargetPressure(1.0);
-    manostatSettings.setTau(100.0 * fs);
-    manostatSettings.setCompressibility(4.6e-5);
+    manostatSettings.setTargetPressureByUser(1.0);
+    manostatSettings.setTauByUser(100.0 * fs);
+    manostatSettings.setCompressibilityByUser(4.6e-5);
     ReferenceSettings referenceSettings;
     manostatSettings.finalize(referenceSettings);
     auto manostat = manostat::BerendsenManostat(manostatSettings);

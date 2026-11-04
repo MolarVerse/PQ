@@ -807,7 +807,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
     WaterModelSettings waterModelSettings;
-    waterModelSettings.setWaterInterModel(WaterInterModel::SPC);
+    waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
 
     const auto coulomb =
         std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
@@ -836,7 +836,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
         unusedCellList
     );
 
-    waterModelSettings.setWaterInterModel(WaterInterModel::SPC_E);
+    waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
     auto simBoxCellList = makeHybridWaterBox();
     auto cellList       = makeCellList(simBoxCellList, waterModelSettings);
     physicalData::PhysicalData cellListData;
@@ -991,7 +991,7 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     EXPECT_NE(bruteForce.clone(), nullptr);
     EXPECT_NE(cellListPotential.clone(), nullptr);
 
-    waterModelSettings.setWaterInterModel(WaterInterModel::SPC_E);
+    waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
     auto filteredBox      = makeHybridWaterBox();
     auto filteredCellList = makeCellList(filteredBox, waterModelSettings);
     physicalData::PhysicalData filteredData;

@@ -137,7 +137,7 @@ TEST_F(TestParameterFileReader, deleteSection)
  */
 TEST_F(TestParameterFileReader, readFileNameEmpty)
 {
-    _settings.forceFieldSettings.setType(ForceFieldType::ON);
+    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_THROW_MSG(
         _parameterFileReader->read(),
@@ -241,7 +241,7 @@ TEST_F(TestParameterFileReader, readParameterFileWithComments)
  */
 TEST_F(TestParameterFileReader, readParameterFileFreeFunction)
 {
-    _settings.forceFieldSettings.setType(ForceFieldType::ON);
+    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     _engine->getPotential()->makeNonCoulombPotential(
         pot::ForceFieldNonCoulomb()
     );
@@ -253,7 +253,7 @@ TEST_F(TestParameterFileReader, readParameterFileFreeFunction)
 
 TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
 {
-    _settings.forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::FileSettings::unsetIsParameterFileNameSet();
     EXPECT_NO_THROW(input::parameterFile::readParameterFile(*_engine));
 }

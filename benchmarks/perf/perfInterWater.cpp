@@ -66,7 +66,7 @@ int main()
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
     WaterModelSettings waterModelSettings;
-    waterModelSettings.setWaterInterModel(WaterInterModel::SPC_E);
+    waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
 
     // ~6x6x6 = 216 water molecules (648 atoms) on a 3 Å grid in a 30 Å box.
     constexpr size_t perSide = 6;

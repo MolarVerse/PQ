@@ -870,7 +870,8 @@ namespace input::guffdat
         const auto waterType = simBox.getWaterType();
 
         const auto isInterWaterModelSet =
-            _engine.getSettings().waterModelSettings.isInterWaterModelSet();
+            _engine.getSettings()
+                .waterModelSettings.isInterWaterModelSetAndNotNone();
 
         return isInterWaterModelSet && waterType.has_value() &&
                molType1 == waterType.value() && molType2 == waterType.value();

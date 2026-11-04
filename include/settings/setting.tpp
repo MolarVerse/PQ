@@ -32,19 +32,43 @@
  * @param defaultValue the default value for the setting.
  */
 template <typename T, mstd::Tag Name>
-Setting<T, Name>::Setting(const T& defaultValue) : _default(defaultValue)
+Setting<T, Name>::Setting(const T& defaultValue)
+    : _default(defaultValue), _setter(Setter::Default)
 {
 }
 
 /**
- * Check if the setting has been set.
+ * Check if the setting has been set by the user.
  *
- * @return true if the setting has a value, false otherwise.
+ * @return true if the setting has a value set by the user, false otherwise.
  */
 template <typename T, mstd::Tag Name>
-bool Setting<T, Name>::isSet() const
+bool Setting<T, Name>::isSetByUser() const
 {
-    return _value.has_value();
+    return _value.has_value() && _setter == Setter::User;
+}
+
+/**
+ * Check if the setting has been set by the system.
+ *
+ * @return true if the setting has a value set by the system, false otherwise.
+ */
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSetBySystem() const
+{
+    return _value.has_value() && _setter == Setter::System;
+}
+
+/**
+ * Check if the setting has been set by anyone (user or system).
+ *
+ * @return true if the setting has a value set by either the user or the system,
+ * false otherwise.
+ */
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSetBySomeone() const
+{
+    return _value.has_value() && _setter != Setter::None;
 }
 
 /**
@@ -72,9 +96,24 @@ const T& Setting<T, Name>::get() const
  * @param value the value to set for the setting.
  */
 template <typename T, mstd::Tag Name>
-void Setting<T, Name>::set(const T& value)
+void Setting<T, Name>::setByUser(const T& value)
 {
-    _value = value;
+    _value  = value;
+    _setter = Setter::User;
+}
+
+/**
+ * @brief Set the value of the setting by the system.
+ *
+ * @tparam T
+ * @tparam Name
+ * @param value
+ */
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::setBySystem(const T& value)
+{
+    _value  = value;
+    _setter = Setter::System;
 }
 
 /**

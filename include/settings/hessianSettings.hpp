@@ -47,11 +47,11 @@ class HessianSettings
    public:
     HessianSettings();
 
-    void setHessianFile(const std::string &filename);
-    void setHessianInfoFile(const std::string &filename);
-    void setDisplacement(double displacement);
-    void setOptimizeBeforeHessian(bool optimize);
-    void setBuilder(HessianBuilderType builder);
+    void setHessianFileByUser(const std::string &filename);
+    void setHessianInfoFileByUser(const std::string &filename);
+    void setDisplacementByUser(double displacement);
+    void setOptimizeBeforeHessianByUser(bool optimize);
+    void setBuilderByUser(HessianBuilderType builder);
 
     [[nodiscard]] std::string        getHessianFile() const;
     [[nodiscard]] std::string        getHessianInfoFile() const;

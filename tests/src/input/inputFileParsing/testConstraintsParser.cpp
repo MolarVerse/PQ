@@ -60,7 +60,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
 
     _clearParser(parser);
 
-    constraintSettings.deactivateShake();
+    constraintSettings.deactivateShakeByUser();
 
     lineElements = {"shake", "=", "shake"};
     parseFunc(lineElements, 0);
@@ -69,7 +69,7 @@ TEST_F(TestInputFileReader, testParseShakeActivated)
 
     _clearParser(parser);
 
-    constraintSettings.deactivateShake();
+    constraintSettings.deactivateShakeByUser();
 
     lineElements = {"shake", "=", "mshake"};
     parseFunc(lineElements, 0);
@@ -345,7 +345,7 @@ TEST_F(TestInputFileReader, testParseDistanceConstraintsActivated)
     EXPECT_TRUE(constraintSettings.isActive());
     EXPECT_TRUE(constraintSettings.isDistanceConstraintsActivated());
 
-    constraintSettings.deactivateDistanceConstraints();
+    constraintSettings.deactivateDistanceConstraintsByUser();
 
     _clearParser(parser);
 

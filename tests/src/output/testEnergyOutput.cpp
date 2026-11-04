@@ -68,7 +68,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -110,7 +110,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->setImproperEnergy(22.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -152,9 +152,9 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -196,9 +196,9 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
@@ -241,9 +241,9 @@ TEST_F(TestEnergyOutput, qmActive)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
-    _settings->manostatSettings.setManostatType(ManostatType::NONE);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
 
     _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);
@@ -281,10 +281,10 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     _physicalData->setNoseHooverFrictionEnergy(12.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::deactivateRingPolymerMD();
-    _settings->manostatSettings.setManostatType(ManostatType::NONE);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(
         ThermostatType::NOSE_HOOVER
     );
@@ -328,9 +328,9 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
     _physicalData->setNumberOfSmoothingMolecules(1.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-    _settings->manostatSettings.setManostatType(ManostatType::NONE);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
 
     _energyOutput->setFilename("default.en", false);

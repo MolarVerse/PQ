@@ -64,8 +64,8 @@ class WaterModelSettings
      * standard getters *
      ********************/
 
-    [[nodiscard]] bool            isWaterModelSet() const;
-    [[nodiscard]] bool            isInterWaterModelSet() const;
+    [[nodiscard]] bool            isWaterModelSetAndNotNone() const;
+    [[nodiscard]] bool            isInterWaterModelSetAndNotNone() const;
     [[nodiscard]] WaterIntraModel getWaterIntraModel() const;
     [[nodiscard]] WaterInterModel getWaterInterModel() const;
 
@@ -73,8 +73,8 @@ class WaterModelSettings
      * standard setters *
      ********************/
 
-    void setWaterIntraModel(WaterIntraModel model);
-    void setWaterInterModel(WaterInterModel model);
+    void setWaterIntraModelByUser(WaterIntraModel model);
+    void setWaterInterModelByUser(WaterInterModel model);
 
    private:
     void _addReferences(ReferenceSettings &references) const;
