@@ -7,6 +7,12 @@ implementation changes are documented in
 ## Next Release
 
 <!-- insertion marker -->
+## [v1.0.1](https://github.com/MolarVerse/PQ/releases/tag/v1.0.1) - 2026-11-04
+
+### Bug Fixes
+
+- Fix MACE runs failing at startup with `module 'mace.calculators' has no attribute 'MACE_OFF'`; PQ again passes the MACE calculator and model names (e.g. `mace_off`, `small-0b`).
+
 ## [v1.0.0](https://github.com/MolarVerse/PQ/releases/tag/v1.0.0) - 2026-11-03
 
 ### New Features
