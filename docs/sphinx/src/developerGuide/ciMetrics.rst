@@ -94,6 +94,11 @@ build times (from ``-ftime-trace``); it was removed (#935), because compile time
 read a pull request's effect from them. For compile-time questions use the exact include graph numbers, or measure on
 your own machine with :doc:`localBuildTimes`, where the build can be pinned to one core.
 
+Pull requests build with ccache (the job took 8 to 17 minutes, depending on the CPU of the runner, #1045). A push to
+``dev`` ignores the cache for reading (``CCACHE_RECACHE``) and writes it, so the build analysis and the include graph
+of the metrics stay those of a full build. The build passes ``-Xclang -fno-pch-timestamp``: without it clang puts the
+date of the precompiled header into the ``.pch`` file and every compile is a ccache miss.
+
 ***************************
 Adding a job to the metrics
 ***************************
