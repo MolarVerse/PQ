@@ -1,1 +1,0 @@
-- The `h2o_mm-mshake` example now writes every 50th step, ships an O-O RDF input for PQAnalysis and lists the expected RDF and diffusion values.

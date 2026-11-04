@@ -74,7 +74,54 @@ const T& Setting<T, Name>::get() const
 template <typename T, mstd::Tag Name>
 void Setting<T, Name>::set(const T& value)
 {
-    _value = value;
+    setByUser(value);
+}
+
+/**
+ * Set the value of the setting as an explicit user choice.
+ *
+ * @param value the value to set for the setting.
+ */
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::setByUser(const T& value)
+{
+    _value  = value;
+    _setter = Setter::User;
+}
+
+/**
+ * Set the value of the setting as a value filled in automatically by
+ * internal logic (e.g. during finalization), as opposed to a user choice.
+ *
+ * @param value the value to set for the setting.
+ */
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::setBySystem(const T& value)
+{
+    _value  = value;
+    _setter = Setter::System;
+}
+
+/**
+ * Check if the current value was explicitly chosen by the user.
+ *
+ * @return true if a value is set and it was set via setByUser().
+ */
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSetByUser() const
+{
+    return _value.has_value() && _setter == Setter::User;
+}
+
+/**
+ * Check if the current value was filled in automatically by internal logic.
+ *
+ * @return true if a value is set and it was set via setBySystem().
+ */
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSetBySystem() const
+{
+    return _value.has_value() && _setter == Setter::System;
 }
 
 /**

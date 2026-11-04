@@ -1,1 +1,0 @@
-- Add a CI timings overview page (`.github/ci-metrics/data/CI_TIMINGS.md`) generated from the collected data by `report.py` and refreshed by the CI Metrics workflow; add a test for it.

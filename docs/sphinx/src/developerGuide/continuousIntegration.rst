@@ -46,6 +46,9 @@ Workflows
       - pull requests (any base branch), pushes to ``dev``, ``main`` and ``NEXT``, manual
       - ``clangd-tidy`` on the changed C++ files (``scripts/clang_tidy.sh``). The job builds the project first,
         tolerating compile errors, only to get a compile database.
+        It is skipped for release pull requests (``release/*``) and for pushes to ``main``: these contain every change
+        since the last release, which was linted on its ``dev`` pull requests, and one serial run over 800 files does
+        not finish. A hotfix is linted on its own pull request.
     * - DevOps C++ Check
       - ``devops_cpp_check.yml``
       - pull requests to ``main``, ``dev`` and ``NEXT``, manual
@@ -81,6 +84,8 @@ Workflows
         with an empty environment. The simulation makes the runs about three times slower, so pull requests skip it
         (``PERF_CACHE_SIM=0``); a nightly run (03:00 UTC, ``dev`` against ``dev`` of a day earlier, also available as
         a manual run) keeps it on and writes the table to the job summary.
+        A second step compares the CPU time of the measured loop of both builds on the same runner, see
+        :ref:`perfTiming`; a confirmed slowdown fails the check.
     * - Clang Build
       - ``clang_build.yml``
       - pull requests that touch C++ or build files
@@ -187,6 +192,39 @@ The checks that fail most often can be run before you push:
 
         This needs ``doxygen``, ``graphviz`` and the Python packages listed in :ref:`the Sphinx section <sphinxBuild>`.
         ``PQ_DOXYGEN_GRAPHS=OFF`` skips the dot graphs, which is what pull request builds do.
+
+.. _perfTiming:
+
+*****************
+Timing comparison
+*****************
+
+Instruction counts cannot see memory bound code, system calls or file I/O, so ``scripts/perf_timing.py`` also compares
+the CPU time of the measured loop of every benchmark with the one of the base. Both are built and run in the same job.
+The time comes from ``libperf_timer.so`` (``benchmarks/perf/timer``), preloaded in a plain run: it measures from the
+``perfAllocBegin()`` marker to the end of the process, so startup and setup are not part of it.
+
+A timing on a shared runner is noisy, so the script does not compare two numbers:
+
+    - **Copies.** Byte-identical copies of a binary run at different speeds (4 to 7 % for allocation heavy code in a
+      test: where the file lies in the page cache). Every benchmark is therefore run from 4 copies of the base and 4
+      copies of the pull request binary. Their spread is the layout noise and widens the interval.
+    - **Interleaved and pinned.** Every round runs all copies in a random order on one CPU, without address space
+      randomisation, with an empty environment and from paths of the same length.
+    - **An interval, not a number.** The change is the median of the paired ratios with a 95 % bootstrap interval over
+      the rounds, plus the layout noise.
+    - **A clear criterion.** A regression needs the whole interval above the threshold (10 %). It is then measured again
+      with more rounds, and only that second measurement decides. If the layout noise alone exceeds the threshold the
+      benchmark is shown as noisy (⚠️) and not judged. Loops shorter than 5 ms are listed, not timed.
+
+.. code:: bash
+
+    $ python3 scripts/perf_timing.py build-pr/benchmarks/perf build-base/benchmarks/perf    # needs libperf_timer.so there
+    $ python3 scripts/perf_timing.py PR BASE --threshold 5 --rounds 21 --copies 6 --report-only
+
+Comparing a build with a copy of itself is the way to see the noise of a machine: it must report no regression, and a
+benchmark the script cannot judge shows up as noisy. If the check ever fails without a change of yours, run the
+benchmark again in the job log; to only report, add ``--report-only`` to the step in ``perf.yml``.
 
 ****************
 Caches and speed

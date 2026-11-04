@@ -1,2 +1,0 @@
-- Keep PQ Bot draft publication successful when GitHub cannot add the invoking user as reviewer.
-- Restore GitHub Pages deployment from its fresh publish runner.

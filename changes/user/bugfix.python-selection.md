@@ -1,1 +1,0 @@
-- Fix atom selections through PQAnalysis (e.g. `inner_region_center = res(LIG)`) crashing PQ, and a second selection failing after the first.

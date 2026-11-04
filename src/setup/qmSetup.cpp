@@ -51,8 +51,6 @@ namespace setup
      * @brief wrapper to build QMSetup object and call setup
      *
      * @param engine
-     * @param references Reference settings object used to manage and add
-     * necessary reference files for the specified QM method.
      */
     void setupQM(engine::Engine &engine)
     {
@@ -254,7 +252,7 @@ namespace setup
             logOutput.writeSetupInfo(dispersionMsg);
             logOutput.writeSetupInfo(thirdOrderMsg);
 
-            if (qmSettings.isHubbardDerivsSet())
+            if (qmSettings.isHubbardDerivsUserSet())
             {
                 const auto hubbardDerivsMsg = std::format(
                     "Hubbard derivatives:  {}",
@@ -272,7 +270,7 @@ namespace setup
             }
 
             if (slakosType == SlakosType::THREEOB &&
-                qmSettings.isHubbardDerivsSet())
+                qmSettings.isHubbardDerivsUserSet())
             {
                 logOutput.writeEmptyLine();
                 logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);

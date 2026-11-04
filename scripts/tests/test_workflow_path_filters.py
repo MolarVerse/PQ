@@ -22,5 +22,25 @@ class PathFilterTests(unittest.TestCase):
         self.assertGreater(checked, 0)
 
 
+class LintWorkflowTests(unittest.TestCase):
+    def lint_condition(self):
+        text = (WORKFLOWS / "lint.yml").read_text()
+        match = re.search(r"^  lint:\n(?:.*\n)*?    if: >-\n((?:      .*\n)+)", text, re.MULTILINE)
+        self.assertIsNotNone(match, "the lint job has no multi-line if")
+        return " ".join(match.group(1).split())
+
+    def test_lint_is_skipped_for_release_pull_requests_and_pushes_to_main(self):
+        # such a run lints every file of the release (812 for 1.0.0), serially,
+        # and was killed after half an hour
+        condition = self.lint_condition()
+        self.assertIn("needs.changes.outputs.relevant == 'true'", condition)
+        self.assertIn("!(github.event_name == 'push' && github.ref == 'refs/heads/main')", condition)
+        self.assertIn("!(github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/'))", condition)
+
+    def test_the_lint_gate_still_passes_when_lint_is_skipped(self):
+        text = (WORKFLOWS / "lint.yml").read_text()
+        self.assertIn('if [[ "${{ needs.lint.result }}" == "failure" ]]', text)
+
+
 if __name__ == "__main__":
     unittest.main()

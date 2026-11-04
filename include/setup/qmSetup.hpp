@@ -31,6 +31,8 @@ namespace engine
     class QMMDEngine;   // forward declaration
 }   // namespace engine
 
+class ReferenceSettings;
+
 namespace setup
 {
     void setupQM(engine::Engine &);

@@ -1,1 +1,0 @@
-- Fix QM timeouts of ASE calculations aborting PQ; the Python calculation is now interrupted and a regular error is raised.

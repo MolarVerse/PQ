@@ -1,1 +1,0 @@
-- Perf gate: add scaling benchmarks (cell list update and inter-water forces for 216, 512 and 1728 waters) and show the scaling exponent of such size series in the performance comment.

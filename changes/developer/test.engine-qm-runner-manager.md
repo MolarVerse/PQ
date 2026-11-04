@@ -1,1 +1,0 @@
-- Add unit tests for QMRunnerManager (runner per method, missing qm_prog, ASE disabled) and for OptEngine::throwOnFailure, which HessianEngine now shares.

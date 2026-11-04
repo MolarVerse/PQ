@@ -1,8 +1,0 @@
-- add explicit path filtering via filters in CI to make them checkable in rulesets
-- add CI to check if a pull request has a linked issue
-- add mentioned issues in PR title or description as a linked issue
-- add 0.5% threshold for test coverage
-- fix CI issue if special characters like backticks are present in PR title
-- make all compiler warnings as errors
-- add a new `NEXT` branch for future feature development that should not be in released in the next version (feature branch). Additionally, add a CI to automatically merge dev into NEXT daily to keep it in sync
-- install `tqdm` for lint CI for clangd-tidy

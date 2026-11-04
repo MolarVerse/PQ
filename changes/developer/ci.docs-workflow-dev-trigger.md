@@ -1,1 +1,0 @@
-- Run the Docs workflow on pull requests to `dev` and configure it without ASE and tests.

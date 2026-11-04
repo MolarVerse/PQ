@@ -144,6 +144,7 @@ class QMSettings
     [[nodiscard]]
     std::unordered_map<std::string, double> getHubbardDerivs() const;
     [[nodiscard]] bool                      isHubbardDerivsSet() const;
+    [[nodiscard]] bool                      isHubbardDerivsUserSet() const;
 
     [[nodiscard]] XtbMethod getXtbMethod() const;
 

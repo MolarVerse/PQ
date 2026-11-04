@@ -105,6 +105,10 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
         _settings = std::make_unique<Settings>();
         _settings->outputFiles.setFilePrefix(PREFIX);
         _settings->outputFiles.setOutputFrequency(1);
+        // Settings::finalize() finalizes QMSettings whenever a QM jobtype is
+        // active, which requires a QM method to be set, even though this
+        // fixture never invokes a QM runner.
+        _settings->qmSettings.setQMMethod(QMMethod::ASE_DFTBPLUS);
         _settings->finalize();
 
         _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);

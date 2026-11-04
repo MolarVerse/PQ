@@ -1,1 +1,0 @@
-- Cache the clang-20/libclang-rt-20-dev/g++-14 apt install in the DevOps C++ Check workflow via `awalsh128/cache-apt-pkgs-action`, instead of a plain `apt-get install`, to avoid re-downloading and unpacking the full clang/llvm toolchain on every run.

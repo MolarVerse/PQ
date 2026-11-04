@@ -1,1 +1,0 @@
-- Build the four-way CI build matrix with Ninja instead of Make (including the coverage build), so these jobs also record .ninja_log and include graph summaries for the CI metrics.

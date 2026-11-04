@@ -114,9 +114,14 @@ endforeach()
 
 # allocation counter: preloaded by scripts/perf_gate.sh in a plain run of every
 # benchmark (not linked into them). Linux/glibc only.
+# The same holds for the timer of scripts/perf_timing.py.
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_library(perf_alloc_counter SHARED allocCounter/perfAllocCounter.cpp)
     list(APPEND perf_targets perf_alloc_counter)
+
+    # timer: preloaded by scripts/perf_timing.py, measures the measured loop
+    add_library(perf_timer SHARED timer/perfTimer.cpp)
+    list(APPEND perf_targets perf_timer)
 endif()
 
 # aggregate target so CI can build every benchmark with one command

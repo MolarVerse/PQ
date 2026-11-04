@@ -1,1 +1,0 @@
-- Fix the per-configuration QM charge reset in exact smoothing, which reset a copy and had no effect.

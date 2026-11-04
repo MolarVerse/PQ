@@ -1,2 +1,0 @@
-- remove some member variables of `Molecule` that are very cheap to recompute
-- introduce exceptions if some variables were forgot to set in the code to not get UB

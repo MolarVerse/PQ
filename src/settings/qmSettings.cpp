@@ -239,7 +239,7 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
 
         case THREEOB:
             if (!_hubbardDerivs.isSet())
-                _hubbardDerivs.set(hubbardDerivMap3ob);
+                _hubbardDerivs.setBySystem(hubbardDerivMap3ob);
             [[fallthrough]];
         case MATSCI:
             if (resolveBuiltInPath)
@@ -473,11 +473,23 @@ bool QMSettings::isThirdOrderDftbSet() const
 }
 
 /**
- * @brief returns if the Hubbard derivatives are set by the user
+ * @brief returns if the Hubbard derivatives have a value, either a built-in
+ * default or a user-provided one
  *
  * @return bool
  */
 bool QMSettings::isHubbardDerivsSet() const { return _hubbardDerivs.isSet(); }
+
+/**
+ * @brief returns if the Hubbard derivatives were explicitly set by the user,
+ * as opposed to being filled in with the built-in 3ob default
+ *
+ * @return bool
+ */
+bool QMSettings::isHubbardDerivsUserSet() const
+{
+    return _hubbardDerivs.isSetByUser();
+}
 
 /**
  * @brief returns the Hubbard Derivative dictionary

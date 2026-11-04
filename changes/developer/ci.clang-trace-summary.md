@@ -1,1 +1,0 @@
-- Summarise the clang `-ftime-trace` output of the clang job (totals, slowest files, heaviest headers and templates by self time) into the build-timings artifact, together with the raw traces of the slowest files.

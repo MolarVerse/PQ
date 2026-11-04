@@ -1,1 +1,0 @@
-- Cache and shallow-clone Eigen in the Docs validate job, like other CI workflows already do, instead of letting CMake's FetchContent hit gitlab.com fresh on every run; fixes frequent clone failures in that job.

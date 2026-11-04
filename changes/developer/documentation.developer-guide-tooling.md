@@ -1,1 +1,0 @@
-- Extend the developer guide with pages on the CI workflows, the static checks, the CI metrics, the local build-time and code-statistics tools, the CMake options and the branch and release process; correct the clang-format version note.

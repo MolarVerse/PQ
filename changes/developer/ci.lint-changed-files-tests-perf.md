@@ -1,1 +1,0 @@
-- Restrict CI clangd-tidy to files changed in the PR instead of every file under src/apps/include, and build with tests and both benchmark suites enabled so a changed test or benchmark file is compiled and linted too (issue #620).
