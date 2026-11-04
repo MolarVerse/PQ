@@ -82,81 +82,81 @@ void OutputFileSettings::setFilePrefixByUser(const std::string& prefix)
  */
 void OutputFileSettings::_replaceDefaultValues(const std::string& prefix)
 {
-    if (_rstFile.isSetByUser())
+    if (!_rstFile.isSetByUser())
         _rstFile.setBySystem(prefix + ".rst");
 
-    if (_logFile.isSetByUser())
+    if (!_logFile.isSetByUser())
         _logFile.setBySystem(prefix + ".log");
 
-    if (_refFile.isSetByUser())
+    if (!_refFile.isSetByUser())
         _refFile.setBySystem(prefix + ".ref");
 
-    if (_trajFile.isSetByUser())
+    if (!_trajFile.isSetByUser())
         _trajFile.setBySystem(prefix + ".xyz");
 
-    if (_hybridCenterFile.isSetByUser())
+    if (!_hybridCenterFile.isSetByUser())
         _hybridCenterFile.setBySystem(prefix + ".center.xyz");
 
-    if (_energyFile.isSetByUser())
+    if (!_energyFile.isSetByUser())
         _energyFile.setBySystem(prefix + ".en");
 
-    if (_instEnFile.isSetByUser())
+    if (!_instEnFile.isSetByUser())
         _instEnFile.setBySystem(prefix + ".instant_en");
 
-    if (_forceFile.isSetByUser())
+    if (!_forceFile.isSetByUser())
         _forceFile.setBySystem(prefix + ".force");
 
-    if (_velFile.isSetByUser())
+    if (!_velFile.isSetByUser())
         _velFile.setBySystem(prefix + ".vel");
 
-    if (_chargeFile.isSetByUser())
+    if (!_chargeFile.isSetByUser())
         _chargeFile.setBySystem(prefix + ".chrg");
 
-    if (_infoFile.isSetByUser())
+    if (!_infoFile.isSetByUser())
         _infoFile.setBySystem(prefix + ".info");
 
-    if (_momFile.isSetByUser())
+    if (!_momFile.isSetByUser())
         _momFile.setBySystem(prefix + ".mom");
 
-    if (_virialFile.isSetByUser())
+    if (!_virialFile.isSetByUser())
         _virialFile.setBySystem(prefix + ".vir");
 
-    if (_stressFile.isSetByUser())
+    if (!_stressFile.isSetByUser())
         _stressFile.setBySystem(prefix + ".stress");
 
-    if (_boxFile.isSetByUser())
+    if (!_boxFile.isSetByUser())
         _boxFile.setBySystem(prefix + ".box");
 
-    if (_optFile.isSetByUser())
+    if (!_optFile.isSetByUser())
         _optFile.setBySystem(prefix + ".opt");
 
     /*****************************
      * ring polymer output files *
      *****************************/
 
-    if (_rpmdRstFile.isSetByUser())
+    if (!_rpmdRstFile.isSetByUser())
         _rpmdRstFile.setBySystem(prefix + ".rpmd.rst");
 
-    if (_rpmdTrajFile.isSetByUser())
+    if (!_rpmdTrajFile.isSetByUser())
         _rpmdTrajFile.setBySystem(prefix + ".rpmd.xyz");
 
-    if (_rpmdVelFile.isSetByUser())
+    if (!_rpmdVelFile.isSetByUser())
         _rpmdVelFile.setBySystem(prefix + ".rpmd.vel");
 
-    if (_rpmdForceFile.isSetByUser())
+    if (!_rpmdForceFile.isSetByUser())
         _rpmdForceFile.setBySystem(prefix + ".rpmd.force");
 
-    if (_rpmdChargeFile.isSetByUser())
+    if (!_rpmdChargeFile.isSetByUser())
         _rpmdChargeFile.setBySystem(prefix + ".rpmd.chrg");
 
-    if (_rpmdEnergyFile.isSetByUser())
+    if (!_rpmdEnergyFile.isSetByUser())
         _rpmdEnergyFile.setBySystem(prefix + ".rpmd.en");
 
     /********************
      * the timings file *
      ********************/
 
-    if (_timeFile.isSetByUser())
+    if (!_timeFile.isSetByUser())
         _timeFile.setBySystem(prefix + ".timings");
 }
 

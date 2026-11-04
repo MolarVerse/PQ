@@ -142,3 +142,51 @@ TEST(ConstraintSettingsTest, FinalizeAddsRattleReferenceForExplicitShake)
         ReferenceFiles::RATTLE_FILE
     ));
 }
+
+/**
+ * @brief finalize() must not re-activate shake for a rigid water model if
+ * the user has explicitly deactivated it - an explicit user choice always
+ * takes precedence over the water-model-driven system default.
+ */
+TEST(ConstraintSettingsTest, FinalizeDoesNotOverrideExplicitShakeDeactivation)
+{
+    ConstraintSettings settings;
+    settings.deactivateShakeByUser();
+
+    WaterModelSettings waterModelSettings;
+    waterModelSettings.setWaterIntraModelByUser(WaterIntraModel::SPC);
+    ASSERT_TRUE(waterModelSettings.getRigidWaterGeometry().has_value());
+
+    ReferenceSettings referenceSettings;
+    settings.finalize(referenceSettings, waterModelSettings);
+
+    EXPECT_FALSE(settings.isShakeActivated());
+    EXPECT_FALSE(settings.isShakeSetBySystem());
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().empty());
+}
+
+/**
+ * @brief isShakeSetBySystem() must distinguish shake activated only as a
+ * side effect of a rigid water model from shake activated explicitly by
+ * the user, since that distinction decides whether a topology file is
+ * still required (see input::topology::isNeeded()).
+ */
+TEST(ConstraintSettingsTest, IsShakeSetBySystemReflectsActivationSource)
+{
+    ConstraintSettings systemActivated;
+    WaterModelSettings waterModelSettings;
+    waterModelSettings.setWaterIntraModelByUser(WaterIntraModel::SPC);
+
+    ReferenceSettings referenceSettings;
+    systemActivated.finalize(referenceSettings, waterModelSettings);
+
+    EXPECT_TRUE(systemActivated.isShakeActivated());
+    EXPECT_TRUE(systemActivated.isShakeSetBySystem());
+
+    ConstraintSettings userActivated;
+    userActivated.activateShakeByUser();
+    userActivated.finalize(referenceSettings, waterModelSettings);
+
+    EXPECT_TRUE(userActivated.isShakeActivated());
+    EXPECT_FALSE(userActivated.isShakeSetBySystem());
+}

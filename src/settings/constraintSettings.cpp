@@ -69,9 +69,9 @@ void ConstraintSettings::finalize(
  *
  * @return true if shake is only active for the water model
  */
-bool ConstraintSettings::isShakeOnlyWaterModel() const
+bool ConstraintSettings::isShakeSetBySystem() const
 {
-    return _shakeOnlyWaterModel;
+    return _shakeActive.isSetBySystem();
 }
 
 /**
@@ -80,10 +80,8 @@ bool ConstraintSettings::isShakeOnlyWaterModel() const
  */
 void ConstraintSettings::activateShakeForWaterModel()
 {
-    if (!_shakeActive.get())
-        _shakeOnlyWaterModel = true;
-
-    _shakeActive.setBySystem(true);
+    if (!_shakeActive.isSetByUser() && !_shakeActive.get())
+        _shakeActive.setBySystem(true);
 }
 
 /**
