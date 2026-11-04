@@ -112,5 +112,8 @@ TEST(TestOutputSettings, preservesUserSetHybridCenterFilenameEqualToDefault)
     settings.setHybridCenterFileNameByUser(DefaultFiles::hybridCenterFile);
     TestOutputFileSettings::replaceDefaultValues(settings, "centerPrefix");
 
-    EXPECT_EQ(settings.getHybridCenterFileName(), DefaultFiles::hybridCenterFile);
+    EXPECT_EQ(
+        settings.getHybridCenterFileName(),
+        DefaultFiles::hybridCenterFile
+    );
 }
