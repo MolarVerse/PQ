@@ -46,6 +46,9 @@ Workflows
       - pull requests (any base branch), pushes to ``dev``, ``main`` and ``NEXT``, manual
       - ``clangd-tidy`` on the changed C++ files (``scripts/clang_tidy.sh``). The job builds the project first,
         tolerating compile errors, only to get a compile database.
+        It is skipped for release pull requests (``release/*``) and for pushes to ``main``: these contain every change
+        since the last release, which was linted on its ``dev`` pull requests, and one serial run over 800 files does
+        not finish. A hotfix is linted on its own pull request.
     * - DevOps C++ Check
       - ``devops_cpp_check.yml``
       - pull requests to ``main``, ``dev`` and ``NEXT``, manual

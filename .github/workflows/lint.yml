@@ -49,7 +49,15 @@ jobs:
 
   lint:
     needs: changes
-    if: needs.changes.outputs.relevant == 'true'
+    # Not for a release pull request or the push of its merge to main: they
+    # contain everything changed since the last release (800+ files, run one
+    # after the other), which was already linted on its dev pull requests, and
+    # the run was killed after half an hour. A hotfix is linted on its own pull
+    # request.
+    if: >-
+      needs.changes.outputs.relevant == 'true' &&
+      !(github.event_name == 'push' && github.ref == 'refs/heads/main') &&
+      !(github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-24.04
 
     steps:
