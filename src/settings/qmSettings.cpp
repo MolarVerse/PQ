@@ -22,6 +22,7 @@
 
 #include "qmSettings.hpp"
 
+#include <algorithm>
 #include <filesystem>
 #include <format>
 #include <utility>
@@ -29,6 +30,7 @@
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "executablePath.hpp"
+#include "stringUtilities.hpp"
 
 namespace settings
 {
@@ -353,6 +355,30 @@ namespace settings
     MaceModel QMSettings::getMaceModel() { return _maceModel; }
 
     MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
+
+    /**
+     * @brief returns the maceModel as expected by mace.calculators
+     *
+     * @return std::string e.g. "small-0b"
+     */
+    std::string QMSettings::getMaceModelName()
+    {
+        auto name = utilities::toLowerCopy(MaceModelMeta::toString(_maceModel));
+        std::ranges::replace(name, '_', '-');
+        return name;
+    }
+
+    /**
+     * @brief returns the maceModelType as calculator name in mace.calculators
+     *
+     * @return std::string e.g. "mace_off"
+     */
+    std::string QMSettings::getMaceModelTypeName()
+    {
+        return utilities::toLowerCopy(
+            MaceModelTypeMeta::toString(_maceModelType)
+        );
+    }
 
     /**
      * @brief returns the maceMode
