@@ -43,12 +43,19 @@ pytestmark = pytest.mark.skipif(
     ["mace/"],
     indirect=False
 )
-def test_mace(test_with_data_dir):
+@pytest.mark.parametrize(
+    "input_file, base_name",
+    [
+        ("run-01.in", "malondialdehyde-md-01"),  # mace_off
+        ("run-02.in", "malondialdehyde-md-02"),  # mace_mp
+    ],
+)
+def test_mace(test_with_data_dir, input_file, base_name):
     print("Current directory: ", os.getcwd())
     print("List of files in current directory: ", os.listdir(os.getcwd()))
 
-    stdout, stderr = execute_pq("run-01.in")
+    stdout, stderr = execute_pq(input_file)
 
     assert stderr == b""
 
-    check_pq_output("malondialdehyde-md-01", "mace")
+    check_pq_output(base_name, "mace")
