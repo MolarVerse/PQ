@@ -23,7 +23,7 @@ Create a hotfix branch, make the correction and open its PR:
    git commit -m "fix: describe the correction"
    git push -u origin hotfix/short-description
    gh pr create --repo MolarVerse/PQ --base main \
-     --head hotfix/short-description --title "fix: describe the correction"
+     --head hotfix/short-description --title "Hotfix-X.Y.Z: describe the correction"
 
 Retry publication of a prepared, merged release:
 

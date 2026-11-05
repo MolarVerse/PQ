@@ -1,0 +1,1 @@
+- Fix MACE runs failing at startup with `module 'mace.calculators' has no attribute 'MACE_OFF'`; PQ again passes the MACE calculator and model names (e.g. `mace_off`, `small-0b`).

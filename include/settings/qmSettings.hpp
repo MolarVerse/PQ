@@ -117,6 +117,8 @@ namespace settings
         [[nodiscard]] static MaceModelType getMaceModelType();
         [[nodiscard]] static MaceMode      getMaceMode();
         [[nodiscard]] static std::string   getMaceModelPath();
+        [[nodiscard]] static std::string   getMaceModelName();
+        [[nodiscard]] static std::string   getMaceModelTypeName();
 
         [[nodiscard]] static std::string getQMScript();
         [[nodiscard]] static std::string getQMScriptFullPath();

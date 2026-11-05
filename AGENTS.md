@@ -18,7 +18,7 @@ The project uses the **git-flow** branching model: `main` is the stable/release 
 
 1. **Never push directly to `main` or `dev`.** These are protected branches.
 2. **Always create a feature/bugfix branch from `dev`** for any change (git-flow: `git flow feature start <name>`, or plain `git checkout -b feature/<name> dev`).
-3. **Open pull requests targeting `dev`**, not `main`, unless explicitly instructed otherwise. Only release PRs go from `dev` to `main`, and those must contain `Release-x.y.z` in the title or body (enforced by CI).
+3. **Open pull requests targeting `dev`**, not `main`, unless explicitly instructed otherwise. Only release PRs go from `dev` to `main`, and those must contain `Release-x.y.z` in the title or body (enforced by CI). Hotfix PRs go from `hotfix/<name>` (branched from `main`) to `main` with a title starting `Hotfix-x.y.z`, the next patch version.
 4. Branch naming convention: `feature/<short-description>` or `bugfix/<short-description>`.
 5. **Always `git checkout dev` and `git pull` to update local `dev` before creating any new branch.**
 6. **Never amend or force-push** to shared branches.
