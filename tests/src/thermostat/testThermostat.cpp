@@ -36,6 +36,7 @@
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 #include "velocityRescalingThermostat.hpp"
 
 TEST_F(TestThermostat, calculateTemperature)
@@ -128,7 +129,7 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
 {
     _thermostat =
         std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     const auto mol1                = _simulationBox->getMolecule(0);
     const auto velocity_mol1_atom1 = mol1.getAtomVelocity(AtomIndex{0});
@@ -185,7 +186,7 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(300.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
@@ -204,7 +205,7 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(0.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
@@ -221,7 +222,7 @@ TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 {
     _thermostat =
         std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
@@ -238,7 +239,7 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(0.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
@@ -255,7 +256,7 @@ TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(300.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
@@ -293,7 +294,7 @@ TEST_F(TestThermostat, berendsenRejectsRelaxationTimeShorterThanTimestep)
         0.5 * _data->getTemperature(),
         0.01
     );
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     EXPECT_THROW_MSG(
         _thermostat->applyThermostat(*_simulationBox, *_data),
@@ -307,7 +308,7 @@ TEST_F(TestThermostat, berendsenRejectsRelaxationTimeJustBelowTimestep)
 {
     _thermostat =
         std::make_unique<thermostat::BerendsenThermostat>(300.0, 0.09);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     EXPECT_THROW_MSG(
         _thermostat->applyThermostat(*_simulationBox, *_data),
@@ -321,7 +322,7 @@ TEST_F(TestThermostat, berendsenRelaxationTimeEqualToTimestepStaysFinite)
 {
     _data->calculateTemperature(*_simulationBox);
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(0.0, 0.1);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
@@ -333,7 +334,7 @@ TEST_F(TestThermostat, berendsenNearZeroTemperatureStaysFinite)
 {
     _thermostat =
         std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({1e-12, 0.0, 0.0});
@@ -348,7 +349,7 @@ TEST_F(TestThermostat, velocityRescalingRejectsZeroDegreesOfFreedom)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(300.0, 100.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
     _simulationBox->setDegreesOfFreedom(0);
 
     EXPECT_THROW_MSG(
@@ -366,7 +367,7 @@ TEST_F(TestThermostat, velocityRescalingRelaxationTimeShorterThanTimestep)
         0.5 * _data->getTemperature(),
         0.01
     );
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
@@ -394,7 +395,7 @@ namespace
 TEST_F(TestThermostat, noseHooverRejectsZeroTargetTemperature)
 {
     auto thermostat = noseHoover(0.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     EXPECT_THROW_MSG(
         thermostat.applyThermostat(*_simulationBox, *_data),
@@ -417,7 +418,7 @@ TEST_F(TestThermostat, noseHooverForcesRejectZeroTargetTemperature)
 TEST_F(TestThermostat, noseHooverRejectsZeroDegreesOfFreedom)
 {
     auto thermostat = noseHoover(300.0);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
     _simulationBox->setDegreesOfFreedom(0);
 
     EXPECT_THROW_MSG(
@@ -437,7 +438,7 @@ TEST_F(TestThermostat, noseHooverRejectsZeroDegreesOfFreedom)
 TEST_F(TestThermostat, noseHooverTinyPositiveTargetTemperatureStaysFinite)
 {
     auto thermostat = noseHoover(1e-6);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     thermostat.applyThermostat(*_simulationBox, *_data);
 
@@ -448,7 +449,7 @@ TEST_F(TestThermostat, noseHooverTinyPositiveTargetTemperatureStaysFinite)
 TEST_F(TestThermostat, langevinTinyTimestepSigmaStaysFinite)
 {
     const auto previousTimeStep = settings::TimingsSettings::getTimeStep();
-    settings::TimingsSettings::setTimeStep(1e-12);
+    settings::TimingsSettings::setTimeStep(1e-12 * fs);
     const auto thermostat = thermostat::LangevinThermostat(300.0, 0.01);
     settings::TimingsSettings::setTimeStep(previousTimeStep);
 
@@ -488,7 +489,7 @@ TEST_F(TestThermostat, langevinSettersAndGetters)
 TEST_F(TestThermostat, langevinSetTargetTemperatureRecomputesSigma)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaAt300 = langevin.getSigma();
 
     langevin.setTargetTemperature(600.0);
@@ -503,7 +504,7 @@ TEST_F(TestThermostat, langevinSetTargetTemperatureRecomputesSigma)
 TEST_F(TestThermostat, langevinSetFrictionRecomputesSigma)
 {
     auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaAtFrictionPointOne = langevin.getSigma();
 
     langevin.setFriction(0.5);
@@ -569,7 +570,7 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
         std::vector<double>{0.0, 0.0, 0.0},
         1.0
     );
-    settings::TimingsSettings::setTimeStep(0.1);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     thermostat.applyThermostatOnForces(*_simulationBox);
     for (const auto &atom : _simulationBox->getAtoms())

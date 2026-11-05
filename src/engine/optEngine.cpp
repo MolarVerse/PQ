@@ -241,7 +241,7 @@ namespace engine
                 getAveragePhysicalData(),
                 getSettings()
             );
-            getEngineOutput().writeInfoFile(
+            getEngineOutput().getInfoOutput().write(
                 effStepDouble,
                 getAveragePhysicalData(),
                 getSettings()

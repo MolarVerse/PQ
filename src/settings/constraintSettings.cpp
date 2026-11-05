@@ -69,9 +69,9 @@ void ConstraintSettings::finalize(
  *
  * @return true if shake is only active for the water model
  */
-bool ConstraintSettings::isShakeOnlyWaterModel() const
+bool ConstraintSettings::isShakeSetBySystem() const
 {
-    return _shakeOnlyWaterModel;
+    return _shakeActive.isSetBySystem();
 }
 
 /**
@@ -80,10 +80,8 @@ bool ConstraintSettings::isShakeOnlyWaterModel() const
  */
 void ConstraintSettings::activateShakeForWaterModel()
 {
-    if (!_shakeActive.get())
-        _shakeOnlyWaterModel = true;
-
-    _shakeActive.set(true);
+    if (!_shakeActive.isSetByUser() && !_shakeActive.get())
+        _shakeActive.setBySystem(true);
 }
 
 /**
@@ -118,42 +116,51 @@ bool ConstraintSettings::isShakeLikeActive() const
  * @brief activate the shake algorithm
  *
  */
-void ConstraintSettings::activateShake() { _shakeActive.set(true); }
+void ConstraintSettings::activateShakeByUser() { _shakeActive.setByUser(true); }
 
 /**
  * @brief deactivate the shake algorithm
  *
  */
-void ConstraintSettings::deactivateShake() { _shakeActive.set(false); }
+void ConstraintSettings::deactivateShakeByUser()
+{
+    _shakeActive.setByUser(false);
+}
 
 /**
  * @brief activate the M-shake algorithm
  *
  */
-void ConstraintSettings::activateMShake() { _mShakeActive.set(true); }
+void ConstraintSettings::activateMShakeByUser()
+{
+    _mShakeActive.setByUser(true);
+}
 
 /**
  * @brief deactivate the M-shake algorithm
  *
  */
-void ConstraintSettings::deactivateMShake() { _mShakeActive.set(false); }
+void ConstraintSettings::deactivateMShakeByUser()
+{
+    _mShakeActive.setByUser(false);
+}
 
 /**
  * @brief activate the distance constraints
  *
  */
-void ConstraintSettings::activateDistanceConstraints()
+void ConstraintSettings::activateDistanceConstraintsByUser()
 {
-    _distanceConstsActive.set(true);
+    _distanceConstsActive.setByUser(true);
 }
 
 /**
  * @brief deactivate the distance constraints
  *
  */
-void ConstraintSettings::deactivateDistanceConstraints()
+void ConstraintSettings::deactivateDistanceConstraintsByUser()
 {
-    _distanceConstsActive.set(false);
+    _distanceConstsActive.setByUser(false);
 }
 
 /*****************************
@@ -167,7 +174,10 @@ void ConstraintSettings::deactivateDistanceConstraints()
  *
  * @return true if shake is activated
  */
-bool ConstraintSettings::isShakeActivated() const { return _shakeActive.get(); }
+bool ConstraintSettings::isShakeActivated() const
+{
+    return _shakeActive.isSetBySomeone() && _shakeActive.get();
+}
 
 /**
  * @brief check if the M-shake algorithm is activated
@@ -176,7 +186,7 @@ bool ConstraintSettings::isShakeActivated() const { return _shakeActive.get(); }
  */
 bool ConstraintSettings::isMShakeActivated() const
 {
-    return _mShakeActive.get();
+    return _mShakeActive.isSetBySomeone() && _mShakeActive.get();
 }
 
 /**
@@ -186,7 +196,8 @@ bool ConstraintSettings::isMShakeActivated() const
  */
 bool ConstraintSettings::isDistanceConstraintsActivated() const
 {
-    return _distanceConstsActive.get();
+    return _distanceConstsActive.isSetBySomeone() &&
+           _distanceConstsActive.get();
 }
 
 /**
@@ -260,9 +271,9 @@ double ConstraintSettings::getMShakeTolerance() const
  *
  * @param shakeMaxIter
  */
-void ConstraintSettings::setShakeMaxIter(size_t shakeMaxIter)
+void ConstraintSettings::setShakeMaxIterByUser(size_t shakeMaxIter)
 {
-    _shakeMaxIter.set(shakeMaxIter);
+    _shakeMaxIter.setByUser(shakeMaxIter);
 }
 
 /**
@@ -270,9 +281,9 @@ void ConstraintSettings::setShakeMaxIter(size_t shakeMaxIter)
  *
  * @param rattleMaxIter
  */
-void ConstraintSettings::setRattleMaxIter(size_t rattleMaxIter)
+void ConstraintSettings::setRattleMaxIterByUser(size_t rattleMaxIter)
 {
-    _rattleMaxIter.set(rattleMaxIter);
+    _rattleMaxIter.setByUser(rattleMaxIter);
 }
 
 /**
@@ -280,9 +291,9 @@ void ConstraintSettings::setRattleMaxIter(size_t rattleMaxIter)
  *
  * @param mshakeMaxIter
  */
-void ConstraintSettings::setMShakeMaxIter(size_t mshakeMaxIter)
+void ConstraintSettings::setMShakeMaxIterByUser(size_t mshakeMaxIter)
 {
-    _mshakeMaxIter.set(mshakeMaxIter);
+    _mshakeMaxIter.setByUser(mshakeMaxIter);
 }
 
 /**
@@ -290,9 +301,9 @@ void ConstraintSettings::setMShakeMaxIter(size_t mshakeMaxIter)
  *
  * @param shakeTolerance
  */
-void ConstraintSettings::setShakeTolerance(double shakeTolerance)
+void ConstraintSettings::setShakeToleranceByUser(double shakeTolerance)
 {
-    _shakeTolerance.set(shakeTolerance);
+    _shakeTolerance.setByUser(shakeTolerance);
 }
 
 /**
@@ -300,9 +311,9 @@ void ConstraintSettings::setShakeTolerance(double shakeTolerance)
  *
  * @param rattleTolerance
  */
-void ConstraintSettings::setRattleTolerance(double rattleTolerance)
+void ConstraintSettings::setRattleToleranceByUser(double rattleTolerance)
 {
-    _rattleTolerance.set(rattleTolerance);
+    _rattleTolerance.setByUser(rattleTolerance);
 }
 
 /**
@@ -310,7 +321,7 @@ void ConstraintSettings::setRattleTolerance(double rattleTolerance)
  *
  * @param mshakeTolerance
  */
-void ConstraintSettings::setMShakeTolerance(double mshakeTolerance)
+void ConstraintSettings::setMShakeToleranceByUser(double mshakeTolerance)
 {
-    _mshakeTolerance.set(mshakeTolerance);
+    _mshakeTolerance.setByUser(mshakeTolerance);
 }

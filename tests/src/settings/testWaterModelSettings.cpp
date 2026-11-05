@@ -31,16 +31,16 @@
 TEST(TestWaterModelSettings, FlagsAndEnumSettersRoundTrip)
 {
     WaterModelSettings settings;
-    EXPECT_FALSE(settings.isWaterModelSet());
-    EXPECT_FALSE(settings.isInterWaterModelSet());
+    EXPECT_FALSE(settings.isWaterModelSetAndNotNone());
+    EXPECT_FALSE(settings.isInterWaterModelSetAndNotNone());
 
-    settings.setWaterIntraModel(WaterIntraModel::SPC);
-    settings.setWaterInterModel(WaterInterModel::NONE);
+    settings.setWaterIntraModelByUser(WaterIntraModel::SPC);
+    settings.setWaterInterModelByUser(WaterInterModel::NONE);
     EXPECT_EQ(settings.getWaterIntraModel(), WaterIntraModel::SPC);
     EXPECT_EQ(settings.getWaterInterModel(), WaterInterModel::NONE);
 
-    EXPECT_TRUE(settings.isWaterModelSet());
-    EXPECT_TRUE(settings.isInterWaterModelSet());
+    EXPECT_TRUE(settings.isWaterModelSetAndNotNone());
+    EXPECT_FALSE(settings.isInterWaterModelSetAndNotNone());
 }
 
 TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
@@ -103,7 +103,7 @@ TEST(TestWaterModelSettings, IntraModelNamesRoundTrip)
     for (const auto &testCase : cases)
     {
         WaterModelSettings settings;
-        settings.setWaterIntraModel(testCase.model);
+        settings.setWaterIntraModelByUser(testCase.model);
         EXPECT_EQ(settings.getWaterIntraModel(), testCase.model);
         EXPECT_EQ(
             WaterIntraModelMeta::toString(testCase.model),
@@ -180,7 +180,7 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
     for (const auto &testCase : cases)
     {
         WaterModelSettings settings;
-        settings.setWaterInterModel(testCase.model);
+        settings.setWaterInterModelByUser(testCase.model);
         EXPECT_EQ(settings.getWaterInterModel(), testCase.model);
         EXPECT_EQ(
             WaterInterModelMeta::toString(testCase.model),
@@ -201,9 +201,9 @@ TEST(TestWaterModelSettings, InterModelNamesRoundTrip)
 TEST(TestWaterModelSettings, FinalizeAddsIntraModelReferenceWithoutInterModel)
 {
     WaterModelSettings settings;
-    settings.setWaterIntraModel(WaterIntraModel::SPC_FW);
-    ASSERT_TRUE(settings.isWaterModelSet());
-    ASSERT_FALSE(settings.isInterWaterModelSet());
+    settings.setWaterIntraModelByUser(WaterIntraModel::SPC_FW);
+    ASSERT_TRUE(settings.isWaterModelSetAndNotNone());
+    ASSERT_FALSE(settings.isInterWaterModelSetAndNotNone());
 
     ReferenceSettings referenceSettings;
     settings.finalize(referenceSettings);
@@ -220,8 +220,8 @@ TEST(TestWaterModelSettings, FinalizeAddsIntraModelReferenceWithoutInterModel)
 TEST(TestWaterModelSettings, FinalizeAddsInterModelReferenceWithoutIntraModel)
 {
     WaterModelSettings settings;
-    settings.setWaterInterModel(WaterInterModel::TIP3P);
-    ASSERT_TRUE(settings.isInterWaterModelSet());
+    settings.setWaterInterModelByUser(WaterInterModel::TIP3P);
+    ASSERT_TRUE(settings.isInterWaterModelSetAndNotNone());
 
     ReferenceSettings referenceSettings;
     settings.finalize(referenceSettings);
@@ -238,8 +238,8 @@ TEST(TestWaterModelSettings, FinalizeAddsInterModelReferenceWithoutIntraModel)
 TEST(TestWaterModelSettings, FinalizeAddsBothReferencesWhenBothModelsSet)
 {
     WaterModelSettings settings;
-    settings.setWaterIntraModel(WaterIntraModel::SPC_MTR);
-    settings.setWaterInterModel(WaterInterModel::TIP3P_MTR);
+    settings.setWaterIntraModelByUser(WaterIntraModel::SPC_MTR);
+    settings.setWaterInterModelByUser(WaterInterModel::TIP3P_MTR);
 
     ReferenceSettings referenceSettings;
     settings.finalize(referenceSettings);

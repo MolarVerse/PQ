@@ -30,6 +30,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -60,7 +61,8 @@ namespace thermostat
 
         // the radicand 1 + dt / tau * (target / T - 1) is negative for a hot
         // system if tau < dt, which would turn all velocities into NaN
-        if (_tau < settings::TimingsSettings::getTimeStep())
+        if (_tau <
+            settings::TimingsSettings::getTimeStep().numerical_value_in(fs))
         {
             throw exc::UserInputException(
                 "The relaxation time of the Berendsen thermostat must not be "
@@ -84,7 +86,8 @@ namespace thermostat
             );
         }
 
-        const auto timeStep  = settings::TimingsSettings::getTimeStep();
+        const auto timeStep =
+            settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
         const auto tempRatio = getTargetTemperature() / getTemperature();
 
         const auto berendsenFactor =

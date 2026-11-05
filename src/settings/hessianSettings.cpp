@@ -44,9 +44,9 @@ HessianSettings::HessianSettings()
  *
  * @param filename The path to the Hessian file.
  */
-void HessianSettings::setHessianFile(const std::string &filename)
+void HessianSettings::setHessianFileByUser(const std::string &filename)
 {
-    _hessianFile.set(filename);
+    _hessianFile.setByUser(filename);
 }
 
 /**
@@ -54,9 +54,9 @@ void HessianSettings::setHessianFile(const std::string &filename)
  *
  * @param filename The path to the Hessian info file.
  */
-void HessianSettings::setHessianInfoFile(const std::string &filename)
+void HessianSettings::setHessianInfoFileByUser(const std::string &filename)
 {
-    _hessianInfoFile.set(filename);
+    _hessianInfoFile.setByUser(filename);
 }
 
 /**
@@ -64,9 +64,9 @@ void HessianSettings::setHessianInfoFile(const std::string &filename)
  *
  * @param displacement The displacement value to be used.
  */
-void HessianSettings::setDisplacement(double displacement)
+void HessianSettings::setDisplacementByUser(double displacement)
 {
-    _displacement.set(displacement);
+    _displacement.setByUser(displacement);
 }
 
 /**
@@ -75,9 +75,9 @@ void HessianSettings::setDisplacement(double displacement)
  * @param optimize True to optimize before Hessian calculations, false
  * otherwise.
  */
-void HessianSettings::setOptimizeBeforeHessian(bool optimize)
+void HessianSettings::setOptimizeBeforeHessianByUser(bool optimize)
 {
-    _optimizeBeforeHessian.set(optimize);
+    _optimizeBeforeHessian.setByUser(optimize);
 }
 
 /**
@@ -85,9 +85,9 @@ void HessianSettings::setOptimizeBeforeHessian(bool optimize)
  *
  * @param builder The Hessian builder type to be used.
  */
-void HessianSettings::setBuilder(HessianBuilderType builder)
+void HessianSettings::setBuilderByUser(HessianBuilderType builder)
 {
-    _builder.set(builder);
+    _builder.setByUser(builder);
 }
 
 /**

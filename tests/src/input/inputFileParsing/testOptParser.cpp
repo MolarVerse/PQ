@@ -137,7 +137,7 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
         defaults::INITIAL_LEARNING_RATE_DEFAULT
     );
 
-    optimizerSettings.setInitialLearningRate(0.0);
+    optimizerSettings.setInitialLearningRateByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -167,9 +167,9 @@ TEST_F(TestInputFileReader, parserInitialLearningRate)
 TEST_F(TestInputFileReader, parserLearningRateDecay)
 {
     OptimizerSettings optimizerSettings;
-    EXPECT_FALSE(optimizerSettings.isLearningRateDecaySet());
+    EXPECT_FALSE(optimizerSettings.isLearningRateDecaySetByUser());
 
-    optimizerSettings.setLearningRateDecay(0.0);
+    optimizerSettings.setLearningRateDecayByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -200,9 +200,9 @@ TEST_F(TestInputFileReader, parserMaxLearningRate)
 {
     OptimizerSettings optimizerSettings;
 
-    EXPECT_FALSE(optimizerSettings.isMaxLearningRateSet());
+    EXPECT_FALSE(optimizerSettings.isMaxLearningRateSetByUser());
 
-    optimizerSettings.setMaxLearningRate(0.0);
+    optimizerSettings.setMaxLearningRateByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -240,7 +240,7 @@ TEST_F(TestInputFileReader, parserLRUpdateFrequency)
         defaults::LR_UPDATE_FREQUENCY_DEFAULT
     );
 
-    optimizerSettings.setLRUpdateFrequency(0);
+    optimizerSettings.setLRUpdateFrequencyByUser(0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();
@@ -274,7 +274,7 @@ TEST_F(TestInputFileReader, parserMinLearningRate)
         defaults::MIN_LEARNING_RATE_DEFAULT
     );
 
-    optimizerSettings.setMinLearningRate(0.0);
+    optimizerSettings.setMinLearningRateByUser(0.0);
 
     auto       parser  = input::OptInputParser(optimizerSettings);
     const auto funcMap = parser.getKeywordFuncMap();

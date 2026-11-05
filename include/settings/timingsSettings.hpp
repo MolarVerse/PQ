@@ -25,6 +25,8 @@
 
 #include <cstddef>
 
+#include "unit_types.hpp"
+
 namespace settings
 {
     /**
@@ -36,7 +38,7 @@ namespace settings
     class TimingsSettings
     {
        private:
-        static inline double _timeStep;
+        static inline Time   _timeStep;
         static inline size_t _numberOfSteps;
         static inline size_t _stepCount = 0;
 
@@ -48,7 +50,7 @@ namespace settings
          * standard setters *
          ********************/
 
-        static void setTimeStep(double timeStep);
+        static void setTimeStep(const Time& timeStep);
         static void setStepCount(size_t stepCount);
         static void setNumberOfSteps(size_t numberOfSteps);
 
@@ -56,9 +58,9 @@ namespace settings
          * standard setters *
          ********************/
 
-        [[nodiscard]] static double getTimeStep();
-        [[nodiscard]] static size_t getStepCount();
-        [[nodiscard]] static size_t getNumberOfSteps();
+        [[nodiscard]] static const Time& getTimeStep();
+        [[nodiscard]] static size_t      getStepCount();
+        [[nodiscard]] static size_t      getNumberOfSteps();
     };
 }   // namespace settings
 

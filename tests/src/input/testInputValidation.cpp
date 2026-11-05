@@ -52,16 +52,16 @@ class TestInputValidation : public ::testing::Test
     void SetUp() override
     {
         settings::GeneralSettings::setJobtype(JobType::NONE);
-        _settings.hessianSettings.setOptimizeBeforeHessian(false);
+        _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
 
-        _settings.optimizerSettings.setLearningRateStrategy(
+        _settings.optimizerSettings.setLearningRateStrategyByUser(
             LearningRate::CONSTANT
         );
-        _settings.optimizerSettings.setMinLearningRate(1.0e-15);
-        _settings.optimizerSettings.setMaxLearningRate(1.0);
+        _settings.optimizerSettings.setMinLearningRateByUser(1.0e-15);
+        _settings.optimizerSettings.setMaxLearningRateByUser(1.0);
 
-        _settings.manostatSettings.setManostatType(ManostatType::NONE);
-        _settings.manostatSettings.setTau(
+        _settings.manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+        _settings.manostatSettings.setTauByUser(
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
@@ -80,7 +80,7 @@ class TestInputValidation : public ::testing::Test
         settings::ThermostatSettings::setFriction(
             defaults::LANGEVIN_THERMOSTAT_FRICTION
         );
-        _settings.simulationBoxSettings.setInitializeVelocities(
+        _settings.simulationBoxSettings.setInitializeVelocsByUser(
             InitVelocities::FALSE
         );
 
@@ -90,7 +90,7 @@ class TestInputValidation : public ::testing::Test
         settings::PotentialSettings::setCoulombRadiusCutOff(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
-        settings::TimingsSettings::setTimeStep(0.5);
+        settings::TimingsSettings::setTimeStep(0.5 * fs);
 
         _settings.qmSettings.setMaceModel(MaceModel::MEDIUM);
         _settings.qmSettings.setMaceModelType(MaceModelType::MACE_MP);
@@ -151,7 +151,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
-    _settings.hessianSettings.setOptimizeBeforeHessian(true);
+    _settings.hessianSettings.setOptimizeBeforeHessianByUser(true);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -182,7 +182,7 @@ TEST_F(TestInputValidation, requiresTimeStepForMD)
 
 TEST_F(TestInputValidation, requiresPressureForManostat)
 {
-    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -194,8 +194,8 @@ TEST_F(TestInputValidation, requiresPressureForManostat)
 TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
-    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
-    _settings.manostatSettings.setTau(0.0001 * ps);
+    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setTauByUser(0.0001 * ps);
     _setKeyword("pressure");
 
     ASSERT_THROW_MSG(
@@ -261,7 +261,7 @@ TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
 {
     _configureMDJob(JobType::MM_MD);
-    _settings.simulationBoxSettings.setInitializeVelocities(
+    _settings.simulationBoxSettings.setInitializeVelocsByUser(
         InitVelocities::FORCE
     );
 
@@ -609,7 +609,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethod(QMMethod::MACE);
     _settings.qmSettings.setMaceModel(MaceModel::CUSTOM);
-    _settings.manostatSettings.setManostatType(ManostatType::BERENDSEN);
+    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     _setKeyword("mace_model_path");
     _setKeyword("pressure");
@@ -622,7 +622,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    _settings.optimizerSettings.setLearningRateStrategy(
+    _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT_DECAY
     );
     _setKeyword("nstep");
@@ -639,7 +639,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    _settings.optimizerSettings.setLearningRateStrategy(
+    _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::EXPONENTIAL_DECAY
     );
     _setKeyword("nstep");
@@ -656,7 +656,9 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    _settings.optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
+    _settings.optimizerSettings.setLearningRateStrategyByUser(
+        LearningRate::CONSTANT
+    );
     _setKeyword("nstep");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -666,7 +668,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    _settings.optimizerSettings.setLearningRateStrategy(
+    _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::LINESEARCH_WOLFE
     );
     _setKeyword("nstep");
@@ -682,9 +684,11 @@ TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::TimingsSettings::setNumberOfSteps(100);
-    _settings.optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
-    _settings.optimizerSettings.setMinLearningRate(0.5);
-    _settings.optimizerSettings.setMaxLearningRate(0.5);
+    _settings.optimizerSettings.setLearningRateStrategyByUser(
+        LearningRate::CONSTANT
+    );
+    _settings.optimizerSettings.setMinLearningRateByUser(0.5);
+    _settings.optimizerSettings.setMaxLearningRateByUser(0.5);
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(

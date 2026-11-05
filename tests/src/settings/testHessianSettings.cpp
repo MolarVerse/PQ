@@ -27,9 +27,9 @@
 TEST(TestHessianSettings, setFilesAndDisplacement)
 {
     HessianSettings hessianSettings;
-    hessianSettings.setHessianFile("water.hessian");
-    hessianSettings.setHessianInfoFile("water.hessian.info");
-    hessianSettings.setDisplacement(0.002);
+    hessianSettings.setHessianFileByUser("water.hessian");
+    hessianSettings.setHessianInfoFileByUser("water.hessian.info");
+    hessianSettings.setDisplacementByUser(0.002);
 
     EXPECT_EQ(hessianSettings.getHessianFile(), "water.hessian");
     EXPECT_EQ(hessianSettings.getHessianInfoFile(), "water.hessian.info");
@@ -39,9 +39,9 @@ TEST(TestHessianSettings, setFilesAndDisplacement)
 TEST(TestHessianSettings, setOptimizeBeforeHessian)
 {
     HessianSettings hessianSettings;
-    hessianSettings.setOptimizeBeforeHessian(false);
+    hessianSettings.setOptimizeBeforeHessianByUser(false);
     EXPECT_FALSE(hessianSettings.optimizeBeforeHessian());
 
-    hessianSettings.setOptimizeBeforeHessian(true);
+    hessianSettings.setOptimizeBeforeHessianByUser(true);
     EXPECT_TRUE(hessianSettings.optimizeBeforeHessian());
 }

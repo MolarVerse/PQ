@@ -141,7 +141,7 @@ namespace benchInputReaders
         settings::FileSettings::setIsTopologyFileNameSet();
 
         Settings settings;
-        settings.forceFieldSettings.setType(ForceFieldType::BONDED);
+        settings.forceFieldSettings.setTypeByUser(ForceFieldType::BONDED);
 
         std::size_t atoms = 0;
 

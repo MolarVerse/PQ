@@ -103,8 +103,8 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
         settings::GeneralSettings::setIsRingPolymerMDActivated(true);
 
         _settings = std::make_unique<Settings>();
-        _settings->outputFiles.setFilePrefix(PREFIX);
-        _settings->outputFiles.setOutputFrequency(1);
+        _settings->outputFiles.setFilePrefixByUser(PREFIX);
+        _settings->outputFiles.setOutputFrequencyByUser(1);
         // Settings::finalize() finalizes QMSettings whenever a QM jobtype is
         // active, which requires a QM method to be set, even though this
         // fixture never invokes a QM runner.

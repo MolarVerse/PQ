@@ -297,23 +297,6 @@ namespace engine
     }
 
     /**
-     * @brief wrapper for info file output function
-     *
-     * @param time
-     * @param physicalData
-     * @param settings
-     */
-    void EngineOutput::writeInfoFile(
-        double                            time,
-        const physicalData::PhysicalData &physicalData,
-        const Settings                   &settings
-    )
-    {
-        auto _ = scopedTimer(TimerId::Output, "InfoOutput");
-        _infoOutput->write(time, physicalData, settings);
-    }
-
-    /**
      * @brief wrapper for restart file output function
      *
      * @param simulationBox

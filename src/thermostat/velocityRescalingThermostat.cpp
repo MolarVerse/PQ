@@ -30,6 +30,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -111,7 +112,8 @@ namespace thermostat
             );
         }
 
-        const auto timeStep  = settings::TimingsSettings::getTimeStep();
+        const auto timeStep =
+            settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
         const auto tempRatio = getTargetTemperature() / getTemperature();
         const auto dof =
             static_cast<double>(simulationBox.getDegreesOfFreedom());

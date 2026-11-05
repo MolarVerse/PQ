@@ -143,14 +143,14 @@ bool QMSettings::isExternalQMRunner() const
  *
  * @param method
  */
-void QMSettings::setQMMethod(QMMethod method) { _qmMethod.set(method); }
+void QMSettings::setQMMethod(QMMethod method) { _qmMethod.setByUser(method); }
 
 /**
  * @brief sets the maceModel to enum in settings
  *
  * @param model
  */
-void QMSettings::setMaceModel(MaceModel model) { _maceModel.set(model); }
+void QMSettings::setMaceModel(MaceModel model) { _maceModel.setByUser(model); }
 
 /**
  * @brief sets the maceModelType to enum in settings
@@ -159,7 +159,7 @@ void QMSettings::setMaceModel(MaceModel model) { _maceModel.set(model); }
  */
 void QMSettings::setMaceModelType(MaceModelType model)
 {
-    _maceModelType.set(model);
+    _maceModelType.setByUser(model);
 }
 
 /**
@@ -167,7 +167,7 @@ void QMSettings::setMaceModelType(MaceModelType model)
  *
  * @param mode
  */
-void QMSettings::setMaceMode(MaceMode mode) { _maceMode.set(mode); }
+void QMSettings::setMaceMode(MaceMode mode) { _maceMode.setByUser(mode); }
 
 /**
  * @brief set the mace model path
@@ -175,7 +175,7 @@ void QMSettings::setMaceMode(MaceMode mode) { _maceMode.set(mode); }
  */
 void QMSettings::setMaceModelPath(const std::string &path)
 {
-    _maceModelPath.set(path);
+    _maceModelPath.setByUser(path);
 }
 
 /**
@@ -183,7 +183,7 @@ void QMSettings::setMaceModelPath(const std::string &path)
  *
  * @param method
  */
-void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod.set(method); }
+void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod.setByUser(method); }
 
 /**
  * @brief sets the qmScript in settings
@@ -192,7 +192,7 @@ void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod.set(method); }
  */
 void QMSettings::setQMScript(const std::string &script)
 {
-    _qmScript.set(script);
+    _qmScript.setByUser(script);
 }
 
 /**
@@ -202,7 +202,7 @@ void QMSettings::setQMScript(const std::string &script)
  */
 void QMSettings::setQMScriptFullPath(const std::string &script)
 {
-    _qmScriptFullPath.set(script);
+    _qmScriptFullPath.setByUser(script);
 }
 
 /**
@@ -226,10 +226,10 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
     if (!resolveBuiltInPath &&
         (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
     {
-        _slakosType.set(slakos);
+        _slakosType.setByUser(slakos);
         auto path = _slakosPath.get();
         path.clear();
-        _slakosPath.set(path);
+        _slakosPath.setBySystem(path);
         return;
     }
 
@@ -238,24 +238,24 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
         using enum SlakosType;
 
         case THREEOB:
-            if (!_hubbardDerivs.isSet())
+            if (!_hubbardDerivs.isSetBySomeone())
                 _hubbardDerivs.setBySystem(hubbardDerivMap3ob);
             [[fallthrough]];
         case MATSCI:
             if (resolveBuiltInPath)
-                _slakosPath.set(builtinSlakosPath(slakos));
+                _slakosPath.setBySystem(builtinSlakosPath(slakos));
             break;
         case CUSTOM:
         case NONE:
         {
             auto path = _slakosPath.get();
             path.clear();
-            _slakosPath.set(path);
+            _slakosPath.setBySystem(path);
             break;
         }
     }
 
-    _slakosType.set(slakos);
+    _slakosType.setByUser(slakos);
 }
 
 /**
@@ -287,7 +287,7 @@ void QMSettings::_setupQMMethodAseXtb(ReferenceSettings &references) const
 void QMSettings::setSlakosPath(const std::string &path)
 {
     if (_slakosType.get() == SlakosType::CUSTOM)
-        _slakosPath.set(path);
+        _slakosPath.setByUser(path);
     else if (_slakosType.get() == SlakosType::NONE)
     {
         throw exc::UserInputException(
@@ -311,7 +311,7 @@ void QMSettings::setSlakosPath(const std::string &path)
  */
 void QMSettings::setUseThirdOrderDftb(bool useThirdOrderDftb)
 {
-    _useThirdOrderDftb.set(useThirdOrderDftb);
+    _useThirdOrderDftb.setByUser(useThirdOrderDftb);
 }
 
 /**
@@ -322,7 +322,7 @@ void QMSettings::setHubbardDerivs(
     const std::unordered_map<std::string, double> &hubbardDerivs
 )
 {
-    _hubbardDerivs.set(hubbardDerivs);
+    _hubbardDerivs.setByUser(hubbardDerivs);
 }
 
 /**
@@ -331,7 +331,7 @@ void QMSettings::setHubbardDerivs(
  */
 void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
 {
-    _useDispersionCorrection.set(useDispersionCorr);
+    _useDispersionCorrection.setByUser(useDispersionCorr);
 }
 
 /**
@@ -341,7 +341,7 @@ void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
  */
 void QMSettings::setRemoveNetForce(bool removeNetForce)
 {
-    _removeNetForce.set(removeNetForce);
+    _removeNetForce.setByUser(removeNetForce);
 }
 
 /**
@@ -349,7 +349,7 @@ void QMSettings::setRemoveNetForce(bool removeNetForce)
  *
  * @param time
  */
-void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit.set(time); }
+void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit.setByUser(time); }
 
 /**
  * @brief sets the FeNNol model path
@@ -358,7 +358,7 @@ void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit.set(time); }
  */
 void QMSettings::setFennolModelPath(const std::string &path)
 {
-    _fennolModelPath.set(path);
+    _fennolModelPath.setByUser(path);
 }
 
 /**
@@ -367,7 +367,7 @@ void QMSettings::setFennolModelPath(const std::string &path)
  */
 void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
 {
-    _useGPUPreprocessing.set(useGPUPreprocessing);
+    _useGPUPreprocessing.setByUser(useGPUPreprocessing);
 }
 
 /***************************
@@ -388,7 +388,7 @@ QMMethod QMSettings::getQMMethod() const { return _qmMethod.get(); }
  *
  * @return bool
  */
-bool QMSettings::isQMMethodSet() const { return _qmMethod.isSet(); }
+bool QMSettings::isQMMethodSet() const { return _qmMethod.isSetBySomeone(); }
 
 /**
  * @brief returns the maceModel
@@ -469,7 +469,7 @@ bool QMSettings::useThirdOrderDftb() const { return _useThirdOrderDftb.get(); }
  */
 bool QMSettings::isThirdOrderDftbSet() const
 {
-    return _useThirdOrderDftb.isSet();
+    return _useThirdOrderDftb.isSetBySomeone();
 }
 
 /**
@@ -478,7 +478,7 @@ bool QMSettings::isThirdOrderDftbSet() const
  *
  * @return bool
  */
-bool QMSettings::isHubbardDerivsSet() const { return _hubbardDerivs.isSet(); }
+bool QMSettings::isHubbardDerivsSet() const { return _hubbardDerivs.isSetBySomeone(); }
 
 /**
  * @brief returns if the Hubbard derivatives were explicitly set by the user,

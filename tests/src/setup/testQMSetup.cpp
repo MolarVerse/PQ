@@ -160,7 +160,7 @@ TEST(TestQMSetup, setupQMFull)
     settings.qmSettings.setQMScript("test");
     engine::QMMDEngine engine(settings);
     settings.qmSettings.setQMMethod(QMMethod::DFTBPLUS);
-    EXPECT_NO_THROW(setup::setupQM(engine));
+    EXPECT_NO_THROW(setup::setupQM(engine, settings.referenceSettings));
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)

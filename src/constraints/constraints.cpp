@@ -32,6 +32,8 @@
 #include "mShake.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace constraints
 {
@@ -42,7 +44,8 @@ namespace constraints
      **/
     Constraints::Constraints(const ConstraintSettings &constraintSettings)
         : _constraintSettings(constraintSettings),
-          _mShake(std::make_unique<MShake>())
+          _mShake(std::make_unique<MShake>()),
+          _startTime(0.0 * fs)
     {
     }
 
@@ -249,7 +252,7 @@ namespace constraints
     void Constraints::applyDistanceConstraints(
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
-        double                       time
+        const Time                  &time
     )
     {
         if (!_constraintSettings->isDistanceConstraintsActivated())
@@ -257,7 +260,7 @@ namespace constraints
 
         auto effective_time = time - _startTime;
 
-        effective_time = effective_time > 0.0 ? effective_time : -1;
+        effective_time = effective_time > 0.0 * fs ? effective_time : -1 * fs;
 
         std::ranges::for_each(
             _distanceConstraints,

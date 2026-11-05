@@ -52,7 +52,7 @@ class ForceFieldSettings
      * standard setters *
      ********************/
 
-    void setType(ForceFieldType value);
+    void setTypeByUser(ForceFieldType value);
 };
 
 #endif   // SETTINGS__FORCE_FIELD_SETTINGS_HPP

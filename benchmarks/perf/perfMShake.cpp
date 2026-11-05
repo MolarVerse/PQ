@@ -33,6 +33,8 @@
 #include <string>
 #include <vector>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -60,7 +62,7 @@ static constexpr double        TOLERANCE      = 1.0e-8;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // rigid water: oxygen and two hydrogens
     const auto names  = std::vector<std::string>{"O", "H", "H"};

@@ -14,3 +14,4 @@
 - Replace static `OutputFileSettings`
 - Introduce non-static `ReferenceSettings`
 - Replace static `QMSettings`
+- Introduce tracking of by whom a `Setting` was actually set (user vs. system vs. default), replacing the former value-based "is this still the default" checks.

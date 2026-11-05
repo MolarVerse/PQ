@@ -40,18 +40,10 @@ template <typename T, mstd::Tag Name = mstd::Tag("Settings")>
 class Setting
 {
    public:
-    /**
-     * @brief Who last assigned this Setting's value.
-     *
-     * @details Distinguishes a value filled in automatically by internal
-     * logic (e.g. a built-in default populated during finalization) from one
-     * the user explicitly requested. This lets code that only cares about
-     * explicit user intent (e.g. "warn if the user customized X") avoid
-     * misfiring on values that merely happen to be set.
-     */
     enum class Setter : std::uint8_t
     {
         None,
+        Default,
         User,
         System
     };
@@ -68,17 +60,15 @@ class Setting
     [[nodiscard]]
     const T& get() const;
 
-    void set(const T& value);
     void setByUser(const T& value);
     void setBySystem(const T& value);
-
-    [[nodiscard]]
-    bool isSet() const;
 
     [[nodiscard]]
     bool isSetByUser() const;
     [[nodiscard]]
     bool isSetBySystem() const;
+    [[nodiscard]]
+    bool isSetBySomeone() const;
 
    private:
     void _throwIfNotSet() const;

@@ -39,7 +39,7 @@ class RingPolymerSettings
     Setting<size_t> _numberOfBeads;
 
    public:
-    void setNumberOfBeads(size_t numberOfBeads);
+    void setNumberOfBeadsByUser(size_t numberOfBeads);
 
     [[nodiscard]] size_t getNumberOfBeads() const;
 };

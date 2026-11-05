@@ -35,7 +35,7 @@ class ReferenceSettings;
 
 namespace setup
 {
-    void setupQM(engine::Engine &);
+    void setupQM(engine::Engine &, ReferenceSettings &references);
 
     /**
      * @class QMSetup

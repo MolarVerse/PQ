@@ -101,15 +101,17 @@ namespace manostat
      */
     linalg::tensor3D StochasticRescalingManostat::calculateMu(double volume)
     {
-        const auto fixedAxis       = _getSettings().getFixedAxis();
-        const auto compressibility = _getSettings().getCompressibility();
-        const auto tau = _getSettings().getTau().numerical_value_in(fs);
+        const auto fixedAxis = _getSettings().getFixedAxis();
 
         if (fixedAxis == FixedAxis::ALL)
             return diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-        const auto compress =
-            compressibility * settings::TimingsSettings::getTimeStep() / tau;
+        const auto compressibility  = _getSettings().getCompressibility();
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
+
+        const auto compress          = compressibility * tauTimeStepRatio;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -198,9 +200,11 @@ namespace manostat
         double volume
     )
     {
-        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
-        const auto compress = _getSettings().getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() / tau;
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
+        const auto compress =
+            _getSettings().getCompressibility() * tauTimeStepRatio;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -262,9 +266,11 @@ namespace manostat
         double volume
     )
     {
-        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
-        const auto compress = _getSettings().getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() / tau;
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
+        const auto compress =
+            _getSettings().getCompressibility() * tauTimeStepRatio;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -309,9 +315,11 @@ namespace manostat
         double volume
     )
     {
-        const auto tau      = _getSettings().getTau().numerical_value_in(fs);
-        const auto compress = _getSettings().getCompressibility() *
-                              settings::TimingsSettings::getTimeStep() / tau;
+        const auto tau              = _getSettings().getTau();
+        const auto timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
+        const auto compress =
+            _getSettings().getCompressibility() * tauTimeStepRatio;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =

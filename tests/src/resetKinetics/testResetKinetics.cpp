@@ -227,13 +227,13 @@ namespace
     )
     {
         return testSettings::make<ResetKineticsSettings>()
-            .with(&ResetKineticsSettings::setNScale, nScale)
-            .with(&ResetKineticsSettings::setFScale, fScale)
-            .with(&ResetKineticsSettings::setNReset, nReset)
-            .with(&ResetKineticsSettings::setFReset, fReset)
-            .with(&ResetKineticsSettings::setNResetAngular, nResetAngular)
-            .with(&ResetKineticsSettings::setFResetAngular, fResetAngular)
-            .with(&ResetKineticsSettings::setFResetForces, fResetForces)
+            .with(&ResetKineticsSettings::setNScaleByUser, nScale)
+            .with(&ResetKineticsSettings::setFScaleByUser, fScale)
+            .with(&ResetKineticsSettings::setNResetByUser, nReset)
+            .with(&ResetKineticsSettings::setFResetByUser, fReset)
+            .with(&ResetKineticsSettings::setNResetAngularByUser, nResetAngular)
+            .with(&ResetKineticsSettings::setFResetAngularByUser, fResetAngular)
+            .with(&ResetKineticsSettings::setFResetForcesByUser, fResetForces)
             .apply([](auto &config) { config.finalize(); })
             .build();
     }
