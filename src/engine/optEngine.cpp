@@ -51,6 +51,8 @@ namespace engine
 
         for (size_t i = 0; i < _getNSteps(); ++i)
         {
+            throwIfInterrupted();
+
             bar.update();
 
             takeStep();
