@@ -197,7 +197,7 @@ namespace setup
             std::format("Relaxation time: {}", tau.in(ps))
         );
         logOutput.writeSetupInfo(
-            std::format("Compressibility: {} bar⁻¹", compr)
+            std::format("Compressibility: {}", compr.in(per_bar))
         );
         logOutput.writeEmptyLine();
     }

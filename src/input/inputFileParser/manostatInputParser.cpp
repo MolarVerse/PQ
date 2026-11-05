@@ -172,12 +172,19 @@ namespace input
         };
 
         const auto setValue = [this](double compressibility)
-        { _manostatSettings->setCompressibilityByUser(compressibility); };
+        {
+            _manostatSettings->setCompressibilityByUser(
+                compressibility * per_bar
+            );
+        };
+
+        const auto defaultValue =
+            defaults::COMPRESSIBILITY_WATER_DEFAULT.numerical_value_in(per_bar);
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
                 .metadata     = metaData,
-                .defaultValue = defaults::COMPRESSIBILITY_WATER_DEFAULT,
+                .defaultValue = defaultValue,
                 .onSet        = setValue,
                 .validators   = {makeShared(PositiveGTDoubleValidator)}
             }

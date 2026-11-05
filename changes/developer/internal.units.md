@@ -1,1 +1,2 @@
 - make timestep unit aware
+- make compressiblity unit aware
