@@ -29,6 +29,26 @@
 namespace linalg
 {
     /**
+     * @brief Converting constructor from a StaticMatrix3x3 of another
+     * element type, e.g. quantity<Pa> -> quantity<pressure[Pa]>
+     *
+     * @tparam T
+     * @tparam U
+     * @param other
+     */
+    template <typename T>
+    template <typename U>
+    requires(!std::same_as<T, U>) && std::convertible_to<U, T>
+    constexpr StaticMatrix3x3<T>::StaticMatrix3x3(
+        const StaticMatrix3x3<U> &other
+    )
+    {
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j)
+                _data[i][j] = static_cast<T>(other[i][j]);
+    }
+
+    /**
      * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
      *
      * @tparam T

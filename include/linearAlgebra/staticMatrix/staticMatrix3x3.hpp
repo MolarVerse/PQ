@@ -23,6 +23,8 @@
 #ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP
 #define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_HPP
 
+#include <concepts>
+#include <mstd/type_traits/quantity_traits.hpp>
 #include <ostream>
 
 #include "staticMatrix3x3Class.hpp"
@@ -69,11 +71,15 @@ namespace linalg
      * operator* and operator*= *
      ****************************/
 
-    template <typename T>
-    StaticMatrix3x3<T> operator*(
+    template <typename T, typename U>
+    requires requires(const T &lhsElem, const U &rhsElem) {
+        lhsElem * rhsElem;
+        lhsElem + lhsElem;
+    }
+    constexpr auto operator*(
         const StaticMatrix3x3<T> &lhs,
-        const StaticMatrix3x3<T> &rhs
-    );
+        const StaticMatrix3x3<U> &rhs
+    ) -> StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0][0] * rhs[0][0])>>;
 
     template <typename T>
     StaticMatrix3x3<T> operator*(
@@ -92,6 +98,17 @@ namespace linalg
         const StaticMatrix3x3<T> &mat,
         const Vector3D<T>        &vec
     );
+
+    // unit/quantity scalar, e.g. tensor * mstd::units::Pa
+    template <typename T, typename V>
+    requires(!std::same_as<T, V>) && mstd::NonArithmeticScalar<T, V>
+    constexpr auto operator*(const StaticMatrix3x3<T> &mat, const V &scalar)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>;
+
+    template <typename T, typename V>
+    requires(!std::same_as<T, V>) && mstd::NonArithmeticScalar<T, V>
+    constexpr auto operator*(const V &scalar, const StaticMatrix3x3<T> &mat)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>;
 
     template <typename T>
     void operator*=(StaticMatrix3x3<T> &lhs, const T &scalar);

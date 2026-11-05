@@ -34,6 +34,8 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace manostat
 {
@@ -43,7 +45,8 @@ namespace manostat
      *
      * @param settings The settings object containing the manostat configuration
      */
-    Manostat::Manostat(const ManostatSettings &settings) : _settings(settings)
+    Manostat::Manostat(const ManostatSettings &settings)
+        : _settings(settings), _pressureTensor{0.0 * Pa}, _pressure{0.0 * Pa}
     {
     }
 
@@ -64,26 +67,27 @@ namespace manostat
         const auto forceVirial = physicalData.getVirial();
         const auto volume      = simulationBox.getVolume();
 
-        _pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
-        _pressureTensor *= PRESSURE_FACTOR;
-        _pressure        = trace(_pressureTensor) / linalg::tensor3D::size;
+        auto pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
+        pressureTensor      *= PRESSURE_FACTOR_PA;
+        _pressureTensor      = pressureTensor * Pa;
+        _pressure            = trace(_pressureTensor) / linalg::tensor3D::size;
 
-        physicalData.setPressure(_pressure);
+        physicalData.setPressure(_pressure.numerical_value_in(bar));
 
         if (_settings->getIsotropy() != Isotropy::FULL_ANISOTROPIC)
         {
             // Length coupling uses cell-axis coordinates: T^-1 P T.
             // Full anisotropic deformation acts directly in Cartesian space.
             const auto &box = simulationBox.getBox();
-            _pressureTensor = box.toOrthoSpace(_pressureTensor) *
-                              box.toSimSpace(linalg::diagonalMatrix(1.0));
+            _pressureTensor =
+                box.toOrthoSpace(_pressureTensor) * linalg::diagonalMatrix(1.0);
         }
 
         const auto fixedAxis = _settings->getFixedAxis();
         const auto p_xyz     = diagonal(_pressureTensor);
 
-        size_t numFree = 0;
-        double p_avg   = 0.0;
+        size_t   numFree = 0;
+        Pressure p_avg;
 
         for (size_t axis = 0; axis < 3; ++axis)
         {
@@ -97,11 +101,11 @@ namespace manostat
         if (numFree > 0)
         {
             p_avg /= static_cast<double>(numFree);
-            physicalData.setCoupledPressure(p_avg);
+            physicalData.setCoupledPressure(p_avg.numerical_value_in(bar));
         }
         else
         {
-            physicalData.setCoupledPressure(_pressure);
+            physicalData.setCoupledPressure(_pressure.numerical_value_in(bar));
         }
     }
 
@@ -202,9 +206,9 @@ namespace manostat
     /**
      * @brief get the pressure tensor
      *
-     * @return const linalg::tensor3D&
+     * @return const PressureTensor3D&
      */
-    const linalg::tensor3D &Manostat::_getPressureTensor() const
+    const PressureTensor3D &Manostat::_getPressureTensor() const
     {
         return _pressureTensor;
     }
@@ -212,16 +216,16 @@ namespace manostat
     /**
      * @brief get the pressure
      *
-     * @return double
+     * @return const Pressure&
      */
-    double Manostat::_getPressure() const { return _pressure; }
+    const Pressure &Manostat::_getPressure() const { return _pressure; }
 
     /**
      * @brief set the pressure tensor
      *
      * @param pTensor The new pressure tensor
      */
-    void Manostat::_setPressureTensor(const linalg::tensor3D &pTensor)
+    void Manostat::_setPressureTensor(const PressureTensor3D &pTensor)
     {
         _pressureTensor = pTensor;
     }
@@ -231,7 +235,10 @@ namespace manostat
      *
      * @param pressure The new pressure
      */
-    void Manostat::_setPressure(double pressure) { _pressure = pressure; }
+    void Manostat::_setPressure(const Pressure &pressure)
+    {
+        _pressure = pressure;
+    }
 
     /**
      * @brief get the manostat settings

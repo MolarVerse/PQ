@@ -26,6 +26,7 @@
 #include <mstd/types.hpp>
 
 #include "staticMatrix.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -52,8 +53,8 @@ namespace manostat
     {
        private:
         mstd::ConstRef<ManostatSettings> _settings;
-        linalg::tensor3D                 _pressureTensor = {0.0};
-        double                           _pressure;
+        PressureTensor3D                 _pressureTensor;
+        Pressure                         _pressure;
 
        public:
         explicit Manostat(const ManostatSettings &settings);
@@ -78,13 +79,13 @@ namespace manostat
         );
 
         [[nodiscard]]
-        const linalg::tensor3D &_getPressureTensor() const;
+        const PressureTensor3D &_getPressureTensor() const;
 
         [[nodiscard]]
-        double _getPressure() const;
+        const Pressure &_getPressure() const;
 
-        void _setPressureTensor(const linalg::tensor3D &pTensor);
-        void _setPressure(double pressure);
+        void _setPressureTensor(const PressureTensor3D &pTensor);
+        void _setPressure(const Pressure &pressure);
 
         [[nodiscard]]
         const ManostatSettings &_getSettings() const;
