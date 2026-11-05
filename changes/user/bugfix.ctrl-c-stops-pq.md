@@ -1,0 +1,1 @@
+- Fix Ctrl-C not stopping PQ builds with embedded Python (the default with ASE); MD and optimizer runs now stop at the next step.
