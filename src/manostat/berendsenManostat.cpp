@@ -97,9 +97,10 @@ namespace manostat
         const auto tau              = _getSettings().getTau();
         const auto timeStep         = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
-        const auto compressibility  = _getSettings().getCompressibility();
-        const auto preFactor        = compressibility * tauTimeStepRatio;
-        const auto p_xyz            = diagonal(_getPressureTensor());
+        const auto compressibility =
+            _getSettings().getCompressibility().numerical_value_in(per_bar);
+        const auto preFactor = compressibility * tauTimeStepRatio;
+        const auto p_xyz     = diagonal(_getPressureTensor());
 
         size_t numFree = 0;
         double p_avg   = 0.0;
@@ -163,7 +164,8 @@ namespace manostat
             3.0 -
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
         const auto preFactor =
-            _getSettings().getCompressibility() * tauTimeStepRatio / dimension;
+            _getSettings().getCompressibility().numerical_value_in(per_bar) *
+            tauTimeStepRatio / dimension;
 
         const auto targetPressure = _getSettings().getTargetPressure();
 
@@ -202,7 +204,8 @@ namespace manostat
             3.0 -
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
         const auto preFactor =
-            _getSettings().getCompressibility() * tauTimeStepRatio / dimension;
+            _getSettings().getCompressibility().numerical_value_in(per_bar) *
+            tauTimeStepRatio / dimension;
 
         auto mu = 1.0 - preFactor * (_getSettings().getTargetPressure() - pxyz);
 
@@ -235,7 +238,8 @@ namespace manostat
             3.0 -
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
         const auto preFactor =
-            _getSettings().getCompressibility() * tauTimeStepRatio / dimension;
+            _getSettings().getCompressibility().numerical_value_in(per_bar) *
+            tauTimeStepRatio / dimension;
         const auto kronecker = linalg::kroneckerDeltaMatrix<double>();
 
         auto mu = kronecker - (preFactor * (pTarget - _getPressureTensor()));

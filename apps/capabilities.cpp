@@ -309,7 +309,10 @@ namespace
             "bar^-1"
         );
         json.value("minimum", 0);
-        json.value("default", defaults::COMPRESSIBILITY_WATER_DEFAULT);
+        json.value(
+            "default",
+            defaults::COMPRESSIBILITY_WATER_DEFAULT.numerical_value_in(per_bar)
+        );
         json.endObject();
 
         beginParameter(

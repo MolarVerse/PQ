@@ -1,2 +1,3 @@
 - make timestep unit aware
+- make compressiblity unit aware
 - add a devops check to not include `units.hpp` in a header file to not pollute namings 

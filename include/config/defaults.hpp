@@ -116,9 +116,10 @@ namespace defaults
     static constexpr double NH_COUPLING_FREQ             = 1.0e3;    // in cm^-1
     static constexpr double MAX_FRICTION_CONVERSION      = 1.0e12;   // in s^-1
 
-    static constexpr Time   BERENDSEN_MANOSTAT_RELAX_TIME = 1 * mstd::units::ps;
-    static constexpr double COMPRESSIBILITY_WATER_DEFAULT =
-        4.591e-5;   // in bar^-1 default value for berendsen manostat
+    static constexpr Time BERENDSEN_MANOSTAT_RELAX_TIME = 1 * mstd::units::ps;
+    static constexpr Compressibility COMPRESSIBILITY_WATER_DEFAULT =
+        4.591e-5 /
+        mstd::units::bar;   // in bar^-1 default value for berendsen manostat
 
     static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
 

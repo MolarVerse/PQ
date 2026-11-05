@@ -62,7 +62,7 @@ int main()
     ManostatSettings manostatSettings;
     manostatSettings.setTargetPressureByUser(1.0);
     manostatSettings.setTauByUser(100.0 * ps);
-    manostatSettings.setCompressibilityByUser(4.6e-5);
+    manostatSettings.setCompressibilityByUser(4.6e-5 * per_bar);
     ReferenceSettings referenceSettings;
     manostatSettings.finalize(referenceSettings);
     auto manostat = manostat::StochasticRescalingManostat(manostatSettings);

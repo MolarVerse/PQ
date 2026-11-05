@@ -44,8 +44,8 @@ class ManostatSettings
 
     Setting<double> _targetPressure;
 
-    Setting<Time>   _tau;
-    Setting<double> _compressibility;
+    Setting<Time>            _tau;
+    Setting<Compressibility> _compressibility;
 
    public:
     ManostatSettings();
@@ -63,7 +63,7 @@ class ManostatSettings
 
     void setTargetPressureByUser(double targetPressure);
     void setTauByUser(const Time& tau);
-    void setCompressibilityByUser(double compressibility);
+    void setCompressibilityByUser(const Compressibility& compressibility);
 
     /***************************
      * standard getter methods *
@@ -71,12 +71,12 @@ class ManostatSettings
 
     [[nodiscard]] bool isBerendsenBased() const;
 
-    [[nodiscard]] ManostatType getManostatType() const;
-    [[nodiscard]] Isotropy     getIsotropy() const;
-    [[nodiscard]] FixedAxis    getFixedAxis() const;
-    [[nodiscard]] double       getTargetPressure() const;
-    [[nodiscard]] const Time&  getTau() const;
-    [[nodiscard]] double       getCompressibility() const;
+    [[nodiscard]] ManostatType           getManostatType() const;
+    [[nodiscard]] Isotropy               getIsotropy() const;
+    [[nodiscard]] FixedAxis              getFixedAxis() const;
+    [[nodiscard]] double                 getTargetPressure() const;
+    [[nodiscard]] const Time&            getTau() const;
+    [[nodiscard]] const Compressibility& getCompressibility() const;
 
    private:
     void _addReferenceFile(ReferenceSettings& referenceSettings);
