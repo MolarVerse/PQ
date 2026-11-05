@@ -1,19 +1,21 @@
 <map id="settings::QMSettings::setMaceModelType" name="settings::QMSettings::setMaceModelType">
-<area shape="rect" id="Node000001" title="sets the maceModelType to enum in settings" alt="" coords="841,135,997,179"/>
+<area shape="rect" id="Node000001" title="sets the maceModelType to enum in settings" alt="" coords="841,161,997,206"/>
 <area shape="rect" id="Node000002" href="$classinput_1_1QMInputParser.html#a34d7f8142fa0da9d011ecae7bb446b0c" title="parses the QM method if it starts with &quot;mace&quot;" alt="" coords="621,5,793,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="877,124,837,95,791,65,769,53,770,48,794,60,841,91,883,125"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="886,149,844,107,791,65,772,53,772,48,794,60,848,103,891,150"/>
 <area shape="rect" id="Node000006" href="$classTestInputValidation.html#aebac270531beb65b4e1a1dab1a81b0aa" title=" " alt="" coords="634,75,780,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="823,131,780,120,780,115,828,131"/>
-<area shape="rect" id="Node000007" href="$testQMSettings_8cpp.html#a0e3a0fa5cf6391cec0953792c2173c25" title=" " alt="" coords="680,143,734,171"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="822,157,734,160,734,154,828,157"/>
-<area shape="rect" id="Node000008" href="$testInputValidation_8cpp.html#a5ce15fde54c1da2360d8bca08783d051" title=" " alt="" coords="673,195,741,223"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="828,179,742,203,741,198,823,180"/>
-<area shape="rect" id="Node000009" href="$testInputValidation_8cpp.html#aa607daabef0cb0e204fd7360b2578e58" title=" " alt="" coords="673,247,741,275"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="876,187,836,214,794,237,742,255,741,250,792,232,834,210,871,189"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="846,155,792,134,764,123,764,117,794,129,852,155"/>
+<area shape="rect" id="Node000007" href="$testQMSettings_8cpp.html#a69044a23c8267bf58cc24931492a6844" title=" " alt="" coords="680,143,734,171"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="822,172,734,163,734,158,828,172"/>
+<area shape="rect" id="Node000008" href="$testQMSettings_8cpp.html#a0e3a0fa5cf6391cec0953792c2173c25" title=" " alt="" coords="680,195,734,223"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="822,195,734,209,733,203,828,194"/>
+<area shape="rect" id="Node000009" href="$testInputValidation_8cpp.html#a5ce15fde54c1da2360d8bca08783d051" title=" " alt="" coords="673,247,741,275"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="853,212,794,237,742,254,741,248,792,232,847,213"/>
+<area shape="rect" id="Node000010" href="$testInputValidation_8cpp.html#aa607daabef0cb0e204fd7360b2578e58" title=" " alt="" coords="673,299,741,327"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="887,216,844,255,794,289,742,308,741,303,791,284,841,251,882,218"/>
 <area shape="rect" id="Node000003" href="$classinput_1_1QMInputParser.html#a645d21da7128d9dbc5db3c3a8a35b5f2" title=" " alt="" coords="416,5,573,50"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="603,28,574,30,573,25,608,27"/>
 <area shape="rect" id="Node000004" href="$classinput_1_1QMInputParser.html#ac156cd6e55ca1dea71342bd853e625a8" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="211,5,368,50"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="398,29,369,30,368,25,403,27"/>
 <area shape="rect" id="Node000005" href="$classinput_1_1QMInputParser.html#a231e270fdd2d7c0604c05f7af6d3647d" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="5,5,163,50"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="193,29,164,30,162,25,198,26"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="193,29,164,30,162,25,197,26"/>
 </map>

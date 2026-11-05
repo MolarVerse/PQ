@@ -189,6 +189,10 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae628d12cb43bc05f037846d9ea09ee86"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the maceMode  <br /></td></tr>
 <tr class="memitem:a5a4227da817b17dfd08af7504d012627" id="r_a5a4227da817b17dfd08af7504d012627"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a4227da817b17dfd08af7504d012627">getMaceModelPath</a> ()</td></tr>
 <tr class="memdesc:a5a4227da817b17dfd08af7504d012627"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the maceModelPath  <br /></td></tr>
+<tr class="memitem:a1baba81ed266e9ac755cf68b6a10d821" id="r_a1baba81ed266e9ac755cf68b6a10d821"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1baba81ed266e9ac755cf68b6a10d821">getMaceModelName</a> ()</td></tr>
+<tr class="memdesc:a1baba81ed266e9ac755cf68b6a10d821"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the maceModel as expected by mace.calculators  <br /></td></tr>
+<tr class="memitem:ae90e855e61e630d6b65c946d649036d1" id="r_ae90e855e61e630d6b65c946d649036d1"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae90e855e61e630d6b65c946d649036d1">getMaceModelTypeName</a> ()</td></tr>
+<tr class="memdesc:ae90e855e61e630d6b65c946d649036d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the maceModelType as calculator name in mace.calculators  <br /></td></tr>
 <tr class="memitem:a9fd53b7272f3361d593773c0e0972a1a" id="r_a9fd53b7272f3361d593773c0e0972a1a"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9fd53b7272f3361d593773c0e0972a1a">getQMScript</a> ()</td></tr>
 <tr class="memdesc:a9fd53b7272f3361d593773c0e0972a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the qmScript  <br /></td></tr>
 <tr class="memitem:a8f032bf55167c723fa525595202c9e1e" id="r_a8f032bf55167c723fa525595202c9e1e"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f032bf55167c723fa525595202c9e1e">getQMScriptFullPath</a> ()</td></tr>
@@ -506,25 +510,23 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classsettings_1_1QMSettings_afe3751a4a4c3d1d21148bdd4c537b173_icgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_afe3751a4a4c3d1d21148bdd4c537b173_icgraph" loading="lazy" alt=""/></div>
 <map name="aclasssettings_1_1QMSettings_afe3751a4a4c3d1d21148bdd4c537b173_icgraph" id="aclasssettings_1_1QMSettings_afe3751a4a4c3d1d21148bdd4c537b173_icgraph">
-<area shape="rect" title="returns the maceModel" alt="" coords="1561,230,1717,274"/>
-<area shape="rect" href="classinput_1_1InputFileReader.html#a2f95672c78acd081e913c2626675f512" title="validates QM keyword dependencies" alt="" coords="1316,47,1481,92"/>
-<area shape="poly" title=" " alt="" coords="1603,217,1561,179,1511,137,1444,95,1445,90,1514,133,1565,175,1608,219"/>
-<area shape="rect" href="classengine_1_1QMRunnerManager.html#ab9fd454e4b7d95136aac341db3fe43e0" title="Create a MACE QM runner." alt="" coords="1299,147,1498,192"/>
-<area shape="poly" title=" " alt="" coords="1555,224,1465,195,1466,190,1560,224"/>
-<area shape="rect" href="classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="1284,267,1513,295"/>
-<area shape="poly" title=" " alt="" coords="1543,264,1514,270,1513,265,1548,263"/>
-<area shape="rect" href="testQMParser_8cpp.html#a0a02704dd884c01779dbbb3645810a65" title=" " alt="" coords="1364,319,1433,347"/>
-<area shape="poly" title=" " alt="" coords="1580,280,1513,309,1433,330,1432,325,1512,304,1575,282"/>
-<area shape="rect" href="classinput_1_1InputFileReader.html#a1c9695106cef4d7b1d436397f187f115" title="validates semantic dependencies between parsed input keywords" alt="" coords="547,36,750,81"/>
-<area shape="poly" title=" " alt="" coords="1298,69,750,63,750,57,1303,67"/>
+<area shape="rect" title="returns the maceModel" alt="" coords="1462,287,1618,332"/>
+<area shape="rect" href="classinput_1_1InputFileReader.html#a2f95672c78acd081e913c2626675f512" title="validates QM keyword dependencies" alt="" coords="1217,179,1382,224"/>
+<area shape="poly" title=" " alt="" coords="1472,280,1351,227,1352,222,1477,280"/>
+<area shape="rect" href="classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="1185,295,1414,323"/>
+<area shape="poly" title=" " alt="" coords="1444,309,1414,312,1414,307,1449,309"/>
+<area shape="rect" href="testQMParser_8cpp.html#a0a02704dd884c01779dbbb3645810a65" title=" " alt="" coords="1265,347,1334,375"/>
+<area shape="poly" title=" " alt="" coords="1449,329,1334,357,1334,351,1444,330"/>
+<area shape="rect" href="classinput_1_1InputFileReader.html#a1c9695106cef4d7b1d436397f187f115" title="validates semantic dependencies between parsed input keywords" alt="" coords="547,131,750,176"/>
+<area shape="poly" title=" " alt="" coords="1199,188,1137,183,930,168,750,159,750,154,931,162,1138,177,1204,187"/>
 <area shape="rect" href="namespaceinput.html#aca17e7eee014a70cfa8a822976c3c85f" title="wrapper function to construct InputFileReader and call read() and postProcess()" alt="" coords="330,139,478,167"/>
-<area shape="poly" title=" " alt="" coords="573,88,444,141,441,136,577,86"/>
+<area shape="poly" title=" " alt="" coords="529,154,479,156,478,151,534,152"/>
 <area shape="rect" href="namespacecli.html#a41a3b4a6a89f337c76febb1c4dc75299" title=" " alt="" coords="328,35,481,63"/>
-<area shape="poly" title=" " alt="" coords="529,55,482,55,480,50,534,53"/>
+<area shape="poly" title=" " alt="" coords="578,125,439,66,439,61,583,124"/>
 <area shape="rect" href="classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="116,243,252,271"/>
 <area shape="poly" title=" " alt="" coords="364,177,262,233,232,245,229,241,260,228,368,174"/>
 <area shape="rect" href="testInputFileReader_8cpp.html#a6c0709af0c4df98cd557a673d9cfb142" title=" " alt="" coords="150,139,218,167"/>
-<area shape="poly" title=" " alt="" coords="312,155,219,156,218,151,317,152"/>
+<area shape="poly" title=" " alt="" coords="312,155,220,156,218,151,317,152"/>
 <area shape="rect" href="testInputFileReader_8cpp.html#a1d0e9f7baa236db4118595ab07d460ad" title=" " alt="" coords="150,191,218,219"/>
 <area shape="poly" title=" " alt="" coords="325,173,220,200,218,195,329,170"/>
 <area shape="rect" href="testInputFileReader_8cpp.html#a4b66b7ef72f02329266cae4f2741b06c" title=" " alt="" coords="150,87,218,115"/>
@@ -536,35 +538,87 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="348,31,297,19,235,10,171,10,139,16,109,26,88,39,70,56,45,89,40,87,66,52,85,35,107,22,138,11,170,5,236,4,298,14,352,29"/>
 <area shape="rect" href="namespacecli.html#af7a6ba717372d561140cb4cbab35995a" title=" " alt="" coords="108,35,261,63"/>
 <area shape="poly" title=" " alt="" coords="309,51,263,52,260,47,314,48"/>
-<area shape="rect" href="classengine_1_1QMRunnerManager.html#a5cd047a0e45827b73ada4a73cb9a379c" title="Create a QM runner based on the specified method." alt="" coords="1038,106,1236,150"/>
-<area shape="poly" title=" " alt="" coords="1281,151,1237,146,1237,141,1287,151"/>
-<area shape="rect" href="classengine_1_1QMCapableEngine.html#afc5a69f59dc6189c50874637aebe2a2b" title="Set the QM runner based on the specified method." alt="" coords="798,199,990,244"/>
-<area shape="poly" title=" " alt="" coords="1056,155,1039,165,991,189,962,201,960,196,989,184,1037,160,1051,157"/>
-<area shape="rect" href="testQMRunnerManager_8cpp.html#ae8fa72d3ee7bc516b8aaa56e6d3e8709" title=" " alt="" coords="867,95,920,123"/>
-<area shape="poly" title=" " alt="" coords="1020,120,921,114,921,109,1025,119"/>
-<area shape="rect" href="testQMRunnerManager_8cpp.html#aa93f2ced1280ad9940a214e829292c1a" title=" " alt="" coords="867,147,920,175"/>
-<area shape="poly" title=" " alt="" coords="1020,144,922,160,921,155,1025,143"/>
-<area shape="rect" href="classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="1053,278,1221,306"/>
-<area shape="poly" title=" " alt="" coords="1266,287,1222,291,1222,286,1271,286"/>
-<area shape="rect" href="testQMSetup_8cpp.html#ade72ba39a7b2972913cc838febc6199e" title=" " alt="" coords="1110,330,1164,358"/>
-<area shape="poly" title=" " alt="" coords="1324,299,1285,311,1165,340,1164,335,1284,305,1318,300"/>
-<area shape="rect" href="testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="1110,382,1164,410"/>
-<area shape="poly" title=" " alt="" coords="1298,301,1286,310,1271,324,1263,340,1254,356,1238,372,1201,388,1165,396,1164,391,1199,383,1235,367,1250,353,1258,337,1266,321,1283,306,1293,302"/>
-<area shape="rect" href="testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="1110,434,1164,462"/>
-<area shape="poly" title=" " alt="" coords="1293,302,1286,310,1274,323,1268,336,1263,365,1258,394,1251,409,1238,423,1221,435,1202,443,1165,450,1164,444,1200,437,1218,430,1235,419,1246,406,1253,393,1257,364,1262,335,1270,320,1283,306,1288,304"/>
-<area shape="rect" href="testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="1110,174,1164,202"/>
-<area shape="poly" title=" " alt="" coords="1349,261,1235,217,1164,197,1164,191,1237,212,1354,261"/>
-<area shape="rect" href="testQMSetup_8cpp.html#af11b99e79f557ca87e47ad129721b524" title=" " alt="" coords="1110,226,1164,254"/>
-<area shape="poly" title=" " alt="" coords="1289,265,1164,247,1164,241,1294,264"/>
-<area shape="rect" href="namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="832,278,956,306"/>
-<area shape="poly" title=" " alt="" coords="1035,292,956,295,956,289,1040,292"/>
+<area shape="rect" href="classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="969,243,1137,271"/>
+<area shape="poly" title=" " alt="" coords="1213,292,1122,274,1123,269,1218,292"/>
+<area shape="rect" href="testQMSetup_8cpp.html#ade72ba39a7b2972913cc838febc6199e" title=" " alt="" coords="1026,295,1080,323"/>
+<area shape="poly" title=" " alt="" coords="1167,310,1081,312,1080,307,1172,309"/>
+<area shape="rect" href="testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="1026,347,1080,375"/>
+<area shape="poly" title=" " alt="" coords="1218,327,1081,358,1080,353,1213,327"/>
+<area shape="rect" href="testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="1026,399,1080,427"/>
+<area shape="poly" title=" " alt="" coords="1201,329,1187,338,1172,350,1163,362,1154,376,1139,389,1110,403,1081,411,1080,406,1108,398,1136,384,1150,372,1159,359,1168,346,1184,334,1196,330"/>
+<area shape="rect" href="testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="1026,451,1080,479"/>
+<area shape="poly" title=" " alt="" coords="1195,330,1187,338,1176,350,1169,362,1163,387,1158,414,1151,428,1139,441,1111,457,1081,465,1080,460,1109,452,1136,437,1146,424,1153,412,1158,386,1164,360,1171,347,1184,334,1190,332"/>
+<area shape="rect" href="testQMSetup_8cpp.html#af11b99e79f557ca87e47ad129721b524" title=" " alt="" coords="1026,191,1080,219"/>
+<area shape="poly" title=" " alt="" coords="1255,288,1136,234,1080,215,1080,210,1138,230,1261,288"/>
+<area shape="rect" href="namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="798,243,921,271"/>
+<area shape="poly" title=" " alt="" coords="951,258,922,260,921,255,956,257"/>
 <area shape="rect" href="namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="576,243,721,271"/>
-<area shape="poly" title=" " alt="" coords="814,281,722,270,722,265,820,281"/>
+<area shape="poly" title=" " alt="" coords="780,258,722,260,721,255,785,257"/>
 <area shape="rect" href="testQMSetup_8cpp.html#a6bf1e0efafea3b7125043e2c9ca94645" title=" " alt="" coords="622,295,675,323"/>
-<area shape="poly" title=" " alt="" coords="814,298,676,310,675,305,819,297"/>
+<area shape="poly" title=" " alt="" coords="783,276,676,306,675,300,788,275"/>
 <area shape="rect" href="namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="309,243,499,271"/>
 <area shape="poly" title=" " alt="" coords="557,258,500,260,499,255,563,257"/>
 <area shape="poly" title=" " alt="" coords="291,258,254,260,252,255,296,256"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1baba81ed266e9ac755cf68b6a10d821" name="a1baba81ed266e9ac755cf68b6a10d821"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1baba81ed266e9ac755cf68b6a10d821">&#9670;&#160;</a></span>getMaceModelName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string settings::QMSettings::getMaceModelName </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns the maceModel as expected by mace.calculators </p>
+<dl class="section return"><dt>Returns</dt><dd>std::string e.g. "small-0b" </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classsettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_cgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_cgraph" loading="lazy" alt=""/></div>
+<map name="aclasssettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_cgraph" id="aclasssettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_cgraph">
+<area shape="rect" title="returns the maceModel as expected by mace.calculators" alt="" coords="5,24,170,68"/>
+<area shape="rect" href="namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="230,5,394,33"/>
+<area shape="poly" title=" " alt="" coords="170,33,217,30,212,31,171,39"/>
+<area shape="rect" href="structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="218,57,406,85"/>
+<area shape="poly" title=" " alt="" coords="170,52,205,59,199,59,170,58"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classsettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_icgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_icgraph" loading="lazy" alt=""/></div>
+<map name="aclasssettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_icgraph" id="aclasssettings_1_1QMSettings_a1baba81ed266e9ac755cf68b6a10d821_icgraph">
+<area shape="rect" title="returns the maceModel as expected by mace.calculators" alt="" coords="738,96,903,141"/>
+<area shape="rect" href="classengine_1_1QMRunnerManager.html#ab9fd454e4b7d95136aac341db3fe43e0" title="Create a MACE QM runner." alt="" coords="492,65,690,110"/>
+<area shape="poly" title=" " alt="" coords="720,105,691,104,691,98,726,105"/>
+<area shape="rect" href="testQMSettings_8cpp.html#a69044a23c8267bf58cc24931492a6844" title=" " alt="" coords="564,134,618,162"/>
+<area shape="poly" title=" " alt="" coords="726,131,618,147,618,142,720,131"/>
+<area shape="rect" href="classengine_1_1QMRunnerManager.html#a5cd047a0e45827b73ada4a73cb9a379c" title="Create a QM runner based on the specified method." alt="" coords="246,65,444,110"/>
+<area shape="poly" title=" " alt="" coords="473,88,445,90,444,85,479,87"/>
+<area shape="rect" href="classengine_1_1QMCapableEngine.html#afc5a69f59dc6189c50874637aebe2a2b" title="Set the QM runner based on the specified method." alt="" coords="5,5,198,50"/>
+<area shape="poly" title=" " alt="" coords="234,62,195,53,195,48,240,61"/>
+<area shape="rect" href="testQMRunnerManager_8cpp.html#ae8fa72d3ee7bc516b8aaa56e6d3e8709" title=" " alt="" coords="75,74,128,102"/>
+<area shape="poly" title=" " alt="" coords="228,89,129,90,128,85,232,86"/>
+<area shape="rect" href="testQMRunnerManager_8cpp.html#aa93f2ced1280ad9940a214e829292c1a" title=" " alt="" coords="75,126,128,154"/>
+<area shape="poly" title=" " alt="" coords="228,113,129,137,128,131,233,111"/>
 </map>
 </div>
 
@@ -673,27 +727,25 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classsettings_1_1QMSettings_a8386306cb5ec3d9f0116594627e1bde9_icgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_a8386306cb5ec3d9f0116594627e1bde9_icgraph" loading="lazy" alt=""/></div>
 <map name="aclasssettings_1_1QMSettings_a8386306cb5ec3d9f0116594627e1bde9_icgraph" id="aclasssettings_1_1QMSettings_a8386306cb5ec3d9f0116594627e1bde9_icgraph">
-<area shape="rect" title=" " alt="" coords="1561,259,1717,304"/>
-<area shape="rect" href="classinput_1_1InputFileReader.html#a2f95672c78acd081e913c2626675f512" title="validates QM keyword dependencies" alt="" coords="1316,47,1481,92"/>
-<area shape="poly" title=" " alt="" coords="1610,245,1567,193,1511,137,1479,114,1447,95,1448,89,1482,109,1514,133,1571,189,1615,247"/>
-<area shape="rect" href="classengine_1_1QMRunnerManager.html#ab9fd454e4b7d95136aac341db3fe43e0" title="Create a MACE QM runner." alt="" coords="1299,147,1498,192"/>
-<area shape="poly" title=" " alt="" coords="1573,252,1448,195,1449,190,1578,252"/>
-<area shape="rect" href="classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="1284,267,1513,295"/>
-<area shape="poly" title=" " alt="" coords="1543,281,1513,284,1513,279,1548,281"/>
-<area shape="rect" href="testQMSettings_8cpp.html#a0e3a0fa5cf6391cec0953792c2173c25" title=" " alt="" coords="1372,319,1425,347"/>
-<area shape="poly" title=" " alt="" coords="1548,301,1426,330,1425,325,1543,302"/>
-<area shape="rect" href="testQMParser_8cpp.html#afa85e3ef97625e605b9dac3b0561e701" title=" " alt="" coords="1364,371,1433,399"/>
-<area shape="poly" title=" " alt="" coords="1598,312,1557,339,1514,361,1473,375,1434,383,1433,378,1471,369,1512,356,1555,335,1592,313"/>
-<area shape="rect" href="classinput_1_1InputFileReader.html#a1c9695106cef4d7b1d436397f187f115" title="validates semantic dependencies between parsed input keywords" alt="" coords="547,36,750,81"/>
-<area shape="poly" title=" " alt="" coords="1298,69,750,63,750,57,1303,67"/>
+<area shape="rect" title=" " alt="" coords="1503,314,1659,358"/>
+<area shape="rect" href="classinput_1_1InputFileReader.html#a2f95672c78acd081e913c2626675f512" title="validates QM keyword dependencies" alt="" coords="798,131,962,176"/>
+<area shape="poly" title=" " alt="" coords="1509,307,1454,286,1318,227,1257,204,1178,183,1066,165,962,157,962,152,1066,159,1179,177,1259,199,1320,222,1456,282,1514,308"/>
+<area shape="rect" href="classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="1226,295,1455,323"/>
+<area shape="poly" title=" " alt="" coords="1485,326,1455,325,1455,319,1490,326"/>
+<area shape="rect" href="testQMSettings_8cpp.html#a0e3a0fa5cf6391cec0953792c2173c25" title=" " alt="" coords="1314,347,1367,375"/>
+<area shape="poly" title=" " alt="" coords="1490,346,1368,361,1367,356,1485,346"/>
+<area shape="rect" href="testQMParser_8cpp.html#afa85e3ef97625e605b9dac3b0561e701" title=" " alt="" coords="1306,399,1375,427"/>
+<area shape="poly" title=" " alt="" coords="1517,364,1455,389,1376,409,1375,404,1454,384,1512,365"/>
+<area shape="rect" href="classinput_1_1InputFileReader.html#a1c9695106cef4d7b1d436397f187f115" title="validates semantic dependencies between parsed input keywords" alt="" coords="547,131,750,176"/>
+<area shape="poly" title=" " alt="" coords="779,154,751,156,750,151,785,153"/>
 <area shape="rect" href="namespaceinput.html#aca17e7eee014a70cfa8a822976c3c85f" title="wrapper function to construct InputFileReader and call read() and postProcess()" alt="" coords="330,139,478,167"/>
-<area shape="poly" title=" " alt="" coords="573,88,444,141,441,136,577,86"/>
+<area shape="poly" title=" " alt="" coords="529,154,479,156,478,151,534,152"/>
 <area shape="rect" href="namespacecli.html#a41a3b4a6a89f337c76febb1c4dc75299" title=" " alt="" coords="328,35,481,63"/>
-<area shape="poly" title=" " alt="" coords="529,55,482,55,480,50,534,53"/>
+<area shape="poly" title=" " alt="" coords="578,125,439,66,439,61,583,124"/>
 <area shape="rect" href="classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="116,243,252,271"/>
 <area shape="poly" title=" " alt="" coords="364,177,262,233,232,245,229,241,260,228,368,174"/>
 <area shape="rect" href="testInputFileReader_8cpp.html#a6c0709af0c4df98cd557a673d9cfb142" title=" " alt="" coords="150,139,218,167"/>
-<area shape="poly" title=" " alt="" coords="312,155,219,156,218,151,317,152"/>
+<area shape="poly" title=" " alt="" coords="312,155,220,156,218,151,317,152"/>
 <area shape="rect" href="testInputFileReader_8cpp.html#a1d0e9f7baa236db4118595ab07d460ad" title=" " alt="" coords="150,191,218,219"/>
 <area shape="poly" title=" " alt="" coords="325,173,220,200,218,195,329,170"/>
 <area shape="rect" href="testInputFileReader_8cpp.html#a4b66b7ef72f02329266cae4f2741b06c" title=" " alt="" coords="150,87,218,115"/>
@@ -705,35 +757,87 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="348,31,297,19,235,10,171,10,139,16,109,26,88,39,70,56,45,89,40,87,66,52,85,35,107,22,138,11,170,5,236,4,298,14,352,29"/>
 <area shape="rect" href="namespacecli.html#af7a6ba717372d561140cb4cbab35995a" title=" " alt="" coords="108,35,261,63"/>
 <area shape="poly" title=" " alt="" coords="309,51,263,52,260,47,314,48"/>
-<area shape="rect" href="classengine_1_1QMRunnerManager.html#a5cd047a0e45827b73ada4a73cb9a379c" title="Create a QM runner based on the specified method." alt="" coords="1038,106,1236,150"/>
-<area shape="poly" title=" " alt="" coords="1281,151,1237,146,1237,141,1287,151"/>
-<area shape="rect" href="classengine_1_1QMCapableEngine.html#afc5a69f59dc6189c50874637aebe2a2b" title="Set the QM runner based on the specified method." alt="" coords="798,199,990,244"/>
-<area shape="poly" title=" " alt="" coords="1056,155,1039,165,991,189,962,201,960,196,989,184,1037,160,1051,157"/>
-<area shape="rect" href="testQMRunnerManager_8cpp.html#ae8fa72d3ee7bc516b8aaa56e6d3e8709" title=" " alt="" coords="867,95,920,123"/>
-<area shape="poly" title=" " alt="" coords="1020,120,921,114,921,109,1025,119"/>
-<area shape="rect" href="testQMRunnerManager_8cpp.html#aa93f2ced1280ad9940a214e829292c1a" title=" " alt="" coords="867,147,920,175"/>
-<area shape="poly" title=" " alt="" coords="1020,144,922,160,921,155,1025,143"/>
-<area shape="rect" href="classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="1053,278,1221,306"/>
-<area shape="poly" title=" " alt="" coords="1266,287,1222,291,1222,286,1271,286"/>
-<area shape="rect" href="testQMSetup_8cpp.html#ade72ba39a7b2972913cc838febc6199e" title=" " alt="" coords="1110,330,1164,358"/>
-<area shape="poly" title=" " alt="" coords="1324,299,1285,311,1165,340,1164,335,1284,305,1318,300"/>
-<area shape="rect" href="testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="1110,382,1164,410"/>
-<area shape="poly" title=" " alt="" coords="1298,301,1286,310,1271,324,1263,340,1254,356,1238,372,1201,388,1165,396,1164,391,1199,383,1235,367,1250,353,1258,337,1266,321,1283,306,1293,302"/>
-<area shape="rect" href="testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="1110,434,1164,462"/>
-<area shape="poly" title=" " alt="" coords="1293,302,1286,310,1274,323,1268,336,1263,365,1258,394,1251,409,1238,423,1221,435,1202,443,1165,450,1164,444,1200,437,1218,430,1235,419,1246,406,1253,393,1257,364,1262,335,1270,320,1283,306,1288,304"/>
-<area shape="rect" href="testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="1110,174,1164,202"/>
-<area shape="poly" title=" " alt="" coords="1349,261,1235,217,1164,197,1164,191,1237,212,1354,261"/>
-<area shape="rect" href="testQMSetup_8cpp.html#af11b99e79f557ca87e47ad129721b524" title=" " alt="" coords="1110,226,1164,254"/>
-<area shape="poly" title=" " alt="" coords="1289,265,1164,247,1164,241,1294,264"/>
-<area shape="rect" href="namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="832,278,956,306"/>
-<area shape="poly" title=" " alt="" coords="1035,292,956,295,956,289,1040,292"/>
+<area shape="rect" href="classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="1010,243,1178,271"/>
+<area shape="poly" title=" " alt="" coords="1254,292,1163,274,1164,269,1259,292"/>
+<area shape="rect" href="testQMSetup_8cpp.html#ade72ba39a7b2972913cc838febc6199e" title=" " alt="" coords="1068,295,1121,323"/>
+<area shape="poly" title=" " alt="" coords="1208,310,1122,312,1121,307,1213,309"/>
+<area shape="rect" href="testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="1068,347,1121,375"/>
+<area shape="poly" title=" " alt="" coords="1259,327,1122,358,1121,353,1254,327"/>
+<area shape="rect" href="testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="1068,399,1121,427"/>
+<area shape="poly" title=" " alt="" coords="1242,329,1228,338,1213,350,1204,362,1195,376,1180,389,1151,403,1122,411,1121,406,1149,398,1177,384,1191,372,1200,359,1209,346,1225,334,1237,330"/>
+<area shape="rect" href="testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="1068,451,1121,479"/>
+<area shape="poly" title=" " alt="" coords="1236,330,1228,338,1217,350,1210,362,1204,387,1199,414,1192,428,1180,441,1152,457,1122,465,1121,460,1150,452,1177,437,1187,424,1194,412,1199,386,1205,360,1212,347,1225,334,1231,332"/>
+<area shape="rect" href="testQMSetup_8cpp.html#af11b99e79f557ca87e47ad129721b524" title=" " alt="" coords="1068,191,1121,219"/>
+<area shape="poly" title=" " alt="" coords="1296,288,1177,234,1121,215,1121,210,1179,230,1302,288"/>
+<area shape="rect" href="namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="818,243,942,271"/>
+<area shape="poly" title=" " alt="" coords="992,258,942,260,941,255,997,257"/>
 <area shape="rect" href="namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="576,243,721,271"/>
-<area shape="poly" title=" " alt="" coords="814,281,722,270,722,265,820,281"/>
+<area shape="poly" title=" " alt="" coords="800,258,722,260,721,255,805,257"/>
 <area shape="rect" href="testQMSetup_8cpp.html#a6bf1e0efafea3b7125043e2c9ca94645" title=" " alt="" coords="622,295,675,323"/>
-<area shape="poly" title=" " alt="" coords="814,298,676,310,675,305,819,297"/>
+<area shape="poly" title=" " alt="" coords="801,275,676,306,675,301,806,274"/>
 <area shape="rect" href="namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="309,243,499,271"/>
 <area shape="poly" title=" " alt="" coords="557,258,500,260,499,255,563,257"/>
 <area shape="poly" title=" " alt="" coords="291,258,254,260,252,255,296,256"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ae90e855e61e630d6b65c946d649036d1" name="ae90e855e61e630d6b65c946d649036d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae90e855e61e630d6b65c946d649036d1">&#9670;&#160;</a></span>getMaceModelTypeName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string settings::QMSettings::getMaceModelTypeName </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns the maceModelType as calculator name in mace.calculators </p>
+<dl class="section return"><dt>Returns</dt><dd>std::string e.g. "mace_off" </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classsettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_cgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_cgraph" loading="lazy" alt=""/></div>
+<map name="aclasssettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_cgraph" id="aclasssettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_cgraph">
+<area shape="rect" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="5,28,200,72"/>
+<area shape="rect" href="namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="250,5,413,33"/>
+<area shape="poly" title=" " alt="" coords="199,34,237,31,232,33,200,39"/>
+<area shape="rect" href="structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="248,57,415,102"/>
+<area shape="poly" title=" " alt="" coords="200,60,235,66,229,67,200,65"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classsettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_icgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_icgraph" loading="lazy" alt=""/></div>
+<map name="aclasssettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_icgraph" id="aclasssettings_1_1QMSettings_ae90e855e61e630d6b65c946d649036d1_icgraph">
+<area shape="rect" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="738,96,933,141"/>
+<area shape="rect" href="classengine_1_1QMRunnerManager.html#ab9fd454e4b7d95136aac341db3fe43e0" title="Create a MACE QM runner." alt="" coords="492,65,690,110"/>
+<area shape="poly" title=" " alt="" coords="720,104,691,103,691,97,726,104"/>
+<area shape="rect" href="testQMSettings_8cpp.html#a69044a23c8267bf58cc24931492a6844" title=" " alt="" coords="564,134,618,162"/>
+<area shape="poly" title=" " alt="" coords="726,132,618,147,618,142,720,132"/>
+<area shape="rect" href="classengine_1_1QMRunnerManager.html#a5cd047a0e45827b73ada4a73cb9a379c" title="Create a QM runner based on the specified method." alt="" coords="246,65,444,110"/>
+<area shape="poly" title=" " alt="" coords="473,88,445,90,444,85,479,87"/>
+<area shape="rect" href="classengine_1_1QMCapableEngine.html#afc5a69f59dc6189c50874637aebe2a2b" title="Set the QM runner based on the specified method." alt="" coords="5,5,198,50"/>
+<area shape="poly" title=" " alt="" coords="234,62,195,53,195,48,240,61"/>
+<area shape="rect" href="testQMRunnerManager_8cpp.html#ae8fa72d3ee7bc516b8aaa56e6d3e8709" title=" " alt="" coords="75,74,128,102"/>
+<area shape="poly" title=" " alt="" coords="228,89,129,90,128,85,232,86"/>
+<area shape="rect" href="testQMRunnerManager_8cpp.html#aa93f2ced1280ad9940a214e829292c1a" title=" " alt="" coords="75,126,128,154"/>
+<area shape="poly" title=" " alt="" coords="228,113,129,137,128,131,233,111"/>
 </map>
 </div>
 
@@ -1902,23 +2006,25 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classsettings_1_1QMSettings_a885998448fce2ba2627bfc7ce0cc60b3_icgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_a885998448fce2ba2627bfc7ce0cc60b3_icgraph" loading="lazy" alt=""/></div>
 <map name="aclasssettings_1_1QMSettings_a885998448fce2ba2627bfc7ce0cc60b3_icgraph" id="aclasssettings_1_1QMSettings_a885998448fce2ba2627bfc7ce0cc60b3_icgraph">
-<area shape="rect" title="sets the maceModel to enum in settings" alt="" coords="621,187,778,231"/>
+<area shape="rect" title="sets the maceModel to enum in settings" alt="" coords="621,213,778,258"/>
 <area shape="rect" href="classinput_1_1QMInputParser.html#aba7527bdcd81f4562e7623674946e869" title=" " alt="" coords="416,5,573,50"/>
-<area shape="poly" title=" " alt="" coords="673,173,629,119,602,90,572,64,554,53,555,48,575,60,606,87,633,116,678,174"/>
+<area shape="poly" title=" " alt="" coords="677,199,634,133,605,97,572,64,556,53,556,48,575,60,609,93,639,130,683,201"/>
 <area shape="rect" href="classTestInputValidation.html#aebac270531beb65b4e1a1dab1a81b0aa" title=" " alt="" coords="422,75,567,119"/>
-<area shape="poly" title=" " alt="" coords="648,178,572,134,550,123,550,117,575,129,654,178"/>
-<area shape="rect" href="testInputValidation_8cpp.html#a5ce15fde54c1da2360d8bca08783d051" title=" " alt="" coords="460,143,529,171"/>
-<area shape="poly" title=" " alt="" coords="604,186,529,168,529,163,609,185"/>
-<area shape="rect" href="testInputValidation_8cpp.html#a2be0c6284b986f4749c77e9edf736f9b" title=" " alt="" coords="460,195,529,223"/>
-<area shape="poly" title=" " alt="" coords="603,209,529,212,529,206,609,209"/>
-<area shape="rect" href="testInputValidation_8cpp.html#aa607daabef0cb0e204fd7360b2578e58" title=" " alt="" coords="460,247,529,275"/>
-<area shape="poly" title=" " alt="" coords="609,232,530,255,528,250,604,233"/>
-<area shape="rect" href="testInputValidation_8cpp.html#a276cdde8030b1c78d6636a3caf575a16" title=" " alt="" coords="460,299,529,327"/>
-<area shape="poly" title=" " alt="" coords="656,239,574,289,530,306,529,301,572,284,651,241"/>
-<area shape="rect" href="testInputValidation_8cpp.html#a7c7fd6e3c5b718a93e8a6a6fb7fa251b" title=" " alt="" coords="460,351,529,379"/>
-<area shape="poly" title=" " alt="" coords="675,243,631,294,604,319,575,341,530,360,528,355,572,336,601,315,627,291,670,245"/>
+<area shape="poly" title=" " alt="" coords="661,202,620,169,572,134,552,122,552,117,575,129,624,165,666,203"/>
+<area shape="rect" href="testQMSettings_8cpp.html#a69044a23c8267bf58cc24931492a6844" title=" " alt="" coords="468,143,521,171"/>
+<area shape="poly" title=" " alt="" coords="629,207,572,186,522,168,522,163,574,181,634,207"/>
+<area shape="rect" href="testInputValidation_8cpp.html#a5ce15fde54c1da2360d8bca08783d051" title=" " alt="" coords="460,195,529,223"/>
+<area shape="poly" title=" " alt="" coords="603,224,529,216,529,211,609,223"/>
+<area shape="rect" href="testInputValidation_8cpp.html#a2be0c6284b986f4749c77e9edf736f9b" title=" " alt="" coords="460,247,529,275"/>
+<area shape="poly" title=" " alt="" coords="603,248,530,259,528,254,609,247"/>
+<area shape="rect" href="testInputValidation_8cpp.html#aa607daabef0cb0e204fd7360b2578e58" title=" " alt="" coords="460,299,529,327"/>
+<area shape="poly" title=" " alt="" coords="633,263,574,289,530,305,528,299,572,284,628,265"/>
+<area shape="rect" href="testInputValidation_8cpp.html#a276cdde8030b1c78d6636a3caf575a16" title=" " alt="" coords="460,351,529,379"/>
+<area shape="poly" title=" " alt="" coords="667,268,624,307,575,341,530,359,529,354,572,336,621,303,662,270"/>
+<area shape="rect" href="testInputValidation_8cpp.html#a7c7fd6e3c5b718a93e8a6a6fb7fa251b" title=" " alt="" coords="460,403,529,431"/>
+<area shape="poly" title=" " alt="" coords="680,270,636,334,607,365,575,393,553,404,530,413,529,407,551,400,572,388,604,361,632,330,675,273"/>
 <area shape="rect" href="classinput_1_1QMInputParser.html#ac156cd6e55ca1dea71342bd853e625a8" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="211,5,368,50"/>
-<area shape="poly" title=" " alt="" coords="398,29,369,30,368,25,403,27"/>
+<area shape="poly" title=" " alt="" coords="398,29,370,30,368,25,403,27"/>
 <area shape="rect" href="classinput_1_1QMInputParser.html#a231e270fdd2d7c0604c05f7af6d3647d" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="5,5,163,50"/>
 <area shape="poly" title=" " alt="" coords="193,29,165,30,162,25,197,26"/>
 </map>
@@ -2006,23 +2112,25 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classsettings_1_1QMSettings_a5444c6d2cdfacedfdc7d05d612167e05_icgraph.png" border="0" usemap="#aclasssettings_1_1QMSettings_a5444c6d2cdfacedfdc7d05d612167e05_icgraph" loading="lazy" alt=""/></div>
 <map name="aclasssettings_1_1QMSettings_a5444c6d2cdfacedfdc7d05d612167e05_icgraph" id="aclasssettings_1_1QMSettings_a5444c6d2cdfacedfdc7d05d612167e05_icgraph">
-<area shape="rect" title="sets the maceModelType to enum in settings" alt="" coords="841,135,997,179"/>
+<area shape="rect" title="sets the maceModelType to enum in settings" alt="" coords="841,161,997,206"/>
 <area shape="rect" href="classinput_1_1QMInputParser.html#a34d7f8142fa0da9d011ecae7bb446b0c" title="parses the QM method if it starts with &quot;mace&quot;" alt="" coords="621,5,793,50"/>
-<area shape="poly" title=" " alt="" coords="877,124,837,95,791,65,769,53,770,48,794,60,841,91,883,125"/>
+<area shape="poly" title=" " alt="" coords="886,149,844,107,791,65,772,53,772,48,794,60,848,103,891,150"/>
 <area shape="rect" href="classTestInputValidation.html#aebac270531beb65b4e1a1dab1a81b0aa" title=" " alt="" coords="634,75,780,119"/>
-<area shape="poly" title=" " alt="" coords="823,131,780,120,780,115,828,131"/>
-<area shape="rect" href="testQMSettings_8cpp.html#a0e3a0fa5cf6391cec0953792c2173c25" title=" " alt="" coords="680,143,734,171"/>
-<area shape="poly" title=" " alt="" coords="822,157,734,160,734,154,828,157"/>
-<area shape="rect" href="testInputValidation_8cpp.html#a5ce15fde54c1da2360d8bca08783d051" title=" " alt="" coords="673,195,741,223"/>
-<area shape="poly" title=" " alt="" coords="828,179,742,203,741,198,823,180"/>
-<area shape="rect" href="testInputValidation_8cpp.html#aa607daabef0cb0e204fd7360b2578e58" title=" " alt="" coords="673,247,741,275"/>
-<area shape="poly" title=" " alt="" coords="876,187,836,214,794,237,742,255,741,250,792,232,834,210,871,189"/>
+<area shape="poly" title=" " alt="" coords="846,155,792,134,764,123,764,117,794,129,852,155"/>
+<area shape="rect" href="testQMSettings_8cpp.html#a69044a23c8267bf58cc24931492a6844" title=" " alt="" coords="680,143,734,171"/>
+<area shape="poly" title=" " alt="" coords="822,172,734,163,734,158,828,172"/>
+<area shape="rect" href="testQMSettings_8cpp.html#a0e3a0fa5cf6391cec0953792c2173c25" title=" " alt="" coords="680,195,734,223"/>
+<area shape="poly" title=" " alt="" coords="822,195,734,209,733,203,828,194"/>
+<area shape="rect" href="testInputValidation_8cpp.html#a5ce15fde54c1da2360d8bca08783d051" title=" " alt="" coords="673,247,741,275"/>
+<area shape="poly" title=" " alt="" coords="853,212,794,237,742,254,741,248,792,232,847,213"/>
+<area shape="rect" href="testInputValidation_8cpp.html#aa607daabef0cb0e204fd7360b2578e58" title=" " alt="" coords="673,299,741,327"/>
+<area shape="poly" title=" " alt="" coords="887,216,844,255,794,289,742,308,741,303,791,284,841,251,882,218"/>
 <area shape="rect" href="classinput_1_1QMInputParser.html#a645d21da7128d9dbc5db3c3a8a35b5f2" title=" " alt="" coords="416,5,573,50"/>
 <area shape="poly" title=" " alt="" coords="603,28,574,30,573,25,608,27"/>
 <area shape="rect" href="classinput_1_1QMInputParser.html#ac156cd6e55ca1dea71342bd853e625a8" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="211,5,368,50"/>
 <area shape="poly" title=" " alt="" coords="398,29,369,30,368,25,403,27"/>
 <area shape="rect" href="classinput_1_1QMInputParser.html#a231e270fdd2d7c0604c05f7af6d3647d" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="5,5,163,50"/>
-<area shape="poly" title=" " alt="" coords="193,29,164,30,162,25,198,26"/>
+<area shape="poly" title=" " alt="" coords="193,29,164,30,162,25,197,26"/>
 </map>
 </div>
 

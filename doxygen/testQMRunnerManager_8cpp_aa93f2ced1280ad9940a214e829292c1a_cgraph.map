@@ -1,46 +1,49 @@
 <map id="TEST" name="TEST">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,628,59,656"/>
-<area shape="rect" id="Node000002" href="$classengine_1_1QMRunnerManager.html#a5cd047a0e45827b73ada4a73cb9a379c" title="Create a QM runner based on the specified method." alt="" coords="107,620,305,665"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,640,93,640,89,644,61,644"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,534,59,562"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMRunnerManager.html#a5cd047a0e45827b73ada4a73cb9a379c" title="Create a QM runner based on the specified method." alt="" coords="107,525,305,570"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,546,93,546,89,549,61,550"/>
 <area shape="rect" id="Node000003" href="$classengine_1_1QMRunnerManager.html#ad68efa7eb316836f0cc1d59e27e00c12" title="Create an ASE DFTB+ QM runner." alt="" coords="353,144,551,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="217,618,433,200,432,205,221,621"/>
-<area shape="rect" id="Node000008" href="$classengine_1_1QMRunnerManager.html#a1fbde23262229bea272625c19e72c32a" title="Create an ASE FeNNol QM runner." alt="" coords="353,784,551,829"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="241,663,407,774,402,776,241,668"/>
-<area shape="rect" id="Node000012" href="$classengine_1_1QMRunnerManager.html#ab9fd454e4b7d95136aac341db3fe43e0" title="Create a MACE QM runner." alt="" coords="353,491,551,535"/>
-<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="249,617,396,541,393,545,252,622"/>
-<area shape="rect" id="Node000020" href="$classengine_1_1QMRunnerManager.html#a58c01ca39a574eed52e236fcda0e4e89" title="Create an ASE xTB QM runner." alt="" coords="353,957,551,1002"/>
-<area shape="poly" id="edge20_Node000002_Node000020" title=" " alt="" coords="225,663,428,944,423,946,222,667"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="219,524,429,199,427,204,224,526"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1QMRunnerManager.html#a1fbde23262229bea272625c19e72c32a" title="Create an ASE FeNNol QM runner." alt="" coords="353,664,551,709"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="248,568,400,655,395,657,247,573"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1QMRunnerManager.html#ab9fd454e4b7d95136aac341db3fe43e0" title="Create a MACE QM runner." alt="" coords="353,421,551,466"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="259,523,385,471,381,474,262,527"/>
+<area shape="rect" id="Node000021" href="$classengine_1_1QMRunnerManager.html#a58c01ca39a574eed52e236fcda0e4e89" title="Create an ASE xTB QM runner." alt="" coords="353,837,551,882"/>
+<area shape="poly" id="edge22_Node000002_Node000021" title=" " alt="" coords="227,568,426,824,421,826,224,573"/>
 <area shape="rect" id="Node000004" href="$classsettings_1_1QMSettings.html#abc2badd548c139029b3475780817e981" title="returns the Hubbard Derivative dictionary" alt="" coords="630,5,787,50"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="478,142,532,101,598,60,618,53,614,57,601,65,535,105,482,145"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="478,142,532,101,598,60,618,53,614,57,601,65,535,105,482,146"/>
 <area shape="rect" id="Node000005" href="$classsettings_1_1QMSettings.html#a743d73b10017eca6a17215df472bf87a" title="returns the slakosPath" alt="" coords="630,75,787,119"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="536,141,617,120,613,124,539,146"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="536,141,617,121,613,124,539,146"/>
 <area shape="rect" id="Node000006" href="$classsettings_1_1QMSettings.html#ab324126741d9b3eecb6e7886d364178e" title="returns if the dispersion correction should be used" alt="" coords="630,213,787,258"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="537,187,618,209,613,212,538,192"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="537,187,618,209,613,211,538,192"/>
 <area shape="rect" id="Node000007" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="630,144,787,189"/>
 <area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="551,164,617,165,612,168,553,169"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1QMSettings.html#a3efe0df20e4016e49203bc905099eda9" title="returns the FeNNol model path" alt="" coords="628,749,789,794"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="551,790,615,784,610,785,553,795"/>
-<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="616,819,801,863"/>
-<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="552,817,603,826,598,827,552,822"/>
-<area shape="rect" id="Node000011" href="$classsettings_1_1QMSettings.html#a0b0110319c83f7c67ec0b8a9582f2ad2" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="623,888,794,933"/>
-<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="498,826,600,873,620,882,614,882,598,878,497,832"/>
-<area shape="poly" id="edge19_Node000012_Node000006" title=" " alt="" coords="459,489,477,443,506,384,546,322,570,293,598,268,618,257,614,261,601,272,574,297,550,325,510,386,481,445,463,492"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1QMSettings.html#a3efe0df20e4016e49203bc905099eda9" title="returns the FeNNol model path" alt="" coords="628,629,789,674"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="551,670,615,664,610,665,553,675"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="616,699,801,743"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="552,697,603,706,598,707,552,702"/>
+<area shape="rect" id="Node000011" href="$classsettings_1_1QMSettings.html#a0b0110319c83f7c67ec0b8a9582f2ad2" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="623,768,794,813"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="498,706,600,753,620,762,614,762,598,758,497,712"/>
+<area shape="poly" id="edge21_Node000012_Node000006" title=" " alt="" coords="465,419,517,345,554,304,598,268,618,259,614,262,601,273,558,308,521,349,469,423"/>
 <area shape="rect" id="Node000013" href="$classsettings_1_1GeneralSettings.html#a1862423df5853a9d58a116a6c9fd577a" title="get the floating point string representation used in pybind11 bindings" alt="" coords="599,283,818,327"/>
-<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="464,489,517,415,554,373,598,337,609,333,605,336,601,342,558,377,521,418,469,492"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="478,419,532,378,598,337,615,332,610,335,601,342,535,382,482,423"/>
 <area shape="rect" id="Node000014" href="$classsettings_1_1QMSettings.html#ae628d12cb43bc05f037846d9ea09ee86" title="returns the maceMode" alt="" coords="630,352,787,397"/>
-<area shape="poly" id="edge13_Node000012_Node000014" title=" " alt="" coords="478,488,532,447,598,407,618,400,614,403,601,411,535,452,482,492"/>
-<area shape="rect" id="Node000015" href="$classsettings_1_1QMSettings.html#afe3751a4a4c3d1d21148bdd4c537b173" title="returns the maceModel" alt="" coords="630,421,787,466"/>
-<area shape="poly" id="edge14_Node000012_Node000015" title=" " alt="" coords="536,488,617,467,613,470,539,492"/>
-<area shape="rect" id="Node000016" href="$classsettings_1_1QMSettings.html#a5a4227da817b17dfd08af7504d012627" title="returns the maceModelPath" alt="" coords="630,491,787,535"/>
-<area shape="poly" id="edge15_Node000012_Node000016" title=" " alt="" coords="551,510,617,512,612,514,553,516"/>
-<area shape="rect" id="Node000017" href="$classsettings_1_1QMSettings.html#a8386306cb5ec3d9f0116594627e1bde9" title=" " alt="" coords="630,560,787,605"/>
-<area shape="poly" id="edge16_Node000012_Node000017" title=" " alt="" coords="537,533,618,556,613,558,538,539"/>
-<area shape="rect" id="Node000018" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="614,628,803,656"/>
-<area shape="poly" id="edge17_Node000012_Node000018" title=" " alt="" coords="479,533,534,575,566,597,600,615,618,623,612,624,598,619,564,601,531,580,479,539"/>
-<area shape="rect" id="Node000019" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="625,680,792,725"/>
-<area shape="poly" id="edge18_Node000012_Node000019" title=" " alt="" coords="470,533,524,599,560,635,601,665,613,674,608,674,598,670,557,639,520,603,469,539"/>
-<area shape="rect" id="Node000021" href="$classsettings_1_1QMSettings.html#a060329b7e58cfbb9c02c722b561fcdc5" title="returns the xTBMethod" alt="" coords="630,957,787,1002"/>
-<area shape="poly" id="edge21_Node000020_Node000021" title=" " alt="" coords="552,977,617,979,612,980,552,982"/>
-<area shape="rect" id="Node000022" href="$structXtbMethodMeta.html#a0ca84f339c82f9e42ceb579ec0b7d4d6" title=" " alt="" coords="616,1026,801,1054"/>
-<area shape="poly" id="edge22_Node000020_Node000022" title=" " alt="" coords="550,1000,600,1012,633,1022,628,1022,599,1017,550,1005"/>
+<area shape="poly" id="edge13_Node000012_Node000014" title=" " alt="" coords="536,418,617,398,613,401,539,423"/>
+<area shape="rect" id="Node000015" href="$classsettings_1_1QMSettings.html#a1baba81ed266e9ac755cf68b6a10d821" title="returns the maceModel as expected by mace.calculators" alt="" coords="626,421,791,466"/>
+<area shape="poly" id="edge14_Node000012_Node000015" title=" " alt="" coords="551,441,613,443,608,445,553,446"/>
+<area shape="rect" id="Node000018" href="$classsettings_1_1QMSettings.html#a5a4227da817b17dfd08af7504d012627" title="returns the maceModelPath" alt="" coords="630,560,787,605"/>
+<area shape="poly" id="edge17_Node000012_Node000018" title=" " alt="" coords="480,464,535,505,601,545,618,555,613,555,598,550,532,509,480,469"/>
+<area shape="rect" id="Node000019" href="$classsettings_1_1QMSettings.html#ae90e855e61e630d6b65c946d649036d1" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="611,491,806,535"/>
+<area shape="poly" id="edge18_Node000012_Node000019" title=" " alt="" coords="537,464,611,485,606,487,538,469"/>
+<area shape="rect" id="Node000016" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="878,460,1042,488"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="791,451,865,462,860,463,792,456"/>
+<area shape="rect" id="Node000017" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="866,408,1054,436"/>
+<area shape="poly" id="edge16_Node000015_Node000017" title=" " alt="" coords="790,434,853,431,848,433,792,439"/>
+<area shape="poly" id="edge19_Node000019_Node000016" title=" " alt="" coords="806,495,866,488,861,490,807,501"/>
+<area shape="rect" id="Node000020" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="876,512,1044,557"/>
+<area shape="poly" id="edge20_Node000019_Node000020" title=" " alt="" coords="806,519,864,525,858,527,807,524"/>
+<area shape="rect" id="Node000022" href="$classsettings_1_1QMSettings.html#a060329b7e58cfbb9c02c722b561fcdc5" title="returns the xTBMethod" alt="" coords="630,837,787,882"/>
+<area shape="poly" id="edge23_Node000021_Node000022" title=" " alt="" coords="552,857,617,859,612,860,552,862"/>
+<area shape="rect" id="Node000023" href="$structXtbMethodMeta.html#a0ca84f339c82f9e42ceb579ec0b7d4d6" title=" " alt="" coords="616,906,801,934"/>
+<area shape="poly" id="edge24_Node000021_Node000023" title=" " alt="" coords="550,880,600,892,633,902,628,902,599,897,550,885"/>
 </map>

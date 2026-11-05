@@ -1,0 +1,7 @@
+<map id="settings::QMSettings::getMaceModelTypeName" name="settings::QMSettings::getMaceModelTypeName">
+<area shape="rect" id="Node000001" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="5,28,200,72"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="250,5,413,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,34,237,31,232,33,200,39"/>
+<area shape="rect" id="Node000003" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="248,57,415,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="200,60,235,66,229,67,200,65"/>
+</map>
