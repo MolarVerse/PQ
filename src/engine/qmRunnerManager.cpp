@@ -92,9 +92,7 @@ namespace engine
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner()
     {
 #ifdef WITH_ASE
-        const auto modelType = MaceModelTypeMeta::toString(
-            settings::QMSettings::getMaceModelType()
-        );
+        const auto modelType = settings::QMSettings::getMaceModelTypeName();
         const auto modelPath = settings::QMSettings::getMaceModelPath();
         const auto useDFTD   = settings::QMSettings::useDispersionCorr();
         const auto fpType =
@@ -102,8 +100,7 @@ namespace engine
         const auto useCueq =
             settings::QMSettings::getMaceMode() == MaceMode::FAST;
 
-        auto maceModel =
-            MaceModelMeta::toString(settings::QMSettings::getMaceModel());
+        auto maceModel = settings::QMSettings::getMaceModelName();
 
         if (!modelPath.empty())
             maceModel = modelPath;

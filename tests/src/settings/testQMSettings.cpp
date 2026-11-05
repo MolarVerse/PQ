@@ -237,3 +237,23 @@ TEST(QMSettingsTest, SetGPUPreprocessing)
     settings::QMSettings::setUseGPUPreprocessing(true);
     EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
 }
+
+TEST(QMSettingsTest, MaceNamesForMaceCalculatorsTest)
+{
+    settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
+    EXPECT_EQ(settings::QMSettings::getMaceModelTypeName(), "mace_off");
+
+    settings::QMSettings::setMaceModelType(MaceModelType::MACE_MP);
+    EXPECT_EQ(settings::QMSettings::getMaceModelTypeName(), "mace_mp");
+
+    settings::QMSettings::setMaceModel(MaceModel::SMALL);
+    EXPECT_EQ(settings::QMSettings::getMaceModelName(), "small");
+
+    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_0B3);
+    EXPECT_EQ(settings::QMSettings::getMaceModelName(), "medium-0b3");
+
+    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
+    EXPECT_EQ(settings::QMSettings::getMaceModelName(), "medium-omat-0");
+
+    settings::QMSettings::setMaceModel(MaceModel::MEDIUM);
+}

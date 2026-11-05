@@ -192,7 +192,7 @@ jobs:
         if: ${{matrix.build == 'Release' && steps.cache-conda-env.outputs.cache-hit != 'true'}}
         run: |
           conda install -n test-env -y pip conda-forge::dftbplus conda-forge::xtb
-          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0
+          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0 fennol jax
 
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}

@@ -65,5 +65,5 @@ Normal releases use ``release/vX.Y.Z`` branches prepared from ``dev``. Hotfixes
 use ``hotfix/<name>`` branches prepared from ``main``. Both target ``main`` and
 require successful checks on the exact publication commit before publishing.
 
-See :doc:`releasesAndHotfixes` for the creation commands, version pinning,
+See :doc:`releasesAndHotfixes` for the creation commands, version selection,
 changelog preparation, publication verification and recovery procedures.
