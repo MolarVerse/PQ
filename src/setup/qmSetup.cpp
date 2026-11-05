@@ -398,10 +398,8 @@ namespace setup
                 "3ob approach has been chosen while disabling 3rd order DFTB. "
                 "This setup is not recommended."
             );
-            const auto hubbardDerivsMsg = std::format(
-                "Hubbard derivatives:  {}",
-                settings::string(hubbardDerivs)
-            );
+            const auto hubbardDerivsMsg =
+                std::format("Hubbard derivatives:  {}", string(hubbardDerivs));
             const auto threeOBHubbardDerivsMsg = std::format(
                 "3ob approach has been chosen while setting custom Hubbard "
                 "derivatives. This setup is not recommended."
