@@ -46,7 +46,7 @@ namespace QM
      */
     void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
     {
-        const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
+        const auto qmLoopTimeLimit = QMSettings::getQMLoopTimeLimit();
 
         if (qmLoopTimeLimit <= 0)
             return;

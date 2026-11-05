@@ -204,7 +204,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -215,7 +215,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Empty {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -228,7 +228,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot read QM energy from {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -239,7 +239,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     forceFileName
                 )
             );
@@ -256,9 +256,7 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Incomplete {} force file \"{}\"",
-                        QMMethodMeta::toString(
-                            settings::QMSettings::getQMMethod()
-                        ),
+                        QMMethodMeta::toString(QMSettings::getQMMethod()),
                         forceFileName
                     )
                 );
@@ -273,9 +271,7 @@ namespace QM
                             "Invalid QM force component (NaN/Inf) in {} force "
                             "file "
                             "\"{}\"",
-                            QMMethodMeta::toString(
-                                settings::QMSettings::getQMMethod()
-                            ),
+                            QMMethodMeta::toString(QMSettings::getQMMethod()),
                             forceFileName
                         )
                     );
@@ -291,7 +287,7 @@ namespace QM
 
         forceFile.close();
 
-        if (settings::QMSettings::getRemoveNetForce())
+        if (QMSettings::getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 
@@ -317,7 +313,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} charge file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     chargeFileName
                 )
             );
@@ -328,7 +324,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Empty {} charge file \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     chargeFileName
                 )
             );
@@ -345,9 +341,7 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Incomplete {} charge file \"{}\"",
-                        QMMethodMeta::toString(
-                            settings::QMSettings::getQMMethod()
-                        ),
+                        QMMethodMeta::toString(QMSettings::getQMMethod()),
                         chargeFileName
                     )
                 );
@@ -357,9 +351,7 @@ namespace QM
                 throw exc::QMRunnerException(
                     std::format(
                         "Invalid value in {} charge file \"{}\"",
-                        QMMethodMeta::toString(
-                            settings::QMSettings::getQMMethod()
-                        ),
+                        QMMethodMeta::toString(QMSettings::getQMMethod()),
                         chargeFileName
                     )
                 );
@@ -482,7 +474,7 @@ namespace QM
         auto       shell         = std::string("sh");
         auto       shellFlag     = std::string("-c");
         auto       commandString = std::string(command);
-        const auto timeLimit     = settings::QMSettings::getQMLoopTimeLimit();
+        const auto timeLimit     = QMSettings::getQMLoopTimeLimit();
 
         const pid_t pid = ::fork();
         if (pid < 0)

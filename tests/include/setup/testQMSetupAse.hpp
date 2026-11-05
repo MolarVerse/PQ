@@ -50,20 +50,20 @@ class TestQMSetupAse : public ::testing::Test
             "default.log",
             false
         );
-        settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+        QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     }
 
     void TearDown() override
     {
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        settings::QMSettings::setQMMethod(QMMethod::NONE);
-        settings::QMSettings::setSlakosType(SlakosType::NONE);
-        settings::QMSettings::setUseDispersionCorrection(false);
-        settings::QMSettings::setUseThirdOrderDftb(false);
-        settings::QMSettings::setIsThirdOrderDftbSet(false);
-        settings::QMSettings::setHubbardDerivs({});
-        settings::QMSettings::setIsHubbardDerivsSet(false);
+        QMSettings::setQMMethod(QMMethod::NONE);
+        QMSettings::setSlakosType(SlakosType::NONE);
+        QMSettings::setUseDispersionCorrection(false);
+        QMSettings::setUseThirdOrderDftb(false);
+        QMSettings::setIsThirdOrderDftbSet(false);
+        QMSettings::setHubbardDerivs({});
+        QMSettings::setIsHubbardDerivsSet(false);
     }
 };
 

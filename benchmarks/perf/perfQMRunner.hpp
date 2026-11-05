@@ -202,10 +202,10 @@ namespace benchQMRunner
         std::filesystem::current_path(directory);
 
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        settings::QMSettings::setQMMethod(method);
-        settings::QMSettings::setRemoveNetForce(true);
-        settings::QMSettings::setQMLoopTimeLimit(0.0);
-        settings::QMSettings::setQMScript("script.sh");
+        QMSettings::setQMMethod(method);
+        QMSettings::setRemoveNetForce(true);
+        QMSettings::setQMLoopTimeLimit(0.0);
+        QMSettings::setQMScript("script.sh");
 
         molsys::SimulationBox simulationBox;
         buildBox(simulationBox);

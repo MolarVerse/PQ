@@ -185,8 +185,7 @@ namespace QM
      */
     void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
     {
-        const auto scriptFile =
-            _resolveScriptPath(settings::QMSettings::getQMScript());
+        const auto scriptFile = _resolveScriptPath(QMSettings::getQMScript());
 
         if (!mstd::File(scriptFile).exists())
         {
@@ -252,7 +251,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Cannot open {} stress tensor \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     stressFileName
                 )
             );
@@ -267,7 +266,7 @@ namespace QM
             throw exc::QMRunnerException(
                 std::format(
                     "Incomplete {} stress tensor \"{}\"",
-                    QMMethodMeta::toString(settings::QMSettings::getQMMethod()),
+                    QMMethodMeta::toString(QMSettings::getQMMethod()),
                     stressFileName
                 )
             );
@@ -282,9 +281,7 @@ namespace QM
                     throw exc::QMRunnerException(
                         std::format(
                             "Invalid value in {} stress tensor \"{}\"",
-                            QMMethodMeta::toString(
-                                settings::QMSettings::getQMMethod()
-                            ),
+                            QMMethodMeta::toString(QMSettings::getQMMethod()),
                             stressFileName
                         )
                     );

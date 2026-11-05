@@ -101,7 +101,7 @@ namespace input
 
         const auto setValue = [this](QMMethod value)
         {
-            settings::QMSettings::setQMMethod(value);
+            QMSettings::setQMMethod(value);
 
             switch (value)
             {
@@ -159,7 +159,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setQMScript(value); };
+        { QMSettings::setQMScript(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -180,7 +180,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setQMScriptFullPath(value); };
+        { QMSettings::setQMScriptFullPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -201,7 +201,7 @@ namespace input
         };
 
         const auto setValue = [](double value)
-        { settings::QMSettings::setQMLoopTimeLimit(value); };
+        { QMSettings::setQMLoopTimeLimit(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -222,7 +222,7 @@ namespace input
         };
 
         const auto setValue = [](bool value)
-        { settings::QMSettings::setUseDispersionCorrection(value); };
+        { QMSettings::setUseDispersionCorrection(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -243,7 +243,7 @@ namespace input
         };
 
         const auto setValue = [](bool value)
-        { settings::QMSettings::setRemoveNetForce(value); };
+        { QMSettings::setRemoveNetForce(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -264,7 +264,7 @@ namespace input
         };
 
         const auto setValue = [](MaceModel value)
-        { settings::QMSettings::setMaceModel(value); };
+        { QMSettings::setMaceModel(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceModel>{
@@ -285,7 +285,7 @@ namespace input
         };
 
         const auto setValue = [](MaceMode value)
-        { settings::QMSettings::setMaceMode(value); };
+        { QMSettings::setMaceMode(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceMode>{
@@ -306,7 +306,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setMaceModelPath(value); };
+        { QMSettings::setMaceModelPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -331,17 +331,17 @@ namespace input
             switch (value)
             {
                 case SlakosType::THREEOB:
-                    settings::QMSettings::setSlakosType(
+                    QMSettings::setSlakosType(
                         SlakosType::THREEOB,
                         _resolveBuiltInSlakosPath
                     );
-                    settings::QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
+                    QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
                     _referenceSettings->addReferenceFile(
                         ReferenceFiles::THREEOB_FILE
                     );
                     break;
                 case SlakosType::MATSCI:
-                    settings::QMSettings::setSlakosType(
+                    QMSettings::setSlakosType(
                         SlakosType::MATSCI,
                         _resolveBuiltInSlakosPath
                     );
@@ -350,7 +350,7 @@ namespace input
                     );
                     break;
                 case SlakosType::CUSTOM:
-                    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
+                    QMSettings::setSlakosType(SlakosType::CUSTOM);
                     break;
                 case SlakosType::NONE: break;
             }
@@ -376,7 +376,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setSlakosPath(value); };
+        { QMSettings::setSlakosPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -398,8 +398,8 @@ namespace input
 
         const auto setValue = [](bool value)
         {
-            settings::QMSettings::setUseThirdOrderDftb(value);
-            settings::QMSettings::setIsThirdOrderDftbSet(true);
+            QMSettings::setUseThirdOrderDftb(value);
+            QMSettings::setIsThirdOrderDftbSet(true);
         };
 
         auto &key = _getRegistry().registerKey(
@@ -424,8 +424,8 @@ namespace input
         const auto setValue =
             [](const std::unordered_map<std::string, double> &value)
         {
-            settings::QMSettings::setHubbardDerivs(value);
-            settings::QMSettings::setIsHubbardDerivsSet(true);
+            QMSettings::setHubbardDerivs(value);
+            QMSettings::setIsHubbardDerivsSet(true);
         };
 
         auto &key = _getRegistry().registerKey(
@@ -448,7 +448,7 @@ namespace input
         };
 
         const auto setValue = [](XtbMethod value)
-        { settings::QMSettings::setXtbMethod(value); };
+        { QMSettings::setXtbMethod(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<XtbMethod>{
@@ -469,7 +469,7 @@ namespace input
         };
 
         const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setFennolModelPath(value); };
+        { QMSettings::setFennolModelPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -491,7 +491,7 @@ namespace input
         };
 
         const auto setValue = [](bool value)
-        { settings::QMSettings::setUseGPUPreprocessing(value); };
+        { QMSettings::setUseGPUPreprocessing(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -556,6 +556,6 @@ namespace input
                 break;
         }
 
-        settings::QMSettings::setMaceModelType(modelTypeOpt.value());
+        QMSettings::setMaceModelType(modelTypeOpt.value());
     }
 }   // namespace input
