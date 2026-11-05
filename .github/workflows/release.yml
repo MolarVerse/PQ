@@ -105,7 +105,7 @@ jobs:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
-          git add CHANGELOG.md DEV-CHANGELOG.md changes/ .github/release.json
+          git add CHANGELOG.md DEV-CHANGELOG.md changes/
           if git diff --cached --quiet; then
             echo "No release preparation changes to commit."
             exit 0

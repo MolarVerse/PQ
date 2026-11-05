@@ -1,0 +1,1 @@
+- Hotfix PRs now take their version from a `Hotfix-X.Y.Z` title prefix (must be the next patch); `.github/release.json` is removed, so hotfix PRs no longer show a bot edit of it.
