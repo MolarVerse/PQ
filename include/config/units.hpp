@@ -44,5 +44,9 @@ inline constexpr auto fs = mstd::units::fs;
 inline constexpr auto ps = mstd::units::ps;
 inline constexpr auto s  = mstd::units::s;
 
+inline constexpr auto bar     = mstd::units::bar;
+inline constexpr auto Pa      = mstd::units::Pa;
+inline constexpr auto per_bar = mstd::units::per_bar;
+
 // NOLINTEND(readability-identifier-length)
 #endif   // CONFIG__UNITS_HPP

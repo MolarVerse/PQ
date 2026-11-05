@@ -106,7 +106,8 @@ namespace manostat
         if (fixedAxis == FixedAxis::ALL)
             return diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-        const auto compressibility  = _getSettings().getCompressibility();
+        const auto compressibility =
+            _getSettings().getCompressibility().numerical_value_in(per_bar);
         const auto tau              = _getSettings().getTau();
         const auto timeStep         = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
@@ -200,11 +201,13 @@ namespace manostat
         double volume
     )
     {
-        const auto tau              = _getSettings().getTau();
-        const auto timeStep         = settings::TimingsSettings::getTimeStep();
-        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
-        const auto compress =
-            _getSettings().getCompressibility() * tauTimeStepRatio;
+        const auto &settings         = _getSettings();
+        const auto  tau              = settings.getTau();
+        const auto  timeStep         = settings::TimingsSettings::getTimeStep();
+        const auto  tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
+        const auto  compress =
+            settings.getCompressibility().force_numerical_value_in(per_bar) *
+            tauTimeStepRatio;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -223,7 +226,7 @@ namespace manostat
             ::sqrt(2.0 * stochasticFactor) *
             _getRNG().getNormalDistribution(0.0, 1.0);
 
-        const auto isotropy        = _getSettings().getIsotropy();
+        const auto isotropy        = settings.getIsotropy();
         const auto p_xyz           = diagonal(_getPressureTensor());
         const auto isotropicAxes   = get2DIsotropicAxes(isotropy);
         const auto anisotropicAxis = get2DAnisotropicAxis(isotropy);
@@ -232,7 +235,7 @@ namespace manostat
         const auto p_xy            = (p_x + p_y) / 2.0;
         const auto p_z             = p_xyz[anisotropicAxis];
 
-        const auto targetPressure = _getSettings().getTargetPressure();
+        const auto targetPressure = settings.getTargetPressure();
         const auto deltaPxy       = targetPressure - p_xy;
         const auto deltaPz        = targetPressure - p_z;
 
@@ -270,7 +273,8 @@ namespace manostat
         const auto timeStep         = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto compress =
-            _getSettings().getCompressibility() * tauTimeStepRatio;
+            _getSettings().getCompressibility().numerical_value_in(per_bar) *
+            tauTimeStepRatio;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -319,7 +323,8 @@ namespace manostat
         const auto timeStep         = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto compress =
-            _getSettings().getCompressibility() * tauTimeStepRatio;
+            _getSettings().getCompressibility().numerical_value_in(per_bar) *
+            tauTimeStepRatio;
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =

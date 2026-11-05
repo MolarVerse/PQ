@@ -311,7 +311,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     settings::TimingsSettings::setTimeStep(0.5 * fs);
     _settings->manostatSettings.setTauByUser(0.1 * fs);
-    _settings->manostatSettings.setCompressibilityByUser(4.5);
+    _settings->manostatSettings.setCompressibilityByUser(4.5 * per_bar);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
     );
@@ -347,7 +347,7 @@ TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
 {
     setupCutMolecule(*_box, *_data);
 
-    _settings->manostatSettings.setCompressibilityByUser(0.058808);
+    _settings->manostatSettings.setCompressibilityByUser(0.058808 * per_bar);
     auto manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
     );
@@ -369,7 +369,7 @@ TEST_F(
     settings::ThermostatSettings::setActualTargetTemperature(0.0);
 
     _settings->manostatSettings.setTargetPressureByUser(-3.0 * ::log(0.98));
-    _settings->manostatSettings.setCompressibilityByUser(1.0);
+    _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
     manostat.applyManostat(*_box, *_data);
@@ -404,7 +404,7 @@ TEST_F(
     _box->setTotalMass(4.0);
 
     _settings->manostatSettings.setTargetPressureByUser(-3.0 * ::log(0.98));
-    _settings->manostatSettings.setCompressibilityByUser(1.0);
+    _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
     manostat.applyManostat(*_box, *_data);
@@ -435,7 +435,7 @@ TEST_F(
     settings::TimingsSettings::setTimeStep(0.5 * fs);
     _settings->manostatSettings.setTargetPressureByUser(_data->getPressure());
     _settings->manostatSettings.setTauByUser(0.1 * fs);
-    _settings->manostatSettings.setCompressibilityByUser(4.5);
+    _settings->manostatSettings.setCompressibilityByUser(4.5 * per_bar);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
     );
@@ -466,7 +466,7 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 
     _settings->manostatSettings.setTargetPressureByUser(7.0);
     _settings->manostatSettings.setTauByUser(0.25 * fs);
-    _settings->manostatSettings.setCompressibilityByUser(0.12);
+    _settings->manostatSettings.setCompressibilityByUser(0.12 * per_bar);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     auto manostat =
         TestableStochasticRescalingManostat(_settings->manostatSettings);
@@ -516,7 +516,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 
     _settings->manostatSettings.setTargetPressureByUser(7.0);
     _settings->manostatSettings.setTauByUser(0.25 * fs);
-    _settings->manostatSettings.setCompressibilityByUser(0.12);
+    _settings->manostatSettings.setCompressibilityByUser(0.12 * per_bar);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     _manostat = std::make_unique<manostat::StochasticRescalingManostat>(
         _settings->manostatSettings
@@ -583,7 +583,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
         ManostatSettings localSettings;
         localSettings.setTargetPressureByUser(1.0);
         localSettings.setTauByUser(0.5 * fs);
-        localSettings.setCompressibilityByUser(0.2);
+        localSettings.setCompressibilityByUser(0.2 * per_bar);
         localSettings.setFixedAxisByUser(FixedAxis::X);
         auto manostat = TestableBerendsenManostat(localSettings);
         manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
@@ -600,7 +600,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
         ManostatSettings localSettings;
         localSettings.setTargetPressureByUser(1.0);
         localSettings.setTauByUser(0.5 * fs);
-        localSettings.setCompressibilityByUser(0.2);
+        localSettings.setCompressibilityByUser(0.2 * per_bar);
         localSettings.setFixedAxisByUser(FixedAxis::XY);
         auto manostat = TestableBerendsenManostat(localSettings);
         manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
@@ -617,7 +617,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
         ManostatSettings localSettings;
         localSettings.setTargetPressureByUser(1.0);
         localSettings.setTauByUser(0.5 * fs);
-        localSettings.setCompressibilityByUser(0.2);
+        localSettings.setCompressibilityByUser(0.2 * per_bar);
         localSettings.setFixedAxisByUser(FixedAxis::ALL);
         auto manostat = TestableBerendsenManostat(localSettings);
         manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
@@ -637,7 +637,7 @@ TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(1.0);
     localSettings.setTauByUser(0.5 * fs);
-    localSettings.setCompressibilityByUser(0.2);
+    localSettings.setCompressibilityByUser(0.2 * per_bar);
     localSettings.setFixedAxisByUser(FixedAxis::XZ);
     auto manostat = TestableAnisotropicBerendsenManostat(localSettings);
     manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)));
@@ -655,7 +655,7 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(1.0);
     localSettings.setTauByUser(0.5 * fs);
-    localSettings.setCompressibilityByUser(0.2);
+    localSettings.setCompressibilityByUser(0.2 * per_bar);
     localSettings.setFixedAxisByUser(FixedAxis::Y);
     auto manostat = TestableFullAnisotropicBerendsenManostat(localSettings);
     const auto pTensor =
@@ -681,7 +681,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
         ManostatSettings localSettings;
         localSettings.setTargetPressureByUser(7.0);
         localSettings.setTauByUser(0.25 * fs);
-        localSettings.setCompressibilityByUser(0.12);
+        localSettings.setCompressibilityByUser(0.12 * per_bar);
         localSettings.setFixedAxisByUser(FixedAxis::Z);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
         manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
@@ -700,7 +700,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
         ManostatSettings localSettings;
         localSettings.setTargetPressureByUser(7.0);
         localSettings.setTauByUser(0.25 * fs);
-        localSettings.setCompressibilityByUser(0.12);
+        localSettings.setCompressibilityByUser(0.12 * per_bar);
         localSettings.setFixedAxisByUser(FixedAxis::XY);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
         manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
@@ -719,7 +719,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
         ManostatSettings localSettings;
         localSettings.setTargetPressureByUser(7.0);
         localSettings.setTauByUser(0.25 * fs);
-        localSettings.setCompressibilityByUser(0.12);
+        localSettings.setCompressibilityByUser(0.12 * per_bar);
         localSettings.setFixedAxisByUser(FixedAxis::ALL);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
         manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
@@ -741,7 +741,7 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(7.0);
     localSettings.setTauByUser(0.25 * fs);
-    localSettings.setCompressibilityByUser(0.12);
+    localSettings.setCompressibilityByUser(0.12 * per_bar);
     localSettings.setFixedAxisByUser(FixedAxis::YZ);
     auto manostat =
         TestableAnisotropicStochasticRescalingManostat(localSettings);
@@ -763,7 +763,7 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(7.0);
     localSettings.setTauByUser(0.25 * fs);
-    localSettings.setCompressibilityByUser(0.12);
+    localSettings.setCompressibilityByUser(0.12 * per_bar);
     localSettings.setFixedAxisByUser(FixedAxis::X);
     auto manostat =
         TestableFullAnisotropicStochasticRescalingManostat(localSettings);
@@ -787,7 +787,7 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(1.0);
     localSettings.setTauByUser(0.5 * fs);
-    localSettings.setCompressibilityByUser(0.2);
+    localSettings.setCompressibilityByUser(0.2 * per_bar);
     localSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
     localSettings.setFixedAxisByUser(FixedAxis::Z);
     auto manostat = TestableSemiIsotropicBerendsenManostat(localSettings);
@@ -809,7 +809,7 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(7.0);
     localSettings.setTauByUser(0.25 * fs);
-    localSettings.setCompressibilityByUser(0.12);
+    localSettings.setCompressibilityByUser(0.12 * per_bar);
     localSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XZ);
     localSettings.setFixedAxisByUser(FixedAxis::Y);
     auto manostat =
