@@ -20,6 +20,12 @@ Three conventions apply to almost every workflow:
     - **A gate job reports the result.** ``ci-build-gate``, ``lint-gate``, ``cpp-check-gate``, ``clang-format-gate`` and
       ``license-check-gate`` fail if one of their jobs failed and pass if the jobs passed *or were skipped*. A skipped
       job is therefore not a missing check.
+    - **A release pull request skips the checks that judge the whole diff.** A pull request from a ``release/*`` branch
+      contains every change since the last release, all of which passed these checks on its ``dev`` pull request. LINT
+      (800+ files, one after the other: killed after half an hour), the DevOps C++ Check (fails on vendored files in
+      the diff), the Performance Gate (compares with the previous release and reports the sum of a cycle: ``kinetics``
+      +29 %) and the Clang Build do not run on it. BUILD, Clang Format, License Header, the changelog checks and the
+      docs still do. A hotfix is not skipped: its diff is small.
     - **Only superseded pull request runs are cancelled.** Pushing to a pull request branch cancels the older run of
       the same workflow. Runs for pushes to ``dev`` and ``main``, the nightly run and manual runs each get their own
       concurrency group and are never cancelled, because they give the verdict for a commit and fill the cache of the

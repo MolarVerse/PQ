@@ -63,6 +63,10 @@ env:
 
 jobs:
   clang-build:
+    # Not for a release pull request: non-gating, and the same code was built
+    # on its dev pull requests (#1028).
+    if: >-
+      !(github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-24.04
     timeout-minutes: 60
 
