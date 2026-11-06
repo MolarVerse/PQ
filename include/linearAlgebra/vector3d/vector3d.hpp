@@ -24,6 +24,7 @@
 #define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_HPP
 
 #include <cmath>
+#include <functional>
 #include <mstd/math.hpp>
 #include <mstd/type_traits/quantity_traits.hpp>
 #include <ostream>
@@ -31,6 +32,7 @@
 #include "concepts/vector3dConcepts.hpp"
 #include "innerType.hpp"
 #include "vector3dClass.hpp"
+#include "vector3dDetail.hpp"
 
 namespace linalg
 {
@@ -97,112 +99,37 @@ namespace linalg
      * binary + operator *
      *********************/
 
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator+(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] + rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator+(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] + rhs)>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator+(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs + rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator+(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] + scalar)>;
-
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator+(const U &scalar, const V &vec)
-        -> Vector3D<decltype(vec[0] + scalar)>;
+    template <typename U, typename V>
+    requires detail::BinaryOperands<U, V>
+    constexpr auto operator+(const U &lhs, const V &rhs)
+        -> detail::BinaryResult_t<std::plus<>, U, V>;
 
     /*********************
      * binary - operator *
      *********************/
 
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator-(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] - rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator-(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] - rhs)>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator-(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs - rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator-(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] - scalar)>;
-
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator-(const U &scalar, const V &vec)
-        -> Vector3D<decltype(scalar - vec[0])>;
+    template <typename U, typename V>
+    requires detail::BinaryOperands<U, V>
+    constexpr auto operator-(const U &lhs, const V &rhs)
+        -> detail::BinaryResult_t<std::minus<>, U, V>;
 
     /*********************
      * binary * operator *
      *********************/
 
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator*(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] * rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator*(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] * rhs)>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator*(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs * rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, typename V>
-    requires(!pq::ArithmeticVector3D<V>) &&
-            (pq::Arithmetic<V> ||
-             mstd::NonArithmeticScalar<pq::InnerType_t<U>, V>)
-    constexpr auto operator*(const U &vec, const V &scalar)
-        -> Vector3D<std::remove_cvref_t<decltype(vec[0] * scalar)>>;
-
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator*(const U &scalar, const V &vec)
-        -> Vector3D<decltype(vec[0] * scalar)>;
+    template <typename U, typename V>
+    requires detail::MultiplyOperands<U, V>
+    constexpr auto operator*(const U &lhs, const V &rhs)
+        -> detail::BinaryResult_t<std::multiplies<>, U, V>;
 
     /*********************
      * binary / operator *
      *********************/
 
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator/(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] / rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator/(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] / rhs)>;
-
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator/(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs / rhs[0])>;
-
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator/(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] / scalar)>;
-
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator/(const U &scalar, const V &vec)
-        -> Vector3D<decltype(scalar / vec[0])>;
+    template <typename U, typename V>
+    requires detail::BinaryOperands<U, V>
+    constexpr auto operator/(const U &lhs, const V &rhs)
+        -> detail::BinaryResult_t<std::divides<>, U, V>;
 
     /*****************
      * fabs function *
