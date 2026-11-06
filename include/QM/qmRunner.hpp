@@ -23,7 +23,6 @@
 #ifndef QM__QM_RUNNER_HPP
 #define QM__QM_RUNNER_HPP
 
-#include <cstdint>
 #include <mstd/types.hpp>
 #define SCRIPT_PATH_  _SCRIPT_PATH_
 #define SINGULARITY_  _SINGULARITY_
