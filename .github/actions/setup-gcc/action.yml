@@ -41,14 +41,17 @@ runs:
         echo "cxx=g++-$VERSION" >> "$GITHUB_OUTPUT"
         echo "gcov=gcov-$VERSION" >> "$GITHUB_OUTPUT"
 
+    # The packages are cached (awalsh128/cache-apt-pkgs-action, as in
+    # devops_cpp_check.yml): on a hit nothing is downloaded. The Azure mirror
+    # sometimes stalls or crawls, which held this step for 13 to 34+ minutes
+    # (#1069). The post install scripts are run on a restore (openmpi, for
+    # example, sets up its mpicc alternatives there).
     - name: Install GCC ${{ inputs.version }}
-      shell: bash
-      env:
-        VERSION: ${{ inputs.version }}
-        PACKAGES: ${{ inputs.packages }}
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y "gcc-$VERSION" "g++-$VERSION" $PACKAGES
+      uses: awalsh128/cache-apt-pkgs-action@v1
+      with:
+        packages: gcc-${{ inputs.version }} g++-${{ inputs.version }} ${{ inputs.packages }}
+        version: 1.0
+        execute_install_scripts: true
 
     - name: Export CC/CXX
       if: inputs.set-env == 'true'

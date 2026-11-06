@@ -77,11 +77,16 @@ jobs:
         with:
           set-env: 'false'
 
+      # cached apt packages, as in devops_cpp_check.yml (#1069)
       - name: Install clang
-        run: |
-          sudo apt update
-          sudo apt install -y clang-20 libclang-rt-20-dev ninja-build mold
-          clang++-20 --version
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: clang-20 libclang-rt-20-dev ninja-build mold
+          version: 1.0
+          execute_install_scripts: true
+
+      - name: Show the clang version
+        run: clang++-20 --version
         shell: bash
 
       - name: Setup ccache
