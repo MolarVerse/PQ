@@ -249,3 +249,77 @@ TEST_F(TestMolecule, moleculeTypeChargeDefaultsToZero)
 {
     EXPECT_EQ(molsys::MoleculeType().getCharge(), 0);
 }
+
+TEST_F(TestMolecule, scaleAtomsWithNonDiagonalSimSpaceTensor)
+{
+    const linalg::tensor3D scale(
+        {1.0, 0.1, 0.0},
+        {0.0, 1.2, 0.2},
+        {0.0, 0.0, 0.9}
+    );
+    const auto atomPosition1 = _molecule->getAtomPosition(AtomIndex{0});
+    const auto atomPosition2 = _molecule->getAtomPosition(AtomIndex{1});
+    const auto atomPosition3 = _molecule->getAtomPosition(AtomIndex{2});
+
+    molsys::OrthorhombicBox box({100.0, 100.0, 100.0});
+
+    _molecule->calculateCenterOfMass(box);
+
+    const auto centerOfMass = _molecule->getCenterOfMass();
+    const auto shift        = scale * centerOfMass - centerOfMass;
+
+    _molecule->scale(scale, box);
+
+    EXPECT_TRUE(
+        utilities::compare(
+            _molecule->getAtomPosition(AtomIndex{0}),
+            atomPosition1 + shift,
+            1e-12
+        )
+    );
+    EXPECT_TRUE(
+        utilities::compare(
+            _molecule->getAtomPosition(AtomIndex{1}),
+            atomPosition2 + shift,
+            1e-12
+        )
+    );
+    EXPECT_TRUE(
+        utilities::compare(
+            _molecule->getAtomPosition(AtomIndex{2}),
+            atomPosition3 + shift,
+            1e-12
+        )
+    );
+}
+
+TEST_F(TestMolecule, scaleVelocityWithNonDiagonalSimSpaceTensor)
+{
+    const linalg::tensor3D scale(
+        {1.0, 0.1, 0.0},
+        {0.0, 1.2, 0.2},
+        {0.0, 0.0, 0.9}
+    );
+
+    const auto centerOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(AtomIndex{0}) +
+         2.0 * _molecule->getAtomVelocity(AtomIndex{1}) +
+         3.0 * _molecule->getAtomVelocity(AtomIndex{2})) /
+        6.0;
+
+    _molecule->scaleVelocity(scale);
+
+    const auto scaledCenterOfMassVelocity =
+        (1.0 * _molecule->getAtomVelocity(AtomIndex{0}) +
+         2.0 * _molecule->getAtomVelocity(AtomIndex{1}) +
+         3.0 * _molecule->getAtomVelocity(AtomIndex{2})) /
+        6.0;
+
+    EXPECT_TRUE(
+        utilities::compare(
+            scaledCenterOfMassVelocity,
+            scale * centerOfMassVelocity,
+            1e-12
+        )
+    );
+}

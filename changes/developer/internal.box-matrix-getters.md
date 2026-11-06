@@ -1,0 +1,2 @@
+- Replace `Box::toOrthoSpace` and `Box::toSimSpace` with `getBoxMatrix()`, `getInverseBoxMatrix()` and `isOrthorhombic()`; `Molecule::scale` and `Molecule::scaleVelocity` now expect a scaling tensor in simulation space, converted once by `Manostat::_toSimSpaceScaling`.
+- Add `StaticMatrix3x3` operators for unit/quantity scalars, mixed element-type matrix multiplication and a converting constructor.

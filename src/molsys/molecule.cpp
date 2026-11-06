@@ -120,17 +120,15 @@ namespace molsys
      * @brief scales the positions of the molecule by shifting the center of
      * mass
      *
-     * @details the scaling tensor has to be given in simulation space. For
-     * boxes with fixed angles the pressure scaling is done in orthogonal
-     * space, i.e. the caller has to transform it beforehand (T S T^-1).
+     * @details the scaling tensor has to be given in simulation space (see
+     * scaleVelocity). The box is only used to apply the periodic boundary
+     * conditions.
      *
-     * @param scalingTensor the tensor used to scale the molecule's positions
+     * @param scalingTensor scaling tensor in simulation space
      * @param box
      */
     void Molecule::scale(const linalg::tensor3D &scalingTensor, const Box &box)
     {
-        // scalingTensor is already in simulation space (S_sim = T S T^-1 for
-        // fixed angles, S itself otherwise), see scaleVelocity
         const auto shift = scalingTensor * _centerOfMass - _centerOfMass;
 
         auto scaleAtomPosition = [&box, shift](const auto &atom)
@@ -151,9 +149,13 @@ namespace molsys
      *
      * @details pressure scaling moves molecules by their center of mass. The
      * matching velocity scaling must not change the internal molecular
-     * velocities.
+     * velocities. The scaling tensor has to be given in simulation space:
+     * - fixed angles: T * S * T^-1 (S is the scaling tensor in orthogonal
+     *   space)
+     * - orthorhombic box: S (T is the identity)
+     * - full anisotropic: S
      *
-     * @param scalingTensor
+     * @param scalingTensor scaling tensor in simulation space
      */
     void Molecule::scaleVelocity(const linalg::tensor3D &scalingTensor)
     {
@@ -164,20 +166,6 @@ namespace molsys
 
         centerOfMassVelocity /= getMolMass();
 
-        // NOTE: the scaling tensor is passed in in orthogonal or
-        // cartesian/simulation space, depending on the box configuration (full
-        // anisotropic or not to not calling the transformation functions
-        // unnecessarily)
-        //
-        // FIXED_ANGLES case:
-        // scalingTensor = T * originalScalingTensor * T^-1
-        //
-        // ORTHORHOMBIC case:
-        // scalingTensor = T * originalScalingTensor * T^-1 =
-        // originalScalingTensor
-        //
-        // FULL_ANISOTROPIC case:
-        // scalingTensor = originalScalingTensor
         const auto scaledCenterOfMassVelocity =
             scalingTensor * centerOfMassVelocity;
 
