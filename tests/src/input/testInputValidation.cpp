@@ -282,7 +282,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
         ThermostatType::VELOCITY_RESCALING
     );
     settings::ThermostatSettings::setTargetTemperature(300.0);
-    settings::ThermostatSettings::setRelaxationTime(0.0001);
+    settings::ThermostatSettings::setRelaxationTime(0.0001 * ps);
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(

@@ -30,7 +30,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
-#include "units.hpp"
 
 namespace thermostat
 {
@@ -41,7 +40,7 @@ namespace thermostat
      * @param targetTemp
      * @param tau
      */
-    BerendsenThermostat::BerendsenThermostat(double targetTemp, double tau)
+    BerendsenThermostat::BerendsenThermostat(double targetTemp, const Time &tau)
         : Thermostat(targetTemp), _tau(tau)
     {
     }
@@ -59,17 +58,6 @@ namespace thermostat
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
 
-        // the radicand 1 + dt / tau * (target / T - 1) is negative for a hot
-        // system if tau < dt, which would turn all velocities into NaN
-        if (_tau <
-            settings::TimingsSettings::getTimeStep().numerical_value_in(fs))
-        {
-            throw exc::UserInputException(
-                "The relaxation time of the Berendsen thermostat must not be "
-                "shorter than the time step."
-            );
-        }
-
         physicalData.calculateTemperature(simulationBox);
 
         setTemperature(physicalData.getTemperature());
@@ -86,12 +74,12 @@ namespace thermostat
             );
         }
 
-        const auto timeStep =
-            settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
-        const auto tempRatio = getTargetTemperature() / getTemperature();
+        const auto &timeStep  = settings::TimingsSettings::getTimeStep();
+        const auto  timeRatio = static_cast<double>(timeStep / _tau);
+        const auto  tempRatio = getTargetTemperature() / getTemperature();
 
         const auto berendsenFactor =
-            ::sqrt(1.0 + (timeStep / _tau * (tempRatio - 1.0)));
+            ::sqrt(1.0 + (timeRatio * (tempRatio - 1.0)));
 
         for (const auto &atom : simulationBox.getAtoms())
             atom->scaleVelocity(berendsenFactor);
@@ -104,16 +92,16 @@ namespace thermostat
     /**
      * @brief Get the tau (relaxation time) of the Berendsen thermostat
      *
-     * @return double
+     * @return const Time &
      */
-    double BerendsenThermostat::getTau() const { return _tau; }
+    const Time &BerendsenThermostat::getTau() const { return _tau; }
 
     /**
      * @brief Set the tau (relaxation time) of the Berendsen thermostat
      *
      * @param tau
      */
-    void BerendsenThermostat::setTau(double tau) { _tau = tau; }
+    void BerendsenThermostat::setTau(const Time &tau) { _tau = tau; }
 
     /**
      * @brief Get thermostat type

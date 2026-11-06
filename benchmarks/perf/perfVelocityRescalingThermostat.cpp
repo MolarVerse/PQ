@@ -57,7 +57,7 @@ int main()
     constexpr double targetTemperature = 300.0;
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat =
-        thermostat::VelocityRescalingThermostat(targetTemperature, 100.0);
+        thermostat::VelocityRescalingThermostat(targetTemperature, 100.0 * fs);
 
     perfAllocBegin();
 

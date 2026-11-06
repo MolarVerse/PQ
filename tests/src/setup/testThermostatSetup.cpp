@@ -199,9 +199,9 @@ TEST_F(TestSetup, setupThermostatBerendsen)
         dynamic_cast<thermostat::BerendsenThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
-    EXPECT_EQ(berendsenThermostat.getTau(), 0.1 * 1000);
+    EXPECT_EQ(berendsenThermostat.getTau(), 0.1 * 1000 * fs);
 
-    settings::ThermostatSettings::setRelaxationTime(0.2);
+    settings::ThermostatSettings::setRelaxationTime(0.2 * ps);
 
     // needed because otherwise subsequent executions of .setup() will fail
     // because the end temperature is automatically set to the target
@@ -213,7 +213,7 @@ TEST_F(TestSetup, setupThermostatBerendsen)
         dynamic_cast<thermostat::BerendsenThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
-    EXPECT_EQ(berendsenThermostat2.getTau(), 0.2 * 1000);
+    EXPECT_EQ(berendsenThermostat2.getTau(), 0.2 * 1000 * fs);
 
     // needed because otherwise subsequent executions of .setup() will fail
     // because the end temperature is automatically set to the target
@@ -233,7 +233,7 @@ TEST_F(TestSetup, setupThermostatVelocityRescaling)
         dynamic_cast<thermostat::VelocityRescalingThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
-    EXPECT_EQ(velocityRescalingThermostat.getTau(), 0.2 * 1000);
+    EXPECT_EQ(velocityRescalingThermostat.getTau(), 0.2 * 1000 * fs);
 }
 
 TEST_F(TestSetup, setupThermostatLangevin)

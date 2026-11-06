@@ -24,6 +24,7 @@
 #define THERMOSTAT__BERENDSEN_THERMOSTAT_HPP
 
 #include "thermostat.hpp"
+#include "unit_types.hpp"
 
 namespace thermostat
 {
@@ -38,10 +39,10 @@ namespace thermostat
     class BerendsenThermostat : public Thermostat
     {
        private:
-        double _tau;
+        Time _tau;
 
        public:
-        explicit BerendsenThermostat(double targetTemp, double tau);
+        explicit BerendsenThermostat(double targetTemp, const Time &tau);
         BerendsenThermostat() = default;
 
         void applyThermostat(
@@ -49,9 +50,9 @@ namespace thermostat
             physicalData::PhysicalData &physicalData
         ) override;
 
-        void setTau(double tau);
+        void setTau(const Time &tau);
 
-        [[nodiscard]] double getTau() const;
+        [[nodiscard]] const Time &getTau() const;
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
     };

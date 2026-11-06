@@ -34,6 +34,7 @@
 #include "rangeValidator.hpp"
 #include "referenceSettings.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -228,11 +229,12 @@ namespace input
         const auto metaData = KeyMetadata{
             .name        = "t_relaxation",
             .title       = "Relaxation Time",
-            .description = "Specifies the relaxation time of the thermostat"
+            .description = "Specifies the relaxation time of the thermostat",
+            .unit        = "ps"
         };
 
         const auto setValue = [&](double value)
-        { settings::ThermostatSettings::setRelaxationTime(value); };
+        { settings::ThermostatSettings::setRelaxationTime(value * ps); };
 
         const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
             0.0,
