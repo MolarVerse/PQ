@@ -239,57 +239,6 @@ TEST(TestTriclinicBox, wrapPositionIntoBox)
     );
 }
 
-TEST(TestTriclinicBox, transformsRoundTrip)
-{
-    molsys::TriclinicBox box({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false);
-
-    const linalg::Vec3D vector{1.0, 2.0, 3.0};
-    const auto          tensor =
-        linalg::tensor3D({1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0});
-
-    EXPECT_VECTOR_NEAR(
-        box.toSimSpace(box.toOrthoSpace(vector)),
-        vector,
-        1.0e-12
-    );
-    EXPECT_MATRIX_NEAR(
-        box.toSimSpace(box.toOrthoSpace(tensor)),
-        tensor,
-        1.0e-12
-    );
-    EXPECT_NEAR(
-        TestTriclinicBox::cosAlpha(box.getBoxAngles()),
-        std::cos(80.0 * DEG_TO_RAD),
-        1e-15
-    );
-    EXPECT_NEAR(
-        TestTriclinicBox::cosBeta(box.getBoxAngles()),
-        std::cos(75.0 * DEG_TO_RAD),
-        1e-15
-    );
-    EXPECT_NEAR(
-        TestTriclinicBox::cosGamma(box.getBoxAngles()),
-        std::cos(70.0 * DEG_TO_RAD),
-        1e-15
-    );
-    EXPECT_NEAR(
-        TestTriclinicBox::sinAlpha(box.getBoxAngles()),
-        std::sin(80.0 * DEG_TO_RAD),
-        1e-15
-    );
-    EXPECT_NEAR(
-        TestTriclinicBox::sinBeta(box.getBoxAngles()),
-        std::sin(75.0 * DEG_TO_RAD),
-        1e-15
-    );
-    EXPECT_NEAR(
-        TestTriclinicBox::sinGamma(box.getBoxAngles()),
-        std::sin(70.0 * DEG_TO_RAD),
-        1e-15
-    );
-    EXPECT_GT(box.getMinimalBoxDimension(), 0.0);
-}
-
 TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
 {
     molsys::TriclinicBox box({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false);

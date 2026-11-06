@@ -74,23 +74,16 @@ namespace molsys
         linalg::tensor3D getBoxMatrix(Periodicity per) const override;
 
         [[nodiscard]]
-        linalg::Vec3D toOrthoSpace(
-            const linalg::Vec3D &position
-        ) const override;
-        [[nodiscard]]
-        linalg::tensor3D toOrthoSpace(
-            const linalg::tensor3D &position
-        ) const override;
-
-        [[nodiscard]]
-        linalg::Vec3D toSimSpace(const linalg::Vec3D &position) const override;
-        [[nodiscard]]
-        linalg::tensor3D toSimSpace(
-            const linalg::tensor3D &position
-        ) const override;
-
-        [[nodiscard]]
         bool allowChangeOfAngles() const override;
+
+        [[nodiscard]]
+        bool isOrthorhombic() const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix() const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getInverseBoxMatrix() const override;
     };
 
 }   // namespace molsys

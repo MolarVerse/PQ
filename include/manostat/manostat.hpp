@@ -78,6 +78,12 @@ namespace manostat
         );
 
         [[nodiscard]]
+        static linalg::tensor3D _toSimSpaceScaling(
+            const linalg::tensor3D &,
+            const molsys::Box &
+        );
+
+        [[nodiscard]]
         const linalg::tensor3D &_getPressureTensor() const;
 
         [[nodiscard]]
