@@ -22,6 +22,8 @@
 
 #include "aseFennolRunner.hpp"
 
+#include <pybind11/embed.h>
+
 namespace QM
 {
 
