@@ -1,0 +1,1 @@
+- Refresh the apt index before installing the docs packages, so a stale runner image no longer fails the Docs job.
