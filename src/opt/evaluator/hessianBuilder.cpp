@@ -29,6 +29,7 @@
 #include "enums/hessian.hpp"
 #include "evaluator.hpp"
 #include "exceptions.hpp"
+#include "interrupt.hpp"
 
 namespace opt
 {
@@ -94,6 +95,8 @@ namespace opt
             double                 displacement
         )
         {
+            utilities::throwIfInterrupted();
+
             displaceCoordinate(simulationBox, coordinateIndex, displacement);
             evaluator.evaluate();
             const auto forces = flattenForces(simulationBox);

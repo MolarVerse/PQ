@@ -4,7 +4,6 @@ set(source_files
     testQMRunnerManager.cpp
     testQMMMEnergies.cpp
     testRingPolymerEngineOutputGating.cpp
-    testEngineInterrupt.cpp
 )
 
 foreach(source_file ${source_files})

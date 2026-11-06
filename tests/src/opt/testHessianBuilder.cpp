@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>
 
+#include <csignal>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -34,6 +35,10 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+
+#ifdef WITH_PYBIND11
+#include <pybind11/embed.h>
+#endif
 
 namespace
 {
@@ -181,6 +186,34 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
         EXPECT_EQ(box->getAtom(1).getForce(), linalg::Vec3D(16.0, -25.0, 36.0));
     }
 }
+
+#ifdef WITH_PYBIND11
+TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
+{
+    const pybind11::scoped_interpreter guard{};
+
+    auto              box = makeSimulationBox();
+    Settings          settings;
+    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    evaluator.setSimulationBox(box);
+
+    const auto builder = opt::CentralForceDifferenceHessianBuilder(1.0e-4);
+
+    ASSERT_EQ(std::raise(SIGINT), 0);
+
+    try
+    {
+        static_cast<void>(builder.build(evaluator, *box));
+        FAIL() << "pending SIGINT was not reported";
+    }
+    catch (const pybind11::error_already_set &error)
+    {
+        EXPECT_TRUE(error.matches(PyExc_KeyboardInterrupt));
+    }
+
+    expectPositionsRestored(*box);
+}
+#endif
 
 TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 {
