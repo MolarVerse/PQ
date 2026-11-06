@@ -61,6 +61,7 @@ target_link_libraries(engine
 
     optimization
     QM
+    interrupt
     externalQM
 )
 

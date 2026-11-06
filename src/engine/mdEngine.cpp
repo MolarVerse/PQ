@@ -27,6 +27,7 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
+#include "interrupt.hpp"
 #include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
@@ -76,7 +77,7 @@ namespace engine
 
         for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
         {
-            throwIfInterrupted();
+            utilities::throwIfInterrupted();
 
             bar.update();
             takeStep();

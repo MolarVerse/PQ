@@ -82,7 +82,6 @@ namespace engine
         virtual void run()                                                 = 0;
         virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
         static void  deleteTmpFiles();
-        static void  throwIfInterrupted();
 
         [[nodiscard]] Time calculateTotalSimulationTime() const;
 
