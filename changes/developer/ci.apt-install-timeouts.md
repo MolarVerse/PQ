@@ -1,0 +1,1 @@
+- Install the CI packages (GCC, clang, doxygen) through scripts/apt_install.sh, which bounds every apt-get call to 240 s, sets apt network timeouts and retries up to three times, so a stalled mirror no longer holds a job for 13 to 34 minutes.

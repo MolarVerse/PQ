@@ -47,8 +47,8 @@ runs:
         VERSION: ${{ inputs.version }}
         PACKAGES: ${{ inputs.packages }}
       run: |
-        sudo apt-get update
-        sudo apt-get install -y "gcc-$VERSION" "g++-$VERSION" $PACKAGES
+        # shellcheck disable=SC2086
+        "$GITHUB_WORKSPACE/scripts/apt_install.sh" "gcc-$VERSION" "g++-$VERSION" $PACKAGES
 
     - name: Export CC/CXX
       if: inputs.set-env == 'true'

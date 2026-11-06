@@ -79,8 +79,7 @@ jobs:
 
       - name: Install clang
         run: |
-          sudo apt update
-          sudo apt install -y clang-20 libclang-rt-20-dev ninja-build mold
+          scripts/apt_install.sh clang-20 libclang-rt-20-dev ninja-build mold
           clang++-20 --version
         shell: bash
 
