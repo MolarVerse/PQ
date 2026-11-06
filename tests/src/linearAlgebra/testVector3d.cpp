@@ -868,7 +868,8 @@ TEST(TestVector3d, quantityVectorOperators)
     EXPECT_DOUBLE_EQ(sum[0].numerical_value_in(rad), 2.0);
     EXPECT_DOUBLE_EQ(sum[2].numerical_value_in(rad), 6.0);
 
-    const auto diff = vec - vec;
+    const auto& vec2 = vec;
+    const auto  diff = vec - vec2;
     EXPECT_DOUBLE_EQ(diff[1].numerical_value_in(rad), 0.0);
 
     const auto scaled = vec * 2.0;
