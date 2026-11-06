@@ -278,12 +278,8 @@ namespace input
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
-            const auto relaxationTime =
-                settings::ThermostatSettings::getRelaxationTime() * PS_TO_FS;
-
-            if (settings::TimingsSettings::getTimeStep().numerical_value_in(
-                    fs
-                ) > relaxationTime)
+            if (settings::TimingsSettings::getTimeStep() >
+                settings::ThermostatSettings::getRelaxationTime())
             {
                 throw exc::InputFileException(
                     "The timestep must not exceed the thermostat relaxation "

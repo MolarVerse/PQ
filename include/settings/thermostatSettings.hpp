@@ -59,7 +59,7 @@ namespace settings
         static inline double _startTemperature;
         static inline double _endTemperature;
 
-        static inline double _relaxationTime =
+        static inline Time _relaxationTime =
             defaults::BERENDSEN_THERMOSTAT_RELAX_TIME;
         static inline double _friction = defaults::LANGEVIN_THERMOSTAT_FRICTION;
         static inline double _nhCouplingFreq = defaults::NH_COUPLING_FREQ;
@@ -94,7 +94,7 @@ namespace settings
         static void setTemperatureRampSteps(size_t);
         static void setTemperatureRampFrequency(size_t);
 
-        static void setRelaxationTime(double);
+        static void setRelaxationTime(const Time& relaxationTime);
         static void setFriction(double);
         static void setNoseHooverChainLength(size_t);
         static void setNoseHooverCouplingFrequency(double);
@@ -113,13 +113,13 @@ namespace settings
         [[nodiscard]] static bool isStartTemperatureSet();
         [[nodiscard]] static bool isEndTemperatureSet();
 
-        [[nodiscard]] static double getTargetTemperature();
-        [[nodiscard]] static double getActualTargetTemperature();
-        [[nodiscard]] static double getStartTemperature();
-        [[nodiscard]] static double getEndTemperature();
-        [[nodiscard]] static double getRelaxationTime();
-        [[nodiscard]] static double getFriction();
-        [[nodiscard]] static double getNoseHooverCouplingFrequency();
+        [[nodiscard]] static double      getTargetTemperature();
+        [[nodiscard]] static double      getActualTargetTemperature();
+        [[nodiscard]] static double      getStartTemperature();
+        [[nodiscard]] static double      getEndTemperature();
+        [[nodiscard]] static const Time& getRelaxationTime();
+        [[nodiscard]] static double      getFriction();
+        [[nodiscard]] static double      getNoseHooverCouplingFrequency();
 
         [[nodiscard]] static std::map<size_t, double> getChi();
         [[nodiscard]] static std::map<size_t, double> getZeta();

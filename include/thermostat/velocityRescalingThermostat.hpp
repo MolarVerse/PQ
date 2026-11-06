@@ -25,6 +25,7 @@
 
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -45,11 +46,11 @@ namespace thermostat
        private:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
-        double _tau = 0.0;
+        Time _tau;
 
        public:
         VelocityRescalingThermostat() = default;
-        explicit VelocityRescalingThermostat(double, double);
+        explicit VelocityRescalingThermostat(double, const Time &);
         ~VelocityRescalingThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -68,12 +69,12 @@ namespace thermostat
             physicalData::PhysicalData &physicalData
         ) override;
 
-        void setTau(double tau);
+        void setTau(const Time &tau);
 
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
 
-        [[nodiscard]] double getTau() const;
+        [[nodiscard]] const Time &getTau() const;
     };
 }   // namespace thermostat
 

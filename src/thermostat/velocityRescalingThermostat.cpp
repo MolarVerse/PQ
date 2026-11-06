@@ -30,7 +30,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
-#include "units.hpp"
 
 namespace thermostat
 {
@@ -43,8 +42,8 @@ namespace thermostat
      * @param tau
      */
     VelocityRescalingThermostat::VelocityRescalingThermostat(
-        double targetTemp,
-        double tau
+        double      targetTemp,
+        const Time &tau
     )
         : Thermostat(targetTemp), _tau(tau)
     {
@@ -112,16 +111,15 @@ namespace thermostat
             );
         }
 
-        const auto timeStep =
-            settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
+        const auto timeStep  = settings::TimingsSettings::getTimeStep();
+        const auto timeRatio = static_cast<double>(timeStep / _tau);
         const auto tempRatio = getTargetTemperature() / getTemperature();
         const auto dof =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
 
-        auto lambda = 1.0 + (timeStep / _tau * (tempRatio - 1.0));
+        auto lambda = 1.0 + (timeRatio * (tempRatio - 1.0));
 
-        const auto rescalingFactor =
-            2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
+        const auto rescalingFactor = 2.0 * ::sqrt(timeRatio * tempRatio / dof);
 
         auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
@@ -151,16 +149,16 @@ namespace thermostat
     /**
      * @brief Get the tau (relaxation time) of the Velocity Rescaling thermostat
      *
-     * @return double
+     * @return const Time&
      */
-    double VelocityRescalingThermostat::getTau() const { return _tau; }
+    const Time &VelocityRescalingThermostat::getTau() const { return _tau; }
 
     /**
      * @brief Set the tau (relaxation time) of the Velocity Rescaling thermostat
      *
      * @param tau
      */
-    void VelocityRescalingThermostat::setTau(double tau) { _tau = tau; }
+    void VelocityRescalingThermostat::setTau(const Time &tau) { _tau = tau; }
     /**
      * @brief Get thermostat type
      *

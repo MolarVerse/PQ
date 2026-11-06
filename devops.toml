@@ -69,4 +69,4 @@ libs = ["mstd"]
 
 [cpp.ast_check_config.enforceCppOnlyInclude]
 libs = ["units.hpp"]
-exclude_paths = ["tests/"]
+exclude_paths = ["tests/", "benchmarks/"]
