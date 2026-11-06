@@ -118,6 +118,8 @@ namespace engine
             useCueq
         );
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) settings;
         throw exc::CompileTimeException(
             "A MACE type QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use MACE type "
@@ -151,6 +153,8 @@ namespace engine
             dispersion
         );
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) settings;
         throw exc::CompileTimeException(
             "The ASE DFTB+ QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
@@ -177,6 +181,8 @@ namespace engine
 
         return std::make_shared<QM::AseXtbRunner>(settings, xtbMethod);
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) settings;
         throw exc::CompileTimeException(
             "The ASE xTB QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
@@ -212,6 +218,8 @@ namespace engine
             useFloat64
         );
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) settings;
         throw exc::CompileTimeException(
             "The ASE FeNNol QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
