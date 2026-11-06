@@ -81,30 +81,35 @@ TEST(TestQMRunnerManager, rejectsMissingQMProgram)
 TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
 {
     using engine::QMRunnerManager;
+    QMSettings qmSettings;
 
+    qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
     EXPECT_THROW_MSG(
-        const auto _ = QMRunnerManager::createQMRunner(QMMethod::ASE_DFTBPLUS),
+        const auto _ = QMRunnerManager::createQMRunner(qmSettings),
         exc::CompileTimeException,
         "The ASE DFTB+ QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
         "type QM methods using: -DBUILD_WITH_ASE=ON"
     );
+    qmSettings.setQMMethodByUser(QMMethod::ASE_XTB);
     EXPECT_THROW_MSG(
-        const auto _ = QMRunnerManager::createQMRunner(QMMethod::ASE_XTB),
+        const auto _ = QMRunnerManager::createQMRunner(qmSettings),
         exc::CompileTimeException,
         "The ASE xTB QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE xTB "
         "type QM method using: -DBUILD_WITH_ASE=ON"
     );
+    qmSettings.setQMMethodByUser(QMMethod::MACE);
     EXPECT_THROW_MSG(
-        const auto _ = QMRunnerManager::createQMRunner(QMMethod::MACE),
+        const auto _ = QMRunnerManager::createQMRunner(qmSettings),
         exc::CompileTimeException,
         "A MACE type QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use MACE type QM "
         "methods using: -DBUILD_WITH_ASE=ON"
     );
+    qmSettings.setQMMethodByUser(QMMethod::FENNOL);
     EXPECT_THROW_MSG(
-        const auto _ = QMRunnerManager::createQMRunner(QMMethod::FENNOL),
+        const auto _ = QMRunnerManager::createQMRunner(qmSettings),
         exc::CompileTimeException,
         "The ASE FeNNol QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE "
