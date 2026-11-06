@@ -38,11 +38,13 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseDftbRunner::AseDftbRunner(
+        const QMSettings                              &settings,
         const std::string                             &slakosPath,
         bool                                           thirdOrder,
         const std::unordered_map<std::string, double> &hubbardDerivs,
         bool                                           dispersion
     )
+        : AseQMRunner(settings)
     {
         try
         {

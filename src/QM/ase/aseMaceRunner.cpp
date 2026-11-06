@@ -41,12 +41,14 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseMaceRunner::AseMaceRunner(
+        const QMSettings  &settings,
         const std::string &modelType,
         const std::string &model,
         const std::string &fpType,
         bool               dispersion,
         bool               enableCueq
     )
+        : AseQMRunner(settings)
     {
         try
         {

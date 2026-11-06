@@ -34,6 +34,16 @@ namespace QM
 {
 
     /**
+     * @brief constructor for the QMRunner class
+     *
+     * @param qmSettings the QMSettings object containing the settings for the
+     * QM runner
+     */
+    QMRunner::QMRunner(const QMSettings &qmSettings) : _qmSettings(qmSettings)
+    {
+    }
+
+    /**
      * @brief function to throw an exception after a timeout
      *
      * @details This function is used to throw an exception after a timeout. The
@@ -98,4 +108,15 @@ namespace QM
     {
         _periodicity = per;
     }
+
+    /**
+     * @brief returns the QMSettings object associated with the QM runner
+     *
+     * @return const QMSettings&
+     */
+    const QMSettings &QMRunner::_getQMSettings() const
+    {
+        return _qmSettings.get();
+    }
+
 }   // namespace QM

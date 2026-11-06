@@ -32,9 +32,9 @@ namespace engine
      *
      * @param method The QM method to use
      */
-    void QMCapableEngine::setQMRunner(QMMethod method)
+    void QMCapableEngine::setQMRunner(const QMSettings &settings)
     {
-        _qmRunner = QMRunnerManager::createQMRunner(method);
+        _qmRunner = QMRunnerManager::createQMRunner(settings);
     }
 
     /**

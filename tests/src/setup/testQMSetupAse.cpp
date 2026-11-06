@@ -247,7 +247,11 @@ class FENNIXCalculator:
     modules["fennol"]     = fennolModule;
     modules["fennol.ase"] = fennolAseModule;
 
-    ASSERT_NO_THROW({ QM::AseFennolRunner runner("model.fnx", false, true); });
+    _settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+    ASSERT_NO_THROW({
+        QM::AseFennolRunner
+            runner(_settings.qmSettings, "model.fnx", false, true);
+    });
 
     auto lastKwargs = fennolAseModule.attr("FENNIXCalculator")
                           .attr("last_kwargs")
@@ -299,9 +303,16 @@ class MACECalculator:
     modules["mace"]             = maceModule;
     modules["mace.calculators"] = calculatorsModule;
 
+    _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
     ASSERT_NO_THROW({
-        QM::AseMaceRunner
-            runner("MACECalculator", "model.model", "float64", true, false);
+        QM::AseMaceRunner runner(
+            _settings.qmSettings,
+            "MACECalculator",
+            "model.model",
+            "float64",
+            true,
+            false
+        );
     });
 
     auto lastKwargs = calculatorsModule.attr("MACECalculator")
@@ -322,7 +333,7 @@ class MACECalculator:
 
 TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
 {
-    QMSettings::setQMMethod(QMMethod::MACE);
+    _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
     QMSettings::setMaceMode(MaceMode::FAST);
     _qmSetup->setupWriteInfo();
 

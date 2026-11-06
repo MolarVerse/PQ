@@ -28,6 +28,7 @@
 #include <memory>
 
 #include "aseFennolRunner.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
@@ -121,21 +122,26 @@ class AseQMRunnerTest : public ::testing::Test
 
     void TearDown() override { QMSettings::setQMLoopTimeLimit(_timeLimit); }
 
-    static QM::AseFennolRunner _runner(const double delay)
+    static QM::AseFennolRunner _runner(
+        const QMSettings &settings,
+        const double      delay
+    )
     {
         pybind11::module_::import("sys")
             .attr("modules")["ase.atoms"]
             .attr("FENNIXCalculator")
             .attr("delay") = delay;
 
-        return QM::AseFennolRunner{"model.fnx", false, true};
+        return QM::AseFennolRunner{settings, "model.fnx", false, true};
     }
 };
 
 TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 {
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::FENNOL);
     QMSettings::setQMLoopTimeLimit(0.5);
-    auto runner = AseQMRunnerTest::_runner(10.0);
+    auto runner = AseQMRunnerTest::_runner(settings, 10.0);
 
     const auto start = std::chrono::steady_clock::now();
 
@@ -157,7 +163,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     // the interpreter is usable again
     QMSettings::setQMLoopTimeLimit(0.0);
     EXPECT_NO_THROW(
-        AseQMRunnerTest::_runner(0.0)
+        AseQMRunnerTest::_runner(settings, 0.0)
             .run(_simulationBox, _physicalData, molsys::Periodicity::XYZ)
     );
 }
@@ -165,7 +171,9 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
 {
     QMSettings::setQMLoopTimeLimit(10.0);
-    auto runner = AseQMRunnerTest::_runner(0.0);
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::FENNOL);
+    auto runner = AseQMRunnerTest::_runner(settings, 0.0);
 
     EXPECT_NO_THROW(
         runner.run(_simulationBox, _physicalData, molsys::Periodicity::XYZ)

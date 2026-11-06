@@ -32,7 +32,11 @@ namespace QM
      *
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
-    AseXtbRunner::AseXtbRunner(const std::string &method)
+    AseXtbRunner::AseXtbRunner(
+        const QMSettings  &settings,
+        const std::string &method
+    )
+        : AseQMRunner(settings)
     {
         try
         {

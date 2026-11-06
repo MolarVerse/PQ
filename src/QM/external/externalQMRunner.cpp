@@ -175,6 +175,92 @@ namespace
 }   // namespace
 #endif
 
+namespace
+{
+
+    /**
+     * @brief enumerates the types of files handled by the QM runner
+     */
+    enum class FileType : std::uint8_t
+    {
+        Force,
+        Charge
+    };
+
+    /**
+     * @brief throws a QMRunnerException for file errors
+     *
+     * @param message the error message
+     * @param fileName the name of the file
+     * @param qmMethod the QM method used
+     * @param fileType the type of the file (force or charge)
+     *
+     * @throw QMRunnerException
+     */
+    void throwFileException(
+        const std::string &message,
+        const std::string &fileName,
+        const std::string &qmMethod,
+        FileType           fileType
+
+    )
+    {
+        std::string fileTypeStr;
+        switch (fileType)
+        {
+            case FileType::Force: fileTypeStr = "force"; break;
+            case FileType::Charge: fileTypeStr = "charge"; break;
+        }
+
+        throw exc::QMRunnerException(
+            std::format(
+                "{} {} {} file \"{}\"",
+                message,
+                qmMethod,
+                fileTypeStr,
+                fileName
+            )
+        );
+    }
+
+    /**
+     * @brief throws a QMRunnerException for force file errors
+     *
+     * @param message the error message
+     * @param forceFileName the name of the force file
+     * @param qmMethod the QM method used
+     *
+     * @throw QMRunnerException
+     */
+    void throwForceFileException(
+        const std::string &message,
+        const std::string &forceFileName,
+        const std::string &qmMethod
+    )
+    {
+        throwFileException(message, forceFileName, qmMethod, FileType::Force);
+    }
+
+    /**
+     * @brief throws a QMRunnerException for charge file errors
+     *
+     * @param message the error message
+     * @param chargeFileName the name of the charge file
+     * @param qmMethod the QM method used
+     *
+     * @throw QMRunnerException
+     */
+    void throwChargeFileException(
+        const std::string &message,
+        const std::string &chargeFileName,
+        const std::string &qmMethod
+    )
+    {
+        throwFileException(message, chargeFileName, qmMethod, FileType::Charge);
+    }
+
+}   // namespace
+
 namespace QM
 {
 
@@ -191,7 +277,8 @@ namespace QM
      */
     void ExternalQMRunner::_readForceFile(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const QMSettings           &qmSettings
     )
     {
         const auto forceFileName =
@@ -201,23 +288,20 @@ namespace QM
 
         if (!forceFile.is_open())
         {
-            throw exc::QMRunnerException(
-                std::format(
-                    "Cannot open {} force file \"{}\"",
-                    QMMethodMeta::toString(QMSettings::getQMMethod()),
-                    forceFileName
-                )
+            const auto &qmMethod = qmSettings.getQMMethod();
+            throwForceFileException(
+                "Cannot open",
+                forceFileName,
+                QMMethodMeta::toString(qmMethod)
             );
         }
 
         if (forceFile.peek() == std::ifstream::traits_type::eof())
         {
-            throw exc::QMRunnerException(
-                std::format(
-                    "Empty {} force file \"{}\"",
-                    QMMethodMeta::toString(QMSettings::getQMMethod()),
-                    forceFileName
-                )
+            throwForceFileException(
+                "Empty",
+                forceFileName,
+                QMMethodMeta::toString(qmSettings.getQMMethod())
             );
         }
 
@@ -225,40 +309,34 @@ namespace QM
 
         if (!(forceFile >> energy))
         {
-            throw exc::QMRunnerException(
-                std::format(
-                    "Cannot read QM energy from {} force file \"{}\"",
-                    QMMethodMeta::toString(QMSettings::getQMMethod()),
-                    forceFileName
-                )
+            throwForceFileException(
+                "Cannot read QM energy from",
+                forceFileName,
+                QMMethodMeta::toString(qmSettings.getQMMethod())
             );
         }
 
         if (!std::isfinite(energy))
         {
-            throw exc::QMRunnerException(
-                std::format(
-                    "Invalid QM energy (NaN/Inf) in {} force file \"{}\"",
-                    QMMethodMeta::toString(QMSettings::getQMMethod()),
-                    forceFileName
-                )
+            throwForceFileException(
+                "Invalid QM energy (NaN/Inf) in",
+                forceFileName,
+                QMMethodMeta::toString(qmSettings.getQMMethod())
             );
         }
 
         physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
 
-        auto readForces = [&forceFile, &forceFileName](auto &atom)
+        auto readForces = [&forceFile, &forceFileName, &qmSettings](auto &atom)
         {
             auto grad = linalg::Vec3D();
 
             if (!(forceFile >> grad[0] >> grad[1] >> grad[2]))
             {
-                throw exc::QMRunnerException(
-                    std::format(
-                        "Incomplete {} force file \"{}\"",
-                        QMMethodMeta::toString(QMSettings::getQMMethod()),
-                        forceFileName
-                    )
+                throwForceFileException(
+                    "Incomplete",
+                    forceFileName,
+                    QMMethodMeta::toString(qmSettings.getQMMethod())
                 );
             }
 
@@ -266,14 +344,10 @@ namespace QM
             {
                 if (!std::isfinite(grad[i]))
                 {
-                    throw exc::QMRunnerException(
-                        std::format(
-                            "Invalid QM force component (NaN/Inf) in {} force "
-                            "file "
-                            "\"{}\"",
-                            QMMethodMeta::toString(QMSettings::getQMMethod()),
-                            forceFileName
-                        )
+                    throwForceFileException(
+                        "Invalid QM force component (NaN/Inf) in",
+                        forceFileName,
+                        QMMethodMeta::toString(qmSettings.getQMMethod())
                     );
                 }
             }
@@ -301,7 +375,10 @@ namespace QM
      *  - if the charge file cannot be opened
      *  - if the charge file is empty
      */
-    void ExternalQMRunner::_readChargeFile(molsys::SimulationBox &simulationBox)
+    void ExternalQMRunner::_readChargeFile(
+        molsys::SimulationBox &simulationBox,
+        const QMSettings      &qmSettings
+    )
     {
         const auto chargeFileName =
             settings::FileSettings::getQMChargesTempFileName();
@@ -310,50 +387,43 @@ namespace QM
 
         if (!chargeFile.is_open())
         {
-            throw exc::QMRunnerException(
-                std::format(
-                    "Cannot open {} charge file \"{}\"",
-                    QMMethodMeta::toString(QMSettings::getQMMethod()),
-                    chargeFileName
-                )
+            throwChargeFileException(
+                "Cannot open",
+                chargeFileName,
+                QMMethodMeta::toString(qmSettings.getQMMethod())
             );
         }
 
         if (chargeFile.peek() == std::ifstream::traits_type::eof())
         {
-            throw exc::QMRunnerException(
-                std::format(
-                    "Empty {} charge file \"{}\"",
-                    QMMethodMeta::toString(QMSettings::getQMMethod()),
-                    chargeFileName
-                )
+            throwChargeFileException(
+                "Empty",
+                chargeFileName,
+                QMMethodMeta::toString(qmSettings.getQMMethod())
             );
         }
 
         simulationBox.resetQMCharges();
 
-        auto readCharges = [&chargeFile, &chargeFileName](auto &atom)
+        auto readCharges =
+            [&chargeFile, &chargeFileName, &qmSettings](auto &atom)
         {
             auto charge = 0.0;
 
             if (!(chargeFile >> charge))
             {
-                throw exc::QMRunnerException(
-                    std::format(
-                        "Incomplete {} charge file \"{}\"",
-                        QMMethodMeta::toString(QMSettings::getQMMethod()),
-                        chargeFileName
-                    )
+                throwChargeFileException(
+                    "Incomplete",
+                    chargeFileName,
+                    QMMethodMeta::toString(qmSettings.getQMMethod())
                 );
             }
             if (!std::isfinite(charge))
             {
-                throw exc::QMRunnerException(
-                    std::format(
-                        "Invalid value in {} charge file \"{}\"",
-                        QMMethodMeta::toString(QMSettings::getQMMethod()),
-                        chargeFileName
-                    )
+                throwChargeFileException(
+                    "Invalid value in",
+                    chargeFileName,
+                    QMMethodMeta::toString(qmSettings.getQMMethod())
                 );
             }
 
@@ -426,12 +496,12 @@ namespace QM
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
-            _readForceFile(simulationBox, physicalData);
+            _readForceFile(simulationBox, physicalData, _getQMSettings());
         }
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
-            _readChargeFile(simulationBox);
+            _readChargeFile(simulationBox, _getQMSettings());
         }
 
         if (per != molsys::Periodicity::NON_PERIODIC)

@@ -47,30 +47,20 @@ namespace input
      * qm_script
      * "<string>"
      *
-     */
-    QMInputParser::QMInputParser(mstd::Ref<ReferenceSettings> referenceSettings)
-        : QMInputParser(true, referenceSettings)
-    {
-    }
-
-    /**
-     * @brief Construct a new QMInputParser:: QMInputParser object
-     *
-     * @details following keywords are added to the _keywordFuncMap,
-     * _keywordRequiredMap and _keywordCountMap: 1) qm_prog "<string>" 2)
-     * qm_script
-     * "<string>"
-     *
      * @param resolveBuiltInSlakosPath
      * @param referenceSettings Reference settings object used to manage and add
      * necessary reference files for the specified QM method.
+     * @param qmSettings QM settings object used to configure and manage the
+     * quantum mechanical method and its associated parameters.
      */
     QMInputParser::QMInputParser(
-        const bool                   resolveBuiltInSlakosPath,
-        mstd::Ref<ReferenceSettings> referenceSettings
+        const bool         resolveBuiltInSlakosPath,
+        ReferenceSettings &referenceSettings,
+        QMSettings        &qmSettings
     )
         : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath),
-          _referenceSettings(referenceSettings)
+          _referenceSettings(referenceSettings),
+          _qmSettings(qmSettings)
     {
         addQMMethodKey();
         addQMScriptKey();
@@ -101,7 +91,7 @@ namespace input
 
         const auto setValue = [this](QMMethod value)
         {
-            QMSettings::setQMMethod(value);
+            _qmSettings->setQMMethodByUser(value);
 
             switch (value)
             {

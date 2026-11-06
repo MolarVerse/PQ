@@ -57,7 +57,7 @@ namespace QM
         constexpr static auto *_staticBuild = STATIC_BUILD_;
 
        public:
-        ExternalQMRunner()           = default;
+        using QMRunner::QMRunner;
         ~ExternalQMRunner() override = default;
 
         void run(
@@ -105,9 +105,13 @@ namespace QM
        private:
         static void _readForceFile(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const QMSettings           &qmSettings
         );
-        static void _readChargeFile(molsys::SimulationBox &simulationBox);
+        static void _readChargeFile(
+            molsys::SimulationBox &simulationBox,
+            const QMSettings      &qmSettings
+        );
 
         friend class ::ExternalQMRunnerTest;   // for testing private methods
     };

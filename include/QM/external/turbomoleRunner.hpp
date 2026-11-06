@@ -40,6 +40,7 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
+        using ExternalQMRunner::ExternalQMRunner;
         void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
 
         void writePointChargeFile(

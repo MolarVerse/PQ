@@ -30,6 +30,7 @@
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
+#include "qmSettings.hpp"
 #include "referenceSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
@@ -53,6 +54,7 @@ struct Settings
     ManostatSettings      manostatSettings;
     OutputFileSettings    outputFiles;
     ReferenceSettings     referenceSettings;
+    QMSettings            qmSettings;
 
     void finalize();
 };

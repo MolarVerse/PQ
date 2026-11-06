@@ -29,6 +29,7 @@
 
 #include "defaults.hpp"
 #include "enums/qm.hpp"
+#include "setting.hpp"
 
 std::string string(
     const std::unordered_map<std::string, double> &unordered_map
@@ -43,7 +44,7 @@ std::string string(
 class QMSettings
 {
    private:
-    static inline QMMethod      _qmMethod      = QMMethod::NONE;
+    Setting<QMMethod>           _qmMethod{QMMethod::NONE};
     static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
     static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
     static inline MaceMode      _maceMode      = MaceMode::ACCURATE;
@@ -69,13 +70,13 @@ class QMSettings
         defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
 
    public:
-    [[nodiscard]] static bool isExternalQMRunner();
+    [[nodiscard]] bool isExternalQMRunner() const;
 
     /***************************
      * standard setter methods *
      ***************************/
 
-    static void setQMMethod(QMMethod method);
+    void setQMMethodByUser(QMMethod method);
 
     static void setMaceModel(MaceModel model);
     static void setMaceModelType(MaceModelType model);
@@ -109,7 +110,9 @@ class QMSettings
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] static QMMethod      getQMMethod();
+    [[nodiscard]] QMMethod getQMMethod() const;
+    [[nodiscard]] bool     isQMMethodSetByUser() const;
+
     [[nodiscard]] static MaceModel     getMaceModel();
     [[nodiscard]] static MaceModelType getMaceModelType();
     [[nodiscard]] static MaceMode      getMaceMode();

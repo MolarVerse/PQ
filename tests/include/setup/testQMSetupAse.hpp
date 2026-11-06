@@ -44,20 +44,20 @@ class TestQMSetupAse : public ::testing::Test
 
     void SetUp() override
     {
-        _engine  = std::make_unique<engine::QMMDEngine>(_settings);
-        _qmSetup = std::make_unique<setup::QMSetup>(*_engine);
+        _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+        _engine = std::make_unique<engine::QMMDEngine>(_settings);
+        _qmSetup =
+            std::make_unique<setup::QMSetup>(*_engine, _settings.qmSettings);
         _engine->getEngineOutput().getLogOutput().setFilename(
             "default.log",
             false
         );
-        QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     }
 
     void TearDown() override
     {
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        QMSettings::setQMMethod(QMMethod::NONE);
         QMSettings::setSlakosType(SlakosType::NONE);
         QMSettings::setUseDispersionCorrection(false);
         QMSettings::setUseThirdOrderDftb(false);

@@ -68,7 +68,7 @@ namespace setup
      */
     void HybridSetup::setup()
     {
-        validateQMMethod();
+        validateQMMethod(_engine.getSettings().qmSettings.getQMMethod());
         setupInnerRegionCenter();
         setupForcedCoreList();
         setupForcedLayerList();
@@ -87,11 +87,10 @@ namespace setup
      * @throws exc::InputFileException if the QM method is not supported
      * for hybrid type calculations
      */
-    void HybridSetup::validateQMMethod()
+    void HybridSetup::validateQMMethod(QMMethod qmMethod)
     {
         using enum QMMethod;
 
-        const auto qmMethod = QMSettings::getQMMethod();
         const auto errorMsg = std::format(
             "QM method \"{}\" is not supported for hybrid type "
             "calculations. Supported QM methods are \"dftbplus\" and "

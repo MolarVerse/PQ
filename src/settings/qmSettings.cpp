@@ -88,17 +88,22 @@ std::string string(const std::unordered_map<std::string, double> &unordered_map)
  *
  * @return bool
  */
-bool QMSettings::isExternalQMRunner()
+bool QMSettings::isExternalQMRunner() const
 {
-    using enum QMMethod;
+    switch (_qmMethod.get())
+    {
+        case QMMethod::DFTBPLUS:
+        case QMMethod::PYSCF:
+        case QMMethod::TURBOMOLE: return true;
 
-    auto isExternal = false;
+        case QMMethod::NONE:
+        case QMMethod::ASE_XTB:
+        case QMMethod::MACE:
+        case QMMethod::FENNOL:
+        case QMMethod::ASE_DFTBPLUS: return false;
+    }
 
-    isExternal = isExternal || _qmMethod == DFTBPLUS;
-    isExternal = isExternal || _qmMethod == PYSCF;
-    isExternal = isExternal || _qmMethod == TURBOMOLE;
-
-    return isExternal;
+    std::unreachable();
 }
 
 /***************************
@@ -112,7 +117,10 @@ bool QMSettings::isExternalQMRunner()
  *
  * @param method
  */
-void QMSettings::setQMMethod(QMMethod method) { _qmMethod = method; }
+void QMSettings::setQMMethodByUser(QMMethod method)
+{
+    _qmMethod.setByUser(method);
+}
 
 /**
  * @brief sets the maceModel to enum in settings
@@ -336,7 +344,14 @@ void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
  *
  * @return QMMethod
  */
-QMMethod QMSettings::getQMMethod() { return _qmMethod; }
+QMMethod QMSettings::getQMMethod() const { return _qmMethod.get(); }
+
+/**
+ * @brief returns if the QM method was set by the user
+ *
+ * @return bool
+ */
+bool QMSettings::isQMMethodSetByUser() const { return _qmMethod.isSetByUser(); }
 
 /**
  * @brief returns the maceModel

@@ -33,7 +33,9 @@
 #include <string_view>
 #include <thread>
 
+#include "enums/qm.hpp"
 #include "orthorhombicBox.hpp"
+#include "settings.hpp"
 
 #if !defined(_WIN32)
 #include <sys/types.h>
@@ -79,7 +81,11 @@ namespace
     class PeriodicDftbRunner : public QM::DFTBPlusRunner
     {
        public:
-        PeriodicDftbRunner() { _setPeriodicity(molsys::Periodicity::XYZ); }
+        explicit PeriodicDftbRunner(const QMSettings &settings)
+            : QM::DFTBPlusRunner(settings)
+        {
+            _setPeriodicity(molsys::Periodicity::XYZ);
+        }
     };
 
     class ExternalQMRunnerHarness : public QM::ExternalQMRunner
@@ -88,6 +94,7 @@ namespace
         bool _sawStaleResults = false;
 
        public:
+        using QM::ExternalQMRunner::ExternalQMRunner;
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
 
         void execute(molsys::SimulationBox & /*simBox*/) override
@@ -131,6 +138,7 @@ namespace
         mutable std::string _command;
 
        public:
+        using Runner::Runner;
         [[nodiscard]]
         const std::string &getCommand() const
         {
@@ -152,14 +160,14 @@ namespace
 class ExternalQMRunnerTest : public testing::Test
 {
    protected:
-    std::filesystem::path      _originalPath;
-    std::filesystem::path      _workPath;
-    molsys::SimulationBox      _simulationBox;
-    physicalData::PhysicalData _physicalData;
-    ExternalQMRunnerHarness    _runner;
-    QM::DFTBPlusRunner         _dftbRunner;
+    std::filesystem::path                    _originalPath;
+    std::filesystem::path                    _workPath;
+    molsys::SimulationBox                    _simulationBox;
+    physicalData::PhysicalData               _physicalData;
+    Settings                                 _settings;
+    std::unique_ptr<ExternalQMRunnerHarness> _runner;
+    std::unique_ptr<QM::DFTBPlusRunner>      _dftbRunner;
 
-    QMMethod    _qmMethod;
     JobType     _jobType;
     bool        _removeNetForce;
     double      _timeLimit;
@@ -168,20 +176,32 @@ class ExternalQMRunnerTest : public testing::Test
 
     static void _readForceFile(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const QMSettings           &settings
     )
     {
-        QM::ExternalQMRunner::_readForceFile(simulationBox, physicalData);
+        QM::ExternalQMRunner::_readForceFile(
+            simulationBox,
+            physicalData,
+            settings
+        );
     }
 
-    static void _readChargeFile(molsys::SimulationBox &simulationBox)
+    static void _readChargeFile(
+        molsys::SimulationBox &simulationBox,
+        const QMSettings      &settings
+    )
     {
-        QM::ExternalQMRunner::_readChargeFile(simulationBox);
+        QM::ExternalQMRunner::_readChargeFile(simulationBox, settings);
     }
 
     void SetUp() override
     {
-        _qmMethod       = QMSettings::getQMMethod();
+        _settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+        _runner =
+            std::make_unique<ExternalQMRunnerHarness>(_settings.qmSettings);
+        _dftbRunner =
+            std::make_unique<QM::DFTBPlusRunner>(_settings.qmSettings);
         _jobType        = settings::GeneralSettings::getJobtype();
         _removeNetForce = QMSettings::getRemoveNetForce();
         _timeLimit      = QMSettings::getQMLoopTimeLimit();
@@ -196,7 +216,6 @@ class ExternalQMRunnerTest : public testing::Test
         ASSERT_TRUE(std::filesystem::create_directory(_workPath));
         std::filesystem::current_path(_workPath);
 
-        QMSettings::setQMMethod(QMMethod::DFTBPLUS);
         QMSettings::setRemoveNetForce(false);
         QMSettings::setQMLoopTimeLimit(0.0);
         settings::GeneralSettings::setJobtype(JobType::QM_MD);
@@ -211,7 +230,6 @@ class ExternalQMRunnerTest : public testing::Test
 
     void TearDown() override
     {
-        QMSettings::setQMMethod(_qmMethod);
         QMSettings::setRemoveNetForce(_removeNetForce);
         QMSettings::setQMLoopTimeLimit(_timeLimit);
         QMSettings::setQMScript(_qmScript);
@@ -249,7 +267,7 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
 #if defined(_WIN32)
     try
     {
-        _runner.runCommand("true", "External QM");
+        _runner->runCommand("true", "External QM");
         FAIL() << "Expected command execution to be rejected on Windows";
     }
     catch (const exc::QMRunnerException &error)
@@ -257,11 +275,11 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
         EXPECT_THAT(error.what(), HasSubstr("not supported on Windows"));
     }
 #else
-    EXPECT_NO_THROW(_runner.runCommand("true", "External QM"));
+    EXPECT_NO_THROW(_runner->runCommand("true", "External QM"));
 
     try
     {
-        _runner.runCommand("false", "External QM");
+        _runner->runCommand("false", "External QM");
         FAIL() << "Expected the failed command to throw";
     }
     catch (const exc::QMRunnerException &error)
@@ -276,7 +294,9 @@ TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
 
 TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
 {
-    auto       runner    = CommandCaptureRunner<QM::DFTBPlusRunner>();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    auto       runner    = CommandCaptureRunner<QM::DFTBPlusRunner>(settings);
     const auto path      = _configureQuotedScript(runner);
     const auto inputFile = std::string("input file; touch qm-injected");
     settings::FileSettings::setDFTBFileName(inputFile);
@@ -299,7 +319,9 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
 
 TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
 {
-    auto       runner = CommandCaptureRunner<QM::PySCFRunner>();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::PYSCF);
+    auto       runner = CommandCaptureRunner<QM::PySCFRunner>(settings);
     const auto path   = _configureQuotedScript(runner);
 
     runner.execute(_simulationBox);
@@ -317,7 +339,9 @@ TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
 
 TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
 {
-    auto       runner = CommandCaptureRunner<QM::TurbomoleRunner>();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    auto       runner = CommandCaptureRunner<QM::TurbomoleRunner>(settings);
     const auto path   = _configureQuotedScript(runner);
 
     runner.execute(_simulationBox);
@@ -342,12 +366,12 @@ TEST_F(ExternalQMRunnerTest, removesStaleResultsBeforeExecution)
     writeFile(settings::FileSettings::getQMChargesTempFileName(), "stale");
     writeFile(settings::FileSettings::getStressTensorTempFileName(), "stale");
 
-    EXPECT_NO_THROW(_runner.run(
+    EXPECT_NO_THROW(_runner->run(
         _simulationBox,
         _physicalData,
         molsys::Periodicity::NON_PERIODIC
     ));
-    EXPECT_FALSE(_runner.sawStaleResults());
+    EXPECT_FALSE(_runner->sawStaleResults());
     EXPECT_FALSE(
         std::filesystem::exists(
             settings::FileSettings::getStressTensorTempFileName()
@@ -359,8 +383,10 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteForces)
 {
     writeFile(settings::FileSettings::getQMForcesTempFileName(), "0\n0 0\n");
 
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::DFTBPLUS);
     EXPECT_THROW_MSG(
-        _readForceFile(_simulationBox, _physicalData),
+        _readForceFile(_simulationBox, _physicalData, settings),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS force file \"qm_forces\""
     );
@@ -373,8 +399,10 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteForces)
         "0\nnan 0 0\n"
     );
 
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::DFTBPLUS);
     EXPECT_THROW_MSG(
-        _readForceFile(_simulationBox, _physicalData),
+        _readForceFile(_simulationBox, _physicalData, settings),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS force file \"qm_forces\""
     );
@@ -388,8 +416,10 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteCharges)
 
     writeFile(settings::FileSettings::getQMChargesTempFileName(), "0\n");
 
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::DFTBPLUS);
     EXPECT_THROW_MSG(
-        _readChargeFile(_simulationBox),
+        _readChargeFile(_simulationBox, settings),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS charge file \"qm_charges\""
     );
@@ -399,8 +429,10 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteCharges)
 {
     writeFile(settings::FileSettings::getQMChargesTempFileName(), "nan\n");
 
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::DFTBPLUS);
     EXPECT_THROW_MSG(
-        _readChargeFile(_simulationBox),
+        _readChargeFile(_simulationBox, settings),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS charge file \"qm_charges\""
     );
@@ -414,7 +446,7 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteStressTensor)
     );
 
     EXPECT_THROW_MSG(
-        _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
+        _dftbRunner->readStressTensor(_simulationBox.getBox(), _physicalData),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
@@ -428,7 +460,7 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
     );
 
     EXPECT_THROW_MSG(
-        _dftbRunner.readStressTensor(_simulationBox.getBox(), _physicalData),
+        _dftbRunner->readStressTensor(_simulationBox.getBox(), _physicalData),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
@@ -437,7 +469,7 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
 TEST_F(ExternalQMRunnerTest, rejectsUniaxialPeriodicity)
 {
     EXPECT_THROW_MSG(
-        _runner.run(_simulationBox, _physicalData, molsys::Periodicity::X),
+        _runner->run(_simulationBox, _physicalData, molsys::Periodicity::X),
         exc::QMRunnerException,
         "External QM runners only available for non- and 3D-periodic "
         "calculations."
@@ -447,7 +479,7 @@ TEST_F(ExternalQMRunnerTest, rejectsUniaxialPeriodicity)
 TEST_F(ExternalQMRunnerTest, rejectsBiaxialPeriodicity)
 {
     EXPECT_THROW_MSG(
-        _runner.run(_simulationBox, _physicalData, molsys::Periodicity::XY),
+        _runner->run(_simulationBox, _physicalData, molsys::Periodicity::XY),
         exc::QMRunnerException,
         "External QM runners only available for non- and 3D-periodic "
         "calculations."
@@ -457,11 +489,11 @@ TEST_F(ExternalQMRunnerTest, rejectsBiaxialPeriodicity)
 TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
 {
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
-    _dftbRunner.setScriptPath(scriptDirectory + '/');
+    _dftbRunner->setScriptPath(scriptDirectory + '/');
     QMSettings::setQMScript("this-script-does-not-exist.sh");
 
     EXPECT_THROW_MSG(
-        _dftbRunner.execute(_simulationBox),
+        _dftbRunner->execute(_simulationBox),
         exc::InputFileException,
         std::format(
             "DFTB+ script file \"{}/this-script-does-not-exist.sh\" does "
@@ -475,7 +507,9 @@ TEST_F(ExternalQMRunnerTest, pyscfExecuteRejectsMissingScript)
 {
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
 
-    auto runner = QM::PySCFRunner();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::PYSCF);
+    auto runner = QM::PySCFRunner(settings);
     runner.setScriptPath(scriptDirectory + '/');
     QMSettings::setQMScript("this-script-does-not-exist.py");
 
@@ -494,7 +528,9 @@ TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
 {
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
 
-    auto runner = QM::TurbomoleRunner();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    auto runner = QM::TurbomoleRunner(settings);
     runner.setScriptPath(scriptDirectory + '/');
     QMSettings::setQMScript("this-script-does-not-exist.sh");
 
@@ -608,14 +644,16 @@ class QMWriterTest : public ExternalQMRunnerTest
 
 TEST_F(QMWriterTest, dftbCoordsOfAnIsolatedSystemUseTheClusterFlag)
 {
-    _dftbRunner.writeCoordsFile(_simulationBox);
+    _dftbRunner->writeCoordsFile(_simulationBox);
 
     EXPECT_EQ(NON_PERIODIC_COORDS, readFile("coords"));
 }
 
 TEST_F(QMWriterTest, dftbCoordsOfAPeriodicSystemAppendTheCell)
 {
-    auto runner = PeriodicDftbRunner();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    auto runner = PeriodicDftbRunner(settings);
 
     runner.writeCoordsFile(_simulationBox);
 
@@ -628,7 +666,7 @@ TEST_F(QMWriterTest, dftbPointChargesAreOnlyTheInactiveSmoothingAndPointCharge)
 {
     _addPointChargeMolecules();
 
-    _dftbRunner.writePointChargeFile(_simulationBox);
+    _dftbRunner->writePointChargeFile(_simulationBox);
 
     EXPECT_EQ(
         POINT_CHARGES,
@@ -640,7 +678,7 @@ TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
 {
     _addMolecule(molsys::HybridZone::OUTER, false, {7.0, 8.0, 9.0}, 0.1);
 
-    _dftbRunner.writePointChargeFile(_simulationBox);
+    _dftbRunner->writePointChargeFile(_simulationBox);
 
     EXPECT_FALSE(
         std::filesystem::exists(
@@ -651,7 +689,9 @@ TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
 
 TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
 {
-    auto       runner = CommandCaptureRunner<QM::DFTBPlusRunner>();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    auto       runner = CommandCaptureRunner<QM::DFTBPlusRunner>(settings);
     const auto path   = _configureQuotedScript(runner);
     const auto suffix = [](const int usePointCharges)
     {
@@ -681,7 +721,9 @@ TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
 
 TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
 {
-    auto runner = QM::TurbomoleRunner();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    auto runner = QM::TurbomoleRunner(settings);
 
     runner.writeCoordsFile(_simulationBox);
 
@@ -708,7 +750,9 @@ TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
 
 TEST_F(QMWriterTest, turbomolePointChargesAreInBohrAndOnlyTheOuterShells)
 {
-    auto runner = QM::TurbomoleRunner();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    auto runner = QM::TurbomoleRunner(settings);
     _addPointChargeMolecules();
 
     runner.writePointChargeFile(_simulationBox);
@@ -721,7 +765,9 @@ TEST_F(QMWriterTest, turbomolePointChargesAreInBohrAndOnlyTheOuterShells)
 
 TEST_F(QMWriterTest, turbomoleWithoutPointChargesLeavesNoFile)
 {
-    auto runner = QM::TurbomoleRunner();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    auto runner = QM::TurbomoleRunner(settings);
 
     runner.writePointChargeFile(_simulationBox);
 
@@ -734,7 +780,9 @@ TEST_F(QMWriterTest, turbomoleWithoutPointChargesLeavesNoFile)
 
 TEST_F(QMWriterTest, pyscfCoordsAreAnXyzFile)
 {
-    auto runner = QM::PySCFRunner();
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::PYSCF);
+    auto runner = QM::PySCFRunner(settings);
 
     runner.writeCoordsFile(_simulationBox);
 
@@ -753,6 +801,7 @@ namespace
     class SlowExternalQMRunner : public QM::ExternalQMRunner
     {
        public:
+        using QM::ExternalQMRunner::ExternalQMRunner;
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
 
         void execute(molsys::SimulationBox & /*simBox*/) override
@@ -764,6 +813,7 @@ namespace
     class InterruptibleQMRunner : public QM::ExternalQMRunner
     {
        public:
+        using QM::ExternalQMRunner::ExternalQMRunner;
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
         void execute(molsys::SimulationBox & /*simBox*/) override {}
 
@@ -778,7 +828,9 @@ TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
 {
     QMSettings::setQMLoopTimeLimit(1.0);
 
-    auto runner = SlowExternalQMRunner{};
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    auto runner = SlowExternalQMRunner{settings};
 
     try
     {
@@ -802,6 +854,9 @@ TEST_F(ExternalQMRunnerTest, interruptStopsTheQMProcessAndPQ)
 {
     const auto runAndInterrupt = []
     {
+        QMSettings settings;
+        settings.setQMMethodByUser(QMMethod::TURBOMOLE);
+
         auto interrupt = std::jthread{
             []
             {
@@ -810,7 +865,7 @@ TEST_F(ExternalQMRunnerTest, interruptStopsTheQMProcessAndPQ)
             }
         };
 
-        InterruptibleQMRunner{}.runCommand(
+        InterruptibleQMRunner{settings}.runCommand(
             "echo $$ > qm-pid && sleep 3 && touch qm-finished"
         );
         interrupt.join();

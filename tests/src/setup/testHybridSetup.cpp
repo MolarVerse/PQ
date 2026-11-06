@@ -55,10 +55,13 @@ namespace
         engine.getSimulationBox().addMolecule(molecule);
     }
 
-    void configureValidHybridSettings(engine::Engine &engine)
+    void configureValidHybridSettings(
+        Settings       &settings,
+        engine::Engine &engine
+    )
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        QMSettings::setQMMethod(QMMethod::DFTBPLUS);
+        settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
         settings::HybridSettings::setForcedCoreList({});
         settings::HybridSettings::setForcedLayerList({});
         settings::HybridSettings::setForcedOuterList({});
@@ -196,7 +199,7 @@ TEST_F(TestSetup, setupThrowsNotImplemented)
 
 TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 {
-    configureValidHybridSettings(*_engine);
+    configureValidHybridSettings(*_settings, *_engine);
     addSingleAtomMolecule(*_engine, MolType{1});
 
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
@@ -208,8 +211,8 @@ TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 
 TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
 {
-    configureValidHybridSettings(*_engine);
-    QMSettings::setQMMethod(QMMethod::TURBOMOLE);
+    configureValidHybridSettings(*_settings, *_engine);
+    _settings->qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
     settings::HybridSettings::setInnerRegionCenter({0, 1});
     settings::HybridSettings::setForcedCoreList({0});
     settings::HybridSettings::setForcedLayerList({1});
@@ -239,9 +242,8 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 
     for (const auto method : unsupported)
     {
-        QMSettings::setQMMethod(method);
         EXPECT_THROW_MSG(
-            setup.validateQMMethod(),
+            setup.validateQMMethod(method),
             exc::InputFileException,
             "QM method \"" + QMMethodMeta::toString(method) +
                 "\" is not supported for hybrid type "
@@ -250,10 +252,8 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
         );
     }
 
-    QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    EXPECT_NO_THROW(setup.validateQMMethod());
-    QMSettings::setQMMethod(QMMethod::TURBOMOLE);
-    EXPECT_NO_THROW(setup.validateQMMethod());
+    EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::DFTBPLUS));
+    EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::TURBOMOLE));
 }
 
 TEST_F(TestSetup, hybridSetupValidatesZoneRadii)

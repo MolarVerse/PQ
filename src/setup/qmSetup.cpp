@@ -44,8 +44,11 @@ namespace setup
      *
      * @param qmCapableEngine
      */
-    QMSetup::QMSetup(engine::QMCapableEngine &qmCapableEngine)
-        : _qmCapableEngine(qmCapableEngine)
+    QMSetup::QMSetup(
+        engine::QMCapableEngine &qmCapableEngine,
+        const QMSettings        &qmSettings
+    )
+        : _qmCapableEngine(qmCapableEngine), _qmSettings(qmSettings)
     {
     }
 
@@ -70,7 +73,7 @@ namespace setup
         if (auto *qmCapableEngine =
                 dynamic_cast<engine::QMCapableEngine *>(&engine))
         {
-            QMSetup qmSetup(*qmCapableEngine);
+            QMSetup qmSetup(*qmCapableEngine, engine.getSettings().qmSettings);
             qmSetup.setup(references);
         }
         else
@@ -89,11 +92,11 @@ namespace setup
     {
         setupQMMethod();
 
-        setupQMMethodAseDftbPlus();
+        _setupQMMethodAseDftbPlus();
 
-        setupQMMethodAseXtb(references);
+        _setupQMMethodAseXtb(references);
 
-        if (QMSettings::isExternalQMRunner())
+        if (_qmSettings->isExternalQMRunner())
             setupQMScript();
 
         setupCoulombRadiusCutOff();
@@ -105,18 +108,15 @@ namespace setup
      * @brief setup the "QM" method of the system
      *
      */
-    void QMSetup::setupQMMethod()
-    {
-        _qmCapableEngine.setQMRunner(QMSettings::getQMMethod());
-    }
+    void QMSetup::setupQMMethod() { _qmCapableEngine.setQMRunner(_qmSettings); }
 
     /**
      * @brief setup the ASE DFTB+ method of the system
      *
      */
-    void QMSetup::setupQMMethodAseDftbPlus()
+    void QMSetup::_setupQMMethodAseDftbPlus() const
     {
-        if (!(QMSettings::getQMMethod() == QMMethod::ASE_DFTBPLUS))
+        if (!(_qmSettings->getQMMethod() == QMMethod::ASE_DFTBPLUS))
             return;
 
         if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
@@ -128,9 +128,9 @@ namespace setup
      * @brief setup the ASE DFTB+ method of the system
      *
      */
-    void QMSetup::setupQMMethodAseXtb(ReferenceSettings &references)
+    void QMSetup::_setupQMMethodAseXtb(ReferenceSettings &references) const
     {
-        if (!(QMSettings::getQMMethod() == QMMethod::ASE_XTB))
+        if (!(_qmSettings->getQMMethod() == QMMethod::ASE_XTB))
             return;
 
         if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
@@ -280,14 +280,14 @@ namespace setup
         auto &engine    = dynamic_cast<engine::Engine &>(_qmCapableEngine);
         auto &logOutput = engine.getLogOutput();
 
-        const auto qmMethod = QMSettings::getQMMethod();
+        const auto qmMethod = _qmSettings->getQMMethod();
         const auto qmRunnerMessage =
             std::format("QM runner: {}", QMMethodMeta::toString(qmMethod));
 
         logOutput.writeSetupInfo(qmRunnerMessage);
         logOutput.writeEmptyLine();
 
-        if (QMSettings::isExternalQMRunner())
+        if (_qmSettings->isExternalQMRunner())
         {
             const auto qmScript        = QMSettings::getQMScript();
             const auto qmScriptMessage = std::format("QM script: {}", qmScript);

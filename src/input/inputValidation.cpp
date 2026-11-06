@@ -79,7 +79,7 @@ namespace input
     {
         _validateTimings(settings);
         validateOptimizer(settings);
-        _validateQM();
+        _validateQM(settings.qmSettings);
         _validateThermostat(settings.simulationBoxSettings);
         _validateManostat(settings.manostatSettings);
         _validateCellList();
@@ -133,17 +133,17 @@ namespace input
      * @throws exc::InputFileException if selected QM settings require missing
      * or incompatible keywords
      */
-    void InputFileReader::_validateQM() const
+    void InputFileReader::_validateQM(const QMSettings& settings) const
     {
         if (!settings::GeneralSettings::isQMActivated())
             return;
 
-        if (!getKeywordSet("qm_prog"))
+        if (!settings.isQMMethodSetByUser())
             throw exc::InputFileException(
                 "QM job selected but the \"qm_prog\" keyword has not been set"
             );
 
-        const auto qmMethod = QMSettings::getQMMethod();
+        const auto qmMethod = settings.getQMMethod();
 
         if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {

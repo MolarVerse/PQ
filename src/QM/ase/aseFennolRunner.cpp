@@ -36,10 +36,12 @@ namespace QM
      * fails
      */
     AseFennolRunner::AseFennolRunner(
+        const QMSettings  &settings,
         const std::string &modelPath,
         bool               gpuPreprocessing,
         bool               useFloat64
     )
+        : AseQMRunner(settings)
     {
         try
         {
