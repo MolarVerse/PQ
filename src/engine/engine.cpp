@@ -33,6 +33,10 @@
 #include "stdoutOutput.hpp"
 #include "timingsSettings.hpp"
 
+#ifdef WITH_PYBIND11
+#include <pybind11/pybind11.h>
+#endif
+
 namespace engine
 {
     /**
@@ -81,6 +85,19 @@ namespace engine
         const auto effStep  = _step + step0;
 
         return static_cast<double>(effStep) * timeStep;
+    }
+
+    /**
+     * @brief throw if a signal recorded by embedded Python is pending
+     *
+     * @throw pybind11::error_already_set e.g. KeyboardInterrupt
+     */
+    void Engine::throwIfInterrupted()
+    {
+#ifdef WITH_PYBIND11
+        if (::Py_IsInitialized() != 0 && ::PyErr_CheckSignals() != 0)
+            throw pybind11::error_already_set();
+#endif
     }
 
     /**

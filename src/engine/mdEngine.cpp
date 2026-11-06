@@ -76,6 +76,8 @@ namespace engine
 
         for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
         {
+            throwIfInterrupted();
+
             bar.update();
             takeStep();
 

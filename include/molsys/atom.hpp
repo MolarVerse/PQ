@@ -27,7 +27,6 @@
 #include <string>
 #include <string_view>
 
-#include "staticMatrix.hpp"
 #include "strongTypes.hpp"
 #include "vector3d.hpp"
 
@@ -87,10 +86,6 @@ namespace molsys
 
         void scaleVelocity(double scaleFactor);
         void scaleVelocity(const linalg::Vec3D &scaleFactor);
-        void scaleVelocityOrthogonalSpace(
-            const linalg::tensor3D &,
-            const Box &
-        );
         void scaleForce(double scaleFactor);
         void scaleForce(const linalg::Vec3D &scaleFactor);
 

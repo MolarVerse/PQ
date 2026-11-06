@@ -72,15 +72,15 @@ namespace manostat
         _pressureTensor      = pressureTensor * Pa;
         _pressure            = trace(_pressureTensor) / linalg::tensor3D::size;
 
-        physicalData.setPressure(_pressure.numerical_value_in(bar));
+        physicalData.setPressure(_pressure);
 
-        if (_settings->getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        const auto &box = simulationBox.getBox();
+        if (!box.allowChangeOfAngles() && !box.isOrthorhombic())
         {
             // Length coupling uses cell-axis coordinates: T^-1 P T.
             // Full anisotropic deformation acts directly in Cartesian space.
-            const auto &box = simulationBox.getBox();
-            _pressureTensor =
-                box.toOrthoSpace(_pressureTensor) * linalg::diagonalMatrix(1.0);
+            _pressureTensor = box.getInverseBoxMatrix() * _pressureTensor *
+                              box.getBoxMatrix();
         }
 
         const auto fixedAxis = _settings->getFixedAxis();
@@ -107,6 +107,54 @@ namespace manostat
         {
             physicalData.setCoupledPressure(_pressure.numerical_value_in(bar));
         }
+    }
+
+    /**
+     * @brief transform a scaling tensor into simulation space
+     *
+     * @details for boxes with fixed angles (non-orthorhombic) the scaling
+     * tensor is diagonal in orthogonal space and is transformed via
+     * h S h^-1 (equal to T S T^-1 for diagonal S). For orthorhombic boxes and
+     * boxes allowing a change of angles the tensor already acts in simulation
+     * space.
+     *
+     * @param scalingTensor
+     * @param box
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D Manostat::_toSimSpaceScaling(
+        const linalg::tensor3D &scalingTensor,
+        const molsys::Box      &box
+    )
+    {
+        if (box.allowChangeOfAngles() || box.isOrthorhombic())
+            return scalingTensor;
+
+        return box.getBoxMatrix() * scalingTensor * box.getInverseBoxMatrix();
+    }
+
+    /**
+     * @brief transform a scaling tensor into simulation space
+     *
+     * @details for boxes with fixed angles (non-orthorhombic) the scaling
+     * tensor is diagonal in orthogonal space and is transformed via
+     * h S h^-1 (equal to T S T^-1 for diagonal S). For orthorhombic boxes and
+     * boxes allowing a change of angles the tensor already acts in simulation
+     * space.
+     *
+     * @param scalingTensor
+     * @param box
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D Manostat::_toSimSpaceScaling(
+        const linalg::tensor3D &scalingTensor,
+        const molsys::Box      &box
+    )
+    {
+        if (box.allowChangeOfAngles() || box.isOrthorhombic())
+            return scalingTensor;
+
+        return box.getBoxMatrix() * scalingTensor * box.getInverseBoxMatrix();
     }
 
     /** @brief Validate a resize without changing the live cell or atoms. */

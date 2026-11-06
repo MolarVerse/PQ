@@ -39,7 +39,22 @@
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "triclinicBox.hpp"
 #include "units.hpp"
+
+class TestableSimSpaceScalingManostat : public manostat::BerendsenManostat
+{
+   public:
+    using BerendsenManostat::BerendsenManostat;
+
+    static linalg::tensor3D toSimSpaceScaling(
+        const linalg::tensor3D& scalingTensor,
+        const molsys::Box&      box
+    )
+    {
+        return _toSimSpaceScaling(scalingTensor, box);
+    }
+};
 
 class TestableStochasticRescalingManostat
     : public manostat::StochasticRescalingManostat
@@ -823,4 +838,64 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
     EXPECT_DOUBLE_EQ(mu[0][0], expected_xz);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
     EXPECT_DOUBLE_EQ(mu[2][2], expected_xz);
+}
+
+/**
+ * @brief orthorhombic boxes need no transformation of the scaling tensor
+ */
+TEST_F(TestManostat, toSimSpaceScalingOrthorhombicIsIdentityTransform)
+{
+    const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
+    const molsys::OrthorhombicBox box{{10.0, 11.0, 12.0}};
+
+    const auto result =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
+
+    EXPECT_EQ(result, mu);
+}
+
+/**
+ * @brief a box allowing a change of angles keeps the scaling tensor in
+ * simulation space
+ */
+TEST_F(TestManostat, toSimSpaceScalingFullAnisotropicIsIdentityTransform)
+{
+    const linalg::tensor3D mu(
+        {1.0, 0.1, 0.0},
+        {0.0, 1.1, 0.2},
+        {0.0, 0.0, 0.9}
+    );
+    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, true};
+
+    const auto result =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
+
+    EXPECT_EQ(result, mu);
+}
+
+/**
+ * @brief for fixed angles the diagonal scaling in orthogonal space is mapped
+ * to simulation space: S_sim * (h v) = h * (S * v)
+ */
+TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
+{
+    const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
+    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false};
+
+    const auto muSim =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
+
+    const linalg::Vec3D vector{0.3, -0.7, 1.9};
+    const auto          expected = box.getBoxMatrix() * (mu * vector);
+    const auto          result   = muSim * (box.getBoxMatrix() * vector);
+
+    EXPECT_TRUE(utilities::compare(result, expected, 1e-12));
+
+    // isotropic scaling is invariant under the transformation
+    const auto isotropic = linalg::diagonalMatrix(linalg::Vec3D{0.95});
+    const auto isotropicSim =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(isotropic, box);
+    EXPECT_TRUE(
+        utilities::compare(isotropicSim * vector, isotropic * vector, 1e-12)
+    );
 }

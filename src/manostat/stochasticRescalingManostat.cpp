@@ -70,17 +70,21 @@ namespace manostat
             reconstructMolecule
         );
 
+        const auto &box        = simulationBox.getBox();
+        const auto  muSimSpace = _toSimSpaceScaling(mu, box);
+        const auto  invMuSim   = inverse(muSimSpace);
+
         simulationBox.scaleBox(mu);
         simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
         physicalData.setVolume(simulationBox.getVolume());
         physicalData.setDensity(simulationBox.getDensity());
 
-        auto scalePositions = [&mu, &simulationBox](auto &molecule)
-        { molecule.scale(mu, simulationBox.getBox()); };
+        auto scalePositions = [&muSimSpace, &box](auto &molecule)
+        { molecule.scale(muSimSpace, box); };
 
-        auto scaleVelocities = [&mu, &simulationBox](auto &molecule)
-        { molecule.scaleVelocity(inverse(mu), simulationBox.getBox()); };
+        auto scaleVelocities = [&invMuSim](auto &molecule)
+        { molecule.scaleVelocity(invMuSim); };
 
         std::ranges::for_each(simulationBox.getMolecules(), scalePositions);
         std::ranges::for_each(simulationBox.getMolecules(), scaleVelocities);

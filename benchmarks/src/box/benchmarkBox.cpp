@@ -105,7 +105,8 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(vector);
-            auto result = box.toSimSpace(box.toOrthoSpace(vector));
+            auto result =
+                box.getBoxMatrix() * (box.getInverseBoxMatrix() * vector);
             benchmark::DoNotOptimize(result);
         }
     }
@@ -118,7 +119,7 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(vector);
-            auto result = box.toOrthoSpace(vector);
+            auto result = box.getInverseBoxMatrix() * vector;
             benchmark::DoNotOptimize(result);
         }
     }
@@ -131,7 +132,7 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(vector);
-            auto result = box.toSimSpace(vector);
+            auto result = box.getBoxMatrix() * vector;
             benchmark::DoNotOptimize(result);
         }
     }
@@ -148,7 +149,8 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(tensor);
-            auto result = box.toSimSpace(box.toOrthoSpace(tensor));
+            auto result =
+                box.getBoxMatrix() * (box.getInverseBoxMatrix() * tensor);
             benchmark::DoNotOptimize(result);
         }
     }

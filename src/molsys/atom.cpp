@@ -23,7 +23,6 @@
 #include "atom.hpp"
 
 #include "atomMassMap.hpp"
-#include "box.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "stringUtilities.hpp"
@@ -83,26 +82,6 @@ namespace molsys
     void Atom::scaleVelocity(const linalg::Vec3D &scaleFactor)
     {
         _velocity *= scaleFactor;
-    }
-
-    /**
-     * @brief scales the velocities of the atom in orthogonal space
-     *
-     * @param scalingTensor
-     * @param box
-     */
-    void Atom::scaleVelocityOrthogonalSpace(
-        const linalg::tensor3D &scalingTensor,
-        const Box              &box
-    )
-    {
-        if (!box.allowChangeOfAngles())
-            _velocity = box.toOrthoSpace(_velocity);
-
-        _velocity = scalingTensor * _velocity;
-
-        if (!box.allowChangeOfAngles())
-            _velocity = box.toSimSpace(_velocity);
     }
 
     /**
