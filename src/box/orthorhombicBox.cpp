@@ -175,55 +175,23 @@ namespace molsys
     }
 
     /**
-     * @brief transform a vector into orthogonal space
+     * @brief get the box matrix without specifying periodicity
      *
-     * @param position
-     * @return linalg::Vec3D
+     * @return linalg::StaticMatrix3x3<double>
      */
-    linalg::Vec3D OrthorhombicBox::toOrthoSpace(
-        const linalg::Vec3D &position
-    ) const
+    linalg::StaticMatrix3x3<double> OrthorhombicBox::getBoxMatrix() const
     {
-        return position;
+        return linalg::diagonalMatrix(get_boxDimensions());
     }
 
     /**
-     * @brief transform a tensor into orthogonal space
+     * @brief get the inverse of the box matrix
      *
-     * @param position
-     * @return linalg::tensor3D
+     * @return linalg::StaticMatrix3x3<double>
      */
-    linalg::tensor3D OrthorhombicBox::toOrthoSpace(
-        const linalg::tensor3D &position
-    ) const
+    linalg::StaticMatrix3x3<double> OrthorhombicBox::getInverseBoxMatrix() const
     {
-        return position;
-    }
-
-    /**
-     * @brief transform a vector into simulation space
-     *
-     * @param position
-     * @return linalg::Vec3D
-     */
-    linalg::Vec3D OrthorhombicBox::toSimSpace(
-        const linalg::Vec3D &position
-    ) const
-    {
-        return position;
-    }
-
-    /**
-     * @brief transform a tensor into simulation space
-     *
-     * @param position
-     * @return linalg::tensor3D
-     */
-    linalg::tensor3D OrthorhombicBox::toSimSpace(
-        const linalg::tensor3D &position
-    ) const
-    {
-        return position;
+        return linalg::diagonalMatrix(1.0 / get_boxDimensions());
     }
 
     /**
@@ -233,4 +201,10 @@ namespace molsys
      */
     bool OrthorhombicBox::allowChangeOfAngles() const { return false; }
 
+    /**
+     * @brief indicate whether the box is orthorhombic
+     *
+     * @return true if the box is orthorhombic, false otherwise
+     */
+    bool OrthorhombicBox::isOrthorhombic() const { return true; }
 }   // namespace molsys

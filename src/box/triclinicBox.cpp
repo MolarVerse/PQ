@@ -232,52 +232,6 @@ namespace molsys
     }
 
     /**
-     * @brief transform a vector into the orthogonal space
-     *
-     * @param vec
-     * @return linalg::Vec3D
-     */
-    linalg::Vec3D TriclinicBox::toOrthoSpace(const linalg::Vec3D &vec) const
-    {
-        return _invTrafoMatrix.get(*this) * vec;
-    }
-
-    /**
-     * @brief transform a matrix into the orthogonal space
-     *
-     * @param mat
-     * @return linalg::tensor3D
-     */
-    linalg::tensor3D TriclinicBox::toOrthoSpace(
-        const linalg::tensor3D &mat
-    ) const
-    {
-        return _invTrafoMatrix.get(*this) * mat;
-    }
-
-    /**
-     * @brief transform a vector into the simulation space
-     *
-     * @param vec
-     * @return linalg::Vec3D
-     */
-    linalg::Vec3D TriclinicBox::toSimSpace(const linalg::Vec3D &vec) const
-    {
-        return _trafoMatrix.get(*this) * vec;
-    }
-
-    /**
-     * @brief transform a matrix into the simulation space
-     *
-     * @param mat
-     * @return linalg::tensor3D
-     */
-    linalg::tensor3D TriclinicBox::toSimSpace(const linalg::tensor3D &mat) const
-    {
-        return _trafoMatrix.get(*this) * mat;
-    }
-
-    /**
      * @brief scale box dimensions and angles and recalculate the box matrix,
      * transformation matrix and volume
      *
@@ -503,6 +457,26 @@ namespace molsys
     }
 
     /**
+     * @brief get the box matrix without specifying periodicity
+     *
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D TriclinicBox::getBoxMatrix() const
+    {
+        return _boxMatrix.get(*this);
+    }
+
+    /**
+     * @brief get the inverse of the box matrix
+     *
+     * @return linalg::tensor3D
+     */
+    linalg::tensor3D TriclinicBox::getInverseBoxMatrix() const
+    {
+        return _inverse.get(*this);
+    }
+
+    /**
      * @brief indicate whether the box allows change of angles
      *
      * @return true if change of angles is allowed, false otherwise
@@ -511,4 +485,11 @@ namespace molsys
     {
         return _allowChangeOfAngles;
     }
+
+    /**
+     * @brief indicate whether the box is orthorhombic
+     *
+     * @return true if the box is orthorhombic, false otherwise
+     */
+    bool TriclinicBox::isOrthorhombic() const { return false; }
 }   // namespace molsys

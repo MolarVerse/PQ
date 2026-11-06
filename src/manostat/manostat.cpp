@@ -70,13 +70,13 @@ namespace manostat
 
         physicalData.setPressure(_pressure);
 
-        if (_settings->getIsotropy() != Isotropy::FULL_ANISOTROPIC)
+        const auto &box = simulationBox.getBox();
+        if (!box.allowChangeOfAngles() && !box.isOrthorhombic())
         {
             // Length coupling uses cell-axis coordinates: T^-1 P T.
             // Full anisotropic deformation acts directly in Cartesian space.
-            const auto &box = simulationBox.getBox();
-            _pressureTensor = box.toOrthoSpace(_pressureTensor) *
-                              box.toSimSpace(linalg::diagonalMatrix(1.0));
+            _pressureTensor = box.getInverseBoxMatrix() * _pressureTensor *
+                              box.getBoxMatrix();
         }
 
         const auto fixedAxis = _settings->getFixedAxis();

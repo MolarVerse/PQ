@@ -83,18 +83,6 @@ namespace molsys
         [[nodiscard]]
         linalg::Vec3D calcShiftVector(const linalg::Vec3D &vec) const override;
 
-        [[nodiscard]]
-        linalg::Vec3D toOrthoSpace(const linalg::Vec3D &vec) const override;
-        [[nodiscard]]
-        linalg::tensor3D toOrthoSpace(
-            const linalg::tensor3D &mat
-        ) const override;
-
-        [[nodiscard]]
-        linalg::Vec3D toSimSpace(const linalg::Vec3D &vec) const override;
-        [[nodiscard]]
-        linalg::tensor3D toSimSpace(const linalg::tensor3D &mat) const override;
-
         void applyPBC(linalg::Vec3D &position) const override;
         void scaleBox(const linalg::tensor3D &scalingTensor) override;
 
@@ -103,6 +91,13 @@ namespace molsys
 
         [[nodiscard]]
         linalg::tensor3D getBoxMatrix(Periodicity periodicity) const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix() const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getInverseBoxMatrix() const override;
+
         [[nodiscard]]
         linalg::Vec3D wrapPositionIntoBox(
             const linalg::Vec3D &pos
@@ -110,6 +105,9 @@ namespace molsys
 
         [[nodiscard]]
         bool allowChangeOfAngles() const override;
+
+        [[nodiscard]]
+        bool isOrthorhombic() const override;
 
        private:
         [[nodiscard]]

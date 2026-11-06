@@ -123,29 +123,19 @@ namespace molsys
      * @details scaling has to be done in orthogonal space since pressure
      * scaling is done in orthogonal space
      *
-     * @param shiftTensor
+     * @param scalingTensor the tensor used to scale the molecule's positions
      * @param box
      */
-    void Molecule::scale(const linalg::tensor3D &shiftTensor, const Box &box)
+    void Molecule::scale(const linalg::tensor3D &scalingTensor, const Box &box)
     {
-        auto centerOfMass = _centerOfMass;
-
-        if (!box.allowChangeOfAngles())
-            centerOfMass = box.toOrthoSpace(_centerOfMass);
-
-        const auto shift = shiftTensor * centerOfMass - centerOfMass;
+        // scalingTensor is already in simulation space (S_sim = T S T^-1 for
+        // fixed angles, S itself otherwise), see scaleVelocity
+        const auto shift = scalingTensor * _centerOfMass - _centerOfMass;
 
         auto scaleAtomPosition = [&box, shift](const auto &atom)
         {
-            auto position = atom->getPosition();
-
-            if (!box.allowChangeOfAngles())
-                position = box.toOrthoSpace(position);
-
-            position += shift;
-
-            if (!box.allowChangeOfAngles())
-                position = box.toSimSpace(position);
+            auto position  = atom->getPosition();
+            position      += shift;
 
             box.applyPBC(position);
 
@@ -163,12 +153,8 @@ namespace molsys
      * velocities.
      *
      * @param scalingTensor
-     * @param box
      */
-    void Molecule::scaleVelocity(
-        const linalg::tensor3D &scalingTensor,
-        const Box              &box
-    )
+    void Molecule::scaleVelocity(const linalg::tensor3D &scalingTensor)
     {
         auto centerOfMassVelocity = linalg::Vec3D(0.0);
 
@@ -177,17 +163,22 @@ namespace molsys
 
         centerOfMassVelocity /= getMolMass();
 
-        auto scaledCenterOfMassVelocity = centerOfMassVelocity;
-
-        if (!box.allowChangeOfAngles())
-            scaledCenterOfMassVelocity =
-                box.toOrthoSpace(scaledCenterOfMassVelocity);
-
-        scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
-
-        if (!box.allowChangeOfAngles())
-            scaledCenterOfMassVelocity =
-                box.toSimSpace(scaledCenterOfMassVelocity);
+        // NOTE: the scaling tensor is passed in in orthogonal or
+        // cartesian/simulation space, depending on the box configuration (full
+        // anisotropic or not to not calling the transformation functions
+        // unnecessarily)
+        //
+        // FIXED_ANGLES case:
+        // scalingTensor = T * originalScalingTensor * T^-1
+        //
+        // ORTHORHOMBIC case:
+        // scalingTensor = T * originalScalingTensor * T^-1 =
+        // originalScalingTensor
+        //
+        // FULL_ANISOTROPIC case:
+        // scalingTensor = originalScalingTensor
+        const auto scaledCenterOfMassVelocity =
+            scalingTensor * centerOfMassVelocity;
 
         const auto velocityShift =
             scaledCenterOfMassVelocity - centerOfMassVelocity;

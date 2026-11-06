@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "atom.hpp"
+#include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "strongTypes.hpp"
 
 namespace molsys
@@ -103,7 +104,7 @@ namespace molsys
         void calculateCenterOfMass(const Box &);
         void reconstructAtomsAroundCenterOfMass(const Box &);
         void scale(const linalg::tensor3D &, const Box &);
-        void scaleVelocity(const linalg::tensor3D &, const Box &);
+        void scaleVelocity(const linalg::tensor3D &);
 
         [[nodiscard]] size_t                  getNumberOfAtomTypes();
         [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
