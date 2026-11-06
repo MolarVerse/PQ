@@ -269,7 +269,11 @@ namespace QM
      * the atoms
      *
      * @param simulationBox Simulation box containing molecules and atoms.
-     * @param physicalData
+     * @param physicalData The physical data object where the QM energy and
+     * forces will be stored
+     * @param qmSettings The QM settings used to configure the external QM
+     * runner, which may include method-specific parameters and computational
+     * options
      *
      * @throw QMRunnerException
      *  - if the force file cannot be opened
@@ -370,6 +374,9 @@ namespace QM
      * atoms
      *
      * @param simulationBox Simulation box containing molecules and atoms.
+     * @param qmSettings The QM settings used to configure the external QM
+     * runner, which may include method-specific parameters and computational
+     * options
      *
      * @throw QMRunnerException
      *  - if the charge file cannot be opened

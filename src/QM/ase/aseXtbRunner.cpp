@@ -28,9 +28,12 @@ namespace QM
     /**
      * @brief Construct a new AseXtbRunner::AseXtbRunner object
      *
+     * @param settings The QM settings to configure the ASE xTB runner with,
+     * including method-specific parameters such as the xTB method and any
+     * relevant computational options
      * @param method
      *
-     * @throw pybind11::error_already_set if the import of the mace module fails
+     * @throw pybind11::error_already_set if the import of the xTB module fails
      */
     AseXtbRunner::AseXtbRunner(
         const QMSettings  &settings,

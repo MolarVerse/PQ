@@ -30,6 +30,9 @@ namespace QM
     /**
      * @brief Construct a new AseDftbRunner::AseDftbRunner object
      *
+     * @param settings The QM settings to configure the ASE DFTB runner with,
+     * including method-specific parameters such as the DFTB version and any
+     * relevant computational options
      * @param slakosPath
      * @param thirdOrder
      * @param hubbardDerivs

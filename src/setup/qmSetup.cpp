@@ -42,7 +42,11 @@ namespace setup
     /**
      * @brief constructor
      *
-     * @param qmCapableEngine
+     * @param qmCapableEngine The QM-capable engine used to perform QM
+     * calculations
+     * @param qmSettings The QM settings used to configure the QM runner, which
+     * may include method-specific parameters and computational options
+     *
      */
     QMSetup::QMSetup(
         engine::QMCapableEngine &qmCapableEngine,

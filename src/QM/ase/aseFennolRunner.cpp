@@ -28,6 +28,9 @@ namespace QM
     /**
      * @brief Construct a new AseFennolRunner::AseFennolRunner object
      *
+     * @param settings The QM settings to configure the ASE Fennol runner with,
+     * including method-specific parameters such as the model path and any
+     * relevant computational options
      * @param modelPath
      * @param gpuPreprocessing
      * @param useFloat64

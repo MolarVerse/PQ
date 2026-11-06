@@ -32,6 +32,9 @@ namespace QM
     /**
      * @brief Construct a new AseMaceRunner::AseMaceRunner object
      *
+     * @param settings The QM settings to configure the ASE Mace runner with,
+     * including method-specific parameters such as the model type, model path,
+     * floating-point precision, and any relevant computational options
      * @param modelType
      * @param model
      * @param fpType

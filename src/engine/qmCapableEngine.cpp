@@ -30,7 +30,7 @@ namespace engine
     /**
      * @brief Set the QM runner based on the specified method
      *
-     * @param method The QM method to use
+     * @param settings The QM settings to configure the QM runner with
      */
     void QMCapableEngine::setQMRunner(const QMSettings &settings)
     {
