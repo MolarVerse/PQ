@@ -69,7 +69,7 @@ TEST(TestQMRunnerManager, rejectsMissingQMProgram)
     QMSettings qmSettings;
     qmSettings.setQMMethodByUser(QMMethod::NONE);
     EXPECT_THROW_MSG(
-        engine::QMRunnerManager::createQMRunner(qmSettings),
+        auto _ = engine::QMRunnerManager::createQMRunner(qmSettings),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -83,28 +83,28 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
     using engine::QMRunnerManager;
 
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::ASE_DFTBPLUS),
+        const auto _ = QMRunnerManager::createQMRunner(QMMethod::ASE_DFTBPLUS),
         exc::CompileTimeException,
         "The ASE DFTB+ QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
         "type QM methods using: -DBUILD_WITH_ASE=ON"
     );
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::ASE_XTB),
+        const auto _ = QMRunnerManager::createQMRunner(QMMethod::ASE_XTB),
         exc::CompileTimeException,
         "The ASE xTB QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE xTB "
         "type QM method using: -DBUILD_WITH_ASE=ON"
     );
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::MACE),
+        const auto _ = QMRunnerManager::createQMRunner(QMMethod::MACE),
         exc::CompileTimeException,
         "A MACE type QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use MACE type QM "
         "methods using: -DBUILD_WITH_ASE=ON"
     );
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::FENNOL),
+        const auto _ = QMRunnerManager::createQMRunner(QMMethod::FENNOL),
         exc::CompileTimeException,
         "The ASE FeNNol QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE "
