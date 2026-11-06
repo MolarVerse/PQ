@@ -104,6 +104,51 @@ namespace linalg
         using BinaryResult_t = linalg::Vector3D<BinaryElement_t<Op, L, R>>;
 
         /**
+         * @brief `linalg::Vector3D<BinaryElement_t<Op, L, R>>`, or no `type`
+         * if `Op` cannot be applied to the components (SFINAE friendly)
+         */
+        template <typename Op, typename L, typename R, typename = void>
+        struct BinaryResultImpl
+        {
+        };
+
+        template <typename Op, typename L, typename R>
+        struct BinaryResultImpl<
+            Op,
+            L,
+            R,
+            std::void_t<BinaryElement_t<Op, L, R>>>
+        {
+            using type = linalg::Vector3D<BinaryElement_t<Op, L, R>>;
+        };
+
+        /**
+         * @brief `BinaryResult_t<Op, L, R>` if `Valid`, otherwise no `type`
+         *
+         * @details The return type of an operator template is substituted
+         * before its constraints are checked (clang), also for operand pairs
+         * the operator is not meant for, e.g. `StaticMatrix3x3 * Vec3D`.
+         * Computing the element type for them recurses endlessly
+         * (`StaticMatrix3x3 * double` asks for the same operator again). The
+         * element type is therefore only computed if `Valid`, the operand
+         * concept of the operator.
+         *
+         * @tparam Valid the operand concept of the operator
+         */
+        template <bool Valid, typename Op, typename L, typename R>
+        struct BinaryResultIf
+        {
+        };
+
+        template <typename Op, typename L, typename R>
+        struct BinaryResultIf<true, Op, L, R> : BinaryResultImpl<Op, L, R>
+        {
+        };
+
+        template <bool Valid, typename Op, typename L, typename R>
+        using BinaryResultIf_t = typename BinaryResultIf<Valid, Op, L, R>::type;
+
+        /**
          * @brief apply `Op` component-wise to two operands
          *
          * @details Covers all combinations of Vector3D (any depth) and scalar

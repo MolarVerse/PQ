@@ -267,8 +267,8 @@ namespace linalg
      */
     template <typename U, typename V>
     requires detail::BinaryOperands<U, V>
-    constexpr auto operator+(const U &lhs, const V &rhs)
-        -> detail::BinaryResult_t<std::plus<>, U, V>
+    constexpr auto operator+(const U &lhs, const V &rhs) -> detail::
+        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::plus<>, U, V>
     {
         return detail::binaryOp<std::plus<>>(lhs, rhs);
     }
@@ -299,8 +299,8 @@ namespace linalg
      */
     template <typename U, typename V>
     requires detail::BinaryOperands<U, V>
-    constexpr auto operator-(const U &lhs, const V &rhs)
-        -> detail::BinaryResult_t<std::minus<>, U, V>
+    constexpr auto operator-(const U &lhs, const V &rhs) -> detail::
+        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::minus<>, U, V>
     {
         return detail::binaryOp<std::minus<>>(lhs, rhs);
     }
@@ -333,7 +333,11 @@ namespace linalg
     template <typename U, typename V>
     requires detail::MultiplyOperands<U, V>
     constexpr auto operator*(const U &lhs, const V &rhs)
-        -> detail::BinaryResult_t<std::multiplies<>, U, V>
+        -> detail::BinaryResultIf_t<
+            detail::MultiplyOperands<U, V>,
+            std::multiplies<>,
+            U,
+            V>
     {
         return detail::binaryOp<std::multiplies<>>(lhs, rhs);
     }
@@ -364,8 +368,8 @@ namespace linalg
      */
     template <typename U, typename V>
     requires detail::BinaryOperands<U, V>
-    constexpr auto operator/(const U &lhs, const V &rhs)
-        -> detail::BinaryResult_t<std::divides<>, U, V>
+    constexpr auto operator/(const U &lhs, const V &rhs) -> detail::
+        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::divides<>, U, V>
     {
         return detail::binaryOp<std::divides<>>(lhs, rhs);
     }
