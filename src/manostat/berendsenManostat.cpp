@@ -67,14 +67,17 @@ namespace manostat
             reconstructMolecule
         );
 
+        const auto &box        = simulationBox.getBox();
+        const auto  muSimSpace = _toSimSpaceScaling(mu, box);
+
         simulationBox.scaleBox(mu);
         simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
         physicalData.setVolume(simulationBox.getVolume());
         physicalData.setDensity(simulationBox.getDensity());
 
-        auto scaleMolecule = [&mu, &simulationBox](auto &molecule)
-        { molecule.scale(mu, simulationBox.getBox()); };
+        auto scaleMolecule = [&muSimSpace, &box](auto &molecule)
+        { molecule.scale(muSimSpace, box); };
 
         std::ranges::for_each(simulationBox.getMolecules(), scaleMolecule);
     }

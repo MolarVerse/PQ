@@ -120,8 +120,9 @@ namespace molsys
      * @brief scales the positions of the molecule by shifting the center of
      * mass
      *
-     * @details scaling has to be done in orthogonal space since pressure
-     * scaling is done in orthogonal space
+     * @details the scaling tensor has to be given in simulation space. For
+     * boxes with fixed angles the pressure scaling is done in orthogonal
+     * space, i.e. the caller has to transform it beforehand (T S T^-1).
      *
      * @param scalingTensor the tensor used to scale the molecule's positions
      * @param box

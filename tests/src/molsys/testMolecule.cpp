@@ -93,8 +93,6 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
     const linalg::tensor3D scale =
         diagonalMatrix(linalg::Vec3D{0.5, 0.25, 2.0});
 
-    molsys::OrthorhombicBox box({10.0, 10.0, 10.0});
-
     const auto relativeVelocity10 = _molecule->getAtomVelocity(AtomIndex{1}) -
                                     _molecule->getAtomVelocity(AtomIndex{0});
     const auto relativeVelocity20 = _molecule->getAtomVelocity(AtomIndex{2}) -
@@ -106,7 +104,7 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
          3.0 * _molecule->getAtomVelocity(AtomIndex{2})) /
         6.0;
 
-    _molecule->scaleVelocity(scale, box);
+    _molecule->scaleVelocity(scale);
 
     const auto scaledCenterOfMassVelocity =
         (1.0 * _molecule->getAtomVelocity(AtomIndex{0}) +

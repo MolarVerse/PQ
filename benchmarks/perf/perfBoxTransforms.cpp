@@ -61,8 +61,8 @@ int main()
 
         sink += norm(ortho.wrapPositionIntoBox(pos));
         sink += norm(triclinic.wrapPositionIntoBox(pos));
-        sink += norm(triclinic.toOrthoSpace(pos));
-        sink += norm(triclinic.toSimSpace(pos));
+        sink += norm(triclinic.getInverseBoxMatrix() * pos);
+        sink += norm(triclinic.getBoxMatrix() * pos);
     }
 
     std::cout << std::format("{:.6f}\n", sink);
