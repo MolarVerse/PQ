@@ -1,1 +1,1 @@
-- Install the CI packages (GCC, clang, doxygen) through scripts/apt_install.sh: apt network timeouts, and a call that makes no progress for 2 minutes (or runs 20 minutes) is stopped and tried again up to three times. A slow mirror that keeps sending data is not interrupted.
+- Install GCC and the other CI packages through the cached apt action (awalsh128/cache-apt-pkgs-action) in the shared setup-gcc action and the clang build, as the DevOps check already does, so a stalled or slow Azure mirror only matters on a cache miss.
