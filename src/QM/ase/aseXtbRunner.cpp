@@ -22,6 +22,8 @@
 
 #include "aseXtbRunner.hpp"
 
+#include <pybind11/embed.h>
+
 namespace QM
 {
 

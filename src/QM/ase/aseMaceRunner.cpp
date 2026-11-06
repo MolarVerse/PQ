@@ -22,6 +22,8 @@
 
 #include "aseMaceRunner.hpp"
 
+#include <pybind11/embed.h>
+
 #include <cstdio>
 #include <format>
 #include <iostream>
