@@ -40,7 +40,9 @@
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 using Time     = mstd::quantity<mstd::units::fs>;
 
-using Pressure         = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
+using Pressure = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
+using Pressure3D =
+    linalg::Vector3D<mstd::quantity<mstd::units::pressure[mstd::units::Pa]>>;
 using PressureTensor3D = linalg::StaticMatrix3x3<
     mstd::quantity<mstd::units::pressure[mstd::units::Pa]>>;
 using Compressibility = mstd::quantity<

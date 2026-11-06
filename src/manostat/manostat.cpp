@@ -72,7 +72,7 @@ namespace manostat
         _pressureTensor      = pressureTensor * Pa;
         _pressure            = trace(_pressureTensor) / linalg::tensor3D::size;
 
-        physicalData.setPressure(_pressure);
+        physicalData.setPressure(_pressure.numerical_value_in(bar));
 
         const auto &box = simulationBox.getBox();
         if (!box.allowChangeOfAngles() && !box.isOrthorhombic())
@@ -107,30 +107,6 @@ namespace manostat
         {
             physicalData.setCoupledPressure(_pressure.numerical_value_in(bar));
         }
-    }
-
-    /**
-     * @brief transform a scaling tensor into simulation space
-     *
-     * @details for boxes with fixed angles (non-orthorhombic) the scaling
-     * tensor is diagonal in orthogonal space and is transformed via
-     * h S h^-1 (equal to T S T^-1 for diagonal S). For orthorhombic boxes and
-     * boxes allowing a change of angles the tensor already acts in simulation
-     * space.
-     *
-     * @param scalingTensor
-     * @param box
-     * @return linalg::tensor3D
-     */
-    linalg::tensor3D Manostat::_toSimSpaceScaling(
-        const linalg::tensor3D &scalingTensor,
-        const molsys::Box      &box
-    )
-    {
-        if (box.allowChangeOfAngles() || box.isOrthorhombic())
-            return scalingTensor;
-
-        return box.getBoxMatrix() * scalingTensor * box.getInverseBoxMatrix();
     }
 
     /**
@@ -254,9 +230,23 @@ namespace manostat
     /**
      * @brief get the pressure tensor
      *
+     * @return const linalg::tensor3D&
+     */
+    linalg::tensor3D Manostat::_getPressureTensor() const
+    {
+        return linalg::tensor3D(
+            _pressureTensor[0].numerical_value_in(bar),
+            _pressureTensor[1].numerical_value_in(bar),
+            _pressureTensor[2].numerical_value_in(bar)
+        );
+    }
+
+    /**
+     * @brief get the pressure tensor in pascal
+     *
      * @return const PressureTensor3D&
      */
-    const PressureTensor3D &Manostat::_getPressureTensor() const
+    const PressureTensor3D &Manostat::_getPressureTensorPa() const
     {
         return _pressureTensor;
     }
@@ -264,9 +254,19 @@ namespace manostat
     /**
      * @brief get the pressure
      *
+     * @return double
+     */
+    double Manostat::_getPressure() const
+    {
+        return _pressure.numerical_value_in(bar);
+    }
+
+    /**
+     * @brief get the pressure in pascal
+     *
      * @return const Pressure&
      */
-    const Pressure &Manostat::_getPressure() const { return _pressure; }
+    const Pressure &Manostat::_getPressurePa() const { return _pressure; }
 
     /**
      * @brief set the pressure tensor
