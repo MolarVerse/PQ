@@ -50,8 +50,8 @@ namespace physicalData
      */
     struct KineticEnergyVirialTensor
     {
-        linalg::tensor3D atomic;
-        linalg::tensor3D molecular;
+        linalg::tensor3D atomic    = linalg::tensor3D(0.0);
+        linalg::tensor3D molecular = linalg::tensor3D(0.0);
 
         [[nodiscard]]
         const linalg::tensor3D& getVirialTensor(VirialType virialType) const;
@@ -97,13 +97,17 @@ namespace physicalData
         double _lowerDistanceConstraints = 0.0;
         double _upperDistanceConstraints = 0.0;
 
-        linalg::Vec3D _momentum;
-        linalg::Vec3D _angularMomentum;
+        // Vec3D and tensor3D do not initialise their components, a default
+        // constructed PhysicalData (also the one that resets the averages after
+        // every output) would otherwise write garbage, sometimes inf, into the
+        // first energy and momentum line
+        linalg::Vec3D _momentum        = linalg::Vec3D(0.0);
+        linalg::Vec3D _angularMomentum = linalg::Vec3D(0.0);
 
         KineticEnergyVirialTensor _kinEnergyVirialTensor;
 
-        linalg::tensor3D _virial;
-        linalg::tensor3D _stressTensor;
+        linalg::tensor3D _virial       = linalg::tensor3D(0.0);
+        linalg::tensor3D _stressTensor = linalg::tensor3D(0.0);
 
         double _ringPolymerEnergy = 0.0;
 
