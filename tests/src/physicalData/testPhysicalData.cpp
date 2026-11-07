@@ -22,6 +22,10 @@
 
 #include "testPhysicalData.hpp"
 
+#include <array>
+#include <cstddef>
+#include <new>
+
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "physicalData.hpp"
@@ -377,4 +381,41 @@ TEST(PhysicalDataKinetics, molecularPressureExcludesInternalMotion)
         }
         EXPECT_DOUBLE_EQ(data.getKineticEnergy(), 10.0 * KINETIC_ENERGY_FACTOR);
     }
+}
+
+/**
+ * @brief a default initialised PhysicalData has no garbage in it
+ *
+ * @details Vec3D and tensor3D do not initialise their components. The
+ * PhysicalData that holds the averages is a member of the engine and default
+ * initialised (`PhysicalData data;`, unlike `PhysicalData()`, which zeroes the
+ * whole object first), so the first energy and momentum line of a run showed
+ * whatever the memory held, now and then inf, which failed the regression test
+ * of the smoke run. The storage is filled with 0xFF (a NaN as a double) before
+ * the object is built into it.
+ */
+TEST_F(TestPhysicalData, defaultConstructedIsZero)
+{
+    using physicalData::PhysicalData;
+
+    alignas(PhysicalData) std::array<std::byte, sizeof(PhysicalData)> storage;
+    storage.fill(std::byte{0xFF});
+
+    auto *data = new (storage.data()) PhysicalData;
+
+    for (size_t i = 0; i < 3; ++i)
+    {
+        EXPECT_EQ(data->getMomentum()[i], 0.0);
+        EXPECT_EQ(data->getAngularMomentum()[i], 0.0);
+
+        for (size_t j = 0; j < 3; ++j)
+        {
+            EXPECT_EQ(data->getVirial()[i][j], 0.0);
+            EXPECT_EQ(data->getStressTensor()[i][j], 0.0);
+            EXPECT_EQ(data->getKinEnergyAtomTensor()[i][j], 0.0);
+            EXPECT_EQ(data->getKinEnergyMolTensor()[i][j], 0.0);
+        }
+    }
+
+    data->~PhysicalData();
 }
