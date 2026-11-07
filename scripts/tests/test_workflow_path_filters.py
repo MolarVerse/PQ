@@ -80,5 +80,24 @@ class ReleasePullRequestTests(unittest.TestCase):
             self.assertIn(f'if [[ "${{{{ {result} }}}}" == "failure" ]]', (WORKFLOWS / workflow).read_text())
 
 
+class ChangelogWorkflowTests(unittest.TestCase):
+    """The label skip-changelog waives the fragment, not the script tests (#1016)."""
+
+    def setUp(self):
+        self.text = (WORKFLOWS / "changelog.yml").read_text()
+
+    def test_adding_or_removing_the_label_re_runs_the_check(self):
+        self.assertIn("types: [opened, reopened, synchronize, labeled, unlabeled]", self.text)
+
+    def test_only_the_skip_label_re_runs_the_job_on_a_label_event(self):
+        self.assertIn("github.event.label.name == 'skip-changelog'", self.text)
+
+    def test_the_label_skips_the_fragment_step_only(self):
+        step = self.text.split("- name: Check changelog fragment", 1)[1].split("- name:", 1)[0]
+        self.assertIn("!contains(github.event.pull_request.labels.*.name, 'skip-changelog')", step)
+        tests = self.text.split("- name: Test changelog tooling", 1)[1].split("- name:", 1)[0]
+        self.assertNotIn("\n        if:", tests)
+
+
 if __name__ == "__main__":
     unittest.main()

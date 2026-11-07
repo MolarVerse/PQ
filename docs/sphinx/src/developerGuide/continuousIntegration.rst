@@ -72,7 +72,8 @@ Workflows
       - ``changelog.yml``
       - pull requests to ``dev`` and ``NEXT``
       - Runs the tests of the scripts in ``scripts/tests`` and requires a valid changelog fragment,
-        see :ref:`changelogFragments`.
+        see :ref:`changelogFragments`. A pull request with the label ``skip-changelog`` needs no fragment (the tests
+        of the scripts still run); adding or removing the label re-runs the check.
     * - Check PR Has Linked Issue
       - ``gh_checks.yml``
       - pull request events, manual
