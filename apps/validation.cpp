@@ -177,14 +177,14 @@ namespace
         );
     }
 
-    void validateExternalQMScriptSelection()
+    void validateExternalQMScriptSelection(const QMSettings &qmSettings)
     {
         if (!settings::GeneralSettings::isQMActivated() ||
-            !settings::QMSettings::isExternalQMRunner())
+            !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = settings::QMSettings::getQMScript();
-        const auto fullPathScript = settings::QMSettings::getQMScriptFullPath();
+        const auto script         = QMSettings::getQMScript();
+        const auto fullPathScript = QMSettings::getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
         {
@@ -202,31 +202,27 @@ namespace
             );
         }
 
-        if (!script.empty() && !cli::isExternalQMScript(
-                                   settings::QMSettings::getQMMethod(),
-                                   script
-                               ))
+        if (!script.empty() &&
+            !cli::isExternalQMScript(qmSettings.getQMMethod(), script))
         {
             throw exc::InputFileException(
                 std::format(
                     "Bundled QM script \"{}\" is not available for {}",
                     script,
-                    cli::externalQMProgramName(
-                        settings::QMSettings::getQMMethod()
-                    )
+                    cli::externalQMProgramName(qmSettings.getQMMethod())
                 )
             );
         }
     }
 
-    void validateInstalledExternalQMScript()
+    void validateInstalledExternalQMScript(const QMSettings &qmSettings)
     {
         if (!settings::GeneralSettings::isQMActivated() ||
-            !settings::QMSettings::isExternalQMRunner())
+            !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = settings::QMSettings::getQMScript();
-        const auto fullPathScript = settings::QMSettings::getQMScriptFullPath();
+        const auto script         = QMSettings::getQMScript();
+        const auto fullPathScript = QMSettings::getQMScriptFullPath();
 
         // NOTE: these compile flags seem redundant with certain cmake
         // configurations, but are necessary for some build configurations (e.g.
@@ -252,8 +248,7 @@ namespace
 
         requireFile(bundledQMScriptPath(script), "Bundled QM script");
 
-        const auto scripts =
-            cli::externalQMScripts(settings::QMSettings::getQMMethod());
+        const auto scripts  = cli::externalQMScripts(qmSettings.getQMMethod());
         const auto selected = std::ranges::find_if(
             scripts,
             [&script](const auto &candidate)
@@ -301,7 +296,7 @@ namespace
                 "M-SHAKE file needed for requested simulation setup"
             );
 
-        validateExternalQMScriptSelection();
+        validateExternalQMScriptSelection(settings.qmSettings);
     }
 
     void validateEffectiveFiles(const Settings &settings)
@@ -370,7 +365,7 @@ namespace
         if (!settings::GeneralSettings::isQMActivated())
             return;
 
-        const auto method = settings::QMSettings::getQMMethod();
+        const auto method = settings.qmSettings.getQMMethod();
 
         if (method == QMMethod::DFTBPLUS)
         {
@@ -381,13 +376,13 @@ namespace
         }
 
         if (method == QMMethod::ASE_DFTBPLUS &&
-            settings::QMSettings::getSlakosType() != SlakosType::NONE)
+            QMSettings::getSlakosType() != SlakosType::NONE)
         {
-            const auto slakosType = settings::QMSettings::getSlakosType();
+            const auto slakosType = QMSettings::getSlakosType();
             if (slakosType == SlakosType::CUSTOM)
             {
                 requireDirectory(
-                    settings::QMSettings::getSlakosPath(),
+                    QMSettings::getSlakosPath(),
                     "Slater-Koster directory"
                 );
             }
@@ -402,29 +397,26 @@ namespace
 
         if (method == QMMethod::FENNOL)
         {
-            requireFile(
-                settings::QMSettings::getFennolModelPath(),
-                "FeNNol model file"
-            );
+            requireFile(QMSettings::getFennolModelPath(), "FeNNol model file");
         }
 
         if (method == QMMethod::MACE &&
-            settings::QMSettings::getMaceModel() == MaceModel::CUSTOM)
+            QMSettings::getMaceModel() == MaceModel::CUSTOM)
         {
-            const auto modelPath = settings::QMSettings::getMaceModelPath();
+            const auto modelPath = QMSettings::getMaceModelPath();
             if (!isRemoteResource(modelPath))
                 requireFile(modelPath, "MACE model file");
         }
 
-        validateInstalledExternalQMScript();
+        validateInstalledExternalQMScript(settings.qmSettings);
     }
 
-    void validateCompiledCapabilities()
+    void validateCompiledCapabilities(const QMSettings &qmSettings)
     {
         if (PQ_BUILD_WITH_ASE || !settings::GeneralSettings::isQMActivated())
             return;
 
-        const auto method = settings::QMSettings::getQMMethod();
+        const auto method = qmSettings.getQMMethod();
         if (method == QMMethod::ASE_DFTBPLUS || method == QMMethod::ASE_XTB ||
             method == QMMethod::FENNOL || method == QMMethod::MACE)
         {
@@ -523,7 +515,7 @@ cli::ValidationResult cli::validateInputFile(
         validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {
-            validateCompiledCapabilities();
+            validateCompiledCapabilities(settings.qmSettings);
             validateEffectiveFiles(settings);
         }
 

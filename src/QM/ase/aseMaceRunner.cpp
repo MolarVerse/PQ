@@ -22,6 +22,8 @@
 
 #include "aseMaceRunner.hpp"
 
+#include <pybind11/embed.h>
+
 #include <cstdio>
 #include <format>
 #include <iostream>
@@ -32,6 +34,9 @@ namespace QM
     /**
      * @brief Construct a new AseMaceRunner::AseMaceRunner object
      *
+     * @param settings The QM settings to configure the ASE Mace runner with,
+     * including method-specific parameters such as the model type, model path,
+     * floating-point precision, and any relevant computational options
      * @param modelType
      * @param model
      * @param fpType
@@ -41,12 +46,14 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseMaceRunner::AseMaceRunner(
+        const QMSettings  &settings,
         const std::string &modelType,
         const std::string &model,
         const std::string &fpType,
         bool               dispersion,
         bool               enableCueq
     )
+        : AseQMRunner(settings)
     {
         try
         {

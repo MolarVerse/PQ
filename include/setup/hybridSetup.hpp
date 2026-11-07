@@ -23,6 +23,7 @@
 #ifndef SETUP__HYBRID_SETUP_HPP
 #define SETUP__HYBRID_SETUP_HPP
 
+#include "enums/qm.hpp"
 namespace engine
 {
     class Engine;   // forward declaration
@@ -47,7 +48,7 @@ namespace setup
         explicit HybridSetup(engine::Engine &engine);
 
         void        setup();
-        static void validateQMMethod();
+        static void validateQMMethod(QMMethod qmMethod);
         void        setupInnerRegionCenter();
         void        setupForcedCoreList();
         void        setupForcedLayerList();

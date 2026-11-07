@@ -255,7 +255,7 @@ namespace QM
             constexpr auto pollInterval = std::chrono::milliseconds(10);
 
             // qm_loop_time_limit is given in s
-            const auto timeLimit = settings::QMSettings::getQMLoopTimeLimit();
+            const auto timeLimit = QMSettings::getQMLoopTimeLimit();
 
             if (timeLimit <= 0.0)
             {
@@ -314,7 +314,8 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the ase.atoms module
      * fails
      */
-    AseQMRunner::AseQMRunner() : _ase(std::make_unique<AseInterface>())
+    AseQMRunner::AseQMRunner(const QMSettings &settings)
+        : QMRunner(settings), _ase(std::make_unique<AseInterface>())
     {
         try
         {
@@ -482,7 +483,7 @@ namespace QM
             throw;
         }
 
-        if (settings::QMSettings::getRemoveNetForce())
+        if (QMSettings::getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 

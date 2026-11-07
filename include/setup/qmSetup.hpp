@@ -23,6 +23,8 @@
 #ifndef SETUP__QM_SETUP_HPP
 #define SETUP__QM_SETUP_HPP
 
+#include <mstd/types.hpp>
+
 #include "qmCapableEngine.hpp"
 namespace engine
 {
@@ -31,6 +33,7 @@ namespace engine
 }   // namespace engine
 
 class ReferenceSettings;
+struct TestQMSetupUtils;
 
 namespace setup
 {
@@ -45,18 +48,26 @@ namespace setup
     class QMSetup
     {
        private:
-        engine::QMCapableEngine &_qmCapableEngine;
+        engine::QMCapableEngine   &_qmCapableEngine;
+        mstd::ConstRef<QMSettings> _qmSettings;
 
        public:
-        explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
+        explicit QMSetup(
+            engine::QMCapableEngine &qmCapableEngine,
+            const QMSettings        &qmSettings
+        );
 
         void        setup(ReferenceSettings &references);
         void        setupQMMethod();
-        static void setupQMMethodAseDftbPlus();
-        static void setupQMMethodAseXtb(ReferenceSettings &references);
         void        setupQMScript() const;
         static void setupCoulombRadiusCutOff();
         void        setupWriteInfo() const;
+
+       private:
+        void _setupQMMethodAseXtb(ReferenceSettings &references) const;
+        void _setupQMMethodAseDftbPlus() const;
+
+        friend struct ::TestQMSetupUtils;
     };
 
 }   // namespace setup
