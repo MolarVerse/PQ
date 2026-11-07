@@ -32,9 +32,12 @@ namespace engine
      *
      * @param settings The QM settings to configure the QM runner with
      */
-    void QMCapableEngine::setQMRunner(const QMSettings &settings)
+    void QMCapableEngine::setQMRunner(
+        const QMSettings   &settings,
+        const MaceSettings &maceSettings
+    )
     {
-        _qmRunner = QMRunnerManager::createQMRunner(settings);
+        _qmRunner = QMRunnerManager::createQMRunner(settings, maceSettings);
     }
 
     /**

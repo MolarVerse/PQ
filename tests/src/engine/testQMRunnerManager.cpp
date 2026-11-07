@@ -30,6 +30,7 @@
 #include "pyscfRunner.hpp"
 #include "qmRunnerManager.hpp"
 #include "qmSettings.hpp"
+#include "settings.hpp"
 #include "throwWithMessage.hpp"
 #include "turbomoleRunner.hpp"
 
@@ -37,17 +38,21 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
 {
     using engine::QMRunnerManager;
 
-    QMSettings dftbSettings;
+    QMSettings   dftbSettings;
+    MaceSettings maceSettings;
     dftbSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    const auto dftb = QMRunnerManager::createQMRunner(dftbSettings);
+    const auto dftb =
+        QMRunnerManager::createQMRunner(dftbSettings, maceSettings);
 
     QMSettings pyscfSettings;
     pyscfSettings.setQMMethodByUser(QMMethod::PYSCF);
-    const auto pyscf = QMRunnerManager::createQMRunner(pyscfSettings);
+    const auto pyscf =
+        QMRunnerManager::createQMRunner(pyscfSettings, maceSettings);
 
     QMSettings turbomoleSettings;
     turbomoleSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
-    const auto turbomole = QMRunnerManager::createQMRunner(turbomoleSettings);
+    const auto turbomole =
+        QMRunnerManager::createQMRunner(turbomoleSettings, maceSettings);
 
     EXPECT_NE(dynamic_cast<QM::DFTBPlusRunner *>(dftb.get()), nullptr);
     EXPECT_NE(dynamic_cast<QM::PySCFRunner *>(pyscf.get()), nullptr);
@@ -56,20 +61,26 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
 
 TEST(TestQMRunnerManager, eachCallCreatesANewRunner)
 {
-    QMSettings qmSettings;
+    QMSettings   qmSettings;
+    MaceSettings maceSettings;
     qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    const auto first  = engine::QMRunnerManager::createQMRunner(qmSettings);
-    const auto second = engine::QMRunnerManager::createQMRunner(qmSettings);
+    const auto first =
+        engine::QMRunnerManager::createQMRunner(qmSettings, maceSettings);
+    const auto second =
+        engine::QMRunnerManager::createQMRunner(qmSettings, maceSettings);
 
     EXPECT_NE(first.get(), second.get());
 }
 
 TEST(TestQMRunnerManager, rejectsMissingQMProgram)
 {
-    QMSettings qmSettings;
-    qmSettings.setQMMethodByUser(QMMethod::NONE);
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
     EXPECT_THROW_MSG(
-        auto _ = engine::QMRunnerManager::createQMRunner(qmSettings),
+        auto _ = engine::QMRunnerManager::createQMRunner(
+            settings.qmSettings,
+            settings.maceSettings
+        ),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"

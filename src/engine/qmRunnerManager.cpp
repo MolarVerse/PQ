@@ -53,28 +53,29 @@ namespace engine
      * @throws InputFileException if the method is not supported
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
-        const QMSettings &settings
+        const QMSettings   &qmSettings,
+        const MaceSettings &maceSettings
     )
     {
         using enum QMMethod;
 
-        switch (settings.getQMMethod())
+        switch (qmSettings.getQMMethod())
         {
             case DFTBPLUS:
-                return std::make_shared<QM::DFTBPlusRunner>(settings);
+                return std::make_shared<QM::DFTBPlusRunner>(qmSettings);
 
-            case ASE_DFTBPLUS: return createAseDftbRunner(settings);
+            case ASE_DFTBPLUS: return createAseDftbRunner(qmSettings);
 
-            case ASE_XTB: return createAseXtbRunner(settings);
+            case ASE_XTB: return createAseXtbRunner(qmSettings);
 
-            case PYSCF: return std::make_shared<QM::PySCFRunner>(settings);
+            case PYSCF: return std::make_shared<QM::PySCFRunner>(qmSettings);
 
             case TURBOMOLE:
-                return std::make_shared<QM::TurbomoleRunner>(settings);
+                return std::make_shared<QM::TurbomoleRunner>(qmSettings);
 
-            case MACE: return createAseMaceRunner(settings);
+            case MACE: return createAseMaceRunner(qmSettings, maceSettings);
 
-            case FENNOL: return createAseFennolRunner(settings);
+            case FENNOL: return createAseFennolRunner(qmSettings);
 
             case NONE:
                 throw exc::InputFileException(
@@ -93,24 +94,25 @@ namespace engine
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner(
-        const QMSettings &settings
+        const QMSettings   &qmSettings,
+        const MaceSettings &maceSettings
     )
     {
 #ifdef WITH_ASE
-        const auto modelType = QMSettings::getMaceModelTypeName();
-        const auto modelPath = QMSettings::getMaceModelPath();
+        const auto modelType = maceSettings.getMaceModelTypeName();
+        const auto modelPath = maceSettings.getMaceModelPath();
         const auto useDFTD   = QMSettings::useDispersionCorr();
         const auto fpType =
             settings::GeneralSettings::getFloatingPointPybindString();
-        const auto useCueq = QMSettings::getMaceMode() == MaceMode::FAST;
+        const auto useCueq = maceSettings.getMaceMode() == MaceMode::FAST;
 
-        auto maceModel = QMSettings::getMaceModelName();
+        auto maceModel = maceSettings.getMaceModelName();
 
         if (!modelPath.empty())
             maceModel = modelPath;
 
         return std::make_shared<QM::AseMaceRunner>(
-            settings,
+            qmSettings,
             modelType,
             maceModel,
             fpType,
@@ -119,7 +121,8 @@ namespace engine
         );
 #else
         // to silence unused parameter warnings when ASE is not enabled
-        (void) settings;
+        (void) qmSettings;
+        (void) maceSettings;
         throw exc::CompileTimeException(
             "A MACE type QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use MACE type "

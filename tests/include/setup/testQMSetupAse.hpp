@@ -45,9 +45,12 @@ class TestQMSetupAse : public ::testing::Test
     void SetUp() override
     {
         _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-        _engine = std::make_unique<engine::QMMDEngine>(_settings);
-        _qmSetup =
-            std::make_unique<setup::QMSetup>(*_engine, _settings.qmSettings);
+        _engine  = std::make_unique<engine::QMMDEngine>(_settings);
+        _qmSetup = std::make_unique<setup::QMSetup>(
+            *_engine,
+            _settings.qmSettings,
+            _settings.maceSettings
+        );
         _engine->getEngineOutput().getLogOutput().setFilename(
             "default.log",
             false

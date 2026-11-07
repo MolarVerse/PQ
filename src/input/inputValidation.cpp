@@ -79,7 +79,7 @@ namespace input
     {
         _validateTimings(settings);
         validateOptimizer(settings);
-        _validateQM(settings.qmSettings);
+        _validateQM(settings.qmSettings, settings.maceSettings);
         _validateThermostat(settings.simulationBoxSettings);
         _validateManostat(settings.manostatSettings);
         _validateCellList();
@@ -133,7 +133,10 @@ namespace input
      * @throws exc::InputFileException if selected QM settings require missing
      * or incompatible keywords
      */
-    void InputFileReader::_validateQM(const QMSettings& settings) const
+    void InputFileReader::_validateQM(
+        const QMSettings&   settings,
+        const MaceSettings& maceSettings
+    ) const
     {
         if (!settings::GeneralSettings::isQMActivated())
             return;
@@ -188,8 +191,8 @@ namespace input
         if (qmMethod != QMMethod::MACE)
             return;
 
-        const auto modelType    = QMSettings::getMaceModelType();
-        const auto model        = QMSettings::getMaceModel();
+        const auto modelType    = maceSettings.getMaceModelType();
+        const auto model        = maceSettings.getMaceModel();
         const auto modelPathSet = getKeywordSet("mace_model_path");
 
         if (modelType != MaceModelType::MACE_MP && model != MaceModel::SMALL &&

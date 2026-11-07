@@ -65,6 +65,31 @@ namespace
 }   // namespace
 
 /**
+ * @brief finalizes the QM settings by performing necessary checks and setups
+ *
+ * @details Currently, it only finalizes MACE settings if the QM method is set
+ * to MACE.
+ */
+// void QMSettings::finalize()
+// {
+//     if (_qmMethod.get() == QMMethod::MACE)
+//         _finalizeMace();
+// }
+
+// void QMSettings::_finalizeMace()
+// {
+//     const auto useDFTD = QMSettings::useDispersionCorr();
+//     const auto fpType =
+//         settings::GeneralSettings::getFloatingPointPybindString();
+//     const auto useCueq = settings.getMaceMode() == MaceMode::FAST;
+
+//     auto maceModel = settings.getMaceModelName();
+
+//     if (!modelPath.empty())
+//         maceModel = modelPath;
+// }
+
+/**
  * @brief returns an unordered map as string
  *
  * @param unordered_map
@@ -127,16 +152,19 @@ void QMSettings::setQMMethodByUser(QMMethod method)
  *
  * @param model
  */
-void QMSettings::setMaceModel(MaceModel model) { _maceModel = model; }
+void MaceSettings::setMaceModelByUser(MaceModel model)
+{
+    _maceModel.setByUser(model);
+}
 
 /**
  * @brief sets the maceModelType to enum in settings
  *
  * @param model
  */
-void QMSettings::setMaceModelType(MaceModelType model)
+void MaceSettings::setMaceModelTypeByUser(MaceModelType model)
 {
-    _maceModelType = model;
+    _maceModelType.setByUser(model);
 }
 
 /**
@@ -144,15 +172,18 @@ void QMSettings::setMaceModelType(MaceModelType model)
  *
  * @param mode
  */
-void QMSettings::setMaceMode(MaceMode mode) { _maceMode = mode; }
+void MaceSettings::setMaceModeByUser(MaceMode mode)
+{
+    _maceMode.setByUser(mode);
+}
 
 /**
  * @brief set the mace model path
  *
  */
-void QMSettings::setMaceModelPath(const std::string_view &path)
+void MaceSettings::setMaceModelPathByUser(const std::string &path)
 {
-    _maceModelPath = path;
+    _maceModelPath.setByUser(path);
 }
 
 /**
@@ -358,19 +389,30 @@ bool QMSettings::isQMMethodSetByUser() const { return _qmMethod.isSetByUser(); }
  *
  * @return MaceModel
  */
-MaceModel QMSettings::getMaceModel() { return _maceModel; }
+MaceModel MaceSettings::getMaceModel() const { return _maceModel.get(); }
 
-MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
+/**
+ * @brief returns the maceModelType
+ *
+ * @return MaceModelType
+ */
+MaceModelType MaceSettings::getMaceModelType() const
+{
+    return _maceModelType.get();
+}
 
 /**
  * @brief returns the maceModel as expected by mace.calculators
  *
  * @return std::string e.g. "small-0b"
  */
-std::string QMSettings::getMaceModelName()
+std::string MaceSettings::getMaceModelName() const
 {
-    auto name = utilities::toLowerCopy(MaceModelMeta::toString(_maceModel));
+    auto name =
+        utilities::toLowerCopy(MaceModelMeta::toString(_maceModel.get()));
+
     std::ranges::replace(name, '_', '-');
+
     return name;
 }
 
@@ -379,9 +421,11 @@ std::string QMSettings::getMaceModelName()
  *
  * @return std::string e.g. "mace_off"
  */
-std::string QMSettings::getMaceModelTypeName()
+std::string MaceSettings::getMaceModelTypeName() const
 {
-    return utilities::toLowerCopy(MaceModelTypeMeta::toString(_maceModelType));
+    return utilities::toLowerCopy(
+        MaceModelTypeMeta::toString(_maceModelType.get())
+    );
 }
 
 /**
@@ -389,14 +433,17 @@ std::string QMSettings::getMaceModelTypeName()
  *
  * @return MaceMode
  */
-MaceMode QMSettings::getMaceMode() { return _maceMode; }
+MaceMode MaceSettings::getMaceMode() const { return _maceMode.get(); }
 
 /**
  * @brief returns the maceModelPath
  *
  * @return std::string
  */
-std::string QMSettings::getMaceModelPath() { return _maceModelPath; }
+std::string MaceSettings::getMaceModelPath() const
+{
+    return _maceModelPath.get();
+}
 
 /**
  * @brief returns the qmScript

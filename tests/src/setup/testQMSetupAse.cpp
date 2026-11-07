@@ -334,7 +334,7 @@ class MACECalculator:
 TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
 {
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
-    QMSettings::setMaceMode(MaceMode::FAST);
+    _settings.maceSettings.setMaceModeByUser(MaceMode::FAST);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");

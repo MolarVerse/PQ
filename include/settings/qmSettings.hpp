@@ -35,6 +35,28 @@ std::string string(
     const std::unordered_map<std::string, double> &unordered_map
 );
 
+class MaceSettings
+{
+   private:
+    Setting<MaceModel>     _maceModel{MaceModel::MEDIUM};
+    Setting<MaceModelType> _maceModelType{MaceModelType::MACE_MP};
+    Setting<MaceMode>      _maceMode{MaceMode::ACCURATE};
+    Setting<std::string>   _maceModelPath{""};
+
+   public:
+    void setMaceModelByUser(MaceModel model);
+    void setMaceModelTypeByUser(MaceModelType model);
+    void setMaceModeByUser(MaceMode mode);
+    void setMaceModelPathByUser(const std::string &path);
+
+    [[nodiscard]] MaceModel     getMaceModel() const;
+    [[nodiscard]] std::string   getMaceModelName() const;
+    [[nodiscard]] MaceModelType getMaceModelType() const;
+    [[nodiscard]] std::string   getMaceModelTypeName() const;
+    [[nodiscard]] MaceMode      getMaceMode() const;
+    [[nodiscard]] std::string   getMaceModelPath() const;
+};
+
 /**
  * @brief QMSettings
  *
@@ -44,16 +66,12 @@ std::string string(
 class QMSettings
 {
    private:
-    Setting<QMMethod>           _qmMethod{QMMethod::NONE};
-    static inline MaceModel     _maceModel     = MaceModel::MEDIUM;
-    static inline MaceModelType _maceModelType = MaceModelType::MACE_MP;
-    static inline MaceMode      _maceMode      = MaceMode::ACCURATE;
-    static inline SlakosType    _slakosType    = SlakosType::NONE;
-    static inline XtbMethod     _xtbMethod     = XtbMethod::GFN2;
+    Setting<QMMethod>        _qmMethod{QMMethod::NONE};
+    static inline SlakosType _slakosType = SlakosType::NONE;
+    static inline XtbMethod  _xtbMethod  = XtbMethod::GFN2;
 
     static inline std::string _qmScript;
     static inline std::string _qmScriptFullPath;
-    static inline std::string _maceModelPath;
     static inline std::string _slakosPath;
     static inline std::string _fennolModelPath;
 
@@ -70,6 +88,8 @@ class QMSettings
         defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
 
    public:
+    void finalize();
+
     [[nodiscard]] bool isExternalQMRunner() const;
 
     /***************************
@@ -77,11 +97,6 @@ class QMSettings
      ***************************/
 
     void setQMMethodByUser(QMMethod method);
-
-    static void setMaceModel(MaceModel model);
-    static void setMaceModelType(MaceModelType model);
-    static void setMaceMode(MaceMode mode);
-    static void setMaceModelPath(const std::string_view &path);
 
     static void setQMScript(const std::string_view &script);
     static void setQMScriptFullPath(const std::string_view &script);
@@ -113,13 +128,6 @@ class QMSettings
     [[nodiscard]] QMMethod getQMMethod() const;
     [[nodiscard]] bool     isQMMethodSetByUser() const;
 
-    [[nodiscard]] static MaceModel     getMaceModel();
-    [[nodiscard]] static MaceModelType getMaceModelType();
-    [[nodiscard]] static MaceMode      getMaceMode();
-    [[nodiscard]] static std::string   getMaceModelPath();
-    [[nodiscard]] static std::string   getMaceModelName();
-    [[nodiscard]] static std::string   getMaceModelTypeName();
-
     [[nodiscard]] static std::string getQMScript();
     [[nodiscard]] static std::string getQMScriptFullPath();
 
@@ -140,6 +148,9 @@ class QMSettings
     [[nodiscard]] static bool        useGPUPreprocessing();
 
     [[nodiscard]] static double getQMLoopTimeLimit();
+
+   private:
+    void _finalizeMace();
 };
 
 #endif   // SETTINGS__QM_SETTINGS_HPP

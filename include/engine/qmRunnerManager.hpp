@@ -27,6 +27,9 @@
 
 #include "qmRunner.hpp"
 
+class QMSettings;
+class MaceSettings;
+
 namespace engine
 {
     /**
@@ -44,7 +47,8 @@ namespace engine
        public:
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createQMRunner(
-            const QMSettings &settings
+            const QMSettings   &qmSettings,
+            const MaceSettings &maceSettings
         );
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner(
@@ -56,7 +60,8 @@ namespace engine
         );
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createAseMaceRunner(
-            const QMSettings &settings
+            const QMSettings   &qmSettings,
+            const MaceSettings &maceSettings
         );
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createAseXtbRunner(
