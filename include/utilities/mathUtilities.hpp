@@ -96,7 +96,14 @@ namespace utilities
     template <typename T>
     [[nodiscard]] bool isZero(const T &value)
     {
-        return value == T(0);
+        if constexpr (requires { value.zero(); })
+        {
+            return value == value.zero();
+        }
+        else
+        {
+            return value == T(0);
+        }
     }
 
     /**

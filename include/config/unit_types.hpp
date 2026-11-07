@@ -33,6 +33,7 @@
 
 #include <mstd/units.hpp>
 
+#include "mp-units/systems/isq/base_quantities.h"
 #include "mp-units/systems/isq/mechanics.h"
 #include "vector3d.hpp"
 
@@ -42,5 +43,10 @@ using Time     = mstd::quantity<mstd::units::fs>;
 using Pressure        = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
 using Compressibility = mstd::quantity<
     mstd::units::compressibility[mstd::units::one / mstd::units::Pa]>;
+
+using Temperature = mstd::units::quantity_point<
+    mstd::units::thermodynamic_temperature[mstd::units::K]>;
+using TemperatureDiff =
+    mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
 
 #endif   // CONFIG__UNIT_TYPES_HPP

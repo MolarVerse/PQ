@@ -26,6 +26,7 @@
 
 #include <cmath>
 #include <memory>
+#include <vector>
 
 #include "berendsenThermostat.hpp"
 #include "constants/internalConversionFactors.hpp"
@@ -34,6 +35,7 @@
 #include "noseHooverThermostat.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 #include "units.hpp"
@@ -69,66 +71,104 @@ TEST_F(TestThermostat, calculateTemperature)
 
 TEST_F(TestThermostat, applyTemperatureRamping)
 {
-    _thermostat->setTemperatureIncrease(0.0);
+    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(0.0));
     _thermostat->setTemperatureRampingSteps(0);
     _thermostat->setTemperatureRampingFrequency(1);
-    _thermostat->setTargetTemperature(300.0);
+    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 300.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(300.0)
+    );
 
-    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(1.0));
     _thermostat->setTemperatureRampingSteps(1);
     _thermostat->setTemperatureRampingFrequency(1);
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(301.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(301.0)
+    );
 
-    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(1.0));
     _thermostat->setTemperatureRampingSteps(2);
     _thermostat->setTemperatureRampingFrequency(1);
-    _thermostat->setTargetTemperature(300.0);
+    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(301.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(302.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(302.0)
+    );
 
-    _thermostat->setTemperatureIncrease(1.0);
+    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(1.0));
     _thermostat->setTemperatureRampingSteps(4);
     _thermostat->setTemperatureRampingFrequency(2);
-    _thermostat->setTargetTemperature(300.0);
+    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 300.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(300.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(301.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 301.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(301.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(302.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(302.0)
+    );
 
     _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(_thermostat->getTargetTemperature(), 302.0);
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(302.0)
+    );
 }
 
 TEST_F(TestThermostat, applyThermostatBerendsen)
 {
-    _thermostat =
-        std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0 * fs);
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
+        mstd::units::point<K>(300.0),
+        100.0 * fs
+    );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     const auto mol1                = _simulationBox->getMolecule(0);
@@ -166,8 +206,10 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
 
 TEST_F(TestThermostat, velocityRescalingTauSetterGetter)
 {
-    auto thermostat =
-        thermostat::VelocityRescalingThermostat(300.0, 100.0 * fs);
+    auto thermostat = thermostat::VelocityRescalingThermostat(
+        mstd::units::point<K>(300.0),
+        100.0 * fs
+    );
     EXPECT_EQ(thermostat.getTau(), 100.0 * fs);
 
     thermostat.setTau(50.0 * fs);
@@ -176,8 +218,10 @@ TEST_F(TestThermostat, velocityRescalingTauSetterGetter)
 
 TEST_F(TestThermostat, velocityRescalingThermostatType)
 {
-    auto thermostat =
-        thermostat::VelocityRescalingThermostat(300.0, 100.0 * fs);
+    auto thermostat = thermostat::VelocityRescalingThermostat(
+        mstd::units::point<K>(300.0),
+        100.0 * fs
+    );
     EXPECT_EQ(
         thermostat.getThermostatType(),
         ThermostatType::VELOCITY_RESCALING
@@ -187,7 +231,7 @@ TEST_F(TestThermostat, velocityRescalingThermostatType)
 TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 {
     _thermostat = std::make_unique<thermostat::VelocityRescalingThermostat>(
-        300.0,
+        mstd::units::point<K>(300.0),
         100.0 * fs
     );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
@@ -208,8 +252,10 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 
 TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 {
-    _thermostat =
-        std::make_unique<thermostat::BerendsenThermostat>(0.0, 100.0 * fs);
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
+        mstd::units::point<K>(0.0),
+        100.0 * fs
+    );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
@@ -225,8 +271,10 @@ TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 
 TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 {
-    _thermostat =
-        std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0 * fs);
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
+        mstd::units::point<K>(300.0),
+        100.0 * fs
+    );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
@@ -243,7 +291,7 @@ TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 {
     _thermostat = std::make_unique<thermostat::VelocityRescalingThermostat>(
-        0.0,
+        mstd::units::point<K>(0.0),
         100.0 * fs
     );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
@@ -262,7 +310,7 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
 {
     _thermostat = std::make_unique<thermostat::VelocityRescalingThermostat>(
-        300.0,
+        mstd::units::point<K>(300.0),
         100.0 * fs
     );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
@@ -299,8 +347,10 @@ namespace
 TEST_F(TestThermostat, berendsenRelaxationTimeEqualToTimestepStaysFinite)
 {
     _data->calculateTemperature(*_simulationBox);
-    _thermostat =
-        std::make_unique<thermostat::BerendsenThermostat>(0.0, 0.1 * fs);
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
+        mstd::units::point<K>(0.0),
+        0.1 * fs
+    );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
@@ -311,8 +361,10 @@ TEST_F(TestThermostat, berendsenRelaxationTimeEqualToTimestepStaysFinite)
 
 TEST_F(TestThermostat, berendsenNearZeroTemperatureStaysFinite)
 {
-    _thermostat =
-        std::make_unique<thermostat::BerendsenThermostat>(300.0, 100.0 * fs);
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
+        mstd::units::point<K>(300.0),
+        100.0 * fs
+    );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
@@ -327,7 +379,7 @@ TEST_F(TestThermostat, berendsenNearZeroTemperatureStaysFinite)
 TEST_F(TestThermostat, velocityRescalingRejectsZeroDegreesOfFreedom)
 {
     _thermostat = std::make_unique<thermostat::VelocityRescalingThermostat>(
-        300.0,
+        mstd::units::point<K>(300.0),
         100.0 * fs
     );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
@@ -345,7 +397,7 @@ TEST_F(TestThermostat, velocityRescalingRelaxationTimeShorterThanTimestep)
 {
     _data->calculateTemperature(*_simulationBox);
     _thermostat = std::make_unique<thermostat::VelocityRescalingThermostat>(
-        0.5 * _data->getTemperature(),
+        mstd::units::point<K>(0.5 * _data->getTemperature()),
         0.01 * fs
     );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
@@ -361,7 +413,7 @@ namespace
     thermostat::NoseHooverThermostat noseHoover(double targetTemperature)
     {
         return thermostat::NoseHooverThermostat(
-            targetTemperature,
+            mstd::units::point<K>(targetTemperature),
             std::vector<double>{0.1, 0.2, 0.3},
             std::vector<double>{0.0, 0.0, 0.0},
             1.0
@@ -431,7 +483,8 @@ TEST_F(TestThermostat, langevinTinyTimestepSigmaStaysFinite)
 {
     const auto previousTimeStep = settings::TimingsSettings::getTimeStep();
     settings::TimingsSettings::setTimeStep(1e-12 * fs);
-    const auto thermostat = thermostat::LangevinThermostat(300.0, 0.01);
+    const auto thermostat =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), 0.01);
     settings::TimingsSettings::setTimeStep(previousTimeStep);
 
     EXPECT_TRUE(std::isfinite(thermostat.getSigma()));
@@ -443,14 +496,16 @@ TEST_F(TestThermostat, langevinTinyTimestepSigmaStaysFinite)
 TEST_F(TestThermostat, langevinConstructorComputesSigma)
 {
     // sigma > 0 once friction and targetTemp are non-zero.
-    const auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    const auto langevin =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), 0.1);
     EXPECT_GT(langevin.getSigma(), 0.0);
     EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.1);
 }
 
 TEST_F(TestThermostat, langevinZeroFrictionHasZeroSigma)
 {
-    const auto langevin = thermostat::LangevinThermostat(300.0, 0.0);
+    const auto langevin =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), 0.0);
 
     EXPECT_DOUBLE_EQ(langevin.getSigma(), 0.0);
     EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.0);
@@ -458,7 +513,8 @@ TEST_F(TestThermostat, langevinZeroFrictionHasZeroSigma)
 
 TEST_F(TestThermostat, langevinSettersAndGetters)
 {
-    auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    auto langevin =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), 0.1);
 
     langevin.setFriction(0.5);
     EXPECT_DOUBLE_EQ(langevin.getFriction(), 0.5);
@@ -469,11 +525,12 @@ TEST_F(TestThermostat, langevinSettersAndGetters)
 
 TEST_F(TestThermostat, langevinSetTargetTemperatureRecomputesSigma)
 {
-    auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    auto langevin =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), 0.1);
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaAt300 = langevin.getSigma();
 
-    langevin.setTargetTemperature(600.0);
+    langevin.setTargetTemperature(mstd::units::point<K>(600.0));
     const auto sigmaAt600 = langevin.getSigma();
 
     // Setting a higher target temperature must update sigma (the
@@ -484,7 +541,8 @@ TEST_F(TestThermostat, langevinSetTargetTemperatureRecomputesSigma)
 
 TEST_F(TestThermostat, langevinSetFrictionRecomputesSigma)
 {
-    auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    auto langevin =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), 0.1);
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaAtFrictionPointOne = langevin.getSigma();
 
@@ -497,7 +555,8 @@ TEST_F(TestThermostat, langevinSetFrictionRecomputesSigma)
 
 TEST_F(TestThermostat, langevinThermostatType)
 {
-    auto langevin = thermostat::LangevinThermostat(300.0, 0.1);
+    auto langevin =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), 0.1);
     EXPECT_EQ(langevin.getThermostatType(), ThermostatType::LANGEVIN);
 }
 
@@ -506,7 +565,7 @@ TEST_F(TestThermostat, langevinThermostatType)
 TEST_F(TestThermostat, noseHooverThermostatType)
 {
     auto thermostat = thermostat::NoseHooverThermostat(
-        300.0,
+        mstd::units::point<K>(300.0),
         std::vector<double>{0.0, 0.0, 0.0},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
@@ -517,7 +576,7 @@ TEST_F(TestThermostat, noseHooverThermostatType)
 TEST_F(TestThermostat, noseHooverCouplingFrequencySetterGetter)
 {
     auto thermostat = thermostat::NoseHooverThermostat(
-        300.0,
+        mstd::units::point<K>(300.0),
         std::vector<double>{0.0, 0.0, 0.0},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
@@ -531,7 +590,7 @@ TEST_F(TestThermostat, noseHooverCouplingFrequencySetterGetter)
 TEST_F(TestThermostat, noseHooverSetChiAtIndex)
 {
     auto thermostat = thermostat::NoseHooverThermostat(
-        300.0,
+        mstd::units::point<K>(300.0),
         std::vector<double>{0.0, 0.0, 0.0},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0e13
@@ -546,7 +605,7 @@ TEST_F(TestThermostat, noseHooverSetChiAtIndex)
 TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
 {
     auto thermostat = thermostat::NoseHooverThermostat(
-        300.0,
+        mstd::units::point<K>(300.0),
         std::vector<double>{0.1, 0.2, 0.3},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0
@@ -567,4 +626,314 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
     EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
     EXPECT_NE(thermostat.getChi(), chiBefore);
     EXPECT_NE(thermostat.getZeta(), zetaBefore);
+}
+
+/* ---------- additional value-level coverage ---------- */
+
+TEST_F(TestThermostat, temperatureSetterGetter)
+{
+    _thermostat->setTemperature(mstd::units::point<K>(123.0));
+    EXPECT_EQ(_thermostat->getTemperature(), mstd::units::point<K>(123.0));
+
+    _thermostat->setTargetTemperature(mstd::units::point<K>(456.0));
+    EXPECT_EQ(
+        _thermostat->getTargetTemperature(),
+        mstd::units::point<K>(456.0)
+    );
+
+    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(7.5));
+    EXPECT_EQ(
+        _thermostat->getTemperatureIncrease(),
+        mstd::units::delta<K>(7.5)
+    );
+}
+
+TEST_F(TestThermostat, temperatureRampingUpdatesActualTargetTemperature)
+{
+    settings::ThermostatSettings::setActualTargetTemperature(300.0);
+
+    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
+    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(2.5));
+    _thermostat->setTemperatureRampingSteps(2);
+    _thermostat->setTemperatureRampingFrequency(1);
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_DOUBLE_EQ(
+        settings::ThermostatSettings::getActualTargetTemperature(),
+        302.5
+    );
+
+    _thermostat->applyTemperatureRamping();
+    EXPECT_DOUBLE_EQ(
+        settings::ThermostatSettings::getActualTargetTemperature(),
+        305.0
+    );
+
+    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+}
+
+TEST_F(TestThermostat, berendsenStoresMeasuredTemperature)
+{
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
+        mstd::units::point<K>(300.0),
+        100.0 * fs
+    );
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
+
+    _data->calculateTemperature(*_simulationBox);
+    const auto oldTemperature = _data->getTemperature();
+
+    _thermostat->applyThermostat(*_simulationBox, *_data);
+
+    EXPECT_DOUBLE_EQ(
+        _thermostat->getTemperature().quantity_from_zero().numerical_value_in(
+            K
+        ),
+        oldTemperature
+    );
+}
+
+TEST_F(TestThermostat, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)
+{
+    _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
+        mstd::units::point<K>(300.0),
+        100.0 * fs
+    );
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
+
+    _data->calculateTemperature(*_simulationBox);
+    const auto oldTemperature = _data->getTemperature();
+    const auto oldVelocity    = _simulationBox->getAtoms()[1]->getVelocity();
+
+    _thermostat->applyThermostat(*_simulationBox, *_data);
+
+    const auto factor = std::sqrt(_data->getTemperature() / oldTemperature);
+    const auto newVelocity = _simulationBox->getAtoms()[1]->getVelocity();
+    for (size_t axis = 0; axis < 3; ++axis)
+        EXPECT_NEAR(newVelocity[axis], factor * oldVelocity[axis], 1e-12);
+}
+
+namespace
+{
+    std::vector<linalg::Vec3D> saveVelocities(const molsys::SimulationBox &box)
+    {
+        std::vector<linalg::Vec3D> velocities;
+        for (const auto &atom : box.getAtoms())
+            velocities.push_back(atom->getVelocity());
+        return velocities;
+    }
+
+    void restoreVelocities(
+        molsys::SimulationBox            &box,
+        const std::vector<linalg::Vec3D> &velocities
+    )
+    {
+        for (size_t i = 0; i < velocities.size(); ++i)
+            box.getAtoms()[i]->setVelocity(velocities[i]);
+    }
+}   // namespace
+
+/**
+ * lambda = 1 + timeRatio * (Ttarget/T - 1) + 2 sqrt(timeRatio Ttarget/T / dof)
+ * * N(0,1). Repeated draws from identical states must reproduce the mean
+ * and the standard deviation, and the velocities must be scaled by
+ * sqrt(lambda) consistent with the stored temperature.
+ */
+TEST_F(TestThermostat, velocityRescalingLambdaStatistics)
+{
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
+
+    _data->calculateTemperature(*_simulationBox);
+    const auto temperature = _data->getTemperature();
+    const auto initial     = saveVelocities(*_simulationBox);
+    const auto dof = static_cast<double>(_simulationBox->getDegreesOfFreedom());
+
+    const auto tempRatio = 10.0;
+    const auto timeRatio = 0.1 / 10.0;
+
+    auto thermostat = thermostat::VelocityRescalingThermostat(
+        mstd::units::point<K>(tempRatio * temperature),
+        10.0 * fs
+    );
+
+    const auto expectedMean = 1.0 + timeRatio * (tempRatio - 1.0);
+    const auto expectedStd  = 2.0 * std::sqrt(timeRatio * tempRatio / dof);
+
+    constexpr size_t nSamples = 4000;
+    double           sum      = 0.0;
+    double           sumSq    = 0.0;
+
+    for (size_t i = 0; i < nSamples; ++i)
+    {
+        restoreVelocities(*_simulationBox, initial);
+        thermostat.applyThermostat(*_simulationBox, *_data);
+
+        const auto lambda  = _data->getTemperature() / temperature;
+        sum               += lambda;
+        sumSq             += lambda * lambda;
+
+        const auto scaled = _simulationBox->getAtoms()[1]->getVelocity();
+        for (size_t axis = 0; axis < 3; ++axis)
+            ASSERT_NEAR(
+                scaled[axis],
+                std::sqrt(lambda) * initial[1][axis],
+                1e-10
+            );
+    }
+
+    const auto mean = sum / nSamples;
+    const auto var  = sumSq / nSamples - mean * mean;
+
+    EXPECT_NEAR(mean, expectedMean, 5.0 * expectedStd / std::sqrt(nSamples));
+    EXPECT_NEAR(std::sqrt(var), expectedStd, 0.1 * expectedStd);
+    EXPECT_DOUBLE_EQ(
+        thermostat.getTemperature().quantity_from_zero().numerical_value_in(K),
+        temperature
+    );
+}
+
+TEST_F(TestThermostat, velocityRescalingNoStochasticTermAtEquilibriumLimit)
+{
+    // timestep << tau: lambda -> 1, temperature must stay (nearly) unchanged
+    settings::TimingsSettings::setTimeStep(1e-9 * fs);
+
+    _data->calculateTemperature(*_simulationBox);
+    const auto temperature = _data->getTemperature();
+
+    auto thermostat = thermostat::VelocityRescalingThermostat(
+        mstd::units::point<K>(3.0 * temperature),
+        100.0 * fs
+    );
+    thermostat.applyThermostat(*_simulationBox, *_data);
+
+    EXPECT_NEAR(_data->getTemperature(), temperature, 1e-3 * temperature);
+}
+
+/**
+ * Independent re-implementation of one Nose-Hoover step in SI-time units.
+ */
+TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
+{
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
+
+    const auto targetTemp = 300.0;
+    const auto freq       = 1.0;
+    auto       chi        = std::vector<double>{0.1, 0.2, 0.3};
+    auto       zeta       = std::vector<double>{0.0, 0.0, 0.0};
+
+    auto thermostat = thermostat::NoseHooverThermostat(
+        mstd::units::point<K>(targetTemp),
+        chi,
+        zeta,
+        freq
+    );
+
+    thermostat.applyThermostat(*_simulationBox, *_data);
+
+    const auto temperature = _data->getTemperature();
+    const auto dof = static_cast<double>(_simulationBox->getDegreesOfFreedom());
+    const auto dt  = 0.1e-15;
+    const auto f2  = freq * freq;
+    const auto kB  = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto eT  = kB * temperature;
+    const auto eTar = kB * targetTemp;
+
+    auto c     = (eT - eTar) * dof - chi[0] * chi[1] / eTar * f2;
+    chi[0]    += dt * c;
+    auto h     = chi[0] / (eTar * dof) * f2;
+    zeta[0]   += h * dt;
+    auto r     = h * chi[0];
+    auto eMom  = r;
+    auto eFri  = dof * zeta[0];
+    for (size_t i = 1; i < chi.size() - 1; ++i)
+    {
+        c        = r - eTar - chi[i] * chi[i + 1] / eTar * f2;
+        chi[i]  += dt * c;
+        h        = chi[i] / eTar * f2;
+        zeta[i] += h * dt;
+        r        = h * chi[i];
+        eMom    += r;
+        eFri    += zeta[i];
+    }
+
+    for (size_t i = 0; i < chi.size(); ++i)
+    {
+        EXPECT_DOUBLE_EQ(thermostat.getChi()[i], chi[i]);
+        EXPECT_DOUBLE_EQ(thermostat.getZeta()[i], zeta[i]);
+    }
+    EXPECT_DOUBLE_EQ(_data->getNoseHooverMomentumEnergy(), eMom);
+    EXPECT_DOUBLE_EQ(_data->getNoseHooverFrictionEnergy(), eFri);
+    EXPECT_DOUBLE_EQ(
+        thermostat.getTemperature().quantity_from_zero().numerical_value_in(K),
+        temperature
+    );
+}
+
+TEST_F(TestThermostat, noseHooverForceMatchesReference)
+{
+    const auto targetTemp = 250.0;
+    const auto freq       = 2.0;
+    const auto chi0       = 0.4;
+
+    auto thermostat = thermostat::NoseHooverThermostat(
+        mstd::units::point<K>(targetTemp),
+        std::vector<double>{chi0, 0.2, 0.3},
+        std::vector<double>{0.0, 0.0, 0.0},
+        freq
+    );
+
+    for (auto &atom : _simulationBox->getAtoms())
+        atom->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+
+    thermostat.applyThermostatOnForces(*_simulationBox);
+
+    const auto dof = static_cast<double>(_simulationBox->getDegreesOfFreedom());
+    const auto factor =
+        chi0 * freq * freq /
+        (BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL * targetTemp * dof) *
+        MOMENTUM_TO_FORCE;
+
+    for (const auto &atom : _simulationBox->getAtoms())
+        for (size_t axis = 0; axis < 3; ++axis)
+            EXPECT_DOUBLE_EQ(
+                atom->getForce()[axis],
+                -factor * atom->getVelocity()[axis] * atom->getMass()
+            );
+}
+
+TEST_F(TestThermostat, noseHooverRejectsNegativeTargetTemperature)
+{
+    auto thermostat = noseHoover(-5.0);
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
+
+    EXPECT_THROW_MSG(
+        thermostat.applyThermostat(*_simulationBox, *_data),
+        exc::UserInputException,
+        NOSE_HOOVER_ZERO_TARGET
+    );
+}
+
+TEST_F(TestThermostat, langevinSigmaMatchesReference)
+{
+    settings::TimingsSettings::setTimeStep(0.1 * fs);
+
+    const auto friction = 0.1;
+    const auto langevin =
+        thermostat::LangevinThermostat(mstd::units::point<K>(300.0), friction);
+
+    const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
+    const auto expected       = std::sqrt(
+        4.0 * friction * UNIVERSAL_GAS_CONSTANT * unitConversion * 300.0 / 0.1
+    );
+
+    EXPECT_DOUBLE_EQ(langevin.getSigma(), expected);
+
+    // sigma scales with sqrt(T)
+    auto langevin4 =
+        thermostat::LangevinThermostat(mstd::units::point<K>(1200.0), friction);
+    EXPECT_NEAR(
+        langevin4.getSigma(),
+        2.0 * langevin.getSigma(),
+        1e-12 * expected
+    );
 }

@@ -56,7 +56,7 @@ int main()
     constexpr double targetTemperature = 300.0;
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat = thermostat::NoseHooverThermostat(
-        targetTemperature,
+        mstd::units::point<K>(targetTemperature),
         std::vector<double>{0.1, 0.2, 0.3},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0

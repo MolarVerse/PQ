@@ -42,7 +42,10 @@ namespace thermostat
         Time _tau;
 
        public:
-        explicit BerendsenThermostat(double targetTemp, const Time &tau);
+        explicit BerendsenThermostat(
+            const Temperature &targetTemp,
+            const Time        &tau
+        );
         BerendsenThermostat() = default;
 
         void applyThermostat(

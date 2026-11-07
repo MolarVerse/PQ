@@ -47,7 +47,7 @@ namespace thermostat
      * @param couplingFrequency
      */
     NoseHooverThermostat::NoseHooverThermostat(
-        double                     targetTemp,
+        const Temperature         &targetTemp,
         const std::vector<double> &chi,
         const std::vector<double> &zeta,
         double                     couplingFrequency
@@ -74,7 +74,7 @@ namespace thermostat
         const molsys::SimulationBox &simulationBox
     ) const
     {
-        if (getTargetTemperature() <= 0.0)
+        if (getTargetTemperature().quantity_from_zero() <= 0.0)
         {
             throw exc::UserInputException(
                 "Cannot apply the Nose-Hoover thermostat with a target "
@@ -102,7 +102,9 @@ namespace thermostat
         _requireCoupling(simulationBox);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-        const auto kT_target = boltzmannConstant * getTargetTemperature();
+        const auto kT_target =
+            boltzmannConstant *
+            getTargetTemperature().quantity_from_zero().numerical_value_in(K);
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -139,7 +141,7 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        setTemperature(physicalData.getTemperature());
+        setTemperature(mstd::units::point<K>(physicalData.getTemperature()));
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -150,20 +152,23 @@ namespace thermostat
             settings::TimingsSettings::getTimeStep().numerical_value_in(s);
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-        const auto thermalEnergy = boltzmannConstant * getTemperature();
+        const auto thermalEnergy =
+            boltzmannConstant *
+            getTemperature().quantity_from_zero().numerical_value_in(K);
         const auto thermalEnergyTarget =
-            boltzmannConstant * getTargetTemperature();
+            boltzmannConstant *
+            getTargetTemperature().quantity_from_zero().numerical_value_in(K);
 
         auto chi = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
         chi -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
 
         _chi[0] += timestep * chi;
 
-        auto ratio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
-                     couplingFreqSquared;
+        auto helpRatio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
+                         couplingFreqSquared;
 
-        _zeta[0] += ratio * timestep;
-        ratio    *= _chi[0];
+        _zeta[0]   += helpRatio * timestep;
+        auto ratio  = helpRatio * _chi[0];
 
         auto energyMomentum = ratio;
         auto energyFriction = degreesOfFreedom * _zeta[0];
@@ -177,9 +182,9 @@ namespace thermostat
 
             _chi[i] += timestep * chi;
 
-            ratio     = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
-            _zeta[i] += ratio * timestep;
-            ratio    *= _chi[i];
+            helpRatio  = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
+            _zeta[i]  += helpRatio * timestep;
+            ratio      = helpRatio * _chi[i];
 
             energyMomentum += ratio;
             energyFriction += _zeta[i];

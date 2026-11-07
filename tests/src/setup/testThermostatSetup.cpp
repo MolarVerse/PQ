@@ -60,7 +60,7 @@ TEST_F(TestSetup, setupThermostatTempRamping)
 
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        1.0
+        mstd::units::delta<K>(1.0)
     );
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getRampingStepsLeft(),
@@ -74,7 +74,7 @@ TEST_F(TestSetup, setupThermostatTempRamping)
 
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        2.0
+        mstd::units::delta<K>(2.0)
     );
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getRampingStepsLeft(),
@@ -89,7 +89,7 @@ TEST_F(TestSetup, setupThermostatTempRamping)
 
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        2.0
+        mstd::units::delta<K>(2.0)
     );
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getRampingStepsLeft(),
@@ -115,17 +115,17 @@ TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
 
     thermostatSetup.setup();
 
-    EXPECT_DOUBLE_EQ(
+    EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        25.0
+        mstd::units::delta<K>(25.0)
     );
 
     for (size_t step = 0; step < 10; ++step)
         thermostatSetup.getEngine().getThermostat().applyTemperatureRamping();
 
-    EXPECT_DOUBLE_EQ(
+    EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        300.0
+        mstd::units::point<K>(300.0)
     );
 
     settings::ThermostatSettings::setTemperatureRampSteps(0);
@@ -179,7 +179,7 @@ TEST_F(TestSetup, setupThermostatOnlyEndTempDefined)
     EXPECT_NO_THROW(thermostatSetup.setup());
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        300
+        mstd::units::point<K>(300)
     );
 }
 
@@ -192,7 +192,7 @@ TEST_F(TestSetup, setupThermostatBerendsen)
     EXPECT_NO_THROW(thermostatSetup.setup());
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        300
+        mstd::units::point<K>(300)
     );
 
     const auto berendsenThermostat =
