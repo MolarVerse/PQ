@@ -85,14 +85,10 @@ namespace manostat
         );
 
         [[nodiscard]]
-        linalg::tensor3D _getPressureTensor() const;
-        [[nodiscard]]
-        const PressureTensor3D &_getPressureTensorPa() const;
+        const PressureTensor3D &_getPressureTensor() const;
 
         [[nodiscard]]
-        double _getPressure() const;
-        [[nodiscard]]
-        const Pressure &_getPressurePa() const;
+        const Pressure &_getPressure() const;
 
         void _setPressureTensor(const PressureTensor3D &pTensor);
         void _setPressure(const Pressure &pressure);

@@ -113,10 +113,10 @@ namespace manostat
             return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
         const auto preFactor = _calcPreFactor();
-        const auto p_xyz     = diagonal(_getPressureTensorPa());
+        const auto p_xyz     = diagonal(_getPressureTensor());
 
         size_t   numFree = 0;
-        Pressure p_avg;
+        Pressure p_avg{0.0 * Pa};
 
         for (size_t axis = 0; axis < 3; ++axis)
         {
@@ -158,7 +158,7 @@ namespace manostat
      */
     linalg::tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
     {
-        const auto p_xyz           = diagonal(_getPressureTensorPa());
+        const auto p_xyz           = diagonal(_getPressureTensor());
         const auto isotropy        = _getSettings().getIsotropy();
         const auto anisotropicAxis = get2DAnisotropicAxis(isotropy);
         const auto isotropicAxes   = get2DIsotropicAxes(isotropy);
@@ -205,14 +205,14 @@ namespace manostat
      */
     linalg::tensor3D AnisotropicBerendsenManostat::calculateMu() const
     {
-        const auto pxyz           = diagonal(_getPressureTensorPa());
+        const auto pxyz           = diagonal(_getPressureTensor());
         const auto targetPressure = _getSettings().getTargetPressure() * bar;
         const auto fixedAxis      = _getSettings().getFixedAxis();
         const auto dimension =
             3.0 - std::popcount(static_cast<unsigned>(fixedAxis));
         const auto preFactor = _calcPreFactor() / dimension;
 
-        auto mu = 1.0 - (preFactor * (Pressure3D{targetPressure} - pxyz));
+        auto mu = 1.0 - ((Pressure3D{targetPressure} - pxyz) * preFactor);
 
         for (size_t i = 0; i < 3; ++i)
         {
@@ -220,7 +220,7 @@ namespace manostat
                 mu[i] = 1.0;
         }
 
-        return linalg::diagonalMatrix(mu);
+        return linalg::diagonalMatrix(mu.numerical_value_in(one));
     }
 
     /**
@@ -235,15 +235,15 @@ namespace manostat
     linalg::tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
     {
         const auto pTarget =
-            linalg::diagonalMatrix(_getSettings().getTargetPressure());
+            linalg::diagonalMatrix(_getSettings().getTargetPressure()) * bar;
         const auto &fixedAxis = _getSettings().getFixedAxis();
         const auto  dimension =
             3.0 - std::popcount(static_cast<unsigned>(fixedAxis));
-        const auto preFactor =
-            _calcPreFactor().numerical_value_in(per_bar) / dimension;
+        const auto preFactor = _calcPreFactor() / dimension;
         const auto kronecker = linalg::kroneckerDeltaMatrix<double>();
 
-        auto mu = kronecker - (preFactor * (pTarget - _getPressureTensor()));
+        auto mu = kronecker - ((pTarget - _getPressureTensor()) * preFactor)
+                                  .numerical_value_in(one);
 
         for (size_t k = 0; k < 3; ++k)
         {

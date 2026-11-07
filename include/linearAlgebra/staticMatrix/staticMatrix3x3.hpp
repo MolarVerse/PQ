@@ -64,6 +64,15 @@ namespace linalg
         const StaticMatrix3x3<T> &rhs
     );
 
+    // mixed element types, e.g. quantity<bar> - quantity<Pa>
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(const T &lhs, const U &rhs) { lhs - rhs; }
+    constexpr auto operator-(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<U> &rhs
+    ) -> StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0][0] - rhs[0][0])>>;
+
     template <typename T>
     void operator-=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs);
 
@@ -130,6 +139,14 @@ namespace linalg
         const U                  &scalar,
         const StaticMatrix3x3<T> &mat
     );
+
+    // element type not constructible from the scalar, e.g.
+    // StaticMatrix3x3<quantity<one>> / size_t
+    template <typename T, typename U>
+    requires(!std::convertible_to<U, T>) &&
+            requires(const T &elem, const U &scalar) { elem / scalar; }
+    constexpr auto operator/(const StaticMatrix3x3<T> &mat, const U &scalar)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] / scalar)>>;
 
     template <typename T>
     void operator/=(StaticMatrix3x3<T> &lhs, const T &scalar);

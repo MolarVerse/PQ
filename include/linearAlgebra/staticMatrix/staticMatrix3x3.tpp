@@ -131,6 +131,32 @@ namespace linalg
     }
 
     /**
+     * @brief operator- for two StaticMatrix3x3's with different element types
+     * (e.g. quantity<bar> - quantity<Pa>)
+     *
+     * @param lhs
+     * @param rhs
+     * @return `StaticMatrix3x3<decltype(T - U)>`
+     */
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(const T &lhs, const U &rhs) { lhs - rhs; }
+    constexpr auto operator-(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<U> &rhs
+    ) -> StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0][0] - rhs[0][0])>>
+    {
+        using R = std::remove_cvref_t<decltype(lhs[0][0] - rhs[0][0])>;
+
+        StaticMatrix3x3<R> result;
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) result[i][j] = lhs[i][j] - rhs[i][j];
+
+        return result;
+    }
+
+    /**
      * @brief operator-= for two StaticMatrix3x3's
      *
      * @param lhs
@@ -322,6 +348,30 @@ namespace linalg
             mat[1] / scalar,
             mat[2] / scalar
         );
+    }
+
+    /**
+     * @brief operator/ for StaticMatrix3x3 and a scalar whose type the element
+     * type cannot be constructed from (e.g. quantity / size_t)
+     *
+     * @param mat
+     * @param scalar
+     * @return `StaticMatrix3x3<decltype(T / U)>`
+     */
+    template <typename T, typename U>
+    requires(!std::convertible_to<U, T>) &&
+            requires(const T &elem, const U &scalar) { elem / scalar; }
+    constexpr auto operator/(const StaticMatrix3x3<T> &mat, const U &scalar)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] / scalar)>>
+    {
+        using R = std::remove_cvref_t<decltype(mat[0][0] / scalar)>;
+
+        StaticMatrix3x3<R> result;
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) result[i][j] = mat[i][j] / scalar;
+
+        return result;
     }
 
     /**

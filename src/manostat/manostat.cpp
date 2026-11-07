@@ -87,7 +87,7 @@ namespace manostat
         const auto p_xyz     = diagonal(_pressureTensor);
 
         size_t   numFree = 0;
-        Pressure p_avg;
+        Pressure p_avg{0.0 * Pa};
 
         for (size_t axis = 0; axis < 3; ++axis)
         {
@@ -228,37 +228,13 @@ namespace manostat
     }
 
     /**
-     * @brief get the pressure tensor
-     *
-     * @return const linalg::tensor3D&
-     */
-    linalg::tensor3D Manostat::_getPressureTensor() const
-    {
-        return linalg::tensor3D(
-            _pressureTensor[0].numerical_value_in(bar),
-            _pressureTensor[1].numerical_value_in(bar),
-            _pressureTensor[2].numerical_value_in(bar)
-        );
-    }
-
-    /**
      * @brief get the pressure tensor in pascal
      *
      * @return const PressureTensor3D&
      */
-    const PressureTensor3D &Manostat::_getPressureTensorPa() const
+    const PressureTensor3D &Manostat::_getPressureTensor() const
     {
         return _pressureTensor;
-    }
-
-    /**
-     * @brief get the pressure
-     *
-     * @return double
-     */
-    double Manostat::_getPressure() const
-    {
-        return _pressure.numerical_value_in(bar);
     }
 
     /**
@@ -266,7 +242,7 @@ namespace manostat
      *
      * @return const Pressure&
      */
-    const Pressure &Manostat::_getPressurePa() const { return _pressure; }
+    const Pressure &Manostat::_getPressure() const { return _pressure; }
 
     /**
      * @brief set the pressure tensor

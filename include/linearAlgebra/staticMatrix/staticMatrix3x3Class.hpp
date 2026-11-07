@@ -88,6 +88,12 @@ namespace linalg
 
         void setDiagonal(const T &value);
         void setDiagonal(const Vector3D<T> &values);
+
+        template <mstd::UnitLike U>
+        auto in(const U &unit) const;
+
+        template <mstd::UnitLike U>
+        auto numerical_value_in(const U &unit) const;
     };
 }   // namespace linalg
 
