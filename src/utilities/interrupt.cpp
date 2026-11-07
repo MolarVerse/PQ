@@ -26,6 +26,39 @@
 #include <pybind11/pybind11.h>
 #endif
 
+#if defined(WITH_PYBIND11) && !defined(_WIN32)
+#include <unistd.h>
+
+#include <csignal>
+
+namespace
+{
+    volatile std::sig_atomic_t _interrupted = 0;
+    volatile std::sig_atomic_t _wakeOnly    = 0;
+
+    /**
+     * @brief the first Ctrl-C stops PQ at the next step, the second one
+     * exits at once
+     */
+    extern "C" void onInterrupt(int)
+    {
+        if (_wakeOnly != 0)
+        {
+            _wakeOnly = 0;
+            return;
+        }
+
+        if (_interrupted != 0)
+            ::_exit(128 + SIGINT);
+
+        _interrupted = 1;
+
+        if (::Py_IsInitialized() != 0)
+            ::PyErr_SetInterrupt();
+    }
+}   // namespace
+#endif
+
 namespace utilities
 {
     /**
@@ -40,4 +73,36 @@ namespace utilities
             throw pybind11::error_already_set();
 #endif
     }
+
+#if defined(WITH_PYBIND11) && !defined(_WIN32)
+    /**
+     * @brief replace Python's SIGINT handler, which cannot stop PQ while
+     * Python waits in native code
+     */
+    void installInterruptHandler()
+    {
+        struct sigaction action{};
+        action.sa_handler = onInterrupt;
+        ::sigemptyset(&action.sa_mask);
+        ::sigaction(SIGINT, &action, nullptr);
+    }
+
+    /**
+     * @brief wake thread from blocking calls such as time.sleep, without
+     * counting as Ctrl-C
+     */
+    void wakePythonThread(pthread_t thread)
+    {
+        struct sigaction current{};
+        ::sigaction(SIGINT, nullptr, &current);
+
+        if (current.sa_handler == SIG_DFL || current.sa_handler == SIG_IGN)
+            return;
+
+        if (current.sa_handler == onInterrupt)
+            _wakeOnly = 1;
+
+        ::pthread_kill(thread, SIGINT);
+    }
+#endif
 }   // namespace utilities

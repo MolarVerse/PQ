@@ -22,6 +22,7 @@ target_link_libraries(aseQM
     utilities
     physicalData
     exceptions
+    interrupt
 
     QM
 
