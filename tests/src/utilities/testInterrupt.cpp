@@ -66,7 +66,7 @@ TEST(TestInterruptDeathTest, firstCtrlCRaisesKeyboardInterrupt)
         {
             const pybind11::scoped_interpreter guard{};
             utilities::installInterruptHandler();
-            std::raise(SIGINT);
+            static_cast<void>(std::raise(SIGINT));
 
             try
             {
@@ -74,10 +74,10 @@ TEST(TestInterruptDeathTest, firstCtrlCRaisesKeyboardInterrupt)
             }
             catch (const pybind11::error_already_set &error)
             {
-                std::_Exit(error.matches(PyExc_KeyboardInterrupt) ? 0 : 1);
+                std::exit(error.matches(PyExc_KeyboardInterrupt) ? 0 : 1);
             }
 
-            std::_Exit(1);
+            std::exit(1);
         },
         testing::ExitedWithCode(0),
         ""
@@ -89,9 +89,9 @@ TEST(TestInterruptDeathTest, secondCtrlCExitsAtOnce)
     EXPECT_EXIT(
         {
             utilities::installInterruptHandler();
-            std::raise(SIGINT);
-            std::raise(SIGINT);
-            std::_Exit(0);
+            static_cast<void>(std::raise(SIGINT));
+            static_cast<void>(std::raise(SIGINT));
+            std::exit(0);
         },
         testing::ExitedWithCode(128 + SIGINT),
         ""
@@ -104,8 +104,8 @@ TEST(TestInterruptDeathTest, wakeIsNoCtrlC)
         {
             utilities::installInterruptHandler();
             utilities::wakePythonThread(::pthread_self());
-            std::raise(SIGINT);
-            std::_Exit(0);
+            static_cast<void>(std::raise(SIGINT));
+            std::exit(0);
         },
         testing::ExitedWithCode(0),
         ""

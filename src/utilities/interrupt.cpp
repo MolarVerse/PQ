@@ -33,30 +33,39 @@
 
 namespace
 {
-    volatile std::sig_atomic_t _interrupted = 0;
-    volatile std::sig_atomic_t _wakeOnly    = 0;
-
-    /**
-     * @brief the first Ctrl-C stops PQ at the next step, the second one
-     * exits at once
-     */
-    extern "C" void onInterrupt(int)
+    struct InterruptState
     {
-        if (_wakeOnly != 0)
-        {
-            _wakeOnly = 0;
-            return;
-        }
+        static inline volatile std::sig_atomic_t interrupted = 0;
+        static inline volatile std::sig_atomic_t wakeOnly    = 0;
+    };
 
-        if (_interrupted != 0)
-            ::_exit(128 + SIGINT);
-
-        _interrupted = 1;
-
-        if (::Py_IsInitialized() != 0)
-            ::PyErr_SetInterrupt();
-    }
+    constexpr int _exitCodeInterrupted = 128 + SIGINT;
 }   // namespace
+
+/**
+ * @brief the first Ctrl-C stops PQ at the next step, the second one exits at
+ * once
+ *
+ * @param signalNumber received signal
+ */
+// NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
+// linkage
+extern "C" void pqOnInterrupt([[maybe_unused]] const int signalNumber)
+{
+    if (InterruptState::wakeOnly != 0)
+    {
+        InterruptState::wakeOnly = 0;
+        return;
+    }
+
+    if (InterruptState::interrupted != 0)
+        ::_exit(_exitCodeInterrupted);
+
+    InterruptState::interrupted = 1;
+
+    if (::Py_IsInitialized() != 0)
+        ::PyErr_SetInterrupt();
+}
 #endif
 
 namespace utilities
@@ -82,7 +91,7 @@ namespace utilities
     void installInterruptHandler()
     {
         struct sigaction action{};
-        action.sa_handler = onInterrupt;
+        action.sa_handler = pqOnInterrupt;
         ::sigemptyset(&action.sa_mask);
         ::sigaction(SIGINT, &action, nullptr);
     }
@@ -99,8 +108,8 @@ namespace utilities
         if (current.sa_handler == SIG_DFL || current.sa_handler == SIG_IGN)
             return;
 
-        if (current.sa_handler == onInterrupt)
-            _wakeOnly = 1;
+        if (current.sa_handler == pqOnInterrupt)
+            InterruptState::wakeOnly = 1;
 
         ::pthread_kill(thread, SIGINT);
     }
