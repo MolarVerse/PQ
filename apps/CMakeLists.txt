@@ -36,6 +36,7 @@ target_link_libraries(PQ
   driver
   exceptions
   commandLineArgs
+  interrupt
 )
 
 if(BUILD_WITH_MPI)

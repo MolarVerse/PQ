@@ -26,6 +26,48 @@
 #include <pybind11/pybind11.h>
 #endif
 
+#if defined(WITH_PYBIND11) && !defined(_WIN32)
+#include <unistd.h>
+
+#include <csignal>
+
+namespace
+{
+    struct InterruptState
+    {
+        static inline volatile std::sig_atomic_t interrupted = 0;
+        static inline volatile std::sig_atomic_t wakeOnly    = 0;
+    };
+
+    constexpr int _exitCodeInterrupted = 128 + SIGINT;
+}   // namespace
+
+/**
+ * @brief the first Ctrl-C stops PQ at the next step, the second one exits at
+ * once
+ *
+ * @param signalNumber received signal
+ */
+// NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
+// linkage
+extern "C" void pqOnInterrupt([[maybe_unused]] const int signalNumber)
+{
+    if (InterruptState::wakeOnly != 0)
+    {
+        InterruptState::wakeOnly = 0;
+        return;
+    }
+
+    if (InterruptState::interrupted != 0)
+        ::_exit(_exitCodeInterrupted);
+
+    InterruptState::interrupted = 1;
+
+    if (::Py_IsInitialized() != 0)
+        ::PyErr_SetInterrupt();
+}
+#endif
+
 namespace utilities
 {
     /**
@@ -40,4 +82,36 @@ namespace utilities
             throw pybind11::error_already_set();
 #endif
     }
+
+#if defined(WITH_PYBIND11) && !defined(_WIN32)
+    /**
+     * @brief replace Python's SIGINT handler, which cannot stop PQ while
+     * Python waits in native code
+     */
+    void installInterruptHandler()
+    {
+        struct sigaction action{};
+        action.sa_handler = pqOnInterrupt;
+        ::sigemptyset(&action.sa_mask);
+        ::sigaction(SIGINT, &action, nullptr);
+    }
+
+    /**
+     * @brief wake thread from blocking calls such as time.sleep, without
+     * counting as Ctrl-C
+     */
+    void wakePythonThread(pthread_t thread)
+    {
+        struct sigaction current{};
+        ::sigaction(SIGINT, nullptr, &current);
+
+        if (current.sa_handler == SIG_DFL || current.sa_handler == SIG_IGN)
+            return;
+
+        if (current.sa_handler == pqOnInterrupt)
+            InterruptState::wakeOnly = 1;
+
+        ::pthread_kill(thread, SIGINT);
+    }
+#endif
 }   // namespace utilities

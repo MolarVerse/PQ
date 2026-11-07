@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include <csignal>
+#include <cstdlib>
 
 #include "interrupt.hpp"
 
@@ -56,4 +57,59 @@ TEST(TestInterrupt, pendingSigintThrowsKeyboardInterrupt)
 
     EXPECT_NO_THROW(utilities::throwIfInterrupted());
 }
+
+#if !defined(_WIN32)
+// death tests run in a child process, so the handler stays out of the others
+TEST(TestInterruptDeathTest, firstCtrlCRaisesKeyboardInterrupt)
+{
+    EXPECT_EXIT(
+        {
+            const pybind11::scoped_interpreter guard{};
+            utilities::installInterruptHandler();
+            static_cast<void>(std::raise(SIGINT));
+
+            try
+            {
+                utilities::throwIfInterrupted();
+            }
+            catch (const pybind11::error_already_set &error)
+            {
+                std::exit(error.matches(PyExc_KeyboardInterrupt) ? 0 : 1);
+            }
+
+            std::exit(1);
+        },
+        testing::ExitedWithCode(0),
+        ""
+    );
+}
+
+TEST(TestInterruptDeathTest, secondCtrlCExitsAtOnce)
+{
+    EXPECT_EXIT(
+        {
+            utilities::installInterruptHandler();
+            static_cast<void>(std::raise(SIGINT));
+            static_cast<void>(std::raise(SIGINT));
+            std::exit(0);
+        },
+        testing::ExitedWithCode(128 + SIGINT),
+        ""
+    );
+}
+
+TEST(TestInterruptDeathTest, wakeIsNoCtrlC)
+{
+    EXPECT_EXIT(
+        {
+            utilities::installInterruptHandler();
+            utilities::wakePythonThread(::pthread_self());
+            static_cast<void>(std::raise(SIGINT));
+            std::exit(0);
+        },
+        testing::ExitedWithCode(0),
+        ""
+    );
+}
+#endif
 #endif
