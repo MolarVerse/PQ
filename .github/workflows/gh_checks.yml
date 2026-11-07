@@ -11,6 +11,13 @@ on:
 
 jobs:
   check-linked-issue:
+    # Not for a release pull request: the release workflow creates it with the
+    # body "Release vX.Y.Z." and it closes no issue of its own, so the check
+    # failed on every release (#1025). A hotfix or feature pull request still
+    # needs its issue.
+    if: >-
+      github.event_name != 'pull_request' ||
+      !startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-24.04
     steps:
       - name: Resolve PR number and head SHA

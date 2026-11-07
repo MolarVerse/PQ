@@ -68,6 +68,12 @@ class ReleasePullRequestTests(unittest.TestCase):
         self.assertIn("startsWith(github.event.pull_request.head.ref, 'pq-bot/')", condition)
         self.assertIn("startsWith(github.event.pull_request.head.ref, 'release/')", condition)
 
+    def test_the_linked_issue_check_is_skipped_for_release_pull_requests(self):
+        # the release pull request has the body "Release vX.Y.Z." and no issue
+        condition = self.job_condition("gh_checks.yml", "check-linked-issue")
+        self.assertIn("github.event_name != 'pull_request'", condition)
+        self.assertIn("!startsWith(github.head_ref, 'release/')", condition)
+
     def test_the_gate_jobs_still_pass_when_their_job_is_skipped(self):
         # the gates only fail on "failure", so a skipped job is a pass
         for workflow, result in (("devops_cpp_check.yml", "needs.cpp-check.result"), ("lint.yml", "needs.lint.result")):
