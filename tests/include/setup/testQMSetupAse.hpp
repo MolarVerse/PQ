@@ -44,26 +44,26 @@ class TestQMSetupAse : public ::testing::Test
 
     void SetUp() override
     {
-        _engine  = std::make_unique<engine::QMMDEngine>(_settings);
-        _qmSetup = std::make_unique<setup::QMSetup>(*_engine);
+        _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+        _engine = std::make_unique<engine::QMMDEngine>(_settings);
+        _qmSetup =
+            std::make_unique<setup::QMSetup>(*_engine, _settings.qmSettings);
         _engine->getEngineOutput().getLogOutput().setFilename(
             "default.log",
             false
         );
-        settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     }
 
     void TearDown() override
     {
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        settings::QMSettings::setQMMethod(QMMethod::NONE);
-        settings::QMSettings::setSlakosType(SlakosType::NONE);
-        settings::QMSettings::setUseDispersionCorrection(false);
-        settings::QMSettings::setUseThirdOrderDftb(false);
-        settings::QMSettings::setIsThirdOrderDftbSet(false);
-        settings::QMSettings::setHubbardDerivs({});
-        settings::QMSettings::setIsHubbardDerivsSet(false);
+        QMSettings::setSlakosType(SlakosType::NONE);
+        QMSettings::setUseDispersionCorrection(false);
+        QMSettings::setUseThirdOrderDftb(false);
+        QMSettings::setIsThirdOrderDftbSet(false);
+        QMSettings::setHubbardDerivs({});
+        QMSettings::setIsHubbardDerivsSet(false);
     }
 };
 

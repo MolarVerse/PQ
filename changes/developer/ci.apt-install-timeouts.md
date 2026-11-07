@@ -1,0 +1,1 @@
+- Install GCC and the other CI packages through the cached apt action (awalsh128/cache-apt-pkgs-action) in the shared setup-gcc action and the clang build, as the DevOps check already does, so a stalled or slow Azure mirror only matters on a cache miss.

@@ -30,6 +30,9 @@ namespace QM
     /**
      * @brief Construct a new AseDftbRunner::AseDftbRunner object
      *
+     * @param settings The QM settings to configure the ASE DFTB runner with,
+     * including method-specific parameters such as the DFTB version and any
+     * relevant computational options
      * @param slakosPath
      * @param thirdOrder
      * @param hubbardDerivs
@@ -38,11 +41,13 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseDftbRunner::AseDftbRunner(
+        const QMSettings                              &settings,
         const std::string                             &slakosPath,
         bool                                           thirdOrder,
         const std::unordered_map<std::string, double> &hubbardDerivs,
         bool                                           dispersion
     )
+        : AseQMRunner(settings)
     {
         try
         {

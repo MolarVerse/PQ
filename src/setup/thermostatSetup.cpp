@@ -37,6 +37,7 @@
 #include "thermostat.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 #include "velocityRescalingThermostat.hpp"
 
 namespace setup
@@ -139,8 +140,7 @@ namespace setup
     {
         const auto targetTemp =
             settings::ThermostatSettings::getTargetTemperature();
-        const auto tau =
-            settings::ThermostatSettings::getRelaxationTime() * PS_TO_FS;
+        const auto tau = settings::ThermostatSettings::getRelaxationTime();
 
         _engine.makeThermostat(
             thermostat::BerendsenThermostat(targetTemp, tau)
@@ -158,8 +158,7 @@ namespace setup
     {
         const auto targetTemp =
             settings::ThermostatSettings::getTargetTemperature();
-        const auto tau =
-            settings::ThermostatSettings::getRelaxationTime() * PS_TO_FS;
+        const auto tau = settings::ThermostatSettings::getRelaxationTime();
 
         _engine.makeThermostat(
             thermostat::VelocityRescalingThermostat(targetTemp, tau)
@@ -352,7 +351,7 @@ namespace setup
         const auto tau = settings::ThermostatSettings::getRelaxationTime();
 
         log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
-        log.writeSetupInfo(std::format("Relaxation time:    {} ps", tau));
+        log.writeSetupInfo(std::format("Relaxation time:    {}", tau.in(ps)));
         log.writeEmptyLine();
     }
 
@@ -441,7 +440,7 @@ namespace setup
         const auto tau = settings::ThermostatSettings::getRelaxationTime();
 
         log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
-        log.writeSetupInfo(std::format("Relaxation time:    {} ps", tau));
+        log.writeSetupInfo(std::format("Relaxation time:    {}", tau.in(ps)));
         log.writeEmptyLine();
     }
 

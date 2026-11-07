@@ -65,7 +65,7 @@ namespace settings
      * @param thermostatType
      */
     void ThermostatSettings::setThermostatType(
-        const std::string_view &thermostatType
+        const std::string_view& thermostatType
     )
     {
         using enum ThermostatType;
@@ -209,7 +209,7 @@ namespace settings
      *
      * @param relaxationTime
      */
-    void ThermostatSettings::setRelaxationTime(double relaxationTime)
+    void ThermostatSettings::setRelaxationTime(const Time& relaxationTime)
     {
         _relaxationTime = relaxationTime;
     }
@@ -347,9 +347,12 @@ namespace settings
     /**
      * @brief get the relaxation time
      *
-     * @return double
+     * @return const Time&
      */
-    double ThermostatSettings::getRelaxationTime() { return _relaxationTime; }
+    const Time& ThermostatSettings::getRelaxationTime()
+    {
+        return _relaxationTime;
+    }
 
     /**
      * @brief get the friction

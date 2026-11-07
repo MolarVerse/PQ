@@ -20,6 +20,12 @@ Three conventions apply to almost every workflow:
     - **A gate job reports the result.** ``ci-build-gate``, ``lint-gate``, ``cpp-check-gate``, ``clang-format-gate`` and
       ``license-check-gate`` fail if one of their jobs failed and pass if the jobs passed *or were skipped*. A skipped
       job is therefore not a missing check.
+    - **A release pull request skips the checks that judge the whole diff.** A pull request from a ``release/*`` branch
+      contains every change since the last release, all of which passed these checks on its ``dev`` pull request. LINT
+      (800+ files, one after the other: killed after half an hour), the DevOps C++ Check (fails on vendored files in
+      the diff), the Performance Gate (compares with the previous release and reports the sum of a cycle: ``kinetics``
+      +29 %) and the Clang Build do not run on it. BUILD, Clang Format, License Header, the changelog checks and the
+      docs still do. A hotfix is not skipped: its diff is small.
     - **Only superseded pull request runs are cancelled.** Pushing to a pull request branch cancels the older run of
       the same workflow. Runs for pushes to ``dev`` and ``main``, the nightly run and manual runs each get their own
       concurrency group and are never cancelled, because they give the verdict for a commit and fill the cache of the
@@ -243,6 +249,12 @@ A job that takes twice as long as usual is rarely a problem in your change. Thes
     - **The runner CPU.** GitHub gives the same job runners of different CPU generations. The same fixed compile took
       4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763. The CI metrics record the CPU model of the
       runner.
+    - **A stalled or slow apt install.** Installing GCC or clang normally takes 6 to 20 s, but the Azure mirror
+      sometimes stalls or crawls: the step took 13 to 34 minutes on about one run in ten (#1069). The ``setup-gcc``
+      action, the clang build and the DevOps check therefore install through ``awalsh128/cache-apt-pkgs-action``, which
+      caches the ``.deb`` files per package list: a hit downloads nothing, only a miss (a changed package list, or
+      the first run in a branch scope) goes to the mirror. Bump ``version`` there to drop the cached packages. If a job
+      still sits in an install step, cancel and re-run it.
     - **The Eigen source** is cached under a key that hashes ``.cmake/eigen.cmake`` and passed to CMake with
       ``-DFETCHCONTENT_SOURCE_DIR_EIGEN``, so that no job clones it again.
     - **The conda environment** of the integration tests is cached under a key that hashes ``ci_build.yml``. **Every

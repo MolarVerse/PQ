@@ -248,116 +248,29 @@ namespace linalg
      *********************/
 
     /**
-     * @brief + operator special case for two Vector3d objects
+     * @brief binary + operator
      *
+     * @details Applied component-wise. Supported operand pairs:
      * @code
      * Vector3D<int> + Vector3D<double>
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs[0] + rhs[0])>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator+(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] + rhs[0])>
-    {
-        using ResultType = decltype(lhs[0] + rhs[0]);
-
-        return Vector3D<ResultType>(
-            lhs[0] + rhs[0],
-            lhs[1] + rhs[1],
-            lhs[2] + rhs[2]
-        );
-    }
-
-    /**
-     * @brief + operator special case for nested Vector3d objects
-     *
-     * @code
      * Vector3D<Vector3D<int>> + Vector3D<double>
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs[0] + rhs)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator+(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] + rhs)>
-    {
-        using ResultType = decltype(lhs[0] + rhs);
-
-        return Vector3D<ResultType>(lhs[0] + rhs, lhs[1] + rhs, lhs[2] + rhs);
-    }
-
-    /**
-     * @brief + operator special case for nested Vector3d objects
-     *
-     * @code
      * Vector3D<int> + Vector3D<Vector3D<double>>
+     * Vector3D<int> + double
+     * double + Vector3D<int>
      * @endcode
      *
+     * @tparam U
+     * @tparam V
      * @param lhs
      * @param rhs
-     * @return `Vector3D<decltype(lhs + rhs[0])>`
+     * @return `detail::BinaryResult_t<std::plus<>, U, V>`
      */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator+(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs + rhs[0])>
+    template <typename U, typename V>
+    requires detail::BinaryOperands<U, V>
+    constexpr auto operator+(const U &lhs, const V &rhs) -> detail::
+        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::plus<>, U, V>
     {
-        using ResultType = decltype(lhs + rhs[0]);
-
-        return Vector3D<ResultType>(lhs + rhs[0], lhs + rhs[1], lhs + rhs[2]);
-    }
-
-    /**
-     * @brief + operator for a Vector3d object and a scalar
-     *
-     * @code
-     * Vector3D<int> + double
-     * @endcode
-     *
-     * @param vec
-     * @param scalar
-     * @return `Vector3D<decltype(vec[0] + scalar)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator+(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] + scalar)>
-    {
-        using ResultType = decltype(vec[0] + scalar);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(vec[0]) + static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[1]) + static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[2]) + static_cast<ResultType>(scalar)
-        );
-    }
-
-    /**
-     * @brief + operator for a Vector3d object and a scalar
-     *
-     * @code
-     * const double& + const Vector3D<int>&
-     * @endcode
-     *
-     * @overload
-     */
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator+(const U &scalar, const V &vec)
-        -> Vector3D<decltype(vec[0] + scalar)>
-    {
-        using ResultType = decltype(vec[0] + scalar);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(vec[0]) + static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[1]) + static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[2]) + static_cast<ResultType>(scalar)
-        );
+        return detail::binaryOp<std::plus<>>(lhs, rhs);
     }
 
     /*********************
@@ -367,120 +280,29 @@ namespace linalg
      *********************/
 
     /**
-     * @brief - operator special case for two Vector3d objects
+     * @brief binary - operator
      *
+     * @details Applied component-wise. Supported operand pairs:
      * @code
-     * const Vector3D<int>& - const Vector3D<double>&
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs[0] - rhs[0])>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator-(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] - rhs[0])>
-    {
-        using ResultType = decltype(lhs[0] - rhs[0]);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(lhs[0]) - static_cast<ResultType>(rhs[0]),
-            static_cast<ResultType>(lhs[1]) - static_cast<ResultType>(rhs[1]),
-            static_cast<ResultType>(lhs[2]) - static_cast<ResultType>(rhs[2])
-        );
-    }
-
-    /**
-     * @brief - operator special case for nested Vector3d objects
-     *
-     * @code
-     * const Vector3D<Vector3D<int>>& - const Vector3D<double>&
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs[0] - rhs)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator-(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] - rhs)>
-    {
-        using ResultType = decltype(lhs[0] - rhs);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(lhs[0]) - static_cast<ResultType>(rhs),
-            static_cast<ResultType>(lhs[1]) - static_cast<ResultType>(rhs),
-            static_cast<ResultType>(lhs[2]) - static_cast<ResultType>(rhs)
-        );
-    }
-
-    /**
-     * @brief - operator special case for nested Vector3d objects
-     *
-     * @code
-     * const Vector3D<int>& - const Vector3D<Vector3D<double>>&
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs - rhs[0])>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator-(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs - rhs[0])>
-    {
-        using ResultType = decltype(lhs - rhs[0]);
-
-        return Vector3D<ResultType>(lhs - rhs[0], lhs - rhs[1], lhs - rhs[2]);
-    }
-
-    /**
-     * @brief - operator for a Vector3d object and a scalar
-     *
-     * @code
+     * Vector3D<int> - Vector3D<double>
+     * Vector3D<Vector3D<int>> - Vector3D<double>
+     * Vector3D<int> - Vector3D<Vector3D<double>>
      * Vector3D<int> - double
+     * double - Vector3D<int>
      * @endcode
      *
-     * @param vec
-     * @param scalar
-     * @return `Vector3D<decltype(vec[0] - scalar)>`
+     * @tparam U
+     * @tparam V
+     * @param lhs
+     * @param rhs
+     * @return `detail::BinaryResult_t<std::minus<>, U, V>`
      */
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator-(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] - scalar)>
+    template <typename U, typename V>
+    requires detail::BinaryOperands<U, V>
+    constexpr auto operator-(const U &lhs, const V &rhs) -> detail::
+        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::minus<>, U, V>
     {
-        using ResultType = decltype(vec[0] - scalar);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(vec[0]) - static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[1]) - static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[2]) - static_cast<ResultType>(scalar)
-        );
-    }
-
-    /**
-     * @brief - operator for a Vector3d object and a scalar
-     *
-     * @code
-     * const double& - const Vector3D<int>&
-     * @endcode
-     *
-     * @overload
-     */
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator-(const U &scalar, const V &vec)
-        -> Vector3D<decltype(scalar - vec[0])>
-    {
-        using ResultType = decltype(scalar - vec[0]);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(scalar) - static_cast<ResultType>(vec[0]),
-            static_cast<ResultType>(scalar) - static_cast<ResultType>(vec[1]),
-            static_cast<ResultType>(scalar) - static_cast<ResultType>(vec[2])
-        );
+        return detail::binaryOp<std::minus<>>(lhs, rhs);
     }
 
     /*********************
@@ -490,134 +312,34 @@ namespace linalg
      *********************/
 
     /**
-     * @brief * operator for two Vector3d objects
+     * @brief binary * operator
      *
+     * @details Applied component-wise. Supported operand pairs:
      * @code
      * Vector3D<int> * Vector3D<double>
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs[0] * rhs[0])>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator*(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] * rhs[0])>
-    {
-        using ResultType = decltype(lhs[0] * rhs[0]);
-
-        return Vector3D<ResultType>(
-            lhs[0] * rhs[0],
-            lhs[1] * rhs[1],
-            lhs[2] * rhs[2]
-        );
-    }
-
-    /**
-     * @brief * operator for a Vector3d object and a scalar
-     *
-     * @code
-     * Vector3D<int> * double (scalar multiplication)
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs[0] * rhs)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator*(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] * rhs)>
-    {
-        using ResultType = decltype(lhs[0] * rhs);
-
-        return Vector3D<ResultType>(lhs[0] * rhs, lhs[1] * rhs, lhs[2] * rhs);
-    }
-
-    /**
-     * @brief * operator for a Vector3d object and a scalar
-     *
-     * @code
+     * Vector3D<Vector3D<int>> * Vector3D<double>
+     * Vector3D<int> * Vector3D<Vector3D<double>>
      * Vector3D<int> * double
-     * @endcode
-     *
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs * rhs.x)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator*(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs * rhs[0])>
-    {
-        using ResultType = decltype(lhs * rhs[0]);
-
-        return Vector3D<ResultType>(lhs * rhs[0], lhs * rhs[1], lhs * rhs[2]);
-    }
-
-    /**
-     * @brief Operator * for a Vector3d object and a scalar
-     *
-     * @code
-     * Vector3D<int> * double
+     * double * Vector3D<int>
+     * Vector3D<int> * quantity-like scalar
      * @endcode
      *
      * @tparam U
      * @tparam V
-     * @param vec
-     * @param scalar
-     * @return `Vector3D<decltype(vec[0] * scalar)>`
+     * @param lhs
+     * @param rhs
+     * @return `detail::BinaryResult_t<std::multiplies<>, U, V>`
      */
-    template <pq::ArithmeticVector3D U, typename V>
-    requires(!pq::ArithmeticVector3D<V>) &&
-            (pq::Arithmetic<V> ||
-             mstd::NonArithmeticScalar<pq::InnerType_t<U>, V>)
-    constexpr auto operator*(const U &vec, const V &scalar)
-        -> Vector3D<std::remove_cvref_t<decltype(vec[0] * scalar)>>
+    template <typename U, typename V>
+    requires detail::MultiplyOperands<U, V>
+    constexpr auto operator*(const U &lhs, const V &rhs)
+        -> detail::BinaryResultIf_t<
+            detail::MultiplyOperands<U, V>,
+            std::multiplies<>,
+            U,
+            V>
     {
-        using ResultType = std::remove_cvref_t<decltype(vec[0] * scalar)>;
-
-        if constexpr (pq::Arithmetic<V>)
-        {
-            const auto scalarCasted = static_cast<ResultType>(scalar);
-            return Vector3D<ResultType>(
-                static_cast<ResultType>(vec[0]) * scalarCasted,
-                static_cast<ResultType>(vec[1]) * scalarCasted,
-                static_cast<ResultType>(vec[2]) * scalarCasted
-            );
-        }
-        else
-        {
-            // unit/quantity scalar: multiply directly, no casts
-            return Vector3D<ResultType>(
-                vec[0] * scalar,
-                vec[1] * scalar,
-                vec[2] * scalar
-            );
-        }
-    }
-
-    /**
-     * @brief Operator * for a scalar and a Vector3d object
-     *
-     * @code
-     * const double& * const Vector3D<int>&
-     * @endcode
-     *
-     * @overload
-     */
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator*(const U &scalar, const V &vec)
-        -> Vector3D<decltype(vec[0] * scalar)>
-    {
-        using ResultType = decltype(vec[0] * scalar);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(vec[0]) * static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[1]) * static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[2]) * static_cast<ResultType>(scalar)
-        );
+        return detail::binaryOp<std::multiplies<>>(lhs, rhs);
     }
 
     /*********************
@@ -627,124 +349,29 @@ namespace linalg
      *********************/
 
     /**
-     * @brief / operator for two Vector3d objects
+     * @brief binary / operator
      *
+     * @details Applied component-wise. Supported operand pairs:
      * @code
      * Vector3D<int> / Vector3D<double>
+     * Vector3D<Vector3D<int>> / Vector3D<double>
+     * Vector3D<int> / Vector3D<Vector3D<double>>
+     * Vector3D<int> / double
+     * double / Vector3D<int>
      * @endcode
      *
      * @tparam U
      * @tparam V
      * @param lhs
      * @param rhs
-     * @return `Vector3D<decltype(lhs.x / rhs.x)>`
+     * @return `detail::BinaryResult_t<std::divides<>, U, V>`
      */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 0)
-    auto operator/(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] / rhs[0])>
+    template <typename U, typename V>
+    requires detail::BinaryOperands<U, V>
+    constexpr auto operator/(const U &lhs, const V &rhs) -> detail::
+        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::divides<>, U, V>
     {
-        using ResultType = decltype(lhs[0] / rhs[0]);
-
-        return Vector3D<ResultType>(
-            lhs[0] / rhs[0],
-            lhs[1] / rhs[1],
-            lhs[2] / rhs[2]
-        );
-    }
-
-    /**
-     * @brief / operator for a Vector3d object and a scalar
-     *
-     * @code
-     * Vector3D<int> / double
-     * @endcode
-     *
-     * @tparam U
-     * @tparam V
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs.x / rhs)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == 1)
-    auto operator/(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs[0] / rhs)>
-    {
-        using ResultType = decltype(lhs[0] / rhs);
-
-        return Vector3D<ResultType>(lhs[0] / rhs, lhs[1] / rhs, lhs[2] / rhs);
-    }
-
-    /**
-     * @brief / operator for a Vector3d object and a scalar
-     *
-     * @code
-     * Vector3D<int> / double
-     * @endcode
-     *
-     * @tparam U
-     * @tparam V
-     * @param lhs
-     * @param rhs
-     * @return `Vector3D<decltype(lhs / rhs.x)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::ArithmeticVector3D V>
-    requires(pq::Vector3DDepthDifference_v<U, V> == -1)
-    auto operator/(const U &lhs, const V &rhs)
-        -> Vector3D<decltype(lhs / rhs[0])>
-    {
-        using ResultType = decltype(lhs / rhs[0]);
-
-        return Vector3D<ResultType>(lhs / rhs[0], lhs / rhs[1], lhs / rhs[2]);
-    }
-
-    /**
-     * @brief / operator for a Vector3d object and a scalar
-     *
-     * @code
-     * Vector3D<int> / double
-     * @endcode
-     *
-     * @tparam U
-     * @tparam V
-     * @param vec
-     * @param scalar
-     * @return `Vector3D<decltype(vec[0] / scalar)>`
-     */
-    template <pq::ArithmeticVector3D U, pq::Arithmetic V>
-    auto operator/(const U &vec, const V &scalar)
-        -> Vector3D<decltype(vec[0] / scalar)>
-    {
-        using ResultType = decltype(vec[0] / scalar);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(vec[0]) / static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[1]) / static_cast<ResultType>(scalar),
-            static_cast<ResultType>(vec[2]) / static_cast<ResultType>(scalar)
-        );
-    }
-
-    /**
-     * @brief / operator for a scalar and a Vector3d object
-     *
-     * @code
-     * const double& / const Vector3D<int>&
-     * @endcode
-     *
-     * @overload
-     */
-    template <pq::Arithmetic U, pq::ArithmeticVector3D V>
-    auto operator/(const U &scalar, const V &vec)
-        -> Vector3D<decltype(scalar / vec[0])>
-    {
-        using ResultType = decltype(scalar / vec[0]);
-
-        return Vector3D<ResultType>(
-            static_cast<ResultType>(scalar) / static_cast<ResultType>(vec[0]),
-            static_cast<ResultType>(scalar) / static_cast<ResultType>(vec[1]),
-            static_cast<ResultType>(scalar) / static_cast<ResultType>(vec[2])
-        );
+        return detail::binaryOp<std::divides<>>(lhs, rhs);
     }
 
     /*****************

@@ -43,6 +43,7 @@
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
+#include "interrupt.hpp"
 #include "logOutput.hpp"
 #include "mmEvaluator.hpp"
 #include "optEngine.hpp"
@@ -410,6 +411,8 @@ namespace engine
 
         for (size_t i = 0; i < _getNSteps(); ++i)
         {
+            utilities::throwIfInterrupted();
+
             bar.update();
 
             _takeOptimizationStep();

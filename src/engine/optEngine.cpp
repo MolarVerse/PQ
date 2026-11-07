@@ -27,6 +27,7 @@
 #include "constants.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
+#include "interrupt.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "timingsSettings.hpp"
@@ -51,7 +52,7 @@ namespace engine
 
         for (size_t i = 0; i < _getNSteps(); ++i)
         {
-            throwIfInterrupted();
+            utilities::throwIfInterrupted();
 
             bar.update();
 

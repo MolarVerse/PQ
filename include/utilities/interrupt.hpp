@@ -20,40 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef UTILITIES__INTERRUPT_HPP
+#define UTILITIES__INTERRUPT_HPP
 
-#include <csignal>
-
-#include "engine.hpp"
-
-#ifdef WITH_PYBIND11
-#include <pybind11/embed.h>
-#endif
-
-TEST(TestEngineInterrupt, noInterpreterDoesNotThrow)
+namespace utilities
 {
-    EXPECT_NO_THROW(engine::Engine::throwIfInterrupted());
-}
+    void throwIfInterrupted();
+}   // namespace utilities
 
-#ifdef WITH_PYBIND11
-TEST(TestEngineInterrupt, pendingSigintThrowsKeyboardInterrupt)
-{
-    const pybind11::scoped_interpreter guard{};
-
-    EXPECT_NO_THROW(engine::Engine::throwIfInterrupted());
-
-    ASSERT_EQ(std::raise(SIGINT), 0);
-
-    try
-    {
-        engine::Engine::throwIfInterrupted();
-        FAIL() << "pending SIGINT was not reported";
-    }
-    catch (const pybind11::error_already_set &error)
-    {
-        EXPECT_TRUE(error.matches(PyExc_KeyboardInterrupt));
-    }
-
-    EXPECT_NO_THROW(engine::Engine::throwIfInterrupted());
-}
-#endif
+#endif   // UTILITIES__INTERRUPT_HPP

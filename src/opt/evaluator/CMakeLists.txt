@@ -20,6 +20,7 @@ target_link_libraries(evaluator
     molsys
     forceField
     intraNonBonded
+    interrupt
 )
 
 install(TARGETS evaluator

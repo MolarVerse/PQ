@@ -30,6 +30,7 @@
 #include "thermostatInputParser.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "temp" command
@@ -87,7 +88,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
 
     std::vector<std::string> lineElements = {"t_relaxation", "=", "10.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0);
+    EXPECT_EQ(settings::ThermostatSettings::getRelaxationTime(), 10.0 * ps);
 
     _clearParser(parser);
 

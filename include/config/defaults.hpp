@@ -111,7 +111,8 @@ namespace defaults
 
     static constexpr size_t NH_CHAIN_LENGTH_DEFAULT =
         3;   // default value for nose hoover chain length
-    static constexpr double BERENDSEN_THERMOSTAT_RELAX_TIME = 0.1;   // in ps
+    static constexpr Time BERENDSEN_THERMOSTAT_RELAX_TIME =
+        0.1 * mstd::units::ps;
     static constexpr double LANGEVIN_THERMOSTAT_FRICTION = 1.0e11;   // in s^-1
     static constexpr double NH_COUPLING_FREQ             = 1.0e3;    // in cm^-1
     static constexpr double MAX_FRICTION_CONVERSION      = 1.0e12;   // in s^-1
