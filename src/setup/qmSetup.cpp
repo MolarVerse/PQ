@@ -46,6 +46,8 @@ namespace setup
      * calculations
      * @param qmSettings The QM settings used to configure the QM runner, which
      * may include method-specific parameters and computational options
+     * @param maceSettings The Mace settings used to configure the MACE runner,
+     * which may include model-specific parameters and computational options
      *
      */
     QMSetup::QMSetup(
