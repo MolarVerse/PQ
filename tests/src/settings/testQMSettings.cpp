@@ -32,14 +32,15 @@
 
 TEST(QMSettingsTest, SetMaceModelTypeTest)
 {
-    QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_MP);
+    MaceSettings settings;
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_MP);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_MP);
 
-    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_OFF);
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_OFF);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_OFF);
 
-    QMSettings::setMaceModelType(MaceModelType::MACE_ANICC);
-    EXPECT_EQ(QMSettings::getMaceModelType(), MaceModelType::MACE_ANICC);
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_ANICC);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_ANICC);
 }
 
 TEST(QMSettingsTest, SetSlakosTypeTest)
@@ -216,34 +217,35 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
 
 TEST(QMSettingsTest, SetFennolModelPath)
 {
-    QMSettings::setFennolModelPath("/paTh/to/fennol_model.fnx");
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/paTh/to/fennol_model.fnx");
+    FennolSettings fennolSettings;
+    fennolSettings.setFennolModelPath("/paTh/to/fennol_model.fnx");
+    EXPECT_EQ(fennolSettings.getFennolModelPath(), "/paTh/to/fennol_model.fnx");
 }
 
 TEST(QMSettingsTest, SetGPUPreprocessing)
 {
-    QMSettings::setUseGPUPreprocessing(false);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
-    QMSettings::setUseGPUPreprocessing(true);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    FennolSettings fennolSettings;
+    fennolSettings.setUseGPUPreprocessing(false);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), false);
+    fennolSettings.setUseGPUPreprocessing(true);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), true);
 }
 
 TEST(QMSettingsTest, MaceNamesForMaceCalculatorsTest)
 {
-    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    EXPECT_EQ(QMSettings::getMaceModelTypeName(), "mace_off");
+    MaceSettings settings;
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_OFF);
+    EXPECT_EQ(settings.getMaceModelTypeName(), "mace_off");
 
-    QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-    EXPECT_EQ(QMSettings::getMaceModelTypeName(), "mace_mp");
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_MP);
+    EXPECT_EQ(settings.getMaceModelTypeName(), "mace_mp");
 
-    QMSettings::setMaceModel(MaceModel::SMALL);
-    EXPECT_EQ(QMSettings::getMaceModelName(), "small");
+    settings.setMaceModelByUser(MaceModel::SMALL);
+    EXPECT_EQ(settings.getMaceModelName(), "small");
 
-    QMSettings::setMaceModel(MaceModel::MEDIUM_0B3);
-    EXPECT_EQ(QMSettings::getMaceModelName(), "medium-0b3");
+    settings.setMaceModelByUser(MaceModel::MEDIUM_0B3);
+    EXPECT_EQ(settings.getMaceModelName(), "medium-0b3");
 
-    QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
-    EXPECT_EQ(QMSettings::getMaceModelName(), "medium-omat-0");
-
-    QMSettings::setMaceModel(MaceModel::MEDIUM);
+    settings.setMaceModelByUser(MaceModel::MEDIUM_OMAT_0);
+    EXPECT_EQ(settings.getMaceModelName(), "medium-omat-0");
 }

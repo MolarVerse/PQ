@@ -55,6 +55,8 @@ struct Settings
     OutputFileSettings    outputFiles;
     ReferenceSettings     referenceSettings;
     QMSettings            qmSettings;
+    MaceSettings          maceSettings;
+    FennolSettings        fennolSettings;
 
     void finalize();
 };

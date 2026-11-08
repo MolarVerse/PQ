@@ -86,6 +86,10 @@ namespace molsys
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
+        // cumulative number of atoms per molecule (0, n0, n0 + n1, ...), only
+        // filled between buildAtomIndexLookup() and clearAtomIndexLookup()
+        std::vector<size_t> _atomIndexOffsets;
+
         std::vector<ExtVdwType> _externalGlobalVdwTypes;
         std::unordered_map<ExtVdwType, VdwType>
             _externalToInternalGlobalVDWTypes;
@@ -152,6 +156,8 @@ namespace molsys
         std::pair<Molecule*, AtomIndex> findMoleculeByGlobalAtomIndex(
             size_t atomIndex
         );
+        void buildAtomIndexLookup();
+        void clearAtomIndexLookup();
 
 #ifdef WITH_MPI
         [[nodiscard]] std::vector<double> flattenVelocities();

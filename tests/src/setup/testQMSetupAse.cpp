@@ -26,6 +26,11 @@
 
 #include <string>
 
+#include "enums/general.hpp"
+#include "enums/qm.hpp"
+#include "generalSettings.hpp"
+#include "qmSettings.hpp"
+
 #ifdef WITH_ASE
 #include "aseFennolRunner.hpp"
 #include "aseMaceRunner.hpp"
@@ -248,9 +253,15 @@ class FENNIXCalculator:
     modules["fennol.ase"] = fennolAseModule;
 
     _settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+    _settings.fennolSettings.setFennolModelPath("model.fnx");
+    _settings.fennolSettings.setUseGPUPreprocessing(false);
+    settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+
     ASSERT_NO_THROW({
-        QM::AseFennolRunner
-            runner(_settings.qmSettings, "model.fnx", false, true);
+        QM::AseFennolRunner runner(
+            _settings.qmSettings,
+            _settings.fennolSettings
+        );
     });
 
     auto lastKwargs = fennolAseModule.attr("FENNIXCalculator")
@@ -267,6 +278,15 @@ class FENNIXCalculator:
     modules.attr("pop")("ase", pybind11::none());
 }
 #endif
+
+struct TestQMSetupAseUtil
+{
+    static std::string setUseForTesting(Settings& settings)
+    {
+        settings.maceSettings._useForTesting = true;
+        return MaceSettings::_testModelTypeStr;
+    }
+};
 
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseMaceRunnerConstructsCalculator)
@@ -303,19 +323,20 @@ class MACECalculator:
     modules["mace"]             = maceModule;
     modules["mace.calculators"] = calculatorsModule;
 
+    settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+    QMSettings::setUseDispersionCorrection(true);
+    _settings.maceSettings.setMaceModeByUser(MaceMode::ACCURATE);
+    _settings.maceSettings.setMaceModelPathByUser("model.model");
+    _settings.maceSettings.setMaceModelTypeByUser(MaceModelType::MACE_MP);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
+    const auto testModelTypeStr =
+        TestQMSetupAseUtil::setUseForTesting(_settings);
+
     ASSERT_NO_THROW({
-        QM::AseMaceRunner runner(
-            _settings.qmSettings,
-            "MACECalculator",
-            "model.model",
-            "float64",
-            true,
-            false
-        );
+        QM::AseMaceRunner runner(_settings.qmSettings, _settings.maceSettings);
     });
 
-    auto lastKwargs = calculatorsModule.attr("MACECalculator")
+    auto lastKwargs = calculatorsModule.attr(testModelTypeStr.c_str())
                           .attr("last_kwargs")
                           .cast<pybind11::dict>();
 
@@ -334,7 +355,7 @@ class MACECalculator:
 TEST_F(TestQMSetupAse, setupAseMaceWriteInfoFast)
 {
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
-    QMSettings::setMaceMode(MaceMode::FAST);
+    _settings.maceSettings.setMaceModeByUser(MaceMode::FAST);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");

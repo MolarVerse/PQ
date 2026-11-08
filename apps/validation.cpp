@@ -397,13 +397,16 @@ namespace
 
         if (method == QMMethod::FENNOL)
         {
-            requireFile(QMSettings::getFennolModelPath(), "FeNNol model file");
+            requireFile(
+                settings.fennolSettings.getFennolModelPath(),
+                "FeNNol model file"
+            );
         }
 
         if (method == QMMethod::MACE &&
-            QMSettings::getMaceModel() == MaceModel::CUSTOM)
+            settings.maceSettings.getMaceModel() == MaceModel::CUSTOM)
         {
-            const auto modelPath = QMSettings::getMaceModelPath();
+            const auto modelPath = settings.maceSettings.getMaceModelPath();
             if (!isRemoteResource(modelPath))
                 requireFile(modelPath, "MACE model file");
         }

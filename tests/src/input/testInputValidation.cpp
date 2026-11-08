@@ -93,14 +93,11 @@ class TestInputValidation : public ::testing::Test
         );
         settings::TimingsSettings::setTimeStep(0.5 * fs);
 
-        QMSettings::setMaceModel(MaceModel::MEDIUM);
-        QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-        QMSettings::setMaceModelPath("");
         QMSettings::setSlakosType(SlakosType::NONE);
         QMSettings::setUseThirdOrderDftb(false);
         QMSettings::setIsThirdOrderDftbSet(false);
         QMSettings::setIsHubbardDerivsSet(false);
-        QMSettings::setFennolModelPath("");
+        _settings.fennolSettings.setFennolModelPath("");
 
         _engine = std::make_unique<engine::OptEngine>(_settings);
         _reader =
@@ -560,8 +557,8 @@ TEST_F(TestInputValidation, rejectsMaceModelForWrongModelType)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
-    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
+    _settings.maceSettings.setMaceModelTypeByUser(MaceModelType::MACE_OFF);
+    _settings.maceSettings.setMaceModelByUser(MaceModel::MEDIUM_OMAT_0);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -575,8 +572,8 @@ TEST_F(TestInputValidation, acceptsStandardMaceModelForNonMpType)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
-    QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    QMSettings::setMaceModel(MaceModel::SMALL);
+    _settings.maceSettings.setMaceModelTypeByUser(MaceModelType::MACE_OFF);
+    _settings.maceSettings.setMaceModelByUser(MaceModel::SMALL);
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
@@ -585,7 +582,7 @@ TEST_F(TestInputValidation, requiresPathForCustomMaceModel)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
-    QMSettings::setMaceModel(MaceModel::CUSTOM);
+    _settings.maceSettings.setMaceModelByUser(MaceModel::CUSTOM);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -599,7 +596,7 @@ TEST_F(TestInputValidation, rejectsPathForBundledMaceModel)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
-    QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
+    _settings.maceSettings.setMaceModelByUser(MaceModel::MEDIUM_OMAT_0);
     _setKeyword("mace_model_path");
 
     ASSERT_THROW_MSG(
@@ -614,7 +611,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
-    QMSettings::setMaceModel(MaceModel::CUSTOM);
+    _settings.maceSettings.setMaceModelByUser(MaceModel::CUSTOM);
     _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
     _setKeyword("mace_model_path");

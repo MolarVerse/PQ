@@ -46,13 +46,23 @@ namespace setup
      * calculations
      * @param qmSettings The QM settings used to configure the QM runner, which
      * may include method-specific parameters and computational options
+     * @param maceSettings The Mace settings used to configure the MACE runner,
+     * which may include model-specific parameters and computational options
+     * @param fennolSettings The Fennol settings used to configure the Fennol
+     * runner, which may include model-specific parameters and computational
+     * options
      *
      */
     QMSetup::QMSetup(
         engine::QMCapableEngine &qmCapableEngine,
-        const QMSettings        &qmSettings
+        const QMSettings        &qmSettings,
+        const MaceSettings      &maceSettings,
+        const FennolSettings    &fennolSettings
     )
-        : _qmCapableEngine(qmCapableEngine), _qmSettings(qmSettings)
+        : _qmCapableEngine(qmCapableEngine),
+          _qmSettings(qmSettings),
+          _maceSettings(maceSettings),
+          _fennolSettings(fennolSettings)
     {
     }
 
@@ -77,7 +87,13 @@ namespace setup
         if (auto *qmCapableEngine =
                 dynamic_cast<engine::QMCapableEngine *>(&engine))
         {
-            QMSetup qmSetup(*qmCapableEngine, engine.getSettings().qmSettings);
+            const auto &settings = engine.getSettings();
+            QMSetup     qmSetup(
+                *qmCapableEngine,
+                settings.qmSettings,
+                settings.maceSettings,
+                settings.fennolSettings
+            );
             qmSetup.setup(references);
         }
         else
@@ -112,7 +128,11 @@ namespace setup
      * @brief setup the "QM" method of the system
      *
      */
-    void QMSetup::setupQMMethod() { _qmCapableEngine.setQMRunner(_qmSettings); }
+    void QMSetup::setupQMMethod()
+    {
+        _qmCapableEngine
+            .setQMRunner(_qmSettings, _maceSettings, _fennolSettings);
+    }
 
     /**
      * @brief setup the ASE DFTB+ method of the system
@@ -301,12 +321,12 @@ namespace setup
 
         if (qmMethod == MACE)
         {
-            const auto modelType = QMSettings::getMaceModelType();
-            const auto modelSize = QMSettings::getMaceModel();
-            const auto modelPath = QMSettings::getMaceModelPath();
+            const auto modelType = _maceSettings->getMaceModelType();
+            const auto modelSize = _maceSettings->getMaceModel();
+            const auto modelPath = _maceSettings->getMaceModelPath();
             const auto floatingPointStr =
                 settings::GeneralSettings::getFloatingPointPybindString();
-            const auto        maceMode = QMSettings::getMaceMode();
+            const auto        maceMode = _maceSettings->getMaceMode();
             const auto *const useDisp =
                 QMSettings::useDispersionCorr() ? "on" : "off";
 
@@ -356,8 +376,9 @@ namespace setup
         {
             using enum FPType;
 
-            const auto modelPath           = QMSettings::getFennolModelPath();
-            const auto useGPUPreprocessing = QMSettings::useGPUPreprocessing();
+            const auto modelPath = _fennolSettings->getFennolModelPath();
+            const auto useGPUPreprocessing =
+                _fennolSettings->useGPUPreprocessing();
             const bool useFloat64 =
                 settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 

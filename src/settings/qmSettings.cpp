@@ -65,6 +65,12 @@ namespace
 }   // namespace
 
 /**
+ * @brief finalizes the QM settings by performing necessary checks and setups
+ *
+ */
+void QMSettings::finalize() {}
+
+/**
  * @brief returns an unordered map as string
  *
  * @param unordered_map
@@ -127,16 +133,19 @@ void QMSettings::setQMMethodByUser(QMMethod method)
  *
  * @param model
  */
-void QMSettings::setMaceModel(MaceModel model) { _maceModel = model; }
+void MaceSettings::setMaceModelByUser(MaceModel model)
+{
+    _maceModel.setByUser(model);
+}
 
 /**
  * @brief sets the maceModelType to enum in settings
  *
  * @param model
  */
-void QMSettings::setMaceModelType(MaceModelType model)
+void MaceSettings::setMaceModelTypeByUser(MaceModelType model)
 {
-    _maceModelType = model;
+    _maceModelType.setByUser(model);
 }
 
 /**
@@ -144,15 +153,18 @@ void QMSettings::setMaceModelType(MaceModelType model)
  *
  * @param mode
  */
-void QMSettings::setMaceMode(MaceMode mode) { _maceMode = mode; }
+void MaceSettings::setMaceModeByUser(MaceMode mode)
+{
+    _maceMode.setByUser(mode);
+}
 
 /**
  * @brief set the mace model path
  *
  */
-void QMSettings::setMaceModelPath(const std::string_view &path)
+void MaceSettings::setMaceModelPathByUser(const std::string &path)
 {
-    _maceModelPath = path;
+    _maceModelPath.setByUser(path);
 }
 
 /**
@@ -319,18 +331,18 @@ void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
  *
  * @param path
  */
-void QMSettings::setFennolModelPath(const std::string_view &path)
+void FennolSettings::setFennolModelPath(const std::string &path)
 {
-    _fennolModelPath = path;
+    _fennolModelPath.setByUser(path);
 }
 
 /**
  * @brief sets if the GPU pre-processing should be enabled for FeNNol
  *
  */
-void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
+void FennolSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
 {
-    _useGPUPreprocessing = useGPUPreprocessing;
+    _useGPUPreprocessing.setByUser(useGPUPreprocessing);
 }
 
 /***************************
@@ -358,19 +370,30 @@ bool QMSettings::isQMMethodSetByUser() const { return _qmMethod.isSetByUser(); }
  *
  * @return MaceModel
  */
-MaceModel QMSettings::getMaceModel() { return _maceModel; }
+MaceModel MaceSettings::getMaceModel() const { return _maceModel.get(); }
 
-MaceModelType QMSettings::getMaceModelType() { return _maceModelType; }
+/**
+ * @brief returns the maceModelType
+ *
+ * @return MaceModelType
+ */
+MaceModelType MaceSettings::getMaceModelType() const
+{
+    return _maceModelType.get();
+}
 
 /**
  * @brief returns the maceModel as expected by mace.calculators
  *
  * @return std::string e.g. "small-0b"
  */
-std::string QMSettings::getMaceModelName()
+std::string MaceSettings::getMaceModelName() const
 {
-    auto name = utilities::toLowerCopy(MaceModelMeta::toString(_maceModel));
+    auto name =
+        utilities::toLowerCopy(MaceModelMeta::toString(_maceModel.get()));
+
     std::ranges::replace(name, '_', '-');
+
     return name;
 }
 
@@ -379,9 +402,18 @@ std::string QMSettings::getMaceModelName()
  *
  * @return std::string e.g. "mace_off"
  */
-std::string QMSettings::getMaceModelTypeName()
+std::string MaceSettings::getMaceModelTypeName() const
 {
-    return utilities::toLowerCopy(MaceModelTypeMeta::toString(_maceModelType));
+    // unfortunately, when using the testing mode, we need to return the
+    // specific calculator name that is used for testing purposes, which is
+    // "MACECalculator". Otherwise, we need to install mace-torch for all simple
+    // unit tests
+    if (_useForTesting)
+        return _testModelTypeStr;
+
+    return utilities::toLowerCopy(
+        MaceModelTypeMeta::toString(_maceModelType.get())
+    );
 }
 
 /**
@@ -389,14 +421,17 @@ std::string QMSettings::getMaceModelTypeName()
  *
  * @return MaceMode
  */
-MaceMode QMSettings::getMaceMode() { return _maceMode; }
+MaceMode MaceSettings::getMaceMode() const { return _maceMode.get(); }
 
 /**
  * @brief returns the maceModelPath
  *
  * @return std::string
  */
-std::string QMSettings::getMaceModelPath() { return _maceModelPath; }
+std::string MaceSettings::getMaceModelPath() const
+{
+    return _maceModelPath.get();
+}
 
 /**
  * @brief returns the qmScript
@@ -489,13 +524,19 @@ double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
 /**
  * @brief returns the FeNNol model path
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
+const std::string &FennolSettings::getFennolModelPath() const
+{
+    return _fennolModelPath.get();
+}
 
 /**
  * @brief returns if GPU pre-processing should be used for FeNNol
  *
  * @return bool
  */
-bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }
+bool FennolSettings::useGPUPreprocessing() const
+{
+    return _useGPUPreprocessing.get();
+}

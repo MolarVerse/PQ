@@ -52,15 +52,23 @@ namespace input
      * necessary reference files for the specified QM method.
      * @param qmSettings QM settings object used to configure and manage the
      * quantum mechanical method and its associated parameters.
+     * @param maceSettings MACE settings object used to configure and manage the
+     * MACE model and its associated parameters.
+     * @param fennolSettings Fennol settings object used to configure and manage
+     * the Fennol model and its associated parameters.
      */
     QMInputParser::QMInputParser(
         const bool         resolveBuiltInSlakosPath,
         ReferenceSettings &referenceSettings,
-        QMSettings        &qmSettings
+        QMSettings        &qmSettings,
+        MaceSettings      &maceSettings,
+        FennolSettings    &fennolSettings
     )
         : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath),
           _referenceSettings(referenceSettings),
-          _qmSettings(qmSettings)
+          _qmSettings(qmSettings),
+          _maceSettings(maceSettings),
+          _fennolSettings(fennolSettings)
     {
         addQMMethodKey();
         addQMScriptKey();
@@ -253,8 +261,8 @@ namespace input
             .description = "Specifies the MACE model to use.",
         };
 
-        const auto setValue = [](MaceModel value)
-        { QMSettings::setMaceModel(value); };
+        const auto setValue = [this](MaceModel value)
+        { _maceSettings->setMaceModelByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceModel>{
@@ -274,8 +282,8 @@ namespace input
             .description = "Specifies the MACE evaluation mode.",
         };
 
-        const auto setValue = [](MaceMode value)
-        { QMSettings::setMaceMode(value); };
+        const auto setValue = [this](MaceMode value)
+        { _maceSettings->setMaceModeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceMode>{
@@ -295,8 +303,8 @@ namespace input
             .description = "Specifies the path to the external MACE model.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setMaceModelPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _maceSettings->setMaceModelPathByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -458,8 +466,8 @@ namespace input
             .description = "Specifies the path to the FeNNol model file.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setFennolModelPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _fennolSettings->setFennolModelPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -480,8 +488,8 @@ namespace input
                 "Specifies whether GPU pre-processing is enabled for FeNNol.",
         };
 
-        const auto setValue = [](bool value)
-        { QMSettings::setUseGPUPreprocessing(value); };
+        const auto setValue = [this](bool value)
+        { _fennolSettings->setUseGPUPreprocessing(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -546,6 +554,6 @@ namespace input
                 break;
         }
 
-        QMSettings::setMaceModelType(modelTypeOpt.value());
+        _maceSettings->setMaceModelTypeByUser(modelTypeOpt.value());
     }
 }   // namespace input
