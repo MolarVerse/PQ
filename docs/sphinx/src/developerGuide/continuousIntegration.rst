@@ -24,7 +24,8 @@ Three conventions apply to almost every workflow:
       contains every change since the last release, all of which passed these checks on its ``dev`` pull request. LINT
       (800+ files, one after the other: killed after half an hour), the DevOps C++ Check (fails on vendored files in
       the diff), the Performance Gate (compares with the previous release and reports the sum of a cycle: ``kinetics``
-      +29 %) and the Clang Build do not run on it. BUILD, Clang Format, License Header, the changelog checks and the
+      +29 %) and the Clang Build do not run on it, nor does the check for a linked issue (the release pull request
+      closes no issue of its own). BUILD, Clang Format, License Header, the changelog checks and the
       docs still do. A hotfix is not skipped: its diff is small.
     - **Only superseded pull request runs are cancelled.** Pushing to a pull request branch cancels the older run of
       the same workflow. Runs for pushes to ``dev`` and ``main``, the nightly run and manual runs each get their own
@@ -71,7 +72,8 @@ Workflows
       - ``changelog.yml``
       - pull requests to ``dev`` and ``NEXT``
       - Runs the tests of the scripts in ``scripts/tests`` and requires a valid changelog fragment,
-        see :ref:`changelogFragments`.
+        see :ref:`changelogFragments`. A pull request with the label ``skip-changelog`` needs no fragment (the tests
+        of the scripts still run); adding or removing the label re-runs the check.
     * - Check PR Has Linked Issue
       - ``gh_checks.yml``
       - pull request events, manual
@@ -222,7 +224,7 @@ A timing on a shared runner is noisy, so the script does not compare two numbers
       the rounds, plus the layout noise.
     - **A clear criterion.** A regression needs the whole interval above the threshold (10 %). It is then measured again
       with more rounds, and only that second measurement decides. If the layout noise alone exceeds the threshold the
-      benchmark is shown as noisy (⚠️) and not judged. Loops shorter than 5 ms are listed, not timed.
+      benchmark is shown as noisy (⚠️) and not judged. Loops shorter than 2 ms (the median of three runs) are listed, not timed.
 
 .. code:: bash
 

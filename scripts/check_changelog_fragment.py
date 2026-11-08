@@ -209,7 +209,8 @@ def main():
         sys.exit(str(error))
 
     if errors:
-        sys.exit("\n".join(f"- {error}" for error in errors))
+        hint = "- if this pull request needs no entry, ask for the skip-changelog label"
+        sys.exit("\n".join([*(f"- {error}" for error in errors), hint]))
 
     print("pull request contains valid changelog fragments")
 
