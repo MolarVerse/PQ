@@ -33,8 +33,7 @@
 
 #include <mstd/units.hpp>
 
-#include "mp-units/systems/isq/mechanics.h"
-#include "staticMatrix/staticMatrix3x3Class.hpp"
+#include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
@@ -48,4 +47,20 @@ using PressureTensor3D = linalg::StaticMatrix3x3<
 using Compressibility = mstd::quantity<
     mstd::units::compressibility[mstd::units::one / mstd::units::Pa]>;
 
+using Temperature = mstd::units::quantity_point<
+    mstd::units::thermodynamic_temperature[mstd::units::K]>;
+using TemperatureDiff =
+    mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
+
+[[nodiscard]]
+static inline Temperature toTemperature(double temperature)
+{
+    return mstd::units::point<mstd::units::K>(temperature);
+}
+
+[[nodiscard]]
+static inline Temperature scaleAbsTemp(Temperature absTemp, double scalar)
+{
+    return Temperature{absTemp.quantity_from_zero() * scalar};
+}
 #endif   // CONFIG__UNIT_TYPES_HPP

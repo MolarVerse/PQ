@@ -72,8 +72,12 @@ namespace out
     )
     {
         _getFilePointer() << std::format("{:10d}\t", step);
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getTemperature());
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K)
+        );
         _getFilePointer() << std::format(
             "{:20.12f}\t",
             physicalData.getPressure().numerical_value_in(bar)

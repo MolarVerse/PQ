@@ -56,7 +56,7 @@ int main()
     constexpr double targetTemperature = 300.0;
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat = thermostat::NoseHooverThermostat(
-        targetTemperature,
+        mstd::units::point<K>(targetTemperature),
         std::vector<double>{0.1, 0.2, 0.3},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0
@@ -75,7 +75,9 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
-        physicalData.getTemperature(),
+        physicalData.getTemperature().quantity_from_zero().numerical_value_in(
+            K
+        ),
         box.calculateMomentum()[0]
     );
     return 0;

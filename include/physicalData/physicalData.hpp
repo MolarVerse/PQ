@@ -70,9 +70,9 @@ namespace physicalData
         double _numberOfQMAtoms = 0.0;
         double _loopTime        = 0.0;
 
-        double _volume      = 0.0;
-        double _density     = 0.0;
-        double _temperature = 0.0;
+        double      _volume  = 0.0;
+        double      _density = 0.0;
+        Temperature _temperature{Temperature::zero()};
 
         Pressure _pressure{Pressure::zero()};
         Pressure _coupledPressure{Pressure::zero()};
@@ -156,7 +156,7 @@ namespace physicalData
 
         void setVolume(double volume);
         void setDensity(double density);
-        void setTemperature(double temperature);
+        void setTemperature(const Temperature& temperature);
         void setPressure(const Pressure& pressure);
         void setCoupledPressure(const Pressure& coupledPressure);
 
@@ -200,11 +200,11 @@ namespace physicalData
         [[nodiscard]] double getNumberOfQMAtoms() const;
         [[nodiscard]] double getLoopTime() const;
 
-        [[nodiscard]] double          getVolume() const;
-        [[nodiscard]] double          getDensity() const;
-        [[nodiscard]] double          getTemperature() const;
-        [[nodiscard]] const Pressure& getPressure() const;
-        [[nodiscard]] const Pressure& getCoupledPressure() const;
+        [[nodiscard]] double             getVolume() const;
+        [[nodiscard]] double             getDensity() const;
+        [[nodiscard]] const Temperature& getTemperature() const;
+        [[nodiscard]] const Pressure&    getPressure() const;
+        [[nodiscard]] const Pressure&    getCoupledPressure() const;
 
         [[nodiscard]] double getKineticEnergy() const;
         [[nodiscard]] double getNonCoulombEnergy() const;

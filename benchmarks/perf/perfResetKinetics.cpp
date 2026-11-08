@@ -53,7 +53,7 @@ int main()
     benchSetup::scaleVelocitiesToTemperature(box, temperature);
 
     auto physicalData = physicalData::PhysicalData();
-    physicalData.setTemperature(temperature);
+    physicalData.setTemperature(toTemperature(temperature));
 
     // step <= n is always true here, so every reset runs in every iteration
     ResetKineticsSettings settings;

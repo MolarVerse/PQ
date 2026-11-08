@@ -56,8 +56,10 @@ int main()
     auto             physicalData      = physicalData::PhysicalData();
     constexpr double targetTemperature = 300.0;
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat =
-        thermostat::VelocityRescalingThermostat(targetTemperature, 100.0 * fs);
+    auto thermostat = thermostat::VelocityRescalingThermostat(
+        mstd::units::point<K>(targetTemperature),
+        100.0 * fs
+    );
 
     perfAllocBegin();
 
@@ -71,7 +73,9 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
-        physicalData.getTemperature(),
+        physicalData.getTemperature().quantity_from_zero().numerical_value_in(
+            K
+        ),
         box.calculateMomentum()[0]
     );
     return 0;

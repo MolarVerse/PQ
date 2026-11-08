@@ -46,7 +46,7 @@ namespace thermostat
        public:
         NoseHooverThermostat() = default;
         explicit NoseHooverThermostat(
-            double                     targetTemp,
+            const Temperature         &targetTemp,
             const std::vector<double> &chi,
             const std::vector<double> &zeta,
             double                     couplingFrequency

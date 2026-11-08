@@ -477,7 +477,8 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
 
     EXPECT_NEAR(_data.getKineticEnergy() / expectedEnergy, 1.0, 1e-12);
     EXPECT_NEAR(
-        _data.getTemperature() / _box.calculateTemperature(),
+        _data.getTemperature().quantity_from_zero().numerical_value_in(K) /
+            _box.calculateTemperature(),
         1.0,
         1e-12
     );
