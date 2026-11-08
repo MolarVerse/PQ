@@ -67,27 +67,8 @@ namespace
 /**
  * @brief finalizes the QM settings by performing necessary checks and setups
  *
- * @details Currently, it only finalizes MACE settings if the QM method is set
- * to MACE.
  */
-// void QMSettings::finalize()
-// {
-//     if (_qmMethod.get() == QMMethod::MACE)
-//         _finalizeMace();
-// }
-
-// void QMSettings::_finalizeMace()
-// {
-//     const auto useDFTD = QMSettings::useDispersionCorr();
-//     const auto fpType =
-//         settings::GeneralSettings::getFloatingPointPybindString();
-//     const auto useCueq = settings.getMaceMode() == MaceMode::FAST;
-
-//     auto maceModel = settings.getMaceModelName();
-
-//     if (!modelPath.empty())
-//         maceModel = modelPath;
-// }
+void QMSettings::finalize() {}
 
 /**
  * @brief returns an unordered map as string
@@ -423,6 +404,13 @@ std::string MaceSettings::getMaceModelName() const
  */
 std::string MaceSettings::getMaceModelTypeName() const
 {
+    // unfortunately, when using the testing mode, we need to return the
+    // specific calculator name that is used for testing purposes, which is
+    // "MACECalculator". Otherwise, we need to install mace-torch for all simple
+    // unit tests
+    if (_useForTesting)
+        return _testModelTypeStr;
+
     return utilities::toLowerCopy(
         MaceModelTypeMeta::toString(_maceModelType.get())
     );

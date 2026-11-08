@@ -35,6 +35,12 @@ std::string string(
     const std::unordered_map<std::string, double> &unordered_map
 );
 
+struct TestQMSetupAseUtil;
+
+/**
+ * @brief Class for managing MACE settings
+ *
+ */
 class MaceSettings
 {
    private:
@@ -43,7 +49,14 @@ class MaceSettings
     Setting<MaceMode>      _maceMode{MaceMode::ACCURATE};
     Setting<std::string>   _maceModelPath{""};
 
+    // should stay private to control testing behavior and prevent accidental
+    // modification
+    bool                   _useForTesting{false};
+    static constexpr auto *_testModelTypeStr = "MACECalculator";
+
    public:
+    void finalize();
+
     void setMaceModelByUser(MaceModel model);
     void setMaceModelTypeByUser(MaceModelType model);
     void setMaceModeByUser(MaceMode mode);
@@ -55,6 +68,8 @@ class MaceSettings
     [[nodiscard]] std::string   getMaceModelTypeName() const;
     [[nodiscard]] MaceMode      getMaceMode() const;
     [[nodiscard]] std::string   getMaceModelPath() const;
+
+    friend struct ::TestQMSetupAseUtil;
 };
 
 /**

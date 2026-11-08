@@ -99,26 +99,7 @@ namespace engine
     )
     {
 #ifdef WITH_ASE
-        const auto modelType = maceSettings.getMaceModelTypeName();
-        const auto modelPath = maceSettings.getMaceModelPath();
-        const auto useDFTD   = QMSettings::useDispersionCorr();
-        const auto fpType =
-            settings::GeneralSettings::getFloatingPointPybindString();
-        const auto useCueq = maceSettings.getMaceMode() == MaceMode::FAST;
-
-        auto maceModel = maceSettings.getMaceModelName();
-
-        if (!modelPath.empty())
-            maceModel = modelPath;
-
-        return std::make_shared<QM::AseMaceRunner>(
-            qmSettings,
-            modelType,
-            maceModel,
-            fpType,
-            useDFTD,
-            useCueq
-        );
+        return std::make_shared<QM::AseMaceRunner>(qmSettings, maceSettings);
 #else
         // to silence unused parameter warnings when ASE is not enabled
         (void) qmSettings;
