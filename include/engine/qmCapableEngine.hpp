@@ -25,7 +25,6 @@
 
 #include <memory>
 
-#include "enums/qm.hpp"
 #include "qmRunner.hpp"
 namespace engine
 {
@@ -46,7 +45,7 @@ namespace engine
        public:
         virtual ~QMCapableEngine() = default;
 
-        void setQMRunner(QMMethod method);
+        void setQMRunner(const QMSettings &settings);
         [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
         [[nodiscard]] bool                          hasQMRunner() const;
     };

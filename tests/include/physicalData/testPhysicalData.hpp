@@ -55,8 +55,8 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setKineticEnergy(5.0);
         _physicalData->setVolume(6.0);
         _physicalData->setDensity(7.0);
-        _physicalData->setPressure(8.0);
-        _physicalData->setCoupledPressure(8.5);
+        _physicalData->setPressure(8.0 * bar);
+        _physicalData->setCoupledPressure(8.5 * bar);
         _physicalData->setQMEnergy(9.0);
         _physicalData->setQMReferenceEnergy(1.0);
 

@@ -5,14 +5,18 @@ on:
     branches:
       - dev
       - NEXT
-    types: [opened, reopened, synchronize]
+    # labeled and unlabeled: adding or removing the skip-changelog label
+    # re-runs the check
+    types: [opened, reopened, synchronize, labeled, unlabeled]
 
 jobs:
   check-changelog-fragment:
     if: >-
-      github.event.pull_request.head.repo.full_name != github.repository ||
+      (github.event.pull_request.head.repo.full_name != github.repository ||
       (github.event.pull_request.head.ref != 'main' &&
-      !startsWith(github.event.pull_request.head.ref, 'merge/'))
+      !startsWith(github.event.pull_request.head.ref, 'merge/'))) &&
+      ((github.event.action != 'labeled' && github.event.action != 'unlabeled') ||
+      github.event.label.name == 'skip-changelog')
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +29,16 @@ jobs:
       - name: Test changelog tooling
         run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'
 
+      # A pull request that needs no entry (a typo in a comment, a CI
+      # tweak nobody notices) carries the explicit label skip-changelog. The
+      # script tests above run either way.
       - name: Check changelog fragment
+        if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip-changelog') }}
         run: >-
           python3 scripts/check_changelog_fragment.py
           ${{ github.event.pull_request.base.sha }}
           ${{ github.event.pull_request.head.sha }}
+
+      - name: Changelog fragment not required
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'skip-changelog') }}
+        run: echo "::notice::The skip-changelog label is set, no changelog fragment is required."

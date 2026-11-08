@@ -1,0 +1,2 @@
+- Refactor the binary `+`, `-`, `*` and `/` operators of `linalg::Vector3D`: the five overloads per operator are replaced by one constrained template each, built on new component-wise helpers in `linalg::detail` (`vector3dDetail.hpp`).
+- `linalg::Vector3D` of `mstd` quantities now supports the binary `+`, `-`, `*` and `/` operators.

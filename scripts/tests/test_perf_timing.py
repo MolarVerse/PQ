@@ -190,8 +190,10 @@ class CompareTest(unittest.TestCase):
         self.assertEqual(41, result.verdicts[0].rounds)
         self.assertTrue(result.verdicts[0].confirmed)
         self.assertEqual(1, len(messages))
-        # warm-up of both, 15 + 41 rounds of 4 copies each
+        # warm-up of the base, 15 + 41 rounds of 4 copies each; the PR binary
+        # also runs three times to measure the length of the loop
         self.assertEqual(1 + 4 * 56, runner.calls[str(self.base / "perf_a")])
+        self.assertEqual(3 + 4 * 56, runner.calls[str(self.pr / "perf_a")])
 
     def test_an_unchanged_benchmark_is_measured_only_once(self):
         result, _, messages = self.compare({"a": (1e7, 1e7)})
@@ -206,6 +208,35 @@ class CompareTest(unittest.TestCase):
         self.assertIn("❌", report)
         self.assertIn("`short`", report)
         self.assertIn("Loop shorter than 5 ms", report)
+
+    def test_the_length_of_the_loop_is_the_median_of_three_runs(self):
+        # one slow run of a 1 ms loop must not get it judged, one fast run of
+        # a 6 ms loop must not get it dropped
+        pr_dir = str(self.pr)
+
+        class Spiky(FakeRunner):
+            def __init__(self, times, spike):
+                super().__init__(times)
+                self.spike = spike
+                self.first = {}
+
+            def run(self, path):
+                binary = path.split("#")[0]
+                count = self.first.get(binary, 0)
+                self.first[binary] = count + 1
+                if binary.startswith(pr_dir) and count == 1:
+                    return int(self.spike)
+                return super().run(path)
+
+        for mean, spike, judged in ((1e6, 9e6, False), (6e6, 1e6, True)):
+            with self.subTest(mean=mean):
+                pr, base = self.make(self.pr, "a"), self.make(self.base, "a")
+                runner = Spiky({pr: mean, base: mean}, spike)
+                result = perf_timing.compare(
+                    self.pr, self.base, "lib", options(), runner=runner,
+                    out=lambda _: None,
+                )
+                self.assertEqual(judged, bool(result.verdicts))
 
 
 class ScriptTest(unittest.TestCase):

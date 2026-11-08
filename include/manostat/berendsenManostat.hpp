@@ -24,6 +24,7 @@
 #define MANOSTAT__BERENDSEN_MANOSTAT_HPP
 
 #include "manostat.hpp"
+#include "unit_types.hpp"
 
 namespace manostat
 {
@@ -44,6 +45,10 @@ namespace manostat
         ) override;
 
         [[nodiscard]] virtual linalg::tensor3D calculateMu() const;
+
+       protected:
+        [[nodiscard]]
+        Compressibility _calcPreFactor() const;
     };
 
     /**

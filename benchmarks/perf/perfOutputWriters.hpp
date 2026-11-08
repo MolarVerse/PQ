@@ -143,7 +143,7 @@ namespace benchOutputWriters
         );
         auto physicalData = physicalData::PhysicalData();
         physicalData.setTemperature(toTemperature(300.0));
-        physicalData.setPressure(1.0);
+        physicalData.setPressure(1.0 * bar);
         physicalData.setKineticEnergy(12.5);
         physicalData.setCoulombEnergy(-34.5);
         physicalData.setNonCoulombEnergy(7.25);

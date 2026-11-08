@@ -51,8 +51,8 @@ namespace physicalData
      */
     struct KineticEnergyVirialTensor
     {
-        linalg::tensor3D atomic;
-        linalg::tensor3D molecular;
+        linalg::tensor3D atomic    = linalg::tensor3D(0.0);
+        linalg::tensor3D molecular = linalg::tensor3D(0.0);
 
         [[nodiscard]]
         const linalg::tensor3D& getVirialTensor(VirialType virialType) const;
@@ -73,8 +73,9 @@ namespace physicalData
         double      _volume  = 0.0;
         double      _density = 0.0;
         Temperature _temperature{Temperature::zero()};
-        double      _pressure        = 0.0;
-        double      _coupledPressure = 0.0;
+
+        Pressure _pressure{Pressure::zero()};
+        Pressure _coupledPressure{Pressure::zero()};
 
         double _kineticEnergy         = 0.0;
         double _coulombEnergy         = 0.0;
@@ -98,13 +99,17 @@ namespace physicalData
         double _lowerDistanceConstraints = 0.0;
         double _upperDistanceConstraints = 0.0;
 
-        linalg::Vec3D _momentum;
-        linalg::Vec3D _angularMomentum;
+        // Vec3D and tensor3D do not initialise their components, a default
+        // constructed PhysicalData (also the one that resets the averages after
+        // every output) would otherwise write garbage, sometimes inf, into the
+        // first energy and momentum line
+        linalg::Vec3D _momentum        = linalg::Vec3D(0.0);
+        linalg::Vec3D _angularMomentum = linalg::Vec3D(0.0);
 
         KineticEnergyVirialTensor _kinEnergyVirialTensor;
 
-        linalg::tensor3D _virial;
-        linalg::tensor3D _stressTensor;
+        linalg::tensor3D _virial       = linalg::tensor3D(0.0);
+        linalg::tensor3D _stressTensor = linalg::tensor3D(0.0);
 
         double _ringPolymerEnergy = 0.0;
 
@@ -152,8 +157,8 @@ namespace physicalData
         void setVolume(double volume);
         void setDensity(double density);
         void setTemperature(const Temperature& temperature);
-        void setPressure(double pressure);
-        void setCoupledPressure(double coupledPressure);
+        void setPressure(const Pressure& pressure);
+        void setCoupledPressure(const Pressure& coupledPressure);
 
         void setVirial(const linalg::tensor3D& virial);
         void setStressTensor(const linalg::tensor3D& stressTensor);
@@ -198,8 +203,8 @@ namespace physicalData
         [[nodiscard]] double             getVolume() const;
         [[nodiscard]] double             getDensity() const;
         [[nodiscard]] const Temperature& getTemperature() const;
-        [[nodiscard]] double             getPressure() const;
-        [[nodiscard]] double             getCoupledPressure() const;
+        [[nodiscard]] const Pressure&    getPressure() const;
+        [[nodiscard]] const Pressure&    getCoupledPressure() const;
 
         [[nodiscard]] double getKineticEnergy() const;
         [[nodiscard]] double getNonCoulombEnergy() const;

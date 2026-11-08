@@ -67,7 +67,7 @@ namespace
             settings::GeneralSettings::setIsRandomSeedSet(true);
             _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
             _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-            _settings->manostatSettings.setTargetPressureByUser(1.0);
+            _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
             _settings->manostatSettings.setTauByUser(1.0 * fs);
             _settings->manostatSettings.setCompressibilityByUser(
                 0.03 * per_bar
@@ -129,7 +129,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
         const auto oldCell =
             _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ);
         coupling->applyManostat(_box, _data);
-        EXPECT_NEAR(_data.getPressure(), 1.0, 1e-12);
+        EXPECT_NEAR(_data.getPressure().numerical_value_in(bar), 1.0, 1e-12);
         for (size_t i = 0; i < 3; ++i)
         {
             for (size_t j = 0; j < 3; ++j)
@@ -157,14 +157,14 @@ TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
     manostat::Manostat pressure(_settings->manostatSettings);
     pressure.calculatePressure(_box, _data);
     EXPECT_NEAR(
-        _data.getPressure(),
+        _data.getPressure().numerical_value_in(bar),
         0.5 * PRESSURE_FACTOR / _box.getVolume(),
         1e-12
     );
     // r=(1,2,3), F=(2,-1,0.5): changing the first cell length
     // moves r_x by (1 - 2/sqrt(3)) times the fractional length change.
     EXPECT_NEAR(
-        _data.getCoupledPressure(),
+        _data.getCoupledPressure().numerical_value_in(bar),
         (2.0 - 4.0 / std::sqrt(3.0)) * PRESSURE_FACTOR / _box.getVolume(),
         1e-12
     );
@@ -253,7 +253,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
     // proposal see only the values set last (e.g. overflow/underflow would
     // both end up with cutoff's target pressure and compressibility).
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-    _settings->manostatSettings.setTargetPressureByUser(1.0);
+    _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
     _settings->manostatSettings.setTauByUser(1.0 * fs);
 
     auto negativeRootSettings = _settings->manostatSettings;
@@ -267,12 +267,12 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
     manostat::BerendsenManostat negativeVolume(negativeVolumeSettings);
 
     auto overflowSettings = negativeVolumeSettings;
-    overflowSettings.setTargetPressureByUser(-3000.0);
+    overflowSettings.setTargetPressureByUser(-3000.0 * bar);
     overflowSettings.setCompressibilityByUser(1.0 * per_bar);
     manostat::StochasticRescalingManostat overflow(overflowSettings);
 
     auto underflowSettings = negativeVolumeSettings;
-    underflowSettings.setTargetPressureByUser(3000.0);
+    underflowSettings.setTargetPressureByUser(3000.0 * bar);
     underflowSettings.setCompressibilityByUser(1.0 * per_bar);
     manostat::StochasticRescalingManostat underflow(underflowSettings);
 
@@ -375,7 +375,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     settings::ThermostatSettings::setActualTargetTemperature(temperature);
 
     ManostatSettings semiSettings;
-    semiSettings.setTargetPressureByUser(0.0);
+    semiSettings.setTargetPressureByUser(0.0 * bar);
     semiSettings.setTauByUser(tau * fs);
     semiSettings.setCompressibilityByUser(compressibility * per_bar);
     semiSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
@@ -383,7 +383,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     manostat::SemiIsotropicStochasticRescalingManostat semi(semiSettings);
 
     ManostatSettings freeSettings;
-    freeSettings.setTargetPressureByUser(0.0);
+    freeSettings.setTargetPressureByUser(0.0 * bar);
     freeSettings.setTauByUser(tau * fs);
     freeSettings.setCompressibilityByUser(compressibility * per_bar);
     freeSettings.setFixedAxisByUser(FixedAxis::NONE);
@@ -391,7 +391,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     manostat::FullAnisotropicStochasticRescalingManostat full(freeSettings);
 
     ManostatSettings fixedSettings;
-    fixedSettings.setTargetPressureByUser(0.0);
+    fixedSettings.setTargetPressureByUser(0.0 * bar);
     fixedSettings.setTauByUser(tau * fs);
     fixedSettings.setCompressibilityByUser(compressibility * per_bar);
     fixedSettings.setFixedAxisByUser(FixedAxis::Y);
@@ -466,7 +466,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     pressure.calculatePressure(_box, _data);
 
     _settings->manostatSettings.setTargetPressureByUser(
-        _data.getPressure() - (3.0 * std::log(scale))
+        _data.getPressure() - (3.0 * std::log(scale) * bar)
     );
     _settings->manostatSettings.setTauByUser(1.0 * fs);
     _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);

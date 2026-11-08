@@ -2,4 +2,5 @@
 - make compressiblity unit aware
 - add a devops check to not include `units.hpp` in a header file to not pollute namings 
 - add relaxtime of thermostat as a unitful quantity
+- introduce units for pressure
 - start introducing temperature unit in thermostat

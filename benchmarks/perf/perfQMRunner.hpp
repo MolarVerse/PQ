@@ -74,8 +74,11 @@ namespace benchQMRunner
         std::filesystem::path _directory;
 
        public:
-        explicit CannedResultsRunner(std::filesystem::path directory)
-            : _directory(std::move(directory))
+        explicit CannedResultsRunner(
+            const QMSettings     &qmSettings,
+            std::filesystem::path directory
+        )
+            : Runner(qmSettings), _directory(std::move(directory))
         {
         }
 
@@ -185,14 +188,17 @@ namespace benchQMRunner
 
     template <typename Runner>
     inline int run(
-        const QMMethod            method,
+        const QMSettings         &qmSettings,
         const molsys::Periodicity periodicity,
         const std::uint64_t       iterations
     )
     {
         const auto directory =
             std::filesystem::temp_directory_path() /
-            std::format("pq_perf_qm_runner_{}", QMMethodMeta::toString(method));
+            std::format(
+                "pq_perf_qm_runner_{}",
+                QMMethodMeta::toString(qmSettings.getQMMethod())
+            );
         std::filesystem::remove_all(directory);
         std::filesystem::create_directories(directory);
         writeCannedResults(directory);
@@ -202,15 +208,14 @@ namespace benchQMRunner
         std::filesystem::current_path(directory);
 
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        settings::QMSettings::setQMMethod(method);
-        settings::QMSettings::setRemoveNetForce(true);
-        settings::QMSettings::setQMLoopTimeLimit(0.0);
-        settings::QMSettings::setQMScript("script.sh");
+        QMSettings::setRemoveNetForce(true);
+        QMSettings::setQMLoopTimeLimit(0.0);
+        QMSettings::setQMScript("script.sh");
 
         molsys::SimulationBox simulationBox;
         buildBox(simulationBox);
 
-        CannedResultsRunner<Runner> runner(directory);
+        CannedResultsRunner<Runner> runner(qmSettings, directory);
         runner.setScriptPath(directory.string() + "/");
         auto physicalData = physicalData::PhysicalData();
 

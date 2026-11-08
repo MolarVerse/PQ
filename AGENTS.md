@@ -226,7 +226,7 @@ All pipelines are in `.github/workflows/`:
 | `devops_cpp_check.yml` | PRs to `main`/`dev`/`NEXT` | `cpp_checks` from `external/devops` (style and AST rules, `devops.toml`) |
 | `clang_format.yml` | PRs to `main`/`dev`/`NEXT` | clang-format 20.1.3 on every touched C/C++ file, as a whole file |
 | `license_check.yml` | PRs (any branch), push to `main` | Exact GPL header check on all C/C++ files |
-| `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required |
+| `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required (unless the PR has the `skip-changelog` label) |
 | `gh_checks.yml` | PR events | PR must link an issue (`Closes/Fixes/Resolves/Related to #N`) |
 | `perf.yml` | PRs to `main`/`dev`/`NEXT` | Callgrind instruction-count regression gate |
 | `clang_build.yml` | PRs touching C++/build files | Non-gating clang 20 build and tests (build analysis for the CI metrics) |
@@ -270,6 +270,7 @@ changes/developer/<category>.<title>.md
 - Use `user` when an installed-PQ user would notice the change (behavior, results, inputs/outputs, errors, compatibility, runtime performance); use `developer` for build tooling, CI, tests, refactors, and internal maintenance. A PR may add fragments for either or both audiences.
 - `<category>` is one of the fixed categories in `changes/README.md` (user: `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer: `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`). `<title>` is a free-text lowercase-with-hyphens slug and does not appear in the rendered changelog.
 - If an existing unreleased fragment already covers the same change, append a bullet to it instead of creating a new file; a fragment can hold multiple bullets, one per line, each at most 360 characters.
+- A PR that needs no entry carries the explicit `skip-changelog` label instead of a fragment (see `changes/README.md`); coding assistants add a fragment and do not set the label themselves.
 - Do not delete unreleased fragments or the `changes/user/.gitkeep` / `changes/developer/.gitkeep` placeholders.
 - The release workflow consumes every fragment into the matching changelog and removes them; this is the only point at which `CHANGELOG.md`/`DEV-CHANGELOG.md` change.
 

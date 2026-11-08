@@ -78,8 +78,10 @@ namespace out
                 .quantity_from_zero()
                 .numerical_value_in(K)
         );
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getPressure());
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getPressure().numerical_value_in(bar)
+        );
         _getFilePointer(
         ) << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
 
@@ -138,7 +140,7 @@ namespace out
             {
                 _getFilePointer() << std::format(
                     "{:20.12f}\t",
-                    physicalData.getCoupledPressure()
+                    physicalData.getCoupledPressure().numerical_value_in(bar)
                 );
             }
         }

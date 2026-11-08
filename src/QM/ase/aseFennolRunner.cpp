@@ -22,12 +22,17 @@
 
 #include "aseFennolRunner.hpp"
 
+#include <pybind11/embed.h>
+
 namespace QM
 {
 
     /**
      * @brief Construct a new AseFennolRunner::AseFennolRunner object
      *
+     * @param settings The QM settings to configure the ASE Fennol runner with,
+     * including method-specific parameters such as the model path and any
+     * relevant computational options
      * @param modelPath
      * @param gpuPreprocessing
      * @param useFloat64
@@ -36,10 +41,12 @@ namespace QM
      * fails
      */
     AseFennolRunner::AseFennolRunner(
+        const QMSettings  &settings,
         const std::string &modelPath,
         bool               gpuPreprocessing,
         bool               useFloat64
     )
+        : AseQMRunner(settings)
     {
         try
         {

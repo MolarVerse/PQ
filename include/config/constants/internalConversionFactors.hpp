@@ -108,6 +108,18 @@ static constexpr double PRESSURE_FACTOR =
     ENERGY_UNIT_TO_SI / VOLUME_UNIT_TO_SI * SI_TO_PRESSURE_UNIT;
 
 /**
+ * @brief Conversion factors for pressure calculation in Pascals
+ *
+ * @details P = E / V
+ *
+ * [P] = Pa
+ * [E] = kcal mol⁻¹
+ * [V] = A³
+ */
+static constexpr double PRESSURE_FACTOR_PA =
+    ENERGY_UNIT_TO_SI / VOLUME_UNIT_TO_SI;
+
+/**
  * @brief Conversion factors for coulomb preFactor
  *
  * @details factor = 1 / (4 * pi * eps0)

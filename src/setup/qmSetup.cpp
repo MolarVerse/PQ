@@ -42,10 +42,17 @@ namespace setup
     /**
      * @brief constructor
      *
-     * @param qmCapableEngine
+     * @param qmCapableEngine The QM-capable engine used to perform QM
+     * calculations
+     * @param qmSettings The QM settings used to configure the QM runner, which
+     * may include method-specific parameters and computational options
+     *
      */
-    QMSetup::QMSetup(engine::QMCapableEngine &qmCapableEngine)
-        : _qmCapableEngine(qmCapableEngine)
+    QMSetup::QMSetup(
+        engine::QMCapableEngine &qmCapableEngine,
+        const QMSettings        &qmSettings
+    )
+        : _qmCapableEngine(qmCapableEngine), _qmSettings(qmSettings)
     {
     }
 
@@ -70,7 +77,7 @@ namespace setup
         if (auto *qmCapableEngine =
                 dynamic_cast<engine::QMCapableEngine *>(&engine))
         {
-            QMSetup qmSetup(*qmCapableEngine);
+            QMSetup qmSetup(*qmCapableEngine, engine.getSettings().qmSettings);
             qmSetup.setup(references);
         }
         else
@@ -89,11 +96,11 @@ namespace setup
     {
         setupQMMethod();
 
-        setupQMMethodAseDftbPlus();
+        _setupQMMethodAseDftbPlus();
 
-        setupQMMethodAseXtb(references);
+        _setupQMMethodAseXtb(references);
 
-        if (settings::QMSettings::isExternalQMRunner())
+        if (_qmSettings->isExternalQMRunner())
             setupQMScript();
 
         setupCoulombRadiusCutOff();
@@ -105,43 +112,40 @@ namespace setup
      * @brief setup the "QM" method of the system
      *
      */
-    void QMSetup::setupQMMethod()
+    void QMSetup::setupQMMethod() { _qmCapableEngine.setQMRunner(_qmSettings); }
+
+    /**
+     * @brief setup the ASE DFTB+ method of the system
+     *
+     */
+    void QMSetup::_setupQMMethodAseDftbPlus() const
     {
-        _qmCapableEngine.setQMRunner(settings::QMSettings::getQMMethod());
+        if (!(_qmSettings->getQMMethod() == QMMethod::ASE_DFTBPLUS))
+            return;
+
+        if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
+            !QMSettings::isThirdOrderDftbSet())
+            QMSettings::setUseThirdOrderDftb(true);
     }
 
     /**
      * @brief setup the ASE DFTB+ method of the system
      *
      */
-    void QMSetup::setupQMMethodAseDftbPlus()
+    void QMSetup::_setupQMMethodAseXtb(ReferenceSettings &references) const
     {
-        if (!(settings::QMSettings::getQMMethod() == QMMethod::ASE_DFTBPLUS))
+        if (!(_qmSettings->getQMMethod() == QMMethod::ASE_XTB))
             return;
 
-        if (settings::QMSettings::getSlakosType() == SlakosType::THREEOB &&
-            !settings::QMSettings::isThirdOrderDftbSet())
-            settings::QMSettings::setUseThirdOrderDftb(true);
-    }
-
-    /**
-     * @brief setup the ASE DFTB+ method of the system
-     *
-     */
-    void QMSetup::setupQMMethodAseXtb(ReferenceSettings &references)
-    {
-        if (!(settings::QMSettings::getQMMethod() == QMMethod::ASE_XTB))
-            return;
-
-        if (settings::QMSettings::getXtbMethod() == XtbMethod::GFN1)
+        if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
         {
             references.addReferenceFile(ReferenceFiles::GFN1_FILE);
         }
-        else if (settings::QMSettings::getXtbMethod() == XtbMethod::GFN2)
+        else if (QMSettings::getXtbMethod() == XtbMethod::GFN2)
         {
             references.addReferenceFile(ReferenceFiles::GFN2_FILE);
         }
-        else if (settings::QMSettings::getXtbMethod() == XtbMethod::IPEA1)
+        else if (QMSettings::getXtbMethod() == XtbMethod::IPEA1)
         {
             references.addReferenceFile(ReferenceFiles::IPEA1_FILE);
         }
@@ -172,11 +176,10 @@ namespace setup
         const auto staticBuild =
             utilities::toLowerCopy(staticBuildString) == "on";
 
-        const auto qmScript        = settings::QMSettings::getQMScript();
+        const auto qmScript        = QMSettings::getQMScript();
         const auto isQMScriptEmpty = qmScript.empty();
 
-        const auto qmScriptFullPath =
-            settings::QMSettings::getQMScriptFullPath();
+        const auto qmScriptFullPath        = QMSettings::getQMScriptFullPath();
         const auto isQMScriptFullPathEmpty = qmScriptFullPath.empty();
 
         if (singularity || staticBuild)
@@ -225,9 +228,7 @@ namespace setup
             externalQMRunner.setScriptPath("");
 
             // overwriting qm_script with full path
-            settings::QMSettings::setQMScript(
-                settings::QMSettings::getQMScriptFullPath()
-            );
+            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
         }
         else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
         {
@@ -243,9 +244,7 @@ namespace setup
             externalQMRunner.setScriptPath("");
 
             // overwriting qm_script with full path
-            settings::QMSettings::setQMScript(
-                settings::QMSettings::getQMScriptFullPath()
-            );
+            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
         }
         else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
         {
@@ -285,16 +284,16 @@ namespace setup
         auto &engine    = dynamic_cast<engine::Engine &>(_qmCapableEngine);
         auto &logOutput = engine.getLogOutput();
 
-        const auto qmMethod = settings::QMSettings::getQMMethod();
+        const auto qmMethod = _qmSettings->getQMMethod();
         const auto qmRunnerMessage =
             std::format("QM runner: {}", QMMethodMeta::toString(qmMethod));
 
         logOutput.writeSetupInfo(qmRunnerMessage);
         logOutput.writeEmptyLine();
 
-        if (settings::QMSettings::isExternalQMRunner())
+        if (_qmSettings->isExternalQMRunner())
         {
-            const auto qmScript        = settings::QMSettings::getQMScript();
+            const auto qmScript        = QMSettings::getQMScript();
             const auto qmScriptMessage = std::format("QM script: {}", qmScript);
 
             logOutput.writeSetupInfo(qmScriptMessage);
@@ -302,14 +301,14 @@ namespace setup
 
         if (qmMethod == MACE)
         {
-            const auto modelType = settings::QMSettings::getMaceModelType();
-            const auto modelSize = settings::QMSettings::getMaceModel();
-            const auto modelPath = settings::QMSettings::getMaceModelPath();
+            const auto modelType = QMSettings::getMaceModelType();
+            const auto modelSize = QMSettings::getMaceModel();
+            const auto modelPath = QMSettings::getMaceModelPath();
             const auto floatingPointStr =
                 settings::GeneralSettings::getFloatingPointPybindString();
-            const auto        maceMode = settings::QMSettings::getMaceMode();
+            const auto        maceMode = QMSettings::getMaceMode();
             const auto *const useDisp =
-                settings::QMSettings::useDispersionCorr() ? "on" : "off";
+                QMSettings::useDispersionCorr() ? "on" : "off";
 
             const auto modelTypeMsg = std::format(
                 "Model type:            {}",
@@ -357,9 +356,8 @@ namespace setup
         {
             using enum FPType;
 
-            const auto modelPath = settings::QMSettings::getFennolModelPath();
-            const auto useGPUPreprocessing =
-                settings::QMSettings::useGPUPreprocessing();
+            const auto modelPath           = QMSettings::getFennolModelPath();
+            const auto useGPUPreprocessing = QMSettings::useGPUPreprocessing();
             const bool useFloat64 =
                 settings::GeneralSettings::getFloatingPointType() == DOUBLE;
 
@@ -379,13 +377,12 @@ namespace setup
 
         if (qmMethod == ASE_DFTBPLUS)
         {
-            const auto slakosType = settings::QMSettings::getSlakosType();
-            const auto slakosPath = settings::QMSettings::getSlakosPath();
-            const auto thirdOrder = settings::QMSettings::useThirdOrderDftb();
-            const auto hubbardDerivs = settings::QMSettings::getHubbardDerivs();
-            const auto ishubbardDerivsSet =
-                settings::QMSettings::isHubbardDerivsSet();
-            const auto dispersion = settings::QMSettings::useDispersionCorr();
+            const auto slakosType         = QMSettings::getSlakosType();
+            const auto slakosPath         = QMSettings::getSlakosPath();
+            const auto thirdOrder         = QMSettings::useThirdOrderDftb();
+            const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
+            const auto ishubbardDerivsSet = QMSettings::isHubbardDerivsSet();
+            const auto dispersion         = QMSettings::useDispersionCorr();
 
             const auto slakosTypeMsg = std::format(
                 "DFTB approach:        {}",
@@ -405,10 +402,8 @@ namespace setup
                 "3ob approach has been chosen while disabling 3rd order DFTB. "
                 "This setup is not recommended."
             );
-            const auto hubbardDerivsMsg = std::format(
-                "Hubbard derivatives:  {}",
-                settings::string(hubbardDerivs)
-            );
+            const auto hubbardDerivsMsg =
+                std::format("Hubbard derivatives:  {}", string(hubbardDerivs));
             const auto threeOBHubbardDerivsMsg = std::format(
                 "3ob approach has been chosen while setting custom Hubbard "
                 "derivatives. This setup is not recommended."
@@ -439,7 +434,7 @@ namespace setup
 
         if (qmMethod == ASE_XTB)
         {
-            const auto xtbMethod = settings::QMSettings::getXtbMethod();
+            const auto xtbMethod = QMSettings::getXtbMethod();
 
             const auto xtbMethodMsg = std::format(
                 "xTB Parametrization:   {}",
@@ -449,8 +444,7 @@ namespace setup
             logOutput.writeSetupInfo(xtbMethodMsg);
         }
 
-        const auto qm_loop_time_limit =
-            settings::QMSettings::getQMLoopTimeLimit();
+        const auto qm_loop_time_limit = QMSettings::getQMLoopTimeLimit();
 
         const auto qmLoopTimeLimitMsg = std::format(
             "QM looptime limit: {}",

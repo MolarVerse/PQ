@@ -49,7 +49,13 @@ jobs:
   perf-regression:
     # This job builds PR code and later mints a write token. Bot-authored
     # branches require a human-run performance check on a trusted branch.
-    if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'pq-bot/')
+    # A release pull request is not measured: it would compare the release with
+    # the previous one and report every change of the cycle at once, each of which
+    # the gate already judged on its dev pull request (#1028).
+    if: >-
+      github.event_name != 'pull_request' ||
+      !(startsWith(github.event.pull_request.head.ref, 'pq-bot/') ||
+        startsWith(github.event.pull_request.head.ref, 'release/'))
     runs-on: ubuntu-24.04
     env:
       # The simulation makes the callgrind runs about 3 times slower, so pull

@@ -1,0 +1,1 @@
+- Timing comparison: the loop length is the median of three runs and the minimum is 2 ms (was one run and 5 ms), so benchmarks near the limit are judged in every run instead of in some.

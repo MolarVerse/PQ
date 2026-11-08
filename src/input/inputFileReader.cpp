@@ -154,7 +154,8 @@ namespace input
         _parsers.push_back(
             std::make_unique<QMInputParser>(
                 resolveBuiltInSlakosPath,
-                settings.referenceSettings
+                settings.referenceSettings,
+                settings.qmSettings
             )
         );
 

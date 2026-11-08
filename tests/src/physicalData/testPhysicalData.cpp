@@ -22,6 +22,10 @@
 
 #include "testPhysicalData.hpp"
 
+#include <array>
+#include <cstddef>
+#include <new>
+
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "physicalData.hpp"
@@ -42,7 +46,7 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5);
     EXPECT_EQ(_physicalData->getVolume(), 3.0);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
-    EXPECT_EQ(_physicalData->getPressure(), 4.0);
+    EXPECT_EQ(_physicalData->getPressure(), 4.0 * bar);
     EXPECT_EQ(_physicalData->getQMEnergy(), 4.5);
     EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.5);
 }
@@ -62,8 +66,8 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
     EXPECT_EQ(physicalData2.getVolume(), 6.0);
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
-    EXPECT_EQ(physicalData2.getPressure(), 8.0);
-    EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5);
+    EXPECT_EQ(physicalData2.getPressure(), 8.0 * bar);
+    EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5 * bar);
     EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
     EXPECT_EQ(physicalData2.getQMReferenceEnergy(), 1.0);
 }
@@ -84,8 +88,8 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0);
     EXPECT_EQ(_physicalData->getVolume(), 12.0);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
-    EXPECT_EQ(_physicalData->getPressure(), 16.0);
-    EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0);
+    EXPECT_EQ(_physicalData->getPressure(), 16.0 * bar);
+    EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0 * bar);
     EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
     EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 2.0);
 }
@@ -195,8 +199,8 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setMomentum(linalg::Vec3D(1.0));
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
-    _physicalData->setPressure(1.0);
-    _physicalData->setCoupledPressure(1.0);
+    _physicalData->setPressure(1.0 * bar);
+    _physicalData->setCoupledPressure(1.0 * bar);
     _physicalData->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)));
     _physicalData->setQMEnergy(1.0);
     _physicalData->setQMReferenceEnergy(1.0);
@@ -218,8 +222,8 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(0.0));
     EXPECT_EQ(_physicalData->getVolume(), 0.0);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
-    EXPECT_EQ(_physicalData->getPressure(), 0.0);
-    EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0);
+    EXPECT_EQ(_physicalData->getPressure(), 0.0 * bar);
+    EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0 * bar);
     EXPECT_EQ(_physicalData->getVirial(), linalg::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
     EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.0);
@@ -380,4 +384,41 @@ TEST(PhysicalDataKinetics, molecularPressureExcludesInternalMotion)
         }
         EXPECT_DOUBLE_EQ(data.getKineticEnergy(), 10.0 * KINETIC_ENERGY_FACTOR);
     }
+}
+
+/**
+ * @brief a default initialised PhysicalData has no garbage in it
+ *
+ * @details Vec3D and tensor3D do not initialise their components. The
+ * PhysicalData that holds the averages is a member of the engine and default
+ * initialised (`PhysicalData data;`, unlike `PhysicalData()`, which zeroes the
+ * whole object first), so the first energy and momentum line of a run showed
+ * whatever the memory held, now and then inf, which failed the regression test
+ * of the smoke run. The storage is filled with 0xFF (a NaN as a double) before
+ * the object is built into it.
+ */
+TEST_F(TestPhysicalData, defaultConstructedIsZero)
+{
+    using physicalData::PhysicalData;
+
+    alignas(PhysicalData) std::array<std::byte, sizeof(PhysicalData)> storage;
+    storage.fill(std::byte{0xFF});
+
+    auto *data = new (storage.data()) PhysicalData;
+
+    for (size_t i = 0; i < 3; ++i)
+    {
+        EXPECT_EQ(data->getMomentum()[i], 0.0);
+        EXPECT_EQ(data->getAngularMomentum()[i], 0.0);
+
+        for (size_t j = 0; j < 3; ++j)
+        {
+            EXPECT_EQ(data->getVirial()[i][j], 0.0);
+            EXPECT_EQ(data->getStressTensor()[i][j], 0.0);
+            EXPECT_EQ(data->getKinEnergyAtomTensor()[i][j], 0.0);
+            EXPECT_EQ(data->getKinEnergyMolTensor()[i][j], 0.0);
+        }
+    }
+
+    data->~PhysicalData();
 }

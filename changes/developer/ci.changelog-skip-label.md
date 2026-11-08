@@ -1,0 +1,1 @@
+- The Changelog Fragment Check honours the existing skip-changelog label: a pull request with the label needs no fragment (the script tests still run), and adding or removing the label re-runs the check. The failure message names the label.

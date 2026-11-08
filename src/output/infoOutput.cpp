@@ -101,7 +101,11 @@ namespace out
             "K"
         );
 
-        _writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
+        _writeLeft(
+            physicalData.getPressure().numerical_value_in(bar),
+            "PRESSURE",
+            "bar"
+        );
         _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
         if (settings::GeneralSettings::isQMActivated())
@@ -166,7 +170,7 @@ namespace out
             if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
             {
                 _writeLeft(
-                    physicalData.getCoupledPressure(),
+                    physicalData.getCoupledPressure().numerical_value_in(bar),
                     "P(COUPLED)",
                     "bar"
                 );
