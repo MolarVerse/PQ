@@ -224,7 +224,7 @@ A timing on a shared runner is noisy, so the script does not compare two numbers
       the rounds, plus the layout noise.
     - **A clear criterion.** A regression needs the whole interval above the threshold (10 %). It is then measured again
       with more rounds, and only that second measurement decides. If the layout noise alone exceeds the threshold the
-      benchmark is shown as noisy (⚠️) and not judged. Loops shorter than 5 ms are listed, not timed.
+      benchmark is shown as noisy (⚠️) and not judged. Loops shorter than 2 ms (the median of three runs) are listed, not timed.
 
 .. code:: bash
 
