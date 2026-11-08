@@ -745,21 +745,23 @@ TEST_F(TestThermostat, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)
 
 namespace
 {
-    std::vector<linalg::Vec3D> saveVelocities(const molsys::SimulationBox &box)
+    std::vector<linalg::Vec3D> saveVelocities(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         std::vector<linalg::Vec3D> velocities;
-        for (const auto &atom : box.getAtoms())
+        for (const auto &atom : simulationBox.getAtoms())
             velocities.push_back(atom->getVelocity());
         return velocities;
     }
 
     void restoreVelocities(
-        molsys::SimulationBox            &box,
+        molsys::SimulationBox            &simulationBox,
         const std::vector<linalg::Vec3D> &velocities
     )
     {
         for (size_t i = 0; i < velocities.size(); ++i)
-            box.getAtoms()[i]->setVelocity(velocities[i]);
+            simulationBox.getAtoms()[i]->setVelocity(velocities[i]);
     }
 }   // namespace
 
