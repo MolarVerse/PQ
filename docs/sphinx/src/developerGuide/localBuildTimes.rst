@@ -6,7 +6,7 @@ Local Build Times
 
 ``scripts/pq_build_times`` measures and explains how long **your** machine needs to build PQ, so that a change that is
 meant to speed up the build can be judged by numbers. It uses only the Python standard library, keeps its data outside
-the repository and has no connection to the :doc:`CI metrics <ciMetrics>`. The README next to the scripts
+the repository. The README next to the scripts
 (``scripts/pq_build_times/README.md``) is the complete reference; this page shows the workflow.
 
 ********************
