@@ -1000,7 +1000,7 @@ namespace linalg
     template <typename T>
     std::ostream &operator<<(std::ostream &ostream, const Vector3D<T> &vec)
     {
-        return ostream << std::format("{} {} {}", vec[0], vec[1], vec[2]);
+        return ostream << vec[0] << " " << vec[1] << " " << vec[2];
     }
 
 }   // namespace linalg
