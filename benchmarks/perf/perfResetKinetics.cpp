@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -45,7 +47,7 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    constexpr double temperature = 300.0;
+    Temperature temperature{toTemperature(300.0)};
     settings::ThermostatSettings::setActualTargetTemperature(temperature);
 
     auto box =
@@ -53,7 +55,7 @@ int main()
     benchSetup::scaleVelocitiesToTemperature(box, temperature);
 
     auto physicalData = physicalData::PhysicalData();
-    physicalData.setTemperature(toTemperature(temperature));
+    physicalData.setTemperature(temperature);
 
     // step <= n is always true here, so every reset runs in every iteration
     ResetKineticsSettings settings;
@@ -79,7 +81,7 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
-        box.calculateTemperature(),
+        box.calculateTemperature().quantity_from_zero().numerical_value_in(K),
         box.calculateMomentum()[0]
     );
     return 0;

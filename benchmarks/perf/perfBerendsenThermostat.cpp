@@ -50,13 +50,11 @@ int main()
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto             physicalData      = physicalData::PhysicalData();
-    constexpr double targetTemperature = 300.0;
+    auto              physicalData = physicalData::PhysicalData();
+    const Temperature targetTemperature{toTemperature(300.0)};
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat = thermostat::BerendsenThermostat(
-        mstd::units::point<K>(targetTemperature),
-        100.0 * fs
-    );
+    auto thermostat =
+        thermostat::BerendsenThermostat(targetTemperature, 100.0 * fs);
 
     perfAllocBegin();
 

@@ -27,6 +27,7 @@
 #include <mstd/types.hpp>
 
 #include "resetKineticsSettings.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace physicalData
@@ -65,7 +66,7 @@ namespace resetKinetics
 
         static void resetTemperature(
             molsys::SimulationBox &,
-            double temperature
+            const Temperature &temperature
         );
         static void resetMomentum(
             molsys::SimulationBox &,

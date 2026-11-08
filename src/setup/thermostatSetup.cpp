@@ -143,10 +143,7 @@ namespace setup
         const auto tau = settings::ThermostatSettings::getRelaxationTime();
 
         _engine.makeThermostat(
-            thermostat::BerendsenThermostat(
-                mstd::units::point<K>(targetTemp),
-                tau
-            )
+            thermostat::BerendsenThermostat(targetTemp, tau)
         );
     }
 
@@ -164,10 +161,7 @@ namespace setup
         const auto tau = settings::ThermostatSettings::getRelaxationTime();
 
         _engine.makeThermostat(
-            thermostat::VelocityRescalingThermostat(
-                mstd::units::point<K>(targetTemp),
-                tau
-            )
+            thermostat::VelocityRescalingThermostat(targetTemp, tau)
         );
     }
 
@@ -184,10 +178,7 @@ namespace setup
         const auto friction = settings::ThermostatSettings::getFriction();
 
         _engine.makeThermostat(
-            thermostat::LangevinThermostat(
-                mstd::units::point<K>(targetTemp),
-                friction
-            )
+            thermostat::LangevinThermostat(targetTemp, friction)
         );
     }
 
@@ -212,7 +203,7 @@ namespace setup
         const auto zeta = std::vector<double>(nhChainLength + 1, 0.0);
 
         auto thermostat = thermostat::NoseHooverThermostat(
-            mstd::units::point<K>(targetTemp),
+            targetTemp,
             chi,
             zeta,
             nhCouplFreq
@@ -297,9 +288,7 @@ namespace setup
         const auto startTemp =
             settings::ThermostatSettings::getStartTemperature();
 
-        _engine.getThermostat().setTargetTemperature(
-            mstd::units::point<K>(startTemp)
-        );
+        _engine.getThermostat().setTargetTemperature(startTemp);
         settings::ThermostatSettings::setActualTargetTemperature(startTemp);
         _engine.getThermostat().setTemperatureRampingSteps(steps);
         _engine.getThermostat().setTemperatureRampingFrequency(frequency);
@@ -311,9 +300,7 @@ namespace setup
         const auto updates      = (steps / frequency) + remainder;
         const auto tempIncrease = tempDelta / static_cast<double>(updates);
 
-        _engine.getThermostat().setTemperatureIncrease(
-            mstd::units::delta<K>(tempIncrease)
-        );
+        _engine.getThermostat().setTemperatureIncrease(tempIncrease);
     }
 
     void ThermostatSetup::writeSetupInfo() const

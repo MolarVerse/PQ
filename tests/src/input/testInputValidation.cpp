@@ -40,6 +40,7 @@
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 class TestInputValidation : public ::testing::Test
@@ -66,9 +67,9 @@ class TestInputValidation : public ::testing::Test
         );
 
         settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
-        settings::ThermostatSettings::setTargetTemperature(0.0);
-        settings::ThermostatSettings::setStartTemperature(0.0);
-        settings::ThermostatSettings::setEndTemperature(0.0);
+        settings::ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+        settings::ThermostatSettings::setStartTemperature(toTemperature(0.0));
+        settings::ThermostatSettings::setEndTemperature(toTemperature(0.0));
         settings::ThermostatSettings::setTemperatureSet(false);
         settings::ThermostatSettings::setStartTemperatureSet(false);
         settings::ThermostatSettings::setEndTemperatureSet(false);
@@ -249,14 +250,17 @@ TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 {
     _configureMDJob(JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    settings::ThermostatSettings::setEndTemperature(300.0);
+    settings::ThermostatSettings::setEndTemperature(toTemperature(300.0));
     _setKeyword("end_temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
-    EXPECT_DOUBLE_EQ(settings::ThermostatSettings::getTargetTemperature(), 0.0);
-    EXPECT_DOUBLE_EQ(
+    EXPECT_EQ(
+        settings::ThermostatSettings::getTargetTemperature(),
+        toTemperature(0.0)
+    );
+    EXPECT_EQ(
         settings::ThermostatSettings::getActualTargetTemperature(),
-        0.0
+        toTemperature(0.0)
     );
 }
 
@@ -280,7 +284,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
     settings::ThermostatSettings::setThermostatType(
         ThermostatType::VELOCITY_RESCALING
     );
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
     settings::ThermostatSettings::setRelaxationTime(0.0001 * ps);
     _setKeyword("temp");
 
@@ -295,7 +299,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 {
     _configureMDJob(JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
     settings::ThermostatSettings::setFriction(
         std::numeric_limits<double>::max()
     );
@@ -313,9 +317,9 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 {
     _configureMDJob(JobType::MM_MD);
     settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
     settings::ThermostatSettings::setStartTemperature(
-        std::numeric_limits<double>::max()
+        toTemperature(std::numeric_limits<double>::max())
     );
     _setKeyword("temp");
     _setKeyword("start_temp");
@@ -359,7 +363,7 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
     settings::ThermostatSettings::setThermostatType(
         ThermostatType::NOSE_HOOVER
     );
-    settings::ThermostatSettings::setTargetTemperature(0.0);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(0.0));
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
@@ -372,7 +376,7 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
 TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
 {
     settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    settings::ThermostatSettings::setTargetTemperature(0.0);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(0.0));
     _setKeyword("temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));

@@ -31,6 +31,7 @@
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -58,7 +59,9 @@ namespace maxwellBoltzmann
             const auto mass              = atom->getMass() * AMU_TO_KG;
             const auto boltzmannConstant = BOLTZMANN_CONSTANT;
             const auto temp =
-                settings::ThermostatSettings::getActualTargetTemperature();
+                settings::ThermostatSettings::getActualTargetTemperature()
+                    .quantity_from_zero()
+                    .numerical_value_in(K);
 
             const auto stddev =
                 ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
