@@ -40,7 +40,7 @@ namespace QM
         ~AseFennolRunner() override = default;
 
         explicit AseFennolRunner(
-            const QMSettings&     settings,
+            const QMSettings&     qmSettings,
             const FennolSettings& fennolSettings
         );
     };
