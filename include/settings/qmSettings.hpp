@@ -36,6 +36,7 @@ std::string string(
 );
 
 struct TestQMSetupAseUtil;
+class ReferenceSettings;
 
 /**
  * @brief Class for managing MACE settings
@@ -44,10 +45,12 @@ struct TestQMSetupAseUtil;
 class MaceSettings
 {
    private:
-    Setting<MaceModel>     _maceModel{MaceModel::MEDIUM};
-    Setting<MaceModelType> _maceModelType{MaceModelType::MACE_MP};
-    Setting<MaceMode>      _maceMode{MaceMode::ACCURATE};
-    Setting<std::string>   _maceModelPath{""};
+    Setting<MaceModel, "MaceModel">         _maceModel{MaceModel::MEDIUM};
+    Setting<MaceModelType, "MaceModelType"> _maceModelType{
+        MaceModelType::MACE_MP
+    };
+    Setting<MaceMode, "MaceMode">         _maceMode{MaceMode::ACCURATE};
+    Setting<std::string, "MaceModelPath"> _maceModelPath{""};
 
     // should stay private to control testing behavior and prevent accidental
     // modification
@@ -55,8 +58,6 @@ class MaceSettings
     static constexpr auto *_testModelTypeStr = "MACECalculator";
 
    public:
-    void finalize();
-
     void setMaceModelByUser(MaceModel model);
     void setMaceModelTypeByUser(MaceModelType model);
     void setMaceModeByUser(MaceMode mode);
@@ -82,15 +83,67 @@ class MaceSettings
 class FennolSettings
 {
    private:
-    Setting<std::string> _fennolModelPath{""};
-    Setting<bool>        _useGPUPreprocessing{true};
+    Setting<std::string, "FennolModelPath"> _fennolModelPath{""};
+    Setting<bool, "UseGPUPreprocessing">    _useGPUPreprocessing{true};
 
    public:
-    void setFennolModelPath(const std::string &path);
-    void setUseGPUPreprocessing(bool use);
+    void setFennolModelPathByUser(const std::string &path);
+    void setUseGPUPreprocessingByUser(bool use);
 
     [[nodiscard]] const std::string &getFennolModelPath() const;
     [[nodiscard]] bool               useGPUPreprocessing() const;
+};
+
+/**
+ * @brief DftbSettings
+ *
+ * @details stores all information about the DFTB model and related settings
+ *
+ */
+class DftbSettings
+{
+   private:
+    Setting<SlakosType, "SlakosType">  _slakosType{SlakosType::NONE};
+    Setting<std::string, "SlakosPath"> _slakosPath{""};
+    Setting<bool, "UseThirdOrderDftb"> _useThirdOrderDftb{false};
+
+    Setting<std::unordered_map<std::string, double>, "HubbardDerivs">
+        _hubbardDerivs;
+
+   public:
+    void finalize(ReferenceSettings &referenceSettings);
+
+    void setSlakosTypeByUser(SlakosType slakos);
+    void setSlakosPathByUser(const std::string &path);
+    void setSlakosTypeByUser(SlakosType slakos, bool resolveBuiltInPath);
+    void setUseThirdOrderDftbByUser(bool use);
+    void setHubbardDerivsByUser(
+        const std::unordered_map<std::string, double> &hubbardDerivs
+    );
+
+    [[nodiscard]] SlakosType         getSlakosType() const;
+    [[nodiscard]] const std::string &getSlakosPath() const;
+    [[nodiscard]] bool               useThirdOrderDftb() const;
+    [[nodiscard]]
+    std::optional<std::unordered_map<std::string, double>> getHubbardDerivs(
+    ) const;
+    [[nodiscard]] bool isHubbardDerivsSetByUser() const;
+};
+
+/**
+ * @brief XtbSettings
+ *
+ * @details stores all information about the XTB method and related settings
+ *
+ */
+class XtbSettings
+{
+   private:
+    Setting<XtbMethod, "XtbMethod"> _xtbMethod{XtbMethod::GFN2};
+
+   public:
+    void                    setXtbMethodByUser(XtbMethod method);
+    [[nodiscard]] XtbMethod getXtbMethod() const;
 };
 
 /**
@@ -102,21 +155,13 @@ class FennolSettings
 class QMSettings
 {
    private:
-    Setting<QMMethod>        _qmMethod{QMMethod::NONE};
-    static inline SlakosType _slakosType = SlakosType::NONE;
-    static inline XtbMethod  _xtbMethod  = XtbMethod::GFN2;
+    Setting<QMMethod, "QMMethod"> _qmMethod{QMMethod::NONE};
 
     static inline std::string _qmScript;
     static inline std::string _qmScriptFullPath;
-    static inline std::string _slakosPath;
 
     static inline bool _useDispersionCorrection = false;
     static inline bool _removeNetForce          = false;
-    static inline bool _useThirdOrderDftb       = false;
-    static inline bool _isThirdOrderDftbSet     = false;
-    static inline bool _isHubbardDerivsSet      = false;
-
-    static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
     static inline double _qmLoopTimeLimit =
         defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
@@ -135,20 +180,8 @@ class QMSettings
     static void setQMScript(const std::string_view &script);
     static void setQMScriptFullPath(const std::string_view &script);
 
-    static void setSlakosType(SlakosType slakos, bool resolveBuiltInPath);
-    static void setSlakosType(SlakosType slakos);
-    static void setSlakosPath(const std::string_view &path);
-
     static void setUseDispersionCorrection(bool use);
     static void setRemoveNetForce(bool removeNetForce);
-    static void setUseThirdOrderDftb(bool use);
-    static void setIsThirdOrderDftbSet(bool isThirdOrderDftbSet);
-    static void setHubbardDerivs(
-        const std::unordered_map<std::string, double> &hubbardDerivs
-    );
-    static void setIsHubbardDerivsSet(bool isHubbardDerivsSet);
-
-    static void setXtbMethod(XtbMethod method);
 
     static void setQMLoopTimeLimit(double time);
 
@@ -162,18 +195,8 @@ class QMSettings
     [[nodiscard]] static std::string getQMScript();
     [[nodiscard]] static std::string getQMScriptFullPath();
 
-    [[nodiscard]] static SlakosType  getSlakosType();
-    [[nodiscard]] static std::string getSlakosPath();
-
     [[nodiscard]] static bool useDispersionCorr();
     [[nodiscard]] static bool getRemoveNetForce();
-    [[nodiscard]] static bool useThirdOrderDftb();
-    [[nodiscard]] static bool isThirdOrderDftbSet();
-    [[nodiscard]] static std::unordered_map<std::string, double> getHubbardDerivs(
-    );
-    [[nodiscard]] static bool isHubbardDerivsSet();
-
-    [[nodiscard]] static XtbMethod getXtbMethod();
 
     [[nodiscard]] static double getQMLoopTimeLimit();
 };

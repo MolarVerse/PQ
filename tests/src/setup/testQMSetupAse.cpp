@@ -40,8 +40,8 @@
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(true);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(true);
     QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
 
@@ -55,7 +55,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings.dftbSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -67,9 +68,9 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 {
-    QMSettings::setUseThirdOrderDftb(false);
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    _settings.finalize();
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -82,7 +83,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings.dftbSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -102,10 +104,9 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBno3rdOrder)
 
 TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 {
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setHubbardDerivs({{"H", -0.3}});
-    QMSettings::setIsHubbardDerivsSet(true);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(true);
+    _settings.dftbSettings.setHubbardDerivsByUser({{"H", -0.3}});
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -118,7 +119,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
     EXPECT_EQ(line, "         DFTB approach:        3ob");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings.dftbSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -140,7 +142,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
-    QMSettings::setSlakosType(SlakosType::MATSCI);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
     QMSettings::setUseDispersionCorrection(true);
     _qmSetup->setupWriteInfo();
 
@@ -154,7 +156,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
     EXPECT_EQ(line, "         DFTB approach:        matsci");
     getline(file, line);
     std::string skPath{
-        __SLAKOS_DIR__ + SlakosTypeMeta::toString(QMSettings::getSlakosType()) +
+        __SLAKOS_DIR__ +
+        SlakosTypeMeta::toString(_settings.dftbSettings.getSlakosType()) +
         "/skfiles/"
     };
     EXPECT_EQ(line, "         sk file path:         " + skPath);
@@ -167,8 +170,8 @@ TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 {
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setSlakosPath("custom/path/");
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    _settings.dftbSettings.setSlakosPathByUser("custom/path/");
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -189,14 +192,11 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom)
 
 TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 {
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setSlakosPath("custom/path/");
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    _settings.dftbSettings.setSlakosPathByUser("custom/path/");
     QMSettings::setUseDispersionCorrection(true);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setUseThirdOrderDftb(true);
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setHubbardDerivs({{"H", -0.3}});
-    QMSettings::setIsHubbardDerivsSet(true);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(true);
+    _settings.dftbSettings.setHubbardDerivsByUser({{"H", -0.3}});
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -253,8 +253,8 @@ class FENNIXCalculator:
     modules["fennol.ase"] = fennolAseModule;
 
     _settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
-    _settings.fennolSettings.setFennolModelPath("model.fnx");
-    _settings.fennolSettings.setUseGPUPreprocessing(false);
+    _settings.fennolSettings.setFennolModelPathByUser("model.fnx");
+    _settings.fennolSettings.setUseGPUPreprocessingByUser(false);
     settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
 
     ASSERT_NO_THROW({

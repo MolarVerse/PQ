@@ -37,13 +37,17 @@ namespace engine
     void QMCapableEngine::setQMRunner(
         const QMSettings     &qmSettings,
         const MaceSettings   &maceSettings,
-        const FennolSettings &fennolSettings
+        const FennolSettings &fennolSettings,
+        const DftbSettings   &dftbSettings,
+        const XtbSettings    &xtbSettings
     )
     {
         _qmRunner = QMRunnerManager::createQMRunner(
             qmSettings,
             maceSettings,
-            fennolSettings
+            fennolSettings,
+            dftbSettings,
+            xtbSettings
         );
     }
 

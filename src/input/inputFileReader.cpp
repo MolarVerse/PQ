@@ -157,7 +157,9 @@ namespace input
                 settings.referenceSettings,
                 settings.qmSettings,
                 settings.maceSettings,
-                settings.fennolSettings
+                settings.fennolSettings,
+                settings.dftbSettings,
+                settings.xtbSettings
             )
         );
 

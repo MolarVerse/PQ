@@ -51,6 +51,10 @@ namespace engine
      * for the MACE runner
      * @param fennolSettings The FennolSettings object containing the
      * configuration for the Fennol runner
+     * @param xtbSettings The XtbSettings object containing the configuration
+     * for the XTB runner
+     * @param dftbSettings The DftbSettings object containing the configuration
+     * for the DFTB+ runner
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the created QM
      * runner
      * @throws InputFileException if the method is not supported
@@ -58,7 +62,9 @@ namespace engine
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
         const QMSettings     &qmSettings,
         const MaceSettings   &maceSettings,
-        const FennolSettings &fennolSettings
+        const FennolSettings &fennolSettings,
+        const DftbSettings   &dftbSettings,
+        const XtbSettings    &xtbSettings
     )
     {
         using enum QMMethod;
@@ -68,9 +74,10 @@ namespace engine
             case DFTBPLUS:
                 return std::make_shared<QM::DFTBPlusRunner>(qmSettings);
 
-            case ASE_DFTBPLUS: return createAseDftbRunner(qmSettings);
+            case ASE_DFTBPLUS:
+                return createAseDftbRunner(qmSettings, dftbSettings);
 
-            case ASE_XTB: return createAseXtbRunner(qmSettings);
+            case ASE_XTB: return createAseXtbRunner(qmSettings, xtbSettings);
 
             case PYSCF: return std::make_shared<QM::PySCFRunner>(qmSettings);
 
@@ -125,30 +132,20 @@ namespace engine
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseDftbRunner(
-        const QMSettings &settings
+        const QMSettings   &qmSettings,
+        const DftbSettings &dftbSettings
     )
     {
 #ifdef WITH_ASE
-        const auto slakosPath    = QMSettings::getSlakosPath();
-        const auto useThirdOrder = QMSettings::useThirdOrderDftb();
-        const auto hubbardDerivs = QMSettings::getHubbardDerivs();
-        const auto dispersion    = QMSettings::useDispersionCorr();
-
-        return std::make_shared<QM::AseDftbRunner>(
-            settings,
-            slakosPath,
-            useThirdOrder,
-            hubbardDerivs,
-            dispersion
-        );
+        return std::make_shared<QM::AseDftbRunner>(qmSettings, dftbSettings);
 #else
         // to silence unused parameter warnings when ASE is not enabled
-        (void) settings;
+        (void) qmSettings;
+        (void) dftbSettings;
         throw exc::CompileTimeException(
             "The ASE DFTB+ QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
-            "type "
-            "QM methods using: -DBUILD_WITH_ASE=ON"
+            "type QM methods using: -DBUILD_WITH_ASE=ON"
         );
 #endif
     }
@@ -161,22 +158,23 @@ namespace engine
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseXtbRunner(
-        const QMSettings &settings
+        const QMSettings  &qmSettings,
+        const XtbSettings &xtbSettings
     )
     {
 #ifdef WITH_ASE
         const auto xtbMethod =
-            XtbMethodMeta::toString(QMSettings::getXtbMethod());
+            XtbMethodMeta::toString(xtbSettings.getXtbMethod());
 
-        return std::make_shared<QM::AseXtbRunner>(settings, xtbMethod);
+        return std::make_shared<QM::AseXtbRunner>(qmSettings, xtbMethod);
 #else
         // to silence unused parameter warnings when ASE is not enabled
-        (void) settings;
+        (void) qmSettings;
+        (void) xtbSettings;
         throw exc::CompileTimeException(
             "The ASE xTB QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
-            "xTB "
-            "type QM method using: -DBUILD_WITH_ASE=ON"
+            "xTB type QM method using: -DBUILD_WITH_ASE=ON"
         );
 #endif
     }
@@ -205,8 +203,7 @@ namespace engine
         throw exc::CompileTimeException(
             "The ASE FeNNol QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
-            "FeNNol "
-            "type QM method using: -DBUILD_WITH_ASE=ON"
+            "FeNNol type QM method using: -DBUILD_WITH_ASE=ON"
         );
 #endif
     }

@@ -376,13 +376,13 @@ namespace
         }
 
         if (method == QMMethod::ASE_DFTBPLUS &&
-            QMSettings::getSlakosType() != SlakosType::NONE)
+            settings.dftbSettings.getSlakosType() != SlakosType::NONE)
         {
-            const auto slakosType = QMSettings::getSlakosType();
+            const auto slakosType = settings.dftbSettings.getSlakosType();
             if (slakosType == SlakosType::CUSTOM)
             {
                 requireDirectory(
-                    QMSettings::getSlakosPath(),
+                    settings.dftbSettings.getSlakosPath(),
                     "Slater-Koster directory"
                 );
             }
