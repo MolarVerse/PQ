@@ -134,7 +134,7 @@ namespace manostat
         if (fixedAxis == FixedAxis::NONE)
         {
             const auto deltaP =
-                _getSettings().getTargetPressure() * bar - _getPressure();
+                _getSettings().getTargetPressure() - _getPressure();
             constexpr auto dimension = 3.0;
 
             return linalg::diagonalMatrix(
@@ -163,7 +163,7 @@ namespace manostat
 
         p_avg /= static_cast<double>(numFree);
 
-        const auto deltaP    = _getSettings().getTargetPressure() * bar - p_avg;
+        const auto deltaP    = _getSettings().getTargetPressure() - p_avg;
         const auto dimension = static_cast<double>(numFree);
 
         const auto mu_scaled = ::exp(
@@ -247,7 +247,7 @@ namespace manostat
         const auto p_xy            = (p_x + p_y) / 2.0;
         const auto p_z             = p_xyz[anisotropicAxis];
 
-        const auto targetPressure = settings.getTargetPressure() * bar;
+        const auto targetPressure = settings.getTargetPressure();
         const auto deltaPxy       = targetPressure - p_xy;
         const auto deltaPz        = targetPressure - p_z;
 
@@ -304,9 +304,8 @@ namespace manostat
         stochasticFactor *= PRESSURE_FACTOR_PA;
         stochasticFactor  = ::sqrt(stochasticFactor);
 
-        const auto deltaP =
-            Pressure3D{_getSettings().getTargetPressure() * bar} -
-            diagonal(_getPressureTensor());
+        const auto deltaP = Pressure3D{_getSettings().getTargetPressure()} -
+                            diagonal(_getPressureTensor());
 
         auto mu = linalg::Vec3D{1.0, 1.0, 1.0};
         for (size_t i = 0; i < 3; ++i)
@@ -357,7 +356,7 @@ namespace manostat
         stochasticFactor  = ::sqrt(stochasticFactor);
 
         const auto deltaP =
-            linalg::diagonalMatrix(_getSettings().getTargetPressure()) * bar -
+            linalg::diagonalMatrix(_getSettings().getTargetPressure()) -
             _getPressureTensor();
 
         // dimensionless strain: -beta * (dt / tau) * dP / 3

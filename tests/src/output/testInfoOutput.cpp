@@ -47,7 +47,7 @@
 TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
 {
     _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -130,7 +130,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
 TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
 {
     _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -230,7 +230,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
 TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 {
     _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -324,8 +324,8 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
 {
     _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
-    _physicalData->setCoupledPressure(2.5);
+    _physicalData->setPressure(2.0 * bar);
+    _physicalData->setCoupledPressure(2.5 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -427,7 +427,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->reset();
 
     _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(0.0);
@@ -514,7 +514,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
 TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
 {
     _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);

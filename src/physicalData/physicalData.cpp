@@ -241,8 +241,8 @@ namespace physicalData
         _volume          = 0.0;
         _density         = 0.0;
         _temperature     = 0.0;
-        _pressure        = 0.0;
-        _coupledPressure = 0.0;
+        _pressure        = Pressure::zero();
+        _coupledPressure = Pressure::zero();
 
         _kineticEnergy         = 0.0;
         _coulombEnergy         = 0.0;

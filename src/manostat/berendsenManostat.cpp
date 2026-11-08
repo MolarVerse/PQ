@@ -107,7 +107,7 @@ namespace manostat
      */
     linalg::tensor3D BerendsenManostat::calculateMu() const
     {
-        const auto targetPressure = _getSettings().getTargetPressure() * bar;
+        const auto targetPressure = _getSettings().getTargetPressure();
         const auto fixedAxis      = _getSettings().getFixedAxis();
         if (fixedAxis == FixedAxis::ALL)
             return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
@@ -172,7 +172,7 @@ namespace manostat
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
         const auto preFactor = _calcPreFactor() / dimension;
 
-        const auto targetPressure = _getSettings().getTargetPressure() * bar;
+        const auto targetPressure = _getSettings().getTargetPressure();
 
         const double mu_xy = ::sqrt(
             1.0 -
@@ -205,10 +205,11 @@ namespace manostat
      */
     linalg::tensor3D AnisotropicBerendsenManostat::calculateMu() const
     {
-        const auto pxyz           = diagonal(_getPressureTensor());
-        const auto targetPressure = _getSettings().getTargetPressure() * bar;
-        const auto fixedAxis      = _getSettings().getFixedAxis();
-        const auto dimension =
+        const auto &settings       = _getSettings();
+        const auto  pxyz           = diagonal(_getPressureTensor());
+        const auto  targetPressure = settings.getTargetPressure();
+        const auto  fixedAxis      = settings.getFixedAxis();
+        const auto  dimension =
             3.0 - std::popcount(static_cast<unsigned>(fixedAxis));
         const auto preFactor = _calcPreFactor() / dimension;
 
@@ -235,7 +236,7 @@ namespace manostat
     linalg::tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
     {
         const auto pTarget =
-            linalg::diagonalMatrix(_getSettings().getTargetPressure()) * bar;
+            linalg::diagonalMatrix(_getSettings().getTargetPressure());
         const auto &fixedAxis = _getSettings().getFixedAxis();
         const auto  dimension =
             3.0 - std::popcount(static_cast<unsigned>(fixedAxis));

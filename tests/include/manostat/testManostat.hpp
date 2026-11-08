@@ -54,7 +54,7 @@ class TestManostat : public ::testing::Test
         _settings = std::make_unique<Settings>();
         _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
         _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-        _settings->manostatSettings.setTargetPressureByUser(1.0);
+        _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
         _settings->manostatSettings.setTauByUser(1.0 * fs);
         _settings->manostatSettings.setCompressibilityByUser(0.03 * per_bar);
         _manostat =

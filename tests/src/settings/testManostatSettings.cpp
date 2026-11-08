@@ -30,8 +30,8 @@
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
 {
     ManostatSettings settings;
-    settings.setTargetPressureByUser(2.5);
-    EXPECT_DOUBLE_EQ(settings.getTargetPressure(), 2.5);
+    settings.setTargetPressureByUser(2.5 * bar);
+    EXPECT_EQ(settings.getTargetPressure(), 2.5 * bar);
 
     settings.setTauByUser(1.5 * ps);
     EXPECT_EQ(settings.getTau(), 1.5 * ps);

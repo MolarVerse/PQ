@@ -25,6 +25,7 @@
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "physicalData.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -41,7 +42,7 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5);
     EXPECT_EQ(_physicalData->getVolume(), 3.0);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
-    EXPECT_EQ(_physicalData->getPressure(), 4.0);
+    EXPECT_EQ(_physicalData->getPressure(), 4.0 * bar);
     EXPECT_EQ(_physicalData->getQMEnergy(), 4.5);
     EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.5);
 }
@@ -61,8 +62,8 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
     EXPECT_EQ(physicalData2.getVolume(), 6.0);
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
-    EXPECT_EQ(physicalData2.getPressure(), 8.0);
-    EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5);
+    EXPECT_EQ(physicalData2.getPressure(), 8.0 * bar);
+    EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5 * bar);
     EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
     EXPECT_EQ(physicalData2.getQMReferenceEnergy(), 1.0);
 }
@@ -83,8 +84,8 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0);
     EXPECT_EQ(_physicalData->getVolume(), 12.0);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
-    EXPECT_EQ(_physicalData->getPressure(), 16.0);
-    EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0);
+    EXPECT_EQ(_physicalData->getPressure(), 16.0 * bar);
+    EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0 * bar);
     EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
     EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 2.0);
 }
@@ -192,8 +193,8 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setMomentum(linalg::Vec3D(1.0));
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
-    _physicalData->setPressure(1.0);
-    _physicalData->setCoupledPressure(1.0);
+    _physicalData->setPressure(1.0 * bar);
+    _physicalData->setCoupledPressure(1.0 * bar);
     _physicalData->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)));
     _physicalData->setQMEnergy(1.0);
     _physicalData->setQMReferenceEnergy(1.0);
@@ -215,8 +216,8 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(0.0));
     EXPECT_EQ(_physicalData->getVolume(), 0.0);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
-    EXPECT_EQ(_physicalData->getPressure(), 0.0);
-    EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0);
+    EXPECT_EQ(_physicalData->getPressure(), 0.0 * bar);
+    EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0 * bar);
     EXPECT_EQ(_physicalData->getVirial(), linalg::tensor3D(0.0));
     EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
     EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.0);

@@ -72,7 +72,7 @@ namespace manostat
         _pressureTensor      = pressureTensor * Pa;
         _pressure            = trace(_pressureTensor) / linalg::tensor3D::size;
 
-        physicalData.setPressure(_pressure.numerical_value_in(bar));
+        physicalData.setPressure(_pressure);
 
         const auto &box = simulationBox.getBox();
         if (!box.allowChangeOfAngles() && !box.isOrthorhombic())
@@ -101,11 +101,11 @@ namespace manostat
         if (numFree > 0)
         {
             p_avg /= static_cast<double>(numFree);
-            physicalData.setCoupledPressure(p_avg.numerical_value_in(bar));
+            physicalData.setCoupledPressure(p_avg);
         }
         else
         {
-            physicalData.setCoupledPressure(_pressure.numerical_value_in(bar));
+            physicalData.setCoupledPressure(_pressure);
         }
     }
 
