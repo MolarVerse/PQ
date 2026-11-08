@@ -94,6 +94,12 @@ build times (from ``-ftime-trace``); it was removed (#935), because compile time
 read a pull request's effect from them. For compile-time questions use the exact include graph numbers, or measure on
 your own machine with :doc:`localBuildTimes`, where the build can be pinned to one core.
 
+Pull requests build as a unity build (16 source files per compiler call): most of the compile time is mp-units template
+instantiation, which a batch does once instead of once per file. A clean build on 4 cores took 451 to 487 s, with batches
+of 8 324 s and with batches of 16 283 s, with the same test results. A push to ``dev`` stays a normal build, because the
+include graph below counts object files per header. A unity build can hide a missing ``#include``; the GCC jobs, which
+gate, are not unity builds.
+
 Pull requests build with ccache (the job took 8 to 17 minutes, depending on the CPU of the runner, #1045). A push to
 ``dev`` ignores the cache for reading (``CCACHE_RECACHE``) and writes it, so the build analysis and the include graph
 of the metrics stay those of a full build. The build passes ``-Xclang -fno-pch-timestamp``: without it clang puts the

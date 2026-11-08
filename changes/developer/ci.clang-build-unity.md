@@ -1,0 +1,1 @@
+- Build the clang job of pull requests as a unity build (16 source files per compiler call): about 40 % less time for a clean build, same test results; pushes to dev stay a normal build for the CI metrics.

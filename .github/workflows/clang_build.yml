@@ -93,10 +93,12 @@ jobs:
         run: clang++-20 --version
         shell: bash
 
+      # Pull requests build in unity batches, pushes to dev one file at a time:
+      # the objects differ, so the caches are kept apart.
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: clang-debug
+          key: clang-debug-${{ github.event_name == 'pull_request' && 'unity' || 'full' }}
 
       # ccache only takes "true" for a boolean, not "0", so it is set or unset
       - name: Compile everything (push to dev, manual run)
@@ -120,9 +122,20 @@ jobs:
       # -k 0 keeps building past failures so that one run lists every file
       # that does not build with clang; the exit status is passed on to the
       # build-timings step and fails the job at the end of this step.
+      # Pull requests: unity build, 16 source files per compiler call. The
+      # compile time is mostly mp-units template instantiation, which a batch
+      # does once instead of once per file (clean build on 4 cores: 451-487 s,
+      # unity batches of 8: 324 s, of 16: 283 s, same test results). Pushes to
+      # dev stay a normal build: the include graph of the CI metrics counts
+      # object files per header. The GCC jobs, which gate, are not unity
+      # builds, so missing includes are still found there (#1088).
       - name: Configure and build
         id: build
         run: |
+          unity=()
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            unity=(-DCMAKE_UNITY_BUILD=ON -DCMAKE_UNITY_BUILD_BATCH_SIZE=16)
+          fi
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Debug \
             -DBUILD_WITH_NATIVE=Off \
@@ -130,6 +143,7 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DBUILD_WITH_DOCS=OFF \
             -DCMAKE_CXX_FLAGS="-Xclang -fno-pch-timestamp" \
+            "${unity[@]}" \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           status=0
           cmake --build build --parallel "$(nproc)" -- -k 0 || status=$?
