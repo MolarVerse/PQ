@@ -79,7 +79,11 @@ namespace input
     {
         _validateTimings(settings);
         validateOptimizer(settings);
-        _validateQM(settings.qmSettings, settings.maceSettings);
+        _validateQM(
+            settings.qmSettings,
+            settings.maceSettings,
+            settings.dftbSettings
+        );
         _validateThermostat(settings.simulationBoxSettings);
         _validateManostat(settings.manostatSettings);
         _validateCellList();
@@ -135,7 +139,8 @@ namespace input
      */
     void InputFileReader::_validateQM(
         const QMSettings&   settings,
-        const MaceSettings& maceSettings
+        const MaceSettings& maceSettings,
+        const DftbSettings& dftbSettings
     ) const
     {
         if (!settings::GeneralSettings::isQMActivated())
@@ -150,12 +155,12 @@ namespace input
 
         if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {
-            if (QMSettings::getSlakosType() == SlakosType::NONE)
+            if (dftbSettings.getSlakosType() == SlakosType::NONE)
                 throw exc::InputFileException(
                     "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
                 );
 
-            if (QMSettings::getSlakosType() == SlakosType::CUSTOM &&
+            if (dftbSettings.getSlakosType() == SlakosType::CUSTOM &&
                 !getKeywordSet("slakos_path"))
             {
                 throw exc::InputFileException(
@@ -164,9 +169,9 @@ namespace input
                 );
             }
 
-            auto useThirdOrder = QMSettings::useThirdOrderDftb();
+            auto useThirdOrder = dftbSettings.useThirdOrderDftb();
 
-            if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
+            if (dftbSettings.getSlakosType() == SlakosType::THREEOB &&
                 !getKeywordSet("third_order"))
                 useThirdOrder = true;
 
@@ -175,6 +180,16 @@ namespace input
                 throw exc::InputFileException(
                     "You have set custom Hubbard derivatives but disabled 3rd "
                     "order DFTB. This setup is invalid."
+                );
+            }
+
+            if (useThirdOrder &&
+                dftbSettings.getSlakosType() != SlakosType::THREEOB &&
+                !getKeywordSet("hubbard_derivs"))
+            {
+                throw exc::InputFileException(
+                    "Third order DFTB requires the \"hubbard_derivs\" keyword "
+                    "unless the 3ob slakos are used. This setup is invalid."
                 );
             }
         }

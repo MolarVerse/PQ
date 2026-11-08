@@ -57,6 +57,8 @@ struct Settings
     QMSettings            qmSettings;
     MaceSettings          maceSettings;
     FennolSettings        fennolSettings;
+    DftbSettings          dftbSettings;
+    XtbSettings           xtbSettings;
 
     void finalize();
 };

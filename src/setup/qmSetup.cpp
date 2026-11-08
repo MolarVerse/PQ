@@ -51,18 +51,26 @@ namespace setup
      * @param fennolSettings The Fennol settings used to configure the Fennol
      * runner, which may include model-specific parameters and computational
      * options
+     * @param dftbSettings The DFTB settings used to configure the DFTB runner,
+     * which may include method-specific parameters and computational options
+     * @param xtbSettings The XTB settings used to configure the XTB runner,
+     * which may include method-specific parameters and computational options
      *
      */
     QMSetup::QMSetup(
         engine::QMCapableEngine &qmCapableEngine,
         const QMSettings        &qmSettings,
         const MaceSettings      &maceSettings,
-        const FennolSettings    &fennolSettings
+        const FennolSettings    &fennolSettings,
+        const DftbSettings      &dftbSettings,
+        const XtbSettings       &xtbSettings
     )
         : _qmCapableEngine(qmCapableEngine),
           _qmSettings(qmSettings),
           _maceSettings(maceSettings),
-          _fennolSettings(fennolSettings)
+          _fennolSettings(fennolSettings),
+          _dftbSettings(dftbSettings),
+          _xtbSettings(xtbSettings)
     {
     }
 
@@ -92,7 +100,9 @@ namespace setup
                 *qmCapableEngine,
                 settings.qmSettings,
                 settings.maceSettings,
-                settings.fennolSettings
+                settings.fennolSettings,
+                settings.dftbSettings,
+                settings.xtbSettings
             );
             qmSetup.setup(references);
         }
@@ -112,8 +122,6 @@ namespace setup
     {
         setupQMMethod();
 
-        _setupQMMethodAseDftbPlus();
-
         _setupQMMethodAseXtb(references);
 
         if (_qmSettings->isExternalQMRunner())
@@ -130,22 +138,13 @@ namespace setup
      */
     void QMSetup::setupQMMethod()
     {
-        _qmCapableEngine
-            .setQMRunner(_qmSettings, _maceSettings, _fennolSettings);
-    }
-
-    /**
-     * @brief setup the ASE DFTB+ method of the system
-     *
-     */
-    void QMSetup::_setupQMMethodAseDftbPlus() const
-    {
-        if (!(_qmSettings->getQMMethod() == QMMethod::ASE_DFTBPLUS))
-            return;
-
-        if (QMSettings::getSlakosType() == SlakosType::THREEOB &&
-            !QMSettings::isThirdOrderDftbSet())
-            QMSettings::setUseThirdOrderDftb(true);
+        _qmCapableEngine.setQMRunner(
+            _qmSettings,
+            _maceSettings,
+            _fennolSettings,
+            _dftbSettings,
+            _xtbSettings
+        );
     }
 
     /**
@@ -157,15 +156,15 @@ namespace setup
         if (!(_qmSettings->getQMMethod() == QMMethod::ASE_XTB))
             return;
 
-        if (QMSettings::getXtbMethod() == XtbMethod::GFN1)
+        if (_xtbSettings->getXtbMethod() == XtbMethod::GFN1)
         {
             references.addReferenceFile(ReferenceFiles::GFN1_FILE);
         }
-        else if (QMSettings::getXtbMethod() == XtbMethod::GFN2)
+        else if (_xtbSettings->getXtbMethod() == XtbMethod::GFN2)
         {
             references.addReferenceFile(ReferenceFiles::GFN2_FILE);
         }
-        else if (QMSettings::getXtbMethod() == XtbMethod::IPEA1)
+        else if (_xtbSettings->getXtbMethod() == XtbMethod::IPEA1)
         {
             references.addReferenceFile(ReferenceFiles::IPEA1_FILE);
         }
@@ -398,12 +397,11 @@ namespace setup
 
         if (qmMethod == ASE_DFTBPLUS)
         {
-            const auto slakosType         = QMSettings::getSlakosType();
-            const auto slakosPath         = QMSettings::getSlakosPath();
-            const auto thirdOrder         = QMSettings::useThirdOrderDftb();
-            const auto hubbardDerivs      = QMSettings::getHubbardDerivs();
-            const auto ishubbardDerivsSet = QMSettings::isHubbardDerivsSet();
-            const auto dispersion         = QMSettings::useDispersionCorr();
+            const auto slakosType    = _dftbSettings->getSlakosType();
+            const auto slakosPath    = _dftbSettings->getSlakosPath();
+            const auto thirdOrder    = _dftbSettings->useThirdOrderDftb();
+            const auto hubbardDerivs = _dftbSettings->getHubbardDerivs();
+            const auto dispersion    = QMSettings::useDispersionCorr();
 
             const auto slakosTypeMsg = std::format(
                 "DFTB approach:        {}",
@@ -423,8 +421,6 @@ namespace setup
                 "3ob approach has been chosen while disabling 3rd order DFTB. "
                 "This setup is not recommended."
             );
-            const auto hubbardDerivsMsg =
-                std::format("Hubbard derivatives:  {}", string(hubbardDerivs));
             const auto threeOBHubbardDerivsMsg = std::format(
                 "3ob approach has been chosen while setting custom Hubbard "
                 "derivatives. This setup is not recommended."
@@ -434,8 +430,15 @@ namespace setup
             logOutput.writeSetupInfo(slakosPathMsg);
             logOutput.writeSetupInfo(dispersionMsg);
             logOutput.writeSetupInfo(thirdOrderMsg);
-            if (ishubbardDerivsSet)
+            if (_dftbSettings->isHubbardDerivsSetByUser() &&
+                hubbardDerivs.has_value())
+            {
+                const auto hubbardDerivsMsg = std::format(
+                    "Hubbard derivatives:  {}",
+                    string(hubbardDerivs.value())
+                );
                 logOutput.writeSetupInfo(hubbardDerivsMsg);
+            }
 
             // Warnings for non-recommended setups
             if (slakosType == SlakosType::THREEOB && !thirdOrder)
@@ -445,7 +448,8 @@ namespace setup
                 out::StdoutOutput::writeSetupWarning(threeOBThirdOrderMsg);
             }
 
-            if (slakosType == SlakosType::THREEOB && ishubbardDerivsSet)
+            if (slakosType == SlakosType::THREEOB &&
+                _dftbSettings->isHubbardDerivsSetByUser())
             {
                 logOutput.writeEmptyLine();
                 logOutput.writeSetupWarning(threeOBHubbardDerivsMsg);
@@ -455,7 +459,7 @@ namespace setup
 
         if (qmMethod == ASE_XTB)
         {
-            const auto xtbMethod = QMSettings::getXtbMethod();
+            const auto xtbMethod = _xtbSettings->getXtbMethod();
 
             const auto xtbMethodMsg = std::format(
                 "xTB Parametrization:   {}",

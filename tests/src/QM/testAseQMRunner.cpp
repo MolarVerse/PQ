@@ -134,8 +134,8 @@ class AseQMRunnerTest : public ::testing::Test
             .attr("delay") = delay;
 
         FennolSettings fennolSettings;
-        fennolSettings.setFennolModelPath("model.fnx");
-        fennolSettings.setUseGPUPreprocessing(false);
+        fennolSettings.setFennolModelPathByUser("model.fnx");
+        fennolSettings.setUseGPUPreprocessingByUser(false);
         settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
 
         return QM::AseFennolRunner{settings, fennolSettings};
