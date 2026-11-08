@@ -263,7 +263,9 @@ namespace linalg
         concept DivideOperands =
             BinaryOperands<U, V> ||
             (NumericVector3D<U> && !pq::isVector3D_v<V> &&
-             requires(const pq::InnerType_t<U> &u, const V &v) { u / v; });
+             requires(const pq::InnerType_t<U> &value1, const V &value2) {
+                 value1 / value2;
+             });
 
     }   // namespace detail
 
