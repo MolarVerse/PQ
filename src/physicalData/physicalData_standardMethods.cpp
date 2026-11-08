@@ -177,7 +177,7 @@ namespace physicalData
      *
      * @param temperature
      */
-    void PhysicalData::setTemperature(double temperature)
+    void PhysicalData::setTemperature(const Temperature& temperature)
     {
         _temperature = temperature;
     }
@@ -469,9 +469,12 @@ namespace physicalData
     /**
      * @brief get the temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double PhysicalData::getTemperature() const { return _temperature; }
+    const Temperature& PhysicalData::getTemperature() const
+    {
+        return _temperature;
+    }
 
     /**
      * @brief get the pressure

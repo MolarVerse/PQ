@@ -28,6 +28,7 @@
 
 #include "enums/virial.hpp"
 #include "staticMatrix.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -69,11 +70,11 @@ namespace physicalData
         double _numberOfQMAtoms = 0.0;
         double _loopTime        = 0.0;
 
-        double _volume          = 0.0;
-        double _density         = 0.0;
-        double _temperature     = 0.0;
-        double _pressure        = 0.0;
-        double _coupledPressure = 0.0;
+        double      _volume  = 0.0;
+        double      _density = 0.0;
+        Temperature _temperature{Temperature::zero()};
+        double      _pressure        = 0.0;
+        double      _coupledPressure = 0.0;
 
         double _kineticEnergy         = 0.0;
         double _coulombEnergy         = 0.0;
@@ -150,7 +151,7 @@ namespace physicalData
 
         void setVolume(double volume);
         void setDensity(double density);
-        void setTemperature(double temperature);
+        void setTemperature(const Temperature& temperature);
         void setPressure(double pressure);
         void setCoupledPressure(double coupledPressure);
 
@@ -194,11 +195,11 @@ namespace physicalData
         [[nodiscard]] double getNumberOfQMAtoms() const;
         [[nodiscard]] double getLoopTime() const;
 
-        [[nodiscard]] double getVolume() const;
-        [[nodiscard]] double getDensity() const;
-        [[nodiscard]] double getTemperature() const;
-        [[nodiscard]] double getPressure() const;
-        [[nodiscard]] double getCoupledPressure() const;
+        [[nodiscard]] double             getVolume() const;
+        [[nodiscard]] double             getDensity() const;
+        [[nodiscard]] const Temperature& getTemperature() const;
+        [[nodiscard]] double             getPressure() const;
+        [[nodiscard]] double             getCoupledPressure() const;
 
         [[nodiscard]] double getKineticEnergy() const;
         [[nodiscard]] double getNonCoulombEnergy() const;

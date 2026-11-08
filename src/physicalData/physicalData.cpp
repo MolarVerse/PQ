@@ -29,6 +29,7 @@
 #include "constants/internalConversionFactors.hpp"
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace physicalData
 {
@@ -151,7 +152,7 @@ namespace physicalData
         _dihedralEnergy += other.getDihedralEnergy();
         _improperEnergy += other.getImproperEnergy();
 
-        _temperature     += other.getTemperature();
+        _temperature     += other.getTemperature().quantity_from_zero();
         _kineticEnergy   += other.getKineticEnergy();
         _volume          += other.getVolume();
         _density         += other.getDensity();
@@ -202,7 +203,8 @@ namespace physicalData
         _dihedralEnergy /= outputFrequency;
         _improperEnergy /= outputFrequency;
 
-        _temperature     /= outputFrequency;
+        _temperature =
+            Temperature{_temperature.quantity_from_zero() / outputFrequency};
         _volume          /= outputFrequency;
         _density         /= outputFrequency;
         _virial          /= outputFrequency;
@@ -240,7 +242,7 @@ namespace physicalData
 
         _volume          = 0.0;
         _density         = 0.0;
-        _temperature     = 0.0;
+        _temperature     = Temperature::zero();
         _pressure        = 0.0;
         _coupledPressure = 0.0;
 
@@ -316,7 +318,8 @@ namespace physicalData
         molsys::SimulationBox& simulationBox
     )
     {
-        _temperature = simulationBox.calculateTemperature();
+        _temperature =
+            mstd::units::point<K>(simulationBox.calculateTemperature());
     }
 
     /**

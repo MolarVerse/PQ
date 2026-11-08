@@ -73,7 +73,9 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
-        physicalData.getTemperature(),
+        physicalData.getTemperature().quantity_from_zero().numerical_value_in(
+            K
+        ),
         box.calculateMomentum()[0]
     );
     return 0;

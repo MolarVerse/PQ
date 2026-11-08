@@ -35,6 +35,7 @@
 #include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace resetKinetics
@@ -81,27 +82,30 @@ namespace resetKinetics
 
         if (resetTemp)
         {
-            resetTemperature(simulationBox, temperature);
+            resetTemperature(
+                simulationBox,
+                temperature.quantity_from_zero().numerical_value_in(K)
+            );
             momentum = simulationBox.calculateMomentum();
             resetMomentum(simulationBox, momentum);
-            temperature     = simulationBox.calculateTemperature();
-            momentum        = simulationBox.calculateMomentum();
+            temperature = toTemperature(simulationBox.calculateTemperature());
+            momentum    = simulationBox.calculateMomentum();
             angularMomentum = simulationBox.calculateAngularMomentum(momentum);
         }
         else if (resetMom)
         {
             // temperature also needs reset of momentum, thus the else if
             ResetKinetics::resetMomentum(simulationBox, momentum);
-            momentum        = simulationBox.calculateMomentum();
-            temperature     = simulationBox.calculateTemperature();
+            momentum    = simulationBox.calculateMomentum();
+            temperature = toTemperature(simulationBox.calculateTemperature());
             angularMomentum = simulationBox.calculateAngularMomentum(momentum);
         }
 
         if (resetAngular)
         {
             ResetKinetics::resetAngularMomentum(simulationBox, angularMomentum);
-            temperature     = simulationBox.calculateTemperature();
-            momentum        = simulationBox.calculateMomentum();
+            temperature = toTemperature(simulationBox.calculateTemperature());
+            momentum    = simulationBox.calculateMomentum();
             angularMomentum = simulationBox.calculateAngularMomentum(momentum);
         }
 

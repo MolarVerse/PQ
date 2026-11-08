@@ -38,6 +38,7 @@
 #include "testSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace
@@ -172,7 +173,9 @@ namespace
         const auto angularMomentum = angularMomentumOf(simulationBox);
 
         EXPECT_NEAR(
-            physicalData.getTemperature(),
+            physicalData.getTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K),
             simulationBox.calculateTemperature(),
             1e-9
         );
@@ -250,10 +253,14 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
     // temperature handed in by the caller (reset() takes it from PhysicalData)
     data.calculateTemperature(*box);
 
-    resetKinetics::ResetKinetics::resetTemperature(*box, data.getTemperature());
+    resetKinetics::ResetKinetics::resetTemperature(
+        *box,
+        data.getTemperature().quantity_from_zero().numerical_value_in(K)
+    );
 
     data.calculateTemperature(*box);
-    const auto T_after = data.getTemperature();
+    const auto T_after =
+        data.getTemperature().quantity_from_zero().numerical_value_in(K);
 
     EXPECT_FALSE(std::isnan(T_after));
     EXPECT_FALSE(std::isinf(T_after));
@@ -267,10 +274,16 @@ TEST(TestResetKinetics, resetTemperatureScalesFiniteTemperatureToZero)
     auto  data = physicalData::PhysicalData();
     data.calculateTemperature(*box);
     settings::ThermostatSettings::setTargetTemperature(0.0);
-    resetKinetics::ResetKinetics::resetTemperature(*box, data.getTemperature());
+    resetKinetics::ResetKinetics::resetTemperature(
+        *box,
+        data.getTemperature().quantity_from_zero().numerical_value_in(K)
+    );
 
     data.calculateTemperature(*box);
-    EXPECT_DOUBLE_EQ(data.getTemperature(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        0.0
+    );
     for (const auto &atom : box->getAtoms())
         EXPECT_EQ(atom->getVelocity(), linalg::Vec3D(0.0, 0.0, 0.0));
 
@@ -395,7 +408,7 @@ TEST(TestResetKinetics, resetTemperatureReachesTargetTemperature)
 
         resetKinetics::ResetKinetics::resetTemperature(
             *box,
-            data.getTemperature()
+            data.getTemperature().quantity_from_zero().numerical_value_in(K)
         );
 
         EXPECT_NEAR(box->calculateTemperature(), target, 1e-10 * target);
@@ -413,9 +426,14 @@ TEST(TestResetKinetics, resetTemperatureScalesAllVelocitiesByCommonFactor)
 
     const auto before    = velocitiesOf(*box);
     const auto positions = positionsOf(*box);
-    const auto lambda    = ::sqrt(300.0 / data.getTemperature());
+    const auto lambda    = ::sqrt(
+        300.0 / data.getTemperature().quantity_from_zero().numerical_value_in(K)
+    );
 
-    resetKinetics::ResetKinetics::resetTemperature(*box, data.getTemperature());
+    resetKinetics::ResetKinetics::resetTemperature(
+        *box,
+        data.getTemperature().quantity_from_zero().numerical_value_in(K)
+    );
 
     const auto after = velocitiesOf(*box);
     for (size_t i = 0; i < before.size(); ++i)
@@ -437,11 +455,16 @@ TEST(TestResetKinetics, resetTemperatureUsesPassedTemperatureNotBoxTemperature)
     // claim the system is 4 times hotter than it is - the scaling factor has
     // to follow the argument: sqrt(target / (4 T)) = 0.5 * sqrt(target / T)
     const auto before = velocitiesOf(*box);
-    const auto lambda = 0.5 * ::sqrt(300.0 / data.getTemperature());
+    const auto lambda =
+        0.5 *
+        ::sqrt(
+            300.0 /
+            data.getTemperature().quantity_from_zero().numerical_value_in(K)
+        );
 
     resetKinetics::ResetKinetics::resetTemperature(
         *box,
-        4.0 * data.getTemperature()
+        4.0 * data.getTemperature().quantity_from_zero().numerical_value_in(K)
     );
 
     const auto after = velocitiesOf(*box);
@@ -480,13 +503,31 @@ TEST(TestResetKinetics, resetTemperatureCanHeatAndCool)
     auto       data  = makeData(*box);
     const auto temp0 = data.getTemperature();
 
-    settings::ThermostatSettings::setTargetTemperature(2.0 * temp0);
-    resetKinetics::ResetKinetics::resetTemperature(*box, temp0);
-    EXPECT_NEAR(box->calculateTemperature(), 2.0 * temp0, 1e-10 * temp0);
+    settings::ThermostatSettings::setTargetTemperature(
+        scaleAbsTemp(temp0, 2.0).quantity_from_zero().numerical_value_in(K)
+    );
+    resetKinetics::ResetKinetics::resetTemperature(
+        *box,
+        temp0.quantity_from_zero().numerical_value_in(K)
+    );
+    EXPECT_NEAR(
+        box->calculateTemperature(),
+        scaleAbsTemp(temp0, 2.0).quantity_from_zero().numerical_value_in(K),
+        1e-10 * temp0.quantity_from_zero().numerical_value_in(K)
+    );
 
-    settings::ThermostatSettings::setTargetTemperature(0.25 * temp0);
-    resetKinetics::ResetKinetics::resetTemperature(*box, 2.0 * temp0);
-    EXPECT_NEAR(box->calculateTemperature(), 0.25 * temp0, 1e-10 * temp0);
+    settings::ThermostatSettings::setTargetTemperature(
+        scaleAbsTemp(temp0, 0.25).quantity_from_zero().numerical_value_in(K)
+    );
+    resetKinetics::ResetKinetics::resetTemperature(
+        *box,
+        scaleAbsTemp(temp0, 2.0).quantity_from_zero().numerical_value_in(K)
+    );
+    EXPECT_NEAR(
+        box->calculateTemperature(),
+        scaleAbsTemp(temp0, 0.25).quantity_from_zero().numerical_value_in(K),
+        1e-10 * temp0.quantity_from_zero().numerical_value_in(K)
+    );
 
     delete box;
 }
@@ -874,7 +915,7 @@ TEST(TestResetKinetics, resetWithoutScheduledResetLeavesBoxUntouched)
     reset.reset(7U, data, *box);
 
     EXPECT_EQ(velocitiesOf(*box), velocities);
-    EXPECT_DOUBLE_EQ(data.getTemperature(), temp);
+    EXPECT_EQ(data.getTemperature(), temp);
     expectVec3DNear(data.getMomentum() * S_TO_FS, momentum * S_TO_FS, 1e-12);
     expectVec3DNear(
         data.getAngularMomentum() * S_TO_FS,
@@ -898,7 +939,7 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
     // values in PhysicalData deliberately do not match the box
     const linalg::Vec3D momentum(1.0, 2.0, 3.0);
     const linalg::Vec3D angularMomentum(-4.0, 5.0, -6.0);
-    data.setTemperature(123.0);
+    data.setTemperature(toTemperature(123.0));
     data.setMomentum(momentum * FS_TO_S);
     data.setAngularMomentum(angularMomentum * FS_TO_S);
 
@@ -908,7 +949,7 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
 
     // nothing recalculated - the unit conversions S_TO_FS / FS_TO_S cancel
     EXPECT_EQ(velocitiesOf(*box), velocities);
-    EXPECT_DOUBLE_EQ(data.getTemperature(), 123.0);
+    EXPECT_EQ(data.getTemperature(), toTemperature(123.0));
     expectVec3DNear(data.getMomentum() * S_TO_FS, momentum, 1e-12);
     expectVec3DNear(
         data.getAngularMomentum() * S_TO_FS,
@@ -931,7 +972,9 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
 
     const auto before = velocitiesOf(*box);
     const auto vCom   = box->calculateMomentum() / box->getTotalMass();
-    const auto lambda = ::sqrt(300.0 / data.getTemperature());
+    const auto lambda = ::sqrt(
+        300.0 / data.getTemperature().quantity_from_zero().numerical_value_in(K)
+    );
 
     reset.reset(7U, data, *box);
 
@@ -954,8 +997,14 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
     );
 
     // the removed centre of mass motion carried kinetic energy
-    EXPECT_LT(data.getTemperature(), 300.0);
-    EXPECT_GT(data.getTemperature(), 0.0);
+    EXPECT_LT(
+        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        300.0
+    );
+    EXPECT_GT(
+        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        0.0
+    );
 
     // angular momentum was not scheduled
     EXPECT_GT(norm(angularMomentumOf(*box)), 1e-3);
@@ -993,7 +1042,13 @@ TEST(TestResetKinetics, resetMomentumBranchOnlyShiftsVelocities)
     EXPECT_NEAR(data.getMomentum()[0] * S_TO_FS, 0.0, 1e-12);
 
     // the temperature in data follows the (unscaled) box
-    EXPECT_GT(std::abs(data.getTemperature() - 300.0), 1e-3);
+    EXPECT_GT(
+        std::abs(
+            data.getTemperature().quantity_from_zero().numerical_value_in(K) -
+            300.0
+        ),
+        1e-3
+    );
     expectDataMatchesBox(data, *box);
 
     delete box;
@@ -1062,8 +1117,10 @@ TEST(TestResetKinetics, resetTemperatureAndMomentumDueTogetherActOnlyOnce)
     // correction with the stale momentum would shift the velocities again
     EXPECT_EQ(velocitiesOf(*boxBoth), velocitiesOf(*boxTemperature));
     EXPECT_DOUBLE_EQ(
-        dataBoth.getTemperature(),
+        dataBoth.getTemperature().quantity_from_zero().numerical_value_in(K),
         dataTemperature.getTemperature()
+            .quantity_from_zero()
+            .numerical_value_in(K)
     );
 
     delete boxTemperature;
@@ -1304,7 +1361,10 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
     for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
 
     auto data = makeData(*box);
-    ASSERT_DOUBLE_EQ(data.getTemperature(), 0.0);
+    ASSERT_DOUBLE_EQ(
+        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        0.0
+    );
 
     settings::ThermostatSettings::setTargetTemperature(300.0);
 
@@ -1315,7 +1375,10 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
 
     for (const auto &atom : box->getAtoms())
         EXPECT_EQ(atom->getVelocity(), linalg::Vec3D(0.0, 0.0, 0.0));
-    EXPECT_DOUBLE_EQ(data.getTemperature(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        0.0
+    );
 
     delete box;
 }
@@ -1366,7 +1429,10 @@ TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
     fresh.reset(7U, dataC, *boxC);
 
     EXPECT_EQ(velocitiesOf(*boxB), velocitiesOf(*boxC));
-    EXPECT_DOUBLE_EQ(dataB.getTemperature(), dataC.getTemperature());
+    EXPECT_DOUBLE_EQ(
+        dataB.getTemperature().quantity_from_zero().numerical_value_in(K),
+        dataC.getTemperature().quantity_from_zero().numerical_value_in(K)
+    );
     EXPECT_EQ(dataB.getMomentum(), dataC.getMomentum());
     EXPECT_EQ(dataB.getAngularMomentum(), dataC.getAngularMomentum());
 

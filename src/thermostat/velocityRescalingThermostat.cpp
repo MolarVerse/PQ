@@ -30,6 +30,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace thermostat
@@ -99,7 +100,7 @@ namespace thermostat
         physicalData.calculateTemperature(simulationBox);
 
         const auto temp = physicalData.getTemperature();
-        setTemperature(mstd::units::point<K>(temp));
+        setTemperature(temp);
 
         if (utilities::isZero(getTemperature().quantity_from_zero()))
         {
@@ -145,10 +146,12 @@ namespace thermostat
         for (const auto &atom : simulationBox.getAtoms())
             atom->scaleVelocity(berendsenFactor);
 
-        const auto temperature = getTemperature().quantity_from_zero() *
-                                 berendsenFactor * berendsenFactor;
+        const Temperature temperature{
+            getTemperature().quantity_from_zero() * berendsenFactor *
+            berendsenFactor
+        };
 
-        physicalData.setTemperature(temperature.numerical_value_in(K));
+        physicalData.setTemperature(temperature);
     }
 
     /**

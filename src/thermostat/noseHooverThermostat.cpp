@@ -141,7 +141,7 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        setTemperature(mstd::units::point<K>(physicalData.getTemperature()));
+        setTemperature(physicalData.getTemperature());
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());

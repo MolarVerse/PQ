@@ -58,7 +58,7 @@ TEST_F(TestEnergyOutput, writeHeader)
  */
 TEST_F(TestEnergyOutput, forceFieldNotActive)
 {
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
@@ -95,7 +95,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
  */
 TEST_F(TestEnergyOutput, forceFieldActive)
 {
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
@@ -139,7 +139,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
  */
 TEST_F(TestEnergyOutput, manostatActive)
 {
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
@@ -182,7 +182,7 @@ TEST_F(TestEnergyOutput, manostatActive)
  */
 TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
 {
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0);
     _physicalData->setCoupledPressure(2.5);
     _physicalData->setKineticEnergy(3.0);
@@ -228,7 +228,7 @@ TEST_F(TestEnergyOutput, qmActive)
 {
     _physicalData->reset();
 
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setMomentum(linalg::Vec3D(6.0));
@@ -269,7 +269,7 @@ TEST_F(TestEnergyOutput, qmActive)
  */
 TEST_F(TestEnergyOutput, noseHooverActive)
 {
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
@@ -317,7 +317,7 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
 {
     _physicalData->reset();
 
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);

@@ -64,7 +64,7 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        setTemperature(mstd::units::point<K>(physicalData.getTemperature()));
+        setTemperature(physicalData.getTemperature());
 
         if (utilities::isZero(getTemperature().quantity_from_zero()))
         {
@@ -91,8 +91,10 @@ namespace thermostat
             atom->scaleVelocity(berendsenFactor);
 
         physicalData.setTemperature(
-            getTemperature().quantity_from_zero().numerical_value_in(K) *
-            berendsenFactor * berendsenFactor
+            Temperature{
+                getTemperature().quantity_from_zero() * berendsenFactor *
+                berendsenFactor
+            }
         );
     }
 

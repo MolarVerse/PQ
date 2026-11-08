@@ -63,7 +63,7 @@ TEST_F(TestThermostat, calculateTemperature)
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
     EXPECT_EQ(
-        _data->getTemperature(),
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K),
         sum(kineticEnergyAtomicVector) * TEMPERATURE_FACTOR /
             static_cast<double>(nDOF)
     );
@@ -197,7 +197,7 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
     EXPECT_EQ(
-        _data->getTemperature(),
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K),
         oldTemperature * berendsenFactor * berendsenFactor
     );
 }
@@ -238,8 +238,16 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_FALSE(std::isnan(_data->getTemperature()));
-    EXPECT_FALSE(std::isinf(_data->getTemperature()));
+    EXPECT_FALSE(
+        std::isnan(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
+    EXPECT_FALSE(
+        std::isinf(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
     for (const auto &atom : _simulationBox->getAtoms())
     {
         for (size_t i = 0; i < 3; ++i)
@@ -263,7 +271,11 @@ TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(
+        std::isfinite(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t dimension = 0; dimension < 3; ++dimension)
             EXPECT_TRUE(std::isfinite(atom->getVelocity()[dimension]));
@@ -301,7 +313,11 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(
+        std::isfinite(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t dimension = 0; dimension < 3; ++dimension)
             EXPECT_TRUE(std::isfinite(atom->getVelocity()[dimension]));
@@ -355,7 +371,11 @@ TEST_F(TestThermostat, berendsenRelaxationTimeEqualToTimestepStaysFinite)
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(
+        std::isfinite(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
     EXPECT_TRUE(velocitiesAreFinite(*_simulationBox));
 }
 
@@ -372,7 +392,11 @@ TEST_F(TestThermostat, berendsenNearZeroTemperatureStaysFinite)
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(
+        std::isfinite(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
     EXPECT_TRUE(velocitiesAreFinite(*_simulationBox));
 }
 
@@ -397,14 +421,18 @@ TEST_F(TestThermostat, velocityRescalingRelaxationTimeShorterThanTimestep)
 {
     _data->calculateTemperature(*_simulationBox);
     _thermostat = std::make_unique<thermostat::VelocityRescalingThermostat>(
-        mstd::units::point<K>(0.5 * _data->getTemperature()),
+        Temperature{0.5 * _data->getTemperature().quantity_from_zero()},
         0.01 * fs
     );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(
+        std::isfinite(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
     EXPECT_TRUE(velocitiesAreFinite(*_simulationBox));
 }
 
@@ -621,7 +649,11 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
     const auto zetaBefore = thermostat.getZeta();
     thermostat.applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_TRUE(std::isfinite(_data->getTemperature()));
+    EXPECT_TRUE(
+        std::isfinite(
+            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+        )
+    );
     EXPECT_TRUE(std::isfinite(_data->getNoseHooverMomentumEnergy()));
     EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
     EXPECT_NE(thermostat.getChi(), chiBefore);
@@ -685,12 +717,7 @@ TEST_F(TestThermostat, berendsenStoresMeasuredTemperature)
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_DOUBLE_EQ(
-        _thermostat->getTemperature().quantity_from_zero().numerical_value_in(
-            K
-        ),
-        oldTemperature
-    );
+    EXPECT_EQ(_thermostat->getTemperature(), oldTemperature);
 }
 
 TEST_F(TestThermostat, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)
@@ -707,7 +734,10 @@ TEST_F(TestThermostat, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)
 
     _thermostat->applyThermostat(*_simulationBox, *_data);
 
-    const auto factor = std::sqrt(_data->getTemperature() / oldTemperature);
+    const auto factor =
+        std::sqrt((_data->getTemperature().quantity_from_zero() /
+                   oldTemperature.quantity_from_zero())
+                      .numerical_value_in(one));
     const auto newVelocity = _simulationBox->getAtoms()[1]->getVelocity();
     for (size_t axis = 0; axis < 3; ++axis)
         EXPECT_NEAR(newVelocity[axis], factor * oldVelocity[axis], 1e-12);
@@ -752,11 +782,11 @@ TEST_F(TestThermostat, velocityRescalingLambdaStatistics)
     const auto timeRatio = 0.1 / 10.0;
 
     auto thermostat = thermostat::VelocityRescalingThermostat(
-        mstd::units::point<K>(tempRatio * temperature),
+        Temperature{tempRatio * temperature.quantity_from_zero()},
         10.0 * fs
     );
 
-    const auto expectedMean = 1.0 + timeRatio * (tempRatio - 1.0);
+    const auto expectedMean = 1.0 + (timeRatio * (tempRatio - 1.0));
     const auto expectedStd  = 2.0 * std::sqrt(timeRatio * tempRatio / dof);
 
     constexpr size_t nSamples = 4000;
@@ -768,28 +798,29 @@ TEST_F(TestThermostat, velocityRescalingLambdaStatistics)
         restoreVelocities(*_simulationBox, initial);
         thermostat.applyThermostat(*_simulationBox, *_data);
 
-        const auto lambda  = _data->getTemperature() / temperature;
-        sum               += lambda;
-        sumSq             += lambda * lambda;
+        const auto lambda = (_data->getTemperature().quantity_from_zero() /
+                             temperature.quantity_from_zero())
+                                .numerical_value_in(one);
+        sum   += lambda;
+        sumSq += lambda * lambda;
 
         const auto scaled = _simulationBox->getAtoms()[1]->getVelocity();
         for (size_t axis = 0; axis < 3; ++axis)
+        {
             ASSERT_NEAR(
                 scaled[axis],
                 std::sqrt(lambda) * initial[1][axis],
                 1e-10
             );
+        }
     }
 
     const auto mean = sum / nSamples;
-    const auto var  = sumSq / nSamples - mean * mean;
+    const auto var  = (sumSq / nSamples) - (mean * mean);
 
     EXPECT_NEAR(mean, expectedMean, 5.0 * expectedStd / std::sqrt(nSamples));
     EXPECT_NEAR(std::sqrt(var), expectedStd, 0.1 * expectedStd);
-    EXPECT_DOUBLE_EQ(
-        thermostat.getTemperature().quantity_from_zero().numerical_value_in(K),
-        temperature
-    );
+    EXPECT_EQ(thermostat.getTemperature(), temperature);
 }
 
 TEST_F(TestThermostat, velocityRescalingNoStochasticTermAtEquilibriumLimit)
@@ -801,12 +832,16 @@ TEST_F(TestThermostat, velocityRescalingNoStochasticTermAtEquilibriumLimit)
     const auto temperature = _data->getTemperature();
 
     auto thermostat = thermostat::VelocityRescalingThermostat(
-        mstd::units::point<K>(3.0 * temperature),
+        Temperature{3.0 * temperature.quantity_from_zero()},
         100.0 * fs
     );
     thermostat.applyThermostat(*_simulationBox, *_data);
 
-    EXPECT_NEAR(_data->getTemperature(), temperature, 1e-3 * temperature);
+    EXPECT_NEAR(
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K),
+        temperature.quantity_from_zero().numerical_value_in(K),
+        1e-3 * temperature.quantity_from_zero().numerical_value_in(K)
+    );
 }
 
 /**
@@ -832,27 +867,30 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
 
     const auto temperature = _data->getTemperature();
     const auto dof = static_cast<double>(_simulationBox->getDegreesOfFreedom());
-    const auto dt  = 0.1e-15;
-    const auto f2  = freq * freq;
-    const auto kB  = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-    const auto eT  = kB * temperature;
-    const auto eTar = kB * targetTemp;
+    const auto timeStep          = 0.1e-15;
+    const auto freq2             = freq * freq;
+    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto kineticEnergy =
+        boltzmannConstant *
+        temperature.quantity_from_zero().numerical_value_in(K);
+    const auto eTar = boltzmannConstant * targetTemp;
 
-    auto c     = (eT - eTar) * dof - chi[0] * chi[1] / eTar * f2;
-    chi[0]    += dt * c;
-    auto h     = chi[0] / (eTar * dof) * f2;
-    zeta[0]   += h * dt;
-    auto r     = h * chi[0];
-    auto eMom  = r;
-    auto eFri  = dof * zeta[0];
+    auto chiTemp =
+        ((kineticEnergy - eTar) * dof) - (chi[0] * chi[1] / eTar * freq2);
+    chi[0]      += timeStep * chiTemp;
+    auto helper  = chi[0] / (eTar * dof) * freq2;
+    zeta[0]     += helper * timeStep;
+    auto ratio   = helper * chi[0];
+    auto eMom    = ratio;
+    auto eFri    = dof * zeta[0];
     for (size_t i = 1; i < chi.size() - 1; ++i)
     {
-        c        = r - eTar - chi[i] * chi[i + 1] / eTar * f2;
-        chi[i]  += dt * c;
-        h        = chi[i] / eTar * f2;
-        zeta[i] += h * dt;
-        r        = h * chi[i];
-        eMom    += r;
+        chiTemp  = ratio - eTar - chi[i] * chi[i + 1] / eTar * freq2;
+        chi[i]  += timeStep * chiTemp;
+        helper   = chi[i] / eTar * freq2;
+        zeta[i] += helper * timeStep;
+        ratio    = helper * chi[i];
+        eMom    += ratio;
         eFri    += zeta[i];
     }
 
@@ -863,10 +901,7 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
     }
     EXPECT_DOUBLE_EQ(_data->getNoseHooverMomentumEnergy(), eMom);
     EXPECT_DOUBLE_EQ(_data->getNoseHooverFrictionEnergy(), eFri);
-    EXPECT_DOUBLE_EQ(
-        thermostat.getTemperature().quantity_from_zero().numerical_value_in(K),
-        temperature
-    );
+    EXPECT_EQ(thermostat.getTemperature(), temperature);
 }
 
 TEST_F(TestThermostat, noseHooverForceMatchesReference)
@@ -894,11 +929,15 @@ TEST_F(TestThermostat, noseHooverForceMatchesReference)
         MOMENTUM_TO_FORCE;
 
     for (const auto &atom : _simulationBox->getAtoms())
+    {
         for (size_t axis = 0; axis < 3; ++axis)
+        {
             EXPECT_DOUBLE_EQ(
                 atom->getForce()[axis],
                 -factor * atom->getVelocity()[axis] * atom->getMass()
             );
+        }
+    }
 }
 
 TEST_F(TestThermostat, noseHooverRejectsNegativeTargetTemperature)

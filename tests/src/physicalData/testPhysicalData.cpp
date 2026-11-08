@@ -25,6 +25,7 @@
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "physicalData.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -36,7 +37,7 @@ TEST_F(TestPhysicalData, makeAverages)
     _physicalData->makeAverages(2);
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.5);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
-    EXPECT_EQ(_physicalData->getTemperature(), 1.5);
+    EXPECT_EQ(_physicalData->getTemperature(), toTemperature(1.5));
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(2.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5);
     EXPECT_EQ(_physicalData->getVolume(), 3.0);
@@ -56,7 +57,7 @@ TEST_F(TestPhysicalData, copy)
     physicalData2.copy(*_physicalData);
     EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0);
     EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0);
-    EXPECT_EQ(physicalData2.getTemperature(), 3.0);
+    EXPECT_EQ(physicalData2.getTemperature(), toTemperature(3.0));
     EXPECT_EQ(physicalData2.getMomentum(), linalg::Vec3D(4.0));
     EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
     EXPECT_EQ(physicalData2.getVolume(), 6.0);
@@ -78,7 +79,7 @@ TEST_F(TestPhysicalData, updateAverages)
     _physicalData->updateAverages(physicalData2);
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 2.0);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 4.0);
-    EXPECT_EQ(_physicalData->getTemperature(), 6.0);
+    EXPECT_EQ(_physicalData->getTemperature(), toTemperature(6.0));
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(8.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0);
     EXPECT_EQ(_physicalData->getVolume(), 12.0);
@@ -164,7 +165,9 @@ TEST_F(TestPhysicalData, calculateTemperature)
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
     EXPECT_NEAR(
-        _physicalData->getTemperature(),
+        _physicalData->getTemperature().quantity_from_zero().numerical_value_in(
+            K
+        ),
         sum(kineticEnergyAtomicVector) * TEMPERATURE_FACTOR /
             static_cast<double>(nDOF),
         1e-15
@@ -188,7 +191,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setDihedralEnergy(1.0);
     _physicalData->setImproperEnergy(1.0);
 
-    _physicalData->setTemperature(1.0);
+    _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setMomentum(linalg::Vec3D(1.0));
     _physicalData->setVolume(1.0);
     _physicalData->setDensity(1.0);
@@ -211,7 +214,7 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getDihedralEnergy(), 0.0);
     EXPECT_EQ(_physicalData->getImproperEnergy(), 0.0);
 
-    EXPECT_EQ(_physicalData->getTemperature(), 0.0);
+    EXPECT_EQ(_physicalData->getTemperature(), toTemperature(0.0));
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(0.0));
     EXPECT_EQ(_physicalData->getVolume(), 0.0);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);

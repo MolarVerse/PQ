@@ -33,8 +33,6 @@
 
 #include <mstd/units.hpp>
 
-#include "mp-units/systems/isq/base_quantities.h"
-#include "mp-units/systems/isq/mechanics.h"
 #include "vector3d.hpp"
 
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
@@ -49,4 +47,15 @@ using Temperature = mstd::units::quantity_point<
 using TemperatureDiff =
     mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
 
+[[nodiscard]]
+static inline Temperature toTemperature(double temperature)
+{
+    return mstd::units::point<mstd::units::K>(temperature);
+}
+
+[[nodiscard]]
+static inline Temperature scaleAbsTemp(Temperature absTemp, double scalar)
+{
+    return Temperature{absTemp.quantity_from_zero() * scalar};
+}
 #endif   // CONFIG__UNIT_TYPES_HPP

@@ -93,7 +93,13 @@ namespace out
         const Settings                   &settings
     )
     {
-        _writeRight(physicalData.getTemperature(), "TEMPERATURE", "K");
+        _writeRight(
+            physicalData.getTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K),
+            "TEMPERATURE",
+            "K"
+        );
 
         _writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
         _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
