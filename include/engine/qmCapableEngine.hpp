@@ -26,6 +26,10 @@
 #include <memory>
 
 #include "qmRunner.hpp"
+
+class QMSettings;
+class MaceSettings;
+
 namespace engine
 {
     /**
@@ -45,7 +49,10 @@ namespace engine
        public:
         virtual ~QMCapableEngine() = default;
 
-        void setQMRunner(const QMSettings &settings);
+        void setQMRunner(
+            const QMSettings   &settings,
+            const MaceSettings &maceSettings
+        );
         [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
         [[nodiscard]] bool                          hasQMRunner() const;
     };

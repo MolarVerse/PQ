@@ -28,6 +28,9 @@
 #include <format>
 #include <iostream>
 
+#include "generalSettings.hpp"
+#include "qmSettings.hpp"
+
 namespace QM
 {
 
@@ -37,24 +40,20 @@ namespace QM
      * @param settings The QM settings to configure the ASE Mace runner with,
      * including method-specific parameters such as the model type, model path,
      * floating-point precision, and any relevant computational options
-     * @param modelType
-     * @param model
-     * @param fpType
-     * @param dispersion
-     * @param enableCueq
+     * @param maceSettings The MACE-specific settings including model type,
+     * model path, floating-point precision, dispersion correction, and
+     * cuequivariance mode
      *
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseMaceRunner::AseMaceRunner(
-        const QMSettings  &settings,
-        const std::string &modelType,
-        const std::string &model,
-        const std::string &fpType,
-        bool               dispersion,
-        bool               enableCueq
+        const QMSettings   &settings,
+        const MaceSettings &maceSettings
     )
-        : AseQMRunner(settings)
+        : AseQMRunner(settings), _maceSettings(maceSettings)
     {
+        const auto enableCueq = _maceSettings->getMaceMode() == MaceMode::FAST;
+
         try
         {
             const pybind11::module_ calculators =
@@ -62,11 +61,19 @@ namespace QM
 
             const pybind11::dict calculatorArgs;
 
-            calculatorArgs["model"]         = model.c_str();
-            calculatorArgs["dispersion"]    = pybind11::bool_(dispersion);
-            calculatorArgs["enable_cueq"]   = pybind11::bool_(enableCueq);
-            calculatorArgs["default_dtype"] = fpType.c_str();
-            calculatorArgs["device"]        = pybind11::str("cuda");
+            const auto modelType = _maceSettings->getMaceModelTypeName();
+            auto       model     = _maceSettings->getMaceModelName();
+
+            if (!_maceSettings->getMaceModelPath().empty())
+                model = _maceSettings->getMaceModelPath();
+
+            calculatorArgs["model"] = model.c_str();
+            calculatorArgs["dispersion"] =
+                pybind11::bool_(QMSettings::useDispersionCorr());
+            calculatorArgs["enable_cueq"] = pybind11::bool_(enableCueq);
+            calculatorArgs["default_dtype"] =
+                settings::GeneralSettings::getFloatingPointPybindString();
+            calculatorArgs["device"] = pybind11::str("cuda");
 
             _setAseCalculator(
                 calculators.attr(modelType.c_str())(**calculatorArgs)
