@@ -1,75 +1,83 @@
 <map id="manostat::StochasticRescalingManostat::applyManostat" name="manostat::StochasticRescalingManostat::applyManostat">
-<area shape="rect" id="Node000001" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="5,801,227,846"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a0f72c206ae03884de00e8c46932f6cbe" title="Validate a resize without changing the live cell or atoms." alt="" coords="309,288,462,333"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,800,272,509,365,343,363,348,277,512,131,802"/>
-<area shape="rect" id="Node000012" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="592,348,763,393"/>
-<area shape="poly" id="edge31_Node000001_Node000012" title=" " alt="" coords="131,800,190,723,284,616,342,558,404,501,472,448,543,403,579,389,575,392,545,407,475,453,408,505,345,561,288,619,194,726,136,802"/>
-<area shape="rect" id="Node000013" href="$classmanostat_1_1StochasticRescalingManostat.html#a4c9d98558f00c84cd2e452c96f343255" title="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)" alt="" coords="275,697,496,742"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="164,799,274,752,296,746,292,749,276,757,167,803"/>
-<area shape="rect" id="Node000026" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="309,767,462,811"/>
-<area shape="poly" id="edge27_Node000001_Node000026" title=" " alt="" coords="226,807,295,799,291,802,228,812"/>
-<area shape="rect" id="Node000027" href="$classmolsys_1_1SimulationBox.html#af5aa7848a0d6a1874977bdbf0104a3c5" title="checks if the coulomb radius cut off is smaller than half of the minimal box dimension" alt="" coords="295,97,476,142"/>
-<area shape="poly" id="edge28_Node000001_Node000027" title=" " alt="" coords="118,800,135,713,166,581,211,427,240,349,272,274,311,208,356,152,354,156,316,211,277,277,245,351,216,429,171,582,140,714,124,801"/>
-<area shape="rect" id="Node000029" href="$classmolsys_1_1SimulationBox.html#ab8413a472b1174dc7264fefb08be317d" title="get the density" alt="" coords="300,836,471,881"/>
-<area shape="poly" id="edge32_Node000001_Node000029" title=" " alt="" coords="226,835,287,844,282,847,228,840"/>
-<area shape="rect" id="Node000030" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="300,905,471,950"/>
-<area shape="poly" id="edge33_Node000001_Node000030" title=" " alt="" coords="165,844,276,891,297,899,291,901,274,895,166,849"/>
-<area shape="rect" id="Node000031" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="300,975,471,1019"/>
-<area shape="poly" id="edge34_Node000001_Node000031" title=" " alt="" coords="137,844,197,902,235,933,276,960,288,968,283,968,273,965,232,937,194,906,137,849"/>
-<area shape="rect" id="Node000032" href="$classmolsys_1_1SimulationBox.html#a933e79618f00813d816e8dc7d80715f5" title="scales the box" alt="" coords="300,1081,471,1126"/>
-<area shape="poly" id="edge35_Node000001_Node000032" title=" " alt="" coords="131,844,191,931,231,982,276,1030,332,1073,326,1073,273,1034,227,985,186,934,130,849"/>
-<area shape="rect" id="Node000034" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="333,1154,438,1182"/>
-<area shape="poly" id="edge37_Node000001_Node000034" title=" " alt="" coords="122,844,140,904,169,983,189,1025,214,1066,243,1104,276,1136,296,1149,321,1160,315,1159,294,1153,273,1140,239,1107,209,1069,185,1028,164,985,135,906,122,849"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#a7f019934b3be402d7e32a152fb7ed491" title="Scale and validate a candidate cell." alt="" coords="600,177,755,222"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="433,285,543,239,587,225,583,228,545,243,437,289"/>
-<area shape="rect" id="Node000009" href="$namespacelinalg.html#a3c68bcb069b08372c949e4006d9884e5" title=" " alt="" coords="906,350,1019,378"/>
-<area shape="poly" id="edge12_Node000002_Node000009" title=" " alt="" coords="455,285,532,267,622,255,670,254,719,258,766,267,812,283,828,294,837,308,846,322,860,335,894,351,889,352,857,339,841,326,833,311,824,298,809,287,765,272,718,263,670,260,623,261,533,272,458,290"/>
-<area shape="rect" id="Node000011" href="$classmolsys_1_1Box.html#a88c57f7c0f780b860fb3ed68034aa422" title=" " alt="" coords="605,296,749,324"/>
-<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="461,308,592,309,587,312,463,313"/>
-<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="461,323,579,348,574,351,463,328"/>
-<area shape="rect" id="Node000004" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="863,74,1062,102"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="754,176,809,152,823,142,832,132,842,122,857,112,877,105,873,109,860,117,846,126,836,136,826,146,812,157,757,181"/>
-<area shape="rect" id="Node000005" href="$classmolsys_1_1Box.html#abf1ee9721e93ed254e1e2a5f0334abf1" title=" " alt="" coords="864,126,1061,154"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="754,181,881,156,876,159,757,186"/>
-<area shape="rect" id="Node000006" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="866,5,1059,50"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="754,182,783,169,809,152,825,130,832,108,839,84,856,60,865,57,861,61,860,64,843,86,837,109,830,133,812,156,785,174,757,186"/>
-<area shape="rect" id="Node000007" href="$classmolsys_1_1Box.html#a3ac94c19d5514e070431263aecdb07f3" title=" " alt="" coords="858,177,1067,222"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="754,197,845,198,840,201,756,202"/>
-<area shape="rect" id="Node000008" href="$classmolsys_1_1Box.html#a78d443142d87f04497693038220813df" title=" " alt="" coords="873,246,1052,274"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="755,213,881,241,876,243,756,219"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="755,210,786,222,812,239,823,251,830,264,837,289,843,313,849,324,860,335,894,354,889,355,857,339,845,327,838,315,831,290,825,266,819,254,809,243,783,226,756,215"/>
-<area shape="rect" id="Node000010" href="$classmolsys_1_1Box.html#ae3950e2a65948fb0b2e79eda0058b508" title=" " alt="" coords="878,298,1047,326"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="755,215,812,239,827,250,836,262,845,272,860,283,876,292,871,293,857,287,842,276,832,265,823,254,809,243,756,220"/>
-<area shape="rect" id="Node000014" href="$classmanostat_1_1Manostat.html#a8ff9ce39ec4fe3f3962dff75ff01dc50" title="get the pressure" alt="" coords="601,417,753,462"/>
-<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="399,695,542,472,588,452,584,455,546,476,403,698"/>
-<area shape="rect" id="Node000015" href="$classmanostat_1_1Manostat.html#a1f64a2576743cdf459c3c1352f1f9016" title="get the pressure tensor" alt="" coords="600,487,755,531"/>
-<area shape="poly" id="edge15_Node000013_Node000015" title=" " alt="" coords="400,695,457,623,497,583,543,548,587,529,583,532,545,553,501,587,461,627,404,699"/>
-<area shape="rect" id="Node000016" href="$classmanostat_1_1Manostat.html#ac15fdce5c3c9c6e772180815a819f76e" title="get the manostat settings" alt="" coords="886,547,1039,591"/>
-<area shape="poly" id="edge16_Node000013_Node000016" title=" " alt="" coords="404,695,462,641,501,613,543,592,627,568,715,556,798,554,873,558,868,560,798,559,715,562,628,573,545,597,504,618,466,645,408,699"/>
-<area shape="rect" id="Node000017" href="$classmanostat_1_1StochasticRescalingManostat.html#aad7ece15659bb3cf54c50f44d5d34f30" title="Check if a specific axis is fixed." alt="" coords="566,607,788,651"/>
-<area shape="poly" id="edge17_Node000013_Node000017" title=" " alt="" coords="446,694,543,661,572,655,567,657,545,666,449,699"/>
-<area shape="rect" id="Node000019" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="596,675,759,703"/>
-<area shape="poly" id="edge20_Node000013_Node000019" title=" " alt="" coords="495,706,582,698,578,700,497,711"/>
-<area shape="rect" id="Node000020" href="$classsettings_1_1ThermostatSettings.html#a8f899f6bc6879407100993fe6a0d9f54" title="get the actual target temperature" alt="" coords="570,727,784,771"/>
-<area shape="poly" id="edge21_Node000013_Node000020" title=" " alt="" coords="496,728,558,736,553,738,497,733"/>
-<area shape="rect" id="Node000021" href="$classManostatSettings.html#aedc2b8c78131068ecdecd0541f5649af" title="get the compressibility" alt="" coords="544,795,810,823"/>
-<area shape="poly" id="edge22_Node000013_Node000021" title=" " alt="" coords="467,740,497,752,521,767,545,781,567,790,562,791,543,786,518,772,495,757,467,745"/>
-<area shape="rect" id="Node000022" href="$classManostatSettings.html#aa328d484d2832f145c211e745df1f844" title="get the FixedAxis" alt="" coords="564,847,790,875"/>
-<area shape="poly" id="edge23_Node000013_Node000022" title=" " alt="" coords="477,740,498,752,515,773,522,794,529,814,546,832,555,840,550,840,542,836,525,817,517,796,510,776,494,756,478,745"/>
-<area shape="rect" id="Node000023" href="$classManostatSettings.html#a71c708f9b4383cfb971804d0bb3c2db0" title="get the target pressure" alt="" coords="575,899,779,943"/>
-<area shape="poly" id="edge24_Node000013_Node000023" title=" " alt="" coords="480,740,498,752,511,769,519,787,522,820,526,853,533,869,546,884,564,899,559,899,542,888,528,872,521,855,517,821,513,788,507,772,494,756,480,745"/>
-<area shape="rect" id="Node000024" href="$classManostatSettings.html#a90a22737d45a08a647e187fdf3d5ae6a" title="get the tau of the manostat" alt="" coords="584,967,770,995"/>
-<area shape="poly" id="edge25_Node000013_Node000024" title=" " alt="" coords="482,740,498,753,516,779,523,805,524,831,521,857,519,882,520,906,528,930,546,954,572,972,567,972,542,958,523,933,515,907,513,882,516,856,519,831,518,806,511,781,494,756,482,745"/>
-<area shape="rect" id="Node000025" href="$classsettings_1_1TimingsSettings.html#ac990af6a43bd3d7be96c36edf50eb5a0" title="get the time step" alt="" coords="584,1019,770,1063"/>
-<area shape="poly" id="edge26_Node000013_Node000025" title=" " alt="" coords="483,740,498,753,519,785,527,818,527,850,522,881,517,913,517,943,525,974,546,1004,572,1025,567,1025,542,1008,520,976,512,944,512,912,517,881,521,849,522,818,514,787,494,756,483,745"/>
-<area shape="poly" id="edge18_Node000017_Node000016" title=" " alt="" coords="786,604,874,587,869,589,788,609"/>
-<area shape="rect" id="Node000018" href="$config_2enums_2manostat_8cpp.html#a5fd9e28e7868b07d8deb9ee7ebfc47be" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="915,615,1010,643"/>
-<area shape="poly" id="edge19_Node000017_Node000018" title=" " alt="" coords="788,626,902,628,897,630,789,632"/>
-<area shape="poly" id="edge29_Node000027_Node000006" title=" " alt="" coords="475,96,544,82,704,57,853,39,849,42,705,62,544,88,478,101"/>
-<area shape="rect" id="Node000028" href="$classmolsys_1_1SimulationBox.html#a5dfa7ea1a2e9fa84e80e0d73ab95371b" title="gets the minimal box dimension" alt="" coords="578,97,776,142"/>
-<area shape="poly" id="edge30_Node000027_Node000028" title=" " alt="" coords="475,117,564,118,560,121,478,122"/>
-<area shape="rect" id="Node000033" href="$classmolsys_1_1SimulationBox.html#a6f269d92cc137a6ce63523470429be8c" title="calculate density of simulationBox" alt="" coords="592,1088,763,1133"/>
-<area shape="poly" id="edge36_Node000032_Node000033" title=" " alt="" coords="471,1103,578,1108,573,1108,472,1108"/>
-<area shape="rect" id="Node000035" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="588,1157,766,1202"/>
-<area shape="poly" id="edge38_Node000034_Node000035" title=" " alt="" coords="438,1167,576,1175,570,1176,438,1172"/>
+<area shape="rect" id="Node000001" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="5,965,227,1010"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a9420afb1c05d67de61043f3cf791411e" title="transform a scaling tensor into simulation space" alt="" coords="305,117,466,162"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,964,129,857,156,688,176,591,202,490,234,389,272,293,310,226,355,171,353,176,315,229,277,295,239,391,207,492,182,592,161,689,134,858,122,965"/>
+<area shape="rect" id="Node000007" href="$classmanostat_1_1Manostat.html#ae9cc2078d15758378827a07a2d01fb9f" title="Validate a resize without changing the live cell or atoms." alt="" coords="309,477,462,522"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="125,963,186,838,272,673,361,532,359,537,277,675,190,841,130,965"/>
+<area shape="rect" id="Node000016" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="569,537,740,582"/>
+<area shape="poly" id="edge37_Node000001_Node000016" title=" " alt="" coords="133,963,195,892,290,792,347,738,409,685,475,635,543,592,557,586,553,590,545,596,478,640,412,689,350,742,293,796,199,895,138,966"/>
+<area shape="rect" id="Node000017" href="$classmanostat_1_1StochasticRescalingManostat.html#aee9ea6b4c6919e9da57e527fefd3cbdb" title="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)" alt="" coords="275,865,496,910"/>
+<area shape="poly" id="edge18_Node000001_Node000017" title=" " alt="" coords="177,962,311,913,307,917,180,966"/>
+<area shape="rect" id="Node000027" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="309,965,462,1010"/>
+<area shape="poly" id="edge29_Node000001_Node000027" title=" " alt="" coords="226,985,296,986,291,989,228,990"/>
+<area shape="rect" id="Node000029" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="569,1244,740,1288"/>
+<area shape="poly" id="edge40_Node000001_Node000029" title=" " alt="" coords="220,1007,497,1070,514,1090,522,1111,523,1151,525,1191,532,1210,546,1229,558,1241,553,1240,542,1233,527,1213,520,1192,518,1151,516,1112,509,1093,495,1075,221,1013"/>
+<area shape="rect" id="Node000030" href="$classmolsys_1_1SimulationBox.html#af5aa7848a0d6a1874977bdbf0104a3c5" title="checks if the coulomb radius cut off is smaller than half of the minimal box dimension" alt="" coords="295,306,476,351"/>
+<area shape="poly" id="edge34_Node000001_Node000030" title=" " alt="" coords="118,964,134,880,164,753,210,607,239,533,272,463,309,407,352,360,349,365,313,410,277,466,244,536,215,609,170,755,140,881,124,965"/>
+<area shape="rect" id="Node000032" href="$classmolsys_1_1SimulationBox.html#ab8413a472b1174dc7264fefb08be317d" title="get the density" alt="" coords="300,1085,471,1130"/>
+<area shape="poly" id="edge38_Node000001_Node000032" title=" " alt="" coords="160,1007,276,1063,308,1078,303,1079,274,1068,160,1013"/>
+<area shape="rect" id="Node000033" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="300,1154,471,1199"/>
+<area shape="poly" id="edge39_Node000001_Node000033" title=" " alt="" coords="135,1007,194,1073,233,1109,276,1140,288,1147,283,1148,273,1144,230,1113,190,1077,135,1013"/>
+<area shape="rect" id="Node000034" href="$classmolsys_1_1SimulationBox.html#adbaff5ad48ae7029dc4d7124a26d9bf4" title="scales the box" alt="" coords="300,1284,471,1328"/>
+<area shape="poly" id="edge41_Node000001_Node000034" title=" " alt="" coords="131,1007,192,1100,232,1156,277,1209,310,1242,345,1274,339,1273,306,1246,273,1213,228,1159,187,1103,131,1013"/>
+<area shape="rect" id="Node000036" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="333,1356,438,1384"/>
+<area shape="poly" id="edge43_Node000001_Node000036" title=" " alt="" coords="121,1007,137,1074,164,1164,184,1211,209,1258,240,1301,276,1338,296,1351,320,1362,315,1362,294,1356,273,1343,236,1304,205,1261,179,1214,159,1165,131,1076,120,1012"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html#a98d364d3b62df674f97b5f7da26149c8" title=" " alt="" coords="558,57,751,102"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="464,119,544,102,540,106,468,123"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Box.html#abf1ee9721e93ed254e1e2a5f0334abf1" title=" " alt="" coords="819,160,1016,188"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="465,142,805,165,801,168,467,147"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Box.html#acb092a36797507af74fce753649628fb" title=" " alt="" coords="553,177,756,222"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="465,155,540,172,535,174,467,159"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1Box.html#a1f68e99fa4f29164f6929b77ef1b65fb" title=" " alt="" coords="550,5,759,33"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="416,115,473,77,543,42,565,36,561,40,545,47,476,82,420,118"/>
+<area shape="rect" id="Node000008" href="$classmanostat_1_1Manostat.html#a4b65fc81a45d80013139b247602ece8b" title="Scale and validate a candidate cell." alt="" coords="577,417,732,462"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="461,480,564,458,560,461,464,484"/>
+<area shape="rect" id="Node000013" href="$namespacelinalg.html#a3c68bcb069b08372c949e4006d9884e5" title=" " alt="" coords="861,568,974,596"/>
+<area shape="poly" id="edge17_Node000007_Node000013" title=" " alt="" coords="461,491,528,489,605,493,687,503,766,522,781,529,791,537,815,553,849,566,844,568,812,558,788,541,778,533,764,527,686,508,605,498,528,495,463,496"/>
+<area shape="rect" id="Node000015" href="$classmolsys_1_1Box.html#a88c57f7c0f780b860fb3ed68034aa422" title=" " alt="" coords="582,365,727,393"/>
+<area shape="poly" id="edge15_Node000007_Node000015" title=" " alt="" coords="416,475,473,437,543,402,570,395,566,398,545,407,476,442,420,478"/>
+<area shape="poly" id="edge16_Node000007_Node000016" title=" " alt="" coords="461,514,556,536,552,538,463,519"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="731,423,749,414,763,403,777,386,785,370,791,337,794,301,800,282,811,262,844,224,883,195,879,199,847,228,816,265,805,284,800,302,796,337,790,371,782,389,767,406,752,418,735,427"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="818,396,1017,424"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="731,428,805,421,800,424,734,433"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="821,276,1014,320"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="731,420,764,402,779,385,787,368,795,349,812,331,821,326,818,330,815,334,800,352,792,370,784,388,767,407,735,424"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Box.html#a3ac94c19d5514e070431263aecdb07f3" title=" " alt="" coords="813,448,1022,492"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="732,446,800,455,795,457,734,451"/>
+<area shape="rect" id="Node000012" href="$classmolsys_1_1Box.html#a78d443142d87f04497693038220813df" title=" " alt="" coords="828,516,1007,544"/>
+<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="719,460,766,478,814,502,837,511,831,512,812,507,764,483,721,465"/>
+<area shape="poly" id="edge13_Node000008_Node000013" title=" " alt="" coords="732,458,767,478,784,498,791,517,799,536,815,553,849,571,844,572,812,557,794,539,786,519,779,501,764,483,733,464"/>
+<area shape="rect" id="Node000014" href="$classmolsys_1_1Box.html#a54f4931d68be1df1634ac216609f61c8" title=" " alt="" coords="833,344,1002,372"/>
+<area shape="poly" id="edge14_Node000008_Node000014" title=" " alt="" coords="729,414,764,402,812,382,843,375,838,378,814,387,766,407,733,419"/>
+<area shape="rect" id="Node000018" href="$classmanostat_1_1Manostat.html#a4deadf08ee897577f94d0b0990b06696" title="get the pressure in pascal" alt="" coords="578,1054,731,1099"/>
+<area shape="poly" id="edge19_Node000017_Node000018" title=" " alt="" coords="437,907,470,927,498,951,514,975,521,998,529,1019,546,1040,567,1055,562,1055,542,1044,524,1022,516,999,509,977,494,954,466,931,438,913"/>
+<area shape="rect" id="Node000019" href="$classmanostat_1_1Manostat.html#a440cb9b551597e00c96b3d788fc6d940" title="get the pressure tensor in pascal" alt="" coords="577,606,732,651"/>
+<area shape="poly" id="edge20_Node000017_Node000019" title=" " alt="" coords="398,863,467,754,507,698,542,661,565,650,561,654,546,665,512,701,471,757,402,866"/>
+<area shape="rect" id="Node000020" href="$classmanostat_1_1Manostat.html#ac15fdce5c3c9c6e772180815a819f76e" title="get the manostat settings" alt="" coords="841,956,994,1000"/>
+<area shape="poly" id="edge21_Node000017_Node000020" title=" " alt="" coords="485,908,544,919,693,944,828,965,823,967,692,949,544,924,487,913"/>
+<area shape="rect" id="Node000021" href="$classmanostat_1_1StochasticRescalingManostat.html#aad7ece15659bb3cf54c50f44d5d34f30" title="Check if a specific axis is fixed." alt="" coords="544,985,765,1030"/>
+<area shape="poly" id="edge22_Node000017_Node000021" title=" " alt="" coords="429,907,545,963,578,978,572,979,543,968,430,913"/>
+<area shape="rect" id="Node000023" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="573,675,736,702"/>
+<area shape="poly" id="edge25_Node000017_Node000023" title=" " alt="" coords="398,863,422,829,455,788,496,746,543,712,560,705,556,708,545,716,499,750,459,791,426,832,403,866"/>
+<area shape="rect" id="Node000024" href="$classThermostatSettings.html#aec689b40ff79afa931ed73356c50bdb8" title="get the actual target temperature" alt="" coords="548,726,761,771"/>
+<area shape="poly" id="edge26_Node000017_Node000024" title=" " alt="" coords="414,862,472,821,543,781,560,775,556,778,545,786,475,826,418,866"/>
+<area shape="rect" id="Node000025" href="$classManostatSettings.html#acbfe111a00e919c81b5bf6a8416b20a8" title="get the target pressure" alt="" coords="552,796,757,840"/>
+<area shape="poly" id="edge27_Node000017_Node000025" title=" " alt="" coords="474,862,553,843,548,846,476,867"/>
+<area shape="rect" id="Node000026" href="$classsettings_1_1TimingsSettings.html#a9cf276bd4d2096d6fd5ced833badf419" title="get the time step" alt="" coords="562,865,748,910"/>
+<area shape="poly" id="edge28_Node000017_Node000026" title=" " alt="" coords="495,885,549,886,544,888,497,890"/>
+<area shape="poly" id="edge23_Node000021_Node000020" title=" " alt="" coords="765,992,828,987,823,989,767,997"/>
+<area shape="rect" id="Node000022" href="$config_2enums_2manostat_8cpp.html#a5fd9e28e7868b07d8deb9ee7ebfc47be" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="870,1059,965,1086"/>
+<area shape="poly" id="edge24_Node000021_Node000022" title=" " alt="" coords="747,1027,858,1057,853,1058,747,1033"/>
+<area shape="poly" id="edge30_Node000027_Node000016" title=" " alt="" coords="444,962,471,944,494,920,515,876,522,835,519,794,512,754,506,715,505,675,515,634,542,592,557,581,554,585,546,596,520,636,510,676,511,714,518,754,525,793,527,835,520,878,498,923,475,948,447,967"/>
+<area shape="poly" id="edge33_Node000027_Node000022" title=" " alt="" coords="462,1005,498,1027,514,1049,521,1071,528,1092,545,1109,586,1126,629,1135,674,1137,719,1134,803,1115,874,1092,869,1094,805,1120,720,1139,674,1143,629,1141,584,1132,543,1113,523,1095,516,1073,510,1051,494,1030,462,1010"/>
+<area shape="rect" id="Node000028" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="562,1174,747,1219"/>
+<area shape="poly" id="edge31_Node000027_Node000028" title=" " alt="" coords="461,1003,481,1013,498,1027,511,1043,518,1060,523,1091,527,1123,534,1138,546,1153,559,1166,554,1165,542,1157,529,1141,522,1124,517,1092,513,1061,506,1046,494,1030,479,1018,462,1008"/>
+<area shape="poly" id="edge32_Node000027_Node000029" title=" " alt="" coords="461,1002,482,1012,498,1027,515,1053,523,1080,524,1105,522,1131,520,1156,521,1180,529,1205,546,1229,558,1242,553,1241,542,1233,524,1207,516,1181,515,1156,517,1130,519,1105,518,1080,511,1056,494,1030,479,1017,462,1007"/>
+<area shape="poly" id="edge35_Node000030_Node000010" title=" " alt="" coords="475,321,807,302,803,306,478,326"/>
+<area shape="rect" id="Node000031" href="$classmolsys_1_1SimulationBox.html#a5dfa7ea1a2e9fa84e80e0d73ab95371b" title="gets the minimal box dimension" alt="" coords="556,246,754,291"/>
+<area shape="poly" id="edge36_Node000030_Node000031" title=" " alt="" coords="475,306,542,292,538,296,478,310"/>
+<area shape="rect" id="Node000035" href="$classmolsys_1_1SimulationBox.html#a6f269d92cc137a6ce63523470429be8c" title="calculate density of simulationBox" alt="" coords="569,1313,740,1358"/>
+<area shape="poly" id="edge42_Node000034_Node000035" title=" " alt="" coords="471,1312,556,1324,551,1324,471,1318"/>
+<area shape="rect" id="Node000037" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="566,1382,743,1427"/>
+<area shape="poly" id="edge44_Node000036_Node000037" title=" " alt="" coords="438,1374,553,1391,548,1391,438,1379"/>
 </map>

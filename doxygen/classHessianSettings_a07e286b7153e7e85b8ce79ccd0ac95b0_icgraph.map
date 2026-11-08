@@ -1,5 +1,0 @@
-<map id="HessianSettings::setOptimizeBeforeHessian" name="HessianSettings::setOptimizeBeforeHessian">
-<area shape="rect" id="Node000001" title="Set whether to optimize before Hessian calculations." alt="" coords="107,5,320,50"/>
-<area shape="rect" id="Node000002" href="$testHessianSettings_8cpp.html#ad989c3cdc0dc1a12dc57d5609273874b" title=" " alt="" coords="5,14,59,42"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,29,59,30,59,25,93,27"/>
-</map>

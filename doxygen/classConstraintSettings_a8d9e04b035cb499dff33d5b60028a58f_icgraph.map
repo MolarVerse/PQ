@@ -1,5 +1,7 @@
 <map id="ConstraintSettings::activateShakeForWaterModel" name="ConstraintSettings::activateShakeForWaterModel">
-<area shape="rect" id="Node000001" title="activate the shake algorithm only for the water model" alt="" coords="195,5,414,50"/>
-<area shape="rect" id="Node000002" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="5,5,147,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,28,147,30,147,25,182,27"/>
+<area shape="rect" id="Node000001" title="activate the shake algorithm only for the water model" alt="" coords="296,5,515,50"/>
+<area shape="rect" id="Node000002" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="107,5,248,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="278,28,249,30,248,25,283,28"/>
+<area shape="rect" id="Node000003" href="$testConstraintSettings_8cpp.html#ad808cbb357c4fd2740e7c67b54b8a238" title="isShakeSetBySystem() must distinguish shake activated only as a side effect of a rigid water model fr..." alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,29,59,30,59,25,93,27"/>
 </map>

@@ -1,9 +1,0 @@
-<map id="resetKinetics::ResetKinetics::resetTemperature" name="resetKinetics::ResetKinetics::resetTemperature">
-<area shape="rect" id="Node000001" title="reset the temperature of the system &#45; hard scaling" alt="" coords="5,75,209,119"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a8f899f6bc6879407100993fe6a0d9f54" title="get the actual target temperature" alt="" coords="257,5,470,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,71,266,53,261,56,193,77"/>
-<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="278,75,449,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,94,265,96,260,98,210,100"/>
-<area shape="rect" id="Node000004" href="$namespaceutilities.html#aaae9b2dbd3ac275d4268ad9f73baa500" title="check whether a number is exactly zero" alt="" coords="304,143,423,171"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="206,117,291,139,286,140,205,123"/>
-</map>

@@ -1,0 +1,5 @@
+<map id="ThermostatSettings::setEndTemperature" name="ThermostatSettings::setEndTemperature">
+<area shape="rect" id="Node000001" title="set the end temperature" alt="" coords="5,5,161,50"/>
+<area shape="rect" id="Node000002" href="$classThermostatSettings.html#a072b5a7c22b0510991ff135d8f7094e6" title="set the end temperature set" alt="" coords="209,5,385,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,25,196,27,191,28,161,30"/>
+</map>

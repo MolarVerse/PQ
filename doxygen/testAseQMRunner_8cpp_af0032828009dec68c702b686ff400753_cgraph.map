@@ -1,7 +1,15 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,36,74,64"/>
-<area shape="rect" id="Node000002" href="$classAseQMRunnerTest.html#afe1f4b45e3b0deba59ba4cb63e7dd558" title=" " alt="" coords="122,5,318,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,42,122,35,117,38,75,47"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a5faaf087a0133c0e52024666edc36f39" title="sets the qmLoopTimeLimit in settings" alt="" coords="136,57,304,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,53,122,62,118,64,74,58"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,114,74,142"/>
+<area shape="rect" id="Node000002" href="$classAseQMRunnerTest.html#a11de18eb8d449507a4b873c65ba5ac9e" title=" " alt="" coords="129,83,325,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,120,125,112,121,116,75,125"/>
+<area shape="rect" id="Node000007" href="$classQMSettings.html#a9bf600dd42b7946b47084dfc2ce1ba37" title="sets the qmLoopTimeLimit in settings" alt="" coords="122,135,332,179"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="74,130,109,137,104,139,75,136"/>
+<area shape="rect" id="Node000003" href="$classFennolSettings.html#a07b4c6d7001f3fffe408119d95ddbb2a" title="sets the FeNNol model path" alt="" coords="430,5,619,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="289,80,418,52,413,54,290,85"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#aa051a6d49ac857b16cc55b39975ab087" title="sets the floating point type" alt="" coords="432,75,617,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="325,94,419,96,414,98,326,100"/>
+<area shape="rect" id="Node000005" href="$classFennolSettings.html#ac0c17cfe109aaf8979f94d834b086b26" title="sets if the GPU pre&#45;processing should be enabled for FeNNol" alt="" coords="380,144,669,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="290,109,414,140,409,141,289,114"/>
+<area shape="rect" id="Node000006" href="$classFennolSettings.html#a9c1b329fbb66979c061e2b2384376697" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="717,152,985,180"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="670,164,705,166,699,166,670,169"/>
 </map>

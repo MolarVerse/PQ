@@ -1,7 +1,9 @@
 <map id="thermostat::Thermostat" name="thermostat::Thermostat">
-<area shape="rect" id="Node000001" title="Thermostat is a base class for all thermostats." alt="" coords="18,195,234,513"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,60,78"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="29,75,30,122,37,171,39,179,33,180,31,172,25,123,29,80"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="195,5,244,78"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,75,193,172,190,180,185,178,187,171,211,80"/>
+<area shape="rect" id="Node000001" title="Thermostat is a base class for all thermostats." alt="" coords="236,207,452,525"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,215,112"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,109,199,181,228,219,223,220,195,185,145,114"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="239,5,448,112"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="345,109,346,191,341,190,342,114"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="506,22,554,95"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="528,92,520,138,503,184,464,246,460,242,498,182,515,137,525,97"/>
 </map>

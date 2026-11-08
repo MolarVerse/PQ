@@ -53,7 +53,6 @@
 <li class="toctree-l2"><a class="reference internal" href="cmakeOptions.html">Build Options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="staticChecks.html">Static Checks and Conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuousIntegration.html">Continuous Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ciMetrics.html">CI Metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="localBuildTimes.html">Local Build Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="codeStatistics.html">Code Statistics</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Branches and Releases</a><ul>
@@ -127,9 +126,7 @@
 </tr>
 </tbody>
 </table>
-<p>Nobody pushes to <code class="docutils literal notranslate"><span class="pre">main</span></code> or <code class="docutils literal notranslate"><span class="pre">dev</span></code> directly, and a branch that other people use is never amended or force-pushed.
-The only exception is the CI metrics collector, which commits the data below <code class="docutils literal notranslate"><span class="pre">.github/ci-metrics/data/</span></code> to <code class="docutils literal notranslate"><span class="pre">dev</span></code>,
-see <a class="reference internal" href="ciMetrics.html"><span class="doc">CI Metrics</span></a>.</p>
+<p>Nobody pushes to <code class="docutils literal notranslate"><span class="pre">main</span></code> or <code class="docutils literal notranslate"><span class="pre">dev</span></code> directly, and a branch that other people use is never amended or force-pushed.</p>
 <p>A typical change:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>dev<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
 $<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/my-feature
@@ -163,7 +160,7 @@ the branch.</p>
 <p>Normal releases use <code class="docutils literal notranslate"><span class="pre">release/vX.Y.Z</span></code> branches prepared from <code class="docutils literal notranslate"><span class="pre">dev</span></code>. Hotfixes
 use <code class="docutils literal notranslate"><span class="pre">hotfix/&lt;name&gt;</span></code> branches prepared from <code class="docutils literal notranslate"><span class="pre">main</span></code>. Both target <code class="docutils literal notranslate"><span class="pre">main</span></code> and
 require successful checks on the exact publication commit before publishing.</p>
-<p>See <a class="reference internal" href="releasesAndHotfixes.html"><span class="doc">Releases and Hotfixes</span></a> for the creation commands, version pinning,
+<p>See <a class="reference internal" href="releasesAndHotfixes.html"><span class="doc">Releases and Hotfixes</span></a> for the creation commands, version selection,
 changelog preparation, publication verification and recovery procedures.</p>
 </section>
 </section>

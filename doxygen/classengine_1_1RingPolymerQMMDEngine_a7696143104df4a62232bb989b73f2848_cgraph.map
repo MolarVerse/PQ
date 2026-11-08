@@ -1,17 +1,25 @@
 <map id="engine::RingPolymerQMMDEngine::applyManostat" name="engine::RingPolymerQMMDEngine::applyManostat">
-<area shape="rect" id="Node000001" title="apply manostat" alt="" coords="5,125,250,170"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="351,35,503,79"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,122,297,89,338,80,333,82,298,94,196,127"/>
-<area shape="rect" id="Node000006" href="$classengine_1_1MDEngine.html#a8c76de7c312956d2a699baa52180cef4" title="get the reference to the manostat" alt="" coords="312,103,542,131"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="249,133,300,129,295,131,251,138"/>
-<area shape="rect" id="Node000007" href="$classengine_1_1RingPolymerEngine.html#a340c33f61cef81deb6c00a3139bfbd2d" title=" " alt="" coords="327,155,527,199"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="250,157,314,165,308,166,250,162"/>
-<area shape="rect" id="Node000008" href="$classengine_1_1RingPolymerEngine.html#ab051dad3853b3f97de92fb03345616c2" title=" " alt="" coords="298,224,556,269"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="185,168,299,209,324,219,319,219,297,214,185,173"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="604,5,756,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="503,46,591,37,586,39,504,51"/>
-<area shape="rect" id="Node000004" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="628,74,733,102"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="503,64,615,79,610,80,504,69"/>
-<area shape="rect" id="Node000005" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="804,65,982,110"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="733,85,791,87,786,88,734,90"/>
+<area shape="rect" id="Node000001" title="apply manostat" alt="" coords="5,279,250,323"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="351,188,503,233"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,276,297,242,338,233,333,235,298,248,196,281"/>
+<area shape="rect" id="Node000010" href="$classengine_1_1MDEngine.html#a8c76de7c312956d2a699baa52180cef4" title="get the reference to the manostat" alt="" coords="312,256,542,284"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="249,286,300,283,295,284,251,291"/>
+<area shape="rect" id="Node000011" href="$classengine_1_1RingPolymerEngine.html#a340c33f61cef81deb6c00a3139bfbd2d" title=" " alt="" coords="327,308,527,353"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="250,310,314,318,308,320,250,316"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1RingPolymerEngine.html#ab051dad3853b3f97de92fb03345616c2" title=" " alt="" coords="298,377,556,422"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="185,321,299,362,324,373,319,372,297,368,185,327"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="604,144,756,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="503,195,591,181,586,183,504,200"/>
+<area shape="rect" id="Node000008" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="628,242,733,270"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="503,221,615,243,610,244,503,227"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="811,5,983,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="702,141,747,101,803,60,811,58,816,56,806,65,750,105,705,146"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="804,75,990,119"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="751,141,813,124,808,126,753,146"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="811,144,983,189"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="756,164,799,166,793,167,757,169"/>
+<area shape="rect" id="Node000007" href="$config_2enums_2manostat_8cpp.html#a5fd9e28e7868b07d8deb9ee7ebfc47be" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="850,212,944,240"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="757,185,805,198,837,209,832,209,804,204,757,190"/>
+<area shape="rect" id="Node000009" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="808,264,986,309"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="733,260,796,271,790,272,733,266"/>
 </map>

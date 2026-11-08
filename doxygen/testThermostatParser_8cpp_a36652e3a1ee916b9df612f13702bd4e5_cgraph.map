@@ -1,7 +1,7 @@
 <map id="TEST_F" name="TEST_F">
 <area shape="rect" id="Node000001" title="tests parsing the &quot;t_relaxation&quot; command" alt="" coords="5,48,74,76"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="144,5,308,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,131,44,127,48,75,59"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#a10c19eac5a4d4e66873c7619269b2328" title="get the relaxation time" alt="" coords="122,75,331,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,66,109,74,104,76,74,71"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="122,5,286,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,109,47,104,50,75,58"/>
+<area shape="rect" id="Node000003" href="$classThermostatSettings.html#aaccf4e57a8900531a2baafe83c867946" title="get the relaxation time" alt="" coords="127,75,280,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,67,114,76,110,79,74,72"/>
 </map>

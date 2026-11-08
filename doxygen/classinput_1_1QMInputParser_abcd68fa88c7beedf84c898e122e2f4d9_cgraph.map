@@ -1,17 +1,15 @@
 <map id="input::QMInputParser::addMaceModelPathKey" name="input::QMInputParser::addMaceModelPathKey">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,125,186,170"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,186,141"/>
 <area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="234,5,392,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,123,232,60,246,55,242,59,235,65,132,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,93,246,55,242,58,152,98"/>
 <area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="263,74,362,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,122,250,104,246,107,180,127"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,103,250,96,245,98,187,108"/>
 <area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="234,125,392,170"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="185,145,220,147,215,149,187,150"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="186,128,221,134,216,136,186,133"/>
 <area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="238,195,388,239"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="168,168,228,188,223,190,168,173"/>
-<area shape="rect" id="Node000008" href="$classsettings_1_1QMSettings.html#aab2fa74336cbab63f0940668fde16d66" title="set the mace model path" alt="" coords="235,264,391,309"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="123,168,174,208,235,249,245,257,240,256,232,254,171,212,122,173"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="145,138,235,180,248,188,243,188,233,185,144,144"/>
 <area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="468,61,619,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="363,84,455,84,450,86,364,89"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="363,84,455,85,450,86,364,89"/>
 <area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="440,131,647,175"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="392,147,427,150,421,151,392,152"/>
 </map>

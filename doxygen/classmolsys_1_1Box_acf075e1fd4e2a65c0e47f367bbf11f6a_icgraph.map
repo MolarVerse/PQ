@@ -1,5 +1,5 @@
 <map id="molsys::Box::applyPBC" name="molsys::Box::applyPBC">
 <area shape="rect" id="Node000001" title=" " alt="" coords="231,5,402,33"/>
-<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#abee124f582397abcf5138175a35a8c00" title="scales the positions of the molecule by shifting the center of mass" alt="" coords="5,5,183,33"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a4d0bd98063fb31417a1b2e46afd312f3" title="scales the positions of the molecule by shifting the center of mass" alt="" coords="5,5,183,33"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,19,183,22,183,17,217,19"/>
 </map>

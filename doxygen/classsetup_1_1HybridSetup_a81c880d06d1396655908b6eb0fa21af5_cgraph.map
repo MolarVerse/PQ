@@ -14,18 +14,18 @@
 <area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="101,627,277,457,276,462,105,631"/>
 <area shape="rect" id="Node000020" href="$classsetup_1_1HybridSetup.html#adf2ffba3e76851ae4d46d9e4b567486a" title="Validate the compatibility between QM charge settings and moltype 0 presence." alt="" coords="210,699,414,743"/>
 <area shape="poly" id="edge26_Node000001_Node000020" title=" " alt="" coords="151,671,222,692,217,695,152,676"/>
-<area shape="rect" id="Node000021" href="$classsetup_1_1HybridSetup.html#aece3f9da46049f09c2c0a60cdfbc0741" title="Check if chosen QM method is available for hybrid type calculations." alt="" coords="235,837,388,882"/>
+<area shape="rect" id="Node000021" href="$classsetup_1_1HybridSetup.html#a6860f8e8327bb39565580a1199078b92" title="Check if chosen QM method is available for hybrid type calculations." alt="" coords="235,837,388,882"/>
 <area shape="poly" id="edge28_Node000001_Node000021" title=" " alt="" coords="89,672,108,707,132,747,163,788,200,823,224,838,219,838,197,827,159,791,127,750,103,709,89,677"/>
-<area shape="rect" id="Node000024" href="$classsetup_1_1HybridSetup.html#a1baf2452f17066e85f1831b067dc5a0a" title="Validate that no moltype 0 atoms are present when QM reference energies are used." alt="" coords="199,907,425,951"/>
-<area shape="poly" id="edge31_Node000001_Node000024" title=" " alt="" coords="84,672,99,720,122,779,155,840,176,868,200,892,206,898,201,898,197,896,172,871,150,843,117,781,94,721,84,677"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#aa8d4ebfd9525772b278d57e61c65469d" title="get the coreRadius" alt="" coords="500,5,677,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,142,400,101,472,60,490,54,486,58,474,65,402,105,344,145"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1HybridSettings.html#a012ead724b28803dad533a139ddd0749" title="get the layerRadius" alt="" coords="500,75,677,119"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="384,146,487,121,483,125,387,150"/>
-<area shape="rect" id="Node000005" href="$classsettings_1_1HybridSettings.html#a062e2f0295a32ac267132bba10163e58" title="get the pointChargeThickness" alt="" coords="491,144,685,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="384,164,478,165,473,168,386,169"/>
-<area shape="rect" id="Node000006" href="$classsettings_1_1HybridSettings.html#abee55e05df21480e2376937354bd582a" title="get the smoothingRegionThickness" alt="" coords="473,213,703,258"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="384,182,484,208,479,210,386,187"/>
+<area shape="rect" id="Node000023" href="$classsetup_1_1HybridSetup.html#a1baf2452f17066e85f1831b067dc5a0a" title="Validate that no moltype 0 atoms are present when QM reference energies are used." alt="" coords="199,907,425,951"/>
+<area shape="poly" id="edge30_Node000001_Node000023" title=" " alt="" coords="84,672,99,720,122,779,155,840,176,868,200,892,206,898,201,898,197,896,172,871,150,843,117,781,94,721,84,677"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1HybridSettings.html#aa8d4ebfd9525772b278d57e61c65469d" title="get the coreRadius" alt="" coords="500,75,677,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="384,146,487,121,483,125,387,150"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1HybridSettings.html#a012ead724b28803dad533a139ddd0749" title="get the layerRadius" alt="" coords="500,144,677,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="384,164,487,165,482,168,386,169"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1HybridSettings.html#a062e2f0295a32ac267132bba10163e58" title="get the pointChargeThickness" alt="" coords="491,213,685,258"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="384,182,484,208,479,210,386,187"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1HybridSettings.html#abee55e05df21480e2376937354bd582a" title="get the smoothingRegionThickness" alt="" coords="473,5,703,50"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="340,142,400,101,472,60,490,54,486,58,474,65,402,105,344,145"/>
 <area shape="rect" id="Node000008" href="$classsettings_1_1HybridSettings.html#a66d1bc8d6c2a364c3cf88b5d4d973bb1" title="get the forcedCoreList" alt="" coords="500,283,677,327"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="392,327,486,316,482,320,394,332"/>
 <area shape="rect" id="Node000010" href="$classsettings_1_1HybridSettings.html#a356850feb4cb57311e815268ba32c5ff" title="get the forcedLayerList" alt="" coords="500,768,677,813"/>
@@ -34,10 +34,10 @@
 <area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="395,580,486,581,482,583,397,585"/>
 <area shape="rect" id="Node000014" href="$classsettings_1_1HybridSettings.html#abe8d7065b3006e32a22f990f24d44ecf" title="get the innerRegionCenter as list of int" alt="" coords="500,629,677,674"/>
 <area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="405,649,486,651,481,653,406,654"/>
-<area shape="poly" id="edge15_Node000015_Node000003" title=" " alt="" coords="383,404,405,390,423,373,445,332,452,293,450,255,444,216,437,178,436,140,446,101,471,61,488,48,485,53,475,64,450,103,441,140,442,178,449,216,456,254,458,293,450,334,427,376,409,394,387,407"/>
-<area shape="poly" id="edge20_Node000015_Node000004" title=" " alt="" coords="383,403,405,390,423,373,441,341,448,311,448,281,444,251,441,222,441,191,450,161,471,130,488,118,484,123,475,133,455,163,447,192,446,221,449,251,453,281,453,312,446,343,427,376,408,394,386,407"/>
-<area shape="poly" id="edge21_Node000015_Node000005" title=" " alt="" coords="383,402,405,389,423,373,437,351,444,329,445,286,447,243,455,221,471,199,480,194,477,198,475,203,459,224,452,244,450,286,449,330,442,353,427,376,408,393,387,406"/>
-<area shape="poly" id="edge23_Node000015_Node000006" title=" " alt="" coords="380,402,403,388,423,373,440,347,445,321,452,295,459,281,471,268,479,265,476,269,475,272,464,284,457,297,451,322,445,349,427,376,406,393,384,406"/>
+<area shape="poly" id="edge15_Node000015_Node000003" title=" " alt="" coords="383,403,405,390,423,373,441,341,448,311,448,281,444,251,441,222,441,191,450,161,471,130,488,118,484,123,475,133,455,163,447,192,446,221,449,251,453,281,453,312,446,343,427,376,408,394,386,407"/>
+<area shape="poly" id="edge20_Node000015_Node000004" title=" " alt="" coords="383,402,405,389,423,373,437,351,444,329,445,286,447,243,455,221,471,199,488,188,484,192,475,203,459,224,452,244,450,286,449,330,442,353,427,376,408,393,387,406"/>
+<area shape="poly" id="edge21_Node000015_Node000005" title=" " alt="" coords="380,402,403,388,423,373,440,347,445,321,452,295,459,281,471,268,479,265,476,269,475,272,464,284,457,297,451,322,445,349,427,376,406,393,384,406"/>
+<area shape="poly" id="edge23_Node000015_Node000006" title=" " alt="" coords="383,404,405,390,423,373,445,332,452,293,450,255,444,216,437,178,436,140,446,101,471,61,476,58,473,62,475,64,450,103,441,140,442,178,449,216,456,254,458,293,450,334,427,376,409,394,387,407"/>
 <area shape="poly" id="edge16_Node000015_Node000008" title=" " alt="" coords="366,401,424,372,447,354,472,337,489,332,484,335,474,342,450,359,426,377,369,406"/>
 <area shape="poly" id="edge17_Node000015_Node000012" title=" " alt="" coords="337,446,398,496,435,522,474,545,488,553,483,554,472,550,432,527,395,500,337,452"/>
 <area shape="poly" id="edge18_Node000015_Node000014" title=" " alt="" coords="336,447,380,492,427,546,440,566,449,584,458,599,475,615,488,625,483,625,471,619,454,603,444,586,436,569,423,549,376,496,336,452"/>
@@ -50,8 +50,6 @@
 <area shape="rect" id="Node000019" href="$structSmoothingMethodMeta.html#adf64bf9c91a4bb1018f517db0e11e217" title=" " alt="" coords="502,491,675,535"/>
 <area shape="poly" id="edge25_Node000015_Node000019" title=" " alt="" coords="382,447,474,476,499,485,494,486,472,481,383,452"/>
 <area shape="poly" id="edge27_Node000020_Node000018" title=" " alt="" coords="413,718,487,720,482,722,414,724"/>
-<area shape="rect" id="Node000022" href="$classsettings_1_1QMSettings.html#a392002c6312680d946422a22711bee71" title="returns the qmMethod" alt="" coords="510,837,666,882"/>
-<area shape="poly" id="edge29_Node000021_Node000022" title=" " alt="" coords="389,857,497,859,492,860,389,862"/>
-<area shape="rect" id="Node000023" href="$structQMMethodMeta.html#ac7b17240ca445e36d9a8ba58d5ed7a7c" title=" " alt="" coords="496,906,680,934"/>
-<area shape="poly" id="edge30_Node000021_Node000023" title=" " alt="" coords="389,874,509,902,504,902,389,879"/>
+<area shape="rect" id="Node000022" href="$structQMMethodMeta.html#ac7b17240ca445e36d9a8ba58d5ed7a7c" title=" " alt="" coords="496,846,680,874"/>
+<area shape="poly" id="edge29_Node000021_Node000022" title=" " alt="" coords="389,857,483,859,478,860,389,862"/>
 </map>

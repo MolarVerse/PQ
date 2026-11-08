@@ -4,15 +4,15 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="46,111,73,89,106,69,129,62,125,65,109,74,76,94,50,115"/>
 <area shape="rect" id="Node000005" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="165,83,282,110"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="59,120,151,106,148,111,61,125"/>
-<area shape="rect" id="Node000006" href="$namespacebenchSetup.html#a27a0e257edc65efc01e1380a36e89242" title=" " alt="" coords="122,134,324,179"/>
+<area shape="rect" id="Node000006" href="$namespacebenchSetup.html#a15ecf8559be8735d5428e658a8709aa3" title=" " alt="" coords="122,134,324,179"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="59,129,109,137,105,140,61,134"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="117,204,330,248"/>
+<area shape="rect" id="Node000009" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="117,204,330,248"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="47,139,75,165,109,189,122,197,117,197,106,193,72,169,46,144"/>
 <area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="387,5,589,33"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="339,31,374,29,369,31,340,36"/>
 <area shape="rect" id="Node000004" href="$namespacebenchSetup.html#ae5c4061d20e04bf2803b833823ddd3b9" title=" " alt="" coords="388,57,588,85"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,54,375,59,370,60,340,59"/>
-<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#a8ce2ce865611680c4f9ffc84cc9736f7" title="calculate temperature of simulationBox" alt="" coords="402,109,574,154"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#a3047223ee50e1f391a67a44859298278" title="calculate temperature of simulationBox" alt="" coords="402,109,574,154"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="324,144,389,140,384,141,325,149"/>
 <area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="402,178,574,223"/>
 <area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="325,171,390,184,385,184,325,176"/>

@@ -1,0 +1,15 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title="the lookup table gives the same molecule and atom as the walk" alt="" coords="5,169,59,197"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="127,5,329,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="34,168,42,141,56,107,77,72,105,42,115,38,111,42,108,47,81,75,61,109,47,143,39,169"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#acfe1173183ca0e2a8ea98941b42e1360" title="Add a molecule to the simulation box." alt="" coords="142,57,314,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="43,167,69,139,105,112,129,102,126,106,108,116,73,143,47,170"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a6a9910e814f13f9aed236bb7f51c9e22" title="builds the table that makes findMoleculeByGlobalAtomIndex a binary search instead of a walk over all ..." alt="" coords="139,126,317,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,176,125,165,122,169,60,181"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#aef3738fa3aa40de0bac58de91709177c" title="find molecule by atom index" alt="" coords="107,196,349,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="58,185,93,192,89,195,60,190"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="142,265,314,310"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="45,195,73,223,108,250,130,262,125,263,105,255,69,227,45,200"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1Molecule.html#a8ab76a7328d90fa8b6bd04883184fd17" title="set the moltype of the molecule" alt="" coords="120,333,336,361"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="37,195,47,224,61,257,81,291,108,320,115,326,110,325,105,324,77,295,56,260,42,225,36,200"/>
+</map>

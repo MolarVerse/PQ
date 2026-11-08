@@ -125,8 +125,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a4259f8ee6e39f116e463be882be2a98d" id="r_a4259f8ee6e39f116e463be882be2a98d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4259f8ee6e39f116e463be882be2a98d">resetTemperature</a> (<a class="el" href="classmolsys_1_1SimulationBox.html">molsys::SimulationBox</a> &amp;, double temperature)</td></tr>
-<tr class="memdesc:a4259f8ee6e39f116e463be882be2a98d"><td class="mdescLeft">&#160;</td><td class="mdescRight">reset the temperature of the system - hard scaling  <br /></td></tr>
+<tr class="memitem:a010a04a8b1605660ec2724a6b816eb59" id="r_a010a04a8b1605660ec2724a6b816eb59"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a010a04a8b1605660ec2724a6b816eb59">resetTemperature</a> (<a class="el" href="classmolsys_1_1SimulationBox.html">molsys::SimulationBox</a> &amp;, const <a class="el" href="unit__types_8hpp.html#a4c1267186f6993a062e11af69ac3a77b">Temperature</a> &amp;temperature)</td></tr>
+<tr class="memdesc:a010a04a8b1605660ec2724a6b816eb59"><td class="mdescLeft">&#160;</td><td class="mdescRight">reset the temperature of the system - hard scaling  <br /></td></tr>
 <tr class="memitem:a1dc83729626654fc1fa63a97672098c4" id="r_a1dc83729626654fc1fa63a97672098c4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dc83729626654fc1fa63a97672098c4">resetMomentum</a> (<a class="el" href="classmolsys_1_1SimulationBox.html">molsys::SimulationBox</a> &amp;, const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;momentum)</td></tr>
 <tr class="memdesc:a1dc83729626654fc1fa63a97672098c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">reset the momentum of the system  <br /></td></tr>
 <tr class="memitem:a206cb75a7ee137a06093c4fd91211525" id="r_a206cb75a7ee137a06093c4fd91211525"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a206cb75a7ee137a06093c4fd91211525">resetAngularMomentum</a> (<a class="el" href="classmolsys_1_1SimulationBox.html">molsys::SimulationBox</a> &amp;, const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;angularMomentum)</td></tr>
@@ -216,13 +216,13 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="120,313,174,231,212,182,255,136,311,95,308,99,258,140,216,186,178,234,124,316"/>
 <area shape="rect" href="classmolsys_1_1SimulationBox.html#a81dff1f29a520c8c884853b375c3c9bd" title="calculate momentum of simulationBox" alt="" coords="278,384,449,429"/>
 <area shape="poly" title=" " alt="" coords="192,357,266,378,261,381,193,363"/>
-<area shape="rect" href="classmolsys_1_1SimulationBox.html#a8ce2ce865611680c4f9ffc84cc9736f7" title="calculate temperature of simulationBox" alt="" coords="278,453,449,498"/>
+<area shape="rect" href="classmolsys_1_1SimulationBox.html#a3047223ee50e1f391a67a44859298278" title="calculate temperature of simulationBox" alt="" coords="278,453,449,498"/>
 <area shape="poly" title=" " alt="" coords="136,357,191,398,258,439,273,447,267,447,255,443,188,403,136,363"/>
 <area shape="rect" href="classresetKinetics_1_1ResetKinetics.html#a206cb75a7ee137a06093c4fd91211525" title="reset the angular momentum of the system" alt="" coords="262,151,465,195"/>
 <area shape="poly" title=" " alt="" coords="137,312,255,231,309,201,305,205,258,235,141,316"/>
 <area shape="rect" href="classresetKinetics_1_1ResetKinetics.html#a1dc83729626654fc1fa63a97672098c4" title="reset the momentum of the system" alt="" coords="262,245,465,290"/>
 <area shape="poly" title=" " alt="" coords="191,312,266,293,262,296,194,316"/>
-<area shape="rect" href="classresetKinetics_1_1ResetKinetics.html#a4259f8ee6e39f116e463be882be2a98d" title="reset the temperature of the system &#45; hard scaling" alt="" coords="262,315,465,359"/>
+<area shape="rect" href="classresetKinetics_1_1ResetKinetics.html#a010a04a8b1605660ec2724a6b816eb59" title="reset the temperature of the system &#45; hard scaling" alt="" coords="262,315,465,359"/>
 <area shape="poly" title=" " alt="" coords="208,334,249,336,244,338,210,340"/>
 <area shape="rect" href="globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="311,522,416,550"/>
 <area shape="poly" title=" " alt="" coords="122,357,145,392,176,433,214,474,258,508,298,527,293,526,255,513,210,478,172,436,141,395,121,362"/>
@@ -241,7 +241,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classmolsys_1_1SimulationBox.html#a24ac3c9aa6ebdbd6e94217858fc196a6" title="get the total mass" alt="" coords="539,245,710,290"/>
 <area shape="poly" title=" " alt="" coords="465,265,526,267,521,268,466,270"/>
 <area shape="poly" title=" " alt="" coords="465,334,526,336,521,338,466,340"/>
-<area shape="rect" href="classsettings_1_1ThermostatSettings.html#a8f899f6bc6879407100993fe6a0d9f54" title="get the actual target temperature" alt="" coords="518,435,731,479"/>
+<area shape="rect" href="classThermostatSettings.html#aec689b40ff79afa931ed73356c50bdb8" title="get the actual target temperature" alt="" coords="518,435,731,479"/>
 <area shape="poly" title=" " alt="" coords="448,357,471,369,487,382,496,395,505,408,520,420,529,428,524,427,516,425,501,412,492,399,483,386,469,374,447,363"/>
 <area shape="rect" href="namespaceutilities.html#aaae9b2dbd3ac275d4268ad9f73baa500" title="check whether a number is exactly zero" alt="" coords="565,383,684,411"/>
 <area shape="poly" title=" " alt="" coords="464,357,552,380,547,380,464,363"/>
@@ -615,8 +615,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a4259f8ee6e39f116e463be882be2a98d" name="a4259f8ee6e39f116e463be882be2a98d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4259f8ee6e39f116e463be882be2a98d">&#9670;&#160;</a></span>resetTemperature()</h2>
+<a id="a010a04a8b1605660ec2724a6b816eb59" name="a010a04a8b1605660ec2724a6b816eb59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a010a04a8b1605660ec2724a6b816eb59">&#9670;&#160;</a></span>resetTemperature()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -632,7 +632,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>temperature</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="unit__types_8hpp.html#a4c1267186f6993a062e11af69ac3a77b">Temperature</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>temperature</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -654,10 +654,10 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_cgraph.png" border="0" usemap="#aclassresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_cgraph" loading="lazy" alt=""/></div>
-<map name="aclassresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_cgraph" id="aclassresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_cgraph">
+<div class="center"><img src="classresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_cgraph.png" border="0" usemap="#aclassresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_cgraph" loading="lazy" alt=""/></div>
+<map name="aclassresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_cgraph" id="aclassresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_cgraph">
 <area shape="rect" title="reset the temperature of the system &#45; hard scaling" alt="" coords="5,75,209,119"/>
-<area shape="rect" href="classsettings_1_1ThermostatSettings.html#a8f899f6bc6879407100993fe6a0d9f54" title="get the actual target temperature" alt="" coords="257,5,470,50"/>
+<area shape="rect" href="classThermostatSettings.html#aec689b40ff79afa931ed73356c50bdb8" title="get the actual target temperature" alt="" coords="257,5,470,50"/>
 <area shape="poly" title=" " alt="" coords="192,71,266,53,261,56,193,77"/>
 <area shape="rect" href="classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="278,75,449,119"/>
 <area shape="poly" title=" " alt="" coords="209,94,265,96,260,98,210,100"/>
@@ -668,8 +668,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_icgraph.png" border="0" usemap="#aclassresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_icgraph" loading="lazy" alt=""/></div>
-<map name="aclassresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_icgraph" id="aclassresetKinetics_1_1ResetKinetics_a4259f8ee6e39f116e463be882be2a98d_icgraph">
+<div class="center"><img src="classresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_icgraph.png" border="0" usemap="#aclassresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_icgraph" loading="lazy" alt=""/></div>
+<map name="aclassresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_icgraph" id="aclassresetKinetics_1_1ResetKinetics_a010a04a8b1605660ec2724a6b816eb59_icgraph">
 <area shape="rect" title="reset the temperature of the system &#45; hard scaling" alt="" coords="564,984,767,1028"/>
 <area shape="rect" href="classmaxwellBoltzmann_1_1MaxwellBoltzmann.html#a9495d2dc3908e3cd6ea7dc7eab65ac21" title="generate boltzmann distributed velocities for all atoms in the simulation box" alt="" coords="298,180,516,224"/>
 <area shape="poly" title=" " alt="" coords="651,969,513,525,415,227,417,222,519,524,656,969"/>

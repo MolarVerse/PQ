@@ -1,3 +1,21 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classsettings_1_1GeneralSettings.html" title=" " alt="" coords="5,5,191,33"/>
+<area shape="rect" id="Node000000" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="5,187,125,214"/>
+<area shape="rect" id="Node000001" href="$classQM_1_1AseQMRunner.html" title="AseQMRunner inherits from QMRunner." alt="" coords="188,109,331,137"/>
+<area shape="poly" id="edge132_Node000000_Node000001" title=" " alt="" coords="115,178,224,135,221,140,117,183"/>
+<area shape="rect" id="Node000006" href="$classQM_1_1ExternalQMRunner.html" title="ExternalQMRunner inherits from QMRunner." alt="" coords="173,239,346,266"/>
+<area shape="poly" id="edge137_Node000000_Node000006" title=" " alt="" coords="134,216,207,237,202,239,135,222"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseDftbRunner.html" title="AseDftbRunner inherits from AseQMRunner." alt="" coords="402,5,551,33"/>
+<area shape="poly" id="edge133_Node000001_Node000002" title=" " alt="" coords="293,99,340,71,393,43,428,32,423,35,395,48,342,75,296,103"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseFennolRunner.html" title="AseFennolRunner inherits from AseQMRunner." alt="" coords="394,57,559,85"/>
+<area shape="poly" id="edge134_Node000001_Node000003" title=" " alt="" coords="334,103,418,84,413,87,336,108"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1AseMaceRunner.html" title="AseMaceRunner inherits from AseQMRunner." alt="" coords="398,109,555,137"/>
+<area shape="poly" id="edge135_Node000001_Node000004" title=" " alt="" coords="346,121,400,122,395,124,347,126"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1AseXtbRunner.html" title="AseXtbRunner inherits from AseQMRunner." alt="" coords="405,161,548,189"/>
+<area shape="poly" id="edge136_Node000001_Node000005" title=" " alt="" coords="335,139,418,160,413,161,335,144"/>
+<area shape="rect" id="Node000007" href="$classQM_1_1DFTBPlusRunner.html" title="class for running DFTB+ inheriting from ExternalQMRunner" alt="" coords="398,213,556,241"/>
+<area shape="poly" id="edge138_Node000006_Node000007" title=" " alt="" coords="361,238,400,236,395,237,362,243"/>
+<area shape="rect" id="Node000008" href="$classQM_1_1PySCFRunner.html" title="class for running PySCF inheriting from ExternalQMRunner" alt="" coords="408,265,546,293"/>
+<area shape="poly" id="edge139_Node000006_Node000008" title=" " alt="" coords="361,262,410,270,404,271,361,268"/>
+<area shape="rect" id="Node000009" href="$classQM_1_1TurbomoleRunner.html" title="class for running DFTB+ inheriting from ExternalQMRunner" alt="" coords="394,317,559,345"/>
+<area shape="poly" id="edge140_Node000006_Node000009" title=" " alt="" coords="311,270,395,302,433,317,427,317,393,307,310,275"/>
 </map>

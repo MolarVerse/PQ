@@ -11,7 +11,7 @@ var searchData=
   ['qmmmmdengine_8',['QMMMMDEngine',['../classengine_1_1QMMMMDEngine.html',1,'engine']]],
   ['qmrunner_9',['QMRunner',['../classQM_1_1QMRunner.html',1,'QM']]],
   ['qmrunnermanager_10',['QMRunnerManager',['../classengine_1_1QMRunnerManager.html',1,'engine']]],
-  ['qmsettings_11',['QMSettings',['../classsettings_1_1QMSettings.html',1,'settings']]],
+  ['qmsettings_11',['QMSettings',['../classQMSettings.html',1,'']]],
   ['qmsetup_12',['QMSetup',['../classsetup_1_1QMSetup.html',1,'setup']]],
   ['qmwritertest_13',['QMWriterTest',['../classQMWriterTest.html',1,'']]],
   ['qspcfwinterparam_14',['qSPCFwInterParam',['../structwaterModel_1_1qSPCFwInterParam.html',1,'waterModel']]],

@@ -2,7 +2,7 @@ var searchData=
 [
   ['label_0',['label',['../structcli_1_1ExternalQMScriptInfo.html#ab2aad7adccd8c5d16754bf9c599073b1',1,'cli::ExternalQMScriptInfo']]],
   ['langevin_5ffile_1',['LANGEVIN_FILE',['../structReferenceFiles.html#a85d400171697f2843b7b420d05e37f31',1,'ReferenceFiles']]],
-  ['langevinthermostat_2',['LangevinThermostat',['../classthermostat_1_1LangevinThermostat.html',1,'thermostat::LangevinThermostat'],['../classthermostat_1_1LangevinThermostat.html#ab0c4ec639607514f8e499d49a097d311',1,'thermostat::LangevinThermostat::LangevinThermostat(double, double)'],['../classthermostat_1_1LangevinThermostat.html#ac354be36b16f92363225af965e18876a',1,'thermostat::LangevinThermostat::LangevinThermostat()=default'],['../classthermostat_1_1LangevinThermostat.html#ad6443aced1b73ca91cf8f0654eb454e2',1,'thermostat::LangevinThermostat::LangevinThermostat(const LangevinThermostat &amp;)'],['../classthermostat_1_1LangevinThermostat.html#a7496f71f860a42c254db4daaf99c32bc',1,'thermostat::LangevinThermostat::LangevinThermostat(LangevinThermostat &amp;&amp;) noexcept=delete']]],
+  ['langevinthermostat_2',['LangevinThermostat',['../classthermostat_1_1LangevinThermostat.html',1,'thermostat::LangevinThermostat'],['../classthermostat_1_1LangevinThermostat.html#ada4d6164d33ec7b7ce3297dee223609a',1,'thermostat::LangevinThermostat::LangevinThermostat(const Temperature &amp;, double)'],['../classthermostat_1_1LangevinThermostat.html#ac354be36b16f92363225af965e18876a',1,'thermostat::LangevinThermostat::LangevinThermostat()=default'],['../classthermostat_1_1LangevinThermostat.html#ad6443aced1b73ca91cf8f0654eb454e2',1,'thermostat::LangevinThermostat::LangevinThermostat(const LangevinThermostat &amp;)'],['../classthermostat_1_1LangevinThermostat.html#a7496f71f860a42c254db4daaf99c32bc',1,'thermostat::LangevinThermostat::LangevinThermostat(LangevinThermostat &amp;&amp;) noexcept=delete']]],
   ['langevinthermostat_2ecpp_3',['langevinThermostat.cpp',['../langevinThermostat_8cpp.html',1,'']]],
   ['langevinthermostat_2ehpp_4',['langevinThermostat.hpp',['../langevinThermostat_8hpp.html',1,'']]],
   ['last_5fframe_5',['last_frame',['../namespacerun__regression__case.html#a82eda78adad82904f49a1f65a1dbe583',1,'run_regression_case']]],
@@ -20,12 +20,13 @@ var searchData=
   ['lennardjonespair_2ehpp_17',['lennardJonesPair.hpp',['../lennardJonesPair_8hpp.html',1,'']]],
   ['less_18',['Less',['../namespaceinput.html#a791d8ccebc834e4bb90f75ec7c1ce8ff',1,'input']]],
   ['linalg_19',['linalg',['../namespacelinalg.html',1,'']]],
-  ['linearalgebraexception_20',['LinearAlgebraException',['../namespaceexc.html#af362b67867ccedab721a870246513ece',1,'exc']]],
-  ['linenumber_21',['lineNumber',['../structcli_1_1ValidationDiagnostic.html#a52f1a583dd21f72c93367668a44cc43a',1,'cli::ValidationDiagnostic']]],
-  ['ljparams_22',['LJParams',['../structLJParams.html',1,'']]],
-  ['logfile_23',['logFile',['../structDefaultFiles.html#a468a3676baee98c7a9ef7b4fcdf2f859',1,'DefaultFiles']]],
-  ['logoutput_24',['LogOutput',['../classout_1_1LogOutput.html',1,'out']]],
-  ['logoutput_2ecpp_25',['logOutput.cpp',['../logOutput_8cpp.html',1,'']]],
-  ['logoutput_2ehpp_26',['logOutput.hpp',['../logOutput_8hpp.html',1,'']]],
-  ['lt_27',['LT',['../namespaceinput.html#a791d8ccebc834e4bb90f75ec7c1ce8ffac562607189d77eb9dfb707464c1e7b0b',1,'input']]]
+  ['linalg_3a_3adetail_20',['detail',['../namespacelinalg_1_1detail.html',1,'linalg']]],
+  ['linearalgebraexception_21',['LinearAlgebraException',['../namespaceexc.html#af362b67867ccedab721a870246513ece',1,'exc']]],
+  ['linenumber_22',['lineNumber',['../structcli_1_1ValidationDiagnostic.html#a52f1a583dd21f72c93367668a44cc43a',1,'cli::ValidationDiagnostic']]],
+  ['ljparams_23',['LJParams',['../structLJParams.html',1,'']]],
+  ['logfile_24',['logFile',['../structDefaultFiles.html#a468a3676baee98c7a9ef7b4fcdf2f859',1,'DefaultFiles']]],
+  ['logoutput_25',['LogOutput',['../classout_1_1LogOutput.html',1,'out']]],
+  ['logoutput_2ecpp_26',['logOutput.cpp',['../logOutput_8cpp.html',1,'']]],
+  ['logoutput_2ehpp_27',['logOutput.hpp',['../logOutput_8hpp.html',1,'']]],
+  ['lt_28',['LT',['../namespaceinput.html#a791d8ccebc834e4bb90f75ec7c1ce8ffac562607189d77eb9dfb707464c1e7b0b',1,'input']]]
 ];

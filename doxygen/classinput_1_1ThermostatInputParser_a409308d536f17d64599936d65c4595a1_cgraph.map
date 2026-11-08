@@ -10,7 +10,7 @@
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="282,189,372,199,367,200,283,194"/>
 <area shape="rect" id="Node000008" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="382,245,531,290"/>
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="221,199,330,230,370,243,364,244,329,236,221,204"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1ThermostatSettings.html#a90a2950915f93836c36d3cab565bb035" title="set the nose hoover coupling frequency" alt="" coords="330,315,583,359"/>
+<area shape="rect" id="Node000009" href="$classThermostatSettings.html#ac18387e7443ab8875591b1228f3dd845" title="set the nose hoover coupling frequency" alt="" coords="330,315,583,359"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="173,199,243,250,286,276,331,300,348,309,343,309,329,305,283,281,240,254,172,204"/>
 <area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="659,61,810,106"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="506,84,646,84,641,86,507,90"/>

@@ -1,11 +1,5 @@
 <map id="linalg::cos" name="linalg::cos">
-<area shape="rect" id="Node000001" title=" " alt="" coords="289,98,376,126"/>
-<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="367,82,356,79,332,76,311,78,299,83,296,89,301,98,296,96,290,89,295,79,309,73,332,71,357,74,372,83"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="289,14,376,42"/>
 <area shape="rect" id="Node000002" href="$classmolsys_1_1TriclinicBox.html#ab073618163fc9ab0647647d482a449a3" title="Calculate the rotation matrix." alt="" coords="5,5,241,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="292,90,240,65,209,53,209,48,242,60,297,89"/>
-<area shape="rect" id="Node000003" href="$namespacelinalg.html#a03b457ce27b64a67752cacc767162764" title=" " alt="" coords="72,98,174,126"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="271,113,174,114,174,109,276,111"/>
-<area shape="rect" id="Node000004" href="$namespacelinalg.html#affc75c5250ecb6c3d72be4c915cbe36c" title=" " alt="" coords="79,150,167,178"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="276,128,241,140,168,157,166,152,240,134,271,129"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="157,83,146,79,123,76,101,78,89,83,86,89,92,97,87,97,81,89,86,79,100,73,123,71,148,74,162,82"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="270,28,241,30,241,25,276,28"/>
 </map>

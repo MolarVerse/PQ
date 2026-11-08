@@ -1,7 +1,0 @@
-<map id="OptimizerSettings::setMaxLearningRate" name="OptimizerSettings::setMaxLearningRate">
-<area shape="rect" id="Node000001" title="sets the max learning rate" alt="" coords="122,24,277,68"/>
-<area shape="rect" id="Node000002" href="$testOptimizerSettings_8cpp.html#a81443438777180422469fecff7a77721" title=" " alt="" coords="13,5,66,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,32,67,26,67,21,108,29"/>
-<area shape="rect" id="Node000003" href="$testOptParser_8cpp.html#a2c6bd9d848d948c5262f2e193b2bf5b2" title="parse the optimizer learning rate decay factor" alt="" coords="5,57,74,85"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,61,75,68,74,63,109,60"/>
-</map>

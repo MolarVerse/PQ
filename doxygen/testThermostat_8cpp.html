@@ -102,6 +102,7 @@ $(function(){initNavTree('testThermostat_8cpp.html','',''); });
 <code>#include &lt;gtest/gtest.h&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="berendsenThermostat_8hpp.html">berendsenThermostat.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="internalConversionFactors_8hpp.html">constants/internalConversionFactors.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="exceptions_8hpp.html">exceptions.hpp</a>&quot;</code><br />
@@ -109,139 +110,182 @@ $(function(){initNavTree('testThermostat_8cpp.html','',''); });
 <code>#include &quot;<a class="el" href="noseHooverThermostat_8hpp.html">noseHooverThermostat.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="physicalData_8hpp.html">physicalData.hpp</a>&quot;</code><br />
 <code>#include &quot;simulationBox.hpp&quot;</code><br />
+<code>#include &quot;<a class="el" href="thermostatSettings_8hpp.html">thermostatSettings.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="throwWithMessage_8hpp.html">throwWithMessage.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="timingsSettings_8hpp.html">timingsSettings.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="units_8hpp.html">units.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="velocityRescalingThermostat_8hpp.html">velocityRescalingThermostat.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for testThermostat.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="testThermostat_8cpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2thermostat_2testThermostat_8cpp" loading="lazy" alt=""/></div>
 <map name="a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2thermostat_2testThermostat_8cpp" id="a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2thermostat_2testThermostat_8cpp">
-<area shape="rect" title=" " alt="" coords="846,5,1025,67"/>
-<area shape="rect" href="testThermostat_8hpp.html" title=" " alt="" coords="353,124,502,151"/>
-<area shape="poly" title=" " alt="" coords="844,57,511,123,509,117,848,53"/>
-<area shape="rect" title=" " alt="" coords="5,208,109,235"/>
-<area shape="poly" title=" " alt="" coords="844,39,676,44,470,55,368,65,275,78,198,95,141,117,119,133,100,153,72,195,67,192,96,150,115,129,138,113,196,90,274,73,368,59,469,50,676,38,848,36"/>
-<area shape="rect" title=" " alt="" coords="619,283,695,311"/>
-<area shape="poly" title=" " alt="" coords="844,46,808,57,769,71,732,90,701,116,685,176,665,270,660,267,680,175,696,114,729,86,767,66,806,52,849,44"/>
-<area shape="rect" href="physicalData_8hpp.html" title=" " alt="" coords="731,208,866,235"/>
-<area shape="poly" title=" " alt="" coords="844,45,810,55,773,69,740,89,714,117,708,127,707,137,714,158,732,181,756,200,750,200,728,184,709,161,701,137,703,125,710,113,737,85,771,64,808,50,848,43"/>
-<area shape="rect" title=" " alt="" coords="513,208,657,235"/>
-<area shape="poly" title=" " alt="" coords="844,50,714,78,656,96,634,106,619,117,606,133,597,153,588,193,584,191,592,151,601,131,615,113,632,101,654,91,712,73,848,48"/>
-<area shape="rect" title=" " alt="" coords="1960,359,2023,387"/>
-<area shape="poly" title=" " alt="" coords="1025,38,1229,48,1475,64,1695,85,1773,98,1818,113,1851,136,1880,164,1928,228,1963,292,1985,345,1980,343,1958,294,1924,230,1876,167,1848,140,1816,117,1772,103,1694,91,1475,69,1228,54,1026,44"/>
-<area shape="rect" href="berendsenThermostat_8hpp.html" title=" " alt="" coords="950,124,1142,151"/>
-<area shape="poly" title=" " alt="" coords="970,65,1023,113,1018,113,969,70"/>
-<area shape="rect" href="internalConversionFactors_8hpp.html" title=" " alt="" coords="1943,115,2155,160"/>
-<area shape="poly" title=" " alt="" coords="1025,39,1417,64,1670,85,1925,112,1930,115,1925,116,1925,118,1669,90,1416,69,1026,44"/>
-<area shape="rect" href="exceptions_8hpp.html" title=" " alt="" coords="1685,124,1805,151"/>
-<area shape="poly" title=" " alt="" coords="1025,40,1312,63,1489,84,1667,112,1689,119,1684,119,1666,118,1489,90,1312,69,1025,45"/>
-<area shape="rect" href="langevinThermostat_8hpp.html" title=" " alt="" coords="1430,124,1610,151"/>
-<area shape="poly" title=" " alt="" coords="1025,48,1207,76,1419,112,1447,120,1441,120,1418,118,1207,81,1026,53"/>
-<area shape="rect" href="noseHooverThermostat_8hpp.html" title=" " alt="" coords="724,124,926,151"/>
-<area shape="poly" title=" " alt="" coords="904,66,852,115,849,111,900,69"/>
-<area shape="rect" href="throwWithMessage_8hpp.html" title=" " alt="" coords="151,124,326,151"/>
-<area shape="poly" title=" " alt="" coords="844,48,617,77,341,118,315,122,312,118,341,112,616,72,849,46"/>
-<area shape="rect" href="timingsSettings_8hpp.html" title=" " alt="" coords="1475,359,1626,387"/>
-<area shape="poly" title=" " alt="" coords="1025,38,1188,47,1376,62,1538,83,1594,97,1624,113,1632,132,1633,158,1618,222,1591,290,1565,347,1562,343,1587,288,1613,220,1627,157,1627,133,1620,117,1592,102,1537,89,1375,67,1188,53,1026,44"/>
-<area shape="rect" href="velocityRescalingThermostat_8hpp.html" title=" " alt="" coords="1167,124,1406,151"/>
-<area shape="poly" title=" " alt="" coords="1025,60,1228,118,1222,119,1025,65"/>
-<area shape="poly" title=" " alt="" coords="369,153,338,162,125,208,123,204,336,157,374,150"/>
-<area shape="poly" title=" " alt="" coords="435,149,462,191,481,213,503,233,553,262,607,283,602,284,551,267,499,237,477,217,458,194,434,154"/>
-<area shape="rect" href="atom_8hpp.html" title=" " alt="" coords="314,283,397,311"/>
-<area shape="poly" title=" " alt="" coords="386,153,350,176,333,191,319,209,315,224,318,240,336,272,330,272,313,242,310,224,315,207,329,187,347,171,390,150"/>
-<area shape="rect" href="molecule_8hpp.html" title=" " alt="" coords="329,208,438,235"/>
-<area shape="poly" title=" " alt="" coords="422,150,400,196,396,192,419,154"/>
-<area shape="poly" title=" " alt="" coords="487,149,727,203,722,205,487,154"/>
-<area shape="poly" title=" " alt="" coords="453,149,549,200,544,201,453,154"/>
-<area shape="rect" title=" " alt="" coords="132,208,254,235"/>
-<area shape="poly" title=" " alt="" coords="388,154,246,204,243,200,392,150"/>
-<area shape="rect" title=" " alt="" coords="304,359,378,387"/>
-<area shape="poly" title=" " alt="" coords="354,309,349,345,344,342,352,314"/>
-<area shape="rect" title=" " alt="" coords="725,359,784,387"/>
-<area shape="poly" title=" " alt="" coords="398,304,712,362,708,365,398,309"/>
-<area shape="rect" title=" " alt="" coords="402,359,498,387"/>
-<area shape="poly" title=" " alt="" coords="373,309,424,349,419,350,372,314"/>
-<area shape="rect" href="staticMatrix_8hpp.html" title=" " alt="" coords="523,359,650,387"/>
-<area shape="poly" title=" " alt="" coords="397,309,533,353,528,355,397,314"/>
-<area shape="rect" title=" " alt="" coords="178,586,285,614"/>
-<area shape="poly" title=" " alt="" coords="312,306,214,327,169,342,152,351,142,361,129,387,125,415,130,445,141,475,175,530,211,575,206,575,171,533,137,477,125,446,120,415,123,385,138,357,149,347,167,338,213,322,316,303"/>
-<area shape="rect" href="strongTypes_8hpp.html" title=" " alt="" coords="152,359,279,387"/>
-<area shape="poly" title=" " alt="" coords="329,313,255,354,252,349,333,310"/>
-<area shape="rect" href="staticMatrix3x3_8hpp.html" title=" " alt="" coords="520,435,754,462"/>
-<area shape="poly" title=" " alt="" coords="596,385,622,422,617,421,594,390"/>
-<area shape="rect" href="staticMatrix3x3Class_8hpp.html" title=" " alt="" coords="362,510,549,538"/>
-<area shape="poly" title=" " alt="" coords="568,386,539,410,511,436,488,467,470,499,467,495,484,464,507,433,536,406,563,389"/>
-<area shape="rect" title=" " alt="" coords="1227,510,1303,538"/>
-<area shape="poly" title=" " alt="" coords="750,460,1215,516,1209,517,750,466"/>
-<area shape="poly" title=" " alt="" coords="607,462,503,507,501,502,602,464"/>
-<area shape="rect" title=" " alt="" coords="574,510,722,538"/>
-<area shape="poly" title=" " alt="" coords="641,461,646,496,641,494,637,465"/>
-<area shape="poly" title=" " alt="" coords="418,538,287,583,285,578,413,539"/>
-<area shape="rect" title=" " alt="" coords="364,586,547,614"/>
-<area shape="poly" title=" " alt="" coords="458,537,458,572,454,569,454,540"/>
-<area shape="rect" title=" " alt="" coords="837,435,906,462"/>
-<area shape="poly" title=" " alt="" coords="279,382,292,384,529,410,767,432,825,441,819,441,766,437,529,415,291,389,281,388"/>
-<area shape="rect" title=" " alt="" coords="299,435,364,462"/>
-<area shape="poly" title=" " alt="" coords="237,385,301,426,296,427,236,390"/>
-<area shape="rect" title=" " alt="" coords="153,435,276,462"/>
-<area shape="poly" title=" " alt="" coords="217,385,217,420,212,418,214,390"/>
-<area shape="poly" title=" " alt="" coords="432,233,606,281,601,283,433,239"/>
-<area shape="poly" title=" " alt="" coords="380,234,368,270,364,267,377,238"/>
-<area shape="poly" title=" " alt="" coords="423,233,550,281,607,309,713,354,708,355,605,313,548,286,423,239"/>
-<area shape="poly" title=" " alt="" coords="390,233,441,345,436,344,388,238"/>
-<area shape="poly" title=" " alt="" coords="362,238,304,285,239,350,235,346,301,281,366,234"/>
-<area shape="poly" title=" " alt="" coords="407,233,550,309,607,332,663,357,714,384,825,430,820,430,712,389,661,361,605,337,548,313,406,238"/>
-<area shape="rect" title=" " alt="" coords="719,283,782,311"/>
-<area shape="poly" title=" " alt="" coords="438,229,557,249,707,282,701,283,556,255,439,234"/>
-<area shape="poly" title=" " alt="" coords="775,235,697,278,694,273,771,237"/>
-<area shape="poly" title=" " alt="" coords="803,234,808,272,805,294,795,313,775,328,743,341,666,361,665,355,741,336,772,323,791,309,800,292,803,272,800,238"/>
-<area shape="poly" title=" " alt="" coords="792,234,769,272,765,268,788,238"/>
-<area shape="rect" href="config_2enums_2virial_8hpp.html" title=" " alt="" coords="957,283,1088,311"/>
-<area shape="poly" title=" " alt="" coords="838,233,971,278,966,278,838,239"/>
-<area shape="rect" title=" " alt="" coords="1351,359,1416,387"/>
-<area shape="poly" title=" " alt="" coords="1087,309,1339,362,1333,362,1087,314"/>
-<area shape="rect" title=" " alt="" coords="1134,359,1257,387"/>
-<area shape="poly" title=" " alt="" coords="1054,309,1154,353,1149,353,1053,314"/>
-<area shape="rect" href="thermostat_2thermostat_8hpp.html" title=" " alt="" coords="986,208,1107,235"/>
-<area shape="poly" title=" " alt="" coords="1048,150,1049,194,1044,191,1045,154"/>
-<area shape="poly" title=" " alt="" coords="1014,235,902,286,841,320,788,353,785,348,838,315,900,281,1009,237"/>
-<area shape="poly" title=" " alt="" coords="1016,235,980,258,947,285,923,318,904,355,880,422,877,418,899,352,919,315,943,282,977,253,1012,237"/>
-<area shape="rect" href="config_2enums_2thermostat_8hpp.html" title=" " alt="" coords="1111,283,1280,311"/>
-<area shape="poly" title=" " alt="" coords="1073,233,1158,276,1153,276,1073,239"/>
-<area shape="poly" title=" " alt="" coords="1230,309,1339,353,1334,353,1229,314"/>
-<area shape="poly" title=" " alt="" coords="1197,309,1198,345,1194,342,1194,314"/>
-<area shape="rect" href="conversionFactors_8hpp.html" title=" " alt="" coords="1943,208,2110,235"/>
-<area shape="poly" title=" " alt="" coords="2045,158,2036,194,2032,191,2041,162"/>
-<area shape="rect" href="natureConstants_8hpp.html" title=" " alt="" coords="2030,283,2186,311"/>
-<area shape="poly" title=" " alt="" coords="2082,158,2106,180,2123,207,2128,222,2128,239,2121,271,2117,267,2123,238,2122,223,2119,209,2102,183,2081,163"/>
-<area shape="poly" title=" " alt="" coords="2025,234,2000,345,1996,342,2021,237"/>
-<area shape="poly" title=" " alt="" coords="2042,233,2085,274,2080,272,2040,238"/>
-<area shape="poly" title=" " alt="" coords="2089,311,2026,353,2024,348,2084,312"/>
-<area shape="rect" href="baseException_8hpp.html" title=" " alt="" coords="1640,208,1784,235"/>
-<area shape="poly" title=" " alt="" coords="1742,150,1724,196,1721,192,1738,153"/>
-<area shape="rect" href="color_8hpp.html" title=" " alt="" coords="1789,283,1869,311"/>
-<area shape="poly" title=" " alt="" coords="1757,149,1778,175,1798,206,1823,269,1818,267,1793,209,1774,178,1755,154"/>
-<area shape="poly" title=" " alt="" coords="1733,233,1798,276,1793,275,1732,238"/>
-<area shape="rect" href="exceptionTypes_8hpp.html" title=" " alt="" coords="1399,283,1550,311"/>
-<area shape="poly" title=" " alt="" coords="1672,235,1532,281,1530,276,1667,237"/>
-<area shape="rect" title=" " alt="" coords="1624,283,1765,311"/>
-<area shape="poly" title=" " alt="" coords="1710,234,1703,270,1699,266,1707,238"/>
-<area shape="poly" title=" " alt="" coords="1805,311,1639,389,1463,457,1318,508,1316,503,1462,452,1637,384,1800,312"/>
-<area shape="poly" title=" " alt="" coords="1791,308,1777,314,1620,340,1463,362,1433,366,1432,361,1462,356,1620,334,1777,308,1786,309"/>
-<area shape="poly" title=" " alt="" coords="1461,310,1413,351,1410,347,1456,313"/>
-<area shape="poly" title=" " alt="" coords="1427,311,1260,357,1259,352,1422,312"/>
-<area shape="poly" title=" " alt="" coords="1456,152,1419,162,1123,211,1121,206,1418,157,1461,151"/>
-<area shape="rect" href="randomNumberGenerator_8hpp.html" title=" " alt="" coords="1232,208,1447,235"/>
-<area shape="poly" title=" " alt="" coords="1493,151,1383,203,1382,198,1488,153"/>
-<area shape="rect" title=" " alt="" coords="1304,283,1375,311"/>
-<area shape="poly" title=" " alt="" coords="1341,234,1342,269,1338,266,1338,238"/>
-<area shape="poly" title=" " alt="" coords="842,149,860,167,876,189,885,212,884,225,879,237,863,256,842,271,797,289,795,284,839,266,859,252,875,234,879,224,879,213,872,191,856,171,841,154"/>
-<area shape="poly" title=" " alt="" coords="861,149,1000,202,994,202,861,154"/>
-<area shape="poly" title=" " alt="" coords="208,154,101,203,98,199,211,149"/>
-<area shape="poly" title=" " alt="" coords="1472,383,922,444,921,439,1477,382"/>
-<area shape="poly" title=" " alt="" coords="1245,153,1100,205,1098,200,1250,151"/>
-<area shape="poly" title=" " alt="" coords="1296,149,1326,196,1321,194,1294,154"/>
+<area shape="rect" title=" " alt="" coords="1095,5,1274,67"/>
+<area shape="rect" href="testThermostat_8hpp.html" title=" " alt="" coords="487,124,636,151"/>
+<area shape="poly" title=" " alt="" coords="1093,53,653,124,651,119,1097,50"/>
+<area shape="rect" title=" " alt="" coords="126,208,230,235"/>
+<area shape="poly" title=" " alt="" coords="1092,42,880,52,616,68,380,89,297,103,250,117,230,133,213,153,190,194,186,192,209,150,226,129,247,113,296,97,380,84,616,62,880,47,1097,40"/>
+<area shape="rect" title=" " alt="" coords="322,283,399,311"/>
+<area shape="poly" title=" " alt="" coords="1092,43,944,55,766,70,597,91,528,103,476,118,428,133,391,148,361,170,334,209,329,224,331,239,344,271,339,270,325,240,324,223,329,207,357,167,389,143,427,128,474,112,527,98,596,86,765,65,944,49,1097,41"/>
+<area shape="rect" title=" " alt="" coords="887,283,949,311"/>
+<area shape="poly" title=" " alt="" coords="1092,44,1011,54,923,68,847,88,820,102,801,117,795,127,794,136,802,159,810,174,819,184,844,206,900,272,895,271,840,210,815,188,805,177,797,161,789,136,790,125,797,113,817,97,846,83,922,63,1010,48,1097,42"/>
+<area shape="rect" href="physicalData_8hpp.html" title=" " alt="" coords="955,208,1089,235"/>
+<area shape="poly" title=" " alt="" coords="1135,66,1105,91,1079,117,1052,156,1034,195,1030,191,1048,153,1074,113,1102,87,1130,69"/>
+<area shape="rect" title=" " alt="" coords="686,208,830,235"/>
+<area shape="poly" title=" " alt="" coords="1093,41,1001,50,899,64,811,85,779,100,757,117,748,134,745,153,750,194,746,192,740,153,743,132,753,113,776,95,809,80,898,58,1000,45,1098,40"/>
+<area shape="rect" title=" " alt="" coords="2932,359,2994,387"/>
+<area shape="poly" title=" " alt="" coords="1274,36,1605,42,2046,55,2263,65,2455,78,2602,93,2654,103,2688,113,2732,135,2774,163,2849,227,2908,293,2948,347,2943,345,2904,296,2845,231,2771,167,2730,140,2686,117,2653,108,2601,99,2454,83,2263,70,2046,60,1605,47,1274,41"/>
+<area shape="rect" href="berendsenThermostat_8hpp.html" title=" " alt="" coords="1088,124,1281,151"/>
+<area shape="poly" title=" " alt="" coords="1186,65,1187,109,1182,106,1183,70"/>
+<area shape="rect" href="internalConversionFactors_8hpp.html" title=" " alt="" coords="2915,115,3126,160"/>
+<area shape="poly" title=" " alt="" coords="1274,35,1548,38,1949,49,2418,73,2660,90,2897,112,2902,115,2897,115,2896,118,2659,95,2418,78,1949,55,1548,44,1274,40"/>
+<area shape="rect" href="exceptions_8hpp.html" title=" " alt="" coords="2555,124,2675,151"/>
+<area shape="poly" title=" " alt="" coords="1274,41,2541,129,2537,133,1274,46"/>
+<area shape="rect" href="langevinThermostat_8hpp.html" title=" " alt="" coords="1305,124,1485,151"/>
+<area shape="poly" title=" " alt="" coords="1249,65,1356,117,1351,117,1249,70"/>
+<area shape="rect" href="noseHooverThermostat_8hpp.html" title=" " alt="" coords="811,124,1014,151"/>
+<area shape="poly" title=" " alt="" coords="1099,69,964,120,962,115,1104,66"/>
+<area shape="rect" href="thermostatSettings_8hpp.html" title=" " alt="" coords="1928,124,2102,151"/>
+<area shape="poly" title=" " alt="" coords="1274,42,1558,68,1734,88,1910,112,1942,120,1937,120,1909,118,1733,94,1558,74,1274,47"/>
+<area shape="rect" href="throwWithMessage_8hpp.html" title=" " alt="" coords="5,124,180,151"/>
+<area shape="poly" title=" " alt="" coords="1093,42,705,66,453,88,198,118,169,122,165,118,197,112,452,83,704,61,1097,40"/>
+<area shape="rect" href="timingsSettings_8hpp.html" title=" " alt="" coords="1752,208,1903,235"/>
+<area shape="poly" title=" " alt="" coords="1274,39,1436,47,1622,62,1782,84,1837,97,1868,113,1877,134,1874,156,1864,178,1850,198,1847,194,1860,175,1869,155,1872,134,1864,117,1836,102,1781,89,1621,68,1435,53,1275,44"/>
+<area shape="rect" href="units_8hpp.html" title=" " alt="" coords="1772,124,1853,151"/>
+<area shape="poly" title=" " alt="" coords="1274,40,1375,48,1497,62,1630,83,1761,112,1772,118,1767,118,1760,118,1629,89,1497,68,1374,54,1275,45"/>
+<area shape="rect" href="velocityRescalingThermostat_8hpp.html" title=" " alt="" coords="1509,124,1748,151"/>
+<area shape="poly" title=" " alt="" coords="1274,55,1558,119,1552,120,1274,60"/>
+<area shape="poly" title=" " alt="" coords="499,154,246,208,244,204,502,150"/>
+<area shape="poly" title=" " alt="" coords="484,142,448,150,410,162,374,181,345,209,339,223,339,238,348,270,343,269,334,239,334,222,341,206,371,177,407,157,447,145,489,140"/>
+<area shape="rect" href="atom_8hpp.html" title=" " alt="" coords="546,283,629,311"/>
+<area shape="poly" title=" " alt="" coords="556,149,543,190,540,212,543,235,552,253,565,272,560,271,548,256,538,236,534,213,538,189,553,154"/>
+<area shape="rect" href="molecule_8hpp.html" title=" " alt="" coords="552,208,662,235"/>
+<area shape="poly" title=" " alt="" coords="570,149,595,194,590,194,568,154"/>
+<area shape="poly" title=" " alt="" coords="636,149,942,204,937,207,636,154"/>
+<area shape="poly" title=" " alt="" coords="593,149,715,201,710,202,593,154"/>
+<area shape="rect" title=" " alt="" coords="356,208,477,235"/>
+<area shape="poly" title=" " alt="" coords="536,153,454,202,451,198,541,150"/>
+<area shape="rect" title=" " alt="" coords="887,359,962,387"/>
+<area shape="poly" title=" " alt="" coords="629,305,875,359,870,361,629,310"/>
+<area shape="rect" title=" " alt="" coords="754,359,812,387"/>
+<area shape="poly" title=" " alt="" coords="622,309,742,355,737,356,622,314"/>
+<area shape="rect" title=" " alt="" coords="431,359,527,387"/>
+<area shape="poly" title=" " alt="" coords="570,310,512,352,509,348,566,313"/>
+<area shape="rect" href="strongTypes_8hpp.html" title=" " alt="" coords="602,359,730,387"/>
+<area shape="poly" title=" " alt="" coords="602,309,643,348,638,348,601,314"/>
+<area shape="rect" title=" " alt="" coords="1091,603,1198,631"/>
+<area shape="poly" title=" " alt="" coords="587,309,586,343,588,384,599,426,608,444,622,460,674,500,732,532,794,558,856,577,918,591,977,601,1078,614,1073,614,976,607,917,597,855,582,792,563,730,537,671,505,619,464,604,447,594,427,582,384,580,343,584,314"/>
+<area shape="rect" title=" " alt="" coords="1635,435,1704,462"/>
+<area shape="poly" title=" " alt="" coords="730,383,742,384,875,396,988,401,1181,402,1374,406,1487,415,1620,432,1622,435,1617,435,1619,437,1486,420,1374,411,1181,408,988,407,875,401,742,389,730,388"/>
+<area shape="rect" title=" " alt="" coords="633,435,698,462"/>
+<area shape="poly" title=" " alt="" coords="667,385,668,420,664,417,664,389"/>
+<area shape="rect" title=" " alt="" coords="830,435,952,462"/>
+<area shape="poly" title=" " alt="" coords="706,385,839,429,834,430,706,390"/>
+<area shape="poly" title=" " alt="" coords="561,237,414,283,412,278,565,234"/>
+<area shape="poly" title=" " alt="" coords="605,234,597,270,592,267,602,238"/>
+<area shape="poly" title=" " alt="" coords="623,233,759,349,754,349,621,238"/>
+<area shape="poly" title=" " alt="" coords="590,234,563,259,536,285,513,316,494,347,490,344,508,313,532,282,559,255,586,237"/>
+<area shape="poly" title=" " alt="" coords="616,233,643,282,662,345,657,343,638,284,615,238"/>
+<area shape="poly" title=" " alt="" coords="631,233,715,281,795,334,876,384,985,414,1078,428,1163,431,1242,428,1409,418,1506,420,1620,432,1622,435,1617,435,1619,437,1506,425,1409,423,1243,433,1163,437,1078,433,984,419,874,389,792,339,712,286,631,239"/>
+<area shape="poly" title=" " alt="" coords="662,233,869,281,874,284,869,284,868,286,662,238"/>
+<area shape="rect" href="unit__types_8hpp.html" title=" " alt="" coords="1474,283,1591,311"/>
+<area shape="poly" title=" " alt="" coords="662,231,674,233,792,245,892,252,1065,257,1237,262,1339,269,1461,283,1455,283,1339,274,1237,267,1064,263,892,258,792,251,674,238,663,236"/>
+<area shape="poly" title=" " alt="" coords="1471,309,1462,314,1400,320,1320,325,1243,337,1213,347,1192,361,1172,386,1158,414,1148,445,1142,477,1139,538,1142,589,1138,586,1134,538,1137,476,1143,444,1153,412,1167,383,1188,357,1210,343,1242,332,1319,320,1400,314,1461,308,1476,308"/>
+<area shape="rect" title=" " alt="" coords="1499,359,1617,387"/>
+<area shape="poly" title=" " alt="" coords="1538,309,1551,345,1546,343,1536,314"/>
+<area shape="rect" href="staticMatrix_8hpp.html" title=" " alt="" coords="1202,359,1330,387"/>
+<area shape="poly" title=" " alt="" coords="1487,311,1328,357,1327,352,1482,312"/>
+<area shape="rect" href="staticMatrix3x3_8hpp.html" title=" " alt="" coords="1373,435,1606,462"/>
+<area shape="poly" title=" " alt="" coords="1306,385,1438,430,1433,429,1306,390"/>
+<area shape="rect" href="staticMatrix3x3Class_8hpp.html" title=" " alt="" coords="1202,519,1388,546"/>
+<area shape="poly" title=" " alt="" coords="1270,385,1292,505,1288,502,1267,389"/>
+<area shape="rect" title=" " alt="" coords="1609,603,1688,631"/>
+<area shape="poly" title=" " alt="" coords="1583,460,1710,483,1760,495,1786,508,1794,521,1796,532,1787,556,1770,575,1749,590,1704,609,1703,603,1747,585,1767,572,1782,554,1791,532,1789,522,1783,512,1758,501,1709,488,1583,466"/>
+<area shape="rect" title=" " alt="" coords="1586,510,1772,555"/>
+<area shape="poly" title=" " alt="" coords="1521,460,1618,504,1612,503,1520,466"/>
+<area shape="rect" title=" " alt="" coords="2232,519,2308,546"/>
+<area shape="poly" title=" " alt="" coords="1607,459,2220,526,2214,526,1607,465"/>
+<area shape="poly" title=" " alt="" coords="1461,462,1341,515,1340,510,1456,464"/>
+<area shape="rect" title=" " alt="" coords="1413,519,1561,546"/>
+<area shape="poly" title=" " alt="" coords="1491,461,1490,505,1486,502,1488,465"/>
+<area shape="poly" title=" " alt="" coords="1274,546,1183,598,1181,593,1268,548"/>
+<area shape="poly" title=" " alt="" coords="1352,544,1596,603,1591,603,1352,550"/>
+<area shape="rect" title=" " alt="" coords="1222,603,1406,631"/>
+<area shape="poly" title=" " alt="" coords="1300,545,1310,590,1305,586,1297,549"/>
+<area shape="poly" title=" " alt="" coords="953,233,415,292,414,287,955,228"/>
+<area shape="poly" title=" " alt="" coords="1006,235,950,277,947,272,1001,237"/>
+<area shape="poly" title=" " alt="" coords="1089,230,1108,233,1282,255,1461,283,1456,283,1281,261,1107,238,1090,235"/>
+<area shape="poly" title=" " alt="" coords="1048,233,1137,281,1238,350,1233,350,1134,286,1048,238"/>
+<area shape="rect" href="config_2enums_2virial_8hpp.html" title=" " alt="" coords="1717,283,1847,311"/>
+<area shape="poly" title=" " alt="" coords="1090,227,1704,287,1699,289,1090,232"/>
+<area shape="rect" title=" " alt="" coords="2173,359,2238,387"/>
+<area shape="poly" title=" " alt="" coords="1848,307,2160,363,2155,363,1848,312"/>
+<area shape="rect" title=" " alt="" coords="1946,359,2069,387"/>
+<area shape="poly" title=" " alt="" coords="1822,309,1955,354,1950,354,1822,314"/>
+<area shape="poly" title=" " alt="" coords="1175,150,1162,171,1151,193,1147,215,1149,225,1154,234,1176,249,1207,260,1289,272,1461,283,1456,284,1289,277,1205,265,1173,254,1151,237,1144,226,1142,215,1146,191,1158,168,1171,153"/>
+<area shape="rect" href="thermostat_2thermostat_8hpp.html" title=" " alt="" coords="1164,208,1285,235"/>
+<area shape="poly" title=" " alt="" coords="1192,149,1214,195,1209,193,1190,154"/>
+<area shape="poly" title=" " alt="" coords="1168,237,1098,259,1019,286,962,313,828,361,826,356,959,309,1017,281,1097,254,1174,235"/>
+<area shape="poly" title=" " alt="" coords="1246,233,1367,309,1427,349,1488,384,1557,412,1623,434,1617,434,1555,417,1486,389,1424,354,1364,313,1245,239"/>
+<area shape="poly" title=" " alt="" coords="1280,233,1465,279,1460,279,1280,239"/>
+<area shape="rect" href="config_2enums_2thermostat_8hpp.html" title=" " alt="" coords="1922,283,2092,311"/>
+<area shape="poly" title=" " alt="" coords="1286,231,1297,233,1909,287,1904,288,1296,238,1286,236"/>
+<area shape="poly" title=" " alt="" coords="2043,309,2161,354,2156,354,2042,314"/>
+<area shape="poly" title=" " alt="" coords="2009,310,2009,345,2005,342,2005,314"/>
+<area shape="rect" href="conversionFactors_8hpp.html" title=" " alt="" coords="2915,208,3081,235"/>
+<area shape="poly" title=" " alt="" coords="3017,158,3007,194,3004,190,3013,162"/>
+<area shape="rect" href="natureConstants_8hpp.html" title=" " alt="" coords="3001,283,3157,311"/>
+<area shape="poly" title=" " alt="" coords="3054,158,3077,180,3095,207,3099,222,3100,239,3092,271,3089,267,3094,238,3094,223,3090,209,3073,183,3052,163"/>
+<area shape="poly" title=" " alt="" coords="2997,234,2972,345,2968,342,2993,237"/>
+<area shape="poly" title=" " alt="" coords="3013,233,3056,274,3051,272,3012,238"/>
+<area shape="poly" title=" " alt="" coords="3061,311,2998,353,2996,348,3056,312"/>
+<area shape="rect" href="baseException_8hpp.html" title=" " alt="" coords="2543,208,2687,235"/>
+<area shape="poly" title=" " alt="" coords="2617,150,2617,194,2613,191,2613,154"/>
+<area shape="rect" href="color_8hpp.html" title=" " alt="" coords="2710,283,2790,311"/>
+<area shape="poly" title=" " alt="" coords="2636,149,2668,174,2701,206,2723,237,2740,270,2735,268,2719,240,2697,209,2665,178,2634,154"/>
+<area shape="poly" title=" " alt="" coords="2640,233,2716,276,2710,275,2639,239"/>
+<area shape="rect" href="exceptionTypes_8hpp.html" title=" " alt="" coords="2320,283,2470,311"/>
+<area shape="poly" title=" " alt="" coords="2578,235,2449,281,2448,275,2573,236"/>
+<area shape="rect" title=" " alt="" coords="2544,283,2686,311"/>
+<area shape="poly" title=" " alt="" coords="2617,234,2617,269,2613,266,2613,238"/>
+<area shape="poly" title=" " alt="" coords="2726,311,2311,514,2310,509,2720,312"/>
+<area shape="poly" title=" " alt="" coords="2712,308,2698,314,2573,334,2449,350,2254,370,2254,365,2448,345,2572,328,2697,308,2706,309"/>
+<area shape="poly" title=" " alt="" coords="2364,311,2254,356,2252,351,2359,312"/>
+<area shape="poly" title=" " alt="" coords="2328,311,2085,360,2084,354,2323,312"/>
+<area shape="poly" title=" " alt="" coords="1370,151,1267,203,1264,198,1365,153"/>
+<area shape="rect" href="randomNumberGenerator_8hpp.html" title=" " alt="" coords="1309,208,1524,235"/>
+<area shape="poly" title=" " alt="" coords="1400,149,1412,194,1407,191,1397,154"/>
+<area shape="rect" title=" " alt="" coords="1378,283,1450,311"/>
+<area shape="poly" title=" " alt="" coords="1418,234,1417,269,1413,266,1414,238"/>
+<area shape="poly" title=" " alt="" coords="915,149,919,269,915,266,911,154"/>
+<area shape="poly" title=" " alt="" coords="963,149,1162,203,1157,204,963,154"/>
+<area shape="poly" title=" " alt="" coords="2102,139,2248,146,2421,159,2584,178,2650,191,2700,205,2748,224,2790,247,2806,261,2814,276,2814,294,2804,313,2782,329,2745,343,2633,369,2484,391,2314,409,1968,435,1720,448,1720,442,1968,430,2313,404,2484,386,2632,364,2743,338,2779,324,2800,309,2809,293,2809,278,2801,264,2787,252,2745,229,2698,210,2649,196,2583,184,2420,164,2248,152,2103,144"/>
+<area shape="poly" title=" " alt="" coords="1948,152,1851,178,1740,210,1650,245,1574,279,1572,274,1648,240,1738,205,1850,173,1953,151"/>
+<area shape="poly" title=" " alt="" coords="2017,149,2012,192,2004,215,1992,237,1971,254,1950,261,1930,268,1914,285,1910,303,1919,321,1937,336,1961,352,1956,351,1934,341,1915,324,1905,304,1909,282,1927,263,1948,256,1969,249,1988,234,1999,213,2006,190,2013,153"/>
+<area shape="poly" title=" " alt="" coords="2022,150,2035,189,2038,212,2036,236,2023,271,2020,267,2031,235,2033,212,2030,190,2020,154"/>
+<area shape="rect" title=" " alt="" coords="1927,208,1978,235"/>
+<area shape="poly" title=" " alt="" coords="2007,150,1973,198,1970,193,2003,153"/>
+<area shape="rect" href="defaults_8hpp.html" title=" " alt="" coords="2129,208,2232,235"/>
+<area shape="poly" title=" " alt="" coords="2042,149,2143,201,2138,200,2041,154"/>
+<area shape="rect" href="setting_8hpp.html" title=" " alt="" coords="1029,283,1124,311"/>
+<area shape="poly" title=" " alt="" coords="1944,152,1665,210,1537,238,1318,271,1139,292,1138,287,1317,265,1536,233,1664,205,1949,151"/>
+<area shape="poly" title=" " alt="" coords="2232,223,2300,229,2375,240,2441,257,2467,268,2484,282,2490,297,2484,312,2462,335,2431,355,2393,372,2349,387,2245,411,2129,428,2009,439,1895,446,1720,450,1720,445,1895,441,2009,434,2128,423,2244,406,2347,382,2391,367,2429,350,2459,331,2480,310,2485,297,2480,285,2464,272,2440,262,2374,245,2299,234,2232,228"/>
+<area shape="poly" title=" " alt="" coords="2126,229,1607,290,1606,285,2132,228"/>
+<area shape="rect" href="config_2enums_2convergence_8hpp.html" title=" " alt="" coords="2116,283,2296,311"/>
+<area shape="poly" title=" " alt="" coords="2186,234,2199,270,2194,267,2184,238"/>
+<area shape="poly" title=" " alt="" coords="2208,310,2208,345,2204,342,2204,314"/>
+<area shape="poly" title=" " alt="" coords="2173,311,2058,356,2056,351,2168,312"/>
+<area shape="poly" title=" " alt="" coords="1052,311,966,355,964,350,1047,312"/>
+<area shape="poly" title=" " alt="" coords="1065,310,975,389,923,428,921,423,972,385,1060,313"/>
+<area shape="rect" title=" " alt="" coords="1036,359,1128,387"/>
+<area shape="poly" title=" " alt="" coords="1079,309,1082,345,1078,342,1076,314"/>
+<area shape="poly" title=" " alt="" coords="106,149,156,196,151,198,107,154"/>
+<area shape="poly" title=" " alt="" coords="1780,235,1740,257,1722,269,1707,285,1688,317,1678,353,1673,389,1671,421,1667,417,1667,388,1672,352,1683,315,1702,282,1718,265,1737,252,1775,237"/>
+<area shape="poly" title=" " alt="" coords="1777,235,1601,282,1600,276,1772,237"/>
+<area shape="poly" title=" " alt="" coords="1801,150,1585,351,1582,346,1796,153"/>
+<area shape="poly" title=" " alt="" coords="1623,150,1550,272,1547,268,1618,153"/>
+<area shape="poly" title=" " alt="" coords="1561,152,1301,208,1299,202,1566,151"/>
+<area shape="poly" title=" " alt="" coords="1597,151,1465,204,1463,199,1592,153"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -257,8 +301,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a8d5123ef350362bf61b38d862ce2a95e" id="r_a8d5123ef350362bf61b38d862ce2a95e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d5123ef350362bf61b38d862ce2a95e">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, berendsenRejectsPositiveTargetFromZero)</td></tr>
 <tr class="memitem:a4c56c30866d9f4f4bbed19aa379ae184" id="r_a4c56c30866d9f4f4bbed19aa379ae184"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c56c30866d9f4f4bbed19aa379ae184">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, velocityRescalingZeroTemperatureDoesNotNaN)</td></tr>
 <tr class="memitem:a41836ea480a43f09cccb252b2a39109a" id="r_a41836ea480a43f09cccb252b2a39109a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41836ea480a43f09cccb252b2a39109a">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, velocityRescalingRejectsPositiveTargetFromZero)</td></tr>
-<tr class="memitem:a878df3c3b9961611900f120487c88eae" id="r_a878df3c3b9961611900f120487c88eae"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a878df3c3b9961611900f120487c88eae">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, berendsenRejectsRelaxationTimeShorterThanTimestep)</td></tr>
-<tr class="memitem:af83aa01de7a64a5ac85c966ecbeca3a0" id="r_af83aa01de7a64a5ac85c966ecbeca3a0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af83aa01de7a64a5ac85c966ecbeca3a0">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, berendsenRejectsRelaxationTimeJustBelowTimestep)</td></tr>
 <tr class="memitem:abd9d941cb2b82b7e14a10f9003cb1475" id="r_abd9d941cb2b82b7e14a10f9003cb1475"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abd9d941cb2b82b7e14a10f9003cb1475">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, berendsenRelaxationTimeEqualToTimestepStaysFinite)</td></tr>
 <tr class="memitem:ae1339f6200df8e12879637a346b37c50" id="r_ae1339f6200df8e12879637a346b37c50"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1339f6200df8e12879637a346b37c50">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, berendsenNearZeroTemperatureStaysFinite)</td></tr>
 <tr class="memitem:a81cb29501d9570211c5064177b135b01" id="r_a81cb29501d9570211c5064177b135b01"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81cb29501d9570211c5064177b135b01">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, velocityRescalingRejectsZeroDegreesOfFreedom)</td></tr>
@@ -278,10 +320,20 @@ Functions</h2></td></tr>
 <tr class="memitem:a8df7c19bb14afc9b67b5acfa2f985345" id="r_a8df7c19bb14afc9b67b5acfa2f985345"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8df7c19bb14afc9b67b5acfa2f985345">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, noseHooverCouplingFrequencySetterGetter)</td></tr>
 <tr class="memitem:a77568148ea728600fd2700e1f5b2dc6b" id="r_a77568148ea728600fd2700e1f5b2dc6b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77568148ea728600fd2700e1f5b2dc6b">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, noseHooverSetChiAtIndex)</td></tr>
 <tr class="memitem:adb823e6d874fa86f873dc01395418413" id="r_adb823e6d874fa86f873dc01395418413"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb823e6d874fa86f873dc01395418413">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, noseHooverAppliesFiniteForceAndStateUpdates)</td></tr>
+<tr class="memitem:a41fb241dabd08a085c30cb81b7da9044" id="r_a41fb241dabd08a085c30cb81b7da9044"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a41fb241dabd08a085c30cb81b7da9044">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, temperatureSetterGetter)</td></tr>
+<tr class="memitem:aa72325cd62e1f8103c3a0574e8dc3fe7" id="r_aa72325cd62e1f8103c3a0574e8dc3fe7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa72325cd62e1f8103c3a0574e8dc3fe7">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, temperatureRampingUpdatesActualTargetTemperature)</td></tr>
+<tr class="memitem:a0b9657c88e03e8d3133f41293b808284" id="r_a0b9657c88e03e8d3133f41293b808284"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b9657c88e03e8d3133f41293b808284">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, berendsenStoresMeasuredTemperature)</td></tr>
+<tr class="memitem:a69e162addaa44d873bb8e0939f3da37c" id="r_a69e162addaa44d873bb8e0939f3da37c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69e162addaa44d873bb8e0939f3da37c">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)</td></tr>
+<tr class="memitem:a71dd22e683b2e10caebda19814e1bfbc" id="r_a71dd22e683b2e10caebda19814e1bfbc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71dd22e683b2e10caebda19814e1bfbc">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, velocityRescalingLambdaStatistics)</td></tr>
+<tr class="memitem:a8d086e5de5625e66e611956b597bc953" id="r_a8d086e5de5625e66e611956b597bc953"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d086e5de5625e66e611956b597bc953">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, velocityRescalingNoStochasticTermAtEquilibriumLimit)</td></tr>
+<tr class="memitem:a037ffc8a8cb03c340315650c179858e3" id="r_a037ffc8a8cb03c340315650c179858e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a037ffc8a8cb03c340315650c179858e3">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, noseHooverMatchesReferenceStep)</td></tr>
+<tr class="memitem:a2d06589f6836184db63074490655e720" id="r_a2d06589f6836184db63074490655e720"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d06589f6836184db63074490655e720">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, noseHooverForceMatchesReference)</td></tr>
+<tr class="memitem:a1a6589c7cc50ce5edace96f05d4ea262" id="r_a1a6589c7cc50ce5edace96f05d4ea262"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a6589c7cc50ce5edace96f05d4ea262">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, noseHooverRejectsNegativeTargetTemperature)</td></tr>
+<tr class="memitem:a427ddb0b9600446f3b87934c4218a034" id="r_a427ddb0b9600446f3b87934c4218a034"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a427ddb0b9600446f3b87934c4218a034">TEST_F</a> (<a class="el" href="classTestThermostat.html">TestThermostat</a>, langevinSigmaMatchesReference)</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="a417bf8432eef2fb45e8b94d3777e0b3c" name="a417bf8432eef2fb45e8b94d3777e0b3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a417bf8432eef2fb45e8b94d3777e0b3c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[1/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a417bf8432eef2fb45e8b94d3777e0b3c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[1/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,7 +354,7 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a id="a0b5937aaa2f573bfc788136e19a82978" name="a0b5937aaa2f573bfc788136e19a82978"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b5937aaa2f573bfc788136e19a82978">&#9670;&#160;</a></span>TEST_F() <span class="overload">[2/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b5937aaa2f573bfc788136e19a82978">&#9670;&#160;</a></span>TEST_F() <span class="overload">[2/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -325,7 +377,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a0b5937aaa2f573bfc788136e19a82978_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a0b5937aaa2f573bfc788136e19a82978_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a0b5937aaa2f573bfc788136e19a82978_cgraph" id="atestThermostat_8cpp_a0b5937aaa2f573bfc788136e19a82978_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -333,7 +385,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="ae1339f6200df8e12879637a346b37c50" name="ae1339f6200df8e12879637a346b37c50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1339f6200df8e12879637a346b37c50">&#9670;&#160;</a></span>TEST_F() <span class="overload">[3/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1339f6200df8e12879637a346b37c50">&#9670;&#160;</a></span>TEST_F() <span class="overload">[3/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -356,7 +408,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_ae1339f6200df8e12879637a346b37c50_cgraph.png" border="0" usemap="#atestThermostat_8cpp_ae1339f6200df8e12879637a346b37c50_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_ae1339f6200df8e12879637a346b37c50_cgraph" id="atestThermostat_8cpp_ae1339f6200df8e12879637a346b37c50_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -364,7 +416,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a8d5123ef350362bf61b38d862ce2a95e" name="a8d5123ef350362bf61b38d862ce2a95e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d5123ef350362bf61b38d862ce2a95e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[4/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d5123ef350362bf61b38d862ce2a95e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[4/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -387,69 +439,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a8d5123ef350362bf61b38d862ce2a95e_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a8d5123ef350362bf61b38d862ce2a95e_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a8d5123ef350362bf61b38d862ce2a95e_cgraph" id="atestThermostat_8cpp_a8d5123ef350362bf61b38d862ce2a95e_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
-<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="af83aa01de7a64a5ac85c966ecbeca3a0" name="af83aa01de7a64a5ac85c966ecbeca3a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af83aa01de7a64a5ac85c966ecbeca3a0">&#9670;&#160;</a></span>TEST_F() <span class="overload">[5/31]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST_F </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">berendsenRejectsRelaxationTimeJustBelowTimestep</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="testThermostat_8cpp_af83aa01de7a64a5ac85c966ecbeca3a0_cgraph.png" border="0" usemap="#atestThermostat_8cpp_af83aa01de7a64a5ac85c966ecbeca3a0_cgraph" loading="lazy" alt=""/></div>
-<map name="atestThermostat_8cpp_af83aa01de7a64a5ac85c966ecbeca3a0_cgraph" id="atestThermostat_8cpp_af83aa01de7a64a5ac85c966ecbeca3a0_cgraph">
-<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
-<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a878df3c3b9961611900f120487c88eae" name="a878df3c3b9961611900f120487c88eae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a878df3c3b9961611900f120487c88eae">&#9670;&#160;</a></span>TEST_F() <span class="overload">[6/31]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST_F </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">berendsenRejectsRelaxationTimeShorterThanTimestep</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="testThermostat_8cpp_a878df3c3b9961611900f120487c88eae_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a878df3c3b9961611900f120487c88eae_cgraph" loading="lazy" alt=""/></div>
-<map name="atestThermostat_8cpp_a878df3c3b9961611900f120487c88eae_cgraph" id="atestThermostat_8cpp_a878df3c3b9961611900f120487c88eae_cgraph">
-<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -457,7 +447,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="abd9d941cb2b82b7e14a10f9003cb1475" name="abd9d941cb2b82b7e14a10f9003cb1475"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd9d941cb2b82b7e14a10f9003cb1475">&#9670;&#160;</a></span>TEST_F() <span class="overload">[7/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abd9d941cb2b82b7e14a10f9003cb1475">&#9670;&#160;</a></span>TEST_F() <span class="overload">[5/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -480,7 +470,69 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_abd9d941cb2b82b7e14a10f9003cb1475_cgraph.png" border="0" usemap="#atestThermostat_8cpp_abd9d941cb2b82b7e14a10f9003cb1475_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_abd9d941cb2b82b7e14a10f9003cb1475_cgraph" id="atestThermostat_8cpp_abd9d941cb2b82b7e14a10f9003cb1475_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a69e162addaa44d873bb8e0939f3da37c" name="a69e162addaa44d873bb8e0939f3da37c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69e162addaa44d873bb8e0939f3da37c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[6/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">berendsenScalesVelocitiesBySqrtOfTemperatureRatio</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_a69e162addaa44d873bb8e0939f3da37c_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a69e162addaa44d873bb8e0939f3da37c_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_a69e162addaa44d873bb8e0939f3da37c_cgraph" id="atestThermostat_8cpp_a69e162addaa44d873bb8e0939f3da37c_cgraph">
+<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a0b9657c88e03e8d3133f41293b808284" name="a0b9657c88e03e8d3133f41293b808284"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b9657c88e03e8d3133f41293b808284">&#9670;&#160;</a></span>TEST_F() <span class="overload">[7/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">berendsenStoresMeasuredTemperature</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_a0b9657c88e03e8d3133f41293b808284_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a0b9657c88e03e8d3133f41293b808284_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_a0b9657c88e03e8d3133f41293b808284_cgraph" id="atestThermostat_8cpp_a0b9657c88e03e8d3133f41293b808284_cgraph">
+<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -488,7 +540,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a1ef7fe78ffc7a23a501baa242cb8cf2e" name="a1ef7fe78ffc7a23a501baa242cb8cf2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ef7fe78ffc7a23a501baa242cb8cf2e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[8/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ef7fe78ffc7a23a501baa242cb8cf2e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[8/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -511,7 +563,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a1ef7fe78ffc7a23a501baa242cb8cf2e_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a1ef7fe78ffc7a23a501baa242cb8cf2e_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a1ef7fe78ffc7a23a501baa242cb8cf2e_cgraph" id="atestThermostat_8cpp_a1ef7fe78ffc7a23a501baa242cb8cf2e_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -519,7 +571,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a363478c8f896326199dc0f94b5c0f971" name="a363478c8f896326199dc0f94b5c0f971"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a363478c8f896326199dc0f94b5c0f971">&#9670;&#160;</a></span>TEST_F() <span class="overload">[9/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a363478c8f896326199dc0f94b5c0f971">&#9670;&#160;</a></span>TEST_F() <span class="overload">[9/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -540,7 +592,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="aa265a3fcb7095ed1cd8bd8056f023d01" name="aa265a3fcb7095ed1cd8bd8056f023d01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa265a3fcb7095ed1cd8bd8056f023d01">&#9670;&#160;</a></span>TEST_F() <span class="overload">[10/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa265a3fcb7095ed1cd8bd8056f023d01">&#9670;&#160;</a></span>TEST_F() <span class="overload">[10/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -561,7 +613,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="ac0220b1f69b98f0352124568a78e2d73" name="ac0220b1f69b98f0352124568a78e2d73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0220b1f69b98f0352124568a78e2d73">&#9670;&#160;</a></span>TEST_F() <span class="overload">[11/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0220b1f69b98f0352124568a78e2d73">&#9670;&#160;</a></span>TEST_F() <span class="overload">[11/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -584,7 +636,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_ac0220b1f69b98f0352124568a78e2d73_cgraph.png" border="0" usemap="#atestThermostat_8cpp_ac0220b1f69b98f0352124568a78e2d73_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_ac0220b1f69b98f0352124568a78e2d73_cgraph" id="atestThermostat_8cpp_ac0220b1f69b98f0352124568a78e2d73_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -592,7 +644,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a988062ce380f223b174adbf89021cf2e" name="a988062ce380f223b174adbf89021cf2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a988062ce380f223b174adbf89021cf2e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[12/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a988062ce380f223b174adbf89021cf2e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[12/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -615,7 +667,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a988062ce380f223b174adbf89021cf2e_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a988062ce380f223b174adbf89021cf2e_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a988062ce380f223b174adbf89021cf2e_cgraph" id="atestThermostat_8cpp_a988062ce380f223b174adbf89021cf2e_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -623,7 +675,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="ac24fac251467d7bafd0f4763ba46e386" name="ac24fac251467d7bafd0f4763ba46e386"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac24fac251467d7bafd0f4763ba46e386">&#9670;&#160;</a></span>TEST_F() <span class="overload">[13/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac24fac251467d7bafd0f4763ba46e386">&#9670;&#160;</a></span>TEST_F() <span class="overload">[13/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -643,8 +695,39 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="a427ddb0b9600446f3b87934c4218a034" name="a427ddb0b9600446f3b87934c4218a034"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a427ddb0b9600446f3b87934c4218a034">&#9670;&#160;</a></span>TEST_F() <span class="overload">[14/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">langevinSigmaMatchesReference</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_a427ddb0b9600446f3b87934c4218a034_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a427ddb0b9600446f3b87934c4218a034_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_a427ddb0b9600446f3b87934c4218a034_cgraph" id="atestThermostat_8cpp_a427ddb0b9600446f3b87934c4218a034_cgraph">
+<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="ad2defb51d18281f1d03647c4fbe0c7f2" name="ad2defb51d18281f1d03647c4fbe0c7f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2defb51d18281f1d03647c4fbe0c7f2">&#9670;&#160;</a></span>TEST_F() <span class="overload">[14/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2defb51d18281f1d03647c4fbe0c7f2">&#9670;&#160;</a></span>TEST_F() <span class="overload">[15/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -665,7 +748,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a5591a48bff9fb4c2f5d82cc523b18147" name="a5591a48bff9fb4c2f5d82cc523b18147"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5591a48bff9fb4c2f5d82cc523b18147">&#9670;&#160;</a></span>TEST_F() <span class="overload">[15/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5591a48bff9fb4c2f5d82cc523b18147">&#9670;&#160;</a></span>TEST_F() <span class="overload">[16/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -688,9 +771,9 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a5591a48bff9fb4c2f5d82cc523b18147_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a5591a48bff9fb4c2f5d82cc523b18147_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a5591a48bff9fb4c2f5d82cc523b18147_cgraph" id="atestThermostat_8cpp_a5591a48bff9fb4c2f5d82cc523b18147_cgraph">
 <area shape="rect" title=" " alt="" coords="5,48,74,76"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#ac990af6a43bd3d7be96c36edf50eb5a0" title="get the time step" alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#a9cf276bd4d2096d6fd5ced833badf419" title="get the time step" alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="73,53,108,48,104,51,75,58"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,75,308,119"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,75,308,119"/>
 <area shape="poly" title=" " alt="" coords="74,66,109,74,104,77,74,72"/>
 </map>
 </div>
@@ -698,7 +781,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a0ace62b9ccd426536c191a24945f978b" name="a0ace62b9ccd426536c191a24945f978b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ace62b9ccd426536c191a24945f978b">&#9670;&#160;</a></span>TEST_F() <span class="overload">[16/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ace62b9ccd426536c191a24945f978b">&#9670;&#160;</a></span>TEST_F() <span class="overload">[17/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -719,7 +802,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="adb823e6d874fa86f873dc01395418413" name="adb823e6d874fa86f873dc01395418413"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb823e6d874fa86f873dc01395418413">&#9670;&#160;</a></span>TEST_F() <span class="overload">[17/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adb823e6d874fa86f873dc01395418413">&#9670;&#160;</a></span>TEST_F() <span class="overload">[18/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -742,7 +825,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_adb823e6d874fa86f873dc01395418413_cgraph.png" border="0" usemap="#atestThermostat_8cpp_adb823e6d874fa86f873dc01395418413_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_adb823e6d874fa86f873dc01395418413_cgraph" id="atestThermostat_8cpp_adb823e6d874fa86f873dc01395418413_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -750,7 +833,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a8df7c19bb14afc9b67b5acfa2f985345" name="a8df7c19bb14afc9b67b5acfa2f985345"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8df7c19bb14afc9b67b5acfa2f985345">&#9670;&#160;</a></span>TEST_F() <span class="overload">[18/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8df7c19bb14afc9b67b5acfa2f985345">&#9670;&#160;</a></span>TEST_F() <span class="overload">[19/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -770,8 +853,29 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="a2d06589f6836184db63074490655e720" name="a2d06589f6836184db63074490655e720"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d06589f6836184db63074490655e720">&#9670;&#160;</a></span>TEST_F() <span class="overload">[20/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">noseHooverForceMatchesReference</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a26918a4abb7b43f921f6e11f995177c3" name="a26918a4abb7b43f921f6e11f995177c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26918a4abb7b43f921f6e11f995177c3">&#9670;&#160;</a></span>TEST_F() <span class="overload">[19/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a26918a4abb7b43f921f6e11f995177c3">&#9670;&#160;</a></span>TEST_F() <span class="overload">[21/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -791,8 +895,71 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="a037ffc8a8cb03c340315650c179858e3" name="a037ffc8a8cb03c340315650c179858e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a037ffc8a8cb03c340315650c179858e3">&#9670;&#160;</a></span>TEST_F() <span class="overload">[22/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">noseHooverMatchesReferenceStep</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Independent re-implementation of one Nose-Hoover step in SI-time units. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_a037ffc8a8cb03c340315650c179858e3_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a037ffc8a8cb03c340315650c179858e3_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_a037ffc8a8cb03c340315650c179858e3_cgraph" id="atestThermostat_8cpp_a037ffc8a8cb03c340315650c179858e3_cgraph">
+<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a1a6589c7cc50ce5edace96f05d4ea262" name="a1a6589c7cc50ce5edace96f05d4ea262"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a6589c7cc50ce5edace96f05d4ea262">&#9670;&#160;</a></span>TEST_F() <span class="overload">[23/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">noseHooverRejectsNegativeTargetTemperature</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_a1a6589c7cc50ce5edace96f05d4ea262_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a1a6589c7cc50ce5edace96f05d4ea262_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_a1a6589c7cc50ce5edace96f05d4ea262_cgraph" id="atestThermostat_8cpp_a1a6589c7cc50ce5edace96f05d4ea262_cgraph">
+<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a42ef7773521412819743a8ae889a6aaa" name="a42ef7773521412819743a8ae889a6aaa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42ef7773521412819743a8ae889a6aaa">&#9670;&#160;</a></span>TEST_F() <span class="overload">[20/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a42ef7773521412819743a8ae889a6aaa">&#9670;&#160;</a></span>TEST_F() <span class="overload">[24/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -815,7 +982,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a42ef7773521412819743a8ae889a6aaa_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a42ef7773521412819743a8ae889a6aaa_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a42ef7773521412819743a8ae889a6aaa_cgraph" id="atestThermostat_8cpp_a42ef7773521412819743a8ae889a6aaa_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -823,7 +990,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a293ce428c3804e26fa918d2830b4abc0" name="a293ce428c3804e26fa918d2830b4abc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a293ce428c3804e26fa918d2830b4abc0">&#9670;&#160;</a></span>TEST_F() <span class="overload">[21/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a293ce428c3804e26fa918d2830b4abc0">&#9670;&#160;</a></span>TEST_F() <span class="overload">[25/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -846,7 +1013,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a293ce428c3804e26fa918d2830b4abc0_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a293ce428c3804e26fa918d2830b4abc0_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a293ce428c3804e26fa918d2830b4abc0_cgraph" id="atestThermostat_8cpp_a293ce428c3804e26fa918d2830b4abc0_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -854,7 +1021,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a77568148ea728600fd2700e1f5b2dc6b" name="a77568148ea728600fd2700e1f5b2dc6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77568148ea728600fd2700e1f5b2dc6b">&#9670;&#160;</a></span>TEST_F() <span class="overload">[22/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a77568148ea728600fd2700e1f5b2dc6b">&#9670;&#160;</a></span>TEST_F() <span class="overload">[26/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -875,7 +1042,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a0d701c610445ab5822b5f7d6b151e392" name="a0d701c610445ab5822b5f7d6b151e392"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d701c610445ab5822b5f7d6b151e392">&#9670;&#160;</a></span>TEST_F() <span class="overload">[23/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d701c610445ab5822b5f7d6b151e392">&#9670;&#160;</a></span>TEST_F() <span class="overload">[27/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -896,7 +1063,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a210edbaacb1fab2d2c92b919b4fe3d7e" name="a210edbaacb1fab2d2c92b919b4fe3d7e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a210edbaacb1fab2d2c92b919b4fe3d7e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[24/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a210edbaacb1fab2d2c92b919b4fe3d7e">&#9670;&#160;</a></span>TEST_F() <span class="overload">[28/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -919,15 +1086,69 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a210edbaacb1fab2d2c92b919b4fe3d7e_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a210edbaacb1fab2d2c92b919b4fe3d7e_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a210edbaacb1fab2d2c92b919b4fe3d7e_cgraph" id="atestThermostat_8cpp_a210edbaacb1fab2d2c92b919b4fe3d7e_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
 
 </div>
 </div>
+<a id="aa72325cd62e1f8103c3a0574e8dc3fe7" name="aa72325cd62e1f8103c3a0574e8dc3fe7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa72325cd62e1f8103c3a0574e8dc3fe7">&#9670;&#160;</a></span>TEST_F() <span class="overload">[29/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">temperatureRampingUpdatesActualTargetTemperature</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_aa72325cd62e1f8103c3a0574e8dc3fe7_cgraph.png" border="0" usemap="#atestThermostat_8cpp_aa72325cd62e1f8103c3a0574e8dc3fe7_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_aa72325cd62e1f8103c3a0574e8dc3fe7_cgraph" id="atestThermostat_8cpp_aa72325cd62e1f8103c3a0574e8dc3fe7_cgraph">
+<area shape="rect" title=" " alt="" coords="5,48,74,76"/>
+<area shape="rect" href="classThermostatSettings.html#aec689b40ff79afa931ed73356c50bdb8" title="get the actual target temperature" alt="" coords="122,5,335,50"/>
+<area shape="poly" title=" " alt="" coords="73,54,109,49,104,52,75,59"/>
+<area shape="rect" href="classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="122,75,334,119"/>
+<area shape="poly" title=" " alt="" coords="74,66,109,74,105,76,74,71"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a41fb241dabd08a085c30cb81b7da9044" name="a41fb241dabd08a085c30cb81b7da9044"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41fb241dabd08a085c30cb81b7da9044">&#9670;&#160;</a></span>TEST_F() <span class="overload">[30/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">temperatureSetterGetter</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="afc1d515275884e8a31f53770cd7bf809" name="afc1d515275884e8a31f53770cd7bf809"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc1d515275884e8a31f53770cd7bf809">&#9670;&#160;</a></span>TEST_F() <span class="overload">[25/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afc1d515275884e8a31f53770cd7bf809">&#9670;&#160;</a></span>TEST_F() <span class="overload">[31/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -950,7 +1171,72 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_afc1d515275884e8a31f53770cd7bf809_cgraph.png" border="0" usemap="#atestThermostat_8cpp_afc1d515275884e8a31f53770cd7bf809_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_afc1d515275884e8a31f53770cd7bf809_cgraph" id="atestThermostat_8cpp_afc1d515275884e8a31f53770cd7bf809_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a71dd22e683b2e10caebda19814e1bfbc" name="a71dd22e683b2e10caebda19814e1bfbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71dd22e683b2e10caebda19814e1bfbc">&#9670;&#160;</a></span>TEST_F() <span class="overload">[32/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">velocityRescalingLambdaStatistics</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>lambda = 1 + timeRatio * (Ttarget/T - 1) + 2 sqrt(timeRatio Ttarget/T / dof)</p><ul>
+<li>N(0,1). Repeated draws from identical states must reproduce the mean and the standard deviation, and the velocities must be scaled by sqrt(lambda) consistent with the stored temperature. </li>
+</ul>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_a71dd22e683b2e10caebda19814e1bfbc_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a71dd22e683b2e10caebda19814e1bfbc_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_a71dd22e683b2e10caebda19814e1bfbc_cgraph" id="atestThermostat_8cpp_a71dd22e683b2e10caebda19814e1bfbc_cgraph">
+<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a8d086e5de5625e66e611956b597bc953" name="a8d086e5de5625e66e611956b597bc953"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d086e5de5625e66e611956b597bc953">&#9670;&#160;</a></span>TEST_F() <span class="overload">[33/39]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestThermostat.html">TestThermostat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">velocityRescalingNoStochasticTermAtEquilibriumLimit</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testThermostat_8cpp_a8d086e5de5625e66e611956b597bc953_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a8d086e5de5625e66e611956b597bc953_cgraph" loading="lazy" alt=""/></div>
+<map name="atestThermostat_8cpp_a8d086e5de5625e66e611956b597bc953_cgraph" id="atestThermostat_8cpp_a8d086e5de5625e66e611956b597bc953_cgraph">
+<area shape="rect" title=" " alt="" coords="5,14,74,42"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -958,7 +1244,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a41836ea480a43f09cccb252b2a39109a" name="a41836ea480a43f09cccb252b2a39109a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41836ea480a43f09cccb252b2a39109a">&#9670;&#160;</a></span>TEST_F() <span class="overload">[26/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a41836ea480a43f09cccb252b2a39109a">&#9670;&#160;</a></span>TEST_F() <span class="overload">[34/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -981,7 +1267,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a41836ea480a43f09cccb252b2a39109a_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a41836ea480a43f09cccb252b2a39109a_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a41836ea480a43f09cccb252b2a39109a_cgraph" id="atestThermostat_8cpp_a41836ea480a43f09cccb252b2a39109a_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -989,7 +1275,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a81cb29501d9570211c5064177b135b01" name="a81cb29501d9570211c5064177b135b01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a81cb29501d9570211c5064177b135b01">&#9670;&#160;</a></span>TEST_F() <span class="overload">[27/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a81cb29501d9570211c5064177b135b01">&#9670;&#160;</a></span>TEST_F() <span class="overload">[35/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1012,7 +1298,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a81cb29501d9570211c5064177b135b01_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a81cb29501d9570211c5064177b135b01_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a81cb29501d9570211c5064177b135b01_cgraph" id="atestThermostat_8cpp_a81cb29501d9570211c5064177b135b01_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -1020,7 +1306,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a44a887bf410e11d1ffb1c5be25336160" name="a44a887bf410e11d1ffb1c5be25336160"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44a887bf410e11d1ffb1c5be25336160">&#9670;&#160;</a></span>TEST_F() <span class="overload">[28/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a44a887bf410e11d1ffb1c5be25336160">&#9670;&#160;</a></span>TEST_F() <span class="overload">[36/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1043,7 +1329,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a44a887bf410e11d1ffb1c5be25336160_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a44a887bf410e11d1ffb1c5be25336160_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a44a887bf410e11d1ffb1c5be25336160_cgraph" id="atestThermostat_8cpp_a44a887bf410e11d1ffb1c5be25336160_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>
@@ -1051,7 +1337,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a71a44a20cac5b81f6a4bddffb6100c7c" name="a71a44a20cac5b81f6a4bddffb6100c7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71a44a20cac5b81f6a4bddffb6100c7c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[29/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a71a44a20cac5b81f6a4bddffb6100c7c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[37/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1072,7 +1358,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a8a70f3c7d725871c033e995eff6353db" name="a8a70f3c7d725871c033e995eff6353db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a70f3c7d725871c033e995eff6353db">&#9670;&#160;</a></span>TEST_F() <span class="overload">[30/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a70f3c7d725871c033e995eff6353db">&#9670;&#160;</a></span>TEST_F() <span class="overload">[38/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1093,7 +1379,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a4c56c30866d9f4f4bbed19aa379ae184" name="a4c56c30866d9f4f4bbed19aa379ae184"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c56c30866d9f4f4bbed19aa379ae184">&#9670;&#160;</a></span>TEST_F() <span class="overload">[31/31]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c56c30866d9f4f4bbed19aa379ae184">&#9670;&#160;</a></span>TEST_F() <span class="overload">[39/39]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1116,7 +1402,7 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostat_8cpp_a4c56c30866d9f4f4bbed19aa379ae184_cgraph.png" border="0" usemap="#atestThermostat_8cpp_a4c56c30866d9f4f4bbed19aa379ae184_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostat_8cpp_a4c56c30866d9f4f4bbed19aa379ae184_cgraph" id="atestThermostat_8cpp_a4c56c30866d9f4f4bbed19aa379ae184_cgraph">
 <area shape="rect" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" href="classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="122,5,308,50"/>
+<area shape="rect" href="classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="122,5,308,50"/>
 <area shape="poly" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
 </map>
 </div>

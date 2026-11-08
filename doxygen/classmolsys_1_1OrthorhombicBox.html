@@ -108,9 +108,9 @@ Inheritance diagram for molsys::OrthorhombicBox:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmolsys_1_1OrthorhombicBox__inherit__graph.png" border="0" usemap="#amolsys_1_1OrthorhombicBox_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="amolsys_1_1OrthorhombicBox_inherit__map" id="amolsys_1_1OrthorhombicBox_inherit__map">
-<area shape="rect" title="This class represents the unit cell of an orthorhombic box." alt="" coords="18,483,224,890"/>
-<area shape="rect" href="classmolsys_1_1Box.html" title="This class represents the unit cell of a general triclinic box." alt="" coords="5,5,237,435"/>
-<area shape="poly" title=" " alt="" coords="122,447,124,484,119,483,121,453"/>
+<area shape="rect" title="This class represents the unit cell of an orthorhombic box." alt="" coords="18,572,224,957"/>
+<area shape="rect" href="classmolsys_1_1Box.html" title="This class represents the unit cell of a general triclinic box." alt="" coords="5,5,237,524"/>
+<area shape="poly" title=" " alt="" coords="122,537,124,573,119,572,121,542"/>
 </map>
 </div>
 <div class="dynheader">
@@ -118,13 +118,13 @@ Collaboration diagram for molsys::OrthorhombicBox:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmolsys_1_1OrthorhombicBox__coll__graph.png" border="0" usemap="#amolsys_1_1OrthorhombicBox_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="amolsys_1_1OrthorhombicBox_coll__map" id="amolsys_1_1OrthorhombicBox_coll__map">
-<area shape="rect" title="This class represents the unit cell of an orthorhombic box." alt="" coords="78,624,284,1032"/>
-<area shape="rect" href="classmolsys_1_1Box.html" title="This class represents the unit cell of a general triclinic box." alt="" coords="65,168,297,575"/>
-<area shape="poly" title=" " alt="" coords="182,587,184,625,178,624,180,592"/>
+<area shape="rect" title="This class represents the unit cell of an orthorhombic box." alt="" coords="78,714,284,1099"/>
+<area shape="rect" href="classmolsys_1_1Box.html" title="This class represents the unit cell of a general triclinic box." alt="" coords="65,168,297,664"/>
+<area shape="poly" title=" " alt="" coords="182,677,184,714,178,713,180,682"/>
 <area shape="rect" title=" " alt="" coords="5,5,162,95"/>
-<area shape="poly" title=" " alt="" coords="97,92,117,151,112,152,97,97"/>
+<area shape="poly" title=" " alt="" coords="95,92,113,151,108,151,95,97"/>
 <area shape="rect" title=" " alt="" coords="186,5,373,95"/>
-<area shape="poly" title=" " alt="" coords="266,97,251,152,246,151,267,92"/>
+<area shape="poly" title=" " alt="" coords="267,97,255,152,250,151,269,92"/>
 </map>
 </div>
 <table class="memberdecls">
@@ -136,8 +136,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a522e6bc5773eb98d9c190a658d184d72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the cell geometry into an independent box.  <br /></td></tr>
 <tr class="memitem:a8a21d197fdb8c4fd7fa6f9a78850c578" id="r_a8a21d197fdb8c4fd7fa6f9a78850c578"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a21d197fdb8c4fd7fa6f9a78850c578">applyPBC</a> (<a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;position) const override</td></tr>
 <tr class="memdesc:a8a21d197fdb8c4fd7fa6f9a78850c578"><td class="mdescLeft">&#160;</td><td class="mdescRight">applies the periodic boundary conditions  <br /></td></tr>
-<tr class="memitem:ae726b49b3cb131e9a809adc35ced9694" id="r_ae726b49b3cb131e9a809adc35ced9694"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae726b49b3cb131e9a809adc35ced9694">scaleBox</a> (const <a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> &amp;scalingTensor) override</td></tr>
-<tr class="memdesc:ae726b49b3cb131e9a809adc35ced9694"><td class="mdescLeft">&#160;</td><td class="mdescRight">scales the cell dimensions and recalculates the volume  <br /></td></tr>
+<tr class="memitem:a72ed41a78c5a92a0c6ac28b1f28284ee" id="r_a72ed41a78c5a92a0c6ac28b1f28284ee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72ed41a78c5a92a0c6ac28b1f28284ee">scaleBox</a> (const <a class="el" href="unit__types_8hpp.html#a01cf713b5285a7a39f0995ad2ac3e89a">QuantityTensor3D</a> &amp;scalingTensor) override</td></tr>
+<tr class="memdesc:a72ed41a78c5a92a0c6ac28b1f28284ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">scales the cell dimensions and recalculates the volume  <br /></td></tr>
 <tr class="memitem:a3ad92a1af44211f42ab382d45d83adef" id="r_a3ad92a1af44211f42ab382d45d83adef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ad92a1af44211f42ab382d45d83adef">calcShiftVector</a> (const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;shiftVector) const override</td></tr>
 <tr class="memdesc:a3ad92a1af44211f42ab382d45d83adef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the shift vector.  <br /></td></tr>
 <tr class="memitem:a9cdf3b454dde0b02613fdf35f71979e0" id="r_a9cdf3b454dde0b02613fdf35f71979e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cdf3b454dde0b02613fdf35f71979e0">wrapPositionIntoBox</a> (const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;pos) const override</td></tr>
@@ -147,16 +147,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae0f0a841d70a9b7bd06437c315eca3dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the minimal box dimension  <br /></td></tr>
 <tr class="memitem:a66eda5599939e9f6eddabf438d1fcb55" id="r_a66eda5599939e9f6eddabf438d1fcb55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66eda5599939e9f6eddabf438d1fcb55">getBoxMatrix</a> (<a class="el" href="namespacemolsys.html#a1e12942fb755cfb6b01a94f468679e49">Periodicity</a> per) const override</td></tr>
 <tr class="memdesc:a66eda5599939e9f6eddabf438d1fcb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the box matrix  <br /></td></tr>
-<tr class="memitem:a5c6e5bb78555bba99a338e1cd7b0bab0" id="r_a5c6e5bb78555bba99a338e1cd7b0bab0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c6e5bb78555bba99a338e1cd7b0bab0">toOrthoSpace</a> (const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;position) const override</td></tr>
-<tr class="memdesc:a5c6e5bb78555bba99a338e1cd7b0bab0"><td class="mdescLeft">&#160;</td><td class="mdescRight">transform a vector into orthogonal space  <br /></td></tr>
-<tr class="memitem:abb168f87d5380911fa81474613af1a10" id="r_abb168f87d5380911fa81474613af1a10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb168f87d5380911fa81474613af1a10">toOrthoSpace</a> (const <a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> &amp;position) const override</td></tr>
-<tr class="memdesc:abb168f87d5380911fa81474613af1a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">transform a tensor into orthogonal space  <br /></td></tr>
-<tr class="memitem:ab56befc51fb478b6757a65af5ded4aa5" id="r_ab56befc51fb478b6757a65af5ded4aa5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab56befc51fb478b6757a65af5ded4aa5">toSimSpace</a> (const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;position) const override</td></tr>
-<tr class="memdesc:ab56befc51fb478b6757a65af5ded4aa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">transform a vector into simulation space  <br /></td></tr>
-<tr class="memitem:a1f3fafb157f2ec56a86a8cef7600fe20" id="r_a1f3fafb157f2ec56a86a8cef7600fe20"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f3fafb157f2ec56a86a8cef7600fe20">toSimSpace</a> (const <a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> &amp;position) const override</td></tr>
-<tr class="memdesc:a1f3fafb157f2ec56a86a8cef7600fe20"><td class="mdescLeft">&#160;</td><td class="mdescRight">transform a tensor into simulation space  <br /></td></tr>
 <tr class="memitem:a20ea3b87f27b801952ee72e1ce4956fb" id="r_a20ea3b87f27b801952ee72e1ce4956fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20ea3b87f27b801952ee72e1ce4956fb">allowChangeOfAngles</a> () const override</td></tr>
 <tr class="memdesc:a20ea3b87f27b801952ee72e1ce4956fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">indicate whether the box allows change of angles  <br /></td></tr>
+<tr class="memitem:a29bc75ce26b8605672b71a0b0a1bf211" id="r_a29bc75ce26b8605672b71a0b0a1bf211"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29bc75ce26b8605672b71a0b0a1bf211">isOrthorhombic</a> () const override</td></tr>
+<tr class="memdesc:a29bc75ce26b8605672b71a0b0a1bf211"><td class="mdescLeft">&#160;</td><td class="mdescRight">indicate whether the box is orthorhombic  <br /></td></tr>
+<tr class="memitem:a25be4a104b67cd272ae5c7b6ede0a0b3" id="r_a25be4a104b67cd272ae5c7b6ede0a0b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25be4a104b67cd272ae5c7b6ede0a0b3">getBoxMatrix</a> () const override</td></tr>
+<tr class="memdesc:a25be4a104b67cd272ae5c7b6ede0a0b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the box matrix without specifying periodicity  <br /></td></tr>
+<tr class="memitem:a29fbf767dac71112f9e2c9fcda3035f0" id="r_a29fbf767dac71112f9e2c9fcda3035f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29fbf767dac71112f9e2c9fcda3035f0">getInverseBoxMatrix</a> () const override</td></tr>
+<tr class="memdesc:a29fbf767dac71112f9e2c9fcda3035f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the inverse of the box matrix  <br /></td></tr>
 <tr class="inherit_header pub_methods_classmolsys_1_1Box"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classmolsys_1_1Box')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classmolsys_1_1Box.html">molsys::Box</a></td></tr>
 <tr class="memitem:a2d62d8a883a9dbc2b9ed9420d91aae10 inherit pub_methods_classmolsys_1_1Box" id="r_a2d62d8a883a9dbc2b9ed9420d91aae10"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmolsys_1_1Box.html#a2d62d8a883a9dbc2b9ed9420d91aae10">~Box</a> ()=default</td></tr>
 <tr class="memitem:a053b6964b2f64fed9b133fac0227bc2b inherit pub_methods_classmolsys_1_1Box" id="r_a053b6964b2f64fed9b133fac0227bc2b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmolsys_1_1Box.html#a053b6964b2f64fed9b133fac0227bc2b">CONST_PROPERTY_GETTER</a> (<a class="el" href="classmolsys_1_1Box.html#aab89d8748a8bc0f04757ef97bf09ad09">_boxDimensions</a>)</td></tr>
@@ -424,8 +422,48 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a25be4a104b67cd272ae5c7b6ede0a0b3" name="a25be4a104b67cd272ae5c7b6ede0a0b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25be4a104b67cd272ae5c7b6ede0a0b3">&#9670;&#160;</a></span>getBoxMatrix() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classlinalg_1_1StaticMatrix3x3.html">linalg::StaticMatrix3x3</a>&lt; double &gt; molsys::OrthorhombicBox::getBoxMatrix </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get the box matrix without specifying periodicity </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classlinalg_1_1StaticMatrix3x3.html">linalg::StaticMatrix3x3&lt;double&gt;</a> </dd></dl>
+
+<p>Implements <a class="el" href="classmolsys_1_1Box.html#a42a523af2b8b103ec3296addc2a41471">molsys::Box</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmolsys_1_1OrthorhombicBox_a25be4a104b67cd272ae5c7b6ede0a0b3_cgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_a25be4a104b67cd272ae5c7b6ede0a0b3_cgraph" loading="lazy" alt=""/></div>
+<map name="aclassmolsys_1_1OrthorhombicBox_a25be4a104b67cd272ae5c7b6ede0a0b3_cgraph" id="aclassmolsys_1_1OrthorhombicBox_a25be4a104b67cd272ae5c7b6ede0a0b3_cgraph">
+<area shape="rect" title="get the box matrix without specifying periodicity" alt="" coords="5,5,196,50"/>
+<area shape="rect" href="namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="244,14,407,42"/>
+<area shape="poly" title=" " alt="" coords="196,25,231,27,225,28,196,30"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a66eda5599939e9f6eddabf438d1fcb55" name="a66eda5599939e9f6eddabf438d1fcb55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66eda5599939e9f6eddabf438d1fcb55">&#9670;&#160;</a></span>getBoxMatrix()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a66eda5599939e9f6eddabf438d1fcb55">&#9670;&#160;</a></span>getBoxMatrix() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -466,9 +504,61 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmolsys_1_1OrthorhombicBox_a66eda5599939e9f6eddabf438d1fcb55_icgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_a66eda5599939e9f6eddabf438d1fcb55_icgraph" loading="lazy" alt=""/></div>
 <map name="aclassmolsys_1_1OrthorhombicBox_a66eda5599939e9f6eddabf438d1fcb55_icgraph" id="aclassmolsys_1_1OrthorhombicBox_a66eda5599939e9f6eddabf438d1fcb55_icgraph">
-<area shape="rect" title="get the box matrix" alt="" coords="107,5,297,50"/>
-<area shape="rect" href="testOrthorhombicBox_8cpp.html#ab6dfaf72abf0877574868530304fba73" title=" " alt="" coords="5,14,59,42"/>
-<area shape="poly" title=" " alt="" coords="89,29,59,30,59,25,93,27"/>
+<area shape="rect" title="get the box matrix" alt="" coords="108,24,298,68"/>
+<area shape="rect" href="perfBoxTransforms_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
+<area shape="poly" title=" " alt="" coords="90,30,61,26,60,21,95,27"/>
+<area shape="rect" href="testOrthorhombicBox_8cpp.html#ab6dfaf72abf0877574868530304fba73" title=" " alt="" coords="6,57,59,85"/>
+<area shape="poly" title=" " alt="" coords="90,63,60,70,59,65,95,61"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a29fbf767dac71112f9e2c9fcda3035f0" name="a29fbf767dac71112f9e2c9fcda3035f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29fbf767dac71112f9e2c9fcda3035f0">&#9670;&#160;</a></span>getInverseBoxMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classlinalg_1_1StaticMatrix3x3.html">linalg::StaticMatrix3x3</a>&lt; double &gt; molsys::OrthorhombicBox::getInverseBoxMatrix </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>get the inverse of the box matrix </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classlinalg_1_1StaticMatrix3x3.html">linalg::StaticMatrix3x3&lt;double&gt;</a> </dd></dl>
+
+<p>Implements <a class="el" href="classmolsys_1_1Box.html#acb092a36797507af74fce753649628fb">molsys::Box</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_cgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_cgraph" loading="lazy" alt=""/></div>
+<map name="aclassmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_cgraph" id="aclassmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_cgraph">
+<area shape="rect" title="get the inverse of the box matrix" alt="" coords="5,5,196,50"/>
+<area shape="rect" href="namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="244,14,407,42"/>
+<area shape="poly" title=" " alt="" coords="196,25,231,27,225,28,196,30"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_icgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_icgraph" loading="lazy" alt=""/></div>
+<map name="aclassmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_icgraph" id="aclassmolsys_1_1OrthorhombicBox_a29fbf767dac71112f9e2c9fcda3035f0_icgraph">
+<area shape="rect" title="get the inverse of the box matrix" alt="" coords="108,5,298,50"/>
+<area shape="rect" href="perfBoxTransforms_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,14,60,42"/>
+<area shape="poly" title=" " alt="" coords="90,29,60,30,60,25,95,27"/>
 </map>
 </div>
 
@@ -534,6 +624,36 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a29bc75ce26b8605672b71a0b0a1bf211" name="a29bc75ce26b8605672b71a0b0a1bf211"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29bc75ce26b8605672b71a0b0a1bf211">&#9670;&#160;</a></span>isOrthorhombic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool molsys::OrthorhombicBox::isOrthorhombic </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>indicate whether the box is orthorhombic </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the box is orthorhombic, false otherwise </dd></dl>
+
+<p>Implements <a class="el" href="classmolsys_1_1Box.html#a1f68e99fa4f29164f6929b77ef1b65fb">molsys::Box</a>.</p>
+
+</div>
+</div>
 <a id="adb8e913a4fc244468be4d716ba5bf5e2" name="adb8e913a4fc244468be4d716ba5bf5e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adb8e913a4fc244468be4d716ba5bf5e2">&#9670;&#160;</a></span>makeVacuumBox()</h2>
 
@@ -574,8 +694,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="ae726b49b3cb131e9a809adc35ced9694" name="ae726b49b3cb131e9a809adc35ced9694"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae726b49b3cb131e9a809adc35ced9694">&#9670;&#160;</a></span>scaleBox()</h2>
+<a id="a72ed41a78c5a92a0c6ac28b1f28284ee" name="a72ed41a78c5a92a0c6ac28b1f28284ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72ed41a78c5a92a0c6ac28b1f28284ee">&#9670;&#160;</a></span>scaleBox()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -586,7 +706,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname">void molsys::OrthorhombicBox::scaleBox </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>scalingTensor</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="unit__types_8hpp.html#a01cf713b5285a7a39f0995ad2ac3e89a">QuantityTensor3D</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>scalingTensor</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -605,183 +725,15 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classmolsys_1_1Box.html#ae3950e2a65948fb0b2e79eda0058b508">molsys::Box</a>.</p>
+<p>Implements <a class="el" href="classmolsys_1_1Box.html#a54f4931d68be1df1634ac216609f61c8">molsys::Box</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classmolsys_1_1OrthorhombicBox_ae726b49b3cb131e9a809adc35ced9694_icgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_ae726b49b3cb131e9a809adc35ced9694_icgraph" loading="lazy" alt=""/></div>
-<map name="aclassmolsys_1_1OrthorhombicBox_ae726b49b3cb131e9a809adc35ced9694_icgraph" id="aclassmolsys_1_1OrthorhombicBox_ae726b49b3cb131e9a809adc35ced9694_icgraph">
+<div class="center"><img src="classmolsys_1_1OrthorhombicBox_a72ed41a78c5a92a0c6ac28b1f28284ee_icgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_a72ed41a78c5a92a0c6ac28b1f28284ee_icgraph" loading="lazy" alt=""/></div>
+<map name="aclassmolsys_1_1OrthorhombicBox_a72ed41a78c5a92a0c6ac28b1f28284ee_icgraph" id="aclassmolsys_1_1OrthorhombicBox_a72ed41a78c5a92a0c6ac28b1f28284ee_icgraph">
 <area shape="rect" title="scales the cell dimensions and recalculates the volume" alt="" coords="122,5,312,50"/>
 <area shape="rect" href="testMolecule_8cpp.html#a7db12602d6e23d2e3568288b194f0fa1" title=" " alt="" coords="5,14,74,42"/>
 <area shape="poly" title=" " alt="" coords="103,28,74,30,74,25,108,27"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="abb168f87d5380911fa81474613af1a10" name="abb168f87d5380911fa81474613af1a10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb168f87d5380911fa81474613af1a10">&#9670;&#160;</a></span>toOrthoSpace() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> molsys::OrthorhombicBox::toOrthoSpace </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>position</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>transform a tensor into orthogonal space </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">position</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> </dd></dl>
-
-<p>Implements <a class="el" href="classmolsys_1_1Box.html#adfb94671b0ee0b23352ab142195ba63e">molsys::Box</a>.</p>
-
-</div>
-</div>
-<a id="a5c6e5bb78555bba99a338e1cd7b0bab0" name="a5c6e5bb78555bba99a338e1cd7b0bab0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c6e5bb78555bba99a338e1cd7b0bab0">&#9670;&#160;</a></span>toOrthoSpace() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> molsys::OrthorhombicBox::toOrthoSpace </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>position</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>transform a vector into orthogonal space </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">position</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> </dd></dl>
-
-<p>Implements <a class="el" href="classmolsys_1_1Box.html#a160bdd91407b7610b45761e33f192344">molsys::Box</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classmolsys_1_1OrthorhombicBox_a5c6e5bb78555bba99a338e1cd7b0bab0_icgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_a5c6e5bb78555bba99a338e1cd7b0bab0_icgraph" loading="lazy" alt=""/></div>
-<map name="aclassmolsys_1_1OrthorhombicBox_a5c6e5bb78555bba99a338e1cd7b0bab0_icgraph" id="aclassmolsys_1_1OrthorhombicBox_a5c6e5bb78555bba99a338e1cd7b0bab0_icgraph">
-<area shape="rect" title="transform a vector into orthogonal space" alt="" coords="108,24,298,68"/>
-<area shape="rect" href="perfBoxTransforms_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
-<area shape="poly" title=" " alt="" coords="90,30,61,26,60,21,95,27"/>
-<area shape="rect" href="testOrthorhombicBox_8cpp.html#a1ed31249fdd690393f714ac0da6118c3" title=" " alt="" coords="6,57,59,85"/>
-<area shape="poly" title=" " alt="" coords="90,63,60,70,59,65,95,61"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a1f3fafb157f2ec56a86a8cef7600fe20" name="a1f3fafb157f2ec56a86a8cef7600fe20"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f3fafb157f2ec56a86a8cef7600fe20">&#9670;&#160;</a></span>toSimSpace() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> molsys::OrthorhombicBox::toSimSpace </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>position</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>transform a tensor into simulation space </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">position</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="namespacelinalg.html#a2145abd9dd90db865cac97532fceabb4">linalg::tensor3D</a> </dd></dl>
-
-<p>Implements <a class="el" href="classmolsys_1_1Box.html#af59503268ed27bfb3f13a5fd8ceeb701">molsys::Box</a>.</p>
-
-</div>
-</div>
-<a id="ab56befc51fb478b6757a65af5ded4aa5" name="ab56befc51fb478b6757a65af5ded4aa5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab56befc51fb478b6757a65af5ded4aa5">&#9670;&#160;</a></span>toSimSpace() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> molsys::OrthorhombicBox::toSimSpace </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>position</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>transform a vector into simulation space </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">position</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="namespacelinalg.html#af0d9c3b473de7eba883ca73ed6b86d05">linalg::Vec3D</a> </dd></dl>
-
-<p>Implements <a class="el" href="classmolsys_1_1Box.html#a2298a98d6a33af885fa8464870a8fedf">molsys::Box</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classmolsys_1_1OrthorhombicBox_ab56befc51fb478b6757a65af5ded4aa5_icgraph.png" border="0" usemap="#aclassmolsys_1_1OrthorhombicBox_ab56befc51fb478b6757a65af5ded4aa5_icgraph" loading="lazy" alt=""/></div>
-<map name="aclassmolsys_1_1OrthorhombicBox_ab56befc51fb478b6757a65af5ded4aa5_icgraph" id="aclassmolsys_1_1OrthorhombicBox_ab56befc51fb478b6757a65af5ded4aa5_icgraph">
-<area shape="rect" title="transform a vector into simulation space" alt="" coords="108,24,298,68"/>
-<area shape="rect" href="perfBoxTransforms_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
-<area shape="poly" title=" " alt="" coords="90,30,61,26,60,21,95,27"/>
-<area shape="rect" href="testOrthorhombicBox_8cpp.html#a1ed31249fdd690393f714ac0da6118c3" title=" " alt="" coords="6,57,59,85"/>
-<area shape="poly" title=" " alt="" coords="90,63,60,70,59,65,95,61"/>
 </map>
 </div>
 

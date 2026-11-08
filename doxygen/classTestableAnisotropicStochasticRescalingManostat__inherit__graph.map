@@ -1,9 +1,9 @@
 <map id="TestableAnisotropicStochasticRescalingManostat" name="TestableAnisotropicStochasticRescalingManostat">
-<area shape="rect" id="Node000001" title=" " alt="" coords="13,780,218,869"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html" title="AnisotropicStochasticRescalingManostat inherits from StochasticRescalingManostat." alt="" coords="5,643,226,732"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,744,118,781,113,779,114,749"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1StochasticRescalingManostat.html" title="StochasticRescalingManostat inherits from Manostat." alt="" coords="10,416,221,595"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,607,118,643,113,642,115,612"/>
-<area shape="rect" id="Node000004" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="34,5,197,368"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,380,118,417,113,416,115,386"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="13,802,218,892"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html" title="AnisotropicStochasticRescalingManostat inherits from StochasticRescalingManostat." alt="" coords="5,665,226,754"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,767,118,803,113,802,114,771"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1StochasticRescalingManostat.html" title="StochasticRescalingManostat inherits from Manostat." alt="" coords="10,438,221,617"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,629,118,666,113,665,115,634"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="32,5,200,390"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,403,118,439,113,438,115,408"/>
 </map>

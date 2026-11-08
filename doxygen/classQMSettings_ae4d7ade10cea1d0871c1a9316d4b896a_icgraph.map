@@ -1,0 +1,11 @@
+<map id="QMSettings::setUseDispersionCorrection" name="QMSettings::setUseDispersionCorrection">
+<area shape="rect" id="Node000001" title="sets if the dispersion correction should be used" alt="" coords="461,65,679,110"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1QMInputParser.html#afadcef9bcfc31a38cb1ab81514f7dc10" title=" " alt="" coords="233,5,390,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="454,62,391,49,391,43,459,61"/>
+<area shape="rect" id="Node000004" href="$classTestQMSetupAse.html#a19daaf5ac6c71b67805a8cc3204eaa4f" title=" " alt="" coords="211,74,413,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="443,88,414,90,413,85,448,87"/>
+<area shape="rect" id="Node000005" href="$testQMSetupAse_8cpp.html#a9ce8a4047427a0a6bac0c1ec1b764b83" title=" " alt="" coords="278,126,346,154"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="448,113,347,136,346,130,443,113"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1QMInputParser.html#a7e6c42d87be90aa02b796fb76a73c88f" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="5,5,163,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="215,29,164,30,162,25,220,27"/>
+</map>

@@ -1,7 +1,7 @@
 <map id="input::ThermostatInputParser" name="input::ThermostatInputParser">
-<area shape="rect" id="Node000001" title="ThermostatInputParser inherits from InputFileParser." alt="" coords="347,1516,597,1880"/>
+<area shape="rect" id="Node000001" title="ThermostatInputParser inherits from InputFileParser." alt="" coords="351,1516,601,1880"/>
 <area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html" title="Base class for parsing the input file." alt="" coords="212,1259,412,1443"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="361,1454,391,1516,385,1516,360,1459"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="362,1454,393,1516,387,1516,361,1459"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="189,464,341,553"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="275,551,288,616,293,687,293,1095,296,1170,301,1243,296,1242,290,1170,288,1095,288,687,283,616,275,556"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="522,271,598,343"/>
@@ -37,6 +37,6 @@
 <area shape="rect" id="Node000016" title=" " alt="" coords="636,643,801,733"/>
 <area shape="poly" id="edge19_Node000015_Node000016" title=" " alt="" coords="689,735,654,793,650,790,692,730"/>
 <area shape="poly" id="edge20_Node000016_Node000017" title=" " alt="" coords="723,564,723,627,718,626,721,569"/>
-<area shape="rect" id="Node000018" title=" " alt="" coords="436,1315,617,1387"/>
-<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="523,1384,506,1500,501,1498,520,1389"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="436,1315,627,1387"/>
+<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="528,1384,510,1500,506,1498,525,1389"/>
 </map>

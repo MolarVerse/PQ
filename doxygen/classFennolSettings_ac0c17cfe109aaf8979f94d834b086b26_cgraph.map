@@ -1,0 +1,5 @@
+<map id="FennolSettings::setUseGPUPreprocessingByUser" name="FennolSettings::setUseGPUPreprocessingByUser">
+<area shape="rect" id="Node000001" title="sets if the GPU pre&#45;processing should be enabled for FeNNol" alt="" coords="5,5,295,50"/>
+<area shape="rect" id="Node000002" href="$classFennolSettings.html#a9c1b329fbb66979c061e2b2384376697" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="343,14,610,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="295,25,330,28,325,28,295,30"/>
+</map>

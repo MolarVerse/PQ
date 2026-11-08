@@ -1,23 +1,31 @@
 <map id="molsys::Molecule::setMoltype" name="molsys::Molecule::setMoltype">
-<area shape="rect" id="Node000001" title="set the moltype of the molecule" alt="" coords="580,136,797,164"/>
+<area shape="rect" id="Node000001" title="set the moltype of the molecule" alt="" coords="580,240,797,268"/>
 <area shape="rect" id="Node000002" href="$namespacebenchQMRunner.html#a81476c9e79c08085280b73044f57bd0f" title=" " alt="" coords="326,5,519,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="656,126,601,87,531,48,498,36,497,31,533,43,603,83,661,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="672,225,650,187,619,138,579,89,531,48,508,36,508,31,534,44,583,85,623,135,655,184,677,227"/>
 <area shape="rect" id="Node000005" href="$perfInterWater_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="396,57,450,85"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="630,131,532,100,450,80,450,74,533,95,636,130"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="666,227,611,164,573,129,531,100,490,84,451,76,450,71,491,79,534,95,576,125,614,160,671,228"/>
 <area shape="rect" id="Node000006" href="$namespacebenchmarkSetup.html#a24fd64793f79d08dd5d16c89ea05f81e" title=" " alt="" coords="313,109,532,137"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="562,138,533,137,533,132,567,137"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="656,230,601,191,531,152,498,140,497,135,533,147,603,187,661,230"/>
 <area shape="rect" id="Node000007" href="$namespacebenchOutputWriters.html#aded826eb8be74f772428464eb4242abc" title=" " alt="" coords="332,161,513,189"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="562,162,514,169,513,164,567,161"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="630,235,532,204,487,192,486,187,533,199,636,234"/>
 <area shape="rect" id="Node000009" href="$namespacebenchWaterScaling.html#a3372b0ab1c542bdc9fb149f57bdabb63" title=" " alt="" coords="336,213,510,241"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="634,168,533,203,487,215,486,210,532,198,629,170"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="562,242,511,239,510,233,568,241"/>
 <area shape="rect" id="Node000011" href="$testWaterModels_8cpp.html#a01e3bb18b0664e1eef6e5ac12e8525ce" title=" " alt="" coords="396,265,449,293"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="660,173,603,216,533,255,490,269,450,278,449,273,489,264,531,250,600,212,655,175"/>
-<area shape="rect" id="Node000003" href="$namespacebenchQMRunner.html#af59b6188cd23f4db67b6f50ab362d11d" title=" " alt="" coords="108,5,265,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="308,20,266,22,265,17,313,18"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="562,267,450,279,449,274,567,265"/>
+<area shape="rect" id="Node000012" href="$testSimulationBox_8cpp.html#a66e3f71a773b98284dcd53e5feace894" title="with the lookup table the errors are the same" alt="" coords="396,317,449,345"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="629,274,533,307,451,328,449,323,532,302,634,272"/>
+<area shape="rect" id="Node000013" href="$testSimulationBox_8cpp.html#a9bd96e58ebc6b53065b5a8ec97f2818d" title="the lookup table gives the same molecule and atom as the walk" alt="" coords="396,369,449,397"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="660,277,603,320,533,359,490,373,450,382,449,377,489,368,531,354,600,316,655,279"/>
+<area shape="rect" id="Node000014" href="$testSimulationBox_8cpp.html#af2f6c742110bb53dac70b262e05fcd5a" title="the table and the walk agree for every atom of a larger box" alt="" coords="396,421,449,449"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="671,279,614,347,576,381,534,411,491,428,450,435,449,430,489,422,531,406,573,377,611,343,666,281"/>
+<area shape="rect" id="Node000015" href="$testSimulationBox_8cpp.html#aeba8305760f395186fb0aaa796aeedae" title="a table that does not fit the molecules is not used, and the table is gone after clearAtomIndexLookup" alt="" coords="396,473,449,501"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="676,280,655,323,623,372,583,421,534,463,513,474,491,481,450,488,449,483,490,476,511,469,531,458,579,418,619,369,650,320,672,283"/>
+<area shape="rect" id="Node000003" href="$namespacebenchQMRunner.html#abca373c8b7c7c2a122ccde294bf97547" title=" " alt="" coords="108,5,265,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="308,21,267,22,264,17,313,18"/>
 <area shape="rect" id="Node000004" href="$perfDftbRunnerFiles_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,21,62,21,59,17,94,17"/>
 <area shape="rect" id="Node000008" href="$perfOutputWritersN100_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="159,161,214,189"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="315,176,214,178,214,173,320,174"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="315,177,215,178,213,173,319,174"/>
 <area shape="rect" id="Node000010" href="$perfInterWaterN1728_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="159,213,214,241"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="317,228,214,230,214,225,322,226"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="318,229,215,230,213,225,322,226"/>
 </map>

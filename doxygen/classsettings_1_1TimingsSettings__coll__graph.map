@@ -1,7 +1,7 @@
 <map id="settings::TimingsSettings" name="settings::TimingsSettings">
-<area shape="rect" id="Node000001" title="static class to store settings of timings" alt="" coords="5,173,181,402"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="11,5,66,78"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="36,75,38,112,42,149,44,156,38,157,37,149,33,112,36,80"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="124,5,172,78"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,75,125,157,120,156,139,80"/>
+<area shape="rect" id="Node000001" title="static class to store settings of timings" alt="" coords="14,173,190,402"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,89,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,75,47,112,51,149,52,156,47,157,46,149,42,112,44,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="132,5,181,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="150,75,134,157,128,156,148,80"/>
 </map>

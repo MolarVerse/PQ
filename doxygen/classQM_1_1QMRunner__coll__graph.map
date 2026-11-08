@@ -1,5 +1,7 @@
 <map id="QM::QMRunner" name="QM::QMRunner">
-<area shape="rect" id="Node000001" title="base class for different qm engines" alt="" coords="5,151,164,335"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="45,5,125,78"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,75,87,134,82,133,84,80"/>
+<area shape="rect" id="Node000001" title="base class for different qm engines" alt="" coords="40,151,199,379"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,85,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,75,79,134,74,135,57,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="108,5,283,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,75,167,136,162,134,183,80"/>
 </map>

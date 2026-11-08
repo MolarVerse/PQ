@@ -1,9 +1,0 @@
-<map id="QM::AseDftbRunner::AseDftbRunner" name="QM::AseDftbRunner::AseDftbRunner">
-<area shape="rect" id="Node000001" title="Construct a new AseDftbRunner::AseDftbRunner object." alt="" coords="5,75,162,119"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="210,5,412,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,72,223,54,218,57,160,77"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1AseDftbRunner.html#a382b224f6d5792db6471a71d76d66648" title="get the 3ob Hubbard derivatives as dict" alt="" coords="233,75,389,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="162,94,219,96,214,98,163,100"/>
-<area shape="rect" id="Node000004" href="$classQM_1_1AseDftbRunner.html#a8362c666305316110412e4e51376b5fb" title="set the 3ob Hubbard derivatives as dict" alt="" coords="233,144,389,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,117,223,138,218,139,159,123"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="linalg::angle" name="linalg::angle">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,107,57"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="30,29,27,20,30,11,40,5,56,3,73,5,83,13,78,14,71,10,56,8,42,10,34,14,32,20,36,29"/>
-<area shape="rect" id="Node000002" href="$namespacelinalg.html#a8b09ed67f3c2927e7d78dd44342b9f72" title=" " alt="" coords="155,29,242,57"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="107,41,142,43,136,43,107,46"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="173,28,169,20,172,11,182,5,198,3,215,5,226,14,220,13,213,10,198,8,184,10,176,14,174,20,178,30"/>
-</map>

@@ -1,3 +1,39 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classmaxwellBoltzmann_1_1MaxwellBoltzmann.html" title="class to initialize velocities of particles with a random maxwell boltzmann distribution" alt="" coords="5,5,216,50"/>
+<area shape="rect" id="Node000000" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="5,287,158,314"/>
+<area shape="rect" id="Node000001" href="$classmanostat_1_1BerendsenManostat.html" title="BerendsenManostat inherits from Manostat." alt="" coords="209,152,430,180"/>
+<area shape="poly" id="edge74_Node000000_Node000001" title=" " alt="" coords="119,277,294,178,292,183,122,281"/>
+<area shape="rect" id="Node000010" href="$classmanostat_1_1MonteCarloManostat.html" title="MonteCarloManostat inherits from Manostat." alt="" coords="206,287,433,314"/>
+<area shape="poly" id="edge83_Node000000_Node000010" title=" " alt="" coords="172,298,207,299,203,302,174,303"/>
+<area shape="rect" id="Node000011" href="$classmanostat_1_1StochasticRescalingManostat.html" title="StochasticRescalingManostat inherits from Manostat." alt="" coords="209,386,430,431"/>
+<area shape="poly" id="edge84_Node000000_Node000011" title=" " alt="" coords="128,319,270,384,266,387,128,324"/>
+<area shape="rect" id="Node000002" href="$classTestableBerendsenManostat.html" title=" " alt="" coords="503,5,708,33"/>
+<area shape="poly" id="edge75_Node000001_Node000002" title=" " alt="" coords="344,139,403,90,440,65,480,43,517,32,513,35,482,48,443,69,407,94,348,143"/>
+<area shape="rect" id="Node000003" href="$classTestableSimSpaceScalingManostat.html" title=" " alt="" coords="482,57,729,85"/>
+<area shape="poly" id="edge76_Node000001_Node000003" title=" " alt="" coords="361,143,417,117,480,94,524,84,520,87,482,99,419,122,364,147"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1AnisotropicBerendsenManostat.html" title="AnisotropicBerendsenManostat inherits from BerendsenManostat." alt="" coords="489,109,722,154"/>
+<area shape="poly" id="edge77_Node000001_Node000004" title=" " alt="" coords="444,148,491,144,486,147,446,153"/>
+<area shape="rect" id="Node000006" href="$classmanostat_1_1FullAnisotropicBerendsenManostat.html" title="FullAnisotropicBerendsenManostat inherits from BerendsenManostat." alt="" coords="512,178,699,223"/>
+<area shape="poly" id="edge79_Node000001_Node000006" title=" " alt="" coords="445,178,514,188,509,190,446,184"/>
+<area shape="rect" id="Node000008" href="$classmanostat_1_1SemiIsotropicBerendsenManostat.html" title="SemiIsotropicBerendsenManostat inherits from BerendsenManostat." alt="" coords="481,248,730,292"/>
+<area shape="poly" id="edge81_Node000001_Node000008" title=" " alt="" coords="364,184,482,233,520,246,514,247,480,238,364,189"/>
+<area shape="rect" id="Node000005" href="$classTestableAnisotropicBerendsenManostat.html" title=" " alt="" coords="790,109,1007,154"/>
+<area shape="poly" id="edge78_Node000004_Node000005" title=" " alt="" coords="737,129,792,130,787,132,739,134"/>
+<area shape="rect" id="Node000007" href="$classTestableFullAnisotropicBerendsenManostat.html" title=" " alt="" coords="778,178,1019,223"/>
+<area shape="poly" id="edge80_Node000006_Node000007" title=" " alt="" coords="714,198,780,200,775,201,715,203"/>
+<area shape="rect" id="Node000009" href="$classTestableSemiIsotropicBerendsenManostat.html" title=" " alt="" coords="782,248,1015,292"/>
+<area shape="poly" id="edge82_Node000008_Node000009" title=" " alt="" coords="745,267,784,269,779,270,746,272"/>
+<area shape="rect" id="Node000012" href="$classTestableStochasticRescalingManostat.html" title=" " alt="" coords="503,317,708,362"/>
+<area shape="poly" id="edge85_Node000011_Node000012" title=" " alt="" coords="429,379,513,361,508,363,430,384"/>
+<area shape="rect" id="Node000013" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html" title="AnisotropicStochasticRescalingManostat inherits from StochasticRescalingManostat." alt="" coords="490,386,721,431"/>
+<area shape="poly" id="edge86_Node000011_Node000013" title=" " alt="" coords="445,406,492,408,487,409,446,411"/>
+<area shape="rect" id="Node000015" href="$classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html" title="FullAnisotropicStochasticRescalingManostat inherits from StochasticRescalingManostat." alt="" coords="500,456,712,500"/>
+<area shape="poly" id="edge88_Node000011_Node000015" title=" " alt="" coords="429,432,513,455,508,455,429,438"/>
+<area shape="rect" id="Node000017" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html" title="SemiIsotropicStochasticRescalingManostat inherits from Manostat." alt="" coords="482,525,729,570"/>
+<area shape="poly" id="edge90_Node000011_Node000017" title=" " alt="" coords="363,438,418,475,482,510,514,524,508,524,480,515,416,480,361,443"/>
+<area shape="rect" id="Node000014" href="$classTestableAnisotropicStochasticRescalingManostat.html" title=" " alt="" coords="791,386,1006,431"/>
+<area shape="poly" id="edge87_Node000013_Node000014" title=" " alt="" coords="736,406,793,408,788,409,737,411"/>
+<area shape="rect" id="Node000016" href="$classTestableFullAnisotropicStochasticRescalingManostat.html" title=" " alt="" coords="779,456,1018,500"/>
+<area shape="poly" id="edge89_Node000015_Node000016" title=" " alt="" coords="727,475,782,478,776,478,727,480"/>
+<area shape="rect" id="Node000018" href="$classTestableSemiIsotropicStochasticRescalingManostat.html" title=" " alt="" coords="783,525,1014,570"/>
+<area shape="poly" id="edge91_Node000017_Node000018" title=" " alt="" coords="745,545,785,547,780,547,745,550"/>
 </map>

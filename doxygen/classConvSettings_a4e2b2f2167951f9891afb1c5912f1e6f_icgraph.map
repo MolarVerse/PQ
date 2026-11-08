@@ -1,5 +1,0 @@
-<map id="ConvSettings::setRMSForceConv" name="ConvSettings::setRMSForceConv">
-<area shape="rect" id="Node000001" title="set relative max force convergence" alt="" coords="107,5,339,33"/>
-<area shape="rect" id="Node000002" href="$testConvergenceSettings_8cpp.html#acbcea93ed043120a4019bd8ccd3419e7" title=" " alt="" coords="5,5,59,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,20,59,22,59,17,93,18"/>
-</map>

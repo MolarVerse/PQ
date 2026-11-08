@@ -1,9 +1,13 @@
 <map id="WaterModelSettings::getRigidWaterGeometry" name="WaterModelSettings::getRigidWaterGeometry">
-<area shape="rect" id="Node000001" title="Get the rigid geometry parameters for a water model." alt="" coords="195,65,381,110"/>
-<area shape="rect" id="Node000002" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="5,5,147,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,61,147,50,147,45,195,60"/>
-<area shape="rect" id="Node000003" href="$testConstraintSettings_8cpp.html#a5033ec7f99e31fff88f7a3e536bb90e3" title="finalize() must activate shake when the configured water model has a rigid geometry (e...." alt="" coords="49,74,103,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,89,103,90,103,85,181,86"/>
-<area shape="rect" id="Node000004" href="$testConstraintSettings_8cpp.html#afb8026e7188d76cd46dcf321461c1ce9" title="finalize() must not activate shake for a water model without a rigid geometry (e.g...." alt="" coords="49,126,103,154"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="182,114,104,136,102,131,177,115"/>
+<area shape="rect" id="Node000001" title="Get the rigid geometry parameters for a water model." alt="" coords="296,92,482,137"/>
+<area shape="rect" id="Node000002" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="107,5,248,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="316,86,234,53,234,48,321,85"/>
+<area shape="rect" id="Node000004" href="$testConstraintSettings_8cpp.html#a5033ec7f99e31fff88f7a3e536bb90e3" title="finalize() must activate shake when the configured water model has a rigid geometry (e...." alt="" coords="151,74,204,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="278,102,205,94,204,88,283,100"/>
+<area shape="rect" id="Node000005" href="$testConstraintSettings_8cpp.html#afb8026e7188d76cd46dcf321461c1ce9" title="finalize() must not activate shake for a water model without a rigid geometry (e.g...." alt="" coords="151,126,204,154"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="278,128,205,139,204,134,283,127"/>
+<area shape="rect" id="Node000006" href="$testConstraintSettings_8cpp.html#af66333770a9b5c6b5b2d597975b03d2f" title="finalize() must not re&#45;activate shake for a rigid water model if the user has explicitly deactivated ..." alt="" coords="151,178,204,206"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="314,142,205,185,204,180,309,143"/>
+<area shape="rect" id="Node000003" href="$testConstraintSettings_8cpp.html#ad808cbb357c4fd2740e7c67b54b8a238" title="isShakeSetBySystem() must distinguish shake activated only as a side effect of a rigid water model fr..." alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,29,60,30,58,25,93,26"/>
 </map>

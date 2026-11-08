@@ -1,9 +1,9 @@
 <map id="TestableAnisotropicBerendsenManostat" name="TestableAnisotropicBerendsenManostat">
-<area shape="rect" id="Node000001" title=" " alt="" coords="13,718,220,808"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1AnisotropicBerendsenManostat.html" title="AnisotropicBerendsenManostat inherits from BerendsenManostat." alt="" coords="5,581,228,670"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,683,119,719,114,718,115,687"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1BerendsenManostat.html" title="BerendsenManostat inherits from Manostat." alt="" coords="11,416,222,533"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="117,546,119,582,114,581,116,551"/>
-<area shape="rect" id="Node000004" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="35,5,198,368"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="117,380,119,417,114,416,116,386"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="13,763,220,852"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1AnisotropicBerendsenManostat.html" title="AnisotropicBerendsenManostat inherits from BerendsenManostat." alt="" coords="5,626,228,715"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,727,119,764,114,762,115,732"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1BerendsenManostat.html" title="BerendsenManostat inherits from Manostat." alt="" coords="11,438,222,578"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="117,590,119,626,114,626,116,595"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="33,5,201,390"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="117,402,119,439,114,438,116,408"/>
 </map>

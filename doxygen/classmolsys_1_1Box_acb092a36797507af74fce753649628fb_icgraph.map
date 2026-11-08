@@ -1,0 +1,22 @@
+<map id="molsys::Box::getInverseBoxMatrix" name="molsys::Box::getInverseBoxMatrix">
+<area shape="rect" id="Node000001" title=" " alt="" coords="625,75,829,119"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a9420afb1c05d67de61043f3cf791411e" title="transform a scaling tensor into simulation space" alt="" coords="417,75,577,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="607,97,578,100,577,94,612,97"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="135,5,356,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="399,72,329,53,329,48,405,70"/>
+<area shape="rect" id="Node000005" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="135,75,356,119"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="399,98,357,100,356,94,404,96"/>
+<area shape="rect" id="Node000007" href="$classTestableSimSpaceScalingManostat.html#a294cbc39fe34435ca6af62e9d5445188" title=" " alt="" coords="122,152,369,197"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="405,125,321,154,320,149,410,124"/>
+<area shape="rect" id="Node000004" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="5,18,74,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="117,32,75,33,73,29,121,28"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="143,71,121,65,75,48,73,42,123,60,148,69"/>
+<area shape="rect" id="Node000006" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="5,78,74,106"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="117,95,75,95,73,90,121,92"/>
+<area shape="rect" id="Node000008" href="$testManostat_8cpp.html#ad438d3298396963c6ca1c0378b331bc6" title="a box allowing a change of angles keeps the scaling tensor in simulation space" alt="" coords="5,130,74,158"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="104,155,75,151,73,146,108,152"/>
+<area shape="rect" id="Node000009" href="$testManostat_8cpp.html#ab551f7a073e4ea37992d425368c804d2" title="orthorhombic boxes need no transformation of the scaling tensor" alt="" coords="5,182,74,210"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="104,190,75,195,73,190,108,187"/>
+<area shape="rect" id="Node000010" href="$testManostat_8cpp.html#afbab15ab2e6ee17d737511c827dcb5db" title="for fixed angles the diagonal scaling in orthogonal space is mapped to simulation space: S_sim * (h v..." alt="" coords="5,234,74,262"/>
+<area shape="poly" id="edge10_Node000007_Node000010" title=" " alt="" coords="168,205,75,238,73,233,166,200"/>
+</map>

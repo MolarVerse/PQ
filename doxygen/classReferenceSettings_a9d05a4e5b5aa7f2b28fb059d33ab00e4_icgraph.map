@@ -1,21 +1,27 @@
 <map id="ReferenceSettings::addReferenceFile" name="ReferenceSettings::addReferenceFile">
-<area shape="rect" id="Node000001" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="537,178,686,223"/>
-<area shape="rect" id="Node000002" href="$classManostatSettings.html#a9a5f9c461380cb265bbabde942ee0546" title="adds the appropriate reference file for the current manostat type to the given reference settings" alt="" coords="346,49,489,94"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="570,168,532,139,488,108,469,97,469,91,491,104,535,135,576,169"/>
-<area shape="rect" id="Node000007" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="347,118,488,163"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="520,173,488,165,489,160,526,173"/>
-<area shape="rect" id="Node000008" href="$testReferencesOutput_8cpp.html#a5d0150df0ba9dd45a503298b00f231f4" title=" " alt="" coords="391,187,444,214"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="519,201,445,203,444,198,524,200"/>
-<area shape="rect" id="Node000009" href="$testReferencesOutput_8cpp.html#a886042122d4b3d0cf7382336d422447b" title=" " alt="" coords="391,239,444,266"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="525,224,445,248,444,243,520,225"/>
-<area shape="rect" id="Node000010" href="$testReferencesOutput_8cpp.html#a21e498ed61e2d3514958024f012ec8b3" title=" " alt="" coords="391,291,444,318"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="569,231,491,280,446,299,444,294,488,275,563,233"/>
+<area shape="rect" id="Node000001" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="550,238,699,283"/>
+<area shape="rect" id="Node000002" href="$classManostatSettings.html#a9a5f9c461380cb265bbabde942ee0546" title="adds the appropriate reference file for the current manostat type to the given reference settings" alt="" coords="352,49,496,94"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="600,225,558,167,531,136,501,108,484,97,484,91,504,104,535,132,563,163,605,226"/>
+<area shape="rect" id="Node000007" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="354,118,495,163"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="580,229,501,177,480,166,480,161,504,173,585,229"/>
+<area shape="rect" id="Node000009" href="$classDftbSettings.html#a165d73160e74c2bbf267c7ba07029366" title="finalizes the DFTB settings by performing necessary checks and setups" alt="" coords="346,187,502,214"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="533,234,473,218,473,212,539,234"/>
+<area shape="rect" id="Node000010" href="$classThermostatSettings.html#ae6bdace099417818d6cbfb73e7f7d654" title="finalize the thermostat settings by checking if all required temperatures are set" alt="" coords="350,238,499,283"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="532,261,499,263,498,258,538,260"/>
+<area shape="rect" id="Node000011" href="$testReferencesOutput_8cpp.html#a5d0150df0ba9dd45a503298b00f231f4" title=" " alt="" coords="398,307,451,334"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="538,286,452,315,450,310,533,288"/>
+<area shape="rect" id="Node000012" href="$testReferencesOutput_8cpp.html#a886042122d4b3d0cf7382336d422447b" title=" " alt="" coords="398,359,451,386"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="586,291,547,322,504,348,452,368,450,363,501,343,544,318,581,294"/>
+<area shape="rect" id="Node000013" href="$testReferencesOutput_8cpp.html#a21e498ed61e2d3514958024f012ec8b3" title=" " alt="" coords="398,411,451,438"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="603,294,560,350,533,377,504,400,478,413,452,422,451,416,476,408,501,396,530,373,556,346,598,297"/>
 <area shape="rect" id="Node000003" href="$classManostatSettings.html#a55e37d5bcc2e78da3a0d95690a7f8d9b" title="finalizes the settings by setting the fixed axis if it was not explicitly set" alt="" coords="108,57,298,85"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="328,72,299,74,297,69,333,70"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,72,299,74,297,69,339,70"/>
 <area shape="rect" id="Node000004" href="$perfBerendsenManostat_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="138,54,61,30,59,25,142,51"/>
 <area shape="rect" id="Node000005" href="$testManostatSettings_8cpp.html#ad449ced7be1ca062f29ccc8e51d85ca3" title="finalize() must add the reference file matching the configured manostat type." alt="" coords="6,57,59,85"/>
 <area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="90,73,61,73,58,69,94,69"/>
 <area shape="rect" id="Node000006" href="$testManostatSettings_8cpp.html#a2e9bacf8d8b53ede70d1fb4a71a923d5" title=" " alt="" coords="6,109,59,137"/>
 <area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="139,92,61,117,58,113,142,88"/>
+<area shape="rect" id="Node000008" href="$testConstraintSettings_8cpp.html#ad808cbb357c4fd2740e7c67b54b8a238" title="isShakeSetBySystem() must distinguish shake activated only as a side effect of a rigid water model fr..." alt="" coords="176,127,230,154"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="336,142,231,143,229,138,340,139"/>
 </map>

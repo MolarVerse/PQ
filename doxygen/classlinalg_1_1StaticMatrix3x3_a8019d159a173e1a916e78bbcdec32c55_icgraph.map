@@ -1,0 +1,15 @@
+<map id="linalg::StaticMatrix3x3::numerical_value_in" name="linalg::StaticMatrix3x3::numerical_value_in">
+<area shape="rect" id="Node000001" title=" " alt="" coords="384,117,552,162"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a4d0bd98063fb31417a1b2e46afd312f3" title="scales the positions of the molecule by shifting the center of mass" alt="" coords="133,5,310,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="428,107,386,76,335,47,306,36,305,31,337,42,389,72,433,107"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1TriclinicBox.html#a83d610ea4ed30ac8c0a630023bb92147" title="scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume" alt="" coords="146,57,296,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="366,116,297,100,297,95,371,114"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Molecule.html#a1bc8867c1a5c9c51669a84a13c2e3435" title="scales the center&#45;of&#45;mass velocity of the molecule" alt="" coords="107,125,336,153"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="366,140,337,142,336,137,371,139"/>
+<area shape="rect" id="Node000006" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="187,177,256,205"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="366,161,257,187,256,181,371,159"/>
+<area shape="rect" id="Node000007" href="$testManostat_8cpp.html#afbab15ab2e6ee17d737511c827dcb5db" title="for fixed angles the diagonal scaling in orthogonal space is mapped to simulation space: S_sim * (h v..." alt="" coords="187,229,256,257"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="424,170,382,197,337,219,295,232,256,241,255,235,294,227,335,214,380,193,419,171"/>
+<area shape="rect" id="Node000004" href="$testTriclinicBox_8cpp.html#a340d5369d7ced0adf82b9aa812db3a7f" title=" " alt="" coords="5,65,59,93"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="129,81,60,82,58,77,132,77"/>
+</map>

@@ -10,7 +10,7 @@ var classengine_1_1Engine =
     [ "_getNSteps", "classengine_1_1Engine.html#aa3a13549f23d2bfcce13db72f6e929b1", null ],
     [ "_setNSteps", "classengine_1_1Engine.html#a0750cb745853e166758febb68b47dcd1", null ],
     [ "_setStep", "classengine_1_1Engine.html#ae9a099a3f3efbb693a6760acf92984f6", null ],
-    [ "calculateTotalSimulationTime", "classengine_1_1Engine.html#a77472643b962f17d5aa76a05da6169cf", null ],
+    [ "calculateTotalSimulationTime", "classengine_1_1Engine.html#ac7f586337c685f0dcb798917f704b669", null ],
     [ "getAveragePhysicalData", "classengine_1_1Engine.html#a2fa575804f6cecb570baf93a6aaad88f", null ],
     [ "getCellList", "classengine_1_1Engine.html#ae6560f7079438e25efb0b18555a7c75a", null ],
     [ "getCellList", "classengine_1_1Engine.html#a0c867bc08924f1b060f4a83190dcd78d", null ],

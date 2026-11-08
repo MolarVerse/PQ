@@ -1,5 +1,5 @@
 <map id="out::InfoOutput" name="out::InfoOutput">
-<area shape="rect" id="Node000001" title="InfoOutput inherits from Output." alt="" coords="19,438,179,712"/>
+<area shape="rect" id="Node000001" title="InfoOutput inherits from Output." alt="" coords="9,438,189,823"/>
 <area shape="rect" id="Node000002" href="$classout_1_1Output.html" title="Base class for output files." alt="" coords="5,5,192,390"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,403,101,439,96,438,98,408"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,402,101,439,96,438,98,408"/>
 </map>

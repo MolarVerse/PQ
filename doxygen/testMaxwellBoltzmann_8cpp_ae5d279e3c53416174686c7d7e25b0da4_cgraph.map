@@ -2,15 +2,15 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,407,59,435"/>
 <area shape="rect" id="Node000002" href="$classmaxwellBoltzmann_1_1MaxwellBoltzmann.html#a9495d2dc3908e3cd6ea7dc7eab65ac21" title="generate boltzmann distributed velocities for all atoms in the simulation box" alt="" coords="107,273,325,318"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,405,170,325,168,330,56,409"/>
-<area shape="rect" id="Node000017" href="$classsettings_1_1ThermostatSettings.html#a34583b44496c7f5b0bfe2d3f0ef5716a" title="set the target temperature" alt="" coords="111,523,320,567"/>
+<area shape="rect" id="Node000017" href="$classThermostatSettings.html#aec3f6c4bb78bbb8e79b9eff31ae4fa3b" title="set the target temperature" alt="" coords="130,523,302,567"/>
 <area shape="poly" id="edge21_Node000001_Node000017" title=" " alt="" coords="55,433,171,512,167,515,54,438"/>
 <area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#ad8c77c782c3758cc7ae205f01ff31d67" title="calculate angular momentum of simulationBox" alt="" coords="373,144,586,189"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="248,271,305,234,372,199,390,193,385,196,374,203,308,239,252,275"/>
 <area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBox.html#a81dff1f29a520c8c884853b375c3c9bd" title="calculate momentum of simulationBox" alt="" coords="394,5,565,50"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="224,272,244,227,276,170,319,111,344,84,371,60,382,55,378,59,375,64,348,88,323,115,281,173,249,230,229,274"/>
-<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a8ce2ce865611680c4f9ffc84cc9736f7" title="calculate temperature of simulationBox" alt="" coords="394,75,565,119"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a3047223ee50e1f391a67a44859298278" title="calculate temperature of simulationBox" alt="" coords="394,75,565,119"/>
 <area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="231,272,288,202,327,163,372,129,384,125,380,128,374,134,331,167,291,206,235,275"/>
-<area shape="rect" id="Node000007" href="$classsettings_1_1ThermostatSettings.html#a8f899f6bc6879407100993fe6a0d9f54" title="get the actual target temperature" alt="" coords="634,463,848,507"/>
+<area shape="rect" id="Node000007" href="$classThermostatSettings.html#aec689b40ff79afa931ed73356c50bdb8" title="get the actual target temperature" alt="" coords="634,463,848,507"/>
 <area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="231,316,256,350,288,389,328,427,374,457,434,479,497,491,560,496,621,498,616,499,560,501,496,496,432,484,372,462,324,432,284,393,251,353,230,321"/>
 <area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="655,273,827,318"/>
 <area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="325,293,642,294,638,298,326,298"/>
@@ -18,7 +18,7 @@
 <area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="316,270,366,261,361,263,318,275"/>
 <area shape="rect" id="Node000013" href="$classresetKinetics_1_1ResetKinetics.html#a1dc83729626654fc1fa63a97672098c4" title="reset the momentum of the system" alt="" coords="378,333,581,378"/>
 <area shape="poly" id="edge14_Node000002_Node000013" title=" " alt="" coords="316,316,366,328,361,330,318,321"/>
-<area shape="rect" id="Node000015" href="$classresetKinetics_1_1ResetKinetics.html#a4259f8ee6e39f116e463be882be2a98d" title="reset the temperature of the system &#45; hard scaling" alt="" coords="378,403,581,447"/>
+<area shape="rect" id="Node000015" href="$classresetKinetics_1_1ResetKinetics.html#a010a04a8b1605660ec2724a6b816eb59" title="reset the temperature of the system &#45; hard scaling" alt="" coords="378,403,581,447"/>
 <area shape="poly" id="edge17_Node000002_Node000015" title=" " alt="" coords="250,316,308,352,374,388,390,396,385,397,372,393,305,357,250,321"/>
 <area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#ad4727b1fadb1c321684918232354f80c" title="calculate center of mass of simulationBox" alt="" coords="651,32,831,77"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="560,141,585,129,599,119,608,109,618,98,633,87,647,82,643,85,636,91,622,102,612,112,603,123,588,134,563,146"/>
@@ -37,8 +37,8 @@
 <area shape="poly" id="edge19_Node000015_Node000008" title=" " alt="" coords="564,400,585,388,600,374,608,359,617,344,633,328,640,327,644,324,636,332,621,347,613,362,604,377,588,392,567,405"/>
 <area shape="rect" id="Node000016" href="$namespaceutilities.html#aaae9b2dbd3ac275d4268ad9f73baa500" title="check whether a number is exactly zero" alt="" coords="681,411,801,439"/>
 <area shape="poly" id="edge20_Node000015_Node000016" title=" " alt="" coords="581,422,668,424,663,426,582,428"/>
-<area shape="rect" id="Node000018" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="374,523,586,567"/>
-<area shape="poly" id="edge22_Node000017_Node000018" title=" " alt="" coords="321,542,361,545,355,545,321,548"/>
-<area shape="rect" id="Node000019" href="$classsettings_1_1ThermostatSettings.html#ab14dab1c6bcdc947f6228793489e3a48" title="set the temperature set" alt="" coords="375,592,584,637"/>
-<area shape="poly" id="edge23_Node000017_Node000019" title=" " alt="" coords="304,565,380,587,375,588,304,571"/>
+<area shape="rect" id="Node000018" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="374,523,586,567"/>
+<area shape="poly" id="edge22_Node000017_Node000018" title=" " alt="" coords="302,542,361,545,355,545,302,548"/>
+<area shape="rect" id="Node000019" href="$classThermostatSettings.html#a86ffc12bd69e8731d80593133a048c02" title="set the temperature set" alt="" coords="404,592,556,637"/>
+<area shape="poly" id="edge23_Node000017_Node000019" title=" " alt="" coords="302,565,391,590,386,591,302,570"/>
 </map>

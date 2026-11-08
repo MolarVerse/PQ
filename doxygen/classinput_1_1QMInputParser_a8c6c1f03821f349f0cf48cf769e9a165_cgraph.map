@@ -1,17 +1,17 @@
 <map id="input::QMInputParser::addQMLoopTimeLimitKey" name="input::QMInputParser::addQMLoopTimeLimitKey">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,125,202,170"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="255,5,413,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,123,248,60,264,55,259,58,251,65,142,127"/>
-<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="284,74,384,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="190,122,271,103,267,106,193,127"/>
-<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="255,125,413,170"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="201,145,241,147,236,149,203,150"/>
-<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="259,195,408,239"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="180,168,247,189,242,191,180,173"/>
-<area shape="rect" id="Node000008" href="$classsettings_1_1QMSettings.html#a5faaf087a0133c0e52024666edc36f39" title="sets the qmLoopTimeLimit in settings" alt="" coords="250,264,418,309"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="133,168,187,208,251,249,262,257,257,257,248,254,184,213,132,173"/>
-<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="494,61,645,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="384,84,481,84,476,86,385,89"/>
-<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="466,131,673,175"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="413,147,453,150,448,151,414,152"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="276,5,434,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,123,189,91,249,60,266,55,262,58,251,65,191,96,141,127"/>
+<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="305,74,404,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,122,292,101,288,105,201,127"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="276,125,434,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="201,145,263,147,258,149,203,150"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="280,195,430,239"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="187,168,268,191,263,193,187,173"/>
+<area shape="rect" id="Node000008" href="$classQMSettings.html#a9bf600dd42b7946b47084dfc2ce1ba37" title="sets the qmLoopTimeLimit in settings" alt="" coords="250,264,460,309"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="132,168,186,209,251,249,265,258,260,257,248,254,183,213,131,173"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="536,61,687,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="404,84,523,84,518,86,405,90"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="508,131,715,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="434,147,495,150,490,151,435,152"/>
 </map>

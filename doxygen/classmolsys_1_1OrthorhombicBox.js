@@ -5,13 +5,12 @@ var classmolsys_1_1OrthorhombicBox =
     [ "applyPBC", "classmolsys_1_1OrthorhombicBox.html#a8a21d197fdb8c4fd7fa6f9a78850c578", null ],
     [ "calcShiftVector", "classmolsys_1_1OrthorhombicBox.html#a3ad92a1af44211f42ab382d45d83adef", null ],
     [ "clone", "classmolsys_1_1OrthorhombicBox.html#a522e6bc5773eb98d9c190a658d184d72", null ],
+    [ "getBoxMatrix", "classmolsys_1_1OrthorhombicBox.html#a25be4a104b67cd272ae5c7b6ede0a0b3", null ],
     [ "getBoxMatrix", "classmolsys_1_1OrthorhombicBox.html#a66eda5599939e9f6eddabf438d1fcb55", null ],
+    [ "getInverseBoxMatrix", "classmolsys_1_1OrthorhombicBox.html#a29fbf767dac71112f9e2c9fcda3035f0", null ],
     [ "getMinimalBoxDimension", "classmolsys_1_1OrthorhombicBox.html#ae0f0a841d70a9b7bd06437c315eca3dc", null ],
     [ "getVolume", "classmolsys_1_1OrthorhombicBox.html#ab10d5bc12ec09801496c8899bcaa688a", null ],
-    [ "scaleBox", "classmolsys_1_1OrthorhombicBox.html#ae726b49b3cb131e9a809adc35ced9694", null ],
-    [ "toOrthoSpace", "classmolsys_1_1OrthorhombicBox.html#abb168f87d5380911fa81474613af1a10", null ],
-    [ "toOrthoSpace", "classmolsys_1_1OrthorhombicBox.html#a5c6e5bb78555bba99a338e1cd7b0bab0", null ],
-    [ "toSimSpace", "classmolsys_1_1OrthorhombicBox.html#a1f3fafb157f2ec56a86a8cef7600fe20", null ],
-    [ "toSimSpace", "classmolsys_1_1OrthorhombicBox.html#ab56befc51fb478b6757a65af5ded4aa5", null ],
+    [ "isOrthorhombic", "classmolsys_1_1OrthorhombicBox.html#a29bc75ce26b8605672b71a0b0a1bf211", null ],
+    [ "scaleBox", "classmolsys_1_1OrthorhombicBox.html#a72ed41a78c5a92a0c6ac28b1f28284ee", null ],
     [ "wrapPositionIntoBox", "classmolsys_1_1OrthorhombicBox.html#a9cdf3b454dde0b02613fdf35f71979e0", null ]
 ];

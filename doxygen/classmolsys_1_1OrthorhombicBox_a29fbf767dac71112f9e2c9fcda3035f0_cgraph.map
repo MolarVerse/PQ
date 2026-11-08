@@ -1,0 +1,5 @@
+<map id="molsys::OrthorhombicBox::getInverseBoxMatrix" name="molsys::OrthorhombicBox::getInverseBoxMatrix">
+<area shape="rect" id="Node000001" title="get the inverse of the box matrix" alt="" coords="5,5,196,50"/>
+<area shape="rect" id="Node000002" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="244,14,407,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,25,231,27,225,28,196,30"/>
+</map>

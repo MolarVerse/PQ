@@ -7,7 +7,7 @@ Continuous Integration
 Every pull request and every push to the long-lived branches is checked by GitHub Actions. The workflow files are in
 ``.github/workflows/``. This page explains what runs when, how to run the same checks on your own machine, why a job
 can be slow or red for reasons that have nothing to do with your change, and what to keep in mind when you edit a
-workflow. The numbers behind the timing statements come from the :doc:`CI metrics <ciMetrics>`.
+workflow.
 
 ***********************
 How the CI is organised
@@ -20,6 +20,13 @@ Three conventions apply to almost every workflow:
     - **A gate job reports the result.** ``ci-build-gate``, ``lint-gate``, ``cpp-check-gate``, ``clang-format-gate`` and
       ``license-check-gate`` fail if one of their jobs failed and pass if the jobs passed *or were skipped*. A skipped
       job is therefore not a missing check.
+    - **A release pull request skips the checks that judge the whole diff.** A pull request from a ``release/*`` branch
+      contains every change since the last release, all of which passed these checks on its ``dev`` pull request. LINT
+      (800+ files, one after the other: killed after half an hour), the DevOps C++ Check (fails on vendored files in
+      the diff), the Performance Gate (compares with the previous release and reports the sum of a cycle: ``kinetics``
+      +29 %) and the Clang Build do not run on it, nor does the check for a linked issue (the release pull request
+      closes no issue of its own). BUILD, Clang Format, License Header, the changelog checks and the
+      docs still do. A hotfix is not skipped: its diff is small.
     - **Only superseded pull request runs are cancelled.** Pushing to a pull request branch cancels the older run of
       the same workflow. Runs for pushes to ``dev`` and ``main``, the nightly run and manual runs each get their own
       concurrency group and are never cancelled, because they give the verdict for a commit and fill the cache of the
@@ -46,6 +53,9 @@ Workflows
       - pull requests (any base branch), pushes to ``dev``, ``main`` and ``NEXT``, manual
       - ``clangd-tidy`` on the changed C++ files (``scripts/clang_tidy.sh``). The job builds the project first,
         tolerating compile errors, only to get a compile database.
+        It is skipped for release pull requests (``release/*``) and for pushes to ``main``: these contain every change
+        since the last release, which was linted on its ``dev`` pull requests, and one serial run over 800 files does
+        not finish. A hotfix is linted on its own pull request.
     * - DevOps C++ Check
       - ``devops_cpp_check.yml``
       - pull requests to ``main``, ``dev`` and ``NEXT``, manual
@@ -62,7 +72,8 @@ Workflows
       - ``changelog.yml``
       - pull requests to ``dev`` and ``NEXT``
       - Runs the tests of the scripts in ``scripts/tests`` and requires a valid changelog fragment,
-        see :ref:`changelogFragments`.
+        see :ref:`changelogFragments`. A pull request with the label ``skip-changelog`` needs no fragment (the tests
+        of the scripts still run); adding or removing the label re-runs the check.
     * - Check PR Has Linked Issue
       - ``gh_checks.yml``
       - pull request events, manual
@@ -81,19 +92,17 @@ Workflows
         with an empty environment. The simulation makes the runs about three times slower, so pull requests skip it
         (``PERF_CACHE_SIM=0``); a nightly run (03:00 UTC, ``dev`` against ``dev`` of a day earlier, also available as
         a manual run) keeps it on and writes the table to the job summary.
+        A second step compares the CPU time of the measured loop of both builds on the same runner, see
+        :ref:`perfTiming`; a confirmed slowdown fails the check.
     * - Clang Build
       - ``clang_build.yml``
       - pull requests that touch C++ or build files
-      - Not a gate. Builds and tests the project with clang 20 and records the build analysis for the
-        :ref:`CI metrics <ciMetricsClangJob>`.
+      - Not a gate. Builds and tests the project with clang 20 to keep it building with clang. Pull requests use
+        ccache; a push to ``dev`` compiles everything and refreshes the cache.
     * - Docs
       - ``jekyll-gh-pages.yml``
       - pull requests to ``main`` and ``dev`` that touch ``docs``, ``include`` or ``src``; pushes to ``main``
       - Builds the Sphinx and Doxygen documentation; a push to ``main`` also deploys the website.
-    * - CI Metrics
-      - ``ci_metrics.yml``
-      - daily at 04:30 UTC, manual
-      - Collects the timing of all CI runs, see :doc:`ciMetrics`.
     * - Sync dev → NEXT
       - ``sync-dev-into-next.yml``
       - pushes to ``dev``, daily at 03:00 UTC, manual
@@ -188,6 +197,39 @@ The checks that fail most often can be run before you push:
         This needs ``doxygen``, ``graphviz`` and the Python packages listed in :ref:`the Sphinx section <sphinxBuild>`.
         ``PQ_DOXYGEN_GRAPHS=OFF`` skips the dot graphs, which is what pull request builds do.
 
+.. _perfTiming:
+
+*****************
+Timing comparison
+*****************
+
+Instruction counts cannot see memory bound code, system calls or file I/O, so ``scripts/perf_timing.py`` also compares
+the CPU time of the measured loop of every benchmark with the one of the base. Both are built and run in the same job.
+The time comes from ``libperf_timer.so`` (``benchmarks/perf/timer``), preloaded in a plain run: it measures from the
+``perfAllocBegin()`` marker to the end of the process, so startup and setup are not part of it.
+
+A timing on a shared runner is noisy, so the script does not compare two numbers:
+
+    - **Copies.** Byte-identical copies of a binary run at different speeds (4 to 7 % for allocation heavy code in a
+      test: where the file lies in the page cache). Every benchmark is therefore run from 4 copies of the base and 4
+      copies of the pull request binary. Their spread is the layout noise and widens the interval.
+    - **Interleaved and pinned.** Every round runs all copies in a random order on one CPU, without address space
+      randomisation, with an empty environment and from paths of the same length.
+    - **An interval, not a number.** The change is the median of the paired ratios with a 95 % bootstrap interval over
+      the rounds, plus the layout noise.
+    - **A clear criterion.** A regression needs the whole interval above the threshold (10 %). It is then measured again
+      with more rounds, and only that second measurement decides. If the layout noise alone exceeds the threshold the
+      benchmark is shown as noisy (⚠️) and not judged. Loops shorter than 2 ms (the median of three runs) are listed, not timed.
+
+.. code:: bash
+
+    $ python3 scripts/perf_timing.py build-pr/benchmarks/perf build-base/benchmarks/perf    # needs libperf_timer.so there
+    $ python3 scripts/perf_timing.py PR BASE --threshold 5 --rounds 21 --copies 6 --report-only
+
+Comparing a build with a copy of itself is the way to see the noise of a machine: it must report no regression, and a
+benchmark the script cannot judge shows up as noisy. If the check ever fails without a change of yours, run the
+benchmark again in the job log; to only report, add ``--report-only`` to the step in ``perf.yml``.
+
 ****************
 Caches and speed
 ****************
@@ -202,8 +244,17 @@ A job that takes twice as long as usual is rarely a problem in your change. Thes
       Release job went from about 2.5 to 9 minutes for a pull request that changed ``exceptionTypes.hpp``. The same is
       true for your local build, see :doc:`localBuildTimes`.
     - **The runner CPU.** GitHub gives the same job runners of different CPU generations. The same fixed compile took
-      4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763. The CI metrics record the CPU model of the
-      runner.
+      4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763.
+    - **A stalled or slow apt install.** Installing GCC or clang normally takes 6 to 20 s, but the Azure mirror
+      sometimes stalls or crawls: the step took 13 to 34 minutes on about one run in ten (#1069). The ``setup-gcc``
+      action, the clang build and the DevOps check therefore install through ``awalsh128/cache-apt-pkgs-action``, which
+      caches the ``.deb`` files per package list: a hit downloads nothing, only a miss (a changed package list, or
+      the first run in a branch scope) goes to the mirror. Bump ``version`` there to drop the cached packages. If a job
+      still sits in an install step, cancel and re-run it.
+    - **The clang job and ccache.** Pull requests build with ccache (the job took 8 to 17 minutes, depending on the CPU
+      of the runner, #1045). A push to ``dev`` ignores the cache for reading (``CCACHE_RECACHE``) and writes it. The
+      build passes ``-Xclang -fno-pch-timestamp``: without it clang puts the date of the precompiled header into the
+      ``.pch`` file and every compile is a ccache miss.
     - **The Eigen source** is cached under a key that hashes ``.cmake/eigen.cmake`` and passed to CMake with
       ``-DFETCHCONTENT_SOURCE_DIR_EIGEN``, so that no job clones it again.
     - **The conda environment** of the integration tests is cached under a key that hashes ``ci_build.yml``. **Every
@@ -234,5 +285,4 @@ Adding or changing a workflow
       performance bot are installed.
     - A push made with the default ``GITHUB_TOKEN`` does not start other workflows. A branch that has to trigger CI
       needs a token of a GitHub App.
-    - Prefer the shared actions in ``.github/actions``: ``setup-gcc`` installs the pinned GCC once for all workflows and
-      ``upload-build-timings`` records the build analysis for the :doc:`CI metrics <ciMetrics>`.
+    - Prefer the shared actions in ``.github/actions``: ``setup-gcc`` installs the pinned GCC once for all workflows.

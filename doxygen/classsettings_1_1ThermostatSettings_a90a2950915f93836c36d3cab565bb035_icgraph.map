@@ -1,7 +1,0 @@
-<map id="settings::ThermostatSettings::setNoseHooverCouplingFrequency" name="settings::ThermostatSettings::setNoseHooverCouplingFrequency">
-<area shape="rect" id="Node000001" title="set the nose hoover coupling frequency" alt="" coords="588,5,841,50"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1ThermostatInputParser.html#a409308d536f17d64599936d65c4595a1" title=" " alt="" coords="264,5,540,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="570,28,540,30,540,25,575,28"/>
-<area shape="rect" id="Node000003" href="$classinput_1_1ThermostatInputParser.html#abec4a194259608113187242bc7201fc2" title="Construct a new Input File Parser Thermostat:: Input File Parser Thermostat object." alt="" coords="5,5,216,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="245,28,216,30,216,25,251,28"/>
-</map>

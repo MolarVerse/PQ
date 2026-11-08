@@ -1,9 +1,11 @@
 <map id="engine::QMCapableEngine" name="engine::QMCapableEngine">
-<area shape="rect" id="Node000001" title="Mixin class providing QM functionality to engines." alt="" coords="5,570,187,709"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="24,408,168,497"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,494,99,554,94,553,95,499"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="17,151,176,335"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,332,99,391,94,391,96,337"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="56,5,136,78"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="96,75,99,134,94,134,96,80"/>
+<area shape="rect" id="Node000001" title="Mixin class providing QM functionality to engines." alt="" coords="29,615,211,754"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="48,452,192,542"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,539,122,598,117,597,119,544"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="40,151,199,379"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="120,377,122,436,117,435,119,382"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,5,85,78"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="57,75,79,134,74,135,57,80"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="108,5,283,78"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="183,80,167,135,162,134,185,75"/>
 </map>

@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,80,121,60,144,54,140,57,123,65,74,85"/>
 <area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="143,75,328,119"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,94,129,95,125,99,75,100"/>
-<area shape="rect" id="Node000006" href="$classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="142,144,328,189"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="142,144,328,189"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="73,109,123,129,145,138,139,139,121,134,72,114"/>
 <area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="405,40,592,85"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="328,82,392,76,387,77,329,87"/>

@@ -1,9 +1,9 @@
 <map id="TEST" name="TEST">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a34583b44496c7f5b0bfe2d3f0ef5716a" title="set the target temperature" alt="" coords="107,40,316,85"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,60,94,61,89,64,60,65"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="364,5,576,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="316,46,351,43,346,44,317,51"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#ab14dab1c6bcdc947f6228793489e3a48" title="set the temperature set" alt="" coords="366,75,575,119"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="317,74,352,81,347,81,316,79"/>
+<area shape="rect" id="Node000002" href="$classThermostatSettings.html#aec3f6c4bb78bbb8e79b9eff31ae4fa3b" title="set the target temperature" alt="" coords="107,40,278,85"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,60,93,61,89,64,60,65"/>
+<area shape="rect" id="Node000003" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="326,5,538,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="278,47,313,45,308,46,279,53"/>
+<area shape="rect" id="Node000004" href="$classThermostatSettings.html#a86ffc12bd69e8731d80593133a048c02" title="set the temperature set" alt="" coords="356,75,508,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="279,72,344,84,338,84,279,77"/>
 </map>

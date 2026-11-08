@@ -1,13 +1,13 @@
 <map id="setup::ThermostatSetup::setupNoseHooverThermostat" name="setup::ThermostatSetup::setupNoseHooverThermostat">
 <area shape="rect" id="Node000001" title="setup nose hoover thermostat" alt="" coords="5,144,226,189"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a54412e34f1a01f56fa38a1a9b0919409" title="get chi" alt="" coords="296,5,506,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,141,201,100,272,60,291,54,287,57,275,65,204,105,147,145"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#ad5bc1fa2ddebf943baac0b805c73ab14" title="get the nose hoover chain length" alt="" coords="295,75,506,119"/>
+<area shape="rect" id="Node000002" href="$classThermostatSettings.html#a79a433ec13d87caaa29e701837377f02" title="get chi" alt="" coords="326,5,476,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,141,201,100,273,60,313,47,309,50,275,65,204,105,147,145"/>
+<area shape="rect" id="Node000003" href="$classThermostatSettings.html#a35d8fe5fe5504de0f0b1535de7697a01" title="get the nose hoover chain length" alt="" coords="295,75,506,119"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,141,294,122,289,125,212,146"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#a0a92303bc2f5aa533b3ac799fb940474" title="get the nose hoover coupling frequency" alt="" coords="274,144,528,189"/>
+<area shape="rect" id="Node000004" href="$classThermostatSettings.html#a0b36754fbb3381ecea17e5bc3d77e459" title="get the nose hoover coupling frequency" alt="" coords="274,144,528,189"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="225,164,260,165,255,167,227,169"/>
-<area shape="rect" id="Node000005" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="296,213,506,258"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="211,187,294,208,289,210,211,192"/>
-<area shape="rect" id="Node000006" href="$classsettings_1_1ThermostatSettings.html#a22539ed6cf08afb6e9f0cc2793d2e801" title="get zeta" alt="" coords="296,283,506,327"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="146,187,204,228,275,268,292,277,287,277,272,273,201,233,145,192"/>
+<area shape="rect" id="Node000005" href="$classThermostatSettings.html#acbcccfae7bfebf7416bc00d7665d6670" title="get the target temperature" alt="" coords="315,213,487,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="211,187,302,210,297,212,211,192"/>
+<area shape="rect" id="Node000006" href="$classThermostatSettings.html#a9d43f7527289117e62ae5a8469bedad5" title="get zeta" alt="" coords="326,283,476,327"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="146,187,204,228,275,268,314,285,309,284,273,273,201,233,145,192"/>
 </map>

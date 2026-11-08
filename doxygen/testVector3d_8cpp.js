@@ -1,5 +1,7 @@
 var testVector3d_8cpp =
 [
+    [ "@105333115356156076222207002016157112116223325323::CanAdd", "concept_0d105333115356156076222207002016157112116223325323_1_1CanAdd.html", null ],
+    [ "@105333115356156076222207002016157112116223325323::CanMultiply", "concept_0d105333115356156076222207002016157112116223325323_1_1CanMultiply.html", null ],
     [ "TEST", "testVector3d_8cpp.html#afd6c7e0f6999cea3eb948027985c89d6", null ],
     [ "TEST", "testVector3d_8cpp.html#ae4260f5147aff179cf9a72b6c2582eb8", null ],
     [ "TEST", "testVector3d_8cpp.html#a024a75aa4b53aac8226672bacb7845e0", null ],
@@ -28,6 +30,7 @@ var testVector3d_8cpp =
     [ "TEST", "testVector3d_8cpp.html#afbd543c379302742220109d4d02fb989", null ],
     [ "TEST", "testVector3d_8cpp.html#aede4acdf64567f2bb14b1e8ce5516d72", null ],
     [ "TEST", "testVector3d_8cpp.html#a1bf5c9444e2fca027c7747d34930fb62", null ],
+    [ "TEST", "testVector3d_8cpp.html#a6ec6505f8e300c8db2bf67dacaa69028", null ],
     [ "TEST", "testVector3d_8cpp.html#ab7487716c66d7a8c9f845aed92343188", null ],
     [ "TEST", "testVector3d_8cpp.html#acdd8da5045db27ed942e12a3dfae0010", null ],
     [ "TEST", "testVector3d_8cpp.html#a187828ee832468986f6460f99241075e", null ],

@@ -1,0 +1,5 @@
+<map id="DftbSettings::setUseThirdOrderDftbByUser" name="DftbSettings::setUseThirdOrderDftbByUser">
+<area shape="rect" id="Node000001" title="sets if third order DFTB should be used" alt="" coords="5,5,193,50"/>
+<area shape="rect" id="Node000002" href="$classDftbSettings.html#ad71a2e36a2ee153f78c1b491eda4264a" title="returns if third order DFTB should be used" alt="" coords="241,14,469,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,25,228,27,222,28,193,30"/>
+</map>

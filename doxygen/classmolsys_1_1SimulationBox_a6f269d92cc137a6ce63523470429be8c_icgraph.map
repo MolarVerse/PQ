@@ -1,6 +1,6 @@
 <map id="molsys::SimulationBox::calculateDensity" name="molsys::SimulationBox::calculateDensity">
 <area shape="rect" id="Node000001" title="calculate density of simulationBox" alt="" coords="610,40,782,85"/>
-<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a933e79618f00813d816e8dc7d80715f5" title="scales the box" alt="" coords="391,40,562,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#adbaff5ad48ae7029dc4d7124a26d9bf4" title="scales the box" alt="" coords="391,40,562,85"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="592,62,563,65,563,60,598,62"/>
 <area shape="rect" id="Node000003" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="122,5,343,50"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="373,48,343,46,343,41,378,48"/>

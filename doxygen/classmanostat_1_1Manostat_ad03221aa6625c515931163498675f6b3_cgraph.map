@@ -1,0 +1,11 @@
+<map id="manostat::Manostat::calculatePressure" name="manostat::Manostat::calculatePressure">
+<area shape="rect" id="Node000001" title="calculate the pressure of the system" alt="" coords="5,109,158,154"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="213,5,384,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,107,204,60,221,55,217,58,207,65,121,111"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="206,75,391,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="157,117,193,113,188,115,159,122"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="213,144,384,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="157,141,200,149,195,151,158,146"/>
+<area shape="rect" id="Node000005" href="$config_2enums_2manostat_8cpp.html#a5fd9e28e7868b07d8deb9ee7ebfc47be" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="251,212,346,240"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="118,152,160,176,207,199,239,212,234,212,205,203,158,181,117,157"/>
+</map>

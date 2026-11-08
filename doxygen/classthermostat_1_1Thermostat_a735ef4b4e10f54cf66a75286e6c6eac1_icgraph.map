@@ -1,0 +1,13 @@
+<map id="thermostat::Thermostat::setTargetTemperature" name="thermostat::Thermostat::setTargetTemperature">
+<area shape="rect" id="Node000001" title="set target temperature" alt="" coords="581,95,757,139"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html#ad893611256b75c00eb189438952222f2" title="Apply temperature ramping." alt="" coords="313,60,518,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="562,103,518,99,519,94,568,103"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1LangevinThermostat.html#a4783ea4a94489d3a6da78c1dd71949c8" title="Set target temperature for Langevin Thermostat and calculate sigma." alt="" coords="298,129,533,174"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="568,131,534,138,533,133,563,131"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1RingPolymerQMMDEngine.html#abf2a1b83ebf163c6eec06c0a99883815" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="5,5,250,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="295,61,249,53,248,48,300,59"/>
+<area shape="rect" id="Node000004" href="$testThermostatSetup_8cpp.html#a164078f54a929baa37b4e7dd2efb8796" title=" " alt="" coords="93,74,162,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="295,86,162,90,162,84,299,83"/>
+<area shape="rect" id="Node000006" href="$classthermostat_1_1LangevinThermostat.html#a5ed88c2607e43f9da929e103b33d154f" title=" " alt="" coords="10,129,245,174"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="279,152,246,154,245,149,285,152"/>
+</map>

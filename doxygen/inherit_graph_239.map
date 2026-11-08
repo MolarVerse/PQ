@@ -1,3 +1,107 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structVdwTypeTag.html" title=" " alt="" coords="5,5,107,33"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,1149,106,1177"/>
+<area shape="rect" id="Node000001" href="$classAseQMRunnerTest.html" title=" " alt="" coords="194,5,333,33"/>
+<area shape="poly" id="edge174_Node000000_Node000001" title=" " alt="" coords="55,1134,61,905,77,559,89,383,106,228,126,110,138,69,152,44,170,29,195,21,192,25,173,34,156,48,143,71,131,111,111,228,95,383,82,559,66,905,60,1134"/>
+<area shape="rect" id="Node000002" href="$classExternalQMRunnerTest.html" title=" " alt="" coords="179,57,348,85"/>
+<area shape="poly" id="edge175_Node000000_Node000002" title=" " alt="" coords="55,1134,62,914,78,584,91,418,107,270,127,158,139,120,152,96,180,78,177,83,156,100,144,122,132,159,113,271,96,418,84,585,67,914,60,1134"/>
+<area shape="rect" id="Node000004" href="$classQMMMEnergiesTest.html" title=" " alt="" coords="189,109,338,137"/>
+<area shape="poly" id="edge177_Node000000_Node000004" title=" " alt="" coords="55,1134,63,923,80,611,93,453,109,313,128,207,139,171,152,148,168,135,190,126,187,131,171,139,156,152,144,173,133,208,114,314,98,453,85,611,68,924,60,1134"/>
+<area shape="rect" id="Node000005" href="$classTestAtomSection.html" title="Test fixture for testing the AtomSection class." alt="" coords="198,161,328,189"/>
+<area shape="poly" id="edge178_Node000000_Node000005" title=" " alt="" coords="55,1134,64,933,82,637,95,488,110,356,129,256,140,221,152,200,172,184,199,176,196,180,175,189,156,204,145,224,134,257,116,357,100,488,87,637,69,934,60,1134"/>
+<area shape="rect" id="Node000006" href="$classTestBondConstraint.html" title="Fixture for bond constraint tests." alt="" coords="190,213,337,241"/>
+<area shape="poly" id="edge179_Node000000_Node000006" title=" " alt="" coords="55,1133,65,942,83,663,96,522,112,399,130,304,140,272,152,252,169,238,191,230,188,234,171,243,156,256,145,274,135,306,117,399,102,523,89,663,70,943,61,1134"/>
+<area shape="rect" id="Node000007" href="$classTestBoxSection.html" title="Test fixture for testing the BoxSection class." alt="" coords="203,265,324,293"/>
+<area shape="poly" id="edge180_Node000000_Node000007" title=" " alt="" coords="56,1134,65,953,85,690,98,558,113,441,131,353,141,323,152,304,175,287,205,279,201,283,177,292,156,308,146,325,136,354,119,442,103,558,90,690,71,953,61,1134"/>
+<area shape="rect" id="Node000008" href="$classTestCellList.html" title=" " alt="" coords="216,317,311,345"/>
+<area shape="poly" id="edge181_Node000000_Node000008" title=" " alt="" coords="56,1134,66,963,87,716,100,593,115,484,132,402,142,374,152,356,165,345,181,336,217,329,214,333,183,341,168,349,156,360,146,376,137,403,120,485,105,594,92,717,72,963,61,1134"/>
+<area shape="rect" id="Node000009" href="$classTestConstraints.html" title="Fixture for constraint tests." alt="" coords="203,369,324,397"/>
+<area shape="poly" id="edge182_Node000000_Node000009" title=" " alt="" coords="54,1133,55,983,65,765,77,653,94,551,119,466,134,433,152,408,175,391,204,383,201,387,177,396,156,412,139,436,124,468,100,552,82,654,71,766,60,983,59,1134"/>
+<area shape="rect" id="Node000010" href="$classTestDistanceConstraint.html" title="Fixture for distance constraint tests." alt="" coords="178,421,349,449"/>
+<area shape="poly" id="edge183_Node000000_Node000010" title=" " alt="" coords="54,1134,56,993,68,791,80,687,97,592,121,514,135,483,152,460,178,443,176,448,156,464,140,486,126,516,103,593,86,688,74,791,62,993,59,1134"/>
+<area shape="rect" id="Node000011" href="$classTestEnergyOutput.html" title="test suite for energy output" alt="" coords="195,473,332,501"/>
+<area shape="poly" id="edge184_Node000000_Node000011" title=" " alt="" coords="54,1134,58,1002,72,816,84,720,101,633,123,561,136,533,152,512,171,497,196,489,193,493,174,502,156,516,141,536,128,563,106,635,89,721,77,816,63,1002,60,1134"/>
+<area shape="rect" id="Node000012" href="$classTestEngine.html" title="Fixture for base Engine behavior, exercised through the concrete MMMDEngine (an MM MD engine,..." alt="" coords="218,525,309,553"/>
+<area shape="poly" id="edge185_Node000000_Node000012" title=" " alt="" coords="55,1134,60,1011,75,840,87,753,104,674,125,609,138,584,152,564,166,552,182,544,219,537,215,541,184,549,169,557,156,568,142,586,130,611,109,676,92,754,80,841,65,1011,60,1134"/>
+<area shape="rect" id="Node000013" href="$classTestGuffDatReader.html" title="Fixture for guffDatReader tests." alt="" coords="192,577,335,605"/>
+<area shape="poly" id="edge186_Node000000_Node000013" title=" " alt="" coords="55,1133,62,1020,78,865,91,787,107,715,127,656,152,616,169,602,193,594,189,599,172,607,156,620,132,659,112,717,96,788,83,866,67,1021,61,1134"/>
+<area shape="rect" id="Node000014" href="$classTestInputFileReader.html" title="Test fixture for testing the InputFileReader class." alt="" coords="189,629,338,657"/>
+<area shape="poly" id="edge187_Node000000_Node000014" title=" " alt="" coords="56,1134,64,1030,82,891,94,821,110,757,129,704,152,668,168,655,190,647,187,652,171,660,156,672,134,706,115,758,99,822,87,892,70,1031,61,1134"/>
+<area shape="rect" id="Node000015" href="$classTestInputValidation.html" title=" " alt="" coords="191,681,336,709"/>
+<area shape="poly" id="edge188_Node000000_Node000015" title=" " alt="" coords="57,1134,67,1041,85,917,98,855,113,798,131,752,152,720,169,707,192,699,189,703,172,712,156,724,136,754,118,800,103,856,90,918,72,1041,62,1134"/>
+<area shape="rect" id="Node000016" href="$classTestIntegrator.html" title="Fixture for integrator tests." alt="" coords="208,733,319,761"/>
+<area shape="poly" id="edge189_Node000000_Node000016" title=" " alt="" coords="58,1134,69,1050,89,942,116,839,133,799,152,772,177,755,209,747,206,751,180,760,156,776,138,802,121,841,94,943,74,1051,63,1134"/>
+<area shape="rect" id="Node000017" href="$classTestIntraNonBondedReader.html" title="Fixture class for testing the IntraNonBondedReader class." alt="" coords="164,785,362,813"/>
+<area shape="poly" id="edge190_Node000000_Node000017" title=" " alt="" coords="53,1133,56,1069,69,986,82,942,99,899,122,859,152,824,172,811,170,816,155,828,126,862,104,901,87,944,75,987,62,1070,59,1134"/>
+<area shape="rect" id="Node000018" href="$classTestLogOutput.html" title="test suite for log output" alt="" coords="206,837,320,865"/>
+<area shape="poly" id="edge191_Node000000_Node000018" title=" " alt="" coords="55,1133,61,1078,77,1009,89,973,105,937,126,905,152,876,177,860,207,852,204,856,179,865,155,880,130,908,110,940,94,975,82,1010,67,1079,61,1134"/>
+<area shape="rect" id="Node000019" href="$classTestMShakeReader.html" title=" " alt="" coords="191,889,336,917"/>
+<area shape="poly" id="edge192_Node000000_Node000019" title=" " alt="" coords="58,1134,67,1089,84,1033,111,976,130,950,152,928,170,916,193,908,189,913,172,921,155,932,134,954,116,979,89,1035,72,1090,63,1135"/>
+<area shape="rect" id="Node000020" href="$classTestManostat.html" title="Fixture for manostat tests." alt="" coords="209,941,318,969"/>
+<area shape="poly" id="edge193_Node000000_Node000020" title=" " alt="" coords="62,1134,74,1098,92,1056,118,1015,152,980,179,965,211,957,207,961,181,970,155,984,122,1018,97,1059,79,1100,67,1135"/>
+<area shape="rect" id="Node000021" href="$classTestMoldescriptorReader.html" title="Fixture class for testing the MoldescriptorReader class." alt="" coords="172,993,354,1021"/>
+<area shape="poly" id="edge194_Node000000_Node000021" title=" " alt="" coords="68,1135,101,1082,125,1054,152,1032,179,1019,176,1024,155,1036,128,1058,106,1085,73,1136"/>
+<area shape="rect" id="Node000022" href="$classTestMolecule.html" title=" " alt="" coords="210,1045,316,1073"/>
+<area shape="poly" id="edge195_Node000000_Node000022" title=" " alt="" coords="79,1137,113,1109,153,1083,211,1065,208,1069,155,1088,116,1113,84,1140"/>
+<area shape="rect" id="Node000023" href="$classTestNonCoulombPotentialFF.html" title=" " alt="" coords="161,1097,366,1125"/>
+<area shape="poly" id="edge196_Node000000_Node000023" title=" " alt="" coords="119,1145,153,1135,205,1124,201,1128,154,1140,123,1148"/>
+<area shape="rect" id="Node000030" href="$classTestNoseHooverSection.html" title="Test fixture for testing the NoseHooverSection class." alt="" coords="176,1149,351,1177"/>
+<area shape="poly" id="edge203_Node000000_Node000030" title=" " alt="" coords="119,1161,177,1161,173,1165,123,1165"/>
+<area shape="rect" id="Node000031" href="$classTestParameterFileReader.html" title="Fixture class for testing the ParameterFileReader class." alt="" coords="172,1201,355,1229"/>
+<area shape="poly" id="edge204_Node000000_Node000031" title=" " alt="" coords="119,1178,154,1186,205,1199,201,1202,153,1191,122,1182"/>
+<area shape="rect" id="Node000032" href="$classTestParameterFileSection.html" title="Fixture class for testing the ParameterFileSection class." alt="" coords="171,1253,356,1281"/>
+<area shape="poly" id="edge205_Node000000_Node000032" title=" " alt="" coords="80,1185,116,1213,155,1238,188,1251,183,1254,152,1243,113,1218,82,1190"/>
+<area shape="rect" id="Node000033" href="$classTestPhysicalData.html" title="test suite for physical data" alt="" coords="197,1305,330,1333"/>
+<area shape="poly" id="edge206_Node000000_Node000033" title=" " alt="" coords="70,1188,106,1242,128,1268,155,1290,175,1301,199,1309,194,1312,173,1306,152,1295,125,1272,101,1245,71,1193"/>
+<area shape="rect" id="Node000034" href="$classTestQMSetupAse.html" title="test suite for QMSetup ase Runner" alt="" coords="198,1357,328,1385"/>
+<area shape="poly" id="edge207_Node000000_Node000034" title=" " alt="" coords="64,1190,79,1227,97,1268,122,1308,155,1342,176,1354,200,1363,196,1366,174,1359,152,1347,118,1312,92,1270,74,1229,65,1195"/>
+<area shape="rect" id="Node000035" href="$classTestRandomNumberGenerator.html" title="seed every test, so the statistical checks do not fail at random" alt="" coords="154,1409,372,1437"/>
+<area shape="poly" id="edge208_Node000000_Node000035" title=" " alt="" coords="60,1189,72,1237,89,1292,116,1347,134,1373,155,1394,175,1408,170,1410,152,1399,130,1376,111,1350,84,1294,67,1238,61,1195"/>
+<area shape="rect" id="Node000036" href="$classTestRingPolymerEnergyOutput.html" title=" " alt="" coords="154,1461,373,1489"/>
+<area shape="poly" id="edge209_Node000000_Node000036" title=" " alt="" coords="58,1190,67,1247,82,1316,94,1352,110,1386,130,1419,155,1446,174,1460,169,1462,152,1451,126,1422,105,1389,89,1354,77,1317,61,1248,58,1196"/>
+<area shape="rect" id="Node000037" href="$classTestRingPolymerEngineOutputGating.html" title="Fixture building a minimal, directly&#45;usable RingPolymerQMMDEngine (no QM runner invoked) with exactly..." alt="" coords="154,1513,372,1558"/>
+<area shape="poly" id="edge210_Node000000_Node000037" title=" " alt="" coords="57,1190,63,1256,76,1338,89,1381,105,1424,127,1463,156,1499,171,1511,166,1513,152,1502,123,1466,101,1426,84,1383,71,1339,58,1256,57,1195"/>
+<area shape="rect" id="Node000038" href="$classTestRingPolymerRestartFileOutput.html" title="test suite for restart file output" alt="" coords="163,1582,364,1627"/>
+<area shape="poly" id="edge211_Node000000_Node000038" title=" " alt="" coords="60,1190,74,1278,94,1391,121,1498,138,1540,156,1568,170,1581,165,1583,152,1572,133,1542,116,1500,89,1392,69,1279,60,1195"/>
+<area shape="rect" id="Node000039" href="$classTestRingPolymerTrajectoryOutput.html" title="test suite for ring polymer trajectory output" alt="" coords="166,1652,360,1696"/>
+<area shape="poly" id="edge212_Node000000_Node000039" title=" " alt="" coords="59,1190,71,1292,89,1425,102,1492,117,1553,135,1603,156,1637,170,1650,165,1652,152,1641,130,1606,112,1555,97,1493,84,1426,66,1292,59,1195"/>
+<area shape="rect" id="Node000040" href="$classTestRstFileOutput.html" title="test suite for restart file output" alt="" coords="196,1720,331,1748"/>
+<area shape="poly" id="edge213_Node000000_Node000040" title=" " alt="" coords="58,1190,67,1306,83,1460,96,1539,112,1610,132,1668,156,1707,174,1720,198,1729,193,1732,172,1725,152,1710,127,1670,107,1611,90,1540,78,1461,62,1306,58,1195"/>
+<area shape="rect" id="Node000041" href="$classTestRstFileReader.html" title="Fixture class for testing the RestartFileReader class." alt="" coords="195,1772,332,1800"/>
+<area shape="poly" id="edge214_Node000000_Node000041" title=" " alt="" coords="57,1190,65,1315,80,1485,93,1571,109,1650,130,1714,142,1739,156,1757,174,1771,197,1780,192,1783,171,1776,152,1761,138,1742,125,1716,104,1651,87,1572,75,1485,60,1315,57,1195"/>
+<area shape="rect" id="Node000042" href="$classTestSetup.html" title=" " alt="" coords="221,1824,306,1852"/>
+<area shape="poly" id="edge215_Node000000_Node000042" title=" " alt="" coords="57,1190,64,1324,77,1509,89,1604,106,1691,128,1762,141,1789,156,1809,169,1821,186,1828,223,1837,219,1840,184,1833,167,1825,152,1813,136,1792,123,1764,101,1692,84,1605,72,1510,58,1324,57,1195"/>
+<area shape="rect" id="Node000043" href="$classTestSimulationBox.html" title=" " alt="" coords="192,1876,334,1904"/>
+<area shape="poly" id="edge216_Node000000_Node000043" title=" " alt="" coords="57,1190,62,1333,74,1534,86,1638,103,1732,126,1809,140,1839,156,1861,172,1874,194,1884,189,1886,170,1879,152,1865,135,1842,121,1811,98,1733,80,1638,68,1535,56,1333,57,1195"/>
+<area shape="rect" id="Node000044" href="$classTestStdoutOutput.html" title="test suite for stdout output" alt="" coords="197,1928,330,1956"/>
+<area shape="poly" id="edge217_Node000000_Node000044" title=" " alt="" coords="56,1190,60,1343,71,1560,82,1671,100,1773,124,1857,139,1889,156,1913,174,1928,199,1937,194,1940,172,1932,152,1917,134,1892,119,1859,95,1774,77,1672,65,1560,55,1343,56,1195"/>
+<area shape="rect" id="Node000045" href="$classTestStepCountSection.html" title="Test fixture for testing the StepCountSection class." alt="" coords="182,1980,344,2008"/>
+<area shape="poly" id="edge218_Node000000_Node000045" title=" " alt="" coords="58,1190,72,1363,92,1609,105,1732,120,1840,137,1922,146,1949,156,1965,168,1976,184,1985,179,1987,165,1980,152,1969,142,1951,132,1923,115,1841,100,1733,87,1609,66,1363,58,1195"/>
+<area shape="rect" id="Node000046" href="$classTestThermostat.html" title=" " alt="" coords="202,2032,324,2060"/>
+<area shape="poly" id="edge219_Node000000_Node000046" title=" " alt="" coords="58,1190,71,1373,90,1635,103,1767,119,1883,136,1971,146,2000,156,2017,177,2033,204,2043,199,2045,174,2038,152,2021,141,2002,131,1972,114,1884,98,1768,85,1636,65,1373,58,1195"/>
+<area shape="rect" id="Node000047" href="$classTestTimer.html" title="Fixture for Timer tests." alt="" coords="221,2084,306,2112"/>
+<area shape="poly" id="edge220_Node000000_Node000047" title=" " alt="" coords="58,1190,70,1383,89,1662,102,1802,117,1926,135,2019,145,2051,156,2069,169,2081,185,2089,222,2097,218,2100,183,2094,166,2085,152,2073,140,2053,130,2021,112,1927,96,1803,83,1663,65,1384,58,1196"/>
+<area shape="rect" id="Node000048" href="$classTestTimingsSection.html" title="Fixture for TimingsSection tests." alt="" coords="190,2136,337,2164"/>
+<area shape="poly" id="edge221_Node000000_Node000048" title=" " alt="" coords="58,1190,69,1392,87,1688,100,1837,116,1969,134,2068,145,2101,156,2121,171,2134,192,2144,187,2146,168,2139,152,2125,140,2104,129,2069,110,1969,95,1838,82,1689,64,1393,58,1195"/>
+<area shape="rect" id="Node000049" href="$classTestTopologyReader.html" title="Fixture class for testing the TopologyReader class." alt="" coords="188,2188,339,2216"/>
+<area shape="poly" id="edge222_Node000000_Node000049" title=" " alt="" coords="58,1190,68,1402,85,1715,98,1872,114,2011,133,2117,144,2152,156,2173,170,2186,190,2195,184,2197,167,2190,152,2177,139,2154,128,2118,109,2012,93,1873,80,1715,63,1403,58,1195"/>
+<area shape="rect" id="Node000050" href="$classTestTopologySection.html" title="Fixture class for testing the TopologySection class." alt="" coords="187,2240,340,2268"/>
+<area shape="poly" id="edge223_Node000000_Node000050" title=" " alt="" coords="58,1190,67,1412,84,1741,96,1907,113,2054,132,2166,144,2203,156,2225,170,2237,189,2248,184,2248,167,2242,152,2229,139,2205,127,2167,107,2055,91,1908,78,1741,62,1412,57,1195"/>
+<area shape="rect" id="Node000051" href="$classTestTrajectoryOutput.html" title="test suite for trajectory output" alt="" coords="186,2292,341,2320"/>
+<area shape="poly" id="edge224_Node000000_Node000051" title=" " alt="" coords="57,1190,66,1421,82,1767,95,1942,111,2097,131,2214,143,2254,156,2277,170,2289,188,2299,183,2300,167,2294,152,2281,138,2256,126,2216,106,2097,89,1942,77,1767,61,1421,57,1195"/>
+<area shape="rect" id="Node000052" href="$classTestVirial.html" title=" " alt="" coords="223,2344,304,2372"/>
+<area shape="poly" id="edge225_Node000000_Node000052" title=" " alt="" coords="57,1190,65,1431,81,1793,93,1977,110,2140,130,2263,143,2305,156,2329,169,2341,186,2349,225,2359,219,2359,184,2354,167,2346,152,2333,138,2307,125,2264,104,2140,88,1978,75,1794,60,1431,57,1195"/>
+<area shape="rect" id="Node000003" href="$classQMWriterTest.html" title=" " alt="" coords="456,57,566,85"/>
+<area shape="poly" id="edge176_Node000002_Node000003" title=" " alt="" coords="362,69,458,69,454,73,365,73"/>
+<area shape="rect" id="Node000024" href="$classTestAngleForceField.html" title=" " alt="" coords="436,968,586,996"/>
+<area shape="poly" id="edge197_Node000023_Node000024" title=" " alt="" coords="362,1089,371,1082,387,1065,395,1046,402,1026,419,1006,444,994,441,998,423,1011,407,1029,400,1048,392,1068,375,1087,366,1092"/>
+<area shape="rect" id="Node000025" href="$classTestBondForceField.html" title=" " alt="" coords="438,1020,584,1048"/>
+<area shape="poly" id="edge198_Node000023_Node000025" title=" " alt="" coords="346,1091,372,1082,420,1058,458,1046,454,1050,422,1063,374,1087,349,1095"/>
+<area shape="rect" id="Node000026" href="$classTestDihedralForceField.html" title=" " alt="" coords="427,1072,595,1100"/>
+<area shape="poly" id="edge199_Node000023_Node000026" title=" " alt="" coords="380,1097,429,1093,425,1096,383,1101"/>
+<area shape="rect" id="Node000027" href="$classTestForceField.html" title=" " alt="" coords="454,1124,568,1152"/>
+<area shape="poly" id="edge200_Node000023_Node000027" title=" " alt="" coords="380,1122,456,1130,452,1133,383,1126"/>
+<area shape="rect" id="Node000028" href="$classTestIntraNonBonded.html" title=" " alt="" coords="435,1176,587,1204"/>
+<area shape="poly" id="edge201_Node000023_Node000028" title=" " alt="" coords="348,1127,374,1135,398,1148,422,1161,458,1174,453,1177,420,1166,396,1153,372,1140,350,1132"/>
+<area shape="rect" id="Node000029" href="$classTestIntraNonBondedMap.html" title=" " alt="" coords="421,1228,601,1256"/>
+<area shape="poly" id="edge202_Node000023_Node000029" title=" " alt="" coords="364,1130,375,1136,392,1155,400,1175,407,1195,423,1213,445,1227,440,1228,419,1217,402,1197,395,1177,388,1158,371,1140,365,1135"/>
 </map>

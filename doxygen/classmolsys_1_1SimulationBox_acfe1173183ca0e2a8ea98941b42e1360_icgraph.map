@@ -1,45 +1,53 @@
 <map id="molsys::SimulationBox::addMolecule" name="molsys::SimulationBox::addMolecule">
-<area shape="rect" id="Node000001" title="Add a molecule to the simulation box." alt="" coords="660,473,832,518"/>
+<area shape="rect" id="Node000001" title="Add a molecule to the simulation box." alt="" coords="660,577,832,622"/>
 <area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1AtomSection.html#a99c4712b5e8c39f0ff3ff3eb9af81dd1" title="adds a single atom with moltype 0 to the simulation box" alt="" coords="351,75,612,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="740,457,730,389,708,301,691,255,670,211,643,170,611,134,596,122,596,117,614,130,647,166,675,208,696,253,713,299,735,388,745,459"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="743,561,739,474,733,419,722,359,705,298,682,238,651,182,610,134,597,122,597,117,614,130,655,179,687,236,710,296,727,358,738,418,745,474,748,563"/>
 <area shape="rect" id="Node000005" href="$namespacebenchQMRunner.html#a81476c9e79c08085280b73044f57bd0f" title=" " alt="" coords="385,143,578,171"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="738,457,725,398,702,324,686,285,665,249,640,215,611,186,579,168,579,163,614,182,644,211,670,246,690,283,707,322,730,397,743,459"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="742,561,736,483,717,380,700,327,678,275,648,227,611,186,595,175,579,167,578,162,598,170,614,182,652,224,682,272,705,325,722,379,741,482,747,563"/>
 <area shape="rect" id="Node000008" href="$perfInterWater_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="454,195,509,223"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="734,457,719,408,694,348,659,288,636,261,611,238,586,224,559,216,510,211,508,206,561,211,589,219,614,234,640,257,663,285,699,345,724,406,739,459"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="740,561,731,492,710,404,693,358,671,314,644,273,611,238,587,223,560,215,510,210,508,205,561,209,589,218,614,234,648,270,676,311,698,356,715,402,736,491,745,563"/>
 <area shape="rect" id="Node000009" href="$namespacebenchmarkSetup.html#a24fd64793f79d08dd5d16c89ea05f81e" title=" " alt="" coords="372,247,591,275"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="729,458,711,419,686,373,652,327,611,290,589,278,589,273,614,285,656,324,690,370,716,417,734,459"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="737,561,725,502,702,428,686,389,665,353,640,319,611,290,592,278,591,272,614,286,644,315,670,350,690,387,707,426,730,501,743,563"/>
 <area shape="rect" id="Node000010" href="$namespacebenchWaterScaling.html#a3372b0ab1c542bdc9fb149f57bdabb63" title=" " alt="" coords="394,299,569,327"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="722,460,676,399,646,368,611,342,570,325,569,320,614,337,649,364,681,396,727,460"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="734,562,719,512,694,452,659,392,636,365,611,342,591,330,570,322,569,317,593,325,614,338,640,361,663,389,699,449,724,510,739,563"/>
 <area shape="rect" id="Node000012" href="$testPhysicalData_8cpp.html#ad236f7af808fe6049c3fa5b91321d73f" title=" " alt="" coords="455,351,508,379"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="709,462,665,427,611,394,557,377,510,369,508,364,559,372,613,389,668,423,714,462"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="729,562,711,523,686,477,652,431,611,394,586,381,559,373,510,367,508,362,560,368,588,376,614,389,656,428,690,474,716,521,734,563"/>
 <area shape="rect" id="Node000013" href="$testHybridConfigurator_8cpp.html#ae6c6cf43b503bf06099e377b621fa432" title=" " alt="" coords="455,403,508,431"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="676,468,612,446,557,433,509,424,508,418,558,427,613,441,681,467"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="722,564,676,503,646,472,611,446,585,434,558,427,510,420,508,415,559,421,587,429,614,441,649,468,681,500,727,564"/>
 <area shape="rect" id="Node000014" href="$testHybridConfigurator_8cpp.html#aac423197af99488b7aece4a2775f44f3" title=" " alt="" coords="455,455,508,483"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="642,486,509,474,508,469,647,484"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="709,566,665,531,611,498,557,481,510,473,508,468,559,476,613,493,668,527,714,566"/>
 <area shape="rect" id="Node000015" href="$testHybridConfigurator_8cpp.html#a38d9b03c5a49a3662c87536d6be2e956" title=" " alt="" coords="455,507,508,535"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="642,506,509,521,508,516,647,504"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="676,572,612,550,557,537,509,528,508,522,558,531,613,545,681,570"/>
 <area shape="rect" id="Node000016" href="$testHybridConfigurator_8cpp.html#ad4f28af45f30418797bd7334ecd677af" title=" " alt="" coords="455,559,508,587"/>
-<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="674,525,613,549,509,571,508,566,612,544,679,523"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="642,591,509,578,508,573,647,588"/>
 <area shape="rect" id="Node000017" href="$testHybridConfigurator_8cpp.html#ab9f03a37906a792ae9a1b4463144f118" title=" " alt="" coords="455,611,508,639"/>
-<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="713,528,668,568,613,601,559,618,510,626,508,621,557,613,611,596,665,564,709,530"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="642,611,509,625,508,620,647,608"/>
 <area shape="rect" id="Node000018" href="$testHybridConfigurator_8cpp.html#af101c1804efd9bcaf35f7299c6e4b295" title=" " alt="" coords="455,663,508,691"/>
-<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="726,529,680,595,649,626,614,653,587,665,559,673,509,679,508,674,558,667,585,660,611,648,646,622,676,591,722,533"/>
-<area shape="rect" id="Node000019" href="$testSimulationBox_8cpp.html#a445a8c416f539d0ed64fdb3c43fa58ba" title=" " alt="" coords="448,715,516,743"/>
-<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="733,531,716,574,690,621,656,667,614,705,590,717,565,725,517,732,515,727,563,720,588,712,611,700,652,663,686,618,711,572,730,535"/>
-<area shape="rect" id="Node000020" href="$testSimulationBox_8cpp.html#a73086d365764bde6f7de0f38e3992d86" title="tests setPartialChargesOfMoleculesFromMoleculeTypes function" alt="" coords="448,767,516,795"/>
-<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="738,531,724,585,699,646,663,706,640,733,614,756,591,770,565,778,516,784,516,779,564,773,588,765,611,752,636,729,658,703,694,643,719,583,735,535"/>
-<area shape="rect" id="Node000021" href="$testSimulationBox_8cpp.html#a3153496939fa97c909d0e7594849b904" title="tests setPartialChargesOfMoleculesFromMoleculeTypes function" alt="" coords="448,819,516,847"/>
-<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="742,531,730,594,707,669,690,707,669,745,644,779,614,808,591,822,565,831,517,837,516,832,564,826,589,818,611,804,640,775,665,742,685,705,702,667,725,593,738,535"/>
-<area shape="rect" id="Node000022" href="$testSimulationBox_8cpp.html#af5f3ebcdaf2a6c6a64a867c76a0cf28a" title=" " alt="" coords="448,871,516,899"/>
-<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="744,532,736,605,715,693,698,739,676,784,648,825,614,860,591,875,566,884,516,889,516,884,564,878,589,870,611,856,644,821,671,781,693,737,709,691,731,604,741,536"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="674,629,613,653,510,675,508,671,612,648,679,627"/>
+<area shape="rect" id="Node000019" href="$testSimulationBox_8cpp.html#a66e3f71a773b98284dcd53e5feace894" title="with the lookup table the errors are the same" alt="" coords="455,715,508,743"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="713,631,668,672,613,705,559,722,510,730,508,725,557,717,611,700,665,668,709,635"/>
+<area shape="rect" id="Node000020" href="$testSimulationBox_8cpp.html#a9bd96e58ebc6b53065b5a8ec97f2818d" title="the lookup table gives the same molecule and atom as the walk" alt="" coords="455,767,508,795"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="726,633,680,699,649,730,614,757,587,769,559,777,509,783,508,778,558,771,585,764,611,752,646,726,676,695,722,637"/>
+<area shape="rect" id="Node000021" href="$testSimulationBox_8cpp.html#af2f6c742110bb53dac70b262e05fcd5a" title="the table and the walk agree for every atom of a larger box" alt="" coords="455,819,508,847"/>
+<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="733,635,716,678,690,725,656,771,614,809,588,822,560,830,509,836,508,831,559,825,586,817,611,804,652,767,686,722,711,676,730,639"/>
+<area shape="rect" id="Node000022" href="$testSimulationBox_8cpp.html#aeba8305760f395186fb0aaa796aeedae" title="a table that does not fit the molecules is not used, and the table is gone after clearAtomIndexLookup" alt="" coords="455,871,508,899"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="738,635,724,689,699,750,663,810,640,837,614,861,589,875,560,883,510,889,508,883,559,878,586,870,611,856,636,833,658,807,694,747,719,687,735,639"/>
+<area shape="rect" id="Node000023" href="$testSimulationBox_8cpp.html#a445a8c416f539d0ed64fdb3c43fa58ba" title=" " alt="" coords="448,923,516,951"/>
+<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="742,635,730,698,707,773,690,811,669,849,644,883,614,912,591,926,565,935,517,941,516,936,564,930,589,922,611,908,640,879,665,846,685,809,702,771,725,697,738,639"/>
+<area shape="rect" id="Node000024" href="$testSimulationBox_8cpp.html#a73086d365764bde6f7de0f38e3992d86" title="tests setPartialChargesOfMoleculesFromMoleculeTypes function" alt="" coords="448,975,516,1003"/>
+<area shape="poly" id="edge23_Node000001_Node000024" title=" " alt="" coords="744,636,736,709,715,797,698,843,676,888,648,929,614,964,591,979,566,988,516,993,516,988,564,982,589,974,611,960,644,925,671,885,693,841,709,795,731,708,741,640"/>
+<area shape="rect" id="Node000025" href="$testSimulationBox_8cpp.html#a3153496939fa97c909d0e7594849b904" title="tests setPartialChargesOfMoleculesFromMoleculeTypes function" alt="" coords="448,1027,516,1055"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="746,635,741,717,722,820,705,873,682,926,652,974,614,1016,592,1031,566,1040,517,1046,516,1040,565,1035,589,1026,611,1012,648,971,677,923,700,872,717,818,736,716,743,640"/>
+<area shape="rect" id="Node000026" href="$testSimulationBox_8cpp.html#af5f3ebcdaf2a6c6a64a867c76a0cf28a" title=" " alt="" coords="448,1079,516,1107"/>
+<area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="741,635,724,739,696,868,679,932,659,989,638,1036,614,1068,592,1083,566,1092,517,1098,516,1092,565,1087,589,1079,610,1064,633,1034,654,987,674,930,691,866,719,738,737,639"/>
 <area shape="rect" id="Node000003" href="$classTestAtomSection.html#a38bde3c10f7ade9be1dea463477ed05e" title=" " alt="" coords="108,5,303,50"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="372,72,298,53,296,48,377,69"/>
 <area shape="rect" id="Node000004" href="$classinput_1_1restartFile_1_1AtomSection.html#aac27a04235e5b4ddaa34b013e9fb060b" title="processes the atom section of the rst file" alt="" coords="120,75,290,119"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="333,99,292,99,290,95,338,95"/>
-<area shape="rect" id="Node000006" href="$namespacebenchQMRunner.html#af59b6188cd23f4db67b6f50ab362d11d" title=" " alt="" coords="127,143,284,171"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="367,159,286,159,283,155,372,155"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="333,99,292,99,289,95,338,95"/>
+<area shape="rect" id="Node000006" href="$namespacebenchQMRunner.html#abca373c8b7c7c2a122ccde294bf97547" title=" " alt="" coords="127,143,284,171"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="367,159,286,159,283,155,371,155"/>
 <area shape="rect" id="Node000007" href="$perfDftbRunnerFiles_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,143,60,171"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="109,159,62,159,58,155,113,155"/>
 <area shape="rect" id="Node000011" href="$perfInterWaterN1728_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="178,299,232,327"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="377,315,234,315,232,311,381,311"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="377,315,234,315,231,311,381,311"/>
 </map>

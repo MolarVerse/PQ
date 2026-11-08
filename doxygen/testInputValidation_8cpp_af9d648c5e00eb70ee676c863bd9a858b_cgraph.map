@@ -1,17 +1,13 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,135,74,163"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a359d8ed002272725965af27baefe4405" title="set the start temperature" alt="" coords="122,23,331,67"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,132,172,73,171,78,68,137"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#a34583b44496c7f5b0bfe2d3f0ef5716a" title="set the target temperature" alt="" coords="122,127,331,171"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,146,109,147,104,151,75,152"/>
-<area shape="rect" id="Node000007" href="$classsettings_1_1ThermostatSettings.html#ae29ae0e19ed6e7ca9b725ac2c8b063ec" title="sets the thermostatType to enum in settings" alt="" coords="122,196,331,241"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="73,161,123,181,142,190,137,191,121,186,73,166"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#a430a5017f3026c15f297c0223ebfa2ef" title="set the start temperature set" alt="" coords="380,5,590,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,35,367,35,362,37,332,41"/>
-<area shape="rect" id="Node000005" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="379,75,591,119"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="331,125,366,121,361,122,332,130"/>
-<area shape="rect" id="Node000006" href="$classsettings_1_1ThermostatSettings.html#ab14dab1c6bcdc947f6228793489e3a48" title="set the temperature set" alt="" coords="380,144,590,189"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="331,153,367,158,362,159,332,159"/>
-<area shape="rect" id="Node000008" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="382,213,589,258"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="331,223,369,228,363,228,331,228"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classThermostatSettings.html#a8a0d136edac083be8e4da94e13c12adc" title="set the start temperature" alt="" coords="126,5,288,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,113,46,109,50,76,58"/>
+<area shape="rect" id="Node000004" href="$classThermostatSettings.html#aec3f6c4bb78bbb8e79b9eff31ae4fa3b" title="set the target temperature" alt="" coords="122,75,293,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,67,109,75,104,77,75,72"/>
+<area shape="rect" id="Node000003" href="$classThermostatSettings.html#a4213807c7fe5707b6adfe8854b21d935" title="set the start temperature set" alt="" coords="356,5,539,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="288,25,343,27,338,28,289,30"/>
+<area shape="rect" id="Node000005" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="341,75,553,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="293,94,328,97,323,97,294,100"/>
+<area shape="rect" id="Node000006" href="$classThermostatSettings.html#a86ffc12bd69e8731d80593133a048c02" title="set the temperature set" alt="" coords="371,144,523,189"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="287,117,358,140,353,140,287,123"/>
 </map>

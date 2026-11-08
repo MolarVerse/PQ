@@ -99,90 +99,114 @@ $(function(){initNavTree('testPhysicalData_8cpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="testPhysicalData_8hpp.html">testPhysicalData.hpp</a>&quot;</code><br />
+<code>#include &lt;array&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
+<code>#include &lt;new&gt;</code><br />
 <code>#include &quot;<a class="el" href="conversionFactors_8hpp.html">constants/conversionFactors.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="internalConversionFactors_8hpp.html">constants/internalConversionFactors.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="physicalData_8hpp.html">physicalData.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="units_8hpp.html">units.hpp</a>&quot;</code><br />
 <code>#include &quot;vector3d.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for testPhysicalData.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="testPhysicalData_8cpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2physicalData_2testPhysicalData_8cpp" loading="lazy" alt=""/></div>
 <map name="a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2physicalData_2testPhysicalData_8cpp" id="a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2physicalData_2testPhysicalData_8cpp">
-<area shape="rect" title=" " alt="" coords="926,5,1117,67"/>
-<area shape="rect" href="testPhysicalData_8hpp.html" title=" " alt="" coords="478,124,637,151"/>
-<area shape="poly" title=" " alt="" coords="923,59,635,122,633,117,928,56"/>
-<area shape="rect" title=" " alt="" coords="500,586,607,614"/>
-<area shape="poly" title=" " alt="" coords="1023,65,1024,220,1024,450,1023,500,1016,520,998,540,968,557,927,569,878,576,825,580,715,584,622,589,622,583,715,578,824,575,878,571,926,563,966,552,995,536,1011,517,1018,499,1019,450,1019,220,1020,69"/>
-<area shape="rect" href="physicalData_8hpp.html" title=" " alt="" coords="684,208,818,235"/>
-<area shape="poly" title=" " alt="" coords="979,66,784,201,781,197,975,69"/>
-<area shape="rect" href="conversionFactors_8hpp.html" title=" " alt="" coords="1060,208,1293,235"/>
-<area shape="poly" title=" " alt="" coords="1037,65,1065,111,1100,158,1145,199,1140,198,1096,161,1060,114,1035,70"/>
-<area shape="rect" href="internalConversionFactors_8hpp.html" title=" " alt="" coords="1109,115,1321,160"/>
-<area shape="poly" title=" " alt="" coords="1081,65,1162,108,1157,108,1080,70"/>
-<area shape="rect" title=" " alt="" coords="506,208,609,235"/>
-<area shape="poly" title=" " alt="" coords="559,149,560,193,555,191,556,154"/>
-<area shape="rect" title=" " alt="" coords="533,283,609,311"/>
-<area shape="poly" title=" " alt="" coords="576,149,603,174,624,207,627,225,622,243,600,274,596,271,617,241,621,225,619,209,599,177,575,154"/>
-<area shape="rect" href="atom_8hpp.html" title=" " alt="" coords="259,283,342,311"/>
-<area shape="poly" title=" " alt="" coords="475,145,439,153,399,166,360,184,327,210,318,222,311,237,304,269,299,267,306,236,313,220,324,206,358,179,397,161,437,148,480,142"/>
-<area shape="rect" href="molecule_8hpp.html" title=" " alt="" coords="154,208,263,235"/>
-<area shape="poly" title=" " alt="" coords="500,154,279,206,277,202,503,150"/>
-<area shape="poly" title=" " alt="" coords="589,149,708,201,703,202,589,154"/>
-<area shape="rect" title=" " alt="" coords="338,208,481,235"/>
-<area shape="poly" title=" " alt="" coords="532,153,448,202,445,198,536,150"/>
-<area shape="rect" title=" " alt="" coords="376,359,451,387"/>
-<area shape="poly" title=" " alt="" coords="321,309,383,350,378,351,320,314"/>
-<area shape="rect" title=" " alt="" coords="142,359,200,387"/>
-<area shape="poly" title=" " alt="" coords="275,313,209,353,205,349,279,310"/>
-<area shape="rect" title=" " alt="" coords="21,359,118,387"/>
-<area shape="poly" title=" " alt="" coords="257,314,127,356,124,352,260,309"/>
-<area shape="rect" href="staticMatrix_8hpp.html" title=" " alt="" coords="587,359,715,387"/>
-<area shape="poly" title=" " alt="" coords="342,305,575,354,571,357,343,310"/>
-<area shape="poly" title=" " alt="" coords="342,301,406,318,437,335,465,357,482,380,492,401,499,443,502,487,506,511,516,537,537,574,532,572,511,539,501,512,496,487,494,443,487,403,477,382,461,361,435,339,404,323,343,306"/>
-<area shape="rect" href="strongTypes_8hpp.html" title=" " alt="" coords="225,359,352,387"/>
-<area shape="poly" title=" " alt="" coords="299,309,295,345,290,343,297,314"/>
-<area shape="rect" href="staticMatrix3x3_8hpp.html" title=" " alt="" coords="657,435,890,462"/>
-<area shape="poly" title=" " alt="" coords="673,385,741,427,736,426,672,390"/>
-<area shape="rect" href="staticMatrix3x3Class_8hpp.html" title=" " alt="" coords="526,510,712,538"/>
-<area shape="poly" title=" " alt="" coords="650,385,627,497,623,493,646,389"/>
-<area shape="rect" title=" " alt="" coords="736,510,811,538"/>
-<area shape="poly" title=" " alt="" coords="775,461,776,496,771,493,772,465"/>
-<area shape="poly" title=" " alt="" coords="748,462,661,506,659,501,743,464"/>
-<area shape="rect" title=" " alt="" coords="835,510,984,538"/>
-<area shape="poly" title=" " alt="" coords="798,460,875,503,869,502,797,465"/>
-<area shape="poly" title=" " alt="" coords="610,537,576,577,574,572,605,540"/>
-<area shape="rect" title=" " alt="" coords="631,586,815,614"/>
-<area shape="poly" title=" " alt="" coords="638,536,695,578,690,577,637,541"/>
-<area shape="rect" title=" " alt="" coords="42,435,111,462"/>
-<area shape="poly" title=" " alt="" coords="249,389,127,432,124,428,252,385"/>
-<area shape="rect" title=" " alt="" coords="314,435,380,462"/>
-<area shape="poly" title=" " alt="" coords="299,385,330,423,324,422,298,390"/>
-<area shape="rect" title=" " alt="" coords="168,435,291,462"/>
-<area shape="poly" title=" " alt="" coords="280,385,251,424,248,421,276,389"/>
-<area shape="poly" title=" " alt="" coords="263,231,520,283,516,287,263,237"/>
-<area shape="poly" title=" " alt="" coords="225,233,275,273,270,274,225,239"/>
-<area shape="poly" title=" " alt="" coords="206,233,180,344,175,343,204,238"/>
-<area shape="poly" title=" " alt="" coords="196,238,94,349,90,346,197,233"/>
-<area shape="poly" title=" " alt="" coords="214,233,249,310,272,346,267,346,245,312,212,238"/>
-<area shape="poly" title=" " alt="" coords="169,238,131,256,86,283,44,317,26,338,12,360,9,377,15,394,27,409,44,424,39,427,24,413,10,396,3,378,7,358,22,334,40,313,83,278,129,252,172,234"/>
-<area shape="rect" title=" " alt="" coords="633,283,695,311"/>
-<area shape="poly" title=" " alt="" coords="263,226,420,245,620,282,615,284,419,251,264,231"/>
-<area shape="poly" title=" " alt="" coords="716,237,618,280,616,275,721,235"/>
-<area shape="poly" title=" " alt="" coords="748,234,733,272,709,313,677,350,674,346,705,309,728,269,744,237"/>
-<area shape="poly" title=" " alt="" coords="738,234,692,276,689,271,733,237"/>
-<area shape="rect" href="config_2enums_2virial_8hpp.html" title=" " alt="" coords="770,283,900,311"/>
-<area shape="poly" title=" " alt="" coords="766,233,811,273,806,273,765,239"/>
-<area shape="rect" title=" " alt="" coords="902,359,968,387"/>
-<area shape="poly" title=" " alt="" coords="853,309,908,350,902,349,852,314"/>
-<area shape="rect" title=" " alt="" coords="755,359,878,387"/>
-<area shape="poly" title=" " alt="" coords="833,310,825,345,821,342,830,313"/>
-<area shape="rect" title=" " alt="" coords="1204,359,1266,387"/>
-<area shape="poly" title=" " alt="" coords="1180,233,1190,269,1204,310,1221,347,1217,345,1199,312,1185,271,1178,238"/>
-<area shape="rect" href="natureConstants_8hpp.html" title=" " alt="" coords="1214,283,1370,311"/>
-<area shape="poly" title=" " alt="" coords="1197,233,1261,275,1256,274,1197,239"/>
-<area shape="poly" title=" " alt="" coords="1284,310,1256,349,1253,345,1280,313"/>
-<area shape="poly" title=" " alt="" coords="1207,158,1191,195,1187,192,1203,162"/>
-<area shape="poly" title=" " alt="" coords="1259,158,1287,179,1308,206,1313,222,1313,239,1306,271,1302,267,1308,238,1308,223,1303,209,1283,182,1258,163"/>
+<area shape="rect" title=" " alt="" coords="1081,5,1272,67"/>
+<area shape="rect" href="testPhysicalData_8hpp.html" title=" " alt="" coords="691,124,851,151"/>
+<area shape="poly" title=" " alt="" coords="1078,62,841,122,839,117,1083,60"/>
+<area shape="rect" title=" " alt="" coords="142,435,211,462"/>
+<area shape="poly" title=" " alt="" coords="1078,44,794,64,617,80,438,99,272,123,135,151,82,167,42,184,17,202,11,211,8,220,8,298,11,346,18,365,33,385,54,403,77,417,129,437,124,439,75,422,50,407,29,388,13,367,6,347,3,299,3,220,6,209,13,199,39,180,80,162,134,146,271,118,438,94,617,74,794,59,1083,41"/>
+<area shape="rect" title=" " alt="" coords="519,603,626,631"/>
+<area shape="poly" title=" " alt="" coords="1182,65,1191,111,1204,159,1218,191,1235,222,1277,277,1367,371,1401,415,1413,437,1420,459,1421,482,1416,506,1403,531,1382,557,1366,567,1339,576,1261,588,1157,596,1040,600,804,603,641,606,641,601,804,597,1040,595,1157,591,1260,583,1338,571,1364,563,1379,553,1399,528,1411,504,1416,482,1415,460,1408,439,1396,418,1363,375,1273,280,1231,225,1213,194,1199,161,1186,112,1179,70"/>
+<area shape="rect" href="physicalData_8hpp.html" title=" " alt="" coords="840,208,974,235"/>
+<area shape="poly" title=" " alt="" coords="1134,66,940,201,937,197,1130,69"/>
+<area shape="rect" href="units_8hpp.html" title=" " alt="" coords="998,208,1080,235"/>
+<area shape="poly" title=" " alt="" coords="1156,66,1060,197,1056,193,1152,69"/>
+<area shape="rect" title=" " alt="" coords="1214,124,1269,151"/>
+<area shape="poly" title=" " alt="" coords="1197,65,1228,111,1222,110,1196,70"/>
+<area shape="rect" title=" " alt="" coords="1294,124,1342,151"/>
+<area shape="poly" title=" " alt="" coords="1220,65,1289,114,1284,114,1219,70"/>
+<area shape="rect" href="conversionFactors_8hpp.html" title=" " alt="" coords="1497,208,1730,235"/>
+<area shape="poly" title=" " alt="" coords="1272,41,1361,50,1454,64,1536,85,1568,98,1590,113,1604,131,1612,151,1617,194,1613,191,1607,153,1599,133,1587,117,1565,103,1535,90,1453,69,1360,55,1273,46"/>
+<area shape="rect" href="internalConversionFactors_8hpp.html" title=" " alt="" coords="1365,115,1577,160"/>
+<area shape="poly" title=" " alt="" coords="1266,65,1395,109,1389,110,1266,70"/>
+<area shape="rect" title=" " alt="" coords="611,208,715,235"/>
+<area shape="poly" title=" " alt="" coords="756,150,694,200,691,196,752,153"/>
+<area shape="rect" title=" " alt="" coords="780,283,856,311"/>
+<area shape="poly" title=" " alt="" coords="776,149,812,269,807,268,774,154"/>
+<area shape="rect" href="atom_8hpp.html" title=" " alt="" coords="401,283,485,311"/>
+<area shape="poly" title=" " alt="" coords="771,150,759,194,747,218,729,238,696,250,637,264,501,289,499,284,635,259,694,245,726,233,742,215,754,192,767,154"/>
+<area shape="rect" href="molecule_8hpp.html" title=" " alt="" coords="310,208,419,235"/>
+<area shape="poly" title=" " alt="" coords="704,153,435,209,433,204,708,150"/>
+<area shape="poly" title=" " alt="" coords="793,149,875,199,870,199,793,154"/>
+<area shape="rect" title=" " alt="" coords="443,208,587,235"/>
+<area shape="poly" title=" " alt="" coords="728,153,571,205,569,200,732,150"/>
+<area shape="poly" title=" " alt="" coords="814,149,986,203,981,204,814,154"/>
+<area shape="rect" title=" " alt="" coords="449,359,523,387"/>
+<area shape="poly" title=" " alt="" coords="451,309,473,346,468,345,450,314"/>
+<area shape="rect" title=" " alt="" coords="366,359,424,387"/>
+<area shape="poly" title=" " alt="" coords="436,310,414,348,410,344,433,313"/>
+<area shape="rect" title=" " alt="" coords="43,359,139,387"/>
+<area shape="poly" title=" " alt="" coords="400,310,155,361,153,356,402,305"/>
+<area shape="rect" href="strongTypes_8hpp.html" title=" " alt="" coords="214,359,341,387"/>
+<area shape="poly" title=" " alt="" coords="411,313,322,355,320,350,416,310"/>
+<area shape="poly" title=" " alt="" coords="476,309,509,329,537,357,553,386,564,417,577,481,580,541,578,589,573,586,575,541,571,482,559,419,548,389,533,361,506,333,476,314"/>
+<area shape="poly" title=" " alt="" coords="258,389,208,427,205,423,262,385"/>
+<area shape="rect" title=" " alt="" coords="241,435,306,462"/>
+<area shape="poly" title=" " alt="" coords="278,385,278,420,273,418,276,390"/>
+<area shape="rect" title=" " alt="" coords="330,435,452,462"/>
+<area shape="poly" title=" " alt="" coords="298,385,361,426,356,427,298,390"/>
+<area shape="poly" title=" " alt="" coords="419,231,432,233,597,255,671,264,767,282,762,284,670,270,596,260,431,238,420,236"/>
+<area shape="poly" title=" " alt="" coords="379,233,421,272,415,273,378,239"/>
+<area shape="poly" title=" " alt="" coords="368,233,392,344,387,343,366,238"/>
+<area shape="poly" title=" " alt="" coords="307,231,235,250,196,265,159,285,129,315,107,347,102,344,125,311,156,281,193,260,233,245,311,228"/>
+<area shape="poly" title=" " alt="" coords="359,233,295,347,291,344,355,238"/>
+<area shape="poly" title=" " alt="" coords="339,238,274,286,236,321,204,360,190,390,183,420,178,418,185,388,200,358,232,317,270,282,343,234"/>
+<area shape="rect" title=" " alt="" coords="693,283,756,311"/>
+<area shape="poly" title=" " alt="" coords="419,231,680,282,676,284,420,236"/>
+<area shape="rect" href="unit__types_8hpp.html" title=" " alt="" coords="552,283,670,311"/>
+<area shape="poly" title=" " alt="" coords="408,233,555,278,550,280,409,239"/>
+<area shape="poly" title=" " alt="" coords="612,310,578,589,573,586,607,313"/>
+<area shape="rect" title=" " alt="" coords="835,359,953,387"/>
+<area shape="poly" title=" " alt="" coords="662,309,831,354,826,355,662,314"/>
+<area shape="rect" href="staticMatrix_8hpp.html" title=" " alt="" coords="682,359,809,387"/>
+<area shape="poly" title=" " alt="" coords="635,309,712,351,706,352,635,314"/>
+<area shape="rect" href="staticMatrix3x3_8hpp.html" title=" " alt="" coords="806,435,1040,462"/>
+<area shape="poly" title=" " alt="" coords="778,385,880,428,875,428,777,390"/>
+<area shape="rect" href="staticMatrix3x3Class_8hpp.html" title=" " alt="" coords="649,519,835,546"/>
+<area shape="poly" title=" " alt="" coords="747,385,745,504,740,502,744,389"/>
+<area shape="rect" title=" " alt="" coords="858,603,937,631"/>
+<area shape="poly" title=" " alt="" coords="918,461,908,486,900,511,896,551,897,589,893,586,891,550,895,510,903,484,914,464"/>
+<area shape="rect" title=" " alt="" coords="1182,510,1368,555"/>
+<area shape="poly" title=" " alt="" coords="980,460,1170,506,1164,506,979,466"/>
+<area shape="rect" title=" " alt="" coords="909,519,985,546"/>
+<area shape="poly" title=" " alt="" coords="928,461,941,505,937,502,925,465"/>
+<area shape="poly" title=" " alt="" coords="897,462,785,515,784,510,891,464"/>
+<area shape="rect" title=" " alt="" coords="1009,519,1157,546"/>
+<area shape="poly" title=" " alt="" coords="949,460,1047,512,1041,511,948,466"/>
+<area shape="poly" title=" " alt="" coords="717,547,614,598,612,593,712,548"/>
+<area shape="poly" title=" " alt="" coords="768,545,862,596,857,595,766,550"/>
+<area shape="rect" title=" " alt="" coords="650,603,833,631"/>
+<area shape="poly" title=" " alt="" coords="744,545,744,589,740,586,740,549"/>
+<area shape="poly" title=" " alt="" coords="893,235,847,276,844,271,889,237"/>
+<area shape="poly" title=" " alt="" coords="872,237,771,280,769,275,877,235"/>
+<area shape="poly" title=" " alt="" coords="851,237,680,282,678,277,856,235"/>
+<area shape="poly" title=" " alt="" coords="906,234,895,273,884,294,870,313,839,338,804,355,802,350,836,333,867,309,880,291,890,271,903,238"/>
+<area shape="rect" href="config_2enums_2virial_8hpp.html" title=" " alt="" coords="982,283,1112,311"/>
+<area shape="poly" title=" " alt="" coords="932,233,1011,276,1006,276,932,239"/>
+<area shape="rect" title=" " alt="" coords="1132,359,1197,387"/>
+<area shape="poly" title=" " alt="" coords="1069,309,1134,351,1129,351,1068,314"/>
+<area shape="rect" title=" " alt="" coords="984,359,1107,387"/>
+<area shape="poly" title=" " alt="" coords="1049,309,1048,345,1044,342,1045,314"/>
+<area shape="poly" title=" " alt="" coords="1025,234,972,285,915,349,912,344,968,281,1021,237"/>
+<area shape="rect" title=" " alt="" coords="1525,359,1588,387"/>
+<area shape="poly" title=" " alt="" coords="1613,234,1591,312,1574,347,1570,343,1586,310,1609,237"/>
+<area shape="rect" href="natureConstants_8hpp.html" title=" " alt="" coords="1420,283,1576,311"/>
+<area shape="poly" title=" " alt="" coords="1596,235,1532,277,1530,272,1591,237"/>
+<area shape="poly" title=" " alt="" coords="1509,309,1539,348,1534,346,1507,314"/>
+<area shape="poly" title=" " alt="" coords="1509,158,1581,200,1575,199,1509,163"/>
+<area shape="poly" title=" " alt="" coords="1476,158,1488,235,1494,269,1490,267,1483,236,1473,162"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -215,6 +239,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a5b3a5959061e6de63b507460a7993bc9" id="r_a5b3a5959061e6de63b507460a7993bc9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b3a5959061e6de63b507460a7993bc9">TEST_F</a> (<a class="el" href="classTestPhysicalData.html">TestPhysicalData</a>, addRingPolymerEnergyAccumulates)</td></tr>
 <tr class="memitem:a77aba451b97be2ea4739dc339025cd78" id="r_a77aba451b97be2ea4739dc339025cd78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77aba451b97be2ea4739dc339025cd78">TEST_F</a> (<a class="el" href="classTestPhysicalData.html">TestPhysicalData</a>, addVirialAccumulates)</td></tr>
 <tr class="memitem:ad236f7af808fe6049c3fa5b91321d73f" id="r_ad236f7af808fe6049c3fa5b91321d73f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad236f7af808fe6049c3fa5b91321d73f">TEST</a> (PhysicalDataKinetics, molecularPressureExcludesInternalMotion)</td></tr>
+<tr class="memitem:aad6d045051c3a871e951b0b94caf40bc" id="r_aad6d045051c3a871e951b0b94caf40bc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad6d045051c3a871e951b0b94caf40bc">TEST_F</a> (<a class="el" href="classTestPhysicalData.html">TestPhysicalData</a>, defaultConstructedIsZero)</td></tr>
+<tr class="memdesc:aad6d045051c3a871e951b0b94caf40bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">a default initialised PhysicalData has no garbage in it  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ad236f7af808fe6049c3fa5b91321d73f" name="ad236f7af808fe6049c3fa5b91321d73f"></a>
@@ -271,7 +297,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a555a91e70730403d578af8432a54b226" name="a555a91e70730403d578af8432a54b226"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a555a91e70730403d578af8432a54b226">&#9670;&#160;</a></span>TEST_F() <span class="overload">[1/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a555a91e70730403d578af8432a54b226">&#9670;&#160;</a></span>TEST_F() <span class="overload">[1/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,7 +318,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a1f90831ab89d4c3d81b6ec69a24fe3a0" name="a1f90831ab89d4c3d81b6ec69a24fe3a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f90831ab89d4c3d81b6ec69a24fe3a0">&#9670;&#160;</a></span>TEST_F() <span class="overload">[2/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f90831ab89d4c3d81b6ec69a24fe3a0">&#9670;&#160;</a></span>TEST_F() <span class="overload">[2/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -313,7 +339,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a67e01dc9ab9f0cea6d51c3cbbf56e930" name="a67e01dc9ab9f0cea6d51c3cbbf56e930"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67e01dc9ab9f0cea6d51c3cbbf56e930">&#9670;&#160;</a></span>TEST_F() <span class="overload">[3/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a67e01dc9ab9f0cea6d51c3cbbf56e930">&#9670;&#160;</a></span>TEST_F() <span class="overload">[3/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -334,7 +360,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="ab8aafe38089dd1aba3413774cb9e7753" name="ab8aafe38089dd1aba3413774cb9e7753"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab8aafe38089dd1aba3413774cb9e7753">&#9670;&#160;</a></span>TEST_F() <span class="overload">[4/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8aafe38089dd1aba3413774cb9e7753">&#9670;&#160;</a></span>TEST_F() <span class="overload">[4/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -355,7 +381,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a72947756c83a803cf889f5d233e84afb" name="a72947756c83a803cf889f5d233e84afb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72947756c83a803cf889f5d233e84afb">&#9670;&#160;</a></span>TEST_F() <span class="overload">[5/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a72947756c83a803cf889f5d233e84afb">&#9670;&#160;</a></span>TEST_F() <span class="overload">[5/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -376,7 +402,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="aff02460dbf7fe5fac13dfaa1239a7803" name="aff02460dbf7fe5fac13dfaa1239a7803"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff02460dbf7fe5fac13dfaa1239a7803">&#9670;&#160;</a></span>TEST_F() <span class="overload">[6/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aff02460dbf7fe5fac13dfaa1239a7803">&#9670;&#160;</a></span>TEST_F() <span class="overload">[6/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -399,7 +425,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a6e904d302419b752807f731211fe7e48" name="a6e904d302419b752807f731211fe7e48"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e904d302419b752807f731211fe7e48">&#9670;&#160;</a></span>TEST_F() <span class="overload">[7/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e904d302419b752807f731211fe7e48">&#9670;&#160;</a></span>TEST_F() <span class="overload">[7/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -422,7 +448,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a22d42b2b6d2a76586fb3ff27cd3e9959" name="a22d42b2b6d2a76586fb3ff27cd3e9959"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22d42b2b6d2a76586fb3ff27cd3e9959">&#9670;&#160;</a></span>TEST_F() <span class="overload">[8/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a22d42b2b6d2a76586fb3ff27cd3e9959">&#9670;&#160;</a></span>TEST_F() <span class="overload">[8/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -443,7 +469,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a5b3a5959061e6de63b507460a7993bc9" name="a5b3a5959061e6de63b507460a7993bc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b3a5959061e6de63b507460a7993bc9">&#9670;&#160;</a></span>TEST_F() <span class="overload">[9/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b3a5959061e6de63b507460a7993bc9">&#9670;&#160;</a></span>TEST_F() <span class="overload">[9/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -464,7 +490,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a77aba451b97be2ea4739dc339025cd78" name="a77aba451b97be2ea4739dc339025cd78"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77aba451b97be2ea4739dc339025cd78">&#9670;&#160;</a></span>TEST_F() <span class="overload">[10/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a77aba451b97be2ea4739dc339025cd78">&#9670;&#160;</a></span>TEST_F() <span class="overload">[10/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -485,7 +511,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="af86e1b3c2614f643b5094dc415fd7651" name="af86e1b3c2614f643b5094dc415fd7651"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af86e1b3c2614f643b5094dc415fd7651">&#9670;&#160;</a></span>TEST_F() <span class="overload">[11/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af86e1b3c2614f643b5094dc415fd7651">&#9670;&#160;</a></span>TEST_F() <span class="overload">[11/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -508,7 +534,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="aa6ca90d09302aa265b4072c104ad2e44" name="aa6ca90d09302aa265b4072c104ad2e44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6ca90d09302aa265b4072c104ad2e44">&#9670;&#160;</a></span>TEST_F() <span class="overload">[12/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6ca90d09302aa265b4072c104ad2e44">&#9670;&#160;</a></span>TEST_F() <span class="overload">[12/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -531,7 +557,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a8fac4cc785c2c6f57a9285672d3d001c" name="a8fac4cc785c2c6f57a9285672d3d001c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fac4cc785c2c6f57a9285672d3d001c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[13/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fac4cc785c2c6f57a9285672d3d001c">&#9670;&#160;</a></span>TEST_F() <span class="overload">[13/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -560,7 +586,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="38,1431,39,1308,48,1115,58,1012,72,917,92,838,105,806,120,782,132,772,129,777,124,785,110,809,98,839,77,918,63,1013,53,1115,44,1309,43,1431"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#ae89062eb0a79c622c082be46147ba87c" title="get the coulomb energy" alt="" coords="643,5,843,50"/>
 <area shape="poly" title=" " alt="" coords="39,1430,46,1342,61,1208,85,1074,101,1020,119,981,146,946,173,919,199,899,227,884,290,859,368,829,399,819,427,815,478,815,502,813,524,808,545,796,566,775,582,749,593,715,599,676,602,631,599,529,590,420,581,310,578,209,581,163,587,123,598,88,614,61,632,47,629,51,618,64,603,90,592,124,586,164,583,209,586,310,595,419,604,529,607,631,604,676,598,717,587,751,570,779,548,800,525,813,502,819,479,820,428,820,400,824,370,834,292,864,229,889,202,904,176,923,150,949,124,984,106,1022,91,1075,67,1209,52,1342,44,1431"/>
-<area shape="rect" href="classphysicalData_1_1PhysicalData.html#a0537022d194681d8f1a739ef0e566388" title="get the coupled pressure" alt="" coords="643,75,843,119"/>
+<area shape="rect" href="classphysicalData_1_1PhysicalData.html#a80dec02e48a578e7d60ae7fc8a207a6c" title="get the coupled pressure" alt="" coords="643,75,843,119"/>
 <area shape="poly" title=" " alt="" coords="38,1431,42,1373,53,1286,77,1187,96,1138,119,1092,172,1016,197,988,224,964,286,924,368,879,398,866,426,860,477,859,501,857,523,852,545,840,566,819,581,794,591,761,597,723,600,679,597,582,589,476,581,371,579,273,581,229,588,190,598,157,614,130,631,117,628,121,618,133,603,159,593,191,587,229,584,273,586,370,594,476,603,581,605,679,603,723,597,762,586,796,570,823,548,845,525,857,502,863,478,864,427,866,399,871,370,883,289,928,227,969,201,992,176,1019,124,1094,101,1140,82,1189,58,1287,47,1373,44,1431"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a178dabb8badbdab0448278cf91baf793" title="get the density" alt="" coords="643,144,843,189"/>
 <area shape="poly" title=" " alt="" coords="43,1430,76,1343,105,1279,142,1207,186,1132,239,1057,299,987,367,927,395,911,423,904,475,904,499,904,522,901,545,890,566,870,581,845,591,814,597,776,600,734,597,639,589,536,582,434,579,338,582,296,588,258,599,225,614,199,631,186,628,191,618,203,604,227,594,259,587,296,585,338,587,433,595,536,603,639,605,734,602,777,596,815,586,847,570,873,548,895,524,906,499,909,475,909,423,909,397,916,371,931,303,991,243,1060,191,1135,146,1210,110,1281,81,1345,48,1432"/>
@@ -570,13 +596,13 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="74,1441,629,1417,627,1422,75,1446"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a78d98b11bb2e9674f2f87a45d8767a35" title="get the non coulomb energy" alt="" coords="643,1461,843,1506"/>
 <area shape="poly" title=" " alt="" coords="74,1444,629,1475,627,1480,74,1449"/>
-<area shape="rect" href="classphysicalData_1_1PhysicalData.html#aaf0047505bc542559142f21c52804880" title="get the pressure" alt="" coords="643,1531,843,1575"/>
+<area shape="rect" href="classphysicalData_1_1PhysicalData.html#abd8c5a40924a248a2dfa759cccad17c0" title="get the pressure" alt="" coords="643,1531,843,1575"/>
 <area shape="poly" title=" " alt="" coords="73,1452,122,1462,394,1507,630,1539,625,1542,393,1513,121,1468,75,1456"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a2b1133f5dac0162cd85c1797f8fdb2b3" title="get the qm energy" alt="" coords="643,1600,843,1645"/>
 <area shape="poly" title=" " alt="" coords="55,1457,87,1480,123,1501,187,1526,254,1547,390,1580,518,1601,630,1615,625,1616,518,1606,389,1585,252,1553,185,1531,121,1506,84,1485,57,1462"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a452c8726f4803e76f9ff98e5e48cf942" title="get the qm reference energy" alt="" coords="643,1669,843,1714"/>
 <area shape="poly" title=" " alt="" coords="46,1457,74,1513,96,1543,123,1568,183,1603,248,1631,315,1652,383,1669,514,1687,630,1695,625,1696,514,1692,382,1674,313,1658,246,1636,181,1608,120,1572,92,1547,70,1516,46,1462"/>
-<area shape="rect" href="classphysicalData_1_1PhysicalData.html#aab5e28bf53e05591d047c1f8ffdef28f" title="get the temperature" alt="" coords="643,1739,843,1783"/>
+<area shape="rect" href="classphysicalData_1_1PhysicalData.html#a1fcb2377d7950243d22b2ac90ec17208" title="get the temperature" alt="" coords="643,1739,843,1783"/>
 <area shape="poly" title=" " alt="" coords="42,1457,49,1499,61,1554,85,1610,102,1636,123,1658,180,1696,243,1726,310,1747,378,1762,446,1770,512,1774,630,1774,625,1774,512,1779,446,1776,377,1767,308,1753,241,1731,178,1701,120,1662,98,1639,80,1613,56,1555,44,1500,42,1462"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a8b6e71b213bc5e0589cdeee41f67feb9" title="get the volume" alt="" coords="643,1808,843,1853"/>
 <area shape="poly" title=" " alt="" coords="43,1457,54,1523,70,1613,93,1700,108,1734,124,1755,179,1794,241,1823,308,1843,376,1854,444,1860,510,1859,625,1852,630,1852,511,1865,444,1865,375,1860,306,1848,239,1828,177,1799,120,1759,103,1736,88,1702,64,1615,48,1524,42,1462"/>
@@ -632,8 +658,32 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="aad6d045051c3a871e951b0b94caf40bc" name="aad6d045051c3a871e951b0b94caf40bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad6d045051c3a871e951b0b94caf40bc">&#9670;&#160;</a></span>TEST_F() <span class="overload">[14/18]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST_F </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTestPhysicalData.html">TestPhysicalData</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">defaultConstructedIsZero</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>a default initialised PhysicalData has no garbage in it </p>
+<p>Vec3D and tensor3D do not initialise their components. The PhysicalData that holds the averages is a member of the engine and default initialised (<span class="tt">PhysicalData data;</span>, unlike <span class="tt">PhysicalData()</span>, which zeroes the whole object first), so the first energy and momentum line of a run showed whatever the memory held, now and then inf, which failed the regression test of the smoke run. The storage is filled with 0xFF (a NaN as a double) before the object is built into it. </p>
+
+</div>
+</div>
 <a id="a06539ae1eaa892929bd586fd7be0fe2a" name="a06539ae1eaa892929bd586fd7be0fe2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06539ae1eaa892929bd586fd7be0fe2a">&#9670;&#160;</a></span>TEST_F() <span class="overload">[14/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a06539ae1eaa892929bd586fd7be0fe2a">&#9670;&#160;</a></span>TEST_F() <span class="overload">[15/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -656,7 +706,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a0100caf324087bfa6b1ccb988dfd78a3" name="a0100caf324087bfa6b1ccb988dfd78a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0100caf324087bfa6b1ccb988dfd78a3">&#9670;&#160;</a></span>TEST_F() <span class="overload">[15/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0100caf324087bfa6b1ccb988dfd78a3">&#9670;&#160;</a></span>TEST_F() <span class="overload">[16/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -679,7 +729,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a374b49d870ffc7298c8e9e51df4241af" name="a374b49d870ffc7298c8e9e51df4241af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a374b49d870ffc7298c8e9e51df4241af">&#9670;&#160;</a></span>TEST_F() <span class="overload">[16/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a374b49d870ffc7298c8e9e51df4241af">&#9670;&#160;</a></span>TEST_F() <span class="overload">[17/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -702,7 +752,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="aaf12fb1641f9f84d6779b1e771450aad" name="aaf12fb1641f9f84d6779b1e771450aad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf12fb1641f9f84d6779b1e771450aad">&#9670;&#160;</a></span>TEST_F() <span class="overload">[17/17]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf12fb1641f9f84d6779b1e771450aad">&#9670;&#160;</a></span>TEST_F() <span class="overload">[18/18]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -737,7 +787,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="221,906,233,764,259,551,279,441,303,340,332,256,349,224,367,199,384,187,381,192,371,203,353,227,337,258,308,341,284,442,265,552,239,764,227,906"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#ae89062eb0a79c622c082be46147ba87c" title="get the coulomb energy" alt="" coords="396,213,595,258"/>
 <area shape="poly" title=" " alt="" coords="222,906,236,776,264,584,283,485,307,394,335,320,350,291,367,268,384,257,381,262,371,272,355,293,340,322,312,396,289,486,269,585,241,776,227,907"/>
-<area shape="rect" href="classphysicalData_1_1PhysicalData.html#a0537022d194681d8f1a739ef0e566388" title="get the coupled pressure" alt="" coords="396,283,595,327"/>
+<area shape="rect" href="classphysicalData_1_1PhysicalData.html#a80dec02e48a578e7d60ae7fc8a207a6c" title="get the coupled pressure" alt="" coords="396,283,595,327"/>
 <area shape="poly" title=" " alt="" coords="223,906,238,788,268,617,288,530,311,449,337,383,352,357,367,338,384,326,381,331,371,342,356,360,342,385,316,451,293,531,273,618,244,789,228,907"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a178dabb8badbdab0448278cf91baf793" title="get the density" alt="" coords="396,352,595,397"/>
 <area shape="poly" title=" " alt="" coords="219,906,221,815,227,751,238,681,256,608,282,535,319,467,341,436,367,407,384,396,381,400,371,411,346,439,323,470,287,537,261,609,243,682,232,752,226,815,224,907"/>
@@ -767,7 +817,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="230,949,250,997,279,1056,319,1118,343,1145,371,1170,385,1180,380,1181,367,1174,340,1149,315,1121,274,1059,245,999,230,954"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a9f3e29e60b47590ceb6fe51e5b986386" title="get the number of smoothing molecules" alt="" coords="369,1253,622,1298"/>
 <area shape="poly" title=" " alt="" coords="227,949,243,1009,269,1087,288,1129,311,1169,338,1206,371,1239,376,1244,371,1245,367,1243,334,1210,307,1172,283,1131,264,1089,238,1011,227,954"/>
-<area shape="rect" href="classphysicalData_1_1PhysicalData.html#aaf0047505bc542559142f21c52804880" title="get the pressure" alt="" coords="396,1323,595,1367"/>
+<area shape="rect" href="classphysicalData_1_1PhysicalData.html#abd8c5a40924a248a2dfa759cccad17c0" title="get the pressure" alt="" coords="396,1323,595,1367"/>
 <area shape="poly" title=" " alt="" coords="225,949,237,1021,260,1118,279,1169,303,1220,334,1267,371,1308,385,1320,380,1321,367,1312,329,1271,298,1223,274,1171,255,1119,232,1022,224,954"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a2b1133f5dac0162cd85c1797f8fdb2b3" title="get the qm energy" alt="" coords="396,1392,595,1437"/>
 <area shape="poly" title=" " alt="" coords="223,949,231,1032,239,1087,252,1147,270,1209,295,1271,328,1328,371,1378,385,1390,380,1390,367,1382,324,1331,290,1273,265,1211,246,1148,234,1088,226,1033,223,954"/>
@@ -775,7 +825,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="222,949,226,1043,232,1106,243,1176,261,1249,287,1321,323,1388,346,1419,371,1447,385,1460,380,1460,367,1451,341,1422,319,1391,282,1323,256,1250,238,1177,227,1107,221,1043,221,954"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#ab02929236922bf40ac771b6c0159fe2e" title="get the ring polymer energy" alt="" coords="396,1531,595,1575"/>
 <area shape="poly" title=" " alt="" coords="226,949,244,1069,273,1240,293,1327,316,1407,342,1473,356,1498,371,1516,385,1529,380,1529,367,1520,352,1501,337,1475,311,1409,288,1328,268,1241,238,1070,225,954"/>
-<area shape="rect" href="classphysicalData_1_1PhysicalData.html#aab5e28bf53e05591d047c1f8ffdef28f" title="get the temperature" alt="" coords="396,1600,595,1645"/>
+<area shape="rect" href="classphysicalData_1_1PhysicalData.html#a1fcb2377d7950243d22b2ac90ec17208" title="get the temperature" alt="" coords="396,1600,595,1645"/>
 <area shape="poly" title=" " alt="" coords="225,949,241,1082,269,1273,289,1372,312,1462,340,1536,355,1565,371,1586,385,1599,379,1599,367,1590,350,1567,335,1538,307,1464,283,1373,264,1274,236,1082,224,954"/>
 <area shape="rect" href="classphysicalData_1_1PhysicalData.html#a210788511e7988c5e5ea3d148a110047" title="get the upper distance constraints energy" alt="" coords="386,1669,606,1714"/>
 <area shape="poly" title=" " alt="" coords="224,949,239,1094,265,1306,284,1416,308,1517,337,1600,353,1631,371,1655,376,1662,371,1661,367,1659,349,1634,332,1602,303,1518,279,1417,259,1307,233,1094,224,955"/>

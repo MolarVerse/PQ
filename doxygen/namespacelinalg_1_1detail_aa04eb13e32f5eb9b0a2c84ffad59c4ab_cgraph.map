@@ -1,0 +1,5 @@
+<map id="linalg::detail::binaryOp" name="linalg::detail::binaryOp">
+<area shape="rect" id="Node000001" title="apply Op component&#45;wise to two operands" alt="" coords="5,5,175,33"/>
+<area shape="rect" id="Node000002" href="$namespacelinalg_1_1detail.html#a2063932281c5f691be755d83e2ddd5a6" title="component i of vec, or vec itself if it is broadcast" alt="" coords="223,5,406,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,17,210,19,204,19,175,22"/>
+</map>

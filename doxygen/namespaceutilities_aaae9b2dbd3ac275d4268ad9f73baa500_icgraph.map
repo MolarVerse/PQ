@@ -1,13 +1,15 @@
 <map id="utilities::isZero" name="utilities::isZero">
-<area shape="rect" id="Node000001" title="check whether a number is exactly zero" alt="" coords="857,904,977,932"/>
+<area shape="rect" id="Node000001" title="check whether a number is exactly zero" alt="" coords="857,939,977,966"/>
 <area shape="rect" id="Node000002" href="$classthermostat_1_1BerendsenThermostat.html#a8e5dc93aed0fc32ffc999ee0ed0dd5f0" title="apply thermostat &#45; Berendsen" alt="" coords="564,792,809,836"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="882,894,848,873,808,851,779,839,779,834,810,846,851,868,888,894"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="893,926,856,888,808,851,785,839,785,834,811,846,860,884,898,927"/>
 <area shape="rect" id="Node000003" href="$classthermostat_1_1VelocityRescalingThermostat.html#a0c78a478f5c153332a6c1d5bd42eff1f" title="apply thermostat &#45; Velocity Rescaling" alt="" coords="578,861,795,906"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="839,907,796,902,795,897,845,906"/>
-<area shape="rect" id="Node000005" href="$classresetKinetics_1_1ResetKinetics.html#a4259f8ee6e39f116e463be882be2a98d" title="reset the temperature of the system &#45; hard scaling" alt="" coords="585,930,788,975"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="839,930,790,940,788,935,844,928"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="856,934,809,920,770,909,769,903,810,915,861,933"/>
+<area shape="rect" id="Node000005" href="$classresetKinetics_1_1ResetKinetics.html#a010a04a8b1605660ec2724a6b816eb59" title="reset the temperature of the system &#45; hard scaling" alt="" coords="585,930,788,975"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="839,953,789,955,788,950,845,952"/>
 <area shape="rect" id="Node000043" href="$testMathUtilities_8cpp.html#a539c49ad279b11ee04195fac4f85fb21" title="tests isZero template function for the double data type. Uses exact equality, so subnormal but non&#45;ze..." alt="" coords="660,999,713,1026"/>
-<area shape="poly" id="edge43_Node000001_Node000043" title=" " alt="" coords="889,940,852,968,810,990,760,1005,715,1012,713,1007,759,1000,808,985,850,963,884,942"/>
+<area shape="poly" id="edge43_Node000001_Node000043" title=" " alt="" coords="858,973,810,990,715,1011,713,1005,809,985,863,971"/>
+<area shape="rect" id="Node000044" href="$testMathUtilities_8cpp.html#a6773e4c96d56269d6d2d626eb1b15a86" title="tests isZero for unit&#45;carrying quantities, which use the quantity&#39;s own zero() instead of T(0)" alt="" coords="660,1051,713,1078"/>
+<area shape="poly" id="edge44_Node000001_Node000044" title=" " alt="" coords="894,976,857,1011,810,1040,760,1057,714,1065,713,1060,759,1052,808,1035,853,1007,890,978"/>
 <area shape="rect" id="Node000004" href="$classthermostat_1_1VelocityRescalingThermostat.html#ad35bf41454e4bc11d0800cd17d325c7f" title=" " alt="" coords="299,136,515,180"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="564,852,562,850,547,825,537,793,530,756,528,714,529,621,537,521,544,421,546,328,543,286,538,250,528,219,514,194,504,183,503,178,518,191,533,216,543,248,549,286,551,327,549,421,542,521,535,622,533,714,536,755,542,792,552,823,566,847,569,852"/>
 <area shape="rect" id="Node000006" href="$classmaxwellBoltzmann_1_1MaxwellBoltzmann.html#a9495d2dc3908e3cd6ea7dc7eab65ac21" title="generate boltzmann distributed velocities for all atoms in the simulation box" alt="" coords="298,205,516,250"/>

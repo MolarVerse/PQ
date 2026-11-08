@@ -1,7 +1,7 @@
 <map id="TEST" name="TEST">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a3efe0df20e4016e49203bc905099eda9" title="returns the FeNNol model path" alt="" coords="107,5,268,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,54,94,47,90,51,60,59"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#ae5b096bec1c96480cd0dda9bff580498" title="sets the FeNNol model path" alt="" coords="107,75,268,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,66,94,74,90,77,59,71"/>
+<area shape="rect" id="Node000002" href="$classFennolSettings.html#ac2c8553e1e03b1d881c134e9b8175926" title="returns the FeNNol model path" alt="" coords="107,5,296,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,55,93,49,89,52,60,59"/>
+<area shape="rect" id="Node000003" href="$classFennolSettings.html#a07b4c6d7001f3fffe408119d95ddbb2a" title="sets the FeNNol model path" alt="" coords="107,75,296,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,65,94,73,89,76,59,70"/>
 </map>

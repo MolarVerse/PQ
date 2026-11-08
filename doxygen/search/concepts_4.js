@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quantitylikevector3d_0',['QuantityLikeVector3D',['../conceptpq_1_1QuantityLikeVector3D.html',1,'pq']]]
+  ['floatingpoint_0',['FloatingPoint',['../conceptpq_1_1FloatingPoint.html',1,'pq']]]
 ];

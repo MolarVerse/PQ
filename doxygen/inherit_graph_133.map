@@ -1,3 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classstd_1_1optional_3_01bool_01_4.html" title=" " alt="" coords="5,5,138,33"/>
+<area shape="rect" id="Node000000" href="$classopt_1_1HessianBuilder.html" title=" " alt="" coords="5,54,154,82"/>
+<area shape="rect" id="Node000001" href="$classopt_1_1AnalyticHessianBuilder.html" title=" " alt="" coords="203,23,404,51"/>
+<area shape="poly" id="edge96_Node000000_Node000001" title=" " alt="" coords="168,53,205,50,200,52,170,58"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1ForceDifferenceHessianBuilder.html" title=" " alt="" coords="202,75,406,119"/>
+<area shape="poly" id="edge97_Node000000_Node000002" title=" " alt="" coords="169,77,204,83,199,84,170,82"/>
+<area shape="rect" id="Node000003" href="$classopt_1_1CentralForceDifferenceHessianBuilder.html" title=" " alt="" coords="460,5,660,50"/>
+<area shape="poly" id="edge98_Node000002_Node000003" title=" " alt="" coords="403,67,478,50,472,51,404,73"/>
+<area shape="rect" id="Node000004" href="$classopt_1_1FivePointForceDifferenceHessianBuilder.html" title=" " alt="" coords="454,75,666,119"/>
+<area shape="poly" id="edge99_Node000002_Node000004" title=" " alt="" coords="422,94,456,97,451,97,422,100"/>
+<area shape="rect" id="Node000005" href="$classopt_1_1ForwardForceDifferenceHessianBuilder.html" title=" " alt="" coords="458,144,662,189"/>
+<area shape="poly" id="edge100_Node000002_Node000005" title=" " alt="" coords="404,121,478,143,472,143,403,127"/>
 </map>

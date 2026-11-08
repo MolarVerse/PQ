@@ -1,0 +1,5 @@
+<map id="ThermostatSettings::setThermostatTypeByUser" name="ThermostatSettings::setThermostatTypeByUser">
+<area shape="rect" id="Node000001" title="sets the thermostatType to enum in settings" alt="" coords="107,5,308,50"/>
+<area shape="rect" id="Node000002" href="$testThermostatSettings_8cpp.html#a8c5e2946af9d6b6f63075d7f4fb547d0" title=" " alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,29,60,30,59,25,93,27"/>
+</map>

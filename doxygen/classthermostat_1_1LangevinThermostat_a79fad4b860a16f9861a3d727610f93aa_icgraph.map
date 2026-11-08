@@ -1,0 +1,22 @@
+<map id="thermostat::LangevinThermostat::calculateSigma" name="thermostat::LangevinThermostat::calculateSigma">
+<area shape="rect" id="Node000001" title="Calculate sigma for Langevin Thermostat." alt="" coords="572,248,807,293"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1LangevinThermostat.html#ada4d6164d33ec7b7ce3297dee223609a" title="Constructor for Langevin Thermostat." alt="" coords="289,148,524,193"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="607,243,471,196,472,191,612,242"/>
+<area shape="rect" id="Node000006" href="$classthermostat_1_1LangevinThermostat.html#a5ed88c2607e43f9da929e103b33d154f" title=" " alt="" coords="5,283,241,327"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="554,260,427,260,357,262,289,268,203,285,201,279,288,262,357,256,426,254,559,259"/>
+<area shape="rect" id="Node000008" href="$classthermostat_1_1LangevinThermostat.html#afc5e79945c18b508d5ef53b7d405bf27" title="Set the friction for Langevin Thermostat." alt="" coords="289,277,524,322"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="554,285,525,290,524,285,559,284"/>
+<area shape="rect" id="Node000009" href="$classthermostat_1_1LangevinThermostat.html#a4783ea4a94489d3a6da78c1dd71949c8" title="Set target temperature for Langevin Thermostat and calculate sigma." alt="" coords="289,347,524,391"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="621,298,525,337,488,349,487,344,523,332,616,299"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1LangevinThermostat.html#ad6443aced1b73ca91cf8f0654eb454e2" title="Copy constructor for Langevin Thermostat." alt="" coords="5,5,241,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="362,139,306,102,240,65,212,53,210,48,242,60,309,97,367,138"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1LangevinThermostat.html#a7496f71f860a42c254db4daaf99c32bc" title=" " alt="" coords="5,75,241,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="300,145,213,123,212,117,305,142"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1LangevinThermostat.html#ac59eabf0bdb8c06411a06996822f738c" title="Copy assignment operator for Langevin Thermostat." alt="" coords="5,144,241,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="270,170,242,171,240,165,275,167"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="324,201,290,223,276,236,267,248,258,260,242,273,218,285,216,280,239,268,254,257,263,245,272,232,287,219,329,198"/>
+<area shape="rect" id="Node000007" href="$classthermostat_1_1LangevinThermostat.html#ac584ceb90707e28aaee86b4ed8092725" title=" " alt="" coords="5,213,241,258"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="289,198,224,215,222,210,294,195"/>
+<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="270,303,242,305,241,300,276,302"/>
+<area shape="poly" id="edge11_Node000009_Node000006" title=" " alt="" coords="287,343,225,331,225,325,292,342"/>
+</map>

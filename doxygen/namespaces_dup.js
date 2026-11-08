@@ -178,6 +178,7 @@ var namespaces_dup =
       [ "stringToInt", "namespaceutilities.html#a9e4f1dff151ede7a59f5f5fb84bf1f28", null ],
       [ "stringToUintFast32t", "namespaceutilities.html#a903ffd59d20f4c5ca871f7beb4ace617", null ],
       [ "stringToULL", "namespaceutilities.html#ae318e9709a69a1fc3f460347a5fbfcc7", null ],
+      [ "throwIfInterrupted", "namespaceutilities.html#a458d0e1fd27c931bf6fcfa184568ba90", null ],
       [ "toLowerAndReplaceDashesCopy", "namespaceutilities.html#a888ee862daf82c77f15dcbc387b33ed0", null ],
       [ "toLowerAndReplaceDashesCopy", "namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7", null ],
       [ "toLowerCopy", "namespaceutilities.html#a4bd4d8abfe568051a665b47af11ab07e", null ],

@@ -140,8 +140,8 @@ Collaboration diagram for out::EnergyOutput:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3d83267ab1a0c734b6f8279896fcbb3f" id="r_a3d83267ab1a0c734b6f8279896fcbb3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d83267ab1a0c734b6f8279896fcbb3f">writeHeader</a> (double timeStep)</td></tr>
-<tr class="memdesc:a3d83267ab1a0c734b6f8279896fcbb3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write energy file metadata.  <br /></td></tr>
+<tr class="memitem:a9d5f1e800a256263a3cd54dabcc6fe3f" id="r_a9d5f1e800a256263a3cd54dabcc6fe3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d5f1e800a256263a3cd54dabcc6fe3f">writeHeader</a> (const <a class="el" href="unit__types_8hpp.html#a4f0b1c5659e10879945100147571dbb4">Time</a> &amp;timeStep)</td></tr>
+<tr class="memdesc:a9d5f1e800a256263a3cd54dabcc6fe3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write energy file metadata.  <br /></td></tr>
 <tr class="memitem:aa91039fe7021bc1551396d4e2813a51d" id="r_aa91039fe7021bc1551396d4e2813a51d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa91039fe7021bc1551396d4e2813a51d">write</a> (size_t step, const <a class="el" href="classphysicalData_1_1PhysicalData.html">physicalData::PhysicalData</a> &amp;<a class="el" href="namespacephysicalData.html">physicalData</a>, const <a class="el" href="structSettings.html">Settings</a> &amp;<a class="el" href="namespacesettings.html">settings</a>)</td></tr>
 <tr class="memdesc:aa91039fe7021bc1551396d4e2813a51d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the energy output.  <br /></td></tr>
 <tr class="memitem:a4122782787ec8128dad607da20f4af40" id="r_a4122782787ec8128dad607da20f4af40"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4122782787ec8128dad607da20f4af40">Output</a> (std::string filename)</td></tr>
@@ -300,18 +300,16 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classout_1_1EnergyOutput_aa91039fe7021bc1551396d4e2813a51d_cgraph.png" border="0" usemap="#aclassout_1_1EnergyOutput_aa91039fe7021bc1551396d4e2813a51d_cgraph" loading="lazy" alt=""/></div>
 <map name="aclassout_1_1EnergyOutput_aa91039fe7021bc1551396d4e2813a51d_cgraph" id="aclassout_1_1EnergyOutput_aa91039fe7021bc1551396d4e2813a51d_cgraph">
-<area shape="rect" title="Write the energy output." alt="" coords="5,150,153,195"/>
-<area shape="rect" href="classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="206,29,405,57"/>
-<area shape="poly" title=" " alt="" coords="98,148,142,106,170,84,199,66,215,61,211,64,202,71,173,89,145,110,102,152"/>
-<area shape="rect" href="classsettings_1_1ThermostatSettings.html#ac4c97da43c21068729c85bfe98382e43" title="get the thermostat type" alt="" coords="201,81,410,126"/>
-<area shape="poly" title=" " alt="" coords="152,148,218,129,214,132,154,152"/>
-<area shape="rect" href="classsettings_1_1GeneralSettings.html#a5b6c55783018fc3a9a8234ec902ca594" title="Returns true if the jobtype is a hybrid type simulation." alt="" coords="213,150,398,195"/>
-<area shape="poly" title=" " alt="" coords="152,170,200,171,195,174,154,175"/>
-<area shape="rect" href="classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="213,220,398,264"/>
-<area shape="poly" title=" " alt="" coords="153,192,218,213,213,215,153,198"/>
-<area shape="rect" href="classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="213,289,398,334"/>
-<area shape="poly" title=" " alt="" coords="102,193,147,234,202,274,214,282,209,282,199,279,143,238,101,198"/>
-<area shape="poly" title=" " alt="" coords="266,29,260,20,265,11,281,5,305,3,332,5,348,13,343,15,331,10,305,8,282,10,269,15,266,20,272,29"/>
+<area shape="rect" title="Write the energy output." alt="" coords="5,116,153,160"/>
+<area shape="rect" href="classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="201,29,400,57"/>
+<area shape="poly" title=" " alt="" coords="113,113,154,88,200,66,221,61,216,63,202,71,156,93,116,117"/>
+<area shape="rect" href="classsettings_1_1GeneralSettings.html#a5b6c55783018fc3a9a8234ec902ca594" title="Returns true if the jobtype is a hybrid type simulation." alt="" coords="208,81,393,126"/>
+<area shape="poly" title=" " alt="" coords="152,124,195,119,190,121,154,129"/>
+<area shape="rect" href="classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="208,150,393,195"/>
+<area shape="poly" title=" " alt="" coords="153,147,195,155,190,156,154,152"/>
+<area shape="rect" href="classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="208,220,393,264"/>
+<area shape="poly" title=" " alt="" coords="116,158,202,205,218,214,212,213,199,210,115,163"/>
+<area shape="poly" title=" " alt="" coords="262,29,256,20,261,11,276,5,300,3,326,5,342,14,337,14,325,10,300,8,277,10,265,15,262,20,267,29"/>
 </map>
 </div>
 <div class="dynheader">
@@ -329,8 +327,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a3d83267ab1a0c734b6f8279896fcbb3f" name="a3d83267ab1a0c734b6f8279896fcbb3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d83267ab1a0c734b6f8279896fcbb3f">&#9670;&#160;</a></span>writeHeader()</h2>
+<a id="a9d5f1e800a256263a3cd54dabcc6fe3f" name="a9d5f1e800a256263a3cd54dabcc6fe3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d5f1e800a256263a3cd54dabcc6fe3f">&#9670;&#160;</a></span>writeHeader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -338,7 +336,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void out::EnergyOutput::writeHeader </td>
           <td>(</td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="unit__types_8hpp.html#a4f0b1c5659e10879945100147571dbb4">Time</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>timeStep</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -354,8 +352,8 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classout_1_1EnergyOutput_a3d83267ab1a0c734b6f8279896fcbb3f_cgraph.png" border="0" usemap="#aclassout_1_1EnergyOutput_a3d83267ab1a0c734b6f8279896fcbb3f_cgraph" loading="lazy" alt=""/></div>
-<map name="aclassout_1_1EnergyOutput_a3d83267ab1a0c734b6f8279896fcbb3f_cgraph" id="aclassout_1_1EnergyOutput_a3d83267ab1a0c734b6f8279896fcbb3f_cgraph">
+<div class="center"><img src="classout_1_1EnergyOutput_a9d5f1e800a256263a3cd54dabcc6fe3f_cgraph.png" border="0" usemap="#aclassout_1_1EnergyOutput_a9d5f1e800a256263a3cd54dabcc6fe3f_cgraph" loading="lazy" alt=""/></div>
+<map name="aclassout_1_1EnergyOutput_a9d5f1e800a256263a3cd54dabcc6fe3f_cgraph" id="aclassout_1_1EnergyOutput_a9d5f1e800a256263a3cd54dabcc6fe3f_cgraph">
 <area shape="rect" title="Write energy file metadata." alt="" coords="5,21,153,66"/>
 <area shape="rect" href="classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="201,29,400,57"/>
 <area shape="poly" title=" " alt="" coords="153,41,187,43,182,43,153,46"/>

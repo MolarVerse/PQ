@@ -164,6 +164,12 @@ var annotated_dup =
       [ "IntraNonBondedMap", "classintraNonBonded_1_1IntraNonBondedMap.html", "classintraNonBonded_1_1IntraNonBondedMap" ]
     ] ],
     [ "linalg", "namespacelinalg.html", [
+      [ "detail", "namespacelinalg_1_1detail.html", [
+        [ "BinaryResultImpl", "structlinalg_1_1detail_1_1BinaryResultImpl.html", null ],
+        [ "BinaryResultImpl&lt; Op, L, R, std::void_t&lt; BinaryElement_t&lt; Op, L, R &gt; &gt; &gt;", "structlinalg_1_1detail_1_1BinaryResultImpl_3_01Op_00_01L_00_01R_00_01std_1_1void__t_3_01BinaryEl8f4dfebdb29f26f347fd95cf535449c0.html", "structlinalg_1_1detail_1_1BinaryResultImpl_3_01Op_00_01L_00_01R_00_01std_1_1void__t_3_01BinaryEl8f4dfebdb29f26f347fd95cf535449c0" ],
+        [ "BinaryResultIf", "structlinalg_1_1detail_1_1BinaryResultIf.html", null ],
+        [ "BinaryResultIf&lt; true, Op, L, R &gt;", "structlinalg_1_1detail_1_1BinaryResultIf_3_01true_00_01Op_00_01L_00_01R_01_4.html", null ]
+      ] ],
       [ "Vector3D", "classlinalg_1_1Vector3D.html", "classlinalg_1_1Vector3D" ],
       [ "Matrix", "classlinalg_1_1Matrix.html", "classlinalg_1_1Matrix" ],
       [ "StaticMatrix3x3", "classlinalg_1_1StaticMatrix3x3.html", "classlinalg_1_1StaticMatrix3x3" ]
@@ -316,8 +322,6 @@ var annotated_dup =
       [ "GeneralSettings", "classsettings_1_1GeneralSettings.html", null ],
       [ "HybridSettings", "classsettings_1_1HybridSettings.html", null ],
       [ "PotentialSettings", "classsettings_1_1PotentialSettings.html", "classsettings_1_1PotentialSettings" ],
-      [ "QMSettings", "classsettings_1_1QMSettings.html", null ],
-      [ "ThermostatSettings", "classsettings_1_1ThermostatSettings.html", "classsettings_1_1ThermostatSettings" ],
       [ "TimingsSettings", "classsettings_1_1TimingsSettings.html", "classsettings_1_1TimingsSettings" ]
     ] ],
     [ "setup", "namespacesetup.html", [
@@ -338,6 +342,9 @@ var annotated_dup =
       [ "SimulationBoxSetup", "classsetup_1_1SimulationBoxSetup.html", "classsetup_1_1SimulationBoxSetup" ],
       [ "ThermostatSetup", "classsetup_1_1ThermostatSetup.html", "classsetup_1_1ThermostatSetup" ],
       [ "WaterModelSetup", "classsetup_1_1WaterModelSetup.html", "classsetup_1_1WaterModelSetup" ]
+    ] ],
+    [ "std", null, [
+      [ "formatter&lt; linalg::Vector3D&lt; T &gt; &gt;", "structstd_1_1formatter_3_01linalg_1_1Vector3D_3_01T_01_4_01_4.html", "structstd_1_1formatter_3_01linalg_1_1Vector3D_3_01T_01_4_01_4" ]
     ] ],
     [ "testSettings", "namespacetestSettings.html", [
       [ "Builder", "classtestSettings_1_1Builder.html", "classtestSettings_1_1Builder" ]
@@ -395,12 +402,14 @@ var annotated_dup =
     [ "ConvStrategyMeta", "structConvStrategyMeta.html", "structConvStrategyMeta" ],
     [ "CoulombLongRangeTypeMeta", "structCoulombLongRangeTypeMeta.html", "structCoulombLongRangeTypeMeta" ],
     [ "DefaultFiles", "structDefaultFiles.html", null ],
+    [ "DftbSettings", "classDftbSettings.html", "classDftbSettings" ],
     [ "DihedralIdTag", "structDihedralIdTag.html", null ],
     [ "DihedralParams", "structDihedralParams.html", "structDihedralParams" ],
     [ "ExceptionTypeMeta", "structExceptionTypeMeta.html", "structExceptionTypeMeta" ],
     [ "ExtAtomTypeTag", "structExtAtomTypeTag.html", null ],
     [ "ExternalQMRunnerTest", "classExternalQMRunnerTest.html", "classExternalQMRunnerTest" ],
     [ "ExtVdwTypeTag", "structExtVdwTypeTag.html", null ],
+    [ "FennolSettings", "classFennolSettings.html", "classFennolSettings" ],
     [ "FixedAxisFlagTest", "structFixedAxisFlagTest.html", "structFixedAxisFlagTest" ],
     [ "FixedAxisMeta", "structFixedAxisMeta.html", "structFixedAxisMeta" ],
     [ "ForceFieldSettings", "classForceFieldSettings.html", "classForceFieldSettings" ],
@@ -418,6 +427,7 @@ var annotated_dup =
     [ "MaceModelMeta", "structMaceModelMeta.html", "structMaceModelMeta" ],
     [ "MaceModelTypeMeta", "structMaceModelTypeMeta.html", "structMaceModelTypeMeta" ],
     [ "MaceModeMeta", "structMaceModeMeta.html", "structMaceModeMeta" ],
+    [ "MaceSettings", "classMaceSettings.html", "classMaceSettings" ],
     [ "ManostatSettings", "classManostatSettings.html", "classManostatSettings" ],
     [ "ManostatTypeMeta", "structManostatTypeMeta.html", "structManostatTypeMeta" ],
     [ "MolTypeTag", "structMolTypeTag.html", null ],
@@ -431,6 +441,7 @@ var annotated_dup =
     [ "QMForceDistMeta", "structQMForceDistMeta.html", "structQMForceDistMeta" ],
     [ "QMMethodMeta", "structQMMethodMeta.html", "structQMMethodMeta" ],
     [ "QMMMEnergiesTest", "classQMMMEnergiesTest.html", null ],
+    [ "QMSettings", "classQMSettings.html", "classQMSettings" ],
     [ "QMWriterTest", "classQMWriterTest.html", "classQMWriterTest" ],
     [ "ReferenceFiles", "structReferenceFiles.html", null ],
     [ "ReferenceSettings", "classReferenceSettings.html", "classReferenceSettings" ],
@@ -454,6 +465,7 @@ var annotated_dup =
     [ "TestableFullAnisotropicStochasticRescalingManostat", "classTestableFullAnisotropicStochasticRescalingManostat.html", "classTestableFullAnisotropicStochasticRescalingManostat" ],
     [ "TestableSemiIsotropicBerendsenManostat", "classTestableSemiIsotropicBerendsenManostat.html", "classTestableSemiIsotropicBerendsenManostat" ],
     [ "TestableSemiIsotropicStochasticRescalingManostat", "classTestableSemiIsotropicStochasticRescalingManostat.html", "classTestableSemiIsotropicStochasticRescalingManostat" ],
+    [ "TestableSimSpaceScalingManostat", "classTestableSimSpaceScalingManostat.html", null ],
     [ "TestableStochasticRescalingManostat", "classTestableStochasticRescalingManostat.html", "classTestableStochasticRescalingManostat" ],
     [ "TestAngleForceField", "classTestAngleForceField.html", null ],
     [ "TestAtomSection", "classTestAtomSection.html", "classTestAtomSection" ],
@@ -492,6 +504,7 @@ var annotated_dup =
     [ "TestParameterFileSection", "classTestParameterFileSection.html", "classTestParameterFileSection" ],
     [ "TestPhysicalData", "classTestPhysicalData.html", "classTestPhysicalData" ],
     [ "TestQMSetupAse", "classTestQMSetupAse.html", "classTestQMSetupAse" ],
+    [ "TestQMSetupAseUtil", "structTestQMSetupAseUtil.html", null ],
     [ "TestRandomNumberGenerator", "classTestRandomNumberGenerator.html", "classTestRandomNumberGenerator" ],
     [ "TestResetKinetics", "classTestResetKinetics.html", null ],
     [ "TestRingPolymerEnergyOutput", "classTestRingPolymerEnergyOutput.html", null ],
@@ -512,6 +525,7 @@ var annotated_dup =
     [ "TestTrajectoryOutput", "classTestTrajectoryOutput.html", "classTestTrajectoryOutput" ],
     [ "TestTriclinicBox", "structTestTriclinicBox.html", null ],
     [ "TestVirial", "classTestVirial.html", "classTestVirial" ],
+    [ "ThermostatSettings", "classThermostatSettings.html", "classThermostatSettings" ],
     [ "ThermostatTypeMeta", "structThermostatTypeMeta.html", "structThermostatTypeMeta" ],
     [ "TimerIdMeta", "structTimerIdMeta.html", "structTimerIdMeta" ],
     [ "VdwTypeTag", "structVdwTypeTag.html", null ],
@@ -519,5 +533,6 @@ var annotated_dup =
     [ "WaterInterModelMeta", "structWaterInterModelMeta.html", "structWaterInterModelMeta" ],
     [ "WaterIntraModelMeta", "structWaterIntraModelMeta.html", "structWaterIntraModelMeta" ],
     [ "WaterModelSettings", "classWaterModelSettings.html", "classWaterModelSettings" ],
-    [ "XtbMethodMeta", "structXtbMethodMeta.html", "structXtbMethodMeta" ]
+    [ "XtbMethodMeta", "structXtbMethodMeta.html", "structXtbMethodMeta" ],
+    [ "XtbSettings", "classXtbSettings.html", "classXtbSettings" ]
 ];

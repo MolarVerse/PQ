@@ -1,10 +1,10 @@
 <map id="TEST_F" name="TEST_F">
 <area shape="rect" id="Node000001" title="parse the optimizer learning rate decay factor" alt="" coords="5,74,74,102"/>
-<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#a4c293804415c54725bcb6dbcadcd4402" title="returns the max learning rate" alt="" coords="122,5,278,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,73,126,54,123,58,76,77"/>
-<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#a181f8112305256f00767cc2f20db33f9" title="returns whether the max learning rate has been set" alt="" coords="326,36,493,81"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="74,82,311,64,310,69,74,88"/>
-<area shape="rect" id="Node000004" href="$classOptimizerSettings.html#a88d847cc15cd897a7a23e29b1d814c28" title="sets the max learning rate" alt="" coords="122,125,278,170"/>
-<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="75,98,127,118,122,121,74,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="278,36,313,43,308,44,279,42"/>
+<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#a4c293804415c54725bcb6dbcadcd4402" title="returns the max learning rate" alt="" coords="145,5,301,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,74,140,53,137,57,75,79"/>
+<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#a3cd9d9b17f946c85e69904626bd47403" title="returns whether the max learning rate has been set" alt="" coords="372,36,586,81"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="74,83,357,64,356,69,74,88"/>
+<area shape="rect" id="Node000004" href="$classOptimizerSettings.html#aab0ff89fee22a0192602f3380190414a" title="sets the max learning rate" alt="" coords="122,125,324,170"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="74,96,140,119,136,122,74,101"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="301,34,359,43,354,44,302,40"/>
 </map>

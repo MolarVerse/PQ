@@ -1,7 +1,7 @@
 <map id="TestableBerendsenManostat" name="TestableBerendsenManostat">
-<area shape="rect" id="Node000001" title=" " alt="" coords="13,581,208,653"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1BerendsenManostat.html" title="BerendsenManostat inherits from Manostat." alt="" coords="5,416,216,533"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,546,113,582,108,580,109,550"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="29,5,192,368"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,380,113,417,108,416,110,386"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="13,626,208,698"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1BerendsenManostat.html" title="BerendsenManostat inherits from Manostat." alt="" coords="5,438,216,578"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,590,113,627,108,625,109,595"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="27,5,195,390"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,402,113,439,108,438,110,408"/>
 </map>

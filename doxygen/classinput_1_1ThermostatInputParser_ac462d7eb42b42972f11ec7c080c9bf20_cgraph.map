@@ -10,7 +10,7 @@
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="239,188,307,197,302,199,239,194"/>
 <area shape="rect" id="Node000008" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="317,245,466,290"/>
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="192,199,288,230,310,240,305,240,286,236,192,204"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1ThermostatSettings.html#a9c8a4214c991ca3f09460635cafbfa8b" title="set the nose hoover chain length" alt="" coords="287,315,497,359"/>
+<area shape="rect" id="Node000009" href="$classThermostatSettings.html#ac464e600d9b41fa67a3732c182766f1f" title="set the nose hoover chain length" alt="" coords="287,315,497,359"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="148,198,210,249,248,276,288,300,302,309,296,308,285,305,245,281,207,253,147,203"/>
 <area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="573,61,724,106"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="441,84,560,84,555,86,442,90"/>

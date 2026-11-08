@@ -1,5 +1,0 @@
-<map id="settings::QMSettings::setUseThirdOrderDftb" name="settings::QMSettings::setUseThirdOrderDftb">
-<area shape="rect" id="Node000001" title="sets if third order DFTB should be used" alt="" coords="5,5,176,50"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="224,5,380,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,25,211,27,206,28,176,30"/>
-</map>

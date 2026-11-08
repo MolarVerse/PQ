@@ -36,64 +36,64 @@
 <area shape="poly" id="edge56_Node000001_Node000037" title=" " alt="" coords="34,857,40,947,51,1079,60,1146,73,1209,89,1260,109,1294,124,1308,119,1309,105,1297,84,1262,67,1210,55,1147,45,1079,35,948,34,862"/>
 <area shape="rect" id="Node000038" href="$classsettings_1_1HybridSettings.html#a258153466df6a9684d444fcc5b2c070b" title="set the useQMCharges in the settings" alt="" coords="156,1377,333,1422"/>
 <area shape="poly" id="edge57_Node000001_Node000038" title=" " alt="" coords="33,856,38,959,47,1111,56,1190,68,1263,86,1323,97,1346,109,1363,124,1376,143,1388,138,1389,121,1381,105,1367,92,1349,81,1325,63,1264,50,1191,41,1111,32,959,33,862"/>
-<area shape="rect" id="Node000039" href="$classWaterModelSettings.html#a026d306484da2d6128b209c3a921e77e" title="sets the waterInterModel to enum in settings" alt="" coords="166,1447,323,1491"/>
-<area shape="poly" id="edge58_Node000001_Node000039" title=" " alt="" coords="33,857,36,971,43,1144,51,1234,64,1318,83,1387,95,1413,109,1433,128,1448,153,1461,148,1461,125,1453,105,1436,91,1415,78,1388,59,1319,46,1235,37,1144,30,971,33,862"/>
-<area shape="rect" id="Node000003" href="$classpot_1_1Potential.html#adcdee6872aa911e94fec6532100e4650" title=" " alt="" coords="444,213,619,258"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="332,223,431,229,427,232,335,228"/>
-<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a8cf72f3d8f589d6013b935e5b388c7e0" title="get the Box/Cell pointer" alt="" coords="446,333,617,378"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="333,232,360,241,384,254,400,270,409,287,417,303,432,319,439,325,434,326,428,323,412,306,404,289,396,273,380,258,358,245,335,236"/>
-<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBoxView.html#a45dafe9b98fff4a41b9979a7192b4132" title="get all MM molecules using range&#45;based filtering" alt="" coords="430,5,633,50"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="264,197,333,130,379,93,429,60,442,55,438,59,431,65,382,97,337,134,269,200"/>
-<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#acbd9a0d7c22786005c1d5e6e07353c44" title="Get the water type." alt="" coords="446,75,617,119"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="287,196,429,129,448,123,445,127,431,134,291,200"/>
-<area shape="rect" id="Node000009" href="$classWaterModelSettings.html#ad663039f65dc6e5ebd4da0db97887a44" title="returns whether a intermolecular water model is set" alt="" coords="447,144,616,189"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="332,202,434,183,430,187,335,206"/>
-<area shape="rect" id="Node000010" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="479,282,584,310"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="333,240,383,253,431,268,466,278,462,281,429,273,381,258,335,245"/>
-<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="681,424,885,469"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="620,48,635,61,658,95,669,127,672,159,670,190,666,255,670,291,684,329,712,374,747,413,741,413,708,377,679,332,665,292,660,255,665,190,667,159,664,128,653,97,631,64,621,53"/>
-<area shape="rect" id="Node000007" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="726,492,840,520"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="620,48,635,61,654,88,667,116,673,143,676,170,670,222,658,274,645,326,641,377,644,402,651,428,664,453,683,479,696,490,714,499,709,501,694,495,679,483,659,456,646,430,639,403,636,377,640,325,652,273,665,221,670,170,668,144,661,117,650,91,631,64,622,53"/>
-<area shape="rect" id="Node000011" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="694,273,872,318"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="583,293,681,294,677,297,586,298"/>
-<area shape="poly" id="edge12_Node000012_Node000003" title=" " alt="" coords="321,273,431,253,427,257,325,278"/>
-<area shape="poly" id="edge13_Node000012_Node000004" title=" " alt="" coords="322,306,433,331,428,334,324,310"/>
-<area shape="poly" id="edge15_Node000012_Node000008" title=" " alt="" coords="321,282,353,271,380,254,393,239,400,225,404,194,408,162,415,146,428,130,435,127,432,131,432,133,420,149,413,164,409,195,405,226,397,242,384,258,355,276,325,286"/>
-<area shape="poly" id="edge16_Node000012_Node000009" title=" " alt="" coords="321,277,352,267,381,253,395,241,404,227,413,213,428,199,439,194,436,198,432,203,417,216,409,230,399,244,383,258,354,272,325,281"/>
-<area shape="poly" id="edge17_Node000012_Node000010" title=" " alt="" coords="322,290,466,293,462,296,324,294"/>
-<area shape="rect" id="Node000013" href="$classmolsys_1_1CellList.html#a57475a3572160f8d22c4168db04154f9" title="get cells" alt="" coords="439,402,624,430"/>
-<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="322,298,355,308,384,323,400,339,408,357,416,373,432,388,440,394,435,396,428,392,412,376,404,359,396,342,380,327,353,313,324,303"/>
-<area shape="poly" id="edge20_Node000014_Node000003" title=" " alt="" coords="357,335,381,323,395,310,404,297,413,282,428,268,439,263,436,268,432,272,417,286,409,300,399,314,383,327,361,338"/>
-<area shape="poly" id="edge22_Node000014_Node000004" title=" " alt="" coords="381,356,433,355,428,359,384,360"/>
-<area shape="poly" id="edge29_Node000014_Node000008" title=" " alt="" coords="365,335,380,323,397,300,405,277,406,253,404,230,402,205,403,180,411,155,428,130,435,125,433,130,432,133,416,157,409,181,408,205,410,229,412,253,410,278,402,303,384,327,369,338"/>
-<area shape="poly" id="edge30_Node000014_Node000009" title=" " alt="" coords="363,335,380,323,393,309,400,294,404,263,408,231,415,215,428,199,436,195,433,199,432,203,420,218,413,233,409,264,405,296,397,312,384,327,367,339"/>
-<area shape="poly" id="edge31_Node000014_Node000010" title=" " alt="" coords="346,335,466,309,462,313,349,339"/>
-<area shape="rect" id="Node000015" href="$classpot_1_1Potential.html#abe94218d96125716ebf4c832b10c224f" title=" " alt="" coords="437,661,626,706"/>
-<area shape="poly" id="edge19_Node000014_Node000015" title=" " alt="" coords="367,380,384,393,406,425,415,457,415,489,410,521,405,552,404,584,412,615,432,647,434,651,429,651,428,651,407,618,399,585,400,552,405,520,409,489,410,458,401,427,380,396,369,385"/>
-<area shape="rect" id="Node000016" href="$classpot_1_1Potential.html#a6c4a29447de4e518c70bf2beba8395a4" title=" " alt="" coords="439,592,624,637"/>
-<area shape="poly" id="edge21_Node000014_Node000016" title=" " alt="" coords="366,380,384,392,401,416,409,439,411,463,410,486,409,532,416,555,432,578,435,582,430,583,428,581,411,557,404,533,404,486,406,463,404,440,397,418,380,396,368,385"/>
-<area shape="rect" id="Node000017" href="$classmolsys_1_1SimulationBoxView.html#a296966f2d8061b780b5cd28fea32585a" title="get all molecules in the specified hybrid zone using range&#45;based filtering" alt="" coords="430,523,633,567"/>
-<area shape="poly" id="edge23_Node000014_Node000017" title=" " alt="" coords="364,380,384,392,397,407,404,422,409,451,414,480,420,494,432,508,436,513,431,514,428,512,416,497,409,482,404,452,399,423,392,410,380,396,366,385"/>
-<area shape="rect" id="Node000018" href="$classmolsys_1_1SimulationBoxView.html#aa87886354cf5df73f59b01c707239742" title="get all molecules outside the specified hybrid zone using range&#45;based filtering" alt="" coords="430,453,633,498"/>
-<area shape="poly" id="edge26_Node000014_Node000018" title=" " alt="" coords="356,380,383,392,399,404,408,416,417,427,432,439,441,445,436,447,428,443,414,431,404,419,395,407,381,397,358,385"/>
-<area shape="poly" id="edge24_Node000017_Node000006" title=" " alt="" coords="604,520,632,508,656,493,680,479,697,473,693,477,683,483,659,498,635,513,607,524"/>
-<area shape="poly" id="edge25_Node000017_Node000007" title=" " alt="" coords="632,527,713,516,709,519,635,532"/>
-<area shape="poly" id="edge27_Node000018_Node000006" title=" " alt="" coords="632,462,668,459,664,461,635,466"/>
-<area shape="poly" id="edge28_Node000018_Node000007" title=" " alt="" coords="633,486,713,496,708,499,635,491"/>
-<area shape="poly" id="edge34_Node000019_Node000003" title=" " alt="" coords="363,405,380,392,393,378,400,363,404,333,408,301,415,284,428,269,435,265,432,270,432,272,420,287,413,302,409,333,405,365,397,381,384,396,367,408"/>
-<area shape="poly" id="edge36_Node000019_Node000004" title=" " alt="" coords="334,404,381,392,433,380,429,384,383,397,338,408"/>
-<area shape="poly" id="edge38_Node000019_Node000010" title=" " alt="" coords="360,404,380,392,396,375,404,357,411,337,428,319,466,303,462,307,432,323,416,340,408,359,401,378,384,396,364,408"/>
-<area shape="poly" id="edge37_Node000019_Node000013" title=" " alt="" coords="381,420,425,419,421,422,384,425"/>
-<area shape="poly" id="edge33_Node000019_Node000015" title=" " alt="" coords="366,449,384,462,401,485,409,509,411,532,410,556,409,602,416,624,432,647,435,651,430,652,428,651,411,627,404,603,404,555,406,532,404,510,397,488,380,466,368,454"/>
-<area shape="poly" id="edge35_Node000019_Node000016" title=" " alt="" coords="364,449,384,462,397,476,404,491,409,521,414,550,420,564,432,578,436,582,431,584,428,582,416,567,409,551,404,521,399,493,392,479,380,466,366,454"/>
-<area shape="rect" id="Node000021" href="$classpot_1_1Potential.html#aaad1a1f27407901e3a01d9628d3d0bd8" title=" " alt="" coords="444,731,619,775"/>
-<area shape="poly" id="edge40_Node000020_Node000021" title=" " alt="" coords="331,503,360,514,384,531,401,554,409,578,411,602,410,625,409,671,416,694,432,717,435,720,430,721,428,720,411,696,404,672,404,625,406,602,404,579,397,557,380,535,358,519,334,508"/>
-<area shape="rect" id="Node000022" href="$classpot_1_1Potential.html#a69fc1a2f833e4da7a1e0ed680ca3b9b0" title=" " alt="" coords="444,800,619,845"/>
-<area shape="poly" id="edge41_Node000020_Node000022" title=" " alt="" coords="331,503,361,513,384,531,406,563,415,596,415,628,410,660,405,691,404,723,412,754,432,786,435,790,430,790,428,789,407,756,399,723,400,691,405,659,409,627,410,596,401,566,380,535,358,518,334,508"/>
-<area shape="rect" id="Node000023" href="$classpot_1_1Potential.html#a51a2a8ed6e03bcc54c8e0508f0660c30" title=" " alt="" coords="444,869,619,914"/>
-<area shape="poly" id="edge42_Node000020_Node000023" title=" " alt="" coords="331,502,361,513,384,531,400,552,411,572,420,613,418,654,410,694,402,734,400,774,408,814,418,835,432,855,435,859,429,859,428,859,413,837,403,816,394,774,397,733,405,693,413,653,415,614,406,574,395,555,380,535,358,518,334,507"/>
-<area shape="rect" id="Node000034" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="438,1135,625,1179"/>
-<area shape="poly" id="edge53_Node000033_Node000034" title=" " alt="" coords="336,1178,425,1169,420,1171,338,1183"/>
-<area shape="rect" id="Node000035" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="430,1204,633,1249"/>
-<area shape="poly" id="edge54_Node000033_Node000035" title=" " alt="" coords="337,1200,417,1211,412,1213,338,1205"/>
+<area shape="rect" id="Node000039" href="$classWaterModelSettings.html#af9666110e5e0763c2e4ceb87a9251cd0" title="sets the waterInterModel to enum in settings" alt="" coords="142,1447,346,1491"/>
+<area shape="poly" id="edge58_Node000001_Node000039" title=" " alt="" coords="33,857,36,971,43,1144,51,1234,64,1318,83,1387,95,1413,109,1433,131,1452,126,1452,105,1436,91,1415,78,1388,59,1319,46,1235,37,1144,30,971,33,862"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1Potential.html#adcdee6872aa911e94fec6532100e4650" title=" " alt="" coords="468,213,643,258"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="333,223,455,229,450,233,336,227"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a8cf72f3d8f589d6013b935e5b388c7e0" title="get the Box/Cell pointer" alt="" coords="470,333,641,378"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="333,232,360,241,384,254,400,270,408,287,416,303,432,319,458,334,453,336,428,323,412,307,404,289,396,273,380,258,358,245,335,236"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBoxView.html#a45dafe9b98fff4a41b9979a7192b4132" title="get all MM molecules using range&#45;based filtering" alt="" coords="454,5,657,50"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="263,197,332,129,378,92,429,60,444,54,441,58,431,65,382,96,336,133,268,200"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#acbd9a0d7c22786005c1d5e6e07353c44" title="Get the water type." alt="" coords="470,75,641,119"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="286,196,353,162,429,129,457,121,453,125,431,134,355,167,290,200"/>
+<area shape="rect" id="Node000009" href="$classWaterModelSettings.html#ac96f4240e2e9cf06d1fa77d1837fb55e" title="returns whether a intermolecular water model is set" alt="" coords="430,144,681,189"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="332,203,416,189,413,193,336,207"/>
+<area shape="rect" id="Node000010" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="503,282,608,310"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="333,240,383,253,431,268,490,282,486,285,429,273,381,258,335,245"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="729,424,933,469"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="657,42,683,60,707,94,718,126,721,158,719,189,714,255,718,291,732,329,760,374,795,413,789,413,756,377,727,331,713,292,709,255,714,189,716,158,713,127,702,96,679,64,659,47"/>
+<area shape="rect" id="Node000007" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="774,492,888,520"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="657,41,683,60,703,88,716,115,723,141,725,168,720,221,707,273,695,325,690,376,692,402,699,427,712,453,731,479,744,490,762,499,757,501,742,495,727,483,708,456,694,429,687,403,684,376,689,324,702,272,715,220,720,168,718,142,711,116,698,90,679,64,658,46"/>
+<area shape="rect" id="Node000011" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="742,273,920,318"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="608,293,729,294,725,297,610,298"/>
+<area shape="poly" id="edge12_Node000012_Node000003" title=" " alt="" coords="322,274,455,252,451,256,325,279"/>
+<area shape="poly" id="edge13_Node000012_Node000004" title=" " alt="" coords="322,304,457,333,453,336,324,309"/>
+<area shape="poly" id="edge15_Node000012_Node000008" title=" " alt="" coords="321,282,353,271,380,254,393,239,399,225,404,194,408,162,415,145,428,130,457,113,454,117,432,134,419,148,413,163,409,194,405,226,397,242,384,258,355,276,325,286"/>
+<area shape="poly" id="edge16_Node000012_Node000009" title=" " alt="" coords="321,277,352,267,381,253,395,241,404,227,413,213,428,199,441,193,438,198,432,203,417,216,408,230,399,244,383,258,354,272,325,281"/>
+<area shape="poly" id="edge17_Node000012_Node000010" title=" " alt="" coords="322,289,489,293,485,296,325,294"/>
+<area shape="rect" id="Node000013" href="$classmolsys_1_1CellList.html#a57475a3572160f8d22c4168db04154f9" title="get cells" alt="" coords="463,402,648,430"/>
+<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="322,298,355,308,384,323,400,339,408,357,416,373,432,388,451,399,446,401,428,392,412,376,403,359,396,343,380,327,353,313,324,303"/>
+<area shape="poly" id="edge20_Node000014_Node000003" title=" " alt="" coords="357,335,381,323,395,310,404,296,413,282,428,268,456,256,452,260,432,273,417,285,408,299,399,313,383,327,361,338"/>
+<area shape="poly" id="edge22_Node000014_Node000004" title=" " alt="" coords="381,356,457,355,453,359,384,360"/>
+<area shape="poly" id="edge29_Node000014_Node000008" title=" " alt="" coords="365,335,380,323,397,300,405,277,406,253,404,229,401,204,403,179,410,154,428,130,458,111,454,116,432,134,415,157,408,180,407,204,409,228,411,253,410,278,402,302,384,327,369,338"/>
+<area shape="poly" id="edge30_Node000014_Node000009" title=" " alt="" coords="363,335,380,323,393,309,399,294,404,263,408,231,415,215,428,199,435,196,432,200,432,203,419,218,413,232,409,264,405,295,397,311,384,327,367,339"/>
+<area shape="poly" id="edge31_Node000014_Node000010" title=" " alt="" coords="353,335,429,318,490,307,486,311,431,324,356,339"/>
+<area shape="rect" id="Node000015" href="$classpot_1_1Potential.html#abe94218d96125716ebf4c832b10c224f" title=" " alt="" coords="461,661,650,706"/>
+<area shape="poly" id="edge19_Node000014_Node000015" title=" " alt="" coords="367,380,384,393,406,425,414,457,414,490,409,522,404,554,403,585,411,616,432,647,450,662,445,664,428,651,406,618,398,586,399,553,404,521,409,489,409,458,401,427,380,396,369,385"/>
+<area shape="rect" id="Node000016" href="$classpot_1_1Potential.html#a6c4a29447de4e518c70bf2beba8395a4" title=" " alt="" coords="463,592,648,637"/>
+<area shape="poly" id="edge21_Node000014_Node000016" title=" " alt="" coords="366,380,384,392,401,416,409,440,411,463,409,487,407,510,408,533,416,556,432,578,451,593,446,595,428,582,411,558,403,534,402,510,404,487,405,463,404,441,397,418,380,396,368,385"/>
+<area shape="rect" id="Node000017" href="$classmolsys_1_1SimulationBoxView.html#a296966f2d8061b780b5cd28fea32585a" title="get all molecules in the specified hybrid zone using range&#45;based filtering" alt="" coords="454,523,657,567"/>
+<area shape="poly" id="edge23_Node000014_Node000017" title=" " alt="" coords="364,380,384,392,397,407,404,422,409,452,413,481,420,495,432,508,443,518,438,519,428,512,415,498,408,483,404,453,399,423,392,410,380,396,366,385"/>
+<area shape="rect" id="Node000018" href="$classmolsys_1_1SimulationBoxView.html#aa87886354cf5df73f59b01c707239742" title="get all molecules outside the specified hybrid zone using range&#45;based filtering" alt="" coords="454,453,657,498"/>
+<area shape="poly" id="edge26_Node000014_Node000018" title=" " alt="" coords="356,380,383,392,399,404,408,416,417,428,431,439,443,446,438,448,429,443,413,431,404,419,395,408,381,397,358,385"/>
+<area shape="poly" id="edge24_Node000017_Node000006" title=" " alt="" coords="649,520,680,508,704,494,728,479,745,473,741,477,731,483,707,498,682,513,652,524"/>
+<area shape="poly" id="edge25_Node000017_Node000007" title=" " alt="" coords="656,528,761,515,757,518,659,533"/>
+<area shape="poly" id="edge27_Node000018_Node000006" title=" " alt="" coords="656,463,716,457,712,460,659,467"/>
+<area shape="poly" id="edge28_Node000018_Node000007" title=" " alt="" coords="657,485,761,497,757,500,659,489"/>
+<area shape="poly" id="edge34_Node000019_Node000003" title=" " alt="" coords="363,405,380,392,393,378,399,363,404,332,408,300,415,284,428,268,455,252,452,257,432,272,419,287,413,302,409,333,405,365,397,381,384,396,367,408"/>
+<area shape="poly" id="edge36_Node000019_Node000004" title=" " alt="" coords="340,404,457,377,453,381,344,408"/>
+<area shape="poly" id="edge38_Node000019_Node000010" title=" " alt="" coords="360,404,380,392,396,375,403,356,411,337,428,319,457,305,490,298,486,301,459,310,432,323,416,340,408,358,401,378,384,396,364,408"/>
+<area shape="poly" id="edge37_Node000019_Node000013" title=" " alt="" coords="381,421,450,419,445,422,384,425"/>
+<area shape="poly" id="edge33_Node000019_Node000015" title=" " alt="" coords="366,449,384,462,401,485,409,509,411,533,409,556,407,580,408,602,416,625,432,647,450,662,445,663,428,651,411,627,403,603,402,579,404,556,405,533,404,510,397,488,380,466,368,454"/>
+<area shape="poly" id="edge35_Node000019_Node000016" title=" " alt="" coords="364,449,384,462,397,476,404,491,409,521,413,550,420,564,432,578,452,592,446,594,428,582,415,567,408,552,404,522,399,493,392,479,380,466,366,454"/>
+<area shape="rect" id="Node000021" href="$classpot_1_1Potential.html#aaad1a1f27407901e3a01d9628d3d0bd8" title=" " alt="" coords="468,731,643,775"/>
+<area shape="poly" id="edge40_Node000020_Node000021" title=" " alt="" coords="331,503,360,514,384,531,401,554,409,578,411,602,409,626,407,649,408,672,416,694,432,716,457,735,452,736,428,720,411,697,403,673,402,649,404,625,405,602,404,579,397,557,380,535,358,519,334,508"/>
+<area shape="rect" id="Node000022" href="$classpot_1_1Potential.html#a69fc1a2f833e4da7a1e0ed680ca3b9b0" title=" " alt="" coords="468,800,643,845"/>
+<area shape="poly" id="edge41_Node000020_Node000022" title=" " alt="" coords="331,503,361,513,384,531,406,563,414,596,414,628,409,660,404,692,403,724,411,755,432,786,457,805,451,806,428,790,406,757,398,724,399,692,404,660,409,628,409,597,401,566,380,535,358,518,334,508"/>
+<area shape="rect" id="Node000023" href="$classpot_1_1Potential.html#a51a2a8ed6e03bcc54c8e0508f0660c30" title=" " alt="" coords="468,869,643,914"/>
+<area shape="poly" id="edge42_Node000020_Node000023" title=" " alt="" coords="331,502,361,513,384,531,400,552,411,573,420,614,417,655,409,695,401,735,398,775,407,815,417,835,432,855,456,875,451,876,428,859,412,838,402,817,393,776,396,735,404,694,412,654,414,614,406,574,395,555,380,535,358,518,334,507"/>
+<area shape="rect" id="Node000034" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="462,1135,649,1179"/>
+<area shape="poly" id="edge53_Node000033_Node000034" title=" " alt="" coords="337,1179,449,1168,444,1170,338,1184"/>
+<area shape="rect" id="Node000035" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="454,1204,657,1249"/>
+<area shape="poly" id="edge54_Node000033_Node000035" title=" " alt="" coords="337,1199,441,1212,436,1214,338,1205"/>
 </map>

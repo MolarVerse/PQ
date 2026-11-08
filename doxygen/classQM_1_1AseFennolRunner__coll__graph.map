@@ -1,19 +1,21 @@
 <map id="QM::AseFennolRunner" name="QM::AseFennolRunner">
-<area shape="rect" id="Node000001" title="AseFennolRunner inherits from AseQMRunner." alt="" coords="135,920,296,1015"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1AseQMRunner.html" title="AseQMRunner inherits from QMRunner." alt="" coords="138,598,292,871"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,884,218,922,213,920,214,888"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="5,341,164,525"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="131,536,159,598,154,598,130,541"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="45,195,125,268"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="85,265,87,324,82,324,85,270"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="188,396,243,469"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="216,466,218,581,213,581,215,471"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="266,388,482,477"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="353,475,297,585,293,582,350,479"/>
-<area shape="rect" id="Node000007" href="$structQM_1_1AseQMRunner_1_1AseInterface.html" title="PIMPL Interface to the ASE QM calculator." alt="" coords="263,195,486,268"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="375,265,377,372,372,371,373,270"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="280,5,330,78"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="298,75,298,123,301,147,309,170,315,182,310,182,304,172,296,149,293,123,297,80"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="378,5,509,78"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="440,75,433,123,417,172,412,182,407,180,412,170,428,122,438,80"/>
+<area shape="rect" id="Node000001" title="AseFennolRunner inherits from AseQMRunner." alt="" coords="213,965,374,1060"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseQMRunner.html" title="AseQMRunner inherits from QMRunner." alt="" coords="216,642,370,916"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="295,929,295,967,291,964,291,933"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="83,341,242,569"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="214,581,241,642,236,643,214,586"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,195,85,268"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="63,265,92,315,97,325,92,326,87,318,64,270"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="108,195,283,268"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="191,265,185,325,179,324,190,270"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="266,419,320,491"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="294,488,296,626,291,625,292,493"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="344,410,560,500"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="432,497,370,629,365,626,429,501"/>
+<area shape="rect" id="Node000008" href="$structQM_1_1AseQMRunner_1_1AseInterface.html" title="PIMPL Interface to the ASE QM calculator." alt="" coords="340,195,563,268"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="453,265,454,394,449,393,451,270"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="357,5,408,78"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="376,75,376,123,379,147,386,170,393,182,387,182,381,172,374,149,370,123,375,80"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="456,5,586,78"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="518,75,510,123,494,172,489,182,485,180,489,170,505,122,516,80"/>
 </map>

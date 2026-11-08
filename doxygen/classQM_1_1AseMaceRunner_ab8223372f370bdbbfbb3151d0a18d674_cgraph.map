@@ -1,7 +1,30 @@
 <map id="QM::AseMaceRunner::~AseMaceRunner" name="QM::AseMaceRunner::~AseMaceRunner">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,170,50"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1AseMaceRunner.html#a02679ee9f96801fca5b955cf53cc25b4" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="218,5,382,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,25,205,27,200,28,170,30"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="430,5,632,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="382,25,417,28,412,28,382,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,212,170,257"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseMaceRunner.html#a9a22c0b19828554f6d39abbde7ac50d0" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="218,212,382,257"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,232,205,233,200,236,171,237"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="455,5,657,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,210,328,177,354,136,388,95,428,60,443,54,439,57,432,64,392,99,359,139,333,180,314,213"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1AseQMRunner.html#a14d780cf728f0d2ede91173dad38732d" title="Construct a new AseQMRunner::AseQMRunner object." alt="" coords="434,74,678,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="317,210,363,159,394,133,429,111,445,106,440,109,431,115,398,137,367,163,320,214"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a1862423df5853a9d58a116a6c9fd577a" title="get the floating point string representation used in pybind11 bindings" alt="" coords="447,125,665,170"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="353,209,429,180,456,174,451,176,431,185,355,214"/>
+<area shape="rect" id="Node000007" href="$classMaceSettings.html#aca78c366e8c2b7de1fd52be7db4d61d0" title="returns the maceMode" alt="" coords="452,194,661,222"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="382,223,439,219,434,221,383,228"/>
+<area shape="rect" id="Node000008" href="$classMaceSettings.html#a4f1adea9cf0bc7af23973a65842345a2" title="returns the maceModel as expected by mace.calculators" alt="" coords="430,246,682,274"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="382,240,417,245,412,246,383,245"/>
+<area shape="rect" id="Node000011" href="$classMaceSettings.html#ad6d50681337604174ea1d5d4125b66e1" title="returns the maceModelPath" alt="" coords="436,298,677,326"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="354,255,431,282,466,294,460,294,429,288,354,260"/>
+<area shape="rect" id="Node000012" href="$classMaceSettings.html#a3da31ecdad24669e1fe010d86d2434f3" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="450,349,663,394"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="324,255,372,296,431,335,446,343,441,343,429,339,369,300,323,260"/>
+<area shape="rect" id="Node000014" href="$classQMSettings.html#a6efd4c1cfd2b1eb015aa735195561f2a" title="returns if the dispersion correction should be used" alt="" coords="444,418,668,446"/>
+<area shape="poly" id="edge14_Node000002_Node000014" title=" " alt="" coords="312,254,332,290,358,330,391,371,432,404,441,412,436,411,428,409,387,374,353,333,327,292,310,259"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1QMRunner.html#ac10db8a298dfddae091119ae69324959" title="constructor for the QMRunner class" alt="" coords="730,74,926,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="678,85,717,87,712,88,679,90"/>
+<area shape="rect" id="Node000009" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="746,298,910,326"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="633,271,740,294,734,295,632,277"/>
+<area shape="rect" id="Node000010" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="734,246,922,274"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="682,257,721,259,715,260,683,262"/>
+<area shape="poly" id="edge12_Node000012_Node000009" title=" " alt="" coords="660,346,745,330,750,329,661,351"/>
+<area shape="rect" id="Node000013" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="744,349,912,394"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="663,369,732,372,726,372,664,374"/>
 </map>

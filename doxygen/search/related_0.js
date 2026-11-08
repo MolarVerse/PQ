@@ -10,6 +10,8 @@ var searchData=
   ['_3a_3atestmorsepairutils_7',['TestMorsePairUtils',['../classpot_1_1MorsePair.html#a6665322b16d31772f36d4f38458f7710',1,'pot::MorsePair']]],
   ['_3a_3atestnoncoulombpotentialff_8',['TestNonCoulombPotentialFF',['../classpot_1_1ForceFieldNonCoulomb.html#a662dff208f82b8dedb8bec604722fb48',1,'pot::ForceFieldNonCoulomb']]],
   ['_3a_3atestoutpututils_9',['TestOutputUtils',['../classout_1_1Output.html#ac274f5b633dd1615aace0e574f5cdf3e',1,'out::Output']]],
-  ['_3a_3atestringpolymerenergyoutput_10',['TestRingPolymerEnergyOutput',['../classout_1_1RingPolymerEnergyOutput.html#a27e3f1c3d2fa060237adfb5f0a90b12f',1,'out::RingPolymerEnergyOutput']]],
-  ['_3a_3atesttriclinicbox_11',['TestTriclinicBox',['../classmolsys_1_1TriclinicBox.html#af570b5a0447023d23ead9c2d802c0f0b',1,'molsys::TriclinicBox']]]
+  ['_3a_3atestqmsetupaseutil_10',['TestQMSetupAseUtil',['../classMaceSettings.html#ae768debc5fc45b4fff52d17efe6d70e8',1,'MaceSettings']]],
+  ['_3a_3atestqmsetuputils_11',['TestQMSetupUtils',['../classsetup_1_1QMSetup.html#a63aa7f1fa4da4da340eee0130c8c2fa7',1,'setup::QMSetup']]],
+  ['_3a_3atestringpolymerenergyoutput_12',['TestRingPolymerEnergyOutput',['../classout_1_1RingPolymerEnergyOutput.html#a27e3f1c3d2fa060237adfb5f0a90b12f',1,'out::RingPolymerEnergyOutput']]],
+  ['_3a_3atesttriclinicbox_13',['TestTriclinicBox',['../classmolsys_1_1TriclinicBox.html#af570b5a0447023d23ead9c2d802c0f0b',1,'molsys::TriclinicBox']]]
 ];

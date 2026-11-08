@@ -1,0 +1,5 @@
+<map id="WaterModelSettings::isWaterModelSetAndNotNone" name="WaterModelSettings::isWaterModelSetAndNotNone">
+<area shape="rect" id="Node000001" title="returns whether a water model is set" alt="" coords="5,5,227,50"/>
+<area shape="rect" id="Node000002" href="$classWaterModelSettings.html#ac96f4240e2e9cf06d1fa77d1837fb55e" title="returns whether a intermolecular water model is set" alt="" coords="275,5,526,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,25,262,28,256,28,227,30"/>
+</map>

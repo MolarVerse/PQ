@@ -1,5 +1,5 @@
 <map id="input::QMInputParser" name="input::QMInputParser">
-<area shape="rect" id="Node000001" title="QMInputParser inherits from InputFileParser." alt="" coords="5,304,209,622"/>
+<area shape="rect" id="Node000001" title="QMInputParser inherits from InputFileParser." alt="" coords="5,304,209,734"/>
 <area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html" title="Base class for parsing the input file." alt="" coords="7,5,207,256"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,268,110,305,105,304,107,274"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,269,110,305,105,304,107,274"/>
 </map>

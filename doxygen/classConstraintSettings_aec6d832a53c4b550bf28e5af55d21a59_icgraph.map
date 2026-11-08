@@ -1,0 +1,9 @@
+<map id="ConstraintSettings::setRattleMaxIterByUser" name="ConstraintSettings::setRattleMaxIterByUser">
+<area shape="rect" id="Node000001" title="set the maximum number of iterations for the rattle algorithm" alt="" coords="122,49,307,94"/>
+<area shape="rect" id="Node000002" href="$testConstraints_8cpp.html#a06a9d02e9df1e2891595873725892fd5" title="test apply rattle algorithm to all bond constraints" alt="" coords="5,5,74,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,45,74,32,74,27,125,42"/>
+<area shape="rect" id="Node000003" href="$testConstraints_8cpp.html#a2650e5a222285b6430479a5ed6ecd56b" title="test apply rattle algorithm to all bond constraints and it does not converge" alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,73,75,74,74,69,108,70"/>
+<area shape="rect" id="Node000004" href="$testConstraints_8cpp.html#ac0b6d46fc2ba222bf85e62248ee209a2" title="test apply rattle algorithm to all bond constraints and it does not converge but is deactivated" alt="" coords="5,109,74,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="120,99,75,116,73,111,125,98"/>
+</map>

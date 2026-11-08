@@ -10,6 +10,11 @@ var hierarchy =
     [ "AtomNumberTag", "structAtomNumberTag.html", null ],
     [ "AtomTypeTag", "structAtomTypeTag.html", null ],
     [ "benchSetup::BenchNonCoulombFFPot", "structbenchSetup_1_1BenchNonCoulombFFPot.html", null ],
+    [ "linalg::detail::BinaryResultIf&lt; Valid, Op, L, R &gt;", "structlinalg_1_1detail_1_1BinaryResultIf.html", null ],
+    [ "linalg::detail::BinaryResultImpl&lt; Op, L, R, typename &gt;", "structlinalg_1_1detail_1_1BinaryResultImpl.html", [
+      [ "linalg::detail::BinaryResultIf< true, Op, L, R >", "structlinalg_1_1detail_1_1BinaryResultIf_3_01true_00_01Op_00_01L_00_01R_01_4.html", null ]
+    ] ],
+    [ "linalg::detail::BinaryResultImpl&lt; Op, L, R, std::void_t&lt; BinaryElement_t&lt; Op, L, R &gt; &gt; &gt;", "structlinalg_1_1detail_1_1BinaryResultImpl_3_01Op_00_01L_00_01R_00_01std_1_1void__t_3_01BinaryEl8f4dfebdb29f26f347fd95cf535449c0.html", null ],
     [ "BondIdTag", "structBondIdTag.html", null ],
     [ "BondParams", "structBondParams.html", null ],
     [ "ff::BondType", "classff_1_1BondType.html", null ],
@@ -84,6 +89,7 @@ var hierarchy =
     ] ],
     [ "DefaultFiles", "structDefaultFiles.html", null ],
     [ "input::DeprecatedInputKey", "classinput_1_1DeprecatedInputKey.html", null ],
+    [ "DftbSettings", "classDftbSettings.html", null ],
     [ "pqviews::detail::difference_type_helper&lt; T, HasDiffType &gt;", "structpqviews_1_1detail_1_1difference__type__helper.html", null ],
     [ "pqviews::detail::difference_type_helper&lt; T, true &gt;", "structpqviews_1_1detail_1_1difference__type__helper_3_01T_00_01true_01_4.html", null ],
     [ "DihedralIdTag", "structDihedralIdTag.html", null ],
@@ -158,6 +164,7 @@ var hierarchy =
     [ "ExtAtomTypeTag", "structExtAtomTypeTag.html", null ],
     [ "cli::ExternalQMScriptInfo", "structcli_1_1ExternalQMScriptInfo.html", null ],
     [ "ExtVdwTypeTag", "structExtVdwTypeTag.html", null ],
+    [ "FennolSettings", "classFennolSettings.html", null ],
     [ "settings::FileSettings", "classsettings_1_1FileSettings.html", null ],
     [ "pqviews::FilterAdaptor&lt; Pred &gt;", "structpqviews_1_1FilterAdaptor.html", null ],
     [ "pqviews::FilterIterator&lt; Iter, Pred &gt;", "classpqviews_1_1FilterIterator.html", null ],
@@ -168,6 +175,9 @@ var hierarchy =
     [ "ForceFieldSettings", "classForceFieldSettings.html", null ],
     [ "setup::ForceFieldSetup", "classsetup_1_1ForceFieldSetup.html", null ],
     [ "ForceFieldTypeMeta", "structForceFieldTypeMeta.html", null ],
+    [ "std::formatter", null, [
+      [ "std::formatter< linalg::Vector3D< T > >", "structstd_1_1formatter_3_01linalg_1_1Vector3D_3_01T_01_4_01_4.html", null ]
+    ] ],
     [ "FPTypeMeta", "structFPTypeMeta.html", null ],
     [ "settings::GeneralSettings", "classsettings_1_1GeneralSettings.html", null ],
     [ "input::guffdat::GuffDatReader", "classinput_1_1guffdat_1_1GuffDatReader.html", null ],
@@ -267,9 +277,11 @@ var hierarchy =
     [ "MaceModelMeta", "structMaceModelMeta.html", null ],
     [ "MaceModelTypeMeta", "structMaceModelTypeMeta.html", null ],
     [ "MaceModeMeta", "structMaceModeMeta.html", null ],
+    [ "MaceSettings", "classMaceSettings.html", null ],
     [ "manostat::Manostat", "classmanostat_1_1Manostat.html", [
       [ "manostat::BerendsenManostat", "classmanostat_1_1BerendsenManostat.html", [
         [ "TestableBerendsenManostat", "classTestableBerendsenManostat.html", null ],
+        [ "TestableSimSpaceScalingManostat", "classTestableSimSpaceScalingManostat.html", null ],
         [ "manostat::AnisotropicBerendsenManostat", "classmanostat_1_1AnisotropicBerendsenManostat.html", [
           [ "TestableAnisotropicBerendsenManostat", "classTestableAnisotropicBerendsenManostat.html", null ]
         ] ],
@@ -391,7 +403,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "engine::QMRunnerManager", "classengine_1_1QMRunnerManager.html", null ],
-    [ "settings::QMSettings", "classsettings_1_1QMSettings.html", null ],
+    [ "QMSettings", "classQMSettings.html", null ],
     [ "setup::QMSetup", "classsetup_1_1QMSetup.html", null ],
     [ "waterModel::qSPCFwInterParam", "structwaterModel_1_1qSPCFwInterParam.html", null ],
     [ "rng::RandomNumberGenerator", "classrng_1_1RandomNumberGenerator.html", null ],
@@ -506,6 +518,7 @@ var hierarchy =
     [ "TestMorsePairUtils", "structTestMorsePairUtils.html", null ],
     [ "TestOutputFileSettings", "structTestOutputFileSettings.html", null ],
     [ "TestOutputUtils", "structTestOutputUtils.html", null ],
+    [ "TestQMSetupAseUtil", "structTestQMSetupAseUtil.html", null ],
     [ "TestResetKinetics", "classTestResetKinetics.html", null ],
     [ "TestTriclinicBox", "structTestTriclinicBox.html", null ],
     [ "thermostat::Thermostat", "classthermostat_1_1Thermostat.html", [
@@ -514,7 +527,7 @@ var hierarchy =
       [ "thermostat::NoseHooverThermostat", "classthermostat_1_1NoseHooverThermostat.html", null ],
       [ "thermostat::VelocityRescalingThermostat", "classthermostat_1_1VelocityRescalingThermostat.html", null ]
     ] ],
-    [ "settings::ThermostatSettings", "classsettings_1_1ThermostatSettings.html", null ],
+    [ "ThermostatSettings", "classThermostatSettings.html", null ],
     [ "setup::ThermostatSetup", "classsetup_1_1ThermostatSetup.html", null ],
     [ "ThermostatTypeMeta", "structThermostatTypeMeta.html", null ],
     [ "timings::Timer", "classtimings_1_1Timer.html", null ],
@@ -550,9 +563,11 @@ var hierarchy =
     [ "WaterModelSettings", "classWaterModelSettings.html", null ],
     [ "setup::WaterModelSetup", "classsetup_1_1WaterModelSetup.html", null ],
     [ "XtbMethodMeta", "structXtbMethodMeta.html", null ],
+    [ "XtbSettings", "classXtbSettings.html", null ],
     [ "Matrix&lt; double, Eigen::Dynamic, Eigen::Dynamic &gt;", "classEigen_1_1Matrix_3_01double_00_01Eigen_1_1Dynamic_00_01Eigen_1_1Dynamic_01_4.html", null ],
     [ "Matrix&lt; std::shared_ptr&lt; pot::NonCoulombPair &gt;, Eigen::Dynamic, Eigen::Dynamic &gt;", "classEigen_1_1Matrix_3_01std_1_1shared__ptr_3_01pot_1_1NonCoulombPair_01_4_00_01Eigen_1_1Dynamic_00_01Eigen_1_1Dynamic_01_4.html", null ],
     [ "optional&lt; bool &gt;", "classstd_1_1optional_3_01bool_01_4.html", null ],
+    [ "optional&lt; Compressibility &gt;", "classstd_1_1optional_3_01Compressibility_01_4.html", null ],
     [ "optional&lt; ConvStrategy &gt;", "classstd_1_1optional_3_01ConvStrategy_01_4.html", null ],
     [ "optional&lt; FixedAxis &gt;", "classstd_1_1optional_3_01FixedAxis_01_4.html", null ],
     [ "optional&lt; ForceFieldType &gt;", "classstd_1_1optional_3_01ForceFieldType_01_4.html", null ],
@@ -560,9 +575,18 @@ var hierarchy =
     [ "optional&lt; InitVelocities &gt;", "classstd_1_1optional_3_01InitVelocities_01_4.html", null ],
     [ "optional&lt; Isotropy &gt;", "classstd_1_1optional_3_01Isotropy_01_4.html", null ],
     [ "optional&lt; LearningRate &gt;", "classstd_1_1optional_3_01LearningRate_01_4.html", null ],
+    [ "optional&lt; MaceMode &gt;", "classstd_1_1optional_3_01MaceMode_01_4.html", null ],
+    [ "optional&lt; MaceModel &gt;", "classstd_1_1optional_3_01MaceModel_01_4.html", null ],
+    [ "optional&lt; MaceModelType &gt;", "classstd_1_1optional_3_01MaceModelType_01_4.html", null ],
     [ "optional&lt; ManostatType &gt;", "classstd_1_1optional_3_01ManostatType_01_4.html", null ],
     [ "optional&lt; OptimizerType &gt;", "classstd_1_1optional_3_01OptimizerType_01_4.html", null ],
+    [ "optional&lt; Pressure &gt;", "classstd_1_1optional_3_01Pressure_01_4.html", null ],
+    [ "optional&lt; QMMethod &gt;", "classstd_1_1optional_3_01QMMethod_01_4.html", null ],
+    [ "optional&lt; SlakosType &gt;", "classstd_1_1optional_3_01SlakosType_01_4.html", null ],
+    [ "optional&lt; std::unordered_map&lt; std::string, double &gt; &gt;", "classstd_1_1optional_3_01std_1_1unordered__map_3_01std_1_1string_00_01double_01_4_01_4.html", null ],
+    [ "optional&lt; ThermostatType &gt;", "classstd_1_1optional_3_01ThermostatType_01_4.html", null ],
     [ "optional&lt; Time &gt;", "classstd_1_1optional_3_01Time_01_4.html", null ],
     [ "optional&lt; WaterInterModel &gt;", "classstd_1_1optional_3_01WaterInterModel_01_4.html", null ],
-    [ "optional&lt; WaterIntraModel &gt;", "classstd_1_1optional_3_01WaterIntraModel_01_4.html", null ]
+    [ "optional&lt; WaterIntraModel &gt;", "classstd_1_1optional_3_01WaterIntraModel_01_4.html", null ],
+    [ "optional&lt; XtbMethod &gt;", "classstd_1_1optional_3_01XtbMethod_01_4.html", null ]
 ];

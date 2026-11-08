@@ -1,0 +1,7 @@
+<map id="MaceSettings::getMaceModelName" name="MaceSettings::getMaceModelName">
+<area shape="rect" id="Node000001" title="returns the maceModel as expected by mace.calculators" alt="" coords="5,32,258,60"/>
+<area shape="rect" id="Node000002" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="318,5,482,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="258,31,305,28,300,29,259,36"/>
+<area shape="rect" id="Node000003" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="306,57,494,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="258,55,293,61,287,61,258,60"/>
+</map>

@@ -1,9 +1,9 @@
 <map id="molsys::Cell::assignWaterMoleculeIndices" name="molsys::Cell::assignWaterMoleculeIndices">
 <area shape="rect" id="Node000001" title="assigns the indices of water molecules in the cell" alt="" coords="5,75,195,119"/>
-<area shape="rect" id="Node000002" href="$classmolsys_1_1Cell.html#a6841502de7d1d69d5ddc3ef56ef27950" title="returns the number of molecules in the cell" alt="" coords="243,5,440,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,72,249,54,244,56,181,77"/>
-<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#acbd9a0d7c22786005c1d5e6e07353c44" title="Get the water type." alt="" coords="256,75,427,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,94,242,96,237,98,196,100"/>
-<area shape="rect" id="Node000004" href="$classWaterModelSettings.html#ad663039f65dc6e5ebd4da0db97887a44" title="returns whether a intermolecular water model is set" alt="" coords="257,144,426,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,117,249,139,244,140,180,123"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Cell.html#a6841502de7d1d69d5ddc3ef56ef27950" title="returns the number of molecules in the cell" alt="" coords="270,5,467,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,71,267,53,262,56,190,77"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#acbd9a0d7c22786005c1d5e6e07353c44" title="Get the water type." alt="" coords="283,75,454,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,94,269,96,264,98,195,100"/>
+<area shape="rect" id="Node000004" href="$classWaterModelSettings.html#ac96f4240e2e9cf06d1fa77d1837fb55e" title="returns whether a intermolecular water model is set" alt="" coords="243,144,494,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="190,117,267,139,262,140,189,123"/>
 </map>

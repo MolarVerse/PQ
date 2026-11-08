@@ -1,21 +1,15 @@
 <map id="input::QMInputParser::addHubbardDerivsKey" name="input::QMInputParser::addHubbardDerivsKey">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,160,180,205"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="238,5,396,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,158,162,110,226,60,238,55,234,59,229,65,165,114,116,161"/>
-<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="267,74,366,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,158,176,133,227,111,255,103,250,106,229,115,179,138,134,162"/>
-<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="238,125,396,170"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="179,166,225,161,220,164,181,171"/>
-<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="242,195,392,239"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="180,193,229,202,224,204,181,198"/>
-<area shape="rect" id="Node000008" href="$classsettings_1_1QMSettings.html#a113ce24a68a36e8561ffa78d7fac1409" title="sets the custom Hubbard Derivative dictionary" alt="" coords="239,264,395,309"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="136,203,229,249,244,257,239,258,227,254,135,208"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1QMSettings.html#a8d44d152590d92fd8e55c8844aec1d5f" title="sets if the Hubbard Derivative dictionary is set by the user" alt="" coords="228,333,406,378"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="111,202,161,260,194,291,229,319,238,326,233,325,226,323,190,295,158,264,110,207"/>
-<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="482,61,633,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="366,84,469,84,464,86,368,89"/>
-<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="454,131,661,175"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="396,147,441,150,436,151,397,152"/>
-<area shape="rect" id="Node000010" href="$classsettings_1_1QMSettings.html#acacc3738bf0a0bb0e6a27fb02616e9b0" title="returns if the Hubbard derivatives are set by the user" alt="" coords="478,333,637,378"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="406,353,465,356,460,356,407,358"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,180,141"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="228,5,386,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,93,240,55,236,58,149,98"/>
+<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="257,74,356,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,103,244,96,239,98,181,108"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="228,125,386,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="180,128,215,134,210,135,180,133"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="232,195,382,239"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="141,139,229,180,242,188,237,188,227,185,140,144"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="462,61,613,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="357,84,449,85,444,86,358,89"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="434,131,641,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="386,147,421,150,415,151,386,152"/>
 </map>

@@ -1,13 +1,16 @@
 <map id="main" name="main">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,100,60,128"/>
-<area shape="rect" id="Node000002" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="145,5,261,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="43,98,70,69,106,42,132,33,128,36,109,47,74,73,48,101"/>
-<area shape="rect" id="Node000003" href="$classmolsys_1_1OrthorhombicBox.html#a5c6e5bb78555bba99a338e1cd7b0bab0" title="transform a vector into orthogonal space" alt="" coords="108,57,298,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,106,94,100,90,104,61,111"/>
-<area shape="rect" id="Node000004" href="$classmolsys_1_1OrthorhombicBox.html#ab56befc51fb478b6757a65af5ded4aa5" title="transform a vector into simulation space" alt="" coords="108,126,298,171"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,117,95,124,90,127,61,122"/>
-<area shape="rect" id="Node000005" href="$classmolsys_1_1OrthorhombicBox.html#a9cdf3b454dde0b02613fdf35f71979e0" title=" " alt="" coords="108,196,298,240"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="46,125,74,154,109,181,119,188,114,188,106,185,71,157,45,130"/>
-<area shape="rect" id="Node000006" href="$classmolsys_1_1OrthorhombicBox.html#a8a21d197fdb8c4fd7fa6f9a78850c578" title="applies the periodic boundary conditions" alt="" coords="346,196,536,240"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="299,215,333,218,328,218,299,220"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,114,60,142"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1OrthorhombicBox.html#a66eda5599939e9f6eddabf438d1fcb55" title="get the box matrix" alt="" coords="108,5,298,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="45,112,72,86,106,60,119,55,115,59,109,65,75,90,49,115"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1OrthorhombicBox.html#a29fbf767dac71112f9e2c9fcda3035f0" title="get the inverse of the box matrix" alt="" coords="108,75,298,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,121,94,115,90,119,61,125"/>
+<area shape="rect" id="Node000005" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="145,143,261,171"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="60,130,131,143,127,146,60,135"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1OrthorhombicBox.html#a9cdf3b454dde0b02613fdf35f71979e0" title=" " alt="" coords="108,195,298,239"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="50,139,78,160,109,180,121,188,116,188,106,185,75,164,50,144"/>
+<area shape="rect" id="Node000003" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="360,48,523,76"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="298,39,347,48,342,49,299,44"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="298,81,347,76,342,77,299,86"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1OrthorhombicBox.html#a8a21d197fdb8c4fd7fa6f9a78850c578" title="applies the periodic boundary conditions" alt="" coords="346,195,536,239"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="299,214,333,217,328,217,299,220"/>
 </map>

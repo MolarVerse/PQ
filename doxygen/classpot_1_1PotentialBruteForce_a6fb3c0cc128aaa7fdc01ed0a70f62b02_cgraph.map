@@ -1,21 +1,21 @@
 <map id="pot::PotentialBruteForce::calculateForces" name="pot::PotentialBruteForce::calculateForces">
 <area shape="rect" id="Node000001" title="calculates forces, coulombic and non&#45;coulombic energy for brute force routine" alt="" coords="5,179,184,223"/>
-<area shape="rect" id="Node000002" href="$classpot_1_1Potential.html#adcdee6872aa911e94fec6532100e4650" title=" " alt="" coords="246,5,421,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,177,160,119,194,87,230,60,242,55,239,59,233,65,197,92,164,123,115,180"/>
-<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a8cf72f3d8f589d6013b935e5b388c7e0" title="get the Box/Cell pointer" alt="" coords="248,75,419,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,176,231,129,250,123,246,127,233,134,138,180"/>
-<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBoxView.html#a45dafe9b98fff4a41b9979a7192b4132" title="get all MM molecules using range&#45;based filtering" alt="" coords="232,144,435,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="183,186,218,182,214,185,185,190"/>
-<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#acbd9a0d7c22786005c1d5e6e07353c44" title="Get the water type." alt="" coords="248,213,419,258"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="184,211,235,220,230,222,185,217"/>
-<area shape="rect" id="Node000008" href="$classWaterModelSettings.html#ad663039f65dc6e5ebd4da0db97887a44" title="returns whether a intermolecular water model is set" alt="" coords="249,283,418,327"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="137,221,233,268,251,277,245,277,231,273,136,226"/>
-<area shape="rect" id="Node000009" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="281,351,386,379"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="113,221,163,280,196,311,233,337,268,354,263,354,230,342,193,315,159,284,111,227"/>
-<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="483,115,686,159"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="435,152,470,150,465,152,436,157"/>
-<area shape="rect" id="Node000006" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="528,183,641,211"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="435,176,515,188,510,189,436,181"/>
-<area shape="rect" id="Node000010" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="496,343,673,387"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="386,362,483,365,478,365,386,368"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1Potential.html#adcdee6872aa911e94fec6532100e4650" title=" " alt="" coords="270,5,445,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,177,159,118,193,87,230,60,257,49,253,52,233,65,196,91,163,122,114,180"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a8cf72f3d8f589d6013b935e5b388c7e0" title="get the Box/Cell pointer" alt="" coords="272,75,443,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="134,176,180,152,231,129,259,121,255,124,233,134,182,157,137,180"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBoxView.html#a45dafe9b98fff4a41b9979a7192b4132" title="get all MM molecules using range&#45;based filtering" alt="" coords="256,144,459,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="183,187,243,180,238,183,185,192"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1SimulationBox.html#acbd9a0d7c22786005c1d5e6e07353c44" title="Get the water type." alt="" coords="272,213,443,258"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="184,210,259,221,254,224,185,215"/>
+<area shape="rect" id="Node000008" href="$classWaterModelSettings.html#ac96f4240e2e9cf06d1fa77d1837fb55e" title="returns whether a intermolecular water model is set" alt="" coords="232,283,483,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="135,221,182,245,233,268,254,277,248,278,231,273,180,250,135,226"/>
+<area shape="rect" id="Node000009" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="305,351,410,379"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="112,221,162,281,195,312,233,337,260,349,292,359,286,359,259,354,230,342,192,316,158,285,110,226"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1SimulationBoxView.html#a10fa764d9a67f7d76931a0b9352d1ef4" title="Get the Molecules vector reference." alt="" coords="531,115,734,159"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="459,153,518,149,513,150,460,158"/>
+<area shape="rect" id="Node000006" href="$namespacepqviews.html#a31c245de828205df781c2077b4fef06a" title="Creates a FilterAdaptor with the given predicate." alt="" coords="576,183,689,211"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="459,175,563,188,558,190,460,180"/>
+<area shape="rect" id="Node000010" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="544,343,721,387"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="411,362,531,365,526,365,411,368"/>
 </map>

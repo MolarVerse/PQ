@@ -1,9 +1,9 @@
 <map id="manostat::SemiIsotropicStochasticRescalingManostat" name="manostat::SemiIsotropicStochasticRescalingManostat">
-<area shape="rect" id="Node000001" title="SemiIsotropicStochasticRescalingManostat inherits from Manostat." alt="" coords="5,643,242,732"/>
-<area shape="rect" id="Node000004" href="$classTestableSemiIsotropicStochasticRescalingManostat.html" title=" " alt="" coords="13,780,234,869"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="125,744,126,781,121,779,122,749"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1StochasticRescalingManostat.html" title="StochasticRescalingManostat inherits from Manostat." alt="" coords="18,416,229,595"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,607,126,643,121,642,123,612"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="42,5,205,368"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,380,126,417,121,416,123,386"/>
+<area shape="rect" id="Node000001" title="SemiIsotropicStochasticRescalingManostat inherits from Manostat." alt="" coords="5,665,242,754"/>
+<area shape="rect" id="Node000004" href="$classTestableSemiIsotropicStochasticRescalingManostat.html" title=" " alt="" coords="13,802,234,892"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="125,767,126,803,121,802,122,771"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1StochasticRescalingManostat.html" title="StochasticRescalingManostat inherits from Manostat." alt="" coords="18,438,229,617"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,629,126,666,121,665,123,634"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="40,5,208,390"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,403,126,439,121,438,123,408"/>
 </map>

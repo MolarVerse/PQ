@@ -1,5 +1,6 @@
 var testManostat_8cpp =
 [
+    [ "TestableSimSpaceScalingManostat", "classTestableSimSpaceScalingManostat.html", null ],
     [ "TestableStochasticRescalingManostat", "classTestableStochasticRescalingManostat.html", "classTestableStochasticRescalingManostat" ],
     [ "TestableAnisotropicStochasticRescalingManostat", "classTestableAnisotropicStochasticRescalingManostat.html", "classTestableAnisotropicStochasticRescalingManostat" ],
     [ "TestableSemiIsotropicStochasticRescalingManostat", "classTestableSemiIsotropicStochasticRescalingManostat.html", "classTestableSemiIsotropicStochasticRescalingManostat" ],
@@ -27,5 +28,8 @@ var testManostat_8cpp =
     [ "TEST_F", "testManostat_8cpp.html#a3b7e7e6d4e266770f3f66bb7a3208db5", null ],
     [ "TEST_F", "testManostat_8cpp.html#a9a2cda6840bedbe18f755e0dc1053d78", null ],
     [ "TEST_F", "testManostat_8cpp.html#a6747742c3cb7ab14e458f6bcab17f78b", null ],
-    [ "TEST_F", "testManostat_8cpp.html#a3fcd286ca21d5c52566bcd81c88caff7", null ]
+    [ "TEST_F", "testManostat_8cpp.html#a3fcd286ca21d5c52566bcd81c88caff7", null ],
+    [ "TEST_F", "testManostat_8cpp.html#ad438d3298396963c6ca1c0378b331bc6", null ],
+    [ "TEST_F", "testManostat_8cpp.html#ab551f7a073e4ea37992d425368c804d2", null ],
+    [ "TEST_F", "testManostat_8cpp.html#afbab15ab2e6ee17d737511c827dcb5db", null ]
 ];

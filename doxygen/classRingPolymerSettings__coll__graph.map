@@ -1,7 +1,9 @@
 <map id="RingPolymerSettings" name="RingPolymerSettings">
-<area shape="rect" id="Node000001" title="class for storing settings for ring polymer md" alt="" coords="5,408,170,502"/>
-<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="21,173,155,335"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,332,90,391,85,390,87,337"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="22,5,154,78"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,75,90,156,85,156,87,80"/>
+<area shape="rect" id="Node000001" title="class for storing settings for ring polymer md" alt="" coords="23,475,234,569"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="55,173,202,402"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,399,131,458,126,457,127,404"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,137,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,75,93,148,95,156,90,157,88,150,77,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="161,5,211,78"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="179,75,162,157,156,156,177,80"/>
 </map>

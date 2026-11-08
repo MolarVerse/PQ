@@ -99,6 +99,7 @@ $(function(){initNavTree('config_2enums_2manostat_8cpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="config_2enums_2manostat_8hpp.html">enums/manostat.hpp</a>&quot;</code><br />
+<code>#include &lt;bit&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -106,13 +107,15 @@ Include dependency graph for manostat.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="config_2enums_2manostat_8cpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2PQ_2PQ_2src_2config_2enums_2manostat_8cpp" loading="lazy" alt=""/></div>
 <map name="a_2home_2runner_2work_2PQ_2PQ_2src_2config_2enums_2manostat_8cpp" id="a_2home_2runner_2work_2PQ_2PQ_2src_2config_2enums_2manostat_8cpp">
-<area shape="rect" title=" " alt="" coords="220,5,386,67"/>
+<area shape="rect" title=" " alt="" coords="239,5,405,67"/>
 <area shape="rect" href="config_2enums_2manostat_8hpp.html" title=" " alt="" coords="77,115,236,143"/>
-<area shape="poly" title=" " alt="" coords="257,66,192,109,189,104,252,69"/>
-<area shape="rect" title=" " alt="" coords="261,115,346,143"/>
-<area shape="poly" title=" " alt="" coords="305,65,306,100,301,98,302,70"/>
-<area shape="rect" title=" " alt="" coords="370,115,429,143"/>
-<area shape="poly" title=" " alt="" coords="336,65,377,104,372,104,335,70"/>
+<area shape="poly" title=" " alt="" coords="265,69,195,110,192,105,269,66"/>
+<area shape="rect" title=" " alt="" coords="260,115,299,143"/>
+<area shape="poly" title=" " alt="" coords="310,66,294,102,290,99,306,69"/>
+<area shape="rect" title=" " alt="" coords="322,115,407,143"/>
+<area shape="poly" title=" " alt="" coords="337,65,354,101,349,100,335,70"/>
+<area shape="rect" title=" " alt="" coords="431,115,490,143"/>
+<area shape="poly" title=" " alt="" coords="369,65,431,106,425,106,368,70"/>
 <area shape="rect" title=" " alt="" coords="5,191,71,218"/>
 <area shape="poly" title=" " alt="" coords="138,144,73,185,70,180,133,143"/>
 <area shape="rect" title=" " alt="" coords="95,191,218,218"/>
@@ -132,6 +135,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ada3411e92f0b2ea65044828682e51093"><td class="mdescLeft">&#160;</td><td class="mdescRight">gets the isotropic axes for a given semi-isotropic isotropy  <br /></td></tr>
 <tr class="memitem:a5fd9e28e7868b07d8deb9ee7ebfc47be" id="r_a5fd9e28e7868b07d8deb9ee7ebfc47be"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fd9e28e7868b07d8deb9ee7ebfc47be">isAxisFixed</a> (<a class="el" href="config_2enums_2manostat_8hpp.html#ad0dcb0e2ee1ab15ad42a1e47b86a12c5">FixedAxis</a> fixedAxis, size_t axisIndex)</td></tr>
 <tr class="memdesc:a5fd9e28e7868b07d8deb9ee7ebfc47be"><td class="mdescLeft">&#160;</td><td class="mdescRight">checks if a specific axis is fixed in the given <a class="el" href="config_2enums_2manostat_8hpp.html#ad0dcb0e2ee1ab15ad42a1e47b86a12c5" title="enum class to store the fixed axis of the manostat">FixedAxis</a> bitmask  <br /></td></tr>
+<tr class="memitem:a2b052f9c5519435f1c4d4a6f5d650846" id="r_a2b052f9c5519435f1c4d4a6f5d650846"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b052f9c5519435f1c4d4a6f5d650846">toDim</a> (<a class="el" href="config_2enums_2manostat_8hpp.html#ad0dcb0e2ee1ab15ad42a1e47b86a12c5">FixedAxis</a> fixedAxis)</td></tr>
+<tr class="memdesc:a2b052f9c5519435f1c4d4a6f5d650846"><td class="mdescLeft">&#160;</td><td class="mdescRight">converts a <a class="el" href="config_2enums_2manostat_8hpp.html#ad0dcb0e2ee1ab15ad42a1e47b86a12c5" title="enum class to store the fixed axis of the manostat">FixedAxis</a> bitmask to its corresponding dimensionality  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="a5d6bf4c590db5571d69c04ba4901f947" name="a5d6bf4c590db5571d69c04ba4901f947"></a>
@@ -171,9 +176,9 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="config_2enums_2manostat_8cpp_a5d6bf4c590db5571d69c04ba4901f947_icgraph.png" border="0" usemap="#aconfig_2enums_2manostat_8cpp_a5d6bf4c590db5571d69c04ba4901f947_icgraph" loading="lazy" alt=""/></div>
 <map name="aconfig_2enums_2manostat_8cpp_a5d6bf4c590db5571d69c04ba4901f947_icgraph" id="aconfig_2enums_2manostat_8cpp_a5d6bf4c590db5571d69c04ba4901f947_icgraph">
 <area shape="rect" title="gets the anisotropic axis for a given semi&#45;isotropic isotropy" alt="" coords="1443,319,1604,346"/>
-<area shape="rect" href="classmanostat_1_1SemiIsotropicBerendsenManostat.html#a8b89563b256cb7dae1a2c3059606a98a" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="1145,241,1395,286"/>
+<area shape="rect" href="classmanostat_1_1SemiIsotropicBerendsenManostat.html#a88471fe1e2a561374e2d610344a16548" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="1145,241,1395,286"/>
 <area shape="poly" title=" " alt="" coords="1453,314,1354,289,1354,283,1458,314"/>
-<area shape="rect" href="classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="1146,310,1394,355"/>
+<area shape="rect" href="classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#a110dd19a016d6302cdee4e90fe85ec19" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="1146,310,1394,355"/>
 <area shape="poly" title=" " alt="" coords="1425,333,1394,335,1394,330,1430,332"/>
 <area shape="rect" href="classsetup_1_1ManostatSetup.html#a6b750fe516b2aa5253596fb0349e8225" title="validate isotropy and fixed_axis combination" alt="" coords="1171,379,1369,441"/>
 <area shape="poly" title=" " alt="" coords="1464,351,1370,382,1368,377,1459,352"/>
@@ -263,9 +268,9 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="config_2enums_2manostat_8cpp_ada3411e92f0b2ea65044828682e51093_icgraph.png" border="0" usemap="#aconfig_2enums_2manostat_8cpp_ada3411e92f0b2ea65044828682e51093_icgraph" loading="lazy" alt=""/></div>
 <map name="aconfig_2enums_2manostat_8cpp_ada3411e92f0b2ea65044828682e51093_icgraph" id="aconfig_2enums_2manostat_8cpp_ada3411e92f0b2ea65044828682e51093_icgraph">
 <area shape="rect" title="gets the isotropic axes for a given semi&#45;isotropic isotropy" alt="" coords="419,48,566,76"/>
-<area shape="rect" href="classmanostat_1_1SemiIsotropicBerendsenManostat.html#a8b89563b256cb7dae1a2c3059606a98a" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="122,5,371,50"/>
+<area shape="rect" href="classmanostat_1_1SemiIsotropicBerendsenManostat.html#a88471fe1e2a561374e2d610344a16548" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="122,5,371,50"/>
 <area shape="poly" title=" " alt="" coords="401,50,371,48,371,43,406,50"/>
-<area shape="rect" href="classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="123,75,370,119"/>
+<area shape="rect" href="classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#a110dd19a016d6302cdee4e90fe85ec19" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="123,75,370,119"/>
 <area shape="poly" title=" " alt="" coords="406,74,371,82,370,77,401,75"/>
 <area shape="rect" href="testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="5,83,74,111"/>
 <area shape="poly" title=" " alt="" coords="105,98,74,100,74,94,110,96"/>
@@ -315,42 +320,55 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="config_2enums_2manostat_8cpp_a5fd9e28e7868b07d8deb9ee7ebfc47be_icgraph.png" border="0" usemap="#aconfig_2enums_2manostat_8cpp_a5fd9e28e7868b07d8deb9ee7ebfc47be_icgraph" loading="lazy" alt=""/></div>
 <map name="aconfig_2enums_2manostat_8cpp_a5fd9e28e7868b07d8deb9ee7ebfc47be_icgraph" id="aconfig_2enums_2manostat_8cpp_a5fd9e28e7868b07d8deb9ee7ebfc47be_icgraph">
-<area shape="rect" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="984,376,1078,404"/>
-<area shape="rect" href="classmanostat_1_1StochasticRescalingManostat.html#aad7ece15659bb3cf54c50f44d5d34f30" title="Check if a specific axis is fixed." alt="" coords="700,160,922,205"/>
-<area shape="poly" title=" " alt="" coords="1019,360,1007,329,990,290,965,252,934,219,917,208,918,203,937,215,969,248,994,288,1012,327,1024,363"/>
-<area shape="rect" href="classmanostat_1_1AnisotropicBerendsenManostat.html#afed794443d827672d3cca75eb1a30b54" title="calculate mu as scaling factor for Berendsen manostat (anisotropic)" alt="" coords="694,229,928,274"/>
-<area shape="poly" title=" " alt="" coords="1009,363,977,325,957,305,934,289,912,277,913,272,937,284,960,301,981,322,1014,364"/>
-<area shape="rect" href="classmanostat_1_1BerendsenManostat.html#ab77ba17bb56e8faab976e937fccd191b" title="calculate mu as scaling factor for Berendsen manostat (isotropic)" alt="" coords="700,299,922,343"/>
-<area shape="poly" title=" " alt="" coords="976,371,935,358,897,347,898,341,936,353,981,371"/>
-<area shape="rect" href="classmanostat_1_1FullAnisotropicBerendsenManostat.html#a95fea8967742c6cf9b45031500d31962" title="calculate mu as scaling factor for Berendsen manostat (full anisotropic including angles)" alt="" coords="692,368,930,413"/>
-<area shape="poly" title=" " alt="" coords="966,391,931,393,930,388,971,390"/>
-<area shape="rect" href="classmanostat_1_1SemiIsotropicBerendsenManostat.html#a8b89563b256cb7dae1a2c3059606a98a" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="686,437,936,482"/>
-<area shape="poly" title=" " alt="" coords="981,409,936,428,898,439,897,434,935,422,976,411"/>
-<area shape="rect" href="classmanostat_1_1BerendsenManostat.html#a76d6a1f9dda7f5dcc742e5bee8527375" title="Construct a new Manostat:: Manostat object." alt="" coords="700,507,922,551"/>
-<area shape="poly" title=" " alt="" coords="1014,416,981,459,960,479,937,497,913,509,912,504,934,492,957,475,977,456,1009,419"/>
-<area shape="rect" href="testManostatSettings_8cpp.html#a8b20fea90730675517bdbf2f844fedfd" title=" " alt="" coords="784,575,838,603"/>
-<area shape="poly" title=" " alt="" coords="1024,417,1013,454,995,494,970,533,937,566,913,579,887,587,838,592,838,587,886,582,911,574,934,562,966,530,991,491,1008,452,1020,421"/>
-<area shape="rect" href="classmanostat_1_1AnisotropicStochasticRescalingManostat.html#a542d1f74440916dd1520692cf879a2c8" title="calculate mu as scaling factor for Stochastic Rescaling manostat (anisotropic)" alt="" coords="398,5,631,50"/>
-<area shape="poly" title=" " alt="" coords="769,150,710,107,637,65,610,53,609,48,640,60,713,103,774,150"/>
-<area shape="rect" href="classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html#a7cbf6a69e255cf92a192c2365f167f27" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="408,74,621,136"/>
-<area shape="poly" title=" " alt="" coords="705,156,621,135,621,130,710,155"/>
-<area shape="rect" href="classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="391,160,638,205"/>
-<area shape="poly" title=" " alt="" coords="682,183,640,185,638,180,687,182"/>
-<area shape="rect" href="classmanostat_1_1StochasticRescalingManostat.html#a4c9d98558f00c84cd2e452c96f343255" title="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)" alt="" coords="404,229,625,274"/>
-<area shape="poly" title=" " alt="" coords="695,210,614,231,612,226,700,208"/>
-<area shape="rect" href="testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="198,91,266,119"/>
-<area shape="poly" title=" " alt="" coords="414,57,268,98,266,93,418,53"/>
-<area shape="poly" title=" " alt="" coords="391,107,268,107,266,103,395,103"/>
-<area shape="poly" title=" " alt="" coords="414,157,268,117,267,112,418,154"/>
-<area shape="rect" href="classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="122,229,343,274"/>
-<area shape="poly" title=" " alt="" coords="386,253,344,254,343,249,391,251"/>
-<area shape="rect" href="testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="5,298,74,326"/>
-<area shape="poly" title=" " alt="" coords="142,281,75,303,72,299,146,277"/>
-<area shape="rect" href="testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="5,238,74,266"/>
-<area shape="poly" title=" " alt="" coords="104,253,76,254,73,249,108,250"/>
-<area shape="rect" href="classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="122,299,343,343"/>
-<area shape="poly" title=" " alt="" coords="683,323,344,324,343,318,687,319"/>
-<area shape="poly" title=" " alt="" coords="104,317,76,316,73,311,108,313"/>
+<area shape="rect" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="1452,422,1546,450"/>
+<area shape="rect" href="classmanostat_1_1StochasticRescalingManostat.html#aad7ece15659bb3cf54c50f44d5d34f30" title="Check if a specific axis is fixed." alt="" coords="1169,160,1390,205"/>
+<area shape="poly" title=" " alt="" coords="1482,407,1449,348,1402,283,1358,241,1315,208,1316,202,1361,237,1406,279,1454,346,1487,409"/>
+<area shape="rect" href="classmanostat_1_1AnisotropicBerendsenManostat.html#acdf10a9565360079e158c5f21981c07b" title="calculate mu as scaling factor for Berendsen manostat (anisotropic)" alt="" coords="1163,413,1396,458"/>
+<area shape="poly" title=" " alt="" coords="1434,436,1397,438,1396,433,1439,435"/>
+<area shape="rect" href="classmanostat_1_1BerendsenManostat.html#acb6b0650417751fc6a6846530865cad1" title="calculate mu as scaling factor for Berendsen manostat (isotropic)" alt="" coords="1169,293,1390,338"/>
+<area shape="poly" title=" " alt="" coords="1471,411,1440,385,1403,359,1363,341,1364,336,1405,355,1444,381,1476,412"/>
+<area shape="rect" href="classmanostat_1_1FullAnisotropicBerendsenManostat.html#a6890493603e39464efcb7d15a0801d58" title="calculate mu as scaling factor for Berendsen manostat (full anisotropic including angles)" alt="" coords="1160,483,1398,527"/>
+<area shape="poly" title=" " alt="" coords="1450,455,1405,473,1366,485,1365,479,1403,468,1445,456"/>
+<area shape="rect" href="classmanostat_1_1SemiIsotropicBerendsenManostat.html#a88471fe1e2a561374e2d610344a16548" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="1155,552,1404,597"/>
+<area shape="poly" title=" " alt="" coords="1482,461,1450,504,1429,525,1405,542,1382,554,1380,549,1403,537,1425,521,1446,501,1478,464"/>
+<area shape="rect" href="classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="907,353,1059,398"/>
+<area shape="poly" title=" " alt="" coords="1449,415,1403,404,1312,389,1219,380,1060,376,1059,371,1219,375,1312,383,1405,398,1454,416"/>
+<area shape="rect" href="testManostatSettings_8cpp.html#a8b20fea90730675517bdbf2f844fedfd" title=" " alt="" coords="1253,620,1306,648"/>
+<area shape="poly" title=" " alt="" coords="1493,463,1482,499,1464,539,1439,578,1406,611,1381,624,1355,632,1307,638,1306,632,1354,627,1379,620,1402,607,1434,575,1459,536,1477,497,1488,466"/>
+<area shape="rect" href="classmanostat_1_1AnisotropicStochasticRescalingManostat.html#ad3c57dab9c0105d3ce70a3d2cabca752" title="calculate mu as scaling factor for Stochastic Rescaling manostat (anisotropic)" alt="" coords="867,5,1099,50"/>
+<area shape="poly" title=" " alt="" coords="1237,150,1178,107,1105,65,1078,53,1078,48,1108,60,1181,103,1243,150"/>
+<area shape="rect" href="classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html#aac1fab20ee0b4eea7568a63c04b77b77" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="877,74,1089,136"/>
+<area shape="poly" title=" " alt="" coords="1173,156,1090,135,1089,130,1179,155"/>
+<area shape="rect" href="classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#a110dd19a016d6302cdee4e90fe85ec19" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="859,160,1107,205"/>
+<area shape="poly" title=" " alt="" coords="1151,183,1108,185,1107,180,1156,182"/>
+<area shape="rect" href="classmanostat_1_1StochasticRescalingManostat.html#aee9ea6b4c6919e9da57e527fefd3cbdb" title="calculate mu as scaling factor for Stochastic Rescaling manostat (isotropic)" alt="" coords="872,229,1094,274"/>
+<area shape="poly" title=" " alt="" coords="1163,210,1082,231,1081,226,1168,208"/>
+<area shape="rect" href="testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="666,91,735,119"/>
+<area shape="poly" title=" " alt="" coords="882,56,737,98,734,93,887,53"/>
+<area shape="poly" title=" " alt="" coords="859,106,736,108,734,102,864,104"/>
+<area shape="poly" title=" " alt="" coords="882,156,736,117,735,112,887,155"/>
+<area shape="rect" href="classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="590,224,811,269"/>
+<area shape="poly" title=" " alt="" coords="854,250,812,251,811,246,860,249"/>
+<area shape="rect" href="testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="386,267,454,295"/>
+<area shape="poly" title=" " alt="" coords="572,263,455,279,454,274,577,261"/>
+<area shape="rect" href="testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="386,340,454,368"/>
+<area shape="poly" title=" " alt="" coords="604,276,591,283,543,309,456,345,453,340,541,304,589,279,609,273"/>
+<area shape="rect" href="classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="590,293,811,338"/>
+<area shape="poly" title=" " alt="" coords="1150,316,812,318,811,313,1156,315"/>
+<area shape="poly" title=" " alt="" coords="572,301,455,288,454,283,577,299"/>
+<area shape="poly" title=" " alt="" coords="930,345,874,315,810,283,781,272,781,267,812,279,877,310,935,345"/>
+<area shape="poly" title=" " alt="" coords="890,374,454,358,454,353,894,370"/>
+<area shape="poly" title=" " alt="" coords="889,357,809,341,809,336,894,356"/>
+<area shape="rect" href="classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="624,413,777,458"/>
+<area shape="poly" title=" " alt="" coords="889,396,778,422,777,417,894,394"/>
+<area shape="rect" href="testManostatRegressions_8cpp.html#ac93c2151b82ebcfa68d349aa9164ea7d" title=" " alt="" coords="666,482,735,510"/>
+<area shape="poly" title=" " alt="" coords="937,406,878,442,812,473,773,485,736,493,735,488,772,480,810,468,875,438,932,408"/>
+<area shape="rect" href="classengine_1_1RingPolymerQMMDEngine.html#a7696143104df4a62232bb989b73f2848" title="apply manostat" alt="" coords="298,392,542,437"/>
+<area shape="poly" title=" " alt="" coords="606,429,543,426,542,421,612,428"/>
+<area shape="rect" href="testManostatRegressions_8cpp.html#a988dea1ca49601ae00feda8f4da17fd1" title=" " alt="" coords="386,460,454,488"/>
+<area shape="poly" title=" " alt="" coords="607,449,455,472,454,467,612,447"/>
+<area shape="rect" href="classengine_1_1RingPolymerQMMDEngine.html#abf2a1b83ebf163c6eec06c0a99883815" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="5,392,250,437"/>
+<area shape="poly" title=" " alt="" coords="280,415,251,417,249,412,285,413"/>
 </map>
 </div>
 
@@ -437,6 +455,54 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="90,32,62,26,59,22,94,29"/>
 <area shape="rect" href="PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,57,60,85"/>
 <area shape="poly" title=" " alt="" coords="91,63,62,68,58,64,94,59"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a2b052f9c5519435f1c4d4a6f5d650846" name="a2b052f9c5519435f1c4d4a6f5d650846"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b052f9c5519435f1c4d4a6f5d650846">&#9670;&#160;</a></span>toDim()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int toDim </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="config_2enums_2manostat_8hpp.html#ad0dcb0e2ee1ab15ad42a1e47b86a12c5">FixedAxis</a></td>          <td class="paramname"><span class="paramname"><em>fixedAxis</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>converts a <a class="el" href="config_2enums_2manostat_8hpp.html#ad0dcb0e2ee1ab15ad42a1e47b86a12c5" title="enum class to store the fixed axis of the manostat">FixedAxis</a> bitmask to its corresponding dimensionality </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fixedAxis</td><td>the <a class="el" href="config_2enums_2manostat_8hpp.html#ad0dcb0e2ee1ab15ad42a1e47b86a12c5" title="enum class to store the fixed axis of the manostat">FixedAxis</a> bitmask </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the number of fixed axes (0 for none, 1 for a single axis, 2 for two axes, 3 for all axes) </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="config_2enums_2manostat_8cpp_a2b052f9c5519435f1c4d4a6f5d650846_icgraph.png" border="0" usemap="#aconfig_2enums_2manostat_8cpp_a2b052f9c5519435f1c4d4a6f5d650846_icgraph" loading="lazy" alt=""/></div>
+<map name="aconfig_2enums_2manostat_8cpp_a2b052f9c5519435f1c4d4a6f5d650846_icgraph" id="aconfig_2enums_2manostat_8cpp_a2b052f9c5519435f1c4d4a6f5d650846_icgraph">
+<area shape="rect" title="converts a FixedAxis bitmask to its corresponding dimensionality" alt="" coords="303,83,364,111"/>
+<area shape="rect" href="classmanostat_1_1AnisotropicBerendsenManostat.html#acdf10a9565360079e158c5f21981c07b" title="calculate mu as scaling factor for Berendsen manostat (anisotropic)" alt="" coords="13,5,247,50"/>
+<area shape="poly" title=" " alt="" coords="286,77,254,65,219,53,219,48,256,60,291,76"/>
+<area shape="rect" href="classmanostat_1_1FullAnisotropicBerendsenManostat.html#a6890493603e39464efcb7d15a0801d58" title="calculate mu as scaling factor for Berendsen manostat (full anisotropic including angles)" alt="" coords="11,75,249,119"/>
+<area shape="poly" title=" " alt="" coords="285,98,250,100,249,94,290,96"/>
+<area shape="rect" href="classmanostat_1_1SemiIsotropicBerendsenManostat.html#a88471fe1e2a561374e2d610344a16548" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="5,144,255,189"/>
+<area shape="poly" title=" " alt="" coords="291,117,256,134,219,146,218,141,254,129,286,118"/>
 </map>
 </div>
 

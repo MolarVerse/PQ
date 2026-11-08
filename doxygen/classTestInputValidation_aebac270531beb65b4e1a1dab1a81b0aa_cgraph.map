@@ -1,68 +1,40 @@
 <map id="TestInputValidation::SetUp" name="TestInputValidation::SetUp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,784,151,829"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,437,151,482"/>
 <area shape="rect" id="Node000002" href="$classsettings_1_1PotentialSettings.html#adfe157a2e78a8d225559ff523de28007" title="Set the Coulomb long range type in the PotentialSettings class." alt="" coords="212,5,422,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,783,83,639,101,422,116,309,137,205,163,120,179,86,197,61,202,58,199,63,201,64,184,89,168,122,142,207,121,310,106,423,89,639,82,784"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,437,80,365,96,264,111,210,132,156,160,105,197,61,203,57,200,62,201,64,165,108,137,158,116,211,101,265,86,366,82,437"/>
 <area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#a5b9c06df8d1c8f7cf0f20e1e0268df9d" title="Set the Coulomb radius cut off in the PotentialSettings class." alt="" coords="221,75,413,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="78,783,86,651,105,455,121,353,141,260,166,183,180,153,197,130,208,121,206,126,201,133,185,156,171,185,146,261,126,354,110,455,91,651,83,784"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#a6db6b0135265491e5a26ffa38110f898" title="set the end temperature" alt="" coords="212,144,422,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="78,783,89,664,111,492,127,403,146,321,169,253,182,226,197,206,211,195,208,200,201,209,187,229,174,255,151,322,132,404,116,493,94,665,84,784"/>
-<area shape="rect" id="Node000005" href="$classsettings_1_1ThermostatSettings.html#abdc47caa557d6147fed7910c60c2e95a" title="set the end temperature set" alt="" coords="484,175,694,219"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="78,783,88,671,110,509,125,427,145,352,168,291,182,267,197,249,233,236,301,223,471,205,467,209,302,229,235,241,200,254,186,270,173,293,150,354,131,428,115,510,94,671,84,784"/>
-<area shape="rect" id="Node000006" href="$classsettings_1_1QMSettings.html#ae5b096bec1c96480cd0dda9bff580498" title="sets the FeNNol model path" alt="" coords="237,264,397,309"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="79,783,93,684,117,545,133,474,152,409,173,356,197,319,224,301,221,306,201,323,178,358,157,411,138,476,122,546,98,685,85,784"/>
-<area shape="rect" id="Node000007" href="$classsettings_1_1ThermostatSettings.html#afdb399778eea7a652a72b03cbc1e7b8b" title="set the friction" alt="" coords="212,333,422,378"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="76,784,79,709,94,603,109,545,130,489,159,435,197,389,203,385,200,390,201,392,164,438,135,491,114,547,99,604,84,709,81,784"/>
-<area shape="rect" id="Node000008" href="$classsettings_1_1QMSettings.html#a8d44d152590d92fd8e55c8844aec1d5f" title="sets if the Hubbard Derivative dictionary is set by the user" alt="" coords="228,403,406,447"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="78,783,84,719,103,632,118,585,138,539,164,496,197,458,215,446,213,450,200,462,169,499,143,541,123,587,108,633,90,720,83,784"/>
-<area shape="rect" id="Node000010" href="$classsettings_1_1QMSettings.html#af511c42a8672eefc62ef24e854be186e" title="sets if the third order is set" alt="" coords="228,472,406,517"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="80,783,91,731,112,662,146,590,169,556,197,527,216,515,213,520,200,531,173,560,151,592,117,664,96,732,85,784"/>
-<area shape="rect" id="Node000012" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="224,541,410,586"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="83,783,98,743,122,692,154,641,174,617,197,596,212,588,209,592,200,600,178,621,159,644,126,695,103,745,89,784"/>
-<area shape="rect" id="Node000015" href="$classsettings_1_1QMSettings.html#a885998448fce2ba2627bfc7ce0cc60b3" title="sets the maceModel to enum in settings" alt="" coords="239,611,395,655"/>
-<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="90,783,133,724,163,692,197,665,226,652,223,657,200,670,167,696,137,727,95,785"/>
-<area shape="rect" id="Node000016" href="$classsettings_1_1QMSettings.html#aab2fa74336cbab63f0940668fde16d66" title="set the mace model path" alt="" coords="239,680,395,725"/>
-<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="112,782,152,757,198,735,226,725,223,729,200,739,155,762,116,785"/>
-<area shape="rect" id="Node000017" href="$classsettings_1_1QMSettings.html#a5444c6d2cdfacedfdc7d05d612167e05" title="sets the maceModelType to enum in settings" alt="" coords="239,749,395,794"/>
-<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="149,794,225,783,221,787,153,798"/>
-<area shape="rect" id="Node000018" href="$classsettings_1_1QMSettings.html#a62a365fa2f7baa766b07736bf189bf86" title="sets the qmMethod to enum in settings" alt="" coords="239,819,395,863"/>
-<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="149,815,225,826,221,829,152,819"/>
-<area shape="rect" id="Node000019" href="$classsettings_1_1ThermostatSettings.html#adde7f2d5f0e43f549411794a7d875011" title="set the relaxation time" alt="" coords="212,888,422,933"/>
-<area shape="poly" id="edge19_Node000001_Node000019" title=" " alt="" coords="113,827,155,851,200,873,218,881,213,884,198,878,152,855,115,832"/>
-<area shape="rect" id="Node000020" href="$classsettings_1_1QMSettings.html#a5240619fa30e80decda4cb0c87adbec6" title="sets the slakosType to enum in settings" alt="" coords="239,957,395,1002"/>
-<area shape="poly" id="edge20_Node000001_Node000020" title=" " alt="" coords="92,826,137,885,167,916,200,943,227,957,222,959,197,947,163,920,133,889,93,832"/>
-<area shape="rect" id="Node000021" href="$classsettings_1_1ThermostatSettings.html#a359d8ed002272725965af27baefe4405" title="set the start temperature" alt="" coords="212,1027,422,1071"/>
-<area shape="poly" id="edge21_Node000001_Node000021" title=" " alt="" coords="86,826,103,868,126,918,159,969,178,992,200,1012,207,1018,202,1019,197,1016,174,996,154,972,122,920,98,870,86,832"/>
-<area shape="rect" id="Node000022" href="$classsettings_1_1ThermostatSettings.html#a430a5017f3026c15f297c0223ebfa2ef" title="set the start temperature set" alt="" coords="484,1047,694,1091"/>
-<area shape="poly" id="edge23_Node000001_Node000022" title=" " alt="" coords="81,826,92,883,111,954,126,991,146,1025,170,1056,200,1081,236,1100,276,1112,317,1119,358,1120,440,1111,513,1095,509,1098,440,1116,359,1125,316,1124,274,1118,234,1105,197,1086,166,1060,141,1028,121,993,106,956,87,885,81,832"/>
-<area shape="rect" id="Node000023" href="$classsettings_1_1ThermostatSettings.html#a34583b44496c7f5b0bfe2d3f0ef5716a" title="set the target temperature" alt="" coords="212,1147,422,1191"/>
-<area shape="poly" id="edge24_Node000001_Node000023" title=" " alt="" coords="81,827,93,888,112,967,127,1010,147,1052,171,1091,201,1126,214,1138,209,1139,197,1130,167,1094,142,1054,122,1012,107,969,87,889,81,832"/>
-<area shape="rect" id="Node000025" href="$classsettings_1_1ThermostatSettings.html#ab14dab1c6bcdc947f6228793489e3a48" title="set the temperature set" alt="" coords="484,1207,694,1251"/>
-<area shape="poly" id="edge29_Node000001_Node000025" title=" " alt="" coords="83,826,100,912,125,1026,141,1083,159,1134,179,1175,200,1202,219,1212,245,1220,312,1230,391,1234,471,1235,467,1237,391,1239,312,1236,243,1225,217,1217,197,1206,174,1178,154,1137,136,1085,120,1028,95,914,83,832"/>
-<area shape="rect" id="Node000026" href="$classsettings_1_1ThermostatSettings.html#a1db479eaf0e22f7360878526e43d2fd1" title="set the temperature ramp frequency" alt="" coords="199,1267,435,1311"/>
-<area shape="poly" id="edge27_Node000001_Node000026" title=" " alt="" coords="79,826,83,907,88,960,98,1018,112,1079,134,1139,163,1196,201,1246,213,1257,207,1258,197,1249,158,1198,129,1141,107,1080,92,1019,83,961,78,907,78,832"/>
-<area shape="rect" id="Node000027" href="$classsettings_1_1ThermostatSettings.html#a1ab14d70b462706ccb85630a2304c431" title="set the temperature ramp steps" alt="" coords="212,1336,422,1381"/>
-<area shape="poly" id="edge28_Node000001_Node000027" title=" " alt="" coords="82,826,97,934,120,1082,136,1158,155,1227,176,1284,201,1322,204,1326,198,1326,197,1325,172,1286,150,1229,131,1159,115,1083,91,934,81,832"/>
-<area shape="rect" id="Node000028" href="$classsettings_1_1ThermostatSettings.html#ae29ae0e19ed6e7ca9b725ac2c8b063ec" title="sets the thermostatType to enum in settings" alt="" coords="212,1405,422,1450"/>
-<area shape="poly" id="edge30_Node000001_Node000028" title=" " alt="" coords="81,826,94,946,116,1115,131,1202,151,1282,174,1347,187,1372,201,1391,204,1395,198,1395,197,1395,182,1375,169,1349,146,1283,126,1203,110,1116,89,946,81,831"/>
-<area shape="rect" id="Node000030" href="$classsettings_1_1TimingsSettings.html#a83f68d05f4ff106b50d9d4cbdfe93343" title="Set the time step." alt="" coords="224,1475,410,1519"/>
-<area shape="poly" id="edge32_Node000001_Node000030" title=" " alt="" coords="81,827,91,959,112,1148,127,1247,147,1337,171,1411,185,1439,201,1461,213,1473,208,1473,197,1464,181,1442,166,1413,142,1338,122,1248,106,1149,86,959,80,832"/>
-<area shape="rect" id="Node000031" href="$classsettings_1_1QMSettings.html#a6bb00508ab531e43a21e180f3424e43f" title="sets if third order DFTB should be used" alt="" coords="232,1544,402,1589"/>
-<area shape="poly" id="edge33_Node000001_Node000031" title=" " alt="" coords="80,826,89,970,107,1181,123,1291,143,1391,169,1474,184,1506,201,1530,221,1548,215,1547,197,1533,179,1508,164,1476,138,1392,117,1291,102,1182,84,971,80,832"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="421,176,471,182,467,185,423,180"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1QMSettings.html#acacc3738bf0a0bb0e6a27fb02616e9b0" title="returns if the Hubbard derivatives are set by the user" alt="" coords="510,403,668,447"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="405,423,496,423,492,427,408,427"/>
-<area shape="rect" id="Node000011" href="$classsettings_1_1QMSettings.html#ab06f21ee699cf03ab5b1e1f5bf04231c" title="returns if the third order is set" alt="" coords="510,472,668,517"/>
-<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="405,492,497,493,493,496,407,497"/>
-<area shape="rect" id="Node000013" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="496,541,683,586"/>
-<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="408,561,482,562,478,565,411,566"/>
-<area shape="rect" id="Node000014" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="488,611,691,655"/>
-<area shape="poly" id="edge14_Node000012_Node000014" title=" " alt="" coords="407,584,486,605,482,608,409,589"/>
-<area shape="poly" id="edge22_Node000021_Node000022" title=" " alt="" coords="421,1054,472,1059,467,1061,423,1059"/>
-<area shape="rect" id="Node000024" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="483,1137,695,1182"/>
-<area shape="poly" id="edge25_Node000023_Node000024" title=" " alt="" coords="421,1163,470,1163,465,1165,423,1168"/>
-<area shape="poly" id="edge26_Node000023_Node000025" title=" " alt="" coords="421,1189,473,1202,467,1204,422,1195"/>
-<area shape="rect" id="Node000029" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="486,1405,693,1450"/>
-<area shape="poly" id="edge31_Node000028_Node000029" title=" " alt="" coords="422,1425,472,1427,467,1428,422,1430"/>
-<area shape="rect" id="Node000032" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="511,1544,667,1589"/>
-<area shape="poly" id="edge34_Node000031_Node000032" title=" " alt="" coords="402,1564,498,1566,493,1566,402,1569"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="78,436,86,376,105,293,120,249,140,206,166,165,197,130,209,122,206,127,201,134,170,169,145,208,125,251,110,295,91,377,83,437"/>
+<area shape="rect" id="Node000004" href="$classThermostatSettings.html#a732d642850a0fe9a9dcad32ea3a3b912" title="set the end temperature" alt="" coords="239,144,394,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="81,436,94,389,116,327,150,262,172,232,197,206,227,188,224,192,200,210,176,236,154,265,121,329,99,390,86,438"/>
+<area shape="rect" id="Node000005" href="$classThermostatSettings.html#a072b5a7c22b0510991ff135d8f7094e6" title="set the end temperature set" alt="" coords="501,175,677,219"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="83,436,96,395,119,344,152,292,173,269,197,249,219,238,248,229,322,215,405,205,488,200,483,203,406,210,322,220,249,234,221,243,200,254,177,273,157,295,124,346,101,397,88,438"/>
+<area shape="rect" id="Node000006" href="$classThermostatSettings.html#aa3ec336e79392d4946073251c27b53a9" title="set the friction" alt="" coords="242,264,392,309"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="91,436,133,377,163,346,197,319,229,304,226,309,200,323,167,350,137,381,95,438"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="224,333,410,378"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="112,435,152,411,198,388,217,382,214,386,200,393,155,415,116,438"/>
+<area shape="rect" id="Node000010" href="$classThermostatSettings.html#a784b50c7a6f979862a5bb1a12a7aa367" title="set the relaxation time" alt="" coords="241,403,393,447"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="149,447,227,436,223,440,152,451"/>
+<area shape="rect" id="Node000011" href="$classThermostatSettings.html#a8a0d136edac083be8e4da94e13c12adc" title="set the start temperature" alt="" coords="236,472,398,517"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="150,468,222,479,218,482,152,473"/>
+<area shape="rect" id="Node000012" href="$classThermostatSettings.html#a4213807c7fe5707b6adfe8854b21d935" title="set the start temperature set" alt="" coords="498,492,681,537"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="108,480,151,506,199,526,271,540,346,543,417,540,484,534,480,536,418,545,346,548,271,545,198,532,148,511,109,485"/>
+<area shape="rect" id="Node000013" href="$classThermostatSettings.html#aec3f6c4bb78bbb8e79b9eff31ae4fa3b" title="set the target temperature" alt="" coords="231,592,402,637"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="98,480,143,526,171,550,200,571,225,585,220,586,197,575,167,554,140,530,99,485"/>
+<area shape="rect" id="Node000015" href="$classThermostatSettings.html#a86ffc12bd69e8731d80593133a048c02" title="set the temperature set" alt="" coords="513,652,665,697"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="86,479,103,519,126,565,158,611,178,631,200,647,235,664,272,677,351,691,428,693,500,690,495,691,428,699,350,696,271,682,233,669,197,651,174,635,154,614,121,568,98,521,86,485"/>
+<area shape="rect" id="Node000016" href="$classThermostatSettings.html#a5241cedb9c4ee28ba810c196dac72c20" title="set the temperature ramp frequency" alt="" coords="199,712,435,757"/>
+<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="85,480,101,526,124,582,157,640,177,667,200,691,217,704,211,705,197,695,173,671,152,643,119,584,96,527,85,485"/>
+<area shape="rect" id="Node000017" href="$classThermostatSettings.html#aca9b9b2eb48b73d0638c45b242decd59" title="set the temperature ramp steps" alt="" coords="214,781,420,826"/>
+<area shape="poly" id="edge18_Node000001_Node000017" title=" " alt="" coords="82,480,93,540,113,616,128,657,147,697,171,734,201,767,205,772,200,772,197,771,167,738,142,700,123,659,107,618,88,541,81,485"/>
+<area shape="rect" id="Node000018" href="$classsettings_1_1TimingsSettings.html#aed2daadb87a2ea5629e6b836e70307a7" title="Set the time step." alt="" coords="224,851,410,895"/>
+<area shape="poly" id="edge20_Node000001_Node000018" title=" " alt="" coords="80,480,87,551,104,646,119,698,139,748,166,795,201,836,213,848,208,847,197,840,162,798,134,750,114,699,99,648,82,552,79,485"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="394,173,488,184,483,187,396,178"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="496,299,683,343"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="409,342,482,333,478,336,411,346"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="488,368,691,413"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="409,365,475,374,470,377,411,370"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="398,498,484,505,479,508,399,503"/>
+<area shape="rect" id="Node000014" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="483,583,695,627"/>
+<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="402,609,470,608,465,610,404,614"/>
+<area shape="poly" id="edge16_Node000013_Node000015" title=" " alt="" coords="403,631,500,654,495,655,403,636"/>
 </map>

@@ -26,8 +26,8 @@
 <area shape="poly" id="edge18_Node000001_Node000017" title=" " alt="" coords="33,490,35,542,43,612,52,650,65,688,84,723,109,754,124,767,119,768,105,758,79,726,60,690,47,652,38,613,30,542,32,495"/>
 <area shape="rect" id="Node000018" href="$classsettings_1_1HybridSettings.html#a258153466df6a9684d444fcc5b2c070b" title="set the useQMCharges in the settings" alt="" coords="156,837,333,882"/>
 <area shape="poly" id="edge19_Node000001_Node000018" title=" " alt="" coords="34,490,44,562,57,662,79,760,93,798,109,823,124,836,144,847,138,848,121,840,105,827,88,800,74,761,52,663,38,563,34,495"/>
-<area shape="rect" id="Node000019" href="$classWaterModelSettings.html#a026d306484da2d6128b209c3a921e77e" title="sets the waterInterModel to enum in settings" alt="" coords="166,907,323,951"/>
-<area shape="poly" id="edge20_Node000001_Node000019" title=" " alt="" coords="34,490,41,574,53,695,62,757,75,815,90,861,109,893,128,908,153,921,148,921,125,913,105,896,85,864,69,816,57,758,48,696,36,575,34,495"/>
+<area shape="rect" id="Node000019" href="$classWaterModelSettings.html#af9666110e5e0763c2e4ceb87a9251cd0" title="sets the waterInterModel to enum in settings" alt="" coords="142,907,346,951"/>
+<area shape="poly" id="edge20_Node000001_Node000019" title=" " alt="" coords="34,490,41,574,53,695,62,757,75,815,90,861,109,893,131,911,125,911,105,896,85,864,69,816,57,758,48,696,36,575,34,495"/>
 <area shape="rect" id="Node000003" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="479,83,584,111"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,46,466,79,462,82,333,51"/>
 <area shape="rect" id="Node000004" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="681,75,859,119"/>

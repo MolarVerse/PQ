@@ -21,7 +21,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="CI Metrics" href="ciMetrics.html" />
+    <link rel="next" title="Local Build Times" href="localBuildTimes.html" />
     <link rel="prev" title="Static Checks and Conventions" href="staticChecks.html" /> 
 </head>
 
@@ -59,12 +59,12 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#running-the-checks-locally">Running the checks locally</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#timing-comparison">Timing comparison</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#caches-and-speed">Caches and speed</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#when-a-job-fails-without-a-reason">When a job fails without a reason</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#adding-or-changing-a-workflow">Adding or changing a workflow</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ciMetrics.html">CI Metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="localBuildTimes.html">Local Build Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="codeStatistics.html">Code Statistics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="branchesAndReleases.html">Branches and Releases</a></li>
@@ -109,7 +109,7 @@
 <p>Every pull request and every push to the long-lived branches is checked by GitHub Actions. The workflow files are in
 <code class="docutils literal notranslate"><span class="pre">.github/workflows/</span></code>. This page explains what runs when, how to run the same checks on your own machine, why a job
 can be slow or red for reasons that have nothing to do with your change, and what to keep in mind when you edit a
-workflow. The numbers behind the timing statements come from the <a class="reference internal" href="ciMetrics.html"><span class="doc">CI metrics</span></a>.</p>
+workflow.</p>
 <section id="how-the-ci-is-organised">
 <h2>How the CI is organised<a class="headerlink" href="#how-the-ci-is-organised" title="Link to this heading"></a></h2>
 <p>Three conventions apply to almost every workflow:</p>
@@ -120,6 +120,13 @@ filter, so a pull request that only touches documentation does not start the C++
 <li><p><strong>A gate job reports the result.</strong> <code class="docutils literal notranslate"><span class="pre">ci-build-gate</span></code>, <code class="docutils literal notranslate"><span class="pre">lint-gate</span></code>, <code class="docutils literal notranslate"><span class="pre">cpp-check-gate</span></code>, <code class="docutils literal notranslate"><span class="pre">clang-format-gate</span></code> and
 <code class="docutils literal notranslate"><span class="pre">license-check-gate</span></code> fail if one of their jobs failed and pass if the jobs passed <em>or were skipped</em>. A skipped
 job is therefore not a missing check.</p></li>
+<li><p><strong>A release pull request skips the checks that judge the whole diff.</strong> A pull request from a <code class="docutils literal notranslate"><span class="pre">release/*</span></code> branch
+contains every change since the last release, all of which passed these checks on its <code class="docutils literal notranslate"><span class="pre">dev</span></code> pull request. LINT
+(800+ files, one after the other: killed after half an hour), the DevOps C++ Check (fails on vendored files in
+the diff), the Performance Gate (compares with the previous release and reports the sum of a cycle: <code class="docutils literal notranslate"><span class="pre">kinetics</span></code>
++29 %) and the Clang Build do not run on it, nor does the check for a linked issue (the release pull request
+closes no issue of its own). BUILD, Clang Format, License Header, the changelog checks and the
+docs still do. A hotfix is not skipped: its diff is small.</p></li>
 <li><p><strong>Only superseded pull request runs are cancelled.</strong> Pushing to a pull request branch cancels the older run of
 the same workflow. Runs for pushes to <code class="docutils literal notranslate"><span class="pre">dev</span></code> and <code class="docutils literal notranslate"><span class="pre">main</span></code>, the nightly run and manual runs each get their own
 concurrency group and are never cancelled, because they give the verdict for a commit and fill the cache of the
@@ -153,7 +160,10 @@ branch.</p></li>
 <td><p><code class="docutils literal notranslate"><span class="pre">lint.yml</span></code></p></td>
 <td><p>pull requests (any base branch), pushes to <code class="docutils literal notranslate"><span class="pre">dev</span></code>, <code class="docutils literal notranslate"><span class="pre">main</span></code> and <code class="docutils literal notranslate"><span class="pre">NEXT</span></code>, manual</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">clangd-tidy</span></code> on the changed C++ files (<code class="docutils literal notranslate"><span class="pre">scripts/clang_tidy.sh</span></code>). The job builds the project first,
-tolerating compile errors, only to get a compile database.</p></td>
+tolerating compile errors, only to get a compile database.
+It is skipped for release pull requests (<code class="docutils literal notranslate"><span class="pre">release/*</span></code>) and for pushes to <code class="docutils literal notranslate"><span class="pre">main</span></code>: these contain every change
+since the last release, which was linted on its <code class="docutils literal notranslate"><span class="pre">dev</span></code> pull requests, and one serial run over 800 files does
+not finish. A hotfix is linted on its own pull request.</p></td>
 </tr>
 <tr class="row-even"><td><p>DevOps C++ Check</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">devops_cpp_check.yml</span></code></p></td>
@@ -174,7 +184,8 @@ tolerating compile errors, only to get a compile database.</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">changelog.yml</span></code></p></td>
 <td><p>pull requests to <code class="docutils literal notranslate"><span class="pre">dev</span></code> and <code class="docutils literal notranslate"><span class="pre">NEXT</span></code></p></td>
 <td><p>Runs the tests of the scripts in <code class="docutils literal notranslate"><span class="pre">scripts/tests</span></code> and requires a valid changelog fragment,
-see <a class="reference internal" href="developerGuide.html#changelogfragments"><span class="std std-ref">Changelog Fragments</span></a>.</p></td>
+see <a class="reference internal" href="developerGuide.html#changelogfragments"><span class="std std-ref">Changelog Fragments</span></a>. A pull request with the label <code class="docutils literal notranslate"><span class="pre">skip-changelog</span></code> needs no fragment (the tests
+of the scripts still run); adding or removing the label re-runs the check.</p></td>
 </tr>
 <tr class="row-even"><td><p>Check PR Has Linked Issue</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">gh_checks.yml</span></code></p></td>
@@ -194,47 +205,44 @@ and branch predictor (report only). The simulated numbers depend only on the bin
 on the program path and the environment, so the gate runs every binary through a path of the same length
 with an empty environment. The simulation makes the runs about three times slower, so pull requests skip it
 (<code class="docutils literal notranslate"><span class="pre">PERF_CACHE_SIM=0</span></code>); a nightly run (03:00 UTC, <code class="docutils literal notranslate"><span class="pre">dev</span></code> against <code class="docutils literal notranslate"><span class="pre">dev</span></code> of a day earlier, also available as
-a manual run) keeps it on and writes the table to the job summary.</p></td>
+a manual run) keeps it on and writes the table to the job summary.
+A second step compares the CPU time of the measured loop of both builds on the same runner, see
+<a class="reference internal" href="#perftiming"><span class="std std-ref">Timing comparison</span></a>; a confirmed slowdown fails the check.</p></td>
 </tr>
 <tr class="row-even"><td><p>Clang Build</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">clang_build.yml</span></code></p></td>
 <td><p>pull requests that touch C++ or build files</p></td>
-<td><p>Not a gate. Builds and tests the project with clang 20 and records the build analysis for the
-<a class="reference internal" href="ciMetrics.html#cimetricsclangjob"><span class="std std-ref">CI metrics</span></a>.</p></td>
+<td><p>Not a gate. Builds and tests the project with clang 20 to keep it building with clang. Pull requests use
+ccache; a push to <code class="docutils literal notranslate"><span class="pre">dev</span></code> compiles everything and refreshes the cache.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Docs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">jekyll-gh-pages.yml</span></code></p></td>
 <td><p>pull requests to <code class="docutils literal notranslate"><span class="pre">main</span></code> and <code class="docutils literal notranslate"><span class="pre">dev</span></code> that touch <code class="docutils literal notranslate"><span class="pre">docs</span></code>, <code class="docutils literal notranslate"><span class="pre">include</span></code> or <code class="docutils literal notranslate"><span class="pre">src</span></code>; pushes to <code class="docutils literal notranslate"><span class="pre">main</span></code></p></td>
 <td><p>Builds the Sphinx and Doxygen documentation; a push to <code class="docutils literal notranslate"><span class="pre">main</span></code> also deploys the website.</p></td>
 </tr>
-<tr class="row-even"><td><p>CI Metrics</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ci_metrics.yml</span></code></p></td>
-<td><p>daily at 04:30 UTC, manual</p></td>
-<td><p>Collects the timing of all CI runs, see <a class="reference internal" href="ciMetrics.html"><span class="doc">CI Metrics</span></a>.</p></td>
-</tr>
-<tr class="row-odd"><td><p>Sync dev → NEXT</p></td>
+<tr class="row-even"><td><p>Sync dev → NEXT</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sync-dev-into-next.yml</span></code></p></td>
 <td><p>pushes to <code class="docutils literal notranslate"><span class="pre">dev</span></code>, daily at 03:00 UTC, manual</p></td>
 <td><p>Merges <code class="docutils literal notranslate"><span class="pre">dev</span></code> into <code class="docutils literal notranslate"><span class="pre">NEXT</span></code>. On a conflict it opens a pull request from a <code class="docutils literal notranslate"><span class="pre">merge/dev-into-NEXT-&lt;time&gt;</span></code>
 branch instead.</p></td>
 </tr>
-<tr class="row-even"><td><p>Sync main → dev</p></td>
+<tr class="row-odd"><td><p>Sync main → dev</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sync-main-into-dev.yml</span></code></p></td>
 <td><p>pushes to <code class="docutils literal notranslate"><span class="pre">main</span></code>, manual</p></td>
 <td><p>Merges <code class="docutils literal notranslate"><span class="pre">main</span></code> back into <code class="docutils literal notranslate"><span class="pre">dev</span></code> after a release or a hotfix; on a conflict it opens a pull request from a
 <code class="docutils literal notranslate"><span class="pre">merge/main-into-dev…</span></code> branch.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Create Release PR, Release Lifecycle</p></td>
+<tr class="row-even"><td><p>Create Release PR, Release Lifecycle</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">create-release-pr.yml</span></code>, <code class="docutils literal notranslate"><span class="pre">release.yml</span></code></p></td>
 <td><p>manual; pull requests to <code class="docutils literal notranslate"><span class="pre">main</span></code> from <code class="docutils literal notranslate"><span class="pre">release/*</span></code> and <code class="docutils literal notranslate"><span class="pre">hotfix/*</span></code></p></td>
 <td><p>The release process, see <a class="reference internal" href="branchesAndReleases.html"><span class="doc">Branches and Releases</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p>Dismiss Stale Approvals</p></td>
+<tr class="row-odd"><td><p>Dismiss Stale Approvals</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">dismiss_stale_approvals.yml</span></code></p></td>
 <td><p>new commits on pull requests to <code class="docutils literal notranslate"><span class="pre">main</span></code>, <code class="docutils literal notranslate"><span class="pre">dev</span></code> and <code class="docutils literal notranslate"><span class="pre">NEXT</span></code></p></td>
 <td><p>Dismisses approvals when the new commits contain more than a merge of <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p>PQ Bot Coworker, PQ Bot Review</p></td>
+<tr class="row-even"><td><p>PQ Bot Coworker, PQ Bot Review</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pq-bot.yml</span></code>, <code class="docutils literal notranslate"><span class="pre">pq-bot-review.yml</span></code></p></td>
 <td><p>comments on issues and pull requests</p></td>
 <td><p>The <a class="reference internal" href="../userGuide/pqBot.html#pqbot"><span class="std std-ref">PQ Bot</span></a>.</p></td>
@@ -325,6 +333,35 @@ $<span class="w"> </span>cmake<span class="w"> </span>--build<span class="w"> </
 </tbody>
 </table>
 </section>
+<section id="timing-comparison">
+<span id="perftiming"></span><h2>Timing comparison<a class="headerlink" href="#timing-comparison" title="Link to this heading"></a></h2>
+<p>Instruction counts cannot see memory bound code, system calls or file I/O, so <code class="docutils literal notranslate"><span class="pre">scripts/perf_timing.py</span></code> also compares
+the CPU time of the measured loop of every benchmark with the one of the base. Both are built and run in the same job.
+The time comes from <code class="docutils literal notranslate"><span class="pre">libperf_timer.so</span></code> (<code class="docutils literal notranslate"><span class="pre">benchmarks/perf/timer</span></code>), preloaded in a plain run: it measures from the
+<code class="docutils literal notranslate"><span class="pre">perfAllocBegin()</span></code> marker to the end of the process, so startup and setup are not part of it.</p>
+<p>A timing on a shared runner is noisy, so the script does not compare two numbers:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Copies.</strong> Byte-identical copies of a binary run at different speeds (4 to 7 % for allocation heavy code in a
+test: where the file lies in the page cache). Every benchmark is therefore run from 4 copies of the base and 4
+copies of the pull request binary. Their spread is the layout noise and widens the interval.</p></li>
+<li><p><strong>Interleaved and pinned.</strong> Every round runs all copies in a random order on one CPU, without address space
+randomisation, with an empty environment and from paths of the same length.</p></li>
+<li><p><strong>An interval, not a number.</strong> The change is the median of the paired ratios with a 95 % bootstrap interval over
+the rounds, plus the layout noise.</p></li>
+<li><p><strong>A clear criterion.</strong> A regression needs the whole interval above the threshold (10 %). It is then measured again
+with more rounds, and only that second measurement decides. If the layout noise alone exceeds the threshold the
+benchmark is shown as noisy (⚠️) and not judged. Loops shorter than 2 ms (the median of three runs) are listed, not timed.</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>scripts/perf_timing.py<span class="w"> </span>build-pr/benchmarks/perf<span class="w"> </span>build-base/benchmarks/perf<span class="w">    </span><span class="c1"># needs libperf_timer.so there</span>
+$<span class="w"> </span>python3<span class="w"> </span>scripts/perf_timing.py<span class="w"> </span>PR<span class="w"> </span>BASE<span class="w"> </span>--threshold<span class="w"> </span><span class="m">5</span><span class="w"> </span>--rounds<span class="w"> </span><span class="m">21</span><span class="w"> </span>--copies<span class="w"> </span><span class="m">6</span><span class="w"> </span>--report-only
+</pre></div>
+</div>
+<p>Comparing a build with a copy of itself is the way to see the noise of a machine: it must report no regression, and a
+benchmark the script cannot judge shows up as noisy. If the check ever fails without a change of yours, run the
+benchmark again in the job log; to only report, add <code class="docutils literal notranslate"><span class="pre">--report-only</span></code> to the step in <code class="docutils literal notranslate"><span class="pre">perf.yml</span></code>.</p>
+</section>
 <section id="caches-and-speed">
 <h2>Caches and speed<a class="headerlink" href="#caches-and-speed" title="Link to this heading"></a></h2>
 <p>A job that takes twice as long as usual is rarely a problem in your change. These are the effects to look at first:</p>
@@ -338,8 +375,17 @@ compiler calls were uncacheable before, issue #732). The Debug and the lint cach
 Release job went from about 2.5 to 9 minutes for a pull request that changed <code class="docutils literal notranslate"><span class="pre">exceptionTypes.hpp</span></code>. The same is
 true for your local build, see <a class="reference internal" href="localBuildTimes.html"><span class="doc">Local Build Times</span></a>.</p></li>
 <li><p><strong>The runner CPU.</strong> GitHub gives the same job runners of different CPU generations. The same fixed compile took
-4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763. The CI metrics record the CPU model of the
-runner.</p></li>
+4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763.</p></li>
+<li><p><strong>A stalled or slow apt install.</strong> Installing GCC or clang normally takes 6 to 20 s, but the Azure mirror
+sometimes stalls or crawls: the step took 13 to 34 minutes on about one run in ten (#1069). The <code class="docutils literal notranslate"><span class="pre">setup-gcc</span></code>
+action, the clang build and the DevOps check therefore install through <code class="docutils literal notranslate"><span class="pre">awalsh128/cache-apt-pkgs-action</span></code>, which
+caches the <code class="docutils literal notranslate"><span class="pre">.deb</span></code> files per package list: a hit downloads nothing, only a miss (a changed package list, or
+the first run in a branch scope) goes to the mirror. Bump <code class="docutils literal notranslate"><span class="pre">version</span></code> there to drop the cached packages. If a job
+still sits in an install step, cancel and re-run it.</p></li>
+<li><p><strong>The clang job and ccache.</strong> Pull requests build with ccache (the job took 8 to 17 minutes, depending on the CPU
+of the runner, #1045). A push to <code class="docutils literal notranslate"><span class="pre">dev</span></code> ignores the cache for reading (<code class="docutils literal notranslate"><span class="pre">CCACHE_RECACHE</span></code>) and writes it. The
+build passes <code class="docutils literal notranslate"><span class="pre">-Xclang</span> <span class="pre">-fno-pch-timestamp</span></code>: without it clang puts the date of the precompiled header into the
+<code class="docutils literal notranslate"><span class="pre">.pch</span></code> file and every compile is a ccache miss.</p></li>
 <li><p><strong>The Eigen source</strong> is cached under a key that hashes <code class="docutils literal notranslate"><span class="pre">.cmake/eigen.cmake</span></code> and passed to CMake with
 <code class="docutils literal notranslate"><span class="pre">-DFETCHCONTENT_SOURCE_DIR_EIGEN</span></code>, so that no job clones it again.</p></li>
 <li><p><strong>The conda environment</strong> of the integration tests is cached under a key that hashes <code class="docutils literal notranslate"><span class="pre">ci_build.yml</span></code>. <strong>Every
@@ -370,8 +416,7 @@ app that was not installed and its token step failed with “Not Found” (issue
 performance bot are installed.</p></li>
 <li><p>A push made with the default <code class="docutils literal notranslate"><span class="pre">GITHUB_TOKEN</span></code> does not start other workflows. A branch that has to trigger CI
 needs a token of a GitHub App.</p></li>
-<li><p>Prefer the shared actions in <code class="docutils literal notranslate"><span class="pre">.github/actions</span></code>: <code class="docutils literal notranslate"><span class="pre">setup-gcc</span></code> installs the pinned GCC once for all workflows and
-<code class="docutils literal notranslate"><span class="pre">upload-build-timings</span></code> records the build analysis for the <a class="reference internal" href="ciMetrics.html"><span class="doc">CI metrics</span></a>.</p></li>
+<li><p>Prefer the shared actions in <code class="docutils literal notranslate"><span class="pre">.github/actions</span></code>: <code class="docutils literal notranslate"><span class="pre">setup-gcc</span></code> installs the pinned GCC once for all workflows.</p></li>
 </ul>
 </div></blockquote>
 </section>
@@ -382,7 +427,7 @@ needs a token of a GitHub App.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="staticChecks.html" class="btn btn-neutral float-left" title="Static Checks and Conventions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ciMetrics.html" class="btn btn-neutral float-right" title="CI Metrics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="localBuildTimes.html" class="btn btn-neutral float-right" title="Local Build Times" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

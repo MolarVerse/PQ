@@ -13,7 +13,9 @@ var testMolecule_8cpp =
     [ "TEST_F", "testMolecule_8cpp.html#ac2744938637de1f08f66a55a36ed5e04", null ],
     [ "TEST_F", "testMolecule_8cpp.html#a06416a2ed8de3d54ea99d73777736ab9", null ],
     [ "TEST_F", "testMolecule_8cpp.html#aa3c8533bafb178a9f6ae3ff4723ecccf", null ],
+    [ "TEST_F", "testMolecule_8cpp.html#ab27b545fd87c23d61ca4c414a9952562", null ],
     [ "TEST_F", "testMolecule_8cpp.html#a7db12602d6e23d2e3568288b194f0fa1", null ],
     [ "TEST_F", "testMolecule_8cpp.html#a64cd885a3d448bd6484ed3511f9005f1", null ],
+    [ "TEST_F", "testMolecule_8cpp.html#a995dfc36eb098af8674d3ca5e101a9ae", null ],
     [ "TEST_F", "testMolecule_8cpp.html#a339c778a4d93d0b0196b56d090780616", null ]
 ];

@@ -1,7 +1,7 @@
 <map id="TEST" name="TEST">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a060329b7e58cfbb9c02c722b561fcdc5" title="returns the xTBMethod" alt="" coords="107,5,263,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,54,94,47,90,51,60,59"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#af7bcceb3511d3fbfc4ee951b2ac5462d" title="sets the xTB method to enum in settings" alt="" coords="107,75,263,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,66,94,75,89,77,59,71"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,36,59,64"/>
+<area shape="rect" id="Node000002" href="$classXtbSettings.html#af557852dd57468e26991ab8e2339ab99" title="returns the xTBMethod" alt="" coords="107,5,303,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,43,110,34,107,38,60,48"/>
+<area shape="rect" id="Node000003" href="$classXtbSettings.html#a647c561477bfd5a2f0ef921221d75c8c" title="sets the xTB method to enum in settings" alt="" coords="107,57,302,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="59,52,94,59,89,61,59,57"/>
 </map>

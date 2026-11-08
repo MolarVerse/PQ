@@ -1,0 +1,5 @@
+<map id="thermostat::LangevinThermostat::calculateSigma" name="thermostat::LangevinThermostat::calculateSigma">
+<area shape="rect" id="Node000001" title="Calculate sigma for Langevin Thermostat." alt="" coords="5,5,241,50"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1TimingsSettings.html#a9cf276bd4d2096d6fd5ced833badf419" title="get the time step" alt="" coords="289,5,475,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,25,276,28,270,28,241,30"/>
+</map>

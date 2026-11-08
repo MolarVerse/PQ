@@ -1,7 +1,11 @@
 <map id="QM::AseXtbRunner::~AseXtbRunner" name="QM::AseXtbRunner::~AseXtbRunner">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,157,50"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1AseXtbRunner.html#a925a6682313b7fdc0522a3be1bf33e8e" title="Construct a new AseXtbRunner::AseXtbRunner object." alt="" coords="205,5,402,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,25,192,27,186,28,157,30"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="450,5,652,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="403,25,437,28,432,28,403,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,36,157,81"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseXtbRunner.html#afcde22332da95a2dae7ea739a5bb6d7b" title="Construct a new AseXtbRunner::AseXtbRunner object." alt="" coords="205,36,402,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,56,192,58,186,59,158,61"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="470,5,673,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="402,44,458,41,452,41,403,50"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1AseQMRunner.html#a14d780cf728f0d2ede91173dad38732d" title="Construct a new AseQMRunner::AseQMRunner object." alt="" coords="450,74,693,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="403,66,437,73,432,73,402,72"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1QMRunner.html#ac10db8a298dfddae091119ae69324959" title="constructor for the QMRunner class" alt="" coords="741,74,937,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="694,85,728,88,723,88,694,90"/>
 </map>

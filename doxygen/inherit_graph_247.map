@@ -1,15 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classwaterModel_1_1IntraWater.html" title=" " alt="" coords="5,96,180,124"/>
-<area shape="rect" id="Node000001" href="$classwaterModel_1_1MTRIntraWater.html" title=" " alt="" coords="228,65,431,93"/>
-<area shape="poly" id="edge230_Node000000_Node000001" title=" " alt="" coords="194,94,230,91,225,93,195,99"/>
-<area shape="rect" id="Node000004" href="$classwaterModel_1_1SPCIntraWater.html" title=" " alt="" coords="230,125,429,153"/>
-<area shape="poly" id="edge233_Node000000_Node000004" title=" " alt="" coords="194,120,232,126,226,127,195,125"/>
-<area shape="rect" id="Node000002" href="$classwaterModel_1_1SPCMTRIntraWater.html" title=" " alt="" coords="479,5,707,33"/>
-<area shape="poly" id="edge231_Node000001_Node000002" title=" " alt="" coords="406,59,478,42,530,33,525,34,480,47,408,64"/>
-<area shape="rect" id="Node000003" href="$classwaterModel_1_1TIP3PMTRIntraWater.html" title=" " alt="" coords="492,57,694,102"/>
-<area shape="poly" id="edge232_Node000001_Node000003" title=" " alt="" coords="446,77,495,79,489,80,447,82"/>
-<area shape="rect" id="Node000005" href="$classwaterModel_1_1SPCFwIntraWater.html" title=" " alt="" coords="484,125,702,153"/>
-<area shape="poly" id="edge234_Node000004_Node000005" title=" " alt="" coords="444,137,486,139,481,139,445,142"/>
-<area shape="rect" id="Node000006" href="$classwaterModel_1_1qSPCFwIntraWater.html" title=" " alt="" coords="480,177,706,205"/>
-<area shape="poly" id="edge235_Node000004_Node000006" title=" " alt="" coords="418,154,522,177,516,177,418,159"/>
+<area shape="rect" id="Node000000" href="$classtestSettings_1_1Builder.html" title="Collects overrides for one settings struct." alt="" coords="5,5,159,50"/>
 </map>

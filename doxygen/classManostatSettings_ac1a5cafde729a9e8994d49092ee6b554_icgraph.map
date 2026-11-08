@@ -1,5 +1,0 @@
-<map id="ManostatSettings::isFixedAxisSet" name="ManostatSettings::isFixedAxisSet">
-<area shape="rect" id="Node000001" title="get whether FixedAxis was explicitly set" alt="" coords="107,5,295,50"/>
-<area shape="rect" id="Node000002" href="$testManostatSettings_8cpp.html#a2e9bacf8d8b53ede70d1fb4a71a923d5" title=" " alt="" coords="5,14,59,42"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,29,59,30,59,25,93,27"/>
-</map>

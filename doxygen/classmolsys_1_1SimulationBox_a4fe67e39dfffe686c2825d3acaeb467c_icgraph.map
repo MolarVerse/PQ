@@ -1,31 +1,42 @@
 <map id="molsys::SimulationBox::getVolume" name="molsys::SimulationBox::getVolume">
-<area shape="rect" id="Node000001" title="calculates the volume" alt="" coords="768,295,940,339"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="499,5,720,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="840,279,823,233,797,177,763,120,719,71,692,53,692,48,722,67,767,117,802,175,827,231,844,281"/>
-<area shape="rect" id="Node000003" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="304,74,372,102"/>
-<area shape="poly" id="edge10_Node000001_Node000003" title=" " alt="" coords="838,279,821,240,795,194,761,150,741,131,719,115,675,95,628,81,579,73,531,70,441,74,374,83,372,78,441,68,531,64,580,68,629,76,677,90,722,111,745,127,765,146,800,191,825,238,843,281"/>
-<area shape="rect" id="Node000004" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="499,125,720,170"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="824,282,779,233,750,207,719,185,697,173,697,168,722,180,753,203,782,229,829,283"/>
-<area shape="rect" id="Node000006" href="$classQM_1_1AseQMRunner.html#a430f5cbd90020a14e23dbb41fd5ec703" title="collect the stress from the ASE QM calculation" alt="" coords="512,195,707,239"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="795,287,719,254,689,243,689,237,721,249,800,287"/>
-<area shape="rect" id="Node000009" href="$classmanostat_1_1BerendsenManostat.html#a76d6a1f9dda7f5dcc742e5bee8527375" title="Construct a new Manostat:: Manostat object." alt="" coords="499,264,720,309"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="750,305,721,303,720,298,755,304"/>
-<area shape="rect" id="Node000010" href="$testManostatRegressions_8cpp.html#a31ffaa77e4996a8f202dd0b2812fc557" title=" " alt="" coords="576,332,644,360"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="750,330,645,345,644,340,756,328"/>
-<area shape="rect" id="Node000011" href="$testManostatRegressions_8cpp.html#a988dea1ca49601ae00feda8f4da17fd1" title=" " alt="" coords="576,384,644,412"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="791,345,721,374,645,394,644,389,720,369,786,347"/>
-<area shape="rect" id="Node000012" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="576,436,644,464"/>
-<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="823,349,777,391,722,426,682,440,645,449,644,443,681,435,719,421,773,387,818,351"/>
-<area shape="rect" id="Node000013" href="$testManostatRegressions_8cpp.html#a6533bbf4729b51cdf7cd18cee5990520" title=" " alt="" coords="576,488,644,516"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="835,351,788,418,757,451,722,478,683,494,645,502,644,497,681,489,719,473,754,447,784,415,830,354"/>
-<area shape="rect" id="Node000014" href="$testManostatRegressions_8cpp.html#ac93c2151b82ebcfa68d349aa9164ea7d" title=" " alt="" coords="576,540,644,568"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="842,352,824,396,798,444,764,490,722,530,684,548,645,555,644,550,682,543,719,525,760,487,794,441,819,394,837,356"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="489,55,374,83,372,78,493,52"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="489,123,373,98,372,92,494,120"/>
-<area shape="rect" id="Node000005" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="304,134,372,162"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="481,149,374,150,372,145,486,146"/>
-<area shape="rect" id="Node000007" href="$classQM_1_1AseQMRunner.html#ac90c651d7b04e11e6396ebcffd518282" title="collect the data from the ASE QM calculation" alt="" coords="226,203,451,231"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="495,218,452,220,450,214,500,216"/>
-<area shape="rect" id="Node000008" href="$classQM_1_1AseQMRunner.html#afcbff55049c8cdb7ab89153e016f0793" title="run the ASE QM calculation" alt="" coords="5,203,178,231"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="208,218,179,219,177,215,212,216"/>
+<area shape="rect" id="Node000001" title="calculates the volume" alt="" coords="1106,317,1277,362"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="592,43,813,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1173,302,1154,266,1129,223,1096,181,1056,146,999,115,936,93,873,79,814,71,813,66,873,74,937,88,1001,110,1059,141,1100,177,1133,220,1159,263,1178,304"/>
+<area shape="rect" id="Node000003" href="$testManostatRegressions_8cpp.html#a6594458f6116298ac8ad8c72c8edfbdf" title=" " alt="" coords="386,51,454,79"/>
+<area shape="poly" id="edge18_Node000001_Node000003" title=" " alt="" coords="1178,301,1162,255,1137,198,1102,140,1081,115,1056,92,1020,68,982,49,941,33,899,22,812,10,725,9,642,17,566,29,456,57,453,52,565,24,641,11,725,4,813,5,900,17,943,28,984,44,1023,64,1059,88,1084,111,1106,137,1142,195,1167,253,1183,304"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1StochasticRescalingManostat.html#adcfbf354678725eac1c03cb49e24ad07" title="apply Stochastic Rescaling manostat for NPT ensemble" alt="" coords="592,112,813,157"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1167,303,1121,245,1091,215,1056,191,997,166,935,149,872,139,814,135,813,130,873,134,936,144,999,161,1059,187,1094,211,1125,242,1172,305"/>
+<area shape="rect" id="Node000006" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="884,201,1037,246"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="1129,310,1006,249,1007,244,1134,310"/>
+<area shape="rect" id="Node000010" href="$testManostatRegressions_8cpp.html#a988dea1ca49601ae00feda8f4da17fd1" title=" " alt="" coords="386,326,454,354"/>
+<area shape="poly" id="edge20_Node000001_Node000010" title=" " alt="" coords="1089,342,455,342,454,337,1091,337"/>
+<area shape="rect" id="Node000011" href="$testManostatRegressions_8cpp.html#ac93c2151b82ebcfa68d349aa9164ea7d" title=" " alt="" coords="668,301,737,328"/>
+<area shape="poly" id="edge23_Node000001_Node000011" title=" " alt="" coords="1088,335,737,319,737,313,1093,334"/>
+<area shape="rect" id="Node000012" href="$classQM_1_1AseQMRunner.html#a430f5cbd90020a14e23dbb41fd5ec703" title="collect the stress from the ASE QM calculation" alt="" coords="863,403,1058,447"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="1117,367,1024,405,1022,400,1112,369"/>
+<area shape="rect" id="Node000015" href="$testManostatRegressions_8cpp.html#a31ffaa77e4996a8f202dd0b2812fc557" title=" " alt="" coords="926,471,995,499"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="1164,372,1117,420,1089,443,1059,462,1027,475,996,483,995,478,1026,470,1056,457,1086,439,1114,416,1159,375"/>
+<area shape="rect" id="Node000016" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="926,523,995,551"/>
+<area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="1174,374,1128,446,1096,482,1059,513,1028,528,996,536,995,530,1026,523,1056,508,1092,478,1124,443,1169,377"/>
+<area shape="rect" id="Node000017" href="$testManostatRegressions_8cpp.html#a6533bbf4729b51cdf7cd18cee5990520" title=" " alt="" coords="926,575,995,603"/>
+<area shape="poly" id="edge22_Node000001_Node000017" title=" " alt="" coords="1180,375,1163,421,1137,471,1103,522,1059,564,1028,581,996,589,995,583,1026,576,1056,560,1098,518,1132,469,1158,419,1176,378"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="574,66,455,68,453,62,579,64"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="591,109,455,76,454,71,596,107"/>
+<area shape="rect" id="Node000005" href="$testManostatRegressions_8cpp.html#a1f756f545c116c48ec8f238211e42f1b" title=" " alt="" coords="386,151,454,179"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="574,149,455,164,453,159,579,147"/>
+<area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="925,190,876,146,814,102,790,90,790,85,817,97,879,141,931,190"/>
+<area shape="poly" id="edge12_Node000006_Node000004" title=" " alt="" coords="877,196,769,160,769,155,882,195"/>
+<area shape="poly" id="edge13_Node000006_Node000005" title=" " alt="" coords="867,216,454,171,454,166,871,212"/>
+<area shape="rect" id="Node000007" href="$classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="626,232,779,277"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="866,235,780,248,778,243,871,234"/>
+<area shape="poly" id="edge14_Node000006_Node000011" title=" " alt="" coords="904,252,816,292,738,311,736,306,814,286,899,254"/>
+<area shape="rect" id="Node000008" href="$classengine_1_1RingPolymerQMMDEngine.html#a7696143104df4a62232bb989b73f2848" title="apply manostat" alt="" coords="298,232,542,277"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="608,255,543,257,542,252,614,254"/>
+<area shape="poly" id="edge11_Node000007_Node000010" title=" " alt="" coords="609,283,455,332,453,327,614,280"/>
+<area shape="rect" id="Node000009" href="$classengine_1_1RingPolymerQMMDEngine.html#abf2a1b83ebf163c6eec06c0a99883815" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="5,232,250,277"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="280,256,251,257,249,252,285,253"/>
+<area shape="rect" id="Node000013" href="$classQM_1_1AseQMRunner.html#ac90c651d7b04e11e6396ebcffd518282" title="collect the data from the ASE QM calculation" alt="" coords="590,411,815,439"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="845,425,816,428,815,422,850,425"/>
+<area shape="rect" id="Node000014" href="$classQM_1_1AseQMRunner.html#afcbff55049c8cdb7ab89153e016f0793" title="run the ASE QM calculation" alt="" coords="334,411,506,439"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="572,426,507,428,506,422,577,424"/>
 </map>

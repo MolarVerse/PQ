@@ -1,123 +1,131 @@
 <map id="engine::RingPolymerQMMDEngine::takeStep" name="engine::RingPolymerQMMDEngine::takeStep">
-<area shape="rect" id="Node000001" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="5,1044,250,1089"/>
-<area shape="rect" id="Node000002" href="$classconstraints_1_1Constraints.html#a4b89736a14130b242bcbaa170485e8df" title="applies the distance constraints to all distance constraints" alt="" coords="322,83,518,127"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,1043,138,867,150,737,166,595,188,452,217,321,233,263,252,212,273,170,296,138,310,127,307,132,300,141,277,173,257,214,238,265,222,322,193,453,171,596,155,738,144,868,132,1044"/>
-<area shape="rect" id="Node000003" href="$classengine_1_1RingPolymerQMMDEngine.html#a7696143104df4a62232bb989b73f2848" title="apply manostat" alt="" coords="298,152,542,197"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,1043,141,880,172,632,195,502,222,382,256,282,275,244,296,214,309,204,307,208,300,217,280,246,261,284,228,383,200,503,177,633,147,881,133,1044"/>
-<area shape="rect" id="Node000009" href="$classengine_1_1RingPolymerEngine.html#a340c33f61cef81deb6c00a3139bfbd2d" title=" " alt="" coords="619,195,819,239"/>
-<area shape="poly" id="edge39_Node000001_Node000009" title=" " alt="" coords="127,1043,140,885,152,771,168,647,191,523,219,411,235,361,254,319,274,284,296,258,318,244,348,233,426,219,516,213,606,212,602,216,516,218,427,225,349,238,320,249,299,262,278,287,258,321,240,363,224,412,196,525,174,648,157,772,145,886,133,1044"/>
-<area shape="rect" id="Node000010" href="$classengine_1_1RingPolymerEngine.html#ab051dad3853b3f97de92fb03345616c2" title=" " alt="" coords="590,264,848,309"/>
-<area shape="poly" id="edge40_Node000001_Node000010" title=" " alt="" coords="129,1043,146,907,179,707,202,603,229,508,260,430,277,400,296,378,325,354,353,340,381,334,409,332,469,334,503,332,541,326,613,311,609,315,543,332,504,338,469,339,409,337,382,339,355,345,328,359,300,382,282,403,265,433,234,510,207,604,184,708,151,908,134,1044"/>
-<area shape="rect" id="Node000011" href="$classthermostat_1_1Thermostat.html#ad893611256b75c00eb189438952222f2" title="Apply temperature ramping." alt="" coords="317,1009,522,1054"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="248,1050,304,1044,300,1047,252,1054"/>
-<area shape="rect" id="Node000014" href="$classengine_1_1RingPolymerQMMDEngine.html#a7b53e62eada464e62d54397a0e6453c9" title="apply thermostat" alt="" coords="298,272,542,317"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="129,1043,146,901,179,688,202,578,229,476,260,392,277,359,296,334,310,323,307,328,300,337,282,362,265,394,234,477,207,579,184,689,151,901,134,1044"/>
-<area shape="rect" id="Node000016" href="$classengine_1_1MDEngine.html#af9aadbdc0f8fc2279ab07be0f9f1a767" title="get the reference to the thermostat" alt="" coords="598,478,841,506"/>
-<area shape="poly" id="edge43_Node000001_Node000016" title=" " alt="" coords="137,1043,192,942,235,871,288,794,350,715,422,639,501,571,544,541,589,515,604,510,600,513,591,519,547,545,505,575,425,643,354,719,292,797,239,874,196,944,142,1045"/>
-<area shape="rect" id="Node000017" href="$classengine_1_1RingPolymerQMMDEngine.html#ad01060e2d60918f40ffaf337c7756ca5" title="apply thermostat for half step" alt="" coords="298,469,542,514"/>
-<area shape="poly" id="edge19_Node000001_Node000017" title=" " alt="" coords="132,1043,153,971,188,866,235,747,264,687,295,630,338,572,385,523,382,528,342,575,300,633,269,690,240,749,193,868,158,972,137,1044"/>
-<area shape="rect" id="Node000019" href="$classthermostat_1_1Thermostat.html#a21dd2bf0aae51af2b77396322c56857e" title=" " alt="" coords="320,1079,520,1123"/>
-<area shape="poly" id="edge24_Node000001_Node000019" title=" " alt="" coords="249,1078,307,1086,302,1089,251,1083"/>
-<area shape="rect" id="Node000020" href="$classengine_1_1Engine.html#a77472643b962f17d5aa76a05da6169cf" title="Calculate total simulation time." alt="" coords="328,1148,512,1193"/>
-<area shape="poly" id="edge25_Node000001_Node000020" title=" " alt="" coords="180,1087,299,1133,322,1142,317,1144,297,1138,181,1092"/>
-<area shape="rect" id="Node000021" href="$classengine_1_1RingPolymerEngine.html#ae282321f05969b8574a27d6f4c7e8525" title="combining all beads into one simulation box" alt="" coords="320,1217,520,1262"/>
-<area shape="poly" id="edge26_Node000001_Node000021" title=" " alt="" coords="150,1086,215,1145,255,1176,299,1203,313,1210,308,1212,296,1207,252,1180,211,1149,151,1092"/>
-<area shape="rect" id="Node000026" href="$classengine_1_1Engine.html#a3de2559488f0ddc5db3af0dd8cc73a52" title="get the reference to the simulation box" alt="" coords="598,1478,840,1506"/>
-<area shape="poly" id="edge41_Node000001_Node000026" title=" " alt="" coords="140,1086,166,1128,201,1179,246,1230,271,1253,299,1272,333,1288,364,1294,424,1291,453,1289,483,1292,513,1302,544,1323,559,1341,566,1359,569,1396,571,1431,578,1448,592,1464,596,1470,591,1469,588,1468,573,1451,566,1433,563,1396,561,1360,554,1343,540,1327,510,1306,482,1297,453,1295,424,1296,364,1299,331,1293,296,1277,268,1257,242,1234,197,1182,162,1131,141,1092"/>
-<area shape="rect" id="Node000027" href="$classengine_1_1RingPolymerEngine.html#a819e710a99542809f6dfb0635ec34bab" title="coupling step of ring polymers" alt="" coords="320,940,520,985"/>
-<area shape="poly" id="edge32_Node000001_Node000027" title=" " alt="" coords="179,1041,297,994,322,988,318,992,299,1000,182,1045"/>
-<area shape="rect" id="Node000029" href="$classintegrator_1_1Integrator.html#a81aaf673aead77f8212b4a5230d85562" title=" " alt="" coords="341,1337,498,1382"/>
-<area shape="poly" id="edge34_Node000001_Node000029" title=" " alt="" coords="138,1086,162,1135,197,1197,243,1261,270,1290,299,1316,329,1335,324,1336,296,1320,266,1294,239,1264,192,1200,158,1138,138,1092"/>
-<area shape="rect" id="Node000030" href="$classengine_1_1Engine.html#a85305d3371461f86b6dad610a0836eca" title="get the shared pointer to the constraints" alt="" coords="310,1406,530,1434"/>
-<area shape="poly" id="edge35_Node000001_Node000030" title=" " alt="" coords="133,1086,152,1150,184,1233,205,1277,232,1320,263,1359,299,1392,306,1398,300,1398,296,1396,259,1362,227,1323,201,1280,179,1235,147,1152,133,1092"/>
-<area shape="rect" id="Node000031" href="$classengine_1_1MDEngine.html#a130fb60ab0a95a2aabff65a173acf130" title="get the reference to the integrator" alt="" coords="304,1458,536,1486"/>
-<area shape="poly" id="edge36_Node000001_Node000031" title=" " alt="" coords="132,1086,148,1158,177,1255,199,1306,226,1357,259,1403,299,1443,307,1450,301,1450,296,1447,255,1407,221,1360,194,1309,172,1257,143,1160,132,1092"/>
-<area shape="rect" id="Node000032" href="$classengine_1_1Engine.html#a91f48b211a0c14ea3d065b9949f65a18" title="get the reference to the physical data" alt="" coords="304,1510,536,1538"/>
-<area shape="poly" id="edge37_Node000001_Node000032" title=" " alt="" coords="131,1087,144,1167,155,1220,170,1278,192,1337,220,1395,256,1449,299,1495,306,1502,301,1502,296,1499,251,1452,215,1398,187,1339,165,1279,149,1221,138,1168,130,1092"/>
-<area shape="rect" id="Node000033" href="$classengine_1_1MDEngine.html#a7136c24ba6c6155a82614b0a05371c0f" title="get the reference to the reset kinetics" alt="" coords="317,1561,522,1606"/>
-<area shape="poly" id="edge38_Node000001_Node000033" title=" " alt="" coords="130,1086,141,1174,151,1233,166,1298,187,1365,216,1431,253,1493,300,1547,307,1555,302,1555,296,1551,249,1496,211,1434,182,1367,161,1299,145,1234,136,1175,129,1092"/>
-<area shape="rect" id="Node000034" href="$classengine_1_1Engine.html#ae2c9118351767468ac7aeaffe8150621" title=" " alt="" coords="332,1630,508,1658"/>
-<area shape="poly" id="edge42_Node000001_Node000034" title=" " alt="" coords="129,1086,134,1186,141,1254,155,1329,175,1407,205,1484,246,1555,271,1587,299,1616,321,1632,315,1632,296,1620,267,1591,242,1558,200,1486,170,1409,149,1330,136,1255,129,1186,128,1092"/>
-<area shape="rect" id="Node000035" href="$classengine_1_1RingPolymerQMMDEngine.html#a44c4f01c10177bec06b248f8d03d5733" title="qm calculation" alt="" coords="298,392,542,437"/>
-<area shape="poly" id="edge44_Node000001_Node000035" title=" " alt="" coords="125,1043,128,939,135,865,148,783,169,696,199,609,241,528,267,490,296,455,313,443,310,448,300,459,271,493,245,531,204,612,174,697,153,784,140,866,134,940,131,1044"/>
-<area shape="rect" id="Node000038" href="$classresetKinetics_1_1ResetKinetics.html#a4ab078b63f9fa805dcf35809abd6b4af" title="checks to reset angular momentum" alt="" coords="318,816,522,861"/>
-<area shape="poly" id="edge50_Node000001_Node000038" title=" " alt="" coords="153,1042,296,926,376,868,373,872,299,930,157,1045"/>
-<area shape="rect" id="Node000052" href="$classintegrator_1_1Integrator.html#ad6d5419d53533f933a1b6ca1cf6980c1" title=" " alt="" coords="341,1681,498,1726"/>
-<area shape="poly" id="edge69_Node000001_Node000052" title=" " alt="" coords="128,1087,132,1193,139,1267,151,1348,172,1434,202,1518,244,1598,270,1634,299,1667,329,1689,324,1688,296,1671,266,1637,240,1601,197,1521,167,1435,146,1349,134,1267,127,1194,128,1092"/>
-<area shape="rect" id="Node000004" href="$classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="643,5,795,50"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="521,150,540,138,556,119,563,100,571,80,588,60,630,41,627,45,592,64,576,83,568,102,561,122,544,142,525,153"/>
-<area shape="rect" id="Node000008" href="$classengine_1_1MDEngine.html#a8c76de7c312956d2a699baa52180cef4" title="get the reference to the manostat" alt="" coords="604,74,834,102"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="508,150,541,137,565,124,589,111,614,104,610,108,591,115,567,128,543,142,512,153"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="541,189,606,199,601,202,544,194"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="465,195,525,222,591,249,614,258,609,260,589,254,523,227,467,200"/>
-<area shape="rect" id="Node000005" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="927,5,1079,50"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="795,25,914,26,909,29,797,30"/>
-<area shape="rect" id="Node000006" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="950,134,1056,162"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="795,42,849,60,914,91,970,125,965,126,911,96,847,65,797,47"/>
-<area shape="rect" id="Node000007" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="1158,125,1335,170"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1055,145,1145,146,1140,149,1057,150"/>
-<area shape="rect" id="Node000012" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="613,1116,825,1161"/>
-<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="511,1052,543,1064,568,1079,591,1095,624,1110,619,1111,589,1099,565,1084,541,1069,513,1057"/>
-<area shape="rect" id="Node000013" href="$classthermostat_1_1Thermostat.html#ac10a06698a451c686e0d86720326d2c6" title="set target temperature" alt="" coords="631,1185,807,1230"/>
-<area shape="poly" id="edge12_Node000011_Node000013" title=" " alt="" coords="523,1051,544,1064,556,1078,563,1092,569,1119,574,1146,580,1159,592,1171,619,1189,614,1190,588,1175,576,1162,569,1148,563,1120,558,1093,552,1081,540,1068,523,1056"/>
-<area shape="poly" id="edge16_Node000014_Node000009" title=" " alt="" coords="508,269,617,242,614,246,511,273"/>
-<area shape="poly" id="edge17_Node000014_Node000010" title=" " alt="" coords="541,289,576,289,572,292,544,293"/>
-<area shape="rect" id="Node000015" href="$classthermostat_1_1Thermostat.html#a9405aedc9eeafd72d0380466ece70f84" title="apply thermostat &#45; base class" alt="" coords="631,125,807,170"/>
-<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="451,270,525,219,589,180,618,170,614,174,591,185,528,223,455,273"/>
-<area shape="poly" id="edge18_Node000014_Node000016" title=" " alt="" coords="462,315,505,343,544,378,559,402,566,424,574,444,592,463,601,470,596,471,588,467,570,447,561,426,554,404,540,381,502,347,464,320"/>
-<area shape="poly" id="edge15_Node000015_Node000006" title=" " alt="" coords="807,145,937,146,933,149,809,150"/>
-<area shape="poly" id="edge21_Node000017_Node000009" title=" " alt="" coords="514,467,540,447,556,423,564,399,565,374,562,350,560,325,562,300,570,275,588,250,607,237,604,241,592,254,575,277,567,301,566,325,568,349,570,374,569,399,561,425,544,451,518,471"/>
-<area shape="poly" id="edge22_Node000017_Node000010" title=" " alt="" coords="512,467,540,447,552,432,559,416,563,384,567,352,575,335,588,319,595,316,592,320,592,323,579,338,572,353,568,385,564,417,557,434,544,451,516,470"/>
-<area shape="poly" id="edge23_Node000017_Node000016" title=" " alt="" coords="541,489,584,490,580,493,544,494"/>
-<area shape="rect" id="Node000018" href="$classthermostat_1_1Thermostat.html#a7aa89b6397fb095e22b454212bc47937" title=" " alt="" coords="621,529,817,574"/>
-<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="533,512,608,528,603,530,536,517"/>
-<area shape="rect" id="Node000022" href="$classmolsys_1_1Atom.html#a5eaa337d10a47e7b97c71dcaf3ad568a" title=" " alt="" coords="630,1254,808,1282"/>
-<area shape="poly" id="edge27_Node000021_Node000022" title=" " alt="" coords="520,1246,617,1257,612,1259,521,1252"/>
-<area shape="rect" id="Node000023" href="$classmolsys_1_1Atom.html#a1b3b40b3ef07bcad27b685a9ab926109" title="add a linalg::Vec3D to the current position of the atom" alt="" coords="622,1306,817,1334"/>
-<area shape="poly" id="edge28_Node000021_Node000023" title=" " alt="" coords="488,1260,591,1290,630,1301,625,1303,589,1296,489,1265"/>
-<area shape="rect" id="Node000024" href="$classmolsys_1_1Atom.html#ac001c2ac76f12b645bd9e9b4288b058b" title="add a linalg::Vec3D to the current velocity of the atom" alt="" coords="622,1358,817,1386"/>
-<area shape="poly" id="edge29_Node000021_Node000024" title=" " alt="" coords="509,1260,544,1279,560,1296,568,1312,576,1328,592,1343,610,1354,604,1354,588,1347,572,1331,563,1315,555,1299,540,1283,509,1265"/>
-<area shape="rect" id="Node000025" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="634,1409,805,1454"/>
-<area shape="poly" id="edge30_Node000021_Node000025" title=" " alt="" coords="515,1260,544,1279,556,1294,563,1309,568,1339,573,1368,580,1382,592,1395,622,1415,616,1415,588,1399,575,1384,568,1370,563,1340,558,1311,552,1297,540,1283,515,1265"/>
-<area shape="poly" id="edge31_Node000021_Node000026" title=" " alt="" coords="518,1260,544,1279,561,1303,568,1328,567,1375,566,1398,567,1421,575,1443,592,1465,595,1469,590,1468,588,1468,570,1445,562,1422,560,1398,562,1375,563,1328,556,1306,540,1283,518,1265"/>
-<area shape="rect" id="Node000028" href="$classsettings_1_1ThermostatSettings.html#a8f899f6bc6879407100993fe6a0d9f54" title="get the actual target temperature" alt="" coords="896,1056,1110,1101"/>
-<area shape="poly" id="edge33_Node000027_Node000028" title=" " alt="" coords="519,983,544,995,559,1010,568,1025,576,1039,591,1051,626,1065,662,1077,737,1090,812,1095,883,1094,879,1096,812,1100,737,1096,661,1082,624,1070,589,1055,572,1042,563,1027,555,1013,540,999,520,988"/>
-<area shape="poly" id="edge46_Node000035_Node000009" title=" " alt="" coords="460,390,501,362,540,327,554,307,562,287,571,268,588,250,607,240,603,244,592,254,575,271,567,289,559,309,544,331,504,366,464,393"/>
-<area shape="poly" id="edge47_Node000035_Node000010" title=" " alt="" coords="504,390,541,371,555,358,564,345,573,332,588,319,602,313,598,317,592,323,577,335,568,348,559,362,543,375,508,393"/>
-<area shape="rect" id="Node000036" href="$classengine_1_1QMCapableEngine.html#a8994a56466dfbd077aa992e40e16da87" title="Get the QM runner." alt="" coords="623,333,815,378"/>
-<area shape="poly" id="edge45_Node000035_Node000036" title=" " alt="" coords="536,389,610,376,606,379,539,394"/>
-<area shape="rect" id="Node000037" href="$classQM_1_1QMRunner.html#af8a7dcb550be92a6cdb6b0dcd32cbf17" title="run the qm engine with default periodicity XYZ (3d)" alt="" coords="645,426,793,454"/>
-<area shape="poly" id="edge48_Node000035_Node000037" title=" " alt="" coords="541,422,631,431,627,434,544,427"/>
-<area shape="poly" id="edge49_Node000037_Node000037" title=" " alt="" coords="671,426,663,417,670,407,688,401,719,399,753,402,772,410,767,412,752,407,719,404,689,406,673,411,669,417,676,425"/>
-<area shape="poly" id="edge68_Node000038_Node000006" title=" " alt="" coords="490,814,517,798,540,778,552,760,558,742,561,706,565,670,573,652,588,635,622,613,655,605,687,605,719,609,751,613,783,613,814,605,847,584,889,539,923,486,949,428,968,369,982,312,991,258,1000,179,1002,174,996,259,987,313,973,371,954,430,927,488,893,542,850,588,817,610,783,618,751,618,719,614,687,610,655,610,624,618,592,639,578,655,570,672,566,706,564,743,557,762,544,781,520,802,493,817"/>
-<area shape="rect" id="Node000039" href="$classmolsys_1_1SimulationBox.html#ad8c77c782c3758cc7ae205f01ff31d67" title="calculate angular momentum of simulationBox" alt="" coords="612,649,826,694"/>
-<area shape="poly" id="edge51_Node000038_Node000039" title=" " alt="" coords="442,814,505,759,545,729,589,704,605,698,602,702,591,709,548,734,508,763,446,817"/>
-<area shape="rect" id="Node000041" href="$classmolsys_1_1SimulationBox.html#a81dff1f29a520c8c884853b375c3c9bd" title="calculate momentum of simulationBox" alt="" coords="634,857,805,902"/>
-<area shape="poly" id="edge53_Node000038_Node000041" title=" " alt="" coords="521,850,620,865,616,867,523,855"/>
-<area shape="rect" id="Node000042" href="$classmolsys_1_1SimulationBox.html#a8ce2ce865611680c4f9ffc84cc9736f7" title="calculate temperature of simulationBox" alt="" coords="634,927,805,971"/>
-<area shape="poly" id="edge54_Node000038_Node000042" title=" " alt="" coords="466,859,526,886,591,912,621,923,616,925,589,917,524,891,468,864"/>
-<area shape="rect" id="Node000043" href="$classresetKinetics_1_1ResetKinetics.html#a206cb75a7ee137a06093c4fd91211525" title="reset the angular momentum of the system" alt="" coords="618,719,821,763"/>
-<area shape="poly" id="edge55_Node000038_Node000043" title=" " alt="" coords="477,813,589,773,617,766,613,770,591,778,481,818"/>
-<area shape="rect" id="Node000048" href="$classresetKinetics_1_1ResetKinetics.html#a1dc83729626654fc1fa63a97672098c4" title="reset the momentum of the system" alt="" coords="618,788,821,833"/>
-<area shape="poly" id="edge61_Node000038_Node000048" title=" " alt="" coords="521,826,604,820,600,823,523,831"/>
-<area shape="rect" id="Node000050" href="$classresetKinetics_1_1ResetKinetics.html#a4259f8ee6e39f116e463be882be2a98d" title="reset the temperature of the system &#45; hard scaling" alt="" coords="618,996,821,1041"/>
-<area shape="poly" id="edge64_Node000038_Node000050" title=" " alt="" coords="456,858,500,889,544,926,558,942,567,956,576,969,592,981,606,990,600,992,588,986,572,972,562,959,554,945,540,930,497,893,457,864"/>
-<area shape="rect" id="Node000040" href="$classmolsys_1_1SimulationBox.html#ad4727b1fadb1c321684918232354f80c" title="calculate center of mass of simulationBox" alt="" coords="913,607,1093,651"/>
-<area shape="poly" id="edge52_Node000039_Node000040" title=" " alt="" coords="825,653,900,643,895,646,828,658"/>
-<area shape="poly" id="edge56_Node000043_Node000040" title=" " alt="" coords="820,716,847,704,861,694,870,683,880,672,895,661,909,656,905,660,898,666,884,676,874,687,865,698,850,709,823,721"/>
-<area shape="rect" id="Node000044" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="921,727,1085,755"/>
-<area shape="poly" id="edge57_Node000043_Node000044" title=" " alt="" coords="820,739,908,740,903,742,822,743"/>
-<area shape="rect" id="Node000045" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="917,848,1089,893"/>
-<area shape="poly" id="edge58_Node000043_Node000045" title=" " alt="" coords="820,759,850,773,866,789,875,804,883,819,898,834,907,840,901,841,895,838,879,822,870,807,862,792,847,778,821,764"/>
-<area shape="rect" id="Node000046" href="$classmolsys_1_1SimulationBox.html#a3ea3b976bb6613f293cfacbdecedf2a0" title="get the center of mass" alt="" coords="917,779,1089,823"/>
-<area shape="poly" id="edge59_Node000043_Node000046" title=" " alt="" coords="820,760,905,779,900,781,822,765"/>
-<area shape="rect" id="Node000047" href="$namespacelinalg.html#a6956373f12f0d2dfaa86aa5dd049949c" title=" " alt="" coords="954,675,1052,703"/>
-<area shape="poly" id="edge60_Node000043_Node000047" title=" " alt="" coords="820,720,941,699,936,702,822,725"/>
-<area shape="poly" id="edge62_Node000048_Node000045" title=" " alt="" coords="821,829,905,848,900,850,822,834"/>
-<area shape="rect" id="Node000049" href="$classmolsys_1_1SimulationBox.html#a24ac3c9aa6ebdbd6e94217858fc196a6" title="get the total mass" alt="" coords="917,917,1089,962"/>
-<area shape="poly" id="edge63_Node000048_Node000049" title=" " alt="" coords="820,828,850,843,866,858,875,873,883,888,898,903,907,910,901,910,895,907,879,892,870,876,862,861,847,847,821,833"/>
-<area shape="poly" id="edge65_Node000050_Node000028" title=" " alt="" coords="821,1037,884,1052,879,1053,822,1042"/>
-<area shape="poly" id="edge66_Node000050_Node000045" title=" " alt="" coords="819,997,847,982,863,963,870,944,878,923,895,903,906,898,902,901,898,907,882,926,875,946,867,966,850,986,823,1001"/>
-<area shape="rect" id="Node000051" href="$namespaceutilities.html#aaae9b2dbd3ac275d4268ad9f73baa500" title="check whether a number is exactly zero" alt="" coords="943,1004,1063,1032"/>
-<area shape="poly" id="edge67_Node000050_Node000051" title=" " alt="" coords="820,1016,930,1017,925,1019,822,1021"/>
+<area shape="rect" id="Node000001" title="Takes one step in a ring polymer QM MD simulation." alt="" coords="5,1168,250,1213"/>
+<area shape="rect" id="Node000002" href="$classconstraints_1_1Constraints.html#abe5709a33e3d6051575976ddbf7e71fb" title="applies the distance constraints to all distance constraints" alt="" coords="322,207,518,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,1167,138,991,150,861,166,719,188,576,217,445,233,387,252,336,273,294,296,262,310,251,307,256,300,265,277,297,257,338,238,389,222,446,193,577,171,720,155,862,144,992,132,1168"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1RingPolymerQMMDEngine.html#a7696143104df4a62232bb989b73f2848" title="apply manostat" alt="" coords="298,276,542,321"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,1167,141,1004,172,756,195,626,222,506,256,406,275,368,296,338,309,328,307,332,300,341,280,370,261,408,228,507,200,627,177,757,147,1005,133,1168"/>
+<area shape="rect" id="Node000013" href="$classengine_1_1RingPolymerEngine.html#a340c33f61cef81deb6c00a3139bfbd2d" title=" " alt="" coords="619,319,819,363"/>
+<area shape="poly" id="edge43_Node000001_Node000013" title=" " alt="" coords="127,1167,140,1009,152,895,168,771,191,647,219,535,235,485,254,443,274,408,296,382,318,368,348,357,426,343,516,337,606,336,602,340,516,342,427,349,349,362,320,373,299,386,278,411,258,445,240,487,224,536,196,649,174,772,157,896,145,1010,133,1168"/>
+<area shape="rect" id="Node000014" href="$classengine_1_1RingPolymerEngine.html#ab051dad3853b3f97de92fb03345616c2" title=" " alt="" coords="590,388,848,433"/>
+<area shape="poly" id="edge44_Node000001_Node000014" title=" " alt="" coords="129,1167,146,1031,179,831,202,727,229,632,260,554,277,524,296,502,325,478,353,464,381,458,409,456,469,458,503,456,541,450,613,435,609,439,543,456,504,462,469,463,409,461,382,463,355,469,328,483,300,506,282,527,265,557,234,634,207,728,184,832,151,1032,134,1168"/>
+<area shape="rect" id="Node000015" href="$classthermostat_1_1Thermostat.html#ad893611256b75c00eb189438952222f2" title="Apply temperature ramping." alt="" coords="317,1133,522,1178"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="248,1174,304,1168,300,1171,252,1178"/>
+<area shape="rect" id="Node000018" href="$classengine_1_1RingPolymerQMMDEngine.html#a7b53e62eada464e62d54397a0e6453c9" title="apply thermostat" alt="" coords="298,396,542,441"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="129,1167,146,1025,179,812,202,702,229,600,260,516,277,483,296,458,310,447,307,452,300,461,282,486,265,518,234,601,207,703,184,813,151,1025,134,1168"/>
+<area shape="rect" id="Node000020" href="$classengine_1_1MDEngine.html#af9aadbdc0f8fc2279ab07be0f9f1a767" title="get the reference to the thermostat" alt="" coords="598,602,841,630"/>
+<area shape="poly" id="edge47_Node000001_Node000020" title=" " alt="" coords="137,1167,192,1066,235,995,288,918,350,839,422,763,501,695,544,665,589,639,604,634,600,637,591,643,547,669,505,699,425,767,354,843,292,921,239,998,196,1068,142,1169"/>
+<area shape="rect" id="Node000021" href="$classengine_1_1RingPolymerQMMDEngine.html#ad01060e2d60918f40ffaf337c7756ca5" title="apply thermostat for half step" alt="" coords="298,593,542,638"/>
+<area shape="poly" id="edge23_Node000001_Node000021" title=" " alt="" coords="132,1167,153,1095,188,990,235,871,264,811,295,754,338,696,385,647,382,652,342,699,300,757,269,814,240,873,193,992,158,1096,137,1168"/>
+<area shape="rect" id="Node000023" href="$classthermostat_1_1Thermostat.html#a21dd2bf0aae51af2b77396322c56857e" title=" " alt="" coords="320,1203,520,1247"/>
+<area shape="poly" id="edge28_Node000001_Node000023" title=" " alt="" coords="249,1202,307,1210,302,1213,251,1207"/>
+<area shape="rect" id="Node000024" href="$classengine_1_1Engine.html#ac7f586337c685f0dcb798917f704b669" title="Calculate total simulation time." alt="" coords="328,1272,512,1317"/>
+<area shape="poly" id="edge29_Node000001_Node000024" title=" " alt="" coords="180,1211,299,1257,322,1266,317,1268,297,1262,181,1216"/>
+<area shape="rect" id="Node000025" href="$classengine_1_1RingPolymerEngine.html#ae282321f05969b8574a27d6f4c7e8525" title="combining all beads into one simulation box" alt="" coords="320,1341,520,1386"/>
+<area shape="poly" id="edge30_Node000001_Node000025" title=" " alt="" coords="150,1210,215,1269,255,1300,299,1327,313,1334,308,1336,296,1331,252,1304,211,1273,151,1216"/>
+<area shape="rect" id="Node000030" href="$classengine_1_1Engine.html#a3de2559488f0ddc5db3af0dd8cc73a52" title="get the reference to the simulation box" alt="" coords="598,1602,840,1630"/>
+<area shape="poly" id="edge45_Node000001_Node000030" title=" " alt="" coords="140,1210,166,1252,201,1303,246,1354,271,1377,299,1396,333,1412,364,1418,424,1415,453,1413,483,1416,513,1426,544,1447,559,1465,566,1483,569,1520,571,1555,578,1572,592,1588,596,1594,591,1593,588,1592,573,1575,566,1557,563,1520,561,1484,554,1467,540,1451,510,1430,482,1421,453,1419,424,1420,364,1423,331,1417,296,1401,268,1381,242,1358,197,1306,162,1255,141,1216"/>
+<area shape="rect" id="Node000031" href="$classengine_1_1RingPolymerEngine.html#a819e710a99542809f6dfb0635ec34bab" title="coupling step of ring polymers" alt="" coords="320,1064,520,1109"/>
+<area shape="poly" id="edge36_Node000001_Node000031" title=" " alt="" coords="179,1165,297,1118,322,1112,318,1116,299,1124,182,1169"/>
+<area shape="rect" id="Node000033" href="$classintegrator_1_1Integrator.html#a81aaf673aead77f8212b4a5230d85562" title=" " alt="" coords="341,1461,498,1506"/>
+<area shape="poly" id="edge38_Node000001_Node000033" title=" " alt="" coords="138,1210,162,1259,197,1321,243,1385,270,1414,299,1440,329,1459,324,1460,296,1444,266,1418,239,1388,192,1324,158,1262,138,1216"/>
+<area shape="rect" id="Node000034" href="$classengine_1_1Engine.html#a85305d3371461f86b6dad610a0836eca" title="get the shared pointer to the constraints" alt="" coords="310,1530,530,1558"/>
+<area shape="poly" id="edge39_Node000001_Node000034" title=" " alt="" coords="133,1210,152,1274,184,1357,205,1401,232,1444,263,1483,299,1516,306,1522,300,1522,296,1520,259,1486,227,1447,201,1404,179,1359,147,1276,133,1216"/>
+<area shape="rect" id="Node000035" href="$classengine_1_1MDEngine.html#a130fb60ab0a95a2aabff65a173acf130" title="get the reference to the integrator" alt="" coords="304,1582,536,1610"/>
+<area shape="poly" id="edge40_Node000001_Node000035" title=" " alt="" coords="132,1210,148,1282,177,1379,199,1430,226,1481,259,1527,299,1567,307,1574,301,1574,296,1571,255,1531,221,1484,194,1433,172,1381,143,1284,132,1216"/>
+<area shape="rect" id="Node000036" href="$classengine_1_1Engine.html#a91f48b211a0c14ea3d065b9949f65a18" title="get the reference to the physical data" alt="" coords="304,1634,536,1662"/>
+<area shape="poly" id="edge41_Node000001_Node000036" title=" " alt="" coords="131,1211,144,1291,155,1344,170,1402,192,1461,220,1519,256,1573,299,1619,306,1626,301,1626,296,1623,251,1576,215,1522,187,1463,165,1403,149,1345,138,1292,130,1216"/>
+<area shape="rect" id="Node000037" href="$classengine_1_1MDEngine.html#a7136c24ba6c6155a82614b0a05371c0f" title="get the reference to the reset kinetics" alt="" coords="317,1685,522,1730"/>
+<area shape="poly" id="edge42_Node000001_Node000037" title=" " alt="" coords="130,1210,141,1298,151,1357,166,1422,187,1489,216,1555,253,1617,300,1671,307,1679,302,1679,296,1675,249,1620,211,1558,182,1491,161,1423,145,1358,136,1299,129,1216"/>
+<area shape="rect" id="Node000038" href="$classengine_1_1Engine.html#ae2c9118351767468ac7aeaffe8150621" title=" " alt="" coords="332,1754,508,1782"/>
+<area shape="poly" id="edge46_Node000001_Node000038" title=" " alt="" coords="129,1210,134,1310,141,1378,155,1453,175,1531,205,1608,246,1679,271,1711,299,1740,321,1756,315,1756,296,1744,267,1715,242,1682,200,1610,170,1533,149,1454,136,1379,129,1310,128,1216"/>
+<area shape="rect" id="Node000039" href="$classengine_1_1RingPolymerQMMDEngine.html#a44c4f01c10177bec06b248f8d03d5733" title="qm calculation" alt="" coords="298,516,542,561"/>
+<area shape="poly" id="edge48_Node000001_Node000039" title=" " alt="" coords="125,1167,128,1063,135,989,148,907,169,820,199,733,241,652,267,614,296,579,313,567,310,572,300,583,271,617,245,655,204,736,174,821,153,908,140,990,134,1064,131,1168"/>
+<area shape="rect" id="Node000042" href="$classresetKinetics_1_1ResetKinetics.html#a4ab078b63f9fa805dcf35809abd6b4af" title="checks to reset angular momentum" alt="" coords="318,940,522,985"/>
+<area shape="poly" id="edge54_Node000001_Node000042" title=" " alt="" coords="153,1166,296,1050,376,992,373,996,299,1054,157,1169"/>
+<area shape="rect" id="Node000056" href="$classintegrator_1_1Integrator.html#ad6d5419d53533f933a1b6ca1cf6980c1" title=" " alt="" coords="341,1805,498,1850"/>
+<area shape="poly" id="edge73_Node000001_Node000056" title=" " alt="" coords="128,1211,132,1317,139,1391,151,1472,172,1558,202,1642,244,1722,270,1758,299,1791,329,1813,324,1812,296,1795,266,1761,240,1725,197,1645,167,1559,146,1473,134,1391,127,1318,128,1216"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="643,129,795,174"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="521,274,540,262,556,243,563,224,571,204,588,184,630,165,627,169,592,188,576,207,568,226,561,246,544,266,525,277"/>
+<area shape="rect" id="Node000012" href="$classengine_1_1MDEngine.html#a8c76de7c312956d2a699baa52180cef4" title="get the reference to the manostat" alt="" coords="604,198,834,226"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="508,274,541,261,565,248,589,235,614,228,610,232,591,239,567,252,543,266,512,277"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="541,313,606,323,601,326,544,318"/>
+<area shape="poly" id="edge13_Node000003_Node000014" title=" " alt="" coords="465,319,525,346,591,373,614,382,609,384,589,378,523,351,467,324"/>
+<area shape="rect" id="Node000005" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="927,125,1079,170"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="795,148,914,147,909,150,797,153"/>
+<area shape="rect" id="Node000010" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="950,267,1056,295"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="795,166,849,184,916,219,973,257,968,258,913,224,847,189,797,171"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="1165,125,1336,170"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1079,145,1151,146,1147,149,1081,150"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="1158,195,1343,239"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="1079,167,1156,189,1151,191,1081,172"/>
+<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="1165,5,1336,50"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="1040,123,1156,60,1173,55,1169,58,1159,65,1044,127"/>
+<area shape="rect" id="Node000009" href="$config_2enums_2manostat_8cpp.html#a5fd9e28e7868b07d8deb9ee7ebfc47be" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="1203,74,1298,102"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="1078,127,1190,101,1186,104,1081,131"/>
+<area shape="rect" id="Node000011" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="1162,264,1339,309"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1055,280,1148,283,1144,285,1057,285"/>
+<area shape="rect" id="Node000016" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="613,1240,825,1285"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="511,1176,543,1188,568,1203,591,1219,624,1234,619,1235,589,1223,565,1208,541,1193,513,1181"/>
+<area shape="rect" id="Node000017" href="$classthermostat_1_1Thermostat.html#a735ef4b4e10f54cf66a75286e6c6eac1" title="set target temperature" alt="" coords="631,1309,807,1354"/>
+<area shape="poly" id="edge16_Node000015_Node000017" title=" " alt="" coords="523,1175,544,1188,556,1202,563,1216,569,1243,574,1270,580,1283,592,1295,619,1313,614,1314,588,1299,576,1286,569,1272,563,1244,558,1217,552,1205,540,1192,523,1180"/>
+<area shape="poly" id="edge20_Node000018_Node000013" title=" " alt="" coords="508,393,617,366,614,370,511,397"/>
+<area shape="poly" id="edge21_Node000018_Node000014" title=" " alt="" coords="541,413,576,413,572,416,544,417"/>
+<area shape="rect" id="Node000019" href="$classthermostat_1_1Thermostat.html#a9405aedc9eeafd72d0380466ece70f84" title="apply thermostat &#45; base class" alt="" coords="631,249,807,294"/>
+<area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="451,394,525,343,589,304,618,294,614,298,591,309,528,347,455,397"/>
+<area shape="poly" id="edge22_Node000018_Node000020" title=" " alt="" coords="462,439,505,467,544,502,559,526,566,548,574,568,592,587,601,594,596,595,588,591,570,571,561,550,554,528,540,505,502,471,464,444"/>
+<area shape="poly" id="edge19_Node000019_Node000010" title=" " alt="" coords="807,272,937,277,933,280,809,277"/>
+<area shape="poly" id="edge25_Node000021_Node000013" title=" " alt="" coords="514,591,540,571,556,547,564,523,565,498,562,474,560,449,562,424,570,399,588,374,607,361,604,365,592,378,575,401,567,425,566,449,568,473,570,498,569,523,561,549,544,575,518,595"/>
+<area shape="poly" id="edge26_Node000021_Node000014" title=" " alt="" coords="512,591,540,571,552,556,559,540,563,508,567,476,575,459,588,443,595,440,592,444,592,447,579,462,572,477,568,509,564,541,557,558,544,575,516,594"/>
+<area shape="poly" id="edge27_Node000021_Node000020" title=" " alt="" coords="541,613,584,614,580,617,544,618"/>
+<area shape="rect" id="Node000022" href="$classthermostat_1_1Thermostat.html#a7aa89b6397fb095e22b454212bc47937" title=" " alt="" coords="621,653,817,698"/>
+<area shape="poly" id="edge24_Node000021_Node000022" title=" " alt="" coords="533,636,608,652,603,654,536,641"/>
+<area shape="rect" id="Node000026" href="$classmolsys_1_1Atom.html#a5eaa337d10a47e7b97c71dcaf3ad568a" title=" " alt="" coords="630,1378,808,1406"/>
+<area shape="poly" id="edge31_Node000025_Node000026" title=" " alt="" coords="520,1370,617,1381,612,1383,521,1376"/>
+<area shape="rect" id="Node000027" href="$classmolsys_1_1Atom.html#a1b3b40b3ef07bcad27b685a9ab926109" title="add a linalg::Vec3D to the current position of the atom" alt="" coords="622,1430,817,1458"/>
+<area shape="poly" id="edge32_Node000025_Node000027" title=" " alt="" coords="488,1384,591,1414,630,1425,625,1427,589,1420,489,1389"/>
+<area shape="rect" id="Node000028" href="$classmolsys_1_1Atom.html#ac001c2ac76f12b645bd9e9b4288b058b" title="add a linalg::Vec3D to the current velocity of the atom" alt="" coords="622,1482,817,1510"/>
+<area shape="poly" id="edge33_Node000025_Node000028" title=" " alt="" coords="509,1384,544,1403,560,1420,568,1436,576,1452,592,1467,610,1478,604,1478,588,1471,572,1455,563,1439,555,1423,540,1407,509,1389"/>
+<area shape="rect" id="Node000029" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="634,1533,805,1578"/>
+<area shape="poly" id="edge34_Node000025_Node000029" title=" " alt="" coords="515,1384,544,1403,556,1418,563,1433,568,1463,573,1492,580,1506,592,1519,622,1539,616,1539,588,1523,575,1508,568,1494,563,1464,558,1435,552,1421,540,1407,515,1389"/>
+<area shape="poly" id="edge35_Node000025_Node000030" title=" " alt="" coords="518,1384,544,1403,561,1427,568,1452,567,1499,566,1522,567,1545,575,1567,592,1589,595,1593,590,1592,588,1592,570,1569,562,1546,560,1522,562,1499,563,1452,556,1430,540,1407,518,1389"/>
+<area shape="rect" id="Node000032" href="$classThermostatSettings.html#aec689b40ff79afa931ed73356c50bdb8" title="get the actual target temperature" alt="" coords="896,1180,1110,1225"/>
+<area shape="poly" id="edge37_Node000031_Node000032" title=" " alt="" coords="519,1107,544,1119,559,1134,568,1149,576,1163,591,1175,626,1189,662,1201,737,1214,812,1219,883,1218,879,1220,812,1224,737,1220,661,1206,624,1194,589,1179,572,1166,563,1151,555,1137,540,1123,520,1112"/>
+<area shape="poly" id="edge50_Node000039_Node000013" title=" " alt="" coords="460,514,501,486,540,451,554,431,562,411,571,392,588,374,607,364,603,368,592,378,575,395,567,413,559,433,544,455,504,490,464,517"/>
+<area shape="poly" id="edge51_Node000039_Node000014" title=" " alt="" coords="504,514,541,495,555,482,564,469,573,456,588,443,602,437,598,441,592,447,577,459,568,472,559,486,543,499,508,517"/>
+<area shape="rect" id="Node000040" href="$classengine_1_1QMCapableEngine.html#a8994a56466dfbd077aa992e40e16da87" title="Get the QM runner." alt="" coords="623,457,815,502"/>
+<area shape="poly" id="edge49_Node000039_Node000040" title=" " alt="" coords="536,513,610,500,606,503,539,518"/>
+<area shape="rect" id="Node000041" href="$classQM_1_1QMRunner.html#af8a7dcb550be92a6cdb6b0dcd32cbf17" title="run the qm engine with default periodicity XYZ (3d)" alt="" coords="645,550,793,578"/>
+<area shape="poly" id="edge52_Node000039_Node000041" title=" " alt="" coords="541,546,631,555,627,558,544,551"/>
+<area shape="poly" id="edge53_Node000041_Node000041" title=" " alt="" coords="671,550,663,541,670,531,688,525,719,523,753,526,772,534,767,536,752,531,719,528,689,530,673,535,669,541,676,549"/>
+<area shape="poly" id="edge72_Node000042_Node000010" title=" " alt="" coords="490,938,517,922,540,902,552,884,558,866,561,830,565,794,573,776,588,759,622,737,655,729,687,729,719,733,751,737,783,737,814,729,847,708,888,664,922,612,948,556,967,499,981,442,990,390,1000,313,1002,308,995,391,986,443,972,500,952,558,926,615,892,667,850,712,816,734,783,742,751,742,719,738,687,734,655,734,624,742,592,763,578,779,570,796,566,830,564,867,557,886,544,905,520,926,493,941"/>
+<area shape="rect" id="Node000043" href="$classmolsys_1_1SimulationBox.html#ad8c77c782c3758cc7ae205f01ff31d67" title="calculate angular momentum of simulationBox" alt="" coords="612,773,826,818"/>
+<area shape="poly" id="edge55_Node000042_Node000043" title=" " alt="" coords="442,938,505,883,545,853,589,828,605,822,602,826,591,833,548,858,508,887,446,941"/>
+<area shape="rect" id="Node000045" href="$classmolsys_1_1SimulationBox.html#a81dff1f29a520c8c884853b375c3c9bd" title="calculate momentum of simulationBox" alt="" coords="634,981,805,1026"/>
+<area shape="poly" id="edge57_Node000042_Node000045" title=" " alt="" coords="521,974,620,989,616,991,523,979"/>
+<area shape="rect" id="Node000046" href="$classmolsys_1_1SimulationBox.html#a3047223ee50e1f391a67a44859298278" title="calculate temperature of simulationBox" alt="" coords="634,1051,805,1095"/>
+<area shape="poly" id="edge58_Node000042_Node000046" title=" " alt="" coords="466,983,526,1010,591,1036,621,1047,616,1049,589,1041,524,1015,468,988"/>
+<area shape="rect" id="Node000047" href="$classresetKinetics_1_1ResetKinetics.html#a206cb75a7ee137a06093c4fd91211525" title="reset the angular momentum of the system" alt="" coords="618,843,821,887"/>
+<area shape="poly" id="edge59_Node000042_Node000047" title=" " alt="" coords="477,937,589,897,617,890,613,894,591,902,481,942"/>
+<area shape="rect" id="Node000052" href="$classresetKinetics_1_1ResetKinetics.html#a1dc83729626654fc1fa63a97672098c4" title="reset the momentum of the system" alt="" coords="618,912,821,957"/>
+<area shape="poly" id="edge65_Node000042_Node000052" title=" " alt="" coords="521,950,604,944,600,947,523,955"/>
+<area shape="rect" id="Node000054" href="$classresetKinetics_1_1ResetKinetics.html#a010a04a8b1605660ec2724a6b816eb59" title="reset the temperature of the system &#45; hard scaling" alt="" coords="618,1120,821,1165"/>
+<area shape="poly" id="edge68_Node000042_Node000054" title=" " alt="" coords="456,982,500,1013,544,1050,558,1066,567,1080,576,1093,592,1105,606,1114,600,1116,588,1110,572,1096,562,1083,554,1069,540,1054,497,1017,457,988"/>
+<area shape="rect" id="Node000044" href="$classmolsys_1_1SimulationBox.html#ad4727b1fadb1c321684918232354f80c" title="calculate center of mass of simulationBox" alt="" coords="913,731,1093,775"/>
+<area shape="poly" id="edge56_Node000043_Node000044" title=" " alt="" coords="825,777,900,767,895,770,828,782"/>
+<area shape="poly" id="edge60_Node000047_Node000044" title=" " alt="" coords="820,840,847,828,861,818,870,807,880,796,895,785,909,780,905,784,898,790,884,800,874,811,865,822,850,833,823,845"/>
+<area shape="rect" id="Node000048" href="$namespacelinalg.html#a9b44a11e7c2d9418476b3a992d903ae2" title=" " alt="" coords="921,851,1085,879"/>
+<area shape="poly" id="edge61_Node000047_Node000048" title=" " alt="" coords="820,863,908,864,903,866,822,867"/>
+<area shape="rect" id="Node000049" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="917,972,1089,1017"/>
+<area shape="poly" id="edge62_Node000047_Node000049" title=" " alt="" coords="820,883,850,897,866,913,875,928,883,943,898,958,907,964,901,965,895,962,879,946,870,931,862,916,847,902,821,888"/>
+<area shape="rect" id="Node000050" href="$classmolsys_1_1SimulationBox.html#a3ea3b976bb6613f293cfacbdecedf2a0" title="get the center of mass" alt="" coords="917,903,1089,947"/>
+<area shape="poly" id="edge63_Node000047_Node000050" title=" " alt="" coords="820,884,905,903,900,905,822,889"/>
+<area shape="rect" id="Node000051" href="$namespacelinalg.html#a6956373f12f0d2dfaa86aa5dd049949c" title=" " alt="" coords="954,799,1052,827"/>
+<area shape="poly" id="edge64_Node000047_Node000051" title=" " alt="" coords="820,844,941,823,936,826,822,849"/>
+<area shape="poly" id="edge66_Node000052_Node000049" title=" " alt="" coords="821,953,905,972,900,974,822,958"/>
+<area shape="rect" id="Node000053" href="$classmolsys_1_1SimulationBox.html#a24ac3c9aa6ebdbd6e94217858fc196a6" title="get the total mass" alt="" coords="917,1041,1089,1086"/>
+<area shape="poly" id="edge67_Node000052_Node000053" title=" " alt="" coords="820,952,850,967,866,982,875,997,883,1012,898,1027,907,1034,901,1034,895,1031,879,1016,870,1000,862,985,847,971,821,957"/>
+<area shape="poly" id="edge69_Node000054_Node000032" title=" " alt="" coords="821,1161,884,1176,879,1177,822,1166"/>
+<area shape="poly" id="edge70_Node000054_Node000049" title=" " alt="" coords="819,1121,847,1106,863,1087,870,1068,878,1047,895,1027,906,1022,902,1025,898,1031,882,1050,875,1070,867,1090,850,1110,823,1125"/>
+<area shape="rect" id="Node000055" href="$namespaceutilities.html#aaae9b2dbd3ac275d4268ad9f73baa500" title="check whether a number is exactly zero" alt="" coords="943,1128,1063,1156"/>
+<area shape="poly" id="edge71_Node000054_Node000055" title=" " alt="" coords="820,1140,930,1141,925,1143,822,1145"/>
 </map>

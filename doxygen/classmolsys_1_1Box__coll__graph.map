@@ -1,7 +1,7 @@
 <map id="molsys::Box" name="molsys::Box">
-<area shape="rect" id="Node000001" title="This class represents the unit cell of a general triclinic box." alt="" coords="65,168,297,575"/>
+<area shape="rect" id="Node000001" title="This class represents the unit cell of a general triclinic box." alt="" coords="65,168,297,664"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,162,95"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,92,117,151,112,151,97,97"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,92,113,151,108,151,95,97"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="186,5,373,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,92,251,152,246,150,265,97"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="269,92,255,152,250,150,267,97"/>
 </map>

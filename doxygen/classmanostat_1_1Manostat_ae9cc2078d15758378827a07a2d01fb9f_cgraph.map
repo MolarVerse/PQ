@@ -1,0 +1,24 @@
+<map id="manostat::Manostat::_validateScaling" name="manostat::Manostat::_validateScaling">
+<area shape="rect" id="Node000001" title="Validate a resize without changing the live cell or atoms." alt="" coords="5,341,158,386"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a4b65fc81a45d80013139b247602ece8b" title="Scale and validate a candidate cell." alt="" coords="214,204,369,248"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,338,244,254,242,259,119,342"/>
+<area shape="rect" id="Node000008" href="$namespacelinalg.html#a3c68bcb069b08372c949e4006d9884e5" title=" " alt="" coords="473,351,585,378"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="158,360,377,361,460,363,455,364,377,366,158,366"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1Box.html#a88c57f7c0f780b860fb3ed68034aa422" title=" " alt="" coords="219,375,364,402"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="158,370,206,377,201,379,159,375"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="206,426,377,471"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="139,383,207,411,223,420,218,420,205,416,138,389"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="430,5,629,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="301,202,319,167,346,124,381,80,423,44,437,38,433,41,427,48,385,84,350,127,324,169,305,205"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Box.html#abf1ee9721e93ed254e1e2a5f0334abf1" title=" " alt="" coords="430,57,628,85"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="308,201,356,147,388,118,424,94,438,90,433,93,426,99,391,123,359,151,312,205"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="432,109,626,154"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="339,201,424,163,445,158,440,160,426,168,341,205"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1Box.html#a3ac94c19d5514e070431263aecdb07f3" title=" " alt="" coords="425,178,633,223"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="368,215,412,212,407,214,370,220"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1Box.html#a78d443142d87f04497693038220813df" title=" " alt="" coords="440,247,619,274"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="369,234,427,245,422,246,369,240"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="314,246,363,292,394,316,426,335,461,351,456,351,424,340,391,320,360,296,313,251"/>
+<area shape="rect" id="Node000009" href="$classmolsys_1_1Box.html#a54f4931d68be1df1634ac216609f61c8" title=" " alt="" coords="445,299,613,326"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="338,246,426,283,453,294,448,294,424,288,338,251"/>
+</map>

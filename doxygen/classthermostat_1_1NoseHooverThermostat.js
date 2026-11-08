@@ -1,7 +1,7 @@
 var classthermostat_1_1NoseHooverThermostat =
 [
     [ "NoseHooverThermostat", "classthermostat_1_1NoseHooverThermostat.html#a064ae066323c5967aa49d004706621b6", null ],
-    [ "NoseHooverThermostat", "classthermostat_1_1NoseHooverThermostat.html#a822bf07713b06ddc26690cae8b1deb9a", null ],
+    [ "NoseHooverThermostat", "classthermostat_1_1NoseHooverThermostat.html#a231bd47de979323822499fbf5c50b8d0", null ],
     [ "_requireCoupling", "classthermostat_1_1NoseHooverThermostat.html#aecf021dd5e429590015d255f232dee08", null ],
     [ "applyThermostat", "classthermostat_1_1NoseHooverThermostat.html#acfd67b9b8239efb85592928ed1d2bce1", null ],
     [ "applyThermostatOnForces", "classthermostat_1_1NoseHooverThermostat.html#a9d96197913c151a95e7ea548a93463d1", null ],

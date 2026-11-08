@@ -1,7 +1,0 @@
-<map id="OptimizerSettings::isLearningRateDecaySet" name="OptimizerSettings::isLearningRateDecaySet">
-<area shape="rect" id="Node000001" title="returns whether the learning rate decay has been set" alt="" coords="269,28,449,72"/>
-<area shape="rect" id="Node000002" href="$testOptParser_8cpp.html#a80e4eaf721b7248f21f89951f6070454" title="parse the optimizer learning rate decay" alt="" coords="79,5,147,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,38,148,26,148,21,256,35"/>
-<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#a065ef7acc59b687c5d5a28006879ace7" title="validates the selected learning&#45;rate strategy" alt="" coords="5,57,221,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,63,222,69,221,64,256,62"/>
-</map>

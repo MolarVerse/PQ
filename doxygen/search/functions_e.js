@@ -6,6 +6,6 @@ var searchData=
   ['norm_3',['norm',['../namespacelinalg.html#ac4f14aa5b9548d9a1f34acd89fb782bd',1,'linalg']]],
   ['norms_4',['norms',['../namespacelinalg.html#a57613909938f1ccfc336a43ae538e65b',1,'linalg']]],
   ['normsquared_5',['normSquared',['../namespacelinalg.html#ab23afb58a7b1eab127cd10bdfbbb0597',1,'linalg']]],
-  ['nosehooverthermostat_6',['NoseHooverThermostat',['../classthermostat_1_1NoseHooverThermostat.html#a064ae066323c5967aa49d004706621b6',1,'thermostat::NoseHooverThermostat::NoseHooverThermostat()=default'],['../classthermostat_1_1NoseHooverThermostat.html#a822bf07713b06ddc26690cae8b1deb9a',1,'thermostat::NoseHooverThermostat::NoseHooverThermostat(double targetTemp, const std::vector&lt; double &gt; &amp;chi, const std::vector&lt; double &gt; &amp;zeta, double couplingFrequency)']]],
-  ['numerical_5fvalue_5fin_7',['numerical_value_in',['../classlinalg_1_1Vector3D.html#a954e7f8857ca38d55d96a42ab5c931d2',1,'linalg::Vector3D']]]
+  ['nosehooverthermostat_6',['NoseHooverThermostat',['../classthermostat_1_1NoseHooverThermostat.html#a064ae066323c5967aa49d004706621b6',1,'thermostat::NoseHooverThermostat::NoseHooverThermostat()=default'],['../classthermostat_1_1NoseHooverThermostat.html#a231bd47de979323822499fbf5c50b8d0',1,'thermostat::NoseHooverThermostat::NoseHooverThermostat(const Temperature &amp;targetTemp, const std::vector&lt; double &gt; &amp;chi, const std::vector&lt; double &gt; &amp;zeta, double couplingFrequency)']]],
+  ['numerical_5fvalue_5fin_7',['numerical_value_in',['../classlinalg_1_1StaticMatrix3x3.html#a8019d159a173e1a916e78bbcdec32c55',1,'linalg::StaticMatrix3x3::numerical_value_in()'],['../classlinalg_1_1Vector3D.html#a954e7f8857ca38d55d96a42ab5c931d2',1,'linalg::Vector3D::numerical_value_in()']]]
 ];

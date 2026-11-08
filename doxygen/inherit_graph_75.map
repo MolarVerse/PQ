@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structinput_1_1SelectionTag.html" title="Tag type for selections." alt="" coords="5,5,150,33"/>
+<area shape="rect" id="Node000000" href="$classinput_1_1restartFile_1_1RestartFileSection.html" title="Base class for all sections of a .rst file." alt="" coords="5,109,153,154"/>
+<area shape="rect" id="Node000001" href="$classinput_1_1restartFile_1_1AtomSection.html" title="Reads the atom section of a .rst file." alt="" coords="215,5,344,50"/>
+<area shape="poly" id="edge61_Node000000_Node000001" title=" " alt="" coords="129,99,199,60,227,49,223,52,202,65,132,103"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1restartFile_1_1BoxSection.html" title="Reads the box section of a .rst file." alt="" coords="215,75,344,119"/>
+<area shape="poly" id="edge62_Node000000_Node000002" title=" " alt="" coords="167,114,217,107,212,109,169,119"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1restartFile_1_1NoseHooverSection.html" title="Reads the Nose&#45;Hoover section of a .rst file." alt="" coords="201,144,358,189"/>
+<area shape="poly" id="edge63_Node000000_Node000003" title=" " alt="" coords="168,144,203,152,198,153,168,150"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1restartFile_1_1StepCountSection.html" title="Reads the step count section of a .rst file." alt="" coords="207,213,352,258"/>
+<area shape="poly" id="edge64_Node000000_Node000004" title=" " alt="" coords="131,159,202,199,227,213,222,213,199,203,130,165"/>
 </map>

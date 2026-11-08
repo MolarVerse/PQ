@@ -1,0 +1,7 @@
+<map id="TestableSimSpaceScalingManostat" name="TestableSimSpaceScalingManostat">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,626,242,698"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1BerendsenManostat.html" title="BerendsenManostat inherits from Manostat." alt="" coords="18,438,229,578"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,590,126,627,121,625,122,595"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html" title="Manostat is a base class for all manostats." alt="" coords="40,5,208,390"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,402,126,439,121,438,123,408"/>
+</map>

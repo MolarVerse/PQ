@@ -3,91 +3,89 @@
 <area shape="rect" id="Node000002" href="$classinput_1_1InputFileReader.html#a31b1608c2af00996c8a6a193a6cef816" title="validates cell&#45;list dependencies" alt="" coords="291,109,456,154"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,1338,109,1186,116,1070,128,934,146,786,172,631,207,476,253,325,272,280,296,236,346,164,345,169,301,239,277,282,258,327,213,477,177,632,151,787,133,935,121,1070,115,1187,110,1338"/>
 <area shape="rect" id="Node000008" href="$classinput_1_1InputFileReader.html#a6476816b56a4b443cc72037630998051" title="validates manostat keyword dependencies" alt="" coords="291,339,456,383"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="111,1338,360,397,364,400,116,1339"/>
-<area shape="rect" id="Node000014" href="$classinput_1_1InputFileReader.html#a2f95672c78acd081e913c2626675f512" title="validates QM keyword dependencies" alt="" coords="291,1816,456,1861"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="122,1381,355,1801,350,1803,119,1386"/>
-<area shape="rect" id="Node000022" href="$classinput_1_1InputFileReader.html#a84408d276f155f4619de9b3e712362bc" title="validates cross&#45;keyword dependencies for the reaction field long range coulomb correction" alt="" coords="256,1433,491,1478"/>
-<area shape="poly" id="edge23_Node000001_Node000022" title=" " alt="" coords="171,1381,296,1426,292,1429,173,1386"/>
-<area shape="rect" id="Node000024" href="$classinput_1_1InputFileReader.html#a69c86f12f3144d169ed186c22e8026c9" title="validates ring&#45;polymer keyword dependencies" alt="" coords="287,1503,460,1547"/>
-<area shape="poly" id="edge26_Node000001_Node000024" title=" " alt="" coords="127,1381,184,1435,219,1464,257,1488,275,1498,270,1500,254,1493,216,1468,181,1439,129,1387"/>
-<area shape="rect" id="Node000026" href="$classinput_1_1InputFileReader.html#ae49b27d5ff1ed938995fc6ee9053eada" title="validates thermostat keyword dependencies" alt="" coords="291,853,456,898"/>
-<area shape="poly" id="edge29_Node000001_Node000026" title=" " alt="" coords="118,1337,353,909,352,914,123,1339"/>
-<area shape="rect" id="Node000039" href="$classinput_1_1InputFileReader.html#a48accc084df8b02307040b1ade17ac32" title="validates conditionally required timing keywords" alt="" coords="291,1339,456,1383"/>
-<area shape="poly" id="edge44_Node000001_Node000039" title=" " alt="" coords="207,1359,278,1359,274,1363,210,1363"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="111,1338,360,397,365,399,116,1339"/>
+<area shape="rect" id="Node000014" href="$classinput_1_1InputFileReader.html#aafd0e18b409764b12879cfff8dce4b72" title="validates QM keyword dependencies" alt="" coords="291,1761,456,1806"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="124,1382,352,1747,347,1749,121,1386"/>
+<area shape="rect" id="Node000021" href="$classinput_1_1InputFileReader.html#a84408d276f155f4619de9b3e712362bc" title="validates cross&#45;keyword dependencies for the reaction field long range coulomb correction" alt="" coords="256,1433,491,1478"/>
+<area shape="poly" id="edge22_Node000001_Node000021" title=" " alt="" coords="171,1381,296,1426,292,1429,173,1386"/>
+<area shape="rect" id="Node000023" href="$classinput_1_1InputFileReader.html#a69c86f12f3144d169ed186c22e8026c9" title="validates ring&#45;polymer keyword dependencies" alt="" coords="287,1503,460,1547"/>
+<area shape="poly" id="edge25_Node000001_Node000023" title=" " alt="" coords="128,1381,184,1435,219,1464,257,1488,275,1498,270,1500,254,1493,216,1468,181,1439,129,1387"/>
+<area shape="rect" id="Node000025" href="$classinput_1_1InputFileReader.html#a805735edacd217c6ccfc11155bc99e56" title="validates thermostat keyword dependencies" alt="" coords="291,853,456,898"/>
+<area shape="poly" id="edge28_Node000001_Node000025" title=" " alt="" coords="118,1337,352,909,352,914,123,1339"/>
+<area shape="rect" id="Node000038" href="$classinput_1_1InputFileReader.html#a48accc084df8b02307040b1ade17ac32" title="validates conditionally required timing keywords" alt="" coords="291,1339,456,1383"/>
+<area shape="poly" id="edge43_Node000001_Node000038" title=" " alt="" coords="207,1359,278,1359,274,1363,209,1363"/>
 <area shape="rect" id="Node000003" href="$classsettings_1_1PotentialSettings.html#a93d6abf4c1483aca90ed3b9e7715307b" title="get the Coulomb radius cut off" alt="" coords="570,5,763,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="422,107,538,60,563,53,559,57,540,65,426,110"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="422,107,538,60,563,53,559,57,540,65,426,111"/>
 <area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a8798c619607f4dd45507427feab904d8" title="Returns true if the cell list is activated." alt="" coords="574,75,759,119"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="454,120,561,108,557,112,458,124"/>
 <area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#ab5e862a7bff6bec5e344743cb8f79f0e" title="Returns true if only QM simulations are activated." alt="" coords="574,144,759,189"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="455,139,561,152,557,155,457,144"/>
 <area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="842,144,1028,189"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="758,164,829,165,825,168,761,169"/>
-<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="842,1029,1028,1074"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="759,175,780,185,796,199,816,227,834,264,864,358,888,472,906,597,927,841,935,1014,930,1013,922,841,901,598,883,473,859,359,829,266,812,230,792,203,777,190,760,180"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="842,1072,1028,1117"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="759,175,780,185,796,199,817,229,836,268,867,367,891,488,908,619,921,752,929,876,936,1057,930,1056,924,876,916,753,903,620,886,489,862,368,831,270,813,232,792,203,777,190,760,180"/>
 <area shape="rect" id="Node000009" href="$classinput_1_1InputFileReader.html#af74f54a09652205d1b5187cf08384d47" title="get whether the keyword has been set in input" alt="" coords="584,1459,749,1503"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="382,381,436,570,467,703,494,841,500,956,506,1149,518,1339,528,1408,534,1431,541,1445,555,1457,572,1468,567,1469,552,1461,537,1448,529,1433,522,1409,512,1339,500,1149,494,956,488,841,462,704,431,572,381,386"/>
 <area shape="rect" id="Node000010" href="$classManostatSettings.html#a7a5438c42b47c8109378b736fa6dc1f5" title="get the manostatType" alt="" coords="539,212,794,240"/>
 <area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="400,337,461,292,499,270,538,251,564,243,560,247,540,255,501,274,464,297,404,340"/>
 <area shape="rect" id="Node000011" href="$classManostatSettings.html#a90a22737d45a08a647e187fdf3d5ae6a" title="get the tau of the manostat" alt="" coords="574,264,760,292"/>
 <area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="434,336,538,302,577,294,573,298,540,308,438,340"/>
-<area shape="rect" id="Node000012" href="$classsettings_1_1TimingsSettings.html#ac990af6a43bd3d7be96c36edf50eb5a0" title="get the time step" alt="" coords="574,368,760,413"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1TimingsSettings.html#a9cf276bd4d2096d6fd5ced833badf419" title="get the time step" alt="" coords="574,368,760,413"/>
 <area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="455,367,560,378,556,381,457,371"/>
 <area shape="rect" id="Node000013" href="$structManostatTypeMeta.html#acfeec83bee63ff8ce0e81af74ba6ed30" title=" " alt="" coords="564,316,769,344"/>
 <area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="454,350,551,341,547,344,458,355"/>
-<area shape="poly" id="edge19_Node000014_Node000007" title=" " alt="" coords="455,1849,547,1860,647,1866,735,1862,769,1854,793,1842,813,1819,831,1788,848,1749,863,1704,886,1599,904,1483,916,1365,924,1254,932,1092,934,1087,929,1254,922,1365,909,1484,892,1600,868,1705,853,1751,836,1790,817,1822,796,1846,771,1859,736,1867,647,1871,547,1865,456,1854"/>
-<area shape="poly" id="edge14_Node000014_Node000009" title=" " alt="" coords="377,1814,394,1754,424,1673,446,1630,471,1587,502,1548,537,1514,572,1496,568,1499,541,1518,506,1551,476,1590,450,1632,429,1675,399,1756,382,1817"/>
-<area shape="rect" id="Node000015" href="$classsettings_1_1QMSettings.html#afe3751a4a4c3d1d21148bdd4c537b173" title="returns the maceModel" alt="" coords="588,1907,745,1951"/>
-<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="448,1859,580,1901,575,1902,448,1864"/>
-<area shape="rect" id="Node000016" href="$classsettings_1_1QMSettings.html#a8386306cb5ec3d9f0116594627e1bde9" title=" " alt="" coords="588,1976,745,2021"/>
-<area shape="poly" id="edge16_Node000014_Node000016" title=" " alt="" coords="399,1858,461,1911,499,1938,540,1961,576,1978,571,1978,538,1966,496,1942,458,1915,398,1864"/>
-<area shape="rect" id="Node000017" href="$classsettings_1_1QMSettings.html#a392002c6312680d946422a22711bee71" title="returns the qmMethod" alt="" coords="588,2045,745,2090"/>
-<area shape="poly" id="edge17_Node000014_Node000017" title=" " alt="" coords="388,1858,413,1897,448,1943,490,1991,540,2031,576,2050,571,2049,538,2035,487,1995,443,1947,409,1900,387,1863"/>
-<area shape="rect" id="Node000018" href="$classsettings_1_1QMSettings.html#aa2201dfe866327a292fce9b2537fe6b7" title="returns the slakosType" alt="" coords="588,2115,745,2159"/>
-<area shape="poly" id="edge18_Node000014_Node000018" title=" " alt="" coords="383,1859,405,1910,437,1975,483,2043,510,2074,541,2100,577,2121,571,2120,537,2105,506,2077,478,2046,433,1978,400,1912,381,1864"/>
-<area shape="rect" id="Node000019" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="572,1666,761,1694"/>
-<area shape="poly" id="edge20_Node000014_Node000019" title=" " alt="" coords="394,1814,455,1757,495,1727,538,1703,560,1696,555,1699,540,1707,497,1732,458,1761,397,1817"/>
-<area shape="rect" id="Node000020" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="583,1717,750,1762"/>
-<area shape="poly" id="edge21_Node000014_Node000020" title=" " alt="" coords="428,1813,538,1772,570,1764,565,1767,540,1777,431,1818"/>
-<area shape="rect" id="Node000021" href="$classsettings_1_1QMSettings.html#a58c286be1d94ffb50639c4e8a83df295" title="returns if third order DFTB should be used" alt="" coords="588,1787,745,1831"/>
-<area shape="poly" id="edge22_Node000014_Node000021" title=" " alt="" coords="455,1828,575,1817,570,1819,457,1833"/>
-<area shape="poly" id="edge25_Node000022_Node000009" title=" " alt="" coords="491,1463,571,1471,566,1474,493,1468"/>
-<area shape="rect" id="Node000023" href="$classsettings_1_1PotentialSettings.html#a6a7f2c90130118e100aeb3902a15684d" title="get the Coulomb long range type" alt="" coords="562,1528,772,1573"/>
-<area shape="poly" id="edge24_Node000022_Node000023" title=" " alt="" coords="458,1476,492,1488,540,1513,561,1522,556,1523,538,1518,490,1493,459,1481"/>
-<area shape="poly" id="edge27_Node000024_Node000009" title=" " alt="" coords="459,1510,571,1494,567,1497,461,1514"/>
-<area shape="rect" id="Node000025" href="$classsettings_1_1GeneralSettings.html#a80529ce88f2148fc94cea22db0fd9ae5" title="Returns true if the ring polymer MD simulations are activated." alt="" coords="563,1597,770,1642"/>
-<area shape="poly" id="edge28_Node000024_Node000025" title=" " alt="" coords="433,1545,540,1582,566,1592,561,1593,538,1588,434,1551"/>
-<area shape="poly" id="edge33_Node000026_Node000009" title=" " alt="" coords="381,896,465,1203,512,1366,530,1420,541,1445,572,1466,567,1467,537,1448,525,1422,507,1368,460,1204,380,901"/>
-<area shape="poly" id="edge41_Node000026_Node000012" title=" " alt="" coords="373,853,383,772,393,717,408,656,429,593,457,531,492,473,537,423,561,409,558,413,541,427,497,477,461,534,434,595,413,657,398,718,388,773,379,854"/>
-<area shape="rect" id="Node000027" href="$classsettings_1_1ThermostatSettings.html#ada9a432c13bf82473d811f17339b7949" title="get the end temperature" alt="" coords="562,437,771,482"/>
-<area shape="poly" id="edge30_Node000026_Node000027" title=" " alt="" coords="375,852,388,782,417,685,438,633,465,582,498,534,537,492,550,485,547,489,541,496,502,537,469,584,443,635,422,687,393,783,380,853"/>
-<area shape="rect" id="Node000028" href="$classsettings_1_1ThermostatSettings.html#a3a2010208a837ade08e86cd0cd0924db" title="get the friction" alt="" coords="562,507,771,551"/>
-<area shape="poly" id="edge31_Node000026_Node000028" title=" " alt="" coords="377,852,395,793,426,715,447,673,473,632,503,594,537,562,550,555,547,559,541,566,507,598,477,635,452,676,431,717,400,795,383,854"/>
-<area shape="rect" id="Node000029" href="$classSimulationBoxSettings.html#aff25f2d3c2abef9d26e700be6045f74e" title="get if the velocities are initialized" alt="" coords="582,576,751,621"/>
-<area shape="poly" id="edge32_Node000026_Node000029" title=" " alt="" coords="381,852,402,805,436,745,481,684,508,655,538,631,569,616,565,620,540,635,511,659,485,687,440,748,407,808,386,854"/>
-<area shape="rect" id="Node000030" href="$classsettings_1_1TimingsSettings.html#a58a13b00fa1ceae44281aed2a416e959" title="get the number of steps" alt="" coords="574,645,760,690"/>
-<area shape="poly" id="edge34_Node000026_Node000030" title=" " alt="" coords="388,851,447,777,490,735,538,700,561,690,558,694,540,705,493,739,451,780,392,854"/>
-<area shape="rect" id="Node000031" href="$classsettings_1_1ThermostatSettings.html#a10c19eac5a4d4e66873c7619269b2328" title="get the relaxation time" alt="" coords="562,715,771,759"/>
-<area shape="poly" id="edge35_Node000026_Node000031" title=" " alt="" coords="403,851,464,810,538,769,557,763,554,767,540,774,466,814,407,854"/>
-<area shape="rect" id="Node000032" href="$classsettings_1_1ThermostatSettings.html#a12fc02ff1c82da409f3349a94ba07fce" title="get the start temperature" alt="" coords="562,784,771,829"/>
-<area shape="poly" id="edge36_Node000026_Node000032" title=" " alt="" coords="454,854,556,831,552,835,458,858"/>
-<area shape="rect" id="Node000033" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="562,853,771,898"/>
-<area shape="poly" id="edge37_Node000026_Node000033" title=" " alt="" coords="455,873,549,874,544,877,457,878"/>
-<area shape="rect" id="Node000034" href="$classsettings_1_1ThermostatSettings.html#a0786537f4e83807e41559fe8742e6b7a" title="get the temperature ramp frequency" alt="" coords="548,923,785,967"/>
-<area shape="poly" id="edge38_Node000026_Node000034" title=" " alt="" coords="455,893,557,917,552,920,457,898"/>
-<area shape="rect" id="Node000035" href="$classsettings_1_1ThermostatSettings.html#ade610dff301fc75e257a1048c1052cdb" title="get the temperature ramp steps" alt="" coords="562,992,771,1037"/>
-<area shape="poly" id="edge39_Node000026_Node000035" title=" " alt="" coords="404,896,466,937,540,977,558,985,553,987,538,982,464,942,405,901"/>
-<area shape="rect" id="Node000036" href="$classsettings_1_1ThermostatSettings.html#ac4c97da43c21068729c85bfe98382e43" title="get the thermostat type" alt="" coords="562,1061,771,1106"/>
-<area shape="poly" id="edge40_Node000026_Node000036" title=" " alt="" coords="390,896,451,971,493,1012,540,1047,552,1054,547,1055,538,1051,490,1016,447,975,390,901"/>
-<area shape="rect" id="Node000037" href="$classsettings_1_1GeneralSettings.html#a9a3a3fbd228c5d1603d240de99a868e0" title="Returns true if the jobtype performs an MD simulation." alt="" coords="574,1200,759,1245"/>
-<area shape="poly" id="edge42_Node000026_Node000037" title=" " alt="" coords="380,896,400,956,431,1034,452,1076,477,1116,507,1153,541,1186,563,1200,558,1202,537,1190,503,1157,473,1119,447,1078,426,1036,395,958,380,901"/>
-<area shape="rect" id="Node000038" href="$structThermostatTypeMeta.html#aae44edb025175e03030900672c4ed3ac" title=" " alt="" coords="587,1131,746,1175"/>
-<area shape="poly" id="edge43_Node000026_Node000038" title=" " alt="" coords="383,896,407,944,440,1003,485,1064,511,1092,540,1116,575,1135,570,1137,538,1121,508,1096,481,1068,436,1006,402,946,384,901"/>
-<area shape="poly" id="edge46_Node000039_Node000009" title=" " alt="" coords="419,1381,492,1419,540,1444,572,1456,567,1458,538,1449,490,1423,420,1387"/>
-<area shape="poly" id="edge47_Node000039_Node000037" title=" " alt="" coords="403,1336,464,1295,538,1255,561,1247,557,1251,540,1259,466,1299,407,1340"/>
-<area shape="rect" id="Node000040" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="574,1269,759,1314"/>
-<area shape="poly" id="edge45_Node000039_Node000040" title=" " alt="" coords="455,1339,561,1315,557,1319,457,1344"/>
-<area shape="rect" id="Node000041" href="$classsettings_1_1GeneralSettings.html#a9c908292d55f625254723bd6051d6460" title="Returns true if the jobtype does is based on optimization." alt="" coords="574,1339,759,1383"/>
-<area shape="poly" id="edge48_Node000039_Node000041" title=" " alt="" coords="455,1359,561,1360,556,1362,457,1363"/>
-<area shape="rect" id="Node000042" href="$structJobTypeMeta.html#abc9000dcacc318fe8ce0f9e1a9760eff" title=" " alt="" coords="585,1407,748,1435"/>
-<area shape="poly" id="edge49_Node000039_Node000042" title=" " alt="" coords="455,1376,540,1393,580,1402,575,1405,538,1398,457,1381"/>
+<area shape="poly" id="edge18_Node000014_Node000007" title=" " alt="" coords="392,1804,418,1835,452,1869,494,1902,540,1927,612,1954,644,1963,674,1969,703,1969,732,1963,762,1949,793,1927,814,1903,833,1870,850,1828,865,1781,890,1670,907,1547,919,1422,926,1304,932,1134,935,1130,931,1305,924,1422,912,1547,895,1671,871,1782,855,1830,838,1872,818,1906,796,1931,764,1954,734,1968,704,1974,674,1974,643,1969,611,1959,538,1931,491,1906,449,1873,414,1838,391,1809"/>
+<area shape="poly" id="edge14_Node000014_Node000009" title=" " alt="" coords="380,1759,399,1709,432,1642,478,1573,506,1541,537,1513,572,1497,568,1500,541,1518,510,1545,482,1576,437,1645,404,1711,384,1763"/>
+<area shape="rect" id="Node000015" href="$classMaceSettings.html#a90b1d12fd936a7e16f14c3f061318a9e" title="returns the maceModel" alt="" coords="560,1991,773,2019"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="389,1804,414,1842,448,1887,491,1932,540,1971,567,1986,562,1985,538,1975,487,1936,444,1890,410,1845,387,1809"/>
+<area shape="rect" id="Node000016" href="$classMaceSettings.html#a656481f02b87b6e8bb7b4ed1c3b951ff" title="returns the maceModelType" alt="" coords="545,1666,788,1694"/>
+<area shape="poly" id="edge16_Node000014_Node000016" title=" " alt="" coords="415,1758,473,1730,538,1704,571,1697,566,1699,540,1709,475,1735,418,1763"/>
+<area shape="rect" id="Node000017" href="$classDftbSettings.html#a94b7c65c0f5139df16493f6099eb4631" title="returns the slakosType" alt="" coords="566,1718,768,1746"/>
+<area shape="poly" id="edge17_Node000014_Node000017" title=" " alt="" coords="455,1767,572,1748,567,1750,457,1772"/>
+<area shape="rect" id="Node000018" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="572,1770,761,1798"/>
+<area shape="poly" id="edge19_Node000014_Node000018" title=" " alt="" coords="456,1781,560,1783,555,1784,456,1786"/>
+<area shape="rect" id="Node000019" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="583,1821,750,1866"/>
+<area shape="poly" id="edge20_Node000014_Node000019" title=" " alt="" coords="456,1798,570,1823,565,1824,456,1803"/>
+<area shape="rect" id="Node000020" href="$classDftbSettings.html#ad71a2e36a2ee153f78c1b491eda4264a" title="returns if third order DFTB should be used" alt="" coords="552,1890,781,1918"/>
+<area shape="poly" id="edge21_Node000014_Node000020" title=" " alt="" coords="407,1804,468,1841,540,1876,563,1885,557,1885,538,1881,466,1846,407,1809"/>
+<area shape="poly" id="edge24_Node000021_Node000009" title=" " alt="" coords="491,1463,571,1471,566,1474,492,1468"/>
+<area shape="rect" id="Node000022" href="$classsettings_1_1PotentialSettings.html#a6a7f2c90130118e100aeb3902a15684d" title="get the Coulomb long range type" alt="" coords="562,1528,772,1573"/>
+<area shape="poly" id="edge23_Node000021_Node000022" title=" " alt="" coords="458,1476,492,1488,540,1513,561,1522,555,1523,538,1518,490,1493,459,1481"/>
+<area shape="poly" id="edge26_Node000023_Node000009" title=" " alt="" coords="459,1510,572,1494,567,1497,461,1515"/>
+<area shape="rect" id="Node000024" href="$classsettings_1_1GeneralSettings.html#a80529ce88f2148fc94cea22db0fd9ae5" title="Returns true if the ring polymer MD simulations are activated." alt="" coords="563,1597,770,1642"/>
+<area shape="poly" id="edge27_Node000023_Node000024" title=" " alt="" coords="434,1545,540,1582,566,1592,561,1593,538,1588,434,1551"/>
+<area shape="poly" id="edge32_Node000025_Node000009" title=" " alt="" coords="381,896,465,1203,512,1366,530,1420,541,1445,572,1466,567,1467,537,1448,525,1422,507,1368,460,1204,380,901"/>
+<area shape="poly" id="edge40_Node000025_Node000012" title=" " alt="" coords="373,852,383,772,393,717,408,656,429,593,457,531,492,473,537,423,561,409,558,413,541,427,497,477,461,534,434,595,413,657,398,718,388,773,379,854"/>
+<area shape="rect" id="Node000026" href="$classThermostatSettings.html#a101dccef52e96a91234478ddf7d7669b" title="get the end temperature" alt="" coords="588,992,745,1037"/>
+<area shape="poly" id="edge29_Node000025_Node000026" title=" " alt="" coords="404,896,466,937,540,977,576,992,571,994,538,982,464,942,405,901"/>
+<area shape="rect" id="Node000027" href="$classThermostatSettings.html#a226e768a6ba0731e3504c4307782d31c" title="get the friction" alt="" coords="592,1061,741,1106"/>
+<area shape="poly" id="edge30_Node000025_Node000027" title=" " alt="" coords="390,896,451,971,493,1012,540,1047,580,1065,575,1067,538,1051,490,1016,447,975,390,901"/>
+<area shape="rect" id="Node000028" href="$classSimulationBoxSettings.html#aff25f2d3c2abef9d26e700be6045f74e" title="get if the velocities are initialized" alt="" coords="582,1131,751,1175"/>
+<area shape="poly" id="edge31_Node000025_Node000028" title=" " alt="" coords="383,896,407,944,440,1003,485,1064,511,1092,540,1116,570,1133,565,1134,538,1121,508,1096,481,1068,436,1006,402,946,384,901"/>
+<area shape="rect" id="Node000029" href="$classsettings_1_1TimingsSettings.html#a58a13b00fa1ceae44281aed2a416e959" title="get the number of steps" alt="" coords="574,437,760,482"/>
+<area shape="poly" id="edge33_Node000025_Node000029" title=" " alt="" coords="375,852,388,782,417,685,438,633,465,582,498,534,537,492,561,478,558,483,541,496,502,537,469,584,443,635,422,687,393,783,380,853"/>
+<area shape="rect" id="Node000030" href="$classThermostatSettings.html#aaccf4e57a8900531a2baafe83c867946" title="get the relaxation time" alt="" coords="590,507,743,551"/>
+<area shape="poly" id="edge34_Node000025_Node000030" title=" " alt="" coords="377,852,395,793,426,715,447,673,473,632,503,594,537,562,577,542,574,546,541,566,507,598,477,635,452,676,431,717,400,795,383,854"/>
+<area shape="rect" id="Node000031" href="$classThermostatSettings.html#adff95767d20992cd2d869b60cdf0575b" title="get the start temperature" alt="" coords="585,576,748,621"/>
+<area shape="poly" id="edge35_Node000025_Node000031" title=" " alt="" coords="381,852,402,805,436,745,481,684,508,655,538,631,572,614,569,618,540,635,511,659,485,687,440,748,407,808,386,854"/>
+<area shape="rect" id="Node000032" href="$classThermostatSettings.html#acbcccfae7bfebf7416bc00d7665d6670" title="get the target temperature" alt="" coords="580,645,753,690"/>
+<area shape="poly" id="edge36_Node000025_Node000032" title=" " alt="" coords="388,851,447,777,490,735,538,700,568,687,565,691,540,705,493,739,451,780,392,854"/>
+<area shape="rect" id="Node000033" href="$classThermostatSettings.html#ab2faf34eec064f60c5a62f0443404ca2" title="get the temperature ramp frequency" alt="" coords="548,715,785,759"/>
+<area shape="poly" id="edge37_Node000025_Node000033" title=" " alt="" coords="403,851,464,810,538,769,557,763,554,767,540,774,466,814,407,855"/>
+<area shape="rect" id="Node000034" href="$classThermostatSettings.html#a2e92c3fef47e185475a06517d9b86ca7" title="get the temperature ramp steps" alt="" coords="564,784,770,829"/>
+<area shape="poly" id="edge38_Node000025_Node000034" title=" " alt="" coords="454,854,556,831,552,835,458,858"/>
+<area shape="rect" id="Node000035" href="$classThermostatSettings.html#abee0b5ae632ff0bb4f828c3a752576c3" title="get the thermostat type" alt="" coords="589,853,744,898"/>
+<area shape="poly" id="edge39_Node000025_Node000035" title=" " alt="" coords="455,873,575,874,571,877,457,878"/>
+<area shape="rect" id="Node000036" href="$classsettings_1_1GeneralSettings.html#a9a3a3fbd228c5d1603d240de99a868e0" title="Returns true if the jobtype performs an MD simulation." alt="" coords="574,1200,759,1245"/>
+<area shape="poly" id="edge41_Node000025_Node000036" title=" " alt="" coords="380,896,400,956,431,1034,452,1076,477,1116,507,1153,541,1186,563,1200,557,1202,537,1190,503,1157,473,1119,447,1078,426,1036,395,958,380,901"/>
+<area shape="rect" id="Node000037" href="$structThermostatTypeMeta.html#aae44edb025175e03030900672c4ed3ac" title=" " alt="" coords="587,923,746,967"/>
+<area shape="poly" id="edge42_Node000025_Node000037" title=" " alt="" coords="455,893,574,921,570,924,457,898"/>
+<area shape="poly" id="edge45_Node000038_Node000009" title=" " alt="" coords="419,1381,492,1419,540,1444,572,1456,567,1458,538,1449,490,1423,420,1387"/>
+<area shape="poly" id="edge46_Node000038_Node000036" title=" " alt="" coords="403,1336,464,1295,538,1255,561,1247,557,1251,540,1259,466,1299,407,1340"/>
+<area shape="rect" id="Node000039" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="574,1269,759,1314"/>
+<area shape="poly" id="edge44_Node000038_Node000039" title=" " alt="" coords="455,1339,561,1315,557,1319,457,1344"/>
+<area shape="rect" id="Node000040" href="$classsettings_1_1GeneralSettings.html#a9c908292d55f625254723bd6051d6460" title="Returns true if the jobtype does is based on optimization." alt="" coords="574,1339,759,1383"/>
+<area shape="poly" id="edge47_Node000038_Node000040" title=" " alt="" coords="455,1359,561,1360,556,1362,457,1363"/>
+<area shape="rect" id="Node000041" href="$structJobTypeMeta.html#abc9000dcacc318fe8ce0f9e1a9760eff" title=" " alt="" coords="585,1407,748,1435"/>
+<area shape="poly" id="edge48_Node000038_Node000041" title=" " alt="" coords="455,1376,540,1393,580,1403,575,1404,538,1398,457,1381"/>
 </map>

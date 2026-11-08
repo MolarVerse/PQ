@@ -1,0 +1,5 @@
+<map id="molsys::SimulationBox::clearAtomIndexLookup" name="molsys::SimulationBox::clearAtomIndexLookup">
+<area shape="rect" id="Node000001" title="drops the table of buildAtomIndexLookup" alt="" coords="107,5,285,50"/>
+<area shape="rect" id="Node000002" href="$testSimulationBox_8cpp.html#aeba8305760f395186fb0aaa796aeedae" title="a table that does not fit the molecules is not used, and the table is gone after clearAtomIndexLookup" alt="" coords="5,14,59,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,29,59,30,59,25,94,27"/>
+</map>

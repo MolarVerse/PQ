@@ -1,8 +1,8 @@
 <map id="molsys::Box::getMinimalBoxDimension" name="molsys::Box::getMinimalBoxDimension">
 <area shape="rect" id="Node000001" title=" " alt="" coords="795,40,1003,85"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a7f019934b3be402d7e32a152fb7ed491" title="Scale and validate a candidate cell." alt="" coords="591,40,747,85"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a4b65fc81a45d80013139b247602ece8b" title="Scale and validate a candidate cell." alt="" coords="591,40,747,85"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="777,62,747,65,747,60,782,62"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#a0f72c206ae03884de00e8c46932f6cbe" title="Validate a resize without changing the live cell or atoms." alt="" coords="391,40,543,85"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#ae9cc2078d15758378827a07a2d01fb9f" title="Validate a resize without changing the live cell or atoms." alt="" coords="391,40,543,85"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="573,62,544,65,544,60,579,62"/>
 <area shape="rect" id="Node000004" href="$classmanostat_1_1BerendsenManostat.html#a7a9748b3087f0741329d35036cd661e5" title="apply Berendsen manostat for NPT ensemble" alt="" coords="122,5,343,50"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="373,49,344,47,344,41,378,49"/>

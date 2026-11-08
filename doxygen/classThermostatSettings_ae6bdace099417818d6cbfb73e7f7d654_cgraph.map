@@ -1,0 +1,5 @@
+<map id="ThermostatSettings::finalize" name="ThermostatSettings::finalize">
+<area shape="rect" id="Node000001" title="finalize the thermostat settings by checking if all required temperatures are set" alt="" coords="5,5,155,50"/>
+<area shape="rect" id="Node000002" href="$classReferenceSettings.html#a9d05a4e5b5aa7f2b28fb059d33ab00e4" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="203,5,351,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,25,190,27,185,28,155,30"/>
+</map>

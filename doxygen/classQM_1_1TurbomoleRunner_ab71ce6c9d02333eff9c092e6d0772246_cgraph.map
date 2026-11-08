@@ -10,16 +10,16 @@
 <area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="169,280,240,261,236,265,171,284"/>
 <area shape="rect" id="Node000011" href="$classsettings_1_1FileSettings.html#a54ba714f5292ac755a130c9469c86fca" title="Get the pointcharge file name." alt="" coords="238,283,430,327"/>
 <area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="170,303,225,304,221,306,172,307"/>
-<area shape="rect" id="Node000012" href="$classsettings_1_1QMSettings.html#a9fd53b7272f3361d593773c0e0972a1a" title="returns the qmScript" alt="" coords="256,352,412,397"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="170,325,243,347,239,350,170,331"/>
-<area shape="rect" id="Node000013" href="$classsettings_1_1HybridSettings.html#a4a3a2ff456a1d0c2f29a041158a9bdcd" title="get the smoothing method" alt="" coords="245,421,422,466"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="112,325,161,367,220,407,233,414,228,415,217,411,157,371,112,331"/>
-<area shape="rect" id="Node000014" href="$classsettings_1_1FileSettings.html#a56bf5c1db8a70d106ed092c004abb99f" title="Get the TM setup file name." alt="" coords="255,491,412,535"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="100,325,121,360,147,400,181,441,220,476,243,491,238,491,217,481,177,445,143,403,116,363,100,330"/>
-<area shape="rect" id="Node000015" href="$namespaceutilities.html#a4e2fa13e8aad34767f73d168b2494198" title="quotes one argument for a POSIX shell command" alt="" coords="260,559,408,587"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="95,325,111,374,136,433,171,495,194,522,220,545,248,562,242,562,217,550,190,526,167,498,131,436,106,376,94,331"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a51de8730bf8a06681d650f055be86ef2" title="returns the qmLoopTimeLimit" alt="" coords="554,5,723,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,25,540,26,535,29,422,30"/>
+<area shape="rect" id="Node000012" href="$classQMSettings.html#accbc248f1dc0bb967aa328aa6c60c5ee" title="returns the qmScript" alt="" coords="242,351,426,379"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="171,325,219,337,253,346,248,348,218,342,172,330"/>
+<area shape="rect" id="Node000013" href="$classsettings_1_1HybridSettings.html#a4a3a2ff456a1d0c2f29a041158a9bdcd" title="get the smoothing method" alt="" coords="245,403,422,447"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="119,325,166,358,220,388,236,396,231,397,217,393,163,362,119,331"/>
+<area shape="rect" id="Node000014" href="$classsettings_1_1FileSettings.html#a56bf5c1db8a70d106ed092c004abb99f" title="Get the TM setup file name." alt="" coords="255,472,412,517"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="103,325,150,391,183,427,220,457,244,472,238,472,217,462,179,431,146,395,102,330"/>
+<area shape="rect" id="Node000015" href="$namespaceutilities.html#a4e2fa13e8aad34767f73d168b2494198" title="quotes one argument for a POSIX shell command" alt="" coords="260,540,408,568"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="96,325,113,370,138,425,174,481,196,505,220,527,248,543,243,543,217,531,192,509,169,484,134,427,108,372,95,331"/>
+<area shape="rect" id="Node000003" href="$classQMSettings.html#a3b68e2f9f11f9cbdc743204386de5399" title="returns the qmLoopTimeLimit" alt="" coords="532,5,744,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,25,519,26,515,29,422,30"/>
 <area shape="rect" id="Node000005" href="$namespaceQM.html#a430721cad42818baeb1e9284220c4ed3" title=" " alt="" coords="543,83,733,111"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="420,94,530,96,525,98,422,100"/>
 <area shape="rect" id="Node000006" href="$namespaceutilities.html#ac17a1d50b00bcf1de310062a44bca2c4" title=" " alt="" coords="827,83,1021,111"/>

@@ -31,5 +31,6 @@ var config_2enums_2manostat_8hpp =
     [ "operator&=", "config_2enums_2manostat_8hpp.html#a731fe814cafc2f0cd0f085d5fe7ce0c2", null ],
     [ "operator|", "config_2enums_2manostat_8hpp.html#a69a095d8b61c7fac4850f68188affbaa", null ],
     [ "operator|=", "config_2enums_2manostat_8hpp.html#a717c03d0e689e4bc54162b73af4de6d9", null ],
-    [ "operator~", "config_2enums_2manostat_8hpp.html#afe74fb53c5f84eebda8ef39b70db92d4", null ]
+    [ "operator~", "config_2enums_2manostat_8hpp.html#afe74fb53c5f84eebda8ef39b70db92d4", null ],
+    [ "toDim", "config_2enums_2manostat_8hpp.html#a2b052f9c5519435f1c4d4a6f5d650846", null ]
 ];

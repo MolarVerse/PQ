@@ -1,0 +1,10 @@
+<map id="OptimizerSettings::isMaxLearningRateSetByUser" name="OptimizerSettings::isMaxLearningRateSetByUser">
+<area shape="rect" id="Node000001" title="returns whether the max learning rate has been set" alt="" coords="466,28,680,72"/>
+<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#a4c293804415c54725bcb6dbcadcd4402" title="returns the max learning rate" alt="" coords="262,57,418,102"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="453,65,419,72,418,67,448,66"/>
+<area shape="rect" id="Node000003" href="$testOptParser_8cpp.html#a2c6bd9d848d948c5262f2e193b2bf5b2" title="parse the optimizer learning rate decay factor" alt="" coords="75,5,144,33"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="450,44,144,24,144,19,451,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="244,54,213,47,144,30,144,24,214,42,249,53"/>
+<area shape="rect" id="Node000004" href="$classOptimizerSettings.html#a070fa1abb3424a664e32bca8b57f1f40" title="validates the configured learning&#45;rate bounds" alt="" coords="5,57,214,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="244,79,214,82,214,77,249,79"/>
+</map>

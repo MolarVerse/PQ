@@ -1,0 +1,31 @@
+<map id="QMSettings::setQMLoopTimeLimit" name="QMSettings::setQMLoopTimeLimit">
+<area shape="rect" id="Node000001" title="sets the qmLoopTimeLimit in settings" alt="" coords="470,305,680,350"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1QMInputParser.html#a8c6c1f03821f349f0cf48cf769e9a165" title=" " alt="" coords="218,5,414,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="560,290,540,240,511,179,471,118,447,89,420,64,404,53,404,48,424,60,451,86,475,114,515,177,545,238,565,291"/>
+<area shape="rect" id="Node000004" href="$namespacebenchQMRunner.html#abca373c8b7c7c2a122ccde294bf97547" title=" " alt="" coords="238,74,395,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="555,290,534,250,504,202,466,155,421,115,396,103,395,97,423,111,470,151,509,199,539,248,561,292"/>
+<area shape="rect" id="Node000006" href="$classExternalQMRunnerTest.html#a697768b4bb7eb2a2d7f4f59ebc071710" title=" " alt="" coords="232,125,401,170"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="543,293,490,239,457,210,421,185,399,173,398,168,423,180,460,205,494,235,548,293"/>
+<area shape="rect" id="Node000008" href="$classAseQMRunnerTest.html#a00929d6299218f9fe7118a863aa67290" title=" " alt="" coords="211,194,422,222"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="529,296,479,265,421,235,390,225,389,219,423,231,482,261,534,296"/>
+<area shape="rect" id="Node000009" href="$classExternalQMRunnerTest.html#a795e2248eacc2ed6f8b05c1ebd5aa23a" title=" " alt="" coords="232,245,401,290"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="459,302,402,290,401,285,464,301"/>
+<area shape="rect" id="Node000010" href="$testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="290,314,343,342"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="452,329,344,330,343,325,457,327"/>
+<area shape="rect" id="Node000011" href="$testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="290,366,343,394"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="453,353,344,377,342,372,457,351"/>
+<area shape="rect" id="Node000012" href="$testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="290,418,343,446"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="524,357,475,385,423,408,344,429,343,424,421,402,473,380,519,359"/>
+<area shape="rect" id="Node000013" href="$testAseQMRunner_8cpp.html#af0032828009dec68c702b686ff400753" title=" " alt="" coords="282,470,350,498"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="545,360,491,413,458,438,423,459,387,473,352,482,350,477,385,468,421,455,455,434,488,409,541,363"/>
+<area shape="rect" id="Node000014" href="$testAseQMRunner_8cpp.html#a82f8e7b2560af2c7eb1e1045d5d71eb4" title=" " alt="" coords="282,522,350,550"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="556,362,533,400,502,440,466,478,423,511,387,527,351,535,350,530,386,522,421,507,462,475,498,436,528,397,551,365"/>
+<area shape="rect" id="Node000015" href="$testExternalQMRunner_8cpp.html#a6c495d10d82dcf4a3ac60e84fcef91f8" title=" " alt="" coords="282,574,350,602"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="562,363,542,411,511,465,472,518,449,542,423,563,388,580,351,588,350,583,386,575,421,559,445,538,468,515,507,462,537,409,558,366"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1QMInputParser.html#a7e6c42d87be90aa02b796fb76a73c88f" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="5,5,163,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="200,29,165,30,162,25,205,26"/>
+<area shape="rect" id="Node000005" href="$perfDftbRunnerFiles_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="57,74,111,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="220,90,113,90,110,85,224,86"/>
+<area shape="rect" id="Node000007" href="$classQMWriterTest.html#a174f5b6ba28def21f508a1a51a03f76e" title=" " alt="" coords="6,134,162,162"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="214,149,164,150,161,145,219,146"/>
+</map>

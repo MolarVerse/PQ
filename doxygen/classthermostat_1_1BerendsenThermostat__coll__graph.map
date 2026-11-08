@@ -1,10 +1,13 @@
 <map id="thermostat::BerendsenThermostat" name="thermostat::BerendsenThermostat">
-<area shape="rect" id="Node000001" title="BerendsenThermostat." alt="" coords="5,563,240,747"/>
-<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="137,195,353,513"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,525,162,564,158,562,173,529"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="67,5,122,78"/>
-<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="91,75,85,156,78,264,77,388,87,513,93,546,88,546,82,514,72,388,73,264,80,155,90,80"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,75,106,122,120,170,132,197,127,197,115,172,101,123,97,80"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="278,5,327,78"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="297,75,280,180,275,178,295,80"/>
+<area shape="rect" id="Node000001" title="BerendsenThermostat." alt="" coords="330,598,565,782"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="236,207,452,525"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="400,537,421,599,416,598,398,541"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,215,112"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,109,199,181,228,219,223,220,195,185,146,114"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="239,5,448,112"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="344,109,346,191,341,190,343,114"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="506,22,554,95"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="530,92,523,140,515,163,503,185,487,198,466,210,463,206,484,193,499,181,510,161,518,138,528,97"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="475,321,628,411"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="540,408,484,584,480,581,536,412"/>
 </map>

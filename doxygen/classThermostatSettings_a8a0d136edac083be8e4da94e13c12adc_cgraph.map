@@ -1,0 +1,5 @@
+<map id="ThermostatSettings::setStartTemperature" name="ThermostatSettings::setStartTemperature">
+<area shape="rect" id="Node000001" title="set the start temperature" alt="" coords="5,5,168,50"/>
+<area shape="rect" id="Node000002" href="$classThermostatSettings.html#a4213807c7fe5707b6adfe8854b21d935" title="set the start temperature set" alt="" coords="216,5,399,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,25,203,27,197,28,168,30"/>
+</map>

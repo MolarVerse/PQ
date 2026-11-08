@@ -1,10 +1,10 @@
 <map id="manostat::StochasticRescalingManostat::_getRNG" name="manostat::StochasticRescalingManostat::_getRNG">
 <area shape="rect" id="Node000001" title="Get the random number generator." alt="" coords="417,83,638,127"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html#a542d1f74440916dd1520692cf879a2c8" title="calculate mu as scaling factor for Stochastic Rescaling manostat (anisotropic)" alt="" coords="129,5,362,50"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1AnisotropicStochasticRescalingManostat.html#ad3c57dab9c0105d3ce70a3d2cabca752" title="calculate mu as scaling factor for Stochastic Rescaling manostat (anisotropic)" alt="" coords="129,5,362,50"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="426,79,329,53,330,48,431,77"/>
-<area shape="rect" id="Node000004" href="$classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html#a7cbf6a69e255cf92a192c2365f167f27" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="139,74,352,136"/>
+<area shape="rect" id="Node000004" href="$classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html#aac1fab20ee0b4eea7568a63c04b77b77" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="139,74,352,136"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="399,105,352,108,352,102,404,105"/>
-<area shape="rect" id="Node000005" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="122,160,369,205"/>
+<area shape="rect" id="Node000005" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#a110dd19a016d6302cdee4e90fe85ec19" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="122,160,369,205"/>
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="431,132,330,162,329,157,426,132"/>
 <area shape="rect" id="Node000003" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="5,91,74,119"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,57,123,65,67,93,63,88,121,60,143,54"/>

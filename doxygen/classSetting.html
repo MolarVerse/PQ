@@ -108,19 +108,32 @@ Collaboration diagram for Setting&lt; T, Name &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSetting__coll__graph.png" border="0" usemap="#aSetting_3_01T_00_01Name_01_4_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aSetting_3_01T_00_01Name_01_4_coll__map" id="aSetting_3_01T_00_01Name_01_4_coll__map">
-<area shape="rect" title="A template class representing a configurable setting." alt="" coords="5,173,147,357"/>
-<area shape="rect" title=" " alt="" coords="25,5,127,78"/>
-<area shape="poly" title=" " alt="" coords="77,75,79,156,74,156,75,80"/>
+<area shape="rect" title="A template class representing a configurable setting." alt="" coords="32,173,179,424"/>
+<area shape="rect" title=" " alt="" coords="5,5,107,78"/>
+<area shape="poly" title=" " alt="" coords="56,75,63,149,65,157,60,156,58,149,55,80"/>
+<area shape="rect" title=" " alt="" coords="131,5,181,78"/>
+<area shape="poly" title=" " alt="" coords="150,75,136,157,131,156,148,80"/>
 </map>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aba9cea0f31efcc26cc5052f58c765c04" id="r_aba9cea0f31efcc26cc5052f58c765c04"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04">Setter</a> : std::uint8_t { <a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04a6adf97f83acf6453d4a6a4b1070f3754">None</a>
+, <a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04a7a1920d61156abc05a60135aefe8bc67">Default</a>
+, <a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04a8f9bfe9d1345237cb3b2b205864da075">User</a>
+, <a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04aa45da96d0bf6575970f2d27af22be28a">System</a>
+ }</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ade17ddc2a0686d8562c531ca2587700b" id="r_ade17ddc2a0686d8562c531ca2587700b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade17ddc2a0686d8562c531ca2587700b">Setting</a> ()=default</td></tr>
 <tr class="memitem:a6d8765b4a2bd1833cc82e7890a368e7d" id="r_a6d8765b4a2bd1833cc82e7890a368e7d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d8765b4a2bd1833cc82e7890a368e7d">Setting</a> (const T &amp;defaultValue)</td></tr>
 <tr class="memitem:aa2f77be2c4ed62cf5f74fc1723e3acd0" id="r_aa2f77be2c4ed62cf5f74fc1723e3acd0"><td class="memItemLeft" align="right" valign="top">const T &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2f77be2c4ed62cf5f74fc1723e3acd0">get</a> () const</td></tr>
-<tr class="memitem:a38e7b7d5f32ff543c950b4ab9d477319" id="r_a38e7b7d5f32ff543c950b4ab9d477319"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38e7b7d5f32ff543c950b4ab9d477319">set</a> (const T &amp;value)</td></tr>
-<tr class="memitem:aec15c45ca2f6b016d8252269a8b80090" id="r_aec15c45ca2f6b016d8252269a8b80090"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec15c45ca2f6b016d8252269a8b80090">isSet</a> () const</td></tr>
+<tr class="memitem:a0218f7e1dcb36e21a182d3c0837efa3a" id="r_a0218f7e1dcb36e21a182d3c0837efa3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0218f7e1dcb36e21a182d3c0837efa3a">setByUser</a> (const T &amp;value)</td></tr>
+<tr class="memitem:a631f49a8f587abf8f9fa821581147223" id="r_a631f49a8f587abf8f9fa821581147223"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a631f49a8f587abf8f9fa821581147223">setBySystem</a> (const T &amp;value)</td></tr>
+<tr class="memitem:a52b8d48ee3937e262bbd3a70be674e94" id="r_a52b8d48ee3937e262bbd3a70be674e94"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52b8d48ee3937e262bbd3a70be674e94">isSetByUser</a> () const</td></tr>
+<tr class="memitem:affeb7dd5acedf9a76c9e7e0655fc9109" id="r_affeb7dd5acedf9a76c9e7e0655fc9109"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affeb7dd5acedf9a76c9e7e0655fc9109">isSetBySystem</a> () const</td></tr>
+<tr class="memitem:ae47f5471f41c431d799f080d627c5710" id="r_ae47f5471f41c431d799f080d627c5710"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae47f5471f41c431d799f080d627c5710">isSetBySomeone</a> () const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -130,6 +143,7 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a4b1477e4101b33084a51bb05a09981a3" id="r_a4b1477e4101b33084a51bb05a09981a3"><td class="memItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b1477e4101b33084a51bb05a09981a3">_default</a> = std::nullopt</td></tr>
 <tr class="memitem:a1642ca825cfa47ee9f308ec742f01cb3" id="r_a1642ca825cfa47ee9f308ec742f01cb3"><td class="memItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1642ca825cfa47ee9f308ec742f01cb3">_value</a> = std::nullopt</td></tr>
+<tr class="memitem:a30612a436b48d76b4fdcfe9b4964035f" id="r_a30612a436b48d76b4fdcfe9b4964035f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04">Setter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30612a436b48d76b4fdcfe9b4964035f">_setter</a> = <a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04a6adf97f83acf6453d4a6a4b1070f3754">Setter::None</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt;<br />
@@ -141,7 +155,38 @@ class Setting&lt; T, Name &gt;</div><p>A template class representing a configura
   </table>
   </dd>
 </dl>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
+<a id="aba9cea0f31efcc26cc5052f58c765c04" name="aba9cea0f31efcc26cc5052f58c765c04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba9cea0f31efcc26cc5052f58c765c04">&#9670;&#160;</a></span>Setter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04">Setting::Setter</a> : std::uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aba9cea0f31efcc26cc5052f58c765c04a6adf97f83acf6453d4a6a4b1070f3754" name="aba9cea0f31efcc26cc5052f58c765c04a6adf97f83acf6453d4a6a4b1070f3754"></a>None&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aba9cea0f31efcc26cc5052f58c765c04a7a1920d61156abc05a60135aefe8bc67" name="aba9cea0f31efcc26cc5052f58c765c04a7a1920d61156abc05a60135aefe8bc67"></a>Default&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aba9cea0f31efcc26cc5052f58c765c04a8f9bfe9d1345237cb3b2b205864da075" name="aba9cea0f31efcc26cc5052f58c765c04a8f9bfe9d1345237cb3b2b205864da075"></a>User&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aba9cea0f31efcc26cc5052f58c765c04aa45da96d0bf6575970f2d27af22be28a" name="aba9cea0f31efcc26cc5052f58c765c04aa45da96d0bf6575970f2d27af22be28a"></a>System&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ade17ddc2a0686d8562c531ca2587700b" name="ade17ddc2a0686d8562c531ca2587700b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade17ddc2a0686d8562c531ca2587700b">&#9670;&#160;</a></span>Setting() <span class="overload">[1/2]</span></h2>
 
@@ -251,8 +296,8 @@ template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </d
 
 </div>
 </div>
-<a id="aec15c45ca2f6b016d8252269a8b80090" name="aec15c45ca2f6b016d8252269a8b80090"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec15c45ca2f6b016d8252269a8b80090">&#9670;&#160;</a></span>isSet()</h2>
+<a id="ae47f5471f41c431d799f080d627c5710" name="ae47f5471f41c431d799f080d627c5710"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae47f5471f41c431d799f080d627c5710">&#9670;&#160;</a></span>isSetBySomeone()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,7 +308,7 @@ template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </d
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::isSet </td>
+          <td class="memname">bool <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::isSetBySomeone </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -278,8 +323,62 @@ template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </d
 
 </div>
 </div>
-<a id="a38e7b7d5f32ff543c950b4ab9d477319" name="a38e7b7d5f32ff543c950b4ab9d477319"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38e7b7d5f32ff543c950b4ab9d477319">&#9670;&#160;</a></span>set()</h2>
+<a id="affeb7dd5acedf9a76c9e7e0655fc9109" name="affeb7dd5acedf9a76c9e7e0655fc9109"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affeb7dd5acedf9a76c9e7e0655fc9109">&#9670;&#160;</a></span>isSetBySystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::isSetBySystem </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a52b8d48ee3937e262bbd3a70be674e94" name="a52b8d48ee3937e262bbd3a70be674e94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52b8d48ee3937e262bbd3a70be674e94">&#9670;&#160;</a></span>isSetByUser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::isSetByUser </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a631f49a8f587abf8f9fa821581147223" name="a631f49a8f587abf8f9fa821581147223"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a631f49a8f587abf8f9fa821581147223">&#9670;&#160;</a></span>setBySystem()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -287,7 +386,26 @@ template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </d
 template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::set </td>
+          <td class="memname">void <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::setBySystem </td>
+          <td>(</td>
+          <td class="paramtype">const T &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0218f7e1dcb36e21a182d3c0837efa3a" name="a0218f7e1dcb36e21a182d3c0837efa3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0218f7e1dcb36e21a182d3c0837efa3a">&#9670;&#160;</a></span>setByUser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::setByUser </td>
           <td>(</td>
           <td class="paramtype">const T &amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
@@ -311,6 +429,30 @@ template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </d
       <table class="memname">
         <tr>
           <td class="memname">std::optional&lt;T&gt; <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::_default = std::nullopt</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a30612a436b48d76b4fdcfe9b4964035f" name="a30612a436b48d76b4fdcfe9b4964035f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30612a436b48d76b4fdcfe9b4964035f">&#9670;&#160;</a></span>_setter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T, mstd::Tag Name = mstd::Tag(&quot;Settings&quot;)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04">Setter</a> <a class="el" href="classSetting.html">Setting</a>&lt; T, Name &gt;::_setter = <a class="el" href="#aba9cea0f31efcc26cc5052f58c765c04a6adf97f83acf6453d4a6a4b1070f3754">Setter::None</a></td>
         </tr>
       </table>
   </td>

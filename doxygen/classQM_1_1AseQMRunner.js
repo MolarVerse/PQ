@@ -1,7 +1,7 @@
 var classQM_1_1AseQMRunner =
 [
     [ "AseInterface", "structQM_1_1AseQMRunner_1_1AseInterface.html", "structQM_1_1AseQMRunner_1_1AseInterface" ],
-    [ "AseQMRunner", "classQM_1_1AseQMRunner.html#a19981349daf372e69025e79272f899a4", null ],
+    [ "AseQMRunner", "classQM_1_1AseQMRunner.html#a14d780cf728f0d2ede91173dad38732d", null ],
     [ "~AseQMRunner", "classQM_1_1AseQMRunner.html#a0b0ddaef13e538f24e9cc780f695bae2", null ],
     [ "_setAseCalculator", "classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8", null ],
     [ "buildAseAtoms", "classQM_1_1AseQMRunner.html#a9dcc0c5806d0ba94cd8523f3f35edac4", null ],

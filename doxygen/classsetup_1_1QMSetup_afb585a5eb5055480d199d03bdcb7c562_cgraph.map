@@ -1,7 +1,0 @@
-<map id="setup::QMSetup::setupQMMethodAseXtb" name="setup::QMSetup::setupQMMethodAseXtb">
-<area shape="rect" id="Node000001" title="setup the ASE DFTB+ method of the system" alt="" coords="5,40,245,85"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a392002c6312680d946422a22711bee71" title="returns the qmMethod" alt="" coords="293,5,449,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,43,280,40,275,41,246,48"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a060329b7e58cfbb9c02c722b561fcdc5" title="returns the xTBMethod" alt="" coords="293,75,449,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,77,280,84,274,84,245,82"/>
-</map>

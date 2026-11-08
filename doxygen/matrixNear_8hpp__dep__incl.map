@@ -1,9 +1,7 @@
 <map id="/home/runner/work/PQ/PQ/tests/include/macros/matrixNear.hpp" name="/home/runner/work/PQ/PQ/tests/include/macros/matrixNear.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="290,5,473,67"/>
-<area shape="rect" id="Node000002" href="$testOrthorhombicBox_8cpp.html" title=" " alt="" coords="5,115,254,177"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,73,201,117,199,112,294,74"/>
-<area shape="rect" id="Node000003" href="$testTriclinicBox_8cpp.html" title=" " alt="" coords="277,115,486,177"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="383,81,384,116,379,113,380,85"/>
-<area shape="rect" id="Node000004" href="$testStaticMatrix3x3_8cpp.html" title=" " alt="" coords="510,115,704,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="459,71,546,115,541,114,458,77"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="130,5,313,67"/>
+<area shape="rect" id="Node000002" href="$testTriclinicBox_8cpp.html" title=" " alt="" coords="5,115,214,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,76,143,117,139,112,177,79"/>
+<area shape="rect" id="Node000003" href="$testStaticMatrix3x3_8cpp.html" title=" " alt="" coords="238,115,432,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="265,75,306,115,300,114,263,80"/>
 </map>

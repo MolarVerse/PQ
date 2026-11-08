@@ -1,12 +1,14 @@
 <map id="TEST" name="TEST">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,65,59,93"/>
-<area shape="rect" id="Node000002" href="$namespacemolsys.html#a8602580547f646cacd5ee849f257590c" title="determine box dimensions and angles from box matrix (angles are in RAD)" alt="" coords="354,66,577,111"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,63,71,40,106,21,161,6,205,3,250,9,307,21,360,36,411,59,406,59,359,41,305,26,250,15,205,9,161,11,108,26,74,44,48,67"/>
-<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="107,35,306,62"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,72,111,64,107,68,60,77"/>
-<area shape="rect" id="Node000004" href="$structTestTriclinicBox.html#a912821194fd30a6058c6702711b30b9d" title=" " alt="" coords="119,86,294,131"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,81,106,90,102,93,60,86"/>
-<area shape="rect" id="Node000005" href="$classmolsys_1_1TriclinicBox.html#af20f84883f6968593bf0d2d59dc8d99a" title="scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume" alt="" coords="131,155,282,200"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="46,90,74,116,108,141,120,148,114,149,105,145,71,120,46,96"/>
-<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="272,152,382,117,387,116,274,158"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,65,59,92"/>
+<area shape="rect" id="Node000002" href="$namespacemolsys.html#a8602580547f646cacd5ee849f257590c" title="determine box dimensions and angles from box matrix (angles are in RAD)" alt="" coords="354,31,577,76"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,63,71,39,106,20,140,11,176,5,247,4,316,11,380,26,374,27,316,17,247,9,176,11,141,16,108,25,74,44,48,66"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="107,34,306,62"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,72,111,63,107,67,60,76"/>
+<area shape="rect" id="Node000004" href="$structTestTriclinicBox.html#a912821194fd30a6058c6702711b30b9d" title=" " alt="" coords="119,86,294,130"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,80,106,89,102,92,60,86"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1TriclinicBox.html#a83d610ea4ed30ac8c0a630023bb92147" title="scale box dimensions and angles and recalculate the box matrix, transformation matrix and volume" alt="" coords="131,155,282,200"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="46,90,74,116,108,140,120,148,114,148,105,145,71,120,46,95"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="277,152,305,140,362,111,413,85,418,83,365,116,307,145,278,157"/>
+<area shape="rect" id="Node000006" href="$classlinalg_1_1StaticMatrix3x3.html#a8019d159a173e1a916e78bbcdec32c55" title=" " alt="" coords="382,155,550,200"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="282,175,369,177,363,177,282,180"/>
 </map>

@@ -10,7 +10,7 @@
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="270,189,351,198,346,200,271,194"/>
 <area shape="rect" id="Node000008" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="361,245,510,290"/>
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="213,199,318,230,349,241,344,242,317,236,213,204"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1ThermostatSettings.html#a1db479eaf0e22f7360878526e43d2fd1" title="set the temperature ramp frequency" alt="" coords="318,315,554,359"/>
+<area shape="rect" id="Node000009" href="$classThermostatSettings.html#a5241cedb9c4ee28ba810c196dac72c20" title="set the temperature ramp frequency" alt="" coords="318,315,554,359"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="166,198,234,249,275,276,319,300,335,309,329,308,316,305,273,281,231,254,165,204"/>
 <area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="630,61,781,106"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="485,84,617,84,612,86,486,90"/>

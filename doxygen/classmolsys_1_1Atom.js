@@ -35,7 +35,6 @@ var classmolsys_1_1Atom =
     [ "scaleForce", "classmolsys_1_1Atom.html#a29c92df42e599c4a92463def6b545899", null ],
     [ "scaleVelocity", "classmolsys_1_1Atom.html#ab303fa33229aeccc14465009ae99a871", null ],
     [ "scaleVelocity", "classmolsys_1_1Atom.html#a4489fbdfaf8f7a1c6df8569616a0d446", null ],
-    [ "scaleVelocityOrthogonalSpace", "classmolsys_1_1Atom.html#a787c8511d10f266733e84040011e544e", null ],
     [ "setActive", "classmolsys_1_1Atom.html#a7c22dfff160f08c9de708783ee92eea9", null ],
     [ "setAtomicNumber", "classmolsys_1_1Atom.html#a2135d3ad64e82ac4ea42ba39fda5caf6", null ],
     [ "setAtomType", "classmolsys_1_1Atom.html#a48d922200c099c29bff83520cb3ea990", null ],

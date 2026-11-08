@@ -1,5 +1,9 @@
 var qmSettings_8hpp =
 [
-    [ "settings::QMSettings", "classsettings_1_1QMSettings.html", null ],
-    [ "settings::string", "namespacesettings.html#af9ee05622cd09f2f0bf6ee98e9910955", null ]
+    [ "MaceSettings", "classMaceSettings.html", "classMaceSettings" ],
+    [ "FennolSettings", "classFennolSettings.html", "classFennolSettings" ],
+    [ "DftbSettings", "classDftbSettings.html", "classDftbSettings" ],
+    [ "XtbSettings", "classXtbSettings.html", "classXtbSettings" ],
+    [ "QMSettings", "classQMSettings.html", "classQMSettings" ],
+    [ "string", "qmSettings_8hpp.html#afe12df3ae6696d79d3ba67f510068283", null ]
 ];

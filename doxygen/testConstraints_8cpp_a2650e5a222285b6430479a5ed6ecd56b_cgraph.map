@@ -1,9 +1,9 @@
 <map id="TEST_F" name="TEST_F">
 <area shape="rect" id="Node000001" title="test apply rattle algorithm to all bond constraints and it does not converge" alt="" coords="5,65,74,93"/>
-<area shape="rect" id="Node000002" href="$namespacetestSettings.html#a9d5aea37b6c36e577dabe1e7b67d5468" title="start a builder for the settings struct SettingsT" alt="" coords="125,5,268,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,63,121,42,140,37,135,40,123,47,74,67"/>
-<area shape="rect" id="Node000003" href="$classConstraintSettings.html#a6b3afc1eb91ee72876a24873c1b0d647" title="set the maximum number of iterations for the rattle algorithm" alt="" coords="126,57,268,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,77,113,78,109,81,75,82"/>
-<area shape="rect" id="Node000004" href="$classConstraintSettings.html#ae3a9dbe4cf42c47ebf5f760c61599226" title="set the tolerance for the rattle algorithm" alt="" coords="122,126,272,171"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,91,133,118,129,121,73,96"/>
+<area shape="rect" id="Node000002" href="$namespacetestSettings.html#a9d5aea37b6c36e577dabe1e7b67d5468" title="start a builder for the settings struct SettingsT" alt="" coords="149,5,292,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,62,121,42,146,36,141,39,123,47,73,67"/>
+<area shape="rect" id="Node000003" href="$classConstraintSettings.html#aec6d832a53c4b550bf28e5af55d21a59" title="set the maximum number of iterations for the rattle algorithm" alt="" coords="128,57,313,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,77,114,78,110,81,75,82"/>
+<area shape="rect" id="Node000004" href="$classConstraintSettings.html#aff79c4e1faba205392518d96a30a1bdf" title="set the tolerance for the rattle algorithm" alt="" coords="122,126,319,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,91,123,111,141,120,136,121,121,116,73,96"/>
 </map>

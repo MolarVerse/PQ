@@ -1,0 +1,11 @@
+<map id="manostat::Manostat::rotateMu" name="manostat::Manostat::rotateMu">
+<area shape="rect" id="Node000001" title="rotate mu back into upper diagonal space" alt="" coords="408,83,560,127"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1FullAnisotropicBerendsenManostat.html#a6890493603e39464efcb7d15a0801d58" title="calculate mu as scaling factor for Berendsen manostat (full anisotropic including angles)" alt="" coords="122,5,360,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="402,77,359,65,322,53,322,48,361,60,407,77"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1FullAnisotropicStochasticRescalingManostat.html#aac1fab20ee0b4eea7568a63c04b77b77" title="calculate mu as scaling factor for Stochastic Rescaling manostat (full anisotropic including angles)" alt="" coords="135,74,347,136"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="390,105,348,108,347,102,395,105"/>
+<area shape="rect" id="Node000005" href="$testManostat_8cpp.html#a3fcd286ca21d5c52566bcd81c88caff7" title="test rotation of mu" alt="" coords="207,160,275,188"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="410,132,361,150,276,170,275,165,359,145,404,133"/>
+<area shape="rect" id="Node000004" href="$testManostatRegressions_8cpp.html#a0ab4004d43595aebc160eb657a2d5edc" title=" " alt="" coords="5,91,74,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="117,107,75,108,73,102,121,103"/>
+</map>

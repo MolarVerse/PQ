@@ -1,7 +1,17 @@
 <map id="QM::AseFennolRunner::~AseFennolRunner" name="QM::AseFennolRunner::~AseFennolRunner">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,170,50"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1AseFennolRunner.html#a542184832d9d4e9d3d726d84a8055a20" title="Construct a new AseFennolRunner::AseFennolRunner object." alt="" coords="218,5,382,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,25,205,27,200,28,170,30"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="430,5,632,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="382,25,417,28,412,28,382,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,125,170,170"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseFennolRunner.html#a6fbd6e396e98c42b73e259b4a6b81abc" title="Construct a new AseFennolRunner::AseFennolRunner object." alt="" coords="218,125,382,170"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,145,205,147,200,149,171,150"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="462,5,665,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="328,122,374,90,429,60,450,54,445,56,431,65,377,95,331,127"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1AseQMRunner.html#a14d780cf728f0d2ede91173dad38732d" title="Construct a new AseQMRunner::AseQMRunner object." alt="" coords="442,74,685,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="382,122,429,110,469,104,464,106,431,116,383,127"/>
+<area shape="rect" id="Node000006" href="$classFennolSettings.html#ac2c8553e1e03b1d881c134e9b8175926" title="returns the FeNNol model path" alt="" coords="469,125,658,170"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="382,145,456,147,451,148,383,150"/>
+<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="471,195,656,239"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="383,167,431,180,462,190,457,190,429,185,383,172"/>
+<area shape="rect" id="Node000008" href="$classFennolSettings.html#a9c1b329fbb66979c061e2b2384376697" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="430,263,697,291"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="323,168,371,211,400,232,431,249,448,258,443,258,429,254,397,236,367,215,322,173"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1QMRunner.html#ac10db8a298dfddae091119ae69324959" title="constructor for the QMRunner class" alt="" coords="745,74,941,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="686,85,733,87,727,88,686,90"/>
 </map>

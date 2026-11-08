@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classstd_1_1optional_3_01FixedAxis_01_4.html" title=" " alt="" coords="5,5,172,33"/>
+<area shape="rect" id="Node000000" href="$classopt_1_1Optimizer.html" title="Base class for all optimizers." alt="" coords="5,32,120,60"/>
+<area shape="rect" id="Node000001" href="$classopt_1_1Adam.html" title=" " alt="" coords="204,5,292,33"/>
+<area shape="poly" id="edge104_Node000000_Node000001" title=" " alt="" coords="134,33,206,25,201,26,136,38"/>
+<area shape="rect" id="Node000002" href="$classopt_1_1SteepestDescent.html" title="Steepest Descent optimizer." alt="" coords="168,57,328,85"/>
+<area shape="poly" id="edge105_Node000000_Node000002" title=" " alt="" coords="135,53,170,60,165,60,135,58"/>
 </map>

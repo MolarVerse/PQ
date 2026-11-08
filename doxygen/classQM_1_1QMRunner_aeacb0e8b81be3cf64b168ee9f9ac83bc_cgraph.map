@@ -1,5 +1,5 @@
 <map id="QM::QMRunner::throwAfterTimeout" name="QM::QMRunner::throwAfterTimeout">
 <area shape="rect" id="Node000001" title="function to throw an exception after a timeout" alt="" coords="5,5,201,50"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a51de8730bf8a06681d650f055be86ef2" title="returns the qmLoopTimeLimit" alt="" coords="249,5,418,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,25,236,27,231,28,201,30"/>
+<area shape="rect" id="Node000002" href="$classQMSettings.html#a3b68e2f9f11f9cbdc743204386de5399" title="returns the qmLoopTimeLimit" alt="" coords="249,5,460,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,25,236,27,230,28,201,30"/>
 </map>

@@ -1,0 +1,9 @@
+<map id="DftbSettings::getSlakosPath" name="DftbSettings::getSlakosPath">
+<area shape="rect" id="Node000001" title="returns the slakosPath" alt="" coords="414,44,614,72"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseDftbRunner.html#a97cb93152a948be576a069a10303e033" title="Construct a new AseDftbRunner::AseDftbRunner object." alt="" coords="210,5,366,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="396,43,366,41,366,36,401,43"/>
+<area shape="rect" id="Node000004" href="$testQMSettings_8cpp.html#a2e2a61fbeb6b064cce6efd69ff8cdb52" title=" " alt="" coords="261,74,314,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="401,73,315,87,315,82,396,74"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseDftbRunner.html#a88e17ef3a6c463ddd575a9c11dd1b885" title=" " alt="" coords="5,5,162,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="191,28,162,30,161,25,197,27"/>
+</map>

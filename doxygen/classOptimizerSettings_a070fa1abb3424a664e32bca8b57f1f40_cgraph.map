@@ -4,6 +4,6 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,44,249,41,244,42,215,49"/>
 <area shape="rect" id="Node000004" href="$classOptimizerSettings.html#a4f02da48832ab453ca819a6edaaf780e" title="returns the min learning rate" alt="" coords="264,75,416,119"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="214,75,251,83,246,83,214,81"/>
-<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#a181f8112305256f00767cc2f20db33f9" title="returns whether the max learning rate has been set" alt="" coords="466,5,633,50"/>
+<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#a3cd9d9b17f946c85e69904626bd47403" title="returns whether the max learning rate has been set" alt="" coords="466,5,680,50"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="418,25,453,27,448,28,419,30"/>
 </map>

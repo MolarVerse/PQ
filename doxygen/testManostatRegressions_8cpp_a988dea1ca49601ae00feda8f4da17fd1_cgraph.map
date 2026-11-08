@@ -1,19 +1,26 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,172,74,200"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="142,35,294,79"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,171,77,131,97,109,120,90,131,85,127,89,123,94,101,113,81,134,52,173"/>
-<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="132,104,304,149"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="73,173,137,152,134,156,76,177"/>
-<area shape="rect" id="Node000007" href="$classmolsys_1_1Atom.html#aceeba752fe1b92c1b3b0fa0fad5ad498" title=" " alt="" coords="122,172,314,200"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="73,184,108,185,104,188,75,189"/>
-<area shape="rect" id="Node000008" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="132,224,304,269"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="74,195,138,217,133,220,74,200"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a4e0af2a46c9addffe64f37b0ab8f2ecc" title="sets the virial type" alt="" coords="125,293,310,338"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="50,198,81,238,101,260,123,279,132,286,126,286,120,283,97,264,77,242,49,203"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="362,5,514,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="293,44,349,39,344,41,295,49"/>
-<area shape="rect" id="Node000004" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="386,74,491,102"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="294,65,373,77,368,79,295,70"/>
-<area shape="rect" id="Node000005" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="562,65,740,110"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="491,85,549,87,544,88,492,90"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,295,74,323"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1Manostat.html#a0f1386ec13dba9b36d9bd3a673cc60fb" title="apply dummy manostat for NVT ensemble" alt="" coords="142,163,294,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="51,293,81,261,120,228,149,213,146,217,123,232,84,265,55,296"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1SimulationBox.html#a4fe67e39dfffe686c2825d3acaeb467c" title="calculates the volume" alt="" coords="569,264,741,309"/>
+<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="65,293,92,281,121,272,236,256,353,253,462,259,557,270,551,271,462,264,353,259,237,262,122,277,94,286,69,297"/>
+<area shape="rect" id="Node000010" href="$classmolsys_1_1SimulationBox.html#a74512ddad78f92fd847829a45a60435d" title="get atom by index" alt="" coords="132,287,304,331"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="73,307,118,307,114,311,75,311"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Atom.html#aceeba752fe1b92c1b3b0fa0fad5ad498" title=" " alt="" coords="122,355,314,383"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="71,321,123,341,145,350,140,351,121,346,72,326"/>
+<area shape="rect" id="Node000012" href="$classsettings_1_1GeneralSettings.html#a4e0af2a46c9addffe64f37b0ab8f2ecc" title="sets the virial type" alt="" coords="125,407,310,451"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="51,320,82,356,123,392,132,399,127,399,120,396,78,360,50,326"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#ad03221aa6625c515931163498675f6b3" title="calculate the pressure of the system" alt="" coords="362,163,514,207"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="293,182,349,184,344,186,295,188"/>
+<area shape="rect" id="Node000008" href="$globalTimer_8hpp.html#a24fe7da9abc65972d66eeba355c5469c" title="Scoped timer for a specific section of code." alt="" coords="386,47,491,75"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="258,160,400,81,397,85,261,164"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="569,125,741,170"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="514,169,556,164,551,166,515,174"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a6cc89b6cb02cd4b30a0c8c260554ca41" title="get the virial type" alt="" coords="562,195,748,239"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="514,194,550,201,544,202,515,199"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="479,205,563,249,579,258,573,258,561,254,478,211"/>
+<area shape="rect" id="Node000007" href="$config_2enums_2manostat_8cpp.html#a5fd9e28e7868b07d8deb9ee7ebfc47be" title="checks if a specific axis is fixed in the given FixedAxis bitmask" alt="" coords="608,74,702,102"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="472,160,514,134,561,111,595,101,591,103,563,115,516,139,475,164"/>
+<area shape="rect" id="Node000009" href="$classSingleton.html#ada1f0cd0944b6ca12d57d127666bae85" title=" " alt="" coords="566,5,744,50"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="490,50,553,42,549,45,492,55"/>
 </map>

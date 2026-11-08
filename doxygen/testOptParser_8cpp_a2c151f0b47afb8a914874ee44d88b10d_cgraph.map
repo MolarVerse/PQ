@@ -1,7 +1,7 @@
 <map id="TEST_F" name="TEST_F">
 <area shape="rect" id="Node000001" title="parse the minimum learning rate" alt="" coords="5,48,74,76"/>
-<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#a4f02da48832ab453ca819a6edaaf780e" title="returns the min learning rate" alt="" coords="122,5,274,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,52,109,46,105,49,75,57"/>
-<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#abf4d073cde173fa8d41cc701bf35d68e" title="sets the min learning rate" alt="" coords="122,75,274,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,67,109,76,104,78,74,72"/>
+<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#a4f02da48832ab453ca819a6edaaf780e" title="returns the min learning rate" alt="" coords="145,5,297,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,131,43,127,47,75,58"/>
+<area shape="rect" id="Node000003" href="$classOptimizerSettings.html#a44cd8f91c7985bbb23aa350797bd1ff2" title="sets the min learning rate" alt="" coords="122,75,320,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,66,109,74,104,76,74,71"/>
 </map>

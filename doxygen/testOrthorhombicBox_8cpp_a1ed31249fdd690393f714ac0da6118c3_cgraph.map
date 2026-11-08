@@ -1,9 +1,0 @@
-<map id="TEST" name="TEST">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,65,59,93"/>
-<area shape="rect" id="Node000002" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="107,5,306,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,63,106,42,129,36,125,39,108,47,61,68"/>
-<area shape="rect" id="Node000003" href="$classmolsys_1_1OrthorhombicBox.html#a5c6e5bb78555bba99a338e1cd7b0bab0" title="transform a vector into orthogonal space" alt="" coords="111,57,302,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,77,98,77,94,81,60,82"/>
-<area shape="rect" id="Node000004" href="$classmolsys_1_1OrthorhombicBox.html#ab56befc51fb478b6757a65af5ded4aa5" title="transform a vector into simulation space" alt="" coords="111,126,302,171"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,90,108,111,126,120,120,121,106,116,59,95"/>
-</map>

@@ -1,0 +1,9 @@
+<map id="TestableSimSpaceScalingManostat::toSimSpaceScaling" name="TestableSimSpaceScalingManostat::toSimSpaceScaling">
+<area shape="rect" id="Node000001" title=" " alt="" coords="122,49,369,94"/>
+<area shape="rect" id="Node000002" href="$testManostat_8cpp.html#ad438d3298396963c6ca1c0378b331bc6" title="a box allowing a change of angles keeps the scaling tensor in simulation space" alt="" coords="5,5,74,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,46,74,30,74,25,142,43"/>
+<area shape="rect" id="Node000003" href="$testManostat_8cpp.html#ab551f7a073e4ea37992d425368c804d2" title="orthorhombic boxes need no transformation of the scaling tensor" alt="" coords="5,57,74,85"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,73,75,74,74,69,108,70"/>
+<area shape="rect" id="Node000004" href="$testManostat_8cpp.html#afbab15ab2e6ee17d737511c827dcb5db" title="for fixed angles the diagonal scaling in orthogonal space is mapped to simulation space: S_sim * (h v..." alt="" coords="5,109,74,137"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="137,99,75,117,73,112,142,96"/>
+</map>

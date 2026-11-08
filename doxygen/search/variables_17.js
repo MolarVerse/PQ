@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['x_0',['x',['../classlinalg_1_1Vector3D.html#a1daa4462a83e25b88ae1de81321513b1',1,'linalg::Vector3D']]],
-  ['xyz_1',['xyz',['../classlinalg_1_1Vector3D.html#a9724c442ca236cbaa96a89c129cd4df0',1,'linalg::Vector3D']]]
+  ['water_5ftype_0',['WATER_TYPE',['../namespacebenchWaterScaling.html#a6ea9095afb3920b792c6f670edd9969f',1,'benchWaterScaling']]],
+  ['watermodelsettings_1',['waterModelSettings',['../structSettings.html#a68d7c9258402590da01250d9cf59d713',1,'Settings']]],
+  ['wellwidth_2',['wellWidth',['../structMorseParams.html#a1c11e0ba0907b9e2494bdeb438cde4b6',1,'MorseParams']]]
 ];

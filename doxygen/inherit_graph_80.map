@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classintraNonBonded_1_1IntraNonBonded.html" title="base class for intra non bonded interactions" alt="" coords="5,5,196,50"/>
+<area shape="rect" id="Node000000" href="$classintegrator_1_1Integrator.html" title="Integrator is a base class for all integrators." alt="" coords="5,5,163,33"/>
+<area shape="rect" id="Node000001" href="$classintegrator_1_1VelocityVerlet.html" title="VelocityVerlet inherits Integrator." alt="" coords="211,5,394,33"/>
+<area shape="poly" id="edge72_Node000000_Node000001" title=" " alt="" coords="178,17,213,19,207,19,178,22"/>
 </map>

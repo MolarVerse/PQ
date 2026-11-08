@@ -1,13 +1,19 @@
 <map id="QM::AseDftbRunner::~AseDftbRunner" name="QM::AseDftbRunner::~AseDftbRunner">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,75,162,119"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1AseDftbRunner.html#acb44aa4fde7386287148d991dbb0ae99" title="Construct a new AseDftbRunner::AseDftbRunner object." alt="" coords="210,75,366,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,94,197,96,192,98,163,100"/>
-<area shape="rect" id="Node000004" href="$classQM_1_1AseDftbRunner.html#a382b224f6d5792db6471a71d76d66648" title="get the 3ob Hubbard derivatives as dict" alt="" coords="437,5,593,50"/>
-<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="159,72,209,60,319,43,424,34,419,35,320,48,210,65,161,77"/>
-<area shape="rect" id="Node000005" href="$classQM_1_1AseDftbRunner.html#a8362c666305316110412e4e51376b5fb" title="set the 3ob Hubbard derivatives as dict" alt="" coords="437,144,593,189"/>
-<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="160,117,210,129,320,146,424,159,419,160,319,151,209,134,160,122"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="414,75,616,119"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="366,94,401,97,396,97,367,100"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="363,72,427,54,422,56,364,77"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="364,117,427,139,422,139,363,123"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,156,162,201"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseDftbRunner.html#a97cb93152a948be576a069a10303e033" title="Construct a new AseDftbRunner::AseDftbRunner object." alt="" coords="210,156,366,201"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,176,197,177,192,179,163,181"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="434,5,637,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="306,154,351,107,381,82,413,60,428,55,423,58,415,65,384,86,355,110,309,158"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1AseQMRunner.html#a14d780cf728f0d2ede91173dad38732d" title="Construct a new AseQMRunner::AseQMRunner object." alt="" coords="414,74,657,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="325,153,366,131,413,111,439,105,434,107,415,115,369,136,327,158"/>
+<area shape="rect" id="Node000006" href="$classDftbSettings.html#ae51fdfeab8222b1e71211c3d09675a2d" title="returns the Hubbard Derivative dictionary" alt="" coords="443,125,628,170"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="366,166,430,160,425,162,367,171"/>
+<area shape="rect" id="Node000007" href="$classDftbSettings.html#a5a0b186ceba0e3b5291c183a135878ff" title="returns the slakosPath" alt="" coords="436,194,636,222"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="366,185,422,194,417,194,367,190"/>
+<area shape="rect" id="Node000008" href="$classQMSettings.html#a6efd4c1cfd2b1eb015aa735195561f2a" title="returns if the dispersion correction should be used" alt="" coords="424,246,647,274"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="336,199,415,230,446,242,441,242,413,236,335,204"/>
+<area shape="rect" id="Node000009" href="$classDftbSettings.html#ad71a2e36a2ee153f78c1b491eda4264a" title="returns if third order DFTB should be used" alt="" coords="422,298,650,326"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="310,199,356,242,385,264,415,283,434,293,429,292,413,287,382,269,353,246,308,204"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1QMRunner.html#ac10db8a298dfddae091119ae69324959" title="constructor for the QMRunner class" alt="" coords="705,74,901,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="657,85,692,87,687,88,658,90"/>
 </map>

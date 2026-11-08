@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="40,141,66,105,85,85,106,69,122,63,118,67,109,73,88,89,70,108,44,144"/>
 <area shape="rect" id="Node000005" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="165,83,282,110"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="59,140,107,119,152,108,148,112,109,124,62,144"/>
-<area shape="rect" id="Node000006" href="$classsettings_1_1ThermostatSettings.html#a94205dbc520ca29a18e67c60ba948706" title="set the actual target temperature" alt="" coords="117,134,330,179"/>
+<area shape="rect" id="Node000006" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="117,134,330,179"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="59,154,104,155,100,158,61,159"/>
 <area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#ae256e11db193b48e1e286ec300ca3034" title="sets if the random seed value has been set" alt="" coords="131,204,316,248"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="60,167,109,189,129,197,124,199,107,194,60,173"/>

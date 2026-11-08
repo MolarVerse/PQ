@@ -1,0 +1,5 @@
+<map id="ConstraintSettings::deactivateDistanceConstraintsByUser" name="ConstraintSettings::deactivateDistanceConstraintsByUser">
+<area shape="rect" id="Node000001" title="deactivate the distance constraints" alt="" coords="122,5,351,67"/>
+<area shape="rect" id="Node000002" href="$testConstraintsParser_8cpp.html#a924d4697f354ba278aace2e3a258bb28" title="tests parsing the distance_constraints section" alt="" coords="5,22,74,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,37,74,39,74,34,109,35"/>
+</map>

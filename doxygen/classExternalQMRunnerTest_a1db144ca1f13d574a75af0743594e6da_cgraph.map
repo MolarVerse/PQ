@@ -1,7 +1,7 @@
 <map id="ExternalQMRunnerTest::_configureQuotedScript" name="ExternalQMRunnerTest::_configureQuotedScript">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,40,186,85"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#ad3b2c7139c58e2d63c6a5eaba7be4dbb" title="sets the qmScript in settings" alt="" coords="242,5,398,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,46,229,41,224,43,187,51"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1ExternalQMRunner.html#aae3c28fbb52595b09de13bc6ae34ebe8" title="setter for the script path" alt="" coords="234,75,407,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,74,221,81,215,81,186,79"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,28,186,72"/>
+<area shape="rect" id="Node000002" href="$classQMSettings.html#af89e4630adc258f815ac4f99363ad35f" title="sets the qmScript in settings" alt="" coords="234,5,417,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,35,221,33,216,34,187,40"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1ExternalQMRunner.html#aae3c28fbb52595b09de13bc6ae34ebe8" title="setter for the script path" alt="" coords="239,57,412,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,59,226,66,220,66,186,64"/>
 </map>

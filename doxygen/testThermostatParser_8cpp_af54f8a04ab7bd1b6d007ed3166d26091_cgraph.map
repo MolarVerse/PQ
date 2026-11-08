@@ -1,9 +1,9 @@
 <map id="TEST_F" name="TEST_F">
 <area shape="rect" id="Node000001" title="tests parsing the &quot;temp&quot; command" alt="" coords="5,83,74,111"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="144,5,308,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,80,121,60,142,54,138,57,123,65,74,85"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="122,75,331,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,94,109,96,104,98,75,100"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#a9637dc72cb8b12245d003859e47d0514" title="is the temperature set" alt="" coords="122,144,331,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,109,123,129,142,138,137,139,121,134,73,114"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="126,5,290,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,80,121,60,138,55,134,58,123,65,76,85"/>
+<area shape="rect" id="Node000003" href="$classThermostatSettings.html#acbcccfae7bfebf7416bc00d7665d6670" title="get the target temperature" alt="" coords="122,75,294,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,94,108,96,104,98,75,100"/>
+<area shape="rect" id="Node000004" href="$classThermostatSettings.html#a52155c71c089e27c72adb4884bebb1ef" title="is the temperature set" alt="" coords="133,144,282,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="74,109,123,129,139,137,133,138,121,134,74,114"/>
 </map>

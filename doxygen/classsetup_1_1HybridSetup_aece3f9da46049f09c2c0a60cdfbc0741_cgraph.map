@@ -1,7 +1,0 @@
-<map id="setup::HybridSetup::validateQMMethod" name="setup::HybridSetup::validateQMMethod">
-<area shape="rect" id="Node000001" title="Check if chosen QM method is available for hybrid type calculations." alt="" coords="5,36,159,81"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a392002c6312680d946422a22711bee71" title="returns the qmMethod" alt="" coords="221,5,377,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,45,208,40,203,42,159,50"/>
-<area shape="rect" id="Node000003" href="$structQMMethodMeta.html#ac7b17240ca445e36d9a8ba58d5ed7a7c" title=" " alt="" coords="207,74,391,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,66,194,73,189,73,159,71"/>
-</map>

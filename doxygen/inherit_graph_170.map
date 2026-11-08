@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structpqviews_1_1TransformAdaptor.html" title="TransformAdaptor is a functor that creates a TransformView." alt="" coords="5,5,205,50"/>
+<area shape="rect" id="Node000000" href="$classpot_1_1NonCoulombPair.html" title="base class representing a pair of non&#45;coulombic types" alt="" coords="5,84,164,112"/>
+<area shape="rect" id="Node000001" href="$classpot_1_1BuckinghamPair.html" title="inherits from NonCoulombPair represents a pair of Buckingham types" alt="" coords="215,5,370,33"/>
+<area shape="poly" id="edge124_Node000000_Node000001" title=" " alt="" coords="131,75,211,43,249,32,244,35,213,48,134,80"/>
+<area shape="rect" id="Node000002" href="$classpot_1_1GuffPair.html" title="inherits from NonCoulombPair represents a pair of Guff types (full guff formula)" alt="" coords="242,57,343,85"/>
+<area shape="poly" id="edge125_Node000000_Node000002" title=" " alt="" coords="178,83,244,77,239,79,179,88"/>
+<area shape="rect" id="Node000003" href="$classpot_1_1LennardJonesPair.html" title="inherits from NonCoulombPair and represents a pair of Lennard&#45;Jones types" alt="" coords="212,109,373,137"/>
+<area shape="poly" id="edge126_Node000000_Node000003" title=" " alt="" coords="179,107,214,113,208,114,179,112"/>
+<area shape="rect" id="Node000004" href="$classpot_1_1MorsePair.html" title="inherits from NonCoulombPair represents a pair of Morse types" alt="" coords="235,161,350,189"/>
+<area shape="poly" id="edge127_Node000000_Node000004" title=" " alt="" coords="134,115,213,146,249,161,244,161,211,151,133,120"/>
 </map>

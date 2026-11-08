@@ -48,12 +48,11 @@ var searchData=
   ['_7esingleton_45',['~Singleton',['../classSingleton.html#abfb600cf10389b0bff6147aeee786c87',1,'Singleton']]],
   ['_7esteepestdescent_46',['~SteepestDescent',['../classopt_1_1SteepestDescent.html#a09df30febd1a4e60f6a083c891aeffde',1,'opt::SteepestDescent']]],
   ['_7ethermostat_47',['~Thermostat',['../classthermostat_1_1Thermostat.html#a83b5113a48e493498c4f0efdc8197b81',1,'thermostat::Thermostat']]],
-  ['_7ethermostatsettings_48',['~ThermostatSettings',['../classsettings_1_1ThermostatSettings.html#af9ab74635398350773d7306184b02a92',1,'settings::ThermostatSettings']]],
-  ['_7etimingssection_49',['~TimingsSection',['../classtimings_1_1TimingsSection.html#a3f9cbde91cbfc179cb445870cb72c4f4',1,'timings::TimingsSection']]],
-  ['_7etimingssectionguard_50',['~TimingsSectionGuard',['../classtimings_1_1TimingsSectionGuard.html#aa0e7bb27ee6711b68962e1d8d6d91dc1',1,'timings::TimingsSectionGuard']]],
-  ['_7etimingssettings_51',['~TimingsSettings',['../classsettings_1_1TimingsSettings.html#a289f6b66d8bd7735ab6772bfa0307240',1,'settings::TimingsSettings']]],
-  ['_7etopologysection_52',['~TopologySection',['../classinput_1_1topology_1_1TopologySection.html#a80199fc98f1d12ac6f94ad7b04ab9425',1,'input::topology::TopologySection']]],
-  ['_7evector3d_53',['~Vector3D',['../classlinalg_1_1Vector3D.html#ae4f552c3c246a8ff07039d7761c1000d',1,'linalg::Vector3D']]],
-  ['_7evelocityrescalingthermostat_54',['~VelocityRescalingThermostat',['../classthermostat_1_1VelocityRescalingThermostat.html#aa44e24766d3e4d84cbe593fa30d1d61a',1,'thermostat::VelocityRescalingThermostat']]],
-  ['_7evelocityverlet_55',['~VelocityVerlet',['../classintegrator_1_1VelocityVerlet.html#aefc05da24c21b771ad120ee25e5b7f52',1,'integrator::VelocityVerlet']]]
+  ['_7etimingssection_48',['~TimingsSection',['../classtimings_1_1TimingsSection.html#a3f9cbde91cbfc179cb445870cb72c4f4',1,'timings::TimingsSection']]],
+  ['_7etimingssectionguard_49',['~TimingsSectionGuard',['../classtimings_1_1TimingsSectionGuard.html#aa0e7bb27ee6711b68962e1d8d6d91dc1',1,'timings::TimingsSectionGuard']]],
+  ['_7etimingssettings_50',['~TimingsSettings',['../classsettings_1_1TimingsSettings.html#a289f6b66d8bd7735ab6772bfa0307240',1,'settings::TimingsSettings']]],
+  ['_7etopologysection_51',['~TopologySection',['../classinput_1_1topology_1_1TopologySection.html#a80199fc98f1d12ac6f94ad7b04ab9425',1,'input::topology::TopologySection']]],
+  ['_7evector3d_52',['~Vector3D',['../classlinalg_1_1Vector3D.html#ae4f552c3c246a8ff07039d7761c1000d',1,'linalg::Vector3D']]],
+  ['_7evelocityrescalingthermostat_53',['~VelocityRescalingThermostat',['../classthermostat_1_1VelocityRescalingThermostat.html#aa44e24766d3e4d84cbe593fa30d1d61a',1,'thermostat::VelocityRescalingThermostat']]],
+  ['_7evelocityverlet_54',['~VelocityVerlet',['../classintegrator_1_1VelocityVerlet.html#aefc05da24c21b771ad120ee25e5b7f52',1,'integrator::VelocityVerlet']]]
 ];

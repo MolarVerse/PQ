@@ -1,7 +1,7 @@
 <map id="setup::ThermostatSetup::writeVelocityRescalingInfo" name="setup::ThermostatSetup::writeVelocityRescalingInfo">
 <area shape="rect" id="Node000001" title="write velocity rescaling thermostat info" alt="" coords="5,40,208,85"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a10c19eac5a4d4e66873c7619269b2328" title="get the relaxation time" alt="" coords="256,5,465,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,46,243,43,238,45,209,51"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1ThermostatSettings.html#ac4dc184e67a2c8e94b21713ccaee62b9" title="get the target temperature" alt="" coords="256,75,465,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,74,243,80,237,81,208,79"/>
+<area shape="rect" id="Node000002" href="$classThermostatSettings.html#aaccf4e57a8900531a2baafe83c867946" title="get the relaxation time" alt="" coords="265,5,418,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,45,252,41,247,42,209,50"/>
+<area shape="rect" id="Node000003" href="$classThermostatSettings.html#acbcccfae7bfebf7416bc00d7665d6670" title="get the target temperature" alt="" coords="256,75,428,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,75,243,82,238,82,208,80"/>
 </map>

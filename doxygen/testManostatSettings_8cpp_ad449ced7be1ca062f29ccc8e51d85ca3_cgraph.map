@@ -1,13 +1,13 @@
 <map id="TEST" name="TEST">
 <area shape="rect" id="Node000001" title="finalize() must add the reference file matching the configured manostat type." alt="" coords="5,74,59,102"/>
-<area shape="rect" id="Node000002" href="$classManostatSettings.html#a55e37d5bcc2e78da3a0d95690a7f8d9b" title="finalizes the settings by setting the fixed axis if it was not explicitly set" alt="" coords="139,14,329,42"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,71,106,50,134,44,130,47,108,56,61,76"/>
-<area shape="rect" id="Node000005" href="$classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="145,65,322,110"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="58,85,131,86,128,90,59,90"/>
-<area shape="rect" id="Node000006" href="$classManostatSettings.html#a3fe8405561d821dd80e6cadc9476bd6d" title="sets the manostatType to enum in settings" alt="" coords="107,134,361,162"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="60,99,108,120,134,129,129,130,106,125,59,104"/>
-<area shape="rect" id="Node000003" href="$classManostatSettings.html#a9a5f9c461380cb265bbabde942ee0546" title="adds the appropriate reference file for the current manostat type to the given reference settings" alt="" coords="409,5,552,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="329,25,396,27,391,28,330,30"/>
-<area shape="rect" id="Node000004" href="$classReferenceSettings.html#a9d05a4e5b5aa7f2b28fb059d33ab00e4" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="600,5,749,50"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="552,25,588,27,582,28,553,30"/>
+<area shape="rect" id="Node000002" href="$classManostatSettings.html#a55e37d5bcc2e78da3a0d95690a7f8d9b" title="finalizes the settings by setting the fixed axis if it was not explicitly set" alt="" coords="124,14,314,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,72,106,51,132,44,128,47,108,55,61,76"/>
+<area shape="rect" id="Node000005" href="$classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="130,65,308,110"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="59,85,116,86,113,90,60,90"/>
+<area shape="rect" id="Node000006" href="$classManostatSettings.html#ae0910911d1790406027a0d025f7ddd32" title="sets the manostatType to enum in settings" alt="" coords="107,135,331,179"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="59,98,108,120,128,129,123,130,106,125,59,104"/>
+<area shape="rect" id="Node000003" href="$classManostatSettings.html#a9a5f9c461380cb265bbabde942ee0546" title="adds the appropriate reference file for the current manostat type to the given reference settings" alt="" coords="379,5,522,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="314,25,366,27,361,28,315,30"/>
+<area shape="rect" id="Node000004" href="$classReferenceSettings.html#a9d05a4e5b5aa7f2b28fb059d33ab00e4" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="570,5,719,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="522,25,558,27,552,28,523,30"/>
 </map>

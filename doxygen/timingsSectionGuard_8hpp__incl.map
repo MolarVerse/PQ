@@ -1,7 +1,9 @@
 <map id="/home/runner/work/PQ/PQ/include/timings/timingsSectionGuard.hpp" name="/home/runner/work/PQ/PQ/include/timings/timingsSectionGuard.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,206,67"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="26,115,84,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,66,72,103,67,100,86,69"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="108,115,204,143"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="124,65,144,102,139,101,121,70"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="73,5,273,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,120,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,67,92,107,89,103,134,68"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="144,115,202,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,66,176,100,171,98,171,69"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="226,115,323,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="208,65,251,105,246,104,206,70"/>
 </map>

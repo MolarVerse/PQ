@@ -1,0 +1,15 @@
+<map id="QM::AseFennolRunner::AseFennolRunner" name="QM::AseFennolRunner::AseFennolRunner">
+<area shape="rect" id="Node000001" title="Construct a new AseFennolRunner::AseFennolRunner object." alt="" coords="5,125,170,170"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="250,5,452,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,123,162,90,217,60,238,54,233,57,219,65,164,95,119,127"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a14d780cf728f0d2ede91173dad38732d" title="Construct a new AseQMRunner::AseQMRunner object." alt="" coords="230,74,473,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,122,217,110,257,104,252,106,218,116,171,127"/>
+<area shape="rect" id="Node000005" href="$classFennolSettings.html#ac2c8553e1e03b1d881c134e9b8175926" title="returns the FeNNol model path" alt="" coords="257,125,446,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="169,145,243,146,239,149,171,150"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="259,195,444,239"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="170,167,218,180,250,190,245,191,217,185,170,172"/>
+<area shape="rect" id="Node000007" href="$classFennolSettings.html#a9c1b329fbb66979c061e2b2384376697" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="218,263,485,291"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="111,168,159,211,188,232,219,249,236,258,230,258,217,254,185,236,155,215,109,173"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1QMRunner.html#ac10db8a298dfddae091119ae69324959" title="constructor for the QMRunner class" alt="" coords="533,74,728,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="473,85,520,87,515,88,474,90"/>
+</map>

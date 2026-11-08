@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['floatingpoint_0',['FloatingPoint',['../conceptpq_1_1FloatingPoint.html',1,'pq']]]
+  ['binaryoperands_0',['BinaryOperands',['../conceptlinalg_1_1detail_1_1BinaryOperands.html',1,'linalg::detail']]]
 ];

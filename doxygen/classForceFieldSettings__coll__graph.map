@@ -1,7 +1,9 @@
 <map id="ForceFieldSettings" name="ForceFieldSettings">
-<area shape="rect" id="Node000001" title="static class to store settings of the force field" alt="" coords="8,408,192,569"/>
-<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="9,173,192,335"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,332,103,391,98,390,99,337"/>
+<area shape="rect" id="Node000001" title="static class to store settings of the force field" alt="" coords="80,475,264,636"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="81,173,264,402"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,399,175,459,170,457,171,404"/>
 <area shape="rect" id="Node000003" href="$classstd_1_1optional_3_01ForceFieldType_01_4.html" title=" " alt="" coords="5,5,195,78"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,75,103,156,98,156,100,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,74,137,157,131,157,110,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="219,5,269,78"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="235,75,213,158,208,156,233,80"/>
 </map>

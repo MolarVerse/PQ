@@ -1,65 +1,57 @@
 <map id="MaceModelTypeMeta::toString" name="MaceModelTypeMeta::toString">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1567,187,1734,232"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1InputFileReader.html#a2f95672c78acd081e913c2626675f512" title="validates QM keyword dependencies" alt="" coords="1322,41,1487,85"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1605,177,1517,120,1457,88,1458,83,1520,115,1611,178"/>
-<area shape="rect" id="Node000013" href="$classsettings_1_1QMSettings.html#ae90e855e61e630d6b65c946d649036d1" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="1307,130,1502,175"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="1549,187,1502,178,1502,172,1554,187"/>
-<area shape="rect" id="Node000020" href="$classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="1290,277,1519,305"/>
-<area shape="poly" id="edge20_Node000001_Node000020" title=" " alt="" coords="1569,237,1450,279,1448,274,1564,238"/>
-<area shape="rect" id="Node000031" href="$testQMSettings_8cpp.html#a6cc396d6dd89eb531de12ed891a4b4b5" title=" " alt="" coords="1378,329,1431,357"/>
-<area shape="poly" id="edge32_Node000001_Node000031" title=" " alt="" coords="1619,242,1574,284,1520,319,1474,335,1432,343,1431,337,1473,330,1517,314,1571,279,1614,244"/>
-<area shape="rect" id="Node000003" href="$classinput_1_1InputFileReader.html#a1c9695106cef4d7b1d436397f187f115" title="validates semantic dependencies between parsed input keywords" alt="" coords="547,19,750,64"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1304,62,750,47,750,42,1309,59"/>
-<area shape="rect" id="Node000004" href="$namespaceinput.html#aca17e7eee014a70cfa8a822976c3c85f" title="wrapper function to construct InputFileReader and call read() and postProcess()" alt="" coords="330,141,478,169"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="560,71,548,79,483,112,430,143,427,138,481,107,546,74,564,69"/>
-<area shape="rect" id="Node000011" href="$namespacecli.html#a41a3b4a6a89f337c76febb1c4dc75299" title=" " alt="" coords="328,28,481,55"/>
-<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="529,43,482,44,480,39,534,40"/>
-<area shape="rect" id="Node000005" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="116,245,252,273"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="364,179,262,235,232,247,229,242,260,230,368,175"/>
-<area shape="rect" id="Node000008" href="$testInputFileReader_8cpp.html#a6c0709af0c4df98cd557a673d9cfb142" title=" " alt="" coords="150,141,218,169"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="312,156,220,157,218,152,317,153"/>
-<area shape="rect" id="Node000009" href="$testInputFileReader_8cpp.html#a1d0e9f7baa236db4118595ab07d460ad" title=" " alt="" coords="150,193,218,221"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="325,175,220,201,218,196,329,171"/>
-<area shape="rect" id="Node000010" href="$testInputFileReader_8cpp.html#a4b66b7ef72f02329266cae4f2741b06c" title=" " alt="" coords="150,89,218,117"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="325,138,219,113,218,108,330,135"/>
-<area shape="rect" id="Node000006" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,245,60,273"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="99,261,61,261,59,257,103,257"/>
-<area shape="rect" id="Node000007" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,90,60,118"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="112,238,106,234,80,206,60,174,38,121,38,116,64,172,84,203,109,230,117,237"/>
-<area shape="poly" id="edge11_Node000011_Node000007" title=" " alt="" coords="341,24,291,15,231,9,168,12,138,18,109,28,88,41,70,57,45,91,40,89,66,54,85,36,107,23,137,13,168,6,231,3,292,10,346,22"/>
-<area shape="rect" id="Node000012" href="$namespacecli.html#af7a6ba717372d561140cb4cbab35995a" title=" " alt="" coords="108,37,261,65"/>
-<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="310,47,263,50,260,45,314,44"/>
-<area shape="rect" id="Node000014" href="$classengine_1_1QMRunnerManager.html#ab9fd454e4b7d95136aac341db3fe43e0" title="Create a MACE QM runner." alt="" coords="1044,130,1242,175"/>
-<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1289,153,1243,155,1242,150,1295,152"/>
-<area shape="rect" id="Node000019" href="$testQMSettings_8cpp.html#a69044a23c8267bf58cc24931492a6844" title=" " alt="" coords="1116,78,1170,106"/>
-<area shape="poly" id="edge19_Node000013_Node000019" title=" " alt="" coords="1290,127,1170,101,1170,95,1295,126"/>
-<area shape="rect" id="Node000015" href="$classengine_1_1QMRunnerManager.html#a5cd047a0e45827b73ada4a73cb9a379c" title="Create a QM runner based on the specified method." alt="" coords="798,139,996,184"/>
-<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="1026,157,997,160,996,155,1031,156"/>
-<area shape="rect" id="Node000016" href="$classengine_1_1QMCapableEngine.html#afc5a69f59dc6189c50874637aebe2a2b" title="Set the QM runner based on the specified method." alt="" coords="552,89,745,133"/>
-<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="780,139,745,133,745,128,785,138"/>
-<area shape="rect" id="Node000017" href="$testQMRunnerManager_8cpp.html#ae8fa72d3ee7bc516b8aaa56e6d3e8709" title=" " alt="" coords="622,157,675,185"/>
-<area shape="poly" id="edge17_Node000015_Node000017" title=" " alt="" coords="780,167,676,172,675,167,785,165"/>
-<area shape="rect" id="Node000018" href="$testQMRunnerManager_8cpp.html#aa93f2ced1280ad9940a214e829292c1a" title=" " alt="" coords="622,209,675,237"/>
-<area shape="poly" id="edge18_Node000015_Node000018" title=" " alt="" coords="786,189,676,219,675,214,792,187"/>
-<area shape="rect" id="Node000021" href="$classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="1059,354,1227,382"/>
-<area shape="poly" id="edge21_Node000020_Node000021" title=" " alt="" coords="1319,309,1291,320,1267,332,1243,344,1205,356,1204,351,1241,339,1265,327,1289,315,1313,310"/>
-<area shape="rect" id="Node000026" href="$testQMSetup_8cpp.html#ade72ba39a7b2972913cc838febc6199e" title=" " alt="" coords="1116,406,1170,434"/>
-<area shape="poly" id="edge27_Node000020_Node000026" title=" " alt="" coords="1302,311,1292,320,1276,337,1269,356,1261,376,1244,396,1207,413,1171,421,1170,416,1206,408,1241,391,1257,373,1264,354,1271,334,1289,315,1297,313"/>
-<area shape="rect" id="Node000027" href="$testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="1116,458,1170,486"/>
-<area shape="poly" id="edge28_Node000020_Node000027" title=" " alt="" coords="1299,312,1292,319,1279,334,1272,349,1269,382,1265,415,1258,431,1244,447,1227,459,1208,467,1171,474,1170,469,1206,462,1225,454,1241,444,1253,428,1260,413,1263,381,1267,348,1275,331,1288,316,1294,314"/>
-<area shape="rect" id="Node000028" href="$testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="1116,198,1170,226"/>
-<area shape="poly" id="edge29_Node000020_Node000028" title=" " alt="" coords="1343,272,1242,241,1170,222,1170,216,1243,236,1349,272"/>
-<area shape="rect" id="Node000029" href="$testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="1116,250,1170,278"/>
-<area shape="poly" id="edge30_Node000020_Node000029" title=" " alt="" coords="1272,278,1170,269,1170,264,1277,277"/>
-<area shape="rect" id="Node000030" href="$testQMSetup_8cpp.html#af11b99e79f557ca87e47ad129721b524" title=" " alt="" coords="1116,302,1170,330"/>
-<area shape="poly" id="edge31_Node000020_Node000030" title=" " alt="" coords="1272,304,1170,316,1170,311,1277,303"/>
-<area shape="rect" id="Node000022" href="$namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="835,344,958,371"/>
-<area shape="poly" id="edge22_Node000021_Node000022" title=" " alt="" coords="1041,364,959,363,959,358,1046,364"/>
-<area shape="rect" id="Node000023" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="576,272,721,299"/>
-<area shape="poly" id="edge23_Node000022_Node000023" title=" " alt="" coords="829,339,699,303,700,297,834,339"/>
-<area shape="rect" id="Node000025" href="$testQMSetup_8cpp.html#a6bf1e0efafea3b7125043e2c9ca94645" title=" " alt="" coords="622,344,675,371"/>
-<area shape="poly" id="edge26_Node000022_Node000025" title=" " alt="" coords="817,358,676,360,675,355,823,357"/>
-<area shape="rect" id="Node000024" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="309,262,499,290"/>
-<area shape="poly" id="edge24_Node000023_Node000024" title=" " alt="" coords="557,283,500,282,500,277,563,282"/>
-<area shape="poly" id="edge25_Node000024_Node000005" title=" " alt="" coords="291,268,254,267,252,262,296,266"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1503,227,1670,272"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileReader.html#aafd0e18b409764b12879cfff8dce4b72" title="validates QM keyword dependencies" alt="" coords="1258,56,1423,101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1548,216,1505,179,1453,140,1391,104,1392,99,1456,135,1508,175,1554,217"/>
+<area shape="rect" id="Node000013" href="$classMaceSettings.html#a3da31ecdad24669e1fe010d86d2434f3" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="1234,150,1447,194"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="1495,222,1414,198,1414,192,1501,222"/>
+<area shape="rect" id="Node000016" href="$classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="1226,265,1455,292"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="1485,261,1456,268,1455,262,1490,261"/>
+<area shape="rect" id="Node000027" href="$testQMSettings_8cpp.html#a6cc396d6dd89eb531de12ed891a4b4b5" title=" " alt="" coords="1314,317,1367,344"/>
+<area shape="poly" id="edge28_Node000001_Node000027" title=" " alt="" coords="1524,278,1455,307,1368,328,1367,323,1454,301,1519,279"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileReader.html#a1c9695106cef4d7b1d436397f187f115" title="validates semantic dependencies between parsed input keywords" alt="" coords="547,44,750,89"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1240,78,750,71,750,66,1245,76"/>
+<area shape="rect" id="Node000004" href="$namespaceinput.html#aca17e7eee014a70cfa8a822976c3c85f" title="wrapper function to construct InputFileReader and call read() and postProcess()" alt="" coords="330,139,478,167"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="567,96,447,141,444,137,571,93"/>
+<area shape="rect" id="Node000011" href="$namespacecli.html#a41a3b4a6a89f337c76febb1c4dc75299" title=" " alt="" coords="328,35,481,63"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="529,59,482,57,481,52,534,57"/>
+<area shape="rect" id="Node000005" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="116,243,252,271"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="364,177,262,233,232,245,229,241,260,228,368,174"/>
+<area shape="rect" id="Node000008" href="$testInputFileReader_8cpp.html#a6c0709af0c4df98cd557a673d9cfb142" title=" " alt="" coords="150,139,218,167"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="312,155,219,156,218,151,317,152"/>
+<area shape="rect" id="Node000009" href="$testInputFileReader_8cpp.html#a1d0e9f7baa236db4118595ab07d460ad" title=" " alt="" coords="150,191,218,219"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="325,173,220,200,218,195,329,170"/>
+<area shape="rect" id="Node000010" href="$testInputFileReader_8cpp.html#a4b66b7ef72f02329266cae4f2741b06c" title=" " alt="" coords="150,87,218,115"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="325,137,219,112,218,107,330,134"/>
+<area shape="rect" id="Node000006" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,243,60,271"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="99,259,61,260,59,255,103,256"/>
+<area shape="rect" id="Node000007" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,89,60,116"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="112,237,106,233,80,205,60,173,38,119,38,114,64,170,84,202,109,229,117,235"/>
+<area shape="poly" id="edge11_Node000011_Node000007" title=" " alt="" coords="348,31,297,19,235,10,171,10,139,16,109,26,88,39,70,56,45,89,40,87,66,52,85,35,107,22,138,11,170,5,236,4,298,14,352,29"/>
+<area shape="rect" id="Node000012" href="$namespacecli.html#af7a6ba717372d561140cb4cbab35995a" title=" " alt="" coords="108,35,261,63"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="309,51,263,52,260,47,314,48"/>
+<area shape="rect" id="Node000014" href="$classQM_1_1AseMaceRunner.html#a9a22c0b19828554f6d39abbde7ac50d0" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="1012,104,1176,149"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1216,150,1177,144,1177,139,1221,149"/>
+<area shape="rect" id="Node000015" href="$classQM_1_1AseMaceRunner.html#ab8223372f370bdbbfbb3151d0a18d674" title=" " alt="" coords="798,104,962,149"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="994,127,963,129,962,124,999,126"/>
+<area shape="rect" id="Node000017" href="$classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="1010,277,1178,304"/>
+<area shape="poly" id="edge17_Node000016_Node000017" title=" " alt="" coords="1208,285,1179,289,1178,284,1213,285"/>
+<area shape="rect" id="Node000022" href="$testQMSetup_8cpp.html#ade72ba39a7b2972913cc838febc6199e" title=" " alt="" coords="1068,329,1121,356"/>
+<area shape="poly" id="edge23_Node000016_Node000022" title=" " alt="" coords="1264,296,1227,308,1122,337,1121,332,1226,303,1259,297"/>
+<area shape="rect" id="Node000023" href="$testQMSetup_8cpp.html#aecf6aefa3b8787a83a5790d3c2aa0536" title=" " alt="" coords="1068,381,1121,408"/>
+<area shape="poly" id="edge24_Node000016_Node000023" title=" " alt="" coords="1240,298,1228,307,1213,322,1204,337,1196,354,1180,370,1151,385,1122,393,1121,388,1149,380,1177,366,1192,351,1200,335,1208,319,1225,303,1235,300"/>
+<area shape="rect" id="Node000024" href="$testQMSetup_8cpp.html#a24b6e07471d356217cf5282c00ef49fd" title=" " alt="" coords="1068,433,1121,460"/>
+<area shape="poly" id="edge25_Node000016_Node000024" title=" " alt="" coords="1235,300,1228,307,1216,320,1209,334,1204,362,1200,392,1193,407,1180,422,1152,439,1122,447,1121,441,1150,434,1177,418,1188,404,1195,391,1199,362,1204,332,1212,317,1225,303,1230,302"/>
+<area shape="rect" id="Node000025" href="$testQMSetup_8cpp.html#a971680db0e52539dc76de90dd456c039" title=" " alt="" coords="1068,173,1121,200"/>
+<area shape="poly" id="edge26_Node000016_Node000025" title=" " alt="" coords="1290,258,1177,216,1121,197,1122,192,1179,211,1295,259"/>
+<area shape="rect" id="Node000026" href="$testQMSetup_8cpp.html#af11b99e79f557ca87e47ad129721b524" title=" " alt="" coords="1068,225,1121,252"/>
+<area shape="poly" id="edge27_Node000016_Node000026" title=" " alt="" coords="1233,262,1121,246,1121,240,1239,262"/>
+<area shape="rect" id="Node000018" href="$namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="818,277,942,304"/>
+<area shape="poly" id="edge18_Node000017_Node000018" title=" " alt="" coords="992,291,942,293,942,288,997,290"/>
+<area shape="rect" id="Node000019" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="576,243,721,271"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="800,280,722,270,722,265,806,279"/>
+<area shape="rect" id="Node000021" href="$testQMSetup_8cpp.html#a6bf1e0efafea3b7125043e2c9ca94645" title=" " alt="" coords="622,295,675,323"/>
+<area shape="poly" id="edge22_Node000018_Node000021" title=" " alt="" coords="800,297,676,310,675,305,805,296"/>
+<area shape="rect" id="Node000020" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="309,243,499,271"/>
+<area shape="poly" id="edge20_Node000019_Node000020" title=" " alt="" coords="557,258,500,260,499,255,563,257"/>
+<area shape="poly" id="edge21_Node000020_Node000005" title=" " alt="" coords="291,258,254,260,252,255,296,256"/>
 </map>

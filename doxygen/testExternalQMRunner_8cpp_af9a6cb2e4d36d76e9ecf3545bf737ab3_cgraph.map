@@ -1,5 +1,5 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#ad3b2c7139c58e2d63c6a5eaba7be4dbb" title="sets the qmScript in settings" alt="" coords="122,5,278,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,25,109,27,104,28,74,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,74,33"/>
+<area shape="rect" id="Node000002" href="$classQMSettings.html#af89e4630adc258f815ac4f99363ad35f" title="sets the qmScript in settings" alt="" coords="122,5,305,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,17,109,19,103,20,74,22"/>
 </map>

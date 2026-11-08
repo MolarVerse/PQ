@@ -1,5 +1,6 @@
 <map id="TEST" name="TEST">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,14,59,42"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#a5240619fa30e80decda4cb0c87adbec6" title="sets the slakosType to enum in settings" alt="" coords="107,5,263,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,25,94,27,89,29,59,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,38,59,66"/>
+<area shape="rect" id="Node000002" href="$classDftbSettings.html#a4a53633413f5245f0378d290ed3b0392" title="sets the slakosType to enum in settings" alt="" coords="107,29,308,74"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,49,93,51,89,53,59,54"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="174,27,172,19,178,10,190,5,207,3,226,5,239,14,234,13,225,10,207,8,191,10,181,14,177,21,178,30"/>
 </map>

@@ -53,7 +53,6 @@
 <li class="toctree-l2"><a class="reference internal" href="cmakeOptions.html">Build Options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="staticChecks.html">Static Checks and Conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="continuousIntegration.html">Continuous Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ciMetrics.html">CI Metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="localBuildTimes.html">Local Build Times</a></li>
 <li class="toctree-l2"><a class="reference internal" href="codeStatistics.html">Code Statistics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="branchesAndReleases.html">Branches and Releases</a></li>
@@ -122,10 +121,13 @@ checks pass. The release branch starts from <code class="docutils literal notran
 <li><p>Make the correction and add a fragment such as
 <code class="docutils literal notranslate"><span class="pre">changes/user/bugfix.short-description.md</span></code>.</p></li>
 <li><p>Open <strong>New pull request</strong> with <strong>base</strong> <code class="docutils literal notranslate"><span class="pre">main</span></code> and <strong>compare</strong> your hotfix
-branch. Link its issue, review and merge once checks pass.</p></li>
+branch. Title it <code class="docutils literal notranslate"><span class="pre">Hotfix-X.Y.Z:</span> <span class="pre">short</span> <span class="pre">description</span></code>, where <code class="docutils literal notranslate"><span class="pre">X.Y.Z</span></code> is
+the latest release with the patch number raised by one. Link its issue,
+review and merge once checks pass.</p></li>
 </ol>
-<p>Opening the PR starts <strong>Release Lifecycle</strong> automatically. It selects and
-keeps the patch version. After merge, publication waits for BUILD and LINT.</p>
+<p>Opening the PR starts <strong>Release Lifecycle</strong> automatically. It takes the
+version from the title and rejects any other than the next patch. After merge,
+publication waits for BUILD and LINT.</p>
 </section>
 <section id="check-a-run">
 <h2>Check a run<a class="headerlink" href="#check-a-run" title="Link to this heading"></a></h2>

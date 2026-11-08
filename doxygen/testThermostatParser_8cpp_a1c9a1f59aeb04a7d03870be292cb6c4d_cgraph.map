@@ -1,9 +1,7 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title="tests parsing the &quot;thermostat&quot; command" alt="" coords="5,83,74,111"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="144,5,308,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,80,121,60,142,54,138,57,123,65,74,85"/>
-<area shape="rect" id="Node000003" href="$classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="138,75,315,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,94,124,95,120,99,75,100"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1ThermostatSettings.html#ac4c97da43c21068729c85bfe98382e43" title="get the thermostat type" alt="" coords="122,144,331,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="73,109,123,129,142,138,137,139,121,134,73,114"/>
+<area shape="rect" id="Node000001" title="tests parsing the &quot;thermostat&quot; command" alt="" coords="5,48,74,76"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="122,5,286,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,109,47,104,50,75,58"/>
+<area shape="rect" id="Node000003" href="$classThermostatSettings.html#abee0b5ae632ff0bb4f828c3a752576c3" title="get the thermostat type" alt="" coords="126,75,282,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,67,113,76,108,78,74,72"/>
 </map>

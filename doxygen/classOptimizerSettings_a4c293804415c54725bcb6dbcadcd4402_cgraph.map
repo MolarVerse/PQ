@@ -1,5 +1,5 @@
 <map id="OptimizerSettings::getMaxLearningRate" name="OptimizerSettings::getMaxLearningRate">
 <area shape="rect" id="Node000001" title="returns the max learning rate" alt="" coords="5,5,162,50"/>
-<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#a181f8112305256f00767cc2f20db33f9" title="returns whether the max learning rate has been set" alt="" coords="210,5,377,50"/>
+<area shape="rect" id="Node000002" href="$classOptimizerSettings.html#a3cd9d9b17f946c85e69904626bd47403" title="returns whether the max learning rate has been set" alt="" coords="210,5,424,50"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,25,197,27,191,28,162,30"/>
 </map>

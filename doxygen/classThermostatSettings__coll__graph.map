@@ -1,0 +1,23 @@
+<map id="ThermostatSettings" name="ThermostatSettings">
+<area shape="rect" id="Node000001" title="static class to store settings of the thermostat" alt="" coords="731,559,951,921"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="88,173,268,419"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,416,154,449,158,479,166,507,181,533,214,564,266,593,331,620,406,644,567,685,716,717,711,718,565,691,404,649,329,625,264,598,211,568,177,536,161,509,152,480,148,449,151,421"/>
+<area shape="rect" id="Node000003" href="$classstd_1_1optional_3_01ThermostatType_01_4.html" title=" " alt="" coords="5,5,204,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,75,141,157,135,157,115,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="228,5,278,78"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="242,80,221,158,216,156,243,75"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="312,260,351,332"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="322,329,314,376,309,429,314,484,322,509,335,533,371,576,413,613,460,643,511,668,564,688,616,704,717,726,711,727,615,709,562,693,509,673,458,648,410,617,367,580,331,536,318,511,309,485,304,429,308,375,320,334"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="584,5,633,78"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="586,69,556,119,542,146,532,174,514,242,506,297,510,352,532,418,567,485,614,547,666,602,720,652,715,651,662,606,610,550,563,488,527,420,505,353,500,297,508,241,527,172,537,143,552,116,583,74"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="747,260,934,332"/>
+<area shape="poly" id="edge10_Node000010_Node000006" title=" " alt="" coords="633,66,800,247,794,248,632,71"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="1128,260,1260,332"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1173,330,1111,420,963,602,960,597,1107,417,1169,333"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="1324,260,1408,332"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1363,330,1354,377,1338,431,1313,487,1277,536,1244,568,1207,597,1127,646,1045,683,968,710,966,705,1043,678,1125,641,1204,593,1241,564,1273,533,1308,484,1333,429,1349,376,1359,334"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="893,5,948,78"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="948,70,966,101,969,125,966,149,964,285,960,344,949,419,916,544,912,541,943,418,955,343,959,285,961,149,963,125,961,102,947,75"/>
+<area shape="poly" id="edge11_Node000010_Node000009" title=" " alt="" coords="898,75,886,103,863,175,849,244,845,242,858,174,881,101,894,79"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="842,330,843,543,838,541,839,334"/>
+</map>

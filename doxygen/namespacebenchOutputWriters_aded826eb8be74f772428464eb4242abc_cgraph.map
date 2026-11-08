@@ -1,89 +1,87 @@
 <map id="benchOutputWriters::run" name="benchOutputWriters::run">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,434,186,462"/>
-<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="241,74,443,102"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,433,105,374,127,287,145,240,168,193,196,150,232,112,241,107,238,112,235,116,201,153,172,196,150,242,132,289,110,375,101,434"/>
-<area shape="rect" id="Node000003" href="$classout_1_1Output.html#ae8558b864274ba5970de16013c09388c" title="Closes the output file." alt="" coords="274,126,410,154"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,433,109,382,134,309,152,270,174,231,200,195,232,164,260,150,257,154,235,168,204,199,178,234,156,272,139,311,114,383,102,434"/>
-<area shape="rect" id="Node000004" href="$classout_1_1Output.html#a5348c9ca882240c2d0f0ed75fc57737b" title="get filename" alt="" coords="250,178,434,206"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="98,433,114,390,140,331,180,269,204,241,232,216,243,211,240,215,235,220,208,244,184,272,145,334,118,392,104,434"/>
-<area shape="rect" id="Node000005" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="284,230,400,258"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="101,433,119,398,148,353,186,306,232,267,270,252,267,256,235,271,189,310,152,356,124,401,106,434"/>
-<area shape="rect" id="Node000006" href="$classout_1_1Output.html#a50279a963a07a60d126dd39df6e60f6d" title="Sets the filename of the output file." alt="" coords="251,358,433,386"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="141,431,281,388,278,393,145,435"/>
-<area shape="rect" id="Node000008" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="249,1197,434,1242"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="99,459,114,548,140,689,181,859,206,945,236,1029,277,1113,319,1184,314,1184,272,1116,231,1031,201,947,175,860,135,690,109,549,99,465"/>
-<area shape="rect" id="Node000011" href="$classmolsys_1_1Molecule.html#a8ab76a7328d90fa8b6bd04883184fd17" title="set the moltype of the molecule" alt="" coords="234,1266,450,1294"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="97,459,106,610,126,849,144,976,167,1092,198,1188,216,1225,236,1253,238,1257,233,1256,232,1256,211,1228,193,1190,162,1094,139,976,121,850,101,610,97,464"/>
-<area shape="rect" id="Node000012" href="$classout_1_1EnergyOutput.html#aa91039fe7021bc1551396d4e2813a51d" title="Write the energy output." alt="" coords="268,281,416,326"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="111,432,164,390,232,344,263,330,260,335,235,349,167,394,115,435"/>
-<area shape="rect" id="Node000018" href="$classout_1_1RstFileOutput.html#aaa5c14b708a6d9eeaa7f69d371f3a61b" title="Write the restart file." alt="" coords="273,425,411,470"/>
-<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="185,445,259,446,255,449,188,450"/>
-<area shape="rect" id="Node000022" href="$classout_1_1TrajectoryOutput.html#ac82018e566cc3eac017986ba846ec47d" title="Write charges file." alt="" coords="263,697,421,742"/>
-<area shape="poly" id="edge24_Node000001_Node000022" title=" " alt="" coords="103,459,154,547,191,601,235,651,284,688,279,690,232,655,187,604,150,550,104,465"/>
-<area shape="rect" id="Node000027" href="$classout_1_1TrajectoryOutput.html#a90bb0f011f7d6d9833dbdea3e58922e8" title="Write forces file." alt="" coords="263,973,421,1018"/>
-<area shape="poly" id="edge33_Node000001_Node000027" title=" " alt="" coords="99,459,114,530,139,637,179,761,205,823,236,882,268,925,304,963,299,963,264,929,231,885,200,826,174,763,134,638,108,531,99,464"/>
-<area shape="rect" id="Node000032" href="$classout_1_1TrajectoryOutput.html#adac1c9c58517fd57203296af87f38087" title="Write velocities file." alt="" coords="263,596,421,641"/>
-<area shape="poly" id="edge41_Node000001_Node000032" title=" " alt="" coords="117,459,298,585,293,588,118,465"/>
-<area shape="rect" id="Node000033" href="$classout_1_1TrajectoryOutput.html#aaca49499c6497e99228bfcced9af2e5f" title="Write xyz file." alt="" coords="263,827,421,871"/>
-<area shape="poly" id="edge46_Node000001_Node000033" title=" " alt="" coords="101,459,119,511,147,586,186,671,236,753,266,786,299,816,294,818,262,790,232,756,181,674,142,588,114,513,101,464"/>
-<area shape="rect" id="Node000007" href="$classout_1_1Output.html#a9a08c675b2c324bc35868587de8df6fe" title="Opens the output file." alt="" coords="520,332,685,360"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="432,361,507,354,503,357,435,365"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="509,1344,696,1389"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="432,1240,452,1252,469,1272,477,1292,484,1311,500,1330,506,1336,501,1335,496,1334,479,1314,472,1294,464,1275,448,1256,431,1245"/>
-<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="501,1275,704,1319"/>
-<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="420,1240,513,1269,508,1270,420,1245"/>
-<area shape="rect" id="Node000013" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="755,706,955,734"/>
-<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="415,295,495,290,581,290,658,298,688,307,709,319,736,349,749,380,752,411,750,442,743,510,746,546,758,585,774,616,793,645,832,695,827,694,788,648,769,619,753,587,741,547,738,510,745,442,747,411,744,381,731,352,706,323,686,312,657,303,581,295,495,295,418,299"/>
-<area shape="rect" id="Node000014" href="$classsettings_1_1ThermostatSettings.html#ac4c97da43c21068729c85bfe98382e43" title="get the thermostat type" alt="" coords="498,5,707,50"/>
-<area shape="poly" id="edge14_Node000012_Node000014" title=" " alt="" coords="414,289,433,280,448,267,465,242,473,217,474,192,471,166,469,140,470,114,478,87,496,61,501,58,499,63,500,64,483,90,475,115,474,140,477,166,479,191,478,218,470,244,452,271,436,284,418,293"/>
-<area shape="rect" id="Node000015" href="$classsettings_1_1GeneralSettings.html#a5b6c55783018fc3a9a8234ec902ca594" title="Returns true if the jobtype is a hybrid type simulation." alt="" coords="510,75,695,119"/>
-<area shape="poly" id="edge15_Node000012_Node000015" title=" " alt="" coords="414,288,433,279,448,267,461,251,468,234,471,200,475,165,482,147,496,130,503,127,500,131,500,133,487,150,480,167,477,201,473,236,466,253,452,271,436,283,418,292"/>
-<area shape="rect" id="Node000016" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="510,144,695,189"/>
-<area shape="poly" id="edge16_Node000012_Node000016" title=" " alt="" coords="414,285,448,267,464,251,472,234,480,216,496,199,506,195,503,199,500,203,484,219,476,236,468,254,452,271,418,289"/>
-<area shape="rect" id="Node000017" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="510,213,695,258"/>
-<area shape="poly" id="edge17_Node000012_Node000017" title=" " alt="" coords="414,282,501,261,498,264,418,287"/>
-<area shape="poly" id="edge13_Node000013_Node000013" title=" " alt="" coords="812,705,805,697,811,687,828,681,855,679,885,682,902,690,897,691,883,687,855,684,829,686,814,691,810,697,817,706"/>
-<area shape="poly" id="edge20_Node000018_Node000007" title=" " alt="" coords="389,423,497,376,538,363,534,367,499,381,392,427"/>
-<area shape="poly" id="edge19_Node000018_Node000013" title=" " alt="" coords="411,459,709,521,837,694,832,694,706,526,412,464"/>
-<area shape="rect" id="Node000019" href="$classmolsys_1_1SimulationBox.html#ae545f6de8888eae2f552ed72a5497b2d" title="gets the box angles" alt="" coords="769,417,941,462"/>
-<area shape="poly" id="edge21_Node000018_Node000019" title=" " alt="" coords="410,435,498,426,603,423,707,426,757,430,752,433,707,432,603,428,498,432,413,440"/>
-<area shape="rect" id="Node000020" href="$classmolsys_1_1SimulationBox.html#a81c7ee944222547e6e980e8325a08757" title="gets the box dimensions" alt="" coords="769,529,941,574"/>
-<area shape="poly" id="edge22_Node000018_Node000020" title=" " alt="" coords="410,444,550,450,630,460,708,477,759,496,806,521,801,522,757,501,707,482,629,465,549,455,413,449"/>
-<area shape="rect" id="Node000021" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="517,536,688,581"/>
-<area shape="poly" id="edge23_Node000018_Node000021" title=" " alt="" coords="392,468,499,515,531,529,526,531,497,519,394,473"/>
-<area shape="poly" id="edge25_Node000022_Node000013" title=" " alt="" coords="421,717,742,718,738,721,422,722"/>
-<area shape="rect" id="Node000023" href="$classout_1_1Output.html#a49a9a1a8097dfbfd6a807a38997a0dcc" title="Write the shared trajectory frame comment." alt="" coords="500,655,706,683"/>
-<area shape="poly" id="edge26_Node000022_Node000023" title=" " alt="" coords="420,702,515,685,511,688,423,707"/>
-<area shape="rect" id="Node000024" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="517,757,688,802"/>
-<area shape="poly" id="edge27_Node000022_Node000024" title=" " alt="" coords="421,735,504,755,500,758,422,740"/>
-<area shape="rect" id="Node000025" href="$classout_1_1TrajectoryOutput.html#a0642bd4e74d5939540058938a1c5cec1" title="Write the header of a trajectory files." alt="" coords="524,827,682,871"/>
-<area shape="poly" id="edge28_Node000022_Node000025" title=" " alt="" coords="375,740,433,776,499,812,515,820,510,821,497,817,430,781,376,745"/>
-<area shape="poly" id="edge29_Node000025_Node000013" title=" " alt="" coords="678,824,706,812,769,777,825,741,821,745,771,781,709,817,681,828"/>
-<area shape="poly" id="edge30_Node000025_Node000019" title=" " alt="" coords="680,831,705,813,729,776,739,741,740,706,736,671,730,635,729,598,735,558,753,516,773,490,801,469,797,473,777,494,758,518,740,559,734,598,736,635,741,670,745,706,744,741,734,778,709,816,684,835"/>
-<area shape="poly" id="edge31_Node000025_Node000020" title=" " alt="" coords="680,830,706,812,720,795,728,779,734,746,738,711,743,691,753,669,784,623,818,587,822,583,789,626,758,672,748,692,743,711,740,747,733,781,724,798,709,816,684,834"/>
-<area shape="rect" id="Node000026" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="769,827,941,871"/>
-<area shape="poly" id="edge32_Node000025_Node000026" title=" " alt="" coords="682,846,756,848,751,850,683,852"/>
-<area shape="poly" id="edge34_Node000027_Node000013" title=" " alt="" coords="376,1016,444,1055,486,1075,531,1091,578,1101,624,1103,667,1093,687,1084,706,1071,731,1043,742,1015,745,985,742,955,734,888,738,851,753,813,783,773,818,745,822,741,787,776,758,816,744,853,740,888,747,954,750,985,748,1016,735,1046,709,1075,689,1089,669,1099,624,1108,577,1106,530,1096,484,1080,442,1060,376,1021"/>
-<area shape="poly" id="edge39_Node000027_Node000021" title=" " alt="" coords="371,971,412,932,431,908,448,882,462,849,468,818,469,762,471,707,479,676,496,642,520,612,552,588,548,592,523,616,500,645,484,678,477,707,475,763,473,819,467,850,452,885,436,911,416,936,375,975"/>
-<area shape="poly" id="edge40_Node000027_Node000025" title=" " alt="" coords="368,971,425,926,497,881,513,876,508,879,499,886,428,930,371,975"/>
-<area shape="rect" id="Node000028" href="$classout_1_1Output.html#a14ebc6f9e756e1c1b00930442484e829" title="Write the shared trajectory force comment." alt="" coords="514,1205,691,1250"/>
-<area shape="poly" id="edge35_Node000027_Node000028" title=" " alt="" coords="355,1015,379,1054,411,1101,452,1149,500,1191,508,1198,503,1198,496,1195,448,1153,407,1104,375,1057,354,1021"/>
-<area shape="rect" id="Node000030" href="$classmolsys_1_1SimulationBox.html#a192383756bdef13a5c4f328f6a06e4c9" title="calculate total force of simulationBox as scalar" alt="" coords="517,1136,688,1181"/>
-<area shape="poly" id="edge37_Node000027_Node000030" title=" " alt="" coords="368,1016,426,1065,499,1115,525,1129,519,1129,497,1119,423,1069,367,1021"/>
-<area shape="rect" id="Node000029" href="$classout_1_1Output.html#ac4ec666b7d765ee51654c6fe8f533f3c" title="Formats the shared trajectory force comment." alt="" coords="761,1205,949,1250"/>
-<area shape="poly" id="edge36_Node000028_Node000029" title=" " alt="" coords="691,1225,748,1227,743,1228,692,1230"/>
-<area shape="rect" id="Node000031" href="$classmolsys_1_1SimulationBox.html#aa4fcc50eda7260f93495a48950aa8042" title="calculate total force of simulationBox as vector" alt="" coords="757,1136,953,1181"/>
-<area shape="poly" id="edge38_Node000030_Node000031" title=" " alt="" coords="688,1156,745,1158,739,1159,689,1161"/>
-<area shape="poly" id="edge42_Node000032_Node000013" title=" " alt="" coords="420,612,557,616,633,625,708,641,770,666,823,697,818,698,767,670,707,646,632,630,556,621,423,617"/>
-<area shape="poly" id="edge44_Node000032_Node000021" title=" " alt="" coords="420,598,504,580,500,583,423,602"/>
-<area shape="poly" id="edge43_Node000032_Node000023" title=" " alt="" coords="420,631,515,650,511,653,422,636"/>
-<area shape="poly" id="edge45_Node000032_Node000025" title=" " alt="" coords="393,638,425,658,452,683,464,701,470,719,475,751,480,782,487,797,500,812,512,824,507,824,496,816,483,800,475,784,469,752,465,720,459,704,448,687,422,662,395,644"/>
-<area shape="poly" id="edge47_Node000033_Node000013" title=" " alt="" coords="367,869,425,914,461,935,499,950,558,969,608,981,631,981,654,977,679,967,706,951,721,937,730,922,735,890,738,853,743,834,753,813,785,773,820,745,824,742,789,777,758,816,748,835,743,854,741,890,735,924,725,940,709,955,681,972,656,982,631,987,607,986,557,975,497,956,458,940,422,918,367,874"/>
-<area shape="poly" id="edge48_Node000033_Node000023" title=" " alt="" coords="374,824,570,690,567,694,378,828"/>
-<area shape="poly" id="edge49_Node000033_Node000024" title=" " alt="" coords="420,826,504,805,500,808,423,830"/>
-<area shape="poly" id="edge52_Node000033_Node000025" title=" " alt="" coords="420,847,510,848,506,850,422,851"/>
-<area shape="rect" id="Node000034" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="517,1016,688,1061"/>
-<area shape="poly" id="edge50_Node000033_Node000034" title=" " alt="" coords="362,869,421,931,459,965,499,995,522,1009,517,1009,497,999,455,969,417,935,362,875"/>
-<area shape="rect" id="Node000035" href="$classmolsys_1_1Box.html#ad5040e71eccefd00b5ff9ed3cf835a2d" title=" " alt="" coords="506,896,699,941"/>
-<area shape="poly" id="edge51_Node000033_Node000035" title=" " alt="" coords="421,867,504,890,499,892,422,873"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,390,186,418"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a3f9b4a857b4ebf08991d939529a2ec42" title="adds an atom to the molecule" alt="" coords="241,54,443,82"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,389,107,333,130,253,148,209,170,167,198,127,232,92,241,87,239,92,235,96,202,130,175,169,153,212,135,255,112,335,101,390"/>
+<area shape="rect" id="Node000003" href="$classout_1_1Output.html#ae8558b864274ba5970de16013c09388c" title="Closes the output file." alt="" coords="274,106,410,134"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,389,111,341,137,275,176,205,202,172,232,144,260,130,257,134,235,148,206,176,181,207,142,277,116,343,103,390"/>
+<area shape="rect" id="Node000004" href="$classout_1_1Output.html#a5348c9ca882240c2d0f0ed75fc57737b" title="get filename" alt="" coords="250,158,434,186"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="99,389,116,350,144,298,182,243,206,218,232,196,244,190,241,195,235,200,210,222,187,246,148,300,121,352,105,390"/>
+<area shape="rect" id="Node000005" href="$perfAlloc_8hpp.html#ab7bc288a8f43eaf48e260d2a803740c5" title=" " alt="" coords="284,210,400,238"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="103,388,151,320,189,280,232,247,270,232,267,236,235,251,192,284,155,323,108,391"/>
+<area shape="rect" id="Node000006" href="$classout_1_1Output.html#a50279a963a07a60d126dd39df6e60f6d" title="Sets the filename of the output file." alt="" coords="251,330,433,358"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="151,387,233,366,266,360,262,364,234,372,155,391"/>
+<area shape="rect" id="Node000008" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="249,1111,434,1155"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="98,415,108,508,130,655,148,741,171,830,200,918,236,1002,270,1055,308,1100,303,1100,265,1058,231,1005,195,920,166,831,142,742,125,656,103,508,98,421"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Molecule.html#a8ab76a7328d90fa8b6bd04883184fd17" title="set the moltype of the molecule" alt="" coords="234,1179,450,1207"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="97,415,108,558,129,785,147,905,170,1015,199,1105,217,1140,236,1166,238,1170,233,1169,232,1169,212,1143,194,1108,165,1016,141,905,124,785,102,559,97,420"/>
+<area shape="rect" id="Node000012" href="$classout_1_1EnergyOutput.html#aa91039fe7021bc1551396d4e2813a51d" title="Write the energy output." alt="" coords="268,261,416,306"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="114,388,167,352,232,316,255,308,252,312,235,321,170,357,119,391"/>
+<area shape="rect" id="Node000017" href="$classout_1_1RstFileOutput.html#aaa5c14b708a6d9eeaa7f69d371f3a61b" title="Write the restart file." alt="" coords="273,381,411,426"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="185,401,259,402,255,405,188,406"/>
+<area shape="rect" id="Node000021" href="$classout_1_1TrajectoryOutput.html#ac82018e566cc3eac017986ba846ec47d" title="Write charges file." alt="" coords="263,628,421,673"/>
+<area shape="poly" id="edge23_Node000001_Node000021" title=" " alt="" coords="106,415,159,487,196,531,235,572,293,618,288,620,232,576,192,534,155,490,107,421"/>
+<area shape="rect" id="Node000026" href="$classout_1_1TrajectoryOutput.html#a90bb0f011f7d6d9833dbdea3e58922e8" title="Write forces file." alt="" coords="263,723,421,767"/>
+<area shape="poly" id="edge32_Node000001_Node000026" title=" " alt="" coords="100,415,118,465,144,535,183,613,208,650,236,683,275,714,270,716,232,687,204,653,179,615,139,537,113,467,101,420"/>
+<area shape="rect" id="Node000031" href="$classout_1_1TrajectoryOutput.html#adac1c9c58517fd57203296af87f38087" title="Write velocities file." alt="" coords="263,517,421,562"/>
+<area shape="poly" id="edge40_Node000001_Node000031" title=" " alt="" coords="122,415,289,508,284,511,123,421"/>
+<area shape="rect" id="Node000032" href="$classout_1_1TrajectoryOutput.html#aaca49499c6497e99228bfcced9af2e5f" title="Write xyz file." alt="" coords="263,947,421,991"/>
+<area shape="poly" id="edge45_Node000001_Node000032" title=" " alt="" coords="101,415,152,566,191,672,236,779,279,862,321,934,316,934,275,865,231,781,186,674,147,567,101,421"/>
+<area shape="rect" id="Node000007" href="$classout_1_1Output.html#a9a08c675b2c324bc35868587de8df6fe" title="Opens the output file." alt="" coords="519,263,683,291"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="404,327,449,316,537,294,533,297,451,321,408,331"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="508,1205,695,1250"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="419,1153,451,1165,499,1191,516,1200,511,1199,497,1195,449,1170,419,1159"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="500,1275,703,1319"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="433,1153,452,1166,470,1190,477,1214,483,1238,500,1260,505,1267,500,1265,496,1264,478,1240,472,1216,465,1192,448,1170,433,1159"/>
+<area shape="rect" id="Node000013" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="752,636,952,664"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="414,263,494,247,579,235,655,233,684,239,706,250,733,279,747,309,750,340,748,372,740,440,743,477,755,516,771,547,790,576,829,625,824,625,785,579,766,549,750,518,738,478,735,440,742,372,745,340,741,311,729,282,703,254,683,244,654,239,579,240,495,252,418,268"/>
+<area shape="rect" id="Node000014" href="$classsettings_1_1GeneralSettings.html#a5b6c55783018fc3a9a8234ec902ca594" title="Returns true if the jobtype is a hybrid type simulation." alt="" coords="508,75,694,119"/>
+<area shape="poly" id="edge14_Node000012_Node000014" title=" " alt="" coords="414,268,433,259,448,247,460,233,467,219,471,190,476,160,484,145,496,130,503,126,500,131,500,134,488,148,482,162,477,191,472,221,464,236,452,251,435,263,418,271"/>
+<area shape="rect" id="Node000015" href="$classsettings_1_1GeneralSettings.html#a160c5a50d25f3fe713bd0a0aebc24347" title="Returns true if the MM simulations are activated." alt="" coords="508,144,694,189"/>
+<area shape="poly" id="edge15_Node000012_Node000015" title=" " alt="" coords="414,262,449,247,472,227,496,205,522,194,518,198,500,210,476,231,451,251,418,266"/>
+<area shape="rect" id="Node000016" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="508,5,694,50"/>
+<area shape="poly" id="edge16_Node000012_Node000016" title=" " alt="" coords="414,269,433,259,448,247,464,224,471,202,472,156,472,109,479,85,496,61,502,58,499,62,500,64,484,87,477,110,477,156,477,203,469,227,452,251,436,264,418,273"/>
+<area shape="poly" id="edge13_Node000013_Node000013" title=" " alt="" coords="809,636,802,628,808,618,825,612,852,610,881,612,899,621,894,622,880,618,852,615,826,617,811,622,808,627,814,636"/>
+<area shape="poly" id="edge19_Node000017_Node000007" title=" " alt="" coords="410,386,448,367,463,353,472,338,480,322,496,307,522,295,518,299,500,311,485,325,476,340,467,356,452,371,413,390"/>
+<area shape="poly" id="edge18_Node000017_Node000013" title=" " alt="" coords="410,402,477,406,553,418,632,440,670,455,706,473,735,499,770,539,834,624,829,624,766,542,731,502,703,478,668,460,630,445,552,423,476,412,413,406"/>
+<area shape="rect" id="Node000018" href="$classmolsys_1_1SimulationBox.html#ae545f6de8888eae2f552ed72a5497b2d" title="gets the box angles" alt="" coords="766,460,938,505"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="410,394,474,390,548,389,627,394,705,408,757,426,805,451,800,452,755,431,704,413,627,400,548,395,474,395,413,398"/>
+<area shape="rect" id="Node000019" href="$classmolsys_1_1SimulationBox.html#a81c7ee944222547e6e980e8325a08757" title="gets the box dimensions" alt="" coords="766,348,938,393"/>
+<area shape="poly" id="edge21_Node000017_Node000019" title=" " alt="" coords="407,379,452,366,498,357,563,351,630,350,753,357,748,360,629,355,563,356,498,362,453,371,410,383"/>
+<area shape="rect" id="Node000020" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="516,517,687,562"/>
+<area shape="poly" id="edge22_Node000017_Node000020" title=" " alt="" coords="386,424,546,509,541,511,387,429"/>
+<area shape="poly" id="edge24_Node000021_Node000013" title=" " alt="" coords="421,648,739,649,735,652,422,653"/>
+<area shape="rect" id="Node000022" href="$classout_1_1Output.html#a49a9a1a8097dfbfd6a807a38997a0dcc" title="Write the shared trajectory frame comment." alt="" coords="498,586,704,614"/>
+<area shape="poly" id="edge25_Node000021_Node000022" title=" " alt="" coords="420,633,514,615,510,619,423,637"/>
+<area shape="rect" id="Node000023" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="516,947,687,991"/>
+<area shape="poly" id="edge26_Node000021_Node000023" title=" " alt="" coords="404,671,431,687,452,709,469,739,476,769,477,797,474,825,472,852,473,878,481,905,500,933,506,940,501,940,496,936,477,907,468,879,466,852,469,824,471,797,471,770,464,741,448,712,427,691,405,676"/>
+<area shape="rect" id="Node000024" href="$classout_1_1TrajectoryOutput.html#a0642bd4e74d5939540058938a1c5cec1" title="Write the header of a trajectory files." alt="" coords="522,688,680,733"/>
+<area shape="poly" id="edge27_Node000021_Node000024" title=" " alt="" coords="421,666,509,687,504,690,422,671"/>
+<area shape="poly" id="edge28_Node000024_Node000013" title=" " alt="" coords="680,689,778,667,774,670,682,694"/>
+<area shape="poly" id="edge29_Node000024_Node000018" title=" " alt="" coords="629,685,703,623,820,514,816,518,706,627,633,689"/>
+<area shape="poly" id="edge30_Node000024_Node000019" title=" " alt="" coords="638,685,672,658,702,624,715,599,721,577,725,536,729,494,737,471,750,446,772,421,800,400,797,404,775,425,755,449,742,473,735,495,731,536,727,578,720,601,707,626,676,662,642,689"/>
+<area shape="rect" id="Node000025" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="766,688,938,733"/>
+<area shape="poly" id="edge31_Node000024_Node000025" title=" " alt="" coords="680,708,753,709,748,711,682,713"/>
+<area shape="poly" id="edge33_Node000026_Node000013" title=" " alt="" coords="421,762,486,772,558,775,633,767,669,757,703,743,719,728,727,711,734,692,751,674,761,670,757,673,754,678,739,694,732,713,724,731,706,747,671,762,634,772,559,781,485,777,422,767"/>
+<area shape="poly" id="edge38_Node000026_Node000020" title=" " alt="" coords="398,720,425,704,448,683,458,669,465,655,470,628,476,600,484,586,496,572,504,569,501,573,500,576,488,589,481,602,475,629,470,657,463,672,452,687,428,708,401,724"/>
+<area shape="poly" id="edge39_Node000026_Node000024" title=" " alt="" coords="420,732,509,721,504,724,423,737"/>
+<area shape="rect" id="Node000027" href="$classout_1_1Output.html#a14ebc6f9e756e1c1b00930442484e829" title="Write the shared trajectory force comment." alt="" coords="512,877,690,922"/>
+<area shape="poly" id="edge34_Node000026_Node000027" title=" " alt="" coords="367,765,426,814,462,840,499,863,512,870,507,871,497,867,459,844,423,818,367,770"/>
+<area shape="rect" id="Node000029" href="$classmolsys_1_1SimulationBox.html#a192383756bdef13a5c4f328f6a06e4c9" title="calculate total force of simulationBox as scalar" alt="" coords="516,808,687,853"/>
+<area shape="poly" id="edge36_Node000026_Node000029" title=" " alt="" coords="412,765,519,802,514,804,413,771"/>
+<area shape="rect" id="Node000028" href="$classout_1_1Output.html#ac4ec666b7d765ee51654c6fe8f533f3c" title="Formats the shared trajectory force comment." alt="" coords="758,877,946,922"/>
+<area shape="poly" id="edge35_Node000027_Node000028" title=" " alt="" coords="690,897,745,899,740,900,691,902"/>
+<area shape="rect" id="Node000030" href="$classmolsys_1_1SimulationBox.html#aa4fcc50eda7260f93495a48950aa8042" title="calculate total force of simulationBox as vector" alt="" coords="754,808,950,853"/>
+<area shape="poly" id="edge37_Node000029_Node000030" title=" " alt="" coords="686,828,741,829,736,831,688,833"/>
+<area shape="poly" id="edge41_Node000031_Node000013" title=" " alt="" coords="403,515,468,496,545,484,585,482,626,484,667,490,705,503,747,527,784,558,814,592,836,624,831,623,809,595,780,562,744,531,703,507,665,495,626,489,585,487,545,489,469,502,406,519"/>
+<area shape="poly" id="edge43_Node000031_Node000020" title=" " alt="" coords="420,537,502,538,498,541,423,542"/>
+<area shape="poly" id="edge42_Node000031_Node000022" title=" " alt="" coords="421,555,526,581,521,583,422,561"/>
+<area shape="poly" id="edge44_Node000031_Node000024" title=" " alt="" coords="377,560,556,678,551,680,377,565"/>
+<area shape="poly" id="edge46_Node000032_Node000013" title=" " alt="" coords="388,989,458,1017,499,1029,541,1037,585,1040,627,1037,667,1024,703,1002,720,984,732,965,739,946,742,927,740,887,731,845,721,803,716,759,724,716,735,695,750,674,752,676,756,672,754,677,739,698,729,718,722,760,726,802,736,844,745,886,748,927,744,948,737,968,724,987,706,1006,669,1029,628,1042,585,1046,541,1042,497,1034,456,1022,388,995"/>
+<area shape="poly" id="edge47_Node000032_Node000022" title=" " alt="" coords="355,945,448,778,460,749,468,725,478,701,496,674,527,644,563,620,559,624,530,648,500,677,483,703,473,726,465,751,452,781,359,947"/>
+<area shape="poly" id="edge48_Node000032_Node000023" title=" " alt="" coords="421,966,503,968,498,970,422,972"/>
+<area shape="poly" id="edge51_Node000032_Node000024" title=" " alt="" coords="360,944,419,875,496,794,560,741,557,745,500,798,423,879,364,948"/>
+<area shape="rect" id="Node000033" href="$classmolsys_1_1SimulationBox.html#a024f25e2a19f79d770c79b22ceaa7a4a" title="get the Box/Cell" alt="" coords="516,1136,687,1181"/>
+<area shape="poly" id="edge49_Node000032_Node000033" title=" " alt="" coords="361,989,419,1055,457,1090,499,1121,510,1129,505,1129,497,1126,454,1094,415,1058,360,994"/>
+<area shape="rect" id="Node000034" href="$classmolsys_1_1Box.html#ad5040e71eccefd00b5ff9ed3cf835a2d" title=" " alt="" coords="504,1067,698,1111"/>
+<area shape="poly" id="edge50_Node000032_Node000034" title=" " alt="" coords="386,989,499,1045,529,1060,524,1060,497,1050,385,994"/>
 </map>

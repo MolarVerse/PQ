@@ -99,45 +99,71 @@ $(function(){initNavTree('testThermostatSettings_8cpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;gtest/gtest.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="config_2enums_2thermostat_8hpp.html">enums/thermostat.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="thermostatSettings_8hpp.html">thermostatSettings.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for testThermostatSettings.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="testThermostatSettings_8cpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2settings_2testThermostatSettings_8cpp" loading="lazy" alt=""/></div>
 <map name="a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2settings_2testThermostatSettings_8cpp" id="a_2home_2runner_2work_2PQ_2PQ_2tests_2src_2settings_2testThermostatSettings_8cpp">
-<area shape="rect" title=" " alt="" coords="112,5,317,67"/>
-<area shape="rect" title=" " alt="" coords="81,115,185,143"/>
-<area shape="poly" title=" " alt="" coords="186,70,157,105,153,102,189,65"/>
-<area shape="rect" href="thermostatSettings_8hpp.html" title=" " alt="" coords="209,115,383,143"/>
-<area shape="poly" title=" " alt="" coords="242,65,276,103,271,103,241,70"/>
-<area shape="rect" title=" " alt="" coords="217,266,286,294"/>
-<area shape="poly" title=" " alt="" coords="277,142,254,165,235,192,232,206,232,222,241,253,235,252,227,223,227,206,231,190,250,162,273,145"/>
-<area shape="rect" title=" " alt="" coords="371,191,421,218"/>
-<area shape="poly" title=" " alt="" coords="314,141,369,181,363,182,313,146"/>
-<area shape="rect" title=" " alt="" coords="46,342,169,370"/>
-<area shape="poly" title=" " alt="" coords="217,145,165,162,108,186,54,221,32,243,13,268,9,277,9,286,18,303,37,319,61,334,57,336,34,324,14,307,3,287,3,276,8,265,28,239,51,217,105,181,164,157,221,142"/>
-<area shape="rect" title=" " alt="" coords="445,191,653,218"/>
-<area shape="poly" title=" " alt="" coords="341,141,491,185,486,187,341,146"/>
-<area shape="rect" title=" " alt="" coords="677,191,773,218"/>
-<area shape="poly" title=" " alt="" coords="382,141,664,189,660,192,382,146"/>
-<area shape="rect" href="defaults_8hpp.html" title=" " alt="" coords="245,191,347,218"/>
-<area shape="poly" title=" " alt="" coords="297,141,298,176,293,174,294,146"/>
-<area shape="rect" href="config_2enums_2thermostat_8hpp.html" title=" " alt="" coords="23,266,192,294"/>
-<area shape="poly" title=" " alt="" coords="281,145,138,259,134,254,279,140"/>
-<area shape="poly" title=" " alt="" coords="290,217,269,255,265,251,286,221"/>
-<area shape="rect" href="config_2enums_2convergence_8hpp.html" title=" " alt="" coords="311,266,491,294"/>
-<area shape="poly" title=" " alt="" coords="315,216,373,257,367,257,314,221"/>
-<area shape="rect" href="unit__types_8hpp.html" title=" " alt="" coords="516,266,633,294"/>
-<area shape="poly" title=" " alt="" coords="346,216,513,261,508,263,345,222"/>
-<area shape="poly" title=" " alt="" coords="350,297,176,340,175,335,346,293"/>
-<area shape="rect" title=" " alt="" coords="304,342,370,370"/>
-<area shape="poly" title=" " alt="" coords="392,293,360,332,357,328,387,296"/>
-<area shape="rect" title=" " alt="" coords="442,342,560,370"/>
-<area shape="poly" title=" " alt="" coords="564,294,526,333,524,329,559,296"/>
-<area shape="rect" title=" " alt="" coords="584,342,690,370"/>
-<area shape="poly" title=" " alt="" coords="587,292,619,331,614,329,584,297"/>
-<area shape="poly" title=" " alt="" coords="109,293,110,327,105,325,106,297"/>
-<area shape="poly" title=" " alt="" coords="149,292,292,338,287,341,148,297"/>
+<area shape="rect" title=" " alt="" coords="44,5,249,67"/>
+<area shape="rect" title=" " alt="" coords="5,115,109,143"/>
+<area shape="poly" title=" " alt="" coords="115,70,83,105,78,103,118,65"/>
+<area shape="rect" href="config_2enums_2thermostat_8hpp.html" title=" " alt="" coords="32,191,202,218"/>
+<area shape="poly" title=" " alt="" coords="142,65,125,176,119,175,140,70"/>
+<area shape="rect" href="thermostatSettings_8hpp.html" title=" " alt="" coords="239,115,414,143"/>
+<area shape="poly" title=" " alt="" coords="206,65,289,106,284,109,207,70"/>
+<area shape="rect" title=" " alt="" coords="84,342,150,370"/>
+<area shape="poly" title=" " alt="" coords="118,216,120,326,114,326,116,221"/>
+<area shape="rect" title=" " alt="" coords="174,342,297,370"/>
+<area shape="poly" title=" " alt="" coords="128,216,218,329,213,330,127,221"/>
+<area shape="poly" title=" " alt="" coords="287,145,170,187,167,183,291,141"/>
+<area shape="poly" title=" " alt="" coords="320,141,292,197,261,267,244,328,239,326,256,265,288,195,317,146"/>
+<area shape="rect" title=" " alt="" coords="270,266,340,294"/>
+<area shape="poly" title=" " alt="" coords="325,141,320,191,311,252,306,250,314,190,323,146"/>
+<area shape="rect" title=" " alt="" coords="329,191,380,218"/>
+<area shape="poly" title=" " alt="" coords="332,141,347,176,341,176,331,146"/>
+<area shape="rect" href="defaults_8hpp.html" title=" " alt="" coords="403,191,506,218"/>
+<area shape="poly" title=" " alt="" coords="349,141,421,182,416,184,349,146"/>
+<area shape="rect" href="unit__types_8hpp.html" title=" " alt="" coords="569,266,686,294"/>
+<area shape="poly" title=" " alt="" coords="386,141,452,160,518,188,567,220,607,256,601,256,563,225,516,193,450,165,387,146"/>
+<area shape="rect" href="setting_8hpp.html" title=" " alt="" coords="786,191,880,218"/>
+<area shape="poly" title=" " alt="" coords="414,140,773,193,768,196,414,145"/>
+<area shape="poly" title=" " alt="" coords="426,221,347,261,344,257,430,217"/>
+<area shape="rect" href="config_2enums_2convergence_8hpp.html" title=" " alt="" coords="364,266,544,294"/>
+<area shape="poly" title=" " alt="" coords="456,217,457,252,452,250,453,221"/>
+<area shape="poly" title=" " alt="" coords="485,216,586,259,581,261,485,222"/>
+<area shape="poly" title=" " alt="" coords="383,297,166,344,164,339,386,292"/>
+<area shape="poly" title=" " alt="" coords="413,296,290,339,288,334,417,293"/>
+<area shape="rect" title=" " alt="" coords="422,342,540,370"/>
+<area shape="poly" title=" " alt="" coords="599,296,522,337,519,333,604,293"/>
+<area shape="rect" href="staticMatrix_8hpp.html" title=" " alt="" coords="564,342,691,370"/>
+<area shape="poly" title=" " alt="" coords="629,292,630,328,625,325,626,297"/>
+<area shape="rect" title=" " alt="" coords="705,586,812,614"/>
+<area shape="poly" title=" " alt="" coords="652,292,681,313,706,341,734,401,750,465,758,524,760,572,756,569,753,524,745,466,729,403,701,343,678,316,651,297"/>
+<area shape="rect" href="staticMatrix3x3_8hpp.html" title=" " alt="" coords="251,418,484,445"/>
+<area shape="poly" title=" " alt="" coords="579,371,430,416,428,411,584,369"/>
+<area shape="rect" href="staticMatrix3x3Class_8hpp.html" title=" " alt="" coords="534,502,721,530"/>
+<area shape="poly" title=" " alt="" coords="630,368,630,487,625,485,626,372"/>
+<area shape="rect" title=" " alt="" coords="184,586,263,614"/>
+<area shape="poly" title=" " alt="" coords="248,440,187,449,125,459,73,475,54,484,42,495,35,505,33,515,42,537,68,561,100,578,135,589,171,597,166,597,134,594,98,583,65,566,37,539,28,516,30,504,38,492,52,480,71,470,123,454,186,443,253,438"/>
+<area shape="rect" title=" " alt="" coords="52,493,238,538"/>
+<area shape="poly" title=" " alt="" coords="330,447,219,490,217,485,334,445"/>
+<area shape="rect" title=" " alt="" coords="262,502,337,530"/>
+<area shape="poly" title=" " alt="" coords="359,444,322,492,318,488,355,447"/>
+<area shape="poly" title=" " alt="" coords="410,443,574,496,569,497,409,449"/>
+<area shape="rect" title=" " alt="" coords="362,502,510,530"/>
+<area shape="poly" title=" " alt="" coords="380,443,418,490,413,490,378,448"/>
+<area shape="poly" title=" " alt="" coords="565,532,279,590,278,585,561,528"/>
+<area shape="poly" title=" " alt="" coords="649,528,727,578,722,577,648,533"/>
+<area shape="rect" title=" " alt="" coords="497,586,681,614"/>
+<area shape="poly" title=" " alt="" coords="624,529,603,574,600,570,619,532"/>
+<area shape="rect" title=" " alt="" coords="710,266,833,294"/>
+<area shape="poly" title=" " alt="" coords="824,217,794,257,790,252,820,220"/>
+<area shape="rect" title=" " alt="" coords="857,266,932,294"/>
+<area shape="poly" title=" " alt="" coords="845,216,876,255,871,254,843,221"/>
+<area shape="rect" title=" " alt="" coords="955,266,1047,294"/>
+<area shape="poly" title=" " alt="" coords="863,216,960,260,955,260,863,222"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -192,14 +218,12 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testThermostatSettings_8cpp_a8c5e2946af9d6b6f63075d7f4fb547d0_cgraph.png" border="0" usemap="#atestThermostatSettings_8cpp_a8c5e2946af9d6b6f63075d7f4fb547d0_cgraph" loading="lazy" alt=""/></div>
 <map name="atestThermostatSettings_8cpp_a8c5e2946af9d6b6f63075d7f4fb547d0_cgraph" id="atestThermostatSettings_8cpp_a8c5e2946af9d6b6f63075d7f4fb547d0_cgraph">
 <area shape="rect" title=" " alt="" coords="5,83,59,111"/>
-<area shape="rect" href="classsettings_1_1ThermostatSettings.html#ac4c97da43c21068729c85bfe98382e43" title="get the thermostat type" alt="" coords="107,5,316,50"/>
-<area shape="poly" title=" " alt="" coords="58,82,106,60,126,54,121,57,108,65,61,86"/>
-<area shape="rect" href="classsettings_1_1ThermostatSettings.html#ae29ae0e19ed6e7ca9b725ac2c8b063ec" title="sets the thermostatType to enum in settings" alt="" coords="107,75,316,119"/>
+<area shape="rect" href="classThermostatSettings.html#abee0b5ae632ff0bb4f828c3a752576c3" title="get the thermostat type" alt="" coords="130,5,285,50"/>
+<area shape="poly" title=" " alt="" coords="58,82,106,60,125,54,121,57,108,65,61,86"/>
+<area shape="rect" href="classThermostatSettings.html#a636a918675c437aadd2a641c58a21688" title="sets the thermostatType to enum in settings" alt="" coords="107,75,308,119"/>
 <area shape="poly" title=" " alt="" coords="58,94,93,95,89,99,60,100"/>
-<area shape="rect" href="structThermostatTypeMeta.html#aae44edb025175e03030900672c4ed3ac" title=" " alt="" coords="132,144,291,189"/>
+<area shape="rect" href="structThermostatTypeMeta.html#aae44edb025175e03030900672c4ed3ac" title=" " alt="" coords="128,144,287,189"/>
 <area shape="poly" title=" " alt="" coords="59,107,108,129,126,138,121,139,106,134,59,113"/>
-<area shape="rect" href="namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="364,75,571,119"/>
-<area shape="poly" title=" " alt="" coords="316,94,351,97,345,97,317,100"/>
 </map>
 </div>
 

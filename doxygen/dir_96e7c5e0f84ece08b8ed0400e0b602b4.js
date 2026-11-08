@@ -1,6 +1,7 @@
 var dir_96e7c5e0f84ece08b8ed0400e0b602b4 =
 [
     [ "allocCounter", "dir_72c4f273d9bfc6a8ab759bc90fb534b6.html", "dir_72c4f273d9bfc6a8ab759bc90fb534b6" ],
+    [ "timer", "dir_ecc406b5afb7eb42b094bb6c5f7ab3d3.html", "dir_ecc406b5afb7eb42b094bb6c5f7ab3d3" ],
     [ "perfAdam.cpp", "perfAdam_8cpp.html", "perfAdam_8cpp" ],
     [ "perfAlloc.hpp", "perfAlloc_8hpp.html", "perfAlloc_8hpp" ],
     [ "perfBenchSetup.hpp", "perfBenchSetup_8hpp.html", "perfBenchSetup_8hpp" ],

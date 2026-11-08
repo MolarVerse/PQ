@@ -1,7 +1,7 @@
 <map id="TEST_F" name="TEST_F">
 <area shape="rect" id="Node000001" title="tests parsing the &quot;friction&quot; command" alt="" coords="5,48,74,76"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1ThermostatSettings.html#a3a2010208a837ade08e86cd0cd0924db" title="get the friction" alt="" coords="122,5,331,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,109,49,104,51,75,59"/>
-<area shape="rect" id="Node000003" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="144,75,308,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,66,131,77,126,80,74,71"/>
+<area shape="rect" id="Node000002" href="$classThermostatSettings.html#a226e768a6ba0731e3504c4307782d31c" title="get the friction" alt="" coords="129,5,278,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,53,116,45,112,48,75,58"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1InputFileParser.html#a16ec3fef193ab16777e2c5f5e3ea17e8" title="get the keyword function map" alt="" coords="122,75,286,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,67,109,75,104,77,74,72"/>
 </map>

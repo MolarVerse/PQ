@@ -1,0 +1,7 @@
+<map id="benchSetup::scaleVelocitiesToTemperature" name="benchSetup::scaleVelocitiesToTemperature">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,40,208,85"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a3047223ee50e1f391a67a44859298278" title="calculate temperature of simulationBox" alt="" coords="256,5,427,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,45,242,42,237,43,209,50"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#a777ff44b9e3ce7bb303e7cb40bcf361b" title="get all atoms" alt="" coords="256,75,427,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,75,243,82,237,82,208,80"/>
+</map>

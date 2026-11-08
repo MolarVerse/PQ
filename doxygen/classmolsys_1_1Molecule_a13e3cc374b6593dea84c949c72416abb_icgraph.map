@@ -2,6 +2,6 @@
 <area shape="rect" id="Node000001" title="returns the molecular mass of the molecule" alt="" coords="283,44,505,72"/>
 <area shape="rect" id="Node000002" href="$classmolsys_1_1Molecule.html#a53ce1e0fe4f4afee117ae80d4b577650" title="calculates the center of mass of the molecule" alt="" coords="19,5,221,50"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,44,222,42,221,36,270,44"/>
-<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a41eee18dcd8a080f0f44a531daf1887e" title="scales the center&#45;of&#45;mass velocity of the molecule" alt="" coords="5,74,235,102"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Molecule.html#a1bc8867c1a5c9c51669a84a13c2e3435" title="scales the center&#45;of&#45;mass velocity of the molecule" alt="" coords="5,74,235,102"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="265,72,235,78,235,73,270,72"/>
 </map>

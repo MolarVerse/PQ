@@ -1,17 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classinput_1_1topology_1_1TopologySection.html" title="base class for reading topology file sections" alt="" coords="5,178,190,223"/>
-<area shape="rect" id="Node000001" href="$classinput_1_1topology_1_1AngleSection.html" title="reads angle section of topology file" alt="" coords="239,5,450,33"/>
-<area shape="poly" id="edge65_Node000000_Node000001" title=" " alt="" coords="119,164,168,102,200,70,236,44,266,32,262,35,239,48,204,74,172,105,123,167"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1topology_1_1BondSection.html" title="reads bond section of topology file" alt="" coords="241,57,448,85"/>
-<area shape="poly" id="edge66_Node000000_Node000002" title=" " alt="" coords="132,166,180,128,237,94,269,84,265,87,239,99,183,132,136,169"/>
-<area shape="rect" id="Node000003" href="$classinput_1_1topology_1_1DihedralSection.html" title="reads dihedral section of topology file" alt="" coords="254,109,435,154"/>
-<area shape="poly" id="edge67_Node000000_Node000003" title=" " alt="" coords="193,171,264,152,260,156,196,176"/>
-<area shape="rect" id="Node000004" href="$classinput_1_1topology_1_1DistanceConstraintsSection.html" title="reads the distance constraints section of the topology file" alt="" coords="253,178,436,223"/>
-<area shape="poly" id="edge68_Node000000_Node000004" title=" " alt="" coords="204,198,255,199,250,202,206,203"/>
-<area shape="rect" id="Node000005" href="$classinput_1_1topology_1_1ImproperDihedralSection.html" title="reads improper dihedral section of topology file" alt="" coords="252,248,437,292"/>
-<area shape="poly" id="edge69_Node000000_Node000005" title=" " alt="" coords="194,225,265,246,260,248,195,230"/>
-<area shape="rect" id="Node000006" href="$classinput_1_1topology_1_1JCouplingSection.html" title="reads j coupling section of topology file" alt="" coords="251,317,438,362"/>
-<area shape="poly" id="edge70_Node000000_Node000006" title=" " alt="" coords="136,230,184,268,239,302,267,316,262,317,236,307,181,272,135,236"/>
-<area shape="rect" id="Node000007" href="$classinput_1_1topology_1_1ShakeSection.html" title="reads shake section of topology file" alt="" coords="238,385,451,413"/>
-<area shape="poly" id="edge71_Node000000_Node000007" title=" " alt="" coords="119,234,168,305,201,341,239,372,262,385,257,384,236,376,197,345,164,309,117,239"/>
+<area shape="rect" id="Node000000" href="$structinput_1_1SelectionTag.html" title="Tag type for selections." alt="" coords="5,5,150,33"/>
 </map>

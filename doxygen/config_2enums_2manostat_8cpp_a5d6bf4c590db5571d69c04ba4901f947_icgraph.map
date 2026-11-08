@@ -1,8 +1,8 @@
 <map id="get2DAnisotropicAxis" name="get2DAnisotropicAxis">
 <area shape="rect" id="Node000001" title="gets the anisotropic axis for a given semi&#45;isotropic isotropy" alt="" coords="1443,319,1604,346"/>
-<area shape="rect" id="Node000002" href="$classmanostat_1_1SemiIsotropicBerendsenManostat.html#a8b89563b256cb7dae1a2c3059606a98a" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="1145,241,1395,286"/>
+<area shape="rect" id="Node000002" href="$classmanostat_1_1SemiIsotropicBerendsenManostat.html#a88471fe1e2a561374e2d610344a16548" title="calculate mu as scaling factor for Berendsen manostat (semi&#45;isotropic)" alt="" coords="1145,241,1395,286"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1453,314,1354,289,1354,283,1458,314"/>
-<area shape="rect" id="Node000003" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#ab23bece84103d55cf67aa6c6741bca40" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="1146,310,1394,355"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1SemiIsotropicStochasticRescalingManostat.html#a110dd19a016d6302cdee4e90fe85ec19" title="calculate mu as scaling factor for Stochastic Rescaling manostat (semi&#45;isotropic)" alt="" coords="1146,310,1394,355"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1425,333,1394,335,1394,330,1430,332"/>
 <area shape="rect" id="Node000005" href="$classsetup_1_1ManostatSetup.html#a6b750fe516b2aa5253596fb0349e8225" title="validate isotropy and fixed_axis combination" alt="" coords="1171,379,1369,441"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1464,351,1370,382,1368,377,1459,352"/>

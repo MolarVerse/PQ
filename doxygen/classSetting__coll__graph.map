@@ -1,5 +1,7 @@
 <map id="Setting&lt; T, Name &gt;" name="Setting&lt; T, Name &gt;">
-<area shape="rect" id="Node000001" title="A template class representing a configurable setting." alt="" coords="5,173,147,357"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="25,5,127,78"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,75,79,156,74,156,75,80"/>
+<area shape="rect" id="Node000001" title="A template class representing a configurable setting." alt="" coords="32,173,179,424"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,107,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,75,63,149,65,157,60,156,58,149,55,80"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="131,5,181,78"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="150,75,136,157,131,156,148,80"/>
 </map>

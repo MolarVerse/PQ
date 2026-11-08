@@ -1,7 +1,6 @@
 var classinput_1_1QMInputParser =
 [
-    [ "QMInputParser", "classinput_1_1QMInputParser.html#ac156cd6e55ca1dea71342bd853e625a8", null ],
-    [ "QMInputParser", "classinput_1_1QMInputParser.html#a231e270fdd2d7c0604c05f7af6d3647d", null ],
+    [ "QMInputParser", "classinput_1_1QMInputParser.html#a7e6c42d87be90aa02b796fb76a73c88f", null ],
     [ "addDispersionKey", "classinput_1_1QMInputParser.html#afadcef9bcfc31a38cb1ab81514f7dc10", null ],
     [ "addFennolModelPathKey", "classinput_1_1QMInputParser.html#a64e1f5e8479346ea8850df664ffe1be4", null ],
     [ "addGPUPreprocessingKey", "classinput_1_1QMInputParser.html#ad2a9a86f52bea60fb9a2ecf7919b71be", null ],
@@ -19,6 +18,11 @@ var classinput_1_1QMInputParser =
     [ "addThirdOrderKey", "classinput_1_1QMInputParser.html#a6f3d7f3feff393b36269d3bbd9267934", null ],
     [ "addXtbMethodKey", "classinput_1_1QMInputParser.html#ad5ab25707f5e2d35e11a53c687eeebfd", null ],
     [ "parseMaceQMMethod", "classinput_1_1QMInputParser.html#a34d7f8142fa0da9d011ecae7bb446b0c", null ],
+    [ "_dftbSettings", "classinput_1_1QMInputParser.html#a51ffb799c09722dc8f7e52050900d20a", null ],
+    [ "_fennolSettings", "classinput_1_1QMInputParser.html#a7f0515fbff442c99e06b70fac7cd5653", null ],
+    [ "_maceSettings", "classinput_1_1QMInputParser.html#ae8489fc4dbeb069ea0191b1ad04e406f", null ],
+    [ "_qmSettings", "classinput_1_1QMInputParser.html#a7b687512c94caccf0c843e25d7a7de13", null ],
     [ "_referenceSettings", "classinput_1_1QMInputParser.html#a10982a396c2740ff12175bb97bbf1bd2", null ],
-    [ "_resolveBuiltInSlakosPath", "classinput_1_1QMInputParser.html#abd4752423b825d8bdd0acbd5f14e01a9", null ]
+    [ "_resolveBuiltInSlakosPath", "classinput_1_1QMInputParser.html#abd4752423b825d8bdd0acbd5f14e01a9", null ],
+    [ "_xtbSettings", "classinput_1_1QMInputParser.html#aac37dc4a4fd4a9576477e1317e7e33db", null ]
 ];

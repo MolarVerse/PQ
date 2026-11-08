@@ -19,7 +19,7 @@
 <area shape="rect" id="Node000006" href="$classengine_1_1QMMMMDEngine.html#ad105ce5b4a1146271a41b143dcd14ce7" title="Apply hotspot smoothing algorithm for QM/MM boundary treatment." alt="" coords="518,60,711,105"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="779,125,705,108,705,103,785,125"/>
 <area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="500,60,445,50,444,44,505,58"/>
-<area shape="rect" id="Node000008" href="$classQM_1_1ExternalQMRunner.html#a9bef40ef45e2f95ac8d4efeb74a0c4dc" title="reads the force file (including qm energy) and sets the forces of the atoms" alt="" coords="528,129,701,174"/>
+<area shape="rect" id="Node000008" href="$classQM_1_1ExternalQMRunner.html#a8e8761f3f876d8666876b1784f0169ac" title="reads the force file (including qm energy) and sets the forces of the atoms" alt="" coords="528,129,701,174"/>
 <area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="810,222,715,189,683,177,683,172,717,184,815,222"/>
 <area shape="rect" id="Node000011" href="$classQM_1_1AseQMRunner.html#a34118d4ef9785c7696bb0b087043ed04" title="collect the forces from the ASE QM calculation" alt="" coords="517,199,711,243"/>
 <area shape="poly" id="edge11_Node000007_Node000011" title=" " alt="" coords="784,240,712,234,712,229,790,239"/>
@@ -29,7 +29,7 @@
 <area shape="poly" id="edge15_Node000007_Node000015" title=" " alt="" coords="790,276,765,287,717,309,649,328,648,323,715,304,763,283,785,278"/>
 <area shape="rect" id="Node000016" href="$testSimulationBox_8cpp.html#ad4d8086f81be5c54aeb7ca2e62bc708d" title=" " alt="" coords="580,371,648,399"/>
 <area shape="poly" id="edge16_Node000007_Node000016" title=" " alt="" coords="791,270,766,287,750,304,743,323,735,342,718,360,684,377,649,385,648,380,682,372,715,356,730,339,738,321,746,302,763,283,786,272"/>
-<area shape="rect" id="Node000009" href="$classExternalQMRunnerTest.html#a3bc2072bc953c4ce966664117a680ced" title=" " alt="" coords="267,79,436,123"/>
+<area shape="rect" id="Node000009" href="$classExternalQMRunnerTest.html#a6c6e55c19704d20fd40f71669358b6c2" title=" " alt="" coords="267,79,436,123"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="509,133,437,120,436,115,515,131"/>
 <area shape="rect" id="Node000010" href="$classQM_1_1ExternalQMRunner.html#aba331cf87a2e37ef6d081075f24e2bf1" title="run the qm engine" alt="" coords="250,147,452,175"/>
 <area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="509,156,454,160,452,155,514,154"/>

@@ -1,7 +1,9 @@
 <map id="/home/runner/work/PQ/PQ/include/linearAlgebra/staticMatrix/staticMatrix3x3Class.hpp" name="/home/runner/work/PQ/PQ/include/linearAlgebra/staticMatrix/staticMatrix3x3Class.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="6,5,279,67"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,112,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,66,83,105,79,102,112,69"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="136,115,320,143"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,65,208,104,202,103,170,70"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="26,5,298,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,85,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,67,76,107,72,103,121,68"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="109,115,216,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,66,165,100,160,98,161,69"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="240,115,423,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="219,65,296,107,291,108,218,70"/>
 </map>

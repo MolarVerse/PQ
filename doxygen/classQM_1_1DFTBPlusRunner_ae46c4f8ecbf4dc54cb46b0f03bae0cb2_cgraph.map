@@ -12,14 +12,14 @@
 <area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="163,303,198,304,194,306,165,307"/>
 <area shape="rect" id="Node000012" href="$classsettings_1_1FileSettings.html#a54ba714f5292ac755a130c9469c86fca" title="Get the pointcharge file name." alt="" coords="231,352,422,397"/>
 <area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="164,325,234,346,229,348,165,330"/>
-<area shape="rect" id="Node000013" href="$classsettings_1_1QMSettings.html#a9fd53b7272f3361d593773c0e0972a1a" title="returns the qmScript" alt="" coords="249,421,405,466"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="108,325,155,367,213,407,237,419,232,420,210,411,152,371,108,331"/>
-<area shape="rect" id="Node000014" href="$classsettings_1_1HybridSettings.html#a4a3a2ff456a1d0c2f29a041158a9bdcd" title="get the smoothing method" alt="" coords="238,491,416,535"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="96,325,116,360,142,400,174,441,213,476,227,486,221,486,210,480,170,445,137,403,112,363,96,330"/>
-<area shape="rect" id="Node000015" href="$namespaceutilities.html#a4e2fa13e8aad34767f73d168b2494198" title="quotes one argument for a POSIX shell command" alt="" coords="253,559,401,587"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="91,325,107,374,130,433,165,494,188,522,213,545,241,562,235,562,210,550,184,526,161,498,125,436,102,376,90,331"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1QMSettings.html#a51de8730bf8a06681d650f055be86ef2" title="returns the qmLoopTimeLimit" alt="" coords="546,5,716,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,25,533,26,528,29,415,30"/>
+<area shape="rect" id="Node000013" href="$classQMSettings.html#accbc248f1dc0bb967aa328aa6c60c5ee" title="returns the qmScript" alt="" coords="235,420,419,448"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="107,325,154,368,182,389,213,407,229,415,223,416,210,411,179,393,151,372,107,330"/>
+<area shape="rect" id="Node000014" href="$classsettings_1_1HybridSettings.html#a4a3a2ff456a1d0c2f29a041158a9bdcd" title="get the smoothing method" alt="" coords="238,472,416,517"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="99,325,145,391,176,427,213,457,227,467,222,467,210,462,173,431,141,395,98,330"/>
+<area shape="rect" id="Node000015" href="$namespaceutilities.html#a4e2fa13e8aad34767f73d168b2494198" title="quotes one argument for a POSIX shell command" alt="" coords="253,540,401,568"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="92,325,109,370,133,425,167,481,189,505,213,527,241,543,236,543,210,531,185,509,163,484,128,427,104,372,91,331"/>
+<area shape="rect" id="Node000003" href="$classQMSettings.html#a3b68e2f9f11f9cbdc743204386de5399" title="returns the qmLoopTimeLimit" alt="" coords="526,5,737,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,25,512,26,508,29,415,30"/>
 <area shape="rect" id="Node000005" href="$namespaceQM.html#a430721cad42818baeb1e9284220c4ed3" title=" " alt="" coords="536,83,726,111"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="413,94,523,96,518,98,415,100"/>
 <area shape="rect" id="Node000006" href="$namespaceutilities.html#ac17a1d50b00bcf1de310062a44bca2c4" title=" " alt="" coords="820,83,1014,111"/>

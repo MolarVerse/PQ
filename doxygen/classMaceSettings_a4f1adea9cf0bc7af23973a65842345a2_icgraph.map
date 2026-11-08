@@ -1,0 +1,7 @@
+<map id="MaceSettings::getMaceModelName" name="MaceSettings::getMaceModelName">
+<area shape="rect" id="Node000001" title="returns the maceModel as expected by mace.calculators" alt="" coords="430,14,682,42"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseMaceRunner.html#a9a22c0b19828554f6d39abbde7ac50d0" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="218,5,382,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="411,28,383,30,382,25,417,28"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseMaceRunner.html#ab8223372f370bdbbfbb3151d0a18d674" title=" " alt="" coords="5,5,170,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="200,28,170,30,170,25,205,27"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="AseQMRunnerTest::_runner" name="AseQMRunnerTest::_runner">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,202,111"/>
+<area shape="rect" id="Node000002" href="$classFennolSettings.html#a07b4c6d7001f3fffe408119d95ddbb2a" title="sets the FeNNol model path" alt="" coords="300,5,488,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,80,287,52,283,55,166,85"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#aa051a6d49ac857b16cc55b39975ab087" title="sets the floating point type" alt="" coords="302,75,487,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,94,289,96,284,98,202,100"/>
+<area shape="rect" id="Node000004" href="$classFennolSettings.html#ac0c17cfe109aaf8979f94d834b086b26" title="sets if the GPU pre&#45;processing should be enabled for FeNNol" alt="" coords="250,144,539,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="165,109,286,139,281,141,165,114"/>
+<area shape="rect" id="Node000005" href="$classFennolSettings.html#a9c1b329fbb66979c061e2b2384376697" title="returns if GPU pre&#45;processing should be used for FeNNol" alt="" coords="587,152,854,180"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="539,164,574,166,569,166,540,169"/>
+</map>

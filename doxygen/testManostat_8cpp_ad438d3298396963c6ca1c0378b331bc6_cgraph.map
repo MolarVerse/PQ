@@ -1,0 +1,15 @@
+<map id="TEST_F" name="TEST_F">
+<area shape="rect" id="Node000001" title="a box allowing a change of angles keeps the scaling tensor in simulation space" alt="" coords="5,104,74,132"/>
+<area shape="rect" id="Node000002" href="$classTestableSimSpaceScalingManostat.html#a294cbc39fe34435ca6af62e9d5445188" title=" " alt="" coords="122,96,369,141"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,116,108,117,104,120,75,121"/>
+<area shape="rect" id="Node000003" href="$classmanostat_1_1Manostat.html#a9420afb1c05d67de61043f3cf791411e" title="transform a scaling tensor into simulation space" alt="" coords="417,96,577,141"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="369,116,404,118,399,119,370,121"/>
+<area shape="rect" id="Node000004" href="$classmolsys_1_1Box.html#a98d364d3b62df674f97b5f7da26149c8" title=" " alt="" coords="633,5,827,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="547,93,624,60,641,56,646,55,626,65,548,98"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Box.html#abf1ee9721e93ed254e1e2a5f0334abf1" title=" " alt="" coords="631,74,829,102"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="577,105,619,102,613,103,578,110"/>
+<area shape="rect" id="Node000006" href="$classmolsys_1_1Box.html#acb092a36797507af74fce753649628fb" title=" " alt="" coords="628,125,832,170"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="578,126,615,133,610,133,578,131"/>
+<area shape="rect" id="Node000007" href="$classmolsys_1_1Box.html#a1f68e99fa4f29164f6929b77ef1b65fb" title=" " alt="" coords="625,194,835,222"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="539,139,581,160,626,180,648,189,643,189,624,185,578,165,537,144"/>
+</map>

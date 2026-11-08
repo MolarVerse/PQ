@@ -1,0 +1,9 @@
+<map id="FennolSettings::getFennolModelPath" name="FennolSettings::getFennolModelPath">
+<area shape="rect" id="Node000001" title="returns the FeNNol model path" alt="" coords="430,36,619,81"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseFennolRunner.html#a6fbd6e396e98c42b73e259b4a6b81abc" title="Construct a new AseFennolRunner::AseFennolRunner object." alt="" coords="218,5,382,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="412,43,383,42,383,36,417,43"/>
+<area shape="rect" id="Node000004" href="$testQMSettings_8cpp.html#a1c3b02e8b849d78b34e92f53b6c682a8" title=" " alt="" coords="273,74,326,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="417,72,327,87,327,82,412,73"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseFennolRunner.html#a5ed437ed1510144ab65a083e516e3596" title=" " alt="" coords="5,5,170,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="200,28,170,30,170,25,205,27"/>
+</map>

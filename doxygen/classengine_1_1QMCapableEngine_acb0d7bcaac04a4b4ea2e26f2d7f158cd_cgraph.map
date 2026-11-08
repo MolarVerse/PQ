@@ -1,0 +1,19 @@
+<map id="engine::QMCapableEngine::setQMRunner" name="engine::QMCapableEngine::setQMRunner">
+<area shape="rect" id="Node000001" title="Set the QM runner based on the specified method." alt="" coords="5,144,198,189"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1QMRunnerManager.html#aaa5deaf1760a3e528984982a0e4cf336" title="Create a QM runner based on the specified method." alt="" coords="246,144,444,189"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,164,233,165,228,167,199,169"/>
+<area shape="rect" id="Node000003" href="$classengine_1_1QMRunnerManager.html#aef145e9347b38947f5eef611eb5436a6" title="Create an ASE DFTB+ QM runner." alt="" coords="492,5,690,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="372,141,425,101,491,60,506,55,501,58,493,65,428,105,375,146"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1QMRunnerManager.html#ac89883f762f9d9fa62ea11b107df3837" title="Create an ASE FeNNol QM runner." alt="" coords="492,75,690,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="426,141,497,123,492,125,428,146"/>
+<area shape="rect" id="Node000005" href="$classengine_1_1QMRunnerManager.html#ae56e3608bd9b202fbf6ff6680f19c2ee" title="Create a MACE QM runner." alt="" coords="492,144,690,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="444,164,479,166,473,167,445,169"/>
+<area shape="rect" id="Node000006" href="$classengine_1_1QMRunnerManager.html#adad25ed53a1535c06ce7279759c7a6d0" title="Create an ASE xTB QM runner." alt="" coords="492,213,690,258"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="427,187,497,208,492,209,427,192"/>
+<area shape="rect" id="Node000009" href="$classQMSettings.html#a08b7b3228b812adf5337d62d2dd9421b" title="returns the qmMethod" alt="" coords="493,282,689,310"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="372,186,427,228,493,268,509,277,504,276,491,273,424,233,371,192"/>
+<area shape="rect" id="Node000007" href="$classXtbSettings.html#af557852dd57468e26991ab8e2339ab99" title="returns the xTBMethod" alt="" coords="738,196,935,224"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="691,223,725,222,720,222,691,228"/>
+<area shape="rect" id="Node000008" href="$structXtbMethodMeta.html#a0ca84f339c82f9e42ceb579ec0b7d4d6" title=" " alt="" coords="744,248,929,276"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="691,244,731,251,726,251,691,249"/>
+</map>

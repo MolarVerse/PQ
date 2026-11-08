@@ -1,0 +1,5 @@
+<map id="QMSettings::setUseDispersionCorrection" name="QMSettings::setUseDispersionCorrection">
+<area shape="rect" id="Node000001" title="sets if the dispersion correction should be used" alt="" coords="5,5,224,50"/>
+<area shape="rect" id="Node000002" href="$classQMSettings.html#a6efd4c1cfd2b1eb015aa735195561f2a" title="returns if the dispersion correction should be used" alt="" coords="272,14,495,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,25,259,28,253,28,224,30"/>
+</map>

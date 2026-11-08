@@ -1,11 +1,11 @@
 <map id="thermostat::LangevinThermostat::~LangevinThermostat" name="thermostat::LangevinThermostat::~LangevinThermostat">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,40,241,85"/>
-<area shape="rect" id="Node000002" href="$classthermostat_1_1LangevinThermostat.html#ab0c4ec639607514f8e499d49a097d311" title="Constructor for Langevin Thermostat." alt="" coords="289,40,524,85"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1LangevinThermostat.html#ada4d6164d33ec7b7ce3297dee223609a" title="Constructor for Langevin Thermostat." alt="" coords="289,40,524,85"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,60,275,62,270,63,242,65"/>
-<area shape="rect" id="Node000003" href="$classthermostat_1_1LangevinThermostat.html#aaef6f3a6c4c32f0fcba36d563518f6e9" title="Calculate sigma for Langevin Thermostat." alt="" coords="572,5,807,50"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1LangevinThermostat.html#a79fad4b860a16f9861a3d727610f93aa" title="Calculate sigma for Langevin Thermostat." alt="" coords="572,5,807,50"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="524,45,559,44,554,44,525,51"/>
-<area shape="rect" id="Node000005" href="$classthermostat_1_1Thermostat.html#ac8a1806922be9fff6e5720c723eee1d9" title="Construct a new Thermostat:: Thermostat object." alt="" coords="602,75,778,119"/>
+<area shape="rect" id="Node000005" href="$classthermostat_1_1Thermostat.html#aee142ae6dafbf7fb8d5460d115425ac9" title="Construct a new Thermostat:: Thermostat object." alt="" coords="602,75,778,119"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="525,74,589,84,583,84,525,79"/>
-<area shape="rect" id="Node000004" href="$classsettings_1_1TimingsSettings.html#ac990af6a43bd3d7be96c36edf50eb5a0" title="get the time step" alt="" coords="855,5,1042,50"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1TimingsSettings.html#a9cf276bd4d2096d6fd5ced833badf419" title="get the time step" alt="" coords="855,5,1042,50"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="808,25,842,28,837,28,808,30"/>
 </map>

@@ -1,11 +1,14 @@
 <map id="SimulationBoxSettings" name="SimulationBoxSettings">
-<area shape="rect" id="Node000001" title="SimulationBoxSettings." alt="" coords="71,408,256,592"/>
-<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="8,173,142,335"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,332,128,392,122,392,104,337"/>
+<area shape="rect" id="Node000001" title="SimulationBoxSettings." alt="" coords="112,475,314,659"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="49,173,196,402"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,399,181,459,175,458,158,404"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,5,143,78"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,75,78,156,72,156,74,80"/>
-<area shape="rect" id="Node000004" href="$classSetting.html" title=" " alt="" coords="169,173,340,335"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="226,332,206,393,201,390,223,337"/>
-<area shape="rect" id="Node000005" href="$classstd_1_1optional_3_01InitVelocities_01_4.html" title=" " alt="" coords="167,5,344,78"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="256,75,257,157,252,156,254,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="72,75,75,112,79,149,80,156,75,156,74,149,70,112,72,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="177,5,227,78"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="183,80,176,103,157,158,152,156,171,101,185,75"/>
+<area shape="rect" id="Node000005" href="$classSetting.html" title=" " alt="" coords="220,173,390,402"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="220,75,234,101,258,157,253,158,229,103,220,80"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="269,399,251,460,246,457,266,404"/>
+<area shape="rect" id="Node000006" href="$classstd_1_1optional_3_01InitVelocities_01_4.html" title=" " alt="" coords="261,5,439,78"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="345,75,332,157,326,156,343,80"/>
 </map>

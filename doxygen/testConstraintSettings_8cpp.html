@@ -156,10 +156,14 @@ Functions</h2></td></tr>
 <tr class="memdesc:afb8026e7188d76cd46dcf321461c1ce9"><td class="mdescLeft">&#160;</td><td class="mdescRight">finalize() must not activate shake for a water model without a rigid geometry (e.g. SPC_FW), nor add the rattle reference.  <br /></td></tr>
 <tr class="memitem:af3fc37cbe37365e72650a604844937c2" id="r_af3fc37cbe37365e72650a604844937c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3fc37cbe37365e72650a604844937c2">TEST</a> (ConstraintSettingsTest, FinalizeAddsRattleReferenceForExplicitShake)</td></tr>
 <tr class="memdesc:af3fc37cbe37365e72650a604844937c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">finalize() must add the rattle reference whenever shake ends up active, regardless of whether that came from an explicit activateShake() call or from a rigid water model.  <br /></td></tr>
+<tr class="memitem:af66333770a9b5c6b5b2d597975b03d2f" id="r_af66333770a9b5c6b5b2d597975b03d2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af66333770a9b5c6b5b2d597975b03d2f">TEST</a> (ConstraintSettingsTest, FinalizeDoesNotOverrideExplicitShakeDeactivation)</td></tr>
+<tr class="memdesc:af66333770a9b5c6b5b2d597975b03d2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">finalize() must not re-activate shake for a rigid water model if the user has explicitly deactivated it - an explicit user choice always takes precedence over the water-model-driven system default.  <br /></td></tr>
+<tr class="memitem:ad808cbb357c4fd2740e7c67b54b8a238" id="r_ad808cbb357c4fd2740e7c67b54b8a238"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad808cbb357c4fd2740e7c67b54b8a238">TEST</a> (ConstraintSettingsTest, IsShakeSetBySystemReflectsActivationSource)</td></tr>
+<tr class="memdesc:ad808cbb357c4fd2740e7c67b54b8a238"><td class="mdescLeft">&#160;</td><td class="mdescRight">isShakeSetBySystem() must distinguish shake activated only as a side effect of a rigid water model from shake activated explicitly by the user, since that distinction decides whether a topology file is still required (see <a class="el" href="namespaceinput_1_1topology.html#ac926c9f9d78ae8899010491cea8465bc" title="checks if reading topology file is needed">input::topology::isNeeded()</a>).  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="a5033ec7f99e31fff88f7a3e536bb90e3" name="a5033ec7f99e31fff88f7a3e536bb90e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5033ec7f99e31fff88f7a3e536bb90e3">&#9670;&#160;</a></span>TEST() <span class="overload">[1/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5033ec7f99e31fff88f7a3e536bb90e3">&#9670;&#160;</a></span>TEST() <span class="overload">[1/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,19 +188,19 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testConstraintSettings_8cpp_a5033ec7f99e31fff88f7a3e536bb90e3_cgraph.png" border="0" usemap="#atestConstraintSettings_8cpp_a5033ec7f99e31fff88f7a3e536bb90e3_cgraph" loading="lazy" alt=""/></div>
 <map name="atestConstraintSettings_8cpp_a5033ec7f99e31fff88f7a3e536bb90e3_cgraph" id="atestConstraintSettings_8cpp_a5033ec7f99e31fff88f7a3e536bb90e3_cgraph">
 <area shape="rect" title="finalize() must activate shake when the configured water model has a rigid geometry (e...." alt="" coords="5,83,59,111"/>
-<area shape="rect" href="classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="111,5,288,50"/>
-<area shape="poly" title=" " alt="" coords="58,82,106,60,124,54,120,58,108,65,61,86"/>
-<area shape="rect" href="classWaterModelSettings.html#a7fc657364d6c1f19ba35a4eb776e4bfa" title="Get the rigid geometry parameters for a water model." alt="" coords="107,75,293,119"/>
-<area shape="poly" title=" " alt="" coords="58,94,93,95,89,99,60,100"/>
-<area shape="rect" href="classWaterModelSettings.html#a262c7ac83be8af41421bafa4ac52bc7c" title="sets the waterIntraModel to enum in settings" alt="" coords="121,144,278,189"/>
-<area shape="poly" title=" " alt="" coords="59,107,108,129,125,138,119,138,106,134,59,113"/>
+<area shape="rect" href="classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="120,5,298,50"/>
+<area shape="poly" title=" " alt="" coords="58,82,106,60,126,54,121,57,108,65,61,86"/>
+<area shape="rect" href="classWaterModelSettings.html#a7fc657364d6c1f19ba35a4eb776e4bfa" title="Get the rigid geometry parameters for a water model." alt="" coords="116,75,302,119"/>
+<area shape="poly" title=" " alt="" coords="58,94,102,95,98,99,60,100"/>
+<area shape="rect" href="classWaterModelSettings.html#ae39162940895e5feb178658ce39faad5" title="sets the waterIntraModel to enum in settings" alt="" coords="107,144,311,189"/>
+<area shape="poly" title=" " alt="" coords="59,107,108,129,126,138,121,139,106,134,59,113"/>
 </map>
 </div>
 
 </div>
 </div>
 <a id="af3fc37cbe37365e72650a604844937c2" name="af3fc37cbe37365e72650a604844937c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3fc37cbe37365e72650a604844937c2">&#9670;&#160;</a></span>TEST() <span class="overload">[2/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af3fc37cbe37365e72650a604844937c2">&#9670;&#160;</a></span>TEST() <span class="overload">[2/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,7 +233,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="afb8026e7188d76cd46dcf321461c1ce9" name="afb8026e7188d76cd46dcf321461c1ce9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb8026e7188d76cd46dcf321461c1ce9">&#9670;&#160;</a></span>TEST() <span class="overload">[3/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afb8026e7188d76cd46dcf321461c1ce9">&#9670;&#160;</a></span>TEST() <span class="overload">[3/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -254,19 +258,103 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="testConstraintSettings_8cpp_afb8026e7188d76cd46dcf321461c1ce9_cgraph.png" border="0" usemap="#atestConstraintSettings_8cpp_afb8026e7188d76cd46dcf321461c1ce9_cgraph" loading="lazy" alt=""/></div>
 <map name="atestConstraintSettings_8cpp_afb8026e7188d76cd46dcf321461c1ce9_cgraph" id="atestConstraintSettings_8cpp_afb8026e7188d76cd46dcf321461c1ce9_cgraph">
 <area shape="rect" title="finalize() must not activate shake for a water model without a rigid geometry (e.g...." alt="" coords="5,83,59,111"/>
-<area shape="rect" href="classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="111,5,288,50"/>
-<area shape="poly" title=" " alt="" coords="58,82,106,60,124,54,120,58,108,65,61,86"/>
-<area shape="rect" href="classWaterModelSettings.html#a7fc657364d6c1f19ba35a4eb776e4bfa" title="Get the rigid geometry parameters for a water model." alt="" coords="107,75,293,119"/>
-<area shape="poly" title=" " alt="" coords="58,94,93,95,89,99,60,100"/>
-<area shape="rect" href="classWaterModelSettings.html#a262c7ac83be8af41421bafa4ac52bc7c" title="sets the waterIntraModel to enum in settings" alt="" coords="121,144,278,189"/>
-<area shape="poly" title=" " alt="" coords="59,107,108,129,125,138,119,138,106,134,59,113"/>
+<area shape="rect" href="classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="120,5,298,50"/>
+<area shape="poly" title=" " alt="" coords="58,82,106,60,126,54,121,57,108,65,61,86"/>
+<area shape="rect" href="classWaterModelSettings.html#a7fc657364d6c1f19ba35a4eb776e4bfa" title="Get the rigid geometry parameters for a water model." alt="" coords="116,75,302,119"/>
+<area shape="poly" title=" " alt="" coords="58,94,102,95,98,99,60,100"/>
+<area shape="rect" href="classWaterModelSettings.html#ae39162940895e5feb178658ce39faad5" title="sets the waterIntraModel to enum in settings" alt="" coords="107,144,311,189"/>
+<area shape="poly" title=" " alt="" coords="59,107,108,129,126,138,121,139,106,134,59,113"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="af66333770a9b5c6b5b2d597975b03d2f" name="af66333770a9b5c6b5b2d597975b03d2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af66333770a9b5c6b5b2d597975b03d2f">&#9670;&#160;</a></span>TEST() <span class="overload">[4/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">ConstraintSettingsTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FinalizeDoesNotOverrideExplicitShakeDeactivation</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>finalize() must not re-activate shake for a rigid water model if the user has explicitly deactivated it - an explicit user choice always takes precedence over the water-model-driven system default. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testConstraintSettings_8cpp_af66333770a9b5c6b5b2d597975b03d2f_cgraph.png" border="0" usemap="#atestConstraintSettings_8cpp_af66333770a9b5c6b5b2d597975b03d2f_cgraph" loading="lazy" alt=""/></div>
+<map name="atestConstraintSettings_8cpp_af66333770a9b5c6b5b2d597975b03d2f_cgraph" id="atestConstraintSettings_8cpp_af66333770a9b5c6b5b2d597975b03d2f_cgraph">
+<area shape="rect" title="finalize() must not re&#45;activate shake for a rigid water model if the user has explicitly deactivated ..." alt="" coords="5,83,59,111"/>
+<area shape="rect" href="classReferenceSettings.html#a6c66b4322c21edc9580f70960452b757" title="Retrieves the set of reference file names." alt="" coords="120,5,298,50"/>
+<area shape="poly" title=" " alt="" coords="58,82,106,60,126,54,121,57,108,65,61,86"/>
+<area shape="rect" href="classWaterModelSettings.html#a7fc657364d6c1f19ba35a4eb776e4bfa" title="Get the rigid geometry parameters for a water model." alt="" coords="116,75,302,119"/>
+<area shape="poly" title=" " alt="" coords="58,94,102,95,98,99,60,100"/>
+<area shape="rect" href="classWaterModelSettings.html#ae39162940895e5feb178658ce39faad5" title="sets the waterIntraModel to enum in settings" alt="" coords="107,144,311,189"/>
+<area shape="poly" title=" " alt="" coords="59,107,108,129,126,138,121,139,106,134,59,113"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ad808cbb357c4fd2740e7c67b54b8a238" name="ad808cbb357c4fd2740e7c67b54b8a238"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad808cbb357c4fd2740e7c67b54b8a238">&#9670;&#160;</a></span>TEST() <span class="overload">[5/11]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">TEST </td>
+          <td>(</td>
+          <td class="paramtype">ConstraintSettingsTest</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IsShakeSetBySystemReflectsActivationSource</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>isShakeSetBySystem() must distinguish shake activated only as a side effect of a rigid water model from shake activated explicitly by the user, since that distinction decides whether a topology file is still required (see <a class="el" href="namespaceinput_1_1topology.html#ac926c9f9d78ae8899010491cea8465bc" title="checks if reading topology file is needed">input::topology::isNeeded()</a>). </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="testConstraintSettings_8cpp_ad808cbb357c4fd2740e7c67b54b8a238_cgraph.png" border="0" usemap="#atestConstraintSettings_8cpp_ad808cbb357c4fd2740e7c67b54b8a238_cgraph" loading="lazy" alt=""/></div>
+<map name="atestConstraintSettings_8cpp_ad808cbb357c4fd2740e7c67b54b8a238_cgraph" id="atestConstraintSettings_8cpp_ad808cbb357c4fd2740e7c67b54b8a238_cgraph">
+<area shape="rect" title="isShakeSetBySystem() must distinguish shake activated only as a side effect of a rigid water model fr..." alt="" coords="5,152,59,180"/>
+<area shape="rect" href="classConstraintSettings.html#a90bd1cacc52b8160d90b22afea7a72eb" title="activate the shake algorithm" alt="" coords="125,5,293,50"/>
+<area shape="poly" title=" " alt="" coords="37,151,63,107,82,82,105,60,115,56,111,60,108,64,86,85,67,109,42,153"/>
+<area shape="rect" href="classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="138,75,280,119"/>
+<area shape="poly" title=" " alt="" coords="57,151,106,129,125,123,122,127,108,134,61,155"/>
+<area shape="rect" href="classConstraintSettings.html#a3700fad69319c4fc7ea23d094b2b4177" title="check if the shake algorithm is activated" alt="" coords="138,144,280,189"/>
+<area shape="poly" title=" " alt="" coords="58,164,124,164,121,168,60,169"/>
+<area shape="rect" href="classConstraintSettings.html#a0928736e9828ef6f913bf1bed6a06cd8" title="check if the shake algorithm is only active for the water model" alt="" coords="126,213,292,258"/>
+<area shape="poly" title=" " alt="" coords="59,177,108,199,126,207,121,208,106,203,59,182"/>
+<area shape="rect" href="classWaterModelSettings.html#ae39162940895e5feb178658ce39faad5" title="sets the waterIntraModel to enum in settings" alt="" coords="107,283,311,327"/>
+<area shape="poly" title=" " alt="" coords="40,178,67,223,86,247,108,268,116,275,110,275,105,272,82,251,63,226,39,183"/>
+<area shape="rect" href="classConstraintSettings.html#a8d9e04b035cb499dff33d5b60028a58f" title="activate the shake algorithm only for the water model" alt="" coords="359,5,578,50"/>
+<area shape="poly" title=" " alt="" coords="279,76,370,53,365,56,281,81"/>
+<area shape="rect" href="classReferenceSettings.html#a9d05a4e5b5aa7f2b28fb059d33ab00e4" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="394,75,543,119"/>
+<area shape="poly" title=" " alt="" coords="279,94,382,96,377,98,281,100"/>
+<area shape="rect" href="classWaterModelSettings.html#a7fc657364d6c1f19ba35a4eb776e4bfa" title="Get the rigid geometry parameters for a water model." alt="" coords="376,144,562,189"/>
+<area shape="poly" title=" " alt="" coords="280,113,370,139,365,140,280,119"/>
 </map>
 </div>
 
 </div>
 </div>
 <a id="af4cc66a17bc8f0d82554b74bbfa979b7" name="af4cc66a17bc8f0d82554b74bbfa979b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4cc66a17bc8f0d82554b74bbfa979b7">&#9670;&#160;</a></span>TEST() <span class="overload">[4/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af4cc66a17bc8f0d82554b74bbfa979b7">&#9670;&#160;</a></span>TEST() <span class="overload">[6/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -287,7 +375,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a1bf7307542be224cc2c623894e3410ee" name="a1bf7307542be224cc2c623894e3410ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1bf7307542be224cc2c623894e3410ee">&#9670;&#160;</a></span>TEST() <span class="overload">[5/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bf7307542be224cc2c623894e3410ee">&#9670;&#160;</a></span>TEST() <span class="overload">[7/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,7 +396,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="ae88a4a36e6757d6c5ecab1f6ea332328" name="ae88a4a36e6757d6c5ecab1f6ea332328"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae88a4a36e6757d6c5ecab1f6ea332328">&#9670;&#160;</a></span>TEST() <span class="overload">[6/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae88a4a36e6757d6c5ecab1f6ea332328">&#9670;&#160;</a></span>TEST() <span class="overload">[8/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -329,7 +417,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a0390226e4a729f3d53fdd7bec1b73044" name="a0390226e4a729f3d53fdd7bec1b73044"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0390226e4a729f3d53fdd7bec1b73044">&#9670;&#160;</a></span>TEST() <span class="overload">[7/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0390226e4a729f3d53fdd7bec1b73044">&#9670;&#160;</a></span>TEST() <span class="overload">[9/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -350,7 +438,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a8bb32254410250b5c6fdc85dfba6df62" name="a8bb32254410250b5c6fdc85dfba6df62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bb32254410250b5c6fdc85dfba6df62">&#9670;&#160;</a></span>TEST() <span class="overload">[8/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bb32254410250b5c6fdc85dfba6df62">&#9670;&#160;</a></span>TEST() <span class="overload">[10/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -371,7 +459,7 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <a id="a15acd41c3c59a18a16f46ef72813c234" name="a15acd41c3c59a18a16f46ef72813c234"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a15acd41c3c59a18a16f46ef72813c234">&#9670;&#160;</a></span>TEST() <span class="overload">[9/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a15acd41c3c59a18a16f46ef72813c234">&#9670;&#160;</a></span>TEST() <span class="overload">[11/11]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

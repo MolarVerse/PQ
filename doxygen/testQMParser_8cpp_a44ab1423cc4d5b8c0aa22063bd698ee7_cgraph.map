@@ -1,5 +1,5 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1QMSettings.html#ab324126741d9b3eecb6e7886d364178e" title="returns if the dispersion correction should be used" alt="" coords="122,5,278,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,25,109,27,104,28,74,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,74,33"/>
+<area shape="rect" id="Node000002" href="$classQMSettings.html#a6efd4c1cfd2b1eb015aa735195561f2a" title="returns if the dispersion correction should be used" alt="" coords="122,5,345,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,17,109,19,103,20,74,22"/>
 </map>

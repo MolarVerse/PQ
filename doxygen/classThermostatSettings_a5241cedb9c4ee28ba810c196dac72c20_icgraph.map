@@ -1,0 +1,19 @@
+<map id="ThermostatSettings::setTemperatureRampFrequency" name="ThermostatSettings::setTemperatureRampFrequency">
+<area shape="rect" id="Node000001" title="set the temperature ramp frequency" alt="" coords="576,187,812,231"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1ThermostatInputParser.html#af46582860ce3edbc0f54f081d7b01835" title=" " alt="" coords="264,5,528,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="661,175,603,119,566,90,527,65,502,53,502,48,529,60,569,85,607,115,667,176"/>
+<area shape="rect" id="Node000004" href="$classTestInputValidation.html#aebac270531beb65b4e1a1dab1a81b0aa" title=" " alt="" coords="323,75,468,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="634,180,527,134,469,116,469,111,529,129,639,179"/>
+<area shape="rect" id="Node000005" href="$testInputValidation_8cpp.html#a7b5102d803227c0946346ef5d36e044d" title=" " alt="" coords="362,143,430,171"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="558,186,431,166,430,160,563,185"/>
+<area shape="rect" id="Node000006" href="$testInputValidation_8cpp.html#a276c30f15520c9797df4b908175ce388" title=" " alt="" coords="362,195,430,223"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="558,210,431,212,430,206,563,208"/>
+<area shape="rect" id="Node000007" href="$testThermostatSetup_8cpp.html#a823486eedb62ed2c7143fce91708cd5d" title=" " alt="" coords="362,247,430,275"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="558,233,431,258,430,253,563,232"/>
+<area shape="rect" id="Node000008" href="$testThermostatSetup_8cpp.html#a09f796f72d8208cc800faa604521c398" title=" " alt="" coords="362,299,430,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="641,238,586,266,529,289,478,302,431,311,430,306,477,297,527,284,584,261,635,240"/>
+<area shape="rect" id="Node000009" href="$testThermostatSetup_8cpp.html#a164078f54a929baa37b4e7dd2efb8796" title=" " alt="" coords="362,351,430,379"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="663,241,604,295,567,320,529,341,478,357,430,365,430,360,477,352,527,336,565,315,600,290,658,243"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1ThermostatInputParser.html#a821a999879a51e478feb50975f6fd05f" title="Construct a new Input File Parser Thermostat:: Input File Parser Thermostat object." alt="" coords="5,5,216,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="246,29,217,30,215,25,250,26"/>
+</map>
