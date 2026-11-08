@@ -47,6 +47,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 ADDR_NO_RANDOMIZE = 0x0040000
+LENGTH_SAMPLES = 3
 TIME_LINE = re.compile(r"^PQ_PERF_TIME (\d+) (\d+)$", re.MULTILINE)
 
 
@@ -234,12 +235,15 @@ def compare(pr_dir, base_dir, library, options, runner=None, out=print):
 
             # warm-up (page cache, dynamic linker), also gives the loop length
             runner.run(base_paths[0])
-            first = runner.run(pr_paths[0])
-            if first is None:
+            samples = [runner.run(pr_paths[0]) for _ in range(LENGTH_SAMPLES)]
+            if None in samples:
                 result.unmeasured.append(name)
                 continue
-            if first < options.min_ms * 1e6:
-                result.too_short.append((name, first / 1e6))
+            # the median of a few runs: a loop close to the minimum used to
+            # be judged in one run and listed as too short in the next
+            length = statistics.median(samples)
+            if length < options.min_ms * 1e6:
+                result.too_short.append((name, length / 1e6))
                 continue
 
             data = measure(runner, base_paths, pr_paths, options.rounds, rng)
@@ -329,8 +333,8 @@ def parse_arguments(argv):
     parser.add_argument("--confirm-rounds", type=int, default=41)
     parser.add_argument("--copies", type=int, default=4,
                         help="copies of each binary (default 4, at least 2)")
-    parser.add_argument("--min-ms", type=float, default=5.0,
-                        help="shortest loop that is judged (default 5)")
+    parser.add_argument("--min-ms", type=float, default=2.0,
+                        help="shortest loop that is judged (default 2)")
     parser.add_argument("--cpu", type=int, default=None,
                         help="CPU to pin to (default: the last allowed one)")
     parser.add_argument("--seed", type=int, default=0)
