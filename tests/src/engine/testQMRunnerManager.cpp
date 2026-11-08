@@ -94,7 +94,7 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
     using engine::QMRunnerManager;
     Settings settings;
 
-    qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
     EXPECT_THROW_MSG(
         const auto _ = QMRunnerManager::createQMRunner(
             settings.qmSettings,
@@ -105,7 +105,7 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
         "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
         "type QM methods using: -DBUILD_WITH_ASE=ON"
     );
-    qmSettings.setQMMethodByUser(QMMethod::ASE_XTB);
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_XTB);
     EXPECT_THROW_MSG(
         const auto _ = QMRunnerManager::createQMRunner(
             settings.qmSettings,
@@ -116,7 +116,7 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
         "compile time. Please recompile with ASE enabled to use the ASE xTB "
         "type QM method using: -DBUILD_WITH_ASE=ON"
     );
-    qmSettings.setQMMethodByUser(QMMethod::MACE);
+    settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
     EXPECT_THROW_MSG(
         const auto _ = QMRunnerManager::createQMRunner(
             settings.qmSettings,
@@ -127,7 +127,7 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
         "compile time. Please recompile with ASE enabled to use MACE type QM "
         "methods using: -DBUILD_WITH_ASE=ON"
     );
-    qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+    settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
     EXPECT_THROW_MSG(
         const auto _ = QMRunnerManager::createQMRunner(
             settings.qmSettings,
