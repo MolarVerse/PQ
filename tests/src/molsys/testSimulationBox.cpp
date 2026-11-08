@@ -199,6 +199,52 @@ TEST(TestSimulationBoxAtomIndexLookup, sameResultAsTheWalk)
 }
 
 /**
+ * @brief the table and the walk agree for every atom of a larger box
+ *
+ * @details 300 molecules with 0 to 5 atoms (sizes from a fixed pattern, so
+ * empty molecules and runs of equal sizes are in there)
+ */
+TEST(TestSimulationBoxAtomIndexLookup, sameResultAsTheWalkForManyMolecules)
+{
+    molsys::SimulationBox box;
+
+    size_t totalAtoms = 0;
+    for (size_t mol = 0; mol < 300; ++mol)
+    {
+        const size_t nAtoms = ((mol * 7) + (mol / 3)) % 6;
+
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+        totalAtoms += nAtoms;
+    }
+
+    std::vector<std::pair<const molsys::Molecule *, AtomIndex>> walk;
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        walk.emplace_back(molecule, atom);
+    }
+
+    box.buildAtomIndexLookup();
+
+    size_t different = 0;
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        if (molecule != walk[index - 1].first || atom != walk[index - 1].second)
+            ++different;
+    }
+
+    EXPECT_GT(totalAtoms, 600U);
+    EXPECT_EQ(0U, different);
+}
+
+/**
  * @brief with the lookup table the errors are the same
  */
 TEST(TestSimulationBoxAtomIndexLookup, sameErrors)
