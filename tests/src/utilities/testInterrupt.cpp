@@ -98,6 +98,19 @@ TEST(TestInterruptDeathTest, secondCtrlCExitsAtOnce)
     );
 }
 
+TEST(TestInterruptDeathTest, wakeWithoutHandlerSendsNoSignal)
+{
+    EXPECT_EXIT(
+        {
+            static_cast<void>(std::signal(SIGINT, SIG_DFL));
+            utilities::wakePythonThread(::pthread_self());
+            std::exit(0);
+        },
+        testing::ExitedWithCode(0),
+        ""
+    );
+}
+
 TEST(TestInterruptDeathTest, wakeIsNoCtrlC)
 {
     EXPECT_EXIT(
