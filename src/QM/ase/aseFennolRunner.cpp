@@ -24,6 +24,9 @@
 
 #include <pybind11/embed.h>
 
+#include "generalSettings.hpp"
+#include "qmSettings.hpp"
+
 namespace QM
 {
 
@@ -41,10 +44,8 @@ namespace QM
      * fails
      */
     AseFennolRunner::AseFennolRunner(
-        const QMSettings  &settings,
-        const std::string &modelPath,
-        bool               gpuPreprocessing,
-        bool               useFloat64
+        const QMSettings     &settings,
+        const FennolSettings &fennolSettings
     )
         : AseQMRunner(settings)
     {
@@ -55,10 +56,14 @@ namespace QM
 
             const pybind11::dict calculatorArgs;
 
-            calculatorArgs["model"] = modelPath.c_str();
+            calculatorArgs["model"] =
+                fennolSettings.getFennolModelPath().c_str();
             calculatorArgs["gpu_preprocessing"] =
-                pybind11::bool_(gpuPreprocessing);
-            calculatorArgs["use_float64"] = pybind11::bool_(useFloat64);
+                pybind11::bool_(fennolSettings.useGPUPreprocessing());
+            calculatorArgs["use_float64"] = pybind11::bool_(
+                settings::GeneralSettings::getFloatingPointType() ==
+                FPType::DOUBLE
+            );
 
             _setAseCalculator(
                 calculators.attr("FENNIXCalculator")(**calculatorArgs)

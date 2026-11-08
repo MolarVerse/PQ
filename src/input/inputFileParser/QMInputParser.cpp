@@ -54,17 +54,21 @@ namespace input
      * quantum mechanical method and its associated parameters.
      * @param maceSettings MACE settings object used to configure and manage the
      * MACE model and its associated parameters.
+     * @param fennolSettings Fennol settings object used to configure and manage
+     * the Fennol model and its associated parameters.
      */
     QMInputParser::QMInputParser(
         const bool         resolveBuiltInSlakosPath,
         ReferenceSettings &referenceSettings,
         QMSettings        &qmSettings,
-        MaceSettings      &maceSettings
+        MaceSettings      &maceSettings,
+        FennolSettings    &fennolSettings
     )
         : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath),
           _referenceSettings(referenceSettings),
           _qmSettings(qmSettings),
-          _maceSettings(maceSettings)
+          _maceSettings(maceSettings),
+          _fennolSettings(fennolSettings)
     {
         addQMMethodKey();
         addQMScriptKey();
@@ -462,8 +466,8 @@ namespace input
             .description = "Specifies the path to the FeNNol model file.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setFennolModelPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _fennolSettings->setFennolModelPath(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -484,8 +488,8 @@ namespace input
                 "Specifies whether GPU pre-processing is enabled for FeNNol.",
         };
 
-        const auto setValue = [](bool value)
-        { QMSettings::setUseGPUPreprocessing(value); };
+        const auto setValue = [this](bool value)
+        { _fennolSettings->setUseGPUPreprocessing(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{

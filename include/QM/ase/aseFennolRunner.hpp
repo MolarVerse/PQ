@@ -25,6 +25,8 @@
 
 #include "aseQMRunner.hpp"
 
+class FennolSettings;
+
 namespace QM
 {
     /**
@@ -38,10 +40,8 @@ namespace QM
         ~AseFennolRunner() override = default;
 
         explicit AseFennolRunner(
-            const QMSettings&  settings,
-            const std::string& modelPath,
-            bool               gpuPreprocessing,
-            bool               useFloat64
+            const QMSettings&     settings,
+            const FennolSettings& fennolSettings
         );
     };
 }   // namespace QM

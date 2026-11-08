@@ -48,15 +48,17 @@ namespace setup
     class QMSetup
     {
        private:
-        engine::QMCapableEngine     &_qmCapableEngine;
-        mstd::ConstRef<QMSettings>   _qmSettings;
-        mstd::ConstRef<MaceSettings> _maceSettings;
+        engine::QMCapableEngine       &_qmCapableEngine;
+        mstd::ConstRef<QMSettings>     _qmSettings;
+        mstd::ConstRef<MaceSettings>   _maceSettings;
+        mstd::ConstRef<FennolSettings> _fennolSettings;
 
        public:
         explicit QMSetup(
             engine::QMCapableEngine &qmCapableEngine,
             const QMSettings        &qmSettings,
-            const MaceSettings      &maceSettings
+            const MaceSettings      &maceSettings,
+            const FennolSettings    &fennolSettings
         );
 
         void        setup(ReferenceSettings &references);

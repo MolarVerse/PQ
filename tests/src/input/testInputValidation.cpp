@@ -96,7 +96,7 @@ class TestInputValidation : public ::testing::Test
         QMSettings::setUseThirdOrderDftb(false);
         QMSettings::setIsThirdOrderDftbSet(false);
         QMSettings::setIsHubbardDerivsSet(false);
-        QMSettings::setFennolModelPath("");
+        _settings.fennolSettings.setFennolModelPath("");
 
         _engine = std::make_unique<engine::OptEngine>(_settings);
         _reader =

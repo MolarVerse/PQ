@@ -29,6 +29,7 @@
 
 class QMSettings;
 class MaceSettings;
+class FennolSettings;
 
 namespace engine
 {
@@ -50,8 +51,9 @@ namespace engine
         virtual ~QMCapableEngine() = default;
 
         void setQMRunner(
-            const QMSettings   &settings,
-            const MaceSettings &maceSettings
+            const QMSettings     &settings,
+            const MaceSettings   &maceSettings,
+            const FennolSettings &fennolSettings
         );
         [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
         [[nodiscard]] bool                          hasQMRunner() const;

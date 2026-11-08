@@ -30,6 +30,7 @@
 class ReferenceSettings;
 class QMSettings;
 class MaceSettings;
+class FennolSettings;
 
 namespace input
 {
@@ -46,13 +47,15 @@ namespace input
         mstd::Ref<ReferenceSettings> _referenceSettings;
         mstd::Ref<QMSettings>        _qmSettings;
         mstd::Ref<MaceSettings>      _maceSettings;
+        mstd::Ref<FennolSettings>    _fennolSettings;
 
        public:
         explicit QMInputParser(
             bool               resolveBuiltInSlakosPath,
             ReferenceSettings &referenceSettings,
             QMSettings        &qmSettings,
-            MaceSettings      &maceSettings
+            MaceSettings      &maceSettings,
+            FennolSettings    &fennolSettings
         );
 
         void parseMaceQMMethod(const std::string &);

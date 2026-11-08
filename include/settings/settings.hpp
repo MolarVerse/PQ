@@ -56,6 +56,7 @@ struct Settings
     ReferenceSettings     referenceSettings;
     QMSettings            qmSettings;
     MaceSettings          maceSettings;
+    FennolSettings        fennolSettings;
 
     void finalize();
 };
