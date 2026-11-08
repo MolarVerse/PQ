@@ -50,24 +50,41 @@ namespace input::topology
          */
         class AtomIndexLookupGuard
         {
+            MSTD_RAII_NO_MOVE(AtomIndexLookupGuard);
+
            private:
-            molsys::SimulationBox &_simulationBox;
+            mstd::Ref<molsys::SimulationBox> _simulationBox;
 
            public:
-            explicit AtomIndexLookupGuard(molsys::SimulationBox &simulationBox)
-                : _simulationBox(simulationBox)
-            {
-                _simulationBox.buildAtomIndexLookup();
-            }
+            explicit AtomIndexLookupGuard(molsys::SimulationBox &simulationBox);
 
-            ~AtomIndexLookupGuard() { _simulationBox.clearAtomIndexLookup(); }
-
-            AtomIndexLookupGuard(const AtomIndexLookupGuard &)       = delete;
-            AtomIndexLookupGuard &operator=(const AtomIndexLookupGuard &
-            )                                                        = delete;
-            AtomIndexLookupGuard(AtomIndexLookupGuard &&)            = delete;
-            AtomIndexLookupGuard &operator=(AtomIndexLookupGuard &&) = delete;
+            ~AtomIndexLookupGuard();
         };
+
+        /**
+         * @brief constructs the atom index lookup guard
+         *
+         * @param simulationBox the simulation box for which to build the atom
+         * index lookup
+         */
+        AtomIndexLookupGuard::AtomIndexLookupGuard(
+            molsys::SimulationBox &simulationBox
+        )
+            : _simulationBox(simulationBox)
+        {
+            _simulationBox->buildAtomIndexLookup();
+        }
+
+        /**
+         * @brief destructs the atom index lookup guard
+         *
+         * @details clears the atom index lookup of the associated simulation
+         * box
+         */
+        AtomIndexLookupGuard::~AtomIndexLookupGuard()
+        {
+            _simulationBox->clearAtomIndexLookup();
+        }
     }   // namespace
 
     /**
