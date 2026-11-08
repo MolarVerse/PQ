@@ -97,9 +97,7 @@ namespace thermostat
             const auto newTargetTemperature =
                 _targetTemperature + _temperatureIncrease;
             setTargetTemperature(newTargetTemperature);
-            settings::ThermostatSettings::setActualTargetTemperature(
-                _targetTemperature
-            );
+            ThermostatSettings::setActualTargetTemperature(_targetTemperature);
         }
 
         if (_rampingStepsLeft > 0)

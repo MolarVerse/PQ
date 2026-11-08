@@ -80,7 +80,10 @@ namespace input
         _validateTimings(settings);
         validateOptimizer(settings);
         _validateQM(settings.qmSettings, settings.maceSettings);
-        _validateThermostat(settings.simulationBoxSettings);
+        _validateThermostat(
+            settings.simulationBoxSettings,
+            settings.thermostatSettings
+        );
         _validateManostat(settings.manostatSettings);
         _validateCellList();
         _validateReactionFieldCoulomb();
@@ -236,11 +239,11 @@ namespace input
      * contradictory, or define an invalid ramp
      */
     void InputFileReader::_validateThermostat(
-        const SimulationBoxSettings& simBoxSettings
+        const SimulationBoxSettings& simBoxSettings,
+        const ThermostatSettings&    thermostatSettings
     ) const
     {
-        const auto thermostatType =
-            settings::ThermostatSettings::getThermostatType();
+        const auto thermostatType    = thermostatSettings.getThermostatType();
         const auto targetTempDefined = getKeywordSet("temp");
         const auto startTempDefined  = getKeywordSet("start_temp");
         const auto endTempDefined    = getKeywordSet("end_temp");
@@ -282,7 +285,7 @@ namespace input
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
             if (settings::TimingsSettings::getTimeStep() >
-                settings::ThermostatSettings::getRelaxationTime())
+                ThermostatSettings::getRelaxationTime())
             {
                 throw exc::InputFileException(
                     "The timestep must not exceed the thermostat relaxation "
@@ -299,21 +302,21 @@ namespace input
             {
                 maxTemperature = mstd::max(
                     maxTemperature,
-                    settings::ThermostatSettings::getTargetTemperature()
+                    ThermostatSettings::getTargetTemperature()
                 );
             }
             if (startTempDefined)
             {
                 maxTemperature = mstd::max(
                     maxTemperature,
-                    settings::ThermostatSettings::getStartTemperature()
+                    ThermostatSettings::getStartTemperature()
                 );
             }
             if (endTempDefined)
             {
                 maxTemperature = mstd::max(
                     maxTemperature,
-                    settings::ThermostatSettings::getEndTemperature()
+                    ThermostatSettings::getEndTemperature()
                 );
             }
 
@@ -321,8 +324,7 @@ namespace input
             const auto conversionFactor =
                 UNIVERSAL_GAS_CONSTANT * unitConversion;
             const auto sigmaSquared =
-                4.0 * settings::ThermostatSettings::getFriction() *
-                conversionFactor *
+                4.0 * ThermostatSettings::getFriction() * conversionFactor *
                 maxTemperature.quantity_from_zero().numerical_value_in(K) /
                 settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
 
@@ -337,23 +339,20 @@ namespace input
 
         if (thermostatType == ThermostatType::NOSE_HOOVER)
         {
-            if (targetTempDefined &&
-                settings::ThermostatSettings::getTargetTemperature() <=
-                    Temperature::zero())
+            if (targetTempDefined && ThermostatSettings::getTargetTemperature(
+                                     ) <= Temperature::zero())
                 throw exc::InputFileException(
                     "Nose-Hoover target temperature must be greater than zero"
                 );
 
             if (endTempDefined &&
-                settings::ThermostatSettings::getEndTemperature() <=
-                    Temperature::zero())
+                ThermostatSettings::getEndTemperature() <= Temperature::zero())
                 throw exc::InputFileException(
                     "Nose-Hoover end temperature must be greater than zero"
                 );
 
-            if (startTempDefined &&
-                settings::ThermostatSettings::getStartTemperature() <=
-                    Temperature::zero())
+            if (startTempDefined && ThermostatSettings::getStartTemperature() <=
+                                        Temperature::zero())
                 throw exc::InputFileException(
                     "Nose-Hoover start temperature must be greater than zero"
                 );
@@ -363,8 +362,7 @@ namespace input
             return;
 
         const auto totalSteps = settings::TimingsSettings::getNumberOfSteps();
-        const auto rampSteps =
-            settings::ThermostatSettings::getTemperatureRampSteps();
+        const auto rampSteps  = ThermostatSettings::getTemperatureRampSteps();
 
         if (rampSteps > totalSteps)
         {
@@ -380,7 +378,7 @@ namespace input
 
         const auto effectiveRampSteps = rampSteps == 0 ? totalSteps : rampSteps;
         const auto frequency =
-            settings::ThermostatSettings::getTemperatureRampFrequency();
+            ThermostatSettings::getTemperatureRampFrequency();
 
         if (frequency > effectiveRampSteps)
         {

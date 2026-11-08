@@ -682,9 +682,7 @@ TEST_F(TestThermostat, temperatureSetterGetter)
 
 TEST_F(TestThermostat, temperatureRampingUpdatesActualTargetTemperature)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(
-        toTemperature(300.0)
-    );
+    ThermostatSettings::setActualTargetTemperature(toTemperature(300.0));
 
     _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
     _thermostat->setTemperatureIncrease(mstd::units::delta<K>(2.5));
@@ -693,18 +691,17 @@ TEST_F(TestThermostat, temperatureRampingUpdatesActualTargetTemperature)
 
     _thermostat->applyTemperatureRamping();
     EXPECT_EQ(
-        settings::ThermostatSettings::getActualTargetTemperature(),
+        ThermostatSettings::getActualTargetTemperature(),
         toTemperature(302.5)
     );
 
     _thermostat->applyTemperatureRamping();
     EXPECT_EQ(
-        settings::ThermostatSettings::getActualTargetTemperature(),
+        ThermostatSettings::getActualTargetTemperature(),
         toTemperature(305.0)
     );
 
-    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
-    );
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
 }
 
 TEST_F(TestThermostat, berendsenStoresMeasuredTemperature)

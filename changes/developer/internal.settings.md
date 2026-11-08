@@ -2,3 +2,4 @@
 - Start removing static access from `QMSettings` - `QMMethod`
 - introduce new class `MaceSettings` for less coupling to `QMSettings`
 - introduce new class `FennolSettings` for less coupling to `QMSettings`
+- remove static access of `ThermostatType` from `ThermostatSettings`
