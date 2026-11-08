@@ -22,6 +22,7 @@
 
 #include "enums/manostat.hpp"
 
+#include <bit>
 #include <stdexcept>
 #include <utility>
 
@@ -94,4 +95,16 @@ bool isAxisFixed(FixedAxis fixedAxis, size_t axisIndex)
 {
     const auto axisToCheck = static_cast<FixedAxis>(1U << axisIndex);
     return (fixedAxis & axisToCheck) == axisToCheck;
+}
+
+/**
+ * @brief converts a FixedAxis bitmask to its corresponding dimensionality
+ *
+ * @param fixedAxis the FixedAxis bitmask
+ * @return the number of fixed axes (0 for none, 1 for a single axis, 2 for two
+ * axes, 3 for all axes)
+ */
+int toDim(FixedAxis fixedAxis)
+{
+    return std::popcount(static_cast<unsigned>(fixedAxis));
 }

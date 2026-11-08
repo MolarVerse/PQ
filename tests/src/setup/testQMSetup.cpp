@@ -70,14 +70,6 @@ namespace
 
 }   // namespace
 
-struct TestQMSetupUtils
-{
-    static void setupQMMethodAseDftbPlus(const setup::QMSetup &setupQM)
-    {
-        setupQM._setupQMMethodAseDftbPlus();
-    }
-};
-
 TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 {
     QMSettings                 qmSettings;
@@ -115,7 +107,9 @@ TEST(TestQMSetup, setupDftbplus)
         engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
@@ -142,7 +136,9 @@ TEST(TestQMSetup, setupPySCF)
         engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
@@ -169,7 +165,9 @@ TEST(TestQMSetup, setupTurbomoleRunner)
         engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
@@ -206,18 +204,10 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setIsThirdOrderDftbSet(false);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    settings.finalize();
 
-    TestQMSetupUtils::setupQMMethodAseDftbPlus(
-        setup::QMSetup(
-            engine,
-            settings.qmSettings,
-            settings.maceSettings,
-            settings.fennolSettings
-        )
-    );
-    EXPECT_EQ(QMSettings::useThirdOrderDftb(), true);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), true);
 }
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
@@ -226,40 +216,26 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setUseThirdOrderDftb(true);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(true);
+    settings.finalize();
 
-    TestQMSetupUtils::setupQMMethodAseDftbPlus(
-        setup::QMSetup(
-            engine,
-            settings.qmSettings,
-            settings.maceSettings,
-            settings.fennolSettings
-        )
-    );
-    EXPECT_EQ(QMSettings::useThirdOrderDftb(), true);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), true);
 }
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 {
+    // this test has nothing to do with the current setup approach
+    // it tests now basically the functionality of settings
     Settings           settings;
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setIsThirdOrderDftbSet(true);
-    QMSettings::setUseThirdOrderDftb(false);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    settings.finalize();
 
-    TestQMSetupUtils::setupQMMethodAseDftbPlus(
-        setup::QMSetup(
-            engine,
-            settings.qmSettings,
-            settings.maceSettings,
-            settings.fennolSettings
-        )
-    );
-    EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), false);
 }
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
@@ -268,19 +244,11 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::MATSCI);
-    QMSettings::setIsThirdOrderDftbSet(false);
-    QMSettings::setUseThirdOrderDftb(false);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    settings.finalize();
 
-    TestQMSetupUtils::setupQMMethodAseDftbPlus(
-        setup::QMSetup(
-            engine,
-            settings.qmSettings,
-            settings.maceSettings,
-            settings.fennolSettings
-        )
-    );
-    EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), false);
 }
 #endif
 
@@ -290,19 +258,11 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setIsThirdOrderDftbSet(false);
-    QMSettings::setUseThirdOrderDftb(false);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    settings.finalize();
 
-    TestQMSetupUtils::setupQMMethodAseDftbPlus(
-        setup::QMSetup(
-            engine,
-            settings.qmSettings,
-            settings.maceSettings,
-            settings.fennolSettings
-        )
-    );
-    EXPECT_EQ(QMSettings::useThirdOrderDftb(), false);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), false);
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
@@ -314,7 +274,9 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
         *engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
@@ -349,7 +311,9 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
         *engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
@@ -385,7 +349,9 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
         *engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
@@ -421,7 +387,9 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
         *engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
@@ -457,13 +425,17 @@ TEST(TestQMSetup, setupQMRunnerFennol)
         *_engine,
         settings.qmSettings,
         settings.maceSettings,
-        settings.fennolSettings
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
     );
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
-    settings.fennolSettings.setFennolModelPath("path/To/fennol_model.fnx");
-    settings.fennolSettings.setUseGPUPreprocessing(false);
+    settings.fennolSettings.setFennolModelPathByUser(
+        "path/To/fennol_model.fnx"
+    );
+    settings.fennolSettings.setUseGPUPreprocessingByUser(false);
     settings::GeneralSettings::setFloatingPointType(FPType::FLOAT);
 
     _qmSetup.setupWriteInfo();

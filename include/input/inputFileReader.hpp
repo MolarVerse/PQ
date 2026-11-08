@@ -43,6 +43,7 @@ class SimulationBoxSettings;   // forward declaration
 class ManostatSettings;        // forward declaration
 class QMSettings;              // forward declaration
 class MaceSettings;            // forward declaration
+class DftbSettings;            // forward declaration
 class ThermostatSettings;      // forward declaration
 
 /**
@@ -123,7 +124,8 @@ namespace input
         void _validateTimings(const Settings &settings) const;
         void _validateQM(
             const QMSettings   &qmSettings,
-            const MaceSettings &maceSettings
+            const MaceSettings &maceSettings,
+            const DftbSettings &dftbSettings
         ) const;
         void _validateThermostat(
             const SimulationBoxSettings &simBoxSettings,

@@ -2,4 +2,5 @@
 - Start removing static access from `QMSettings` - `QMMethod`
 - introduce new class `MaceSettings` for less coupling to `QMSettings`
 - introduce new class `FennolSettings` for less coupling to `QMSettings`
+- ASE-DFTB+ input validation now rejects third order DFTB with non-3ob slakos if `hubbard_derivs` is missing, and `DftbSettings`/`XtbSettings` were extracted from `QMSettings`.
 - remove static access of `ThermostatType` from `ThermostatSettings`

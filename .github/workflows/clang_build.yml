@@ -26,9 +26,7 @@ on:
       - 'CMakeLists.txt'
       - '.cmake/**'
       - '.github/workflows/clang_build.yml'
-      - '.github/actions/upload-build-timings/**'
       - '.github/actions/setup-gcc/**'
-      - '.github/ci-metrics/summarise_build.py'
   push:
     branches:
       - dev
@@ -41,9 +39,7 @@ on:
       - 'CMakeLists.txt'
       - '.cmake/**'
       - '.github/workflows/clang_build.yml'
-      - '.github/actions/upload-build-timings/**'
       - '.github/actions/setup-gcc/**'
-      - '.github/ci-metrics/summarise_build.py'
   workflow_dispatch:
 
 # Only superseded pull_request runs are cancelled; push and manual runs each
@@ -118,8 +114,7 @@ jobs:
         shell: bash
 
       # -k 0 keeps building past failures so that one run lists every file
-      # that does not build with clang; the exit status is passed on to the
-      # build-timings step and fails the job at the end of this step.
+      # that does not build with clang; the job fails at the end of this step.
       - name: Configure and build
         id: build
         run: |
@@ -141,12 +136,3 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
-
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: clang
-          ccache: 'true'
-          job-id: ${{ job.check_run_id }}
-          build-status: ${{ steps.build.outcome }}

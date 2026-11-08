@@ -36,7 +36,10 @@
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
-using Quantity = mstd::quantity<mstd::units::one>;
+using Quantity   = mstd::quantity<mstd::units::one>;
+using Quantity3D = linalg::Vector3D<mstd::quantity<mstd::units::one>>;
+using QuantityTensor3D =
+    linalg::StaticMatrix3x3<mstd::quantity<mstd::units::one>>;
 
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 using Time     = mstd::quantity<mstd::units::fs>;

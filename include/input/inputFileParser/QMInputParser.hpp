@@ -31,6 +31,8 @@ class ReferenceSettings;
 class QMSettings;
 class MaceSettings;
 class FennolSettings;
+class DftbSettings;
+class XtbSettings;
 
 namespace input
 {
@@ -48,6 +50,8 @@ namespace input
         mstd::Ref<QMSettings>        _qmSettings;
         mstd::Ref<MaceSettings>      _maceSettings;
         mstd::Ref<FennolSettings>    _fennolSettings;
+        mstd::Ref<DftbSettings>      _dftbSettings;
+        mstd::Ref<XtbSettings>       _xtbSettings;
 
        public:
         explicit QMInputParser(
@@ -55,7 +59,9 @@ namespace input
             ReferenceSettings &referenceSettings,
             QMSettings        &qmSettings,
             MaceSettings      &maceSettings,
-            FennolSettings    &fennolSettings
+            FennolSettings    &fennolSettings,
+            DftbSettings      &dftbSettings,
+            XtbSettings       &xtbSettings
         );
 
         void parseMaceQMMethod(const std::string &);

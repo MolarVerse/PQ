@@ -5,3 +5,4 @@
 - introduce units for pressure
 - start introducing temperature unit in thermostat
 - finish all places of temperature units
+- cleanup manostat by introducing some mstd math functions for quantities like `mstd::exp`, `mstd::pow` and `mstd::sqrt`

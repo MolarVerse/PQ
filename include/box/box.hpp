@@ -82,7 +82,7 @@ namespace molsys
             const linalg::Vec3D &
         ) const = 0;
 
-        virtual void scaleBox(const linalg::tensor3D &scalingFactors) = 0;
+        virtual void scaleBox(const QuantityTensor3D &scalingFactors) = 0;
 
         [[nodiscard]]
         virtual double getVolume() const = 0;

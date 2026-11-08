@@ -30,6 +30,7 @@
 #include "capabilities.hpp"
 #include "commandLineArgs.hpp"
 #include "driver.hpp"
+#include "interrupt.hpp"
 #include "systemInfo.hpp"
 #include "validation.hpp"
 
@@ -139,6 +140,9 @@ int main(int argc, char *argv[])
 
 #ifdef WITH_PYBIND11
     pybind11::scoped_interpreter guard{};
+#if !defined(_WIN32)
+    utilities::installInterruptHandler();
+#endif
 #endif
 
     try

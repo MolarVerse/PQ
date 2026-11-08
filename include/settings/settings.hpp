@@ -58,6 +58,8 @@ struct Settings
     QMSettings            qmSettings;
     MaceSettings          maceSettings;
     FennolSettings        fennolSettings;
+    DftbSettings          dftbSettings;
+    XtbSettings           xtbSettings;
     ThermostatSettings    thermostatSettings;
 
     void finalize();

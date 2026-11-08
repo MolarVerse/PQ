@@ -25,8 +25,6 @@ The project uses the **git-flow** branching model: `main` is the stable/release 
 7. Use `git push -u origin <branch-name>` when pushing a new branch.
 8. **Install the commit-msg hook once per clone**: `cp .githooks/commit-msg .git/hooks/`. It rejects commits whose subject doesn't start with a recognized conventional-commit-style prefix (see below) — this is enforced locally, not just in CI.
 
-> **One documented exception to rule 1:** the CI metrics collector commits timing data under `.github/ci-metrics/data/` directly to `dev` using `GITHUB_TOKEN` (see `.github/ci-metrics/README.md`). It applies only to that workflow and that path. Contributors and coding assistants must still never push to `dev`.
-
 ```bash
 # Correct workflow
 git checkout dev
@@ -71,7 +69,6 @@ Example: `docs: add shared contributor guide`
 ```
 PQ/
 ├── .github/workflows/     # CI/CD pipelines (GitHub Actions)
-├── .github/ci-metrics/    # CI timing data + schema (data written by the collector)
 ├── .githooks/             # commit-msg hook (conventional-commit enforcement)
 ├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, ...)
 ├── apps/                  # Main application executable (PQ.cpp)
@@ -229,9 +226,8 @@ All pipelines are in `.github/workflows/`:
 | `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required (unless the PR has the `skip-changelog` label) |
 | `gh_checks.yml` | PR events | PR must link an issue (`Closes/Fixes/Resolves/Related to #N`) |
 | `perf.yml` | PRs to `main`/`dev`/`NEXT` | Callgrind instruction-count regression gate |
-| `clang_build.yml` | PRs touching C++/build files | Non-gating clang 20 build and tests (build analysis for the CI metrics) |
+| `clang_build.yml` | PRs touching C++/build files | Non-gating clang 20 build and tests |
 | `jekyll-gh-pages.yml` | PRs to `main`/`dev` touching docs/include/src; push to `main` | Sphinx + Doxygen build; deploys the site from `main` |
-| `ci_metrics.yml` | Daily, manual | Collects CI timing data (see `.github/ci-metrics/README.md`) |
 | `sync-dev-into-next.yml, sync-main-into-dev.yml` | Push to `dev` / `main`, manual | Automatic branch syncs |
 | `create-release-pr.yml, release.yml` | Manual; PRs to `main` from `release/*` , `hotfix/*` | Release process: changelogs, tag, GitHub release |
 | `dismiss_stale_approvals.yml` | New commits on PRs | Dismisses approvals unless the new commits only merge `dev` |

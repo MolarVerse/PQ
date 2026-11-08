@@ -208,10 +208,14 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
         {
             coupling->calculatePressure(_box, _data);
             const auto mu = coupling->calculateMu();
-            EXPECT_NEAR((1.0 - det(mu)) / increment, 1.0, 1e-6);
+            EXPECT_NEAR(
+                (1.0 - det(mu)).numerical_value_in(one) / increment,
+                1.0,
+                1e-6
+            );
             if (fixed == FixedAxis::Z)
             {
-                EXPECT_DOUBLE_EQ(mu[2][2], 1.0);
+                EXPECT_DOUBLE_EQ(mu[2][2].numerical_value_in(one), 1.0);
             }
         }
     }
@@ -417,10 +421,15 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     NoiseMoments<1> fullVolume;
     for (size_t sample = 0; sample < 8192; ++sample)
     {
-        const auto semiMu  = semi.calculateMu(_box.getVolume());
-        const auto anisoMu = aniso.calculateMu(_box.getVolume());
-        const auto fullMu  = full.calculateMu(_box.getVolume());
-        const auto fixedMu = fixed.calculateMu(_box.getVolume());
+        // numerical_value_in(one) can be removed as soon as we have mstd::log
+        const auto semiMu =
+            semi.calculateMu(_box.getVolume()).numerical_value_in(one);
+        const auto anisoMu =
+            aniso.calculateMu(_box.getVolume()).numerical_value_in(one);
+        const auto fullMu =
+            full.calculateMu(_box.getVolume()).numerical_value_in(one);
+        const auto fixedMu =
+            fixed.calculateMu(_box.getVolume()).numerical_value_in(one);
         areaHeight.add(
             {std::log(semiMu[0][0] * semiMu[1][1]) /
                  (2.0 * std::sqrt(noiseFactor)),

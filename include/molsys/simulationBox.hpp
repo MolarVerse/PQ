@@ -257,7 +257,7 @@ namespace molsys
          **********************************************/
 
         void applyPBC(linalg::Vec3D& position) const;
-        void scaleBox(const linalg::tensor3D& scalingTensor);
+        void scaleBox(const QuantityTensor3D& scalingTensor);
 
         [[nodiscard]] double getVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;

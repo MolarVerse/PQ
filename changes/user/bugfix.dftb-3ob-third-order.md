@@ -1,0 +1,1 @@
+- Fix ASE-DFTB+ with 3ob slakos not actually applying third order DFTB (including the 3ob Hubbard derivatives) by default, although the setup output reported it as enabled; results for such inputs change.
