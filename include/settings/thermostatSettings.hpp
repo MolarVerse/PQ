@@ -31,6 +31,7 @@
 
 #include "defaults.hpp"
 #include "enums/thermostat.hpp"
+#include "unit_types.hpp"
 
 namespace settings
 {
@@ -54,15 +55,16 @@ namespace settings
         static inline size_t _temperatureRampSteps     = 0;
         static inline size_t _temperatureRampFrequency = 1;
 
-        static inline double _targetTemperature;
-        static inline double _actualTargetTemperature;   // for reset kinetics
-        static inline double _startTemperature;
-        static inline double _endTemperature;
+        static inline Temperature _targetTemperature;
+        static inline Temperature _actualTargetTemperature;
+        static inline Temperature _startTemperature;
+        static inline Temperature _endTemperature;
 
-        static inline Time _relaxationTime =
-            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME;
-        static inline double _friction = defaults::LANGEVIN_THERMOSTAT_FRICTION;
-        static inline double _nhCouplingFreq = defaults::NH_COUPLING_FREQ;
+        static inline Time _relaxationTime{
+            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
+        };
+        static inline double _friction{defaults::LANGEVIN_THERMOSTAT_FRICTION};
+        static inline double _nhCouplingFreq{defaults::NH_COUPLING_FREQ};
 
         static inline std::map<size_t, double> _chi;
         static inline std::map<size_t, double> _zeta;
@@ -86,10 +88,10 @@ namespace settings
         static void setTemperatureSet(bool);
         static void setStartTemperatureSet(bool);
         static void setEndTemperatureSet(bool);
-        static void setTargetTemperature(double);
-        static void setActualTargetTemperature(double);
-        static void setStartTemperature(double);
-        static void setEndTemperature(double);
+        static void setTargetTemperature(const Temperature&);
+        static void setActualTargetTemperature(const Temperature&);
+        static void setStartTemperature(const Temperature&);
+        static void setEndTemperature(const Temperature&);
 
         static void setTemperatureRampSteps(size_t);
         static void setTemperatureRampFrequency(size_t);
@@ -113,13 +115,13 @@ namespace settings
         [[nodiscard]] static bool isStartTemperatureSet();
         [[nodiscard]] static bool isEndTemperatureSet();
 
-        [[nodiscard]] static double      getTargetTemperature();
-        [[nodiscard]] static double      getActualTargetTemperature();
-        [[nodiscard]] static double      getStartTemperature();
-        [[nodiscard]] static double      getEndTemperature();
-        [[nodiscard]] static const Time& getRelaxationTime();
-        [[nodiscard]] static double      getFriction();
-        [[nodiscard]] static double      getNoseHooverCouplingFrequency();
+        [[nodiscard]] static const Temperature& getTargetTemperature();
+        [[nodiscard]] static const Temperature& getActualTargetTemperature();
+        [[nodiscard]] static const Temperature& getStartTemperature();
+        [[nodiscard]] static const Temperature& getEndTemperature();
+        [[nodiscard]] static const Time&        getRelaxationTime();
+        [[nodiscard]] static double             getFriction();
+        [[nodiscard]] static double getNoseHooverCouplingFrequency();
 
         [[nodiscard]] static std::map<size_t, double> getChi();
         [[nodiscard]] static std::map<size_t, double> getZeta();

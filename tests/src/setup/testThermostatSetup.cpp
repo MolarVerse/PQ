@@ -54,8 +54,8 @@ TEST_F(TestSetup, setupThermostatTempRamping)
     settings::TimingsSettings::setNumberOfSteps(100);
 
     settings::ThermostatSettings::setThermostatType("berendsen");
-    settings::ThermostatSettings::setTargetTemperature(300);
-    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300));
+    settings::ThermostatSettings::setStartTemperature(toTemperature(200));
     EXPECT_NO_THROW(thermostatSetup.setup());
 
     EXPECT_EQ(
@@ -138,8 +138,8 @@ TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
 
     settings::TimingsSettings::setNumberOfSteps(0);
     settings::ThermostatSettings::setThermostatType("berendsen");
-    settings::ThermostatSettings::setTargetTemperature(300);
-    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300));
+    settings::ThermostatSettings::setStartTemperature(toTemperature(200));
     settings::ThermostatSettings::setTemperatureRampSteps(0);
 
     EXPECT_THROW_MSG(
@@ -155,8 +155,8 @@ TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
 
     settings::TimingsSettings::setNumberOfSteps(10);
     settings::ThermostatSettings::setThermostatType("berendsen");
-    settings::ThermostatSettings::setTargetTemperature(300);
-    settings::ThermostatSettings::setStartTemperature(200);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300));
+    settings::ThermostatSettings::setStartTemperature(toTemperature(200));
     settings::ThermostatSettings::setTemperatureRampSteps(10);
     settings::ThermostatSettings::setTemperatureRampFrequency(0);
 
@@ -174,12 +174,12 @@ TEST_F(TestSetup, setupThermostatOnlyEndTempDefined)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::ThermostatSettings::setEndTemperature(300);
+    settings::ThermostatSettings::setEndTemperature(toTemperature(300));
     settings::ThermostatSettings::setThermostatType("berendsen");
     EXPECT_NO_THROW(thermostatSetup.setup());
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        mstd::units::point<K>(300)
+        toTemperature(300)
     );
 }
 
@@ -187,12 +187,12 @@ TEST_F(TestSetup, setupThermostatBerendsen)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300));
     settings::ThermostatSettings::setTemperatureSet(true);
     EXPECT_NO_THROW(thermostatSetup.setup());
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        mstd::units::point<K>(300)
+        toTemperature(300)
     );
 
     const auto berendsenThermostat =
@@ -226,7 +226,7 @@ TEST_F(TestSetup, setupThermostatVelocityRescaling)
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::ThermostatSettings::setThermostatType("velocity_rescaling");
-    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300));
     EXPECT_NO_THROW(thermostatSetup.setup());
 
     const auto velocityRescalingThermostat =
@@ -241,7 +241,7 @@ TEST_F(TestSetup, setupThermostatLangevin)
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     settings::ThermostatSettings::setThermostatType("langevin");
-    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300));
     EXPECT_NO_THROW(thermostatSetup.setup());
 
     // needed because otherwise subsequent executions of .setup() will fail
@@ -259,7 +259,9 @@ TEST_F(TestSetup, setupThermostatLangevin)
         UNIVERSAL_GAS_CONSTANT * M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
     const auto sigma = std::sqrt(
         4.0 * langevinThermostat.getFriction() * conversionFactor *
-        settings::ThermostatSettings::getTargetTemperature() /
+        settings::ThermostatSettings::getTargetTemperature()
+            .quantity_from_zero()
+            .numerical_value_in(K) /
         settings::TimingsSettings::getTimeStep().numerical_value_in(fs)
     );
 
@@ -274,7 +276,7 @@ TEST_F(TestSetup, setupThermostatNhChain)
 
     settings::ThermostatSettings::setThermostatType("nh-chain");
     settings::ThermostatSettings::setNoseHooverChainLength(5);
-    settings::ThermostatSettings::setTargetTemperature(300);
+    settings::ThermostatSettings::setTargetTemperature(toTemperature(300));
     EXPECT_NO_THROW(thermostatSetup.setup());
 
     const auto noseHooverThermostat =

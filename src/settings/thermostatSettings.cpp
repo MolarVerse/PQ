@@ -163,7 +163,9 @@ namespace settings
      *
      * @param targetTemperature
      */
-    void ThermostatSettings::setTargetTemperature(double targetTemperature)
+    void ThermostatSettings::setTargetTemperature(
+        const Temperature& targetTemperature
+    )
     {
         _targetTemperature = targetTemperature;
         setTemperatureSet(true);
@@ -176,7 +178,7 @@ namespace settings
      * @param actualTargetTemperature
      */
     void ThermostatSettings::setActualTargetTemperature(
-        double actualTargetTemperature
+        const Temperature& actualTargetTemperature
     )
     {
         _actualTargetTemperature = actualTargetTemperature;
@@ -187,7 +189,9 @@ namespace settings
      *
      * @param startTemperature
      */
-    void ThermostatSettings::setStartTemperature(double startTemperature)
+    void ThermostatSettings::setStartTemperature(
+        const Temperature& startTemperature
+    )
     {
         _startTemperature = startTemperature;
         setStartTemperatureSet(true);
@@ -198,7 +202,9 @@ namespace settings
      *
      * @param endTemperature
      */
-    void ThermostatSettings::setEndTemperature(double endTemperature)
+    void ThermostatSettings::setEndTemperature(
+        const Temperature& endTemperature
+    )
     {
         _endTemperature = endTemperature;
         setEndTemperatureSet(true);
@@ -310,9 +316,9 @@ namespace settings
     /**
      * @brief get the target temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double ThermostatSettings::getTargetTemperature()
+    const Temperature& ThermostatSettings::getTargetTemperature()
     {
         return _targetTemperature;
     }
@@ -320,9 +326,9 @@ namespace settings
     /**
      * @brief get the actual target temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double ThermostatSettings::getActualTargetTemperature()
+    const Temperature& ThermostatSettings::getActualTargetTemperature()
     {
         return _actualTargetTemperature;
     }
@@ -330,9 +336,9 @@ namespace settings
     /**
      * @brief get the start temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double ThermostatSettings::getStartTemperature()
+    const Temperature& ThermostatSettings::getStartTemperature()
     {
         return _startTemperature;
     }
@@ -340,9 +346,12 @@ namespace settings
     /**
      * @brief get the end temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double ThermostatSettings::getEndTemperature() { return _endTemperature; }
+    const Temperature& ThermostatSettings::getEndTemperature()
+    {
+        return _endTemperature;
+    }
 
     /**
      * @brief get the relaxation time

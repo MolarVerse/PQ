@@ -35,6 +35,7 @@
 #include "moleculeType.hpp"
 #include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 
 /**
  * @namespace molsys
@@ -122,7 +123,7 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] double        calculateTemperature();
+        [[nodiscard]] Temperature   calculateTemperature();
         [[nodiscard]] double        calculateTotalForce() const;
         [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
         [[nodiscard]] double        calculateRMSForce() const;

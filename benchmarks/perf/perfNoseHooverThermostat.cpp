@@ -52,11 +52,11 @@ int main()
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto             physicalData      = physicalData::PhysicalData();
-    constexpr double targetTemperature = 300.0;
+    auto       physicalData      = physicalData::PhysicalData();
+    const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat = thermostat::NoseHooverThermostat(
-        mstd::units::point<K>(targetTemperature),
+        targetTemperature,
         std::vector<double>{0.1, 0.2, 0.3},
         std::vector<double>{0.0, 0.0, 0.0},
         1.0
