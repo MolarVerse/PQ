@@ -34,12 +34,17 @@
 #include <mstd/units.hpp>
 
 #include "mp-units/systems/isq/mechanics.h"
+#include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "vector3d.hpp"
 
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 using Time     = mstd::quantity<mstd::units::fs>;
 
-using Pressure        = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
+using Pressure = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
+using Pressure3D =
+    linalg::Vector3D<mstd::quantity<mstd::units::pressure[mstd::units::Pa]>>;
+using PressureTensor3D = linalg::StaticMatrix3x3<
+    mstd::quantity<mstd::units::pressure[mstd::units::Pa]>>;
 using Compressibility = mstd::quantity<
     mstd::units::compressibility[mstd::units::one / mstd::units::Pa]>;
 

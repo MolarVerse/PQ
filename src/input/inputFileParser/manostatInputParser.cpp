@@ -98,10 +98,11 @@ namespace input
             .name        = "pressure",
             .title       = "Pressure",
             .description = "Specifies the pressure used in the simulation",
+            .unit        = "bar",
         };
 
         const auto setValue = [this](double pressure)
-        { _manostatSettings->setTargetPressureByUser(pressure); };
+        { _manostatSettings->setTargetPressureByUser(pressure * bar); };
 
         const RangeValidator<double> validator{std::nullopt, std::nullopt};
 

@@ -91,7 +91,7 @@ void ManostatSettings::setFixedAxisByUser(FixedAxis fixedAxis)
  *
  * @param targetPressure
  */
-void ManostatSettings::setTargetPressureByUser(double targetPressure)
+void ManostatSettings::setTargetPressureByUser(const Pressure& targetPressure)
 {
     _targetPressure.setByUser(targetPressure);
 }
@@ -161,9 +161,9 @@ FixedAxis ManostatSettings::getFixedAxis() const { return _fixedAxis.get(); }
 /**
  * @brief get the target pressure
  *
- * @return double
+ * @return const Pressure&
  */
-double ManostatSettings::getTargetPressure() const
+const Pressure& ManostatSettings::getTargetPressure() const
 {
     return _targetPressure.get();
 }

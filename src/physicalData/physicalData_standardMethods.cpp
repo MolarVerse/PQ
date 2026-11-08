@@ -187,14 +187,17 @@ namespace physicalData
      *
      * @param pressure
      */
-    void PhysicalData::setPressure(double pressure) { _pressure = pressure; }
+    void PhysicalData::setPressure(const Pressure& pressure)
+    {
+        _pressure = pressure;
+    }
 
     /**
      * @brief set the coupled pressure
      *
      * @param coupledPressure
      */
-    void PhysicalData::setCoupledPressure(double coupledPressure)
+    void PhysicalData::setCoupledPressure(const Pressure& coupledPressure)
     {
         _coupledPressure = coupledPressure;
     }
@@ -476,16 +479,19 @@ namespace physicalData
     /**
      * @brief get the pressure
      *
-     * @return double
+     * @return const Pressure&
      */
-    double PhysicalData::getPressure() const { return _pressure; }
+    const Pressure& PhysicalData::getPressure() const { return _pressure; }
 
     /**
      * @brief get the coupled pressure
      *
-     * @return double
+     * @return const Pressure&
      */
-    double PhysicalData::getCoupledPressure() const { return _coupledPressure; }
+    const Pressure& PhysicalData::getCoupledPressure() const
+    {
+        return _coupledPressure;
+    }
 
     /**
      * @brief get the kinetic energy

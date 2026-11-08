@@ -31,10 +31,25 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
+#include "vector3d.hpp"
 
 namespace manostat
 {
+    /**
+     * @brief calculate the pre-factor for Berendsen manostat scaling
+     *
+     * @return Compressibility
+     */
+    Compressibility BerendsenManostat::_calcPreFactor() const
+    {
+        const auto compressibility = _getSettings().getCompressibility();
+        const auto tau             = _getSettings().getTau();
+        const auto timeStep        = settings::TimingsSettings::getTimeStep();
+
+        return compressibility * timeStep / tau;
+    }
 
     /**
      * @brief apply Berendsen manostat for NPT ensemble
@@ -97,16 +112,11 @@ namespace manostat
         if (fixedAxis == FixedAxis::ALL)
             return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-        const auto tau              = _getSettings().getTau();
-        const auto timeStep         = settings::TimingsSettings::getTimeStep();
-        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
-        const auto compressibility =
-            _getSettings().getCompressibility().numerical_value_in(per_bar);
-        const auto preFactor = compressibility * tauTimeStepRatio;
+        const auto preFactor = _calcPreFactor();
         const auto p_xyz     = diagonal(_getPressureTensor());
 
-        size_t numFree = 0;
-        double p_avg   = 0.0;
+        size_t   numFree = 0;
+        Pressure p_avg{0.0 * Pa};
 
         for (size_t axis = 0; axis < 3; ++axis)
         {
@@ -121,13 +131,10 @@ namespace manostat
 
         const auto deltaP = targetPressure - p_avg;
 
-        double mu_scaled = 1.0;
-        if (numFree == 3)
-            mu_scaled = ::cbrt(1.0 - (preFactor * deltaP));
-        else if (numFree == 2)
-            mu_scaled = ::sqrt(1.0 - (preFactor * deltaP));
-        else if (numFree == 1)
-            mu_scaled = 1.0 - (preFactor * deltaP);
+        double mu_scaled = ::pow(
+            1.0 - (preFactor * deltaP).numerical_value_in(one),
+            1.0 / static_cast<double>(numFree)
+        );
 
         linalg::Vec3D mu = {1.0, 1.0, 1.0};
         for (size_t i = 0; i < 3; ++i)
@@ -160,24 +167,23 @@ namespace manostat
         const auto p_xy            = (p_x + p_y) / 2.0;
         const auto p_z             = p_xyz[anisotropicAxis];
 
-        const auto tau              = _getSettings().getTau();
-        const auto timeStep         = settings::TimingsSettings::getTimeStep();
-        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto dimension =
             3.0 -
             std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
-        const auto preFactor =
-            _getSettings().getCompressibility().numerical_value_in(per_bar) *
-            tauTimeStepRatio / dimension;
+        const auto preFactor = _calcPreFactor() / dimension;
 
         const auto targetPressure = _getSettings().getTargetPressure();
 
-        const double mu_xy =
-            ::sqrt(1.0 - (2.0 * preFactor * (targetPressure - p_xy)));
+        const double mu_xy = ::sqrt(
+            1.0 -
+            (2.0 * preFactor * (targetPressure - p_xy)).numerical_value_in(one)
+        );
         const double mu_z =
             isAxisFixed(_getSettings().getFixedAxis(), anisotropicAxis)
                 ? 1.0
-                : (1.0 - (preFactor * (targetPressure - p_z)));
+                : (1.0 -
+                   (preFactor * (targetPressure - p_z)).numerical_value_in(one)
+                  );
 
         linalg::Vec3D mu;
 
@@ -199,26 +205,23 @@ namespace manostat
      */
     linalg::tensor3D AnisotropicBerendsenManostat::calculateMu() const
     {
-        const auto tau              = _getSettings().getTau();
-        const auto timeStep         = settings::TimingsSettings::getTimeStep();
-        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
-        const auto pxyz             = diagonal(_getPressureTensor());
-        const auto dimension =
-            3.0 -
-            std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
-        const auto preFactor =
-            _getSettings().getCompressibility().numerical_value_in(per_bar) *
-            tauTimeStepRatio / dimension;
+        const auto &settings       = _getSettings();
+        const auto  pxyz           = diagonal(_getPressureTensor());
+        const auto  targetPressure = settings.getTargetPressure();
+        const auto  fixedAxis      = settings.getFixedAxis();
+        const auto  dimension =
+            3.0 - std::popcount(static_cast<unsigned>(fixedAxis));
+        const auto preFactor = _calcPreFactor() / dimension;
 
-        auto mu = 1.0 - preFactor * (_getSettings().getTargetPressure() - pxyz);
+        auto mu = 1.0 - ((Pressure3D{targetPressure} - pxyz) * preFactor);
 
         for (size_t i = 0; i < 3; ++i)
         {
-            if (isAxisFixed(_getSettings().getFixedAxis(), i))
+            if (isAxisFixed(fixedAxis, i))
                 mu[i] = 1.0;
         }
 
-        return linalg::diagonalMatrix(mu);
+        return linalg::diagonalMatrix(mu.numerical_value_in(one));
     }
 
     /**
@@ -232,24 +235,20 @@ namespace manostat
      */
     linalg::tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
     {
-        const auto tau              = _getSettings().getTau();
-        const auto timeStep         = settings::TimingsSettings::getTimeStep();
-        const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto pTarget =
             linalg::diagonalMatrix(_getSettings().getTargetPressure());
-        const auto dimension =
-            3.0 -
-            std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
-        const auto preFactor =
-            _getSettings().getCompressibility().numerical_value_in(per_bar) *
-            tauTimeStepRatio / dimension;
+        const auto &fixedAxis = _getSettings().getFixedAxis();
+        const auto  dimension =
+            3.0 - std::popcount(static_cast<unsigned>(fixedAxis));
+        const auto preFactor = _calcPreFactor() / dimension;
         const auto kronecker = linalg::kroneckerDeltaMatrix<double>();
 
-        auto mu = kronecker - (preFactor * (pTarget - _getPressureTensor()));
+        auto mu = kronecker - ((pTarget - _getPressureTensor()) * preFactor)
+                                  .numerical_value_in(one);
 
         for (size_t k = 0; k < 3; ++k)
         {
-            if (isAxisFixed(_getSettings().getFixedAxis(), k))
+            if (isAxisFixed(fixedAxis, k))
             {
                 for (size_t i = 0; i < 3; ++i)
                 {

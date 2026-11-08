@@ -46,13 +46,18 @@ namespace setup
      * calculations
      * @param qmSettings The QM settings used to configure the QM runner, which
      * may include method-specific parameters and computational options
+     * @param maceSettings The Mace settings used to configure the MACE runner,
+     * which may include model-specific parameters and computational options
      *
      */
     QMSetup::QMSetup(
         engine::QMCapableEngine &qmCapableEngine,
-        const QMSettings        &qmSettings
+        const QMSettings        &qmSettings,
+        const MaceSettings      &maceSettings
     )
-        : _qmCapableEngine(qmCapableEngine), _qmSettings(qmSettings)
+        : _qmCapableEngine(qmCapableEngine),
+          _qmSettings(qmSettings),
+          _maceSettings(maceSettings)
     {
     }
 
@@ -77,7 +82,11 @@ namespace setup
         if (auto *qmCapableEngine =
                 dynamic_cast<engine::QMCapableEngine *>(&engine))
         {
-            QMSetup qmSetup(*qmCapableEngine, engine.getSettings().qmSettings);
+            QMSetup qmSetup(
+                *qmCapableEngine,
+                engine.getSettings().qmSettings,
+                engine.getSettings().maceSettings
+            );
             qmSetup.setup(references);
         }
         else
@@ -112,7 +121,10 @@ namespace setup
      * @brief setup the "QM" method of the system
      *
      */
-    void QMSetup::setupQMMethod() { _qmCapableEngine.setQMRunner(_qmSettings); }
+    void QMSetup::setupQMMethod()
+    {
+        _qmCapableEngine.setQMRunner(_qmSettings, _maceSettings);
+    }
 
     /**
      * @brief setup the ASE DFTB+ method of the system
@@ -301,12 +313,12 @@ namespace setup
 
         if (qmMethod == MACE)
         {
-            const auto modelType = QMSettings::getMaceModelType();
-            const auto modelSize = QMSettings::getMaceModel();
-            const auto modelPath = QMSettings::getMaceModelPath();
+            const auto modelType = _maceSettings->getMaceModelType();
+            const auto modelSize = _maceSettings->getMaceModel();
+            const auto modelPath = _maceSettings->getMaceModelPath();
             const auto floatingPointStr =
                 settings::GeneralSettings::getFloatingPointPybindString();
-            const auto        maceMode = QMSettings::getMaceMode();
+            const auto        maceMode = _maceSettings->getMaceMode();
             const auto *const useDisp =
                 QMSettings::useDispersionCorr() ? "on" : "off";
 
