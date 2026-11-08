@@ -346,10 +346,40 @@ namespace molsys
     }
 
     /**
+     * @brief builds the table that makes findMoleculeByGlobalAtomIndex a
+     * binary search instead of a walk over all molecules
+     *
+     * @details Reading a topology file looks up up to four atoms per line, so
+     * with the walk its cost grew with atoms times molecules. The table is not
+     * kept up to date: build it when the molecules are final and clear it
+     * afterwards. A table that does not fit the number of molecules is
+     * ignored.
+     */
+    void SimulationBox::buildAtomIndexLookup()
+    {
+        _atomIndexOffsets.clear();
+        _atomIndexOffsets.reserve(_molecules.size() + 1);
+        _atomIndexOffsets.push_back(0);
+
+        for (const auto& molecule : _molecules)
+            _atomIndexOffsets.push_back(
+                _atomIndexOffsets.back() + molecule.getNumberOfAtoms()
+            );
+    }
+
+    /**
+     * @brief drops the table of buildAtomIndexLookup
+     */
+    void SimulationBox::clearAtomIndexLookup() { _atomIndexOffsets.clear(); }
+
+    /**
      * @brief find molecule by atom index
      *
      * @details return a pair of a pointer to the molecule and the index of the
-     * atom in the molecule
+     * atom in the molecule. The global atom index starts at 1. With the table
+     * of buildAtomIndexLookup this is a binary search, otherwise a walk over
+     * the molecules; an index that is not found (0 or too large) is always
+     * reported by the walk.
      *
      * @param atomIndex
      * @return pair<Molecule *, AtomIndex>
@@ -357,6 +387,23 @@ namespace molsys
     std::pair<Molecule*, AtomIndex> SimulationBox::
         findMoleculeByGlobalAtomIndex(const size_t atomIndex)
     {
+        if (_atomIndexOffsets.size() == _molecules.size() + 1 &&
+            atomIndex > 0 && atomIndex <= _atomIndexOffsets.back())
+        {
+            // first molecule whose cumulative atom count reaches the index
+            const auto next = std::ranges::lower_bound(
+                _atomIndexOffsets.begin() + 1,
+                _atomIndexOffsets.end(),
+                atomIndex
+            );
+            const auto moleculeIndex = static_cast<size_t>(
+                std::distance(_atomIndexOffsets.begin() + 1, next)
+            );
+            const auto index = atomIndex - _atomIndexOffsets[moleculeIndex] - 1;
+
+            return std::make_pair(&_molecules[moleculeIndex], AtomIndex{index});
+        }
+
         size_t sum = 0;
 
         for (auto& molecule : _molecules)

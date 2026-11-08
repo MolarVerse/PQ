@@ -37,10 +37,38 @@
 #include "improperDihedralSection.hpp"
 #include "jCouplingSection.hpp"
 #include "shakeSection.hpp"
+#include "simulationBox.hpp"
 #include "stringUtilities.hpp"
 
 namespace input::topology
 {
+    namespace
+    {
+        /**
+         * @brief builds the atom index lookup of the simulation box and clears
+         * it again when the topology file is read (or reading throws)
+         */
+        class AtomIndexLookupGuard
+        {
+           private:
+            molsys::SimulationBox &_simulationBox;
+
+           public:
+            explicit AtomIndexLookupGuard(molsys::SimulationBox &simulationBox)
+                : _simulationBox(simulationBox)
+            {
+                _simulationBox.buildAtomIndexLookup();
+            }
+
+            ~AtomIndexLookupGuard() { _simulationBox.clearAtomIndexLookup(); }
+
+            AtomIndexLookupGuard(const AtomIndexLookupGuard &)       = delete;
+            AtomIndexLookupGuard &operator=(const AtomIndexLookupGuard &
+            )                                                        = delete;
+            AtomIndexLookupGuard(AtomIndexLookupGuard &&)            = delete;
+            AtomIndexLookupGuard &operator=(AtomIndexLookupGuard &&) = delete;
+        };
+    }   // namespace
 
     /**
      * @brief constructor
@@ -90,6 +118,10 @@ namespace input::topology
             throw exc::InputFileException(
                 "Topology file needed for requested simulation setup"
             );
+
+        // the molecules do not change while the topology is read: every atom
+        // index of the file is found by a binary search instead of a walk
+        const AtomIndexLookupGuard lookup(_engine.getSimulationBox());
 
         while (getline(_fp, line))
         {

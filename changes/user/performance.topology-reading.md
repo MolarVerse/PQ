@@ -1,0 +1,1 @@
+- Reading a topology file is much faster for large systems: the time grew with atoms times molecules and is now linear in the number of atoms (reading the topology of 1600 water molecules takes about a third of the instructions).

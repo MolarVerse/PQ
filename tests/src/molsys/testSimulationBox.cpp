@@ -28,6 +28,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "exceptions.hpp"
@@ -152,6 +153,118 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
         exc::UserInputException,
         "Atom index 0 out of range - total number of atoms: 3"
     );
+}
+
+/**
+ * @brief the lookup table gives the same molecule and atom as the walk
+ *
+ * @details molecules of 2, 0, 3 and 1 atoms (an empty molecule is the awkward
+ * case: the walk takes the first molecule whose count reaches the index)
+ */
+TEST(TestSimulationBoxAtomIndexLookup, sameResultAsTheWalk)
+{
+    molsys::SimulationBox box;
+
+    for (const size_t nAtoms : {2UL, 0UL, 3UL, 1UL})
+    {
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+    }
+
+    constexpr size_t totalAtoms = 6;
+
+    std::vector<std::pair<const molsys::Molecule *, AtomIndex>> walk;
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        walk.emplace_back(molecule, atom);
+    }
+
+    box.buildAtomIndexLookup();
+
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        EXPECT_EQ(molecule, walk[index - 1].first) << "atom " << index;
+        EXPECT_EQ(atom, walk[index - 1].second) << "atom " << index;
+    }
+
+    EXPECT_EQ(&box.getMolecules()[2], walk[2].first);
+    EXPECT_EQ(AtomIndex{0}, walk[2].second);
+}
+
+/**
+ * @brief with the lookup table the errors are the same
+ */
+TEST(TestSimulationBoxAtomIndexLookup, sameErrors)
+{
+    molsys::SimulationBox box;
+
+    for (const size_t nAtoms : {3UL, 2UL})
+    {
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+    }
+
+    box.buildAtomIndexLookup();
+
+    EXPECT_THROW_MSG(
+        [[maybe_unused]] const auto dummy =
+            box.findMoleculeByGlobalAtomIndex(6),
+        exc::UserInputException,
+        "Atom index 6 out of range - total number of atoms: 5"
+    );
+    EXPECT_THROW_MSG(
+        [[maybe_unused]] const auto dummy =
+            box.findMoleculeByGlobalAtomIndex(0),
+        exc::UserInputException,
+        "Atom index 0 out of range - total number of atoms: 3"
+    );
+}
+
+/**
+ * @brief a table that does not fit the molecules is not used, and the table
+ * is gone after clearAtomIndexLookup
+ */
+TEST(TestSimulationBoxAtomIndexLookup, staleOrClearedTableIsIgnored)
+{
+    molsys::SimulationBox box;
+
+    const auto addMolecule = [&box](const size_t nAtoms)
+    {
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+    };
+
+    addMolecule(2);
+    box.buildAtomIndexLookup();
+    addMolecule(2);   // the table was built for one molecule
+
+    const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(4);
+    EXPECT_EQ(&box.getMolecules()[1], molecule);
+    EXPECT_EQ(AtomIndex{1}, atom);
+
+    box.buildAtomIndexLookup();
+    box.clearAtomIndexLookup();
+
+    const auto [molecule2, atom2] = box.findMoleculeByGlobalAtomIndex(3);
+    EXPECT_EQ(&box.getMolecules()[1], molecule2);
+    EXPECT_EQ(AtomIndex{0}, atom2);
 }
 
 /**
