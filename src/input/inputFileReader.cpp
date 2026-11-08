@@ -156,7 +156,8 @@ namespace input
                 resolveBuiltInSlakosPath,
                 settings.referenceSettings,
                 settings.qmSettings,
-                settings.maceSettings
+                settings.maceSettings,
+                settings.fennolSettings
             )
         );
 

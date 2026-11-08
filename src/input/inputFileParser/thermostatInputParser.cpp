@@ -34,6 +34,7 @@
 #include "rangeValidator.hpp"
 #include "referenceSettings.hpp"
 #include "thermostatSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace input
@@ -114,13 +115,19 @@ namespace input
     void ThermostatInputParser::addTemperatureKey()
     {
         const auto metaData = KeyMetadata{
-            .name        = "temp",
-            .title       = "Target Temperature",
-            .description = "Specifies the target temperature for the simulation"
+            .name  = "temp",
+            .title = "Target Temperature",
+            .description =
+                "Specifies the target temperature for the simulation",
+            .unit = "K"
         };
 
         const auto setValue = [&](double value)
-        { settings::ThermostatSettings::setTargetTemperature(value); };
+        {
+            settings::ThermostatSettings::setTargetTemperature(
+                toTemperature(value)
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -142,7 +149,11 @@ namespace input
         };
 
         const auto setValue = [&](double value)
-        { settings::ThermostatSettings::setStartTemperature(value); };
+        {
+            settings::ThermostatSettings::setStartTemperature(
+                toTemperature(value)
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -164,7 +175,10 @@ namespace input
         };
 
         const auto setValue = [&](double value)
-        { settings::ThermostatSettings::setEndTemperature(value); };
+        {
+            settings::ThermostatSettings::setEndTemperature(toTemperature(value)
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

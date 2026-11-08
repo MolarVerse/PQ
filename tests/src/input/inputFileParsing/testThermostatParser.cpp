@@ -52,7 +52,10 @@ TEST_F(TestInputFileReader, testParseTemperature)
     parseFunc(lineElements, 0);
 
     EXPECT_EQ(settings::ThermostatSettings::isTemperatureSet(), true);
-    EXPECT_EQ(settings::ThermostatSettings::getTargetTemperature(), 300.0);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getTargetTemperature(),
+        toTemperature(300.0)
+    );
 
     _clearParser(parser);
 
@@ -422,7 +425,10 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
 
     std::vector<std::string> lineElements = {"start_temp", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getStartTemperature(), 10);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getStartTemperature(),
+        toTemperature(10)
+    );
 
     _clearParser(parser);
 
@@ -457,7 +463,10 @@ TEST_F(TestInputFileReader, testParseEndTemperature)
 
     std::vector<std::string> lineElements = {"end_temp", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::ThermostatSettings::getEndTemperature(), 10);
+    EXPECT_EQ(
+        settings::ThermostatSettings::getEndTemperature(),
+        toTemperature(10)
+    );
 
     _clearParser(parser);
 

@@ -28,7 +28,6 @@
 #include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
 #include "turbomoleRunner.hpp"
@@ -50,13 +49,16 @@ namespace engine
      * the QM runner
      * @param maceSettings The MaceSettings object containing the configuration
      * for the MACE runner
+     * @param fennolSettings The FennolSettings object containing the
+     * configuration for the Fennol runner
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the created QM
      * runner
      * @throws InputFileException if the method is not supported
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
-        const QMSettings   &qmSettings,
-        const MaceSettings &maceSettings
+        const QMSettings     &qmSettings,
+        const MaceSettings   &maceSettings,
+        const FennolSettings &fennolSettings
     )
     {
         using enum QMMethod;
@@ -77,7 +79,8 @@ namespace engine
 
             case MACE: return createAseMaceRunner(qmSettings, maceSettings);
 
-            case FENNOL: return createAseFennolRunner(qmSettings);
+            case FENNOL:
+                return createAseFennolRunner(qmSettings, fennolSettings);
 
             case NONE:
                 throw exc::InputFileException(
@@ -186,26 +189,19 @@ namespace engine
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseFennolRunner(
-        const QMSettings &settings
+        const QMSettings     &qmSettings,
+        const FennolSettings &fennolSettings
     )
     {
 #ifdef WITH_ASE
-        using enum FPType;
-
-        const auto modelPath        = QMSettings::getFennolModelPath();
-        const auto gpuPreprocessing = QMSettings::useGPUPreprocessing();
-        const bool useFloat64 =
-            settings::GeneralSettings::getFloatingPointType() == DOUBLE;
-
         return std::make_shared<QM::AseFennolRunner>(
-            settings,
-            modelPath,
-            gpuPreprocessing,
-            useFloat64
+            qmSettings,
+            fennolSettings
         );
 #else
         // to silence unused parameter warnings when ASE is not enabled
-        (void) settings;
+        (void) qmSettings;
+        (void) fennolSettings;
         throw exc::CompileTimeException(
             "The ASE FeNNol QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "

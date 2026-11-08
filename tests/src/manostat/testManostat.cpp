@@ -403,7 +403,8 @@ TEST_F(
 )
 {
     setupCutMolecule(*_box, *_data);
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
 
     _settings->manostatSettings.setTargetPressureByUser(
         -3.0 * ::log(0.98) * bar
@@ -422,7 +423,8 @@ TEST_F(
 )
 {
     setupCutMolecule(*_box, *_data);
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -505,7 +507,8 @@ TEST_F(TestManostat, applyNoneManostat)
 
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->manostatSettings.setTargetPressureByUser(7.0 * bar);
@@ -528,7 +531,8 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 {
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
@@ -722,7 +726,8 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 
 TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // 1 fixed axis: Z
@@ -787,7 +792,8 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
@@ -811,7 +817,8 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
@@ -858,7 +865,8 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
 
 TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    settings::ThermostatSettings::setActualTargetTemperature(toTemperature(0.0)
+    );
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // xz isotropic (axes 0, 2), y anisotropic (axis 1) with Y fixed

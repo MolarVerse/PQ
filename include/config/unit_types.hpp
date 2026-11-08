@@ -68,4 +68,10 @@ static inline Temperature scaleAbsTemp(Temperature absTemp, double scalar)
 {
     return Temperature{absTemp.quantity_from_zero() * scalar};
 }
+
+[[nodiscard]]
+static inline Quantity tempRatio(Temperature absTemp, Temperature refTemp)
+{
+    return absTemp.quantity_from_zero() / refTemp.quantity_from_zero();
+}
 #endif   // CONFIG__UNIT_TYPES_HPP

@@ -29,6 +29,7 @@
 
 class QMSettings;
 class MaceSettings;
+class FennolSettings;
 
 namespace engine
 {
@@ -47,8 +48,9 @@ namespace engine
        public:
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createQMRunner(
-            const QMSettings   &qmSettings,
-            const MaceSettings &maceSettings
+            const QMSettings     &qmSettings,
+            const MaceSettings   &maceSettings,
+            const FennolSettings &fennolSettings
         );
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner(
@@ -56,7 +58,8 @@ namespace engine
         );
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createAseFennolRunner(
-            const QMSettings &settings
+            const QMSettings     &qmSettings,
+            const FennolSettings &fennolSettings
         );
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createAseMaceRunner(

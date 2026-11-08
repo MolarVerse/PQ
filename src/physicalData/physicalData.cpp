@@ -29,7 +29,6 @@
 #include "constants/internalConversionFactors.hpp"
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace physicalData
 {
@@ -318,8 +317,7 @@ namespace physicalData
         molsys::SimulationBox& simulationBox
     )
     {
-        _temperature =
-            mstd::units::point<K>(simulationBox.calculateTemperature());
+        _temperature = simulationBox.calculateTemperature();
     }
 
     /**

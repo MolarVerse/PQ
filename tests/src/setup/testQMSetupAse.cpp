@@ -253,9 +253,15 @@ class FENNIXCalculator:
     modules["fennol.ase"] = fennolAseModule;
 
     _settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+    _settings.fennolSettings.setFennolModelPath("model.fnx");
+    _settings.fennolSettings.setUseGPUPreprocessing(false);
+    settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+
     ASSERT_NO_THROW({
-        QM::AseFennolRunner
-            runner(_settings.qmSettings, "model.fnx", false, true);
+        QM::AseFennolRunner runner(
+            _settings.qmSettings,
+            _settings.fennolSettings
+        );
     });
 
     auto lastKwargs = fennolAseModule.attr("FENNIXCalculator")

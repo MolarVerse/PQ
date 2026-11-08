@@ -123,7 +123,7 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] double        calculateTemperature();
+        [[nodiscard]] Temperature   calculateTemperature();
         [[nodiscard]] double        calculateTotalForce() const;
         [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
         [[nodiscard]] double        calculateRMSForce() const;

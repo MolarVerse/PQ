@@ -73,6 +73,27 @@ class MaceSettings
 };
 
 /**
+ * @brief FennolSettings
+ *
+ * @details stores all information about the Fennol model and GPU preprocessing
+ * settings
+ *
+ */
+class FennolSettings
+{
+   private:
+    Setting<std::string> _fennolModelPath{""};
+    Setting<bool>        _useGPUPreprocessing{true};
+
+   public:
+    void setFennolModelPath(const std::string &path);
+    void setUseGPUPreprocessing(bool use);
+
+    [[nodiscard]] const std::string &getFennolModelPath() const;
+    [[nodiscard]] bool               useGPUPreprocessing() const;
+};
+
+/**
  * @brief QMSettings
  *
  * @details stores all information about the external qm runner
@@ -88,14 +109,12 @@ class QMSettings
     static inline std::string _qmScript;
     static inline std::string _qmScriptFullPath;
     static inline std::string _slakosPath;
-    static inline std::string _fennolModelPath;
 
     static inline bool _useDispersionCorrection = false;
     static inline bool _removeNetForce          = false;
     static inline bool _useThirdOrderDftb       = false;
     static inline bool _isThirdOrderDftbSet     = false;
     static inline bool _isHubbardDerivsSet      = false;
-    static inline bool _useGPUPreprocessing     = true;
 
     static inline std::unordered_map<std::string, double> _hubbardDerivs;
 
@@ -131,9 +150,6 @@ class QMSettings
 
     static void setXtbMethod(XtbMethod method);
 
-    static void setFennolModelPath(const std::string_view &path);
-    static void setUseGPUPreprocessing(bool use);
-
     static void setQMLoopTimeLimit(double time);
 
     /***************************
@@ -159,13 +175,7 @@ class QMSettings
 
     [[nodiscard]] static XtbMethod getXtbMethod();
 
-    [[nodiscard]] static std::string getFennolModelPath();
-    [[nodiscard]] static bool        useGPUPreprocessing();
-
     [[nodiscard]] static double getQMLoopTimeLimit();
-
-   private:
-    void _finalizeMace();
 };
 
 #endif   // SETTINGS__QM_SETTINGS_HPP

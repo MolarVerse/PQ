@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -51,7 +53,10 @@ int main()
     double sink = 0.0;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        sink += box.calculateTemperature();
+        sink +=
+            box.calculateTemperature().quantity_from_zero().numerical_value_in(
+                K
+            );
         sink += box.calculateMomentum()[0];
         sink += box.calculateAngularMomentum({0.0, 0.0, 0.0})[0];
         sink += box.calculateTotalForce();

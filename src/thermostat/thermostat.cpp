@@ -27,7 +27,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
-#include "units.hpp"
 
 namespace thermostat
 {
@@ -99,7 +98,7 @@ namespace thermostat
                 _targetTemperature + _temperatureIncrease;
             setTargetTemperature(newTargetTemperature);
             settings::ThermostatSettings::setActualTargetTemperature(
-                _targetTemperature.quantity_from_zero().numerical_value_in(K)
+                _targetTemperature
             );
         }
 

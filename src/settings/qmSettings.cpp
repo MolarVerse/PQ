@@ -331,18 +331,18 @@ void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
  *
  * @param path
  */
-void QMSettings::setFennolModelPath(const std::string_view &path)
+void FennolSettings::setFennolModelPath(const std::string &path)
 {
-    _fennolModelPath = path;
+    _fennolModelPath.setByUser(path);
 }
 
 /**
  * @brief sets if the GPU pre-processing should be enabled for FeNNol
  *
  */
-void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
+void FennolSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
 {
-    _useGPUPreprocessing = useGPUPreprocessing;
+    _useGPUPreprocessing.setByUser(useGPUPreprocessing);
 }
 
 /***************************
@@ -524,13 +524,19 @@ double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
 /**
  * @brief returns the FeNNol model path
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
+const std::string &FennolSettings::getFennolModelPath() const
+{
+    return _fennolModelPath.get();
+}
 
 /**
  * @brief returns if GPU pre-processing should be used for FeNNol
  *
  * @return bool
  */
-bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }
+bool FennolSettings::useGPUPreprocessing() const
+{
+    return _useGPUPreprocessing.get();
+}

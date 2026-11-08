@@ -749,7 +749,7 @@ namespace molsys
      * @brief calculate temperature of simulationBox
      *
      */
-    double SimulationBox::calculateTemperature()
+    Temperature SimulationBox::calculateTemperature()
     {
         auto temperature = 0.0;
 
@@ -761,7 +761,7 @@ namespace molsys
         temperature *=
             TEMPERATURE_FACTOR / static_cast<double>(_degreesOfFreedom);
 
-        return temperature;
+        return toTemperature(temperature);
     }
 
     /**

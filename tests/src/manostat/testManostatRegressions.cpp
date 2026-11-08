@@ -73,7 +73,9 @@ namespace
                 0.03 * per_bar
             );
             settings::TimingsSettings::setTimeStep(1.0 * fs);
-            settings::ThermostatSettings::setActualTargetTemperature(0.0);
+            settings::ThermostatSettings::setActualTargetTemperature(
+                toTemperature(0.0)
+            );
             settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
             _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
             _data.setVirial(linalg::tensor3D{0.0});
@@ -373,7 +375,7 @@ namespace
 
 TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
 {
-    constexpr auto temperature     = 300.0;
+    const auto     temperature{toTemperature(300.0)};
     constexpr auto tau             = 1e8;
     constexpr auto compressibility = 4.591e-5;
     settings::ThermostatSettings::setActualTargetTemperature(temperature);
@@ -405,9 +407,10 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
          std::vector<manostat::Manostat*>{&semi, &aniso, &full, &fixed})
         coupling->calculatePressure(_box, _data);
 
-    const auto noiseFactor = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL * temperature *
-                             compressibility * PRESSURE_FACTOR /
-                             (3.0 * tau * _box.getVolume());
+    const auto noiseFactor =
+        BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL *
+        temperature.quantity_from_zero().numerical_value_in(K) *
+        compressibility * PRESSURE_FACTOR / (3.0 * tau * _box.getVolume());
     const auto      lengthSigma = std::sqrt(2.0 * noiseFactor);
     const auto      shearSigma  = std::sqrt(4.0 * noiseFactor);
     const auto      volumeSigma = std::sqrt(6.0 * noiseFactor);
@@ -486,8 +489,8 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
 
     EXPECT_NEAR(_data.getKineticEnergy() / expectedEnergy, 1.0, 1e-12);
     EXPECT_NEAR(
-        _data.getTemperature().quantity_from_zero().numerical_value_in(K) /
-            _box.calculateTemperature(),
+        tempRatio(_data.getTemperature(), _box.calculateTemperature())
+            .numerical_value_in(one),
         1.0,
         1e-12
     );

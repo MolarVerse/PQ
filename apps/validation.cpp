@@ -397,7 +397,10 @@ namespace
 
         if (method == QMMethod::FENNOL)
         {
-            requireFile(QMSettings::getFennolModelPath(), "FeNNol model file");
+            requireFile(
+                settings.fennolSettings.getFennolModelPath(),
+                "FeNNol model file"
+            );
         }
 
         if (method == QMMethod::MACE &&

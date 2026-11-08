@@ -20,7 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <algorithm>
 #include <cmath>
 #include <format>
 
@@ -38,6 +37,7 @@
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace input
@@ -293,25 +293,25 @@ namespace input
 
         if (thermostatType == ThermostatType::LANGEVIN)
         {
-            auto maxTemperature = 0.0;
+            Temperature maxTemperature = Temperature::zero();
 
             if (targetTempDefined)
             {
-                maxTemperature = std::max(
+                maxTemperature = mstd::max(
                     maxTemperature,
                     settings::ThermostatSettings::getTargetTemperature()
                 );
             }
             if (startTempDefined)
             {
-                maxTemperature = std::max(
+                maxTemperature = mstd::max(
                     maxTemperature,
                     settings::ThermostatSettings::getStartTemperature()
                 );
             }
             if (endTempDefined)
             {
-                maxTemperature = std::max(
+                maxTemperature = mstd::max(
                     maxTemperature,
                     settings::ThermostatSettings::getEndTemperature()
                 );
@@ -322,7 +322,8 @@ namespace input
                 UNIVERSAL_GAS_CONSTANT * unitConversion;
             const auto sigmaSquared =
                 4.0 * settings::ThermostatSettings::getFriction() *
-                conversionFactor * maxTemperature /
+                conversionFactor *
+                maxTemperature.quantity_from_zero().numerical_value_in(K) /
                 settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
 
             if (!std::isfinite(sigmaSquared))
@@ -337,19 +338,22 @@ namespace input
         if (thermostatType == ThermostatType::NOSE_HOOVER)
         {
             if (targetTempDefined &&
-                settings::ThermostatSettings::getTargetTemperature() <= 0.0)
+                settings::ThermostatSettings::getTargetTemperature() <=
+                    Temperature::zero())
                 throw exc::InputFileException(
                     "Nose-Hoover target temperature must be greater than zero"
                 );
 
             if (endTempDefined &&
-                settings::ThermostatSettings::getEndTemperature() <= 0.0)
+                settings::ThermostatSettings::getEndTemperature() <=
+                    Temperature::zero())
                 throw exc::InputFileException(
                     "Nose-Hoover end temperature must be greater than zero"
                 );
 
             if (startTempDefined &&
-                settings::ThermostatSettings::getStartTemperature() <= 0.0)
+                settings::ThermostatSettings::getStartTemperature() <=
+                    Temperature::zero())
                 throw exc::InputFileException(
                     "Nose-Hoover start temperature must be greater than zero"
                 );
