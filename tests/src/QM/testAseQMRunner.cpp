@@ -28,7 +28,9 @@
 #include <memory>
 
 #include "aseFennolRunner.hpp"
+#include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
@@ -116,29 +118,36 @@ class AseQMRunnerTest : public ::testing::Test
         molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
         _simulationBox.setBox(box, false);
 
-        _timeLimit = settings::QMSettings::getQMLoopTimeLimit();
+        _timeLimit = QMSettings::getQMLoopTimeLimit();
     }
 
-    void TearDown() override
-    {
-        settings::QMSettings::setQMLoopTimeLimit(_timeLimit);
-    }
+    void TearDown() override { QMSettings::setQMLoopTimeLimit(_timeLimit); }
 
-    static QM::AseFennolRunner _runner(const double delay)
+    static QM::AseFennolRunner _runner(
+        const QMSettings &settings,
+        const double      delay
+    )
     {
         pybind11::module_::import("sys")
             .attr("modules")["ase.atoms"]
             .attr("FENNIXCalculator")
             .attr("delay") = delay;
 
-        return QM::AseFennolRunner{"model.fnx", false, true};
+        FennolSettings fennolSettings;
+        fennolSettings.setFennolModelPathByUser("model.fnx");
+        fennolSettings.setUseGPUPreprocessingByUser(false);
+        settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+
+        return QM::AseFennolRunner{settings, fennolSettings};
     }
 };
 
 TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 {
-    settings::QMSettings::setQMLoopTimeLimit(0.5);
-    auto runner = AseQMRunnerTest::_runner(10.0);
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::FENNOL);
+    QMSettings::setQMLoopTimeLimit(0.5);
+    auto runner = AseQMRunnerTest::_runner(settings, 10.0);
 
     const auto start = std::chrono::steady_clock::now();
 
@@ -158,17 +167,19 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     );
 
     // the interpreter is usable again
-    settings::QMSettings::setQMLoopTimeLimit(0.0);
+    QMSettings::setQMLoopTimeLimit(0.0);
     EXPECT_NO_THROW(
-        AseQMRunnerTest::_runner(0.0)
+        AseQMRunnerTest::_runner(settings, 0.0)
             .run(_simulationBox, _physicalData, molsys::Periodicity::XYZ)
     );
 }
 
 TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
 {
-    settings::QMSettings::setQMLoopTimeLimit(10.0);
-    auto runner = AseQMRunnerTest::_runner(0.0);
+    QMSettings::setQMLoopTimeLimit(10.0);
+    QMSettings settings;
+    settings.setQMMethodByUser(QMMethod::FENNOL);
+    auto runner = AseQMRunnerTest::_runner(settings, 0.0);
 
     EXPECT_NO_THROW(
         runner.run(_simulationBox, _physicalData, molsys::Periodicity::XYZ)

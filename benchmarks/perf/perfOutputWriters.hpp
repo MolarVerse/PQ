@@ -39,6 +39,8 @@
 #include <string>
 #include <vector>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -135,10 +137,13 @@ namespace benchOutputWriters
         restart.setFilename(restart.getFilename(), true);
         energy.setFilename(energy.getFilename(), true);
 
-        thermostat::BerendsenThermostat thermostat(300.0, 0.1);
+        thermostat::BerendsenThermostat thermostat(
+            mstd::units::point<K>(300.0),
+            0.1 * fs
+        );
         auto physicalData = physicalData::PhysicalData();
-        physicalData.setTemperature(300.0);
-        physicalData.setPressure(1.0);
+        physicalData.setTemperature(toTemperature(300.0));
+        physicalData.setPressure(1.0 * bar);
         physicalData.setKineticEnergy(12.5);
         physicalData.setCoulombEnergy(-34.5);
         physicalData.setNonCoulombEnergy(7.25);

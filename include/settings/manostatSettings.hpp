@@ -42,10 +42,10 @@ class ManostatSettings
     Setting<Isotropy>     _isotropy;
     Setting<FixedAxis>    _fixedAxis;
 
-    Setting<double> _targetPressure;
+    Setting<Pressure> _targetPressure;
 
-    Setting<Time>   _tau;
-    Setting<double> _compressibility;
+    Setting<Time>            _tau;
+    Setting<Compressibility> _compressibility;
 
    public:
     ManostatSettings();
@@ -56,14 +56,14 @@ class ManostatSettings
      * standard setter methods *
      ***************************/
 
-    void setManostatType(ManostatType manostatType);
-    void setIsotropy(Isotropy isotropy);
+    void setManostatTypeByUser(ManostatType manostatType);
+    void setIsotropyByUser(Isotropy isotropy);
 
-    void setFixedAxis(FixedAxis fixedAxis);
+    void setFixedAxisByUser(FixedAxis fixedAxis);
 
-    void setTargetPressure(double targetPressure);
-    void setTau(const Time& tau);
-    void setCompressibility(double compressibility);
+    void setTargetPressureByUser(const Pressure& targetPressure);
+    void setTauByUser(const Time& tau);
+    void setCompressibilityByUser(const Compressibility& compressibility);
 
     /***************************
      * standard getter methods *
@@ -71,13 +71,12 @@ class ManostatSettings
 
     [[nodiscard]] bool isBerendsenBased() const;
 
-    [[nodiscard]] ManostatType getManostatType() const;
-    [[nodiscard]] Isotropy     getIsotropy() const;
-    [[nodiscard]] FixedAxis    getFixedAxis() const;
-    [[nodiscard]] bool         isFixedAxisSet() const;
-    [[nodiscard]] double       getTargetPressure() const;
-    [[nodiscard]] const Time&  getTau() const;
-    [[nodiscard]] double       getCompressibility() const;
+    [[nodiscard]] ManostatType           getManostatType() const;
+    [[nodiscard]] Isotropy               getIsotropy() const;
+    [[nodiscard]] FixedAxis              getFixedAxis() const;
+    [[nodiscard]] const Pressure&        getTargetPressure() const;
+    [[nodiscard]] const Time&            getTau() const;
+    [[nodiscard]] const Compressibility& getCompressibility() const;
 
    private:
     void _addReferenceFile(ReferenceSettings& referenceSettings);

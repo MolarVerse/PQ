@@ -44,12 +44,12 @@ ManostatSettings::ManostatSettings()
  */
 void ManostatSettings::finalize(ReferenceSettings& referenceSettings)
 {
-    if (!_fixedAxis.isSet())
+    if (!_fixedAxis.isSetByUser())
     {
         if (_manostatType.get() == ManostatType::NONE)
-            _fixedAxis.set(FixedAxis::ALL);
+            _fixedAxis.setBySystem(FixedAxis::ALL);
         else
-            _fixedAxis.set(FixedAxis::NONE);
+            _fixedAxis.setBySystem(FixedAxis::NONE);
     }
 
     _addReferenceFile(referenceSettings);
@@ -66,9 +66,9 @@ void ManostatSettings::finalize(ReferenceSettings& referenceSettings)
  *
  * @param manostatType
  */
-void ManostatSettings::setManostatType(ManostatType manostatType)
+void ManostatSettings::setManostatTypeByUser(ManostatType manostatType)
 {
-    _manostatType.set(manostatType);
+    _manostatType.setByUser(manostatType);
 }
 
 /**
@@ -76,14 +76,14 @@ void ManostatSettings::setManostatType(ManostatType manostatType)
  *
  * @param isotropy
  */
-void ManostatSettings::setIsotropy(Isotropy isotropy)
+void ManostatSettings::setIsotropyByUser(Isotropy isotropy)
 {
-    _isotropy.set(isotropy);
+    _isotropy.setByUser(isotropy);
 }
 
-void ManostatSettings::setFixedAxis(FixedAxis fixedAxis)
+void ManostatSettings::setFixedAxisByUser(FixedAxis fixedAxis)
 {
-    _fixedAxis.set(fixedAxis);
+    _fixedAxis.setByUser(fixedAxis);
 }
 
 /**
@@ -91,9 +91,9 @@ void ManostatSettings::setFixedAxis(FixedAxis fixedAxis)
  *
  * @param targetPressure
  */
-void ManostatSettings::setTargetPressure(double targetPressure)
+void ManostatSettings::setTargetPressureByUser(const Pressure& targetPressure)
 {
-    _targetPressure.set(targetPressure);
+    _targetPressure.setByUser(targetPressure);
 }
 
 /**
@@ -101,16 +101,18 @@ void ManostatSettings::setTargetPressure(double targetPressure)
  *
  * @param tau
  */
-void ManostatSettings::setTau(const Time& tau) { _tau.set(tau); }
+void ManostatSettings::setTauByUser(const Time& tau) { _tau.setByUser(tau); }
 
 /**
- * @brief sets the compressibility to double in settings
+ * @brief sets the compressibility in settings
  *
  * @param compressibility
  */
-void ManostatSettings::setCompressibility(double compressibility)
+void ManostatSettings::setCompressibilityByUser(
+    const Compressibility& compressibility
+)
 {
-    _compressibility.set(compressibility);
+    _compressibility.setByUser(compressibility);
 }
 
 /***************************
@@ -157,18 +159,11 @@ Isotropy ManostatSettings::getIsotropy() const { return _isotropy.get(); }
 FixedAxis ManostatSettings::getFixedAxis() const { return _fixedAxis.get(); }
 
 /**
- * @brief get whether FixedAxis was explicitly set
- *
- * @return bool
- */
-bool ManostatSettings::isFixedAxisSet() const { return _fixedAxis.isSet(); }
-
-/**
  * @brief get the target pressure
  *
- * @return double
+ * @return const Pressure&
  */
-double ManostatSettings::getTargetPressure() const
+const Pressure& ManostatSettings::getTargetPressure() const
 {
     return _targetPressure.get();
 }
@@ -183,9 +178,9 @@ const Time& ManostatSettings::getTau() const { return _tau.get(); }
 /**
  * @brief get the compressibility
  *
- * @return double
+ * @return const Compressibility&
  */
-double ManostatSettings::getCompressibility() const
+const Compressibility& ManostatSettings::getCompressibility() const
 {
     return _compressibility.get();
 }
@@ -198,7 +193,7 @@ double ManostatSettings::getCompressibility() const
  */
 void ManostatSettings::_addReferenceFile(ReferenceSettings& referenceSettings)
 {
-    if (!_manostatType.isSet())
+    if (!_manostatType.isSetBySystem() && !_manostatType.isSetByUser())
         return;
 
     switch (_manostatType.get())

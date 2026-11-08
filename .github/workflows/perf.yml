@@ -3,6 +3,9 @@ name: Performance Gate
 # Builds the fixed-work perf benchmarks for the PR and for the base branch,
 # runs each under callgrind, and fails if any regressed by more than the
 # threshold. Instruction counts are deterministic, so this is not flaky.
+# A second step compares the CPU time of the measured loop of both builds on
+# this runner (scripts/perf_timing.py: interleaved, pinned, copies of the
+# binaries, confidence interval, confirmation) and fails on a clear slowdown.
 
 on:
   pull_request:
@@ -24,6 +27,7 @@ on:
       - '.github/workflows/perf.yml'
       - '.github/actions/setup-gcc/**'
       - 'scripts/perf_gate.sh'
+      - 'scripts/perf_timing.py'
   # Nightly run of dev against dev of a day earlier, with the (slow) simulation
   # of the caches and the branch predictor. Scheduled runs use the workflow file
   # of the default branch.
@@ -45,7 +49,13 @@ jobs:
   perf-regression:
     # This job builds PR code and later mints a write token. Bot-authored
     # branches require a human-run performance check on a trusted branch.
-    if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'pq-bot/')
+    # A release pull request is not measured: it would compare the release with
+    # the previous one and report every change of the cycle at once, each of which
+    # the gate already judged on its dev pull request (#1028).
+    if: >-
+      github.event_name != 'pull_request' ||
+      !(startsWith(github.event.pull_request.head.ref, 'pq-bot/') ||
+        startsWith(github.event.pull_request.head.ref, 'release/'))
     runs-on: ubuntu-24.04
     env:
       # The simulation makes the callgrind runs about 3 times slower, so pull
@@ -75,8 +85,9 @@ jobs:
 
       # Callgrind instruction counts are a pure function of the binary, which
       # is a pure function of the base commit SHA. So we cache the measured
-      # base Ir counts keyed on that SHA: on a hit we skip the base checkout,
-      # build, and base callgrind run entirely (~half the workflow).
+      # base Ir counts keyed on that SHA: on a hit the base callgrind run is
+      # skipped. The base is still built: the timing comparison needs its
+      # binaries on this runner.
       - name: Restore cached base instruction counts
         id: base-ir-cache
         uses: actions/cache@v4
@@ -85,7 +96,6 @@ jobs:
           key: perf-base-ir-sim${{ env.PERF_CACHE_SIM }}-${{ steps.base-sha.outputs.sha }}
 
       - name: Checkout base branch
-        if: steps.base-ir-cache.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.base_ref || steps.base-sha.outputs.sha }}
@@ -130,7 +140,6 @@ jobs:
           cmake --build build-pr --target perf_benchmarks -j$(nproc)
 
       - name: Build base benchmarks (baseline)
-        if: steps.base-ir-cache.outputs.cache-hit != 'true'
         run: |
           cmake -S base -B build-base \
             -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_NATIVE=Off \
@@ -148,6 +157,18 @@ jobs:
           # actions/cache@v4 saves them at job end (cache miss path).
           PERF_BASE_IR_FILE: base_ir.tsv
         run: bash scripts/perf_gate.sh build-pr/benchmarks/perf build-base/benchmarks/perf 2
+
+      # CPU time of the measured loop, base against PR on this runner. Fails
+      # only on a regression that is above the threshold with its whole 95 %
+      # interval and confirmed by a second, longer measurement. To only report,
+      # add --report-only.
+      - name: Compare timings
+        id: timing
+        continue-on-error: true
+        run: |
+          python3 scripts/perf_timing.py \
+            build-pr/benchmarks/perf build-base/benchmarks/perf \
+            --append perf_report.md
 
       - name: Mint PQ Perf Bot installation token
         id: app-token
@@ -196,7 +217,7 @@ jobs:
             }
 
       - name: Fail on regression
-        if: steps.gate.outcome == 'failure'
+        if: steps.gate.outcome == 'failure' || steps.timing.outcome == 'failure'
         run: |
           echo "performance regression detected (see the comment / summary above)"
           exit 1

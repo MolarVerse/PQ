@@ -25,7 +25,7 @@
 
 #include <mstd/types.hpp>
 
-#include "staticMatrix.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -52,8 +52,8 @@ namespace manostat
     {
        private:
         mstd::ConstRef<ManostatSettings> _settings;
-        linalg::tensor3D                 _pressureTensor = {0.0};
-        double                           _pressure;
+        PressureTensor3D                 _pressureTensor;
+        Pressure                         _pressure;
 
        public:
         explicit Manostat(const ManostatSettings &settings);
@@ -69,28 +69,34 @@ namespace manostat
             physicalData::PhysicalData &
         );
 
-        static void rotateMu(linalg::tensor3D &mu);
+        static void rotateMu(QuantityTensor3D &mu);
 
        protected:
         static void _validateScaling(
             const molsys::SimulationBox &,
-            const linalg::tensor3D &
+            const QuantityTensor3D &
         );
 
         [[nodiscard]]
-        const linalg::tensor3D &_getPressureTensor() const;
+        static QuantityTensor3D _toSimSpaceScaling(
+            const QuantityTensor3D &,
+            const molsys::Box &
+        );
 
         [[nodiscard]]
-        double _getPressure() const;
+        const PressureTensor3D &_getPressureTensor() const;
 
-        void _setPressureTensor(const linalg::tensor3D &pTensor);
-        void _setPressure(double pressure);
+        [[nodiscard]]
+        const Pressure &_getPressure() const;
+
+        void _setPressureTensor(const PressureTensor3D &pTensor);
+        void _setPressure(const Pressure &pressure);
 
         [[nodiscard]]
         const ManostatSettings &_getSettings() const;
 
        private:
-        static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);
+        static void _validateCandidate(molsys::Box &, const QuantityTensor3D &);
     };
 
 }   // namespace manostat

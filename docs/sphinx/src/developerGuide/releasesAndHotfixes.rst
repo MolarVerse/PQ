@@ -25,10 +25,13 @@ Hotfix
 #. Make the correction and add a fragment such as
    ``changes/user/bugfix.short-description.md``.
 #. Open **New pull request** with **base** ``main`` and **compare** your hotfix
-   branch. Link its issue, review and merge once checks pass.
+   branch. Title it ``Hotfix-X.Y.Z: short description``, where ``X.Y.Z`` is
+   the latest release with the patch number raised by one. Link its issue,
+   review and merge once checks pass.
 
-Opening the PR starts **Release Lifecycle** automatically. It selects and
-keeps the patch version. After merge, publication waits for BUILD and LINT.
+Opening the PR starts **Release Lifecycle** automatically. It takes the
+version from the title and rejects any other than the next patch. After merge,
+publication waits for BUILD and LINT.
 
 ************
 Check a run

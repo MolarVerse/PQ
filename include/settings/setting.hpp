@@ -38,9 +38,19 @@
 template <typename T, mstd::Tag Name = mstd::Tag("Settings")>
 class Setting
 {
+   public:
+    enum class Setter : std::uint8_t
+    {
+        None,
+        Default,
+        User,
+        System
+    };
+
    private:
     std::optional<T> _default = std::nullopt;
     std::optional<T> _value   = std::nullopt;
+    Setter           _setter  = Setter::None;
 
    public:
     explicit Setting() = default;
@@ -49,10 +59,15 @@ class Setting
     [[nodiscard]]
     const T& get() const;
 
-    void set(const T& value);
+    void setByUser(const T& value);
+    void setBySystem(const T& value);
 
     [[nodiscard]]
-    bool isSet() const;
+    bool isSetByUser() const;
+    [[nodiscard]]
+    bool isSetBySystem() const;
+    [[nodiscard]]
+    bool isSetBySomeone() const;
 
    private:
     void _throwIfNotSet() const;

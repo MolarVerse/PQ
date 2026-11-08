@@ -33,8 +33,10 @@ static constexpr std::uint64_t ITERATIONS = 20;
 
 int main()
 {
+    QMSettings qmSettings;
+    qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
     return benchQMRunner::run<QM::DFTBPlusRunner>(
-        QMMethod::DFTBPLUS,
+        qmSettings,
         molsys::Periodicity::XYZ,
         ITERATIONS
     );

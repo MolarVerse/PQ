@@ -29,6 +29,26 @@
 namespace linalg
 {
     /**
+     * @brief Converting constructor from a StaticMatrix3x3 of another
+     * element type, e.g. quantity<Pa> -> quantity<pressure[Pa]>
+     *
+     * @tparam T
+     * @tparam U
+     * @param other
+     */
+    template <typename T>
+    template <typename U>
+    requires(!std::same_as<T, U>) && std::convertible_to<U, T>
+    constexpr StaticMatrix3x3<T>::StaticMatrix3x3(
+        const StaticMatrix3x3<U> &other
+    )
+    {
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j)
+                _data[i][j] = static_cast<T>(other[i][j]);
+    }
+
+    /**
      * @brief Construct a new Static Matrix 3x 3< T>:: Static Matrix 3x 3 object
      *
      * @tparam T
@@ -191,6 +211,47 @@ namespace linalg
         _data[1][1] = values[1];
         _data[2][2] = values[2];
     }
+    /**
+     * @brief convert all elements to the specified unit
+     *
+     * @tparam U
+     * @param unit
+     * @return StaticMatrix3x3<decltype(x.in(unit))>
+     */
+    template <typename T>
+    template <mstd::UnitLike U>
+    auto StaticMatrix3x3<T>::in(const U &unit) const
+    {
+        using R = std::remove_cvref_t<decltype(_data[0][0].in(unit))>;
+
+        return StaticMatrix3x3<R>(
+            _data[0].in(unit),
+            _data[1].in(unit),
+            _data[2].in(unit)
+        );
+    }
+
+    /**
+     * @brief get the numerical values of all elements in the specified unit
+     *
+     * @tparam U
+     * @param unit
+     * @return StaticMatrix3x3 of the plain numerical values
+     */
+    template <typename T>
+    template <mstd::UnitLike U>
+    auto StaticMatrix3x3<T>::numerical_value_in(const U &unit) const
+    {
+        using R =
+            std::remove_cvref_t<decltype(_data[0][0].numerical_value_in(unit))>;
+
+        return StaticMatrix3x3<R>(
+            _data[0].numerical_value_in(unit),
+            _data[1].numerical_value_in(unit),
+            _data[2].numerical_value_in(unit)
+        );
+    }
+
 }   // namespace linalg
 
 #endif   // LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_TPP

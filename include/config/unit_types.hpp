@@ -33,9 +33,45 @@
 
 #include <mstd/units.hpp>
 
+#include "staticMatrix.hpp"
 #include "vector3d.hpp"
+
+using Quantity   = mstd::quantity<mstd::units::one>;
+using Quantity3D = linalg::Vector3D<mstd::quantity<mstd::units::one>>;
+using QuantityTensor3D =
+    linalg::StaticMatrix3x3<mstd::quantity<mstd::units::one>>;
 
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 using Time     = mstd::quantity<mstd::units::fs>;
 
+using Pressure = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
+using Pressure3D =
+    linalg::Vector3D<mstd::quantity<mstd::units::pressure[mstd::units::Pa]>>;
+using PressureTensor3D = linalg::StaticMatrix3x3<
+    mstd::quantity<mstd::units::pressure[mstd::units::Pa]>>;
+using Compressibility = mstd::quantity<
+    mstd::units::compressibility[mstd::units::one / mstd::units::Pa]>;
+
+using Temperature = mstd::units::quantity_point<
+    mstd::units::thermodynamic_temperature[mstd::units::K]>;
+using TemperatureDiff =
+    mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
+
+[[nodiscard]]
+static inline Temperature toTemperature(double temperature)
+{
+    return mstd::units::point<mstd::units::K>(temperature);
+}
+
+[[nodiscard]]
+static inline Temperature scaleAbsTemp(Temperature absTemp, double scalar)
+{
+    return Temperature{absTemp.quantity_from_zero() * scalar};
+}
+
+[[nodiscard]]
+static inline Quantity tempRatio(Temperature absTemp, Temperature refTemp)
+{
+    return absTemp.quantity_from_zero() / refTemp.quantity_from_zero();
+}
 #endif   // CONFIG__UNIT_TYPES_HPP

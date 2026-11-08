@@ -7,6 +7,25 @@ implementation changes are documented in
 ## Next Release
 
 <!-- insertion marker -->
+## [v1.0.2](https://github.com/MolarVerse/PQ/releases/tag/v1.0.2) - 2026-11-08
+
+### New Features
+
+- A second Ctrl-C now stops PQ at once, also during a long Python call such as a MACE or FeNNol step.
+
+### Bug Fixes
+
+- Fix Ctrl-C not stopping `mm-hessian` runs in builds with embedded Python; the pre-optimization and the Hessian builder now stop at the next force evaluation.
+- Fix Ctrl-C not stopping PQ builds with embedded Python (the default with ASE); MD and optimizer runs now stop at the next step.
+- Fix ASE-DFTB+ with 3ob slakos not actually applying third order DFTB (including the 3ob Hubbard derivatives) by default, although the setup output reported it as enabled; results for such inputs change.
+- Fix garbage in the momentum columns of the first energy and momentum output line: the PhysicalData that holds the averages did not initialise its momenta, angular momenta, virial and stress tensors, so the first line showed whatever the memory held (sometimes inf).
+- Fix MACE runs failing at startup with `module 'mace.calculators' has no attribute 'MACE_OFF'`; PQ again passes the MACE calculator and model names (e.g. `mace_off`, `small-0b`).
+- Manostat position and velocity scaling for triclinic boxes with fixed angles now transforms the scaling tensor from cell-axis to Cartesian space once per step instead of per molecule and atom, which avoids redundant transformations.
+
+### Performance
+
+- Reading a topology file is much faster for large systems: the time grew with atoms times molecules and is now linear in the number of atoms (reading the topology of 1600 water molecules takes about a third of the instructions).
+
 ## [v1.0.1](https://github.com/MolarVerse/PQ/releases/tag/v1.0.1) - 2026-11-04
 
 ### Bug Fixes

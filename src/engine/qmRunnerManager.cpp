@@ -28,7 +28,6 @@
 #include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
 #include "turbomoleRunner.hpp"
@@ -46,32 +45,49 @@ namespace engine
     /**
      * @brief Create a QM runner based on the specified method
      *
-     * @param method The QM method to use
+     * @param qmSettings The QMSettings object containing the configuration for
+     * the QM runner
+     * @param maceSettings The MaceSettings object containing the configuration
+     * for the MACE runner
+     * @param fennolSettings The FennolSettings object containing the
+     * configuration for the Fennol runner
+     * @param xtbSettings The XtbSettings object containing the configuration
+     * for the XTB runner
+     * @param dftbSettings The DftbSettings object containing the configuration
+     * for the DFTB+ runner
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the created QM
      * runner
      * @throws InputFileException if the method is not supported
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
-        QMMethod method
+        const QMSettings     &qmSettings,
+        const MaceSettings   &maceSettings,
+        const FennolSettings &fennolSettings,
+        const DftbSettings   &dftbSettings,
+        const XtbSettings    &xtbSettings
     )
     {
         using enum QMMethod;
 
-        switch (method)
+        switch (qmSettings.getQMMethod())
         {
-            case DFTBPLUS: return std::make_shared<QM::DFTBPlusRunner>();
+            case DFTBPLUS:
+                return std::make_shared<QM::DFTBPlusRunner>(qmSettings);
 
-            case ASE_DFTBPLUS: return createAseDftbRunner();
+            case ASE_DFTBPLUS:
+                return createAseDftbRunner(qmSettings, dftbSettings);
 
-            case ASE_XTB: return createAseXtbRunner();
+            case ASE_XTB: return createAseXtbRunner(qmSettings, xtbSettings);
 
-            case PYSCF: return std::make_shared<QM::PySCFRunner>();
+            case PYSCF: return std::make_shared<QM::PySCFRunner>(qmSettings);
 
-            case TURBOMOLE: return std::make_shared<QM::TurbomoleRunner>();
+            case TURBOMOLE:
+                return std::make_shared<QM::TurbomoleRunner>(qmSettings);
 
-            case MACE: return createAseMaceRunner();
+            case MACE: return createAseMaceRunner(qmSettings, maceSettings);
 
-            case FENNOL: return createAseFennolRunner();
+            case FENNOL:
+                return createAseFennolRunner(qmSettings, fennolSettings);
 
             case NONE:
                 throw exc::InputFileException(
@@ -89,30 +105,17 @@ namespace engine
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the MACE runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner()
+    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseMaceRunner(
+        const QMSettings   &qmSettings,
+        const MaceSettings &maceSettings
+    )
     {
 #ifdef WITH_ASE
-        const auto modelType = settings::QMSettings::getMaceModelTypeName();
-        const auto modelPath = settings::QMSettings::getMaceModelPath();
-        const auto useDFTD   = settings::QMSettings::useDispersionCorr();
-        const auto fpType =
-            settings::GeneralSettings::getFloatingPointPybindString();
-        const auto useCueq =
-            settings::QMSettings::getMaceMode() == MaceMode::FAST;
-
-        auto maceModel = settings::QMSettings::getMaceModelName();
-
-        if (!modelPath.empty())
-            maceModel = modelPath;
-
-        return std::make_shared<QM::AseMaceRunner>(
-            modelType,
-            maceModel,
-            fpType,
-            useDFTD,
-            useCueq
-        );
+        return std::make_shared<QM::AseMaceRunner>(qmSettings, maceSettings);
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) qmSettings;
+        (void) maceSettings;
         throw exc::CompileTimeException(
             "A MACE type QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use MACE type "
@@ -128,26 +131,21 @@ namespace engine
      * runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseDftbRunner()
+    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseDftbRunner(
+        const QMSettings   &qmSettings,
+        const DftbSettings &dftbSettings
+    )
     {
 #ifdef WITH_ASE
-        const auto slakosPath    = settings::QMSettings::getSlakosPath();
-        const auto useThirdOrder = settings::QMSettings::useThirdOrderDftb();
-        const auto hubbardDerivs = settings::QMSettings::getHubbardDerivs();
-        const auto dispersion    = settings::QMSettings::useDispersionCorr();
-
-        return std::make_shared<QM::AseDftbRunner>(
-            slakosPath,
-            useThirdOrder,
-            hubbardDerivs,
-            dispersion
-        );
+        return std::make_shared<QM::AseDftbRunner>(qmSettings, dftbSettings);
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) qmSettings;
+        (void) dftbSettings;
         throw exc::CompileTimeException(
             "The ASE DFTB+ QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
-            "type "
-            "QM methods using: -DBUILD_WITH_ASE=ON"
+            "type QM methods using: -DBUILD_WITH_ASE=ON"
         );
 #endif
     }
@@ -159,19 +157,24 @@ namespace engine
      * runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseXtbRunner()
+    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseXtbRunner(
+        const QMSettings  &qmSettings,
+        const XtbSettings &xtbSettings
+    )
     {
 #ifdef WITH_ASE
         const auto xtbMethod =
-            XtbMethodMeta::toString(settings::QMSettings::getXtbMethod());
+            XtbMethodMeta::toString(xtbSettings.getXtbMethod());
 
-        return std::make_shared<QM::AseXtbRunner>(xtbMethod);
+        return std::make_shared<QM::AseXtbRunner>(qmSettings, xtbMethod);
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) qmSettings;
+        (void) xtbSettings;
         throw exc::CompileTimeException(
             "The ASE xTB QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
-            "xTB "
-            "type QM method using: -DBUILD_WITH_ASE=ON"
+            "xTB type QM method using: -DBUILD_WITH_ASE=ON"
         );
 #endif
     }
@@ -183,28 +186,24 @@ namespace engine
      * runner
      * @throws exc::CompileTimeException if ASE was not enabled at compile time
      */
-    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseFennolRunner()
+    std::shared_ptr<QM::QMRunner> QMRunnerManager::createAseFennolRunner(
+        const QMSettings     &qmSettings,
+        const FennolSettings &fennolSettings
+    )
     {
 #ifdef WITH_ASE
-        using enum FPType;
-
-        const auto modelPath = settings::QMSettings::getFennolModelPath();
-        const auto gpuPreprocessing =
-            settings::QMSettings::useGPUPreprocessing();
-        const bool useFloat64 =
-            settings::GeneralSettings::getFloatingPointType() == DOUBLE;
-
         return std::make_shared<QM::AseFennolRunner>(
-            modelPath,
-            gpuPreprocessing,
-            useFloat64
+            qmSettings,
+            fennolSettings
         );
 #else
+        // to silence unused parameter warnings when ASE is not enabled
+        (void) qmSettings;
+        (void) fennolSettings;
         throw exc::CompileTimeException(
             "The ASE FeNNol QM method was requested but ASE was not enabled at "
             "compile time. Please recompile with ASE enabled to use the ASE "
-            "FeNNol "
-            "type QM method using: -DBUILD_WITH_ASE=ON"
+            "FeNNol type QM method using: -DBUILD_WITH_ASE=ON"
         );
 #endif
     }

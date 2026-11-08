@@ -151,7 +151,7 @@ namespace physicalData
         _dihedralEnergy += other.getDihedralEnergy();
         _improperEnergy += other.getImproperEnergy();
 
-        _temperature     += other.getTemperature();
+        _temperature     += other.getTemperature().quantity_from_zero();
         _kineticEnergy   += other.getKineticEnergy();
         _volume          += other.getVolume();
         _density         += other.getDensity();
@@ -202,7 +202,8 @@ namespace physicalData
         _dihedralEnergy /= outputFrequency;
         _improperEnergy /= outputFrequency;
 
-        _temperature     /= outputFrequency;
+        _temperature =
+            Temperature{_temperature.quantity_from_zero() / outputFrequency};
         _volume          /= outputFrequency;
         _density         /= outputFrequency;
         _virial          /= outputFrequency;
@@ -240,9 +241,9 @@ namespace physicalData
 
         _volume          = 0.0;
         _density         = 0.0;
-        _temperature     = 0.0;
-        _pressure        = 0.0;
-        _coupledPressure = 0.0;
+        _temperature     = Temperature::zero();
+        _pressure        = Pressure::zero();
+        _coupledPressure = Pressure::zero();
 
         _kineticEnergy         = 0.0;
         _coulombEnergy         = 0.0;

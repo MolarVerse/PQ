@@ -35,6 +35,8 @@
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace
@@ -142,7 +144,7 @@ namespace
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box = makeBox();
     maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
@@ -158,7 +160,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesAngularMomentum)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box = makeBox();
     maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
@@ -179,14 +181,20 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesReachesTargetTemperature)
     {
         SCOPED_TRACE("target temperature " + std::to_string(target));
 
-        settings::ThermostatSettings::setTargetTemperature(target);
+        ThermostatSettings::setTargetTemperature(toTemperature(target));
 
         auto *box = makeBox();
         maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
 
         // temperature is rescaled last and rescaling does not reintroduce
         // any linear or angular momentum
-        EXPECT_NEAR(box->calculateTemperature(), target, 1e-9 * target);
+        EXPECT_NEAR(
+            box->calculateTemperature().quantity_from_zero().numerical_value_in(
+                K
+            ),
+            target,
+            1e-9 * target
+        );
 
         delete box;
     }
@@ -194,7 +202,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesReachesTargetTemperature)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     // different random numbers must never break the ordering
     // momentum -> angular momentum -> temperature
@@ -216,7 +224,13 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
             EXPECT_NEAR(momentum[i], 0.0, 1e-10 * pScale);
             EXPECT_NEAR(angularMomentum[i], 0.0, 1e-10 * lScale);
         }
-        EXPECT_NEAR(box->calculateTemperature(), 300.0, 1e-9 * 300.0);
+        EXPECT_NEAR(
+            box->calculateTemperature().quantity_from_zero().numerical_value_in(
+                K
+            ),
+            300.0,
+            1e-9 * 300.0
+        );
 
         delete box;
     }
@@ -224,7 +238,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesGivesFiniteNonZeroVelocities)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box = makeBox();
     maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
@@ -244,7 +258,7 @@ TEST(
     initializeVelocitiesLeavesPositionsAndMassesUntouched
 )
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *reference = makeBox();
     auto *box       = makeBox();
@@ -271,7 +285,7 @@ TEST(
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesIsReproducibleForFixedSeed)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     std::vector<linalg::Vec3D> first;
     std::vector<linalg::Vec3D> second;
@@ -307,7 +321,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesForZeroTargetTemperatureThrows)
 {
     // a zero target temperature generates only zero velocities, which cannot
     // be rescaled to a (zero) target - the final temperature reset rejects it
-    settings::ThermostatSettings::setTargetTemperature(0.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
 
     auto *box = makeBox();
 

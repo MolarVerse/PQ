@@ -46,7 +46,7 @@ TEST_F(TestInputFileReader, ParsePressure)
 
     std::vector<std::string> lineElements = {"pressure", "=", "300.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getTargetPressure(), 300.0);
+    EXPECT_EQ(settings.getTargetPressure(), 300.0 * bar);
 
     _clearParser(parser);
 
@@ -171,7 +171,11 @@ TEST_F(TestInputFileReader, ParseCompressibility)
 
     std::vector<std::string> lineElements = {"compressibility", "=", "0.1"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getCompressibility(), 0.1);
+    EXPECT_NEAR(
+        settings.getCompressibility().numerical_value_in(per_bar),
+        0.1,
+        1e-12
+    );
 
     _clearParser(parser);
 

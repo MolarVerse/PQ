@@ -35,6 +35,8 @@
 #include "settings.hpp"
 #include "testEnergyOutput.hpp"
 #include "thermostatSettings.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -45,8 +47,8 @@
  */
 TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
 {
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setTemperature(mstd::units::point<K>(1.0));
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -55,11 +57,11 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -128,8 +130,8 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
  */
 TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
 {
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setTemperature(mstd::units::point<K>(1.0));
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -143,11 +145,11 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _physicalData->setImproperEnergy(22.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -228,8 +230,8 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
  */
 TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 {
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setTemperature(toTemperature(1.0));
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -241,13 +243,13 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _physicalData->setDensity(12.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -322,9 +324,9 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
  */
 TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
 {
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
-    _physicalData->setCoupledPressure(2.5);
+    _physicalData->setTemperature(toTemperature(1.0));
+    _physicalData->setPressure(2.0 * bar);
+    _physicalData->setCoupledPressure(2.5 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -336,13 +338,13 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _physicalData->setDensity(12.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
-    _settings->manostatSettings.setManostatType(ManostatType::BERENDSEN);
-    _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -425,8 +427,8 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
 {
     _physicalData->reset();
 
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setTemperature(toTemperature(1.0));
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setMomentum(linalg::Vec3D(6.0));
     _physicalData->setIntraCoulombEnergy(0.0);
@@ -438,12 +440,12 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
-    _settings->manostatSettings.setManostatType(ManostatType::NONE);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -512,8 +514,8 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
  */
 TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
 {
-    _physicalData->setTemperature(1.0);
-    _physicalData->setPressure(2.0);
+    _physicalData->setTemperature(toTemperature(1.0));
+    _physicalData->setPressure(2.0 * bar);
     _physicalData->setKineticEnergy(3.0);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
@@ -524,15 +526,15 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     _physicalData->setNoseHooverFrictionEnergy(12.0);
     _physicalData->setLoopTime(0.1);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    _settings->manostatSettings.setManostatType(ManostatType::NONE);
-    settings::ThermostatSettings::setThermostatType(
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -614,13 +616,13 @@ TEST_F(TestEnergyOutput, writeInfoQmmmSubtractsQMReferenceEnergy)
     _physicalData->setQMReferenceEnergy(2.0);
     _physicalData->setNumberOfSmoothingMolecules(1.0);
 
-    _settings->forceFieldSettings.setType(ForceFieldType::OFF);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-    _settings->manostatSettings.setManostatType(ManostatType::NONE);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings->thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0, *_physicalData, *_settings);
+    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");

@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -46,7 +48,7 @@ int main()
 {
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);
-    settings::ThermostatSettings::setActualTargetTemperature(300.0);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(300.0));
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
@@ -60,6 +62,9 @@ int main()
         maxwellBoltzmann.initializeVelocities(box);
 
     // read state so the loop cannot be optimized away
-    std::cout << std::format("{:.6f}\n", box.calculateTemperature());
+    std::cout << std::format(
+        "{:.6f}\n",
+        box.calculateTemperature().quantity_from_zero().numerical_value_in(K)
+    );
     return 0;
 }

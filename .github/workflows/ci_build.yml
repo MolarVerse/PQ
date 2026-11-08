@@ -47,9 +47,7 @@ jobs:
           filters: |
             relevant:
               - '.github/workflows/ci_build.yml'
-              - '.github/actions/upload-build-timings/**'
               - '.github/actions/setup-gcc/**'
-              - '.github/ci-metrics/summarise_build.py'
               - '.cmake/**'
               - 'apps/**'
               - 'include/**'
@@ -152,14 +150,6 @@ jobs:
           cmake --build build --parallel "$(nproc)"
           cmake --build build --target coverage_xml
 
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: build-${{ matrix.os }}-${{ matrix.build }}
-          job-id: ${{ job.check_run_id }}
-          build-status: ${{ steps.build.outcome != 'skipped' && steps.build.outcome || steps.build-coverage.outcome }}
-
       - name: Upload coverage to Codecov
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'pq-bot/')) }}
         uses: codecov/codecov-action@v3
@@ -192,7 +182,7 @@ jobs:
         if: ${{matrix.build == 'Release' && steps.cache-conda-env.outputs.cache-hit != 'true'}}
         run: |
           conda install -n test-env -y pip conda-forge::dftbplus conda-forge::xtb
-          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0
+          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0 fennol jax
 
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}
@@ -304,14 +294,6 @@ jobs:
         env:
           WITH_TESTS: ${{ github.event_name == 'schedule' && 'ON' || 'OFF' }}
 
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: static-lto
-          job-id: ${{ job.check_run_id }}
-          build-status: ${{ steps.build.outcome }}
-
   static-singularity-build:
     if: >-
       github.event_name == 'schedule' ||
@@ -403,13 +385,6 @@ jobs:
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
 
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: mpi-release
-          job-id: ${{ job.check_run_id }}
-
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
 
@@ -464,13 +439,6 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)" --target PQ testSelection
-
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: python-bindings
-          job-id: ${{ job.check_run_id }}
 
       - name: Run the Python-binding tests
         run: ctest --test-dir build --output-on-failure -R 'testPQCli|testSelection'

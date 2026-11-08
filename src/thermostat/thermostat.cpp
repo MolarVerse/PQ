@@ -36,7 +36,7 @@ namespace thermostat
      *
      * @param targetTemperature
      */
-    Thermostat::Thermostat(double targetTemperature)
+    Thermostat::Thermostat(const Temperature &targetTemperature)
         : _targetTemperature(targetTemperature)
     {
     }
@@ -94,10 +94,10 @@ namespace thermostat
 
         if (stepsLeft > 0 && (stepsLeft - 1) % _rampingFrequency == 0)
         {
-            setTargetTemperature(_targetTemperature + _temperatureIncrease);
-            settings::ThermostatSettings::setActualTargetTemperature(
-                _targetTemperature
-            );
+            const auto newTargetTemperature =
+                _targetTemperature + _temperatureIncrease;
+            setTargetTemperature(newTargetTemperature);
+            ThermostatSettings::setActualTargetTemperature(_targetTemperature);
         }
 
         if (_rampingStepsLeft > 0)
@@ -115,7 +115,7 @@ namespace thermostat
      *
      * @param targetTemperature
      */
-    void Thermostat::setTargetTemperature(double targetTemperature)
+    void Thermostat::setTargetTemperature(const Temperature &targetTemperature)
     {
         _targetTemperature = targetTemperature;
     }
@@ -123,9 +123,9 @@ namespace thermostat
     /**
      * @brief set temperature
      *
-     * @param temperature
+     * @param temperature in Kelvin
      */
-    void Thermostat::setTemperature(double temperature)
+    void Thermostat::setTemperature(const Temperature &temperature)
     {
         _temperature = temperature;
     }
@@ -133,9 +133,11 @@ namespace thermostat
     /**
      * @brief set temperature increase
      *
-     * @param temperatureIncrease
+     * @param temperatureIncrease in Kelvin
      */
-    void Thermostat::setTemperatureIncrease(double temperatureIncrease)
+    void Thermostat::setTemperatureIncrease(
+        const TemperatureDiff &temperatureIncrease
+    )
     {
         _temperatureIncrease = temperatureIncrease;
     }
@@ -169,16 +171,19 @@ namespace thermostat
     /**
      * @brief get temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double Thermostat::getTemperature() const { return _temperature; }
+    const Temperature &Thermostat::getTemperature() const
+    {
+        return _temperature;
+    }
 
     /**
      * @brief get target temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double Thermostat::getTargetTemperature() const
+    const Temperature &Thermostat::getTargetTemperature() const
     {
         return _targetTemperature;
     }
@@ -186,9 +191,9 @@ namespace thermostat
     /**
      * @brief get temperature increase
      *
-     * @return double
+     * @return const TemperatureDiff&
      */
-    double Thermostat::getTemperatureIncrease() const
+    const TemperatureDiff &Thermostat::getTemperatureIncrease() const
     {
         return _temperatureIncrease;
     }

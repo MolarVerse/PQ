@@ -29,7 +29,6 @@
 #include "box.hpp"
 #include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
-#include "matrixNear.hpp"
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
 #include "vectorNear.hpp"
@@ -185,19 +184,4 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
             EXPECT_DOUBLE_EQ(matrix[axis][axis], expected);
         }
     }
-}
-
-TEST(TestOrthoRhombicBox, baseTransformsAndStateAccessors)
-{
-    const linalg::Vec3D     boxDimensions = {2.0, 3.0, 4.0};
-    molsys::OrthorhombicBox box(boxDimensions);
-
-    const linalg::Vec3D vector{1.0, 2.0, 3.0};
-    const auto          tensor = diagonalMatrix(linalg::Vec3D{1.0, 2.0, 3.0});
-
-    EXPECT_EQ(box.getBoxAngles(), linalg::Vec3D(90.0));
-    EXPECT_EQ(box.toOrthoSpace(vector), vector);
-    EXPECT_EQ(box.toSimSpace(vector), vector);
-    EXPECT_MATRIX_NEAR(box.toOrthoSpace(tensor), tensor, 0.0);
-    EXPECT_MATRIX_NEAR(box.toSimSpace(tensor), tensor, 0.0);
 }

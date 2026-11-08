@@ -27,6 +27,7 @@
 
 #include "mmmdEngine.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @class TestEngine
@@ -50,7 +51,7 @@ class TestEngine : public ::testing::Test
     void TearDown() override
     {
         settings::TimingsSettings::setStepCount(0);
-        settings::TimingsSettings::setTimeStep(0.0);
+        settings::TimingsSettings::setTimeStep(0.0 * fs);
     }
 };
 

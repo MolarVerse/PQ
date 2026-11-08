@@ -25,8 +25,13 @@
 
 #include <memory>
 
-#include "enums/qm.hpp"
 #include "qmRunner.hpp"
+
+class QMSettings;
+class MaceSettings;
+class FennolSettings;
+class DftbSettings;
+class XtbSettings;
 
 namespace engine
 {
@@ -43,11 +48,34 @@ namespace engine
     class QMRunnerManager
     {
        public:
-        static std::shared_ptr<QM::QMRunner> createQMRunner(QMMethod method);
-        static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
-        static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
-        static std::shared_ptr<QM::QMRunner> createAseMaceRunner();
-        static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createQMRunner(
+            const QMSettings     &qmSettings,
+            const MaceSettings   &maceSettings,
+            const FennolSettings &fennolSettings,
+            const DftbSettings   &dftbSettings,
+            const XtbSettings    &xtbSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseDftbRunner(
+            const QMSettings   &qmSettings,
+            const DftbSettings &dftbSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseFennolRunner(
+            const QMSettings     &qmSettings,
+            const FennolSettings &fennolSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseMaceRunner(
+            const QMSettings   &qmSettings,
+            const MaceSettings &maceSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseXtbRunner(
+            const QMSettings  &qmSettings,
+            const XtbSettings &xtbSettings
+        );
 
        private:
         QMRunnerManager() = default;

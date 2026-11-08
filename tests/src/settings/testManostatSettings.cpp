@@ -30,21 +30,21 @@
 TEST(ManostatSettingsTest, DoubleSettersAndGetters)
 {
     ManostatSettings settings;
-    settings.setTargetPressure(2.5);
-    EXPECT_DOUBLE_EQ(settings.getTargetPressure(), 2.5);
+    settings.setTargetPressureByUser(2.5 * bar);
+    EXPECT_EQ(settings.getTargetPressure(), 2.5 * bar);
 
-    settings.setTau(1.5 * ps);
+    settings.setTauByUser(1.5 * ps);
     EXPECT_EQ(settings.getTau(), 1.5 * ps);
 
-    settings.setCompressibility(4.5e-5);
-    EXPECT_DOUBLE_EQ(settings.getCompressibility(), 4.5e-5);
+    settings.setCompressibilityByUser(4.5e-5 / bar);
+    EXPECT_EQ(settings.getCompressibility(), 4.5e-5 / bar);
 }
 
 TEST(ManostatSettingsTest, SetFixedAxisViaEnum)
 {
     ManostatSettings settings;
 
-    settings.setFixedAxis(FixedAxis::XY);
+    settings.setFixedAxisByUser(FixedAxis::XY);
     EXPECT_EQ(settings.getFixedAxis(), FixedAxis::XY);
 }
 
@@ -100,33 +100,31 @@ TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
 {
     // When no manostat is selected and fixed axis was not set, default is ALL
     ManostatSettings settings;
-    settings.setManostatType(ManostatType::NONE);
-    EXPECT_FALSE(settings.isFixedAxisSet());
+    settings.setManostatTypeByUser(ManostatType::NONE);
     ReferenceSettings referenceSettings;
     settings.finalize(referenceSettings);
     EXPECT_EQ(settings.getFixedAxis(), FixedAxis::ALL);
 
     // When manostat is selected, default becomes NONE
     ManostatSettings settings2;
-    settings2.setManostatType(ManostatType::BERENDSEN);
+    settings2.setManostatTypeByUser(ManostatType::BERENDSEN);
     settings2.finalize(referenceSettings);
     EXPECT_EQ(settings2.getFixedAxis(), FixedAxis::NONE);
 
     ManostatSettings settings3;
-    settings3.setManostatType(ManostatType::STOCHASTIC_RESCALING);
+    settings3.setManostatTypeByUser(ManostatType::STOCHASTIC_RESCALING);
     settings3.finalize(referenceSettings);
     EXPECT_EQ(settings3.getFixedAxis(), FixedAxis::NONE);
 
     // When explicitly set, it overrides the default and remains set
     ManostatSettings settings4;
-    settings4.setManostatType(ManostatType::BERENDSEN);
-    settings4.setFixedAxis(FixedAxis::Z);
+    settings4.setManostatTypeByUser(ManostatType::BERENDSEN);
+    settings4.setFixedAxisByUser(FixedAxis::Z);
     settings4.finalize(referenceSettings);
-    EXPECT_TRUE(settings4.isFixedAxisSet());
     EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
 
     // Changing manostat type does not override explicitly set fixed axis
-    settings4.setManostatType(ManostatType::BERENDSEN);
+    settings4.setManostatTypeByUser(ManostatType::BERENDSEN);
     settings4.finalize(referenceSettings);
     EXPECT_EQ(settings4.getFixedAxis(), FixedAxis::Z);
 }
@@ -138,7 +136,7 @@ TEST(ManostatSettingsTest, FixedAxisDefaultBehavior)
 TEST(ManostatSettingsTest, FinalizeAddsReferenceFileForManostatType)
 {
     ManostatSettings berendsen;
-    berendsen.setManostatType(ManostatType::BERENDSEN);
+    berendsen.setManostatTypeByUser(ManostatType::BERENDSEN);
     ReferenceSettings berendsenReferences;
     berendsen.finalize(berendsenReferences);
     EXPECT_TRUE(berendsenReferences.getReferenceFileNames().contains(
@@ -146,7 +144,9 @@ TEST(ManostatSettingsTest, FinalizeAddsReferenceFileForManostatType)
     ));
 
     ManostatSettings stochasticRescaling;
-    stochasticRescaling.setManostatType(ManostatType::STOCHASTIC_RESCALING);
+    stochasticRescaling.setManostatTypeByUser(
+        ManostatType::STOCHASTIC_RESCALING
+    );
     ReferenceSettings stochasticReferences;
     stochasticRescaling.finalize(stochasticReferences);
     EXPECT_TRUE(stochasticReferences.getReferenceFileNames().contains(
@@ -175,7 +175,7 @@ TEST(ManostatSettingsTest, FinalizeAddsNoReferenceFileWhenManostatTypeUnset)
 TEST(ManostatSettingsTest, FinalizeAddsNoReferenceFileForManostatTypeNone)
 {
     ManostatSettings settings;
-    settings.setManostatType(ManostatType::NONE);
+    settings.setManostatTypeByUser(ManostatType::NONE);
 
     ReferenceSettings referenceSettings;
     settings.finalize(referenceSettings);

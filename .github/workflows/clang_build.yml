@@ -5,7 +5,13 @@ name: Clang Build
 # project building with clang and records the Ninja build analysis (job
 # durations, include graph) for the CI metrics. There is no build time comment
 # on pull requests: compile times on shared runners were too noisy to be
-# useful (#935). No ccache, so the include graph and timings are of a full build.
+# useful (#935).
+#
+# Pull requests use ccache (#1045): the job took 8 to 17 minutes, depending on
+# the CPU of the runner, for a full rebuild of 650 steps on every push. Pushes
+# to dev compile everything (CCACHE_RECACHE ignores the cache for reading) and
+# still write it, so the include graph and timings of the metrics are of a full
+# build and the pull requests have a cache to start from.
 
 on:
   pull_request:
@@ -20,9 +26,7 @@ on:
       - 'CMakeLists.txt'
       - '.cmake/**'
       - '.github/workflows/clang_build.yml'
-      - '.github/actions/upload-build-timings/**'
       - '.github/actions/setup-gcc/**'
-      - '.github/ci-metrics/summarise_build.py'
   push:
     branches:
       - dev
@@ -35,9 +39,7 @@ on:
       - 'CMakeLists.txt'
       - '.cmake/**'
       - '.github/workflows/clang_build.yml'
-      - '.github/actions/upload-build-timings/**'
       - '.github/actions/setup-gcc/**'
-      - '.github/ci-metrics/summarise_build.py'
   workflow_dispatch:
 
 # Only superseded pull_request runs are cancelled; push and manual runs each
@@ -49,8 +51,18 @@ concurrency:
 permissions:
   contents: read
 
+# The precompiled headers make ccache miss without these (see ci_build.yml):
+# the sloppiness, and for clang -Xclang -fno-pch-timestamp (set at configure
+# time below), which keeps the date of the header out of the .pch file.
+env:
+  CCACHE_SLOPPINESS: pch_defines,time_macros
+
 jobs:
   clang-build:
+    # Not for a release pull request: non-gating, and the same code was built
+    # on its dev pull requests (#1028).
+    if: >-
+      !(github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-24.04
     timeout-minutes: 60
 
@@ -65,12 +77,27 @@ jobs:
         with:
           set-env: 'false'
 
+      # cached apt packages, as in devops_cpp_check.yml (#1069)
       - name: Install clang
-        run: |
-          sudo apt update
-          sudo apt install -y clang-20 libclang-rt-20-dev ninja-build mold
-          clang++-20 --version
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: clang-20 libclang-rt-20-dev ninja-build mold
+          version: 1.0
+          execute_install_scripts: true
+
+      - name: Show the clang version
+        run: clang++-20 --version
         shell: bash
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: clang-debug
+
+      # ccache only takes "true" for a boolean, not "0", so it is set or unset
+      - name: Compile everything (push to dev, manual run)
+        if: github.event_name != 'pull_request'
+        run: echo "CCACHE_RECACHE=true" >> "$GITHUB_ENV"
 
       - name: Cache Eigen source
         id: cache-eigen
@@ -87,8 +114,7 @@ jobs:
         shell: bash
 
       # -k 0 keeps building past failures so that one run lists every file
-      # that does not build with clang; the exit status is passed on to the
-      # build-timings step and fails the job at the end of this step.
+      # that does not build with clang; the job fails at the end of this step.
       - name: Configure and build
         id: build
         run: |
@@ -98,6 +124,7 @@ jobs:
             -DBUILD_WITH_ASE=OFF \
             -DBUILD_WITH_TESTS=ON \
             -DBUILD_WITH_DOCS=OFF \
+            -DCMAKE_CXX_FLAGS="-Xclang -fno-pch-timestamp" \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           status=0
           cmake --build build --parallel "$(nproc)" -- -k 0 || status=$?
@@ -109,12 +136,3 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
-
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: clang
-          ccache: 'false'
-          job-id: ${{ job.check_run_id }}
-          build-status: ${{ steps.build.outcome }}

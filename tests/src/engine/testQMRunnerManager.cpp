@@ -29,6 +29,8 @@
 #include "exceptions.hpp"
 #include "pyscfRunner.hpp"
 #include "qmRunnerManager.hpp"
+#include "qmSettings.hpp"
+#include "settings.hpp"
 #include "throwWithMessage.hpp"
 #include "turbomoleRunner.hpp"
 
@@ -36,9 +38,33 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
 {
     using engine::QMRunnerManager;
 
-    const auto dftb      = QMRunnerManager::createQMRunner(QMMethod::DFTBPLUS);
-    const auto pyscf     = QMRunnerManager::createQMRunner(QMMethod::PYSCF);
-    const auto turbomole = QMRunnerManager::createQMRunner(QMMethod::TURBOMOLE);
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    const auto dftb = QMRunnerManager::createQMRunner(
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+    );
+
+    settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
+    const auto pyscf = QMRunnerManager::createQMRunner(
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+    );
+
+    settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    const auto turbomole = QMRunnerManager::createQMRunner(
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+    );
 
     EXPECT_NE(dynamic_cast<QM::DFTBPlusRunner *>(dftb.get()), nullptr);
     EXPECT_NE(dynamic_cast<QM::PySCFRunner *>(pyscf.get()), nullptr);
@@ -47,18 +73,38 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
 
 TEST(TestQMRunnerManager, eachCallCreatesANewRunner)
 {
-    const auto first =
-        engine::QMRunnerManager::createQMRunner(QMMethod::DFTBPLUS);
-    const auto second =
-        engine::QMRunnerManager::createQMRunner(QMMethod::DFTBPLUS);
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    const auto first = engine::QMRunnerManager::createQMRunner(
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+    );
+    const auto second = engine::QMRunnerManager::createQMRunner(
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+    );
 
     EXPECT_NE(first.get(), second.get());
 }
 
 TEST(TestQMRunnerManager, rejectsMissingQMProgram)
 {
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
     EXPECT_THROW_MSG(
-        engine::QMRunnerManager::createQMRunner(QMMethod::NONE),
+        auto _ = engine::QMRunnerManager::createQMRunner(
+            settings.qmSettings,
+            settings.maceSettings,
+            settings.fennolSettings,
+            settings.dftbSettings,
+            settings.xtbSettings
+        ),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -70,30 +116,59 @@ TEST(TestQMRunnerManager, rejectsMissingQMProgram)
 TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
 {
     using engine::QMRunnerManager;
+    Settings settings;
 
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::ASE_DFTBPLUS),
+        const auto _ = QMRunnerManager::createQMRunner(
+            settings.qmSettings,
+            settings.maceSettings,
+            settings.fennolSettings,
+            settings.dftbSettings,
+            settings.xtbSettings
+        ),
         exc::CompileTimeException,
         "The ASE DFTB+ QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use ASE DFTB+ "
         "type QM methods using: -DBUILD_WITH_ASE=ON"
     );
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_XTB);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::ASE_XTB),
+        const auto _ = QMRunnerManager::createQMRunner(
+            settings.qmSettings,
+            settings.maceSettings,
+            settings.fennolSettings,
+            settings.dftbSettings,
+            settings.xtbSettings
+        ),
         exc::CompileTimeException,
         "The ASE xTB QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE xTB "
         "type QM method using: -DBUILD_WITH_ASE=ON"
     );
+    settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::MACE),
+        const auto _ = QMRunnerManager::createQMRunner(
+            settings.qmSettings,
+            settings.maceSettings,
+            settings.fennolSettings,
+            settings.dftbSettings,
+            settings.xtbSettings
+        ),
         exc::CompileTimeException,
         "A MACE type QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use MACE type QM "
         "methods using: -DBUILD_WITH_ASE=ON"
     );
+    settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
     EXPECT_THROW_MSG(
-        QMRunnerManager::createQMRunner(QMMethod::FENNOL),
+        const auto _ = QMRunnerManager::createQMRunner(
+            settings.qmSettings,
+            settings.maceSettings,
+            settings.fennolSettings,
+            settings.dftbSettings,
+            settings.xtbSettings
+        ),
         exc::CompileTimeException,
         "The ASE FeNNol QM method was requested but ASE was not enabled at "
         "compile time. Please recompile with ASE enabled to use the ASE "

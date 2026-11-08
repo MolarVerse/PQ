@@ -99,17 +99,19 @@ namespace linalg
 
         // += operators
         void operator+=(const Vector3D<T> &vec)
-        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+                 mstd::is_quantity_like_v<T>;
 
         Vector3D &operator+=(const T &vec)
-        requires pq::Arithmetic<T>;
+        requires pq::Arithmetic<T> || mstd::is_quantity_like_v<T>;
 
         // -= operators
         Vector3D &operator-=(const Vector3D<T> &vec)
-        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+                 mstd::is_quantity_like_v<T>;
 
         Vector3D &operator-=(const T &vec)
-        requires pq::Arithmetic<T>;
+        requires pq::Arithmetic<T> || mstd::is_quantity_like_v<T>;
 
         // *= operators
         Vector3D &operator*=(const Vector3D<T> &vec)

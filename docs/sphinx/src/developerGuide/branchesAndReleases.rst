@@ -24,8 +24,6 @@ Branches
       - Your work, cut from an up to date ``dev``.
 
 Nobody pushes to ``main`` or ``dev`` directly, and a branch that other people use is never amended or force-pushed.
-The only exception is the CI metrics collector, which commits the data below ``.github/ci-metrics/data/`` to ``dev``,
-see :doc:`ciMetrics`.
 
 A typical change:
 
@@ -65,5 +63,5 @@ Normal releases use ``release/vX.Y.Z`` branches prepared from ``dev``. Hotfixes
 use ``hotfix/<name>`` branches prepared from ``main``. Both target ``main`` and
 require successful checks on the exact publication commit before publishing.
 
-See :doc:`releasesAndHotfixes` for the creation commands, version pinning,
+See :doc:`releasesAndHotfixes` for the creation commands, version selection,
 changelog preparation, publication verification and recovery procedures.

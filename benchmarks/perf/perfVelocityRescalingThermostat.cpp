@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -45,17 +47,17 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    settings::TimingsSettings::setTimeStep(0.001 * fs);
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto             physicalData      = physicalData::PhysicalData();
-    constexpr double targetTemperature = 300.0;
+    auto       physicalData      = physicalData::PhysicalData();
+    const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     auto thermostat =
-        thermostat::VelocityRescalingThermostat(targetTemperature, 100.0);
+        thermostat::VelocityRescalingThermostat(targetTemperature, 100.0 * fs);
 
     perfAllocBegin();
 
@@ -69,7 +71,9 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
-        physicalData.getTemperature(),
+        physicalData.getTemperature().quantity_from_zero().numerical_value_in(
+            K
+        ),
         box.calculateMomentum()[0]
     );
     return 0;

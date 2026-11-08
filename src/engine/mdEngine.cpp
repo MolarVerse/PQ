@@ -27,6 +27,7 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
+#include "interrupt.hpp"
 #include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
@@ -76,6 +77,8 @@ namespace engine
 
         for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
         {
+            utilities::throwIfInterrupted();
+
             bar.update();
             takeStep();
 
@@ -254,7 +257,7 @@ namespace engine
 
             const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
+            const auto simTime       = effStepDouble * timeStep;
 
             getEngineOutput().writeEnergyFile(
                 effStep,
@@ -266,7 +269,7 @@ namespace engine
                 getPhysicalData(),
                 getSettings()
             );
-            getEngineOutput().writeInfoFile(
+            getEngineOutput().getInfoOutput().write(
                 simTime,
                 getAveragePhysicalData(),
                 getSettings()

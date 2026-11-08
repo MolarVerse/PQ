@@ -33,14 +33,13 @@
 
 #if !defined(_WIN32)
 #include <pthread.h>
-
-#include <csignal>
 #endif
 
 #include "box.hpp"
 #include "constants.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
+#include "interrupt.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
@@ -238,7 +237,7 @@ namespace QM
          *
          * @details an exception thrown in this thread would terminate PQ, so
          * the Python call in the calling thread is interrupted instead
-         * (KeyboardInterrupt) and timedOut is set. If Python handles SIGINT,
+         * (KeyboardInterrupt) and timedOut is set. If SIGINT is handled,
          * the signal is also sent to the calling thread to wake up blocking
          * calls such as time.sleep or subprocess waits.
          *
@@ -255,7 +254,7 @@ namespace QM
             constexpr auto pollInterval = std::chrono::milliseconds(10);
 
             // qm_loop_time_limit is given in s
-            const auto timeLimit = settings::QMSettings::getQMLoopTimeLimit();
+            const auto timeLimit = QMSettings::getQMLoopTimeLimit();
 
             if (timeLimit <= 0.0)
             {
@@ -279,13 +278,7 @@ namespace QM
             ::PyErr_SetInterrupt();
 
 #if !defined(_WIN32)
-            struct sigaction current{};
-            ::sigaction(SIGINT, nullptr, &current);
-
-            if (current.sa_handler != SIG_DFL && current.sa_handler != SIG_IGN)
-            {
-                ::pthread_kill(pythonThread, SIGINT);
-            }
+            utilities::wakePythonThread(pythonThread);
 #else
             static_cast<void>(pythonThread);
 #endif
@@ -314,7 +307,8 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the ase.atoms module
      * fails
      */
-    AseQMRunner::AseQMRunner() : _ase(std::make_unique<AseInterface>())
+    AseQMRunner::AseQMRunner(const QMSettings &settings)
+        : QMRunner(settings), _ase(std::make_unique<AseInterface>())
     {
         try
         {
@@ -482,7 +476,7 @@ namespace QM
             throw;
         }
 
-        if (settings::QMSettings::getRemoveNetForce())
+        if (QMSettings::getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 

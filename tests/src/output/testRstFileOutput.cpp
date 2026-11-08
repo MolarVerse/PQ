@@ -27,7 +27,6 @@
 
 #include "noseHooverThermostat.hpp"
 #include "thermostat.hpp"
-#include "thermostatSettings.hpp"
 
 /**
  * @brief tests writing the restart file
@@ -81,10 +80,6 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     // NOTE: HERE one more value than printed is needed
     thermostat.setChi({1.0, 2.0, 3.0, 0.0});
     thermostat.setZeta({3.0, 2.0, 1.0, 0.0});
-
-    settings::ThermostatSettings::setThermostatType(
-        ThermostatType::NOSE_HOOVER
-    );
 
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(*_simulationBox, thermostat, 10);

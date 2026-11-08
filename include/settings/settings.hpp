@@ -30,10 +30,12 @@
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
+#include "qmSettings.hpp"
 #include "referenceSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
+#include "thermostatSettings.hpp"
 #include "waterModelSettings.hpp"
 
 /**
@@ -53,6 +55,12 @@ struct Settings
     ManostatSettings      manostatSettings;
     OutputFileSettings    outputFiles;
     ReferenceSettings     referenceSettings;
+    QMSettings            qmSettings;
+    MaceSettings          maceSettings;
+    FennolSettings        fennolSettings;
+    DftbSettings          dftbSettings;
+    XtbSettings           xtbSettings;
+    ThermostatSettings    thermostatSettings;
 
     void finalize();
 };

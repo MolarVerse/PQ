@@ -25,12 +25,12 @@
 #include <cmath>
 #include <vector>
 
-#include "constants/conversionFactors.hpp"
 #include "distanceKernels.hpp"
 #include "exceptions.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace constraints
 {
@@ -165,7 +165,7 @@ namespace constraints
             );
 
             const auto timeStep =
-                settings::TimingsSettings::getTimeStep() * FS_TO_S;
+                settings::TimingsSettings::getTimeStep().numerical_value_in(s);
             const auto dVelocity = dPosition / timeStep;
 
             molecule1->addAtomVelocity(

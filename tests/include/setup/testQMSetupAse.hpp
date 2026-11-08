@@ -44,26 +44,30 @@ class TestQMSetupAse : public ::testing::Test
 
     void SetUp() override
     {
+        // Remove any existing default log file to ensure a clean test
+        // environment
+        const auto _ = std::remove("default.log");
+        _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
         _engine  = std::make_unique<engine::QMMDEngine>(_settings);
-        _qmSetup = std::make_unique<setup::QMSetup>(*_engine);
+        _qmSetup = std::make_unique<setup::QMSetup>(
+            *_engine,
+            _settings.qmSettings,
+            _settings.maceSettings,
+            _settings.fennolSettings,
+            _settings.dftbSettings,
+            _settings.xtbSettings
+        );
         _engine->getEngineOutput().getLogOutput().setFilename(
             "default.log",
             false
         );
-        settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
     }
 
     void TearDown() override
     {
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        settings::QMSettings::setQMMethod(QMMethod::NONE);
-        settings::QMSettings::setSlakosType(SlakosType::NONE);
-        settings::QMSettings::setUseDispersionCorrection(false);
-        settings::QMSettings::setUseThirdOrderDftb(false);
-        settings::QMSettings::setIsThirdOrderDftbSet(false);
-        settings::QMSettings::setHubbardDerivs({});
-        settings::QMSettings::setIsHubbardDerivsSet(false);
+        QMSettings::setUseDispersionCorrection(false);
     }
 };
 

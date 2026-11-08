@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -45,8 +47,8 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    constexpr double temperature = 300.0;
-    settings::ThermostatSettings::setActualTargetTemperature(temperature);
+    Temperature temperature{toTemperature(300.0)};
+    ThermostatSettings::setActualTargetTemperature(temperature);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
@@ -57,13 +59,13 @@ int main()
 
     // step <= n is always true here, so every reset runs in every iteration
     ResetKineticsSettings settings;
-    settings.setNScale(ITERATIONS);
-    settings.setFScale(1);
-    settings.setNReset(ITERATIONS);
-    settings.setFReset(1);
-    settings.setNResetAngular(ITERATIONS);
-    settings.setFResetAngular(1);
-    settings.setFResetForces(1);
+    settings.setNScaleByUser(ITERATIONS);
+    settings.setFScaleByUser(1);
+    settings.setNResetByUser(ITERATIONS);
+    settings.setFResetByUser(1);
+    settings.setNResetAngularByUser(ITERATIONS);
+    settings.setFResetAngularByUser(1);
+    settings.setFResetForcesByUser(1);
     const auto resetKinetics = resetKinetics::ResetKinetics(settings);
 
     perfAllocBegin();
@@ -79,7 +81,7 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
-        box.calculateTemperature(),
+        box.calculateTemperature().quantity_from_zero().numerical_value_in(K),
         box.calculateMomentum()[0]
     );
     return 0;

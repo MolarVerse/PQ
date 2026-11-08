@@ -32,6 +32,7 @@
 #include "physicalData.hpp"
 #include "settings.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -41,9 +42,9 @@ namespace out
      *
      * @param timeStep simulation timestep in fs
      */
-    void EnergyOutput::writeHeader(double timeStep)
+    void EnergyOutput::writeHeader(const Time &timeStep)
     {
-        _getFilePointer() << std::format("# timestep = {} fs\n", timeStep);
+        _getFilePointer() << std::format("# timestep = {}\n", timeStep.in(fs));
     }
 
     /**
@@ -71,10 +72,16 @@ namespace out
     )
     {
         _getFilePointer() << std::format("{:10d}\t", step);
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getTemperature());
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getPressure());
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K)
+        );
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getPressure().numerical_value_in(bar)
+        );
         _getFilePointer(
         ) << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
 
@@ -133,12 +140,12 @@ namespace out
             {
                 _getFilePointer() << std::format(
                     "{:20.12f}\t",
-                    physicalData.getCoupledPressure()
+                    physicalData.getCoupledPressure().numerical_value_in(bar)
                 );
             }
         }
 
-        if (settings::ThermostatSettings::getThermostatType() ==
+        if (settings.thermostatSettings.getThermostatType() ==
             ThermostatType::NOSE_HOOVER)
         {
             _getFilePointer() << std::format(

@@ -121,11 +121,11 @@ namespace resetKinetics
      */
     void ResetKinetics::resetTemperature(
         molsys::SimulationBox &simulationBox,
-        double                 temperature
+        const Temperature     &temperature
     )
     {
         const auto targetTemp =
-            settings::ThermostatSettings::getActualTargetTemperature();
+            ThermostatSettings::getActualTargetTemperature();
 
         if (utilities::isZero(temperature))
         {
@@ -136,7 +136,7 @@ namespace resetKinetics
             );
         }
 
-        const auto lambda = ::sqrt(targetTemp / temperature);
+        const auto lambda = mstd::sqrt(tempRatio(targetTemp, temperature));
 
         std::ranges::for_each(
             simulationBox.getAtoms(),

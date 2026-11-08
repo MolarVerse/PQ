@@ -31,6 +31,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -45,8 +46,8 @@ namespace thermostat
      * @param friction
      */
     LangevinThermostat::LangevinThermostat(
-        double targetTemperature,
-        double friction
+        const Temperature &targetTemperature,
+        double             friction
     )
         : Thermostat(targetTemperature), _friction(friction)
     {
@@ -89,8 +90,8 @@ namespace thermostat
      * @param targetTemperature
      */
     void LangevinThermostat::calculateSigma(
-        double friction,
-        double targetTemperature
+        double             friction,
+        const Temperature &targetTemperature
     )
     {
         const auto unitConversion   = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
@@ -98,9 +99,10 @@ namespace thermostat
 
         const auto timeStep = settings::TimingsSettings::getTimeStep();
         const auto force =
-            4.0 * friction * conversionFactor * targetTemperature;
+            4.0 * friction * conversionFactor *
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
-        _sigma = std::sqrt(force / timeStep);
+        _sigma = std::sqrt(force / timeStep.numerical_value_in(fs));
     }
 
     /**
@@ -118,7 +120,8 @@ namespace thermostat
             const auto mass     = atom->getMass();
             const auto timeStep = settings::TimingsSettings::getTimeStep();
 
-            const auto propagationFactor = 0.5 * timeStep * FS_TO_S / mass;
+            const auto propagationFactor =
+                0.5 * timeStep.numerical_value_in(s) / mass;
 
             const linalg::Vec3D randomFactor = {
                 _randomNumberGenerator.getNormalDistribution(0.0, 1.0),
@@ -186,7 +189,9 @@ namespace thermostat
      *
      * @param targetTemperature
      */
-    void LangevinThermostat::setTargetTemperature(double targetTemperature)
+    void LangevinThermostat::setTargetTemperature(
+        const Temperature &targetTemperature
+    )
     {
         Thermostat::setTargetTemperature(targetTemperature);
         calculateSigma(_friction, targetTemperature);

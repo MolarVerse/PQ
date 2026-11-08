@@ -26,6 +26,7 @@
 #include <cstddef>
 
 #include "output.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -47,7 +48,7 @@ namespace out
        public:
         using Output::Output;
 
-        void writeHeader(double timeStep);
+        void writeHeader(const Time &timeStep);
         void write(
             size_t                            step,
             const physicalData::PhysicalData &physicalData,

@@ -23,7 +23,11 @@
 #ifndef QM__ASE__ASE_MACE_RUNNER_HPP
 #define QM__ASE__ASE_MACE_RUNNER_HPP
 
+#include <mstd/types.hpp>
+
 #include "aseQMRunner.hpp"
+
+class MaceSettings;
 
 namespace QM
 {
@@ -38,11 +42,8 @@ namespace QM
         ~AseMaceRunner() override = default;
 
         explicit AseMaceRunner(
-            const std::string& modelType,
-            const std::string& model,
-            const std::string& fpType,
-            bool               dispersion,
-            bool               enableCueq
+            const QMSettings&   settings,
+            const MaceSettings& maceSettings
         );
     };
 }   // namespace QM

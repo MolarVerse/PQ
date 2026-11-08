@@ -121,6 +121,9 @@ MSTD_ENUM_BITFLAG(FixedAxis, std::uint8_t, FIXED_AXIS_LIST);
 [[nodiscard]]
 bool isAxisFixed(FixedAxis fixedAxis, size_t axisIndex);
 
+[[nodiscard]]
+int toDim(FixedAxis fixedAxis);
+
 /**
  * @brief Input aliases for the FixedAxis enum
  *

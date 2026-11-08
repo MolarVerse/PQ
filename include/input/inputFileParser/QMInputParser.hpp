@@ -28,6 +28,11 @@
 #include "inputFileParser.hpp"
 
 class ReferenceSettings;
+class QMSettings;
+class MaceSettings;
+class FennolSettings;
+class DftbSettings;
+class XtbSettings;
 
 namespace input
 {
@@ -42,13 +47,22 @@ namespace input
        private:
         bool                         _resolveBuiltInSlakosPath;
         mstd::Ref<ReferenceSettings> _referenceSettings;
+        mstd::Ref<QMSettings>        _qmSettings;
+        mstd::Ref<MaceSettings>      _maceSettings;
+        mstd::Ref<FennolSettings>    _fennolSettings;
+        mstd::Ref<DftbSettings>      _dftbSettings;
+        mstd::Ref<XtbSettings>       _xtbSettings;
 
        public:
         explicit QMInputParser(
-            bool                         resolveBuiltInSlakosPath,
-            mstd::Ref<ReferenceSettings> referenceSettings
+            bool               resolveBuiltInSlakosPath,
+            ReferenceSettings &referenceSettings,
+            QMSettings        &qmSettings,
+            MaceSettings      &maceSettings,
+            FennolSettings    &fennolSettings,
+            DftbSettings      &dftbSettings,
+            XtbSettings       &xtbSettings
         );
-        explicit QMInputParser(mstd::Ref<ReferenceSettings> referenceSettings);
 
         void parseMaceQMMethod(const std::string &);
         void addQMMethodKey();

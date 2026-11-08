@@ -1,8 +1,7 @@
 # Local build-time tracking
 
 A small toolkit for analysing and improving PQ's build times step by step, on **your** machine.
-Standard library only. It is deliberately **uncoupled from the CI metrics** (`.github/ci-metrics`):
-it has its own parsers and schema, and its data never leaves your machine.
+Standard library only. It has its own parsers and schema, and its data never leaves your machine.
 
 ```text
 python3 scripts/pq_build_times/pqbt.py snapshot --note "what changed"   # measure and store

@@ -22,24 +22,31 @@
 
 #include "aseFennolRunner.hpp"
 
+#include <pybind11/embed.h>
+
+#include "generalSettings.hpp"
+#include "qmSettings.hpp"
+
 namespace QM
 {
 
     /**
      * @brief Construct a new AseFennolRunner::AseFennolRunner object
      *
-     * @param modelPath
-     * @param gpuPreprocessing
-     * @param useFloat64
+     * @param qmSettings The QM settings to configure the ASE Fennol runner
+     * with, including method-specific parameters such as the model path and any
+     * relevant computational options
+     * @param fennolSettings The Fennol-specific settings including the model
+     * path, GPU preprocessing flag, and any other relevant options
      *
      * @throw pybind11::error_already_set if the import of the fennol module
      * fails
      */
     AseFennolRunner::AseFennolRunner(
-        const std::string &modelPath,
-        bool               gpuPreprocessing,
-        bool               useFloat64
+        const QMSettings     &qmSettings,
+        const FennolSettings &fennolSettings
     )
+        : AseQMRunner(qmSettings)
     {
         try
         {
@@ -48,10 +55,14 @@ namespace QM
 
             const pybind11::dict calculatorArgs;
 
-            calculatorArgs["model"] = modelPath.c_str();
+            calculatorArgs["model"] =
+                fennolSettings.getFennolModelPath().c_str();
             calculatorArgs["gpu_preprocessing"] =
-                pybind11::bool_(gpuPreprocessing);
-            calculatorArgs["use_float64"] = pybind11::bool_(useFloat64);
+                pybind11::bool_(fennolSettings.useGPUPreprocessing());
+            calculatorArgs["use_float64"] = pybind11::bool_(
+                settings::GeneralSettings::getFloatingPointType() ==
+                FPType::DOUBLE
+            );
 
             _setAseCalculator(
                 calculators.attr("FENNIXCalculator")(**calculatorArgs)

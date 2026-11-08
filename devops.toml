@@ -42,6 +42,7 @@ ast_check_enabled_ids = [
     "noFinalKeyword",
     "enforceTypenameOverClass",
     "enforceSystemHeaderLibs",
+    "enforceCppOnlyInclude",
 ]
 
 # Per-check configuration — one sub-table per check id.
@@ -57,7 +58,13 @@ type_to_name = { "molsys::SimulationBox" = [
 ] }
 
 [cpp.ast_check_config.classMemberOrder]
-excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
+excluded_macros = [
+    "MSTD_ENUM",
+    "MSTD_ENUM_BITFLAG",
+    "TEST",
+    "TEST_F",
+    "MSTD_RAII_NO_MOVE",
+]
 
 [cpp.ast_check_config.includeIwyuPragmaOnly]
 allowed_pragmas = ["export", "keep"]
@@ -65,3 +72,7 @@ pragma_required_reasons = { keep = "-- for template specialization" }
 
 [cpp.ast_check_config.enforceSystemHeaderLibs]
 libs = ["mstd"]
+
+[cpp.ast_check_config.enforceCppOnlyInclude]
+libs = ["units.hpp"]
+exclude_paths = ["tests/", "benchmarks/"]

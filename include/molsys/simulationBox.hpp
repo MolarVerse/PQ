@@ -35,6 +35,7 @@
 #include "moleculeType.hpp"
 #include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 
 /**
  * @namespace molsys
@@ -85,6 +86,10 @@ namespace molsys
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
+        // cumulative number of atoms per molecule (0, n0, n0 + n1, ...), only
+        // filled between buildAtomIndexLookup() and clearAtomIndexLookup()
+        std::vector<size_t> _atomIndexOffsets;
+
         std::vector<ExtVdwType> _externalGlobalVdwTypes;
         std::unordered_map<ExtVdwType, VdwType>
             _externalToInternalGlobalVDWTypes;
@@ -118,7 +123,7 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] double        calculateTemperature();
+        [[nodiscard]] Temperature   calculateTemperature();
         [[nodiscard]] double        calculateTotalForce() const;
         [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
         [[nodiscard]] double        calculateRMSForce() const;
@@ -151,6 +156,8 @@ namespace molsys
         std::pair<Molecule*, AtomIndex> findMoleculeByGlobalAtomIndex(
             size_t atomIndex
         );
+        void buildAtomIndexLookup();
+        void clearAtomIndexLookup();
 
 #ifdef WITH_MPI
         [[nodiscard]] std::vector<double> flattenVelocities();
@@ -250,7 +257,7 @@ namespace molsys
          **********************************************/
 
         void applyPBC(linalg::Vec3D& position) const;
-        void scaleBox(const linalg::tensor3D& scalingTensor);
+        void scaleBox(const QuantityTensor3D& scalingTensor);
 
         [[nodiscard]] double getVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;

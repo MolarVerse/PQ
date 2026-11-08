@@ -24,25 +24,28 @@
 
 #include <pybind11/embed.h>
 
+#include "qmSettings.hpp"
+
 namespace QM
 {
 
     /**
      * @brief Construct a new AseDftbRunner::AseDftbRunner object
      *
-     * @param slakosPath
-     * @param thirdOrder
-     * @param hubbardDerivs
-     * @param dispersion
+     * @param settings The QM settings to configure the ASE DFTB runner with,
+     * including method-specific parameters such as the DFTB version and any
+     * relevant computational options
+     * @param dftbSettings The DFTB+ specific settings including the Slakos
+     * path, whether third order corrections should be applied, the Hubbard
+     * derivatives, and whether dispersion corrections should be included
      *
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseDftbRunner::AseDftbRunner(
-        const std::string                             &slakosPath,
-        bool                                           thirdOrder,
-        const std::unordered_map<std::string, double> &hubbardDerivs,
-        bool                                           dispersion
+        const QMSettings   &settings,
+        const DftbSettings &dftbSettings
     )
+        : AseQMRunner(settings)
     {
         try
         {
@@ -51,9 +54,9 @@ namespace QM
 
             const pybind11::dict calculatorArgs;
 
-            calculatorArgs["slako_dir"] = slakosPath.c_str();
+            calculatorArgs["slako_dir"] = dftbSettings.getSlakosPath().c_str();
 
-            if (dispersion)
+            if (QMSettings::useDispersionCorr())
             {
                 calculatorArgs["Hamiltonian_Dispersion"]            = "DftD3{";
                 calculatorArgs["Hamiltonian_Dispersion_Damping_a1"] = "0.746";
@@ -64,13 +67,20 @@ namespace QM
                 calculatorArgs["Hamiltonian_Dispersion_s8"] = "3.209";
             }
 
-            if (thirdOrder)
+            if (dftbSettings.useThirdOrderDftb())
             {
-                setHubbDerivDict(hubbardDerivs);
+                const auto hubbDerivDict = dftbSettings.getHubbardDerivs();
+                if (!hubbDerivDict.has_value())
+                {
+                    throw std::runtime_error(
+                        "Third order DFTB requested but Hubbard derivatives "
+                        "are not provided."
+                    );
+                }
+
                 calculatorArgs["Hamiltonian_ThirdOrderFull"] = "Yes";
                 calculatorArgs["Hamiltonian_hubbardderivs_"] = "";
-                const auto hubbDerivDict = getHubbDerivDict();
-                for (const auto &[key, value] : hubbDerivDict)
+                for (const auto &[key, value] : hubbDerivDict.value())
                 {
                     auto _key = "Hamiltonian_hubbardderivs_" + key;
                     calculatorArgs[_key.c_str()] = value;
@@ -90,39 +100,6 @@ namespace QM
             ::PyErr_Print();
             throw;
         }
-    }
-
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief get the 3ob Hubbard derivatives as dict
-     *
-     * @return std::unordered_map<std::string, float>
-     */
-    const std::unordered_map<std::string, double> &AseDftbRunner::
-        getHubbDerivDict() const
-    {
-        return _hubbardDerivDict;
-    }
-
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief set the 3ob Hubbard derivatives as dict
-     */
-    void AseDftbRunner::setHubbDerivDict(
-        const std::unordered_map<std::string, double> &slakosDict
-    )
-    {
-        _hubbardDerivDict = slakosDict;
     }
 
 }   // namespace QM

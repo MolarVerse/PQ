@@ -30,6 +30,8 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -42,8 +44,8 @@ namespace thermostat
      * @param tau
      */
     VelocityRescalingThermostat::VelocityRescalingThermostat(
-        double targetTemp,
-        double tau
+        const Temperature &targetTemp,
+        const Time        &tau
     )
         : Thermostat(targetTemp), _tau(tau)
     {
@@ -97,11 +99,12 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        setTemperature(physicalData.getTemperature());
+        const auto temp = physicalData.getTemperature();
+        setTemperature(temp);
 
-        if (utilities::isZero(getTemperature()))
+        if (utilities::isZero(getTemperature().quantity_from_zero()))
         {
-            if (utilities::isZero(getTargetTemperature()))
+            if (utilities::isZero(getTargetTemperature().quantity_from_zero()))
                 return;
 
             throw exc::UserInputException(
@@ -112,14 +115,17 @@ namespace thermostat
         }
 
         const auto timeStep  = settings::TimingsSettings::getTimeStep();
-        const auto tempRatio = getTargetTemperature() / getTemperature();
+        const auto timeRatio = static_cast<double>(timeStep / _tau);
+        const auto tempRatio = getTargetTemperature().quantity_from_zero() /
+                               getTemperature().quantity_from_zero();
         const auto dof =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
 
-        auto lambda = 1.0 + (timeStep / _tau * (tempRatio - 1.0));
+        auto lambda =
+            1.0 + (timeRatio * (tempRatio - 1.0)).numerical_value_in(one);
 
         const auto rescalingFactor =
-            2.0 * ::sqrt(timeStep * tempRatio / (dof * _tau));
+            2.0 * ::sqrt(timeRatio * tempRatio.numerical_value_in(one) / dof);
 
         auto random = _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
 
@@ -140,8 +146,10 @@ namespace thermostat
         for (const auto &atom : simulationBox.getAtoms())
             atom->scaleVelocity(berendsenFactor);
 
-        const auto temperature =
-            getTemperature() * berendsenFactor * berendsenFactor;
+        const Temperature temperature{
+            getTemperature().quantity_from_zero() * berendsenFactor *
+            berendsenFactor
+        };
 
         physicalData.setTemperature(temperature);
     }
@@ -149,16 +157,16 @@ namespace thermostat
     /**
      * @brief Get the tau (relaxation time) of the Velocity Rescaling thermostat
      *
-     * @return double
+     * @return const Time&
      */
-    double VelocityRescalingThermostat::getTau() const { return _tau; }
+    const Time &VelocityRescalingThermostat::getTau() const { return _tau; }
 
     /**
      * @brief Set the tau (relaxation time) of the Velocity Rescaling thermostat
      *
      * @param tau
      */
-    void VelocityRescalingThermostat::setTau(double tau) { _tau = tau; }
+    void VelocityRescalingThermostat::setTau(const Time &tau) { _tau = tau; }
     /**
      * @brief Get thermostat type
      *

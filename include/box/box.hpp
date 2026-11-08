@@ -82,7 +82,7 @@ namespace molsys
             const linalg::Vec3D &
         ) const = 0;
 
-        virtual void scaleBox(const linalg::tensor3D &scalingFactors) = 0;
+        virtual void scaleBox(const QuantityTensor3D &scalingFactors) = 0;
 
         [[nodiscard]]
         virtual double getVolume() const = 0;
@@ -97,19 +97,15 @@ namespace molsys
         virtual linalg::tensor3D getBoxMatrix(Periodicity per) const = 0;
 
         [[nodiscard]]
-        virtual linalg::Vec3D toOrthoSpace(const linalg::Vec3D &) const = 0;
+        virtual linalg::tensor3D getBoxMatrix() const = 0;
         [[nodiscard]]
-        virtual linalg::tensor3D toOrthoSpace(
-            const linalg::tensor3D &
-        ) const = 0;
-
-        [[nodiscard]]
-        virtual linalg::Vec3D toSimSpace(const linalg::Vec3D &) const = 0;
-        [[nodiscard]]
-        virtual linalg::tensor3D toSimSpace(const linalg::tensor3D &) const = 0;
+        virtual linalg::tensor3D getInverseBoxMatrix() const = 0;
 
         [[nodiscard]]
         virtual bool allowChangeOfAngles() const = 0;
+
+        [[nodiscard]]
+        virtual bool isOrthorhombic() const = 0;
 
         /********************
          * standard getters *

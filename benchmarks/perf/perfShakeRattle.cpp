@@ -32,6 +32,7 @@
 
 #include "settings.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -51,18 +52,18 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    settings::TimingsSettings::setTimeStep(0.001 * fs);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto &molecules = box.getMolecules();
 
     Settings settings;
-    settings.constraintSettings.setShakeMaxIter(100);
-    settings.constraintSettings.setRattleMaxIter(100);
-    settings.constraintSettings.setShakeTolerance(1.0e-8);
-    settings.constraintSettings.setRattleTolerance(1.0e-8);
-    settings.constraintSettings.activateShake();
+    settings.constraintSettings.setShakeMaxIterByUser(100);
+    settings.constraintSettings.setRattleMaxIterByUser(100);
+    settings.constraintSettings.setShakeToleranceByUser(1.0e-8);
+    settings.constraintSettings.setRattleToleranceByUser(1.0e-8);
+    settings.constraintSettings.activateShakeByUser();
     auto constr = constraints::Constraints(settings.constraintSettings);
 
     for (auto &molecule : molecules)

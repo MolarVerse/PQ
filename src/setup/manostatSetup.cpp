@@ -192,12 +192,14 @@ namespace setup
         const auto tau      = settings.getTau();
         const auto compr    = settings.getCompressibility();
 
-        logOutput.writeSetupInfo(std::format("Target pressure: {}", pressure));
+        logOutput.writeSetupInfo(
+            std::format("Target pressure: {}", pressure.in(bar))
+        );
         logOutput.writeSetupInfo(
             std::format("Relaxation time: {}", tau.in(ps))
         );
         logOutput.writeSetupInfo(
-            std::format("Compressibility: {} bar⁻¹", compr)
+            std::format("Compressibility: {}", compr.in(per_bar))
         );
         logOutput.writeEmptyLine();
     }

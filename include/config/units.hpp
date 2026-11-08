@@ -35,11 +35,21 @@
 
 // NOLINTBEGIN(readability-identifier-length)
 
+inline constexpr auto one = mstd::units::one;
+
 inline constexpr auto rad = mstd::units::rad;
 inline constexpr auto deg = mstd::units::deg;
 
-inline constexpr auto ps = mstd::units::ps;
 inline constexpr auto fs = mstd::units::fs;
+inline constexpr auto ps = mstd::units::ps;
+inline constexpr auto s  = mstd::units::s;
+
+inline constexpr auto bar     = mstd::units::bar;
+inline constexpr auto Pa      = mstd::units::Pa;
+inline constexpr auto per_bar = mstd::units::per_bar;
+inline constexpr auto per_Pa  = mstd::units::per_Pa;
+
+inline constexpr auto K = mstd::units::K;
 
 // NOLINTEND(readability-identifier-length)
 #endif   // CONFIG__UNITS_HPP

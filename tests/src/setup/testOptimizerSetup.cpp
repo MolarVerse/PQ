@@ -43,12 +43,12 @@ namespace
     // from earlier tests can't leak in.
     void resetOptimizerSettings(OptimizerSettings &settings)
     {
-        settings.setOptimizer(OptimizerType::STEEPEST_DESCENT);
-        settings.setLearningRateStrategy(LearningRate::CONSTANT);
-        settings.setInitialLearningRate(0.01);
-        settings.setMinLearningRate(0.0);
-        settings.setMaxLearningRate(1.0);
-        settings.setLRUpdateFrequency(1);
+        settings.setOptimizerByUser(OptimizerType::STEEPEST_DESCENT);
+        settings.setLearningRateStrategyByUser(LearningRate::CONSTANT);
+        settings.setInitialLearningRateByUser(0.01);
+        settings.setMinLearningRateByUser(0.0);
+        settings.setMaxLearningRateByUser(1.0);
+        settings.setLRUpdateFrequencyByUser(1);
     }
 }   // namespace
 
@@ -67,10 +67,10 @@ TEST_F(TestSetup, setupOptimizerIsNoOpWhenNotOptJob)
 TEST_F(TestSetup, setupLearningRateStrategyConstant)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );
-    _settings->optimizerSettings.setInitialLearningRate(0.25);
+    _settings->optimizerSettings.setInitialLearningRateByUser(0.25);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -81,12 +81,12 @@ TEST_F(TestSetup, setupLearningRateStrategyConstant)
 TEST_F(TestSetup, setupLearningRateStrategyConstantDecay)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT_DECAY
     );
-    _settings->optimizerSettings.setInitialLearningRate(0.5);
-    _settings->optimizerSettings.setLearningRateDecay(0.1);
-    _settings->optimizerSettings.setLRUpdateFrequency(1);
+    _settings->optimizerSettings.setInitialLearningRateByUser(0.5);
+    _settings->optimizerSettings.setLearningRateDecayByUser(0.1);
+    _settings->optimizerSettings.setLRUpdateFrequencyByUser(1);
 
     engine::OptEngine optEngine{*_settings};
 
@@ -98,12 +98,12 @@ TEST_F(TestSetup, setupLearningRateStrategyConstantDecay)
 TEST_F(TestSetup, setupLearningRateStrategyExpDecay)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::EXPONENTIAL_DECAY
     );
-    _settings->optimizerSettings.setInitialLearningRate(1.0);
-    _settings->optimizerSettings.setLearningRateDecay(0.3);
-    _settings->optimizerSettings.setLRUpdateFrequency(2);
+    _settings->optimizerSettings.setInitialLearningRateByUser(1.0);
+    _settings->optimizerSettings.setLearningRateDecayByUser(0.3);
+    _settings->optimizerSettings.setLRUpdateFrequencyByUser(2);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -114,7 +114,7 @@ TEST_F(TestSetup, setupLearningRateStrategyExpDecay)
 TEST_F(TestSetup, setupLearningRateStrategyConstantDecayMissingDecayThrows)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT_DECAY
     );
     // Reset optional learningRateDecay by re-declaring as STEEPEST_DESCENT
@@ -127,7 +127,7 @@ TEST_F(TestSetup, setupLearningRateStrategyConstantDecayMissingDecayThrows)
     // Set decay then unset is not possible; this test only runs successfully
     // before LearningRateDecay has been set in this process. To stay robust
     // across orderings, we skip the assertion if a value has been set.
-    if (!_settings->optimizerSettings.isLearningRateDecaySet())
+    if (!_settings->optimizerSettings.isLearningRateDecaySetByUser())
     {
         EXPECT_THROW_MSG(
             const auto _ = setup.setupLearningRateStrategy(),
@@ -141,7 +141,7 @@ TEST_F(TestSetup, setupLearningRateStrategyConstantDecayMissingDecayThrows)
 TEST_F(TestSetup, setupLearningRateStrategyLineSearchThrows)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::LINESEARCH_WOLFE
     );
     engine::OptEngine     optEngine{*_settings};
@@ -158,11 +158,11 @@ TEST_F(TestSetup, setupLearningRateStrategyLineSearchThrows)
 TEST_F(TestSetup, setupMinMaxLRAcceptsValidRange)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );
-    _settings->optimizerSettings.setMinLearningRate(0.01);
-    _settings->optimizerSettings.setMaxLearningRate(1.0);
+    _settings->optimizerSettings.setMinLearningRateByUser(0.01);
+    _settings->optimizerSettings.setMaxLearningRateByUser(1.0);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -175,11 +175,11 @@ TEST_F(TestSetup, setupMinMaxLRWorksWithoutAMaxLearningRate)
     // max-learning-rate is optional: an input that does not set it must not
     // fail (it has no default, so reading it unconditionally throws)
     auto &optimizerSettings = _settings->optimizerSettings;
-    optimizerSettings.setOptimizer(OptimizerType::STEEPEST_DESCENT);
-    optimizerSettings.setLearningRateStrategy(LearningRate::CONSTANT);
-    optimizerSettings.setInitialLearningRate(0.01);
-    optimizerSettings.setMinLearningRate(0.001);
-    ASSERT_FALSE(optimizerSettings.isMaxLearningRateSet());
+    optimizerSettings.setOptimizerByUser(OptimizerType::STEEPEST_DESCENT);
+    optimizerSettings.setLearningRateStrategyByUser(LearningRate::CONSTANT);
+    optimizerSettings.setInitialLearningRateByUser(0.01);
+    optimizerSettings.setMinLearningRateByUser(0.001);
+    ASSERT_FALSE(optimizerSettings.isMaxLearningRateSetByUser());
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -190,11 +190,11 @@ TEST_F(TestSetup, setupMinMaxLRWorksWithoutAMaxLearningRate)
 TEST_F(TestSetup, setupMinMaxLRThrowsWhenMinGreaterThanMax)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );
-    _settings->optimizerSettings.setMinLearningRate(1.0);
-    _settings->optimizerSettings.setMaxLearningRate(0.5);
+    _settings->optimizerSettings.setMinLearningRateByUser(1.0);
+    _settings->optimizerSettings.setMaxLearningRateByUser(0.5);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -212,7 +212,9 @@ TEST_F(TestSetup, setupMinMaxLRThrowsWhenMinGreaterThanMax)
 TEST_F(TestSetup, setupEmptyOptimizerSteepestDescent)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setOptimizer(OptimizerType::STEEPEST_DESCENT);
+    _settings->optimizerSettings.setOptimizerByUser(
+        OptimizerType::STEEPEST_DESCENT
+    );
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -224,7 +226,7 @@ TEST_F(TestSetup, setupEmptyOptimizerSteepestDescent)
 TEST_F(TestSetup, setupEmptyOptimizerAdam)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setOptimizer(OptimizerType::ADAM);
+    _settings->optimizerSettings.setOptimizerByUser(OptimizerType::ADAM);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -238,11 +240,13 @@ TEST_F(TestSetup, setupEmptyOptimizerAdam)
 TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    _settings->optimizerSettings.setOptimizer(OptimizerType::STEEPEST_DESCENT);
-    _settings->convSettings.setEnergyConvStrategy(ConvStrategy::RIGOROUS);
-    _settings->convSettings.setUseEnergyConv(true);
-    _settings->convSettings.setUseMaxForceConv(true);
-    _settings->convSettings.setUseRMSForceConv(true);
+    _settings->optimizerSettings.setOptimizerByUser(
+        OptimizerType::STEEPEST_DESCENT
+    );
+    _settings->convSettings.setEnergyConvStrategyByUser(ConvStrategy::RIGOROUS);
+    _settings->convSettings.setUseEnergyConvByUser(true);
+    _settings->convSettings.setUseMaxForceConvByUser(true);
+    _settings->convSettings.setUseRMSForceConvByUser(true);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -289,11 +293,13 @@ TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    _settings->optimizerSettings.setOptimizer(OptimizerType::STEEPEST_DESCENT);
-    _settings->optimizerSettings.setLearningRateStrategy(
+    _settings->optimizerSettings.setOptimizerByUser(
+        OptimizerType::STEEPEST_DESCENT
+    );
+    _settings->optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );
-    _settings->optimizerSettings.setInitialLearningRate(0.05);
+    _settings->optimizerSettings.setInitialLearningRateByUser(0.05);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -306,10 +312,10 @@ TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
     settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
-    _settings->optimizerSettings.setMinLearningRate(0.5);
-    _settings->optimizerSettings.setMaxLearningRate(0.5);
+    _settings->optimizerSettings.setMinLearningRateByUser(0.5);
+    _settings->optimizerSettings.setMaxLearningRateByUser(0.5);
 
-    _settings->hessianSettings.setOptimizeBeforeHessian(true);
+    _settings->hessianSettings.setOptimizeBeforeHessianByUser(true);
     engine::HessianEngine hessianEngine{*_settings};
     EXPECT_THROW_MSG(
         hessianEngine.run(),

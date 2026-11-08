@@ -122,8 +122,7 @@ namespace QM
     {
         using enum SmoothingMethod;
 
-        const auto scriptFile =
-            _resolveScriptPath(settings::QMSettings::getQMScript());
+        const auto scriptFile = _resolveScriptPath(QMSettings::getQMScript());
 
         if (!mstd::File(scriptFile).exists())
         {

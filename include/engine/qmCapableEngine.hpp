@@ -25,8 +25,14 @@
 
 #include <memory>
 
-#include "enums/qm.hpp"
 #include "qmRunner.hpp"
+
+class QMSettings;
+class MaceSettings;
+class FennolSettings;
+class DftbSettings;
+class XtbSettings;
+
 namespace engine
 {
     /**
@@ -46,7 +52,13 @@ namespace engine
        public:
         virtual ~QMCapableEngine() = default;
 
-        void setQMRunner(QMMethod method);
+        void setQMRunner(
+            const QMSettings     &settings,
+            const MaceSettings   &maceSettings,
+            const FennolSettings &fennolSettings,
+            const DftbSettings   &dftbSettings,
+            const XtbSettings    &xtbSettings
+        );
         [[nodiscard]] std::shared_ptr<QM::QMRunner> getQMRunner() const;
         [[nodiscard]] bool                          hasQMRunner() const;
     };

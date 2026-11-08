@@ -25,6 +25,7 @@
 #include <cmath>
 #include <iostream>
 #include <limits>
+#include <mstd/units.hpp>
 #include <string>
 
 #include "vector3d.hpp"
@@ -836,4 +837,55 @@ TEST(TestVector3d, divisionAssignmentOperator)
             vec / vec / vec
         )
     );
+}
+
+namespace
+{
+    using Angle = mstd::quantity<mstd::units::rad>;
+
+    template <typename U, typename V>
+    concept CanAdd = requires(U lhs, V rhs) { lhs + rhs; };
+
+    template <typename U, typename V>
+    concept CanMultiply = requires(U lhs, V rhs) { lhs * rhs; };
+}   // namespace
+
+/**
+ * @brief tests the binary operators for linalg::Vector3D of quantities
+ */
+TEST(TestVector3d, quantityVectorOperators)
+{
+    using mstd::units::rad;
+
+    const auto vec = linalg::Vector3D<Angle>(
+        Angle{1.0 * rad},
+        Angle{2.0 * rad},
+        Angle{3.0 * rad}
+    );
+    const auto plain = linalg::Vec3D(1.0, 2.0, 3.0);
+
+    const auto sum = vec + vec;
+    EXPECT_DOUBLE_EQ(sum[0].numerical_value_in(rad), 2.0);
+    EXPECT_DOUBLE_EQ(sum[2].numerical_value_in(rad), 6.0);
+
+    const auto& vec2 = vec;
+    const auto  diff = vec - vec2;
+    EXPECT_DOUBLE_EQ(diff[1].numerical_value_in(rad), 0.0);
+
+    const auto scaled = vec * 2.0;
+    EXPECT_DOUBLE_EQ(scaled[1].numerical_value_in(rad), 4.0);
+
+    const auto scaledLeft = 2.0 * vec;
+    EXPECT_DOUBLE_EQ(scaledLeft[2].numerical_value_in(rad), 6.0);
+
+    const auto product = vec * plain;
+    EXPECT_DOUBLE_EQ(product[2].numerical_value_in(rad), 9.0);
+
+    const auto divided = vec / 2.0;
+    EXPECT_DOUBLE_EQ(divided[2].numerical_value_in(rad), 1.5);
+
+    // a quantity cannot be added to a plain number
+    static_assert(!CanAdd<linalg::Vector3D<Angle>, double>);
+    static_assert(!CanAdd<linalg::Vector3D<Angle>, linalg::Vec3D>);
+    static_assert(CanMultiply<linalg::Vector3D<Angle>, linalg::Vec3D>);
 }

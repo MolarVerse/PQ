@@ -55,7 +55,7 @@ namespace input
 
         const auto setValue =
             [_hessianSettings = _hessianSettings](const std::string &value)
-        { _hessianSettings->setHessianFile(value); };
+        { _hessianSettings->setHessianFileByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{.metadata = metaData, .onSet = setValue}
@@ -74,7 +74,7 @@ namespace input
 
         const auto setValue =
             [_hessianSettings = _hessianSettings](const std::string &value)
-        { _hessianSettings->setHessianInfoFile(value); };
+        { _hessianSettings->setHessianInfoFileByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{.metadata = metaData, .onSet = setValue}
@@ -94,7 +94,7 @@ namespace input
 
         const auto setValue =
             [_hessianSettings = _hessianSettings](double value)
-        { _hessianSettings->setDisplacement(value); };
+        { _hessianSettings->setDisplacementByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -118,7 +118,7 @@ namespace input
         };
 
         const auto setValue = [_hessianSettings = _hessianSettings](bool value)
-        { _hessianSettings->setOptimizeBeforeHessian(value); };
+        { _hessianSettings->setOptimizeBeforeHessianByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -137,7 +137,7 @@ namespace input
 
         const auto setValue =
             [_hessianSettings = _hessianSettings](HessianBuilderType value)
-        { _hessianSettings->setBuilder(value); };
+        { _hessianSettings->setBuilderByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<HessianBuilderType>{

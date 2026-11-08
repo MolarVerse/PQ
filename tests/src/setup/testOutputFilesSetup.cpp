@@ -32,6 +32,7 @@
 #include "outputFilesSetup.hpp"
 #include "testSetup.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -66,7 +67,7 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    _settings->outputFiles.setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->finalize();
 
     EXPECT_NO_THROW(setup::setupOutputFiles(*_engine));
@@ -89,7 +90,7 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    _settings->outputFiles.setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -109,8 +110,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    _settings->outputFiles.setFilePrefix(PREFIX);
-    settings::TimingsSettings::setTimeStep(0.5);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -134,9 +135,9 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    _settings->outputFiles.setFilePrefix(PREFIX);
-    _settings->outputFiles.setIncludeOutputMetadata(true);
-    settings::TimingsSettings::setTimeStep(0.5);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.setIncludeOutputMetadataByUser(true);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -162,7 +163,7 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
-    _settings->outputFiles.setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);

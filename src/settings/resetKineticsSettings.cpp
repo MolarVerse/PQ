@@ -48,16 +48,16 @@ void ResetKineticsSettings::finalize()
     const auto numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
 
     if (_fScale.get() == 0)
-        _fScale.set(numberOfSteps + 1);
+        _fScale.setBySystem(numberOfSteps + 1);
 
     if (_fReset.get() == 0)
-        _fReset.set(numberOfSteps + 1);
+        _fReset.setBySystem(numberOfSteps + 1);
 
     if (_fResetAngular.get() == 0)
-        _fResetAngular.set(numberOfSteps + 1);
+        _fResetAngular.setBySystem(numberOfSteps + 1);
 
     if (_fResetForces.get() == 0)
-        _fResetForces.set(numberOfSteps + 1);
+        _fResetForces.setBySystem(numberOfSteps + 1);
 }
 
 /***************************
@@ -71,37 +71,49 @@ void ResetKineticsSettings::finalize()
  *
  * @param nScale
  */
-void ResetKineticsSettings::setNScale(size_t nScale) { _nScale.set(nScale); }
+void ResetKineticsSettings::setNScaleByUser(size_t nScale)
+{
+    _nScale.setByUser(nScale);
+}
 
 /**
  * @brief set fScale
  *
  * @param fScale
  */
-void ResetKineticsSettings::setFScale(size_t fScale) { _fScale.set(fScale); }
+void ResetKineticsSettings::setFScaleByUser(size_t fScale)
+{
+    _fScale.setByUser(fScale);
+}
 
 /**
  * @brief set nReset
  *
  * @param nReset
  */
-void ResetKineticsSettings::setNReset(size_t nReset) { _nReset.set(nReset); }
+void ResetKineticsSettings::setNResetByUser(size_t nReset)
+{
+    _nReset.setByUser(nReset);
+}
 
 /**
  * @brief set fReset
  *
  * @param fReset
  */
-void ResetKineticsSettings::setFReset(size_t fReset) { _fReset.set(fReset); }
+void ResetKineticsSettings::setFResetByUser(size_t fReset)
+{
+    _fReset.setByUser(fReset);
+}
 
 /**
  * @brief set nResetAngular
  *
  * @param nResetAngular
  */
-void ResetKineticsSettings::setNResetAngular(size_t nResetAngular)
+void ResetKineticsSettings::setNResetAngularByUser(size_t nResetAngular)
 {
-    _nResetAngular.set(nResetAngular);
+    _nResetAngular.setByUser(nResetAngular);
 }
 
 /**
@@ -109,9 +121,9 @@ void ResetKineticsSettings::setNResetAngular(size_t nResetAngular)
  *
  * @param fResetAngular
  */
-void ResetKineticsSettings::setFResetAngular(size_t fResetAngular)
+void ResetKineticsSettings::setFResetAngularByUser(size_t fResetAngular)
 {
-    _fResetAngular.set(fResetAngular);
+    _fResetAngular.setByUser(fResetAngular);
 }
 
 /**
@@ -119,9 +131,9 @@ void ResetKineticsSettings::setFResetAngular(size_t fResetAngular)
  *
  * @param fResetForces
  */
-void ResetKineticsSettings::setFResetForces(size_t fResetForces)
+void ResetKineticsSettings::setFResetForcesByUser(size_t fResetForces)
 {
-    _fResetForces.set(fResetForces);
+    _fResetForces.setByUser(fResetForces);
 }
 
 /***************************

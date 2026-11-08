@@ -75,7 +75,7 @@ namespace benchWaterScaling
         pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
         WaterModelSettings waterModelSettings;
-        waterModelSettings.setWaterInterModel(WaterInterModel::SPC_E);
+        waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
 
         const double boxLength = (SPACING * static_cast<double>(perSide)) + 3.0;
         const auto   numberOfCells = static_cast<size_t>(boxLength / CUTOFF);

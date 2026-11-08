@@ -39,7 +39,23 @@
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "triclinicBox.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
+
+class TestableSimSpaceScalingManostat : public manostat::BerendsenManostat
+{
+   public:
+    using BerendsenManostat::BerendsenManostat;
+
+    static QuantityTensor3D toSimSpaceScaling(
+        const linalg::tensor3D& scalingTensor,
+        const molsys::Box&      box
+    )
+    {
+        return _toSimSpaceScaling(scalingTensor, box);
+    }
+};
 
 class TestableStochasticRescalingManostat
     : public manostat::StochasticRescalingManostat
@@ -47,8 +63,8 @@ class TestableStochasticRescalingManostat
    public:
     using StochasticRescalingManostat::StochasticRescalingManostat;
 
-    void setPressure(const double pressure) { _setPressure(pressure); }
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressure(const Pressure pressure) { _setPressure(pressure); }
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -61,7 +77,7 @@ class TestableAnisotropicStochasticRescalingManostat
     using AnisotropicStochasticRescalingManostat::
         AnisotropicStochasticRescalingManostat;
 
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -74,7 +90,7 @@ class TestableSemiIsotropicStochasticRescalingManostat
     using SemiIsotropicStochasticRescalingManostat::
         SemiIsotropicStochasticRescalingManostat;
 
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -87,7 +103,7 @@ class TestableFullAnisotropicStochasticRescalingManostat
     using FullAnisotropicStochasticRescalingManostat::
         FullAnisotropicStochasticRescalingManostat;
 
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -98,7 +114,7 @@ class TestableBerendsenManostat : public manostat::BerendsenManostat
    public:
     using BerendsenManostat::BerendsenManostat;
 
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -110,7 +126,7 @@ class TestableSemiIsotropicBerendsenManostat
    public:
     using SemiIsotropicBerendsenManostat::SemiIsotropicBerendsenManostat;
 
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -122,7 +138,7 @@ class TestableAnisotropicBerendsenManostat
    public:
     using AnisotropicBerendsenManostat::AnisotropicBerendsenManostat;
 
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -134,7 +150,7 @@ class TestableFullAnisotropicBerendsenManostat
    public:
     using FullAnisotropicBerendsenManostat::FullAnisotropicBerendsenManostat;
 
-    void setPressureTensor(const linalg::tensor3D& pTensor)
+    void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
     }
@@ -149,7 +165,7 @@ namespace
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
-        settings::TimingsSettings::setTimeStep(1.0);
+        settings::TimingsSettings::setTimeStep(1.0 * fs);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         simulationBox.setBox(orthoBox, false);
@@ -250,13 +266,19 @@ TEST_F(TestManostat, CalculatePressure)
 {
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
-    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getPressure().numerical_value_in(bar),
+        3.0 * PRESSURE_FACTOR
+    );
+    EXPECT_DOUBLE_EQ(
+        _data->getCoupledPressure().numerical_value_in(bar),
+        3.0 * PRESSURE_FACTOR
+    );
 }
 
 TEST_F(TestManostat, CalculatePressureWithFixedAxis)
 {
-    _settings->manostatSettings.setFixedAxis(FixedAxis::Z);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
 
     // _data has kinEnergyMolecular = diag(1, 2, 3), virial = diag(1, 2, 3)
     // 2 * kin + vir = diag(3, 6, 9) / volume(2.0) = diag(1.5, 3.0, 4.5) *
@@ -264,15 +286,24 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
     // avg = (1.5 + 3.0) / 2 = 2.25 * PRESSURE_FACTOR
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
-    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 2.25 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getPressure().numerical_value_in(bar),
+        3.0 * PRESSURE_FACTOR
+    );
+    EXPECT_DOUBLE_EQ(
+        _data->getCoupledPressure().numerical_value_in(bar),
+        2.25 * PRESSURE_FACTOR
+    );
 
-    _settings->manostatSettings.setFixedAxis(FixedAxis::ALL);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::ALL);
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getCoupledPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getCoupledPressure().numerical_value_in(bar),
+        3.0 * PRESSURE_FACTOR
+    );
 
-    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
 }
 
 /**
@@ -284,7 +315,10 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
     settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 2.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getPressure().numerical_value_in(bar),
+        2.0 * PRESSURE_FACTOR
+    );
 
     // set virial type back to molecular for other tests
     settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
@@ -309,9 +343,9 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     _box->addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5);
-    _settings->manostatSettings.setTau(0.1 * fs);
-    _settings->manostatSettings.setCompressibility(4.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    _settings->manostatSettings.setTauByUser(0.1 * fs);
+    _settings->manostatSettings.setCompressibilityByUser(4.5 * per_bar);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
     );
@@ -326,7 +360,10 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     _manostat->applyManostat(*_box, *_data);
     auto boxNew = _box->getBoxDimensions();
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 0.75 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getPressure().numerical_value_in(bar),
+        0.75 * PRESSURE_FACTOR
+    );
     EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
     EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
@@ -347,7 +384,7 @@ TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
 {
     setupCutMolecule(*_box, *_data);
 
-    _settings->manostatSettings.setCompressibility(0.058808);
+    _settings->manostatSettings.setCompressibilityByUser(0.058808 * per_bar);
     auto manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
     );
@@ -366,10 +403,12 @@ TEST_F(
 )
 {
     setupCutMolecule(*_box, *_data);
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
 
-    _settings->manostatSettings.setTargetPressure(-3.0 * ::log(0.98));
-    _settings->manostatSettings.setCompressibility(1.0);
+    _settings->manostatSettings.setTargetPressureByUser(
+        -3.0 * ::log(0.98) * bar
+    );
+    _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
     manostat.applyManostat(*_box, *_data);
@@ -383,7 +422,7 @@ TEST_F(
 )
 {
     setupCutMolecule(*_box, *_data);
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -403,8 +442,10 @@ TEST_F(
     _box->addMolecule(molecule);
     _box->setTotalMass(4.0);
 
-    _settings->manostatSettings.setTargetPressure(-3.0 * ::log(0.98));
-    _settings->manostatSettings.setCompressibility(1.0);
+    _settings->manostatSettings.setTargetPressureByUser(
+        -3.0 * ::log(0.98) * bar
+    );
+    _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
     manostat.applyManostat(*_box, *_data);
@@ -432,10 +473,10 @@ TEST_F(
     _box->setBox(orthoBox, false);
 
     _manostat->calculatePressure(*_box, *_data);
-    settings::TimingsSettings::setTimeStep(0.5);
-    _settings->manostatSettings.setTargetPressure(_data->getPressure());
-    _settings->manostatSettings.setTau(0.1 * fs);
-    _settings->manostatSettings.setCompressibility(4.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    _settings->manostatSettings.setTargetPressureByUser(_data->getPressure());
+    _settings->manostatSettings.setTauByUser(0.1 * fs);
+    _settings->manostatSettings.setCompressibilityByUser(4.5 * per_bar);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
     );
@@ -456,23 +497,26 @@ TEST_F(TestManostat, applyNoneManostat)
 {
     _manostat->applyManostat(*_box, *_data);
 
-    EXPECT_DOUBLE_EQ(_data->getPressure(), 3.0 * PRESSURE_FACTOR);
+    EXPECT_DOUBLE_EQ(
+        _data->getPressure().numerical_value_in(bar),
+        3.0 * PRESSURE_FACTOR
+    );
 }
 
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
-    settings::TimingsSettings::setTimeStep(0.5);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
-    _settings->manostatSettings.setTargetPressure(7.0);
-    _settings->manostatSettings.setTau(0.25 * fs);
-    _settings->manostatSettings.setCompressibility(0.12);
-    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setTargetPressureByUser(7.0 * bar);
+    _settings->manostatSettings.setTauByUser(0.25 * fs);
+    _settings->manostatSettings.setCompressibilityByUser(0.12 * per_bar);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     auto manostat =
         TestableStochasticRescalingManostat(_settings->manostatSettings);
-    manostat.setPressure(1.0);
+    manostat.setPressure(1.0 * bar);
 
-    const auto mu       = manostat.calculateMu(10.0);
+    const auto mu       = manostat.calculateMu(10.0).numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -482,10 +526,10 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 
 TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 {
-    _settings->manostatSettings.setIsotropy(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
-    settings::TimingsSettings::setTimeStep(0.5);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     _box->setBox(orthoBox, false);
@@ -514,10 +558,10 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     molecule.calculateCenterOfMass(_box->getBox());
     _box->addMolecule(molecule);
 
-    _settings->manostatSettings.setTargetPressure(7.0);
-    _settings->manostatSettings.setTau(0.25 * fs);
-    _settings->manostatSettings.setCompressibility(0.12);
-    _settings->manostatSettings.setFixedAxis(FixedAxis::NONE);
+    _settings->manostatSettings.setTargetPressureByUser(7.0 * bar);
+    _settings->manostatSettings.setTauByUser(0.25 * fs);
+    _settings->manostatSettings.setCompressibilityByUser(0.12 * per_bar);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     _manostat = std::make_unique<manostat::StochasticRescalingManostat>(
         _settings->manostatSettings
     );
@@ -554,7 +598,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
  */
 TEST_F(TestManostat, testRotateMu)
 {
-    auto mu = linalg::tensor3D({
+    auto mu = QuantityTensor3D({
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0},
@@ -564,7 +608,7 @@ TEST_F(TestManostat, testRotateMu)
 
     EXPECT_EQ(
         mu,
-        linalg::tensor3D({
+        QuantityTensor3D({
             {1.0, 6.0, 10.0},
             {0.0, 5.0, 14.0},
             {0.0, 0.0, 9.0},
@@ -576,20 +620,21 @@ TEST_F(TestManostat, testRotateMu)
 
 TEST_F(TestManostat, berendsenFixedAxesMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // 1 fixed axis: X
     {
         ManostatSettings localSettings;
-        localSettings.setTargetPressure(1.0);
-        localSettings.setTau(0.5 * fs);
-        localSettings.setCompressibility(0.2);
-        localSettings.setFixedAxis(FixedAxis::X);
+        localSettings.setTargetPressureByUser(1.0 * bar);
+        localSettings.setTauByUser(0.5 * fs);
+        localSettings.setCompressibilityByUser(0.2 * per_bar);
+        localSettings.setFixedAxisByUser(FixedAxis::X);
         auto manostat = TestableBerendsenManostat(localSettings);
-        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu();
+        const auto mu = manostat.calculateMu().numerical_value_in(one);
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], ::sqrt(1.5));
         EXPECT_DOUBLE_EQ(mu[2][2], ::sqrt(1.5));
@@ -598,15 +643,16 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     // 2 fixed axes: XY
     {
         ManostatSettings localSettings;
-        localSettings.setTargetPressure(1.0);
-        localSettings.setTau(0.5 * fs);
-        localSettings.setCompressibility(0.2);
-        localSettings.setFixedAxis(FixedAxis::XY);
+        localSettings.setTargetPressureByUser(1.0 * bar);
+        localSettings.setTauByUser(0.5 * fs);
+        localSettings.setCompressibilityByUser(0.2 * per_bar);
+        localSettings.setFixedAxisByUser(FixedAxis::XY);
         auto manostat = TestableBerendsenManostat(localSettings);
-        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu();
+        const auto mu = manostat.calculateMu().numerical_value_in(one);
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
         EXPECT_DOUBLE_EQ(mu[2][2], 1.6);
@@ -615,15 +661,16 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
     // All fixed axes
     {
         ManostatSettings localSettings;
-        localSettings.setTargetPressure(1.0);
-        localSettings.setTau(0.5 * fs);
-        localSettings.setCompressibility(0.2);
-        localSettings.setFixedAxis(FixedAxis::ALL);
+        localSettings.setTargetPressureByUser(1.0 * bar);
+        localSettings.setTauByUser(0.5 * fs);
+        localSettings.setCompressibilityByUser(0.2 * per_bar);
+        localSettings.setFixedAxisByUser(FixedAxis::ALL);
         auto manostat = TestableBerendsenManostat(localSettings);
-        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu();
+        const auto mu = manostat.calculateMu().numerical_value_in(one);
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
         EXPECT_DOUBLE_EQ(mu[2][2], 1.0);
@@ -632,17 +679,19 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
 
 TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
-    localSettings.setTargetPressure(1.0);
-    localSettings.setTau(0.5 * fs);
-    localSettings.setCompressibility(0.2);
-    localSettings.setFixedAxis(FixedAxis::XZ);
+    localSettings.setTargetPressureByUser(1.0 * bar);
+    localSettings.setTauByUser(0.5 * fs);
+    localSettings.setCompressibilityByUser(0.2 * per_bar);
+    localSettings.setFixedAxisByUser(FixedAxis::XZ);
     auto manostat = TestableAnisotropicBerendsenManostat(localSettings);
-    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)));
+    manostat.setPressureTensor(
+        diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
+    );
 
-    const auto mu = manostat.calculateMu();
+    const auto mu = manostat.calculateMu().numerical_value_in(one);
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.4);
     EXPECT_DOUBLE_EQ(mu[2][2], 1.0);
@@ -650,19 +699,19 @@ TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
 
 TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
-    localSettings.setTargetPressure(1.0);
-    localSettings.setTau(0.5 * fs);
-    localSettings.setCompressibility(0.2);
-    localSettings.setFixedAxis(FixedAxis::Y);
+    localSettings.setTargetPressureByUser(1.0 * bar);
+    localSettings.setTauByUser(0.5 * fs);
+    localSettings.setCompressibilityByUser(0.2 * per_bar);
+    localSettings.setFixedAxisByUser(FixedAxis::Y);
     auto manostat = TestableFullAnisotropicBerendsenManostat(localSettings);
     const auto pTensor =
         linalg::tensor3D({{2.0, 0.5, 0.1}, {0.5, 3.0, 0.2}, {0.1, 0.2, 4.0}});
-    manostat.setPressureTensor(pTensor);
+    manostat.setPressureTensor(pTensor * bar);
 
-    const auto mu = manostat.calculateMu();
+    const auto mu = manostat.calculateMu().numerical_value_in(one);
     // Y row and column should be zeroed except diagonal which is 1.0
     EXPECT_DOUBLE_EQ(mu[1][0], 0.0);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
@@ -673,21 +722,22 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 
 TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
-    settings::TimingsSettings::setTimeStep(0.5);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // 1 fixed axis: Z
     {
         ManostatSettings localSettings;
-        localSettings.setTargetPressure(7.0);
-        localSettings.setTau(0.25 * fs);
-        localSettings.setCompressibility(0.12);
-        localSettings.setFixedAxis(FixedAxis::Z);
+        localSettings.setTargetPressureByUser(7.0 * bar);
+        localSettings.setTauByUser(0.25 * fs);
+        localSettings.setCompressibilityByUser(0.12 * per_bar);
+        localSettings.setFixedAxisByUser(FixedAxis::Z);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
-        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu       = manostat.calculateMu(10.0);
+        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.5) / 2.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -698,15 +748,16 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
     // 2 fixed axes: XY
     {
         ManostatSettings localSettings;
-        localSettings.setTargetPressure(7.0);
-        localSettings.setTau(0.25 * fs);
-        localSettings.setCompressibility(0.12);
-        localSettings.setFixedAxis(FixedAxis::XY);
+        localSettings.setTargetPressureByUser(7.0 * bar);
+        localSettings.setTauByUser(0.25 * fs);
+        localSettings.setCompressibilityByUser(0.12 * per_bar);
+        localSettings.setFixedAxisByUser(FixedAxis::XY);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
-        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu       = manostat.calculateMu(10.0);
+        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 3.0) / 1.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
@@ -717,15 +768,16 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
     // All fixed axes
     {
         ManostatSettings localSettings;
-        localSettings.setTargetPressure(7.0);
-        localSettings.setTau(0.25 * fs);
-        localSettings.setCompressibility(0.12);
-        localSettings.setFixedAxis(FixedAxis::ALL);
+        localSettings.setTargetPressureByUser(7.0 * bar);
+        localSettings.setTauByUser(0.25 * fs);
+        localSettings.setCompressibilityByUser(0.12 * per_bar);
+        localSettings.setFixedAxisByUser(FixedAxis::ALL);
         auto manostat = TestableStochasticRescalingManostat(localSettings);
-        manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
+        manostat.setPressureTensor(
+            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0);
+        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
@@ -735,19 +787,21 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
-    settings::TimingsSettings::setTimeStep(0.5);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
-    localSettings.setTargetPressure(7.0);
-    localSettings.setTau(0.25 * fs);
-    localSettings.setCompressibility(0.12);
-    localSettings.setFixedAxis(FixedAxis::YZ);
+    localSettings.setTargetPressureByUser(7.0 * bar);
+    localSettings.setTauByUser(0.25 * fs);
+    localSettings.setCompressibilityByUser(0.12 * per_bar);
+    localSettings.setFixedAxisByUser(FixedAxis::YZ);
     auto manostat =
         TestableAnisotropicStochasticRescalingManostat(localSettings);
-    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));
+    manostat.setPressureTensor(
+        diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
+    );
 
-    const auto mu       = manostat.calculateMu(10.0);
+    const auto mu       = manostat.calculateMu(10.0).numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -757,21 +811,21 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
-    settings::TimingsSettings::setTimeStep(0.5);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
-    localSettings.setTargetPressure(7.0);
-    localSettings.setTau(0.25 * fs);
-    localSettings.setCompressibility(0.12);
-    localSettings.setFixedAxis(FixedAxis::X);
+    localSettings.setTargetPressureByUser(7.0 * bar);
+    localSettings.setTauByUser(0.25 * fs);
+    localSettings.setCompressibilityByUser(0.12 * per_bar);
+    localSettings.setFixedAxisByUser(FixedAxis::X);
     auto manostat =
         TestableFullAnisotropicStochasticRescalingManostat(localSettings);
     const auto pTensor =
         linalg::tensor3D({{1.0, 0.2, 0.3}, {0.2, 2.0, 0.4}, {0.3, 0.4, 3.0}});
-    manostat.setPressureTensor(pTensor);
+    manostat.setPressureTensor(pTensor * bar);
 
-    const auto mu = manostat.calculateMu(10.0);
+    const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
     EXPECT_DOUBLE_EQ(mu[0][1], 0.0);
     EXPECT_DOUBLE_EQ(mu[0][2], 0.0);
@@ -781,19 +835,21 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5);
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // xy isotropic (axes 0, 1), z anisotropic (axis 2) with Z fixed
     ManostatSettings localSettings;
-    localSettings.setTargetPressure(1.0);
-    localSettings.setTau(0.5 * fs);
-    localSettings.setCompressibility(0.2);
-    localSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XY);
-    localSettings.setFixedAxis(FixedAxis::Z);
+    localSettings.setTargetPressureByUser(1.0 * bar);
+    localSettings.setTauByUser(0.5 * fs);
+    localSettings.setCompressibilityByUser(0.2 * per_bar);
+    localSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XY);
+    localSettings.setFixedAxisByUser(FixedAxis::Z);
     auto manostat = TestableSemiIsotropicBerendsenManostat(localSettings);
-    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(2.0, 4.0, 5.0)));
+    manostat.setPressureTensor(
+        diagonalMatrix(linalg::Vec3D(2.0, 4.0, 5.0)) * bar
+    );
 
-    const auto mu = manostat.calculateMu();
+    const auto mu = manostat.calculateMu().numerical_value_in(one);
     // xy avg = 3.0, mu_xy = sqrt(1 - 0.2 * 0.5 / 0.5 * (1.0 - 3.0)) = sqrt(1.4)
     EXPECT_DOUBLE_EQ(mu[0][0], ::sqrt(1.4));
     EXPECT_DOUBLE_EQ(mu[1][1], ::sqrt(1.4));
@@ -802,25 +858,89 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
 
 TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
 {
-    settings::ThermostatSettings::setActualTargetTemperature(0.0);
-    settings::TimingsSettings::setTimeStep(0.5);
+    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // xz isotropic (axes 0, 2), y anisotropic (axis 1) with Y fixed
     ManostatSettings localSettings;
-    localSettings.setTargetPressure(7.0);
-    localSettings.setTau(0.25 * fs);
-    localSettings.setCompressibility(0.12);
-    localSettings.setIsotropy(Isotropy::SEMI_ISOTROPIC_XZ);
-    localSettings.setFixedAxis(FixedAxis::Y);
+    localSettings.setTargetPressureByUser(7.0 * bar);
+    localSettings.setTauByUser(0.25 * fs);
+    localSettings.setCompressibilityByUser(0.12 * per_bar);
+    localSettings.setIsotropyByUser(Isotropy::SEMI_ISOTROPIC_XZ);
+    localSettings.setFixedAxisByUser(FixedAxis::Y);
     auto manostat =
         TestableSemiIsotropicStochasticRescalingManostat(localSettings);
-    manostat.setPressureTensor(diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)));
+    manostat.setPressureTensor(
+        diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)) * bar
+    );
 
-    const auto mu = manostat.calculateMu(10.0);
+    const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
     // xz avg = 2.0, deltaPxy = 7.0 - 2.0 = 5.0
     const auto expected_xz = ::exp(-(0.12 * 0.5 / 0.25) * 5.0 / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected_xz);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
     EXPECT_DOUBLE_EQ(mu[2][2], expected_xz);
+}
+
+/**
+ * @brief orthorhombic boxes need no transformation of the scaling tensor
+ */
+TEST_F(TestManostat, toSimSpaceScalingOrthorhombicIsIdentityTransform)
+{
+    const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
+    const molsys::OrthorhombicBox box{{10.0, 11.0, 12.0}};
+
+    const auto result =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
+
+    EXPECT_EQ(result, mu);
+}
+
+/**
+ * @brief a box allowing a change of angles keeps the scaling tensor in
+ * simulation space
+ */
+TEST_F(TestManostat, toSimSpaceScalingFullAnisotropicIsIdentityTransform)
+{
+    const linalg::tensor3D mu(
+        {1.0, 0.1, 0.0},
+        {0.0, 1.1, 0.2},
+        {0.0, 0.0, 0.9}
+    );
+    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, true};
+
+    const auto result =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
+
+    EXPECT_EQ(result, mu);
+}
+
+/**
+ * @brief for fixed angles the diagonal scaling in orthogonal space is mapped
+ * to simulation space: S_sim * (h v) = h * (S * v)
+ */
+TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
+{
+    const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
+    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false};
+
+    const auto muSim =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box)
+            .numerical_value_in(one);
+
+    const linalg::Vec3D vector{0.3, -0.7, 1.9};
+    const auto          expected = box.getBoxMatrix() * (mu * vector);
+    const auto          result   = muSim * (box.getBoxMatrix() * vector);
+
+    EXPECT_TRUE(utilities::compare(result, expected, 1e-12));
+
+    // isotropic scaling is invariant under the transformation
+    const auto isotropic = linalg::diagonalMatrix(linalg::Vec3D{0.95});
+    const auto isotropicSim =
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(isotropic, box)
+            .numerical_value_in(one);
+    EXPECT_TRUE(
+        utilities::compare(isotropicSim * vector, isotropic * vector, 1e-12)
+    );
 }

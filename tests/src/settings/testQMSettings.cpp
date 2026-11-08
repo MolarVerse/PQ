@@ -32,41 +32,37 @@
 
 TEST(QMSettingsTest, SetMaceModelTypeTest)
 {
-    settings::QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-    EXPECT_EQ(settings::QMSettings::getMaceModelType(), MaceModelType::MACE_MP);
+    MaceSettings settings;
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_MP);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_MP);
 
-    settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    EXPECT_EQ(
-        settings::QMSettings::getMaceModelType(),
-        MaceModelType::MACE_OFF
-    );
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_OFF);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_OFF);
 
-    settings::QMSettings::setMaceModelType(MaceModelType::MACE_ANICC);
-    EXPECT_EQ(
-        settings::QMSettings::getMaceModelType(),
-        MaceModelType::MACE_ANICC
-    );
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_ANICC);
+    EXPECT_EQ(settings.getMaceModelType(), MaceModelType::MACE_ANICC);
 }
 
 TEST(QMSettingsTest, SetSlakosTypeTest)
 {
+    DftbSettings dftbSettings;
 #ifdef WITH_ASE
-    settings::QMSettings::setSlakosType(SlakosType::NONE);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::NONE);
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::NONE);
 
-    settings::QMSettings::setSlakosType(SlakosType::MATSCI);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::MATSCI);
+    dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::MATSCI);
 
-    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::THREEOB);
+    dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::THREEOB);
 
 #endif
 
-    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::CUSTOM);
+    dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::CUSTOM);
 
-    settings::QMSettings::setSlakosType(SlakosType::NONE);
-    EXPECT_EQ(settings::QMSettings::getSlakosType(), SlakosType::NONE);
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::NONE);
 }
 
 #ifdef WITH_ASE
@@ -74,12 +70,13 @@ TEST(QMSettingsTest, ResolvesBundledSlakos)
 {
     const auto *expectedRoot = std::getenv("PQ_TEST_EXPECTED_SLAKOS_ROOT");
 
+    DftbSettings dftbSettings;
+
     for (const auto slakos : {SlakosType::THREEOB, SlakosType::MATSCI})
     {
-        settings::QMSettings::setSlakosType(slakos);
-        const auto path = std::filesystem::weakly_canonical(
-            settings::QMSettings::getSlakosPath()
-        );
+        dftbSettings.setSlakosTypeByUser(slakos);
+        const auto path =
+            std::filesystem::weakly_canonical(dftbSettings.getSlakosPath());
 
         EXPECT_TRUE(std::filesystem::is_directory(path));
         if (expectedRoot != nullptr)
@@ -99,48 +96,50 @@ TEST(QMSettingsTest, ResolvesBundledSlakos)
 #ifndef WITH_ASE
 TEST(QMSettingsTest, SetBuiltInSlakosTypeRequiresAse)
 {
+    DftbSettings dftbSettings;
     ASSERT_THROW_MSG(
-        settings::QMSettings::setSlakosType(SlakosType::THREEOB),
+        dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB),
         exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 
     ASSERT_THROW_MSG(
-        settings::QMSettings::setSlakosType(SlakosType::MATSCI),
+        dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI),
         exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 
-    settings::QMSettings::setSlakosType(SlakosType::NONE);
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
 }
 #endif
 
 TEST(QMSettingsTest, SetSlakosPathTest)
 {
-    settings::QMSettings::setSlakosType(SlakosType::NONE);
+    DftbSettings dftbSettings;
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
     ASSERT_THROW_MSG(
-        settings::QMSettings::setSlakosPath("/path/to/slakos"),
+        dftbSettings.setSlakosPathByUser("/path/to/slakos"),
         exc::UserInputException,
         "Slakos path cannot be set without a slakos type"
     );
 
-    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
-    settings::QMSettings::setSlakosPath("/path/to/slakos");
-    EXPECT_EQ(settings::QMSettings::getSlakosPath(), "/path/to/slakos");
+    dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    dftbSettings.setSlakosPathByUser("/path/to/slakos");
+    EXPECT_EQ(dftbSettings.getSlakosPath(), "/path/to/slakos");
 
 #ifdef WITH_ASE
-    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
+    dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
     ASSERT_THROW_MSG(
-        settings::QMSettings::setSlakosPath("/path/to/slakos"),
+        dftbSettings.setSlakosPathByUser("/path/to/slakos"),
         exc::UserInputException,
         "Slakos path cannot be set for slakos type: 3ob"
     );
 
-    settings::QMSettings::setSlakosType(SlakosType::MATSCI);
+    dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
     ASSERT_THROW_MSG(
-        settings::QMSettings::setSlakosPath("/path/to/slakos"),
+        dftbSettings.setSlakosPathByUser("/path/to/slakos"),
         exc::UserInputException,
         "Slakos path cannot be set for slakos type: matsci"
     );
@@ -149,14 +148,15 @@ TEST(QMSettingsTest, SetSlakosPathTest)
 
 TEST(QMSettingsTest, SetXtbMethodTest)
 {
-    settings::QMSettings::setXtbMethod(XtbMethod::GFN1);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN1);
+    XtbSettings xtbSettings;
+    xtbSettings.setXtbMethodByUser(XtbMethod::GFN1);
+    EXPECT_EQ(xtbSettings.getXtbMethod(), XtbMethod::GFN1);
 
-    settings::QMSettings::setXtbMethod(XtbMethod::GFN2);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::GFN2);
+    xtbSettings.setXtbMethodByUser(XtbMethod::GFN2);
+    EXPECT_EQ(xtbSettings.getXtbMethod(), XtbMethod::GFN2);
 
-    settings::QMSettings::setXtbMethod(XtbMethod::IPEA1);
-    EXPECT_EQ(settings::QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+    xtbSettings.setXtbMethodByUser(XtbMethod::IPEA1);
+    EXPECT_EQ(xtbSettings.getXtbMethod(), XtbMethod::IPEA1);
 }
 
 TEST(QMSettingsTest, ReturnQMMethodTest)
@@ -223,37 +223,35 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
 
 TEST(QMSettingsTest, SetFennolModelPath)
 {
-    settings::QMSettings::setFennolModelPath("/paTh/to/fennol_model.fnx");
-    EXPECT_EQ(
-        settings::QMSettings::getFennolModelPath(),
-        "/paTh/to/fennol_model.fnx"
-    );
+    FennolSettings fennolSettings;
+    fennolSettings.setFennolModelPathByUser("/paTh/to/fennol_model.fnx");
+    EXPECT_EQ(fennolSettings.getFennolModelPath(), "/paTh/to/fennol_model.fnx");
 }
 
 TEST(QMSettingsTest, SetGPUPreprocessing)
 {
-    settings::QMSettings::setUseGPUPreprocessing(false);
-    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), false);
-    settings::QMSettings::setUseGPUPreprocessing(true);
-    EXPECT_EQ(settings::QMSettings::useGPUPreprocessing(), true);
+    FennolSettings fennolSettings;
+    fennolSettings.setUseGPUPreprocessingByUser(false);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), false);
+    fennolSettings.setUseGPUPreprocessingByUser(true);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), true);
 }
 
 TEST(QMSettingsTest, MaceNamesForMaceCalculatorsTest)
 {
-    settings::QMSettings::setMaceModelType(MaceModelType::MACE_OFF);
-    EXPECT_EQ(settings::QMSettings::getMaceModelTypeName(), "mace_off");
+    MaceSettings settings;
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_OFF);
+    EXPECT_EQ(settings.getMaceModelTypeName(), "mace_off");
 
-    settings::QMSettings::setMaceModelType(MaceModelType::MACE_MP);
-    EXPECT_EQ(settings::QMSettings::getMaceModelTypeName(), "mace_mp");
+    settings.setMaceModelTypeByUser(MaceModelType::MACE_MP);
+    EXPECT_EQ(settings.getMaceModelTypeName(), "mace_mp");
 
-    settings::QMSettings::setMaceModel(MaceModel::SMALL);
-    EXPECT_EQ(settings::QMSettings::getMaceModelName(), "small");
+    settings.setMaceModelByUser(MaceModel::SMALL);
+    EXPECT_EQ(settings.getMaceModelName(), "small");
 
-    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_0B3);
-    EXPECT_EQ(settings::QMSettings::getMaceModelName(), "medium-0b3");
+    settings.setMaceModelByUser(MaceModel::MEDIUM_0B3);
+    EXPECT_EQ(settings.getMaceModelName(), "medium-0b3");
 
-    settings::QMSettings::setMaceModel(MaceModel::MEDIUM_OMAT_0);
-    EXPECT_EQ(settings::QMSettings::getMaceModelName(), "medium-omat-0");
-
-    settings::QMSettings::setMaceModel(MaceModel::MEDIUM);
+    settings.setMaceModelByUser(MaceModel::MEDIUM_OMAT_0);
+    EXPECT_EQ(settings.getMaceModelName(), "medium-omat-0");
 }

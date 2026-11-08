@@ -97,23 +97,23 @@ namespace
     {
         const Setting<TypeParam> setting;
 
-        EXPECT_FALSE(setting.isSet());
+        EXPECT_FALSE(setting.isSetBySomeone());
     }
 
     TYPED_TEST(SettingTypedTest, isSetAfterSet)
     {
         Setting<TypeParam> setting;
 
-        setting.set(SampleValues<TypeParam>::first());
+        setting.setByUser(SampleValues<TypeParam>::first());
 
-        EXPECT_TRUE(setting.isSet());
+        EXPECT_TRUE(setting.isSetBySomeone());
     }
 
     TYPED_TEST(SettingTypedTest, getReturnsSetValue)
     {
         Setting<TypeParam> setting;
 
-        setting.set(SampleValues<TypeParam>::first());
+        setting.setByUser(SampleValues<TypeParam>::first());
 
         EXPECT_EQ(setting.get(), SampleValues<TypeParam>::first());
     }
@@ -122,10 +122,10 @@ namespace
     {
         Setting<TypeParam> setting;
 
-        setting.set(SampleValues<TypeParam>::first());
-        setting.set(SampleValues<TypeParam>::second());
+        setting.setByUser(SampleValues<TypeParam>::first());
+        setting.setByUser(SampleValues<TypeParam>::second());
 
-        EXPECT_TRUE(setting.isSet());
+        EXPECT_TRUE(setting.isSetBySomeone());
         EXPECT_EQ(setting.get(), SampleValues<TypeParam>::second());
     }
 
@@ -134,9 +134,9 @@ namespace
     {
         Setting<TypeParam> setting;
 
-        setting.set(SampleValues<TypeParam>::zero());
+        setting.setByUser(SampleValues<TypeParam>::zero());
 
-        EXPECT_TRUE(setting.isSet());
+        EXPECT_TRUE(setting.isSetBySomeone());
         EXPECT_EQ(setting.get(), SampleValues<TypeParam>::zero());
     }
 
@@ -144,21 +144,21 @@ namespace
     {
         Setting<TypeParam> setting;
 
-        setting.set(SampleValues<TypeParam>::first());
-        setting.set(SampleValues<TypeParam>::first());
+        setting.setBySystem(SampleValues<TypeParam>::first());
+        setting.setBySystem(SampleValues<TypeParam>::first());
 
-        EXPECT_TRUE(setting.isSet());
+        EXPECT_TRUE(setting.isSetBySomeone());
         EXPECT_EQ(setting.get(), SampleValues<TypeParam>::first());
     }
 
     TYPED_TEST(SettingTypedTest, copyPreservesStateAndValue)
     {
         Setting<TypeParam> original;
-        original.set(SampleValues<TypeParam>::first());
+        original.setByUser(SampleValues<TypeParam>::first());
 
         const auto copy = original;
 
-        EXPECT_TRUE(copy.isSet());
+        EXPECT_TRUE(copy.isSetBySomeone());
         EXPECT_EQ(copy.get(), SampleValues<TypeParam>::first());
     }
 
@@ -168,16 +168,16 @@ namespace
 
         const auto copy = original;
 
-        EXPECT_FALSE(copy.isSet());
+        EXPECT_FALSE(copy.isSetBySomeone());
     }
 
     TYPED_TEST(SettingTypedTest, copiesAreIndependent)
     {
         Setting<TypeParam> original;
-        original.set(SampleValues<TypeParam>::first());
+        original.setByUser(SampleValues<TypeParam>::first());
 
         auto copy = original;
-        copy.set(SampleValues<TypeParam>::second());
+        copy.setByUser(SampleValues<TypeParam>::second());
 
         EXPECT_EQ(original.get(), SampleValues<TypeParam>::first());
         EXPECT_EQ(copy.get(), SampleValues<TypeParam>::second());
@@ -191,7 +191,7 @@ namespace
     {
         const Setting<TypeParam> setting(SampleValues<TypeParam>::first());
 
-        EXPECT_FALSE(setting.isSet());
+        EXPECT_FALSE(setting.isSetBySomeone());
     }
 
     TYPED_TEST(SettingTypedTest, getReturnsDefaultWhenNotSet)
@@ -212,9 +212,9 @@ namespace
     {
         Setting<TypeParam> setting(SampleValues<TypeParam>::first());
 
-        setting.set(SampleValues<TypeParam>::second());
+        setting.setByUser(SampleValues<TypeParam>::second());
 
-        EXPECT_TRUE(setting.isSet());
+        EXPECT_TRUE(setting.isSetBySomeone());
         EXPECT_EQ(setting.get(), SampleValues<TypeParam>::second());
     }
 
@@ -223,9 +223,9 @@ namespace
     {
         Setting<TypeParam> setting(SampleValues<TypeParam>::first());
 
-        setting.set(SampleValues<TypeParam>::first());
+        setting.setByUser(SampleValues<TypeParam>::first());
 
-        EXPECT_TRUE(setting.isSet());
+        EXPECT_TRUE(setting.isSetBySomeone());
         EXPECT_EQ(setting.get(), SampleValues<TypeParam>::first());
     }
 
@@ -235,18 +235,18 @@ namespace
 
         const auto copy = original;
 
-        EXPECT_FALSE(copy.isSet());
+        EXPECT_FALSE(copy.isSetBySomeone());
         EXPECT_EQ(copy.get(), SampleValues<TypeParam>::first());
     }
 
     TYPED_TEST(SettingTypedTest, copyOfSetSettingWithDefaultKeepsSetValue)
     {
         Setting<TypeParam> original(SampleValues<TypeParam>::first());
-        original.set(SampleValues<TypeParam>::second());
+        original.setByUser(SampleValues<TypeParam>::second());
 
         const auto copy = original;
 
-        EXPECT_TRUE(copy.isSet());
+        EXPECT_TRUE(copy.isSetBySomeone());
         EXPECT_EQ(copy.get(), SampleValues<TypeParam>::second());
     }
 
@@ -276,7 +276,7 @@ namespace
     {
         Setting<TypeParam> setting;
 
-        setting.set(SampleValues<TypeParam>::first());
+        setting.setByUser(SampleValues<TypeParam>::first());
 
         EXPECT_NO_THROW(static_cast<void>(setting.get()));
     }
@@ -309,21 +309,21 @@ namespace
     TEST(SettingTest, readAccessorsCallableOnConstObject)
     {
         Setting<int> setting;
-        setting.set(5);
+        setting.setByUser(5);
 
         const auto& constRef = setting;
 
-        EXPECT_TRUE(constRef.isSet());
+        EXPECT_TRUE(constRef.isSetByUser());
         EXPECT_EQ(constRef.get(), 5);
     }
 
     TEST(SettingTest, getReferenceTracksLaterSet)
     {
         Setting<int> setting;
-        setting.set(1);
+        setting.setBySystem(1);
 
         const int& ref = setting.get();
-        setting.set(2);
+        setting.setBySystem(2);
 
         // reference to internal storage stays valid and reflects the update
         EXPECT_EQ(ref, 2);
@@ -338,9 +338,9 @@ namespace
         Setting<int> settingsA;
         Setting<int> settingsB;
 
-        settingsA.set(10);
+        settingsA.setBySystem(10);
 
-        EXPECT_TRUE(settingsA.isSet());
-        EXPECT_FALSE(settingsB.isSet());
+        EXPECT_TRUE(settingsA.isSetBySomeone());
+        EXPECT_FALSE(settingsB.isSetBySomeone());
     }
 }   // namespace

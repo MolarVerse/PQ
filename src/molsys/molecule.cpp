@@ -30,6 +30,8 @@
 #include "collectionUtilities.hpp"
 #include "generalSettings.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -120,32 +122,23 @@ namespace molsys
      * @brief scales the positions of the molecule by shifting the center of
      * mass
      *
-     * @details scaling has to be done in orthogonal space since pressure
-     * scaling is done in orthogonal space
+     * @details the scaling tensor has to be given in simulation space (see
+     * scaleVelocity). The box is only used to apply the periodic boundary
+     * conditions.
      *
-     * @param shiftTensor
+     * @param scalingTensor scaling tensor in simulation space
      * @param box
      */
-    void Molecule::scale(const linalg::tensor3D &shiftTensor, const Box &box)
+    void Molecule::scale(const QuantityTensor3D &scalingTensor, const Box &box)
     {
-        auto centerOfMass = _centerOfMass;
-
-        if (!box.allowChangeOfAngles())
-            centerOfMass = box.toOrthoSpace(_centerOfMass);
-
-        const auto shift = shiftTensor * centerOfMass - centerOfMass;
+        const auto shift =
+            scalingTensor.numerical_value_in(one) * _centerOfMass -
+            _centerOfMass;
 
         auto scaleAtomPosition = [&box, shift](const auto &atom)
         {
-            auto position = atom->getPosition();
-
-            if (!box.allowChangeOfAngles())
-                position = box.toOrthoSpace(position);
-
-            position += shift;
-
-            if (!box.allowChangeOfAngles())
-                position = box.toSimSpace(position);
+            auto position  = atom->getPosition();
+            position      += shift;
 
             box.applyPBC(position);
 
@@ -160,15 +153,15 @@ namespace molsys
      *
      * @details pressure scaling moves molecules by their center of mass. The
      * matching velocity scaling must not change the internal molecular
-     * velocities.
+     * velocities. The scaling tensor has to be given in simulation space:
+     * - fixed angles: T * S * T^-1 (S is the scaling tensor in orthogonal
+     *   space)
+     * - orthorhombic box: S (T is the identity)
+     * - full anisotropic: S
      *
-     * @param scalingTensor
-     * @param box
+     * @param scalingTensor scaling tensor in simulation space
      */
-    void Molecule::scaleVelocity(
-        const linalg::tensor3D &scalingTensor,
-        const Box              &box
-    )
+    void Molecule::scaleVelocity(const QuantityTensor3D &scalingTensor)
     {
         auto centerOfMassVelocity = linalg::Vec3D(0.0);
 
@@ -177,17 +170,8 @@ namespace molsys
 
         centerOfMassVelocity /= getMolMass();
 
-        auto scaledCenterOfMassVelocity = centerOfMassVelocity;
-
-        if (!box.allowChangeOfAngles())
-            scaledCenterOfMassVelocity =
-                box.toOrthoSpace(scaledCenterOfMassVelocity);
-
-        scaledCenterOfMassVelocity = scalingTensor * scaledCenterOfMassVelocity;
-
-        if (!box.allowChangeOfAngles())
-            scaledCenterOfMassVelocity =
-                box.toSimSpace(scaledCenterOfMassVelocity);
+        const auto scaledCenterOfMassVelocity =
+            scalingTensor.numerical_value_in(one) * centerOfMassVelocity;
 
         const auto velocityShift =
             scaledCenterOfMassVelocity - centerOfMassVelocity;

@@ -236,7 +236,10 @@ namespace
         json.value("parameter", "timestep");
         json.value("factor", FS_TO_PS);
         json.endObject();
-        json.value("default", defaults::BERENDSEN_THERMOSTAT_RELAX_TIME);
+        json.value(
+            "default",
+            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME.numerical_value_in(ps)
+        );
         json.endObject();
 
         beginParameter(
@@ -309,7 +312,10 @@ namespace
             "bar^-1"
         );
         json.value("minimum", 0);
-        json.value("default", defaults::COMPRESSIBILITY_WATER_DEFAULT);
+        json.value(
+            "default",
+            defaults::COMPRESSIBILITY_WATER_DEFAULT.numerical_value_in(per_bar)
+        );
         json.endObject();
 
         beginParameter(

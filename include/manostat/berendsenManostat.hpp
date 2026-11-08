@@ -24,6 +24,7 @@
 #define MANOSTAT__BERENDSEN_MANOSTAT_HPP
 
 #include "manostat.hpp"
+#include "unit_types.hpp"
 
 namespace manostat
 {
@@ -43,7 +44,11 @@ namespace manostat
             physicalData::PhysicalData &physicalData
         ) override;
 
-        [[nodiscard]] virtual linalg::tensor3D calculateMu() const;
+        [[nodiscard]] virtual QuantityTensor3D calculateMu() const;
+
+       protected:
+        [[nodiscard]]
+        static Compressibility _calcPreFactor(const ManostatSettings &settings);
     };
 
     /**
@@ -57,7 +62,7 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linalg::tensor3D calculateMu() const override;
+        [[nodiscard]] QuantityTensor3D calculateMu() const override;
     };
 
     /**
@@ -71,7 +76,7 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linalg::tensor3D calculateMu() const override;
+        [[nodiscard]] QuantityTensor3D calculateMu() const override;
     };
 
     /**
@@ -88,7 +93,7 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linalg::tensor3D calculateMu() const override;
+        [[nodiscard]] QuantityTensor3D calculateMu() const override;
     };
 
 }   // namespace manostat
