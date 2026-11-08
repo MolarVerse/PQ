@@ -50,7 +50,11 @@ namespace QM
      * timeout is set in the settings file. If the timeout is set to 0, the
      * function will return without throwing an exception.
      *
-     * @param stopToken
+     * @param stopToken The stop token used to check for cancellation of the QM
+     * calculation loop
+     * @param qmLoopTimeLimit The maximum allowed time for the QM calculation
+     * loop. If the loop exceeds this time, an exception will be thrown. A value
+     * of 0 indicates no time limit.
      *
      * @throw QMRunnerException if the timeout is exceeded
      */
