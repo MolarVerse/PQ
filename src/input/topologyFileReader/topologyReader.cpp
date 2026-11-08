@@ -37,10 +37,55 @@
 #include "improperDihedralSection.hpp"
 #include "jCouplingSection.hpp"
 #include "shakeSection.hpp"
+#include "simulationBox.hpp"
 #include "stringUtilities.hpp"
 
 namespace input::topology
 {
+    namespace
+    {
+        /**
+         * @brief builds the atom index lookup of the simulation box and clears
+         * it again when the topology file is read (or reading throws)
+         */
+        class AtomIndexLookupGuard
+        {
+            MSTD_RAII_NO_MOVE(AtomIndexLookupGuard);
+
+           private:
+            mstd::Ref<molsys::SimulationBox> _simulationBox;
+
+           public:
+            explicit AtomIndexLookupGuard(molsys::SimulationBox &simulationBox);
+
+            ~AtomIndexLookupGuard();
+        };
+
+        /**
+         * @brief constructs the atom index lookup guard
+         *
+         * @param simulationBox the simulation box for which to build the atom
+         * index lookup
+         */
+        AtomIndexLookupGuard::AtomIndexLookupGuard(
+            molsys::SimulationBox &simulationBox
+        )
+            : _simulationBox(simulationBox)
+        {
+            _simulationBox->buildAtomIndexLookup();
+        }
+
+        /**
+         * @brief destructs the atom index lookup guard
+         *
+         * @details clears the atom index lookup of the associated simulation
+         * box
+         */
+        AtomIndexLookupGuard::~AtomIndexLookupGuard()
+        {
+            _simulationBox->clearAtomIndexLookup();
+        }
+    }   // namespace
 
     /**
      * @brief constructor
@@ -90,6 +135,10 @@ namespace input::topology
             throw exc::InputFileException(
                 "Topology file needed for requested simulation setup"
             );
+
+        // the molecules do not change while the topology is read: every atom
+        // index of the file is found by a binary search instead of a walk
+        const AtomIndexLookupGuard lookup(_engine.getSimulationBox());
 
         while (getline(_fp, line))
         {
