@@ -87,7 +87,8 @@ namespace linalg
      */
     template <typename T>
     void Vector3D<T>::operator+=(const Vector3D<T> &vec)
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+             mstd::is_quantity_like_v<T>
     {
         x += vec.x;
         y += vec.y;
@@ -102,7 +103,7 @@ namespace linalg
      */
     template <typename T>
     Vector3D<T> &Vector3D<T>::operator+=(const T &vec)
-    requires pq::Arithmetic<T>
+    requires pq::Arithmetic<T> || mstd::is_quantity_like_v<T>
     {
         x += vec;
         y += vec;
@@ -122,7 +123,8 @@ namespace linalg
      */
     template <typename T>
     Vector3D<T> &Vector3D<T>::operator-=(const Vector3D<T> &vec)
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+             mstd::is_quantity_like_v<T>
     {
         x -= vec.x;
         y -= vec.y;
@@ -138,7 +140,7 @@ namespace linalg
      */
     template <typename T>
     Vector3D<T> &Vector3D<T>::operator-=(const T &vec)
-    requires pq::Arithmetic<T>
+    requires pq::Arithmetic<T> || mstd::is_quantity_like_v<T>
     {
         x -= vec;
         y -= vec;

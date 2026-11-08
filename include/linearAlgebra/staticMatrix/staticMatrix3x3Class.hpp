@@ -23,6 +23,8 @@
 #ifndef LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP
 #define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_CLASS_HPP
 
+#include <concepts>
+
 #include "vector3d.hpp"
 
 namespace linalg
@@ -66,6 +68,13 @@ namespace linalg
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
         explicit StaticMatrix3x3(const std::vector<T> &vector);
 
+        // converting constructor, e.g. quantity<Pa> -> quantity<pressure[Pa]>
+        // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
+        template <typename U>
+        requires(!std::same_as<T, U>) && std::convertible_to<U, T>
+        constexpr StaticMatrix3x3(const StaticMatrix3x3<U> &other);
+        // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
+
         Vector3D<T>       &operator[](size_t index);
         const Vector3D<T> &operator[](size_t index) const;
 
@@ -79,6 +88,12 @@ namespace linalg
 
         void setDiagonal(const T &value);
         void setDiagonal(const Vector3D<T> &values);
+
+        template <mstd::UnitLike U>
+        auto in(const U &unit) const;
+
+        template <mstd::UnitLike U>
+        auto numerical_value_in(const U &unit) const;
     };
 }   // namespace linalg
 

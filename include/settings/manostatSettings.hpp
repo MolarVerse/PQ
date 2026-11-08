@@ -42,7 +42,7 @@ class ManostatSettings
     Setting<Isotropy>     _isotropy;
     Setting<FixedAxis>    _fixedAxis;
 
-    Setting<double> _targetPressure;
+    Setting<Pressure> _targetPressure;
 
     Setting<Time>            _tau;
     Setting<Compressibility> _compressibility;
@@ -61,7 +61,7 @@ class ManostatSettings
 
     void setFixedAxisByUser(FixedAxis fixedAxis);
 
-    void setTargetPressureByUser(double targetPressure);
+    void setTargetPressureByUser(const Pressure& targetPressure);
     void setTauByUser(const Time& tau);
     void setCompressibilityByUser(const Compressibility& compressibility);
 
@@ -74,7 +74,7 @@ class ManostatSettings
     [[nodiscard]] ManostatType           getManostatType() const;
     [[nodiscard]] Isotropy               getIsotropy() const;
     [[nodiscard]] FixedAxis              getFixedAxis() const;
-    [[nodiscard]] double                 getTargetPressure() const;
+    [[nodiscard]] const Pressure&        getTargetPressure() const;
     [[nodiscard]] const Time&            getTau() const;
     [[nodiscard]] const Compressibility& getCompressibility() const;
 
