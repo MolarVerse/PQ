@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -70,7 +72,12 @@ int main()
         AtomIndex{1},
         BondId{0}
     );
-    bond.setParams(BondParams{.equilibrium = 1.2, .forceConstant = 3.0});
+    bond.setParams(
+        BondParams{
+            .equilibrium   = 1.2 * angstrom,
+            .forceConstant = 3.0 * kcal_per_mol / angstrom / angstrom
+        }
+    );
 
     auto angle = ff::AngleForceField(
         {&molecule, &molecule, &molecule},
@@ -78,7 +85,10 @@ int main()
         AngleId{0}
     );
     angle.setParams(
-        AngleParams{.equilibrium = M_PI / 2.0, .forceConstant = 3.0}
+        AngleParams{
+            .equilibrium   = M_PI / 2.0 * rad,
+            .forceConstant = 3.0 * kcal_per_mol / rad / rad
+        }
     );
 
     auto dihedral = ff::DihedralForceField(

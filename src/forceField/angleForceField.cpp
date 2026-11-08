@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace ff
 {
@@ -101,10 +102,15 @@ namespace ff
         const auto distance12 = ::sqrt(distance12Squared);
         const auto distance13 = ::sqrt(distance13Squared);
 
-        const auto alpha      = angle(dPosition12, dPosition13);
-        const auto deltaAngle = alpha - _params.equilibrium;
+        const auto alpha = angle(dPosition12, dPosition13);
+        const auto equilibriumAngle =
+            _params.equilibrium.numerical_value_in(rad);
+        const auto deltaAngle = alpha - equilibriumAngle;
 
-        auto forceMagnitude = -_params.forceConstant * deltaAngle;
+        auto forceMagnitude = -_params.forceConstant.numerical_value_in(
+                                  kcal_per_mol / rad / rad
+                              ) *
+                              deltaAngle;
 
         physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
