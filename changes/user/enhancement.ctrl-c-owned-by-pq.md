@@ -1,0 +1,1 @@
+- A second Ctrl-C now stops PQ at once, also during a long Python call such as a MACE or FeNNol step.
