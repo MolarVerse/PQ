@@ -181,10 +181,9 @@ namespace engine
     {
         const auto nBeads = _ringPolymerBeads.size();
         const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
-        const auto temp =
-            settings::ThermostatSettings::getActualTargetTemperature()
-                .quantity_from_zero()
-                .numerical_value_in(K);
+        const auto temp   = ThermostatSettings::getActualTargetTemperature()
+                              .quantity_from_zero()
+                              .numerical_value_in(K);
 
         // to silence narrowing conversion warning -- here not a problem
         const auto nBeads_ = static_cast<double>(nBeads);

@@ -34,6 +34,7 @@ void Settings::finalize()
     outputFiles.finalize();
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
+    thermostatSettings.finalize(referenceSettings);
 
     const auto& qmMethod = qmSettings.getQMMethod();
 

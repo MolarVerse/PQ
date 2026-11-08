@@ -35,6 +35,7 @@
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
+#include "thermostatSettings.hpp"
 #include "waterModelSettings.hpp"
 
 /**
@@ -59,6 +60,7 @@ struct Settings
     FennolSettings        fennolSettings;
     DftbSettings          dftbSettings;
     XtbSettings           xtbSettings;
+    ThermostatSettings    thermostatSettings;
 
     void finalize();
 };

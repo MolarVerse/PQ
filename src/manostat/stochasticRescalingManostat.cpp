@@ -120,7 +120,7 @@ namespace manostat
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
         const auto targetTemp =
-            settings::ThermostatSettings::getActualTargetTemperature();
+            ThermostatSettings::getActualTargetTemperature();
 
         const auto thermalEnergy =
             boltzmannConstant *
@@ -223,10 +223,9 @@ namespace manostat
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
-            boltzmannConstant *
-            settings::ThermostatSettings::getActualTargetTemperature()
-                .quantity_from_zero()
-                .numerical_value_in(K);
+            boltzmannConstant * ThermostatSettings::getActualTargetTemperature()
+                                    .quantity_from_zero()
+                                    .numerical_value_in(K);
 
         auto stochasticFactor = 1.0 / linalg::tensor3D::size * thermalEnergy *
                                 compress.numerical_value_in(per_Pa) *
@@ -296,10 +295,9 @@ namespace manostat
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
-            boltzmannConstant *
-            settings::ThermostatSettings::getActualTargetTemperature()
-                .quantity_from_zero()
-                .numerical_value_in(K);
+            boltzmannConstant * ThermostatSettings::getActualTargetTemperature()
+                                    .quantity_from_zero()
+                                    .numerical_value_in(K);
 
         auto stochasticFactor = 2.0 / linalg::tensor3D::size * thermalEnergy *
                                 compress.numerical_value_in(per_Pa) *
@@ -348,7 +346,7 @@ namespace manostat
         const auto  compress         = settings.getCompressibility();
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
         const auto &targetTemp =
-            settings::ThermostatSettings::getActualTargetTemperature();
+            ThermostatSettings::getActualTargetTemperature();
 
         const auto thermalEnergy =
             boltzmannConstant *

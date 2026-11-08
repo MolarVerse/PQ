@@ -32,7 +32,6 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "referenceSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
@@ -51,9 +50,9 @@ namespace input
      * nh-chain_length "<size_t>" 6) coupling_frequency "<double>"
      */
     ThermostatInputParser::ThermostatInputParser(
-        ReferenceSettings &referenceSettings
+        ThermostatSettings &thermostatSettings
     )
-        : _referenceSettings(referenceSettings)
+        : _thermostatSettings(thermostatSettings)
     {
         addThermostatKey();
         addTemperatureKey();
@@ -77,33 +76,7 @@ namespace input
         };
 
         const auto setValue = [this](ThermostatType value)
-        {
-            settings::ThermostatSettings::setThermostatType(value);
-            switch (value)
-            {
-                case ThermostatType::BERENDSEN:
-                    _referenceSettings->addReferenceFile(
-                        ReferenceFiles::BERENDSEN_FILE
-                    );
-                    break;
-                case ThermostatType::VELOCITY_RESCALING:
-                    _referenceSettings->addReferenceFile(
-                        ReferenceFiles::VELOCITY_RESCALING_FILE
-                    );
-                    break;
-                case ThermostatType::LANGEVIN:
-                    _referenceSettings->addReferenceFile(
-                        ReferenceFiles::LANGEVIN_FILE
-                    );
-                    break;
-                case ThermostatType::NOSE_HOOVER:
-                    _referenceSettings->addReferenceFile(
-                        ReferenceFiles::NOSE_HOOVER_CHAIN_FILE
-                    );
-                    break;
-                case ThermostatType::NONE: break;
-            }
-        };
+        { _thermostatSettings->setThermostatTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ThermostatType>{.metadata = metaData, .onSet = setValue}
@@ -123,11 +96,7 @@ namespace input
         };
 
         const auto setValue = [&](double value)
-        {
-            settings::ThermostatSettings::setTargetTemperature(
-                toTemperature(value)
-            );
-        };
+        { ThermostatSettings::setTargetTemperature(toTemperature(value)); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -149,11 +118,7 @@ namespace input
         };
 
         const auto setValue = [&](double value)
-        {
-            settings::ThermostatSettings::setStartTemperature(
-                toTemperature(value)
-            );
-        };
+        { ThermostatSettings::setStartTemperature(toTemperature(value)); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -175,10 +140,7 @@ namespace input
         };
 
         const auto setValue = [&](double value)
-        {
-            settings::ThermostatSettings::setEndTemperature(toTemperature(value)
-            );
-        };
+        { ThermostatSettings::setEndTemperature(toTemperature(value)); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -201,7 +163,7 @@ namespace input
         };
 
         const auto setValue = [&](size_t value)
-        { settings::ThermostatSettings::setTemperatureRampSteps(value); };
+        { ThermostatSettings::setTemperatureRampSteps(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -222,7 +184,7 @@ namespace input
         };
 
         const auto setValue = [&](size_t value)
-        { settings::ThermostatSettings::setTemperatureRampFrequency(value); };
+        { ThermostatSettings::setTemperatureRampFrequency(value); };
 
         const auto validator =
             RangeValidator<size_t, Greater::GT>{0, std::nullopt};
@@ -248,7 +210,7 @@ namespace input
         };
 
         const auto setValue = [&](double value)
-        { settings::ThermostatSettings::setRelaxationTime(value * ps); };
+        { ThermostatSettings::setRelaxationTime(value * ps); };
 
         const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
             0.0,
@@ -276,7 +238,7 @@ namespace input
 
         const auto setValue = [&](double value)
         {
-            settings::ThermostatSettings::setFriction(
+            ThermostatSettings::setFriction(
                 value * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
             );
         };
@@ -308,7 +270,7 @@ namespace input
         };
 
         const auto setValue = [&](size_t value)
-        { settings::ThermostatSettings::setNoseHooverChainLength(value); };
+        { ThermostatSettings::setNoseHooverChainLength(value); };
 
         const auto minValidator =
             RangeValidator<size_t, Greater::GE>{1, std::nullopt};
@@ -334,9 +296,7 @@ namespace input
         };
 
         const auto setValue = [&](double value)
-        {
-            settings::ThermostatSettings::setNoseHooverCouplingFrequency(value);
-        };
+        { ThermostatSettings::setNoseHooverCouplingFrequency(value); };
 
         const auto validator = RangeValidator<double, Greater::GE, Less::LE>{
             0.0,

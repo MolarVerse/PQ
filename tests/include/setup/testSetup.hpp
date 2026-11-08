@@ -53,9 +53,9 @@ class TestSetup : public ::testing::Test
 
     void TearDown() override
     {
-        settings::ThermostatSettings::setEndTemperatureSet(false);
-        settings::ThermostatSettings::setStartTemperatureSet(false);
-        settings::ThermostatSettings::setTemperatureSet(false);
+        ThermostatSettings::setEndTemperatureSet(false);
+        ThermostatSettings::setStartTemperatureSet(false);
+        ThermostatSettings::setTemperatureSet(false);
         settings::GeneralSettings::deactivateCellList();
     }
 };

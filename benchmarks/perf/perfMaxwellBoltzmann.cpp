@@ -48,9 +48,7 @@ int main()
 {
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);
-    settings::ThermostatSettings::setActualTargetTemperature(
-        toTemperature(300.0)
-    );
+    ThermostatSettings::setActualTargetTemperature(toTemperature(300.0));
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});

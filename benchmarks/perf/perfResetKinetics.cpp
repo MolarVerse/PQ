@@ -48,7 +48,7 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 int main()
 {
     Temperature temperature{toTemperature(300.0)};
-    settings::ThermostatSettings::setActualTargetTemperature(temperature);
+    ThermostatSettings::setActualTargetTemperature(temperature);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
