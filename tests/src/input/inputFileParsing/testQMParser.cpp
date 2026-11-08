@@ -40,7 +40,8 @@ TEST_F(TestInputFileReader, parseQMMethod)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_prog"));
@@ -140,7 +141,8 @@ TEST_F(TestInputFileReader, parseQMScript)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_script"));
@@ -156,7 +158,8 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_script_full_path"));
@@ -172,7 +175,8 @@ TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_loop_time_limit"));
@@ -195,7 +199,8 @@ TEST_F(TestInputFileReader, parseDispersion)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("dispersion"));
@@ -248,7 +253,8 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("remove_net_force"));
@@ -302,7 +308,8 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
 
     parser.parseMaceQMMethod("mace");
@@ -349,7 +356,8 @@ TEST_F(TestInputFileReader, parseMaceModel)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_model"));
@@ -434,7 +442,8 @@ TEST_F(TestInputFileReader, parseMaceMode)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_mode"));
@@ -465,7 +474,8 @@ TEST_F(TestInputFileReader, parseMaceModelPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_model_path"));
@@ -486,7 +496,8 @@ TEST_F(TestInputFileReader, parseSlakosType)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
@@ -551,7 +562,8 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
@@ -570,7 +582,8 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     auto funcMap2 = parser2.getKeywordFuncMap();
     ASSERT_TRUE(funcMap2.contains("slakos"));
@@ -594,7 +607,8 @@ TEST_F(TestInputFileReader, parseSlakosPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
@@ -616,7 +630,8 @@ TEST_F(TestInputFileReader, parseThirdOrder)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("third_order"));
@@ -668,7 +683,8 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hubbard_derivs"));
@@ -721,7 +737,8 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("xtb_method"));
@@ -761,18 +778,22 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("fennol_model_path"));
     const auto& fennolModelPathParseFunc = funcMap.at("fennol_model_path");
 
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
+    EXPECT_EQ(settings.fennolSettings.getFennolModelPath(), "");
     fennolModelPathParseFunc(
         {"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"},
         0
     );
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
+    EXPECT_EQ(
+        settings.fennolSettings.getFennolModelPath(),
+        "/pAth/to/fennol_model.fnx"
+    );
 }
 
 TEST_F(TestInputFileReader, parseGPUPreprocessing)
@@ -785,20 +806,21 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("gpu_preprocessing"));
     const auto& gpuPreprocessingParseFunc = funcMap.at("gpu_preprocessing");
 
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings.fennolSettings.useGPUPreprocessing(), true);
     gpuPreprocessingParseFunc({"GPU-Preprocessing", "=", "false"}, 0);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(settings.fennolSettings.useGPUPreprocessing(), false);
 
     _clearParser(parser);
 
     gpuPreprocessingParseFunc({"gpu_preprocessing", "=", "on"}, 0);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings.fennolSettings.useGPUPreprocessing(), true);
 
     _clearParser(parser);
 
@@ -813,10 +835,10 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 TEST_F(TestInputFileReader, processFennolKeywords)
 {
     _inputFileReader->process({"fennol-model-path", "=", "model.fnx"});
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "model.fnx");
+    EXPECT_EQ(_settings.fennolSettings.getFennolModelPath(), "model.fnx");
     EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
 
     _inputFileReader->process({"GPU-Preprocessing", "=", "off"});
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(_settings.fennolSettings.useGPUPreprocessing(), false);
     EXPECT_EQ(_inputFileReader->getKeywordCount("gpu_preprocessing"), 1);
 }

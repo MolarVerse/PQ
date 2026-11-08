@@ -52,7 +52,8 @@ class TestQMSetupAse : public ::testing::Test
         _qmSetup = std::make_unique<setup::QMSetup>(
             *_engine,
             _settings.qmSettings,
-            _settings.maceSettings
+            _settings.maceSettings,
+            _settings.fennolSettings
         );
         _engine->getEngineOutput().getLogOutput().setFilename(
             "default.log",

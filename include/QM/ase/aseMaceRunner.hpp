@@ -38,9 +38,6 @@ namespace QM
     class __attribute__((visibility("default"))) AseMaceRunner
         : public AseQMRunner
     {
-       private:
-        mstd::ConstRef<MaceSettings> _maceSettings;
-
        public:
         ~AseMaceRunner() override = default;
 

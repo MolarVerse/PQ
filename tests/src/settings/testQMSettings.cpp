@@ -217,16 +217,18 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
 
 TEST(QMSettingsTest, SetFennolModelPath)
 {
-    QMSettings::setFennolModelPath("/paTh/to/fennol_model.fnx");
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/paTh/to/fennol_model.fnx");
+    FennolSettings fennolSettings;
+    fennolSettings.setFennolModelPath("/paTh/to/fennol_model.fnx");
+    EXPECT_EQ(fennolSettings.getFennolModelPath(), "/paTh/to/fennol_model.fnx");
 }
 
 TEST(QMSettingsTest, SetGPUPreprocessing)
 {
-    QMSettings::setUseGPUPreprocessing(false);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
-    QMSettings::setUseGPUPreprocessing(true);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    FennolSettings fennolSettings;
+    fennolSettings.setUseGPUPreprocessing(false);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), false);
+    fennolSettings.setUseGPUPreprocessing(true);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), true);
 }
 
 TEST(QMSettingsTest, MaceNamesForMaceCalculatorsTest)
