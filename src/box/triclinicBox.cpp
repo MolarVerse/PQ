@@ -241,15 +241,19 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void TriclinicBox::scaleBox(const linalg::tensor3D &scalingTensor)
+    void TriclinicBox::scaleBox(const QuantityTensor3D &scalingTensor)
     {
         if (!_allowChangeOfAngles)
         {
-            _set_boxDimensions(diagonal(scalingTensor) * get_boxDimensions());
+            _set_boxDimensions(
+                diagonal(scalingTensor).numerical_value_in(one) *
+                get_boxDimensions()
+            );
         }
         else
         {
-            const auto boxMatrix = scalingTensor * _boxMatrix.get(*this);
+            const auto boxMatrix =
+                scalingTensor.numerical_value_in(one) * _boxMatrix.get(*this);
 
             const auto &[boxDimensions, boxAngles] =
                 calcBoxDimAndAnglesFromBoxMatrix(boxMatrix);

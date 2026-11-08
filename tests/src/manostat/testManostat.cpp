@@ -48,7 +48,7 @@ class TestableSimSpaceScalingManostat : public manostat::BerendsenManostat
    public:
     using BerendsenManostat::BerendsenManostat;
 
-    static linalg::tensor3D toSimSpaceScaling(
+    static QuantityTensor3D toSimSpaceScaling(
         const linalg::tensor3D& scalingTensor,
         const molsys::Box&      box
     )
@@ -516,7 +516,7 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
         TestableStochasticRescalingManostat(_settings->manostatSettings);
     manostat.setPressure(1.0 * bar);
 
-    const auto mu       = manostat.calculateMu(10.0);
+    const auto mu       = manostat.calculateMu(10.0).numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -598,7 +598,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
  */
 TEST_F(TestManostat, testRotateMu)
 {
-    auto mu = linalg::tensor3D({
+    auto mu = QuantityTensor3D({
         {1.0, 2.0, 3.0},
         {4.0, 5.0, 6.0},
         {7.0, 8.0, 9.0},
@@ -608,7 +608,7 @@ TEST_F(TestManostat, testRotateMu)
 
     EXPECT_EQ(
         mu,
-        linalg::tensor3D({
+        QuantityTensor3D({
             {1.0, 6.0, 10.0},
             {0.0, 5.0, 14.0},
             {0.0, 0.0, 9.0},
@@ -634,7 +634,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu();
+        const auto mu = manostat.calculateMu().numerical_value_in(one);
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], ::sqrt(1.5));
         EXPECT_DOUBLE_EQ(mu[2][2], ::sqrt(1.5));
@@ -652,7 +652,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu();
+        const auto mu = manostat.calculateMu().numerical_value_in(one);
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
         EXPECT_DOUBLE_EQ(mu[2][2], 1.6);
@@ -670,7 +670,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu();
+        const auto mu = manostat.calculateMu().numerical_value_in(one);
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
         EXPECT_DOUBLE_EQ(mu[2][2], 1.0);
@@ -691,7 +691,7 @@ TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
         diagonalMatrix(linalg::Vec3D(2.0, 3.0, 4.0)) * bar
     );
 
-    const auto mu = manostat.calculateMu();
+    const auto mu = manostat.calculateMu().numerical_value_in(one);
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.4);
     EXPECT_DOUBLE_EQ(mu[2][2], 1.0);
@@ -711,7 +711,7 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
         linalg::tensor3D({{2.0, 0.5, 0.1}, {0.5, 3.0, 0.2}, {0.1, 0.2, 4.0}});
     manostat.setPressureTensor(pTensor * bar);
 
-    const auto mu = manostat.calculateMu();
+    const auto mu = manostat.calculateMu().numerical_value_in(one);
     // Y row and column should be zeroed except diagonal which is 1.0
     EXPECT_DOUBLE_EQ(mu[1][0], 0.0);
     EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
@@ -737,7 +737,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu       = manostat.calculateMu(10.0);
+        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.5) / 2.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -757,7 +757,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu       = manostat.calculateMu(10.0);
+        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 3.0) / 1.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
@@ -777,7 +777,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0);
+        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
@@ -801,7 +801,7 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
         diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
     );
 
-    const auto mu       = manostat.calculateMu(10.0);
+    const auto mu       = manostat.calculateMu(10.0).numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -825,7 +825,7 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
         linalg::tensor3D({{1.0, 0.2, 0.3}, {0.2, 2.0, 0.4}, {0.3, 0.4, 3.0}});
     manostat.setPressureTensor(pTensor * bar);
 
-    const auto mu = manostat.calculateMu(10.0);
+    const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
     EXPECT_DOUBLE_EQ(mu[0][1], 0.0);
     EXPECT_DOUBLE_EQ(mu[0][2], 0.0);
@@ -849,7 +849,7 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
         diagonalMatrix(linalg::Vec3D(2.0, 4.0, 5.0)) * bar
     );
 
-    const auto mu = manostat.calculateMu();
+    const auto mu = manostat.calculateMu().numerical_value_in(one);
     // xy avg = 3.0, mu_xy = sqrt(1 - 0.2 * 0.5 / 0.5 * (1.0 - 3.0)) = sqrt(1.4)
     EXPECT_DOUBLE_EQ(mu[0][0], ::sqrt(1.4));
     EXPECT_DOUBLE_EQ(mu[1][1], ::sqrt(1.4));
@@ -874,7 +874,7 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
         diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)) * bar
     );
 
-    const auto mu = manostat.calculateMu(10.0);
+    const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
     // xz avg = 2.0, deltaPxy = 7.0 - 2.0 = 5.0
     const auto expected_xz = ::exp(-(0.12 * 0.5 / 0.25) * 5.0 / 3.0);
 
@@ -926,7 +926,8 @@ TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
     const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false};
 
     const auto muSim =
-        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box)
+            .numerical_value_in(one);
 
     const linalg::Vec3D vector{0.3, -0.7, 1.9};
     const auto          expected = box.getBoxMatrix() * (mu * vector);
@@ -937,7 +938,8 @@ TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
     // isotropic scaling is invariant under the transformation
     const auto isotropic = linalg::diagonalMatrix(linalg::Vec3D{0.95});
     const auto isotropicSim =
-        TestableSimSpaceScalingManostat::toSimSpaceScaling(isotropic, box);
+        TestableSimSpaceScalingManostat::toSimSpaceScaling(isotropic, box)
+            .numerical_value_in(one);
     EXPECT_TRUE(
         utilities::compare(isotropicSim * vector, isotropic * vector, 1e-12)
     );

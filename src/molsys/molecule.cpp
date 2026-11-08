@@ -30,6 +30,8 @@
 #include "collectionUtilities.hpp"
 #include "generalSettings.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -127,9 +129,11 @@ namespace molsys
      * @param scalingTensor scaling tensor in simulation space
      * @param box
      */
-    void Molecule::scale(const linalg::tensor3D &scalingTensor, const Box &box)
+    void Molecule::scale(const QuantityTensor3D &scalingTensor, const Box &box)
     {
-        const auto shift = scalingTensor * _centerOfMass - _centerOfMass;
+        const auto shift =
+            scalingTensor.numerical_value_in(one) * _centerOfMass -
+            _centerOfMass;
 
         auto scaleAtomPosition = [&box, shift](const auto &atom)
         {
@@ -157,7 +161,7 @@ namespace molsys
      *
      * @param scalingTensor scaling tensor in simulation space
      */
-    void Molecule::scaleVelocity(const linalg::tensor3D &scalingTensor)
+    void Molecule::scaleVelocity(const QuantityTensor3D &scalingTensor)
     {
         auto centerOfMassVelocity = linalg::Vec3D(0.0);
 
@@ -167,7 +171,7 @@ namespace molsys
         centerOfMassVelocity /= getMolMass();
 
         const auto scaledCenterOfMassVelocity =
-            scalingTensor * centerOfMassVelocity;
+            scalingTensor.numerical_value_in(one) * centerOfMassVelocity;
 
         const auto velocityShift =
             scaledCenterOfMassVelocity - centerOfMassVelocity;

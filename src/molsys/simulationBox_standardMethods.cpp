@@ -534,7 +534,7 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void SimulationBox::scaleBox(const linalg::tensor3D &scalingTensor)
+    void SimulationBox::scaleBox(const QuantityTensor3D &scalingTensor)
     {
         _box->scaleBox(scalingTensor);
         calculateDensity();

@@ -120,10 +120,11 @@ namespace manostat
      *
      * @param scalingTensor
      * @param box
-     * @return linalg::tensor3D
+     * @return QuantityTensor3D representing the scaling tensor transformed into
+     * simulation space
      */
-    linalg::tensor3D Manostat::_toSimSpaceScaling(
-        const linalg::tensor3D &scalingTensor,
+    QuantityTensor3D Manostat::_toSimSpaceScaling(
+        const QuantityTensor3D &scalingTensor,
         const molsys::Box      &box
     )
     {
@@ -133,14 +134,23 @@ namespace manostat
         return box.getBoxMatrix() * scalingTensor * box.getInverseBoxMatrix();
     }
 
-    /** @brief Validate a resize without changing the live cell or atoms. */
+    /**
+     * @brief Validate a resize without changing the live cell or atoms.
+     *
+     * @param simulationBox The current simulation box.
+     * @param mu The scaling tensor to validate.
+     *
+     * @throws exc::ManostatException if the scaling tensor is invalid or leads
+     * to an invalid candidate cell.
+     */
     void Manostat::_validateScaling(
         const molsys::SimulationBox &simulationBox,
-        const linalg::tensor3D      &mu
+        const QuantityTensor3D      &mu
     )
     {
         const auto determinant = det(mu);
-        if (!linalg::isFinite(mu) || !std::isfinite(determinant) ||
+        if (!linalg::isFinite(mu) ||
+            !std::isfinite(static_cast<double>(determinant)) ||
             determinant <= 0.0 || mu[0][0] <= 0.0 || mu[1][1] <= 0.0 ||
             mu[2][2] <= 0.0 || !linalg::isFinite(inverse(mu)))
         {
@@ -151,10 +161,18 @@ namespace manostat
         _validateCandidate(*candidate, mu);
     }
 
-    /** @brief Scale and validate a candidate cell. */
+    /**
+     * @brief Scale and validate a candidate cell.
+     *
+     * @param candidate The candidate simulation box to scale and validate.
+     * @param mu The scaling tensor to apply to the candidate box.
+     *
+     * @throws exc::ManostatException if the resulting candidate cell geometry
+     * is invalid.
+     */
     void Manostat::_validateCandidate(
         molsys::Box            &candidate,
-        const linalg::tensor3D &mu
+        const QuantityTensor3D &mu
     )
     {
         candidate.scaleBox(mu);
@@ -198,7 +216,7 @@ namespace manostat
      * [gromacs](https://manual.gromacs.org/current/reference-manual/algorithms/molecular-dynamics.html)
      *
      */
-    void Manostat::rotateMu(linalg::tensor3D &mu)
+    void Manostat::rotateMu(QuantityTensor3D &mu)
     {
         mu[0][1] += mu[1][0];
         mu[0][2] += mu[2][0];

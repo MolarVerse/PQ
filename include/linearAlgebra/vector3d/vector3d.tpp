@@ -367,9 +367,9 @@ namespace linalg
      * @return `detail::BinaryResult_t<std::divides<>, U, V>`
      */
     template <typename U, typename V>
-    requires detail::BinaryOperands<U, V>
+    requires detail::DivideOperands<U, V>
     constexpr auto operator/(const U &lhs, const V &rhs) -> detail::
-        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::divides<>, U, V>
+        BinaryResultIf_t<detail::DivideOperands<U, V>, std::divides<>, U, V>
     {
         return detail::binaryOp<std::divides<>>(lhs, rhs);
     }
@@ -840,6 +840,26 @@ namespace linalg
                std::isfinite(vec[2]);
     }
 
+    /**
+     * @brief checks if all elements of a Vector3D of quantities are finite
+     *
+     * @code
+     * isFinite(Vector3D<quantity<one>>)
+     * @endcode
+     *
+     * @tparam U
+     * @param vec
+     * @return true if all elements are finite, false otherwise
+     */
+    template <pq::QuantityLikeVector3D U>
+    auto isFinite(const U &vec) -> bool
+    {
+        const auto finite = [](const auto &elem)
+        { return std::isfinite(elem.numerical_value_in(elem.unit)); };
+
+        return finite(vec[0]) && finite(vec[1]) && finite(vec[2]);
+    }
+
     /***************
      *             *
      * dot product *
@@ -977,10 +997,10 @@ namespace linalg
      * @param vec
      * @return std::ostream&
      */
-    template <pq::ArithmeticVector3D U>
-    std::ostream &operator<<(std::ostream &ostream, const U &vec)
+    template <typename T>
+    std::ostream &operator<<(std::ostream &ostream, const Vector3D<T> &vec)
     {
-        return ostream << vec[0] << " " << vec[1] << " " << vec[2];
+        return ostream << std::format("{} {} {}", vec[0], vec[1], vec[2]);
     }
 
 }   // namespace linalg
