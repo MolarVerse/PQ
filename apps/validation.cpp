@@ -177,14 +177,17 @@ namespace
         );
     }
 
-    void validateExternalQMScriptSelection(const QMSettings &qmSettings)
+    void validateExternalQMScriptSelection(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings
+    )
     {
         if (!settings::GeneralSettings::isQMActivated() ||
             !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = externalQMSettings.getQMScript();
+        const auto fullPathScript = externalQMSettings.getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
         {
@@ -215,14 +218,17 @@ namespace
         }
     }
 
-    void validateInstalledExternalQMScript(const QMSettings &qmSettings)
+    void validateInstalledExternalQMScript(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings
+    )
     {
         if (!settings::GeneralSettings::isQMActivated() ||
             !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto script         = externalQMSettings.getQMScript();
+        const auto fullPathScript = externalQMSettings.getQMScriptFullPath();
 
         // NOTE: these compile flags seem redundant with certain cmake
         // configurations, but are necessary for some build configurations (e.g.
@@ -296,7 +302,10 @@ namespace
                 "M-SHAKE file needed for requested simulation setup"
             );
 
-        validateExternalQMScriptSelection(settings.qmSettings);
+        validateExternalQMScriptSelection(
+            settings.qmSettings,
+            settings.externalQMSettings
+        );
     }
 
     void validateEffectiveFiles(const Settings &settings)
@@ -411,7 +420,10 @@ namespace
                 requireFile(modelPath, "MACE model file");
         }
 
-        validateInstalledExternalQMScript(settings.qmSettings);
+        validateInstalledExternalQMScript(
+            settings.qmSettings,
+            settings.externalQMSettings
+        );
     }
 
     void validateCompiledCapabilities(const QMSettings &qmSettings)

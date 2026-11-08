@@ -42,7 +42,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OB)
 {
     _settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
     _settings.dftbSettings.setUseThirdOrderDftbByUser(true);
-    QMSettings::setUseDispersionCorrection(true);
+    _settings.qmSettings.setUseDispersionCorrectionByUser(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -143,7 +143,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplus3OBCustomHubbardDerivs)
 TEST_F(TestQMSetupAse, setupAseDftbplusMatsci)
 {
     _settings.dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
-    QMSettings::setUseDispersionCorrection(true);
+    _settings.qmSettings.setUseDispersionCorrectionByUser(true);
     _qmSetup->setupWriteInfo();
 
     std::ifstream file("default.log");
@@ -194,7 +194,7 @@ TEST_F(TestQMSetupAse, setupAseDftbplusCustom3rdOrder)
 {
     _settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
     _settings.dftbSettings.setSlakosPathByUser("custom/path/");
-    QMSettings::setUseDispersionCorrection(true);
+    _settings.qmSettings.setUseDispersionCorrectionByUser(true);
     _settings.dftbSettings.setUseThirdOrderDftbByUser(true);
     _settings.dftbSettings.setHubbardDerivsByUser({{"H", -0.3}});
     _qmSetup->setupWriteInfo();
@@ -324,7 +324,7 @@ class MACECalculator:
     modules["mace.calculators"] = calculatorsModule;
 
     settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
-    QMSettings::setUseDispersionCorrection(true);
+    _settings.qmSettings.setUseDispersionCorrectionByUser(true);
     _settings.maceSettings.setMaceModeByUser(MaceMode::ACCURATE);
     _settings.maceSettings.setMaceModelPathByUser("model.model");
     _settings.maceSettings.setMaceModelTypeByUser(MaceModelType::MACE_MP);

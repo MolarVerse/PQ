@@ -31,6 +31,8 @@
 #include <chrono>
 #include <thread>
 
+#include "units.hpp"
+
 #if !defined(_WIN32)
 #include <pthread.h>
 
@@ -249,21 +251,21 @@ namespace QM
         void interruptAfterTimeout(
             const std::stop_token &stopToken,
             std::atomic_bool      &timedOut,
-            PythonThread           pythonThread
+            PythonThread           pythonThread,
+            const TimeMs          &qmLoopTimeLimit
         )
         {
             constexpr auto pollInterval = std::chrono::milliseconds(10);
 
-            // qm_loop_time_limit is given in s
-            const auto timeLimit = QMSettings::getQMLoopTimeLimit();
-
-            if (timeLimit <= 0.0)
+            if (qmLoopTimeLimit <= TimeMs::zero())
             {
                 return;
             }
 
             const auto deadline = std::chrono::steady_clock::now() +
-                                  std::chrono::duration<double>(timeLimit);
+                                  std::chrono::duration<double>(
+                                      qmLoopTimeLimit.numerical_value_in(s)
+                                  );
 
             while (std::chrono::steady_clock::now() < deadline)
             {
@@ -360,11 +362,17 @@ namespace QM
         _setPeriodicity(per);
 
         auto         timedOut = std::atomic_bool{false};
-        std::jthread timeoutThread{
-            [&timedOut,
-             pythonThread = currentThread()](const std::stop_token &stopToken)
-            { interruptAfterTimeout(stopToken, timedOut, pythonThread); }
-        };
+        std::jthread timeoutThread{[&timedOut,
+                                    pythonThread = currentThread(),
+                                    this](const std::stop_token &stopToken)
+                                   {
+                                       interruptAfterTimeout(
+                                           stopToken,
+                                           timedOut,
+                                           pythonThread,
+                                           _getQMSettings().getQMLoopTimeLimit()
+                                       );
+                                   }};
 
         try
         {
@@ -483,7 +491,7 @@ namespace QM
             throw;
         }
 
-        if (QMSettings::getRemoveNetForce())
+        if (_getQMSettings().getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 

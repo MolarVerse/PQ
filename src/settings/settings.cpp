@@ -42,12 +42,15 @@ void Settings::finalize()
         case QMMethod::ASE_DFTBPLUS:
             dftbSettings.finalize(referenceSettings);
             break;
+        case QMMethod::ASE_XTB: xtbSettings.finalize(referenceSettings); break;
         case QMMethod::MACE:
-        case QMMethod::ASE_XTB:
         case QMMethod::DFTBPLUS:
         case QMMethod::FENNOL:
         case QMMethod::PYSCF:
         case QMMethod::TURBOMOLE:
         case QMMethod::NONE: break;
     }
+
+    if (qmSettings.isExternalQMRunner())
+        externalQMSettings.finalize();
 }

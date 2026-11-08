@@ -43,6 +43,7 @@ inline constexpr auto deg = mstd::units::deg;
 inline constexpr auto fs = mstd::units::fs;
 inline constexpr auto ps = mstd::units::ps;
 inline constexpr auto s  = mstd::units::s;
+inline constexpr auto ms = mstd::units::ms;
 
 inline constexpr auto bar     = mstd::units::bar;
 inline constexpr auto Pa      = mstd::units::Pa;

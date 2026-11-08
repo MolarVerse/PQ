@@ -24,19 +24,6 @@ target_link_libraries(externalQM
     config_headers
 )
 
-if(BUILD_SHARED_LIBS)
-    set(BUILD_STATIC "OFF")
-else()
-    set(BUILD_STATIC "ON")
-endif()
-
-target_compile_definitions(externalQM
-    PUBLIC
-    _SCRIPT_PATH_=\"${CMAKE_CURRENT_BINARY_DIR}/../scripts/\"
-    _SINGULARITY_=\"${BUILD_WITH_SINGULARITY}\"
-    _STATIC_BUILD_=\"${BUILD_STATIC}\"
-)
-
 add_custom_command(TARGET externalQM POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/src/QM/scripts $<TARGET_FILE_DIR:QM>/scripts

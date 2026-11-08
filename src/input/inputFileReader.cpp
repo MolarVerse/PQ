@@ -159,7 +159,8 @@ namespace input
                 settings.maceSettings,
                 settings.fennolSettings,
                 settings.dftbSettings,
-                settings.xtbSettings
+                settings.xtbSettings,
+                settings.externalQMSettings
             )
         );
 

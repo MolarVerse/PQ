@@ -59,6 +59,7 @@ struct Settings
     FennolSettings        fennolSettings;
     DftbSettings          dftbSettings;
     XtbSettings           xtbSettings;
+    ExternalQMSettings    externalQMSettings;
 
     void finalize();
 };

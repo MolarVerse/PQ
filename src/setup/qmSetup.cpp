@@ -34,7 +34,7 @@
 #include "qmCapableEngine.hpp"
 #include "qmSettings.hpp"
 #include "stdoutOutput.hpp"
-#include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace setup
 {
@@ -55,22 +55,27 @@ namespace setup
      * which may include method-specific parameters and computational options
      * @param xtbSettings The XTB settings used to configure the XTB runner,
      * which may include method-specific parameters and computational options
+     * @param externalQMSettings The External QM settings used to configure the
+     * external QM runner, which may include method-specific parameters and
+     * computational options
      *
      */
     QMSetup::QMSetup(
-        engine::QMCapableEngine &qmCapableEngine,
-        const QMSettings        &qmSettings,
-        const MaceSettings      &maceSettings,
-        const FennolSettings    &fennolSettings,
-        const DftbSettings      &dftbSettings,
-        const XtbSettings       &xtbSettings
+        engine::QMCapableEngine  &qmCapableEngine,
+        const QMSettings         &qmSettings,
+        const MaceSettings       &maceSettings,
+        const FennolSettings     &fennolSettings,
+        const DftbSettings       &dftbSettings,
+        const XtbSettings        &xtbSettings,
+        const ExternalQMSettings &externalQMSettings
     )
         : _qmCapableEngine(qmCapableEngine),
           _qmSettings(qmSettings),
           _maceSettings(maceSettings),
           _fennolSettings(fennolSettings),
           _dftbSettings(dftbSettings),
-          _xtbSettings(xtbSettings)
+          _xtbSettings(xtbSettings),
+          _externalQMSettings(externalQMSettings)
     {
     }
 
@@ -78,11 +83,9 @@ namespace setup
      * @brief wrapper to build QMSetup object and call setup
      *
      * @param engine
-     * @param references Reference settings object used to manage and add
-     * necessary reference files for the specified QM method.
      * TODO(97gamjak): remove references as soon as qmsettings is in place
      */
-    void setupQM(engine::Engine &engine, ReferenceSettings &references)
+    void setupQM(engine::Engine &engine)
     {
         if (!settings::GeneralSettings::isQMActivated())
             return;
@@ -102,9 +105,10 @@ namespace setup
                 settings.maceSettings,
                 settings.fennolSettings,
                 settings.dftbSettings,
-                settings.xtbSettings
+                settings.xtbSettings,
+                settings.externalQMSettings
             );
-            qmSetup.setup(references);
+            qmSetup.setup();
         }
         else
         {
@@ -118,14 +122,9 @@ namespace setup
      * @brief setup QM-MD for all subtypes
      *
      */
-    void QMSetup::setup(ReferenceSettings &references)
+    void QMSetup::setup()
     {
         setupQMMethod();
-
-        _setupQMMethodAseXtb(references);
-
-        if (_qmSettings->isExternalQMRunner())
-            setupQMScript();
 
         setupCoulombRadiusCutOff();
 
@@ -143,138 +142,9 @@ namespace setup
             _maceSettings,
             _fennolSettings,
             _dftbSettings,
-            _xtbSettings
+            _xtbSettings,
+            _externalQMSettings
         );
-    }
-
-    /**
-     * @brief setup the ASE DFTB+ method of the system
-     *
-     */
-    void QMSetup::_setupQMMethodAseXtb(ReferenceSettings &references) const
-    {
-        if (!(_qmSettings->getQMMethod() == QMMethod::ASE_XTB))
-            return;
-
-        if (_xtbSettings->getXtbMethod() == XtbMethod::GFN1)
-        {
-            references.addReferenceFile(ReferenceFiles::GFN1_FILE);
-        }
-        else if (_xtbSettings->getXtbMethod() == XtbMethod::GFN2)
-        {
-            references.addReferenceFile(ReferenceFiles::GFN2_FILE);
-        }
-        else if (_xtbSettings->getXtbMethod() == XtbMethod::IPEA1)
-        {
-            references.addReferenceFile(ReferenceFiles::IPEA1_FILE);
-        }
-    }
-
-    /**
-     * @brief checks if a singularity or static build is used and sets the
-     * qm_script accordingly
-     *
-     * @details if a singularity or static build is used the qm_script is set to
-     * the qm_script_full_path and the script path is set to the empty string to
-     * avoid errors. This is necessary because the script can not be accessed
-     * from inside the container. Therefore the user has to provide the script
-     * somewhere else and give the full or relative path to it. For more
-     * information please refer to the documentation.
-     *
-     */
-    void QMSetup::setupQMScript() const
-    {
-        auto &qmRunner         = *_qmCapableEngine.getQMRunner();
-        auto &externalQMRunner = dynamic_cast<QM::ExternalQMRunner &>(qmRunner);
-
-        const auto singularityString = QM::ExternalQMRunner::getSingularity();
-        const auto staticBuildString = QM::ExternalQMRunner::getStaticBuild();
-
-        const auto singularity =
-            utilities::toLowerCopy(singularityString) == "on";
-        const auto staticBuild =
-            utilities::toLowerCopy(staticBuildString) == "on";
-
-        const auto qmScript        = QMSettings::getQMScript();
-        const auto isQMScriptEmpty = qmScript.empty();
-
-        const auto qmScriptFullPath        = QMSettings::getQMScriptFullPath();
-        const auto isQMScriptFullPathEmpty = qmScriptFullPath.empty();
-
-        if (singularity || staticBuild)
-        {
-            if (isQMScriptFullPathEmpty)
-            {
-                throw exc::QMRunnerException(
-                    "You are using at least one of these settings: i) "
-                    "singularity "
-                    "build or/and ii) static build of PQ. Therefore the "
-                    "general "
-                    "setting with 'qm_script' to set only the name of the "
-                    "executable is not applicable. Please use "
-                    "'qm_script_full_path' instead and provide the full path "
-                    "to "
-                    "the executable. For singularity builds the script can not "
-                    "be "
-                    "accessed from inside the container. In case of a static "
-                    "build "
-                    "the binary may be shipped without the source code and "
-                    "again "
-                    "PQ might therefore not be able to locate the executable "
-                    "qm "
-                    "script. Therefore you have to provide the script "
-                    "somewhere "
-                    "else and give the full/relative path to it. For more "
-                    "information please refer to the documentation."
-                );
-            }
-
-            if (!isQMScriptEmpty)
-            {
-                throw exc::QMRunnerException(
-                    "You have set both 'qm_script' and 'qm_script_full_path' "
-                    "in "
-                    "the input file. Please use only one the full path option "
-                    "as "
-                    "you are working either with a singularity build or a "
-                    "static "
-                    "build. For more information please refer to the "
-                    "documentation."
-                );
-            }
-
-            // setting script path to empty string to avoid errors
-            externalQMRunner.setScriptPath("");
-
-            // overwriting qm_script with full path
-            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
-        }
-        else if (isQMScriptEmpty && isQMScriptFullPathEmpty)
-        {
-            throw exc::InputFileException(
-                "No qm_script provided. Please provide a qm_script in the "
-                "input "
-                "file."
-            );
-        }
-        else if (!isQMScriptFullPathEmpty && isQMScriptEmpty)
-        {
-            // setting script path to empty string to avoid errors
-            externalQMRunner.setScriptPath("");
-
-            // overwriting qm_script with full path
-            QMSettings::setQMScript(QMSettings::getQMScriptFullPath());
-        }
-        else if (!isQMScriptFullPathEmpty && !isQMScriptEmpty)
-        {
-            throw exc::InputFileException(
-                "You have set both 'qm_script' and 'qm_script_full_path' in "
-                "the "
-                "input file. They are mutually exclusive. Please use only one "
-                "of "
-                "them. For more information please refer to the documentation."
-            );
-        }
     }
 
     /**
@@ -312,7 +182,7 @@ namespace setup
 
         if (_qmSettings->isExternalQMRunner())
         {
-            const auto qmScript        = QMSettings::getQMScript();
+            const auto qmScript        = _externalQMSettings->getQMScript();
             const auto qmScriptMessage = std::format("QM script: {}", qmScript);
 
             logOutput.writeSetupInfo(qmScriptMessage);
@@ -327,7 +197,7 @@ namespace setup
                 settings::GeneralSettings::getFloatingPointPybindString();
             const auto        maceMode = _maceSettings->getMaceMode();
             const auto *const useDisp =
-                QMSettings::useDispersionCorr() ? "on" : "off";
+                _qmSettings->useDispersionCorr() ? "on" : "off";
 
             const auto modelTypeMsg = std::format(
                 "Model type:            {}",
@@ -401,7 +271,7 @@ namespace setup
             const auto slakosPath    = _dftbSettings->getSlakosPath();
             const auto thirdOrder    = _dftbSettings->useThirdOrderDftb();
             const auto hubbardDerivs = _dftbSettings->getHubbardDerivs();
-            const auto dispersion    = QMSettings::useDispersionCorr();
+            const auto dispersion    = _qmSettings->useDispersionCorr();
 
             const auto slakosTypeMsg = std::format(
                 "DFTB approach:        {}",
@@ -469,11 +339,11 @@ namespace setup
             logOutput.writeSetupInfo(xtbMethodMsg);
         }
 
-        const auto qm_loop_time_limit = QMSettings::getQMLoopTimeLimit();
+        const auto qm_loop_time_limit = _qmSettings->getQMLoopTimeLimit();
 
         const auto qmLoopTimeLimitMsg = std::format(
             "QM looptime limit: {}",
-            qm_loop_time_limit > 0 ? std::format("{} s", qm_loop_time_limit)
+            qm_loop_time_limit > 0 ? std::format("{}", qm_loop_time_limit.in(s))
                                    : "unlimited"
         );
 

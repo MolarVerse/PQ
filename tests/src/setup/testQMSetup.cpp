@@ -41,14 +41,18 @@
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"
 #include "turbomoleRunner.hpp"
+#include "units.hpp"
 
 namespace
 {
     class DefaultExternalQMRunner : public QM::ExternalQMRunner
     {
        public:
-        explicit DefaultExternalQMRunner(const QMSettings &qmSettings)
-            : QM::ExternalQMRunner(qmSettings)
+        explicit DefaultExternalQMRunner(
+            const QMSettings         &qmSettings,
+            const ExternalQMSettings &externalQMSettings
+        )
+            : QM::ExternalQMRunner(qmSettings, externalQMSettings)
         {
         }
 
@@ -56,16 +60,12 @@ namespace
         void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
     };
 
-    void setBuildCompatibleQMScript()
+    // the full path variant is valid for all build types (including
+    // singularity and static builds)
+    void setBuildCompatibleQMScript(ExternalQMSettings &externalQMSettings)
     {
-        QMSettings::setQMScript("");
-        QMSettings::setQMScriptFullPath("");
-
-        if (std::string_view(SINGULARITY_) == "ON" ||
-            std::string_view(STATIC_BUILD_) == "ON")
-            QMSettings::setQMScriptFullPath("test");
-        else
-            QMSettings::setQMScript("test");
+        externalQMSettings.setQMScriptFullPathByUser("test");
+        externalQMSettings.finalize();
     }
 
 }   // namespace
@@ -73,7 +73,8 @@ namespace
 TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 {
     QMSettings                 qmSettings;
-    DefaultExternalQMRunner    runner{qmSettings};
+    ExternalQMSettings         externalQMSettings;
+    DefaultExternalQMRunner    runner{qmSettings, externalQMSettings};
     molsys::SimulationBox      simBox;
     physicalData::PhysicalData physicalData;
     QM::ExternalQMRunner *volatile baseRunner = &runner;
@@ -85,7 +86,10 @@ TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 
 TEST(TestQMSetup, resolvesBundledQMScript)
 {
-    const auto script = QM::bundledQMScriptPath("pyscf_hf.py");
+    ExternalQMSettings externalQMSettings;
+    externalQMSettings.setQMScriptByUser("pyscf_hf.py");
+    externalQMSettings.finalize();
+    const auto script = externalQMSettings.getQMScript();
 
     EXPECT_EQ(std::filesystem::path(script).filename(), "pyscf_hf.py");
     EXPECT_TRUE(std::filesystem::is_regular_file(script));
@@ -109,19 +113,20 @@ TEST(TestQMSetup, setupDftbplus)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    setBuildCompatibleQMScript();
-    setupQM.setup(settings.referenceSettings);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
+    setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
 
     settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
-        setupQM.setup(settings.referenceSettings),
+        setupQM.setup(),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -138,19 +143,20 @@ TEST(TestQMSetup, setupPySCF)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
-    setBuildCompatibleQMScript();
-    setupQM.setup(settings.referenceSettings);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
+    setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::PySCFRunner));
 
     settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
-        setupQM.setup(settings.referenceSettings),
+        setupQM.setup(),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -167,19 +173,20 @@ TEST(TestQMSetup, setupTurbomoleRunner)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
-    setBuildCompatibleQMScript();
-    setupQM.setup(settings.referenceSettings);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
+    setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::TurbomoleRunner));
 
     settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
-        setupQM.setup(settings.referenceSettings),
+        setupQM.setup(),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
         "\"qm_prog\" provided"
@@ -188,13 +195,12 @@ TEST(TestQMSetup, setupTurbomoleRunner)
 
 TEST(TestQMSetup, setupQMFull)
 {
-    QMSettings qmSettings;
-    qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("test");
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
 
-    Settings           settings;
     engine::QMMDEngine engine(settings);
-    EXPECT_NO_THROW(setup::setupQM(engine, settings.referenceSettings));
+    EXPECT_NO_THROW(setup::setupQM(engine));
 }
 
 #ifdef WITH_ASE
@@ -276,12 +282,14 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
 
     qmSetup.setupWriteInfo();
 
@@ -313,13 +321,15 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
-    QMSettings::setQMLoopTimeLimit(-1.2);
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
+    settings.qmSettings.setQMLoopTimeLimitByUser(-1.2 * s);
 
     qmSetup.setupWriteInfo();
 
@@ -351,13 +361,15 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
-    QMSettings::setQMLoopTimeLimit(0);
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
+    settings.qmSettings.setQMLoopTimeLimitByUser(0 * s);
 
     qmSetup.setupWriteInfo();
 
@@ -389,13 +401,15 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-    QMSettings::setQMScript("path/To/myQMScript");
-    QMSettings::setQMLoopTimeLimit(3.14);
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
+    settings.qmSettings.setQMLoopTimeLimitByUser(3.14 * s);
 
     qmSetup.setupWriteInfo();
 
@@ -427,7 +441,8 @@ TEST(TestQMSetup, setupQMRunnerFennol)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);

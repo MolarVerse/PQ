@@ -42,7 +42,7 @@ namespace QM
         ~AseMaceRunner() override = default;
 
         explicit AseMaceRunner(
-            const QMSettings&   settings,
+            const QMSettings&   qmSettings,
             const MaceSettings& maceSettings
         );
     };

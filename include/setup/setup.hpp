@@ -45,16 +45,13 @@ namespace timings
  */
 namespace setup
 {
-    void setupRequestedJob(
-        engine::Engine    &engine,
-        ReferenceSettings &references
-    );
+    void setupRequestedJob(engine::Engine &engine);
 
     void startSetup();
     void endSetup(engine::Engine &);
 
     void readFiles(engine::Engine &);
-    void setupEngine(engine::Engine &, ReferenceSettings &references);
+    void setupEngine(engine::Engine &);
 }   // namespace setup
 
 #endif   // SETUP__SETUP_HPP

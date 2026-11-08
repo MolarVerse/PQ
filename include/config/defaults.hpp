@@ -124,7 +124,7 @@ namespace defaults
 
     static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
 
-    static constexpr double QM_LOOP_TIME_LIMIT_DEFAULT = 3600;   // in s
+    static constexpr TimeMs QM_LOOP_TIME_LIMIT_DEFAULT = 3600 * mstd::units::s;
     static constexpr double VACUUM_BOX_DIMENSION       = 1000;   // in Å
 
     static constexpr auto*  OPTIMIZER_DEFAULT             = "gradient-descent";

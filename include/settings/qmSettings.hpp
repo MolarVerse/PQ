@@ -24,7 +24,6 @@
 #define SETTINGS__QM_SETTINGS_HPP
 
 #include <string>
-#include <string_view>
 #include <unordered_map>
 
 #include "defaults.hpp"
@@ -142,8 +141,33 @@ class XtbSettings
     Setting<XtbMethod, "XtbMethod"> _xtbMethod{XtbMethod::GFN2};
 
    public:
+    void finalize(ReferenceSettings &referenceSettings);
+
     void                    setXtbMethodByUser(XtbMethod method);
     [[nodiscard]] XtbMethod getXtbMethod() const;
+};
+
+/**
+ * @brief ExternalQMSettings
+ *
+ * @details stores all information about the external QM runner script and its
+ * full path
+ *
+ */
+class ExternalQMSettings
+{
+   private:
+    Setting<std::string, "ExternalQMScript">         _qmScript{""};
+    Setting<std::string, "ExternalQMScriptFullPath"> _qmScriptFullPath{""};
+
+   public:
+    void finalize();
+
+    void setQMScriptByUser(const std::string &script);
+    void setQMScriptFullPathByUser(const std::string &scriptFullPath);
+
+    [[nodiscard]] const std::string &getQMScript() const;
+    [[nodiscard]] const std::string &getQMScriptFullPath() const;
 };
 
 /**
@@ -157,14 +181,12 @@ class QMSettings
    private:
     Setting<QMMethod, "QMMethod"> _qmMethod{QMMethod::NONE};
 
-    static inline std::string _qmScript;
-    static inline std::string _qmScriptFullPath;
+    Setting<bool, "UseDispersionCorrection"> _useDispersionCorrection{false};
+    Setting<bool, "RemoveNetForce">          _removeNetForce{false};
 
-    static inline bool _useDispersionCorrection = false;
-    static inline bool _removeNetForce          = false;
-
-    static inline double _qmLoopTimeLimit =
-        defaults::QM_LOOP_TIME_LIMIT_DEFAULT;
+    Setting<TimeMs, "QMLoopTimeLimit"> _qmLoopTimeLimit{
+        defaults::QM_LOOP_TIME_LIMIT_DEFAULT
+    };
 
    public:
     void finalize();
@@ -177,13 +199,10 @@ class QMSettings
 
     void setQMMethodByUser(QMMethod method);
 
-    static void setQMScript(const std::string_view &script);
-    static void setQMScriptFullPath(const std::string_view &script);
+    void setUseDispersionCorrectionByUser(bool use);
+    void setRemoveNetForceByUser(bool removeNetForce);
 
-    static void setUseDispersionCorrection(bool use);
-    static void setRemoveNetForce(bool removeNetForce);
-
-    static void setQMLoopTimeLimit(double time);
+    void setQMLoopTimeLimitByUser(const TimeMs &time);
 
     /***************************
      * standard getter methods *
@@ -192,13 +211,10 @@ class QMSettings
     [[nodiscard]] QMMethod getQMMethod() const;
     [[nodiscard]] bool     isQMMethodSetByUser() const;
 
-    [[nodiscard]] static std::string getQMScript();
-    [[nodiscard]] static std::string getQMScriptFullPath();
+    [[nodiscard]] bool useDispersionCorr() const;
+    [[nodiscard]] bool getRemoveNetForce() const;
 
-    [[nodiscard]] static bool useDispersionCorr();
-    [[nodiscard]] static bool getRemoveNetForce();
-
-    [[nodiscard]] static double getQMLoopTimeLimit();
+    [[nodiscard]] const TimeMs &getQMLoopTimeLimit() const;
 };
 
 #endif   // SETTINGS__QM_SETTINGS_HPP
