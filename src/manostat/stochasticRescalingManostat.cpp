@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <mstd/units.hpp>
 
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
@@ -104,7 +105,7 @@ namespace manostat
      * @param volume
      * @return linalg::Vec3D
      */
-    linalg::tensor3D StochasticRescalingManostat::calculateMu(double volume)
+    QuantityTensor3D StochasticRescalingManostat::calculateMu(double volume)
     {
         const auto &settings  = _getSettings();
         const auto  fixedAxis = settings.getFixedAxis();
@@ -136,15 +137,13 @@ namespace manostat
 
         if (fixedAxis == FixedAxis::NONE)
         {
-            const auto deltaP =
-                _getSettings().getTargetPressure() - _getPressure();
+            const auto deltaP = settings.getTargetPressure() - _getPressure();
             constexpr auto dimension = 3.0;
 
             return linalg::diagonalMatrix(
-                ::exp(
+                mstd::exp(
                     ((-compressibility * tauTimeStepRatio * deltaP) +
-                     stochasticFactor)
-                        .numerical_value_in(one) /
+                     stochasticFactor) /
                     dimension
                 )
             );
@@ -152,7 +151,7 @@ namespace manostat
 
         const auto p_xyz = diagonal(_getPressureTensor());
 
-        size_t   numFree = 0;
+        double   numFree = 0;
         Pressure p_avg{0.0 * Pa};
 
         for (size_t axis = 0; axis < 3; ++axis)
@@ -164,15 +163,14 @@ namespace manostat
             }
         }
 
-        p_avg /= static_cast<double>(numFree);
+        p_avg /= numFree;
 
-        const auto deltaP    = _getSettings().getTargetPressure() - p_avg;
-        const auto dimension = static_cast<double>(numFree);
+        const auto deltaP = _getSettings().getTargetPressure() - p_avg;
 
-        const auto mu_scaled = ::exp(
-            ((-compressibility * tauTimeStepRatio * deltaP) + stochasticFactor)
-                .numerical_value_in(one) /
-            dimension
+        const auto mu_scaled = mstd::exp(
+            ((-compressibility * tauTimeStepRatio * deltaP) + stochasticFactor
+            ) /
+            numFree
         );
 
         linalg::Vec3D mu = {1.0, 1.0, 1.0};
@@ -211,9 +209,9 @@ namespace manostat
      * (semi-isotropic)
      *
      * @param volume
-     * @return linalg::Vec3D
+     * @return QuantityTensor3D
      */
-    linalg::tensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
+    QuantityTensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
         double volume
     )
     {
@@ -256,17 +254,15 @@ namespace manostat
         const auto deltaPxy       = targetPressure - p_xy;
         const auto deltaPz        = targetPressure - p_z;
 
-        const auto mu_xy = ::exp(
-            (-compress * tauTimeStepRatio * deltaPxy / 3.0)
-                .numerical_value_in(one) +
+        const auto mu_xy = mstd::exp(
+            (-compress * tauTimeStepRatio * deltaPxy / 3.0) +
             (stochasticFactor_xy / 2.0)
         );
         const auto mu_z =
             _hasFixedAxis(anisotropicAxis)
                 ? 1.0
-                : ::exp(
-                      (-compress * tauTimeStepRatio * deltaPz / 3.0)
-                          .numerical_value_in(one) +
+                : mstd::exp(
+                      (-compress * tauTimeStepRatio * deltaPz / 3.0) +
                       stochasticFactor_z
                   );
 
@@ -287,9 +283,9 @@ namespace manostat
      * and the other axes are scaled independently with stochastic coupling
      *
      * @param volume
-     * @return linalg::Vec3D
+     * @return QuantityTensor3D
      */
-    linalg::tensor3D AnisotropicStochasticRescalingManostat::calculateMu(
+    QuantityTensor3D AnisotropicStochasticRescalingManostat::calculateMu(
         double volume
     )
     {
@@ -319,10 +315,9 @@ namespace manostat
         {
             if (!_hasFixedAxis(i))
             {
-                mu[i] = ::exp(
+                mu[i] = mstd::exp(
                     (-compress * tauTimeStepRatio * deltaP[i] /
-                     linalg::tensor3D::size)
-                        .numerical_value_in(one) +
+                     linalg::tensor3D::size) +
                     (stochasticFactor *
                      _getRNG().getNormalDistribution(0.0, 1.0))
                 );
@@ -340,9 +335,9 @@ namespace manostat
      * are zeroed (no coupling with other axes) and the diagonals are set to 1.0
      *
      * @param volume
-     * @return linalg::tensor3D
+     * @return QuantityTensor3D
      */
-    linalg::tensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
+    QuantityTensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
         double volume
     )
     {
@@ -388,7 +383,7 @@ namespace manostat
             }
         }
 
-        auto mu = expPade(strain.numerical_value_in(one));
+        QuantityTensor3D mu = expPade(strain);
 
         rotateMu(mu);
 

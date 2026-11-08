@@ -47,7 +47,7 @@ namespace molsys
         static OrthorhombicBox makeVacuumBox();
 
         void applyPBC(linalg::Vec3D &position) const override;
-        void scaleBox(const linalg::tensor3D &scalingTensor) override;
+        void scaleBox(const QuantityTensor3D &scalingTensor) override;
 
         [[nodiscard]] linalg::Vec3D calcShiftVector(
             const linalg::Vec3D &shiftVector

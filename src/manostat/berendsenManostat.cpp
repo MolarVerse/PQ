@@ -23,8 +23,8 @@
 #include "berendsenManostat.hpp"
 
 #include <algorithm>
-#include <bit>
 #include <cmath>
+#include <mstd/units.hpp>
 
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"
@@ -42,10 +42,12 @@ namespace manostat
      *
      * @return Compressibility
      */
-    Compressibility BerendsenManostat::_calcPreFactor() const
+    Compressibility BerendsenManostat::_calcPreFactor(
+        const ManostatSettings &settings
+    )
     {
-        const auto compressibility = _getSettings().getCompressibility();
-        const auto tau             = _getSettings().getTau();
+        const auto compressibility = settings.getCompressibility();
+        const auto tau             = settings.getTau();
         const auto timeStep        = settings::TimingsSettings::getTimeStep();
 
         return compressibility * timeStep / tau;
@@ -105,17 +107,18 @@ namespace manostat
      *
      * @return linalg::tensor3D
      */
-    linalg::tensor3D BerendsenManostat::calculateMu() const
+    QuantityTensor3D BerendsenManostat::calculateMu() const
     {
-        const auto targetPressure = _getSettings().getTargetPressure();
-        const auto fixedAxis      = _getSettings().getFixedAxis();
+        const auto &settings  = _getSettings();
+        const auto &fixedAxis = settings.getFixedAxis();
+
         if (fixedAxis == FixedAxis::ALL)
             return linalg::diagonalMatrix(linalg::Vec3D{1.0, 1.0, 1.0});
 
-        const auto preFactor = _calcPreFactor();
+        const auto preFactor = _calcPreFactor(settings);
         const auto p_xyz     = diagonal(_getPressureTensor());
 
-        size_t   numFree = 0;
+        double   numFree = 0;
         Pressure p_avg{0.0 * Pa};
 
         for (size_t axis = 0; axis < 3; ++axis)
@@ -127,21 +130,17 @@ namespace manostat
             }
         }
 
-        p_avg /= static_cast<double>(numFree);
+        p_avg /= numFree;
 
-        const auto deltaP = targetPressure - p_avg;
+        const auto deltaP = settings.getTargetPressure() - p_avg;
 
-        double mu_scaled = ::pow(
-            1.0 - (preFactor * deltaP).numerical_value_in(one),
-            1.0 / static_cast<double>(numFree)
-        );
+        double mu_scaled = mstd::pow(1.0 - (preFactor * deltaP), 1.0 / numFree);
 
         linalg::Vec3D mu = {1.0, 1.0, 1.0};
+
         for (size_t i = 0; i < 3; ++i)
-        {
             if (!isAxisFixed(fixedAxis, i))
                 mu[i] = mu_scaled;
-        }
 
         return linalg::diagonalMatrix(mu);
     }
@@ -156,36 +155,31 @@ namespace manostat
      *
      * @return linalg::tensor3D
      */
-    linalg::tensor3D SemiIsotropicBerendsenManostat::calculateMu() const
+    QuantityTensor3D SemiIsotropicBerendsenManostat::calculateMu() const
     {
-        const auto p_xyz           = diagonal(_getPressureTensor());
-        const auto isotropy        = _getSettings().getIsotropy();
-        const auto anisotropicAxis = get2DAnisotropicAxis(isotropy);
-        const auto isotropicAxes   = get2DIsotropicAxes(isotropy);
-        const auto p_x             = p_xyz[isotropicAxes[0]];
-        const auto p_y             = p_xyz[isotropicAxes[1]];
-        const auto p_xy            = (p_x + p_y) / 2.0;
-        const auto p_z             = p_xyz[anisotropicAxis];
+        const auto &settings        = _getSettings();
+        const auto  p_xyz           = diagonal(_getPressureTensor());
+        const auto  isotropy        = settings.getIsotropy();
+        const auto  anisotropicAxis = get2DAnisotropicAxis(isotropy);
+        const auto  isotropicAxes   = get2DIsotropicAxes(isotropy);
+        const auto  p_x             = p_xyz[isotropicAxes[0]];
+        const auto  p_y             = p_xyz[isotropicAxes[1]];
+        const auto  p_xy            = (p_x + p_y) / 2.0;
+        const auto  p_z             = p_xyz[anisotropicAxis];
 
-        const auto dimension =
-            3.0 -
-            std::popcount(static_cast<unsigned>(_getSettings().getFixedAxis()));
-        const auto preFactor = _calcPreFactor() / dimension;
+        const auto &fixedAxis = settings.getFixedAxis();
+        const auto  dimension = 3.0 - toDim(fixedAxis);
+        const auto  preFactor = _calcPreFactor(settings) / dimension;
 
-        const auto targetPressure = _getSettings().getTargetPressure();
+        const auto targetPressure = settings.getTargetPressure();
+        const auto pressureFactor = preFactor * (targetPressure - p_xy);
 
-        const double mu_xy = ::sqrt(
-            1.0 -
-            (2.0 * preFactor * (targetPressure - p_xy)).numerical_value_in(one)
-        );
-        const double mu_z =
-            isAxisFixed(_getSettings().getFixedAxis(), anisotropicAxis)
-                ? 1.0
-                : (1.0 -
-                   (preFactor * (targetPressure - p_z)).numerical_value_in(one)
-                  );
+        Quantity3D mu;
+        const auto mu_xy = mstd::sqrt(1.0 - (2.0 * pressureFactor));
 
-        linalg::Vec3D mu;
+        Quantity mu_z = 1.0;
+        if (!isAxisFixed(fixedAxis, anisotropicAxis))
+            mu_z = 1.0 - preFactor * (targetPressure - p_z);
 
         mu[isotropicAxes[0]] = mu_xy;
         mu[isotropicAxes[1]] = mu_xy;
@@ -203,15 +197,14 @@ namespace manostat
      *
      * @return linalg::tensor3D
      */
-    linalg::tensor3D AnisotropicBerendsenManostat::calculateMu() const
+    QuantityTensor3D AnisotropicBerendsenManostat::calculateMu() const
     {
         const auto &settings       = _getSettings();
         const auto  pxyz           = diagonal(_getPressureTensor());
         const auto  targetPressure = settings.getTargetPressure();
         const auto  fixedAxis      = settings.getFixedAxis();
-        const auto  dimension =
-            3.0 - std::popcount(static_cast<unsigned>(fixedAxis));
-        const auto preFactor = _calcPreFactor() / dimension;
+        const auto  dimension      = 3.0 - toDim(fixedAxis);
+        const auto  preFactor      = _calcPreFactor(settings) / dimension;
 
         auto mu = 1.0 - ((Pressure3D{targetPressure} - pxyz) * preFactor);
 
@@ -221,7 +214,7 @@ namespace manostat
                 mu[i] = 1.0;
         }
 
-        return linalg::diagonalMatrix(mu.numerical_value_in(one));
+        return linalg::diagonalMatrix(mu);
     }
 
     /**
@@ -233,18 +226,19 @@ namespace manostat
      *
      * @return linalg::tensor3D
      */
-    linalg::tensor3D FullAnisotropicBerendsenManostat::calculateMu() const
+    QuantityTensor3D FullAnisotropicBerendsenManostat::calculateMu() const
     {
-        const auto pTarget =
-            linalg::diagonalMatrix(_getSettings().getTargetPressure());
-        const auto &fixedAxis = _getSettings().getFixedAxis();
-        const auto  dimension =
-            3.0 - std::popcount(static_cast<unsigned>(fixedAxis));
-        const auto preFactor = _calcPreFactor() / dimension;
-        const auto kronecker = linalg::kroneckerDeltaMatrix<double>();
+        const auto &settings = _getSettings();
+        const auto  pTarget =
+            linalg::diagonalMatrix(settings.getTargetPressure());
+        const auto            &fixedAxis = settings.getFixedAxis();
+        const auto             dimension = 3.0 - toDim(fixedAxis);
+        const auto             preFactor = _calcPreFactor(settings) / dimension;
+        const QuantityTensor3D kronecker =
+            linalg::kroneckerDeltaMatrix<double>();
 
-        auto mu = kronecker - ((pTarget - _getPressureTensor()) * preFactor)
-                                  .numerical_value_in(one);
+        QuantityTensor3D mu =
+            kronecker - ((pTarget - _getPressureTensor()) * preFactor);
 
         for (size_t k = 0; k < 3; ++k)
         {
