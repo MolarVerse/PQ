@@ -48,7 +48,11 @@ namespace driver
         std::unique_ptr<engine::Engine> engine =
             engine::engineFactory.at(jobType)(settings);
 
-        setup::setupRequestedJob(*engine, settings.referenceSettings);
+        setup::setupRequestedJob(
+            *engine,
+            settings.referenceSettings,
+            settings.noseHooverSettings
+        );
 
         engine->run();
     }

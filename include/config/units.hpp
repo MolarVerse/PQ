@@ -51,5 +51,8 @@ inline constexpr auto per_Pa  = mstd::units::per_Pa;
 
 inline constexpr auto K = mstd::units::K;
 
+inline constexpr auto per_cm = mstd::units::per_cm;
+inline constexpr auto Hz     = mstd::units::Hz;
+
 // NOLINTEND(readability-identifier-length)
 #endif   // CONFIG__UNITS_HPP

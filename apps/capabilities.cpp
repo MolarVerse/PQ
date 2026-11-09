@@ -28,6 +28,7 @@
 #include <initializer_list>
 #include <iomanip>
 #include <limits>
+#include <mstd/units/wave_number.hpp>
 #include <ostream>
 #include <string_view>
 
@@ -279,7 +280,11 @@ namespace
             "maximum",
             std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ
         );
-        json.value("default", defaults::NH_COUPLING_FREQ);
+        json.value(
+            "default",
+            mstd::toWavenumber(defaults::NH_COUPLING_FREQ)
+                .numerical_value_in(per_cm)
+        );
         json.endObject();
 
         beginParameter(

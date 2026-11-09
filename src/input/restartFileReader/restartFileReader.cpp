@@ -49,8 +49,9 @@ namespace input::restartFile
      * @param engine
      */
     RestartFileReader::RestartFileReader(
-        const std::string &filename,
-        engine::Engine    &engine
+        const std::string  &filename,
+        engine::Engine     &engine,
+        NoseHooverSettings &noseHooverSettings
     )
         : _fileName(filename),
           _fp(filename),
@@ -58,7 +59,9 @@ namespace input::restartFile
           _atomSection(std::make_unique<AtomSection>())
     {
         _sections.push_back(std::make_unique<BoxSection>());
-        _sections.push_back(std::make_unique<NoseHooverSection>());
+        _sections.push_back(
+            std::make_unique<NoseHooverSection>(noseHooverSettings)
+        );
         _sections.push_back(std::make_unique<StepCountSection>());
     }
 
@@ -115,14 +118,17 @@ namespace input::restartFile
      *
      * @param engine
      */
-    void readRestartFile(engine::Engine &engine)
+    void readRestartFile(
+        engine::Engine     &engine,
+        NoseHooverSettings &noseHooverSettings
+    )
     {
         const auto filename = settings::FileSettings::getStartFileName();
 
         out::StdoutOutput::writeRead("Start File", filename);
         engine.getLogOutput().writeRead("Start File", filename);
 
-        RestartFileReader rstFileReader(filename, engine);
+        RestartFileReader rstFileReader(filename, engine, noseHooverSettings);
         rstFileReader.read();
     }
 

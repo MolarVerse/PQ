@@ -61,6 +61,7 @@ struct Settings
     DftbSettings          dftbSettings;
     XtbSettings           xtbSettings;
     ThermostatSettings    thermostatSettings;
+    NoseHooverSettings    noseHooverSettings;
 
     void finalize();
 };

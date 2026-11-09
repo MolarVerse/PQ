@@ -32,6 +32,16 @@ namespace input::restartFile
 {
 
     /**
+     * @brief Constructor for NoseHooverSection
+     *
+     * @param noseHooverSettings Reference to the NoseHooverSettings object
+     */
+    NoseHooverSection::NoseHooverSection(NoseHooverSettings &noseHooverSettings)
+        : _noseHooverSettings(noseHooverSettings)
+    {
+    }
+
+    /**
      * @brief checks the number of arguments in the line
      *
      * @param lineElements all elements of the line
@@ -63,9 +73,23 @@ namespace input::restartFile
         const auto chi  = stod(lineElements[2]);
         const auto zeta = stod(lineElements[3]);
 
-        auto [iterChi, chiIsInserted] = ThermostatSettings::addChi(idx, chi);
-        auto [iterZeta, zetaIsInserted] =
-            ThermostatSettings::addZeta(idx, zeta);
+        if (idx > _noseHooverSettings->getNoseHooverChainLength())
+        {
+            throw exc::InputFileException(
+                std::format(
+                    "Chi index {} is larger than the number of nose hoover "
+                    "chains {}",
+                    idx,
+                    _noseHooverSettings->getNoseHooverChainLength()
+                )
+            );
+        }
+
+        auto chis  = _noseHooverSettings->getChi();
+        auto zetas = _noseHooverSettings->getZeta();
+
+        auto [iterChi, chiIsInserted]   = chis.try_emplace(idx, chi);
+        auto [iterZeta, zetaIsInserted] = zetas.try_emplace(idx, zeta);
 
         if (!chiIsInserted || !zetaIsInserted)
         {
@@ -78,6 +102,9 @@ namespace input::restartFile
                 )
             );
         }
+
+        _noseHooverSettings->setChiByUser(chis);
+        _noseHooverSettings->setZetaByUser(zetas);
     }
 
     /**

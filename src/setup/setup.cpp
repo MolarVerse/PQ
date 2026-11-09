@@ -61,10 +61,13 @@ namespace setup
      * @param engine The engine to set up.
      * @param references Reference settings object used to manage and add
      * necessary reference files for the specified QM method.
+     * @param nhSettings Nose-Hoover thermostat settings object used to
+     * configure the thermostat if applicable.
      */
     void setupRequestedJob(
-        engine::Engine&    engine,
-        ReferenceSettings& references
+        engine::Engine&     engine,
+        ReferenceSettings&  references,
+        NoseHooverSettings& nhSettings
     )
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
@@ -79,7 +82,7 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        readFiles(engine);
+        readFiles(engine, nhSettings);
 
         setupEngine(engine, references);
 
@@ -110,12 +113,14 @@ namespace setup
      * @brief reads all the files needed for the simulation
      *
      * @param engine
+     * @param nhSettings Nose-Hoover thermostat settings object used to
+     * configure the thermostat if applicable.
      */
-    void readFiles(engine::Engine& engine)
+    void readFiles(engine::Engine& engine, NoseHooverSettings& nhSettings)
     {
         input::molDescriptor::readMolDescriptor(engine);
 
-        input::restartFile::readRestartFile(engine);
+        input::restartFile::readRestartFile(engine, nhSettings);
 
         input::topology::readTopologyFile(engine);
 
