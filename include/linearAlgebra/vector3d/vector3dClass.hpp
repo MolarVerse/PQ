@@ -76,7 +76,10 @@ namespace linalg
        public:
         ~Vector3D() = default;
 
-        Vector3D() = default;
+        // value-initialised: zero for arithmetic types. A defaulted constructor
+        // left the components uninitialised, which printed garbage (once inf)
+        // into the first output line of a run
+        constexpr Vector3D() : x(), y(), z() {}
         Vector3D(const T xValue, const T yValue, const T zValue)
             : x(xValue), y(yValue), z(zValue)
         {
