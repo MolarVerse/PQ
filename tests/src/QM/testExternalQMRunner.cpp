@@ -974,6 +974,10 @@ TEST_F(ExternalQMRunnerTest, orcaRejectsMissingScript)
     EXPECT_THROW_MSG(
         runner.execute(_simulationBox),
         exc::InputFileException,
-        std::format("ORCA script file \"{}{}\" does not exist.", runner.getScriptPath(), QMSettings::getQMScript())
+        std::format(
+            "ORCA script file \"{}{}\" does not exist.",
+            runner.getScriptPath(),
+            QMSettings::getQMScript()
+        )
     );
 }
