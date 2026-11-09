@@ -386,3 +386,18 @@ if(EXPECTED_SHARED AND NOT EXPECTED_SINGULARITY)
     file(WRITE "${VALIDATION_WORK_DIR}/orca.template" "")
     assert_valid("orca-default.in" installed)
 endif()
+
+foreach(scf_script IN ITEMS orca_hf.py orca_dft.py)
+    file(WRITE "${VALIDATION_WORK_DIR}/orca-scf.in"
+        "jobtype = qm-md;\n"
+        "nstep = 1;\n"
+        "timestep = 0.5;\n"
+        "qm_prog = orca;\n"
+        "qm_script = ${scf_script};\n"
+        "orca_file = custom-orca.template;\n"
+        "start_file = start.rst;\n")
+    assert_valid("orca-scf.in" portable)
+    if(EXPECTED_SHARED AND NOT EXPECTED_SINGULARITY)
+        assert_valid("orca-scf.in" installed)
+    endif()
+endforeach()

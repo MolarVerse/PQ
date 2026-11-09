@@ -971,5 +971,9 @@ TEST_F(ExternalQMRunnerTest, orcaRejectsMissingScript)
     auto runner = QM::OrcaRunner(_settings.qmSettings);
     runner.setScriptPath((_workPath / "missing").string() + '/');
     QMSettings::setQMScript("orca_rimp2.py");
-    EXPECT_THROW(runner.execute(_simulationBox), exc::InputFileException);
+    EXPECT_THROW_MSG(
+        runner.execute(_simulationBox),
+        exc::InputFileException,
+        std::format("ORCA script file \"{}{}\" does not exist.", runner.getScriptPath(), QMSettings::getQMScript())
+    );
 }

@@ -689,7 +689,8 @@ ORCA Setup File
 
     orca_file = {file} -> "orca.template"
 
-The external ``orca_rimp2.py`` runner reads this shared template. An example
+The external ``orca_rimp2.py``, ``orca_hf.py`` and ``orca_dft.py`` runners read
+this shared template. An example
 and the stage-placeholder contract are provided in ``examples/orca/``.
 Load ORCA before running PQ, or set ``ORCA_EXE`` to its full executable path.
 

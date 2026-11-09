@@ -38,10 +38,13 @@ target_compile_definitions(externalQM
     _STATIC_BUILD_=\"${BUILD_STATIC}\"
 )
 
-add_custom_command(TARGET externalQM POST_BUILD
+# Refresh Python entry points and their helpers even on script-only changes.
+add_custom_target(copyExternalQMScripts
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/src/QM/scripts $<TARGET_FILE_DIR:QM>/scripts
+    COMMENT "Copy external QM scripts"
 )
+add_dependencies(externalQM copyExternalQMScripts)
 
 install(TARGETS externalQM
     DESTINATION lib

@@ -69,12 +69,26 @@ namespace cli
         .requiredWorkingFile = "tm_define.template"
     }};
 
-    inline constexpr auto orcaScripts = std::array{ExternalQMScriptInfo{
-        .name                = "orca_rimp2.py",
-        .label               = "RI-MP2 (polarized QM/MM)",
-        .requiredFileKeyword = "orca_file",
-        .requiredWorkingFile = ""
-    }};
+    inline constexpr auto orcaScripts = std::array{
+        ExternalQMScriptInfo{
+            .name                = "orca_rimp2.py",
+            .label               = "RI-MP2 (polarized QM/MM)",
+            .requiredFileKeyword = "orca_file",
+            .requiredWorkingFile = ""
+        },
+        ExternalQMScriptInfo{
+            .name                = "orca_hf.py",
+            .label               = "HF (polarized QM/MM)",
+            .requiredFileKeyword = "orca_file",
+            .requiredWorkingFile = ""
+        },
+        ExternalQMScriptInfo{
+            .name                = "orca_dft.py",
+            .label               = "DFT (polarized QM/MM)",
+            .requiredFileKeyword = "orca_file",
+            .requiredWorkingFile = ""
+        }
+    };
 
     inline constexpr auto externalQMMethods = std::array{
         QMMethod::DFTBPLUS,

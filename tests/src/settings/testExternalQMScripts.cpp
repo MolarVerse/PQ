@@ -56,7 +56,11 @@ TEST(ExternalQMScriptsTest, describesBundledScripts)
     EXPECT_TRUE(cli::recommendedExternalQMScript(QMMethod::PYSCF).empty());
 
     const auto orca = cli::externalQMScripts(QMMethod::ORCA);
-    ASSERT_EQ(orca.size(), 1);
+    ASSERT_EQ(orca.size(), 3);
+    EXPECT_EQ(orca[1].name, "orca_hf.py");
+    EXPECT_EQ(orca[2].name, "orca_dft.py");
+    EXPECT_TRUE(cli::isExternalQMScript(QMMethod::ORCA, "orca_hf.py"));
+    EXPECT_TRUE(cli::isExternalQMScript(QMMethod::ORCA, "orca_dft.py"));
     EXPECT_EQ(orca.front().name, "orca_rimp2.py");
     EXPECT_EQ(orca.front().requiredFileKeyword, "orca_file");
     EXPECT_EQ(
