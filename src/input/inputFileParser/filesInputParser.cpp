@@ -196,14 +196,12 @@ namespace input
             .description = "File containing the topology of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setTopologyFileName(value);
+                _fileSettings->setTopologyFileNameByUser(value);
             else
-                FileSettings::setTopologyFileName(value.fileName());
-
-            FileSettings::setIsTopologyFileNameSet();
+                _fileSettings->setTopologyFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -229,14 +227,12 @@ namespace input
             .description = "File containing the parameters of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setParameterFileName(value);
+                _fileSettings->setParameterFileNameByUser(value);
             else
-                FileSettings::setParameterFileName(value.fileName());
-
-            FileSettings::setIsParameterFileNameSet();
+                _fileSettings->setParameterFileNameByUser(value.fileName());
         };
 
         addFileKeyword(

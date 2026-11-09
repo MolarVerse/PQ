@@ -76,16 +76,15 @@ TEST_F(TestTopologyReader, read)
     EXPECT_NO_THROW(_topologyReader->read());
 
     _settings.constraintSettings.activateShakeByUser();
-    engine::MMMDEngine engine{_settings};
     _topologyReader = std::make_unique<input::topology::TopologyReader>(
-        FileSettings::getTopologyFileName(),
-        engine
+        _settings.fileSettings.getTopologyFileName(),
+        *_engine
     );
     EXPECT_NO_THROW(_topologyReader->read());
 
-    FileSettings::unsetIsTopologyFileNameSet();
+    _settings.fileSettings = FileSettings{};
     EXPECT_THROW_MSG(
-        _topologyReader->read(),
+        input::topology::readTopologyFile(*_engine),
         exc::InputFileException,
         "Topology file needed for requested simulation setup"
     );
@@ -98,6 +97,6 @@ TEST_F(TestTopologyReader, read)
  */
 TEST_F(TestTopologyReader, readTopologyFile)
 {
-    FileSettings::setTopologyFileName("topology.top");
+    _settings.fileSettings.setTopologyFileNameByUser("topology.top");
     input::topology::readTopologyFile(*_engine);
 }

@@ -284,14 +284,14 @@ namespace
         if (settings.constraintSettings.isActive() ||
             settings.forceFieldSettings.isActive())
         {
-            if (!FileSettings::isTopologyFileNameSet())
+            if (!settings.fileSettings.isTopologyFileNameSetByUser())
                 throw exc::InputFileException(
                     "Topology file needed for requested simulation setup"
                 );
         }
 
         if (settings.forceFieldSettings.isActive() &&
-            !FileSettings::isParameterFileNameSet())
+            !settings.fileSettings.isParameterFileNameSetByUser())
             throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
             );
@@ -349,12 +349,18 @@ namespace
         if (settings.constraintSettings.isActive() ||
             settings.forceFieldSettings.isActive())
         {
-            requireFile(FileSettings::getTopologyFileName(), "Topology file");
+            requireFile(
+                settings.fileSettings.getTopologyFileName(),
+                "Topology file"
+            );
         }
 
         if (settings.forceFieldSettings.isActive())
         {
-            requireFile(FileSettings::getParameterFilename(), "Parameter file");
+            requireFile(
+                settings.fileSettings.getParameterFileName(),
+                "Parameter file"
+            );
         }
 
         if (FileSettings::isMShakeFileNameSet())

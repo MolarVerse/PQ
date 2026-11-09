@@ -40,11 +40,12 @@ TEST(FileSettingsTest, GuffDatRoundTrip)
 
 TEST(FileSettingsTest, TopologyAndParameterRoundTrip)
 {
-    FileSettings::setTopologyFileName("topology.top");
-    EXPECT_EQ(FileSettings::getTopologyFileName(), "topology.top");
+    FileSettings settings;
+    settings.setTopologyFileNameByUser("topology.top");
+    EXPECT_EQ(settings.getTopologyFileName(), "topology.top");
 
-    FileSettings::setParameterFileName("parameter.par");
-    EXPECT_EQ(FileSettings::getParameterFilename(), "parameter.par");
+    settings.setParameterFileNameByUser("parameter.par");
+    EXPECT_EQ(settings.getParameterFileName(), "parameter.par");
 }
 
 TEST(FileSettingsTest, StartAndRingPolymerRoundTrip)

@@ -134,9 +134,9 @@ namespace benchInputReaders
             (directory / "moldescriptor.dat").string()
         );
         FileSettings::setStartFileName((directory / "input.rst").string());
-        FileSettings::setTopologyFileName((directory / "topology.top").string()
+        settings.fileSettings.setTopologyFileNameByUser(
+            (directory / "topology.top").string()
         );
-        FileSettings::setIsTopologyFileNameSet();
 
         settings.forceFieldSettings.setTypeByUser(ForceFieldType::BONDED);
 

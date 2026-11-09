@@ -46,8 +46,9 @@ class FileSettings
         defaults::GUFF_FILE_DEFAULT
     };
 
-    static inline std::string _topologyFile;
-    static inline std::string _parameterFile;
+    Setting<std::string, "TopologyFile">  _topologyFile;
+    Setting<std::string, "ParameterFile"> _parameterFile;
+
     static inline std::string _intraNonBondedFile;
     static inline std::string _startFile;
     static inline std::string _rpmdStartFile;
@@ -82,8 +83,9 @@ class FileSettings
     [[nodiscard]] const std::string& getMolDescriptorFileName() const;
     [[nodiscard]] const std::string& getGuffDatFileName() const;
 
-    [[nodiscard]] static std::string getTopologyFileName();
-    [[nodiscard]] static std::string getParameterFilename();
+    [[nodiscard]] const std::string& getTopologyFileName() const;
+    [[nodiscard]] const std::string& getParameterFileName() const;
+
     [[nodiscard]] static std::string getIntraNonBondedFileName();
     [[nodiscard]] static std::string getStartFileName();
     [[nodiscard]] static std::string getRingPolymerStartFileName();
@@ -96,8 +98,9 @@ class FileSettings
     [[nodiscard]] static std::string getQMChargesTempFileName();
     [[nodiscard]] static std::string getStressTensorTempFileName();
 
-    [[nodiscard]] static bool isTopologyFileNameSet();
-    [[nodiscard]] static bool isParameterFileNameSet();
+    [[nodiscard]] bool isTopologyFileNameSetByUser() const;
+    [[nodiscard]] bool isParameterFileNameSetByUser() const;
+
     [[nodiscard]] static bool isIntraNonBondedFileNameSet();
     [[nodiscard]] static bool isRingPolymerStartFileNameSet();
     [[nodiscard]] static bool isMShakeFileNameSet();
@@ -110,8 +113,9 @@ class FileSettings
     void setMolDescriptorFileNameByUser(const std::string& name);
     void setGuffDatFileNameByUser(const std::string& name);
 
-    static void setTopologyFileName(const std::string_view& name);
-    static void setParameterFileName(const std::string_view& name);
+    void setTopologyFileNameByUser(const std::string& name);
+    void setParameterFileNameByUser(const std::string& name);
+
     static void setIntraNonBondedFileName(const std::string_view& name);
     static void setStartFileName(const std::string_view& name);
     static void setRingPolymerStartFileName(const std::string_view& name);
@@ -120,15 +124,11 @@ class FileSettings
     static void setTMFileName(const std::string_view& name);
     static void setPointChargeFileName(const std::string_view& name);
 
-    static void setIsTopologyFileNameSet();
-    static void setIsParameterFileNameSet();
     static void setIsIntraNonBondedFileNameSet();
     static void setIsRingPolymerStartFileNameSet();
     static void setIsMShakeFileNameSet();
     static void setIsDFTBFileNameSet();
 
-    static void unsetIsTopologyFileNameSet();
-    static void unsetIsParameterFileNameSet();
     static void unsetIsIntraNonBondedFileNameSet();
     static void unsetIsRingPolymerStartFileNameSet();
     static void unsetIsMShakeFileNameSet();

@@ -53,14 +53,20 @@ const std::string& FileSettings::getGuffDatFileName() const
  *
  * @return std::string
  */
-std::string FileSettings::getTopologyFileName() { return _topologyFile; }
+const std::string& FileSettings::getTopologyFileName() const
+{
+    return _topologyFile.get();
+}
 
 /**
  * @brief Get the parameter file name
  *
  * @return std::string
  */
-std::string FileSettings::getParameterFilename() { return _parameterFile; }
+const std::string& FileSettings::getParameterFileName() const
+{
+    return _parameterFile.get();
+}
 
 /**
  * @brief Get the intra non bonded file name
@@ -152,14 +158,20 @@ std::string FileSettings::getStressTensorTempFileName()
  *
  * @return bool
  */
-bool FileSettings::isTopologyFileNameSet() { return _isTopologyFileSet; }
+bool FileSettings::isTopologyFileNameSetByUser() const
+{
+    return _topologyFile.isSetByUser();
+}
 
 /**
  * @brief Check if the parameter file name is set
  *
  * @return bool
  */
-bool FileSettings::isParameterFileNameSet() { return _isParameterFileSet; }
+bool FileSettings::isParameterFileNameSetByUser() const
+{
+    return _parameterFile.isSetByUser();
+}
 
 /**
  * @brief Check if the intra non bonded file name is set
@@ -226,9 +238,9 @@ void FileSettings::setGuffDatFileNameByUser(const std::string& name)
  *
  * @param name
  */
-void FileSettings::setTopologyFileName(const std::string_view& name)
+void FileSettings::setTopologyFileNameByUser(const std::string& name)
 {
-    FileSettings::_topologyFile = name;
+    _topologyFile.setByUser(name);
 }
 
 /**
@@ -236,9 +248,9 @@ void FileSettings::setTopologyFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setParameterFileName(const std::string_view& name)
+void FileSettings::setParameterFileNameByUser(const std::string& name)
 {
-    FileSettings::_parameterFile = name;
+    _parameterFile.setByUser(name);
 }
 
 /**
@@ -312,24 +324,6 @@ void FileSettings::setPointChargeFileName(const std::string_view& name)
 }
 
 /**
- * @brief set the topology file name flag to is set
- *
- */
-void FileSettings::setIsTopologyFileNameSet()
-{
-    FileSettings::_isTopologyFileSet = true;
-}
-
-/**
- * @brief set the parameter file name flag to is set
- *
- */
-void FileSettings::setIsParameterFileNameSet()
-{
-    FileSettings::_isParameterFileSet = true;
-}
-
-/**
  * @brief set the intra non bonded file name flag to is set
  *
  */
@@ -363,24 +357,6 @@ void FileSettings::setIsMShakeFileNameSet()
 void FileSettings::setIsDFTBFileNameSet()
 {
     FileSettings::_isDFTBFileSet = true;
-}
-
-/**
- * @brief set the topology file name flag to is not set
- *
- */
-void FileSettings::unsetIsTopologyFileNameSet()
-{
-    FileSettings::_isTopologyFileSet = false;
-}
-
-/**
- * @brief set the parameter file name flag to is not set
- *
- */
-void FileSettings::unsetIsParameterFileNameSet()
-{
-    FileSettings::_isParameterFileSet = false;
 }
 
 /**

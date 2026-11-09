@@ -121,7 +121,6 @@ namespace input::topology
      * @details reads topology file line by line and determines which section
      * the line belongs to. Then the line is processed by the section.
      *
-     * @throws exc::InputFileException if topology file is not set
      * @throws exc::InputFileException if topology file does not exist
      *
      */
@@ -130,11 +129,6 @@ namespace input::topology
         std::string              line;
         std::vector<std::string> lineElements;
         size_t                   lineNumber = 1;
-
-        if (!FileSettings::isTopologyFileNameSet())
-            throw exc::InputFileException(
-                "Topology file needed for requested simulation setup"
-            );
 
         // the molecules do not change while the topology is read: every atom
         // index of the file is found by a binary search instead of a walk
@@ -196,7 +190,13 @@ namespace input::topology
         if (!isNeeded(engine.getSettings()))
             return;
 
-        const auto filename = FileSettings::getTopologyFileName();
+        const auto &fileSettings = engine.getSettings().fileSettings;
+        if (!fileSettings.isTopologyFileNameSetByUser())
+            throw exc::InputFileException(
+                "Topology file needed for requested simulation setup"
+            );
+
+        const auto filename = fileSettings.getTopologyFileName();
 
         out::StdoutOutput::writeRead("Topology File", filename);
         engine.getLogOutput().writeRead("Topology File", filename);

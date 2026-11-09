@@ -57,12 +57,14 @@ class TestParameterFileReader : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
+        _settings.fileSettings.setParameterFileNameByUser(
+            "data/parameterFileReader/param.param"
+        );
         _parameterFileReader =
             std::make_unique<input::parameterFile::ParameterFileReader>(
                 "data/parameterFileReader/param.param",
                 *_engine
             );
-        FileSettings::setIsParameterFileNameSet();
     }
 };
 

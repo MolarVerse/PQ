@@ -63,7 +63,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
     lineElements = {"topology_file", "=", "data/topologyReader/topology.top"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getTopologyFileName(),
+        settings.getTopologyFileName(),
         "data/topologyReader/topology.top"
     );
 }
@@ -104,7 +104,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getParameterFilename(),
+        settings.getParameterFileName(),
         "data/parameterFileReader/param.param"
     );
 }
