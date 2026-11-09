@@ -36,6 +36,11 @@
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
+using Quantity   = mstd::quantity<mstd::units::one>;
+using Quantity3D = linalg::Vector3D<mstd::quantity<mstd::units::one>>;
+using QuantityTensor3D =
+    linalg::StaticMatrix3x3<mstd::quantity<mstd::units::one>>;
+
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 using Time     = mstd::quantity<mstd::units::fs>;
 using TimeMs   = mstd::quantity<mstd::units::ms>;
@@ -63,5 +68,11 @@ static inline Temperature toTemperature(double temperature)
 static inline Temperature scaleAbsTemp(Temperature absTemp, double scalar)
 {
     return Temperature{absTemp.quantity_from_zero() * scalar};
+}
+
+[[nodiscard]]
+static inline Quantity tempRatio(Temperature absTemp, Temperature refTemp)
+{
+    return absTemp.quantity_from_zero() / refTemp.quantity_from_zero();
 }
 #endif   // CONFIG__UNIT_TYPES_HPP

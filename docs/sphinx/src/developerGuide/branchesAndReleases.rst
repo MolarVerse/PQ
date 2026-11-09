@@ -24,8 +24,6 @@ Branches
       - Your work, cut from an up to date ``dev``.
 
 Nobody pushes to ``main`` or ``dev`` directly, and a branch that other people use is never amended or force-pushed.
-The only exception is the CI metrics collector, which commits the data below ``.github/ci-metrics/data/`` to ``dev``,
-see :doc:`ciMetrics`.
 
 A typical change:
 

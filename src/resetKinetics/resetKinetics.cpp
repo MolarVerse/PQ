@@ -35,7 +35,6 @@
 #include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "thermostatSettings.hpp"
-#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace resetKinetics
@@ -82,30 +81,27 @@ namespace resetKinetics
 
         if (resetTemp)
         {
-            resetTemperature(
-                simulationBox,
-                temperature.quantity_from_zero().numerical_value_in(K)
-            );
+            resetTemperature(simulationBox, temperature);
             momentum = simulationBox.calculateMomentum();
             resetMomentum(simulationBox, momentum);
-            temperature = toTemperature(simulationBox.calculateTemperature());
-            momentum    = simulationBox.calculateMomentum();
+            temperature     = simulationBox.calculateTemperature();
+            momentum        = simulationBox.calculateMomentum();
             angularMomentum = simulationBox.calculateAngularMomentum(momentum);
         }
         else if (resetMom)
         {
             // temperature also needs reset of momentum, thus the else if
             ResetKinetics::resetMomentum(simulationBox, momentum);
-            momentum    = simulationBox.calculateMomentum();
-            temperature = toTemperature(simulationBox.calculateTemperature());
+            momentum        = simulationBox.calculateMomentum();
+            temperature     = simulationBox.calculateTemperature();
             angularMomentum = simulationBox.calculateAngularMomentum(momentum);
         }
 
         if (resetAngular)
         {
             ResetKinetics::resetAngularMomentum(simulationBox, angularMomentum);
-            temperature = toTemperature(simulationBox.calculateTemperature());
-            momentum    = simulationBox.calculateMomentum();
+            temperature     = simulationBox.calculateTemperature();
+            momentum        = simulationBox.calculateMomentum();
             angularMomentum = simulationBox.calculateAngularMomentum(momentum);
         }
 
@@ -125,11 +121,11 @@ namespace resetKinetics
      */
     void ResetKinetics::resetTemperature(
         molsys::SimulationBox &simulationBox,
-        double                 temperature
+        const Temperature     &temperature
     )
     {
         const auto targetTemp =
-            settings::ThermostatSettings::getActualTargetTemperature();
+            ThermostatSettings::getActualTargetTemperature();
 
         if (utilities::isZero(temperature))
         {
@@ -140,7 +136,7 @@ namespace resetKinetics
             );
         }
 
-        const auto lambda = ::sqrt(targetTemp / temperature);
+        const auto lambda = mstd::sqrt(tempRatio(targetTemp, temperature));
 
         std::ranges::for_each(
             simulationBox.getAtoms(),

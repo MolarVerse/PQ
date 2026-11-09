@@ -25,7 +25,6 @@
 
 #include <mstd/types.hpp>
 
-#include "staticMatrix.hpp"
 #include "unit_types.hpp"
 
 namespace molsys
@@ -70,17 +69,17 @@ namespace manostat
             physicalData::PhysicalData &
         );
 
-        static void rotateMu(linalg::tensor3D &mu);
+        static void rotateMu(QuantityTensor3D &mu);
 
        protected:
         static void _validateScaling(
             const molsys::SimulationBox &,
-            const linalg::tensor3D &
+            const QuantityTensor3D &
         );
 
         [[nodiscard]]
-        static linalg::tensor3D _toSimSpaceScaling(
-            const linalg::tensor3D &,
+        static QuantityTensor3D _toSimSpaceScaling(
+            const QuantityTensor3D &,
             const molsys::Box &
         );
 
@@ -97,7 +96,7 @@ namespace manostat
         const ManostatSettings &_getSettings() const;
 
        private:
-        static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);
+        static void _validateCandidate(molsys::Box &, const QuantityTensor3D &);
     };
 
 }   // namespace manostat

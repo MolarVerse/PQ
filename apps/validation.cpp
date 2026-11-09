@@ -447,7 +447,8 @@ namespace
 
     void appendWarnings(
         const input::InputFileReader &reader,
-        cli::ValidationResult        &result
+        cli::ValidationResult        &result,
+        const ThermostatSettings     &thermostatSettings
     )
     {
         using enum ThermostatType;
@@ -460,10 +461,10 @@ namespace
                  std::nullopt}
             );
         }
-        if (settings::ThermostatSettings::getThermostatType() ==
+        if (thermostatSettings.getThermostatType() ==
                 ThermostatType::NOSE_HOOVER &&
             utilities::isZero(
-                settings::ThermostatSettings::getNoseHooverCouplingFrequency()
+                ThermostatSettings::getNoseHooverCouplingFrequency()
             ))
         {
             result.diagnostics.push_back(
@@ -474,9 +475,9 @@ namespace
             );
         }
 
-        if (settings::ThermostatSettings::getThermostatType() ==
+        if (thermostatSettings.getThermostatType() ==
                 ThermostatType::LANGEVIN &&
-            utilities::isZero(settings::ThermostatSettings::getFriction()))
+            utilities::isZero(ThermostatSettings::getFriction()))
         {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,
@@ -540,7 +541,7 @@ cli::ValidationResult cli::validateInputFile(
             .scope       = scope,
             .diagnostics = {}
         };
-        appendWarnings(reader, result);
+        appendWarnings(reader, result, settings.thermostatSettings);
         return result;
     }
     catch (const exc::PQException &exception)

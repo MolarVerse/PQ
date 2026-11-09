@@ -1,1 +1,0 @@
-- Use ccache in the clang build job on pull requests (with -Xclang -fno-pch-timestamp so the precompiled headers can be cached); pushes to dev still compile everything and refresh the cache.

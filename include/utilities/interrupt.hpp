@@ -23,9 +23,18 @@
 #ifndef UTILITIES__INTERRUPT_HPP
 #define UTILITIES__INTERRUPT_HPP
 
+#if defined(WITH_PYBIND11) && !defined(_WIN32)
+#include <pthread.h>
+#endif
+
 namespace utilities
 {
     void throwIfInterrupted();
+
+#if defined(WITH_PYBIND11) && !defined(_WIN32)
+    void installInterruptHandler();
+    void wakePythonThread(pthread_t thread);
+#endif
 }   // namespace utilities
 
 #endif   // UTILITIES__INTERRUPT_HPP

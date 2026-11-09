@@ -46,7 +46,7 @@
 //   protected:
 //     void SetUp() override
 //     {
-//         settings::ThermostatSettings::setTargetTemperature(300.0);
+//         ThermostatSettings::setTargetTemperature(300.0);
 //         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50,
 //         11); _data          = new physicalData::PhysicalData();
 

@@ -27,7 +27,7 @@
 
 #include "inputFileParser.hpp"
 
-class ReferenceSettings;
+class ThermostatSettings;
 
 namespace input
 {
@@ -40,10 +40,10 @@ namespace input
     class ThermostatInputParser : public InputFileParser
     {
        private:
-        mstd::Ref<ReferenceSettings> _referenceSettings;
+        mstd::Ref<ThermostatSettings> _thermostatSettings;
 
        public:
-        explicit ThermostatInputParser(ReferenceSettings& referenceSettings);
+        explicit ThermostatInputParser(ThermostatSettings& thermostatSettings);
 
         void addThermostatKey();
         void addTemperatureKey();

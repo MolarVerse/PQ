@@ -38,6 +38,7 @@
 #include "testSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 
@@ -176,7 +177,9 @@ namespace
             physicalData.getTemperature()
                 .quantity_from_zero()
                 .numerical_value_in(K),
-            simulationBox.calculateTemperature(),
+            simulationBox.calculateTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K),
             1e-9
         );
         expectVec3DNear(
@@ -247,16 +250,13 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
     auto *box  = makeBox();
     auto  data = physicalData::PhysicalData();
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     // resetTemperature scales by sqrt(target / temperature) with the
     // temperature handed in by the caller (reset() takes it from PhysicalData)
     data.calculateTemperature(*box);
 
-    resetKinetics::ResetKinetics::resetTemperature(
-        *box,
-        data.getTemperature().quantity_from_zero().numerical_value_in(K)
-    );
+    resetKinetics::ResetKinetics::resetTemperature(*box, data.getTemperature());
 
     data.calculateTemperature(*box);
     const auto T_after =
@@ -273,11 +273,8 @@ TEST(TestResetKinetics, resetTemperatureScalesFiniteTemperatureToZero)
     auto *box  = makeBox();
     auto  data = physicalData::PhysicalData();
     data.calculateTemperature(*box);
-    settings::ThermostatSettings::setTargetTemperature(0.0);
-    resetKinetics::ResetKinetics::resetTemperature(
-        *box,
-        data.getTemperature().quantity_from_zero().numerical_value_in(K)
-    );
+    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    resetKinetics::ResetKinetics::resetTemperature(*box, data.getTemperature());
 
     data.calculateTemperature(*box);
     EXPECT_DOUBLE_EQ(
@@ -296,10 +293,13 @@ TEST(TestResetKinetics, rejectsZeroTargetFromZeroTemperature)
 
     for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
 
-    settings::ThermostatSettings::setTargetTemperature(0.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
 
     EXPECT_THROW_MSG(
-        resetKinetics::ResetKinetics::resetTemperature(*box, 0.0),
+        resetKinetics::ResetKinetics::resetTemperature(
+            *box,
+            toTemperature(0.0)
+        ),
         exc::UserInputException,
         "Cannot rescale a zero-temperature system. Initialize velocities first."
     );
@@ -313,10 +313,13 @@ TEST(TestResetKinetics, rejectsPositiveTargetFromZeroTemperature)
 
     for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     EXPECT_THROW_MSG(
-        resetKinetics::ResetKinetics::resetTemperature(*box, 0.0),
+        resetKinetics::ResetKinetics::resetTemperature(
+            *box,
+            toTemperature(0.0)
+        ),
         exc::UserInputException,
         "Cannot rescale a zero-temperature system. Initialize velocities first."
     );
@@ -404,14 +407,20 @@ TEST(TestResetKinetics, resetTemperatureReachesTargetTemperature)
         auto *box  = makeBox();
         auto  data = makeData(*box);
 
-        settings::ThermostatSettings::setTargetTemperature(target);
+        ThermostatSettings::setTargetTemperature(toTemperature(target));
 
         resetKinetics::ResetKinetics::resetTemperature(
             *box,
-            data.getTemperature().quantity_from_zero().numerical_value_in(K)
+            data.getTemperature()
         );
 
-        EXPECT_NEAR(box->calculateTemperature(), target, 1e-10 * target);
+        EXPECT_NEAR(
+            box->calculateTemperature().quantity_from_zero().numerical_value_in(
+                K
+            ),
+            target,
+            1e-10 * target
+        );
 
         delete box;
     }
@@ -422,7 +431,7 @@ TEST(TestResetKinetics, resetTemperatureScalesAllVelocitiesByCommonFactor)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto before    = velocitiesOf(*box);
     const auto positions = positionsOf(*box);
@@ -430,10 +439,7 @@ TEST(TestResetKinetics, resetTemperatureScalesAllVelocitiesByCommonFactor)
         300.0 / data.getTemperature().quantity_from_zero().numerical_value_in(K)
     );
 
-    resetKinetics::ResetKinetics::resetTemperature(
-        *box,
-        data.getTemperature().quantity_from_zero().numerical_value_in(K)
-    );
+    resetKinetics::ResetKinetics::resetTemperature(*box, data.getTemperature());
 
     const auto after = velocitiesOf(*box);
     for (size_t i = 0; i < before.size(); ++i)
@@ -450,7 +456,7 @@ TEST(TestResetKinetics, resetTemperatureUsesPassedTemperatureNotBoxTemperature)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     // claim the system is 4 times hotter than it is - the scaling factor has
     // to follow the argument: sqrt(target / (4 T)) = 0.5 * sqrt(target / T)
@@ -464,7 +470,7 @@ TEST(TestResetKinetics, resetTemperatureUsesPassedTemperatureNotBoxTemperature)
 
     resetKinetics::ResetKinetics::resetTemperature(
         *box,
-        4.0 * data.getTemperature().quantity_from_zero().numerical_value_in(K)
+        scaleAbsTemp(data.getTemperature(), 4.0)
     );
 
     const auto after = velocitiesOf(*box);
@@ -478,18 +484,22 @@ TEST(TestResetKinetics, resetTemperatureIsIdempotent)
 {
     auto *box = makeBox();
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     resetKinetics::ResetKinetics::resetTemperature(
         *box,
-        box->calculateTemperature()
+        toTemperature(box->calculateTemperature()
+                          .quantity_from_zero()
+                          .numerical_value_in(K))
     );
     const auto once = velocitiesOf(*box);
 
     // already at the target -> lambda = 1
     resetKinetics::ResetKinetics::resetTemperature(
         *box,
-        box->calculateTemperature()
+        toTemperature(box->calculateTemperature()
+                          .quantity_from_zero()
+                          .numerical_value_in(K))
     );
 
     expectVelocitiesNear(*box, once, velocityTolerance(*box));
@@ -503,28 +513,21 @@ TEST(TestResetKinetics, resetTemperatureCanHeatAndCool)
     auto       data  = makeData(*box);
     const auto temp0 = data.getTemperature();
 
-    settings::ThermostatSettings::setTargetTemperature(
-        scaleAbsTemp(temp0, 2.0).quantity_from_zero().numerical_value_in(K)
-    );
-    resetKinetics::ResetKinetics::resetTemperature(
-        *box,
-        temp0.quantity_from_zero().numerical_value_in(K)
-    );
+    ThermostatSettings::setTargetTemperature(scaleAbsTemp(temp0, 2.0));
+    resetKinetics::ResetKinetics::resetTemperature(*box, temp0);
     EXPECT_NEAR(
-        box->calculateTemperature(),
+        box->calculateTemperature().quantity_from_zero().numerical_value_in(K),
         scaleAbsTemp(temp0, 2.0).quantity_from_zero().numerical_value_in(K),
         1e-10 * temp0.quantity_from_zero().numerical_value_in(K)
     );
 
-    settings::ThermostatSettings::setTargetTemperature(
-        scaleAbsTemp(temp0, 0.25).quantity_from_zero().numerical_value_in(K)
-    );
+    ThermostatSettings::setTargetTemperature(scaleAbsTemp(temp0, 0.25));
     resetKinetics::ResetKinetics::resetTemperature(
         *box,
-        scaleAbsTemp(temp0, 2.0).quantity_from_zero().numerical_value_in(K)
+        scaleAbsTemp(temp0, 2.0)
     );
     EXPECT_NEAR(
-        box->calculateTemperature(),
+        box->calculateTemperature().quantity_from_zero().numerical_value_in(K),
         scaleAbsTemp(temp0, 0.25).quantity_from_zero().numerical_value_in(K),
         1e-10 * temp0.quantity_from_zero().numerical_value_in(K)
     );
@@ -536,14 +539,17 @@ TEST(TestResetKinetics, resetTemperatureThrowsBeforeModifyingVelocities)
 {
     auto *box = makeBox();
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto before = velocitiesOf(*box);
 
     // the box itself is hot, but the temperature handed in is zero - the
     // decision to throw is based on the argument
     EXPECT_THROW_MSG(
-        resetKinetics::ResetKinetics::resetTemperature(*box, 0.0),
+        resetKinetics::ResetKinetics::resetTemperature(
+            *box,
+            toTemperature(0.0)
+        ),
         exc::UserInputException,
         "Cannot rescale a zero-temperature system. Initialize velocities first."
     );
@@ -558,9 +564,14 @@ TEST(TestResetKinetics, resetTemperatureOfColdBoxWithNonZeroArgumentStaysCold)
     auto *box = makeBox();
     for (const auto &atom : box->getAtoms()) atom->setVelocity({0.0, 0.0, 0.0});
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
-    EXPECT_NO_THROW(resetKinetics::ResetKinetics::resetTemperature(*box, 10.0));
+    EXPECT_NO_THROW(
+        resetKinetics::ResetKinetics::resetTemperature(
+            *box,
+            toTemperature(10.0)
+        )
+    );
 
     for (const auto &atom : box->getAtoms())
         EXPECT_EQ(atom->getVelocity(), linalg::Vec3D(0.0, 0.0, 0.0));
@@ -885,7 +896,7 @@ TEST(TestResetKinetics, resetAngularMomentumDoesNotIncreaseKineticEnergy)
 
     // the removed rotational energy is 1/2 omega . L > 0
     EXPECT_LT(box->calculateTemperature(), T_before);
-    EXPECT_GT(box->calculateTemperature(), 0.0);
+    EXPECT_GT(box->calculateTemperature(), Temperature::zero());
 
     delete box;
 }
@@ -901,7 +912,7 @@ TEST(TestResetKinetics, resetWithoutScheduledResetLeavesBoxUntouched)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     // reset() must be callable on a const object
     const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
@@ -931,7 +942,7 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
     auto *box  = makeBox();
     auto  data = physicalData::PhysicalData();
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -965,7 +976,7 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1019,7 +1030,7 @@ TEST(TestResetKinetics, resetMomentumBranchOnlyShiftsVelocities)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, never, 0U, 7U, 0U, never, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1059,7 +1070,7 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, never, 0U, never, 0U, 7U, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1094,7 +1105,7 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
 
 TEST(TestResetKinetics, resetTemperatureAndMomentumDueTogetherActOnlyOnce)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *boxTemperature  = makeBox();
     auto  dataTemperature = makeData(*boxTemperature);
@@ -1129,7 +1140,7 @@ TEST(TestResetKinetics, resetTemperatureAndMomentumDueTogetherActOnlyOnce)
 
 TEST(TestResetKinetics, resetAllBranchesMatchSequentialStaticCalls)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box  = makeBox();
     auto  data = makeData(*box);
@@ -1190,7 +1201,7 @@ TEST(TestResetKinetics, resetAllBranchesMatchSequentialStaticCalls)
 
 TEST(TestResetKinetics, resetTemperatureAndAngularDueTogetherKeepMomentumZero)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box  = makeBox();
     auto  data = makeData(*box);
@@ -1217,7 +1228,7 @@ TEST(TestResetKinetics, resetTemperatureAndAngularDueTogetherKeepMomentumZero)
 
 TEST(TestResetKinetics, resetMomentumAndAngularDueTogetherZeroBoth)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box  = makeBox();
     auto  data = makeData(*box);
@@ -1250,7 +1261,7 @@ TEST(TestResetKinetics, resetMomentumAndAngularDueTogetherZeroBoth)
 
 TEST(TestResetKinetics, resetTemperatureIsScheduledByStepsAndFrequency)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(5U, 1000U, 0U, never, 0U, never, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1266,7 +1277,7 @@ TEST(TestResetKinetics, resetTemperatureIsScheduledByStepsAndFrequency)
 
 TEST(TestResetKinetics, resetMomentumIsScheduledByStepsAndFrequency)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, never, 5U, 1000U, 0U, never, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1282,7 +1293,7 @@ TEST(TestResetKinetics, resetMomentumIsScheduledByStepsAndFrequency)
 
 TEST(TestResetKinetics, resetAngularMomentumIsScheduledByStepsAndFrequency)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, never, 0U, never, 5U, 1000U, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1298,7 +1309,7 @@ TEST(TestResetKinetics, resetAngularMomentumIsScheduledByStepsAndFrequency)
 
 TEST(TestResetKinetics, stepZeroTriggersEveryResetIndependentOfSchedule)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     // step 0: 0 % frequency == 0 for every non-zero frequency
     auto *box  = makeBox();
@@ -1337,7 +1348,7 @@ TEST(TestResetKinetics, resetThrowsForZeroTemperatureInDataWhenScheduled)
     // PhysicalData has not been filled -> temperature 0.0
     auto data = physicalData::PhysicalData();
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1366,7 +1377,7 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
         0.0
     );
 
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U);
     const resetKinetics::ResetKinetics reset{settings};
@@ -1385,7 +1396,7 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
 
 TEST(TestResetKinetics, resetIsIdempotentForMomentumAndAngularMomentum)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box  = makeBox();
     auto  data = makeData(*box);
@@ -1406,7 +1417,7 @@ TEST(TestResetKinetics, resetIsIdempotentForMomentumAndAngularMomentum)
 
 TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     const auto settings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U);
     const resetKinetics::ResetKinetics reused{settings};
@@ -1465,7 +1476,7 @@ TEST(TestResetKinetics, resetForcesRespectsStepFrequency)
 
 TEST(TestResetKinetics, resetAngularBranchUsesFreshCentreOfMass)
 {
-    settings::ThermostatSettings::setTargetTemperature(300.0);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     // In the MD loop PhysicalData::calculateKinetics runs before reset() with
     // whatever centre of mass the box has cached - it is only refreshed on

@@ -185,11 +185,12 @@ namespace benchSetup
     // amount of work.
     inline void scaleVelocitiesToTemperature(
         molsys::SimulationBox& simulationBox,
-        double                 temperature
+        const Temperature&     temperature
     )
     {
-        const auto factor =
-            std::sqrt(temperature / simulationBox.calculateTemperature());
+        const auto factor = mstd::sqrt(
+            tempRatio(temperature, simulationBox.calculateTemperature())
+        );
         for (auto& atom : simulationBox.getAtoms())
             atom->setVelocity(atom->getVelocity() * factor);
     }

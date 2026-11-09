@@ -22,67 +22,55 @@
 
 #include <gtest/gtest.h>
 
+#include "enums/thermostat.hpp"
 #include "thermostatSettings.hpp"
 
 TEST(ThermostatSettingsTest, SetThermostatTypeTest)
 {
-    settings::ThermostatSettings::setThermostatType("berendsen");
+    ThermostatSettings thermostatSettings;
+    thermostatSettings.setThermostatTypeByUser(ThermostatType::BERENDSEN);
     EXPECT_EQ(
-        settings::ThermostatSettings::getThermostatType(),
+        thermostatSettings.getThermostatType(),
         ThermostatType::BERENDSEN
     );
     EXPECT_EQ(
-        ThermostatTypeMeta::toString(
-            settings::ThermostatSettings::getThermostatType()
-        ),
+        ThermostatTypeMeta::toString(thermostatSettings.getThermostatType()),
         "BERENDSEN"
     );
 
-    settings::ThermostatSettings::setThermostatType("none");
+    thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);
+    EXPECT_EQ(thermostatSettings.getThermostatType(), ThermostatType::NONE);
     EXPECT_EQ(
-        settings::ThermostatSettings::getThermostatType(),
-        ThermostatType::NONE
-    );
-    EXPECT_EQ(
-        ThermostatTypeMeta::toString(
-            settings::ThermostatSettings::getThermostatType()
-        ),
+        ThermostatTypeMeta::toString(thermostatSettings.getThermostatType()),
         "NONE"
     );
 
-    settings::ThermostatSettings::setThermostatType("langevin");
+    thermostatSettings.setThermostatTypeByUser(ThermostatType::LANGEVIN);
+    EXPECT_EQ(thermostatSettings.getThermostatType(), ThermostatType::LANGEVIN);
     EXPECT_EQ(
-        settings::ThermostatSettings::getThermostatType(),
-        ThermostatType::LANGEVIN
-    );
-    EXPECT_EQ(
-        ThermostatTypeMeta::toString(
-            settings::ThermostatSettings::getThermostatType()
-        ),
+        ThermostatTypeMeta::toString(thermostatSettings.getThermostatType()),
         "LANGEVIN"
     );
 
-    settings::ThermostatSettings::setThermostatType("NH-chain");
+    thermostatSettings.setThermostatTypeByUser(ThermostatType::NOSE_HOOVER);
     EXPECT_EQ(
-        settings::ThermostatSettings::getThermostatType(),
+        thermostatSettings.getThermostatType(),
         ThermostatType::NOSE_HOOVER
     );
     EXPECT_EQ(
-        ThermostatTypeMeta::toString(
-            settings::ThermostatSettings::getThermostatType()
-        ),
+        ThermostatTypeMeta::toString(thermostatSettings.getThermostatType()),
         "NOSE_HOOVER"
     );
 
-    settings::ThermostatSettings::setThermostatType("velocity_rescaling");
-    EXPECT_EQ(
-        settings::ThermostatSettings::getThermostatType(),
+    thermostatSettings.setThermostatTypeByUser(
         ThermostatType::VELOCITY_RESCALING
     );
     EXPECT_EQ(
-        ThermostatTypeMeta::toString(
-            settings::ThermostatSettings::getThermostatType()
-        ),
+        thermostatSettings.getThermostatType(),
+        ThermostatType::VELOCITY_RESCALING
+    );
+    EXPECT_EQ(
+        ThermostatTypeMeta::toString(thermostatSettings.getThermostatType()),
         "VELOCITY_RESCALING"
     );
 }

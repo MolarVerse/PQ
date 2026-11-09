@@ -44,6 +44,7 @@ class ManostatSettings;        // forward declaration
 class QMSettings;              // forward declaration
 class MaceSettings;            // forward declaration
 class DftbSettings;            // forward declaration
+class ThermostatSettings;      // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -127,7 +128,8 @@ namespace input
             const DftbSettings &dftbSettings
         ) const;
         void _validateThermostat(
-            const SimulationBoxSettings &simBoxSettings
+            const SimulationBoxSettings &simBoxSettings,
+            const ThermostatSettings    &thermostatSettings
         ) const;
         void _validateManostat(const ManostatSettings &manostatSettings) const;
         void _validateReactionFieldCoulomb() const;

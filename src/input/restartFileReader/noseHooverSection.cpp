@@ -63,10 +63,9 @@ namespace input::restartFile
         const auto chi  = stod(lineElements[2]);
         const auto zeta = stod(lineElements[3]);
 
-        auto [iterChi, chiIsInserted] =
-            settings::ThermostatSettings::addChi(idx, chi);
+        auto [iterChi, chiIsInserted] = ThermostatSettings::addChi(idx, chi);
         auto [iterZeta, zetaIsInserted] =
-            settings::ThermostatSettings::addZeta(idx, zeta);
+            ThermostatSettings::addZeta(idx, zeta);
 
         if (!chiIsInserted || !zetaIsInserted)
         {

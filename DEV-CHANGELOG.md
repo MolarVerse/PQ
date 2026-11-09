@@ -8,6 +8,50 @@ in `CHANGELOG.md`.
 ## Next Release
 
 <!-- insertion marker -->
+## [v1.0.2](https://github.com/MolarVerse/PQ/releases/tag/v1.0.2) - 2026-11-08
+
+### CI
+
+- Install GCC and the other CI packages through the cached apt action (awalsh128/cache-apt-pkgs-action) in the shared setup-gcc action and the clang build, as the DevOps check already does, so a stalled or slow Azure mirror only matters on a cache miss.
+- The Changelog Fragment Check honours the existing skip-changelog label: a pull request with the label needs no fragment (the script tests still run), and adding or removing the label re-runs the check. The failure message names the label.
+- Use ccache in the clang build job on pull requests (with -Xclang -fno-pch-timestamp so the precompiled headers can be cached); pushes to dev still compile everything and refresh the cache.
+- Refresh the apt index before installing the docs packages, so a stale runner image no longer fails the Docs job.
+- Hotfix PRs now take their version from a `Hotfix-X.Y.Z` title prefix (must be the next patch); `.github/release.json` is removed, so hotfix PRs no longer show a bot edit of it.
+- Skip the "Check PR Has Linked Issue" job for release pull requests (release/* branches): the release workflow creates them with the body "Release vX.Y.Z." and they close no issue, so the check failed on every release.
+- Skip the lint job for release pull requests and pushes to main: it linted every file of the release (812 files, serially) and was killed after half an hour.
+- Remove the CI metrics (daily collector workflow, build-analysis artifacts and steps, report, tests, page and the 21 MB of old data under .github/ci-metrics): they did not tell us anything we use, and the collector pushed data commits to dev. The history stays in git.
+- Skip the lint, DevOps C++ check, performance gate and clang build jobs for release pull requests (release/* branches): they contain every change since the last release, which these checks already passed on the dev pull requests, and the checks failed or timed out on the 1.0.0 release pull request.
+
+### Tests
+
+- Add a FeNNol integration test (malondialdehyde, ANI-1x model, 2 MD steps, CPU) and install `fennol` and `jax` for the integration tests in CI.
+- Add MACE-OFF and MACE-MP integration tests (malondialdehyde, 2 MD steps); they run only where torch, MACE and a CUDA device are available and is skipped otherwise.
+- Add a timing comparison to the performance gate: CPU time of the measured loop, base against PR on the same runner (copies of the binaries, interleaved pinned runs, bootstrap interval, confirmation). A confirmed slowdown above 10% fails the check. New `perf_timer` preload library and `scripts/perf_timing.py` with tests.
+- Timing comparison: the loop length is the median of three runs and the minimum is 2 ms (was one run and 5 ms), so benchmarks near the limit are judged in every run instead of in some.
+- Add unit tests for the binary operators of `linalg::Vector3D` holding `mstd` quantities.
+
+### Internal
+
+- Include the pybind11 header in the ASE xTB, MACE and FeNNol runner sources instead of relying on the precompiled header, so lint no longer reports errors when a pull request changes them.
+- Replace `Box::toOrthoSpace` and `Box::toSimSpace` with `getBoxMatrix()`, `getInverseBoxMatrix()` and `isOrthorhombic()`; `Molecule::scale` and `Molecule::scaleVelocity` now expect a scaling tensor in simulation space, converted once by `Manostat::_toSimSpaceScaling`.
+- Add `StaticMatrix3x3` operators for unit/quantity scalars, mixed element-type matrix multiplication and a converting constructor.
+- Introduce tracking of by whom a `Setting` was actually set (user vs. system vs. default), replacing the former value-based "is this still the default" checks.
+- Start removing static access from `QMSettings` - `QMMethod`
+- introduce new class `MaceSettings` for less coupling to `QMSettings`
+- introduce new class `FennolSettings` for less coupling to `QMSettings`
+- ASE-DFTB+ input validation now rejects third order DFTB with non-3ob slakos if `hubbard_derivs` is missing, and `DftbSettings`/`XtbSettings` were extracted from `QMSettings`.
+- remove static access of `ThermostatType` from `ThermostatSettings`
+- make timestep unit aware
+- make compressiblity unit aware
+- add a devops check to not include `units.hpp` in a header file to not pollute namings 
+- add relaxtime of thermostat as a unitful quantity
+- introduce units for pressure
+- start introducing temperature unit in thermostat
+- finish all places of temperature units
+- cleanup manostat by introducing some mstd math functions for quantities like `mstd::exp`, `mstd::pow` and `mstd::sqrt`
+- Refactor the binary `+`, `-`, `*` and `/` operators of `linalg::Vector3D`: the five overloads per operator are replaced by one constrained template each, built on new component-wise helpers in `linalg::detail` (`vector3dDetail.hpp`).
+- `linalg::Vector3D` of `mstd` quantities now supports the binary `+`, `-`, `*` and `/` operators.
+
 ## [v1.0.0](https://github.com/MolarVerse/PQ/releases/tag/v1.0.0) - 2026-11-03
 
 ### Enhancements

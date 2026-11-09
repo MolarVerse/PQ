@@ -253,6 +253,20 @@ namespace linalg
         concept MultiplyOperands =
             BinaryOperands<U, V> || QuantityScalarOperands<U, V>;
 
+        /**
+         * @brief operands of the binary operator `/`
+         *
+         * @details additionally allows a Vector3D (lhs) divided by a
+         * quantity-like scalar (rhs)
+         */
+        template <typename U, typename V>
+        concept DivideOperands =
+            BinaryOperands<U, V> ||
+            (NumericVector3D<U> && !pq::isVector3D_v<V> &&
+             requires(const pq::InnerType_t<U> &value1, const V &value2) {
+                 value1 / value2;
+             });
+
     }   // namespace detail
 
 }   // namespace linalg

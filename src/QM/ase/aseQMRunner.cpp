@@ -35,14 +35,13 @@
 
 #if !defined(_WIN32)
 #include <pthread.h>
-
-#include <csignal>
 #endif
 
 #include "box.hpp"
 #include "constants.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
+#include "interrupt.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
@@ -240,7 +239,7 @@ namespace QM
          *
          * @details an exception thrown in this thread would terminate PQ, so
          * the Python call in the calling thread is interrupted instead
-         * (KeyboardInterrupt) and timedOut is set. If Python handles SIGINT,
+         * (KeyboardInterrupt) and timedOut is set. If SIGINT is handled,
          * the signal is also sent to the calling thread to wake up blocking
          * calls such as time.sleep or subprocess waits.
          *
@@ -281,13 +280,7 @@ namespace QM
             ::PyErr_SetInterrupt();
 
 #if !defined(_WIN32)
-            struct sigaction current{};
-            ::sigaction(SIGINT, nullptr, &current);
-
-            if (current.sa_handler != SIG_DFL && current.sa_handler != SIG_IGN)
-            {
-                ::pthread_kill(pythonThread, SIGINT);
-            }
+            utilities::wakePythonThread(pythonThread);
 #else
             static_cast<void>(pythonThread);
 #endif

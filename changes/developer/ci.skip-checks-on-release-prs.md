@@ -1,1 +1,0 @@
-- Skip the lint, DevOps C++ check, performance gate and clang build jobs for release pull requests (release/* branches): they contain every change since the last release, which these checks already passed on the dev pull requests, and the checks failed or timed out on the 1.0.0 release pull request.

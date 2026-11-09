@@ -529,7 +529,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    settings::ThermostatSettings::setThermostatType(
+    _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
 
@@ -619,7 +619,7 @@ TEST_F(TestEnergyOutput, writeInfoQmmmSubtractsQMReferenceEnergy)
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
+    _settings->thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0 * ps, *_physicalData, *_settings);

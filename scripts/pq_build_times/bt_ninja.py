@@ -1,7 +1,7 @@
 """Readers for what Ninja leaves behind: `.ninja_log` and `ninja -t deps`.
 
-Deliberately independent of the CI metrics scripts (.github/ci-metrics), so that
-changes to the CI pipeline cannot break local build-time tracking.
+Standard library only, independent of the CI scripts, so that changes to the CI
+pipeline cannot break local build-time tracking.
 """
 
 import hashlib
