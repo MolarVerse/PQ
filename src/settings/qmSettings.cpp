@@ -126,7 +126,8 @@ bool QMSettings::isExternalQMRunner() const
     {
         case QMMethod::DFTBPLUS:
         case QMMethod::PYSCF:
-        case QMMethod::TURBOMOLE: return true;
+        case QMMethod::TURBOMOLE:
+        case QMMethod::ORCA: return true;
 
         case QMMethod::NONE:
         case QMMethod::ASE_XTB:

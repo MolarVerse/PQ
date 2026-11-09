@@ -52,6 +52,7 @@ namespace input
         void addMShakeFileKey();
         void addDFTBFileKey();
         void addTMFileKey();
+        void addOrcaFileKey();
     };
 
 }   // namespace input

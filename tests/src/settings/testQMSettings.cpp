@@ -166,6 +166,7 @@ TEST(QMSettingsTest, ReturnQMMethodTest)
     EXPECT_EQ(QMMethodMeta::toString(QMMethod::ASE_XTB), "ASE_XTB");
     EXPECT_EQ(QMMethodMeta::toString(QMMethod::PYSCF), "PYSCF");
     EXPECT_EQ(QMMethodMeta::toString(QMMethod::TURBOMOLE), "TURBOMOLE");
+    EXPECT_EQ(QMMethodMeta::toString(QMMethod::ORCA), "ORCA");
     EXPECT_EQ(QMMethodMeta::toString(QMMethod::MACE), "MACE");
     EXPECT_EQ(QMMethodMeta::toString(QMMethod::FENNOL), "FENNOL");
     EXPECT_EQ(QMMethodMeta::toString(QMMethod::NONE), "NONE");

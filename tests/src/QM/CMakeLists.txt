@@ -36,3 +36,10 @@ if(BUILD_WITH_ASE)
 
     set_property(TEST testAseQMRunner PROPERTY LABELS QM)
 endif()
+
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+add_test(NAME testOrcaScript
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testOrcaScript.py
+            ${PROJECT_SOURCE_DIR}/src/QM/scripts/orca_rimp2.py
+            ${PROJECT_SOURCE_DIR}/examples/orca/orca.template)
+set_property(TEST testOrcaScript PROPERTY LABELS QM)

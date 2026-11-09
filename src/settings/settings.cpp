@@ -49,6 +49,7 @@ void Settings::finalize()
         case QMMethod::FENNOL:
         case QMMethod::PYSCF:
         case QMMethod::TURBOMOLE:
+        case QMMethod::ORCA:
         case QMMethod::NONE: break;
     }
 }

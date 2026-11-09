@@ -3,6 +3,7 @@ add_library(externalQM
 
     dftbplusRunner.cpp
     turbomoleRunner.cpp
+    orcaRunner.cpp
     pyscfRunner.cpp
 )
 

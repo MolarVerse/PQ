@@ -69,8 +69,19 @@ namespace cli
         .requiredWorkingFile = "tm_define.template"
     }};
 
-    inline constexpr auto externalQMMethods =
-        std::array{QMMethod::DFTBPLUS, QMMethod::PYSCF, QMMethod::TURBOMOLE};
+    inline constexpr auto orcaScripts = std::array{ExternalQMScriptInfo{
+        .name                = "orca_rimp2.py",
+        .label               = "RI-MP2 (polarized QM/MM)",
+        .requiredFileKeyword = "orca_file",
+        .requiredWorkingFile = ""
+    }};
+
+    inline constexpr auto externalQMMethods = std::array{
+        QMMethod::DFTBPLUS,
+        QMMethod::PYSCF,
+        QMMethod::TURBOMOLE,
+        QMMethod::ORCA
+    };
 
     inline std::span<const ExternalQMScriptInfo> externalQMScripts(
         const QMMethod method
@@ -83,6 +94,7 @@ namespace cli
             case DFTBPLUS: return dftbPlusScripts;
             case PYSCF: return pyScfScripts;
             case TURBOMOLE: return turbomoleScripts;
+            case ORCA: return orcaScripts;
 
             case NONE:
             case ASE_DFTBPLUS:
@@ -103,6 +115,7 @@ namespace cli
             case DFTBPLUS: return "dftbplus";
             case PYSCF: return "pyscf";
             case TURBOMOLE: return "turbomole";
+            case ORCA: return "orca";
 
             case NONE:
             case ASE_DFTBPLUS:
@@ -122,6 +135,7 @@ namespace cli
         {
             case DFTBPLUS: return dftbPlusScripts.front().name;
             case TURBOMOLE: return turbomoleScripts.front().name;
+            case ORCA: return orcaScripts.front().name;
 
             case NONE:
             case ASE_DFTBPLUS:

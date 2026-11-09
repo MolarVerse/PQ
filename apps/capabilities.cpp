@@ -349,7 +349,8 @@ namespace
 
         json.beginArray("qm_programs");
 
-        for (const auto *const program : {"dftbplus", "pyscf", "turbomole"})
+        for (const auto *const program :
+             {"dftbplus", "pyscf", "turbomole", "orca"})
             json.value(program);
 
         if (withAse)

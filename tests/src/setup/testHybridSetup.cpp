@@ -193,7 +193,7 @@ TEST_F(TestSetup, setupThrowsNotImplemented)
         hybridSetup.setup(),
         exc::InputFileException,
         "QM method \"NONE\" is not supported for hybrid type calculations. "
-        "Supported QM methods are \"dftbplus\" and \"turbomole\"."
+        "Supported QM methods are \"dftbplus\", \"turbomole\" and \"orca\"."
     );
 }
 
@@ -247,13 +247,14 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
             exc::InputFileException,
             "QM method \"" + QMMethodMeta::toString(method) +
                 "\" is not supported for hybrid type "
-                "calculations. Supported QM methods are \"dftbplus\" and "
-                "\"turbomole\"."
+                "calculations. Supported QM methods are \"dftbplus\", "
+                "\"turbomole\" and \"orca\"."
         );
     }
 
     EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::DFTBPLUS));
     EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::TURBOMOLE));
+    EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::ORCA));
 }
 
 TEST_F(TestSetup, hybridSetupValidatesZoneRadii)

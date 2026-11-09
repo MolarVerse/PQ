@@ -393,3 +393,22 @@ TEST_F(TestInputFileReader, testTMFileName)
         "data/turbomoleReader/tm_define.template"
     );
 }
+
+TEST_F(TestInputFileReader, testOrcaFileName)
+{
+    input::FilesInputParser parser;
+    const auto              functions = parser.getKeywordFuncMap();
+    const auto             &parse     = functions.at("orca_file");
+    const auto previous = settings::FileSettings::getOrcaFileName();
+    EXPECT_THROW(
+        parse({"orca_file", "=", "no-such-orca-template"}, 0),
+        exc::InputFileException
+    );
+    _clearParser(parser);
+    parse({"orca_file", "=", "data/atomSection/testProcess.rst"}, 0);
+    EXPECT_EQ(
+        settings::FileSettings::getOrcaFileName(),
+        "data/atomSection/testProcess.rst"
+    );
+    settings::FileSettings::setOrcaFileName(previous);
+}

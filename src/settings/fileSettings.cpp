@@ -111,6 +111,13 @@ namespace settings
     std::string FileSettings::getTMFileName() { return _tmFile; }
 
     /**
+     * @brief Get the ORCA setup file name
+     *
+     * @return std::string
+     */
+    std::string FileSettings::getOrcaFileName() { return _orcaFile; }
+
+    /**
      * @brief Get the pointcharge file name
      *
      * @return std::string
@@ -302,6 +309,16 @@ namespace settings
     void FileSettings::setTMFileName(const std::string_view& name)
     {
         FileSettings::_tmFile = name;
+    }
+
+    /**
+     * @brief set the ORCA setup file name
+     *
+     * @param name
+     */
+    void FileSettings::setOrcaFileName(const std::string_view& name)
+    {
+        _orcaFile = name;
     }
 
     /**

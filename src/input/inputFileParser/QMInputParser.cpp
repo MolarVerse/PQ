@@ -121,6 +121,11 @@ namespace input
                         ReferenceFiles::TURBOMOLE_FILE
                     );
                     break;
+                case QMMethod::ORCA:
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::ORCA_FILE
+                    );
+                    break;
                 case QMMethod::FENNOL:
                     _referenceSettings->addReferenceFile(
                         ReferenceFiles::FENNOL_FILE

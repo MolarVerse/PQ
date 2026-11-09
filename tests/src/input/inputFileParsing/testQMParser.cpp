@@ -66,6 +66,14 @@ TEST_F(TestInputFileReader, parseQMMethod)
 
     _clearParser(parser);
 
+    parseFunc({"qm_prog", "=", "orca"}, 0);
+    EXPECT_EQ(settings.qmSettings.getQMMethod(), ORCA);
+    EXPECT_TRUE(settings.qmSettings.isExternalQMRunner());
+    EXPECT_TRUE(settings.referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::ORCA_FILE
+    ));
+    _clearParser(parser);
+
     parseFunc({"qm_prog", "=", "turbomole"}, 0);
     EXPECT_EQ(settings.qmSettings.getQMMethod(), TURBOMOLE);
     EXPECT_TRUE(settings.referenceSettings.getReferenceFileNames().contains(
@@ -133,7 +141,7 @@ TEST_F(TestInputFileReader, parseQMMethod)
         exc::InputFileException,
         "Invalid value \"notAMethod\" for key \"qm_prog\" at line 0 in input "
         "file. Allowed values: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
-        "turbomole, mace, fennol, mace_mp, mace_off, mace_anicc, mace_ani"
+        "turbomole, orca, mace, fennol, mace_mp, mace_off, mace_anicc, mace_ani"
     )
 }
 
