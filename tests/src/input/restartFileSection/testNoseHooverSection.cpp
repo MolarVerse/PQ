@@ -27,11 +27,11 @@
 #include <string>
 #include <vector>
 
-#include "engine.hpp"
 #include "exceptions.hpp"
 #include "restartFileReader/restartFileSection.hpp"
 #include "testRestartFileSection.hpp"
 #include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
 
 TEST_F(TestNoseHooverSection, testKeyword)
 {
@@ -51,9 +51,11 @@ TEST_F(TestNoseHooverSection, testNumberOfArguments)
         if (i != 4)
         {
             auto line = std::vector<std::string>(i);
-            EXPECT_THROW(
+            EXPECT_THROW_MSG(
                 _section->process(line, *_engine, lineNumber),
-                exc::RstFileException
+                exc::RstFileException,
+                "Error not enough arguments in line 0 for a chi entry of the "
+                "nose hoover thermostat"
             );
         }
     }
@@ -92,9 +94,10 @@ TEST_F(TestNoseHooverSection, testProcessRejectsZeroIndex)
     size_t                   lineNumber = 0;
     std::vector<std::string> line       = {"chi", "0", "0.1", "0.4"};
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _section->process(line, *_engine, lineNumber),
-        exc::RstFileException
+        exc::RstFileException,
+        "Error in line 0 in restart file; chi index cannot be zero"
     );
 }
 
@@ -105,9 +108,10 @@ TEST_F(TestNoseHooverSection, testProcessRejectsIndexLargerThanChainLength)
     size_t                   lineNumber = 0;
     std::vector<std::string> line       = {"chi", "4", "0.1", "0.4"};
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _section->process(line, *_engine, lineNumber),
-        exc::RstFileException
+        exc::RstFileException,
+        "Chi index 4 is larger than the number of nose hoover chains 3"
     );
 }
 
@@ -120,8 +124,9 @@ TEST_F(TestNoseHooverSection, testProcessRejectsDuplicateIndex)
 
     _section->process(line, *_engine, lineNumber);
 
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         _section->process(line, *_engine, lineNumber),
-        exc::RstFileException
+        exc::RstFileException,
+        "Error in line 0 in restart file; chi or zeta entry already exists"
     );
 }
