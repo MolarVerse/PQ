@@ -55,16 +55,19 @@ namespace engine
      * for the XTB runner
      * @param dftbSettings The DftbSettings object containing the configuration
      * for the DFTB+ runner
+     * @param externalQMSettings The ExternalQMSettings object containing the
+     * configuration for any external QM programs that may be used by the runner
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the created QM
      * runner
      * @throws InputFileException if the method is not supported
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(
-        const QMSettings     &qmSettings,
-        const MaceSettings   &maceSettings,
-        const FennolSettings &fennolSettings,
-        const DftbSettings   &dftbSettings,
-        const XtbSettings    &xtbSettings
+        const QMSettings         &qmSettings,
+        const MaceSettings       &maceSettings,
+        const FennolSettings     &fennolSettings,
+        const DftbSettings       &dftbSettings,
+        const XtbSettings        &xtbSettings,
+        const ExternalQMSettings &externalQMSettings
     )
     {
         using enum QMMethod;
@@ -72,17 +75,27 @@ namespace engine
         switch (qmSettings.getQMMethod())
         {
             case DFTBPLUS:
-                return std::make_shared<QM::DFTBPlusRunner>(qmSettings);
+                return std::make_shared<QM::DFTBPlusRunner>(
+                    qmSettings,
+                    externalQMSettings
+                );
 
             case ASE_DFTBPLUS:
                 return createAseDftbRunner(qmSettings, dftbSettings);
 
             case ASE_XTB: return createAseXtbRunner(qmSettings, xtbSettings);
 
-            case PYSCF: return std::make_shared<QM::PySCFRunner>(qmSettings);
+            case PYSCF:
+                return std::make_shared<QM::PySCFRunner>(
+                    qmSettings,
+                    externalQMSettings
+                );
 
             case TURBOMOLE:
-                return std::make_shared<QM::TurbomoleRunner>(qmSettings);
+                return std::make_shared<QM::TurbomoleRunner>(
+                    qmSettings,
+                    externalQMSettings
+                );
 
             case MACE: return createAseMaceRunner(qmSettings, maceSettings);
 

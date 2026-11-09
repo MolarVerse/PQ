@@ -26,9 +26,9 @@
 #include <thread>
 
 #include "box.hpp"
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "qmSettings.hpp"
+#include "units.hpp"
 
 namespace QM
 {
@@ -50,25 +50,31 @@ namespace QM
      * timeout is set in the settings file. If the timeout is set to 0, the
      * function will return without throwing an exception.
      *
-     * @param stopToken
+     * @param stopToken The stop token used to check for cancellation of the QM
+     * calculation loop
+     * @param qmLoopTimeLimit The maximum allowed time for the QM calculation
+     * loop. If the loop exceeds this time, an exception will be thrown. A value
+     * of 0 indicates no time limit.
      *
      * @throw QMRunnerException if the timeout is exceeded
      */
-    void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
+    void QMRunner::throwAfterTimeout(
+        const std::stop_token &stopToken,
+        const TimeMs          &qmLoopTimeLimit
+    )
     {
-        const auto qmLoopTimeLimit = QMSettings::getQMLoopTimeLimit();
-
-        if (qmLoopTimeLimit <= 0)
+        if (qmLoopTimeLimit <= TimeMs::zero())
             return;
 
-        const auto timeout = static_cast<int>(::ceil(qmLoopTimeLimit));
-
-        for (int i = 0; i < timeout * S_TO_MS; ++i)
+        const auto sleepDuration = 1 * ms;
+        for (auto i = TimeMs::zero(); i < qmLoopTimeLimit; i += sleepDuration)
         {
             if (stopToken.stop_requested())
                 return;
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(sleepDuration.numerical_value_in(ms))
+            );
         }
 
         throw exc::QMRunnerException("QM calculation timeout");

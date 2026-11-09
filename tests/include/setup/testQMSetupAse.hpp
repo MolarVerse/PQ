@@ -55,7 +55,8 @@ class TestQMSetupAse : public ::testing::Test
             _settings.maceSettings,
             _settings.fennolSettings,
             _settings.dftbSettings,
-            _settings.xtbSettings
+            _settings.xtbSettings,
+            _settings.externalQMSettings
         );
         _engine->getEngineOutput().getLogOutput().setFilename(
             "default.log",
@@ -67,7 +68,6 @@ class TestQMSetupAse : public ::testing::Test
     {
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        QMSettings::setUseDispersionCorrection(false);
     }
 };
 

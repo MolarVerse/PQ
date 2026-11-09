@@ -45,7 +45,8 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
@@ -54,7 +55,8 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
@@ -63,7 +65,8 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     EXPECT_NE(dynamic_cast<QM::DFTBPlusRunner *>(dftb.get()), nullptr);
@@ -80,14 +83,16 @@ TEST(TestQMRunnerManager, eachCallCreatesANewRunner)
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
     const auto second = engine::QMRunnerManager::createQMRunner(
         settings.qmSettings,
         settings.maceSettings,
         settings.fennolSettings,
         settings.dftbSettings,
-        settings.xtbSettings
+        settings.xtbSettings,
+        settings.externalQMSettings
     );
 
     EXPECT_NE(first.get(), second.get());
@@ -103,7 +108,8 @@ TEST(TestQMRunnerManager, rejectsMissingQMProgram)
             settings.maceSettings,
             settings.fennolSettings,
             settings.dftbSettings,
-            settings.xtbSettings
+            settings.xtbSettings,
+            settings.externalQMSettings
         ),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
@@ -125,7 +131,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.maceSettings,
             settings.fennolSettings,
             settings.dftbSettings,
-            settings.xtbSettings
+            settings.xtbSettings,
+            settings.externalQMSettings
         ),
         exc::CompileTimeException,
         "The ASE DFTB+ QM method was requested but ASE was not enabled at "
@@ -139,7 +146,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.maceSettings,
             settings.fennolSettings,
             settings.dftbSettings,
-            settings.xtbSettings
+            settings.xtbSettings,
+            settings.externalQMSettings
         ),
         exc::CompileTimeException,
         "The ASE xTB QM method was requested but ASE was not enabled at "
@@ -153,7 +161,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.maceSettings,
             settings.fennolSettings,
             settings.dftbSettings,
-            settings.xtbSettings
+            settings.xtbSettings,
+            settings.externalQMSettings
         ),
         exc::CompileTimeException,
         "A MACE type QM method was requested but ASE was not enabled at "
@@ -167,7 +176,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.maceSettings,
             settings.fennolSettings,
             settings.dftbSettings,
-            settings.xtbSettings
+            settings.xtbSettings,
+            settings.externalQMSettings
         ),
         exc::CompileTimeException,
         "The ASE FeNNol QM method was requested but ASE was not enabled at "
