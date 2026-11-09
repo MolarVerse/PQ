@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef CONFIG__UNIT_TYPES_HPP
-#define CONFIG__UNIT_TYPES_HPP
+#ifndef UTILITIES__UNIT_TYPES_HPP
+#define UTILITIES__UNIT_TYPES_HPP
 
 /// NOTE FOR DEVELOPERS
 /// This header defines type aliases for commonly used unit types in the
@@ -88,4 +88,4 @@ static inline Quantity tempRatio(Temperature absTemp, Temperature refTemp)
 {
     return absTemp.quantity_from_zero() / refTemp.quantity_from_zero();
 }
-#endif   // CONFIG__UNIT_TYPES_HPP
+#endif   // UTILITIES__UNIT_TYPES_HPP

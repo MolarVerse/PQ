@@ -26,7 +26,6 @@
 #include <vector>
 
 #include "angleSection.hpp"
-#include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "testParameterFileSection.hpp"
