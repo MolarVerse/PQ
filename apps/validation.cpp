@@ -186,8 +186,8 @@ namespace
             !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = externalQMSettings.getQMScript();
-        const auto fullPathScript = externalQMSettings.getQMScriptFullPath();
+        const auto &script         = externalQMSettings.getQMScript();
+        const auto &fullPathScript = externalQMSettings.getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
         {
@@ -227,8 +227,8 @@ namespace
             !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = externalQMSettings.getQMScript();
-        const auto fullPathScript = externalQMSettings.getQMScriptFullPath();
+        const auto &script         = externalQMSettings.getQMScript();
+        const auto &fullPathScript = externalQMSettings.getQMScriptFullPath();
 
         // NOTE: these compile flags seem redundant with certain cmake
         // configurations, but are necessary for some build configurations (e.g.
