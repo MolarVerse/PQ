@@ -144,7 +144,7 @@ namespace
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 {
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box = makeBox();
     maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
@@ -160,7 +160,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesAngularMomentum)
 {
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box = makeBox();
     maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
@@ -181,8 +181,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesReachesTargetTemperature)
     {
         SCOPED_TRACE("target temperature " + std::to_string(target));
 
-        settings::ThermostatSettings::setTargetTemperature(toTemperature(target)
-        );
+        ThermostatSettings::setTargetTemperature(toTemperature(target));
 
         auto *box = makeBox();
         maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
@@ -203,7 +202,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesReachesTargetTemperature)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
 {
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     // different random numbers must never break the ordering
     // momentum -> angular momentum -> temperature
@@ -239,7 +238,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesGivesFiniteNonZeroVelocities)
 {
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *box = makeBox();
     maxwellBoltzmann::MaxwellBoltzmann().initializeVelocities(*box);
@@ -259,7 +258,7 @@ TEST(
     initializeVelocitiesLeavesPositionsAndMassesUntouched
 )
 {
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     auto *reference = makeBox();
     auto *box       = makeBox();
@@ -286,7 +285,7 @@ TEST(
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesIsReproducibleForFixedSeed)
 {
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
 
     std::vector<linalg::Vec3D> first;
     std::vector<linalg::Vec3D> second;
@@ -322,7 +321,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesForZeroTargetTemperatureThrows)
 {
     // a zero target temperature generates only zero velocities, which cannot
     // be rescaled to a (zero) target - the final temperature reset rejects it
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
 
     auto *box = makeBox();
 

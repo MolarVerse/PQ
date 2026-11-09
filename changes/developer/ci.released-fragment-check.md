@@ -1,0 +1,1 @@
+- Make the release changelog step fail when a fragment repeats an entry of an earlier release, so a fix that reached both `main` and `dev` is not listed twice.

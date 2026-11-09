@@ -14,7 +14,6 @@ The pages below go into detail on the tooling around the code:
     cmakeOptions
     staticChecks
     continuousIntegration
-    ciMetrics
     localBuildTimes
     codeStatistics
     branchesAndReleases

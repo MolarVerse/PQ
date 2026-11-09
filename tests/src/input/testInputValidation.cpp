@@ -66,21 +66,18 @@ class TestInputValidation : public ::testing::Test
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
-        settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
-        settings::ThermostatSettings::setTargetTemperature(toTemperature(0.0));
-        settings::ThermostatSettings::setStartTemperature(toTemperature(0.0));
-        settings::ThermostatSettings::setEndTemperature(toTemperature(0.0));
-        settings::ThermostatSettings::setTemperatureSet(false);
-        settings::ThermostatSettings::setStartTemperatureSet(false);
-        settings::ThermostatSettings::setEndTemperatureSet(false);
-        settings::ThermostatSettings::setTemperatureRampSteps(0);
-        settings::ThermostatSettings::setTemperatureRampFrequency(1);
-        settings::ThermostatSettings::setRelaxationTime(
+        ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+        ThermostatSettings::setStartTemperature(toTemperature(0.0));
+        ThermostatSettings::setEndTemperature(toTemperature(0.0));
+        ThermostatSettings::setTemperatureSet(false);
+        ThermostatSettings::setStartTemperatureSet(false);
+        ThermostatSettings::setEndTemperatureSet(false);
+        ThermostatSettings::setTemperatureRampSteps(0);
+        ThermostatSettings::setTemperatureRampFrequency(1);
+        ThermostatSettings::setRelaxationTime(
             defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
-        settings::ThermostatSettings::setFriction(
-            defaults::LANGEVIN_THERMOSTAT_FRICTION
-        );
+        ThermostatSettings::setFriction(defaults::LANGEVIN_THERMOSTAT_FRICTION);
         _settings.simulationBoxSettings.setInitializeVelocsByUser(
             InitVelocities::FALSE
         );
@@ -93,11 +90,9 @@ class TestInputValidation : public ::testing::Test
         );
         settings::TimingsSettings::setTimeStep(0.5 * fs);
 
-        QMSettings::setSlakosType(SlakosType::NONE);
-        QMSettings::setUseThirdOrderDftb(false);
-        QMSettings::setIsThirdOrderDftbSet(false);
-        QMSettings::setIsHubbardDerivsSet(false);
-        _settings.fennolSettings.setFennolModelPath("");
+        _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
+        _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+        _settings.fennolSettings.setFennolModelPathByUser("");
 
         _engine = std::make_unique<engine::OptEngine>(_settings);
         _reader =
@@ -220,7 +215,9 @@ TEST_F(TestInputValidation, requiresQMProgramForQMJob)
 
 TEST_F(TestInputValidation, requiresTemperatureForThermostat)
 {
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -231,7 +228,9 @@ TEST_F(TestInputValidation, requiresTemperatureForThermostat)
 
 TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
 {
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
     _setKeyword("temp");
     _setKeyword("end_temp");
 
@@ -246,17 +245,16 @@ TEST_F(TestInputValidation, rejectsBothThermostatTemperatures)
 TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    settings::ThermostatSettings::setEndTemperature(toTemperature(300.0));
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
+    ThermostatSettings::setEndTemperature(toTemperature(300.0));
     _setKeyword("end_temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+    EXPECT_EQ(ThermostatSettings::getTargetTemperature(), toTemperature(0.0));
     EXPECT_EQ(
-        settings::ThermostatSettings::getTargetTemperature(),
-        toTemperature(0.0)
-    );
-    EXPECT_EQ(
-        settings::ThermostatSettings::getActualTargetTemperature(),
+        ThermostatSettings::getActualTargetTemperature(),
         toTemperature(0.0)
     );
 }
@@ -278,11 +276,11 @@ TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
 TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(
+    _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::VELOCITY_RESCALING
     );
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
-    settings::ThermostatSettings::setRelaxationTime(0.0001 * ps);
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setRelaxationTime(0.0001 * ps);
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
@@ -295,11 +293,11 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
-    settings::ThermostatSettings::setFriction(
-        std::numeric_limits<double>::max()
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::LANGEVIN
     );
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setFriction(std::numeric_limits<double>::max());
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
@@ -313,9 +311,11 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
 TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::LANGEVIN);
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(300.0));
-    settings::ThermostatSettings::setStartTemperature(
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::LANGEVIN
+    );
+    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    ThermostatSettings::setStartTemperature(
         toTemperature(std::numeric_limits<double>::max())
     );
     _setKeyword("temp");
@@ -357,10 +357,10 @@ TEST_F(TestInputValidation, rejectsCellListForPureQM)
 
 TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
 {
-    settings::ThermostatSettings::setThermostatType(
+    _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
@@ -372,8 +372,10 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
 
 TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
 {
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    settings::ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
+    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
     _setKeyword("temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -382,8 +384,10 @@ TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
 TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    settings::ThermostatSettings::setTemperatureRampSteps(200);
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
+    ThermostatSettings::setTemperatureRampSteps(200);
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -398,9 +402,11 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
 TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    settings::ThermostatSettings::setTemperatureRampSteps(2);
-    settings::ThermostatSettings::setTemperatureRampFrequency(4);
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
+    ThermostatSettings::setTemperatureRampSteps(2);
+    ThermostatSettings::setTemperatureRampFrequency(4);
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -415,8 +421,10 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
 TEST_F(TestInputValidation, acceptsDefaultTemperatureRampLength)
 {
     _configureMDJob(JobType::MM_MD);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
-    settings::ThermostatSettings::setTemperatureRampFrequency(100);
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
+    ThermostatSettings::setTemperatureRampFrequency(100);
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -448,7 +456,7 @@ TEST_F(TestInputValidation, requiresSlaterKosterSetForAseDftbPlus)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::NONE);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -461,7 +469,7 @@ TEST_F(TestInputValidation, requiresPathForCustomSlaterKosterParameters)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -474,8 +482,8 @@ TEST_F(TestInputValidation, rejectsHubbardDerivativesWithoutThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setUseThirdOrderDftb(false);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
@@ -492,8 +500,8 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setUseThirdOrderDftb(true);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(true);
     _setKeyword("slakos_path");
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
@@ -501,13 +509,30 @@ TEST_F(TestInputValidation, acceptsHubbardDerivativesWithThirdOrder)
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
+TEST_F(TestInputValidation, rejectsCustomThirdOrderWithoutHubbardDerivatives)
+{
+    _configureMDJob(JobType::QM_MD);
+    _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(true);
+    _setKeyword("slakos_path");
+    _setKeyword("third_order");
+
+    ASSERT_THROW_MSG(
+        _reader->validateInputConfiguration(_settings),
+        exc::InputFileException,
+        "Third order DFTB requires the \"hubbard_derivs\" keyword unless the "
+        "3ob slakos are used. This setup is invalid."
+    );
+}
+
 #ifdef WITH_ASE
 TEST_F(TestInputValidation, rejectsExplicitlyDisabledThreeObThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(false);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
     _setKeyword("third_order");
     _setKeyword("hubbard_derivs");
 
@@ -523,8 +548,8 @@ TEST_F(TestInputValidation, acceptsThreeObDefaultThirdOrder)
 {
     _configureMDJob(JobType::QM_MD);
     _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    QMSettings::setUseThirdOrderDftb(false);
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
     _setKeyword("hubbard_derivs");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -613,7 +638,9 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _settings.qmSettings.setQMMethodByUser(QMMethod::MACE);
     _settings.maceSettings.setMaceModelByUser(MaceModel::CUSTOM);
     _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::BERENDSEN);
+    _settings.thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::BERENDSEN
+    );
     _setKeyword("mace_model_path");
     _setKeyword("pressure");
     _setKeyword("temp");

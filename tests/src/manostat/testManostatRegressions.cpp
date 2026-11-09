@@ -73,9 +73,7 @@ namespace
                 0.03 * per_bar
             );
             settings::TimingsSettings::setTimeStep(1.0 * fs);
-            settings::ThermostatSettings::setActualTargetTemperature(
-                toTemperature(0.0)
-            );
+            ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
             settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
             _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
             _data.setVirial(linalg::tensor3D{0.0});
@@ -378,7 +376,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     const auto     temperature{toTemperature(300.0)};
     constexpr auto tau             = 1e8;
     constexpr auto compressibility = 4.591e-5;
-    settings::ThermostatSettings::setActualTargetTemperature(temperature);
+    ThermostatSettings::setActualTargetTemperature(temperature);
 
     ManostatSettings semiSettings;
     semiSettings.setTargetPressureByUser(0.0 * bar);

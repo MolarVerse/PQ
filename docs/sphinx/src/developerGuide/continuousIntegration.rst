@@ -7,7 +7,7 @@ Continuous Integration
 Every pull request and every push to the long-lived branches is checked by GitHub Actions. The workflow files are in
 ``.github/workflows/``. This page explains what runs when, how to run the same checks on your own machine, why a job
 can be slow or red for reasons that have nothing to do with your change, and what to keep in mind when you edit a
-workflow. The numbers behind the timing statements come from the :doc:`CI metrics <ciMetrics>`.
+workflow.
 
 ***********************
 How the CI is organised
@@ -97,17 +97,13 @@ Workflows
     * - Clang Build
       - ``clang_build.yml``
       - pull requests that touch C++ or build files
-      - Not a gate. Builds and tests the project with clang 20 and records the build analysis for the
-        :ref:`CI metrics <ciMetricsClangJob>`. Pull requests use ccache; a push to ``dev`` compiles everything and
-        refreshes the cache.
+      - Not a gate. Builds and tests the project with clang 20 to keep it building with clang. Pull requests use
+        ccache and a unity build (16 files per compiler call, about 40 % faster when a header changes); a push to
+        ``dev`` compiles every file on its own and refreshes the cache.
     * - Docs
       - ``jekyll-gh-pages.yml``
       - pull requests to ``main`` and ``dev`` that touch ``docs``, ``include`` or ``src``; pushes to ``main``
       - Builds the Sphinx and Doxygen documentation; a push to ``main`` also deploys the website.
-    * - CI Metrics
-      - ``ci_metrics.yml``
-      - daily at 04:30 UTC, manual
-      - Collects the timing of all CI runs, see :doc:`ciMetrics`.
     * - Sync dev → NEXT
       - ``sync-dev-into-next.yml``
       - pushes to ``dev``, daily at 03:00 UTC, manual
@@ -249,14 +245,21 @@ A job that takes twice as long as usual is rarely a problem in your change. Thes
       Release job went from about 2.5 to 9 minutes for a pull request that changed ``exceptionTypes.hpp``. The same is
       true for your local build, see :doc:`localBuildTimes`.
     - **The runner CPU.** GitHub gives the same job runners of different CPU generations. The same fixed compile took
-      4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763. The CI metrics record the CPU model of the
-      runner.
+      4.8 to 5.1 s on an AMD EPYC 9V45 and 7.3 to 8.7 s on an EPYC 7763.
     - **A stalled or slow apt install.** Installing GCC or clang normally takes 6 to 20 s, but the Azure mirror
       sometimes stalls or crawls: the step took 13 to 34 minutes on about one run in ten (#1069). The ``setup-gcc``
       action, the clang build and the DevOps check therefore install through ``awalsh128/cache-apt-pkgs-action``, which
       caches the ``.deb`` files per package list: a hit downloads nothing, only a miss (a changed package list, or
       the first run in a branch scope) goes to the mirror. Bump ``version`` there to drop the cached packages. If a job
       still sits in an install step, cancel and re-run it.
+    - **The clang job: ccache and unity.** Pull requests build with ccache (the job took 8 to 17 minutes, depending on the
+      CPU of the runner, #1045). A push to ``dev`` ignores the cache for reading (``CCACHE_RECACHE``) and writes it. The
+      build passes ``-Xclang -fno-pch-timestamp``: without it clang puts the date of the precompiled header into the
+      ``.pch`` file and every compile is a ccache miss. Pull requests also build in unity batches of 16 source files
+      (``CMAKE_UNITY_BUILD``): most of the compile time is mp-units template instantiation, which a batch does once
+      instead of once per file. A clean build on 4 cores took 451 to 487 s, with batches of 8 324 s and with batches of
+      16 283 s, with the same test results (#1088). A unity build can hide a missing ``#include``, so a push to ``dev``
+      stays a normal build, and the GCC jobs, which gate, are not unity builds.
     - **The Eigen source** is cached under a key that hashes ``.cmake/eigen.cmake`` and passed to CMake with
       ``-DFETCHCONTENT_SOURCE_DIR_EIGEN``, so that no job clones it again.
     - **The conda environment** of the integration tests is cached under a key that hashes ``ci_build.yml``. **Every
@@ -287,5 +290,4 @@ Adding or changing a workflow
       performance bot are installed.
     - A push made with the default ``GITHUB_TOKEN`` does not start other workflows. A branch that has to trigger CI
       needs a token of a GitHub App.
-    - Prefer the shared actions in ``.github/actions``: ``setup-gcc`` installs the pinned GCC once for all workflows and
-      ``upload-build-timings`` records the build analysis for the :doc:`CI metrics <ciMetrics>`.
+    - Prefer the shared actions in ``.github/actions``: ``setup-gcc`` installs the pinned GCC once for all workflows.

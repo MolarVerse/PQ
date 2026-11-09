@@ -1,1 +1,0 @@
-- Skip the "Check PR Has Linked Issue" job for release pull requests (release/* branches): the release workflow creates them with the body "Release vX.Y.Z." and they close no issue, so the check failed on every release.

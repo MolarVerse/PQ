@@ -125,7 +125,7 @@ namespace resetKinetics
     )
     {
         const auto targetTemp =
-            settings::ThermostatSettings::getActualTargetTemperature();
+            ThermostatSettings::getActualTargetTemperature();
 
         if (utilities::isZero(temperature))
         {

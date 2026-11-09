@@ -135,7 +135,7 @@ namespace input
             )
         );
         _parsers.push_back(
-            std::make_unique<ThermostatInputParser>(settings.referenceSettings)
+            std::make_unique<ThermostatInputParser>(settings.thermostatSettings)
         );
         _parsers.push_back(std::make_unique<TimingsInputParser>());
         _parsers.push_back(std::make_unique<VirialInputParser>());
@@ -157,7 +157,9 @@ namespace input
                 settings.referenceSettings,
                 settings.qmSettings,
                 settings.maceSettings,
-                settings.fennolSettings
+                settings.fennolSettings,
+                settings.dftbSettings,
+                settings.xtbSettings
             )
         );
 

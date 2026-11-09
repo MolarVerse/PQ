@@ -1,1 +1,0 @@
-- Fix garbage in the momentum columns of the first energy and momentum output line: the PhysicalData that holds the averages did not initialise its momenta, angular momenta, virial and stress tensors, so the first line showed whatever the memory held (sometimes inf).
