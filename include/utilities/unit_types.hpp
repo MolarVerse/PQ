@@ -61,7 +61,7 @@ using Temperature = mstd::units::quantity_point<
 using TemperatureDiff =
     mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
 
-using EnergyPerMol = mstd::quantity<mstd::units::kcal_per_mol>;
+using Energy = mstd::quantity<mstd::units::kcal_per_mol>;
 
 using Distance = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
 

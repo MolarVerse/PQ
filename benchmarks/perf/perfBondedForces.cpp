@@ -97,7 +97,11 @@ int main()
         DihedralId{0}
     );
     dihedral.setParams(
-        DihedralParams{.forceConstant = 3.0, .frequency = 3, .phaseShift = M_PI}
+        DihedralParams{
+            .forceConstant = 3.0 * kcal_per_mol,
+            .frequency     = 3,
+            .phaseShift    = M_PI * rad
+        }
     );
     dihedral.setIsLinker(false);
 

@@ -182,9 +182,9 @@ struct BondParams
 
 struct DihedralParams
 {
-    double forceConstant;
+    Energy forceConstant;   // Energy unit for dihedral force constant
     double frequency;
-    double phaseShift;
+    Angle  phaseShift;
 
     [[nodiscard]]
     bool operator==(const DihedralParams &other) const;

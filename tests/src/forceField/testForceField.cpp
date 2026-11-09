@@ -137,9 +137,9 @@ TEST_F(TestForceField, findDihedralTypeById)
     auto dihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 1.0,
-            .phaseShift    = 1.0
+            .phaseShift    = 1.0 * rad
         }
     );
 
@@ -173,9 +173,9 @@ TEST_F(TestForceField, findImproperTypeById)
     auto improperDihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 1.0,
-            .phaseShift    = 1.0
+            .phaseShift    = 1.0 * rad
         }
     );
 
@@ -308,17 +308,17 @@ TEST_F(TestForceField, calculateBondedInteractions)
     );
 
     dihedralForceField.setParams({DihedralParams{
-        .forceConstant = 3.0,
+        .forceConstant = 3.0 * kcal_per_mol / rad / rad,
         .frequency     = 3,
-        .phaseShift    = 180.0 * M_PI / 180.0
+        .phaseShift    = 180.0 * M_PI / 180.0 * rad
     }});
 
     dihedralForceField.setIsLinker(true);
 
     improperDihedralForceField.setParams({DihedralParams{
-        .forceConstant = 3.0,
+        .forceConstant = 3.0 * kcal_per_mol / rad / rad,
         .frequency     = 3,
-        .phaseShift    = 180.0 * M_PI / 180.0
+        .phaseShift    = 180.0 * M_PI / 180.0 * rad
     }});
     improperDihedralForceField.setIsLinker(false);
 
