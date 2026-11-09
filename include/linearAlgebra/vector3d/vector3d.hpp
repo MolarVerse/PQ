@@ -131,9 +131,9 @@ namespace linalg
      *********************/
 
     template <typename U, typename V>
-    requires detail::BinaryOperands<U, V>
+    requires detail::DivideOperands<U, V>
     constexpr auto operator/(const U &lhs, const V &rhs) -> detail::
-        BinaryResultIf_t<detail::BinaryOperands<U, V>, std::divides<>, U, V>;
+        BinaryResultIf_t<detail::DivideOperands<U, V>, std::divides<>, U, V>;
 
     /*****************
      * fabs function *
@@ -238,6 +238,9 @@ namespace linalg
     template <pq::ArithmeticVector3D U>
     auto isFinite(const U &vec) -> bool;
 
+    template <pq::QuantityLikeVector3D U>
+    auto isFinite(const U &vec) -> bool;
+
     /***************
      * dot product *
      ***************/
@@ -272,10 +275,26 @@ namespace linalg
      * ostream << *
      **************/
 
-    template <pq::ArithmeticVector3D U>
-    std::ostream &operator<<(std::ostream &ostream, const U &vec);
+    template <typename T>
+    std::ostream &operator<<(std::ostream &ostream, const Vector3D<T> &vec);
 
 }   // namespace linalg
+
+// implement std::format for Vector3D objects to enable formatted output using
+// std::format in the ostream operator.
+// NOLINTBEGIN(cert-dcl58-cpp)
+template <typename T>
+struct std::formatter<linalg::Vector3D<T>> : std::formatter<std::string>
+{
+    auto format(const linalg::Vector3D<T> &vec, std::format_context &ctx) const
+    {
+        return std::formatter<std::string>::format(
+            std::format("{} {} {}", vec[0], vec[1], vec[2]),
+            ctx
+        );
+    }
+};
+// NOLINTEND(cert-dcl58-cpp)
 
 #ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_TPP
 #include "vector3d.tpp"   // IWYU pragma: export

@@ -50,9 +50,9 @@ namespace QM
         const QMSettings   &settings,
         const MaceSettings &maceSettings
     )
-        : AseQMRunner(settings), _maceSettings(maceSettings)
+        : AseQMRunner(settings)
     {
-        const auto enableCueq = _maceSettings->getMaceMode() == MaceMode::FAST;
+        const auto enableCueq = maceSettings.getMaceMode() == MaceMode::FAST;
 
         try
         {
@@ -61,11 +61,11 @@ namespace QM
 
             const pybind11::dict calculatorArgs;
 
-            const auto modelType = _maceSettings->getMaceModelTypeName();
-            auto       model     = _maceSettings->getMaceModelName();
+            const auto modelType = maceSettings.getMaceModelTypeName();
+            auto       model     = maceSettings.getMaceModelName();
 
-            if (!_maceSettings->getMaceModelPath().empty())
-                model = _maceSettings->getMaceModelPath();
+            if (!maceSettings.getMaceModelPath().empty())
+                model = maceSettings.getMaceModelPath();
 
             calculatorArgs["model"] = model.c_str();
             calculatorArgs["dispersion"] =

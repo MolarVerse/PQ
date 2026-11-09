@@ -40,7 +40,11 @@ TEST_F(TestInputFileReader, parseQMMethod)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_prog"));
@@ -140,7 +144,11 @@ TEST_F(TestInputFileReader, parseQMScript)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_script"));
@@ -156,7 +164,11 @@ TEST_F(TestInputFileReader, parseQMScriptFullPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_script_full_path"));
@@ -172,7 +184,11 @@ TEST_F(TestInputFileReader, parseQMLoopTimeLimit)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_loop_time_limit"));
@@ -195,7 +211,11 @@ TEST_F(TestInputFileReader, parseDispersion)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("dispersion"));
@@ -248,7 +268,11 @@ TEST_F(TestInputFileReader, parseRemoveNetForce)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("remove_net_force"));
@@ -302,7 +326,11 @@ TEST_F(TestInputFileReader, parseMaceQMMethod)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
 
     parser.parseMaceQMMethod("mace");
@@ -349,7 +377,11 @@ TEST_F(TestInputFileReader, parseMaceModel)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_model"));
@@ -434,7 +466,11 @@ TEST_F(TestInputFileReader, parseMaceMode)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_mode"));
@@ -465,7 +501,11 @@ TEST_F(TestInputFileReader, parseMaceModelPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mace_model_path"));
@@ -486,7 +526,11 @@ TEST_F(TestInputFileReader, parseSlakosType)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
@@ -494,7 +538,8 @@ TEST_F(TestInputFileReader, parseSlakosType)
 
 #ifdef WITH_ASE
     parseFunc({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    EXPECT_EQ(settings.dftbSettings.getSlakosType(), SlakosType::THREEOB);
+    settings.dftbSettings.finalize(settings.referenceSettings);
     EXPECT_TRUE(settings.referenceSettings.getReferenceFileNames().contains(
         ReferenceFiles::THREEOB_FILE
     ));
@@ -502,7 +547,8 @@ TEST_F(TestInputFileReader, parseSlakosType)
     _clearParser(parser);
 
     parseFunc({"slakos", "=", "matsci"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+    EXPECT_EQ(settings.dftbSettings.getSlakosType(), SlakosType::MATSCI);
+    settings.dftbSettings.finalize(settings.referenceSettings);
     EXPECT_TRUE(settings.referenceSettings.getReferenceFileNames().contains(
         ReferenceFiles::MATSCI_FILE
     ));
@@ -529,7 +575,7 @@ TEST_F(TestInputFileReader, parseSlakosType)
 #endif
 
     parseFunc({"slakos", "=", "custom"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+    EXPECT_EQ(settings.dftbSettings.getSlakosType(), SlakosType::CUSTOM);
 
     _clearParser(parser);
 
@@ -551,7 +597,11 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
@@ -561,8 +611,8 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
     slakosParseFunc({"slakos", "=", "3ob"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_EQ(settings.dftbSettings.getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(settings.dftbSettings.useThirdOrderDftb());
 
     _clearParser(parser);
 
@@ -570,7 +620,11 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     auto funcMap2 = parser2.getKeywordFuncMap();
     ASSERT_TRUE(funcMap2.contains("slakos"));
@@ -580,8 +634,8 @@ TEST_F(TestInputFileReader, parseSlakosTypeThirdOrder)
 
     slakosParseFunc2({"slakos", "=", "3ob"}, 0);
     thirdOrderParseFunc2({"third_order", "=", "off"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_EQ(settings.dftbSettings.getSlakosType(), SlakosType::THREEOB);
+    EXPECT_FALSE(settings.dftbSettings.useThirdOrderDftb());
 }
 #endif
 
@@ -594,7 +648,11 @@ TEST_F(TestInputFileReader, parseSlakosPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("slakos"));
@@ -604,52 +662,54 @@ TEST_F(TestInputFileReader, parseSlakosPath)
 
     slakosParseFunc({"slakos", "=", "custom"}, 0);
     slakosPathParseFunc({"slakos_path", "=", "/path/to/slakos"}, 0);
-    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
+    EXPECT_EQ(settings.dftbSettings.getSlakosPath(), "/path/to/slakos");
 }
 
 TEST_F(TestInputFileReader, parseThirdOrder)
 {
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
-
     Settings settings;
-    auto     parser = input::QMInputParser(
+    EXPECT_FALSE(settings.dftbSettings.useThirdOrderDftb());
+    auto parser = input::QMInputParser(
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("third_order"));
     const auto& thirdOrderParseFunc = funcMap.at("third_order");
 
     thirdOrderParseFunc({"third_order", "=", "on"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings.dftbSettings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "off"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings.dftbSettings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "true"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings.dftbSettings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "false"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
+    EXPECT_FALSE(settings.dftbSettings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "yes"}, 0);
-    EXPECT_TRUE(QMSettings::useThirdOrderDftb());
+    EXPECT_TRUE(settings.dftbSettings.useThirdOrderDftb());
 
     _clearParser(parser);
 
     thirdOrderParseFunc({"third_order", "=", "no"}, 0);
-    EXPECT_FALSE(QMSettings::useThirdOrderDftb());
-    EXPECT_TRUE(QMSettings::isThirdOrderDftbSet());
+    EXPECT_FALSE(settings.dftbSettings.useThirdOrderDftb());
 
     _clearParser(parser);
 
@@ -668,7 +728,11 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hubbard_derivs"));
@@ -676,10 +740,10 @@ TEST_F(TestInputFileReader, parseHubbardDerivs)
 
     hubbardDerivsParseFunc({"hubbard_derivs", "=", "H:1.0,He:2.0"}, 0);
 
-    const auto hubbardDerivs = QMSettings::getHubbardDerivs();
-    EXPECT_EQ(hubbardDerivs.size(), 2);
-    EXPECT_EQ(hubbardDerivs.at("H"), 1.0);
-    EXPECT_EQ(hubbardDerivs.at("He"), 2.0);
+    const auto hubbardDerivs = settings.dftbSettings.getHubbardDerivs();
+    EXPECT_EQ(hubbardDerivs->size(), 2);
+    EXPECT_EQ(hubbardDerivs->at("H"), 1.0);
+    EXPECT_EQ(hubbardDerivs->at("He"), 2.0);
 
     _clearParser(parser);
 
@@ -721,24 +785,28 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("xtb_method"));
     const auto& xtbMethodParseFunc = funcMap.at("xtb_method");
 
     xtbMethodParseFunc({"xtb_method", "=", "Gfn1-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+    EXPECT_EQ(settings.xtbSettings.getXtbMethod(), XtbMethod::GFN1);
 
     _clearParser(parser);
 
     xtbMethodParseFunc({"xtb_method", "=", "gfN2-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+    EXPECT_EQ(settings.xtbSettings.getXtbMethod(), XtbMethod::GFN2);
 
     _clearParser(parser);
 
     xtbMethodParseFunc({"xtb_method", "=", "iPEa1-XTb"}, 0);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+    EXPECT_EQ(settings.xtbSettings.getXtbMethod(), XtbMethod::IPEA1);
 
     _clearParser(parser);
 
@@ -748,7 +816,7 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         "Invalid value \"notAnXtbMethod\" for key \"xtb_method\" at line 0 in "
         "input file. Allowed values: gfn1, gfn2, ipea1, gfn1-xtb, gfn2-xtb, "
         "ipea1-xtb, gfn1_xtb, gfn2_xtb, ipea1_xtb"
-    )
+    );
 }
 
 TEST_F(TestInputFileReader, parseFennolModelPath)
@@ -761,18 +829,25 @@ TEST_F(TestInputFileReader, parseFennolModelPath)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("fennol_model_path"));
     const auto& fennolModelPathParseFunc = funcMap.at("fennol_model_path");
 
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "");
+    EXPECT_EQ(settings.fennolSettings.getFennolModelPath(), "");
     fennolModelPathParseFunc(
         {"fennol_model_path", "=", "/pAth/to/fennol_model.fnx"},
         0
     );
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/pAth/to/fennol_model.fnx");
+    EXPECT_EQ(
+        settings.fennolSettings.getFennolModelPath(),
+        "/pAth/to/fennol_model.fnx"
+    );
 }
 
 TEST_F(TestInputFileReader, parseGPUPreprocessing)
@@ -785,20 +860,24 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
         true,
         settings.referenceSettings,
         settings.qmSettings,
-        settings.maceSettings
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings
+
     );
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("gpu_preprocessing"));
     const auto& gpuPreprocessingParseFunc = funcMap.at("gpu_preprocessing");
 
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings.fennolSettings.useGPUPreprocessing(), true);
     gpuPreprocessingParseFunc({"GPU-Preprocessing", "=", "false"}, 0);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(settings.fennolSettings.useGPUPreprocessing(), false);
 
     _clearParser(parser);
 
     gpuPreprocessingParseFunc({"gpu_preprocessing", "=", "on"}, 0);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    EXPECT_EQ(settings.fennolSettings.useGPUPreprocessing(), true);
 
     _clearParser(parser);
 
@@ -813,10 +892,10 @@ TEST_F(TestInputFileReader, parseGPUPreprocessing)
 TEST_F(TestInputFileReader, processFennolKeywords)
 {
     _inputFileReader->process({"fennol-model-path", "=", "model.fnx"});
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "model.fnx");
+    EXPECT_EQ(_settings.fennolSettings.getFennolModelPath(), "model.fnx");
     EXPECT_EQ(_inputFileReader->getKeywordCount("fennol_model_path"), 1);
 
     _inputFileReader->process({"GPU-Preprocessing", "=", "off"});
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
+    EXPECT_EQ(_settings.fennolSettings.useGPUPreprocessing(), false);
     EXPECT_EQ(_inputFileReader->getKeywordCount("gpu_preprocessing"), 1);
 }

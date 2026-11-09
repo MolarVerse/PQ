@@ -45,23 +45,24 @@ TEST(QMSettingsTest, SetMaceModelTypeTest)
 
 TEST(QMSettingsTest, SetSlakosTypeTest)
 {
+    DftbSettings dftbSettings;
 #ifdef WITH_ASE
-    QMSettings::setSlakosType(SlakosType::NONE);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::NONE);
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::NONE);
 
-    QMSettings::setSlakosType(SlakosType::MATSCI);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::MATSCI);
+    dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::MATSCI);
 
-    QMSettings::setSlakosType(SlakosType::THREEOB);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::THREEOB);
+    dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::THREEOB);
 
 #endif
 
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::CUSTOM);
+    dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::CUSTOM);
 
-    QMSettings::setSlakosType(SlakosType::NONE);
-    EXPECT_EQ(QMSettings::getSlakosType(), SlakosType::NONE);
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
+    EXPECT_EQ(dftbSettings.getSlakosType(), SlakosType::NONE);
 }
 
 #ifdef WITH_ASE
@@ -69,11 +70,13 @@ TEST(QMSettingsTest, ResolvesBundledSlakos)
 {
     const auto *expectedRoot = std::getenv("PQ_TEST_EXPECTED_SLAKOS_ROOT");
 
+    DftbSettings dftbSettings;
+
     for (const auto slakos : {SlakosType::THREEOB, SlakosType::MATSCI})
     {
-        QMSettings::setSlakosType(slakos);
+        dftbSettings.setSlakosTypeByUser(slakos);
         const auto path =
-            std::filesystem::weakly_canonical(QMSettings::getSlakosPath());
+            std::filesystem::weakly_canonical(dftbSettings.getSlakosPath());
 
         EXPECT_TRUE(std::filesystem::is_directory(path));
         if (expectedRoot != nullptr)
@@ -93,48 +96,50 @@ TEST(QMSettingsTest, ResolvesBundledSlakos)
 #ifndef WITH_ASE
 TEST(QMSettingsTest, SetBuiltInSlakosTypeRequiresAse)
 {
+    DftbSettings dftbSettings;
     ASSERT_THROW_MSG(
-        QMSettings::setSlakosType(SlakosType::THREEOB),
+        dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB),
         exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 
     ASSERT_THROW_MSG(
-        QMSettings::setSlakosType(SlakosType::MATSCI),
+        dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI),
         exc::InputFileException,
         "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
         "-DBUILD_WITH_ASE=On"
     );
 
-    QMSettings::setSlakosType(SlakosType::NONE);
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
 }
 #endif
 
 TEST(QMSettingsTest, SetSlakosPathTest)
 {
-    QMSettings::setSlakosType(SlakosType::NONE);
+    DftbSettings dftbSettings;
+    dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
     ASSERT_THROW_MSG(
-        QMSettings::setSlakosPath("/path/to/slakos"),
+        dftbSettings.setSlakosPathByUser("/path/to/slakos"),
         exc::UserInputException,
         "Slakos path cannot be set without a slakos type"
     );
 
-    QMSettings::setSlakosType(SlakosType::CUSTOM);
-    QMSettings::setSlakosPath("/path/to/slakos");
-    EXPECT_EQ(QMSettings::getSlakosPath(), "/path/to/slakos");
+    dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    dftbSettings.setSlakosPathByUser("/path/to/slakos");
+    EXPECT_EQ(dftbSettings.getSlakosPath(), "/path/to/slakos");
 
 #ifdef WITH_ASE
-    QMSettings::setSlakosType(SlakosType::THREEOB);
+    dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
     ASSERT_THROW_MSG(
-        QMSettings::setSlakosPath("/path/to/slakos"),
+        dftbSettings.setSlakosPathByUser("/path/to/slakos"),
         exc::UserInputException,
         "Slakos path cannot be set for slakos type: 3ob"
     );
 
-    QMSettings::setSlakosType(SlakosType::MATSCI);
+    dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
     ASSERT_THROW_MSG(
-        QMSettings::setSlakosPath("/path/to/slakos"),
+        dftbSettings.setSlakosPathByUser("/path/to/slakos"),
         exc::UserInputException,
         "Slakos path cannot be set for slakos type: matsci"
     );
@@ -143,14 +148,15 @@ TEST(QMSettingsTest, SetSlakosPathTest)
 
 TEST(QMSettingsTest, SetXtbMethodTest)
 {
-    QMSettings::setXtbMethod(XtbMethod::GFN1);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN1);
+    XtbSettings xtbSettings;
+    xtbSettings.setXtbMethodByUser(XtbMethod::GFN1);
+    EXPECT_EQ(xtbSettings.getXtbMethod(), XtbMethod::GFN1);
 
-    QMSettings::setXtbMethod(XtbMethod::GFN2);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::GFN2);
+    xtbSettings.setXtbMethodByUser(XtbMethod::GFN2);
+    EXPECT_EQ(xtbSettings.getXtbMethod(), XtbMethod::GFN2);
 
-    QMSettings::setXtbMethod(XtbMethod::IPEA1);
-    EXPECT_EQ(QMSettings::getXtbMethod(), XtbMethod::IPEA1);
+    xtbSettings.setXtbMethodByUser(XtbMethod::IPEA1);
+    EXPECT_EQ(xtbSettings.getXtbMethod(), XtbMethod::IPEA1);
 }
 
 TEST(QMSettingsTest, ReturnQMMethodTest)
@@ -217,16 +223,18 @@ TEST(QMSettingsTest, ReturnXtbMethodTest)
 
 TEST(QMSettingsTest, SetFennolModelPath)
 {
-    QMSettings::setFennolModelPath("/paTh/to/fennol_model.fnx");
-    EXPECT_EQ(QMSettings::getFennolModelPath(), "/paTh/to/fennol_model.fnx");
+    FennolSettings fennolSettings;
+    fennolSettings.setFennolModelPathByUser("/paTh/to/fennol_model.fnx");
+    EXPECT_EQ(fennolSettings.getFennolModelPath(), "/paTh/to/fennol_model.fnx");
 }
 
 TEST(QMSettingsTest, SetGPUPreprocessing)
 {
-    QMSettings::setUseGPUPreprocessing(false);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), false);
-    QMSettings::setUseGPUPreprocessing(true);
-    EXPECT_EQ(QMSettings::useGPUPreprocessing(), true);
+    FennolSettings fennolSettings;
+    fennolSettings.setUseGPUPreprocessingByUser(false);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), false);
+    fennolSettings.setUseGPUPreprocessingByUser(true);
+    EXPECT_EQ(fennolSettings.useGPUPreprocessing(), true);
 }
 
 TEST(QMSettingsTest, MaceNamesForMaceCalculatorsTest)

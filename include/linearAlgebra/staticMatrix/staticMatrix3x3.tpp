@@ -24,6 +24,7 @@
 #define LINEAR_ALGEBRA__STATIC_MATRIX__STATIC_MATRIX3X3_TPP
 
 #include <concepts>
+#include <format>
 
 #include "staticMatrix3x3.hpp"
 
@@ -42,9 +43,9 @@ namespace linalg
         const StaticMatrix3x3<T> &mat
     )
     {
-        return ostream << "[[" << mat[0] << "]\n"
-                       << " [" << mat[1] << "]\n"
-                       << " [" << mat[2] << "]]";
+        return ostream << "[[" << std::format("{}", mat[0]) << "]\n"
+                       << " [" << std::format("{}", mat[1]) << "]\n"
+                       << " [" << std::format("{}", mat[2]) << "]]";
     }
 
     /****************************
@@ -520,7 +521,15 @@ namespace linalg
 
         result = transpose(result);
 
-        return result / det(mat);
+        const auto determinant = det(mat);
+
+        // element-wise and cast back to T: for quantities T / T may carry a
+        // different (derived) quantity spec than T itself
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j)
+                result[i][j] = static_cast<T>(result[i][j] / determinant);
+
+        return result;
     }
 
     /**
@@ -622,8 +631,22 @@ namespace linalg
     {
         auto result = StaticMatrix3x3<T>(0.0);
 
-        auto mat2 = mat * mat;
-        auto mat3 = mat2 * mat;
+        // products of quantities carry a derived quantity spec (e.g.
+        // compressibility * pressure), so bring every power of mat back to
+        // the element type T to be able to add them up
+        const auto toElementType = [](const auto &matrix)
+        {
+            StaticMatrix3x3<T> converted;
+
+            for (size_t i = 0; i < 3; ++i)
+                for (size_t j = 0; j < 3; ++j)
+                    converted[i][j] = static_cast<T>(matrix[i][j]);
+
+            return converted;
+        };
+
+        const auto mat2 = toElementType(mat * mat);
+        const auto mat3 = toElementType(mat2 * mat);
 
         const auto padeMat  = mat / 2.0;
         const auto padeMat2 = mat2 / 10.0;

@@ -84,7 +84,7 @@ namespace molsys
         linalg::Vec3D calcShiftVector(const linalg::Vec3D &vec) const override;
 
         void applyPBC(linalg::Vec3D &position) const override;
-        void scaleBox(const linalg::tensor3D &scalingTensor) override;
+        void scaleBox(const QuantityTensor3D &scalingTensor) override;
 
         [[nodiscard]] double getMinimalBoxDimension() const override;
         [[nodiscard]] double getVolume() const override;

@@ -48,15 +48,21 @@ namespace setup
     class QMSetup
     {
        private:
-        engine::QMCapableEngine     &_qmCapableEngine;
-        mstd::ConstRef<QMSettings>   _qmSettings;
-        mstd::ConstRef<MaceSettings> _maceSettings;
+        engine::QMCapableEngine       &_qmCapableEngine;
+        mstd::ConstRef<QMSettings>     _qmSettings;
+        mstd::ConstRef<MaceSettings>   _maceSettings;
+        mstd::ConstRef<FennolSettings> _fennolSettings;
+        mstd::ConstRef<DftbSettings>   _dftbSettings;
+        mstd::ConstRef<XtbSettings>    _xtbSettings;
 
        public:
         explicit QMSetup(
             engine::QMCapableEngine &qmCapableEngine,
             const QMSettings        &qmSettings,
-            const MaceSettings      &maceSettings
+            const MaceSettings      &maceSettings,
+            const FennolSettings    &fennolSettings,
+            const DftbSettings      &dftbSettings,
+            const XtbSettings       &xtbSettings
         );
 
         void        setup(ReferenceSettings &references);
@@ -67,7 +73,6 @@ namespace setup
 
        private:
         void _setupQMMethodAseXtb(ReferenceSettings &references) const;
-        void _setupQMMethodAseDftbPlus() const;
 
         friend struct ::TestQMSetupUtils;
     };

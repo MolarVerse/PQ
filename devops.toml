@@ -58,7 +58,13 @@ type_to_name = { "molsys::SimulationBox" = [
 ] }
 
 [cpp.ast_check_config.classMemberOrder]
-excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
+excluded_macros = [
+    "MSTD_ENUM",
+    "MSTD_ENUM_BITFLAG",
+    "TEST",
+    "TEST_F",
+    "MSTD_RAII_NO_MOVE",
+]
 
 [cpp.ast_check_config.includeIwyuPragmaOnly]
 allowed_pragmas = ["export", "keep"]

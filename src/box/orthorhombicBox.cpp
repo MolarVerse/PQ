@@ -27,6 +27,7 @@
 #include "constants.hpp"
 #include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -128,9 +129,12 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void OrthorhombicBox::scaleBox(const linalg::tensor3D &scalingTensor)
+    void OrthorhombicBox::scaleBox(const QuantityTensor3D &scalingTensor)
     {
-        _set_boxDimensions(get_boxDimensions() * diagonal(scalingTensor));
+        _set_boxDimensions(
+            get_boxDimensions() *
+            diagonal(scalingTensor).numerical_value_in(one)
+        );
     }
 
     /**

@@ -1,1 +1,0 @@
-- Include the pybind11 header in the ASE xTB, MACE and FeNNol runner sources instead of relying on the precompiled header, so lint no longer reports errors when a pull request changes them.

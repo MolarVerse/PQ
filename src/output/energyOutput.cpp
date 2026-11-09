@@ -145,7 +145,7 @@ namespace out
             }
         }
 
-        if (settings::ThermostatSettings::getThermostatType() ==
+        if (settings.thermostatSettings.getThermostatType() ==
             ThermostatType::NOSE_HOOVER)
         {
             _getFilePointer() << std::format(

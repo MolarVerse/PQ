@@ -1,1 +1,0 @@
-- Fix Ctrl-C not stopping `mm-hessian` runs in builds with embedded Python; the pre-optimization and the Hessian builder now stop at the next force evaluation.

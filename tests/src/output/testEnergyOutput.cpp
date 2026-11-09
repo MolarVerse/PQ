@@ -285,7 +285,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::deactivateRingPolymerMD();
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    settings::ThermostatSettings::setThermostatType(
+    _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
 
@@ -331,7 +331,7 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    settings::ThermostatSettings::setThermostatType(ThermostatType::NONE);
+    _settings->thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);
 
     _energyOutput->setFilename("default.en", false);
     _energyOutput->write(100.0, *_physicalData, *_settings);

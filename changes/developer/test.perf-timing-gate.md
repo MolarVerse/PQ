@@ -1,1 +1,0 @@
-- Add a timing comparison to the performance gate: CPU time of the measured loop, base against PR on the same runner (copies of the binaries, interleaved pinned runs, bootstrap interval, confirmation). A confirmed slowdown above 10% fails the check. New `perf_timer` preload library and `scripts/perf_timing.py` with tests.

@@ -25,6 +25,7 @@
 
 #include "manostat.hpp"
 #include "randomNumberGenerator.hpp"
+#include "unit_types.hpp"
 
 namespace manostat
 {
@@ -47,7 +48,7 @@ namespace manostat
             physicalData::PhysicalData &physicalData
         ) override;
 
-        [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
+        [[nodiscard]] virtual QuantityTensor3D calculateMu(double);
 
        protected:
         [[nodiscard]]
@@ -70,7 +71,7 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linalg::tensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(double volume) override;
     };
 
     /**
@@ -87,7 +88,7 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linalg::tensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(double volume) override;
     };
 
     /**
@@ -104,7 +105,7 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linalg::tensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(double volume) override;
     };
 
 }   // namespace manostat

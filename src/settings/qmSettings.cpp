@@ -25,11 +25,14 @@
 #include <algorithm>
 #include <filesystem>
 #include <format>
+#include <optional>
 #include <utility>
 
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "executablePath.hpp"
+#include "hubbardDerivMap.hpp"
+#include "referenceSettings.hpp"
 #include "stringUtilities.hpp"
 
 namespace
@@ -65,12 +68,6 @@ namespace
 }   // namespace
 
 /**
- * @brief finalizes the QM settings by performing necessary checks and setups
- *
- */
-void QMSettings::finalize() {}
-
-/**
  * @brief returns an unordered map as string
  *
  * @param unordered_map
@@ -87,6 +84,35 @@ std::string string(const std::unordered_map<std::string, double> &unordered_map)
     }
 
     return unorderedMapStr;
+}
+
+/**
+ * @brief finalizes the QM settings by performing necessary checks and setups
+ *
+ */
+void QMSettings::finalize() {}
+
+/**
+ * @brief finalizes the DFTB settings by performing necessary checks and setups
+ *
+ */
+void DftbSettings::finalize(ReferenceSettings &referenceSettings)
+{
+    switch (_slakosType.get())
+    {
+        case SlakosType::THREEOB:
+            if (!_useThirdOrderDftb.isSetByUser())
+                _useThirdOrderDftb.setBySystem(true);
+            if (!_hubbardDerivs.isSetByUser())
+                _hubbardDerivs.setBySystem(hubbardDerivMap3ob);
+            referenceSettings.addReferenceFile(ReferenceFiles::THREEOB_FILE);
+            break;
+        case SlakosType::MATSCI:
+            referenceSettings.addReferenceFile(ReferenceFiles::MATSCI_FILE);
+            break;
+        case SlakosType::CUSTOM:
+        case SlakosType::NONE: break;
+    }
 }
 
 /**
@@ -172,7 +198,10 @@ void MaceSettings::setMaceModelPathByUser(const std::string &path)
  *
  * @param method
  */
-void QMSettings::setXtbMethod(XtbMethod method) { _xtbMethod = method; }
+void XtbSettings::setXtbMethodByUser(XtbMethod method)
+{
+    _xtbMethod.setByUser(method);
+}
 
 /**
  * @brief sets the qmScript in settings
@@ -199,9 +228,9 @@ void QMSettings::setQMScriptFullPath(const std::string_view &script)
  *
  * @param slakos
  */
-void QMSettings::setSlakosType(SlakosType slakos)
+void DftbSettings::setSlakosTypeByUser(SlakosType slakos)
 {
-    setSlakosType(slakos, true);
+    setSlakosTypeByUser(slakos, true);
 }
 
 /**
@@ -210,13 +239,16 @@ void QMSettings::setSlakosType(SlakosType slakos)
  * @param slakos
  * @param resolveBuiltInPath
  */
-void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
+void DftbSettings::setSlakosTypeByUser(
+    SlakosType slakos,
+    bool       resolveBuiltInPath
+)
 {
     if (!resolveBuiltInPath &&
         (slakos == SlakosType::THREEOB || slakos == SlakosType::MATSCI))
     {
-        _slakosType = slakos;
-        _slakosPath.clear();
+        _slakosType.setByUser(slakos);
+        _slakosPath.setByUser("");
         return;
     }
 
@@ -227,13 +259,13 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
         case THREEOB:
         case MATSCI:
             if (resolveBuiltInPath)
-                _slakosPath = builtinSlakosPath(slakos);
+                _slakosPath.setBySystem(builtinSlakosPath(slakos));
             break;
         case CUSTOM:
-        case NONE: _slakosPath.clear(); break;
+        case NONE: _slakosPath.setByUser(""); break;
     }
 
-    _slakosType = slakos;
+    _slakosType.setByUser(slakos);
 }
 
 /**
@@ -241,11 +273,11 @@ void QMSettings::setSlakosType(SlakosType slakos, bool resolveBuiltInPath)
  *
  * @param path
  */
-void QMSettings::setSlakosPath(const std::string_view &path)
+void DftbSettings::setSlakosPathByUser(const std::string &path)
 {
-    if (_slakosType == SlakosType::CUSTOM)
-        _slakosPath = path;
-    else if (_slakosType == SlakosType::NONE)
+    if (_slakosType.get() == SlakosType::CUSTOM)
+        _slakosPath.setByUser(path);
+    else if (_slakosType.get() == SlakosType::NONE)
     {
         throw exc::UserInputException(
             "Slakos path cannot be set without a slakos type"
@@ -256,7 +288,7 @@ void QMSettings::setSlakosPath(const std::string_view &path)
         throw exc::UserInputException(
             std::format(
                 "Slakos path cannot be set for slakos type: {}",
-                SlakosTypeMeta::toString(_slakosType)
+                SlakosTypeMeta::toString(_slakosType.get())
             )
         );
     }
@@ -266,38 +298,20 @@ void QMSettings::setSlakosPath(const std::string_view &path)
  * @brief sets if third order DFTB should be used
  *
  */
-void QMSettings::setUseThirdOrderDftb(bool useThirdOrderDftb)
+void DftbSettings::setUseThirdOrderDftbByUser(bool useThirdOrderDftb)
 {
-    _useThirdOrderDftb = useThirdOrderDftb;
-}
-
-/**
- * @brief sets if the third order is set
- *
- */
-void QMSettings::setIsThirdOrderDftbSet(bool isThirdOrderDftbSet)
-{
-    _isThirdOrderDftbSet = isThirdOrderDftbSet;
+    _useThirdOrderDftb.setByUser(useThirdOrderDftb);
 }
 
 /**
  * @brief sets the custom Hubbard Derivative dictionary
  *
  */
-void QMSettings::setHubbardDerivs(
+void DftbSettings::setHubbardDerivsByUser(
     const std::unordered_map<std::string, double> &hubbardDerivs
 )
 {
-    _hubbardDerivs = hubbardDerivs;
-}
-
-/**
- * @brief sets if the Hubbard Derivative dictionary is set by the user
- *
- */
-void QMSettings::setIsHubbardDerivsSet(bool isHubbardDerivsSet)
-{
-    _isHubbardDerivsSet = isHubbardDerivsSet;
+    _hubbardDerivs.setByUser(hubbardDerivs);
 }
 
 /**
@@ -331,18 +345,18 @@ void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
  *
  * @param path
  */
-void QMSettings::setFennolModelPath(const std::string_view &path)
+void FennolSettings::setFennolModelPathByUser(const std::string &path)
 {
-    _fennolModelPath = path;
+    _fennolModelPath.setByUser(path);
 }
 
 /**
  * @brief sets if the GPU pre-processing should be enabled for FeNNol
  *
  */
-void QMSettings::setUseGPUPreprocessing(bool useGPUPreprocessing)
+void FennolSettings::setUseGPUPreprocessingByUser(bool useGPUPreprocessing)
 {
-    _useGPUPreprocessing = useGPUPreprocessing;
+    _useGPUPreprocessing.setByUser(useGPUPreprocessing);
 }
 
 /***************************
@@ -452,44 +466,50 @@ std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
  *
  * @return SlakosType
  */
-SlakosType QMSettings::getSlakosType() { return _slakosType; }
+SlakosType DftbSettings::getSlakosType() const { return _slakosType.get(); }
 
 /**
  * @brief returns the slakosPath
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string QMSettings::getSlakosPath() { return _slakosPath; }
+const std::string &DftbSettings::getSlakosPath() const
+{
+    return _slakosPath.get();
+}
 
 /**
  * @brief returns if third order DFTB should be used
  *
  * @return bool
  */
-bool QMSettings::useThirdOrderDftb() { return _useThirdOrderDftb; }
-
-/**
- * @brief returns if the third order is set
- *
- * @return bool
- */
-bool QMSettings::isThirdOrderDftbSet() { return _isThirdOrderDftbSet; }
-
-/**
- * @brief returns if the Hubbard derivatives are set by the user
- *
- * @return bool
- */
-bool QMSettings::isHubbardDerivsSet() { return _isHubbardDerivsSet; }
+bool DftbSettings::useThirdOrderDftb() const
+{
+    return _useThirdOrderDftb.get();
+}
 
 /**
  * @brief returns the Hubbard Derivative dictionary
  *
  * @return std::unordered_map<std::string, double>
  */
-std::unordered_map<std::string, double> QMSettings::getHubbardDerivs()
+std::optional<std::unordered_map<std::string, double>> DftbSettings::
+    getHubbardDerivs() const
 {
-    return _hubbardDerivs;
+    if (!_hubbardDerivs.isSetBySomeone())
+        return std::nullopt;
+
+    return _hubbardDerivs.get();
+}
+
+/**
+ * @brief returns if the Hubbard Derivative dictionary was set by the user
+ *
+ * @return bool
+ */
+bool DftbSettings::isHubbardDerivsSetByUser() const
+{
+    return _hubbardDerivs.isSetByUser();
 }
 
 /**
@@ -512,7 +532,7 @@ bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
  *
  * @return XtbMethod
  */
-XtbMethod QMSettings::getXtbMethod() { return _xtbMethod; }
+XtbMethod XtbSettings::getXtbMethod() const { return _xtbMethod.get(); }
 
 /**
  * @brief returns the qmLoopTimeLimit
@@ -524,13 +544,19 @@ double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
 /**
  * @brief returns the FeNNol model path
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string QMSettings::getFennolModelPath() { return _fennolModelPath; }
+const std::string &FennolSettings::getFennolModelPath() const
+{
+    return _fennolModelPath.get();
+}
 
 /**
  * @brief returns if GPU pre-processing should be used for FeNNol
  *
  * @return bool
  */
-bool QMSettings::useGPUPreprocessing() { return _useGPUPreprocessing; }
+bool FennolSettings::useGPUPreprocessing() const
+{
+    return _useGPUPreprocessing.get();
+}

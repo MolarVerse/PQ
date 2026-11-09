@@ -34,4 +34,21 @@ void Settings::finalize()
     outputFiles.finalize();
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
+    thermostatSettings.finalize(referenceSettings);
+
+    const auto& qmMethod = qmSettings.getQMMethod();
+
+    switch (qmMethod)
+    {
+        case QMMethod::ASE_DFTBPLUS:
+            dftbSettings.finalize(referenceSettings);
+            break;
+        case QMMethod::MACE:
+        case QMMethod::ASE_XTB:
+        case QMMethod::DFTBPLUS:
+        case QMMethod::FENNOL:
+        case QMMethod::PYSCF:
+        case QMMethod::TURBOMOLE:
+        case QMMethod::NONE: break;
+    }
 }

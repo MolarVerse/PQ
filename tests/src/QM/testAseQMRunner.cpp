@@ -30,6 +30,7 @@
 #include "aseFennolRunner.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
@@ -132,7 +133,12 @@ class AseQMRunnerTest : public ::testing::Test
             .attr("FENNIXCalculator")
             .attr("delay") = delay;
 
-        return QM::AseFennolRunner{settings, "model.fnx", false, true};
+        FennolSettings fennolSettings;
+        fennolSettings.setFennolModelPathByUser("model.fnx");
+        fennolSettings.setUseGPUPreprocessingByUser(false);
+        settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+
+        return QM::AseFennolRunner{settings, fennolSettings};
     }
 };
 
