@@ -59,14 +59,9 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine The engine to set up.
-     * @param references Reference settings object used to manage and add
-     * necessary reference files for the specified QM method.
-     * @param nhSettings Nose-Hoover thermostat settings object used to
-     * configure the thermostat if applicable.
      */
     void setupRequestedJob(
         engine::Engine&     engine,
-        ReferenceSettings&  references,
         NoseHooverSettings& nhSettings
     )
     {
@@ -84,7 +79,7 @@ namespace setup
 
         readFiles(engine, nhSettings);
 
-        setupEngine(engine, references);
+        setupEngine(engine);
 
         // needs setup of engine before reading guff.dat
         input::guffdat::readGuffDat(engine);
@@ -133,14 +128,12 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine
-     * @param references Reference settings object used to manage and add
-     * necessary reference files for the specified QM method.
      */
-    void setupEngine(engine::Engine& engine, ReferenceSettings& references)
+    void setupEngine(engine::Engine& engine)
     {
         const auto& settings = engine.getSettings();
         if (settings::GeneralSettings::isQMActivated())
-            setupQM(engine, references);
+            setupQM(engine);
 
         if (settings::GeneralSettings::isMDJobType())
         {

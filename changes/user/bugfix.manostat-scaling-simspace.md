@@ -1,1 +1,0 @@
-- Manostat position and velocity scaling for triclinic boxes with fixed angles now transforms the scaling tensor from cell-axis to Cartesian space once per step instead of per molecule and atom, which avoids redundant transformations.

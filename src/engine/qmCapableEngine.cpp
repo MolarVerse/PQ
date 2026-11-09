@@ -35,13 +35,16 @@ namespace engine
      * @param fennolSettings The Fennol settings to configure the QM runner with
      * @param dftbSettings The DFTB settings to configure the QM runner with
      * @param xtbSettings The XTB settings to configure the QM runner with
+     * @param externalQMSettings The external QM settings to configure the QM
+     * runner with
      */
     void QMCapableEngine::setQMRunner(
-        const QMSettings     &qmSettings,
-        const MaceSettings   &maceSettings,
-        const FennolSettings &fennolSettings,
-        const DftbSettings   &dftbSettings,
-        const XtbSettings    &xtbSettings
+        const QMSettings         &qmSettings,
+        const MaceSettings       &maceSettings,
+        const FennolSettings     &fennolSettings,
+        const DftbSettings       &dftbSettings,
+        const XtbSettings        &xtbSettings,
+        const ExternalQMSettings &externalQMSettings
     )
     {
         _qmRunner = QMRunnerManager::createQMRunner(
@@ -49,7 +52,8 @@ namespace engine
             maceSettings,
             fennolSettings,
             dftbSettings,
-            xtbSettings
+            xtbSettings,
+            externalQMSettings
         );
     }
 

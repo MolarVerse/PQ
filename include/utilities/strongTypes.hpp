@@ -27,6 +27,8 @@
 #include <format>
 #include <mstd/types.hpp>
 
+#include "unit_types.hpp"
+
 template <typename Tag>
 using StrongSizeT = mstd::StrongType<
     size_t,
@@ -162,8 +164,8 @@ struct BuckinghamParams
 
 struct AngleParams
 {
-    double equilibrium;
-    double forceConstant;
+    Angle              equilibrium;
+    AngleForceConstant forceConstant;
 
     [[nodiscard]]
     bool operator==(const AngleParams &other) const;
@@ -171,8 +173,8 @@ struct AngleParams
 
 struct BondParams
 {
-    double equilibrium;
-    double forceConstant;
+    Distance      equilibrium;
+    ForceConstant forceConstant;
 
     [[nodiscard]]
     bool operator==(const BondParams &other) const;
@@ -180,9 +182,9 @@ struct BondParams
 
 struct DihedralParams
 {
-    double forceConstant;
+    Energy forceConstant;   // Energy unit for dihedral force constant
     double frequency;
-    double phaseShift;
+    Angle  phaseShift;
 
     [[nodiscard]]
     bool operator==(const DihedralParams &other) const;

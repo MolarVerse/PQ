@@ -39,6 +39,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -107,8 +108,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    const auto equilibrium   = 90 * M_PI / 180.0;
-    const auto forceConstant = 3.0;
+    const auto equilibrium   = 90 * M_PI / 180.0 * rad;
+    const auto forceConstant = 3.0 * kcal_per_mol / rad / rad;
     angleFF.setParams(
         AngleParams{.equilibrium = equilibrium, .forceConstant = forceConstant}
     );
@@ -289,7 +290,10 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         AngleId{0}
     );
     angleForceField.setParams(
-        AngleParams{.equilibrium = M_PI, .forceConstant = 3.0}
+        AngleParams{
+            .equilibrium   = M_PI * rad,
+            .forceConstant = 3.0 * kcal_per_mol / rad / rad
+        }
     );
     angleForceField.setIsLinker(false);
 

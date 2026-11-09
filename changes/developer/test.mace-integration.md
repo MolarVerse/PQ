@@ -1,1 +1,0 @@
-- Add MACE-OFF and MACE-MP integration tests (malondialdehyde, 2 MD steps); they run only where torch, MACE and a CUDA device are available and is skipped otherwise.

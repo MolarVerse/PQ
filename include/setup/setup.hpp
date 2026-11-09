@@ -48,7 +48,6 @@ namespace setup
 {
     void setupRequestedJob(
         engine::Engine     &engine,
-        ReferenceSettings  &references,
         NoseHooverSettings &nhSettings
     );
 
@@ -56,7 +55,7 @@ namespace setup
     void endSetup(engine::Engine &);
 
     void readFiles(engine::Engine &, NoseHooverSettings &);
-    void setupEngine(engine::Engine &, ReferenceSettings &references);
+    void setupEngine(engine::Engine &);
 }   // namespace setup
 
 #endif   // SETUP__SETUP_HPP

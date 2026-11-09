@@ -37,7 +37,7 @@ struct TestQMSetupUtils;
 
 namespace setup
 {
-    void setupQM(engine::Engine &, ReferenceSettings &references);
+    void setupQM(engine::Engine &);
 
     /**
      * @class QMSetup
@@ -48,31 +48,29 @@ namespace setup
     class QMSetup
     {
        private:
-        engine::QMCapableEngine       &_qmCapableEngine;
-        mstd::ConstRef<QMSettings>     _qmSettings;
-        mstd::ConstRef<MaceSettings>   _maceSettings;
-        mstd::ConstRef<FennolSettings> _fennolSettings;
-        mstd::ConstRef<DftbSettings>   _dftbSettings;
-        mstd::ConstRef<XtbSettings>    _xtbSettings;
+        engine::QMCapableEngine           &_qmCapableEngine;
+        mstd::ConstRef<QMSettings>         _qmSettings;
+        mstd::ConstRef<MaceSettings>       _maceSettings;
+        mstd::ConstRef<FennolSettings>     _fennolSettings;
+        mstd::ConstRef<DftbSettings>       _dftbSettings;
+        mstd::ConstRef<XtbSettings>        _xtbSettings;
+        mstd::ConstRef<ExternalQMSettings> _externalQMSettings;
 
        public:
         explicit QMSetup(
-            engine::QMCapableEngine &qmCapableEngine,
-            const QMSettings        &qmSettings,
-            const MaceSettings      &maceSettings,
-            const FennolSettings    &fennolSettings,
-            const DftbSettings      &dftbSettings,
-            const XtbSettings       &xtbSettings
+            engine::QMCapableEngine  &qmCapableEngine,
+            const QMSettings         &qmSettings,
+            const MaceSettings       &maceSettings,
+            const FennolSettings     &fennolSettings,
+            const DftbSettings       &dftbSettings,
+            const XtbSettings        &xtbSettings,
+            const ExternalQMSettings &externalQMSettings
         );
 
-        void        setup(ReferenceSettings &references);
+        void        setup();
         void        setupQMMethod();
-        void        setupQMScript() const;
         static void setupCoulombRadiusCutOff();
         void        setupWriteInfo() const;
-
-       private:
-        void _setupQMMethodAseXtb(ReferenceSettings &references) const;
 
         friend struct ::TestQMSetupUtils;
     };

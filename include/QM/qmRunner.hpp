@@ -24,10 +24,6 @@
 #define QM__QM_RUNNER_HPP
 
 #include <mstd/types.hpp>
-#define SCRIPT_PATH_  _SCRIPT_PATH_
-#define SINGULARITY_  _SINGULARITY_
-#define STATIC_BUILD_ _STATIC_BUILD_
-
 #include <stop_token>
 
 #include "box.hpp"
@@ -62,7 +58,10 @@ namespace QM
         explicit QMRunner(const QMSettings &qmSettings);
         virtual ~QMRunner() = default;
 
-        static void throwAfterTimeout(const std::stop_token &stopToken);
+        static void throwAfterTimeout(
+            const std::stop_token &stopToken,
+            const TimeMs          &qmLoopTimeLimit
+        );
 
         void         run(molsys::SimulationBox &, physicalData::PhysicalData &);
         virtual void run(

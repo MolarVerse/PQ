@@ -1,8 +1,1 @@
-- make timestep unit aware
-- make compressiblity unit aware
-- add a devops check to not include `units.hpp` in a header file to not pollute namings 
-- add relaxtime of thermostat as a unitful quantity
-- introduce units for pressure
-- start introducing temperature unit in thermostat
-- finish all places of temperature units
-- cleanup manostat by introducing some mstd math functions for quantities like `mstd::exp`, `mstd::pow` and `mstd::sqrt`
+- introduce units for Bonded strong types

@@ -1,6 +1,1 @@
-- Introduce tracking of by whom a `Setting` was actually set (user vs. system vs. default), replacing the former value-based "is this still the default" checks.
-- Start removing static access from `QMSettings` - `QMMethod`
-- introduce new class `MaceSettings` for less coupling to `QMSettings`
-- introduce new class `FennolSettings` for less coupling to `QMSettings`
-- ASE-DFTB+ input validation now rejects third order DFTB with non-3ob slakos if `hubbard_derivs` is missing, and `DftbSettings`/`XtbSettings` were extracted from `QMSettings`.
-- remove static access of `ThermostatType` from `ThermostatSettings`
+- introduce new class `ExternalQMSettings` for the external QM script (`qm_script`, `qm_script_full_path`); the script path is resolved once in `finalize()` and the build-time script directory/singularity/static flags now live in the `settings` library.

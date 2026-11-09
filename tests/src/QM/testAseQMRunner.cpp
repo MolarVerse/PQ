@@ -35,6 +35,7 @@
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -82,7 +83,6 @@ class AseQMRunnerTest : public ::testing::Test
    protected:
     molsys::SimulationBox      _simulationBox;
     physicalData::PhysicalData _physicalData;
-    double                     _timeLimit = 0.0;
 
    public:
     static void SetUpTestSuite()
@@ -117,11 +117,7 @@ class AseQMRunnerTest : public ::testing::Test
         constexpr auto          boxEdge = 10.0;
         molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
         _simulationBox.setBox(box, false);
-
-        _timeLimit = QMSettings::getQMLoopTimeLimit();
     }
-
-    void TearDown() override { QMSettings::setQMLoopTimeLimit(_timeLimit); }
 
     static QM::AseFennolRunner _runner(
         const QMSettings &settings,
@@ -146,7 +142,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 {
     QMSettings settings;
     settings.setQMMethodByUser(QMMethod::FENNOL);
-    QMSettings::setQMLoopTimeLimit(0.5);
+    settings.setQMLoopTimeLimitByUser(0.5 * s);
     auto runner = AseQMRunnerTest::_runner(settings, 10.0);
 
     const auto start = std::chrono::steady_clock::now();
@@ -167,7 +163,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     );
 
     // the interpreter is usable again
-    QMSettings::setQMLoopTimeLimit(0.0);
+    settings.setQMLoopTimeLimitByUser(0.0 * s);
     EXPECT_NO_THROW(
         AseQMRunnerTest::_runner(settings, 0.0)
             .run(_simulationBox, _physicalData, molsys::Periodicity::XYZ)
@@ -176,8 +172,8 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 
 TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
 {
-    QMSettings::setQMLoopTimeLimit(10.0);
     QMSettings settings;
+    settings.setQMLoopTimeLimitByUser(10.0 * s);
     settings.setQMMethodByUser(QMMethod::FENNOL);
     auto runner = AseQMRunnerTest::_runner(settings, 0.0);
 

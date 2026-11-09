@@ -1,1 +1,0 @@
-- Remove the CI metrics (daily collector workflow, build-analysis artifacts and steps, report, tests, page and the 21 MB of old data under .github/ci-metrics): they did not tell us anything we use, and the collector pushed data commits to dev. The history stays in git.

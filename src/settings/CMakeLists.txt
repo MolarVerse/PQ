@@ -33,6 +33,22 @@ target_link_libraries(settings
     config_headers
 )
 
+if(BUILD_SHARED_LIBS)
+    set(BUILD_STATIC "OFF")
+else()
+    set(BUILD_STATIC "ON")
+endif()
+
+# build configuration used by ExternalQMSettings to locate the QM scripts
+# - _SCRIPT_PATH_ must match the location the scripts are copied to by the
+#   externalQM target (src/QM/external/CMakeLists.txt)
+target_compile_definitions(settings
+    PUBLIC
+    _SCRIPT_PATH_=\"${PROJECT_BINARY_DIR}/src/QM/scripts/\"
+    _SINGULARITY_=\"${BUILD_WITH_SINGULARITY}\"
+    _STATIC_BUILD_=\"${BUILD_STATIC}\"
+)
+
 install(TARGETS settings
     DESTINATION lib
 )
