@@ -112,6 +112,29 @@ def append_fragments(sections, fragments, audience):
                     entries.append(entry)
 
 
+def reject_released_fragments(fragments, user_history, dev_history):
+    """Exit if a fragment repeats a bullet of an earlier release."""
+    released = {
+        "user": {line.strip() for line in user_history if BULLET_RE.match(line)},
+        "developer": {
+            line.strip() for line in dev_history if BULLET_RE.match(line)
+        },
+    }
+    repeated = sorted(
+        f"changes/{fragment.audience}/{fragment.path.name}"
+        for fragment in fragments
+        if any(
+            entry.strip() in released[fragment.audience]
+            for entry in fragment.entries
+        )
+    )
+    if repeated:
+        sys.exit(
+            "these fragments repeat an entry of an earlier release; "
+            "delete them on dev: " + ", ".join(repeated)
+        )
+
+
 def has_release_notes(body_lines):
     """Return whether a changelog body contains at least one bullet."""
     return any(BULLET_RE.match(line) for line in body_lines)
@@ -184,14 +207,15 @@ def check_release_changelogs():
     fragments = read_all_fragments()
 
     user_lines = load_changelog(USER_CHANGELOG)
-    _, user_body, _ = split_next_release(
+    _, user_body, user_tail = split_next_release(
         user_lines, USER_CHANGELOG.name
     )
     user_sections = parse_subsections(user_body, USER_ORDER)
     append_fragments(user_sections, fragments, "user")
 
     dev_lines = load_changelog(DEV_CHANGELOG)
-    _, dev_body, _ = split_next_release(dev_lines, DEV_CHANGELOG.name)
+    _, dev_body, dev_tail = split_next_release(dev_lines, DEV_CHANGELOG.name)
+    reject_released_fragments(fragments, user_tail, dev_tail)
     dev_sections = parse_subsections(dev_body, DEVELOPER_ORDER)
     append_fragments(dev_sections, fragments, "developer")
 
@@ -220,6 +244,7 @@ def update_changelogs(version):
     dev_header, previous_dev_body, dev_tail = prepared_release(dev_tail, version)
 
     fragments = read_all_fragments()
+    reject_released_fragments(fragments, user_tail, dev_tail)
     user_sections = parse_subsections(previous_user_body + user_body, USER_ORDER)
     dev_sections = parse_subsections(previous_dev_body + dev_body, DEVELOPER_ORDER)
     append_fragments(user_sections, fragments, "user")
