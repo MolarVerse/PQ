@@ -19,7 +19,6 @@ implementation changes are documented in
 - Fix Ctrl-C not stopping PQ builds with embedded Python (the default with ASE); MD and optimizer runs now stop at the next step.
 - Fix ASE-DFTB+ with 3ob slakos not actually applying third order DFTB (including the 3ob Hubbard derivatives) by default, although the setup output reported it as enabled; results for such inputs change.
 - Fix garbage in the momentum columns of the first energy and momentum output line: the PhysicalData that holds the averages did not initialise its momenta, angular momenta, virial and stress tensors, so the first line showed whatever the memory held (sometimes inf).
-- Fix MACE runs failing at startup with `module 'mace.calculators' has no attribute 'MACE_OFF'`; PQ again passes the MACE calculator and model names (e.g. `mace_off`, `small-0b`).
 - Manostat position and velocity scaling for triclinic boxes with fixed angles now transforms the scaling tensor from cell-axis to Cartesian space once per step instead of per molecule and atom, which avoids redundant transformations.
 
 ### Performance
