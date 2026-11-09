@@ -123,7 +123,7 @@ namespace input::parameterFile
      */
     void ParameterFileReader::read()
     {
-        if (!settings::FileSettings::isParameterFileNameSet())
+        if (!FileSettings::isParameterFileNameSet())
             throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
             );
@@ -161,7 +161,7 @@ namespace input::parameterFile
         if (!engine.getSettings().forceFieldSettings.isActive())
             return;
 
-        const auto filename = settings::FileSettings::getParameterFilename();
+        const auto filename = FileSettings::getParameterFilename();
 
         out::StdoutOutput::writeRead("Parameter File", filename);
         engine.getLogOutput().writeRead("Parameter File", filename);

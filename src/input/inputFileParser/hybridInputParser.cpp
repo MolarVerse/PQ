@@ -430,9 +430,8 @@ namespace input
             needsPython = true;
 
 #ifdef PYTHON_ENABLED
-        std::string restartFile = settings::FileSettings::getStartFileName();
-        std::string moldescFile =
-            settings::FileSettings::getMolDescriptorFileName();
+        std::string restartFile = FileSettings::getStartFileName();
+        std::string moldescFile = FileSettings::getMolDescriptorFileName();
 
         if (needsPython)
             selectionVec =

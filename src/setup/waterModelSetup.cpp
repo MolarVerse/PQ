@@ -198,7 +198,7 @@ namespace setup
                         "expects "
                         "the molecules of this moltype not to appear in the "
                         "topology file.",
-                        settings::FileSettings::getTopologyFileName(),
+                        FileSettings::getTopologyFileName(),
                         bondIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()
@@ -236,7 +236,7 @@ namespace setup
                         "expects the molecules of this moltype not to appear "
                         "in "
                         "the topology file.",
-                        settings::FileSettings::getTopologyFileName(),
+                        FileSettings::getTopologyFileName(),
                         angleIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()

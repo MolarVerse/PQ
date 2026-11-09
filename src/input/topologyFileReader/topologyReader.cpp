@@ -131,7 +131,7 @@ namespace input::topology
         std::vector<std::string> lineElements;
         size_t                   lineNumber = 1;
 
-        if (!settings::FileSettings::isTopologyFileNameSet())
+        if (!FileSettings::isTopologyFileNameSet())
             throw exc::InputFileException(
                 "Topology file needed for requested simulation setup"
             );
@@ -196,7 +196,7 @@ namespace input::topology
         if (!isNeeded(engine.getSettings()))
             return;
 
-        const auto filename = settings::FileSettings::getTopologyFileName();
+        const auto filename = FileSettings::getTopologyFileName();
 
         out::StdoutOutput::writeRead("Topology File", filename);
         engine.getLogOutput().writeRead("Topology File", filename);

@@ -78,12 +78,12 @@ TEST_F(TestTopologyReader, read)
     _settings.constraintSettings.activateShakeByUser();
     engine::MMMDEngine engine{_settings};
     _topologyReader = std::make_unique<input::topology::TopologyReader>(
-        settings::FileSettings::getTopologyFileName(),
+        FileSettings::getTopologyFileName(),
         engine
     );
     EXPECT_NO_THROW(_topologyReader->read());
 
-    settings::FileSettings::unsetIsTopologyFileNameSet();
+    FileSettings::unsetIsTopologyFileNameSet();
     EXPECT_THROW_MSG(
         _topologyReader->read(),
         exc::InputFileException,
@@ -98,6 +98,6 @@ TEST_F(TestTopologyReader, read)
  */
 TEST_F(TestTopologyReader, readTopologyFile)
 {
-    settings::FileSettings::setTopologyFileName("topology.top");
+    FileSettings::setTopologyFileName("topology.top");
     input::topology::readTopologyFile(*_engine);
 }

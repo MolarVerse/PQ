@@ -301,8 +301,7 @@ namespace QM
         const QMSettings           &qmSettings
     )
     {
-        const auto forceFileName =
-            settings::FileSettings::getQMForcesTempFileName();
+        const auto forceFileName = FileSettings::getQMForcesTempFileName();
 
         std::ifstream forceFile(forceFileName);
 
@@ -403,8 +402,7 @@ namespace QM
         const QMSettings      &qmSettings
     )
     {
-        const auto chargeFileName =
-            settings::FileSettings::getQMChargesTempFileName();
+        const auto chargeFileName = FileSettings::getQMChargesTempFileName();
 
         std::ifstream chargeFile(chargeFileName);
 
@@ -494,9 +492,9 @@ namespace QM
         }
 
         const auto resultFiles = std::array{
-            settings::FileSettings::getQMForcesTempFileName(),
-            settings::FileSettings::getQMChargesTempFileName(),
-            settings::FileSettings::getStressTensorTempFileName()
+            FileSettings::getQMForcesTempFileName(),
+            FileSettings::getQMChargesTempFileName(),
+            FileSettings::getStressTensorTempFileName()
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 

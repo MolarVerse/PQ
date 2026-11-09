@@ -117,7 +117,7 @@ namespace input::restartFile
      */
     void readRestartFile(engine::Engine &engine)
     {
-        const auto filename = settings::FileSettings::getStartFileName();
+        const auto filename = FileSettings::getStartFileName();
 
         out::StdoutOutput::writeRead("Start File", filename);
         engine.getLogOutput().writeRead("Start File", filename);

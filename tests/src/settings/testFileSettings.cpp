@@ -26,48 +26,47 @@
 
 TEST(FileSettingsTest, MolDescriptorRoundTrip)
 {
-    settings::FileSettings::setMolDescriptorFileName("mol.dat");
-    EXPECT_EQ(settings::FileSettings::getMolDescriptorFileName(), "mol.dat");
+    FileSettings settings;
+    settings.setMolDescriptorFileNameByUser("mol.dat");
+    EXPECT_EQ(settings.getMolDescriptorFileName(), "mol.dat");
 }
 
 TEST(FileSettingsTest, GuffDatRoundTrip)
 {
-    settings::FileSettings::setGuffDatFileName("guff.dat");
-    EXPECT_EQ(settings::FileSettings::getGuffDatFileName(), "guff.dat");
+    FileSettings settings;
+    settings.setGuffDatFileNameByUser("guff.dat");
+    EXPECT_EQ(settings.getGuffDatFileName(), "guff.dat");
 }
 
 TEST(FileSettingsTest, TopologyAndParameterRoundTrip)
 {
-    settings::FileSettings::setTopologyFileName("topology.top");
-    EXPECT_EQ(settings::FileSettings::getTopologyFileName(), "topology.top");
+    FileSettings::setTopologyFileName("topology.top");
+    EXPECT_EQ(FileSettings::getTopologyFileName(), "topology.top");
 
-    settings::FileSettings::setParameterFileName("parameter.par");
-    EXPECT_EQ(settings::FileSettings::getParameterFilename(), "parameter.par");
+    FileSettings::setParameterFileName("parameter.par");
+    EXPECT_EQ(FileSettings::getParameterFilename(), "parameter.par");
 }
 
 TEST(FileSettingsTest, StartAndRingPolymerRoundTrip)
 {
-    settings::FileSettings::setStartFileName("start.rst");
-    EXPECT_EQ(settings::FileSettings::getStartFileName(), "start.rst");
+    FileSettings::setStartFileName("start.rst");
+    EXPECT_EQ(FileSettings::getStartFileName(), "start.rst");
 
-    settings::FileSettings::setRingPolymerStartFileName("rp_start.rst");
-    EXPECT_EQ(
-        settings::FileSettings::getRingPolymerStartFileName(),
-        "rp_start.rst"
-    );
+    FileSettings::setRingPolymerStartFileName("rp_start.rst");
+    EXPECT_EQ(FileSettings::getRingPolymerStartFileName(), "rp_start.rst");
 }
 
 TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
 {
-    settings::FileSettings::setMShakeFileName("mshake.dat");
-    EXPECT_EQ(settings::FileSettings::getMShakeFileName(), "mshake.dat");
+    FileSettings::setMShakeFileName("mshake.dat");
+    EXPECT_EQ(FileSettings::getMShakeFileName(), "mshake.dat");
 
-    settings::FileSettings::setDFTBFileName("dftb_in.hsd");
-    EXPECT_EQ(settings::FileSettings::getDFTBFileName(), "dftb_in.hsd");
+    FileSettings::setDFTBFileName("dftb_in.hsd");
+    EXPECT_EQ(FileSettings::getDFTBFileName(), "dftb_in.hsd");
 }
 
 TEST(FileSettingsTest, IntraNonBondedRoundTrip)
 {
-    settings::FileSettings::setIntraNonBondedFileName("intra.dat");
-    EXPECT_EQ(settings::FileSettings::getIntraNonBondedFileName(), "intra.dat");
+    FileSettings::setIntraNonBondedFileName("intra.dat");
+    EXPECT_EQ(FileSettings::getIntraNonBondedFileName(), "intra.dat");
 }

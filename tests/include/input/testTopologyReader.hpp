@@ -70,7 +70,7 @@ class TestTopologyReader : public ::testing::Test
             "data/topologyReader/topology.top",
             *_engine
         );
-        settings::FileSettings::setIsTopologyFileNameSet();
+        FileSettings::setIsTopologyFileNameSet();
     }
 };
 

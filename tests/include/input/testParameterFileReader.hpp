@@ -62,7 +62,7 @@ class TestParameterFileReader : public ::testing::Test
                 "data/parameterFileReader/param.param",
                 *_engine
             );
-        settings::FileSettings::setIsParameterFileNameSet();
+        FileSettings::setIsParameterFileNameSet();
     }
 };
 
