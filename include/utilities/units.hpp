@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef CONFIG__UNITS_HPP
-#define CONFIG__UNITS_HPP
+#ifndef UTILITIES__UNITS_HPP
+#define UTILITIES__UNITS_HPP
 
 /// NOTE FOR DEVELOPERS
 /// This header provides convenient type aliases for commonly used angular
@@ -52,5 +52,9 @@ inline constexpr auto per_Pa  = mstd::units::per_Pa;
 
 inline constexpr auto K = mstd::units::K;
 
+inline constexpr auto angstrom = mstd::units::angstrom;
+
+inline constexpr auto kcal_per_mol = mstd::units::kcal_per_mol;
+
 // NOLINTEND(readability-identifier-length)
-#endif   // CONFIG__UNITS_HPP
+#endif   // UTILITIES__UNITS_HPP

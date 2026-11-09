@@ -24,10 +24,10 @@
 
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "dihedralType.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "units.hpp"
 
 namespace input::parameterFile
 {
@@ -68,27 +68,23 @@ namespace input::parameterFile
             throw exc::ParameterFileException(
                 std::format(
                     "Wrong number of arguments in parameter file dihedral "
-                    "section "
-                    "at "
-                    "line {} - number of elements has to be 4!",
+                    "section at line {} - number of elements has to be 4!",
                     lineNumber
                 )
             );
         }
 
         auto id            = DihedralId{stoul(lineElements[0])};
-        auto forceConstant = stod(lineElements[1]);
+        auto forceConstant = stod(lineElements[1]) * kcal_per_mol;
         auto periodicity   = stod(lineElements[2]);
-        auto phase         = stod(lineElements[3]) * DEG_TO_RAD;
+        auto phase         = stod(lineElements[3]) * deg;
 
         if (periodicity < 0.0)
         {
             throw exc::ParameterFileException(
                 std::format(
                     "Parameter file dihedral section at line {} - periodicity "
-                    "has "
-                    "to "
-                    "be positive!",
+                    "has to be positive!",
                     lineNumber
                 )
             );
