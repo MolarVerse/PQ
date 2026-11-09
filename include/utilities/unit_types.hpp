@@ -46,7 +46,8 @@ using QuantityTensor3D =
 using Angle    = mstd::quantity<mstd::units::rad>;
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 
-using Time = mstd::quantity<mstd::units::fs>;
+using Time   = mstd::quantity<mstd::units::fs>;
+using TimeMs = mstd::quantity<mstd::units::ms>;
 
 using Pressure = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
 using Pressure3D =

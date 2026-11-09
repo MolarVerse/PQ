@@ -35,6 +35,10 @@
 #include "referenceSettings.hpp"
 #include "stringUtilities.hpp"
 
+#define SCRIPT_PATH_  _SCRIPT_PATH_
+#define SINGULARITY_  _SINGULARITY_
+#define STATIC_BUILD_ _STATIC_BUILD_
+
 namespace
 {
     /**
@@ -112,6 +116,125 @@ void DftbSettings::finalize(ReferenceSettings &referenceSettings)
             break;
         case SlakosType::CUSTOM:
         case SlakosType::NONE: break;
+    }
+}
+
+/**
+ * @brief finalizes the XTB settings by performing necessary checks and setups
+ *
+ */
+void XtbSettings::finalize(ReferenceSettings &referenceSettings)
+{
+    switch (_xtbMethod.get())
+    {
+        case XtbMethod::GFN1:
+            referenceSettings.addReferenceFile(ReferenceFiles::GFN1_FILE);
+            break;
+        case XtbMethod::GFN2:
+            referenceSettings.addReferenceFile(ReferenceFiles::GFN2_FILE);
+            break;
+        case XtbMethod::IPEA1:
+            referenceSettings.addReferenceFile(ReferenceFiles::IPEA1_FILE);
+            break;
+    }
+}
+
+namespace
+{
+    /**
+     * @brief returns the full path to the bundled QM script
+     *
+     * @param script The name of the QM script
+     * @return std::string The full path to the bundled QM script
+     */
+    std::string bundledQMScriptPath(const std::string_view script)
+    {
+        const auto installedPath = utilities::installedDataPath(
+            std::filesystem::path("scripts") / script
+        );
+        if (std::filesystem::is_regular_file(installedPath))
+            return installedPath.string();
+
+        return (std::filesystem::path(SCRIPT_PATH_) / script).string();
+    }
+}   // namespace
+
+/**
+ * @brief finalizes the external QM settings by performing necessary checks and
+ *setups
+ *
+ * @details if a singularity or static build is used the qm_script is set to
+ * the qm_script_full_path and the script path is set to the empty string to
+ * avoid errors. This is necessary because the script can not be accessed
+ * from inside the container. Therefore the user has to provide the script
+ * somewhere else and give the full or relative path to it. For more
+ * information please refer to the documentation.
+ */
+void ExternalQMSettings::finalize()
+{
+    const std::string singularityString = SINGULARITY_;
+    const std::string staticBuildString = STATIC_BUILD_;
+
+    const auto singularity = utilities::toLowerCopy(singularityString) == "on";
+    const auto staticBuild = utilities::toLowerCopy(staticBuildString) == "on";
+
+    if (singularity || staticBuild)
+    {
+        if (!_qmScriptFullPath.isSetByUser())
+        {
+            throw exc::QMRunnerException(
+                "You are using at least one of these settings: i) "
+                "singularity build or/and ii) static build of PQ. Therefore "
+                "the general setting with 'qm_script' to set only the name of "
+                "the executable is not applicable. Please use "
+                "'qm_script_full_path' instead and provide the full path "
+                "to the executable. For singularity builds the script can not "
+                "be accessed from inside the container. In case of a static "
+                "build the binary may be shipped without the source code and "
+                "again PQ might therefore not be able to locate the executable "
+                "qm script. Therefore you have to provide the script "
+                "somewhere else and give the full/relative path to it. For "
+                "more information please refer to the documentation."
+            );
+        }
+
+        if (_qmScript.isSetByUser())
+        {
+            throw exc::QMRunnerException(
+                "You have set both 'qm_script' and 'qm_script_full_path' "
+                "in the input file. Please use only one the full path option "
+                "as you are working either with a singularity build or a "
+                "static build. For more information please refer to the "
+                "documentation."
+            );
+        }
+        // overwriting qm_script with full path
+        _qmScript.setBySystem(_qmScriptFullPath.get());
+    }
+    else if (!_qmScript.isSetByUser() && !_qmScriptFullPath.isSetByUser())
+    {
+        throw exc::InputFileException(
+            "No qm_script provided. Please provide a qm_script in the "
+            "input "
+            "file."
+        );
+    }
+    else if (_qmScriptFullPath.isSetByUser() && !_qmScript.isSetByUser())
+    {
+        // overwriting qm_script with full path
+        _qmScript.setBySystem(_qmScriptFullPath.get());
+    }
+    else if (_qmScriptFullPath.isSetByUser() && _qmScript.isSetByUser())
+    {
+        throw exc::InputFileException(
+            "You have set both 'qm_script' and 'qm_script_full_path' in "
+            "the input file. They are mutually exclusive. Please use only one "
+            "of them. For more information please refer to the documentation."
+        );
+    }
+    else
+    {
+        _qmScript.setBySystem(bundledQMScriptPath(_qmScript.get()));
     }
 }
 
@@ -208,19 +331,21 @@ void XtbSettings::setXtbMethodByUser(XtbMethod method)
  *
  * @param script
  */
-void QMSettings::setQMScript(const std::string_view &script)
+void ExternalQMSettings::setQMScriptByUser(const std::string &script)
 {
-    _qmScript = script;
+    _qmScript.setByUser(script);
 }
 
 /**
  * @brief sets the qmScriptFullPath in settings
  *
- * @param script
+ * @param scriptFullPath
  */
-void QMSettings::setQMScriptFullPath(const std::string_view &script)
+void ExternalQMSettings::setQMScriptFullPathByUser(
+    const std::string &scriptFullPath
+)
 {
-    _qmScriptFullPath = script;
+    _qmScriptFullPath.setByUser(scriptFullPath);
 }
 
 /**
@@ -318,9 +443,9 @@ void DftbSettings::setHubbardDerivsByUser(
  * @brief sets if the dispersion correction should be used
  *
  */
-void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
+void QMSettings::setUseDispersionCorrectionByUser(bool useDispersionCorr)
 {
-    _useDispersionCorrection = useDispersionCorr;
+    _useDispersionCorrection.setByUser(useDispersionCorr);
 }
 
 /**
@@ -328,9 +453,9 @@ void QMSettings::setUseDispersionCorrection(bool useDispersionCorr)
  * forces
  *
  */
-void QMSettings::setRemoveNetForce(bool removeNetForce)
+void QMSettings::setRemoveNetForceByUser(bool removeNetForce)
 {
-    _removeNetForce = removeNetForce;
+    _removeNetForce.setByUser(removeNetForce);
 }
 
 /**
@@ -338,7 +463,10 @@ void QMSettings::setRemoveNetForce(bool removeNetForce)
  *
  * @param time
  */
-void QMSettings::setQMLoopTimeLimit(double time) { _qmLoopTimeLimit = time; }
+void QMSettings::setQMLoopTimeLimitByUser(const TimeMs &time)
+{
+    _qmLoopTimeLimit.setByUser(time);
+}
 
 /**
  * @brief sets the FeNNol model path
@@ -450,16 +578,22 @@ std::string MaceSettings::getMaceModelPath() const
 /**
  * @brief returns the qmScript
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string QMSettings::getQMScript() { return _qmScript; }
+const std::string &ExternalQMSettings::getQMScript() const
+{
+    return _qmScript.get();
+}
 
 /**
  * @brief returns the qmScriptFullPath
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string QMSettings::getQMScriptFullPath() { return _qmScriptFullPath; }
+const std::string &ExternalQMSettings::getQMScriptFullPath() const
+{
+    return _qmScriptFullPath.get();
+}
 
 /**
  * @brief returns the slakosType
@@ -517,7 +651,10 @@ bool DftbSettings::isHubbardDerivsSetByUser() const
  *
  * @return bool
  */
-bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
+bool QMSettings::useDispersionCorr() const
+{
+    return _useDispersionCorrection.get();
+}
 
 /**
  * @brief returns if the net force should be removed after reading in the QM
@@ -525,7 +662,7 @@ bool QMSettings::useDispersionCorr() { return _useDispersionCorrection; }
  *
  * @return bool
  */
-bool QMSettings::getRemoveNetForce() { return _removeNetForce; }
+bool QMSettings::getRemoveNetForce() const { return _removeNetForce.get(); }
 
 /**
  * @brief returns the xTBMethod
@@ -537,9 +674,12 @@ XtbMethod XtbSettings::getXtbMethod() const { return _xtbMethod.get(); }
 /**
  * @brief returns the qmLoopTimeLimit
  *
- * @return double
+ * @return const TimeMs&
  */
-double QMSettings::getQMLoopTimeLimit() { return _qmLoopTimeLimit; }
+const TimeMs &QMSettings::getQMLoopTimeLimit() const
+{
+    return _qmLoopTimeLimit.get();
+}
 
 /**
  * @brief returns the FeNNol model path

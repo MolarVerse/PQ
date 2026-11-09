@@ -33,6 +33,7 @@ class MaceSettings;
 class FennolSettings;
 class DftbSettings;
 class XtbSettings;
+class ExternalQMSettings;
 
 namespace input
 {
@@ -45,23 +46,25 @@ namespace input
     class QMInputParser : public InputFileParser
     {
        private:
-        bool                         _resolveBuiltInSlakosPath;
-        mstd::Ref<ReferenceSettings> _referenceSettings;
-        mstd::Ref<QMSettings>        _qmSettings;
-        mstd::Ref<MaceSettings>      _maceSettings;
-        mstd::Ref<FennolSettings>    _fennolSettings;
-        mstd::Ref<DftbSettings>      _dftbSettings;
-        mstd::Ref<XtbSettings>       _xtbSettings;
+        bool                          _resolveBuiltInSlakosPath;
+        mstd::Ref<ReferenceSettings>  _referenceSettings;
+        mstd::Ref<QMSettings>         _qmSettings;
+        mstd::Ref<MaceSettings>       _maceSettings;
+        mstd::Ref<FennolSettings>     _fennolSettings;
+        mstd::Ref<DftbSettings>       _dftbSettings;
+        mstd::Ref<XtbSettings>        _xtbSettings;
+        mstd::Ref<ExternalQMSettings> _externalQMSettings;
 
        public:
         explicit QMInputParser(
-            bool               resolveBuiltInSlakosPath,
-            ReferenceSettings &referenceSettings,
-            QMSettings        &qmSettings,
-            MaceSettings      &maceSettings,
-            FennolSettings    &fennolSettings,
-            DftbSettings      &dftbSettings,
-            XtbSettings       &xtbSettings
+            bool                resolveBuiltInSlakosPath,
+            ReferenceSettings  &referenceSettings,
+            QMSettings         &qmSettings,
+            MaceSettings       &maceSettings,
+            FennolSettings     &fennolSettings,
+            DftbSettings       &dftbSettings,
+            XtbSettings        &xtbSettings,
+            ExternalQMSettings &externalQMSettings
         );
 
         void parseMaceQMMethod(const std::string &);

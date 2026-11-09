@@ -40,7 +40,7 @@ namespace QM
         ~AseDftbRunner() override = default;
 
         explicit AseDftbRunner(
-            const QMSettings   &settings,
+            const QMSettings   &qmSettings,
             const DftbSettings &dftbSettings
         );
     };

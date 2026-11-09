@@ -67,8 +67,7 @@ namespace QM
      */
     void PySCFRunner::execute(molsys::SimulationBox & /*simBox*/)
     {
-        const auto scriptFileName =
-            _resolveScriptPath(QMSettings::getQMScript());
+        const auto scriptFileName = _getExternalQMSettings().getQMScript();
 
         if (!mstd::File(scriptFileName).exists())
         {
