@@ -301,5 +301,6 @@ TEST_F(TestSetup, setupThermostatNhChain)
         dynamic_cast<thermostat::NoseHooverThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
-    EXPECT_EQ(noseHooverThermostat.getChi().size(), 6);
+    EXPECT_EQ(noseHooverThermostat.getChi().size(), 5);
+    EXPECT_EQ(noseHooverThermostat.getZeta().size(), 5);
 }

@@ -42,8 +42,11 @@ namespace thermostat
     {
        private:
         mstd::ConstRef<NoseHooverSettings> _nhSettings;
-        std::vector<double>                _chi{0.0};    // in kcal/mol s
-        std::vector<double>                _zeta{0.0};   // unitless
+        // chainLength + 1 entries; the last one is a fixed zero boundary term
+        // needed by the chi[i] * chi[i + 1] coupling of the last real link. It
+        // is never updated and never exposed through the getters.
+        std::vector<double> _chi{0.0};    // in kcal/mol s
+        std::vector<double> _zeta{0.0};   // unitless
 
        public:
         explicit NoseHooverThermostat(

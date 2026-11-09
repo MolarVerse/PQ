@@ -43,9 +43,9 @@ namespace thermostat
      * object
      *
      * @param targetTemp
-     * @param chi
-     * @param zeta
-     * @param couplingFrequency
+     * @param nhSettings Reference to the NoseHooverSettings object containing
+     * the Nose-Hoover chain parameters such as chi, zeta, and coupling
+     * frequency.
      */
     NoseHooverThermostat::NoseHooverThermostat(
         const NoseHooverSettings &nhSettings,
@@ -214,16 +214,28 @@ namespace thermostat
     /**
      * @brief get the chi values of the Nose-Hoover thermostat
      *
+     * @details only the real chain links are returned, not the internal zero
+     * boundary term
+     *
      * @return std::vector<double>
      */
-    std::vector<double> NoseHooverThermostat::getChi() const { return _chi; }
+    std::vector<double> NoseHooverThermostat::getChi() const
+    {
+        return {_chi.begin(), _chi.end() - 1};
+    }
 
     /**
      * @brief get the zeta values of the Nose-Hoover thermostat
      *
+     * @details only the real chain links are returned, not the internal
+     * boundary term
+     *
      * @return std::vector<double>
      */
-    std::vector<double> NoseHooverThermostat::getZeta() const { return _zeta; }
+    std::vector<double> NoseHooverThermostat::getZeta() const
+    {
+        return {_zeta.begin(), _zeta.end() - 1};
+    }
 
     /**
      * @brief get the ThermostatType

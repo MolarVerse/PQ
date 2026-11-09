@@ -893,7 +893,10 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
         eFri    += zeta[i];
     }
 
-    for (size_t i = 0; i < chi.size(); ++i)
+    // the last reference entry is the hidden boundary term
+    ASSERT_EQ(thermostat.getChi().size(), chi.size() - 1);
+    ASSERT_EQ(thermostat.getZeta().size(), zeta.size() - 1);
+    for (size_t i = 0; i < chi.size() - 1; ++i)
     {
         EXPECT_DOUBLE_EQ(thermostat.getChi()[i], chi[i]);
         EXPECT_DOUBLE_EQ(thermostat.getZeta()[i], zeta[i]);

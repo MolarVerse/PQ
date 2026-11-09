@@ -59,6 +59,8 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine The engine to set up.
+     * @param nhSettings Reference to the NoseHooverSettings object used to
+     * configure the thermostat if applicable.
      */
     void setupRequestedJob(
         engine::Engine&     engine,

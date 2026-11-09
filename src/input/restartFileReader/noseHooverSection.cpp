@@ -23,6 +23,7 @@
 #include "noseHooverSection.hpp"
 
 #include <format>
+#include <map>
 #include <string>
 
 #include "exceptions.hpp"
@@ -75,7 +76,7 @@ namespace input::restartFile
 
         if (idx > _noseHooverSettings->getNoseHooverChainLength())
         {
-            throw exc::InputFileException(
+            throw exc::RstFileException(
                 std::format(
                     "Chi index {} is larger than the number of nose hoover "
                     "chains {}",
@@ -85,19 +86,36 @@ namespace input::restartFile
             );
         }
 
-        auto chis  = _noseHooverSettings->getChi();
-        auto zetas = _noseHooverSettings->getZeta();
+        if (idx == 0)
+        {
+            throw exc::RstFileException(
+                std::format(
+                    "Error in line {} in restart file; chi index cannot be "
+                    "zero",
+                    lineNumber
+                )
+            );
+        }
 
-        auto [iterChi, chiIsInserted]   = chis.try_emplace(idx, chi);
-        auto [iterZeta, zetaIsInserted] = zetas.try_emplace(idx, zeta);
+        // the maps do not exist before the first chi line has been read
+        auto chis  = std::map<size_t, double>();
+        auto zetas = std::map<size_t, double>();
+
+        if (_noseHooverSettings->isChiAndZetaSet())
+        {
+            chis  = _noseHooverSettings->getChi();
+            zetas = _noseHooverSettings->getZeta();
+        }
+
+        auto [iterChi, chiIsInserted]   = chis.try_emplace(idx - 1, chi);
+        auto [iterZeta, zetaIsInserted] = zetas.try_emplace(idx - 1, zeta);
 
         if (!chiIsInserted || !zetaIsInserted)
         {
             throw exc::RstFileException(
                 std::format(
                     "Error in line {} in restart file; chi or zeta entry "
-                    "already "
-                    "exists",
+                    "already exists",
                     lineNumber
                 )
             );
