@@ -27,18 +27,10 @@
 
 #include "output.hpp"
 
-namespace thermostat
-{
-    class Thermostat;   // forward declaration
-}   // namespace thermostat
-
-namespace molsys
-{
-    class SimulationBox;   // forward declaration
-}   // namespace molsys
-
 namespace out
 {
+    struct Frame;   // forward declaration
+
     /**
      * @brief RstFileOutput inherits from Output
      *
@@ -50,11 +42,7 @@ namespace out
        public:
         using Output::Output;
 
-        void write(
-            const molsys::SimulationBox &,
-            const thermostat::Thermostat &,
-            size_t
-        );
+        void write(const Frame &, size_t);
     };
 
 }   // namespace out

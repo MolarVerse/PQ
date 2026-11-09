@@ -26,19 +26,16 @@
 #include <cstdint>
 #include <filesystem>
 #include <string>
-#include <vector>
 
 #include "benchmarkSetup.hpp"
+#include "frame.hpp"
+#include "simulationBox.hpp"
 #include "trajectoryOutput.hpp"
-#include "vector3d.hpp"
 
 namespace
 {
-    using WriteFn = void (out::TrajectoryOutput::*)(
-        const molsys::SimulationBox &,
-        std::size_t,
-        bool
-    );
+    using WriteFn =
+        void (out::TrajectoryOutput::*)(const out::Frame &, std::size_t, bool);
 
     // TMPDIR selects the filesystem under test
     std::string outputFile(const std::string &name)
@@ -66,13 +63,14 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         const auto simBox       = benchmarkSetup::makeLattice(cellsPerSide);
         const auto fileName     = outputFile(name);
+        const out::Frame frame{simBox};
 
         {
             out::TrajectoryOutput output{fileName};
             output.setFilename(fileName, true);
 
             std::size_t step = 0;
-            for (auto _ : state) (output.*write)(simBox, ++step, false);
+            for (auto _ : state) (output.*write)(frame, ++step, false);
         }
 
         state.SetBytesProcessed(
@@ -114,31 +112,16 @@ namespace
         );
     }
 
-    // what a writer thread would leave on the MD thread
+    // what a writer thread leaves on the MD thread
     void BM_CopyFrame(benchmark::State &state)
     {
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         const auto simBox       = benchmarkSetup::makeLattice(cellsPerSide);
-        const auto nAtoms       = simBox.getNumberOfAtoms();
-
-        std::vector<linalg::Vec3D> positions(nAtoms);
-        std::vector<linalg::Vec3D> velocities(nAtoms);
-        std::vector<linalg::Vec3D> forces(nAtoms);
 
         for (auto _ : state)
         {
-            for (std::size_t i = 0; i < nAtoms; ++i)
-            {
-                const auto &atom = simBox.getAtoms()[i];
-                positions[i]     = atom->getPosition();
-                velocities[i]    = atom->getVelocity();
-                forces[i]        = atom->getForce();
-            }
-
-            benchmark::DoNotOptimize(positions.data());
-            benchmark::DoNotOptimize(velocities.data());
-            benchmark::DoNotOptimize(forces.data());
-            benchmark::ClobberMemory();
+            const out::Frame frame{simBox};
+            benchmark::DoNotOptimize(frame.positions.data());
         }
 
         setItemsProcessed(state, simBox);

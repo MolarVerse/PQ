@@ -22,14 +22,12 @@
 
 #include "rstFileOutput.hpp"
 
+#include <cstddef>
 #include <format>
 #include <ostream>
 #include <sstream>
-#include <vector>
 
-#include "molecule.hpp"
-#include "noseHooverThermostat.hpp"
-#include "simulationBox.hpp"
+#include "frame.hpp"
 
 namespace out
 {
@@ -39,21 +37,13 @@ namespace out
         /**
          * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
          *
-         * @param thermostat
+         * @param frame
          * @param buffer
          */
-        void writeNHChain(
-            const thermostat::Thermostat &thermostat,
-            std::ostringstream           &buffer
-        )
+        void writeNHChain(const Frame &frame, std::ostringstream &buffer)
         {
-            const auto &nhChain =
-                dynamic_cast<const thermostat::NoseHooverThermostat &>(
-                    thermostat
-                );
-
-            const auto &chi  = nhChain.getChi();
-            const auto &zeta = nhChain.getZeta();
+            const auto &chi  = frame.noseHooverChi;
+            const auto &zeta = frame.noseHooverZeta;
 
             for (size_t i = 0; i < chi.size(); ++i)
             {
@@ -73,15 +63,10 @@ namespace out
     /**
      * @brief Write the restart file
      *
-     * @param simulationBox
-     * @param thermostat
+     * @param frame
      * @param step
      */
-    void RstFileOutput::write(
-        const molsys::SimulationBox  &simulationBox,
-        const thermostat::Thermostat &thermostat,
-        size_t                        step
-    )
+    void RstFileOutput::write(const Frame &frame, size_t step)
     {
         std::ostringstream buffer;
 
@@ -91,34 +76,30 @@ namespace out
 
         buffer << "Step " << step << '\n';
 
-        const auto &boxDim = simulationBox.getBoxDimensions();
-        const auto &boxAng = simulationBox.getBoxAngles();
+        buffer << "Box   " << frame.boxDimensions << "  " << frame.boxAngles
+               << '\n';
 
-        buffer << "Box   " << boxDim << "  " << boxAng << '\n';
+        if (!frame.noseHooverChi.empty())
+            writeNHChain(frame, buffer);
 
-        if (thermostat.getThermostatType() == ThermostatType::NOSE_HOOVER)
-            writeNHChain(thermostat, buffer);
+        std::size_t atom = 0;
 
-        for (const auto &molecule : simulationBox.getMolecules())
+        for (const auto &[molType, nAtoms] : frame.molecules)
         {
-            const auto nAtoms = molecule.getNumberOfAtoms();
-
-            for (AtomIndex i{0}; i.get() < nAtoms; ++i)
+            for (std::size_t i = 0; i < nAtoms; ++i, ++atom)
             {
-                const auto atomName = molecule.getAtomName(i);
-                const auto molType  = molecule.getMoltype();
-                const auto x        = molecule.getAtomPosition(i)[0];
-                const auto y        = molecule.getAtomPosition(i)[1];
-                const auto z        = molecule.getAtomPosition(i)[2];
-                const auto velX     = molecule.getAtomVelocity(i)[0];
-                const auto velY     = molecule.getAtomVelocity(i)[1];
-                const auto velZ     = molecule.getAtomVelocity(i)[2];
-                const auto forceX   = molecule.getAtomForce(i)[0];
-                const auto forceY   = molecule.getAtomForce(i)[1];
-                const auto forceZ   = molecule.getAtomForce(i)[2];
+                const auto x      = frame.positions[atom][0];
+                const auto y      = frame.positions[atom][1];
+                const auto z      = frame.positions[atom][2];
+                const auto velX   = frame.velocities[atom][0];
+                const auto velY   = frame.velocities[atom][1];
+                const auto velZ   = frame.velocities[atom][2];
+                const auto forceX = frame.forces[atom][0];
+                const auto forceY = frame.forces[atom][1];
+                const auto forceZ = frame.forces[atom][2];
 
-                buffer << std::format("{:<5}\t", atomName);
-                buffer << std::format("{:<5}\t", i.get() + 1);
+                buffer << std::format("{:<5}\t", frame.names[atom]);
+                buffer << std::format("{:<5}\t", i + 1);
                 buffer << std::format("{:<5}\t", molType.get());
 
                 buffer

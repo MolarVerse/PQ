@@ -25,6 +25,7 @@
 #include <iosfwd>
 #include <string>
 
+#include "frame.hpp"
 #include "noseHooverThermostat.hpp"
 #include "thermostat.hpp"
 #include "thermostatSettings.hpp"
@@ -38,7 +39,10 @@
 TEST_F(TestRstFileOutput, write)
 {
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(*_simulationBox, thermostat::Thermostat(), 10);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        10
+    );
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
@@ -94,7 +98,7 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     );
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(*_simulationBox, thermostat, 10);
+    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
