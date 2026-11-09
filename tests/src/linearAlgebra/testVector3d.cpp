@@ -45,7 +45,7 @@ namespace
     struct PoisonedStorage
     {
         alignas(T) std::array<std::byte, sizeof(T)> bytes{};
-        T *object = construct(bytes);
+        T *object = _construct(bytes);
 
         ~PoisonedStorage() { object->~T(); }
 
@@ -56,7 +56,7 @@ namespace
         PoisonedStorage &operator=(PoisonedStorage &&)      = delete;
 
        private:
-        static T *construct(std::array<std::byte, sizeof(T)> &storage)
+        static T *_construct(std::array<std::byte, sizeof(T)> &storage)
         {
             storage.fill(std::byte{0xFF});
             // default initialisation on purpose: `T()` would zero a class
