@@ -400,9 +400,11 @@ TEST_F(TestInputFileReader, testOrcaFileName)
     const auto              functions = parser.getKeywordFuncMap();
     const auto             &parse     = functions.at("orca_file");
     const auto previous = settings::FileSettings::getOrcaFileName();
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         parse({"orca_file", "=", "no-such-orca-template"}, 0),
-        exc::InputFileException
+        exc::InputFileException,
+        "Invalid value \"no-such-orca-template\" for key \"orca_file\" at "
+        "line 0 in input file. Value must be an existing file path."
     );
     _clearParser(parser);
     parse({"orca_file", "=", "data/atomSection/testProcess.rst"}, 0);
