@@ -49,6 +49,14 @@ namespace input
         using ParseFunc =
             std::function<void(const std::vector<std::string> &, const size_t)>;
 
+       private:
+        std::map<std::string, ParseFunc> _keywordFuncMap;
+        std::map<std::string, bool>      _keywordRequiredMap;
+        std::map<std::string, int>       _keywordCountMap;
+
+        InputRegistry _registry;
+
+       public:
         // the derived parsers are owned through
         // std::unique_ptr<InputFileParser> (InputFileReader::_parsers), so the
         // destructor has to be virtual
@@ -59,14 +67,6 @@ namespace input
         InputFileParser &operator=(const InputFileParser &) = default;
         InputFileParser &operator=(InputFileParser &&)      = default;
 
-       private:
-        std::map<std::string, ParseFunc> _keywordFuncMap;
-        std::map<std::string, bool>      _keywordRequiredMap;
-        std::map<std::string, int>       _keywordCountMap;
-
-        InputRegistry _registry;
-
-       public:
         void addKeyword(const std::string &, ParseFunc, bool);
 
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;
