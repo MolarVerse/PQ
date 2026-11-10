@@ -22,18 +22,82 @@
 
 #include <gtest/gtest.h>
 
+#include <array>
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 #include <limits>
 #include <mstd/units.hpp>
 #include <string>
 
+#include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
 /**
  * @brief tests constructors for linalg::Vector3D
  *
  */
+namespace
+{
+    // builds a T (default initialised, `T value;`) into storage that is filled
+    // with 0xFF, which is a NaN for a double
+    template <typename T>
+    struct PoisonedStorage
+    {
+        alignas(T) std::array<std::byte, sizeof(T)> bytes{};
+        T *object = _construct(bytes);
+
+        ~PoisonedStorage() { object->~T(); }
+
+        PoisonedStorage()                                   = default;
+        PoisonedStorage(const PoisonedStorage &)            = delete;
+        PoisonedStorage &operator=(const PoisonedStorage &) = delete;
+        PoisonedStorage(PoisonedStorage &&)                 = delete;
+        PoisonedStorage &operator=(PoisonedStorage &&)      = delete;
+
+       private:
+        static T *_construct(std::array<std::byte, sizeof(T)> &storage)
+        {
+            storage.fill(std::byte{0xFF});
+            // default initialisation on purpose: `T()` would zero a class
+            // whose constructor is defaulted
+            return new (storage.data()) T;
+        }
+    };
+}   // namespace
+
+/**
+ * @brief a default constructed vector is zero, whatever the memory held
+ *
+ * @details A defaulted constructor left the components uninitialised, which
+ * printed garbage (once inf) into the first energy and momentum line of a run.
+ */
+TEST(TestVector3d, defaultConstructedIsZero)
+{
+    const PoisonedStorage<linalg::Vector3D<double>> vector;
+
+    for (size_t i = 0; i < 3; ++i) EXPECT_EQ((*vector.object)[i], 0.0);
+
+    const PoisonedStorage<linalg::Vector3D<int>> intVector;
+
+    for (size_t i = 0; i < 3; ++i) EXPECT_EQ((*intVector.object)[i], 0);
+}
+
+TEST(TestVector3d, defaultConstructedNestedAndMatrixAreZero)
+{
+    const PoisonedStorage<linalg::Vector3D<linalg::Vector3D<double>>> nested;
+    const PoisonedStorage<linalg::StaticMatrix3x3<double>>            matrix;
+
+    for (size_t i = 0; i < 3; ++i)
+    {
+        for (size_t j = 0; j < 3; ++j)
+        {
+            EXPECT_EQ((*nested.object)[i][j], 0.0);
+            EXPECT_EQ((*matrix.object)[i][j], 0.0);
+        }
+    }
+}
+
 TEST(TestVector3d, constructors)
 {
     auto vec = linalg::Vec3D(0.0, 1.0, 2.0);
@@ -649,17 +713,17 @@ TEST(TestVector3d, end)
 TEST(TestVector3d, equalOperator)
 {
     auto                 vec1 = linalg::Vec3D(1.0, 2.0, 3.0);
-    const linalg::Vec3D& vec2 = vec1;
+    const linalg::Vec3D &vec2 = vec1;
 
     EXPECT_EQ(vec1, vec2);
 
     auto                  vec3 = linalg::Vec3Di(1, 2, 3);
-    const linalg::Vec3Di& vec4 = vec3;
+    const linalg::Vec3Di &vec4 = vec3;
 
     EXPECT_EQ(vec3, vec4);
 
     auto                   vec5 = linalg::Vec3Dul(1, 2, 3);
-    const linalg::Vec3Dul& vec6 = vec5;
+    const linalg::Vec3Dul &vec6 = vec5;
 
     EXPECT_EQ(vec5, vec6);
 }
@@ -868,7 +932,7 @@ TEST(TestVector3d, quantityVectorOperators)
     EXPECT_DOUBLE_EQ(sum[0].numerical_value_in(rad), 2.0);
     EXPECT_DOUBLE_EQ(sum[2].numerical_value_in(rad), 6.0);
 
-    const auto& vec2 = vec;
+    const auto &vec2 = vec;
     const auto  diff = vec - vec2;
     EXPECT_DOUBLE_EQ(diff[1].numerical_value_in(rad), 0.0);
 
