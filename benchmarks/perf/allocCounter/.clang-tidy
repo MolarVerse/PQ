@@ -1,0 +1,6 @@
+---
+# The allocation counter replaces glibc's malloc family, so the parameter names
+# cannot match the (reserved) names of glibc's declarations. clangd 20 ignores
+# NOLINT for this check, hence the file-level opt-out.
+InheritParentConfig: true
+Checks: '-readability-inconsistent-declaration-parameter-name'
