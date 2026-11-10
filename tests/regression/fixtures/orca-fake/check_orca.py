@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""Check PQ + ORCA drivers against the calls logged by fake_orca.py.
-
-Usage: check_orca.py qm | qmmm   (run in the case directory after PQ)
-"""
+"""Check PQ output against fake_orca.py calls; usage: check_orca.py qm|qmmm."""
 import json
 import math
 from pathlib import Path
@@ -108,7 +105,7 @@ def check_point_charges(call):
         check(any(abs(q - m) < 1e-6 for m in MM_CHARGES), f"point charge {q} is not an MM charge")
         distances.append(math.dist(pos, centre))
         check(min(math.dist(pos, a) for a in qm) > 0.3, "point charge sits on a QM atom")
-    # Molecule centres lie in [layer - smoothing, layer + pc shell]; atoms within ~1.5 A.
+    # 1.5 A: atom-to-molecule-centre slack
     check(min(distances) > LAYER - SMOOTHING - 1.5,
           f"point charge at {min(distances):.2f} A, inside the QM layer")
     check(max(distances) < LAYER + PC_SHELL + 1.5,

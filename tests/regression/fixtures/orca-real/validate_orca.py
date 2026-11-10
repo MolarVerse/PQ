@@ -1,15 +1,5 @@
 #!/usr/bin/env python3
-"""Validate PQ's ORCA drivers against a real ORCA installation.
-
-Usage: validate_orca.py <scripts dir> <examples/orca dir> [work dir]
-ORCA_EXE (or orca on PATH) selects ORCA. Writes results.json, exits 1 on FAIL.
-
-Checks per driver (orca_hf.py, orca_dft.py, orca_rimp2.py) on water:
-  1. pure QM gradient == central finite differences of the driver energy
-  2. QM/MM with all point charges zero == pure QM (energy, gradient)
-  3. HF/DFT: polarized-then-frozen energy >= pure QM energy (variational)
-  4. a real point-charge field changes the returned atomic charges
-"""
+"""Check the ORCA drivers against real ORCA; usage: validate_orca.py <scripts> <examples/orca> [work]."""
 import json
 import math
 import os
@@ -20,13 +10,12 @@ import sys
 import tempfile
 
 WATER = [("O", 0.000, 0.0, 0.000), ("H", 0.758, 0.0, 0.504), ("H", -0.758, 0.0, 0.504)]
-# One TIP3P-like water 3 A from the QM oxygen; charges in e, positions in A.
 FIELD = [(-0.834, 0.0, 0.0, -2.900), (0.417, 0.757, 0.0, -3.486), (0.417, -0.757, 0.0, -3.486)]
-STEP = 0.005  # finite-difference step in A
+STEP = 0.005  # A
 BOHR_IN_ANGSTROM = 0.529177210903
 DRIVERS = {
     "orca_hf.py": ("orca_hf.template", 2e-6),
-    "orca_dft.py": ("orca_dft.template", 1e-4),   # DFT grid noise
+    "orca_dft.py": ("orca_dft.template", 1e-4),  # grid noise
     "orca_rimp2.py": ("orca.template", 2e-6),
 }
 
@@ -56,7 +45,6 @@ def validate(scripts, examples, work, driver):
     template_name, fd_tol = DRIVERS[driver]
     base = work / driver.removesuffix(".py")
     base.mkdir(parents=True, exist_ok=True)
-    # TightSCF noise in the non-variational MP2 energy alone gives ~3e-6 Eh/bohr.
     template = base / template_name
     template.write_text((examples / template_name).read_text().replace("TightSCF", "VeryTightSCF"))
     results = []
@@ -74,7 +62,6 @@ def validate(scripts, examples, work, driver):
                 atoms = [list(a) for a in WATER]
                 atoms[i][d + 1] += k * STEP
                 e[k] = run(scripts, template, driver, atoms, work=base / f"fd_{i}{d}_{k}")[0]
-            # Five-point stencil: truncation error O(h^4), central differences O(h^2) are ~2e-5 here.
             fd = (8 * (e[1] - e[-1]) - (e[2] - e[-2])) / (12 * STEP / BOHR_IN_ANGSTROM)
             worst = max(worst, abs(fd - g0[i][d]))
     record("gradient_vs_finite_difference", worst < fd_tol,
@@ -87,7 +74,7 @@ def validate(scripts, examples, work, driver):
            f"dE = {ez - e0:.2e} Eh, max dgrad = {dg:.2e} Eh/bohr")
 
     ef, _, qf = run(scripts, template, driver, WATER, FIELD, work=base / "field")
-    if driver != "orca_rimp2.py":  # MP2 is not variational in the orbitals
+    if driver != "orca_rimp2.py":  # MP2 is not variational
         record("frozen_energy_above_pure_qm", ef - e0 > -1e-8,
                f"E(frozen) - E(pure) = {ef - e0:.3e} Eh")
     dq = max(abs(a - b) for a, b in zip(qf, q0))

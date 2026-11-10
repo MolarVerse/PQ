@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic stand-in for the ORCA executable used by PQ's ORCA drivers.
-
-Energy model, in Hartree and Bohr, with r_c the mean QM position:
-    E = E0 + K/2 * sum_i |r_i - r_c|^2 (+ PENALTY for frozen polarized orbitals)
-Each call is logged to fake_orca_calls.jsonl for check_orca.py.
-"""
+"""Fake ORCA: E = E0 + K/2 sum |r_i - r_c|^2 (Eh, bohr); logs calls for check_orca.py."""
 import json
 from pathlib import Path
 import re
