@@ -419,7 +419,7 @@ namespace configurator
     }
 
     /** @brief Set the hybrid-zone change flag used to reset QM references. */
-    void HybridConfigurator::setMoleculeChangedZone(const bool changed)
+    void HybridConfigurator::_setMoleculeChangedZone(const bool changed)
     {
         _molChangedZone = changed;
     }

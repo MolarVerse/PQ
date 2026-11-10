@@ -198,6 +198,11 @@ class ExternalQMRunnerTest : public testing::Test
         QM::ExternalQMRunner::_readChargeFile(simulationBox, settings);
     }
 
+    static void _setMoleculeChangedZone(const bool changed)
+    {
+        configurator::HybridConfigurator::_setMoleculeChangedZone(changed);
+    }
+
     void SetUp() override
     {
         _settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
@@ -936,7 +941,7 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
         "template's name; touch qm-injected"
     );
     settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
-    configurator::HybridConfigurator::setMoleculeChangedZone(false);
+    _setMoleculeChangedZone(false);
     const auto expected = [&](int reset)
     {
         return std::format(
@@ -953,17 +958,17 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
     EXPECT_EQ(expected(1), runner.getCommand());
     runner.execute(_simulationBox);
     EXPECT_EQ(expected(0), runner.getCommand());
-    configurator::HybridConfigurator::setMoleculeChangedZone(true);
+    _setMoleculeChangedZone(true);
     runner.execute(_simulationBox);
     EXPECT_EQ(expected(1), runner.getCommand());
-    configurator::HybridConfigurator::setMoleculeChangedZone(false);
+    _setMoleculeChangedZone(false);
     settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
     runner.execute(_simulationBox);
     EXPECT_EQ(expected(1), runner.getCommand());
     EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
     settings::FileSettings::setOrcaFileName(previous);
     settings::HybridSettings::setSmoothingMethod(smoothing);
-    configurator::HybridConfigurator::setMoleculeChangedZone(changed);
+    _setMoleculeChangedZone(changed);
 }
 
 TEST_F(ExternalQMRunnerTest, orcaRejectsMissingScript)

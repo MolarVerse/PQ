@@ -27,6 +27,8 @@
 
 #include "vector3d.hpp"
 
+class ExternalQMRunnerTest;   // forward declaration
+
 namespace molsys
 {
     class SimulationBox;   // forward declaration
@@ -63,7 +65,10 @@ namespace configurator
         [[nodiscard]] linalg::Vec3D getInnerRegionCenter() const;
         [[nodiscard]] static bool   getMoleculeChangedZone();
 
-        static void setMoleculeChangedZone(bool);
+       private:
+        static void _setMoleculeChangedZone(bool);
+
+        friend class ::ExternalQMRunnerTest;   // for testing private methods
     };
 
 }   // namespace configurator
