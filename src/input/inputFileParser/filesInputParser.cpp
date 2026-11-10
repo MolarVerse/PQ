@@ -131,9 +131,7 @@ namespace input
         bool          validateFilePaths,
         FileSettings &fileSettings
     )
-        : InputFileParser(),
-          _validateFilePaths(validateFilePaths),
-          _fileSettings(fileSettings)
+        : _validateFilePaths(validateFilePaths), _fileSettings(fileSettings)
     {
         addIntraNonBondedFileKey();
         addTopologyFileKey();
