@@ -22,7 +22,6 @@
 
 #include "hybridSettings.hpp"
 
-#include <algorithm>
 #include <cstddef>
 #include <format>
 #include <vector>
