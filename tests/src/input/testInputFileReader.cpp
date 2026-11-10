@@ -33,6 +33,7 @@
 
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "inputFileParser.hpp"
 #include "potentialSettings.hpp"
 #include "stringUtilities.hpp"
 #include "throwWithMessage.hpp"
@@ -389,4 +390,47 @@ TEST_F(TestInputFileReader, testAllKeywordsAcceptValidValue)
         EXPECT_TRUE(_inputFileReader->getKeywordSet(normalizedKeyword));
         EXPECT_EQ(_inputFileReader->getKeywordCount(normalizedKeyword), 1);
     }
+}
+
+namespace
+{
+    class DestructionTrackingParser : public input::InputFileParser
+    {
+       private:
+        bool *_destroyed;
+
+       public:
+        explicit DestructionTrackingParser(bool *destroyed)
+            : _destroyed(destroyed)
+        {
+        }
+
+        ~DestructionTrackingParser() override { *_destroyed = true; }
+
+        DestructionTrackingParser(const DestructionTrackingParser &) = delete;
+        DestructionTrackingParser &operator=(const DestructionTrackingParser &
+        )                                                            = delete;
+        DestructionTrackingParser(DestructionTrackingParser &&)      = delete;
+        DestructionTrackingParser &operator=(DestructionTrackingParser &&
+        )                                                            = delete;
+    };
+}   // namespace
+
+/**
+ * @brief parsers are owned through a pointer to the base class
+ * (InputFileReader::_parsers), so deleting one has to destroy the derived
+ * parser, otherwise it is undefined behaviour
+ */
+TEST(TestInputFileParserOwnership, derivedParserIsDestroyedThroughBasePointer)
+{
+    auto destroyed = false;
+
+    std::unique_ptr<input::InputFileParser> parser =
+        std::make_unique<DestructionTrackingParser>(&destroyed);
+
+    EXPECT_FALSE(destroyed);
+
+    parser.reset();
+
+    EXPECT_TRUE(destroyed);
 }

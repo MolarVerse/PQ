@@ -1,0 +1,1 @@
+- Fix undefined behaviour when the input file parsers are destroyed: the base class InputFileParser had no virtual destructor but the parsers are owned through a pointer to it (valgrind: mismatched new/delete size).
