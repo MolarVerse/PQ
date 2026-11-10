@@ -27,6 +27,8 @@ multiplicity for an unrestricted system. Double hybrids and post-SCF methods
 are outside the HF/DFT drivers' protocol; use the dedicated RI-MP2 driver for
 RI-MP2. Availability of ORCA gradients and frozen-density behavior must be
 checked for other specialized functionals or approximations.
+Avoid basis sets where ORCA removes linear-dependent functions (often diffuse
+ones): `MORead NoIter` then gives wrong results (ORCA manual, section 2.20.5).
 
 For the existing RI-MP2 example, add to a QM or QM/MM input:
 
