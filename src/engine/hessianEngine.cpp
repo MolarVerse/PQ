@@ -39,6 +39,7 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
+#include "frame.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
@@ -315,8 +316,10 @@ namespace engine
 
         if (0 == getStep() % outputFreq)
         {
-            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            const out::Frame frame{getSimulationBox()};
+
+            getEngineOutput().writeXyzFile(frame, effStep);
+            getEngineOutput().writeForceFile(frame, effStep);
             getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
             getEngineOutput().writeOptFile(getStep(), *_optimizer);
         }
