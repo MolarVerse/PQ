@@ -54,8 +54,11 @@ def run(scripts, template, driver, atoms, charges=None, work=None):
 
 def validate(scripts, examples, work, driver):
     template_name, fd_tol = DRIVERS[driver]
-    template = examples / template_name
     base = work / driver.removesuffix(".py")
+    base.mkdir(parents=True, exist_ok=True)
+    # TightSCF noise in the non-variational MP2 energy alone gives ~3e-6 Eh/bohr.
+    template = base / template_name
+    template.write_text((examples / template_name).read_text().replace("TightSCF", "VeryTightSCF"))
     results = []
 
     def record(name, ok, detail):
@@ -66,13 +69,13 @@ def validate(scripts, examples, work, driver):
     worst = 0.0
     for i in range(len(WATER)):
         for d in range(3):
-            energies = []
-            for sign in (1, -1):
+            e = {}
+            for k in (2, 1, -1, -2):
                 atoms = [list(a) for a in WATER]
-                atoms[i][d + 1] += sign * STEP
-                energies.append(run(scripts, template, driver, atoms,
-                                    work=base / f"fd_{i}{d}{'p' if sign > 0 else 'm'}")[0])
-            fd = (energies[0] - energies[1]) / (2 * STEP / BOHR_IN_ANGSTROM)
+                atoms[i][d + 1] += k * STEP
+                e[k] = run(scripts, template, driver, atoms, work=base / f"fd_{i}{d}_{k}")[0]
+            # Five-point stencil: truncation error O(h^4), central differences O(h^2) are ~2e-5 here.
+            fd = (8 * (e[1] - e[-1]) - (e[2] - e[-2])) / (12 * STEP / BOHR_IN_ANGSTROM)
             worst = max(worst, abs(fd - g0[i][d]))
     record("gradient_vs_finite_difference", worst < fd_tol,
            f"max |dE/dx - gradient| = {worst:.2e} Eh/bohr (tol {fd_tol:.0e})")
