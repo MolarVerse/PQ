@@ -66,7 +66,7 @@ int main()
     settings.setNResetAngularByUser(ITERATIONS);
     settings.setFResetAngularByUser(1);
     settings.setFResetForcesByUser(1);
-    const auto resetKinetics = resetKinetics::ResetKinetics(settings);
+    const auto resetKinetics = kinetics::ResetKinetics(settings);
 
     perfAllocBegin();
 

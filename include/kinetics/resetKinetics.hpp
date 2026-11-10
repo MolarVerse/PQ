@@ -40,7 +40,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace resetKinetics
+namespace kinetics
 {
     /**
      * @class ResetKinetics
@@ -78,6 +78,6 @@ namespace resetKinetics
         );
     };
 
-}   // namespace resetKinetics
+}   // namespace kinetics
 
 #endif   // RESET_KINETICS__RESET_KINETICS_HPP

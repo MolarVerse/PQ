@@ -37,7 +37,7 @@
 #include "thermostatSettings.hpp"
 #include "vector3d.hpp"
 
-namespace resetKinetics
+namespace kinetics
 {
 
     /**
@@ -237,4 +237,4 @@ namespace resetKinetics
         );
     }
 
-}   // namespace resetKinetics
+}   // namespace kinetics

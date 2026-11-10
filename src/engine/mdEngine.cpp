@@ -288,9 +288,9 @@ namespace engine
     /**
      * @brief get the reference to the reset kinetics
      *
-     * @return resetKinetics::ResetKinetics&
+     * @return kinetics::ResetKinetics&
      */
-    resetKinetics::ResetKinetics &MDEngine::getResetKinetics()
+    kinetics::ResetKinetics &MDEngine::getResetKinetics()
     {
         return _resetKinetics;
     }

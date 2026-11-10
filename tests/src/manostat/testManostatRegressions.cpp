@@ -508,7 +508,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     resetSettings.setFScaleByUser(100);
     resetSettings.setFResetByUser(1);
     resetSettings.setFResetAngularByUser(100);
-    resetKinetics::ResetKinetics reset(resetSettings);
+    kinetics::ResetKinetics reset(resetSettings);
     reset.reset(1, _data, _box);
     EXPECT_NEAR(_box.calculateMomentum()[0] / speed, 0.0, 1e-12);
 }

@@ -47,7 +47,7 @@
 //     void SetUp() override
 //     {
 //         ThermostatSettings::setTargetTemperature(300.0);
-//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50,
+//         _resetKinetics = new kinetics::ResetKinetics(1, 2, 3, 4, 50,
 //         11); _data          = new physicalData::PhysicalData();
 
 //         _simulationBox = new molsys::SimulationBox();
@@ -92,7 +92,7 @@
 
 //     physicalData::PhysicalData   *_data;
 //     molsys::SimulationBox *_simulationBox;
-//     resetKinetics::ResetKinetics *_resetKinetics;
+//     kinetics::ResetKinetics *_resetKinetics;
 // };
 
 #endif   // TESTS__INCLUDE__RESET_KINETICS__TEST_RESET_KINETICS_HPP
