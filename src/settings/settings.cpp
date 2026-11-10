@@ -22,6 +22,7 @@
 
 #include "settings.hpp"
 
+#include "hybridSettings.hpp"
 #include "resetKineticsSettings.hpp"
 
 /**
@@ -35,6 +36,7 @@ void Settings::finalize()
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
     thermostatSettings.finalize(referenceSettings);
+    settings::HybridSettings::finalize(fileSettings);
 
     const auto& qmMethod = qmSettings.getQMMethod();
 

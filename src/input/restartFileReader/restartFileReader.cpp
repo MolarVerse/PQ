@@ -125,7 +125,7 @@ namespace input::restartFile
         NoseHooverSettings &noseHooverSettings
     )
     {
-        const auto filename = settings::FileSettings::getStartFileName();
+        const auto filename = FileSettings::getStartFileName();
 
         out::StdoutOutput::writeRead("Start File", filename);
         engine.getLogOutput().writeRead("Start File", filename);

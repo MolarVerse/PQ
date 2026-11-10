@@ -53,7 +53,7 @@ namespace input::mShake
      */
     MShakeReader::MShakeReader(engine::Engine &engine) : _engine(engine)
     {
-        _fileName = settings::FileSettings::getMShakeFileName();
+        _fileName = FileSettings::getMShakeFileName();
         _fp.open(_fileName);
     }
 

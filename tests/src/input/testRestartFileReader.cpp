@@ -64,13 +64,13 @@ TEST_F(TestRstFileReader, determineSection)
  */
 TEST_F(TestRstFileReader, rstFileReading)
 {
-    settings::FileSettings::setMolDescriptorFileName(
+    _settings.fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
     );
     input::molDescriptor::MoldescriptorReader moldescriptor(*_engine);
 
     std::string filename = "examples/setup/h2o-qmcf.rst";
-    settings::FileSettings::setStartFileName(filename);
+    FileSettings::setStartFileName(filename);
 
     moldescriptor.read();
     ASSERT_NO_THROW(

@@ -64,8 +64,7 @@ namespace input::intraNonBondedReader
 
         auto &log = engine.getLogOutput();
 
-        const auto filename =
-            settings::FileSettings::getIntraNonBondedFileName();
+        const auto filename = FileSettings::getIntraNonBondedFileName();
 
         out::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
         log.writeRead("Intra Non-Bonded File", filename);
@@ -107,7 +106,7 @@ namespace input::intraNonBondedReader
      */
     void IntraNonBondedReader::read()
     {
-        if (!settings::FileSettings::isIntraNonBondedFileNameSet())
+        if (!FileSettings::isIntraNonBondedFileNameSet())
             throw exc::IntraNonBondedException(
                 "Intra non bonded file needed for requested simulation setup"
             );

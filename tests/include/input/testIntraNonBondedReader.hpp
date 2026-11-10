@@ -66,7 +66,7 @@ class TestIntraNonBondedReader : public ::testing::Test
                 "data/intraNonBondedReader/intraNonBonded.dat",
                 *_engine
             );
-        settings::FileSettings::setIsIntraNonBondedFileNameSet();
+        FileSettings::setIsIntraNonBondedFileNameSet();
     }
 };
 

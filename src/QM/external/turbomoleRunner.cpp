@@ -79,9 +79,8 @@ namespace QM
         molsys::SimulationBox &simulationBox
     )
     {
-        const std::string fileName =
-            settings::FileSettings::getPointChargeFileName();
-        std::ofstream pcFile(fileName);
+        const std::string fileName = FileSettings::getPointChargeFileName();
+        std::ofstream     pcFile(fileName);
 
         using enum molsys::HybridZone;
 
@@ -151,10 +150,8 @@ namespace QM
             charge,
             runTMDefine,
             usePointCharges,
-            utilities::shellQuote(settings::FileSettings::getTMFileName()),
-            utilities::shellQuote(
-                settings::FileSettings::getPointChargeFileName()
-            )
+            utilities::shellQuote(FileSettings::getTMFileName()),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
         );
         _executeCommand(command, "Turbomole");
 

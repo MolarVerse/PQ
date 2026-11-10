@@ -537,7 +537,7 @@ namespace setup
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
-                    settings::FileSettings::getStartFileName()
+                    FileSettings::getStartFileName()
                 )
             );
         }
@@ -554,7 +554,7 @@ namespace setup
             log.writeSetupInfo(
                 std::format(
                     "velocities taken from start file \"{}\"",
-                    settings::FileSettings::getStartFileName()
+                    FileSettings::getStartFileName()
                 )
             );
         }
