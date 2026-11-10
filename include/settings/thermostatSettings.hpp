@@ -35,6 +35,41 @@
 class ReferenceSettings;
 
 /**
+ * @class NoseHooverSettings
+ *
+ * @brief Stores settings specific to the Nose-Hoover thermostat
+ *
+ */
+class NoseHooverSettings
+{
+   private:
+    Setting<size_t, "Nose-Hoover Chain Length"> _nhChainLength{
+        defaults::NH_CHAIN_LENGTH_DEFAULT
+    };
+    Setting<Frequency, "Nose-Hoover Coupling Frequency"> _nhCouplingFreq{
+        defaults::NH_COUPLING_FREQ
+    };
+
+    Setting<std::map<size_t, double>, "Nose-Hoover Chi Values">  _chi;
+    Setting<std::map<size_t, double>, "Nose-Hoover Zeta Values"> _zeta;
+
+   public:
+    void setNoseHooverChainLengthByUser(size_t chainLength);
+    void setNoseHooverCouplingFrequencyByUser(const Frequency& frequency);
+
+    [[nodiscard]] size_t           getNoseHooverChainLength() const;
+    [[nodiscard]] const Frequency& getNoseHooverCouplingFrequency() const;
+
+    void setChiByUser(const std::map<size_t, double>& chi);
+    void setZetaByUser(const std::map<size_t, double>& zeta);
+
+    [[nodiscard]] const std::map<size_t, double>& getChi() const;
+    [[nodiscard]] const std::map<size_t, double>& getZeta() const;
+
+    [[nodiscard]] bool isChiAndZetaSet() const;
+};
+
+/**
  * @class ThermostatSettings
  *
  * @brief static class to store settings of the thermostat
@@ -51,7 +86,6 @@ class ThermostatSettings
     static inline bool _isStartTemperatureSet = false;
     static inline bool _isEndTemperatureSet   = false;
 
-    static inline size_t _nhChainLength = defaults::NH_CHAIN_LENGTH_DEFAULT;
     static inline size_t _temperatureRampSteps     = 0;
     static inline size_t _temperatureRampFrequency = 1;
 
@@ -64,18 +98,9 @@ class ThermostatSettings
         defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
     };
     static inline double _friction{defaults::LANGEVIN_THERMOSTAT_FRICTION};
-    static inline double _nhCouplingFreq{defaults::NH_COUPLING_FREQ};
-
-    static inline std::map<size_t, double> _chi;
-    static inline std::map<size_t, double> _zeta;
 
    public:
     void finalize(ReferenceSettings& referenceSettings);
-
-    static auto addChi(size_t index, double chi)
-        -> decltype(_chi.try_emplace(index, chi));
-    static auto addZeta(size_t index, double zeta)
-        -> decltype(_zeta.try_emplace(index, zeta));
 
     /***************************
      * standard setter methods *
@@ -96,8 +121,6 @@ class ThermostatSettings
 
     static void setRelaxationTime(const Time& relaxationTime);
     static void setFriction(double);
-    static void setNoseHooverChainLength(size_t);
-    static void setNoseHooverCouplingFrequency(double);
 
     /***************************
      * standard getter methods *
@@ -105,7 +128,6 @@ class ThermostatSettings
 
     [[nodiscard]] ThermostatType getThermostatType() const;
 
-    [[nodiscard]] static size_t getNoseHooverChainLength();
     [[nodiscard]] static size_t getTemperatureRampSteps();
     [[nodiscard]] static size_t getTemperatureRampFrequency();
 
@@ -119,10 +141,6 @@ class ThermostatSettings
     [[nodiscard]] static const Temperature& getEndTemperature();
     [[nodiscard]] static const Time&        getRelaxationTime();
     [[nodiscard]] static double             getFriction();
-    [[nodiscard]] static double             getNoseHooverCouplingFrequency();
-
-    [[nodiscard]] static std::map<size_t, double> getChi();
-    [[nodiscard]] static std::map<size_t, double> getZeta();
 };
 
 #endif   // SETTINGS__THERMOSTAT_SETTINGS_HPP

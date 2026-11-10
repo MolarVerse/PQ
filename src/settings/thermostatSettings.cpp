@@ -54,32 +54,6 @@ void ThermostatSettings::finalize(ReferenceSettings& referenceSettings)
     }
 }
 
-/**
- * @brief add chi to the index map
- *
- * @param index
- * @param chi
- * @return auto
- */
-auto ThermostatSettings::addChi(size_t index, double chi)
-    -> decltype(_chi.try_emplace(index, chi))
-{
-    return _chi.try_emplace(index, chi);
-}
-
-/**
- * @brief add zeta to the index map
- *
- * @param index
- * @param zeta
- * @return auto
- */
-auto ThermostatSettings::addZeta(size_t index, double zeta)
-    -> decltype(_zeta.try_emplace(index, zeta))
-{
-    return _zeta.try_emplace(index, zeta);
-}
-
 /***************************
  *                         *
  * standard setter methods *
@@ -101,9 +75,9 @@ void ThermostatSettings::setThermostatTypeByUser(ThermostatType thermostatType)
  *
  * @param length
  */
-void ThermostatSettings::setNoseHooverChainLength(size_t length)
+void NoseHooverSettings::setNoseHooverChainLengthByUser(size_t length)
 {
-    _nhChainLength = length;
+    _nhChainLength.setByUser(length);
 }
 
 /**
@@ -228,9 +202,11 @@ void ThermostatSettings::setFriction(double friction) { _friction = friction; }
  *
  * @param frequency
  */
-void ThermostatSettings::setNoseHooverCouplingFrequency(double frequency)
+void NoseHooverSettings::setNoseHooverCouplingFrequencyByUser(
+    const Frequency& frequency
+)
 {
-    _nhCouplingFreq = frequency;
+    _nhCouplingFreq.setByUser(frequency);
 }
 
 /***************************
@@ -244,7 +220,10 @@ void ThermostatSettings::setNoseHooverCouplingFrequency(double frequency)
  *
  * @return size_t
  */
-size_t ThermostatSettings::getNoseHooverChainLength() { return _nhChainLength; }
+size_t NoseHooverSettings::getNoseHooverChainLength() const
+{
+    return _nhChainLength.get();
+}
 
 /**
  * @brief get the temperature ramp steps
@@ -357,11 +336,11 @@ double ThermostatSettings::getFriction() { return _friction; }
 /**
  * @brief get the nose hoover coupling frequency
  *
- * @return double
+ * @return const Frequency&
  */
-double ThermostatSettings::getNoseHooverCouplingFrequency()
+const Frequency& NoseHooverSettings::getNoseHooverCouplingFrequency() const
 {
-    return _nhCouplingFreq;
+    return _nhCouplingFreq.get();
 }
 
 /**
@@ -369,11 +348,47 @@ double ThermostatSettings::getNoseHooverCouplingFrequency()
  *
  * @return std::map<size_t, double>
  */
-std::map<size_t, double> ThermostatSettings::getChi() { return _chi; }
+const std::map<size_t, double>& NoseHooverSettings::getChi() const
+{
+    return _chi.get();
+}
 
 /**
  * @brief get zeta
  *
  * @return std::map<size_t, double>
  */
-std::map<size_t, double> ThermostatSettings::getZeta() { return _zeta; }
+const std::map<size_t, double>& NoseHooverSettings::getZeta() const
+{
+    return _zeta.get();
+}
+
+/**
+ * @brief check if both chi and zeta are set
+ *
+ * @return bool
+ */
+bool NoseHooverSettings::isChiAndZetaSet() const
+{
+    return _chi.isSetBySomeone() && _zeta.isSetBySomeone();
+}
+
+/**
+ * @brief set chi by user
+ *
+ * @param chi the chi values to set
+ */
+void NoseHooverSettings::setChiByUser(const std::map<size_t, double>& chi)
+{
+    _chi.setByUser(chi);
+}
+
+/**
+ * @brief set zeta by user
+ *
+ * @param zeta the zeta values to set
+ */
+void NoseHooverSettings::setZetaByUser(const std::map<size_t, double>& zeta)
+{
+    _zeta.setByUser(zeta);
+}

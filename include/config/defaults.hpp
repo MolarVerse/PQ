@@ -24,6 +24,7 @@
 #define CONFIG__DEFAULTS_HPP
 
 #include <cstddef>
+#include <mstd/units/wave_number.hpp>
 
 #include "enums/convergence.hpp"
 #include "unit_types.hpp"
@@ -114,8 +115,9 @@ namespace defaults
     static constexpr Time BERENDSEN_THERMOSTAT_RELAX_TIME =
         0.1 * mstd::units::ps;
     static constexpr double LANGEVIN_THERMOSTAT_FRICTION = 1.0e11;   // in s^-1
-    static constexpr double NH_COUPLING_FREQ             = 1.0e3;    // in cm^-1
-    static constexpr double MAX_FRICTION_CONVERSION      = 1.0e12;   // in s^-1
+    static constexpr auto   NH_COUPLING_FREQ =
+        mstd::toFreq(1.0e3 * mstd::units::per_cm);              // in cm^-1
+    static constexpr double MAX_FRICTION_CONVERSION = 1.0e12;   // in s^-1
 
     static constexpr Time BERENDSEN_MANOSTAT_RELAX_TIME = 1 * mstd::units::ps;
     static constexpr Compressibility COMPRESSIBILITY_WATER_DEFAULT =

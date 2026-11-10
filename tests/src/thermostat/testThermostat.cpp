@@ -438,13 +438,28 @@ TEST_F(TestThermostat, velocityRescalingRelaxationTimeShorterThanTimestep)
 
 namespace
 {
-    thermostat::NoseHooverThermostat noseHoover(double targetTemperature)
+    NoseHooverSettings noseHooverSettings()
+    {
+        NoseHooverSettings settings;
+        settings.setNoseHooverCouplingFrequencyByUser(1.0 * Hz);
+        const auto chis =
+            std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
+        const auto zetas =
+            std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+        settings.setChiByUser(chis);
+        settings.setZetaByUser(zetas);
+        return settings;
+    }
+
+    // the thermostat only stores a reference, so the settings must outlive it
+    thermostat::NoseHooverThermostat noseHoover(
+        const NoseHooverSettings &settings,
+        double                    targetTemperature
+    )
     {
         return thermostat::NoseHooverThermostat(
-            mstd::units::point<K>(targetTemperature),
-            std::vector<double>{0.1, 0.2, 0.3},
-            std::vector<double>{0.0, 0.0, 0.0},
-            1.0
+            settings,
+            mstd::units::point<K>(targetTemperature)
         );
     }
 
@@ -455,7 +470,8 @@ namespace
 
 TEST_F(TestThermostat, noseHooverRejectsZeroTargetTemperature)
 {
-    auto thermostat = noseHoover(0.0);
+    const auto nhSettings = noseHooverSettings();
+    auto       thermostat = noseHoover(nhSettings, 0.0);
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     EXPECT_THROW_MSG(
@@ -467,7 +483,8 @@ TEST_F(TestThermostat, noseHooverRejectsZeroTargetTemperature)
 
 TEST_F(TestThermostat, noseHooverForcesRejectZeroTargetTemperature)
 {
-    auto thermostat = noseHoover(0.0);
+    const auto nhSettings = noseHooverSettings();
+    auto       thermostat = noseHoover(nhSettings, 0.0);
 
     EXPECT_THROW_MSG(
         thermostat.applyThermostatOnForces(*_simulationBox),
@@ -478,7 +495,8 @@ TEST_F(TestThermostat, noseHooverForcesRejectZeroTargetTemperature)
 
 TEST_F(TestThermostat, noseHooverRejectsZeroDegreesOfFreedom)
 {
-    auto thermostat = noseHoover(300.0);
+    const auto nhSettings = noseHooverSettings();
+    auto       thermostat = noseHoover(nhSettings, 300.0);
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     _simulationBox->setDegreesOfFreedom(0);
 
@@ -498,7 +516,8 @@ TEST_F(TestThermostat, noseHooverRejectsZeroDegreesOfFreedom)
 
 TEST_F(TestThermostat, noseHooverTinyPositiveTargetTemperatureStaysFinite)
 {
-    auto thermostat = noseHoover(1e-6);
+    const auto nhSettings = noseHooverSettings();
+    auto       thermostat = noseHoover(nhSettings, 1e-6);
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     thermostat.applyThermostat(*_simulationBox, *_data);
@@ -592,51 +611,26 @@ TEST_F(TestThermostat, langevinThermostatType)
 
 TEST_F(TestThermostat, noseHooverThermostatType)
 {
+    NoseHooverSettings noseHooverSettings;
+    noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
     auto thermostat = thermostat::NoseHooverThermostat(
-        mstd::units::point<K>(300.0),
-        std::vector<double>{0.0, 0.0, 0.0},
-        std::vector<double>{0.0, 0.0, 0.0},
-        1.0e13
+        noseHooverSettings,
+        mstd::units::point<K>(300.0)
     );
     EXPECT_EQ(thermostat.getThermostatType(), ThermostatType::NOSE_HOOVER);
 }
 
-TEST_F(TestThermostat, noseHooverCouplingFrequencySetterGetter)
-{
-    auto thermostat = thermostat::NoseHooverThermostat(
-        mstd::units::point<K>(300.0),
-        std::vector<double>{0.0, 0.0, 0.0},
-        std::vector<double>{0.0, 0.0, 0.0},
-        1.0e13
-    );
-    EXPECT_DOUBLE_EQ(thermostat.getCouplingFrequency(), 1.0e13);
-
-    thermostat.setCouplingFrequency(5.0e12);
-    EXPECT_DOUBLE_EQ(thermostat.getCouplingFrequency(), 5.0e12);
-}
-
-TEST_F(TestThermostat, noseHooverSetChiAtIndex)
-{
-    auto thermostat = thermostat::NoseHooverThermostat(
-        mstd::units::point<K>(300.0),
-        std::vector<double>{0.0, 0.0, 0.0},
-        std::vector<double>{0.0, 0.0, 0.0},
-        1.0e13
-    );
-    thermostat.setChi(2U, 7.0);
-    EXPECT_DOUBLE_EQ(thermostat.getChi()[2], 7.0);
-
-    thermostat.setZeta(1U, 3.0);
-    EXPECT_DOUBLE_EQ(thermostat.getZeta()[1], 3.0);
-}
-
 TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
 {
+    NoseHooverSettings noseHooverSettings;
+    noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
+    const auto chis  = std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
+    const auto zetas = std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+    noseHooverSettings.setChiByUser(chis);
+    noseHooverSettings.setZetaByUser(zetas);
     auto thermostat = thermostat::NoseHooverThermostat(
-        mstd::units::point<K>(300.0),
-        std::vector<double>{0.1, 0.2, 0.3},
-        std::vector<double>{0.0, 0.0, 0.0},
-        1.0
+        noseHooverSettings,
+        mstd::units::point<K>(300.0)
     );
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
@@ -858,11 +852,14 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
     auto       chi        = std::vector<double>{0.1, 0.2, 0.3};
     auto       zeta       = std::vector<double>{0.0, 0.0, 0.0};
 
+    NoseHooverSettings noseHooverSettings;
+    noseHooverSettings.setNoseHooverChainLengthByUser(chi.size() - 1);
+    noseHooverSettings.setNoseHooverCouplingFrequencyByUser(freq * Hz);
+    noseHooverSettings.setChiByUser({{0, 0.1}, {1, 0.2}, {2, 0.3}});
+    noseHooverSettings.setZetaByUser({{0, 0.0}, {1, 0.0}, {2, 0.0}});
     auto thermostat = thermostat::NoseHooverThermostat(
-        mstd::units::point<K>(targetTemp),
-        chi,
-        zeta,
-        freq
+        noseHooverSettings,
+        mstd::units::point<K>(targetTemp)
     );
 
     thermostat.applyThermostat(*_simulationBox, *_data);
@@ -896,7 +893,10 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
         eFri    += zeta[i];
     }
 
-    for (size_t i = 0; i < chi.size(); ++i)
+    // the last reference entry is the hidden boundary term
+    ASSERT_EQ(thermostat.getChi().size(), chi.size() - 1);
+    ASSERT_EQ(thermostat.getZeta().size(), zeta.size() - 1);
+    for (size_t i = 0; i < chi.size() - 1; ++i)
     {
         EXPECT_DOUBLE_EQ(thermostat.getChi()[i], chi[i]);
         EXPECT_DOUBLE_EQ(thermostat.getZeta()[i], zeta[i]);
@@ -909,14 +909,18 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
 TEST_F(TestThermostat, noseHooverForceMatchesReference)
 {
     const auto targetTemp = 250.0;
-    const auto freq       = 2.0;
     const auto chi0       = 0.4;
+    const auto freq       = 2.0;
 
+    NoseHooverSettings noseHooverSettings;
+    noseHooverSettings.setNoseHooverCouplingFrequencyByUser(freq * Hz);
+    const auto chis  = std::map<size_t, double>{{0, chi0}, {1, 0.2}, {2, 0.3}};
+    const auto zetas = std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+    noseHooverSettings.setChiByUser(chis);
+    noseHooverSettings.setZetaByUser(zetas);
     auto thermostat = thermostat::NoseHooverThermostat(
-        mstd::units::point<K>(targetTemp),
-        std::vector<double>{chi0, 0.2, 0.3},
-        std::vector<double>{0.0, 0.0, 0.0},
-        freq
+        noseHooverSettings,
+        mstd::units::point<K>(targetTemp)
     );
 
     for (auto &atom : _simulationBox->getAtoms())
@@ -944,7 +948,8 @@ TEST_F(TestThermostat, noseHooverForceMatchesReference)
 
 TEST_F(TestThermostat, noseHooverRejectsNegativeTargetTemperature)
 {
-    auto thermostat = noseHoover(-5.0);
+    const auto nhSettings = noseHooverSettings();
+    auto       thermostat = noseHoover(nhSettings, -5.0);
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     EXPECT_THROW_MSG(
