@@ -22,6 +22,8 @@
 
 #include "frame.hpp"
 
+#include <cstddef>
+
 #include "atom.hpp"
 #include "molecule.hpp"
 #include "noseHooverThermostat.hpp"
@@ -39,35 +41,34 @@ namespace out
      * @param simulationBox
      */
     Frame::Frame(const molsys::SimulationBox &simulationBox)
-        : box(simulationBox.getBox().clone()),
-          boxDimensions(simulationBox.getBoxDimensions()),
-          boxAngles(simulationBox.getBoxAngles()),
-          totalForce(simulationBox.calculateTotalForce())
+        : box(simulationBox.getBox().clone())
     {
-        const auto &allMolecules = simulationBox.getMolecules();
-        molecules.reserve(allMolecules.size());
+        atoms.reserve(simulationBox.getNumberOfAtoms());
 
-        for (const auto &molecule : allMolecules)
+        for (const auto &molecule : simulationBox.getMolecules())
         {
-            molecules.push_back(
-                {molecule.getMoltype(), molecule.getNumberOfAtoms()}
-            );
+            const auto &moleculeAtoms = molecule.getAtoms();
 
-            for (const auto &atom : molecule.getAtoms())
+            for (std::size_t i = 0; i < moleculeAtoms.size(); ++i)
             {
-                names.push_back(atom->getName());
-                positions.push_back(atom->getPosition());
-                velocities.push_back(atom->getVelocity());
-                forces.push_back(atom->getForce());
-                charges.push_back(
-                    atom->getQMCharge().value_or(atom->getPartialCharge())
-                );
+                const auto &atom = *moleculeAtoms[i];
+
+                atoms.push_back({
+                    .name            = atom.getName(),
+                    .moltype         = molecule.getMoltype(),
+                    .indexInMolecule = i,
+                    .position        = atom.getPosition(),
+                    .velocity        = atom.getVelocity(),
+                    .force           = atom.getForce(),
+                    .charge =
+                        atom.getQMCharge().value_or(atom.getPartialCharge()),
+                });
             }
         }
     }
 
     /**
-     * @brief copy box, per-atom data and the Nose-Hoover chain state
+     * @brief copy box, per-atom data and the Nose-Hoover chain
      *
      * @param simulationBox
      * @param thermostat
@@ -84,8 +85,25 @@ namespace out
         const auto &noseHoover =
             dynamic_cast<const thermostat::NoseHooverThermostat &>(thermostat);
 
-        noseHooverChi  = noseHoover.getChi();
-        noseHooverZeta = noseHoover.getZeta();
+        const auto chi  = noseHoover.getChi();
+        const auto zeta = noseHoover.getZeta();
+
+        for (std::size_t i = 0; i < chi.size(); ++i)
+            noseHooverChain.emplace_back(chi[i], zeta[i]);
+    }
+
+    /**
+     * @brief norm of the sum of all atomic forces
+     *
+     * @return double
+     */
+    double Frame::totalForce() const
+    {
+        linalg::Vec3D total(0.0);
+
+        for (const auto &atom : atoms) total += atom.force;
+
+        return norm(total);
     }
 
 }   // namespace out

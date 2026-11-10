@@ -26,6 +26,7 @@
 #include <cstddef>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "box.hpp"
@@ -45,38 +46,36 @@ namespace thermostat
 namespace out
 {
     /**
-     * @brief copy of the data the trajectory and restart writers read
-     *
-     * @details per-atom data is in molecule order
+     * @brief copy of the data the trajectory and restart writers read, so
+     * they can format it while the simulation box changes
      */
     struct Frame
     {
-        struct MoleculeLayout
+        struct Atom
         {
-            MolType     moltype;
-            std::size_t nAtoms;
+            std::string   name;
+            MolType       moltype;
+            std::size_t   indexInMolecule;
+            linalg::Vec3D position;
+            linalg::Vec3D velocity;
+            linalg::Vec3D force;
+            double        charge;
         };
 
+        // (chi, zeta) of each chain link
+        using ChainLink = std::pair<double, double>;
+
         std::unique_ptr<molsys::Box> box;
-        linalg::Vec3D                boxDimensions;
-        linalg::Vec3D                boxAngles;
-
-        std::vector<std::string>    names;
-        std::vector<linalg::Vec3D>  positions;
-        std::vector<linalg::Vec3D>  velocities;
-        std::vector<linalg::Vec3D>  forces;
-        std::vector<double>         charges;
-        std::vector<MoleculeLayout> molecules;
-        double                      totalForce;
-
-        std::vector<double> noseHooverChi;
-        std::vector<double> noseHooverZeta;
+        std::vector<Atom>            atoms;
+        std::vector<ChainLink>       noseHooverChain;
 
         explicit Frame(const molsys::SimulationBox &simulationBox);
         Frame(
             const molsys::SimulationBox  &simulationBox,
             const thermostat::Thermostat &thermostat
         );
+
+        [[nodiscard]] double totalForce() const;
     };
 
 }   // namespace out

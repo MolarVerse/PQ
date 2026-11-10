@@ -42,17 +42,18 @@ namespace out
          */
         void writeNHChain(const Frame &frame, std::ostringstream &buffer)
         {
-            const auto &chi  = frame.noseHooverChi;
-            const auto &zeta = frame.noseHooverZeta;
+            const auto &chain = frame.noseHooverChain;
 
-            for (size_t i = 0; i < chi.size(); ++i)
+            for (std::size_t i = 0; i < chain.size(); ++i)
             {
+                const auto &[chi, zeta] = chain[i];
+
                 buffer << "chi "
                        << std::format(
                               "{:2d}\t{:10.5e}\t{:10.5e}",
                               i + 1,
-                              chi[i],
-                              zeta[i]
+                              chi,
+                              zeta
                           )
                        << '\n';
             }
@@ -76,49 +77,41 @@ namespace out
 
         buffer << "Step " << step << '\n';
 
-        buffer << "Box   " << frame.boxDimensions << "  " << frame.boxAngles
-               << '\n';
+        buffer << "Box   " << frame.box->get_boxDimensions() << "  "
+               << frame.box->getBoxAngles() << '\n';
 
-        if (!frame.noseHooverChi.empty())
-            writeNHChain(frame, buffer);
+        writeNHChain(frame, buffer);
 
-        std::size_t atom = 0;
-
-        for (const auto &[molType, nAtoms] : frame.molecules)
+        for (const auto &atom : frame.atoms)
         {
-            for (std::size_t i = 0; i < nAtoms; ++i, ++atom)
-            {
-                const auto x      = frame.positions[atom][0];
-                const auto y      = frame.positions[atom][1];
-                const auto z      = frame.positions[atom][2];
-                const auto velX   = frame.velocities[atom][0];
-                const auto velY   = frame.velocities[atom][1];
-                const auto velZ   = frame.velocities[atom][2];
-                const auto forceX = frame.forces[atom][0];
-                const auto forceY = frame.forces[atom][1];
-                const auto forceZ = frame.forces[atom][2];
+            const auto &pos   = atom.position;
+            const auto &vel   = atom.velocity;
+            const auto &force = atom.force;
 
-                buffer << std::format("{:<5}\t", frame.names[atom]);
-                buffer << std::format("{:<5}\t", i + 1);
-                buffer << std::format("{:<5}\t", molType.get());
+            buffer << std::format("{:<5}\t", atom.name);
+            buffer << std::format("{:<5}\t", atom.indexInMolecule + 1);
+            buffer << std::format("{:<5}\t", atom.moltype.get());
 
-                buffer
-                    << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
-                buffer << std::format(
-                    "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
-                    velX,
-                    velY,
-                    velZ
-                );
-                buffer << std::format(
-                    "{:15.8f}\t{:15.8f}\t{:15.8f}",
-                    forceX,
-                    forceY,
-                    forceZ
-                );
+            buffer << std::format(
+                "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
+                pos[0],
+                pos[1],
+                pos[2]
+            );
+            buffer << std::format(
+                "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
+                vel[0],
+                vel[1],
+                vel[2]
+            );
+            buffer << std::format(
+                "{:15.8f}\t{:15.8f}\t{:15.8f}",
+                force[0],
+                force[1],
+                force[2]
+            );
 
-                buffer << '\n' << std::flush;
-            }
+            buffer << '\n' << std::flush;
         }
 
         // Write the buffer to the file

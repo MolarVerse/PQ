@@ -42,9 +42,9 @@ namespace out
      */
     void TrajectoryOutput::writeHeader(const Frame &frame)
     {
-        _getFilePointer() << frame.positions.size() << "  "
-                          << frame.boxDimensions << "  " << frame.boxAngles
-                          << '\n';
+        _getFilePointer() << frame.atoms.size() << "  "
+                          << frame.box->get_boxDimensions() << "  "
+                          << frame.box->getBoxAngles() << '\n';
     }
 
     /**
@@ -65,12 +65,11 @@ namespace out
         writeHeader(frame);
         _writeComment(step, includeMetadata);
 
-        for (std::size_t i = 0; i < frame.positions.size(); ++i)
+        for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", frame.names[i]);
+            buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &pos =
-                frame.box->wrapPositionIntoBox(frame.positions[i]);
+            const auto &pos = frame.box->wrapPositionIntoBox(atom.position);
 
             buffer << std::format("{:15.8f}\t", pos[0]);
             buffer << std::format("{:15.8f}\t", pos[1]);
@@ -137,11 +136,11 @@ namespace out
         writeHeader(frame);
         _writeComment(step, includeMetadata);
 
-        for (std::size_t i = 0; i < frame.velocities.size(); ++i)
+        for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", frame.names[i]);
+            buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &vel = frame.velocities[i];
+            const auto &vel = atom.velocity;
 
             buffer << std::format("{:20.8e}\t", vel[0]);
             buffer << std::format("{:20.8e}\t", vel[1]);
@@ -169,13 +168,13 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(frame);
-        _writeForceComment(step, frame.totalForce, includeMetadata);
+        _writeForceComment(step, frame.totalForce(), includeMetadata);
 
-        for (std::size_t i = 0; i < frame.forces.size(); ++i)
+        for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", frame.names[i]);
+            buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &force = frame.forces[i];
+            const auto &force = atom.force;
 
             buffer << std::format("{:15.8f}\t", force[0]);
             buffer << std::format("{:15.8f}\t", force[1]);
@@ -205,10 +204,10 @@ namespace out
         writeHeader(frame);
         _writeComment(step, includeMetadata);
 
-        for (std::size_t i = 0; i < frame.charges.size(); ++i)
+        for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", frame.names[i]);
-            buffer << std::format("{:15.8f}\n", frame.charges[i]);
+            buffer << std::format("{:<5}\t", atom.name);
+            buffer << std::format("{:15.8f}\n", atom.charge);
             buffer << std::flush;
         }
 

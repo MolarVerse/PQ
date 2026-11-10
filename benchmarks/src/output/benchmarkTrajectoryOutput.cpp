@@ -121,7 +121,7 @@ namespace
         for (auto _ : state)
         {
             const out::Frame frame{simBox};
-            benchmark::DoNotOptimize(frame.positions.data());
+            benchmark::DoNotOptimize(frame.atoms.data());
         }
 
         setItemsProcessed(state, simBox);

@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>
 
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "atom.hpp"
@@ -35,6 +34,8 @@
 #include "staticMatrix.hpp"
 #include "strongTypes.hpp"
 #include "thermostat.hpp"
+#include "thermostatSettings.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace
@@ -83,23 +84,28 @@ namespace
     }
 }   // namespace
 
-TEST(TestFrame, copiesAtomDataInAtomOrder)
+TEST(TestFrame, copiesAtomsInMoleculeOrder)
 {
     const auto       simulationBox = makeSimulationBox();
     const out::Frame frame{simulationBox};
 
-    EXPECT_EQ(frame.names, (std::vector<std::string>{"H", "O", "Ar"}));
-    EXPECT_EQ(frame.positions[1], linalg::Vec3D(4.0, 5.0, 6.0));
-    EXPECT_EQ(frame.velocities[1], linalg::Vec3D(8.0, 10.0, 12.0));
-    EXPECT_EQ(frame.forces[2], linalg::Vec3D(-7.0, -8.0, -9.0));
-    EXPECT_EQ(frame.charges, (std::vector<double>{0.4, -0.8, 0.0}));
-    EXPECT_DOUBLE_EQ(frame.totalForce, simulationBox.calculateTotalForce());
-    EXPECT_EQ(frame.boxDimensions, linalg::Vec3D(10.0, 10.0, 10.0));
+    ASSERT_EQ(frame.atoms.size(), 3);
 
-    ASSERT_EQ(frame.molecules.size(), 2);
-    EXPECT_EQ(frame.molecules[0].moltype, MolType{1});
-    EXPECT_EQ(frame.molecules[0].nAtoms, 2);
-    EXPECT_EQ(frame.molecules[1].nAtoms, 1);
+    const auto &oxygen = frame.atoms[1];
+    EXPECT_EQ(oxygen.name, "O");
+    EXPECT_EQ(oxygen.moltype, MolType{1});
+    EXPECT_EQ(oxygen.indexInMolecule, 1);
+    EXPECT_EQ(oxygen.position, linalg::Vec3D(4.0, 5.0, 6.0));
+    EXPECT_EQ(oxygen.velocity, linalg::Vec3D(8.0, 10.0, 12.0));
+    EXPECT_EQ(oxygen.force, linalg::Vec3D(-4.0, -5.0, -6.0));
+    EXPECT_DOUBLE_EQ(oxygen.charge, -0.8);
+
+    const auto &argon = frame.atoms[2];
+    EXPECT_EQ(argon.moltype, MolType{2});
+    EXPECT_EQ(argon.indexInMolecule, 0);
+
+    EXPECT_EQ(frame.box->get_boxDimensions(), linalg::Vec3D(10.0, 10.0, 10.0));
+    EXPECT_DOUBLE_EQ(frame.totalForce(), simulationBox.calculateTotalForce());
 }
 
 TEST(TestFrame, qmChargeReplacesPartialCharge)
@@ -109,7 +115,7 @@ TEST(TestFrame, qmChargeReplacesPartialCharge)
 
     const out::Frame frame{simulationBox};
 
-    EXPECT_DOUBLE_EQ(frame.charges[1], -0.5);
+    EXPECT_DOUBLE_EQ(frame.atoms[1].charge, -0.5);
 }
 
 TEST(TestFrame, doesNotFollowLaterChanges)
@@ -120,25 +126,31 @@ TEST(TestFrame, doesNotFollowLaterChanges)
     simulationBox.getAtoms()[0]->setPosition({0.0, 0.0, 0.0});
     simulationBox.getBox().scaleBox(linalg::diagonalMatrix(2.0));
 
-    EXPECT_EQ(frame.positions[0], linalg::Vec3D(1.0, 2.0, 3.0));
+    EXPECT_EQ(frame.atoms[0].position, linalg::Vec3D(1.0, 2.0, 3.0));
     EXPECT_EQ(
         frame.box->wrapPositionIntoBox({6.0, 0.0, 0.0}),
         linalg::Vec3D(-4.0, 0.0, 0.0)
     );
 }
 
-TEST(TestFrame, copiesNoseHooverChainOnly)
+TEST(TestFrame, copiesNoseHooverChain)
 {
     const auto simulationBox = makeSimulationBox();
 
-    thermostat::NoseHooverThermostat noseHoover;
-    noseHoover.setChi({1.0, 2.0});
-    noseHoover.setZeta({3.0, 4.0});
+    NoseHooverSettings noseHooverSettings;
+    noseHooverSettings.setChiByUser({{0, 1.0}, {1, 2.0}});
+    noseHooverSettings.setZetaByUser({{0, 3.0}, {1, 4.0}});
+    noseHooverSettings.setNoseHooverChainLengthByUser(2);
+
+    const thermostat::NoseHooverThermostat noseHoover{
+        noseHooverSettings,
+        toTemperature(300.0)
+    };
 
     const out::Frame withChain{simulationBox, noseHoover};
     const out::Frame withoutChain{simulationBox, thermostat::Thermostat()};
 
-    EXPECT_EQ(withChain.noseHooverChi, (std::vector<double>{1.0, 2.0}));
-    EXPECT_EQ(withChain.noseHooverZeta, (std::vector<double>{3.0, 4.0}));
-    EXPECT_TRUE(withoutChain.noseHooverChi.empty());
+    const std::vector<out::Frame::ChainLink> expected{{1.0, 3.0}, {2.0, 4.0}};
+    EXPECT_EQ(withChain.noseHooverChain, expected);
+    EXPECT_TRUE(withoutChain.noseHooverChain.empty());
 }
