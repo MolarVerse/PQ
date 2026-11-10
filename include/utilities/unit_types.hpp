@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef CONFIG__UNIT_TYPES_HPP
-#define CONFIG__UNIT_TYPES_HPP
+#ifndef UTILITIES__UNIT_TYPES_HPP
+#define UTILITIES__UNIT_TYPES_HPP
 
 /// NOTE FOR DEVELOPERS
 /// This header defines type aliases for commonly used unit types in the
@@ -32,6 +32,7 @@
 /// usage throughout the codebase.
 
 #include <mstd/units.hpp>
+#include <mstd/units/new_units.hpp>
 
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
@@ -41,9 +42,11 @@ using Quantity3D = linalg::Vector3D<mstd::quantity<mstd::units::one>>;
 using QuantityTensor3D =
     linalg::StaticMatrix3x3<mstd::quantity<mstd::units::one>>;
 
+using Angle    = mstd::quantity<mstd::units::rad>;
 using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
-using Time     = mstd::quantity<mstd::units::fs>;
-using TimeMs   = mstd::quantity<mstd::units::ms>;
+
+using Time   = mstd::quantity<mstd::units::fs>;
+using TimeMs = mstd::quantity<mstd::units::ms>;
 
 using Pressure = mstd::quantity<mstd::units::pressure[mstd::units::Pa]>;
 using Pressure3D =
@@ -57,6 +60,19 @@ using Temperature = mstd::units::quantity_point<
     mstd::units::thermodynamic_temperature[mstd::units::K]>;
 using TemperatureDiff =
     mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
+
+using Frequency =
+    mstd::units::quantity<mstd::units::frequency[mstd::units::Hz]>;
+
+using Energy = mstd::quantity<mstd::units::kcal_per_mol>;
+
+using Distance = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
+
+using ForceConstant = mstd::quantity<
+    mstd::units::kcal_per_mol / mstd::units::angstrom / mstd::units::angstrom>;
+
+using AngleForceConstant = mstd::quantity<
+    mstd::units::kcal_per_mol / mstd::units::rad / mstd::units::rad>;
 
 [[nodiscard]]
 static inline Temperature toTemperature(double temperature)
@@ -75,4 +91,4 @@ static inline Quantity tempRatio(Temperature absTemp, Temperature refTemp)
 {
     return absTemp.quantity_from_zero() / refTemp.quantity_from_zero();
 }
-#endif   // CONFIG__UNIT_TYPES_HPP
+#endif   // UTILITIES__UNIT_TYPES_HPP

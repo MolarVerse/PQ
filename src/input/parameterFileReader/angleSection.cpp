@@ -25,9 +25,9 @@
 #include <format>
 
 #include "angleType.hpp"
-#include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "units.hpp"
 
 namespace input::parameterFile
 {
@@ -75,14 +75,14 @@ namespace input::parameterFile
         }
 
         auto id               = AngleId{stoul(lineElements[0])};
-        auto equilibriumAngle = stod(lineElements[1]) * DEG_TO_RAD;
+        auto equilibriumAngle = stod(lineElements[1]);
         auto forceConstant    = stod(lineElements[2]);
 
         auto angleType = ff::AngleType(
             id,
             AngleParams{
-                .equilibrium   = equilibriumAngle,
-                .forceConstant = forceConstant
+                .equilibrium   = equilibriumAngle * deg,
+                .forceConstant = forceConstant * kcal_per_mol / rad / rad
             }
         );
 

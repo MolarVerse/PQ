@@ -26,6 +26,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <limits>
+#include <mstd/math.hpp>
 
 namespace linalg
 {
@@ -72,7 +73,7 @@ namespace utilities
     [[nodiscard]]
     bool compare(const T &lhs, const T &rhs)
     {
-        return std::fabs(lhs - rhs) < std::numeric_limits<T>::epsilon();
+        return mstd::fabs(lhs - rhs) < std::numeric_limits<T>::epsilon();
     }
 
     [[nodiscard]]

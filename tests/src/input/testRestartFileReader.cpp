@@ -39,7 +39,11 @@
 TEST_F(TestRstFileReader, determineSection)
 {
     std::string filename = "examples/setup/h2o_qmcfc.rst";
-    input::restartFile::RestartFileReader rstFileReader(filename, *_engine);
+    input::restartFile::RestartFileReader rstFileReader(
+        filename,
+        *_engine,
+        _settings.noseHooverSettings
+    );
 
     auto  lineElements = std::vector<std::string>{"sTeP", "1"};
     auto *section      = rstFileReader.determineSection(lineElements);
@@ -69,5 +73,10 @@ TEST_F(TestRstFileReader, rstFileReading)
     FileSettings::setStartFileName(filename);
 
     moldescriptor.read();
-    ASSERT_NO_THROW(input::restartFile::readRestartFile(*_engine));
+    ASSERT_NO_THROW(
+        input::restartFile::readRestartFile(
+            *_engine,
+            _settings.noseHooverSettings
+        )
+    );
 }

@@ -152,7 +152,10 @@ namespace benchInputReaders
 
             input::molDescriptor::MoldescriptorReader moldescriptor(engine);
             moldescriptor.read();
-            input::restartFile::readRestartFile(engine);
+            input::restartFile::readRestartFile(
+                engine,
+                settings.noseHooverSettings
+            );
             input::topology::readTopologyFile(engine);
 
             atoms = engine.getSimulationBox().getNumberOfAtoms();

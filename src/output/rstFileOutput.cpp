@@ -55,7 +55,7 @@ namespace out
             const auto &chi  = nhChain.getChi();
             const auto &zeta = nhChain.getZeta();
 
-            for (size_t i = 0; i < chi.size() - 1; ++i)
+            for (size_t i = 0; i < chi.size(); ++i)
             {
                 buffer << "chi "
                        << std::format(

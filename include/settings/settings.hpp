@@ -63,6 +63,7 @@ struct Settings
     DftbSettings          dftbSettings;
     XtbSettings           xtbSettings;
     ThermostatSettings    thermostatSettings;
+    NoseHooverSettings    noseHooverSettings;
     ExternalQMSettings    externalQMSettings;
 
     void finalize();

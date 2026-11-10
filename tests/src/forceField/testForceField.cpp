@@ -46,6 +46,7 @@
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -65,7 +66,10 @@ TEST_F(TestForceField, findBondTypeById)
     auto       forceField = ff::ForceField();
     const auto bondType   = ff::BondType(
         BondId{0},
-        BondParams{.equilibrium = 1.0, .forceConstant = 1.0}
+        BondParams{
+              .equilibrium   = 1.0 * angstrom,
+              .forceConstant = 1.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
 
     forceField.addBondType(bondType);
@@ -97,7 +101,10 @@ TEST_F(TestForceField, findAngleTypeById)
     auto forceField = ff::ForceField();
     auto angleType  = ff::AngleType(
         AngleId{0},
-        AngleParams{.equilibrium = 1.0, .forceConstant = 1.0}
+        AngleParams{
+             .equilibrium   = 1.0 * rad,
+             .forceConstant = 1.0 * kcal_per_mol / rad / rad
+        }
     );
 
     forceField.addAngleType(angleType);
@@ -130,9 +137,9 @@ TEST_F(TestForceField, findDihedralTypeById)
     auto dihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 1.0,
-            .phaseShift    = 1.0
+            .phaseShift    = 1.0 * rad
         }
     );
 
@@ -166,9 +173,9 @@ TEST_F(TestForceField, findImproperTypeById)
     auto improperDihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 1.0,
-            .phaseShift    = 1.0
+            .phaseShift    = 1.0 * rad
         }
     );
 
@@ -287,25 +294,31 @@ TEST_F(TestForceField, calculateBondedInteractions)
     );
 
     bondForceField.setParams(
-        BondParams{.equilibrium = 1.2, .forceConstant = 3.0}
+        BondParams{
+            .equilibrium   = 1.2 * angstrom,
+            .forceConstant = 3.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
 
     angleForceField.setParams(
-        AngleParams{.equilibrium = 90 * M_PI / 180.0, .forceConstant = 3.0}
+        AngleParams{
+            .equilibrium   = 90 * M_PI / 180.0 * rad,
+            .forceConstant = 3.0 * kcal_per_mol / rad / rad
+        }
     );
 
     dihedralForceField.setParams({DihedralParams{
-        .forceConstant = 3.0,
+        .forceConstant = 3.0 * kcal_per_mol / rad / rad,
         .frequency     = 3,
-        .phaseShift    = 180.0 * M_PI / 180.0
+        .phaseShift    = 180.0 * M_PI / 180.0 * rad
     }});
 
     dihedralForceField.setIsLinker(true);
 
     improperDihedralForceField.setParams({DihedralParams{
-        .forceConstant = 3.0,
+        .forceConstant = 3.0 * kcal_per_mol / rad / rad,
         .frequency     = 3,
-        .phaseShift    = 180.0 * M_PI / 180.0
+        .phaseShift    = 180.0 * M_PI / 180.0 * rad
     }});
     improperDihedralForceField.setIsLinker(false);
 

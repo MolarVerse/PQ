@@ -39,6 +39,7 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -116,9 +117,9 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
     bondForceField.setParams(
         DihedralParams{
-            .forceConstant = 3.0,
+            .forceConstant = 3.0 * kcal_per_mol,
             .frequency     = 3,
-            .phaseShift    = 180.0 * M_PI / 180.0
+            .phaseShift    = 180.0 * M_PI / 180.0 * rad
         }
     );
     bondForceField.setIsLinker(false);

@@ -30,6 +30,7 @@
 #include "exceptions.hpp"
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief test bonds section processing one line
@@ -43,8 +44,11 @@ TEST_F(TestParameterFileSection, processSectionBonds)
     const auto &bondTypes = _engine->getForceField()->getBondTypes();
     EXPECT_EQ(bondTypes.size(), 1);
     EXPECT_EQ(bondTypes[0].getId(), BondId{0});
-    EXPECT_EQ(bondTypes[0].getParams().equilibrium, 1.22);
-    EXPECT_EQ(bondTypes[0].getParams().forceConstant, 234.3);
+    EXPECT_EQ(bondTypes[0].getParams().equilibrium, 1.22 * angstrom);
+    EXPECT_EQ(
+        bondTypes[0].getParams().forceConstant,
+        234.3 * kcal_per_mol / angstrom / angstrom
+    );
 
     lineElements = {"1", "2", "1.0", "0"};
     EXPECT_THROW_MSG(
