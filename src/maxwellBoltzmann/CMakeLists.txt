@@ -19,7 +19,7 @@ target_link_libraries(maxwellBoltzmann
     PUBLIC
     molsys
     settings
-    resetKinetics
+    kinetics
     randomNumberGenerator
 )
 

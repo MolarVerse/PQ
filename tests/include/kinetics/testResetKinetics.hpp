@@ -1,0 +1,98 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#ifndef TESTS__INCLUDE__RESET_KINETICS__TEST_RESET_KINETICS_HPP
+#define TESTS__INCLUDE__RESET_KINETICS__TEST_RESET_KINETICS_HPP
+
+// #include "atom.hpp"                 // for Atom
+// #include "molecule.hpp"             // for Molecule
+// #include "physicalData.hpp"         // for PhysicalData
+// #include "resetKinetics.hpp"        // for ResetKinetics
+// #include "simulationBox.hpp"        // for SimulationBox
+// #include "thermostatSettings.hpp"   // for ThermostatSettings
+// #include "vector3d.hpp"             // for Vec3D
+
+// #include <gtest/gtest.h>   // for Test
+// #include <memory>          // for make_shared, __shared_ptr_access,
+// shared_ptr
+
+// /**
+//  * @class TestResetKinetics
+//  *
+//  * @brief Fixture class for testing the ResetKinetics class
+//  *
+//  */
+// class TestResetKinetics : public ::testing::Test
+// {
+//   protected:
+//     void SetUp() override
+//     {
+//         ThermostatSettings::setTargetTemperature(300.0);
+//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50,
+//         11); _data          = new physicalData::PhysicalData();
+
+//         _simulationBox = new molsys::SimulationBox();
+
+//         auto molecule1 = molsys::Molecule();
+
+//         const auto atom1 = std::make_shared<molsys::Atom>();
+//         const auto atom2 = std::make_shared<molsys::Atom>();
+
+//         molecule1.setNumberOfAtoms(2);
+
+//         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+//         atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
+//         atom1->setMass(1.0);
+//         atom2->setMass(1.0);
+//         molecule1.addAtom(atom1);
+//         molecule1.addAtom(atom2);
+
+//         auto molecule2 = molsys::Molecule();
+
+//         const auto atom3 = std::make_shared<molsys::Atom>();
+
+//         molecule2.setNumberOfAtoms(1);
+//         atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+//         atom3->setMass(1.0);
+//         molecule2.addAtom(atom3);
+
+//         _simulationBox->addMolecule(molecule1);
+//         _simulationBox->addMolecule(molecule2);
+//         _simulationBox->addAtom(atom1);
+//         _simulationBox->addAtom(atom2);
+//         _simulationBox->addAtom(atom3);
+//         _simulationBox->setTotalMass(3.0);
+//     }
+
+//     void TearDown() override
+//     {
+//         delete _data;
+//         delete _simulationBox;
+//         delete _resetKinetics;
+//     }
+
+//     physicalData::PhysicalData   *_data;
+//     molsys::SimulationBox *_simulationBox;
+//     resetKinetics::ResetKinetics *_resetKinetics;
+// };
+
+#endif   // TESTS__INCLUDE__RESET_KINETICS__TEST_RESET_KINETICS_HPP
