@@ -22,6 +22,7 @@
 
 #include "inputConverter.hpp"
 
+#include <algorithm>
 #include <ranges>
 #include <string>
 #include <unordered_map>
