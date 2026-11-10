@@ -113,6 +113,14 @@ namespace input
 
         const auto setValue = [](const SelectionTag &selection)
         {
+            if (selection.expression.has_value())
+            {
+                settings::HybridSettings::setInnerRegionCenterExpression(
+                    *selection.expression
+                );
+                return;
+            }
+
             std::vector<size_t> convertedIndices;
 
             for (const auto &index : selection.indices)

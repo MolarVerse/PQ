@@ -29,11 +29,6 @@
 
 #include "stringUtilities.hpp"
 
-#ifdef PYTHON_ENABLED
-#include "fileSettings.hpp"   // for FileSettings
-#include "selection.hpp"      // for parseSelection
-#endif
-
 namespace input
 {
     /**
@@ -175,12 +170,10 @@ namespace input
             needsPython = true;
 
 #ifdef PYTHON_ENABLED
-        std::string restartFile = FileSettings::getStartFileName();
-        std::string moldescFile = FileSettings::getMolDescriptorFileName();
-
+        // the start and moldescriptor files might not be parsed yet, so the
+        // expression is resolved later in Settings::finalize()
         if (needsPython)
-            selectionVec =
-                pq_python::select(std::string(raw), restartFile, moldescFile);
+            return SelectionTag{.indices = {}, .expression = std::string(raw)};
 #else
 
         // check if string contains any characters that are not digits or commas

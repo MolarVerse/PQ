@@ -1,0 +1,1 @@
+- `inner_region_center` selections using the selection grammar (e.g. `resname SOL`) no longer depend on the position of `start_file`/`moldescriptor_file` in the input file; they are resolved after the whole input file has been read.
