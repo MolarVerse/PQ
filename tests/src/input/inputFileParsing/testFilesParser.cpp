@@ -412,5 +412,14 @@ TEST_F(TestInputFileReader, testOrcaFileName)
         settings::FileSettings::getOrcaFileName(),
         "data/atomSection/testProcess.rst"
     );
+    input::FilesInputParser portable(false);
+    portable.getKeywordFuncMap().at("orca_file")(
+        {"orca_file", "=", "no-such-orca-template"},
+        0
+    );
+    EXPECT_EQ(
+        settings::FileSettings::getOrcaFileName(),
+        "no-such-orca-template"
+    );
     settings::FileSettings::setOrcaFileName(previous);
 }
