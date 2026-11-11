@@ -145,8 +145,8 @@ namespace engine
           _timingsOutput(
               std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile)
           ),
-          _referencesOutput(referenceSettings)
-
+          _referencesOutput(referenceSettings),
+          _frameWriter(std::make_unique<utilities::SerialWorker>(2))
     {
     }
 
@@ -294,6 +294,59 @@ namespace engine
     {
         auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
         _rstFileOutput->write(frame, step);
+    }
+
+    /**
+     * @brief copy the frame and queue the xyz, velocity, force, charge and
+     * restart output for the writer thread
+     *
+     * @details the writer thread does not use the global timer, which is not
+     * thread-safe; the timer here measures what output costs the MD thread
+     *
+     * @param simulationBox
+     * @param thermostat
+     * @param step
+     *
+     * @throw the first error of an earlier frame write
+     */
+    void EngineOutput::writeFrame(
+        const molsys::SimulationBox  &simulationBox,
+        const thermostat::Thermostat &thermostat,
+        size_t                        step
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "FrameOutput");
+
+        const auto metadata = _outputFileSettings->getIncludeOutputMetadata();
+
+        _frameWriter->submit(
+            [xyz     = _xyzOutput.get(),
+             vel     = _velOutput.get(),
+             force   = _forceOutput.get(),
+             charge  = _chargeOutput.get(),
+             restart = _rstFileOutput.get(),
+             frame   = out::Frame{simulationBox, thermostat},
+             step,
+             metadata]
+            {
+                xyz->writeXyz(frame, step, metadata);
+                vel->writeVelocities(frame, step, metadata);
+                force->writeForces(frame, step, metadata);
+                charge->writeCharges(frame, step, metadata);
+                restart->write(frame, step);
+            }
+        );
+    }
+
+    /**
+     * @brief block until all queued frames are written
+     *
+     * @throw the first error of a frame write
+     */
+    void EngineOutput::waitForFrames()
+    {
+        auto _ = scopedTimer(TimerId::Output, "FrameOutput");
+        _frameWriter->wait();
     }
 
     /**

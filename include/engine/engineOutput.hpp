@@ -39,6 +39,7 @@
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "rstFileOutput.hpp"
+#include "serialWorker.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
 #include "timingsOutput.hpp"
@@ -54,6 +55,11 @@ namespace out
 {
     struct Frame;   // forward declaration
 }   // namespace out
+
+namespace thermostat
+{
+    class Thermostat;   // forward declaration
+}   // namespace thermostat
 
 class OutputFileSettings;   // forward declaration
 
@@ -102,6 +108,9 @@ namespace engine
 
         references::ReferencesOutput _referencesOutput;
 
+        // last member: joined before the writers its tasks use are destroyed
+        std::unique_ptr<utilities::SerialWorker> _frameWriter;
+
        public:
         explicit EngineOutput(
             const OutputFileSettings &outputFileSettings,
@@ -128,6 +137,12 @@ namespace engine
         void writeForceFile(const out::Frame &, size_t);
         void writeChargeFile(const out::Frame &, size_t);
         void writeRstFile(const out::Frame &, size_t);
+        void writeFrame(
+            const molsys::SimulationBox &,
+            const thermostat::Thermostat &,
+            size_t
+        );
+        void waitForFrames();
         void writeOptRstFile(molsys::SimulationBox &, size_t);
 
         void writeMomentumFile(size_t step, const physicalData::PhysicalData &);

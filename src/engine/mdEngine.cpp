@@ -24,7 +24,6 @@
 
 #include "constants/conversionFactors.hpp"
 #include "constraintSettings.hpp"
-#include "frame.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
@@ -86,6 +85,8 @@ namespace engine
             writeOutput(outputFileSettings);
             deleteTmpFiles();
         }
+
+        getEngineOutput().waitForFrames();
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
@@ -206,13 +207,8 @@ namespace engine
 
         if (0 == getStep() % outputFreq)
         {
-            const out::Frame frame{getSimulationBox(), *_thermostat};
-
-            getEngineOutput().writeXyzFile(frame, effStep);
-            getEngineOutput().writeVelFile(frame, effStep);
-            getEngineOutput().writeForceFile(frame, effStep);
-            getEngineOutput().writeChargeFile(frame, effStep);
-            getEngineOutput().writeRstFile(frame, effStep);
+            getEngineOutput()
+                .writeFrame(getSimulationBox(), *_thermostat, effStep);
 
             getEngineOutput().writeVirialFile(
                 effStep,

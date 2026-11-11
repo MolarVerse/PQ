@@ -22,6 +22,26 @@ install(TARGETS utilities
     DESTINATION lib
 )
 
+find_package(Threads REQUIRED)
+
+add_library(serialWorker
+    serialWorker.cpp
+)
+
+target_include_directories(serialWorker
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include/utilities
+)
+
+target_link_libraries(serialWorker
+    PUBLIC
+    Threads::Threads
+)
+
+install(TARGETS serialWorker
+    DESTINATION lib
+)
+
 add_library(interrupt
     interrupt.cpp
 )

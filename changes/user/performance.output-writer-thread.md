@@ -1,0 +1,1 @@
+- Trajectory (xyz, velocity, force, charge) and restart files of MD runs are written on a separate thread, so the MD loop no longer waits for text formatting. Output files are unchanged.
