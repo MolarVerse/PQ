@@ -10,8 +10,8 @@ Building from Source
 
 **Prerequisites**
 
-* CMake >= 3.18
-* GCC >= 13.0
+* CMake >= 3.25
+* GCC >= 14.0 (C++23; clang 20 is built and tested in the CI as well)
 
 Clone the PQ GitHub repository and navigate into the directory:
 

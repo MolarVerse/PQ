@@ -25,10 +25,10 @@ python -m pip install cmake -q 1>/dev/null
 
 rm -rf PQ
 
-# check if gcc version is at least 13
-gcc_version=$(gcc --version | grep ^gcc | sed 's/^.* //g')
-if [ $(echo "$gcc_version >= 13" | bc) -eq 0 ]; then
-  echo "Error: gcc version must be at least 13"
+# check if gcc version is at least 14 (the major version: "14.2.0" is no number for bc)
+gcc_major=$(gcc -dumpversion | cut -d. -f1)
+if [ "$gcc_major" -lt 14 ]; then
+  echo "Error: gcc version must be at least 14"
   exit 1
 fi
 
