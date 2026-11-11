@@ -25,7 +25,6 @@
 #include <atomic>
 #include <chrono>
 #include <stdexcept>
-#include <string>
 #include <thread>
 #include <vector>
 
