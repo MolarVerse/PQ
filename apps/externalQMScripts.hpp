@@ -62,12 +62,20 @@ namespace cli
         }
     };
 
-    inline constexpr auto turbomoleScripts = std::array{ExternalQMScriptInfo{
-        .name                = "turbomole_ricc2",
-        .label               = "RI-MP2",
-        .requiredFileKeyword = "",
-        .requiredWorkingFile = "tm_define.template"
-    }};
+    inline constexpr auto turbomoleScripts = std::array{
+        ExternalQMScriptInfo{
+            .name                = "turbomole_ricc2",
+            .label               = "RI-MP2",
+            .requiredFileKeyword = "",
+            .requiredWorkingFile = "tm_define.template"
+        },
+        ExternalQMScriptInfo{
+            .name                = "turbomole_ricc2.py",
+            .label               = "RI-MP2 (Python)",
+            .requiredFileKeyword = "",
+            .requiredWorkingFile = "tm_define.template"
+        }
+    };
 
     inline constexpr auto externalQMMethods =
         std::array{QMMethod::DFTBPLUS, QMMethod::PYSCF, QMMethod::TURBOMOLE};

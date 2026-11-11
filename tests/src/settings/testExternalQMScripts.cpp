@@ -56,9 +56,11 @@ TEST(ExternalQMScriptsTest, describesBundledScripts)
     EXPECT_TRUE(cli::recommendedExternalQMScript(QMMethod::PYSCF).empty());
 
     const auto turbomole = cli::externalQMScripts(QMMethod::TURBOMOLE);
-    ASSERT_EQ(turbomole.size(), 1);
+    ASSERT_EQ(turbomole.size(), 2);
     EXPECT_EQ(turbomole.front().name, "turbomole_ricc2");
-    EXPECT_EQ(turbomole.front().requiredWorkingFile, "tm_define.template");
+    EXPECT_EQ(turbomole.back().name, "turbomole_ricc2.py");
+    for (const auto &script : turbomole)
+        EXPECT_EQ(script.requiredWorkingFile, "tm_define.template");
 }
 
 TEST(ExternalQMScriptsTest, identifiesCatalogEntries)

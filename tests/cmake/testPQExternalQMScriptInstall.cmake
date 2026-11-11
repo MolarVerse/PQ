@@ -26,7 +26,11 @@ foreach(script IN ITEMS
         pyscf_hf.py
         pyscf_mp2.py
         turbomole_hf-dft
-        turbomole_ricc2)
+        turbomole_ricc2
+        turbomole_common.py
+        turbomole_hf_dft.py
+        turbomole_ricc2.py
+        turbomole_ridft.py)
     if(NOT EXISTS "${STAGING_PREFIX}/share/PQ/scripts/${script}")
         message(FATAL_ERROR "QM script ${script} was not installed")
     endif()
