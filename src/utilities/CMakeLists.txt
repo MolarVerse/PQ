@@ -3,6 +3,7 @@ add_library(utilities
     stringUtilities.cpp
     mathUtilities.cpp
     strongTypes.cpp
+    systemMemory.cpp
 )
 
 target_include_directories(utilities

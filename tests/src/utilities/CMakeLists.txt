@@ -6,6 +6,7 @@ set(source_files
     testProgressbar.cpp
     testInterrupt.cpp
     testSerialWorker.cpp
+    testSystemMemory.cpp
 )
 
 foreach(source_file ${source_files})

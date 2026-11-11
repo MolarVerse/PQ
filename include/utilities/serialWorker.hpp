@@ -39,7 +39,7 @@ namespace utilities
      * @details at most capacity tasks are queued or running; submit blocks
      * until there is room. The first exception a task throws is rethrown on
      * the caller's thread by the next submit or wait. The destructor finishes
-     * all queued tasks.
+     * all queued tasks and prints an error that was not rethrown to stderr.
      */
     class SerialWorker
     {

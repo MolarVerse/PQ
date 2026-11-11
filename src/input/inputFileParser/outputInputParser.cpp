@@ -98,6 +98,7 @@ namespace input
 
         addOverwriteOutputKeyword();
         addIncludeOutputMetadataKeyword();
+        addAsyncOutputKeyword();
     }
 
     /**
@@ -149,6 +150,36 @@ namespace input
             KeyRegistry<bool>{
                 .metadata     = metaData,
                 .defaultValue = false,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add async output keyword to the input parser
+     *
+     * @details this keyword controls whether MD trajectory and restart files
+     * are written on a separate thread
+     */
+    void OutputInputParser::addAsyncOutputKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "async_output",
+            .title = "Asynchronous output",
+            .description =
+                "Whether MD trajectory and restart files are "
+                "written on a separate thread"
+        };
+
+        const auto setValue = [this](bool value)
+        { _outputFileSettings->setAsyncOutputByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata     = metaData,
+                .defaultValue = true,
                 .onSet        = setValue,
             }
         );

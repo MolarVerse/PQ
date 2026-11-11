@@ -22,6 +22,7 @@
 
 #include "serialWorker.hpp"
 
+#include <iostream>
 #include <utility>
 
 namespace utilities
@@ -39,8 +40,8 @@ namespace utilities
     /**
      * @brief finish all queued tasks and join the thread
      *
-     * @details an error of these tasks is dropped, as a destructor must not
-     * throw
+     * @details a destructor must not throw, so an error nobody rethrew is
+     * printed to stderr instead of being lost
      */
     SerialWorker::~SerialWorker()
     {
@@ -50,6 +51,23 @@ namespace utilities
         }
 
         _changed.notify_all();
+        _thread.join();
+
+        if (!_error)
+            return;
+
+        try
+        {
+            std::rethrow_exception(_error);
+        }
+        catch (const std::exception &error)
+        {
+            std::cerr << "Error in background output: " << error.what() << '\n';
+        }
+        catch (...)
+        {
+            std::cerr << "Unknown error in background output\n";
+        }
     }
 
     /**

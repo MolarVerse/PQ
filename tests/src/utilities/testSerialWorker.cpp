@@ -105,3 +105,18 @@ TEST(TestSerialWorker, submitBlocksAtCapacity)
     producer.join();
     EXPECT_TRUE(secondQueued);
 }
+
+TEST(TestSerialWorker, destructorPrintsUnhandledError)
+{
+    testing::internal::CaptureStderr();
+
+    {
+        utilities::SerialWorker worker{2};
+        worker.submit([] { throw std::runtime_error("disk full"); });
+    }
+
+    EXPECT_EQ(
+        testing::internal::GetCapturedStderr(),
+        "Error in background output: disk full\n"
+    );
+}

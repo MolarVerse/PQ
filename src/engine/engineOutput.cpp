@@ -23,6 +23,8 @@
 #include "engineOutput.hpp"
 
 #include <memory>
+#include <optional>
+#include <utility>
 
 #include "boxOutput.hpp"
 #include "defaults.hpp"
@@ -39,8 +41,10 @@
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "rstFileOutput.hpp"
+#include "simulationBox.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
+#include "systemMemory.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
 #include "virialOutput.hpp"
@@ -145,8 +149,7 @@ namespace engine
           _timingsOutput(
               std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile)
           ),
-          _referencesOutput(referenceSettings),
-          _frameWriter(std::make_unique<utilities::SerialWorker>(2))
+          _referencesOutput(referenceSettings)
     {
     }
 
@@ -297,11 +300,13 @@ namespace engine
     }
 
     /**
-     * @brief copy the frame and queue the xyz, velocity, force, charge and
-     * restart output for the writer thread
+     * @brief write the xyz, velocity, force, charge and restart files of one
+     * MD frame, on the writer thread if async output is on
      *
-     * @details the writer thread does not use the global timer, which is not
-     * thread-safe; the timer here measures what output costs the MD thread
+     * @details the writer thread is created on the first frame, unless async
+     * output is off or the queued frames would not fit in memory. It does not
+     * use the global timer, which is not thread-safe; FrameOutput measures
+     * what output costs the MD thread.
      *
      * @param simulationBox
      * @param thermostat
@@ -315,27 +320,100 @@ namespace engine
         size_t                        step
     )
     {
+        if (!_frameWriterChecked)
+        {
+            _frameWriterChecked = true;
+            _startFrameWriter(simulationBox.getNumberOfAtoms());
+        }
+
         auto _ = scopedTimer(TimerId::Output, "FrameOutput");
 
+        auto       frame    = out::Frame{simulationBox, thermostat};
         const auto metadata = _outputFileSettings->getIncludeOutputMetadata();
 
-        _frameWriter->submit(
-            [xyz     = _xyzOutput.get(),
-             vel     = _velOutput.get(),
-             force   = _forceOutput.get(),
-             charge  = _chargeOutput.get(),
-             restart = _rstFileOutput.get(),
-             frame   = out::Frame{simulationBox, thermostat},
-             step,
-             metadata]
-            {
-                xyz->writeXyz(frame, step, metadata);
-                vel->writeVelocities(frame, step, metadata);
-                force->writeForces(frame, step, metadata);
-                charge->writeCharges(frame, step, metadata);
-                restart->write(frame, step);
-            }
-        );
+        if (!_frameWriter)
+        {
+            _writeFrame(frame, step, metadata);
+            return;
+        }
+
+        _frameWriter->submit([this, frame = std::move(frame), step, metadata]
+                             { _writeFrame(frame, step, metadata); });
+    }
+
+    /**
+     * @brief whether the queued frames and the text being formatted fit in
+     * half of the available memory
+     *
+     * @param nAtoms
+     * @param availableMemory in bytes, nothing if unknown
+     *
+     * @return true if unknown, as most systems have enough
+     */
+    bool EngineOutput::asyncOutputFits(
+        const std::size_t                nAtoms,
+        const std::optional<std::size_t> availableMemory
+    )
+    {
+        if (!availableMemory)
+            return true;
+
+        // queued frames plus the one being built, and the text of one file
+        // (about 160 bytes per atom), held twice while it is copied out of
+        // the string stream
+        constexpr std::size_t framesInMemory   = _frameCapacity + 1;
+        constexpr std::size_t textBytesPerAtom = 320;
+
+        const auto needed =
+            nAtoms *
+            (framesInMemory * sizeof(out::Frame::Atom) + textBytesPerAtom);
+
+        return needed <= *availableMemory / 2;
+    }
+
+    /**
+     * @brief create the writer thread if async output is on and fits in
+     * memory
+     *
+     * @param nAtoms
+     */
+    void EngineOutput::_startFrameWriter(const std::size_t nAtoms)
+    {
+        if (!_outputFileSettings->getAsyncOutput())
+            return;
+
+        if (!asyncOutputFits(nAtoms, utilities::availableMemory()))
+        {
+            _logOutput->writeInfo(
+                "Not enough free memory for async output: trajectory and "
+                "restart files are written before the next step."
+            );
+            return;
+        }
+
+        _frameWriter =
+            std::make_unique<utilities::SerialWorker>(_frameCapacity);
+    }
+
+    /**
+     * @brief write the xyz, velocity, force, charge and restart files of one
+     * frame
+     *
+     * @param frame
+     * @param step
+     * @param metadata whether to include step metadata
+     */
+    void EngineOutput::_writeFrame(
+        const out::Frame &frame,
+        const size_t      step,
+        const bool        metadata
+    )
+    {
+        _xyzOutput->writeXyz(frame, step, metadata);
+        _velOutput->writeVelocities(frame, step, metadata);
+        _forceOutput->writeForces(frame, step, metadata);
+        _chargeOutput->writeCharges(frame, step, metadata);
+        _rstFileOutput->write(frame, step);
     }
 
     /**
@@ -345,6 +423,9 @@ namespace engine
      */
     void EngineOutput::waitForFrames()
     {
+        if (!_frameWriter)
+            return;
+
         auto _ = scopedTimer(TimerId::Output, "FrameOutput");
         _frameWriter->wait();
     }
