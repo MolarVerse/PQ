@@ -46,17 +46,6 @@ namespace utilities
        public:
         using Task = std::move_only_function<void()>;
 
-        explicit SerialWorker(std::size_t capacity);
-        ~SerialWorker();
-
-        SerialWorker(const SerialWorker &)            = delete;
-        SerialWorker &operator=(const SerialWorker &) = delete;
-        SerialWorker(SerialWorker &&)                 = delete;
-        SerialWorker &operator=(SerialWorker &&)      = delete;
-
-        void submit(Task task);
-        void wait();
-
        private:
         std::size_t             _capacity;
         std::mutex              _mutex;
@@ -69,6 +58,19 @@ namespace utilities
         // last member: started after and joined before the state above
         std::jthread _thread;
 
+       public:
+        explicit SerialWorker(std::size_t capacity);
+        ~SerialWorker();
+
+        SerialWorker(const SerialWorker &)            = delete;
+        SerialWorker &operator=(const SerialWorker &) = delete;
+        SerialWorker(SerialWorker &&)                 = delete;
+        SerialWorker &operator=(SerialWorker &&)      = delete;
+
+        void submit(Task task);
+        void wait();
+
+       private:
         void _work();
         void _rethrowError();
     };
