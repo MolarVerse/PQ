@@ -132,14 +132,14 @@ if ($pointcharges == 1)
       $control_contents .= $_;
     }
   }
-  close (CONTORL);
+  close (CONTROL);
 
   open (CONTROL, "> $control_file") or
     die "\n\n\t (-) $progname: Error opening file '$control_file'\n";
 
   print CONTROL $control_contents;
 
-  close (CONTORL);
+  close (CONTROL);
 
   `$ridft_exe 2>&1 | tee $ridft_nopc_out`;
 }
@@ -190,6 +190,9 @@ if ($pointcharges == 1)
   `cp alpha.bak alpha 2>/dev/null`;
   `cp beta.bak beta 2>/dev/null`;
 }
+
+die "\n\n\t (-) $progname: no SCF energy found in Turbomole output\n"
+  unless (defined $energy && $energy =~ /\d/);
 
 unlink $gradient_file;
 # execute the rdgrad
