@@ -35,6 +35,7 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 #ifdef WITH_PYBIND11
 #include <pybind11/embed.h>
@@ -81,9 +82,10 @@ namespace
                  atomIndex < simulationBox.getNumberOfAtoms();
                  ++atomIndex)
             {
-                auto      &atom     = simulationBox.getAtom(atomIndex);
-                const auto position = atom.getPosition();
-                const auto offset   = 3 * atomIndex;
+                auto      &atom = simulationBox.getAtom(atomIndex);
+                const auto position =
+                    atom.getPosition().numerical_value_in(angstrom);
+                const auto offset = 3 * atomIndex;
                 atom.setForce(
                     {-_forceConstants[offset] * position[0],
                      -_forceConstants[offset + 1] * position[1],
@@ -108,10 +110,10 @@ namespace
         auto box = std::make_shared<molsys::SimulationBox>();
 
         auto atom0 = std::make_shared<molsys::Atom>();
-        atom0->setPosition({1.0, -2.0, 3.0});
+        atom0->setPosition(linalg::Vec3D{1.0, -2.0, 3.0} * angstrom);
 
         auto atom1 = std::make_shared<molsys::Atom>();
-        atom1->setPosition({-4.0, 5.0, -6.0});
+        atom1->setPosition(linalg::Vec3D{-4.0, 5.0, -6.0} * angstrom);
 
         box->addAtom(atom0);
         box->addAtom(atom1);
@@ -142,11 +144,11 @@ namespace
     {
         EXPECT_EQ(
             simulationBox.getAtom(0).getPosition(),
-            linalg::Vec3D(1.0, -2.0, 3.0)
+            linalg::Vec3D(1.0, -2.0, 3.0) * angstrom
         );
         EXPECT_EQ(
             simulationBox.getAtom(1).getPosition(),
-            linalg::Vec3D(-4.0, 5.0, -6.0)
+            linalg::Vec3D(-4.0, 5.0, -6.0) * angstrom
         );
     }
 }   // namespace
@@ -155,20 +157,21 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 {
     const auto diagonal = std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
 
+    const auto displacement = 1.0e-4 * angstrom;
     for (const auto &builder : {
              std::shared_ptr<opt::HessianBuilder>(
                  std::make_shared<opt::CentralForceDifferenceHessianBuilder>(
-                     1.0e-4
+                     displacement
                  )
              ),
              std::shared_ptr<opt::HessianBuilder>(
                  std::make_shared<opt::ForwardForceDifferenceHessianBuilder>(
-                     1.0e-4
+                     displacement
                  )
              ),
              std::shared_ptr<opt::HessianBuilder>(
                  std::make_shared<opt::FivePointForceDifferenceHessianBuilder>(
-                     1.0e-4
+                     displacement
                  )
              ),
          })
@@ -197,7 +200,8 @@ TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
     HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
     evaluator.setSimulationBox(box);
 
-    const auto builder = opt::CentralForceDifferenceHessianBuilder(1.0e-4);
+    const auto builder =
+        opt::CentralForceDifferenceHessianBuilder(1.0e-4 * angstrom);
 
     ASSERT_EQ(std::raise(SIGINT), 0);
 
@@ -252,25 +256,37 @@ TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)
 {
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::CentralForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::CENTRAL, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::CENTRAL,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::ForwardForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::FORWARD, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::FORWARD,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::FivePointForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::FIVE_POINT, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::FIVE_POINT,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::AnalyticHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::ANALYTIC, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::ANALYTIC,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );

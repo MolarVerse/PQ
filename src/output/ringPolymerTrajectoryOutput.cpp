@@ -30,6 +30,7 @@
 
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -81,9 +82,18 @@ namespace out
                 for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
-                    const auto x        = molecule.getAtomPosition(j)[0];
-                    const auto y        = molecule.getAtomPosition(j)[1];
-                    const auto z        = molecule.getAtomPosition(j)[2];
+                    const auto x =
+                        molecule.getAtomPosition(j)[0].numerical_value_in(
+                            angstrom
+                        );
+                    const auto y =
+                        molecule.getAtomPosition(j)[1].numerical_value_in(
+                            angstrom
+                        );
+                    const auto z =
+                        molecule.getAtomPosition(j)[2].numerical_value_in(
+                            angstrom
+                        );
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
 

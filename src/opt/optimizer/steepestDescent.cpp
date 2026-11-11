@@ -23,6 +23,7 @@
 #include "steepestDescent.hpp"
 
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace opt
 {
@@ -56,13 +57,13 @@ namespace opt
         for (const auto& atom : atoms)
         {
             const auto force = atom->getForce();
-            const auto pos   = atom->getPosition();
+            const auto pos   = atom->getPosition().numerical_value_in(angstrom);
 
             auto pos_new = pos + learningRate * force;
             _getSimulationBox().applyPBC(pos_new);
 
-            atom->setPositionOld(pos);
-            atom->setPosition(pos_new);
+            atom->setPositionOld(pos * angstrom);
+            atom->setPosition(pos_new * angstrom);
         }
     }
 

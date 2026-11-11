@@ -35,6 +35,7 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 TEST_F(TestCellList, determineCellSize)
@@ -301,7 +302,7 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsNonFinitePositions)
 
     const auto atom = std::make_shared<molsys::Atom>();
     const auto nan  = std::numeric_limits<double>::quiet_NaN();
-    atom->setPosition(linalg::Vec3D(nan, nan, nan));
+    atom->setPosition(linalg::Vec3D(nan, nan, nan) * angstrom);
 
     molecule.addAtom(atom);
     _simulationBox->addMolecule(molecule);
@@ -335,7 +336,7 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
     auto molecule = molsys::Molecule();
 
     const auto atom = std::make_shared<molsys::Atom>();
-    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
     molecule.addAtom(atom);
     _simulationBox->addMolecule(molecule);
@@ -368,8 +369,8 @@ TEST_F(TestCellList, updateCellList)
     const auto atom1 = std::make_shared<molsys::Atom>();
     const auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-    atom2->setPosition(linalg::Vec3D(6.0, 7.0, 8.0));
+    atom1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(6.0, 7.0, 8.0) * angstrom);
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);

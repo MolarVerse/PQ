@@ -49,6 +49,7 @@
 #include "coulombPotential.hpp"
 #include "interWater.hpp"
 #include "nonCoulombPair.hpp"
+#include "units.hpp"
 
 namespace waterModel
 {
@@ -73,7 +74,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j).numerical_value_in(angstrom);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
@@ -132,7 +133,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j).numerical_value_in(angstrom);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
@@ -185,7 +186,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j).numerical_value_in(angstrom);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 

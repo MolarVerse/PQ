@@ -30,6 +30,7 @@
 
 #include "benchmarkSetup.hpp"
 #include "trajectoryOutput.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace
@@ -130,9 +131,9 @@ namespace
             for (std::size_t i = 0; i < nAtoms; ++i)
             {
                 const auto &atom = simBox.getAtoms()[i];
-                positions[i]     = atom->getPosition();
-                velocities[i]    = atom->getVelocity();
-                forces[i]        = atom->getForce();
+                positions[i] = atom->getPosition().numerical_value_in(angstrom);
+                velocities[i] = atom->getVelocity();
+                forces[i]     = atom->getForce();
             }
 
             benchmark::DoNotOptimize(positions.data());

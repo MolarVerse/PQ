@@ -66,7 +66,8 @@ namespace
                     (1.5 * x) + scalar,
                     (1.5 * y) - scalar,
                     (1.5 * z) + (0.5 * scalar)
-                )
+                ) *
+                angstrom
             );
             atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
 
@@ -126,7 +127,8 @@ namespace
         auto scale = 0.0;
         for (const auto &atom : simulationBox.getAtoms())
         {
-            const auto relativePosition = atom->getPosition() - centerOfMass;
+            const auto relativePosition =
+                atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
             scale += atom->getMass() * norm(relativePosition) *
                      norm(atom->getVelocity());
         }

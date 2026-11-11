@@ -106,7 +106,7 @@ namespace benchOutputWriters
                 const auto offset = static_cast<double>(mol % 7) * 0.001;
                 auto       atom   = std::make_shared<molsys::Atom>();
                 atom->setName(names.at(i));
-                atom->setPosition(origin + shift.at(i));
+                atom->setPosition((origin + shift.at(i)) * angstrom);
                 atom->setVelocity({0.01 + offset, -0.02, 0.005 * index});
                 atom->setForce({1.5 - offset, 0.25 * index, -0.75});
                 atom->setPartialCharge(i == 0 ? -0.82 : 0.41);

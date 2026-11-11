@@ -201,7 +201,9 @@ namespace engine
                 auto &atom1 = bead1.getAtom(j);
                 auto &atom2 = bead2.getAtom(j);
 
-                const auto deltaPos = atom2.getPosition() - atom1.getPosition();
+                const auto deltaPos =
+                    (atom2.getPosition() - atom1.getPosition())
+                        .numerical_value_in(angstrom);
 
                 const auto forceConstant = rpmd_factor * atom1.getMass();
                 const auto force         = forceConstant * deltaPos;
@@ -230,7 +232,7 @@ namespace engine
             getSimulationBox().getAtoms(),
             [](auto &atom)
             {
-                atom->setPosition({0.0, 0.0, 0.0});
+                atom->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
                 atom->setVelocity({0.0, 0.0, 0.0});
                 atom->setForce({0.0, 0.0, 0.0});
             }

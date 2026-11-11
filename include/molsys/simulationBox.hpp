@@ -228,13 +228,13 @@ namespace molsys
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
-        [[nodiscard]] std::vector<linalg::Vec3D> getPositions() const;
+        [[nodiscard]] std::vector<Pos3D>         getPositions() const;
         [[nodiscard]] std::vector<linalg::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<linalg::Vec3D> getForces() const;
         [[nodiscard]] std::vector<AtomNumber>    getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>        flattenPositions() const;
+        [[nodiscard]] std::vector<Pos>           flattenPositions() const;
         [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
-        [[nodiscard]] std::vector<double> getFlattenedQMPositions() const;
+        [[nodiscard]] std::vector<Pos> getFlattenedQMPositions() const;
 
         [[nodiscard]] bool wasBoxSetViaStartFile() const;
 

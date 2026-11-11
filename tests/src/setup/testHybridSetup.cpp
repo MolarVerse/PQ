@@ -39,13 +39,17 @@
 #include "qmSettings.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 namespace
 {
     void addSingleAtomMolecule(engine::Engine &engine, MolType molType)
     {
         auto atom = std::make_shared<molsys::Atom>();
-        atom->setPosition({static_cast<double>(molType.get()), 0.0, 0.0});
+        atom->setPosition(
+            linalg::Vec3D{static_cast<double>(molType.get()), 0.0, 0.0} *
+            angstrom
+        );
 
         molsys::Molecule molecule;
         molecule.setMoltype(molType);

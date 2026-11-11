@@ -58,6 +58,26 @@ namespace linalg
     }
 
     /**
+     * @brief operator == between a vector of quantities and a quantity
+     * holding a vector, e.g. `Pos3D == Vec3D{...} * angstrom`
+     *
+     * @param lhs
+     * @param rhs
+     * @return bool
+     */
+    template <typename U, typename Q>
+    requires(
+        mstd::is_quantity_like_v<U> && mstd::is_quantity_like_v<Q> &&
+        std::same_as<typename Q::rep, Vector3D<double>> &&
+        std::constructible_from<Vector3D<U>, const Q &> &&
+        std::equality_comparable<U>
+    )
+    bool operator==(const Vector3D<U> &lhs, const Q &rhs)
+    {
+        return lhs == Vector3D<U>(rhs);
+    }
+
+    /**
      * @brief operator !=
      *
      * @param lhs

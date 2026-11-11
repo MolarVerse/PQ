@@ -42,6 +42,8 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
+#include "vector3d.hpp"
 #include "waterModelSettings.hpp"
 
 namespace
@@ -60,8 +62,8 @@ namespace
 
     struct Placement
     {
-        MolType       molType;
-        linalg::Vec3D position;
+        MolType molType;
+        Pos3D   position;
     };
 
     /*
@@ -171,12 +173,18 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     // cell, one in-cutoff pair across neighbouring cells (including across a
     // periodic boundary), and an out-of-cutoff pair both paths must skip.
     const std::vector<Placement> placements = {
-        {.molType = MolType{1}, .position = {-5.0, -5.0, -5.0}},
-        {.molType = MolType{2}, .position = {-3.0, -4.0, -3.5}},
-        {.molType = MolType{1}, .position = {1.0, 1.5, 2.0}},
-        {.molType = MolType{2}, .position = {2.0, 2.5, 3.5}},
-        {.molType = MolType{1}, .position = {-1.0, 3.0, 1.0}},
-        {.molType = MolType{2}, .position = {7.0, -7.0, 6.0}},
+        {.molType  = MolType{1},
+         .position = linalg::Vec3D{-5.0, -5.0, -5.0} * angstrom},
+        {.molType  = MolType{2},
+         .position = linalg::Vec3D{-3.0, -4.0, -3.5} * angstrom},
+        {.molType  = MolType{1},
+         .position = linalg::Vec3D{1.0, 1.5, 2.0} * angstrom},
+        {.molType  = MolType{2},
+         .position = linalg::Vec3D{2.0, 2.5, 3.5} * angstrom},
+        {.molType  = MolType{1},
+         .position = linalg::Vec3D{-1.0, 3.0, 1.0} * angstrom},
+        {.molType  = MolType{2},
+         .position = linalg::Vec3D{7.0, -7.0, 6.0} * angstrom},
     };
 
     auto simBoxBF = buildSimulationBox(placements);

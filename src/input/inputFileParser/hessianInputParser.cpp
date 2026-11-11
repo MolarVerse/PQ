@@ -27,6 +27,7 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -89,12 +90,13 @@ namespace input
             .name  = "hessian_displacement",
             .title = "Hessian displacement",
             .description =
-                "The displacement used for numerical Hessian calculations"
+                "The displacement used for numerical Hessian calculations",
+            .unit = "angstrom"
         };
 
         const auto setValue =
             [_hessianSettings = _hessianSettings](double value)
-        { _hessianSettings->setDisplacementByUser(value); };
+        { _hessianSettings->setDisplacementByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

@@ -28,6 +28,7 @@
 #include <memory>
 
 #include "convergence.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -59,7 +60,7 @@ namespace opt
         std::deque<double>                     _maxForceHistory;
         std::deque<double>                     _rmsForceHistory;
         std::deque<std::vector<linalg::Vec3D>> _forceHistory;
-        std::deque<std::vector<linalg::Vec3D>> _positionHistory;
+        std::deque<std::vector<Pos3D>>         _positionHistory;
 
         struct Impl;
         std::unique_ptr<Impl> _impl;
@@ -113,9 +114,9 @@ namespace opt
         std::vector<linalg::Vec3D> getForces(int) const;
 
         [[nodiscard]]
-        std::vector<linalg::Vec3D> getPositions() const;
+        std::vector<Pos3D> getPositions() const;
         [[nodiscard]]
-        std::vector<linalg::Vec3D> getPositions(int) const;
+        std::vector<Pos3D> getPositions(int) const;
 
         [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;

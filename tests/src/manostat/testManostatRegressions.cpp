@@ -49,6 +49,7 @@
 #include "timingsSettings.hpp"
 #include "triclinicBox.hpp"
 #include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 namespace
 {
@@ -91,7 +92,7 @@ namespace
             {
                 auto atom = std::make_shared<molsys::Atom>();
                 atom->setMass(1.0);
-                atom->setPosition({x, 0.0, 0.0});
+                atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
                 atom->setVelocity({speed, 0.0, 0.0});
                 molecule.addAtom(atom);
                 _box.addAtom(atom);
@@ -238,8 +239,10 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
             EXPECT_NO_THROW(coupling->applyManostat(_box, _data));
             EXPECT_LT(_box.getVolume(), oldVolume);
             EXPECT_NEAR(
-                _box.getAtom(1).getPosition()[0] -
-                    _box.getAtom(0).getPosition()[0],
+                _box.getAtom(1).getPosition()[0].numerical_value_in(angstrom) -
+                    _box.getAtom(0).getPosition()[0].numerical_value_in(
+                        angstrom
+                    ),
                 0.4,
                 1e-12
             );
@@ -324,8 +327,14 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         EXPECT_DOUBLE_EQ(_data.getVolume(), 1000.0);
         EXPECT_DOUBLE_EQ(_data.getDensity(), oldDensity);
         EXPECT_EQ(_box.getMolecule(0).getCenterOfMass(), oldCenter);
-        EXPECT_DOUBLE_EQ(_box.getAtom(0).getPosition()[0], 4.95);
-        EXPECT_DOUBLE_EQ(_box.getAtom(1).getPosition()[0], -4.85);
+        EXPECT_DOUBLE_EQ(
+            _box.getAtom(0).getPosition()[0].numerical_value_in(angstrom),
+            4.95
+        );
+        EXPECT_DOUBLE_EQ(
+            _box.getAtom(1).getPosition()[0].numerical_value_in(angstrom),
+            -4.85
+        );
         EXPECT_EQ(_box.getAtom(0).getVelocity(), linalg::Vec3D(1.0, 0.0, 0.0));
     }
 }

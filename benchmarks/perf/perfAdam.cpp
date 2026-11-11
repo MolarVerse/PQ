@@ -55,6 +55,9 @@ int main()
     // the bias correction divides by (1 - beta^step), so the first step is 1
     for (std::uint64_t i = 1; i <= ITERATIONS; ++i) optimizer.update(0.001, i);
 
-    std::cout << std::format("{:.6f}\n", benchOptimizers::sumOfPositions(*box));
+    std::cout << std::format(
+        "{:.6f}\n",
+        benchOptimizers::sumOfPositions(*box).numerical_value_in(angstrom)
+    );
     return 0;
 }

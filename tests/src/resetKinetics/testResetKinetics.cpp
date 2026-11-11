@@ -55,8 +55,8 @@ namespace
         auto atom2 = std::make_shared<molsys::Atom>();
         atom1->setMass(1.0);
         atom2->setMass(1.0);
-        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
         molecule.addAtom(atom1);
@@ -65,7 +65,7 @@ namespace
         auto molecule2 = molsys::Molecule();
         auto atom3     = std::make_shared<molsys::Atom>();
         atom3->setMass(1.0);
-        atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0));
+        atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
         atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         molecule2.addAtom(atom3);
 
@@ -94,9 +94,9 @@ namespace
         return velocities;
     }
 
-    std::vector<linalg::Vec3D> positionsOf(molsys::SimulationBox &simulationBox)
+    std::vector<Pos3D> positionsOf(molsys::SimulationBox &simulationBox)
     {
-        std::vector<linalg::Vec3D> positions;
+        std::vector<Pos3D> positions;
         for (const auto &atom : simulationBox.getAtoms())
             positions.push_back(atom->getPosition());
         return positions;
@@ -817,7 +817,12 @@ TEST(TestResetKinetics, resetAngularMomentumRemovesRigidRotationCompletely)
     const auto          centerOfMass = box->getCenterOfMass();
 
     for (const auto &atom : box->getAtoms())
-        atom->setVelocity(cross(omega, atom->getPosition() - centerOfMass));
+    {
+        atom->setVelocity(cross(
+            omega,
+            atom->getPosition().numerical_value_in(angstrom) - centerOfMass
+        ));
+    }
 
     expectVec3DNear(
         box->calculateMomentum(),

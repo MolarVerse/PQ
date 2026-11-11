@@ -24,6 +24,7 @@
 
 #include <gtest/gtest.h>
 
+#include "units.hpp"
 #include "virial.hpp"
 
 TEST_F(TestVirial, calculateVirial)
@@ -35,9 +36,12 @@ TEST_F(TestVirial, calculateVirial)
     const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
     const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
 
-    const auto position_mol1_atom1 = molecule0.getAtomPosition(AtomIndex{0});
-    const auto position_mol1_atom2 = molecule0.getAtomPosition(AtomIndex{1});
-    const auto position_mol2_atom1 = molecule1.getAtomPosition(AtomIndex{0});
+    const auto position_mol1_atom1 =
+        molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto position_mol1_atom2 =
+        molecule0.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
+    const auto position_mol2_atom1 =
+        molecule1.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
 
     const auto shiftForce_mol1_atom1 = molecule0.getAtomShiftForce(0);
     const auto shiftForce_mol1_atom2 = molecule0.getAtomShiftForce(1);
@@ -73,9 +77,12 @@ TEST_F(TestVirial, intramolecularCorrection)
     const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
     const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
 
-    const auto position_mol1_atom1 = molecule0.getAtomPosition(AtomIndex{0});
-    const auto position_mol1_atom2 = molecule0.getAtomPosition(AtomIndex{1});
-    const auto position_mol2_atom1 = molecule1.getAtomPosition(AtomIndex{0});
+    const auto position_mol1_atom1 =
+        molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto position_mol1_atom2 =
+        molecule0.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
+    const auto position_mol2_atom1 =
+        molecule1.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
 
     const auto shiftForce_mol1_atom1 = molecule0.getAtomShiftForce(0);
     const auto shiftForce_mol1_atom2 = molecule0.getAtomShiftForce(1);
@@ -112,9 +119,12 @@ TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
     const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
     const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
 
-    const auto position_mol1_atom1 = molecule0.getAtomPosition(AtomIndex{0});
-    const auto position_mol1_atom2 = molecule0.getAtomPosition(AtomIndex{1});
-    const auto position_mol2_atom1 = molecule1.getAtomPosition(AtomIndex{0});
+    const auto position_mol1_atom1 =
+        molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto position_mol1_atom2 =
+        molecule0.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
+    const auto position_mol2_atom1 =
+        molecule1.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
 
     // a QM-only jobtype makes every atom a QM atom, so the expected virial
     // is the same tensor-product sum as the atomic virial, but WITHOUT any
@@ -138,9 +148,12 @@ TEST_F(TestVirial, calculateMolecularVirial)
     const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
     const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
 
-    const auto position_mol1_atom1 = molecule0.getAtomPosition(AtomIndex{0});
-    const auto position_mol1_atom2 = molecule0.getAtomPosition(AtomIndex{1});
-    const auto position_mol2_atom1 = molecule1.getAtomPosition(AtomIndex{0});
+    const auto position_mol1_atom1 =
+        molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto position_mol1_atom2 =
+        molecule0.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
+    const auto position_mol2_atom1 =
+        molecule1.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
 
     const auto centerOfMass_mol1 = molecule0.getCenterOfMass();
     const auto centerOfMass_mol2 = molecule1.getCenterOfMass();

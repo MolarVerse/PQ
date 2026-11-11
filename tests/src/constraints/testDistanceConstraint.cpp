@@ -53,7 +53,7 @@ TEST_F(TestDistanceConstraint, withinBoundsAppliesNoForce)
  */
 TEST_F(TestDistanceConstraint, belowLowerBoundAppliesRestoringForce)
 {
-    _atom2->setPosition(linalg::Vec3D(1.0, 1.5, 1.0));
+    _atom2->setPosition(linalg::Vec3D(1.0, 1.5, 1.0) * angstrom);
 
     // dPos = (0, 0.5, 0), distance = 0.5, below lowerDistance = 1.0
     _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
@@ -78,7 +78,7 @@ TEST_F(TestDistanceConstraint, belowLowerBoundAppliesRestoringForce)
  */
 TEST_F(TestDistanceConstraint, aboveUpperBoundAppliesRestoringForce)
 {
-    _atom2->setPosition(linalg::Vec3D(1.0, 5.0, 1.0));
+    _atom2->setPosition(linalg::Vec3D(1.0, 5.0, 1.0) * angstrom);
 
     // dPos = (0, 4, 0), distance = 4.0, above upperDistance = 3.0
     _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
@@ -102,7 +102,7 @@ TEST_F(TestDistanceConstraint, aboveUpperBoundAppliesRestoringForce)
  */
 TEST_F(TestDistanceConstraint, negativeTimeIntervalIsNoOp)
 {
-    _atom2->setPosition(linalg::Vec3D(1.0, 5.0, 1.0));
+    _atom2->setPosition(linalg::Vec3D(1.0, 5.0, 1.0) * angstrom);
 
     EXPECT_NO_THROW(
         _distanceConstraint->applyDistanceConstraint(*_box, -1.0 * fs)

@@ -36,6 +36,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "testSetup.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -47,9 +48,9 @@ namespace
      * calculations are well defined
      */
     void addDiatomicMolecule(
-        engine::Engine      &engine,
-        const linalg::Vec3D &position1,
-        const linalg::Vec3D &position2
+        engine::Engine &engine,
+        const Pos3D    &position1,
+        const Pos3D    &position2
     )
     {
         auto &simBox = engine.getSimulationBox();
@@ -116,12 +117,12 @@ namespace
         molecule.setMoltype(kMShakeMolType);
 
         auto atom1 = std::make_shared<molsys::Atom>();
-        atom1->setPosition({0.0, 0.0, 0.0});
+        atom1->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
         molecule.addAtom(atom1);
         simBox.addAtom(atom1);
 
         auto atom2 = std::make_shared<molsys::Atom>();
-        atom2->setPosition({1.0, 0.0, 0.0});
+        atom2->setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
         molecule.addAtom(atom2);
         simBox.addAtom(atom2);
 
@@ -144,7 +145,11 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 {
     _settings->constraintSettings.activateShakeByUser();
 
-    addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
+    addDiatomicMolecule(
+        *_engine,
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{1.0, 0.0, 0.0} * angstrom
+    );
     addBondConstraintToLastMolecule(*_engine, 1.0);
 
     auto &simBox = _engine->getSimulationBox();
@@ -228,7 +233,11 @@ TEST_F(TestSetup, setupConstraintsWrapperRunsWhenShakeActive)
 {
     _settings->constraintSettings.activateShakeByUser();
 
-    addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
+    addDiatomicMolecule(
+        *_engine,
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{1.0, 0.0, 0.0} * angstrom
+    );
     addBondConstraintToLastMolecule(*_engine, 1.0);
 
     auto &simBox = _engine->getSimulationBox();

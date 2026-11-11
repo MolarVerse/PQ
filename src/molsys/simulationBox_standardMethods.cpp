@@ -357,11 +357,11 @@ namespace molsys
     /**
      * @brief get all positions of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Pos3D>
      */
-    std::vector<linalg::Vec3D> SimulationBox::getPositions() const
+    std::vector<Pos3D> SimulationBox::getPositions() const
     {
-        std::vector<linalg::Vec3D> positions;
+        std::vector<Pos3D> positions;
         positions.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -420,11 +420,11 @@ namespace molsys
     /**
      * @brief flattens positions of each QM atom into a single vector of doubles
      *
-     * @return std::vector<double>
+     * @return std::vector<Pos>
      */
-    std::vector<double> SimulationBox::getFlattenedQMPositions() const
+    std::vector<Pos> SimulationBox::getFlattenedQMPositions() const
     {
-        std::vector<double> positions;
+        std::vector<Pos> positions;
 
         auto addPositions = [&positions](auto &atom)
         {

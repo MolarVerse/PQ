@@ -112,10 +112,7 @@ namespace molsys
      *
      * @param position
      */
-    void Atom::addPosition(const linalg::Vec3D &position)
-    {
-        _position += position;
-    }
+    void Atom::addPosition(const Pos3D &position) { _position += position; }
 
     /**
      * @brief  add a linalg::Vec3D to the current velocity of the atom
@@ -283,9 +280,9 @@ namespace molsys
     /**
      * @brief return the old position of the atom
      *
-     * @return linalg::Vec3D
+     * @return const Pos3D&
      */
-    linalg::Vec3D Atom::getPositionOld() const { return _positionOld; }
+    const Pos3D &Atom::getPositionOld() const { return _positionOld; }
 
     /**
      * @brief return the velocity of the atom
@@ -437,10 +434,7 @@ namespace molsys
      *
      * @param position
      */
-    void Atom::setPosition(const linalg::Vec3D &position)
-    {
-        _position = position;
-    }
+    void Atom::setPosition(const Pos3D &position) { _position = position; }
 
     /**
      * @brief set the velocity of the atom
@@ -511,7 +505,7 @@ namespace molsys
      *
      * @param positionOld
      */
-    void Atom::setPositionOld(const linalg::Vec3D &positionOld)
+    void Atom::setPositionOld(const Pos3D &positionOld)
     {
         _positionOld = positionOld;
     }

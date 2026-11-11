@@ -32,6 +32,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "trajectoryOutput.hpp"
+#include "units.hpp"
 
 /**
  * @class TestTrajectoryOutput
@@ -59,8 +60,8 @@ class TestTrajectoryOutput : public ::testing::Test
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
         atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
         atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
@@ -77,7 +78,7 @@ class TestTrajectoryOutput : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setName("Ar");

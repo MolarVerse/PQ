@@ -35,6 +35,8 @@
 #include <string>
 #include <vector>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -74,7 +76,7 @@ namespace
             auto atom = std::make_shared<molsys::Atom>();
             atom->setName(names.at(i));
             atom->initMass();
-            atom->setPosition(origin + offset.at(i));
+            atom->setPosition((origin + offset.at(i)) * angstrom);
             water.addAtom(atom);
         }
 
@@ -137,7 +139,7 @@ int main()
         for (auto &atom : box.getAtoms())
         {
             auto pos  = atom->getPosition();
-            pos[0]   += shift;
+            pos[0]   += shift * angstrom;
             atom->setPosition(pos);
         }
 

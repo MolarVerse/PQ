@@ -25,6 +25,7 @@
 #include <cmath>
 
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace opt
 {
@@ -77,7 +78,7 @@ namespace opt
         {
             auto&      atom  = simulationBox.getAtoms()[i];
             const auto force = atom->getForce();
-            const auto pos   = atom->getPosition();
+            const auto pos   = atom->getPosition().numerical_value_in(angstrom);
 
             _momentum1[i] = _beta1 * _momentum1[i] - (1.0 - _beta1) * force;
             _momentum2[i] =
@@ -91,8 +92,8 @@ namespace opt
 
             simulationBox.applyPBC(pos_new);
 
-            atom->setPositionOld(pos);
-            atom->setPosition(pos_new);
+            atom->setPositionOld(pos * angstrom);
+            atom->setPosition(pos_new * angstrom);
         }
     }
 

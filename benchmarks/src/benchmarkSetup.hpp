@@ -30,6 +30,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace benchmarkSetup
@@ -52,15 +53,17 @@ namespace benchmarkSetup
             {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
-                    auto                atom = std::make_shared<molsys::Atom>();
-                    const linalg::Vec3D position{
-                        (-boxEdge / 2.0) +
-                            ((static_cast<double>(x) + 0.5) * cellEdge),
-                        (-boxEdge / 2.0) +
-                            ((static_cast<double>(y) + 0.5) * cellEdge),
-                        (-boxEdge / 2.0) +
-                            ((static_cast<double>(z) + 0.5) * cellEdge),
-                    };
+                    auto        atom = std::make_shared<molsys::Atom>();
+                    const Pos3D position =
+                        linalg::Vec3D{
+                            (-boxEdge / 2.0) +
+                                ((static_cast<double>(x) + 0.5) * cellEdge),
+                            (-boxEdge / 2.0) +
+                                ((static_cast<double>(y) + 0.5) * cellEdge),
+                            (-boxEdge / 2.0) +
+                                ((static_cast<double>(z) + 0.5) * cellEdge),
+                        } *
+                        angstrom;
                     atom->setPosition(position);
                     atom->setPositionOld(position);
                     atom->setVelocity({

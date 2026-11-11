@@ -53,6 +53,7 @@ inline constexpr auto per_Pa  = mstd::units::per_Pa;
 inline constexpr auto K = mstd::units::K;
 
 inline constexpr auto angstrom = mstd::units::angstrom;
+inline constexpr auto bohr     = mstd::units::bohr;
 
 inline constexpr auto kcal_per_mol = mstd::units::kcal_per_mol;
 

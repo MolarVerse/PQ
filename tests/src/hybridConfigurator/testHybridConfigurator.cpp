@@ -34,6 +34,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 #include "vectorNear.hpp"
 
@@ -52,22 +53,22 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
         linalg::Vec3D({0.43662598672853264, 0.60446640043437561, 0.0});
 
     molsys::Atom atom1;
-    atom1.setPosition({0.40084395, 0.55383599, 0.0});
+    atom1.setPosition(linalg::Vec3D{0.40084395, 0.55383599, 0.0} * angstrom);
     atom1.setName("O");
     atom1.initMass();
 
     molsys::Atom atom2;
-    atom2.setPosition({1.36084395, 0.55383599, 0.0});
+    atom2.setPosition(linalg::Vec3D{1.36084395, 0.55383599, 0.0} * angstrom);
     atom2.setName("H");
     atom2.initMass();
 
     molsys::Atom atom3;
-    atom3.setPosition({0.08038937, 1.45877182, 0.0});
+    atom3.setPosition(linalg::Vec3D{0.08038937, 1.45877182, 0.0} * angstrom);
     atom3.setName("H");
     atom3.initMass();
 
     molsys::Atom atom4;
-    atom4.setPosition({4.0, -4.5, -2.0});
+    atom4.setPosition(linalg::Vec3D{4.0, -4.5, -2.0} * angstrom);
     atom4.setName("Zr");
     atom4.initMass();
 
@@ -91,22 +92,22 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
     hybridConfigurator.shiftAtomsToInnerRegionCenter(simBox);
 
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(0).getPosition(),
+        simBox.getAtom(0).getPosition().numerical_value_in(angstrom),
         linalg::Vec3D({-0.03578203672853264, -0.05063041043437561, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(1).getPosition(),
+        simBox.getAtom(1).getPosition().numerical_value_in(angstrom),
         linalg::Vec3D({0.92421796327146732, -0.05063041043437561, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(2).getPosition(),
+        simBox.getAtom(2).getPosition().numerical_value_in(angstrom),
         linalg::Vec3D({-0.35623661672853263, 0.85430541956562439, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(3).getPosition(),
+        simBox.getAtom(3).getPosition().numerical_value_in(angstrom),
         linalg::Vec3D({3.5633740132714674, 4.8955335995656242, -2.0}),
         1e-10
     );
@@ -114,23 +115,23 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
     hybridConfigurator.shiftAtomsBackToInitialPositions(simBox);
 
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(0).getPosition(),
-        atom1.getPosition(),
+        simBox.getAtom(0).getPosition().numerical_value_in(angstrom),
+        atom1.getPosition().numerical_value_in(angstrom),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(1).getPosition(),
-        atom2.getPosition(),
+        simBox.getAtom(1).getPosition().numerical_value_in(angstrom),
+        atom2.getPosition().numerical_value_in(angstrom),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(2).getPosition(),
-        atom3.getPosition(),
+        simBox.getAtom(2).getPosition().numerical_value_in(angstrom),
+        atom3.getPosition().numerical_value_in(angstrom),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(3).getPosition(),
-        atom4.getPosition(),
+        simBox.getAtom(3).getPosition().numerical_value_in(angstrom),
+        atom4.getPosition().numerical_value_in(angstrom),
         1e-10
     );
 }
@@ -149,14 +150,14 @@ TEST(testHybridConfigurator, assignHybridZones)
     settings::HybridSettings::setPointChargeThickness(7.0);
 
     auto atom1 = std::make_shared<molsys::Atom>();
-    atom1->setPosition({3.95, 3.15, 1.95}
-    );   // C atom: r ≈ 5.41 < 6.0 (inside core)
+    atom1->setPosition(linalg::Vec3D{3.95, 3.15, 1.95} * angstrom);
+    // C atom: r ≈ 5.41 < 6.0 (inside core)
     atom1->setName("C");
     atom1->initMass();
 
     auto atom2 = std::make_shared<molsys::Atom>();
-    atom2->setPosition({4.45, 3.95, 2.45}
-    );   // O atom: r ≈ 6.44 > 6.0 (outside core)
+    atom2->setPosition(linalg::Vec3D{4.45, 3.95, 2.45} * angstrom);
+    // O atom: r ≈ 6.44 > 6.0 (outside core)
     atom2->setName("O");
     atom2->initMass();
 
@@ -167,7 +168,7 @@ TEST(testHybridConfigurator, assignHybridZones)
     simBox.addMolecule(mol1);
 
     auto atom3 = std::make_shared<molsys::Atom>();
-    atom3->setPosition({6.5, 5.0, 3.5});
+    atom3->setPosition(linalg::Vec3D{6.5, 5.0, 3.5} * angstrom);
     atom3->setName("Ar");
     atom3->initMass();
 
@@ -176,7 +177,7 @@ TEST(testHybridConfigurator, assignHybridZones)
     simBox.addMolecule(mol2);
 
     auto atom4 = std::make_shared<molsys::Atom>();
-    atom4->setPosition({0.0, 0.0, 12.0});
+    atom4->setPosition(linalg::Vec3D{0.0, 0.0, 12.0} * angstrom);
     atom4->setName("Re");
     atom4->initMass();
 
@@ -185,7 +186,7 @@ TEST(testHybridConfigurator, assignHybridZones)
     simBox.addMolecule(mol3);
 
     auto atom5 = std::make_shared<molsys::Atom>();
-    atom5->setPosition({0.0, 19.0, 0.0});
+    atom5->setPosition(linalg::Vec3D{0.0, 19.0, 0.0} * angstrom);
     atom5->setName("Zr");
     atom5->initMass();
 
@@ -194,7 +195,7 @@ TEST(testHybridConfigurator, assignHybridZones)
     simBox.addMolecule(mol4);
 
     auto atom6 = std::make_shared<molsys::Atom>();
-    atom6->setPosition({19.0, 0.001, 0.0});
+    atom6->setPosition(linalg::Vec3D{19.0, 0.001, 0.0} * angstrom);
     atom6->setName("Tc");
     atom6->initMass();
 
@@ -226,7 +227,7 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     settings::HybridSettings::setPointChargeThickness(7.0);
 
     auto atom = std::make_shared<molsys::Atom>();
-    atom->setPosition({0.0, 0.0, 0.0});
+    atom->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
     atom->setName("Dy");
     atom->initMass();
 
@@ -261,7 +262,7 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     auto makeMolecule = [](const linalg::Vec3D &position)
     {
         auto atom = std::make_shared<molsys::Atom>();
-        atom->setPosition(position);
+        atom->setPosition(linalg::Vec3D{position} * angstrom);
         atom->setMass(1.0);
 
         auto molecule = molsys::Molecule();
@@ -386,7 +387,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     using enum molsys::HybridZone;
 
     auto atom1 = std::make_shared<molsys::Atom>();
-    atom1->setPosition({10.0, 0.0, 0.0});
+    atom1->setPosition(linalg::Vec3D{10.0, 0.0, 0.0} * angstrom);
     atom1->setName("Au");
     atom1->initMass();
 
@@ -396,7 +397,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     simBox.addMolecule(mol1);
 
     auto atom2 = std::make_shared<molsys::Atom>();
-    atom2->setPosition({11.0, 0.0, 0.0});
+    atom2->setPosition(linalg::Vec3D{11.0, 0.0, 0.0} * angstrom);
     atom2->setName("Ag");
     atom2->initMass();
 
@@ -406,7 +407,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     simBox.addMolecule(mol2);
 
     auto atom3 = std::make_shared<molsys::Atom>();
-    atom3->setPosition({12.0, 0.0, 0.0});
+    atom3->setPosition(linalg::Vec3D{12.0, 0.0, 0.0} * angstrom);
     atom3->setName("As");
     atom3->initMass();
 
@@ -416,7 +417,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     simBox.addMolecule(mol3);
 
     auto atom4 = std::make_shared<molsys::Atom>();
-    atom4->setPosition({11.73, 0.0, 0.0});
+    atom4->setPosition(linalg::Vec3D{11.73, 0.0, 0.0} * angstrom);
     atom4->setName("At");
     atom4->initMass();
 
@@ -437,7 +438,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     );
 
     auto atom5 = std::make_shared<molsys::Atom>();
-    atom5->setPosition({0.0, 0.0, 0.0});
+    atom5->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
     atom5->setName("Al");
     atom5->initMass();
 
@@ -465,7 +466,7 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
         for (const auto x : positions)
         {
             auto atom = std::make_shared<molsys::Atom>();
-            atom->setPosition({x, 0.0, 0.0});
+            atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
             atom->setMass(1.0);
             box.addAtom(atom);
             molecule.addAtom(atom);
@@ -484,8 +485,9 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
     auto &molecule = box.getMolecule(1);
     molecule.reconstructAtomsAroundCenterOfMass(box.getBox());
     EXPECT_NEAR(
-        molecule.getAtomPosition(AtomIndex{1})[0] -
-            molecule.getAtomPosition(AtomIndex{0})[0],
+        (molecule.getAtomPosition(AtomIndex{1})[0] -
+         molecule.getAtomPosition(AtomIndex{0})[0])
+            .numerical_value_in(angstrom),
         0.4,
         1e-12
     );

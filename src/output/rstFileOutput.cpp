@@ -30,6 +30,7 @@
 #include "molecule.hpp"
 #include "noseHooverThermostat.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -107,15 +108,18 @@ namespace out
             {
                 const auto atomName = molecule.getAtomName(i);
                 const auto molType  = molecule.getMoltype();
-                const auto x        = molecule.getAtomPosition(i)[0];
-                const auto y        = molecule.getAtomPosition(i)[1];
-                const auto z        = molecule.getAtomPosition(i)[2];
-                const auto velX     = molecule.getAtomVelocity(i)[0];
-                const auto velY     = molecule.getAtomVelocity(i)[1];
-                const auto velZ     = molecule.getAtomVelocity(i)[2];
-                const auto forceX   = molecule.getAtomForce(i)[0];
-                const auto forceY   = molecule.getAtomForce(i)[1];
-                const auto forceZ   = molecule.getAtomForce(i)[2];
+                const auto x =
+                    molecule.getAtomPosition(i)[0].numerical_value_in(angstrom);
+                const auto y =
+                    molecule.getAtomPosition(i)[1].numerical_value_in(angstrom);
+                const auto z =
+                    molecule.getAtomPosition(i)[2].numerical_value_in(angstrom);
+                const auto velX   = molecule.getAtomVelocity(i)[0];
+                const auto velY   = molecule.getAtomVelocity(i)[1];
+                const auto velZ   = molecule.getAtomVelocity(i)[2];
+                const auto forceX = molecule.getAtomForce(i)[0];
+                const auto forceY = molecule.getAtomForce(i)[1];
+                const auto forceZ = molecule.getAtomForce(i)[2];
 
                 buffer << std::format("{:<5}\t", atomName);
                 buffer << std::format("{:<5}\t", i.get() + 1);

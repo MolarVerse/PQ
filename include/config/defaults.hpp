@@ -84,9 +84,10 @@ namespace defaults
     static constexpr auto* QM_CHARGES_TEMP_FILE_DEFAULT    = "qm_charges";
     static constexpr auto* STRESS_TENSOR_TEMP_FILE_DEFAULT = "stress_tensor";
 
-    static constexpr double HESSIAN_DISPLACEMENT_DEFAULT = 1.0e-3;
-    static constexpr bool   HESSIAN_OPTIMIZE_DEFAULT     = true;
-    static constexpr auto*  HESSIAN_BUILDER_DEFAULT      = "central";
+    static constexpr Pos HESSIAN_DISPLACEMENT_DEFAULT =
+        1.0e-3 * mstd::units::angstrom;
+    static constexpr bool  HESSIAN_OPTIMIZE_DEFAULT = true;
+    static constexpr auto* HESSIAN_BUILDER_DEFAULT  = "central";
 
     static constexpr char INNER_REGION_CENTER_ATOM_NAME = 'X';
 

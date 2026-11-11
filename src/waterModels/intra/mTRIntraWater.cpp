@@ -33,6 +33,7 @@
 #include "hybridSettings.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace waterModel
 {
@@ -63,9 +64,9 @@ namespace waterModel
             const auto posH1 = hydrogen1.getPosition();
             const auto posH2 = hydrogen2.getPosition();
 
-            auto dOH1 = posO - posH1;
-            auto dOH2 = posO - posH2;
-            auto dHH  = posH1 - posH2;
+            auto dOH1 = (posO - posH1).numerical_value_in(angstrom);
+            auto dOH2 = (posO - posH2).numerical_value_in(angstrom);
+            auto dHH  = (posH1 - posH2).numerical_value_in(angstrom);
 
             simulationBox.applyPBC(dOH1);
             simulationBox.applyPBC(dOH2);

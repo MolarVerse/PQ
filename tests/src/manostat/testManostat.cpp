@@ -42,6 +42,7 @@
 #include "triclinicBox.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 class TestableSimSpaceScalingManostat : public manostat::BerendsenManostat
 {
@@ -182,8 +183,8 @@ namespace
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition({4.95, 0.0, 0.0});
-        atom2->setPosition({-4.85, 0.0, 0.0});
+        atom1->setPosition(linalg::Vec3D{4.95, 0.0, 0.0} * angstrom);
+        atom2->setPosition(linalg::Vec3D{-4.85, 0.0, 0.0} * angstrom);
         atom1->setMass(1.0);
         atom2->setMass(1.0);
 
@@ -201,8 +202,9 @@ namespace
     {
         const auto mol = simulationBox.getMolecule(0);
 
-        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
-                         mol.getAtomPosition(AtomIndex{0});
+        auto dPosition = (mol.getAtomPosition(AtomIndex{1}) -
+                          mol.getAtomPosition(AtomIndex{0}))
+                             .numerical_value_in(angstrom);
         simulationBox.applyPBC(dPosition);
 
         return dPosition;
@@ -229,10 +231,9 @@ namespace
         {
             for (size_t axis = 0; axis < 3; ++axis)
             {
-                const auto coordinate =
-                    simulationBox.getMolecule(0).getAtomPosition(
-                        atomIndex
-                    )[axis];
+                const auto coordinate = simulationBox.getMolecule(0)
+                                            .getAtomPosition(atomIndex)[axis]
+                                            .numerical_value_in(angstrom);
                 const auto halfBoxLength =
                     simulationBox.getBoxDimensions()[axis] / 2.0;
 
@@ -249,8 +250,9 @@ namespace
     {
         const auto mol = simulationBox.getMolecule(moleculeIndex);
 
-        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
-                         mol.getAtomPosition(AtomIndex{0});
+        auto dPosition = (mol.getAtomPosition(AtomIndex{1}) -
+                          mol.getAtomPosition(AtomIndex{0}))
+                             .numerical_value_in(angstrom);
 
         simulationBox.applyPBC(dPosition);
 
@@ -337,7 +339,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     auto       molecule = molsys::Molecule();
     const auto atom     = std::make_shared<molsys::Atom>();
-    atom->setPosition({1.0, 0.0, 0.0});
+    atom->setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
     molecule.addAtom(atom);
     molecule.setCenterOfMass({1.0, 0.0, 0.0});
 
@@ -369,7 +371,9 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
     EXPECT_TRUE(
         utilities::compare(
-            _box->getMolecule(0).getAtomPosition(AtomIndex{0}),
+            _box->getMolecule(0)
+                .getAtomPosition(AtomIndex{0})
+                .numerical_value_in(angstrom),
             linalg::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
             1e-9
         )
@@ -427,8 +431,8 @@ TEST_F(
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition({-1.0, 0.0, 0.0});
-    atom2->setPosition({-0.8, 0.0, 0.0});
+    atom1->setPosition(linalg::Vec3D{-1.0, 0.0, 0.0} * angstrom);
+    atom2->setPosition(linalg::Vec3D{-0.8, 0.0, 0.0} * angstrom);
     atom1->setMass(1.0);
     atom2->setMass(1.0);
 
@@ -539,10 +543,8 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 
     auto molecule = molsys::Molecule();
 
-    const auto addAtom = [this, &molecule](
-                             const linalg::Vec3D& position,
-                             const linalg::Vec3D& velocity
-                         )
+    const auto addAtom =
+        [this, &molecule](const Pos3D& position, const linalg::Vec3D& velocity)
     {
         auto atom = std::make_shared<molsys::Atom>();
         atom->setMass(1.0);
@@ -552,8 +554,8 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
         _box->addAtom(atom);
     };
 
-    addAtom({1.0, 0.0, 0.0}, {2.0, 0.0, 0.0});
-    addAtom({2.0, 0.0, 0.0}, {4.0, 0.0, 0.0});
+    addAtom(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom, {2.0, 0.0, 0.0});
+    addAtom(linalg::Vec3D{2.0, 0.0, 0.0} * angstrom, {4.0, 0.0, 0.0});
 
     molecule.calculateCenterOfMass(_box->getBox());
     _box->addMolecule(molecule);

@@ -32,6 +32,7 @@
 #include "hybridConfigurator.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -75,8 +76,9 @@ namespace out
         {
             buffer << std::format("{:<5}\t", atom->getName());
 
-            const auto &pos =
-                simulationBox.getBox().wrapPositionIntoBox(atom->getPosition());
+            const auto &pos = simulationBox.getBox().wrapPositionIntoBox(
+                atom->getPosition().numerical_value_in(angstrom)
+            );
 
             buffer << std::format("{:15.8f}\t", pos[0]);
             buffer << std::format("{:15.8f}\t", pos[1]);

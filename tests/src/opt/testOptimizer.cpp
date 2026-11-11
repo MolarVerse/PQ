@@ -31,6 +31,7 @@
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace
@@ -54,8 +55,8 @@ namespace
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(sample.pos0);
-        atom2->setPosition(sample.pos1);
+        atom1->setPosition(sample.pos0 * angstrom);
+        atom2->setPosition(sample.pos1 * angstrom);
         atom1->setForce(sample.force0);
         atom2->setForce(sample.force1);
 
@@ -128,7 +129,7 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
     ASSERT_EQ(forces.size(), 2U);
     ASSERT_EQ(positions.size(), 2U);
     EXPECT_EQ(forces[0], linalg::Vec3D(1.0, 0.0, 0.0));
-    EXPECT_EQ(positions[1], linalg::Vec3D(0.4, 0.5, 0.6));
+    EXPECT_EQ(positions[1], linalg::Vec3D(0.4, 0.5, 0.6) * angstrom);
 
     const auto forcesOff    = opt.getForces(-1);
     const auto positionsOff = opt.getPositions(-1);

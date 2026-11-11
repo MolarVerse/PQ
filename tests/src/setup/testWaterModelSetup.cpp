@@ -39,6 +39,7 @@
 #include "strongTypes.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 #include "waterModelSetup.hpp"
 
@@ -66,7 +67,9 @@ namespace
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setPartialCharge(0.0);
-            atom->setPosition({static_cast<double>(i), 0.0, 0.0});
+            atom->setPosition(
+                linalg::Vec3D{static_cast<double>(i), 0.0, 0.0} * angstrom
+            );
             water.addAtom(atom);
             simBox.addAtom(atom);
         }

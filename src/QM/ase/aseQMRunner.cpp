@@ -74,7 +74,7 @@ namespace QM
 
             try
             {
-                auto positions_array = pybind11::array_t<double>(
+                auto positions_array = pybind11::array_t<Pos>(
                     static_cast<ssize_t>(nAtoms) * 3,
                     pos.data()
                 );

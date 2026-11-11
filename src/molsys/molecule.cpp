@@ -86,7 +86,10 @@ namespace molsys
             const auto position = atom->getPosition();
             const auto deltaPos = position - positionAtom1;
 
-            _centerOfMass += mass * (position - box.calcShiftVector(deltaPos));
+            _centerOfMass +=
+                mass *
+                (position.numerical_value_in(angstrom) -
+                 box.calcShiftVector(deltaPos.numerical_value_in(angstrom)));
         }
 
         _centerOfMass /= getMolMass();
@@ -110,9 +113,9 @@ namespace molsys
     {
         auto reconstructAtom = [&box, this](const auto &atom)
         {
-            auto position  = atom->getPosition();
+            auto position  = atom->getPosition().numerical_value_in(angstrom);
             position      -= box.calcShiftVector(position - _centerOfMass);
-            atom->setPosition(position);
+            atom->setPosition(position * angstrom);
         };
 
         std::ranges::for_each(_atoms, reconstructAtom);
@@ -137,12 +140,12 @@ namespace molsys
 
         auto scaleAtomPosition = [&box, shift](const auto &atom)
         {
-            auto position  = atom->getPosition();
+            auto position  = atom->getPosition().numerical_value_in(angstrom);
             position      += shift;
 
             box.applyPBC(position);
 
-            atom->setPosition(position);
+            atom->setPosition(position * angstrom);
         };
 
         std::ranges::for_each(_atoms, scaleAtomPosition);
@@ -318,10 +321,7 @@ namespace molsys
      * @param index
      * @param position
      */
-    void Molecule::addAtomPosition(
-        AtomIndex            index,
-        const linalg::Vec3D &position
-    )
+    void Molecule::addAtomPosition(AtomIndex index, const Pos3D &position)
     {
         _atoms[index.get()]->addPosition(position);
     }
@@ -378,7 +378,7 @@ namespace molsys
      * @param index
      * @param position
      */
-    void Molecule::setAtomPosition(size_t index, const linalg::Vec3D &position)
+    void Molecule::setAtomPosition(size_t index, const Pos3D &position)
     {
         _atoms[index]->setPosition(position);
     }
@@ -429,9 +429,9 @@ namespace molsys
      * @brief returns the position of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const Pos3D&
      */
-    linalg::Vec3D Molecule::getAtomPosition(AtomIndex index) const
+    const Pos3D &Molecule::getAtomPosition(AtomIndex index) const
     {
         return _atoms[index.get()]->getPosition();
     }
@@ -439,11 +439,11 @@ namespace molsys
     /**
      * @brief returns the positions of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Pos3D>
      */
-    std::vector<linalg::Vec3D> Molecule::getAtomPositions() const
+    std::vector<Pos3D> Molecule::getAtomPositions() const
     {
-        std::vector<linalg::Vec3D> positions;
+        std::vector<Pos3D> positions;
         positions.reserve(_atoms.size());
         for (const auto &atom : _atoms)
             positions.push_back(atom->getPosition());
