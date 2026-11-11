@@ -1,0 +1,1 @@
+- Improve the topology file documentation: index base, rules of the file (END, repeated sections, header words, field counts), when parameter types are resolved, the meaning of the linker marker and a complete example.

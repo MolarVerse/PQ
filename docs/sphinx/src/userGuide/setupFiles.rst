@@ -156,18 +156,72 @@ Distances in ``SHAKE`` and ``DIST_CONSTRAINTS`` are given in Å. The
 :math:`\frac{\text{kcal}}{\text{mol Å}^2\text{ fs}}`.
 
 The optional fourth field in ``SHAKE`` entries is accepted for legacy input
-files but is not used by the reader. The optional ``*`` marker in the bonded
-sections marks a linker interaction. Topology atom indices are global atom
-indices from the current structure.
+files but is not used by the reader.
+
+Rules of the file
+=================
+
+    - **Atom indices start at 1** and count all atoms of the start file in the
+      order of the molecules (the global atom index). An index of 0 or larger
+      than the number of atoms is an error. The atoms of one line can belong to
+      different molecules.
+    - **The atoms of one line must differ**, otherwise the reader stops with an
+      error. ``DIST_CONSTRAINTS`` additionally requires lower_distance not
+      greater than upper_distance.
+    - **Only the first word of a header line is read.** Further words are
+      ignored, so headers with counts such as ``BONDS 220 330 50`` (written by
+      some tools) are accepted, but the numbers are not checked against the
+      number of lines.
+    - **Every section ends with** ``END`` (case-insensitive). A missing ``END``
+      is an error that names the line. Blank lines and ``#`` comments (also at
+      the end of a line) are allowed everywhere.
+    - **A section may appear more than once**; the entries are added in file
+      order. The sections need not be in any particular order.
+    - **The number of fields per line is fixed** (see the formats above). A
+      different number is an error that names the line and the expected number.
+    - **Types are resolved later.** A ``bond_type``, ``angle_type``,
+      ``dihedral_type`` or ``improper_type`` that has no entry in the
+      :ref:`parameterFile` is reported when the force field is set up, not while
+      the topology is read.
+
+The linker marker ``*``
+=======================
+
+The optional ``*`` at the end of a ``BONDS``, ``ANGLES`` or ``DIHEDRALS`` line
+marks a linker term. For such a term the Coulomb and non-Coulomb energy and
+forces of the pair of terminal atoms are corrected while the term is
+evaluated, and only if the distance of that pair is within the Coulomb cutoff.
+Use it for terms that connect two molecules (the amyloid example marks its
+MM-MM linker bonds this way). Any other extra word at the end of the line is an
+error.
 
 .. code-block:: text
 
+    # rigid water: the two O-H distances of a molecule (Å)
     SHAKE
-    1 2 1.0
+    1 2 0.9572
+    1 3 0.9572
     END
 
     BONDS
     1 2 1
+    13 15 1 *      # linker bond between two molecules
+    END
+
+    ANGLES
+    2 1 3 1
+    END
+
+    DIHEDRALS
+    1 2 3 4 1
+    END
+
+    IMPROPERS
+    1 2 3 4 1
+    END
+
+    DIST_CONSTRAINTS
+    1 2 0.9 1.1 10.0 0.0
     END
 
 .. Note::
