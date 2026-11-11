@@ -320,10 +320,10 @@ namespace
             );
         }
 
-        if (FileSettings::isIntraNonBondedFileNameSet())
+        if (settings.fileSettings.isIntraNonBondedFileNameSetByUser())
         {
             requireFile(
-                FileSettings::getIntraNonBondedFileName(),
+                settings.fileSettings.getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
         }

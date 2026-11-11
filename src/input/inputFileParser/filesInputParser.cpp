@@ -159,16 +159,15 @@ namespace input
             .description = "File containing intra non bonded combinations"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             settings::GeneralSettings::activateIntraNonBonded();
 
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setIntraNonBondedFileName(value);
+                _fileSettings->setIntraNonBondedFileNameByUser(value);
             else
-                FileSettings::setIntraNonBondedFileName(value.fileName());
-
-            FileSettings::setIsIntraNonBondedFileNameSet();
+                _fileSettings->setIntraNonBondedFileNameByUser(value.fileName()
+                );
         };
 
         addFileKeyword(

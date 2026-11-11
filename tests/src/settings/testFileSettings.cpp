@@ -68,6 +68,7 @@ TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
 
 TEST(FileSettingsTest, IntraNonBondedRoundTrip)
 {
-    FileSettings::setIntraNonBondedFileName("intra.dat");
-    EXPECT_EQ(FileSettings::getIntraNonBondedFileName(), "intra.dat");
+    FileSettings settings;
+    settings.setIntraNonBondedFileNameByUser("intra.dat");
+    EXPECT_EQ(settings.getIntraNonBondedFileName(), "intra.dat");
 }

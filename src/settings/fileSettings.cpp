@@ -73,9 +73,9 @@ const std::string& FileSettings::getParameterFileName() const
  *
  * @return std::string
  */
-std::string FileSettings::getIntraNonBondedFileName()
+const std::string& FileSettings::getIntraNonBondedFileName() const
 {
-    return _intraNonBondedFile;
+    return _intraNonBondedFile.get();
 }
 
 /**
@@ -178,9 +178,9 @@ bool FileSettings::isParameterFileNameSetByUser() const
  *
  * @return bool
  */
-bool FileSettings::isIntraNonBondedFileNameSet()
+bool FileSettings::isIntraNonBondedFileNameSetByUser() const
 {
-    return _isIntraNonBondedFileSet;
+    return _intraNonBondedFile.isSetByUser();
 }
 
 /**
@@ -258,9 +258,9 @@ void FileSettings::setParameterFileNameByUser(const std::string& name)
  *
  * @param name
  */
-void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
+void FileSettings::setIntraNonBondedFileNameByUser(const std::string& name)
 {
-    FileSettings::_intraNonBondedFile = name;
+    _intraNonBondedFile.setByUser(name);
 }
 
 /**
@@ -324,15 +324,6 @@ void FileSettings::setPointChargeFileName(const std::string_view& name)
 }
 
 /**
- * @brief set the intra non bonded file name flag to is set
- *
- */
-void FileSettings::setIsIntraNonBondedFileNameSet()
-{
-    FileSettings::_isIntraNonBondedFileSet = true;
-}
-
-/**
  * @brief set the ring polymer start file name flag to is set
  *
  */
@@ -357,15 +348,6 @@ void FileSettings::setIsMShakeFileNameSet()
 void FileSettings::setIsDFTBFileNameSet()
 {
     FileSettings::_isDFTBFileSet = true;
-}
-
-/**
- * @brief set the intra non bonded file name flag to is not set
- *
- */
-void FileSettings::unsetIsIntraNonBondedFileNameSet()
-{
-    FileSettings::_isIntraNonBondedFileSet = false;
 }
 
 /**

@@ -46,10 +46,10 @@ class FileSettings
         defaults::GUFF_FILE_DEFAULT
     };
 
-    Setting<std::string, "TopologyFile">  _topologyFile;
-    Setting<std::string, "ParameterFile"> _parameterFile;
+    Setting<std::string, "TopologyFile">       _topologyFile;
+    Setting<std::string, "ParameterFile">      _parameterFile;
+    Setting<std::string, "IntraNonBondedFile"> _intraNonBondedFile;
 
-    static inline std::string _intraNonBondedFile;
     static inline std::string _startFile;
     static inline std::string _rpmdStartFile;
     static inline std::string _mShakeFile;
@@ -85,8 +85,8 @@ class FileSettings
 
     [[nodiscard]] const std::string& getTopologyFileName() const;
     [[nodiscard]] const std::string& getParameterFileName() const;
+    [[nodiscard]] const std::string& getIntraNonBondedFileName() const;
 
-    [[nodiscard]] static std::string getIntraNonBondedFileName();
     [[nodiscard]] static std::string getStartFileName();
     [[nodiscard]] static std::string getRingPolymerStartFileName();
     [[nodiscard]] static std::string getMShakeFileName();
@@ -100,8 +100,8 @@ class FileSettings
 
     [[nodiscard]] bool isTopologyFileNameSetByUser() const;
     [[nodiscard]] bool isParameterFileNameSetByUser() const;
+    [[nodiscard]] bool isIntraNonBondedFileNameSetByUser() const;
 
-    [[nodiscard]] static bool isIntraNonBondedFileNameSet();
     [[nodiscard]] static bool isRingPolymerStartFileNameSet();
     [[nodiscard]] static bool isMShakeFileNameSet();
     [[nodiscard]] static bool isDFTBFileNameSet();
@@ -115,8 +115,8 @@ class FileSettings
 
     void setTopologyFileNameByUser(const std::string& name);
     void setParameterFileNameByUser(const std::string& name);
+    void setIntraNonBondedFileNameByUser(const std::string& name);
 
-    static void setIntraNonBondedFileName(const std::string_view& name);
     static void setStartFileName(const std::string_view& name);
     static void setRingPolymerStartFileName(const std::string_view& name);
     static void setMShakeFileName(const std::string_view& name);
@@ -124,12 +124,10 @@ class FileSettings
     static void setTMFileName(const std::string_view& name);
     static void setPointChargeFileName(const std::string_view& name);
 
-    static void setIsIntraNonBondedFileNameSet();
     static void setIsRingPolymerStartFileNameSet();
     static void setIsMShakeFileNameSet();
     static void setIsDFTBFileNameSet();
 
-    static void unsetIsIntraNonBondedFileNameSet();
     static void unsetIsRingPolymerStartFileNameSet();
     static void unsetIsMShakeFileNameSet();
     static void unsetIsDFTBFileNameSet();

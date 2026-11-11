@@ -142,7 +142,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getIntraNonBondedFileName(),
+        settings.getIntraNonBondedFileName(),
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
 }
