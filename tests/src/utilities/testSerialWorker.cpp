@@ -25,10 +25,12 @@
 #include <atomic>
 #include <chrono>
 #include <stdexcept>
+#include <string>
 #include <thread>
 #include <vector>
 
 #include "serialWorker.hpp"
+#include "throwWithMessage.hpp"
 
 TEST(TestSerialWorker, runsTasksInOrder)
 {
@@ -65,7 +67,7 @@ TEST(TestSerialWorker, waitRethrowsTaskErrorOnce)
     utilities::SerialWorker worker{2};
     worker.submit([] { throw std::runtime_error("disk full"); });
 
-    EXPECT_THROW(worker.wait(), std::runtime_error);
+    EXPECT_THROW_MSG(worker.wait(), std::runtime_error, "disk full");
     EXPECT_NO_THROW(worker.wait());
 }
 
@@ -75,7 +77,7 @@ TEST(TestSerialWorker, submitRethrowsEarlierTaskError)
     worker.submit([] { throw std::runtime_error("disk full"); });
 
     // capacity 1: the next submit waits for the failed task, then throws
-    EXPECT_THROW(worker.submit([] {}), std::runtime_error);
+    EXPECT_THROW_MSG(worker.submit([] {}), std::runtime_error, "disk full");
 }
 
 TEST(TestSerialWorker, submitBlocksAtCapacity)
