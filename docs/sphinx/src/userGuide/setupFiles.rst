@@ -208,8 +208,67 @@ The ``NONCOULOMBICS`` header may be followed by ``LJ``, ``BUCKINGHAM`` or
     | ``NONCOULOMBICS MORSE``: atom_type_1 atom_type_2 dissociation_energy well_width equilibrium_distance [cutoff]
 
 If the optional non-Coulombic cutoff is omitted or set to a negative value, the
-global Coulomb cutoff is used. Angle and phase values in the parameter file are
-read in degrees.
+global Coulomb cutoff is used.
+
+.. _parameterFileUnits:
+
+Units
+=====
+
+All values are plain numbers; the unit is fixed per column. Distances are in
+Å, energies in kcal/mol, angles and phases in degrees. Force constants are per
+squared length or squared angle, the angular one per radian (not per degree).
+
+.. list-table::
+    :header-rows: 1
+    :widths: 22 30 48
+
+    * - Section
+      - Column
+      - Unit and energy expression
+    * - ``TYPES``
+      - scale_14_coulomb, scale_14_vdw
+      - unitless factors between 0 and 1 (the first six columns are not used)
+    * - ``BONDS``
+      - equilibrium_distance
+      - Å
+    * -
+      - force_constant
+      - kcal/mol/Å², :math:`E = \frac{1}{2} k (r - r_0)^2`
+    * - ``ANGLES``
+      - equilibrium_angle
+      - degrees
+    * -
+      - force_constant
+      - kcal/mol/rad², :math:`E = \frac{1}{2} k (\alpha - \alpha_0)^2`
+    * - ``DIHEDRALS``, ``IMPROPERS``
+      - force_constant
+      - kcal/mol, :math:`E = k \, (1 + \cos(n \varphi + \delta))`
+    * -
+      - periodicity :math:`n`
+      - unitless, not negative
+    * -
+      - phase :math:`\delta`
+      - degrees
+    * - ``J_COUPLINGS``
+      - j_0, force_constant, a, b, c
+      - read as plain numbers; the j-coupling term is not part of the force
+        calculation yet
+    * -
+      - phase
+      - degrees
+    * - ``NONCOULOMBICS LJ``
+      - c6, c12
+      - kcal/mol Å\ :sup:`6` and kcal/mol Å\ :sup:`12`, :math:`E = c_{12}/r^{12} + c_6/r^6` (the sign of the attractive part is part of c6)
+    * - ``NONCOULOMBICS BUCKINGHAM``
+      - a, d_rho, c6
+      - kcal/mol, 1/Å and kcal/mol Å\ :sup:`6`, :math:`E = a \, e^{d_\rho r} + c_6/r^6`
+    * - ``NONCOULOMBICS MORSE``
+      - dissociation_energy, well_width, equilibrium_distance
+      - kcal/mol, 1/Å and Å, :math:`E = D \, (1 - e^{-w (r - r_0)})^2`
+    * - ``NONCOULOMBICS``
+      - cutoff
+      - Å (negative or omitted: the global Coulomb cutoff)
 
 .. code-block:: text
 
