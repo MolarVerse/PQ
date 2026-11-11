@@ -30,6 +30,7 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace ff
 {
@@ -111,9 +112,13 @@ namespace ff
         auto phi = angle(crossPosition123, crossPosition432);
         phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
 
-        const auto cosine =
-            ::cos((_params.frequency * phi) + _params.phaseShift);
-        const auto energy = _params.forceConstant * (1.0 + cosine);
+        const auto cosine = ::cos(
+            (_params.frequency * phi) +
+            _params.phaseShift.numerical_value_in(rad)
+        );
+        const auto energy =
+            _params.forceConstant.numerical_value_in(kcal_per_mol / rad / rad) *
+            (1.0 + cosine);
 
         if (isImproperDihedral)
             physicalData.addImproperEnergy(energy);
@@ -134,8 +139,13 @@ namespace ff
         forceMagnitude            /= (distance432Squared * distance23);
         const auto forceVector432  = forceMagnitude * crossPosition432;
 
-        const auto sine = ::sin((_params.frequency * phi) + _params.phaseShift);
-        forceMagnitude  = _params.forceConstant * _params.frequency * sine;
+        const auto sine = ::sin(
+            (_params.frequency * phi) +
+            _params.phaseShift.numerical_value_in(rad)
+        );
+        forceMagnitude =
+            _params.forceConstant.numerical_value_in(kcal_per_mol / rad / rad) *
+            _params.frequency * sine;
 
         const auto diffForce123_432 = forceVector123 - forceVector432;
 

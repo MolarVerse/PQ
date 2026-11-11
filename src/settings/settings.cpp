@@ -22,6 +22,7 @@
 
 #include "settings.hpp"
 
+#include "hybridSettings.hpp"
 #include "resetKineticsSettings.hpp"
 
 /**
@@ -35,6 +36,7 @@ void Settings::finalize()
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
     thermostatSettings.finalize(referenceSettings);
+    settings::HybridSettings::finalize(fileSettings);
 
     const auto& qmMethod = qmSettings.getQMMethod();
 
@@ -43,8 +45,8 @@ void Settings::finalize()
         case QMMethod::ASE_DFTBPLUS:
             dftbSettings.finalize(referenceSettings);
             break;
+        case QMMethod::ASE_XTB: xtbSettings.finalize(referenceSettings); break;
         case QMMethod::MACE:
-        case QMMethod::ASE_XTB:
         case QMMethod::DFTBPLUS:
         case QMMethod::FENNOL:
         case QMMethod::PYSCF:
@@ -52,4 +54,7 @@ void Settings::finalize()
         case QMMethod::ORCA:
         case QMMethod::NONE: break;
     }
+
+    if (qmSettings.isExternalQMRunner())
+        externalQMSettings.finalize();
 }

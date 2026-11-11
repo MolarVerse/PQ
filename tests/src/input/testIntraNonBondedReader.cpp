@@ -56,7 +56,7 @@ TEST_F(TestIntraNonBondedReader, findMoleculeType)
 
 TEST_F(TestIntraNonBondedReader, noFileSetByUser)
 {
-    settings::FileSettings::unsetIsIntraNonBondedFileNameSet();
+    FileSettings::unsetIsIntraNonBondedFileNameSet();
     EXPECT_THROW_MSG(
         _intraNonBondedReader->read(),
         exc::IntraNonBondedException,
@@ -130,7 +130,7 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
 
 TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 {
-    settings::FileSettings::setIntraNonBondedFileName(
+    FileSettings::setIntraNonBondedFileName(
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);

@@ -50,6 +50,11 @@ namespace configurator
     class HybridConfigurator;   // forward declaration
 }   // namespace configurator
 
+namespace out
+{
+    struct Frame;   // forward declaration
+}   // namespace out
+
 class OutputFileSettings;   // forward declaration
 
 namespace engine
@@ -114,19 +119,15 @@ namespace engine
             const Settings &
         );
 
-        void writeXyzFile(molsys::SimulationBox &, size_t);
+        void writeXyzFile(const out::Frame &, size_t);
         void writeHybridCenterXyzFile(
             const configurator::HybridConfigurator &,
             size_t
         );
-        void writeVelFile(molsys::SimulationBox &, size_t);
-        void writeForceFile(molsys::SimulationBox &, size_t);
-        void writeChargeFile(molsys::SimulationBox &, size_t);
-        void writeRstFile(
-            molsys::SimulationBox &,
-            const thermostat::Thermostat &,
-            size_t
-        );
+        void writeVelFile(const out::Frame &, size_t);
+        void writeForceFile(const out::Frame &, size_t);
+        void writeChargeFile(const out::Frame &, size_t);
+        void writeRstFile(const out::Frame &, size_t);
         void writeOptRstFile(molsys::SimulationBox &, size_t);
 
         void writeMomentumFile(size_t step, const physicalData::PhysicalData &);

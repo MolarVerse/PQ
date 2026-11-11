@@ -56,7 +56,8 @@ namespace input::molDescriptor
     MoldescriptorReader::MoldescriptorReader(engine::Engine &engine)
         : _engine(engine)
     {
-        _fileName = settings::FileSettings::getMolDescriptorFileName();
+        _fileName =
+            _engine.getSettings().fileSettings.getMolDescriptorFileName();
         _fp.open(_fileName);
     }
 
@@ -69,7 +70,7 @@ namespace input::molDescriptor
     void readMolDescriptor(engine::Engine &engine)
     {
         const auto filename =
-            settings::FileSettings::getMolDescriptorFileName();
+            engine.getSettings().fileSettings.getMolDescriptorFileName();
 
         out::StdoutOutput::writeRead("Moldescriptor File", filename);
         engine.getLogOutput().writeRead("Moldescriptor File", filename);

@@ -25,8 +25,12 @@
 #include <iosfwd>
 #include <string>
 
+#include "frame.hpp"
 #include "noseHooverThermostat.hpp"
 #include "thermostat.hpp"
+#include "thermostatSettings.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests writing the restart file
@@ -35,7 +39,10 @@
 TEST_F(TestRstFileOutput, write)
 {
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(*_simulationBox, thermostat::Thermostat(), 10);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        10
+    );
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
@@ -76,13 +83,22 @@ TEST_F(TestRstFileOutput, write)
  */
 TEST_F(TestRstFileOutput, writeWithNoseHoover)
 {
-    auto thermostat = thermostat::NoseHooverThermostat();
-    // NOTE: HERE one more value than printed is needed
-    thermostat.setChi({1.0, 2.0, 3.0, 0.0});
-    thermostat.setZeta({3.0, 2.0, 1.0, 0.0});
+    NoseHooverSettings noseHooverSettings;
+    noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
+    const auto chis =
+        std::map<size_t, double>{{0, 1.0}, {1, 2.0}, {2, 3.0}, {3, 0.0}};
+    const auto zetas =
+        std::map<size_t, double>{{0, 3.0}, {1, 2.0}, {2, 1.0}, {3, 0.0}};
+    noseHooverSettings.setChiByUser(chis);
+    noseHooverSettings.setZetaByUser(zetas);
+    noseHooverSettings.setNoseHooverChainLengthByUser(3);
+    auto thermostat = thermostat::NoseHooverThermostat(
+        noseHooverSettings,
+        toTemperature(300.0)
+    );
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(*_simulationBox, thermostat, 10);
+    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;

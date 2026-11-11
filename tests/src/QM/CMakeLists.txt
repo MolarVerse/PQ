@@ -49,3 +49,11 @@ add_test(NAME testOrcaScfScripts
             ${PROJECT_SOURCE_DIR}/src/QM/scripts
             ${PROJECT_SOURCE_DIR}/examples/orca)
 set_property(TEST testOrcaScfScripts PROPERTY LABELS QM)
+
+find_program(PERL_EXECUTABLE perl)
+if(PERL_EXECUTABLE)
+    add_test(NAME testTurbomoleScripts
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testTurbomoleScripts.py
+                ${PROJECT_SOURCE_DIR}/src/QM/scripts)
+    set_property(TEST testTurbomoleScripts PROPERTY LABELS QM)
+endif()

@@ -177,14 +177,17 @@ namespace
         );
     }
 
-    void validateExternalQMScriptSelection(const QMSettings &qmSettings)
+    void validateExternalQMScriptSelection(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings
+    )
     {
         if (!settings::GeneralSettings::isQMActivated() ||
             !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto &script         = externalQMSettings.getQMScript();
+        const auto &fullPathScript = externalQMSettings.getQMScriptFullPath();
 
         if (script.empty() && fullPathScript.empty())
         {
@@ -215,14 +218,17 @@ namespace
         }
     }
 
-    void validateInstalledExternalQMScript(const QMSettings &qmSettings)
+    void validateInstalledExternalQMScript(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings
+    )
     {
         if (!settings::GeneralSettings::isQMActivated() ||
             !qmSettings.isExternalQMRunner())
             return;
 
-        const auto script         = QMSettings::getQMScript();
-        const auto fullPathScript = QMSettings::getQMScriptFullPath();
+        const auto &script         = externalQMSettings.getQMScript();
+        const auto &fullPathScript = externalQMSettings.getQMScriptFullPath();
 
         // NOTE: these compile flags seem redundant with certain cmake
         // configurations, but are necessary for some build configurations (e.g.
@@ -278,43 +284,46 @@ namespace
         if (settings.constraintSettings.isActive() ||
             settings.forceFieldSettings.isActive())
         {
-            if (!settings::FileSettings::isTopologyFileNameSet())
+            if (!settings.fileSettings.isTopologyFileNameSetByUser())
                 throw exc::InputFileException(
                     "Topology file needed for requested simulation setup"
                 );
         }
 
         if (settings.forceFieldSettings.isActive() &&
-            !settings::FileSettings::isParameterFileNameSet())
+            !settings.fileSettings.isParameterFileNameSetByUser())
             throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
             );
 
         if (settings.constraintSettings.isMShakeActivated() &&
-            settings::FileSettings::getMShakeFileName().empty())
+            FileSettings::getMShakeFileName().empty())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
             );
 
-        validateExternalQMScriptSelection(settings.qmSettings);
+        validateExternalQMScriptSelection(
+            settings.qmSettings,
+            settings.externalQMSettings
+        );
     }
 
     void validateEffectiveFiles(const Settings &settings)
     {
-        requireFile(settings::FileSettings::getStartFileName(), "Start file");
+        requireFile(FileSettings::getStartFileName(), "Start file");
 
-        if (settings::FileSettings::isRingPolymerStartFileNameSet())
+        if (FileSettings::isRingPolymerStartFileNameSet())
         {
             requireFile(
-                settings::FileSettings::getRingPolymerStartFileName(),
+                FileSettings::getRingPolymerStartFileName(),
                 "Ring-polymer start file"
             );
         }
 
-        if (settings::FileSettings::isIntraNonBondedFileNameSet())
+        if (FileSettings::isIntraNonBondedFileNameSet())
         {
             requireFile(
-                settings::FileSettings::getIntraNonBondedFileName(),
+                FileSettings::getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
         }
@@ -323,7 +332,7 @@ namespace
             settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             requireFile(
-                settings::FileSettings::getMolDescriptorFileName(),
+                settings.fileSettings.getMolDescriptorFileName(),
                 "Moldescriptor file"
             );
         }
@@ -332,7 +341,7 @@ namespace
             !settings.forceFieldSettings.isNonCoulombicActive())
         {
             requireFile(
-                settings::FileSettings::getGuffDatFileName(),
+                settings.fileSettings.getGuffDatFileName(),
                 "Guff file"
             );
         }
@@ -341,7 +350,7 @@ namespace
             settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings::FileSettings::getTopologyFileName(),
+                settings.fileSettings.getTopologyFileName(),
                 "Topology file"
             );
         }
@@ -349,17 +358,14 @@ namespace
         if (settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings::FileSettings::getParameterFilename(),
+                settings.fileSettings.getParameterFileName(),
                 "Parameter file"
             );
         }
 
-        if (settings::FileSettings::isMShakeFileNameSet())
+        if (FileSettings::isMShakeFileNameSet())
         {
-            requireFile(
-                settings::FileSettings::getMShakeFileName(),
-                "M-SHAKE file"
-            );
+            requireFile(FileSettings::getMShakeFileName(), "M-SHAKE file");
         }
 
         if (!settings::GeneralSettings::isQMActivated())
@@ -369,10 +375,7 @@ namespace
 
         if (method == QMMethod::DFTBPLUS)
         {
-            requireFile(
-                settings::FileSettings::getDFTBFileName(),
-                "DFTB setup file"
-            );
+            requireFile(FileSettings::getDFTBFileName(), "DFTB setup file");
         }
 
         if (method == QMMethod::ASE_DFTBPLUS &&
@@ -413,13 +416,13 @@ namespace
 
         if (settings.qmSettings.getQMMethod() == QMMethod::ORCA)
         {
-            requireFile(
-                settings::FileSettings::getOrcaFileName(),
-                "ORCA template"
-            );
+            requireFile(FileSettings::getOrcaFileName(), "ORCA template");
         }
 
-        validateInstalledExternalQMScript(settings.qmSettings);
+        validateInstalledExternalQMScript(
+            settings.qmSettings,
+            settings.externalQMSettings
+        );
     }
 
     void validateCompiledCapabilities(const QMSettings &qmSettings)
@@ -444,7 +447,7 @@ namespace
     void appendWarnings(
         const input::InputFileReader &reader,
         cli::ValidationResult        &result,
-        const ThermostatSettings     &thermostatSettings
+        const Settings               &settings
     )
     {
         using enum ThermostatType;
@@ -457,10 +460,10 @@ namespace
                  std::nullopt}
             );
         }
-        if (thermostatSettings.getThermostatType() ==
+        if (settings.thermostatSettings.getThermostatType() ==
                 ThermostatType::NOSE_HOOVER &&
             utilities::isZero(
-                ThermostatSettings::getNoseHooverCouplingFrequency()
+                settings.noseHooverSettings.getNoseHooverCouplingFrequency()
             ))
         {
             result.diagnostics.push_back(
@@ -471,7 +474,7 @@ namespace
             );
         }
 
-        if (thermostatSettings.getThermostatType() ==
+        if (settings.thermostatSettings.getThermostatType() ==
                 ThermostatType::LANGEVIN &&
             utilities::isZero(ThermostatSettings::getFriction()))
         {
@@ -537,7 +540,7 @@ cli::ValidationResult cli::validateInputFile(
             .scope       = scope,
             .diagnostics = {}
         };
-        appendWarnings(reader, result, settings.thermostatSettings);
+        appendWarnings(reader, result, settings);
         return result;
     }
     catch (const exc::PQException &exception)

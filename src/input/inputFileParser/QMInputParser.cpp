@@ -34,6 +34,7 @@
 #include "qmSettings.hpp"
 #include "referenceSettings.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -59,15 +60,18 @@ namespace input
      * DFTB method and its associated parameters.
      * @param xtbSettings XTB settings object used to configure and manage the
      * XTB method and its associated parameters.
+     * @param externalQMSettings External QM settings object used to configure
+     * and manage any external QM scripts or methods.
      */
     QMInputParser::QMInputParser(
-        const bool         resolveBuiltInSlakosPath,
-        ReferenceSettings &referenceSettings,
-        QMSettings        &qmSettings,
-        MaceSettings      &maceSettings,
-        FennolSettings    &fennolSettings,
-        DftbSettings      &dftbSettings,
-        XtbSettings       &xtbSettings
+        const bool          resolveBuiltInSlakosPath,
+        ReferenceSettings  &referenceSettings,
+        QMSettings         &qmSettings,
+        MaceSettings       &maceSettings,
+        FennolSettings     &fennolSettings,
+        DftbSettings       &dftbSettings,
+        XtbSettings        &xtbSettings,
+        ExternalQMSettings &externalQMSettings
     )
         : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath),
           _referenceSettings(referenceSettings),
@@ -75,7 +79,8 @@ namespace input
           _maceSettings(maceSettings),
           _fennolSettings(fennolSettings),
           _dftbSettings(dftbSettings),
-          _xtbSettings(xtbSettings)
+          _xtbSettings(xtbSettings),
+          _externalQMSettings(externalQMSettings)
     {
         addQMMethodKey();
         addQMScriptKey();
@@ -168,8 +173,8 @@ namespace input
             .description = "Specifies the external QM script to be used.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setQMScript(value); };
+        const auto setValue = [this](const std::string &value)
+        { _externalQMSettings->setQMScriptByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -189,8 +194,8 @@ namespace input
             .description = "Specifies the full path to the external QM script.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { QMSettings::setQMScriptFullPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _externalQMSettings->setQMScriptFullPathByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -208,10 +213,11 @@ namespace input
             .name        = "qm_loop_time_limit",
             .title       = "QM Loop Time Limit",
             .description = "Specifies the time limit for the QM loop.",
+            .unit        = "s",
         };
 
-        const auto setValue = [](double value)
-        { QMSettings::setQMLoopTimeLimit(value); };
+        const auto setValue = [this](double value)
+        { _qmSettings->setQMLoopTimeLimitByUser(value * s); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -231,8 +237,8 @@ namespace input
             .description = "Specifies whether to use dispersion correction.",
         };
 
-        const auto setValue = [](bool value)
-        { QMSettings::setUseDispersionCorrection(value); };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setUseDispersionCorrectionByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -252,8 +258,8 @@ namespace input
             .description = "Specifies whether to remove the net force.",
         };
 
-        const auto setValue = [](bool value)
-        { QMSettings::setRemoveNetForce(value); };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setRemoveNetForceByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{

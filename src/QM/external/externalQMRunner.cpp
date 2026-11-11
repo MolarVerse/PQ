@@ -32,6 +32,8 @@
 #include <string>
 #include <thread>
 
+#include "units.hpp"
+
 #if !defined(_WIN32)
 #include <sys/wait.h>
 #include <unistd.h>
@@ -44,7 +46,6 @@
 #include "box.hpp"
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
-#include "executablePath.hpp"
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
@@ -263,6 +264,21 @@ namespace
 
 namespace QM
 {
+    /**
+     * @brief Constructs an ExternalQMRunner with the given QM settings and
+     * external QM settings.
+     *
+     * @param qmSettings The QM settings used to configure the runner.
+     * @param externalQMSettings The external QM settings used to configure the
+     * runner.
+     */
+    ExternalQMRunner::ExternalQMRunner(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings
+    )
+        : QMRunner(qmSettings), _externalQMSettings(externalQMSettings)
+    {
+    }
 
     /**
      * @brief reads the force file (including qm energy) and sets the forces of
@@ -285,8 +301,7 @@ namespace QM
         const QMSettings           &qmSettings
     )
     {
-        const auto forceFileName =
-            settings::FileSettings::getQMForcesTempFileName();
+        const auto forceFileName = FileSettings::getQMForcesTempFileName();
 
         std::ifstream forceFile(forceFileName);
 
@@ -365,7 +380,7 @@ namespace QM
 
         forceFile.close();
 
-        if (QMSettings::getRemoveNetForce())
+        if (qmSettings.getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 
@@ -387,8 +402,7 @@ namespace QM
         const QMSettings      &qmSettings
     )
     {
-        const auto chargeFileName =
-            settings::FileSettings::getQMChargesTempFileName();
+        const auto chargeFileName = FileSettings::getQMChargesTempFileName();
 
         std::ifstream chargeFile(chargeFileName);
 
@@ -442,17 +456,6 @@ namespace QM
         chargeFile.close();
     }
 
-    std::string bundledQMScriptPath(const std::string_view script)
-    {
-        const auto installedPath = utilities::installedDataPath(
-            std::filesystem::path("scripts") / script
-        );
-        if (std::filesystem::is_regular_file(installedPath))
-            return installedPath.string();
-
-        return (std::filesystem::path(SCRIPT_PATH_) / script).string();
-    }
-
     /**
      * @brief run the qm engine
      *
@@ -489,9 +492,9 @@ namespace QM
         }
 
         const auto resultFiles = std::array{
-            settings::FileSettings::getQMForcesTempFileName(),
-            settings::FileSettings::getQMChargesTempFileName(),
-            settings::FileSettings::getStressTensorTempFileName()
+            FileSettings::getQMForcesTempFileName(),
+            FileSettings::getQMChargesTempFileName(),
+            FileSettings::getStressTensorTempFileName()
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 
@@ -518,19 +521,6 @@ namespace QM
         }
     }
 
-    std::string ExternalQMRunner::_resolveScriptPath(
-        const std::string_view script
-    ) const
-    {
-        if (_scriptPath.empty())
-            return std::string(script);
-
-        if (_scriptPath == SCRIPT_PATH_)
-            return bundledQMScriptPath(script);
-
-        return _scriptPath + std::string(script);
-    }
-
     void ExternalQMRunner::_executeCommand(
         const std::string_view command,
         const std::string_view program
@@ -551,7 +541,7 @@ namespace QM
         auto       shell         = std::string("sh");
         auto       shellFlag     = std::string("-c");
         auto       commandString = std::string(command);
-        const auto timeLimit     = QMSettings::getQMLoopTimeLimit();
+        const auto timeLimit     = _getQMSettings().getQMLoopTimeLimit();
 
         const pid_t pid = ::fork();
         if (pid < 0)
@@ -574,9 +564,9 @@ namespace QM
 
         ::setpgid(pid, pid);
 
-        // qm_loop_time_limit is given in s
-        const auto deadline = std::chrono::steady_clock::now() +
-                              std::chrono::duration<double>(timeLimit);
+        const auto deadline =
+            std::chrono::steady_clock::now() +
+            std::chrono::duration<double>(timeLimit.numerical_value_in(s));
 
         int status = 0;
         {
@@ -631,37 +621,13 @@ namespace QM
      ********************************/
 
     /**
-     * @brief getter for the script path
+     * @brief getter for the external QM settings
      *
-     * @return const std::string&
+     * @return const ExternalQMSettings&
      */
-    const std::string &ExternalQMRunner::getScriptPath() const
+    const ExternalQMSettings &ExternalQMRunner::_getExternalQMSettings() const
     {
-        return _scriptPath;
-    }
-
-    /**
-     * @brief getter for the singularity path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getSingularity() { return _singularity; }
-
-    /**
-     * @brief getter for the static build path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getStaticBuild() { return _staticBuild; }
-
-    /**
-     * @brief setter for the script path
-     *
-     * @param scriptPath
-     */
-    void ExternalQMRunner::setScriptPath(const std::string_view &scriptPath)
-    {
-        _scriptPath = scriptPath;
+        return _externalQMSettings.get();
     }
 
 }   // namespace QM

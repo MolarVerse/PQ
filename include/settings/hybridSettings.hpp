@@ -24,9 +24,11 @@
 #define SETTINGS__HYBRID_SETTINGS_HPP
 
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "enums/hybrid.hpp"
+#include "fileSettings.hpp"
 
 namespace settings
 {
@@ -41,9 +43,10 @@ namespace settings
     {
        private:
         static inline std::optional<std::vector<size_t>> _innerRegionCenter;
-        static inline std::vector<int>                   _forcedCoreList;
-        static inline std::vector<int>                   _forcedLayerList;
-        static inline std::vector<int>                   _forcedOuterList;
+        static inline std::optional<std::string> _innerRegionCenterExpression;
+        static inline std::vector<int>           _forcedCoreList;
+        static inline std::vector<int>           _forcedLayerList;
+        static inline std::vector<int>           _forcedOuterList;
 
         static inline bool _useQMCharges = true;
 
@@ -61,6 +64,7 @@ namespace settings
          ********************/
 
         static void setInnerRegionCenter(const std::vector<size_t> &);
+        static void setInnerRegionCenterExpression(const std::string &);
         static void setForcedCoreList(const std::vector<int> &);
         static void setForcedLayerList(const std::vector<int> &);
         static void setForcedOuterList(const std::vector<int> &);
@@ -74,6 +78,11 @@ namespace settings
 
         static void setSmoothingMethod(SmoothingMethod method);
         static void setQMForceDist(QMForceDist method);
+
+        /**
+         * @brief resolves pending selection expressions (needs the files)
+         */
+        static void finalize(const FileSettings &fileSettings);
 
         /********************
          * standard getters *

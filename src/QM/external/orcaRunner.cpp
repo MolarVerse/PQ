@@ -94,8 +94,7 @@ namespace QM
                 }
             }
         }
-        const auto pcFileName =
-            settings::FileSettings::getPointChargeFileName();
+        const auto pcFileName = FileSettings::getPointChargeFileName();
 
         if (pcCount == 0)
         {
@@ -119,7 +118,7 @@ namespace QM
     {
         using enum SmoothingMethod;
 
-        const auto scriptFile = _resolveScriptPath(QMSettings::getQMScript());
+        const auto scriptFile = _getExternalQMSettings().getQMScript();
 
         if (!mstd::File(scriptFile).exists())
         {
@@ -148,10 +147,8 @@ namespace QM
             charge,
             reset ? 1 : 0,
             usePointCharges,
-            utilities::shellQuote(settings::FileSettings::getOrcaFileName()),
-            utilities::shellQuote(
-                settings::FileSettings::getPointChargeFileName()
-            )
+            utilities::shellQuote(FileSettings::getOrcaFileName()),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
         );
         _executeCommand(command, "ORCA");
 

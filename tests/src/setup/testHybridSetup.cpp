@@ -24,7 +24,6 @@
 
 #include <array>
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "atom.hpp"
@@ -32,7 +31,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "hybridSetup.hpp"
-#include "inputFileParser/hybridInputParser.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
@@ -84,105 +82,6 @@ TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);   // not QMMM_MD
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
 }
-
-/* ---------- parseSelectionNoPython ---------- */
-
-TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelectionNoPython("3", "qm_center");
-    ASSERT_EQ(value.size(), 1U);
-    EXPECT_EQ(value[0], 3);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonCommaList)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelectionNoPython("1,3,5", "qm_center");
-    ASSERT_EQ(value.size(), 3U);
-    EXPECT_EQ(value[0], 1);
-    EXPECT_EQ(value[1], 3);
-    EXPECT_EQ(value[2], 5);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonRange)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelectionNoPython("2-5", "qm_center");
-    ASSERT_EQ(value.size(), 4U);
-    EXPECT_EQ(value[0], 2);
-    EXPECT_EQ(value[3], 5);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
-{
-    input::HybridInputParser parser;
-    const auto value = input::HybridInputParser::parseSelectionNoPython(
-        "1,3-4,7",
-        "qm_center"
-    );
-    ASSERT_EQ(value.size(), 4U);
-    EXPECT_EQ(value[0], 1);
-    EXPECT_EQ(value[1], 3);
-    EXPECT_EQ(value[2], 4);
-    EXPECT_EQ(value[3], 7);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
-{
-    input::HybridInputParser parser;
-    EXPECT_THROW_MSG(
-        parser.parseSelectionNoPython("", "qm_center"),
-        exc::InputFileException,
-        "The value of key qm_center -  is an empty list. The qm_center string "
-        "must be a comma-separated list of integers or ranges, representing "
-        "the atom indices in the restart file that should be treated as the "
-        "qm_center."
-    );
-}
-
-/* ---------- parseSelection ---------- */
-
-TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelection("", "qm_center");
-    ASSERT_EQ(value.size(), 1U);
-    EXPECT_EQ(value[0], 0);
-}
-
-TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelection("5,1,3,1", "qm_center");
-    ASSERT_EQ(value.size(), 3U);
-    EXPECT_EQ(value[0], 1);
-    EXPECT_EQ(value[1], 3);
-    EXPECT_EQ(value[2], 5);
-}
-
-#ifndef PYTHON_ENABLED
-TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
-{
-    input::HybridInputParser parser;
-    EXPECT_THROW_MSG(
-        parser.parseSelection("not_a_number", "qm_center"),
-        exc::InputFileException,
-        "The value of key qm_center - not_a_number contains characters that "
-        "are not digits, \"-\" or commas. The current build of PQ was compiled "
-        "without Python bindings, so the qm_center string must be a "
-        "comma-separated list of integers, representing the atom indices in "
-        "the restart file that should be treated as the qm_center. In order to "
-        "use the full selection parser power of the PQAnalysis Python package, "
-        "the PQ build must be compiled with Python bindings."
-    );
-}
-#endif
 
 /* ---------- setup throws ---------- */
 

@@ -146,9 +146,8 @@ namespace QM
         molsys::SimulationBox &simulationBox
     )
     {
-        const std::string fileName =
-            settings::FileSettings::getPointChargeFileName();
-        std::ofstream pcFile(fileName);
+        const std::string fileName = FileSettings::getPointChargeFileName();
+        std::ofstream     pcFile(fileName);
 
         using enum molsys::HybridZone;
 
@@ -185,7 +184,7 @@ namespace QM
      */
     void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
     {
-        const auto scriptFile = _resolveScriptPath(QMSettings::getQMScript());
+        const auto scriptFile = _getExternalQMSettings().getQMScript();
 
         if (!mstd::File(scriptFile).exists())
         {
@@ -217,10 +216,8 @@ namespace QM
             charge,
             readChargesBin,
             usePointCharges,
-            utilities::shellQuote(settings::FileSettings::getDFTBFileName()),
-            utilities::shellQuote(
-                settings::FileSettings::getPointChargeFileName()
-            )
+            utilities::shellQuote(FileSettings::getDFTBFileName()),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
         );
         _executeCommand(command, "DFTB+");
 
@@ -241,8 +238,7 @@ namespace QM
         physicalData::PhysicalData &physicalData
     )
     {
-        const auto stressFileName =
-            settings::FileSettings::getStressTensorTempFileName();
+        const auto stressFileName = FileSettings::getStressTensorTempFileName();
 
         std::ifstream stressFile(stressFileName);
 

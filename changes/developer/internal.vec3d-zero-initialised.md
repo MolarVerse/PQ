@@ -1,0 +1,1 @@
+- Vector3D (and with it the matrices and tensors) is zero-initialised by default; a default constructed vector used to hold whatever was in the memory, which once printed inf into the first output line.

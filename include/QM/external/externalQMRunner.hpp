@@ -23,7 +23,7 @@
 #ifndef QM__EXTERNAL__EXTERNAL_QM_RUNNER_HPP
 #define QM__EXTERNAL__EXTERNAL_QM_RUNNER_HPP
 
-#include <string>
+#include <mstd/types.hpp>
 #include <string_view>
 
 #include "qmRunner.hpp"
@@ -41,10 +41,10 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+class ExternalQMSettings;   // forward declaration
+
 namespace QM
 {
-    [[nodiscard]] std::string bundledQMScriptPath(std::string_view script);
-
     /**
      * @brief ExternalQMRunner inherits from QMRunner
      *
@@ -52,12 +52,13 @@ namespace QM
     class ExternalQMRunner : public QMRunner
     {
        private:
-        std::string            _scriptPath  = SCRIPT_PATH_;
-        constexpr static auto *_singularity = SINGULARITY_;
-        constexpr static auto *_staticBuild = STATIC_BUILD_;
+        mstd::ConstRef<ExternalQMSettings> _externalQMSettings;
 
        public:
-        using QMRunner::QMRunner;
+        explicit ExternalQMRunner(
+            const QMSettings         &qmSettings,
+            const ExternalQMSettings &externalQMSettings
+        );
         ~ExternalQMRunner() override = default;
 
         void run(
@@ -87,20 +88,14 @@ namespace QM
          * standard getter and setters *
          *******************************/
 
-        [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] static std::string getSingularity();
-        [[nodiscard]] static std::string getStaticBuild();
-
-        void setScriptPath(const std::string_view &scriptPath);
-
        protected:
-        [[nodiscard]]
-        std::string _resolveScriptPath(std::string_view script) const;
-
         virtual void _executeCommand(
             std::string_view command,
             std::string_view program
         ) const;
+
+        [[nodiscard]]
+        const ExternalQMSettings &_getExternalQMSettings() const;
 
        private:
         static void _readForceFile(
