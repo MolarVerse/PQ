@@ -30,6 +30,10 @@ class BuildRequirementsTest(unittest.TestCase):
         self.gcc = gcc_minimum("CMakeLists.txt")
 
     def test_the_root_is_at_least_as_strict_as_the_vendored_mstd(self):
+        # the Changelog Fragment Check runs the script tests without submodules
+        if not (ROOT / "external/mstd/CMakeLists.txt").is_file():
+            self.skipTest("external/mstd is not checked out")
+
         def as_tuple(version):
             return tuple(int(part) for part in version.split("."))
 
