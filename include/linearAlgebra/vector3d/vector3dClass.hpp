@@ -105,7 +105,6 @@ namespace linalg
         // implicit constructor from a quantity holding a Vector3D, e.g.
         // quantity<angstrom, Vector3D<double>> (which is what mp-units
         // produces for `vec * angstrom` with a non-const/temporary vec)
-        // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
         template <typename Q>
         requires(mstd::is_quantity_like_v<T> && mstd::is_quantity_like_v<Q> &&
                  !std::same_as<Q, T> &&

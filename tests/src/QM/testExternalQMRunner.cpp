@@ -50,7 +50,6 @@
 #endif
 
 #include "atom.hpp"
-#include "constants.hpp"
 #include "dftbplusRunner.hpp"
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"

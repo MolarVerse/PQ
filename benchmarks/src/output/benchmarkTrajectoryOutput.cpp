@@ -31,7 +31,6 @@
 #include "frame.hpp"
 #include "simulationBox.hpp"
 #include "trajectoryOutput.hpp"
-#include "units.hpp"
 
 namespace
 {
