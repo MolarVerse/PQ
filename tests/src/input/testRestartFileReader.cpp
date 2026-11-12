@@ -70,7 +70,7 @@ TEST_F(TestRstFileReader, rstFileReading)
     input::molDescriptor::MoldescriptorReader moldescriptor(*_engine);
 
     std::string filename = "examples/setup/h2o-qmcf.rst";
-    FileSettings::setStartFileName(filename);
+    _settings.fileSettings.setStartFileNameByUser(filename);
 
     moldescriptor.read();
     ASSERT_NO_THROW(
