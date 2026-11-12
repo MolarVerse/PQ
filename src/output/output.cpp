@@ -22,6 +22,7 @@
 
 #include "output.hpp"
 
+#include <filesystem>
 #include <format>
 #include <fstream>
 
@@ -73,6 +74,37 @@ namespace out
             throw exc::InputFileException(
                 "Could not open file - filename = " + _fileName
             );
+    }
+
+    /**
+     * @brief replace the whole file with content, so that it is either the
+     * old or the new file even if PQ stops while writing
+     *
+     * @details content is written to <file>.tmp, which is then renamed over
+     * the file; a rename within one directory is atomic
+     *
+     * @param content
+     *
+     * @throw InputFileException if the temporary file cannot be written
+     */
+    void Output::_replaceFile(const std::string_view content)
+    {
+        const auto tmpName = _fileName + ".tmp";
+
+        _fp.close();
+
+        {
+            std::ofstream tmp(tmpName);
+            tmp << content;
+            tmp.close();
+
+            if (!tmp)
+                throw exc::InputFileException(
+                    "Could not write file - filename = " + tmpName
+                );
+        }
+
+        std::filesystem::rename(tmpName, _fileName);
     }
 
     /**
