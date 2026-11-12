@@ -69,100 +69,6 @@ TEST_F(TestThermostat, calculateTemperature)
     );
 }
 
-TEST_F(TestThermostat, applyTemperatureRamping)
-{
-    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(0.0));
-    _thermostat->setTemperatureRampingSteps(0);
-    _thermostat->setTemperatureRampingFrequency(1);
-    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(300.0)
-    );
-
-    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(1.0));
-    _thermostat->setTemperatureRampingSteps(1);
-    _thermostat->setTemperatureRampingFrequency(1);
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(301.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(301.0)
-    );
-
-    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(1.0));
-    _thermostat->setTemperatureRampingSteps(2);
-    _thermostat->setTemperatureRampingFrequency(1);
-    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(301.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(302.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(302.0)
-    );
-
-    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(1.0));
-    _thermostat->setTemperatureRampingSteps(4);
-    _thermostat->setTemperatureRampingFrequency(2);
-    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(300.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(301.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(301.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(302.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(302.0)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        _thermostat->getTargetTemperature(),
-        mstd::units::point<K>(302.0)
-    );
-}
-
 TEST_F(TestThermostat, applyThermostatBerendsen)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(
@@ -672,30 +578,6 @@ TEST_F(TestThermostat, temperatureSetterGetter)
         _thermostat->getTemperatureIncrease(),
         mstd::units::delta<K>(7.5)
     );
-}
-
-TEST_F(TestThermostat, temperatureRampingUpdatesActualTargetTemperature)
-{
-    ThermostatSettings::setActualTargetTemperature(toTemperature(300.0));
-
-    _thermostat->setTargetTemperature(mstd::units::point<K>(300.0));
-    _thermostat->setTemperatureIncrease(mstd::units::delta<K>(2.5));
-    _thermostat->setTemperatureRampingSteps(2);
-    _thermostat->setTemperatureRampingFrequency(1);
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        ThermostatSettings::getActualTargetTemperature(),
-        toTemperature(302.5)
-    );
-
-    _thermostat->applyTemperatureRamping();
-    EXPECT_EQ(
-        ThermostatSettings::getActualTargetTemperature(),
-        toTemperature(305.0)
-    );
-
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
 }
 
 TEST_F(TestThermostat, berendsenStoresMeasuredTemperature)

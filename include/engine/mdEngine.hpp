@@ -28,6 +28,7 @@
 #include "engine.hpp"
 #include "hybridConfigurator.hpp"
 #include "integrator.hpp"
+#include "kinetics.hpp"
 #include "manostat.hpp"
 #include "momentumOutput.hpp"
 #include "outputFileSettings.hpp"
@@ -51,6 +52,7 @@ namespace engine
     {
        private:
         kinetics::ResetKinetics          _resetKinetics;
+        kinetics::Kinetics               _kinetics;
         configurator::HybridConfigurator _configurator{};
 
         std::unique_ptr<integrator::Integrator> _integrator;
@@ -116,7 +118,11 @@ namespace engine
         [[nodiscard]]
         configurator::HybridConfigurator &_getHybridConfigurator();
         [[nodiscard]]
-        configurator::HybridConfigurator const &_getHybridConfigurator() const;
+        const configurator::HybridConfigurator &_getHybridConfigurator() const;
+        [[nodiscard]]
+        kinetics::Kinetics &_getKinetics();
+        [[nodiscard]]
+        const kinetics::Kinetics &_getKinetics() const;
     };
 }   // namespace engine
 

@@ -31,7 +31,6 @@
 #include "generalSettings.hpp"
 #include "mmmdEngine.hpp"
 #include "optEngine.hpp"
-#include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
 {
@@ -53,9 +52,6 @@ class TestSetup : public ::testing::Test
 
     void TearDown() override
     {
-        ThermostatSettings::setEndTemperatureSet(false);
-        ThermostatSettings::setStartTemperatureSet(false);
-        ThermostatSettings::setTemperatureSet(false);
         settings::GeneralSettings::deactivateCellList();
     }
 };

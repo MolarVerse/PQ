@@ -52,9 +52,12 @@ namespace input
      */
     ThermostatInputParser::ThermostatInputParser(
         ThermostatSettings &thermostatSettings,
-        NoseHooverSettings &nhSettings
+        NoseHooverSettings &nhSettings,
+        KineticsSettings   &kineticsSettings
     )
-        : _thermostatSettings(thermostatSettings), _nhSettings(nhSettings)
+        : _thermostatSettings(thermostatSettings),
+          _nhSettings(nhSettings),
+          _kineticsSettings(kineticsSettings)
     {
         addThermostatKey();
         addTemperatureKey();
@@ -97,8 +100,10 @@ namespace input
             .unit = "K"
         };
 
-        const auto setValue = [&](double value)
-        { ThermostatSettings::setTargetTemperature(toTemperature(value)); };
+        const auto setValue = [this](double value)
+        {
+            _kineticsSettings->setTargetTemperatureByUser(toTemperature(value));
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -119,8 +124,8 @@ namespace input
             .description = "Specifies the start temperature for the simulation"
         };
 
-        const auto setValue = [&](double value)
-        { ThermostatSettings::setStartTemperature(toTemperature(value)); };
+        const auto setValue = [this](double value)
+        { _kineticsSettings->setStartTemperatureByUser(toTemperature(value)); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -141,8 +146,8 @@ namespace input
             .description = "Specifies the end temperature for the simulation"
         };
 
-        const auto setValue = [&](double value)
-        { ThermostatSettings::setEndTemperature(toTemperature(value)); };
+        const auto setValue = [this](double value)
+        { _kineticsSettings->setEndTemperatureByUser(toTemperature(value)); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -164,8 +169,8 @@ namespace input
                 "Specifies the number of steps for the temperature ramp"
         };
 
-        const auto setValue = [&](size_t value)
-        { ThermostatSettings::setTemperatureRampSteps(value); };
+        const auto setValue = [this](size_t value)
+        { _kineticsSettings->setRampingStepsByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -185,8 +190,8 @@ namespace input
             .description = "Specifies the frequency of the temperature ramp"
         };
 
-        const auto setValue = [&](size_t value)
-        { ThermostatSettings::setTemperatureRampFrequency(value); };
+        const auto setValue = [this](size_t value)
+        { _kineticsSettings->setRampingFrequencyByUser(value); };
 
         const auto validator =
             RangeValidator<size_t, Greater::GT>{0, std::nullopt};

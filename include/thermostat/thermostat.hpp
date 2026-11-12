@@ -66,8 +66,6 @@ namespace thermostat
         Thermostat()          = default;
         virtual ~Thermostat() = default;
 
-        void applyTemperatureRamping();
-
         virtual void applyThermostat(
             molsys::SimulationBox &,
             physicalData::PhysicalData &

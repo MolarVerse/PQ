@@ -51,16 +51,16 @@ namespace maxwellBoltzmann
      * @param simulationBox
      */
     void MaxwellBoltzmann::initializeVelocities(
-        molsys::SimulationBox &simulationBox
+        molsys::SimulationBox &simulationBox,
+        const Temperature     &targetTemperature
     )
     {
-        auto generateVelocities = [this](auto &atom)
+        auto generateVelocities = [this, &targetTemperature](auto &atom)
         {
             const auto mass              = atom->getMass() * AMU_TO_KG;
             const auto boltzmannConstant = BOLTZMANN_CONSTANT;
-            const auto temp = ThermostatSettings::getActualTargetTemperature()
-                                  .quantity_from_zero()
-                                  .numerical_value_in(K);
+            const auto temp =
+                targetTemperature.quantity_from_zero().numerical_value_in(K);
 
             const auto stddev =
                 ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
@@ -103,7 +103,8 @@ namespace maxwellBoltzmann
         );
         kinetics::ResetKinetics::resetTemperature(
             simulationBox,
-            simulationBox.calculateTemperature()
+            simulationBox.calculateTemperature(),
+            targetTemperature
         );
     }
 

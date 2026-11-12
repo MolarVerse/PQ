@@ -44,6 +44,9 @@
 struct Settings
 {
     ResetKineticsSettings resetKinetics;
+    KineticsSettings      kinetics;
+    ThermostatSettings    thermostatSettings;
+
     SimulationBoxSettings simulationBoxSettings;
     HessianSettings       hessianSettings;
     RingPolymerSettings   ringPolymerSettings;
@@ -60,11 +63,11 @@ struct Settings
     FennolSettings        fennolSettings;
     DftbSettings          dftbSettings;
     XtbSettings           xtbSettings;
-    ThermostatSettings    thermostatSettings;
     NoseHooverSettings    noseHooverSettings;
     ExternalQMSettings    externalQMSettings;
 
     void finalize();
+    void validate() const;
 };
 
 #endif   // SETTINGS__SETTINGS_HPP

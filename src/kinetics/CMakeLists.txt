@@ -1,4 +1,5 @@
 add_library(kinetics
+    kinetics.cpp
     resetKinetics.cpp
 )
 

@@ -66,14 +66,8 @@ class TestInputValidation : public ::testing::Test
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
-        ThermostatSettings::setTargetTemperature(toTemperature(0.0));
-        ThermostatSettings::setStartTemperature(toTemperature(0.0));
-        ThermostatSettings::setEndTemperature(toTemperature(0.0));
-        ThermostatSettings::setTemperatureSet(false);
-        ThermostatSettings::setStartTemperatureSet(false);
-        ThermostatSettings::setEndTemperatureSet(false);
-        ThermostatSettings::setTemperatureRampSteps(0);
-        ThermostatSettings::setTemperatureRampFrequency(1);
+        _settings.kinetics.setRampingStepsByUser(0);
+        _settings.kinetics.setRampingFrequencyByUser(1);
         ThermostatSettings::setRelaxationTime(
             defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
@@ -248,15 +242,12 @@ TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setEndTemperature(toTemperature(300.0));
+    _settings.kinetics.setEndTemperatureByUser(toTemperature(300.0));
     _setKeyword("end_temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
-    EXPECT_EQ(ThermostatSettings::getTargetTemperature(), toTemperature(0.0));
-    EXPECT_EQ(
-        ThermostatSettings::getActualTargetTemperature(),
-        toTemperature(0.0)
-    );
+    EXPECT_EQ(_settings.kinetics.getEndTemperature(), toTemperature(0.0));
+    EXPECT_EQ(_settings.kinetics.getStartTemperature(), toTemperature(0.0));
 }
 
 TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
@@ -279,7 +270,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::VELOCITY_RESCALING
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     ThermostatSettings::setRelaxationTime(0.0001 * ps);
     _setKeyword("temp");
 
@@ -296,7 +287,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::LANGEVIN
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     ThermostatSettings::setFriction(std::numeric_limits<double>::max());
     _setKeyword("temp");
 
@@ -314,8 +305,8 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::LANGEVIN
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
-    ThermostatSettings::setStartTemperature(
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
+    _settings.kinetics.setStartTemperatureByUser(
         toTemperature(std::numeric_limits<double>::max())
     );
     _setKeyword("temp");
@@ -360,7 +351,7 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(0.0));
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
@@ -375,7 +366,7 @@ TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(0.0));
     _setKeyword("temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -387,7 +378,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTemperatureRampSteps(200);
+    _settings.kinetics.setRampingStepsByUser(200);
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -405,8 +396,8 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTemperatureRampSteps(2);
-    ThermostatSettings::setTemperatureRampFrequency(4);
+    _settings.kinetics.setRampingStepsByUser(2);
+    _settings.kinetics.setRampingFrequencyByUser(4);
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -424,7 +415,7 @@ TEST_F(TestInputValidation, acceptsDefaultTemperatureRampLength)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTemperatureRampFrequency(100);
+    _settings.kinetics.setRampingFrequencyByUser(100);
     _setKeyword("temp");
     _setKeyword("start_temp");
 

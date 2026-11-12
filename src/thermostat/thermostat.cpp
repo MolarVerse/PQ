@@ -26,7 +26,6 @@
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 
 namespace thermostat
 {
@@ -82,26 +81,6 @@ namespace thermostat
         auto _ = scopedTimer(TimerId::Thermostat, "Calc Temperature");
 
         physicalData.calculateTemperature(simulationBox);
-    }
-
-    /**
-     * @brief Apply temperature ramping
-     *
-     */
-    void Thermostat::applyTemperatureRamping()
-    {
-        const auto stepsLeft = _rampingStepsLeft;
-
-        if (stepsLeft > 0 && (stepsLeft - 1) % _rampingFrequency == 0)
-        {
-            const auto newTargetTemperature =
-                _targetTemperature + _temperatureIncrease;
-            setTargetTemperature(newTargetTemperature);
-            ThermostatSettings::setActualTargetTemperature(_targetTemperature);
-        }
-
-        if (_rampingStepsLeft > 0)
-            --_rampingStepsLeft;
     }
 
     /***************************

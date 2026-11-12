@@ -234,10 +234,9 @@ namespace manostat
      * @param physicalData The physical data of the system
      */
     void Manostat::applyManostat(
-        molsys::SimulationBox &simulationBox,
-
-        physicalData::PhysicalData &physicalData
-
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData,
+        const Temperature & /*targetTemperature*/
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");

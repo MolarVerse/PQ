@@ -137,7 +137,8 @@ namespace input
         _parsers.push_back(
             std::make_unique<ThermostatInputParser>(
                 settings.thermostatSettings,
-                settings.noseHooverSettings
+                settings.noseHooverSettings,
+                settings.kinetics
             )
         );
         _parsers.push_back(std::make_unique<TimingsInputParser>());

@@ -44,6 +44,7 @@ namespace driver
         input::readInputFile(inputFileName, settings);
 
         settings.finalize();
+        settings.validate();
 
         std::unique_ptr<engine::Engine> engine =
             engine::engineFactory.at(jobType)(settings);

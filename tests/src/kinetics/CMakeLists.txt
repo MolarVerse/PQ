@@ -1,4 +1,5 @@
 set(source_files
+    testKinetics.cpp
     testResetKinetics.cpp
 )
 

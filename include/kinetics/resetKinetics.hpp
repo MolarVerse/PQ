@@ -60,13 +60,15 @@ namespace kinetics
         void reset(
             size_t step,
             physicalData::PhysicalData &,
-            molsys::SimulationBox &
+            molsys::SimulationBox &,
+            const Temperature &targetTemperature
         ) const;
         void resetForces(size_t step, molsys::SimulationBox &) const;
 
         static void resetTemperature(
             molsys::SimulationBox &,
-            const Temperature &temperature
+            const Temperature &temperature,
+            const Temperature &targetTemperature
         );
         static void resetMomentum(
             molsys::SimulationBox &,

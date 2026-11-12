@@ -97,12 +97,17 @@ namespace engine
             auto &data = getRingPolymerBeadsPhysicalData()[i];
             auto &bead = getRingPolymerBeads()[i];
 
-            getResetKinetics().reset(getStep(), data, bead);
+            getResetKinetics().reset(
+                getStep(),
+                data,
+                bead,
+                _getKinetics().getCurrentTargetTemperature()
+            );
         }
 
         combineBeads();
 
-        getThermostat().applyTemperatureRamping();
+        _getKinetics().applyTemperatureRamping();
     }
 
 /**
@@ -407,7 +412,11 @@ namespace engine
             auto &bead = getRingPolymerBeads()[i];
             auto &data = getRingPolymerBeadsPhysicalData()[i];
 
-            getManostat().applyManostat(bead, data);
+            getManostat().applyManostat(
+                bead,
+                data,
+                _getKinetics().getCurrentTargetTemperature()
+            );
         }
     }
 #endif

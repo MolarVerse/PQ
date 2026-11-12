@@ -70,6 +70,45 @@ class NoseHooverSettings
 };
 
 /**
+ * @class KineticsSettings
+ *
+ * @brief Stores settings specific to the kinetics
+ *
+ */
+class KineticsSettings
+{
+   private:
+    Setting<size_t, "Temperature Ramp Frequency"> _temperatureRampFrequency{1};
+    Setting<size_t, "Temperature Ramp Steps">     _temperatureRampSteps{0};
+    Setting<Temperature, "Start Temperature">     _startTemperature;
+    Setting<Temperature, "End Temperature">       _endTemperature;
+    Setting<Temperature, "Target Temperature">    _targetTemperature;
+    Setting<TemperatureDiff, "Temperature Increase"> _temperatureIncrease;
+
+   public:
+    void finalize();
+
+    [[nodiscard]]
+    size_t getRampingSteps() const;
+    [[nodiscard]]
+    size_t getRampingFrequency() const;
+    [[nodiscard]]
+    const TemperatureDiff& getTemperatureIncrease() const;
+    [[nodiscard]]
+    const Temperature& getStartTemperature() const;
+    [[nodiscard]]
+    const Temperature& getEndTemperature() const;
+    [[nodiscard]]
+    bool isStartTemperatureSet() const;
+
+    void setRampingFrequencyByUser(size_t frequency);
+    void setRampingStepsByUser(size_t steps);
+    void setStartTemperatureByUser(const Temperature& startTemperature);
+    void setEndTemperatureByUser(const Temperature& endTemperature);
+    void setTargetTemperatureByUser(const Temperature& targetTemperature);
+};
+
+/**
  * @class ThermostatSettings
  *
  * @brief static class to store settings of the thermostat
@@ -81,18 +120,6 @@ class ThermostatSettings
     Setting<ThermostatType, "Thermostat Type"> _thermostatType{
         ThermostatType::NONE
     };
-
-    static inline bool _isTemperatureSet      = false;
-    static inline bool _isStartTemperatureSet = false;
-    static inline bool _isEndTemperatureSet   = false;
-
-    static inline size_t _temperatureRampSteps     = 0;
-    static inline size_t _temperatureRampFrequency = 1;
-
-    static inline Temperature _targetTemperature;
-    static inline Temperature _actualTargetTemperature;
-    static inline Temperature _startTemperature;
-    static inline Temperature _endTemperature;
 
     static inline Time _relaxationTime{
         defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
@@ -108,17 +135,6 @@ class ThermostatSettings
 
     void setThermostatTypeByUser(ThermostatType thermostatType);
 
-    static void setTemperatureSet(bool);
-    static void setStartTemperatureSet(bool);
-    static void setEndTemperatureSet(bool);
-    static void setTargetTemperature(const Temperature&);
-    static void setActualTargetTemperature(const Temperature&);
-    static void setStartTemperature(const Temperature&);
-    static void setEndTemperature(const Temperature&);
-
-    static void setTemperatureRampSteps(size_t);
-    static void setTemperatureRampFrequency(size_t);
-
     static void setRelaxationTime(const Time& relaxationTime);
     static void setFriction(double);
 
@@ -128,19 +144,8 @@ class ThermostatSettings
 
     [[nodiscard]] ThermostatType getThermostatType() const;
 
-    [[nodiscard]] static size_t getTemperatureRampSteps();
-    [[nodiscard]] static size_t getTemperatureRampFrequency();
-
-    [[nodiscard]] static bool isTemperatureSet();
-    [[nodiscard]] static bool isStartTemperatureSet();
-    [[nodiscard]] static bool isEndTemperatureSet();
-
-    [[nodiscard]] static const Temperature& getTargetTemperature();
-    [[nodiscard]] static const Temperature& getActualTargetTemperature();
-    [[nodiscard]] static const Temperature& getStartTemperature();
-    [[nodiscard]] static const Temperature& getEndTemperature();
-    [[nodiscard]] static const Time&        getRelaxationTime();
-    [[nodiscard]] static double             getFriction();
+    [[nodiscard]] static const Time& getRelaxationTime();
+    [[nodiscard]] static double      getFriction();
 };
 
 #endif   // SETTINGS__THERMOSTAT_SETTINGS_HPP

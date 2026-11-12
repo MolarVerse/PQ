@@ -528,6 +528,8 @@ cli::ValidationResult cli::validateInputFile(
         reader.read();
         reader.postProcess();
         reader.validateInputConfiguration(settings);
+        settings.finalize();
+        settings.validate();
         validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {

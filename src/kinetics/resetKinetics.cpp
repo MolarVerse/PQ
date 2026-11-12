@@ -60,7 +60,8 @@ namespace kinetics
     void ResetKinetics::reset(
         size_t                      step,
         physicalData::PhysicalData &physicalData,
-        molsys::SimulationBox      &simulationBox
+        molsys::SimulationBox      &simulationBox,
+        const Temperature          &targetTemperature
     ) const
     {
         auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
@@ -81,7 +82,7 @@ namespace kinetics
 
         if (resetTemp)
         {
-            resetTemperature(simulationBox, temperature);
+            resetTemperature(simulationBox, temperature, targetTemperature);
             momentum = simulationBox.calculateMomentum();
             resetMomentum(simulationBox, momentum);
             temperature     = simulationBox.calculateTemperature();
@@ -121,11 +122,11 @@ namespace kinetics
      */
     void ResetKinetics::resetTemperature(
         molsys::SimulationBox &simulationBox,
-        const Temperature     &temperature
+        const Temperature     &temperature,
+        const Temperature     &targetTemperature
     )
     {
-        const auto targetTemp =
-            ThermostatSettings::getActualTargetTemperature();
+        const auto targetTemp = targetTemperature;
 
         if (utilities::isZero(temperature))
         {
