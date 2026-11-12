@@ -103,3 +103,31 @@ def test_cgo_atomic_virial(test_with_data_dir):
     assert stderr == b""
 
     check_pq_output("cgo-mm-01", "cgo", "ref_data_atomic_virial")
+
+
+@pytest.mark.parametrize(
+    "example_dir",
+    ["cgo/"],
+    indirect=False
+)
+def test_cgo_temperature_ramp(test_with_data_dir):
+    # Berendsen thermostat with a temperature ramp from 200 K to 998.15 K over
+    # 8 steps in 4 updates; the trajectory differs from every other cgo test
+    # by the ramp only, so the other tests keep their coverage untouched
+
+    stdout, stderr = execute_pq("run-01_temp_ramp.in")
+
+    # check if stderr is empty
+    assert stderr == b""
+
+    check_pq_output("cgo-mm-01", "cgo", "ref_data_temp_ramp")
+
+    # the ramp setup is reported in the log file: (998.15 - 200) / 4 updates
+    with open("cgo-mm-01.log") as log:
+        log_text = log.read()
+
+    assert "Start temp:          200 K" in log_text
+    assert "Temp ramp increase:  199.5375 K" in log_text
+    assert "Temp ramp steps:     8" in log_text
+    assert "Temp ramp frequency: 2" in log_text
+
