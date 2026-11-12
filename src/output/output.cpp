@@ -80,8 +80,8 @@ namespace out
      * @brief replace the whole file with content, so that it is either the
      * old or the new file even if PQ stops while writing
      *
-     * @details content is written to <file>.tmp, which is then renamed over
-     * the file; a rename within one directory is atomic
+     * @details content is written to the file name plus ".tmp", which is
+     * renamed over the file; a rename within one directory is atomic
      *
      * @param content
      *
