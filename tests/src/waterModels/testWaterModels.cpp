@@ -55,6 +55,7 @@
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 namespace
