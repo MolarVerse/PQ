@@ -336,10 +336,11 @@ namespace engine
 
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
-            auto positions = getRingPolymerBeads()[i].getFlattenedQMPositions();
-            auto velocities = getRingPolymerBeads()[i].flattenVelocities();
+            const auto bead       = getRingPolymerBeads()[i];
+            auto       positions  = bead.getFlattenedQMPositionsInAngstrom();
+            auto       velocities = bead.flattenVelocities();
 
-            auto &box = getRingPolymerBeads()[i].getBox();
+            auto &box = bead.getBox();
 
             const auto oldBoxDimensions = box.get_boxDimensions();
             auto       boxDimensions    = oldBoxDimensions.toStdVector();

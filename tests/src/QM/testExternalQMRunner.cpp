@@ -577,9 +577,9 @@ namespace
         {
             return std::format(
                 "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-                x * ANGSTROM_TO_BOHR,
-                y * ANGSTROM_TO_BOHR,
-                z * ANGSTROM_TO_BOHR,
+                (x * angstrom).numerical_value_in(bohr),
+                (y * angstrom).numerical_value_in(bohr),
+                (z * angstrom).numerical_value_in(bohr),
                 charge
             );
         };
@@ -759,9 +759,9 @@ TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
     {
         return std::format(
             "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
-            x * ANGSTROM_TO_BOHR,
-            y * ANGSTROM_TO_BOHR,
-            z * ANGSTROM_TO_BOHR,
+            (x * angstrom).numerical_value_in(bohr),
+            (y * angstrom).numerical_value_in(bohr),
+            (z * angstrom).numerical_value_in(bohr),
             name
         );
     };

@@ -234,7 +234,8 @@ namespace molsys
         [[nodiscard]] std::vector<AtomNumber>    getAtomicNumbers() const;
         [[nodiscard]] std::vector<Pos>           flattenPositions() const;
         [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
-        [[nodiscard]] std::vector<Pos> getFlattenedQMPositions() const;
+        [[nodiscard]]
+        std::vector<double> getFlattenedQMPositionsInAngstrom() const;
 
         [[nodiscard]] bool wasBoxSetViaStartFile() const;
 

@@ -65,7 +65,7 @@ namespace QM
         pybind11::array asePositions(const molsys::SimulationBox &simulationBox)
         {
             const auto nAtoms = simulationBox.getNumberOfQMAtoms();
-            const auto pos    = simulationBox.getFlattenedQMPositions();
+            const auto pos = simulationBox.getFlattenedQMPositionsInAngstrom();
 
             const auto shape      = std::vector<size_t>{nAtoms, 3};
             const auto sizeDouble = sizeof(double);
@@ -74,7 +74,7 @@ namespace QM
 
             try
             {
-                auto positions_array = pybind11::array_t<Pos>(
+                auto positions_array = pybind11::array_t<double>(
                     static_cast<ssize_t>(nAtoms) * 3,
                     pos.data()
                 );

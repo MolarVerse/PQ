@@ -70,7 +70,9 @@ namespace out
         {
             buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &pos = frame.box->wrapPositionIntoBox(atom.position);
+            const auto &pos = frame.box->wrapPositionIntoBox(
+                atom.position.numerical_value_in(angstrom)
+            );
 
             buffer << std::format("{:15.8f}\t", pos[0]);
             buffer << std::format("{:15.8f}\t", pos[1]);

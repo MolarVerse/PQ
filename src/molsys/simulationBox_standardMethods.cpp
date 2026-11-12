@@ -25,6 +25,7 @@
 
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -420,15 +421,16 @@ namespace molsys
     /**
      * @brief flattens positions of each QM atom into a single vector of doubles
      *
-     * @return std::vector<Pos>
+     * @return std::vector<double>
      */
-    std::vector<Pos> SimulationBox::getFlattenedQMPositions() const
+    std::vector<double> SimulationBox::getFlattenedQMPositionsInAngstrom() const
     {
-        std::vector<Pos> positions;
+        std::vector<double> positions;
 
         auto addPositions = [&positions](auto &atom)
         {
-            const auto position = atom->getPosition();
+            const auto position =
+                atom->getPosition().numerical_value_in(angstrom);
 
             positions.push_back(position[0]);
             positions.push_back(position[1]);

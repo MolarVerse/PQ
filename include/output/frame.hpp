@@ -56,7 +56,7 @@ namespace out
             std::string   name;
             MolType       moltype;
             std::size_t   indexInMolecule;
-            linalg::Vec3D position;
+            Pos3D         position;
             linalg::Vec3D velocity;
             linalg::Vec3D force;
             double        charge;
