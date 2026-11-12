@@ -171,10 +171,7 @@ TEST_F(TestInputFileReader, testStartFileName)
 
     lineElements = {"start_file", "=", "data/atomSection/testProcess.rst"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        FileSettings::getStartFileName(),
-        "data/atomSection/testProcess.rst"
-    );
+    EXPECT_EQ(settings.getStartFileName(), "data/atomSection/testProcess.rst");
 }
 
 /**
@@ -295,7 +292,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getRingPolymerStartFileName(),
+        settings.getRingPolymerStartFileName(),
         "data/inputFileReader/inputFile.txt"
     );
 }

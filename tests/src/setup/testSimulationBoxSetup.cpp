@@ -522,6 +522,7 @@ TEST_F(TestSetup, testFullSetup)
     );   // this should be ignored
 
     molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _settings->fileSettings.setStartFileNameByUser("input.rst");
     _engine->getSimulationBox().setBox(orthoBox, true);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
@@ -547,7 +548,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     molsys::OrthorhombicBox orthoBox{{5.73, 9.93, 11.14}};
     simBox.setBox(orthoBox, false);
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
-    FileSettings::setStartFileName("input.rst");
+    _settings->fileSettings.setStartFileNameByUser("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
@@ -600,7 +601,7 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
         InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);
-    FileSettings::setStartFileName("input.rst");
+    _settings->fileSettings.setStartFileNameByUser("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
