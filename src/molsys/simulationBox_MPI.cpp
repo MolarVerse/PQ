@@ -103,11 +103,11 @@ namespace molsys
 
         auto setPositions = [&positions, &index](auto &atom)
         {
-            linalg::Vec3D position;
+            Pos3D position;
 
-            position[0] = positions[index++];
-            position[1] = positions[index++];
-            position[2] = positions[index++];
+            position[0] = positions[index++] * angstrom;
+            position[1] = positions[index++] * angstrom;
+            position[2] = positions[index++] * angstrom;
 
             atom->setPosition(position);
         };
