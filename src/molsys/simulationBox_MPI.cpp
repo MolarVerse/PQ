@@ -34,7 +34,7 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::flattenVelocities()
+    std::vector<double> SimulationBox::flattenVelocities() const
     {
         std::vector<double> velocities;
 
@@ -57,7 +57,7 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::flattenForces()
+    std::vector<double> SimulationBox::flattenForces() const
     {
         std::vector<double> forces;
 
@@ -81,7 +81,7 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::flattenPartialCharges()
+    std::vector<double> SimulationBox::flattenPartialCharges() const
     {
         std::vector<double> partialCharges;
 

@@ -160,9 +160,9 @@ namespace molsys
         void clearAtomIndexLookup();
 
 #ifdef WITH_MPI
-        [[nodiscard]] std::vector<double> flattenVelocities();
-        [[nodiscard]] std::vector<double> flattenForces();
-        [[nodiscard]] std::vector<double> flattenPartialCharges();
+        [[nodiscard]] std::vector<double> flattenVelocities() const;
+        [[nodiscard]] std::vector<double> flattenForces() const;
+        [[nodiscard]] std::vector<double> flattenPartialCharges() const;
 
         void deFlattenPositions(const std::vector<double>& positions);
         void deFlattenVelocities(const std::vector<double>& velocities);
