@@ -25,6 +25,7 @@
 #include <algorithm>
 
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
