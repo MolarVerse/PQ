@@ -94,14 +94,10 @@ namespace engine
     {
         using std::filesystem::remove;
 
-        const auto qm_forces =
-            settings::FileSettings::getQMForcesTempFileName();
-        const auto qm_charges =
-            settings::FileSettings::getQMChargesTempFileName();
-        const auto stress_tensor =
-            settings::FileSettings::getStressTensorTempFileName();
-        const auto pointcharges =
-            settings::FileSettings::getPointChargeFileName();
+        const auto qm_forces     = FileSettings::getQMForcesTempFileName();
+        const auto qm_charges    = FileSettings::getQMChargesTempFileName();
+        const auto stress_tensor = FileSettings::getStressTensorTempFileName();
+        const auto pointcharges  = FileSettings::getPointChargeFileName();
 
         remove(qm_forces);
         remove(qm_charges);

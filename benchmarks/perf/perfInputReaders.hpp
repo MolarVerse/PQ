@@ -129,18 +129,15 @@ namespace benchInputReaders
         std::filesystem::create_directories(directory);
         writeFiles(directory, molecules);
 
-        settings::FileSettings::setMolDescriptorFileName(
+        Settings settings;
+        settings.fileSettings.setMolDescriptorFileNameByUser(
             (directory / "moldescriptor.dat").string()
         );
-        settings::FileSettings::setStartFileName(
-            (directory / "input.rst").string()
-        );
-        settings::FileSettings::setTopologyFileName(
+        FileSettings::setStartFileName((directory / "input.rst").string());
+        settings.fileSettings.setTopologyFileNameByUser(
             (directory / "topology.top").string()
         );
-        settings::FileSettings::setIsTopologyFileNameSet();
 
-        Settings settings;
         settings.forceFieldSettings.setTypeByUser(ForceFieldType::BONDED);
 
         std::size_t atoms = 0;
@@ -155,7 +152,10 @@ namespace benchInputReaders
 
             input::molDescriptor::MoldescriptorReader moldescriptor(engine);
             moldescriptor.read();
-            input::restartFile::readRestartFile(engine);
+            input::restartFile::readRestartFile(
+                engine,
+                settings.noseHooverSettings
+            );
             input::topology::readTopologyFile(engine);
 
             atoms = engine.getSimulationBox().getNumberOfAtoms();

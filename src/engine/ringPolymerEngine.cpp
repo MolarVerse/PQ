@@ -28,6 +28,7 @@
 #include "atom.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "engineOutput.hpp"
+#include "frame.hpp"
 #include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
@@ -76,12 +77,13 @@ namespace engine
             if (mpi::MPI::isRoot())
 #endif
             {
-                getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-                getEngineOutput().writeVelFile(getSimulationBox(), effStep);
-                getEngineOutput().writeForceFile(getSimulationBox(), effStep);
-                getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
-                getEngineOutput()
-                    .writeRstFile(getSimulationBox(), getThermostat(), effStep);
+                const out::Frame frame{getSimulationBox(), getThermostat()};
+
+                getEngineOutput().writeXyzFile(frame, effStep);
+                getEngineOutput().writeVelFile(frame, effStep);
+                getEngineOutput().writeForceFile(frame, effStep);
+                getEngineOutput().writeChargeFile(frame, effStep);
+                getEngineOutput().writeRstFile(frame, effStep);
 
                 getEngineOutput().writeRingPolymerRstFile(_ringPolymerBeads);
                 getEngineOutput().writeRingPolymerXyzFile(

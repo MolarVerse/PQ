@@ -77,7 +77,9 @@ class TestNoseHooverSection : public ::testing::Test
 
     void SetUp() override
     {
-        _section = std::make_unique<input::restartFile::NoseHooverSection>();
+        _section = std::make_unique<input::restartFile::NoseHooverSection>(
+            _settings.noseHooverSettings
+        );
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine

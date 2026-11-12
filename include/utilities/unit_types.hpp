@@ -34,7 +34,6 @@
 #include <mstd/units.hpp>
 #include <mstd/units/new_units.hpp>
 
-#include "mp-units/systems/isq/space_and_time.h"
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
@@ -61,6 +60,9 @@ using Temperature = mstd::units::quantity_point<
     mstd::units::thermodynamic_temperature[mstd::units::K]>;
 using TemperatureDiff =
     mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
+
+using Frequency =
+    mstd::units::quantity<mstd::units::frequency[mstd::units::Hz]>;
 
 using Energy = mstd::quantity<mstd::units::kcal_per_mol>;
 

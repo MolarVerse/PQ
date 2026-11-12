@@ -59,8 +59,13 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine The engine to set up.
+     * @param nhSettings Reference to the NoseHooverSettings object used to
+     * configure the thermostat if applicable.
      */
-    void setupRequestedJob(engine::Engine& engine)
+    void setupRequestedJob(
+        engine::Engine&     engine,
+        NoseHooverSettings& nhSettings
+    )
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
@@ -74,7 +79,7 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        readFiles(engine);
+        readFiles(engine, nhSettings);
 
         setupEngine(engine);
 
@@ -105,12 +110,14 @@ namespace setup
      * @brief reads all the files needed for the simulation
      *
      * @param engine
+     * @param nhSettings Nose-Hoover thermostat settings object used to
+     * configure the thermostat if applicable.
      */
-    void readFiles(engine::Engine& engine)
+    void readFiles(engine::Engine& engine, NoseHooverSettings& nhSettings)
     {
         input::molDescriptor::readMolDescriptor(engine);
 
-        input::restartFile::readRestartFile(engine);
+        input::restartFile::readRestartFile(engine, nhSettings);
 
         input::topology::readTopologyFile(engine);
 

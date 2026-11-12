@@ -49,6 +49,11 @@ target_compile_definitions(settings
     _STATIC_BUILD_=\"${BUILD_STATIC}\"
 )
 
+if(BUILD_WITH_PYTHON_BINDINGS)
+    target_compile_definitions(settings PRIVATE PYTHON_ENABLED)
+    target_link_libraries(settings PUBLIC pq_python)
+endif()
+
 install(TARGETS settings
     DESTINATION lib
 )

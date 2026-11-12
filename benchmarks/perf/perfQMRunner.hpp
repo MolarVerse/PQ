@@ -96,17 +96,17 @@ namespace benchQMRunner
                 std::filesystem::copy_options::overwrite_existing;
             std::filesystem::copy_file(
                 _directory / "forces.canned",
-                settings::FileSettings::getQMForcesTempFileName(),
+                FileSettings::getQMForcesTempFileName(),
                 overwrite
             );
             std::filesystem::copy_file(
                 _directory / "charges.canned",
-                settings::FileSettings::getQMChargesTempFileName(),
+                FileSettings::getQMChargesTempFileName(),
                 overwrite
             );
             std::filesystem::copy_file(
                 _directory / "stress.canned",
-                settings::FileSettings::getStressTensorTempFileName(),
+                FileSettings::getStressTensorTempFileName(),
                 overwrite
             );
         }

@@ -105,7 +105,10 @@ namespace input
         );
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
-            std::make_unique<FilesInputParser>(validateFilePaths)
+            std::make_unique<FilesInputParser>(
+                validateFilePaths,
+                settings.fileSettings
+            )
         );
         _parsers.push_back(
             std::make_unique<MMInputParser>(
@@ -135,7 +138,10 @@ namespace input
             )
         );
         _parsers.push_back(
-            std::make_unique<ThermostatInputParser>(settings.thermostatSettings)
+            std::make_unique<ThermostatInputParser>(
+                settings.thermostatSettings,
+                settings.noseHooverSettings
+            )
         );
         _parsers.push_back(std::make_unique<TimingsInputParser>());
         _parsers.push_back(std::make_unique<VirialInputParser>());

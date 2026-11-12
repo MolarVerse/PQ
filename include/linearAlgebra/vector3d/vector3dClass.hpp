@@ -77,7 +77,7 @@ namespace linalg
        public:
         ~Vector3D() = default;
 
-        Vector3D() = default;
+        constexpr Vector3D();
         Vector3D(const T xValue, const T yValue, const T zValue)
             : x(xValue), y(yValue), z(zValue)
         {

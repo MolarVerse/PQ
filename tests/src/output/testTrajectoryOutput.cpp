@@ -25,6 +25,7 @@
 #include <iosfwd>
 #include <string>
 
+#include "frame.hpp"
 #include "hybridConfigurator.hpp"
 
 /**
@@ -34,7 +35,7 @@
 TEST_F(TestTrajectoryOutput, writeXyz)
 {
     _trajectoryOutput->setFilename("default.xyz", false);
-    _trajectoryOutput->writeXyz(*_simulationBox, 1, false);
+    _trajectoryOutput->writeXyz(out::Frame{*_simulationBox}, 1, false);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;
@@ -57,7 +58,7 @@ TEST_F(TestTrajectoryOutput, writeXyz)
 TEST_F(TestTrajectoryOutput, writeXyzMetadata)
 {
     _trajectoryOutput->setFilename("default.xyz", false);
-    _trajectoryOutput->writeXyz(*_simulationBox, 42, true);
+    _trajectoryOutput->writeXyz(out::Frame{*_simulationBox}, 42, true);
     _trajectoryOutput->close();
 
     std::ifstream file("default.xyz");
@@ -123,7 +124,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
 TEST_F(TestTrajectoryOutput, writeVelocities)
 {
     _trajectoryOutput->setFilename("default.xyz", false);
-    _trajectoryOutput->writeVelocities(*_simulationBox, 1, false);
+    _trajectoryOutput->writeVelocities(out::Frame{*_simulationBox}, 1, false);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;
@@ -158,7 +159,7 @@ TEST_F(TestTrajectoryOutput, writeVelocities)
 TEST_F(TestTrajectoryOutput, writeForces)
 {
     _trajectoryOutput->setFilename("default.xyz", false);
-    _trajectoryOutput->writeForces(*_simulationBox, 1, false);
+    _trajectoryOutput->writeForces(out::Frame{*_simulationBox}, 1, false);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;
@@ -181,7 +182,7 @@ TEST_F(TestTrajectoryOutput, writeForces)
 TEST_F(TestTrajectoryOutput, writeForcesMetadata)
 {
     _trajectoryOutput->setFilename("default.xyz", false);
-    _trajectoryOutput->writeForces(*_simulationBox, 42, true);
+    _trajectoryOutput->writeForces(out::Frame{*_simulationBox}, 42, true);
     _trajectoryOutput->close();
 
     std::ifstream file("default.xyz");
@@ -198,7 +199,7 @@ TEST_F(TestTrajectoryOutput, writeForcesMetadata)
 TEST_F(TestTrajectoryOutput, writeCharges)
 {
     _trajectoryOutput->setFilename("default.xyz", false);
-    _trajectoryOutput->writeCharges(*_simulationBox, 1, false);
+    _trajectoryOutput->writeCharges(out::Frame{*_simulationBox}, 1, false);
     _trajectoryOutput->close();
     std::ifstream file("default.xyz");
     std::string   line;

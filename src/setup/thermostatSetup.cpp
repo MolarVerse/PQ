@@ -22,14 +22,10 @@
 
 #include "thermostatSetup.hpp"
 
-#include <algorithm>
-#include <cstddef>
 #include <format>
 #include <string>
-#include <vector>
 
 #include "berendsenThermostat.hpp"
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "langevinThermostat.hpp"
 #include "mdEngine.hpp"
@@ -183,45 +179,11 @@ namespace setup
      */
     void ThermostatSetup::setupNoseHooverThermostat()
     {
-        const auto targetTemp = ThermostatSettings::getTargetTemperature();
-        const auto nhChainLength =
-            ThermostatSettings::getNoseHooverChainLength();
+        const auto &settings   = _engine.getSettings().noseHooverSettings;
+        const auto  targetTemp = ThermostatSettings::getTargetTemperature();
 
-        auto nhCouplFreq = ThermostatSettings::getNoseHooverCouplingFrequency();
-        nhCouplFreq *= PER_CM_TO_HZ;
-
-        const auto chi  = std::vector<double>(nhChainLength + 1, 0.0);
-        const auto zeta = std::vector<double>(nhChainLength + 1, 0.0);
-
-        auto thermostat = thermostat::NoseHooverThermostat(
-            targetTemp,
-            chi,
-            zeta,
-            nhCouplFreq
-        );
-
-        auto fillChi = [&thermostat, nhChainLength](const auto pair)
-        {
-            if (pair.first > nhChainLength)
-            {
-                throw exc::InputFileException(
-                    std::format(
-                        "Chi index {} is larger than the number of nose hoover "
-                        "chains {}",
-                        pair.first,
-                        nhChainLength
-                    )
-                );
-            }
-
-            thermostat.setChi(size_t(pair.first - 1), pair.second);
-        };
-
-        auto fillZeta = [&thermostat](const auto pair)
-        { thermostat.setZeta(size_t(pair.first - 1), pair.second); };
-
-        std::ranges::for_each(ThermostatSettings::getChi(), fillChi);
-        std::ranges::for_each(ThermostatSettings::getZeta(), fillZeta);
+        auto thermostat =
+            thermostat::NoseHooverThermostat(settings, targetTemp);
 
         _engine.makeThermostat(thermostat);
     }
@@ -366,18 +328,20 @@ namespace setup
     {
         auto &log = _engine.getLogOutput();
 
-        const auto targetTemp = ThermostatSettings::getTargetTemperature();
-        const auto nhChainLength =
-            ThermostatSettings::getNoseHooverChainLength();
-        const auto couplFreq =
-            ThermostatSettings::getNoseHooverCouplingFrequency();
+        const auto  targetTemp    = ThermostatSettings::getTargetTemperature();
+        const auto &nhSettings    = _engine.getSettings().noseHooverSettings;
+        const auto  nhChainLength = nhSettings.getNoseHooverChainLength();
+        const auto  couplFreq     = nhSettings.getNoseHooverCouplingFrequency();
 
         log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
         log.writeSetupInfo(
             std::format("NH chain length:    {}", nhChainLength)
         );
         log.writeSetupInfo(
-            std::format("NH coupling freq:   {} cm⁻¹", couplFreq)
+            std::format(
+                "NH coupling freq:   {}",
+                mstd::toWavenumber(couplFreq).in(per_cm)
+            )
         );
         log.writeEmptyLine();
     }

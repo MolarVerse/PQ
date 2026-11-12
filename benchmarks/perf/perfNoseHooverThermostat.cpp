@@ -28,6 +28,7 @@
 #include <format>
 #include <iostream>
 
+#include "thermostatSettings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -35,8 +36,6 @@
 #else
 #define CALLGRIND_ZERO_STATS
 #endif
-
-#include <vector>
 
 #include "noseHooverThermostat.hpp"
 #include "perfAlloc.hpp"
@@ -55,12 +54,16 @@ int main()
     auto       physicalData      = physicalData::PhysicalData();
     const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat = thermostat::NoseHooverThermostat(
-        targetTemperature,
-        std::vector<double>{0.1, 0.2, 0.3},
-        std::vector<double>{0.0, 0.0, 0.0},
-        1.0
-    );
+    NoseHooverSettings nhSettings;
+    nhSettings.setNoseHooverCouplingFrequencyByUser(1.0 * Hz);
+    const auto chiValues =
+        std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
+    const auto zetaValues =
+        std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+    nhSettings.setChiByUser(chiValues);
+    nhSettings.setZetaByUser(zetaValues);
+    auto thermostat =
+        thermostat::NoseHooverThermostat(nhSettings, targetTemperature);
 
     perfAllocBegin();
 

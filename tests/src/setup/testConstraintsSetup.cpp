@@ -131,9 +131,7 @@ namespace
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         simBox.setBox(orthoBox, false);
 
-        settings::FileSettings::setMShakeFileName(
-            "data/constraintsSetup/mshake.dat"
-        );
+        FileSettings::setMShakeFileName("data/constraintsSetup/mshake.dat");
     }
 }   // namespace
 
