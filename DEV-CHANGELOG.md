@@ -8,6 +8,40 @@ in `CHANGELOG.md`.
 ## Next Release
 
 <!-- insertion marker -->
+## [v1.1.0](https://github.com/MolarVerse/PQ/releases/tag/v1.1.0) - 2026-11-13
+
+### Build
+
+- Make the stated build requirements match what the build enforces: CMake >= 3.25 and GCC >= 14 (the vendored mstd already required both), in the root CMakeLists.txt, README, installation page, AGENTS.md, the Singularity recipes (gcc-14) and the conda script; clang below 20 now only warns, as clang 20 is what the CI tests. A test keeps them in step.
+
+### CI
+
+- Build the clang job of pull requests as a unity build (16 source files per compiler call): about 40 % less time for a clean build, same test results; pushes to dev stay a normal build for the CI metrics.
+- Make the release changelog step fail when a fragment repeats an entry of an earlier release, so a fix that reached both `main` and `dev` is not listed twice.
+
+### Tests
+
+- The build requirements test skips the comparison with the vendored mstd when the submodule is not checked out (the Changelog Fragment Check runs the script tests without submodules).
+- Add an integration test for the temperature ramp (start_temp, temp_ramp_steps, temp_ramp_frequency) as a new variant of the cgo test; the existing cgo tests are unchanged.
+- Fix a use-after-free in the moldescriptor reader unit tests: readers are now built from an Engine that outlives them (found by AddressSanitizer).
+- Add a Google Benchmark for the trajectory writers and the per-frame copy, to measure the output cost per MD step (#1099).
+
+### Internal
+
+- Use const references for simulation boxes in external QM coordinate writers, point-charge writers, and execution hooks, and for the box geometry in stress-tensor readers.
+- Trajectory and restart writers read an `out::Frame` copy of the simulation box instead of the box itself; output files are unchanged. First step of the writer thread (#1112).
+- introduce new class `ExternalQMSettings` for the external QM script (`qm_script`, `qm_script_full_path`); the script path is resolved once in `finalize()` and the build-time script directory/singularity/static flags now live in the `settings` library.
+- introduce non-static `NoseHooverSettings` class
+- remove static access of some `FileSettings` members
+- `SelectionTag` carries an unresolved `expression`; `HybridSettings::finalize(const FileSettings&)` (called from `Settings::finalize()`) resolves it once the start/moldescriptor files are known.
+- `FileSettings` start file and ring-polymer start file are now non-static `Setting` members (`getStartFileName()`, `setStartFileNameByUser()`, `isRingPolymerStartFileNameSetByUser()`, ...); the static ring-polymer start file flag is removed.
+- introduce units for Bonded strong types
+- Vector3D (and with it the matrices and tensors) is zero-initialised by default; a default constructed vector used to hold whatever was in the memory, which once printed inf into the first output line.
+
+### Documentation
+
+- Add integration_tests/README.md: coverage, gaps, coupled feature combinations and what cannot be covered by the integration tests, with a ranked list of suggested tests.
+
 ## [v1.0.2](https://github.com/MolarVerse/PQ/releases/tag/v1.0.2) - 2026-11-08
 
 ### CI

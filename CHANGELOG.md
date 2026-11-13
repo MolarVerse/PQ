@@ -7,6 +7,26 @@ implementation changes are documented in
 ## Next Release
 
 <!-- insertion marker -->
+## [v1.1.0](https://github.com/MolarVerse/PQ/releases/tag/v1.1.0) - 2026-11-13
+
+### New Features
+
+- Add an external ORCA QM runner for pure QM as well as QM/MM hybrid type calculations.
+
+### Bug Fixes
+
+- The restart files (also for ring polymer MD) are written to a temporary file and then renamed, so a crash or kill while writing no longer leaves a broken restart file.
+- `inner_region_center` selections using the selection grammar (e.g. `resname SOL`) no longer depend on the position of `start_file`/`moldescriptor_file` in the input file; they are resolved after the whole input file has been read.
+- Fix undefined behaviour when the input file parsers are destroyed: the base class InputFileParser had no virtual destructor but the parsers are owned through a pointer to it (valgrind: mismatched new/delete size).
+- `cmake --install` now also installs `libconfig_headers.so`, so an installed `PQ` starts without a missing-library error.
+- Fix the `malondialdehyde_tm-rpmd` example, which referred to the removed Turbomole script `turbomole_rimp2` instead of `turbomole_ricc2`.
+- Turbomole drivers now stop with an error when no SCF energy is found, instead of passing an empty energy to PQ.
+
+### Documentation
+
+- Document the units and energy expressions of every column of the parameter file.
+- Improve the topology file documentation: index base, rules of the file (END, repeated sections, header words, field counts), when parameter types are resolved, the meaning of the linker marker and a complete example.
+
 ## [v1.0.2](https://github.com/MolarVerse/PQ/releases/tag/v1.0.2) - 2026-11-08
 
 ### New Features

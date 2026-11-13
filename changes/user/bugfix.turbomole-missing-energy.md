@@ -1,1 +1,0 @@
-- Turbomole drivers now stop with an error when no SCF energy is found, instead of passing an empty energy to PQ.

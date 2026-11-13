@@ -1,1 +1,0 @@
-- Trajectory and restart writers read an `out::Frame` copy of the simulation box instead of the box itself; output files are unchanged. First step of the writer thread (#1112).

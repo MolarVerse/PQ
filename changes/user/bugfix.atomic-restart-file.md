@@ -1,1 +1,0 @@
-- The restart files (also for ring polymer MD) are written to a temporary file and then renamed, so a crash or kill while writing no longer leaves a broken restart file.
