@@ -24,7 +24,6 @@
 #define SETTINGS__FILE_SETTINGS_HPP
 
 #include <string>
-#include <string_view>
 
 #include "defaults.hpp"
 #include "setting.hpp"
@@ -53,23 +52,23 @@ class FileSettings
     Setting<std::string, "StartFile">     _startFile;
     Setting<std::string, "RPMDStartFile"> _rpmdStartFile;
 
-    static inline std::string _mShakeFile;
-    static inline std::string _dftbFile = defaults::DFTB_FILE_DEFAULT;
-    static inline std::string _tmFile   = defaults::TM_FILE_DEFAULT;
-    static inline std::string _pointChargeFile =
-        defaults::POINTCHARGE_FILE_DEFAULT;
+    Setting<std::string, "DFTBFile"> _dftbFile{defaults::DFTB_FILE_DEFAULT};
+    Setting<std::string, "TMFile">   _tmFile{defaults::TM_FILE_DEFAULT};
 
-    static inline std::string _qmForcesTempFile =
-        defaults::QM_FORCES_TEMP_FILE_DEFAULT;
-    static inline std::string _qmChargesTempFile =
-        defaults::QM_CHARGES_TEMP_FILE_DEFAULT;
-    static inline std::string _stressTensorTempFile =
-        defaults::STRESS_TENSOR_TEMP_FILE_DEFAULT;
+    Setting<std::string, "PointChargeFile"> _pointChargeFile{
+        defaults::POINTCHARGE_FILE_DEFAULT
+    };
+    Setting<std::string, "QMForcesTempFile"> _qmForcesTempFile{
+        defaults::QM_FORCES_TEMP_FILE_DEFAULT
+    };
+    Setting<std::string, "QMChargesTempFile"> _qmChargesTempFile{
+        defaults::QM_CHARGES_TEMP_FILE_DEFAULT
+    };
+    Setting<std::string, "StressTensorTempFile"> _stressTensorTempFile{
+        defaults::STRESS_TENSOR_TEMP_FILE_DEFAULT
+    };
 
-    static bool inline _isTopologyFileSet  = false;
-    static bool inline _isParameterFileSet = false;
-    static bool inline _isMShakeFileSet    = false;
-    static bool inline _isDFTBFileSet      = false;
+    Setting<std::string, "MShakeFile"> _mShakeFile;
 
    public:
     FileSettings()  = default;
@@ -89,14 +88,15 @@ class FileSettings
     [[nodiscard]] const std::string& getStartFileName() const;
     [[nodiscard]] const std::string& getRingPolymerStartFileName() const;
 
-    [[nodiscard]] static std::string getMShakeFileName();
-    [[nodiscard]] static std::string getDFTBFileName();
-    [[nodiscard]] static std::string getTMFileName();
-    [[nodiscard]] static std::string getPointChargeFileName();
+    [[nodiscard]] const std::string& getDFTBFileName() const;
+    [[nodiscard]] const std::string& getTMFileName() const;
 
-    [[nodiscard]] static std::string getQMForcesTempFileName();
-    [[nodiscard]] static std::string getQMChargesTempFileName();
-    [[nodiscard]] static std::string getStressTensorTempFileName();
+    [[nodiscard]] const std::string& getMShakeFileName() const;
+
+    [[nodiscard]] const std::string& getPointChargeFileName() const;
+    [[nodiscard]] const std::string& getQMForcesTempFileName() const;
+    [[nodiscard]] const std::string& getQMChargesTempFileName() const;
+    [[nodiscard]] const std::string& getStressTensorTempFileName() const;
 
     [[nodiscard]] bool isTopologyFileNameSetByUser() const;
     [[nodiscard]] bool isParameterFileNameSetByUser() const;
@@ -105,8 +105,7 @@ class FileSettings
     [[nodiscard]] bool isStartFileNameSetByUser() const;
     [[nodiscard]] bool isRingPolymerStartFileNameSetByUser() const;
 
-    [[nodiscard]] static bool isMShakeFileNameSet();
-    [[nodiscard]] static bool isDFTBFileNameSet();
+    [[nodiscard]] bool isMShakeFileNameSetByUser() const;
 
     /********************
      * standard setters *
@@ -122,16 +121,11 @@ class FileSettings
     void setStartFileNameByUser(const std::string& name);
     void setRingPolymerStartFileNameByUser(const std::string& name);
 
-    static void setMShakeFileName(const std::string_view& name);
-    static void setDFTBFileName(const std::string_view& name);
-    static void setTMFileName(const std::string_view& name);
-    static void setPointChargeFileName(const std::string_view& name);
+    void setDFTBFileNameByUser(const std::string& name);
+    void setTMFileNameByUser(const std::string& name);
 
-    static void setIsMShakeFileNameSet();
-    static void setIsDFTBFileNameSet();
-
-    static void unsetIsMShakeFileNameSet();
-    static void unsetIsDFTBFileNameSet();
+    void setMShakeFileNameByUser(const std::string& name);
+    void setPointChargeFileNameByUser(const std::string& name);
 };
 
 #endif   // SETTINGS__FILE_SETTINGS_HPP

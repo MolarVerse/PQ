@@ -31,7 +31,7 @@
 /**
  * @brief Get the mol descriptor file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getMolDescriptorFileName() const
 {
@@ -41,7 +41,7 @@ const std::string& FileSettings::getMolDescriptorFileName() const
 /**
  * @brief Get the guff dat file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getGuffDatFileName() const
 {
@@ -51,7 +51,7 @@ const std::string& FileSettings::getGuffDatFileName() const
 /**
  * @brief Get the topology file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getTopologyFileName() const
 {
@@ -61,7 +61,7 @@ const std::string& FileSettings::getTopologyFileName() const
 /**
  * @brief Get the parameter file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getParameterFileName() const
 {
@@ -71,7 +71,7 @@ const std::string& FileSettings::getParameterFileName() const
 /**
  * @brief Get the intra non bonded file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getIntraNonBondedFileName() const
 {
@@ -101,59 +101,68 @@ const std::string& FileSettings::getRingPolymerStartFileName() const
 /**
  * @brief Get the mShake file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
+const std::string& FileSettings::getMShakeFileName() const
+{
+    return _mShakeFile.get();
+}
 
 /**
  * @brief Get the DFTB setup file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getDFTBFileName() { return _dftbFile; }
+const std::string& FileSettings::getDFTBFileName() const
+{
+    return _dftbFile.get();
+}
 
 /**
- * @brief Get the TM setup file name
+ * @brief Get the TM file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getTMFileName() { return _tmFile; }
+const std::string& FileSettings::getTMFileName() const { return _tmFile.get(); }
 
 /**
  * @brief Get the pointcharge file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getPointChargeFileName() { return _pointChargeFile; }
+const std::string& FileSettings::getPointChargeFileName() const
+{
+    return _pointChargeFile.get();
+}
 
-/*
+/**
  * @brief Get the QM forces temp file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getQMForcesTempFileName()
+const std::string& FileSettings::getQMForcesTempFileName() const
 {
-    return _qmForcesTempFile;
+    return _qmForcesTempFile.get();
 }
 
 /**
  * @brief Get the QM charges temp file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getQMChargesTempFileName()
+const std::string& FileSettings::getQMChargesTempFileName() const
 {
-    return _qmChargesTempFile;
+    return _qmChargesTempFile.get();
 }
 
 /**
  * @brief Get the stress tensor temp file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getStressTensorTempFileName()
+const std::string& FileSettings::getStressTensorTempFileName() const
 {
-    return _stressTensorTempFile;
+    return _stressTensorTempFile.get();
 }
 
 /**
@@ -205,20 +214,6 @@ bool FileSettings::isStartFileNameSetByUser() const
 {
     return _startFile.isSetByUser();
 }
-
-/**
- * @brief Check if the mShake file name is set
- *
- * @return bool
- */
-bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileSet; }
-
-/**
- * @brief Check if the DFTB setup file name is set
- *
- * @return bool
- */
-bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
 
 /***************************
  *                         *
@@ -301,9 +296,9 @@ void FileSettings::setRingPolymerStartFileNameByUser(const std::string& name)
  *
  * @param name
  */
-void FileSettings::setMShakeFileName(const std::string_view& name)
+void FileSettings::setMShakeFileNameByUser(const std::string& name)
 {
-    FileSettings::_mShakeFile = name;
+    _mShakeFile.setByUser(name);
 }
 
 /**
@@ -311,9 +306,9 @@ void FileSettings::setMShakeFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setDFTBFileName(const std::string_view& name)
+void FileSettings::setDFTBFileNameByUser(const std::string& name)
 {
-    FileSettings::_dftbFile = name;
+    FileSettings::_dftbFile.setByUser(name);
 }
 
 /**
@@ -321,9 +316,9 @@ void FileSettings::setDFTBFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setTMFileName(const std::string_view& name)
+void FileSettings::setTMFileNameByUser(const std::string& name)
 {
-    FileSettings::_tmFile = name;
+    FileSettings::_tmFile.setByUser(name);
 }
 
 /**
@@ -331,43 +326,17 @@ void FileSettings::setTMFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setPointChargeFileName(const std::string_view& name)
+void FileSettings::setPointChargeFileNameByUser(const std::string& name)
 {
-    FileSettings::_pointChargeFile = name;
+    FileSettings::_pointChargeFile.setByUser(name);
 }
 
 /**
- * @brief set the mShake file name flag to is set
+ * @brief check if the mShake file name was set by the user
  *
+ * @return true if the mShake file name was set by the user, false otherwise
  */
-void FileSettings::setIsMShakeFileNameSet()
+bool FileSettings::isMShakeFileNameSetByUser() const
 {
-    FileSettings::_isMShakeFileSet = true;
-}
-
-/**
- * @brief set the DFTB setup file name flag to is set
- *
- */
-void FileSettings::setIsDFTBFileNameSet()
-{
-    FileSettings::_isDFTBFileSet = true;
-}
-
-/**
- * @brief set the mShake file name flag to is not set
- *
- */
-void FileSettings::unsetIsMShakeFileNameSet()
-{
-    FileSettings::_isMShakeFileSet = false;
-}
-
-/**
- * @brief set the DFTB setup file name flag to is not set
- *
- */
-void FileSettings::unsetIsDFTBFileNameSet()
-{
-    FileSettings::_isDFTBFileSet = false;
+    return _mShakeFile.isSetByUser();
 }

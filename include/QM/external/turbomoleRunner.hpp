@@ -30,7 +30,7 @@ namespace QM
     /**
      * @class TurbomoleRunner
      *
-     * @brief class for running DFTB+ inheriting from ExternalQMRunner
+     * @brief class for running Turbomole inheriting from ExternalQMRunner
      *
      */
     class TurbomoleRunner : public ExternalQMRunner
@@ -41,13 +41,19 @@ namespace QM
 
        public:
         using ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
 
-        void writePointChargeFile(
-            molsys::SimulationBox &simulationBox
+        void execute(
+            molsys::SimulationBox &simulationBox,
+            const FileSettings    &fileSettings
         ) override;
 
-        void execute(molsys::SimulationBox &simulationBox) override;
+       private:
+        void _writeCoordsFile(molsys::SimulationBox &simulationBox) override;
+
+        void _writePointChargeFile(
+            molsys::SimulationBox &simulationBox,
+            const std::string     &pointChargeFileName
+        ) override;
     };
 }   // namespace QM
 

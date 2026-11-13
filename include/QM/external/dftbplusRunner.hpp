@@ -35,6 +35,8 @@ namespace molsys
     class Box;   // forward declaration
 }   // namespace molsys
 
+class FileSettings;   // forward declaration
+
 namespace QM
 {
     /**
@@ -51,17 +53,24 @@ namespace QM
 
        public:
         using ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
 
-        void writePointChargeFile(
-            molsys::SimulationBox &simulationBox
+        void execute(
+            molsys::SimulationBox &simulationBox,
+            const FileSettings    &fileSettings
         ) override;
 
-        void execute(molsys::SimulationBox &simulationBox) override;
+       private:
+        void _writeCoordsFile(molsys::SimulationBox &simulationBox) override;
 
-        void readStressTensor(
+        void _writePointChargeFile(
+            molsys::SimulationBox &simulationBox,
+            const std::string     &pointChargeFileName
+        ) override;
+
+        void _readStressTensor(
             molsys::Box                &box,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const std::string          &stressFileName
         ) override;
     };
 }   // namespace QM

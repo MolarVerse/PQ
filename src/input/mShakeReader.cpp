@@ -23,6 +23,7 @@
 #include "mShakeReader.hpp"
 
 #include <format>
+#include <utility>
 
 #include "engine.hpp"
 #include "exceptions.hpp"
@@ -40,7 +41,12 @@ namespace input::mShake
      */
     void readMShake(engine::Engine &engine)
     {
-        MShakeReader mShakeReader(engine);
+        const auto &fileSettings = engine.getSettings().fileSettings;
+
+        if (!fileSettings.isMShakeFileNameSetByUser())
+            throw exc::MShakeFileException("MShake file name not set by user");
+
+        MShakeReader mShakeReader(engine, fileSettings.getMShakeFileName());
         mShakeReader.read();
     }
 
@@ -51,9 +57,9 @@ namespace input::mShake
      *
      * @param engine
      */
-    MShakeReader::MShakeReader(engine::Engine &engine) : _engine(engine)
+    MShakeReader::MShakeReader(engine::Engine &engine, std::string fileName)
+        : _fileName(std::move(fileName)), _engine(engine)
     {
-        _fileName = FileSettings::getMShakeFileName();
         _fp.open(_fileName);
     }
 

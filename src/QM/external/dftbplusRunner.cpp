@@ -52,7 +52,7 @@ namespace QM
      *
      * @param simulationBox
      */
-    void DFTBPlusRunner::writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void DFTBPlusRunner::_writeCoordsFile(molsys::SimulationBox &simulationBox)
     {
         using std::ranges::distance;
         using std::ranges::find;
@@ -142,12 +142,12 @@ namespace QM
      *
      * @param simulationBox Simulation box containing molecules and atoms.
      */
-    void DFTBPlusRunner::writePointChargeFile(
-        molsys::SimulationBox &simulationBox
+    void DFTBPlusRunner::_writePointChargeFile(
+        molsys::SimulationBox &simulationBox,
+        const std::string     &pointChargeFileName
     )
     {
-        const std::string fileName = FileSettings::getPointChargeFileName();
-        std::ofstream     pcFile(fileName);
+        std::ofstream pcFile(pointChargeFileName);
 
         using enum molsys::HybridZone;
 
@@ -173,16 +173,21 @@ namespace QM
         pcFile.close();
 
         if (!_usePointCharges)
-            std::filesystem::remove(fileName);
+            std::filesystem::remove(pointChargeFileName);
     }
 
     /**
      * @brief executes the qm script of the external program
      *
      * @param simulationBox Simulation box containing molecules and atoms.
+     * @param fileSettings Object containing file paths and settings required
+     * for the execution of the external QM program.
      *
      */
-    void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
+    void DFTBPlusRunner::execute(
+        molsys::SimulationBox &simulationBox,
+        const FileSettings    &fileSettings
+    )
     {
         const auto scriptFile = _getExternalQMSettings().getQMScript();
 
@@ -216,8 +221,8 @@ namespace QM
             charge,
             readChargesBin,
             usePointCharges,
-            utilities::shellQuote(FileSettings::getDFTBFileName()),
-            utilities::shellQuote(FileSettings::getPointChargeFileName())
+            utilities::shellQuote(fileSettings.getDFTBFileName()),
+            utilities::shellQuote(fileSettings.getPointChargeFileName())
         );
         _executeCommand(command, "DFTB+");
 
@@ -233,13 +238,12 @@ namespace QM
      * @param physicalData Physical data object to which the stress tensor and
      * virial will be added.
      */
-    void DFTBPlusRunner::readStressTensor(
+    void DFTBPlusRunner::_readStressTensor(
         molsys::Box                &box,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const std::string          &stressFileName
     )
     {
-        const auto stressFileName = FileSettings::getStressTensorTempFileName();
-
         std::ifstream stressFile(stressFileName);
 
         if (!stressFile.is_open())

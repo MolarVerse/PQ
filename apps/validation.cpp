@@ -297,7 +297,7 @@ namespace
             );
 
         if (settings.constraintSettings.isMShakeActivated() &&
-            FileSettings::getMShakeFileName().empty())
+            !settings.fileSettings.isMShakeFileNameSetByUser())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
             );
@@ -363,9 +363,12 @@ namespace
             );
         }
 
-        if (FileSettings::isMShakeFileNameSet())
+        if (settings.fileSettings.isMShakeFileNameSetByUser())
         {
-            requireFile(FileSettings::getMShakeFileName(), "M-SHAKE file");
+            requireFile(
+                settings.fileSettings.getMShakeFileName(),
+                "M-SHAKE file"
+            );
         }
 
         if (!settings::GeneralSettings::isQMActivated())
@@ -375,7 +378,10 @@ namespace
 
         if (method == QMMethod::DFTBPLUS)
         {
-            requireFile(FileSettings::getDFTBFileName(), "DFTB setup file");
+            requireFile(
+                settings.fileSettings.getDFTBFileName(),
+                "DFTB setup file"
+            );
         }
 
         if (method == QMMethod::ASE_DFTBPLUS &&

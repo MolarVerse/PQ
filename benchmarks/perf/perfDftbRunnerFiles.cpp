@@ -28,16 +28,18 @@
 
 #include "dftbplusRunner.hpp"
 #include "perfQMRunner.hpp"
+#include "settings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20;
 
 int main()
 {
-    QMSettings qmSettings;
-    qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
     return benchQMRunner::run<QM::DFTBPlusRunner>(
-        qmSettings,
+        settings.qmSettings,
         molsys::Periodicity::XYZ,
-        ITERATIONS
+        ITERATIONS,
+        settings.fileSettings
     );
 }

@@ -173,7 +173,8 @@ namespace engine
         {
             getQMRunner()->run(
                 getRingPolymerBeads()[i],
-                getRingPolymerBeadsPhysicalData()[i]
+                getRingPolymerBeadsPhysicalData()[i],
+                getSettings().fileSettings
             );
         }
     }

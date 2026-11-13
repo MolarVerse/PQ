@@ -90,14 +90,18 @@ namespace engine
      * calculations. The files are safely deleted using std::filesystem::remove,
      * which does not throw exceptions if the files do not exist.
      */
-    void Engine::deleteTmpFiles()
+    void Engine::deleteTmpFiles() const
     {
         using std::filesystem::remove;
 
-        const auto qm_forces     = FileSettings::getQMForcesTempFileName();
-        const auto qm_charges    = FileSettings::getQMChargesTempFileName();
-        const auto stress_tensor = FileSettings::getStressTensorTempFileName();
-        const auto pointcharges  = FileSettings::getPointChargeFileName();
+        const auto qm_forces =
+            getSettings().fileSettings.getQMForcesTempFileName();
+        const auto qm_charges =
+            getSettings().fileSettings.getQMChargesTempFileName();
+        const auto stress_tensor =
+            getSettings().fileSettings.getStressTensorTempFileName();
+        const auto pointcharges =
+            getSettings().fileSettings.getPointChargeFileName();
 
         remove(qm_forces);
         remove(qm_charges);

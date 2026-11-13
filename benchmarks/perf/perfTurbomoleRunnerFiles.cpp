@@ -26,17 +26,19 @@
 #include <cstdint>
 
 #include "perfQMRunner.hpp"
+#include "settings.hpp"
 #include "turbomoleRunner.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20;
 
 int main()
 {
-    QMSettings qmSettings;
-    qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
     return benchQMRunner::run<QM::TurbomoleRunner>(
-        qmSettings,
+        settings.qmSettings,
         molsys::Periodicity::NON_PERIODIC,
-        ITERATIONS
+        ITERATIONS,
+        settings.fileSettings
     );
 }
