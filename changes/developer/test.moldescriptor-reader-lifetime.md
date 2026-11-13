@@ -1,0 +1,1 @@
+- Fix a use-after-free in the moldescriptor reader unit tests: readers are now built from an Engine that outlives them (found by AddressSanitizer).

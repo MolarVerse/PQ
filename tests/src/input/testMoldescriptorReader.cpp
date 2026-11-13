@@ -44,10 +44,8 @@ TEST_F(TestMoldescriptorReader, constructor)
     _settings->fileSettings.setMolDescriptorFileNameByUser(
         "data/moldescriptorReader/moldescriptor.dat"
     );
-    ASSERT_NO_THROW(
-        input::molDescriptor::MoldescriptorReader reader(*_makeEngine(*_settings
-        ))
-    );
+    const auto engine = _makeEngine(*_settings);
+    ASSERT_NO_THROW(input::molDescriptor::MoldescriptorReader reader(*engine));
 }
 
 /**
@@ -88,7 +86,8 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
     _settings->fileSettings.setMolDescriptorFileNameByUser(
         "data/moldescriptorReader/moldescriptorWithErrorInAtomArguments2.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader2(*_makeEngine(*_settings));
+    const auto                                engine2 = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader2(*engine2);
     ASSERT_THROW_MSG(
         reader2.read(),
         exc::MolDescriptorException,
@@ -98,7 +97,8 @@ TEST_F(TestMoldescriptorReader, argumentsInMoleculeSection)
     _settings->fileSettings.setMolDescriptorFileNameByUser(
         "data/moldescriptorReader/moldescriptorWithErrorInMolArguments.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader3(*_makeEngine(*_settings));
+    const auto                                engine3 = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader3(*engine3);
     ASSERT_THROW_MSG(
         reader3.read(),
         exc::MolDescriptorException,
@@ -145,7 +145,8 @@ TEST_F(TestMoldescriptorReader, toManyAtomsPerMoltype)
     _settings->fileSettings.setMolDescriptorFileNameByUser(
         "data/moldescriptorReader/moldescriptorTooManyAtomsPerMoltype.dat"
     );
-    input::molDescriptor::MoldescriptorReader reader2(*_makeEngine(*_settings));
+    const auto                                engine = _makeEngine(*_settings);
+    input::molDescriptor::MoldescriptorReader reader2(*engine);
     ASSERT_THROW_MSG(
         reader2.read(),
         exc::MolDescriptorException,
