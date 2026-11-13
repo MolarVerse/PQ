@@ -12,7 +12,8 @@ namespace kinetics
     Kinetics::Kinetics(const KineticsSettings& settings)
         : _settings(settings),
           _currentTargetTemperature(settings.getStartTemperature()),
-          _temperatureIncrease(settings.getTemperatureIncrease())
+          _temperatureIncrease(settings.getTemperatureIncrease()),
+          _rampingStepsLeft(settings.getRampingSteps())
     {
     }
 
