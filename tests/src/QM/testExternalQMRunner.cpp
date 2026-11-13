@@ -99,9 +99,11 @@ namespace
 
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
 
-        void execute(molsys::SimulationBox & /*simBox*/) override
+        void execute(const molsys::SimulationBox & /*simBox*/) override
         {
             _sawStaleResults = std::filesystem::exists(
                                    FileSettings::getQMForcesTempFileName()
@@ -801,9 +803,11 @@ namespace
     {
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
 
-        void execute(molsys::SimulationBox & /*simBox*/) override
+        void execute(const molsys::SimulationBox & /*simBox*/) override
         {
             _executeCommand("sleep 3 && touch qm-finished", "External QM");
         }
@@ -813,8 +817,10 @@ namespace
     {
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
-        void execute(molsys::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
+        void execute(const molsys::SimulationBox & /*simBox*/) override {}
 
         void runCommand(const std::string_view command) const
         {
