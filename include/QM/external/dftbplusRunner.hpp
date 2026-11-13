@@ -51,16 +51,18 @@ namespace QM
 
        public:
         using ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
-
-        void writePointChargeFile(
-            molsys::SimulationBox &simulationBox
+        void writeCoordsFile(
+            const molsys::SimulationBox &simulationBox
         ) override;
 
-        void execute(molsys::SimulationBox &simulationBox) override;
+        void writePointChargeFile(
+            const molsys::SimulationBox &simulationBox
+        ) override;
+
+        void execute(const molsys::SimulationBox &simulationBox) override;
 
         void readStressTensor(
-            molsys::Box                &box,
+            const molsys::Box          &box,
             physicalData::PhysicalData &physicalData
         ) override;
     };

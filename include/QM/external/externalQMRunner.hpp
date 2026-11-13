@@ -67,18 +67,18 @@ namespace QM
             molsys::Periodicity         per
         ) override;
 
-        virtual void execute(molsys::SimulationBox &) = 0;
+        virtual void execute(const molsys::SimulationBox &) = 0;
 
-        virtual void writeCoordsFile(molsys::SimulationBox &) = 0;
+        virtual void writeCoordsFile(const molsys::SimulationBox &) = 0;
 
         virtual void writePointChargeFile(
-            molsys::SimulationBox & /*simBox*/
+            const molsys::SimulationBox & /*simBox*/
         )
         {
         }
 
         virtual void readStressTensor(
-            molsys::Box & /*simBox*/,
+            const molsys::Box & /*simBox*/,
             physicalData::PhysicalData & /*physData*/
         )
         {
