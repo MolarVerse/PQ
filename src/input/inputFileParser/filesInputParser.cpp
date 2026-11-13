@@ -144,6 +144,7 @@ namespace input
         addMShakeFileKey();
         addDFTBFileKey();
         addTMFileKey();
+        addOrcaFileKey();
     }
 
     /**
@@ -465,6 +466,39 @@ namespace input
                 _fileSettings->setTMFileNameByUser(value);
             else
                 _fileSettings->setTMFileNameByUser(value.fileName());
+        };
+
+        addFileKeyword(
+            metaData,
+            setValue,
+            *this,
+            _getRegistry(),
+            false,
+            _validateFilePaths
+        );
+    }
+
+    /**
+     * @brief Adds the orca_file keyword to the parser
+     *
+     * @details registers the "orca_file" key and associates it with the
+     * appropriate callback that sets the ORCA file name in the settings.
+     */
+    void FilesInputParser::addOrcaFileKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "orca_file",
+            .title = "ORCA File",
+            .description =
+                "File containing the ORCA configuration of the system"
+        };
+
+        const auto setValue = []<typename T>(const T &value) -> void
+        {
+            if constexpr (std::is_same_v<T, std::string>)
+                FileSettings::setOrcaFileName(value);
+            else
+                FileSettings::setOrcaFileName(value.fileName());
         };
 
         addFileKeyword(

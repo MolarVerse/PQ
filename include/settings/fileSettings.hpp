@@ -55,6 +55,7 @@ class FileSettings
     Setting<std::string, "DFTBFile"> _dftbFile{defaults::DFTB_FILE_DEFAULT};
     Setting<std::string, "TMFile">   _tmFile{defaults::TM_FILE_DEFAULT};
 
+    static inline std::string _orcaFile = defaults::ORCA_FILE_DEFAULT;
     Setting<std::string, "PointChargeFile"> _pointChargeFile{
         defaults::POINTCHARGE_FILE_DEFAULT
     };
@@ -93,6 +94,7 @@ class FileSettings
 
     [[nodiscard]] const std::string& getMShakeFileName() const;
 
+    [[nodiscard]] static std::string getOrcaFileName();
     [[nodiscard]] const std::string& getPointChargeFileName() const;
     [[nodiscard]] const std::string& getQMForcesTempFileName() const;
     [[nodiscard]] const std::string& getQMChargesTempFileName() const;
@@ -124,8 +126,9 @@ class FileSettings
     void setDFTBFileNameByUser(const std::string& name);
     void setTMFileNameByUser(const std::string& name);
 
-    void setMShakeFileNameByUser(const std::string& name);
-    void setPointChargeFileNameByUser(const std::string& name);
+    void        setMShakeFileNameByUser(const std::string& name);
+    static void setOrcaFileName(const std::string_view& name);
+    void        setPointChargeFileNameByUser(const std::string& name);
 };
 
 #endif   // SETTINGS__FILE_SETTINGS_HPP

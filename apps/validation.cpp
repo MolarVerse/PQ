@@ -420,6 +420,11 @@ namespace
                 requireFile(modelPath, "MACE model file");
         }
 
+        if (settings.qmSettings.getQMMethod() == QMMethod::ORCA)
+        {
+            requireFile(FileSettings::getOrcaFileName(), "ORCA template");
+        }
+
         validateInstalledExternalQMScript(
             settings.qmSettings,
             settings.externalQMSettings

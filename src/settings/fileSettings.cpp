@@ -126,6 +126,13 @@ const std::string& FileSettings::getDFTBFileName() const
 const std::string& FileSettings::getTMFileName() const { return _tmFile.get(); }
 
 /**
+ * @brief Get the ORCA setup file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getOrcaFileName() { return _orcaFile; }
+
+/**
  * @brief Get the pointcharge file name
  *
  * @return const std::string&
@@ -319,6 +326,16 @@ void FileSettings::setDFTBFileNameByUser(const std::string& name)
 void FileSettings::setTMFileNameByUser(const std::string& name)
 {
     _tmFile.setByUser(name);
+}
+
+/**
+ * @brief set the ORCA setup file name
+ *
+ * @param name
+ */
+void FileSettings::setOrcaFileName(const std::string_view& name)
+{
+    FileSettings::_orcaFile = name;
 }
 
 /**

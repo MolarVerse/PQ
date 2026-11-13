@@ -26,7 +26,7 @@
 
 TEST(ExternalQMScriptsTest, catalogsSupportedPrograms)
 {
-    ASSERT_EQ(cli::externalQMMethods.size(), 3);
+    ASSERT_EQ(cli::externalQMMethods.size(), 4);
     EXPECT_EQ(
         cli::externalQMProgramName(cli::externalQMMethods[0]),
         "dftbplus"
@@ -54,6 +54,20 @@ TEST(ExternalQMScriptsTest, describesBundledScripts)
     EXPECT_EQ(pyScf.front().name, "pyscf_hf.py");
     EXPECT_EQ(pyScf.back().name, "pyscf_mp2.py");
     EXPECT_TRUE(cli::recommendedExternalQMScript(QMMethod::PYSCF).empty());
+
+    const auto orca = cli::externalQMScripts(QMMethod::ORCA);
+    ASSERT_EQ(orca.size(), 3);
+    EXPECT_EQ(orca[1].name, "orca_hf.py");
+    EXPECT_EQ(orca[2].name, "orca_dft.py");
+    EXPECT_TRUE(cli::isExternalQMScript(QMMethod::ORCA, "orca_hf.py"));
+    EXPECT_TRUE(cli::isExternalQMScript(QMMethod::ORCA, "orca_dft.py"));
+    EXPECT_EQ(orca.front().name, "orca_rimp2.py");
+    EXPECT_EQ(orca.front().requiredFileKeyword, "orca_file");
+    EXPECT_EQ(
+        cli::recommendedExternalQMScript(QMMethod::ORCA),
+        "orca_rimp2.py"
+    );
+    EXPECT_EQ(cli::externalQMProgramName(QMMethod::ORCA), "orca");
 
     const auto turbomole = cli::externalQMScripts(QMMethod::TURBOMOLE);
     ASSERT_EQ(turbomole.size(), 1);
