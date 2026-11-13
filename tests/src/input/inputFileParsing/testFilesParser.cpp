@@ -399,7 +399,6 @@ TEST_F(TestInputFileReader, testOrcaFileName)
     input::FilesInputParser parser{true, settings};
     const auto              functions = parser.getKeywordFuncMap();
     const auto             &parse     = functions.at("orca_file");
-    const auto              previous  = FileSettings::getOrcaFileName();
     EXPECT_THROW_MSG(
         parse({"orca_file", "=", "no-such-orca-template"}, 0),
         exc::InputFileException,
@@ -408,15 +407,11 @@ TEST_F(TestInputFileReader, testOrcaFileName)
     );
     _clearParser(parser);
     parse({"orca_file", "=", "data/atomSection/testProcess.rst"}, 0);
-    EXPECT_EQ(
-        FileSettings::getOrcaFileName(),
-        "data/atomSection/testProcess.rst"
-    );
+    EXPECT_EQ(settings.getOrcaFileName(), "data/atomSection/testProcess.rst");
     input::FilesInputParser portable{false, settings};
     portable.getKeywordFuncMap().at("orca_file")(
         {"orca_file", "=", "no-such-orca-template"},
         0
     );
-    EXPECT_EQ(FileSettings::getOrcaFileName(), "no-such-orca-template");
-    FileSettings::setOrcaFileName(previous);
+    EXPECT_EQ(settings.getOrcaFileName(), "no-such-orca-template");
 }

@@ -493,12 +493,12 @@ namespace input
                 "File containing the ORCA configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setOrcaFileName(value);
+                _fileSettings->setOrcaFileNameByUser(value);
             else
-                FileSettings::setOrcaFileName(value.fileName());
+                _fileSettings->setOrcaFileNameByUser(value.fileName());
         };
 
         addFileKeyword(

@@ -128,9 +128,12 @@ const std::string& FileSettings::getTMFileName() const { return _tmFile.get(); }
 /**
  * @brief Get the ORCA setup file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getOrcaFileName() { return _orcaFile; }
+const std::string& FileSettings::getOrcaFileName() const
+{
+    return _orcaFile.get();
+}
 
 /**
  * @brief Get the pointcharge file name
@@ -333,9 +336,9 @@ void FileSettings::setTMFileNameByUser(const std::string& name)
  *
  * @param name
  */
-void FileSettings::setOrcaFileName(const std::string_view& name)
+void FileSettings::setOrcaFileNameByUser(const std::string& name)
 {
-    FileSettings::_orcaFile = name;
+    _orcaFile.setByUser(name);
 }
 
 /**

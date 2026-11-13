@@ -43,7 +43,9 @@ namespace QM
      *
      * @param simulationBox
      */
-    void OrcaRunner::writeCoordsFile(const molsys::SimulationBox &simulationBox)
+    void OrcaRunner::_writeCoordsFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         auto file = std::ofstream("orca_coord.xyz");
         file << simulationBox.getNumberOfQMAtoms() << "\n\n";
@@ -66,8 +68,9 @@ namespace QM
      *
      * @param simulationBox
      */
-    void OrcaRunner::writePointChargeFile(
-        const molsys::SimulationBox &simulationBox
+    void OrcaRunner::_writePointChargeFile(
+        const molsys::SimulationBox &simulationBox,
+        const std::string           &pcFileName
     )
     {
         _usePointCharges = false;
@@ -96,7 +99,6 @@ namespace QM
                 }
             }
         }
-        const auto pcFileName = FileSettings::getPointChargeFileName();
 
         if (pcCount == 0)
         {
@@ -116,7 +118,10 @@ namespace QM
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
      */
-    void OrcaRunner::execute(const molsys::SimulationBox &simulationBox)
+    void OrcaRunner::execute(
+        const molsys::SimulationBox &simulationBox,
+        const FileSettings          &fileSettings
+    )
     {
         using enum SmoothingMethod;
 
@@ -149,8 +154,8 @@ namespace QM
             charge,
             reset ? 1 : 0,
             usePointCharges,
-            utilities::shellQuote(FileSettings::getOrcaFileName()),
-            utilities::shellQuote(FileSettings::getPointChargeFileName())
+            utilities::shellQuote(fileSettings.getOrcaFileName()),
+            utilities::shellQuote(fileSettings.getPointChargeFileName())
         );
         _executeCommand(command, "ORCA");
 

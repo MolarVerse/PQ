@@ -1016,7 +1016,7 @@ TEST_F(QMWriterTest, orcaCoordsAreXyzInAngstrom)
     settings.qmSettings.setQMMethodByUser(QMMethod::ORCA);
     auto runner =
         QM::OrcaRunner(settings.qmSettings, settings.externalQMSettings);
-    runner.writeCoordsFile(_simulationBox);
+    _writeCoordsFile(runner, _simulationBox);
     EXPECT_EQ(
         "3\n\nH 0.000000000000 0.000000000000 0.000000000000\n"
         "O 1.500000000000 2.250000000000 -3.000000000000\n"
@@ -1032,11 +1032,15 @@ TEST_F(QMWriterTest, orcaWritesCountChargeAndPositionOnlyForInactiveShells)
     auto runner =
         QM::OrcaRunner(settings.qmSettings, settings.externalQMSettings);
     _addPointChargeMolecules();
-    runner.writePointChargeFile(_simulationBox);
+    _writePointChargeFile(
+        runner,
+        _simulationBox,
+        settings.fileSettings.getPointChargeFileName()
+    );
     EXPECT_EQ(
         "2\n0.500000000000 1.000000000000 2.000000000000 3.000000000000\n"
         "-0.800000000000 4.000000000000 5.000000000000 6.000000000000\n",
-        readFile(FileSettings::getPointChargeFileName())
+        readFile(settings.fileSettings.getPointChargeFileName())
     );
 }
 
@@ -1046,10 +1050,14 @@ TEST_F(QMWriterTest, orcaRemovesStalePointChargesWhenTheShellBecomesEmpty)
     settings.qmSettings.setQMMethodByUser(QMMethod::ORCA);
     auto runner =
         QM::OrcaRunner(settings.qmSettings, settings.externalQMSettings);
-    writeFile(FileSettings::getPointChargeFileName(), "stale");
-    runner.writePointChargeFile(_simulationBox);
+    writeFile(settings.fileSettings.getPointChargeFileName(), "stale");
+    _writePointChargeFile(
+        runner,
+        _simulationBox,
+        settings.fileSettings.getPointChargeFileName()
+    );
     EXPECT_FALSE(
-        std::filesystem::exists(FileSettings::getPointChargeFileName())
+        std::filesystem::exists(settings.fileSettings.getPointChargeFileName())
     );
 }
 
@@ -1062,11 +1070,12 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
         settings.externalQMSettings
     );
     const auto path      = _configureQuotedScript(settings.externalQMSettings);
-    const auto previous  = FileSettings::getOrcaFileName();
     const auto smoothing = settings::HybridSettings::getSmoothingMethod();
     const auto changed =
         configurator::HybridConfigurator::getMoleculeChangedZone();
-    FileSettings::setOrcaFileName("template's name; touch qm-injected");
+    settings.fileSettings.setOrcaFileNameByUser(
+        "template's name; touch qm-injected"
+    );
     settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
     _setMoleculeChangedZone(false);
     const auto expected = [&](int reset)
@@ -1075,23 +1084,23 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
             "{} 0 {} 0 {} {}",
             utilities::shellQuote(path.string()),
             reset,
-            utilities::shellQuote(FileSettings::getOrcaFileName()),
-            utilities::shellQuote(FileSettings::getPointChargeFileName())
+            utilities::shellQuote(settings.fileSettings.getOrcaFileName()),
+            utilities::shellQuote(settings.fileSettings.getPointChargeFileName()
+            )
         );
     };
-    runner.execute(_simulationBox);
+    runner.execute(_simulationBox, settings.fileSettings);
     EXPECT_EQ(expected(1), runner.getCommand());
-    runner.execute(_simulationBox);
+    runner.execute(_simulationBox, settings.fileSettings);
     EXPECT_EQ(expected(0), runner.getCommand());
     _setMoleculeChangedZone(true);
-    runner.execute(_simulationBox);
+    runner.execute(_simulationBox, settings.fileSettings);
     EXPECT_EQ(expected(1), runner.getCommand());
     _setMoleculeChangedZone(false);
     settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
-    runner.execute(_simulationBox);
+    runner.execute(_simulationBox, settings.fileSettings);
     EXPECT_EQ(expected(1), runner.getCommand());
     EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
-    FileSettings::setOrcaFileName(previous);
     settings::HybridSettings::setSmoothingMethod(smoothing);
     _setMoleculeChangedZone(changed);
 }
@@ -1110,7 +1119,7 @@ TEST_F(ExternalQMRunnerTest, orcaRejectsMissingScript)
     settings.externalQMSettings.finalize();
 
     EXPECT_THROW_MSG(
-        runner.execute(_simulationBox),
+        runner.execute(_simulationBox, settings.fileSettings),
         exc::InputFileException,
         std::format(
             "ORCA script file \"{}/orca_rimp2.py\" does not exist.",

@@ -422,7 +422,10 @@ namespace
 
         if (settings.qmSettings.getQMMethod() == QMMethod::ORCA)
         {
-            requireFile(FileSettings::getOrcaFileName(), "ORCA template");
+            requireFile(
+                settings.fileSettings.getOrcaFileName(),
+                "ORCA template"
+            );
         }
 
         validateInstalledExternalQMScript(
