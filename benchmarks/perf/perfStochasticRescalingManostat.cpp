@@ -73,7 +73,7 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        manostat.applyManostat(box, physicalData);
+        manostat.applyManostat(box, physicalData, toTemperature(300.0));
     }
 
     // read state so the loop cannot be optimized away

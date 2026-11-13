@@ -1,0 +1,1 @@
+- introduce `kinetics::Kinetics` state object that owns the current target temperature and temperature ramping; thermostats, manostats and `ResetKinetics` now receive the target temperature as an argument instead of storing it.

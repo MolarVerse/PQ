@@ -112,7 +112,9 @@ namespace thermostat
         const Temperature     &targetTemperature
     )
     {
-        auto applyFriction = [this, targetTemperature](auto &atom)
+        const auto sigma = calculateSigma(_friction, targetTemperature);
+
+        auto applyFriction = [this, sigma](auto &atom)
         {
             const auto mass     = atom->getMass();
             const auto timeStep = settings::TimingsSettings::getTimeStep();
@@ -130,9 +132,8 @@ namespace thermostat
             auto       deltaVelocity =
                 -propagationFactor * _friction * mass * velocity;
 
-            deltaVelocity += propagationFactor *
-                             calculateSigma(_friction, targetTemperature) *
-                             std::sqrt(mass) * randomFactor;
+            deltaVelocity +=
+                propagationFactor * sigma * std::sqrt(mass) * randomFactor;
 
             atom->addVelocity(deltaVelocity);
         };

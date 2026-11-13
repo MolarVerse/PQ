@@ -20,105 +20,93 @@
 // <GPL_HEADER>
 // ******************************************************************************/
 
-// #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
-// #include "kinetics.hpp"
-// #include "thermostatSettings.hpp"
-// #include "unit_types.hpp"
-// #include "units.hpp"
+#include "kinetics.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
-// class TestKinetics : public ::testing::Test
-// {
-//    protected:
-//     KineticsSettings _settings;
-// };
+namespace
+{
+    KineticsSettings rampSettings(
+        const double start,
+        const double end,
+        const size_t steps,
+        const size_t frequency
+    )
+    {
+        KineticsSettings settings;
+        settings.setStartTemperatureByUser(toTemperature(start));
+        settings.setEndTemperatureByUser(toTemperature(end));
+        settings.setRampingStepsByUser(steps);
+        settings.setRampingFrequencyByUser(frequency);
+        settings.finalize();
+        return settings;
+    }
 
-// TEST_F(TestKinetics, applyTemperatureRamping)
-// {
-//     _settings.setTargetTemperature(mstd::units::point<K>(300.0));
+    void expectTemperature(const kinetics::Kinetics &kin, const double kelvin)
+    {
+        EXPECT_DOUBLE_EQ(
+            kin.getCurrentTargetTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K),
+            kelvin
+        );
+    }
+}   // namespace
 
-//     kinetics::Kinetics kinetics{_settings};
-//     kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(kinetics.getTargetTemperature(), mstd::units::point<K>(300.0));
+TEST(TestKinetics, noRampKeepsTargetTemperature)
+{
+    KineticsSettings settings;
+    settings.setTargetTemperatureByUser(toTemperature(300.0));
+    settings.finalize();
 
-//     _settings.setRampingStepsByUser(1);
-//     _settings.setRampingFrequencyByUser(1);
+    kinetics::Kinetics kin{settings};
+    expectTemperature(kin, 300.0);
 
-//     Kinetics kinetics{_settings};
-//     kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(kinetics.getTargetTemperature(), mstd::units::point<K>(301.0));
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 300.0);
+}
 
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(301.0));
+TEST(TestKinetics, startsAtStartTemperature)
+{
+    const auto settings = rampSettings(300.0, 302.0, 2, 1);
 
-//     _kinetics.setTemperatureIncrease(mstd::units::delta<K>(1.0));
-//     _settings.setRampingStepsByUser(2);
-//     _settings.setRampingFrequencyByUser(1);
-//     _kinetics.setTargetTemperature(mstd::units::point<K>(300.0));
+    kinetics::Kinetics kin{settings};
+    expectTemperature(kin, 300.0);
+}
 
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(301.0));
+TEST(TestKinetics, rampEveryStepReachesEndTemperatureAndStops)
+{
+    const auto         settings = rampSettings(300.0, 302.0, 2, 1);
+    kinetics::Kinetics kin{settings};
 
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(302.0));
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 301.0);
 
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(302.0));
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 302.0);
 
-//     _kinetics.setTemperatureIncrease(mstd::units::delta<K>(1.0));
-//     _settings.setRampingStepsByUser(4);
-//     _settings.setRampingFrequencyByUser(2);
-//     _kinetics.setTargetTemperature(mstd::units::point<K>(300.0));
+    // ramp is finished, the temperature must stay constant
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 302.0);
+}
 
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(300.0));
+TEST(TestKinetics, rampWithFrequencyUpdatesEveryNthStep)
+{
+    const auto         settings = rampSettings(300.0, 302.0, 4, 2);
+    kinetics::Kinetics kin{settings};
 
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(301.0));
-
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(301.0));
-
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(302.0));
-
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(302.0));
-
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(_kinetics.getTargetTemperature(),
-//     mstd::units::point<K>(302.0));
-// }
-
-// TEST_F(TestKinetics, temperatureRampingUpdatesActualTargetTemperature)
-// {
-//     ThermostatSettings::setActualTargetTemperature(toTemperature(300.0));
-
-//     _kinetics.setTargetTemperature(mstd::units::point<K>(300.0));
-//     _kinetics.setTemperatureIncrease(mstd::units::delta<K>(2.5));
-//     _settings.setRampingStepsByUser(2);
-//     _settings.setRampingFrequencyByUser(1);
-
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(
-//         ThermostatSettings::getActualTargetTemperature(),
-//         toTemperature(302.5)
-//     );
-
-//     _kinetics.applyTemperatureRamping();
-//     EXPECT_EQ(
-//         ThermostatSettings::getActualTargetTemperature(),
-//         toTemperature(305.0)
-//     );
-
-//     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-// }
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 300.0);
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 301.0);
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 301.0);
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 302.0);
+    kin.applyTemperatureRamping();
+    expectTemperature(kin, 302.0);
+}
