@@ -31,16 +31,6 @@ namespace thermostat
 {
 
     /**
-     * @brief Construct a new Thermostat:: Thermostat object
-     *
-     * @param targetTemperature
-     */
-    Thermostat::Thermostat(const Temperature &targetTemperature)
-        : _targetTemperature(targetTemperature)
-    {
-    }
-
-    /**
      * @brief throw if the system has no degrees of freedom
      *
      * @details a system with zero degrees of freedom (for example a single
@@ -75,28 +65,13 @@ namespace thermostat
      */
     void Thermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature & /*targetTemperature*/
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Calc Temperature");
 
         physicalData.calculateTemperature(simulationBox);
-    }
-
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief set target temperature
-     *
-     * @param targetTemperature
-     */
-    void Thermostat::setTargetTemperature(const Temperature &targetTemperature)
-    {
-        _targetTemperature = targetTemperature;
     }
 
     /**
@@ -107,38 +82,6 @@ namespace thermostat
     void Thermostat::setTemperature(const Temperature &temperature)
     {
         _temperature = temperature;
-    }
-
-    /**
-     * @brief set temperature increase
-     *
-     * @param temperatureIncrease in Kelvin
-     */
-    void Thermostat::setTemperatureIncrease(
-        const TemperatureDiff &temperatureIncrease
-    )
-    {
-        _temperatureIncrease = temperatureIncrease;
-    }
-
-    /**
-     * @brief set temperature ramping steps
-     *
-     * @param steps
-     */
-    void Thermostat::setTemperatureRampingSteps(size_t steps)
-    {
-        _rampingStepsLeft = steps;
-    }
-
-    /**
-     * @brief set temperature ramping frequency
-     *
-     * @param frequency
-     */
-    void Thermostat::setTemperatureRampingFrequency(size_t frequency)
-    {
-        _rampingFrequency = frequency;
     }
 
     /***************************
@@ -157,39 +100,6 @@ namespace thermostat
         return _temperature;
     }
 
-    /**
-     * @brief get target temperature
-     *
-     * @return const Temperature&
-     */
-    const Temperature &Thermostat::getTargetTemperature() const
-    {
-        return _targetTemperature;
-    }
-
-    /**
-     * @brief get temperature increase
-     *
-     * @return const TemperatureDiff&
-     */
-    const TemperatureDiff &Thermostat::getTemperatureIncrease() const
-    {
-        return _temperatureIncrease;
-    }
-
-    /**
-     * @brief get ramping steps left
-     *
-     * @return size_t
-     */
-    size_t Thermostat::getRampingStepsLeft() const { return _rampingStepsLeft; }
-
-    /**
-     * @brief get ramping frequency
-     *
-     * @return size_t
-     */
-    size_t Thermostat::getRampingFrequency() const { return _rampingFrequency; }
     /**
      * @brief get the ThermostatType
      *

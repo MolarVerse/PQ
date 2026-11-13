@@ -76,7 +76,10 @@ namespace engine
             getRingPolymerBeads(),
             [this](auto &bead)
             {
-                getThermostat().applyThermostatOnForces(bead);
+                getThermostat().applyThermostatOnForces(
+                    bead,
+                    _getKinetics().getCurrentTargetTemperature()
+                );
 
                 getIntegrator().secondStep(bead);
             }
@@ -230,7 +233,11 @@ namespace engine
             auto &bead = getRingPolymerBeads()[i];
             auto &data = getRingPolymerBeadsPhysicalData()[i];
 
-            getThermostat().applyThermostatHalfStep(bead, data);
+            getThermostat().applyThermostatHalfStep(
+                bead,
+                data,
+                _getKinetics().getCurrentTargetTemperature()
+            );
         }
     }
 #endif
@@ -311,7 +318,11 @@ namespace engine
             auto &bead = getRingPolymerBeads()[i];
             auto &data = getRingPolymerBeadsPhysicalData()[i];
 
-            getThermostat().applyThermostat(bead, data);
+            getThermostat().applyThermostat(
+                bead,
+                data,
+                _getKinetics().getCurrentTargetTemperature()
+            );
         }
     }
 #endif

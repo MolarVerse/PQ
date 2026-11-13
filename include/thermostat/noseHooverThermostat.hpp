@@ -49,18 +49,17 @@ namespace thermostat
         std::vector<double> _zeta{0.0};   // unitless
 
        public:
-        explicit NoseHooverThermostat(
-            const NoseHooverSettings &nhSettings,
-            const Temperature        &targetTemp
-        );
+        explicit NoseHooverThermostat(const NoseHooverSettings &nhSettings);
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature
         ) override;
 
         void applyThermostatOnForces(
-            molsys::SimulationBox &simulationBox
+            molsys::SimulationBox &simulationBox,
+            const Temperature     &targetTemperature
         ) override;
 
         /***************************
@@ -74,7 +73,10 @@ namespace thermostat
         ThermostatType getThermostatType() const override;
 
        private:
-        void _requireCoupling(const molsys::SimulationBox &simulationBox) const;
+        static void _requireCoupling(
+            const molsys::SimulationBox &simulationBox,
+            const Temperature           &targetTemperature
+        );
     };
 }   // namespace thermostat
 

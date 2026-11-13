@@ -80,10 +80,14 @@ class KineticsSettings
    private:
     Setting<size_t, "Temperature Ramp Frequency"> _temperatureRampFrequency{1};
     Setting<size_t, "Temperature Ramp Steps">     _temperatureRampSteps{0};
-    Setting<Temperature, "Start Temperature">     _startTemperature;
+    Setting<Temperature, "Start Temperature">     _startTemperature{
+        Temperature::zero()
+    };
     Setting<Temperature, "End Temperature">       _endTemperature;
     Setting<Temperature, "Target Temperature">    _targetTemperature;
-    Setting<TemperatureDiff, "Temperature Increase"> _temperatureIncrease;
+    Setting<TemperatureDiff, "Temperature Increase"> _temperatureIncrease{
+        TemperatureDiff::zero()
+    };
 
    public:
     void finalize();

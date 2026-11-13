@@ -113,7 +113,8 @@ namespace engine
     {
         _thermostat->applyThermostatHalfStep(
             getSimulationBox(),
-            getPhysicalData()
+            getPhysicalData(),
+            _kinetics.getCurrentTargetTemperature()
         );
 
         if (getSettings().constraintSettings.isMShakeActivated())
@@ -147,13 +148,20 @@ namespace engine
             getPhysicalDataPtr()->addVirial(virial);
         }
 
-        _thermostat->applyThermostatOnForces(getSimulationBox());
+        _thermostat->applyThermostatOnForces(
+            getSimulationBox(),
+            _kinetics.getCurrentTargetTemperature()
+        );
 
         _integrator->secondStep(getSimulationBox());
 
         getConstraints()->applyRattle(getSimulationBox());
 
-        _thermostat->applyThermostat(getSimulationBox(), getPhysicalData());
+        _thermostat->applyThermostat(
+            getSimulationBox(),
+            getPhysicalData(),
+            _kinetics.getCurrentTargetTemperature()
+        );
 
         getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
 

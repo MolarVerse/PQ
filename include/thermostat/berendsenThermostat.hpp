@@ -42,15 +42,13 @@ namespace thermostat
         Time _tau;
 
        public:
-        explicit BerendsenThermostat(
-            const Temperature &targetTemp,
-            const Time        &tau
-        );
+        explicit BerendsenThermostat(const Time &tau);
         BerendsenThermostat() = default;
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature
         ) override;
 
         void setTau(const Time &tau);

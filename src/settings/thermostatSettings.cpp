@@ -65,14 +65,8 @@ void KineticsSettings::finalize()
         );
     }
 
-    if (!_endTemperature.isSetByUser() && !_targetTemperature.isSetByUser())
-    {
-        throw exc::InputFileException(
-            "Neither end temperature nor target temperature is set by the "
-            "user. "
-            "At least one must be defined."
-        );
-    }
+    // jobs without a thermostat need no temperature. Whether one is required
+    // is checked by the input file reader, which knows the thermostat type.
 
     if (_endTemperature.isSetByUser() && !_targetTemperature.isSetByUser())
     {
@@ -91,7 +85,10 @@ void KineticsSettings::finalize()
 
     if (!_startTemperature.isSetByUser())
     {
-        // TODO: set values accordingly
+        // no ramp: the target temperature is the end temperature from the start
+        if (_endTemperature.isSetBySomeone())
+            _startTemperature.setBySystem(_endTemperature.get());
+
         return;
     }
 
