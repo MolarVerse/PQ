@@ -120,3 +120,20 @@ TEST(TestSerialWorker, destructorPrintsUnhandledError)
         "Error in background output: disk full\n"
     );
 }
+
+TEST(TestSerialWorker, destructorPrintsUnknownError)
+{
+    testing::internal::CaptureStderr();
+
+    {
+        utilities::SerialWorker worker{2};
+        // a type not derived from std::exception is what this test needs
+        // NOLINTNEXTLINE(hicpp-exception-baseclass)
+        worker.submit([] { throw 42; });
+    }
+
+    EXPECT_EQ(
+        testing::internal::GetCapturedStderr(),
+        "Unknown error in background output\n"
+    );
+}
