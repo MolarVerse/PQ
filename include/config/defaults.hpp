@@ -77,6 +77,7 @@ namespace defaults
     static constexpr auto*  MOLDESCRIPTOR_FILE_DEFAULT = "moldescriptor.dat";
     static constexpr auto*  GUFF_FILE_DEFAULT          = "guff.dat";
     static constexpr auto*  DFTB_FILE_DEFAULT          = "dftb_in.template";
+    static constexpr auto*  ORCA_FILE_DEFAULT          = "orca.template";
     static constexpr auto*  TM_FILE_DEFAULT            = "tm_define.template";
     static constexpr auto*  POINTCHARGE_FILE_DEFAULT   = "pointcharges";
     static constexpr size_t NUMBER_OF_GUFF_ENTRIES     = 28;

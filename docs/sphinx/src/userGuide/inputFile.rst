@@ -679,6 +679,21 @@ TURBOMOLE Setup File
 
 .. centered:: *default value* = "tm_define.template"
 
+.. _orcafileKey:
+
+ORCA Setup File
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    orca_file = {file} -> "orca.template"
+
+The external ``orca_rimp2.py``, ``orca_hf.py`` and ``orca_dft.py`` runners read
+this shared template. An example
+and the stage-placeholder contract are provided in ``examples/orca/``.
+Load ORCA before running PQ, or set ``ORCA_EXE`` to its full executable path.
+
 .. _topologyFileKey:
 
 Topology File
@@ -1586,15 +1601,17 @@ Possible options are:
 
    3. **turbomole** - `Turbomole <https://www.turbomole.org/>`__
 
-   4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`__ same as using **mace_mp**
+   4. **orca** - `ORCA <https://www.faccts.de/orca/>`__
 
-   5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`__
+   5. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`__ same as using **mace_mp**
 
-   6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
+   6. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`__
+
+   7. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
    
-   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
+   8. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
 
-   8. **fennol**  - `FeNNol <https://doi.org/10.1063/5.0217688>`__
+   9. **fennol**  - `FeNNol <https://doi.org/10.1063/5.0217688>`__
 
 .. _qmscriptKey:
 
