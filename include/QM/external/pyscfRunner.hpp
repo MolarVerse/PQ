@@ -38,12 +38,14 @@ namespace QM
        public:
         using ExternalQMRunner::ExternalQMRunner;
         void execute(
-            molsys::SimulationBox &simulationBox,
-            const FileSettings    &fileSettings
+            const molsys::SimulationBox &simulationBox,
+            const FileSettings          &fileSettings
         ) override;
 
        private:
-        void _writeCoordsFile(molsys::SimulationBox &simulationBox) override;
+        void _writeCoordsFile(
+            const molsys::SimulationBox &simulationBox
+        ) override;
     };
 
 }   // namespace QM

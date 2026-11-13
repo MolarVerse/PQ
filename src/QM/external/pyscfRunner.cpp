@@ -40,7 +40,9 @@ namespace QM
      *
      * @param simulationBox Simulation box containing molecules and atoms.
      */
-    void PySCFRunner::_writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void PySCFRunner::_writeCoordsFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         const std::string fileName = "coords.xyz";
         std::ofstream     coordsFile(fileName);
@@ -66,7 +68,7 @@ namespace QM
      *
      */
     void PySCFRunner::execute(
-        molsys::SimulationBox & /*simBox*/,
+        const molsys::SimulationBox & /*simBox*/,
         const FileSettings & /*fileSettings*/
     )
     {

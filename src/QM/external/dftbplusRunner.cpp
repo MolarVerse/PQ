@@ -52,7 +52,9 @@ namespace QM
      *
      * @param simulationBox
      */
-    void DFTBPlusRunner::_writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void DFTBPlusRunner::_writeCoordsFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         using std::ranges::distance;
         using std::ranges::find;
@@ -148,8 +150,8 @@ namespace QM
      * opened, written to, or if it contains invalid values.
      */
     void DFTBPlusRunner::_writePointChargeFile(
-        molsys::SimulationBox &simulationBox,
-        const std::string     &pointChargeFileName
+        const molsys::SimulationBox &simulationBox,
+        const std::string           &pointChargeFileName
     )
     {
         std::ofstream pcFile(pointChargeFileName);
@@ -190,8 +192,8 @@ namespace QM
      *
      */
     void DFTBPlusRunner::execute(
-        molsys::SimulationBox &simulationBox,
-        const FileSettings    &fileSettings
+        const molsys::SimulationBox &simulationBox,
+        const FileSettings          &fileSettings
     )
     {
         const auto scriptFile = _getExternalQMSettings().getQMScript();
@@ -247,7 +249,7 @@ namespace QM
      * opened, if it is incomplete, or if it contains invalid values.
      */
     void DFTBPlusRunner::_readStressTensor(
-        molsys::Box                &box,
+        const molsys::Box          &box,
         physicalData::PhysicalData &physicalData,
         const std::string          &stressFileName
     )

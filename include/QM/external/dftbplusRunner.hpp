@@ -55,20 +55,22 @@ namespace QM
         using ExternalQMRunner::ExternalQMRunner;
 
         void execute(
-            molsys::SimulationBox &simulationBox,
-            const FileSettings    &fileSettings
+            const molsys::SimulationBox &simulationBox,
+            const FileSettings          &fileSettings
         ) override;
 
        private:
-        void _writeCoordsFile(molsys::SimulationBox &simulationBox) override;
+        void _writeCoordsFile(
+            const molsys::SimulationBox &simulationBox
+        ) override;
 
         void _writePointChargeFile(
-            molsys::SimulationBox &simulationBox,
-            const std::string     &pointChargeFileName
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &pointChargeFileName
         ) override;
 
         void _readStressTensor(
-            molsys::Box                &box,
+            const molsys::Box          &box,
             physicalData::PhysicalData &physicalData,
             const std::string          &stressFileName
         ) override;

@@ -12,3 +12,7 @@ target_include_directories(config_headers
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/config
 )
+
+install(TARGETS config_headers
+    DESTINATION lib
+)

@@ -45,7 +45,9 @@ namespace QM
      *
      * @param simulationBox
      */
-    void TurbomoleRunner::_writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void TurbomoleRunner::_writeCoordsFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         const std::string fileName = "coord";
         std::ofstream     coordsFile(fileName);
@@ -81,8 +83,8 @@ namespace QM
      * opened, written to, or if it contains invalid values.
      */
     void TurbomoleRunner::_writePointChargeFile(
-        molsys::SimulationBox &simulationBox,
-        const std::string     &pointChargeFileName
+        const molsys::SimulationBox &simulationBox,
+        const std::string           &pointChargeFileName
     )
     {
         std::ofstream pcFile(pointChargeFileName);
@@ -129,8 +131,8 @@ namespace QM
      *
      */
     void TurbomoleRunner::execute(
-        molsys::SimulationBox &simulationBox,
-        const FileSettings    &fileSettings
+        const molsys::SimulationBox &simulationBox,
+        const FileSettings          &fileSettings
     )
     {
         using enum SmoothingMethod;

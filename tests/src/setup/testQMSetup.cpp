@@ -57,28 +57,30 @@ namespace
         }
 
         void execute(
-            molsys::SimulationBox & /*simBox*/,
+            const molsys::SimulationBox & /*simBox*/,
             const FileSettings & /*fileSettings*/
         ) override
         {
         }
 
         // the optional hooks are protected -> expose the base defaults
-        void callWritePointChargeFile(molsys::SimulationBox &simBox)
+        void callWritePointChargeFile(molsys::SimulationBox &simulationBox)
         {
-            _writePointChargeFile(simBox, "point_charges");
+            _writePointChargeFile(simulationBox, "point_charges");
         }
 
         void callReadStressTensor(
             molsys::Box                &box,
-            physicalData::PhysicalData &physData
+            physicalData::PhysicalData &physicalData
         )
         {
-            _readStressTensor(box, physData, "stress_tensor");
+            _readStressTensor(box, physicalData, "stress_tensor");
         }
 
        protected:
-        void _writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
     };
 
     // the full path variant is valid for all build types (including

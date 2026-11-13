@@ -99,10 +99,12 @@ namespace
 
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void _writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
 
         void execute(
-            molsys::SimulationBox & /*simBox*/,
+            const molsys::SimulationBox & /*simBox*/,
             const FileSettings &fileSettings
         ) override
         {
@@ -905,10 +907,12 @@ namespace
     {
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void _writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
 
         void execute(
-            molsys::SimulationBox & /*simBox*/,
+            const molsys::SimulationBox & /*simBox*/,
             const FileSettings & /*fileSettings*/
         ) override
         {
@@ -920,9 +924,11 @@ namespace
     {
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void _writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
         void execute(
-            molsys::SimulationBox & /*simBox*/,
+            const molsys::SimulationBox & /*simBox*/,
             const FileSettings & /*fileSettings*/
         ) override
         {

@@ -69,7 +69,10 @@ namespace QM
             const FileSettings         &fileSettings
         ) override;
 
-        virtual void execute(molsys::SimulationBox &, const FileSettings &) = 0;
+        virtual void execute(
+            const molsys::SimulationBox &,
+            const FileSettings &
+        ) = 0;
 
         /*******************************
          * standard getter and setters *
@@ -84,17 +87,17 @@ namespace QM
         [[nodiscard]]
         const ExternalQMSettings &_getExternalQMSettings() const;
 
-        virtual void _writeCoordsFile(molsys::SimulationBox &) = 0;
+        virtual void _writeCoordsFile(const molsys::SimulationBox &) = 0;
 
         virtual void _writePointChargeFile(
-            molsys::SimulationBox & /*simBox*/,
+            const molsys::SimulationBox & /*simBox*/,
             const std::string & /*pointChargeFileName*/
         )
         {
         }
 
         virtual void _readStressTensor(
-            molsys::Box & /*simBox*/,
+            const molsys::Box & /*simBox*/,
             physicalData::PhysicalData & /*physData*/,
             const std::string & /*stressFileName*/
         )
