@@ -308,7 +308,7 @@ void FileSettings::setMShakeFileNameByUser(const std::string& name)
  */
 void FileSettings::setDFTBFileNameByUser(const std::string& name)
 {
-    FileSettings::_dftbFile.setByUser(name);
+    _dftbFile.setByUser(name);
 }
 
 /**
@@ -318,7 +318,7 @@ void FileSettings::setDFTBFileNameByUser(const std::string& name)
  */
 void FileSettings::setTMFileNameByUser(const std::string& name)
 {
-    FileSettings::_tmFile.setByUser(name);
+    _tmFile.setByUser(name);
 }
 
 /**
@@ -328,7 +328,7 @@ void FileSettings::setTMFileNameByUser(const std::string& name)
  */
 void FileSettings::setPointChargeFileNameByUser(const std::string& name)
 {
-    FileSettings::_pointChargeFile.setByUser(name);
+    _pointChargeFile.setByUser(name);
 }
 
 /**

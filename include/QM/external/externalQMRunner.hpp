@@ -43,6 +43,7 @@ namespace molsys
 
 class ExternalQMSettings;   // forward declaration
 class FileSettings;         // forward declaration
+
 namespace QM
 {
     /**

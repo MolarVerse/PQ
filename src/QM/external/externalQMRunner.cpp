@@ -290,6 +290,8 @@ namespace QM
      * @param qmSettings The QM settings used to configure the external QM
      * runner, which may include method-specific parameters and computational
      * options
+     * @param forceFileName Path to the file containing the forces and QM
+     * energy.
      *
      * @throw QMRunnerException
      *  - if the force file cannot be opened
@@ -391,6 +393,7 @@ namespace QM
      * @param qmSettings The QM settings used to configure the external QM
      * runner, which may include method-specific parameters and computational
      * options
+     * @param chargeFileName Path to the file containing the QM charges.
      *
      * @throw QMRunnerException
      *  - if the charge file cannot be opened
@@ -460,6 +463,9 @@ namespace QM
      * @param simulationBox SimulationBox reference
      * @param physicalData PhysicalData reference
      * @param per periodicity of the system
+     * @param fileSettings Object containing file paths and settings required
+     * for the execution of the external QM program.
+     *
      */
     void ExternalQMRunner::run(
         molsys::SimulationBox      &simulationBox,

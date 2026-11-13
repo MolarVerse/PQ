@@ -141,6 +141,11 @@ namespace QM
      * QM/MM coupling in DFTB+ calculations.
      *
      * @param simulationBox Simulation box containing molecules and atoms.
+     * @param pointChargeFileName Path to the file where point charges will be
+     * written.
+     *
+     * @throws exc::QMRunnerException if the point charges file cannot be
+     * opened, written to, or if it contains invalid values.
      */
     void DFTBPlusRunner::_writePointChargeFile(
         molsys::SimulationBox &simulationBox,
@@ -237,6 +242,9 @@ namespace QM
      * @param box
      * @param physicalData Physical data object to which the stress tensor and
      * virial will be added.
+     * @param stressFileName Path to the file containing the stress tensor.
+     * @throws exc::QMRunnerException if the stress tensor file cannot be
+     * opened, if it is incomplete, or if it contains invalid values.
      */
     void DFTBPlusRunner::_readStressTensor(
         molsys::Box                &box,

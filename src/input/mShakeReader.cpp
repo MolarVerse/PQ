@@ -56,6 +56,7 @@ namespace input::mShake
      * @details opens mShake file pointer
      *
      * @param engine
+     * @param fileName - the name of the mShake file to be read
      */
     MShakeReader::MShakeReader(engine::Engine &engine, std::string fileName)
         : _fileName(std::move(fileName)), _engine(engine)

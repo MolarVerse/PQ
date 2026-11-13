@@ -74,6 +74,11 @@ namespace QM
      * @brief writes the point charge file in turbomole format
      *
      * @param simulationBox
+     * @param pointChargeFileName Path to the file where point charges will be
+     * written.
+     *
+     * @throws exc::QMRunnerException if the point charges file cannot be
+     * opened, written to, or if it contains invalid values.
      */
     void TurbomoleRunner::_writePointChargeFile(
         molsys::SimulationBox &simulationBox,
@@ -115,6 +120,12 @@ namespace QM
      *
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
+     * @param fileSettings Object containing file paths and settings required
+     * for the execution of the external QM program.
+     *
+     * @throws exc::QMRunnerException if the external QM program cannot be
+     * executed successfully, or if required input files are missing or
+     * invalid.
      *
      */
     void TurbomoleRunner::execute(
