@@ -43,7 +43,7 @@ namespace QM
      *
      * @param simulationBox
      */
-    void OrcaRunner::writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void OrcaRunner::writeCoordsFile(const molsys::SimulationBox &simulationBox)
     {
         auto file = std::ofstream("orca_coord.xyz");
         file << simulationBox.getNumberOfQMAtoms() << "\n\n";
@@ -66,7 +66,9 @@ namespace QM
      *
      * @param simulationBox
      */
-    void OrcaRunner::writePointChargeFile(molsys::SimulationBox &simulationBox)
+    void OrcaRunner::writePointChargeFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         _usePointCharges = false;
         auto   body      = std::ostringstream();
@@ -114,7 +116,7 @@ namespace QM
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
      */
-    void OrcaRunner::execute(molsys::SimulationBox &simulationBox)
+    void OrcaRunner::execute(const molsys::SimulationBox &simulationBox)
     {
         using enum SmoothingMethod;
 
