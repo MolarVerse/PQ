@@ -236,8 +236,24 @@ pq_add_orca_regression(regression_orca_qmmm_fake manifest-qmmm.json 120
 )
 
 # Real ORCA, only where it is installed: -DORCA_EXECUTABLE=/path/to/orca.
+# Only the quantum chemistry ORCA banner counts (not the GNOME screen reader).
 find_program(ORCA_EXECUTABLE orca)
+set(PQ_ORCA_VALID FALSE)
 if(ORCA_EXECUTABLE)
+    execute_process(
+        COMMAND ${ORCA_EXECUTABLE} --version
+        TIMEOUT 10
+        OUTPUT_VARIABLE orca_output
+        ERROR_QUIET
+    )
+    if(orca_output MATCHES "O +R +C +A")
+        set(PQ_ORCA_VALID TRUE)
+    else()
+        message(STATUS
+            "${ORCA_EXECUTABLE} is not quantum chemistry ORCA: skip regression_orca_real")
+    endif()
+endif()
+if(PQ_ORCA_VALID)
     add_test(
         NAME regression_orca_real
         COMMAND
