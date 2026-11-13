@@ -20,7 +20,7 @@
       virial = atomic;
 
     # QM programm
-      qm_prog = turbomole; qm_script = turbomole_rimp2;
+      qm_prog = turbomole; qm_script = turbomole_ricc2;
 
 
     # Input file
