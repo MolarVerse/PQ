@@ -71,10 +71,6 @@ namespace out
     {
         std::ostringstream buffer;
 
-        _getFilePointer().close();
-
-        _openFile();
-
         buffer << "Step " << step << '\n';
 
         buffer << "Box   " << frame.box->get_boxDimensions() << "  "
@@ -114,9 +110,7 @@ namespace out
             buffer << '\n' << std::flush;
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _replaceFile(buffer.str());
     }
 
 }   // namespace out

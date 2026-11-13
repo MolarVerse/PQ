@@ -50,11 +50,12 @@ TEST(FileSettingsTest, TopologyAndParameterRoundTrip)
 
 TEST(FileSettingsTest, StartAndRingPolymerRoundTrip)
 {
-    FileSettings::setStartFileName("start.rst");
-    EXPECT_EQ(FileSettings::getStartFileName(), "start.rst");
+    FileSettings settings;
+    settings.setStartFileNameByUser("start.rst");
+    EXPECT_EQ(settings.getStartFileName(), "start.rst");
 
-    FileSettings::setRingPolymerStartFileName("rp_start.rst");
-    EXPECT_EQ(FileSettings::getRingPolymerStartFileName(), "rp_start.rst");
+    settings.setRingPolymerStartFileNameByUser("rp_start.rst");
+    EXPECT_EQ(settings.getRingPolymerStartFileName(), "rp_start.rst");
 }
 
 TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
@@ -68,6 +69,7 @@ TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
 
 TEST(FileSettingsTest, IntraNonBondedRoundTrip)
 {
-    FileSettings::setIntraNonBondedFileName("intra.dat");
-    EXPECT_EQ(FileSettings::getIntraNonBondedFileName(), "intra.dat");
+    FileSettings settings;
+    settings.setIntraNonBondedFileNameByUser("intra.dat");
+    EXPECT_EQ(settings.getIntraNonBondedFileName(), "intra.dat");
 }

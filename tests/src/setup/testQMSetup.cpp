@@ -56,8 +56,10 @@ namespace
         {
         }
 
-        void execute(molsys::SimulationBox & /*simBox*/) override {}
-        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        void execute(const molsys::SimulationBox & /*simBox*/) override {}
+        void writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
     };
 
     // the full path variant is valid for all build types (including

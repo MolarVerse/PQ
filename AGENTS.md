@@ -96,8 +96,8 @@ PQ/
 ## Build System
 
 **Requirements:**
-- CMake >= 3.20
-- GCC >= 13.0 (C++23), other compilers are untested/unsupported
+- CMake >= 3.25
+- GCC >= 14.0 (C++23); clang 20 is built and tested in the CI (non-gating), other compilers are untested/unsupported
 - Eigen (fetched automatically via CMake `FetchContent`)
 
 **Build commands:**

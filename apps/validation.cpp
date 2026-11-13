@@ -310,20 +310,20 @@ namespace
 
     void validateEffectiveFiles(const Settings &settings)
     {
-        requireFile(FileSettings::getStartFileName(), "Start file");
+        requireFile(settings.fileSettings.getStartFileName(), "Start file");
 
-        if (FileSettings::isRingPolymerStartFileNameSet())
+        if (settings.fileSettings.isRingPolymerStartFileNameSetByUser())
         {
             requireFile(
-                FileSettings::getRingPolymerStartFileName(),
+                settings.fileSettings.getRingPolymerStartFileName(),
                 "Ring-polymer start file"
             );
         }
 
-        if (FileSettings::isIntraNonBondedFileNameSet())
+        if (settings.fileSettings.isIntraNonBondedFileNameSetByUser())
         {
             requireFile(
-                FileSettings::getIntraNonBondedFileName(),
+                settings.fileSettings.getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
         }

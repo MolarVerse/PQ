@@ -130,11 +130,13 @@ namespace setup
      */
     void RingPolymerSetup::initializeBeads()
     {
-        if (FileSettings::isRingPolymerStartFileNameSet())
+        const auto &fileSettings = _engine.getSettings().fileSettings;
+
+        if (fileSettings.isRingPolymerStartFileNameSetByUser())
         {
-            auto             &log = _engine.getLogOutput();
-            const auto *const msg = "Reading ring polymer restart file: ";
-            const auto &file      = FileSettings::getRingPolymerStartFileName();
+            auto             &log  = _engine.getLogOutput();
+            const auto *const msg  = "Reading ring polymer restart file: ";
+            const auto       &file = fileSettings.getRingPolymerStartFileName();
 
             log.writeRead(msg, file);
             out::StdoutOutput::writeRead(msg, file);

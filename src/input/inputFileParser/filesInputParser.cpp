@@ -160,16 +160,15 @@ namespace input
             .description = "File containing intra non bonded combinations"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             settings::GeneralSettings::activateIntraNonBonded();
 
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setIntraNonBondedFileName(value);
+                _fileSettings->setIntraNonBondedFileNameByUser(value);
             else
-                FileSettings::setIntraNonBondedFileName(value.fileName());
-
-            FileSettings::setIsIntraNonBondedFileNameSet();
+                _fileSettings->setIntraNonBondedFileNameByUser(value.fileName()
+                );
         };
 
         addFileKeyword(
@@ -259,12 +258,12 @@ namespace input
                 "File containing the start configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setStartFileName(value);
+                _fileSettings->setStartFileNameByUser(value);
             else
-                FileSettings::setStartFileName(value.fileName());
+                _fileSettings->setStartFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -293,14 +292,15 @@ namespace input
                 "system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setRingPolymerStartFileName(value);
+                _fileSettings->setRingPolymerStartFileNameByUser(value);
             else
-                FileSettings::setRingPolymerStartFileName(value.fileName());
-
-            FileSettings::setIsRingPolymerStartFileNameSet();
+            {
+                const auto &name = value.fileName();
+                _fileSettings->setRingPolymerStartFileNameByUser(name);
+            }
         };
 
         addFileKeyword(
