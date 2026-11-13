@@ -32,7 +32,6 @@
 #include <string>
 #include <string_view>
 #include <thread>
-#include <utility>
 
 #include "enums/qm.hpp"
 #include "orthorhombicBox.hpp"
@@ -302,7 +301,7 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
     const auto inputFile = std::string("input file; touch qm-injected");
     FileSettings::setDFTBFileName(inputFile);
 
-    runner.execute(std::as_const(_simulationBox));
+    runner.execute(_simulationBox);
 
     EXPECT_EQ(
         std::format(
@@ -326,7 +325,7 @@ TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
     );
     const auto path = _configureQuotedScript(settings.externalQMSettings);
 
-    runner.execute(std::as_const(_simulationBox));
+    runner.execute(_simulationBox);
 
     EXPECT_EQ(
         std::format(
@@ -349,7 +348,7 @@ TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
     );
     const auto path = _configureQuotedScript(settings.externalQMSettings);
 
-    runner.execute(std::as_const(_simulationBox));
+    runner.execute(_simulationBox);
 
     EXPECT_EQ(
         std::format(
@@ -441,10 +440,7 @@ TEST_F(ExternalQMRunnerTest, rejectsIncompleteStressTensor)
     writeFile(FileSettings::getStressTensorTempFileName(), "0 0 0\n0 0 0\n");
 
     EXPECT_THROW_MSG(
-        _dftbRunner->readStressTensor(
-            std::as_const(_simulationBox.getBox()),
-            _physicalData
-        ),
+        _dftbRunner->readStressTensor(_simulationBox.getBox(), _physicalData),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
@@ -458,10 +454,7 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
     );
 
     EXPECT_THROW_MSG(
-        _dftbRunner->readStressTensor(
-            std::as_const(_simulationBox.getBox()),
-            _physicalData
-        ),
+        _dftbRunner->readStressTensor(_simulationBox.getBox(), _physicalData),
         exc::QMRunnerException,
         "Incomplete DFTBPLUS stress tensor \"stress_tensor\""
     );
@@ -496,7 +489,7 @@ TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
     _settings.externalQMSettings.finalize();
 
     EXPECT_THROW_MSG(
-        _dftbRunner->execute(std::as_const(_simulationBox)),
+        _dftbRunner->execute(_simulationBox),
         exc::InputFileException,
         std::format(
             "DFTB+ script file \"{}/this-script-does-not-exist.sh\" does "
@@ -520,7 +513,7 @@ TEST_F(ExternalQMRunnerTest, pyscfExecuteRejectsMissingScript)
     settings.externalQMSettings.finalize();
 
     EXPECT_THROW_MSG(
-        runner.execute(std::as_const(_simulationBox)),
+        runner.execute(_simulationBox),
         exc::InputFileException,
         std::format(
             "PySCF script file \"{}/this-script-does-not-exist.py\" does "
@@ -544,7 +537,7 @@ TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
     settings.externalQMSettings.finalize();
 
     EXPECT_THROW_MSG(
-        runner.execute(std::as_const(_simulationBox)),
+        runner.execute(_simulationBox),
         exc::InputFileException,
         std::format(
             "Turbomole script file \"{}/this-script-does-not-exist.sh\" "
@@ -653,7 +646,7 @@ class QMWriterTest : public ExternalQMRunnerTest
 
 TEST_F(QMWriterTest, dftbCoordsOfAnIsolatedSystemUseTheClusterFlag)
 {
-    _dftbRunner->writeCoordsFile(std::as_const(_simulationBox));
+    _dftbRunner->writeCoordsFile(_simulationBox);
 
     EXPECT_EQ(NON_PERIODIC_COORDS, readFile("coords"));
 }
@@ -665,7 +658,7 @@ TEST_F(QMWriterTest, dftbCoordsOfAPeriodicSystemAppendTheCell)
     auto runner =
         PeriodicDftbRunner(settings.qmSettings, settings.externalQMSettings);
 
-    runner.writeCoordsFile(std::as_const(_simulationBox));
+    runner.writeCoordsFile(_simulationBox);
 
     auto expected = NON_PERIODIC_COORDS;
     expected.replace(0, 4, "3  S");
@@ -676,7 +669,7 @@ TEST_F(QMWriterTest, dftbPointChargesAreOnlyTheInactiveSmoothingAndPointCharge)
 {
     _addPointChargeMolecules();
 
-    _dftbRunner->writePointChargeFile(std::as_const(_simulationBox));
+    _dftbRunner->writePointChargeFile(_simulationBox);
 
     EXPECT_EQ(POINT_CHARGES, readFile(FileSettings::getPointChargeFileName()));
 }
@@ -685,7 +678,7 @@ TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
 {
     _addMolecule(molsys::HybridZone::OUTER, false, {7.0, 8.0, 9.0}, 0.1);
 
-    _dftbRunner->writePointChargeFile(std::as_const(_simulationBox));
+    _dftbRunner->writePointChargeFile(_simulationBox);
 
     EXPECT_FALSE(
         std::filesystem::exists(FileSettings::getPointChargeFileName())
@@ -712,12 +705,12 @@ TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
     };
 
     _addPointChargeMolecules();
-    runner.writePointChargeFile(std::as_const(_simulationBox));
-    runner.execute(std::as_const(_simulationBox));
+    runner.writePointChargeFile(_simulationBox);
+    runner.execute(_simulationBox);
     EXPECT_TRUE(runner.getCommand().ends_with(suffix(1)))
         << runner.getCommand();
 
-    runner.execute(std::as_const(_simulationBox));
+    runner.execute(_simulationBox);
     EXPECT_TRUE(runner.getCommand().ends_with(suffix(0)))
         << runner.getCommand();
     EXPECT_TRUE(
@@ -732,7 +725,7 @@ TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
     auto runner =
         QM::TurbomoleRunner(settings.qmSettings, settings.externalQMSettings);
 
-    runner.writeCoordsFile(std::as_const(_simulationBox));
+    runner.writeCoordsFile(_simulationBox);
 
     const auto line = [](const double       x,
                          const double       y,
@@ -763,7 +756,7 @@ TEST_F(QMWriterTest, turbomolePointChargesAreInBohrAndOnlyTheOuterShells)
         QM::TurbomoleRunner(settings.qmSettings, settings.externalQMSettings);
     _addPointChargeMolecules();
 
-    runner.writePointChargeFile(std::as_const(_simulationBox));
+    runner.writePointChargeFile(_simulationBox);
 
     EXPECT_EQ(
         expectedTurbomolePointCharges(),
@@ -778,7 +771,7 @@ TEST_F(QMWriterTest, turbomoleWithoutPointChargesLeavesNoFile)
     auto runner =
         QM::TurbomoleRunner(settings.qmSettings, settings.externalQMSettings);
 
-    runner.writePointChargeFile(std::as_const(_simulationBox));
+    runner.writePointChargeFile(_simulationBox);
 
     EXPECT_FALSE(
         std::filesystem::exists(FileSettings::getPointChargeFileName())
@@ -792,7 +785,7 @@ TEST_F(QMWriterTest, pyscfCoordsAreAnXyzFile)
     auto runner =
         QM::PySCFRunner(settings.qmSettings, settings.externalQMSettings);
 
-    runner.writeCoordsFile(std::as_const(_simulationBox));
+    runner.writeCoordsFile(_simulationBox);
 
     EXPECT_EQ(
         "3\n\n"

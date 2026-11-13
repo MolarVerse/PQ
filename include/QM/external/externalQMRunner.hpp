@@ -78,7 +78,7 @@ namespace QM
         }
 
         virtual void readStressTensor(
-            const molsys::Box & /*simBox*/,
+            const molsys::Box & /*box*/,
             physicalData::PhysicalData & /*physData*/
         )
         {
