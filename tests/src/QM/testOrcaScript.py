@@ -11,6 +11,7 @@ TEMPLATE = Path(sys.argv.pop(1)).read_text()
 FAKE = r'''#!/usr/bin/env python3
 from pathlib import Path
 import os
+import re
 import sys
 inp = Path(sys.argv[1])
 text = inp.read_text()
@@ -19,7 +20,7 @@ with Path("calls").open("a") as f:
     f.write(stem + "\n")
 if os.environ.get("FAIL_STAGE") == stem:
     sys.exit(1)
-assert "__" not in text
+assert not re.search(r"__[A-Z]+__", text)
 assert "%pointcharges" not in text or stem == "orca_polarized"
 if stem != "orca_polarized" and "NoIter" in text:
     assert '%moinp "' in text and 'orca_polarized.gbw"' in text
