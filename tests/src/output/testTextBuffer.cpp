@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "textBuffer.hpp"
-
 #include <gtest/gtest.h>
 
 #include <array>
@@ -30,16 +28,18 @@
 #include <limits>
 #include <string>
 
+#include "textBuffer.hpp"
+
 namespace
 {
     constexpr auto inf = std::numeric_limits<double>::infinity();
     constexpr auto nan = std::numeric_limits<double>::quiet_NaN();
 
     constexpr std::array values{
-        0.0,     -0.0,       1.5,   -1.23456789,  123456789.123,
-        1e-12,   5e-9,       -5e-9, 0.123456785,  2.5e-300,
-        1e300,   -1.7e308,   inf,   -inf,         nan,
-        -nan,    1.0 / 3.0,  42.0,  -99999.99999, 6.02214076e23,
+        0.0,   -0.0,      1.5,   -1.23456789,  123456789.123,
+        1e-12, 5e-9,      -5e-9, 0.123456785,  2.5e-300,
+        1e300, -1.7e308,  inf,   -inf,         nan,
+        -nan,  1.0 / 3.0, 42.0,  -99999.99999, 6.02214076e23,
     };
 }   // namespace
 

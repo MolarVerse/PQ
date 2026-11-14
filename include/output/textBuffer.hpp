@@ -44,12 +44,16 @@ namespace out
         static constexpr std::size_t SCRATCH_SIZE = 512;
 
        private:
-        std::string                        _data;
-        std::array<char, SCRATCH_SIZE>     _scratch{};
+        std::string                    _data;
+        std::array<char, SCRATCH_SIZE> _scratch{};
 
         void             _pad(std::size_t length, std::size_t width);
         std::string_view _toChars(std::size_t value);
-        std::string_view _toChars(double value, std::chars_format, int precision);
+        std::string_view _toChars(
+            double value,
+            std::chars_format,
+            int precision
+        );
 
        public:
         void clear() noexcept { _data.clear(); }

@@ -37,18 +37,18 @@ namespace out
 {
     namespace
     {
-        constexpr std::size_t NAME_WIDTH      = 5;
-        constexpr std::size_t FIXED_WIDTH     = 15;
-        constexpr std::size_t VELOCITY_WIDTH  = 20;
-        constexpr int         PRECISION       = 8;
+        constexpr std::size_t NAME_WIDTH     = 5;
+        constexpr std::size_t FIXED_WIDTH    = 15;
+        constexpr std::size_t VELOCITY_WIDTH = 20;
+        constexpr int         PRECISION      = 8;
 
         /**
          * @brief append "name\tx\ty\tz\n" in fixed notation
          */
         void appendFixedLine(
-            TextBuffer             &buffer,
-            const std::string_view  name,
-            const linalg::Vec3D    &vec
+            TextBuffer            &buffer,
+            const std::string_view name,
+            const linalg::Vec3D   &vec
         )
         {
             buffer.left(name, NAME_WIDTH).put('\t');

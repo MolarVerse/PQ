@@ -33,8 +33,11 @@ namespace out
      */
     std::string_view TextBuffer::_toChars(const std::size_t value)
     {
-        const auto result =
-            std::to_chars(_scratch.data(), _scratch.data() + SCRATCH_SIZE, value);
+        const auto result = std::to_chars(
+            _scratch.data(),
+            _scratch.data() + SCRATCH_SIZE,
+            value
+        );
 
         return {_scratch.data(), result.ptr};
     }
@@ -102,7 +105,10 @@ namespace out
     /**
      * @brief append an integer left aligned, like "{:<width}"
      */
-    TextBuffer &TextBuffer::left(const std::size_t value, const std::size_t width)
+    TextBuffer &TextBuffer::left(
+        const std::size_t value,
+        const std::size_t width
+    )
     {
         return left(_toChars(value), width);
     }
