@@ -87,7 +87,9 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     // --- molsys::SimulationBox with one slightly-stretched triangle ---
     auto simBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
@@ -180,7 +182,9 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
 
     auto simBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
@@ -276,7 +280,9 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 
     auto simBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();

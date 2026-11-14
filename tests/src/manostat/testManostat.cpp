@@ -165,10 +165,12 @@ namespace
         physicalData::PhysicalData& physicalData
     )
     {
-        settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+        settings::PotentialSettings::setCoulombRadiusCutOff(4.0 * angstrom);
         settings::TimingsSettings::setTimeStep(1.0 * fs);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         simulationBox.setBox(orthoBox, false);
         simulationBox.setTotalMass(2.0);
 
@@ -198,13 +200,13 @@ namespace
         simulationBox.addMolecule(molecule);
     }
 
-    linalg::Vec3D getMinimumImageDistance(molsys::SimulationBox& simulationBox)
+    Pos3D getMinimumImageDistance(molsys::SimulationBox& simulationBox)
     {
         const auto mol = simulationBox.getMolecule(0);
 
-        auto dPosition = (mol.getAtomPosition(AtomIndex{1}) -
-                          mol.getAtomPosition(AtomIndex{0}))
-                             .numerical_value_in(angstrom);
+        auto dPosition =
+            (mol.getAtomPosition(AtomIndex{1}) -
+             mol.getAtomPosition(AtomIndex{0}));
         simulationBox.applyPBC(dPosition);
 
         return dPosition;
@@ -219,13 +221,21 @@ namespace
         const auto centerOfMass =
             simulationBox.getMolecule(0).getCenterOfMass();
 
-        EXPECT_NEAR(simulationBox.getBoxDimensions()[0], 9.8, 1e-12);
-        EXPECT_NEAR(centerOfMass[0], -4.851, 1e-12);
-        EXPECT_NEAR(centerOfMass[1], 0.0, 1e-12);
-        EXPECT_NEAR(centerOfMass[2], 0.0, 1e-12);
-        EXPECT_NEAR(dPosition[0], 0.2, 1e-12);
-        EXPECT_NEAR(dPosition[1], 0.0, 1e-12);
-        EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
+        EXPECT_NEAR(
+            simulationBox.getBoxDimensions()[0].numerical_value_in(angstrom),
+            9.8,
+            1e-12
+        );
+        EXPECT_NEAR(
+            centerOfMass[0].numerical_value_in(angstrom),
+            -4.851,
+            1e-12
+        );
+        EXPECT_NEAR(centerOfMass[1].numerical_value_in(angstrom), 0.0, 1e-12);
+        EXPECT_NEAR(centerOfMass[2].numerical_value_in(angstrom), 0.0, 1e-12);
+        EXPECT_NEAR(dPosition[0].numerical_value_in(angstrom), 0.2, 1e-12);
+        EXPECT_NEAR(dPosition[1].numerical_value_in(angstrom), 0.0, 1e-12);
+        EXPECT_NEAR(dPosition[2].numerical_value_in(angstrom), 0.0, 1e-12);
 
         for (AtomIndex atomIndex{0}; atomIndex.get() < 2; ++atomIndex)
         {
@@ -235,7 +245,10 @@ namespace
                                             .getAtomPosition(atomIndex)[axis]
                                             .numerical_value_in(angstrom);
                 const auto halfBoxLength =
-                    simulationBox.getBoxDimensions()[axis] / 2.0;
+                    simulationBox.getBoxDimensions()[axis].numerical_value_in(
+                        angstrom
+                    ) /
+                    2.0;
 
                 EXPECT_GE(coordinate, -halfBoxLength);
                 EXPECT_LT(coordinate, halfBoxLength);
@@ -243,16 +256,16 @@ namespace
         }
     }
 
-    double getMinimumImageDistance(
+    Distance getMinimumImageDistance(
         molsys::SimulationBox& simulationBox,
         const size_t           moleculeIndex
     )
     {
         const auto mol = simulationBox.getMolecule(moleculeIndex);
 
-        auto dPosition = (mol.getAtomPosition(AtomIndex{1}) -
-                          mol.getAtomPosition(AtomIndex{0}))
-                             .numerical_value_in(angstrom);
+        auto dPosition =
+            (mol.getAtomPosition(AtomIndex{1}) -
+             mol.getAtomPosition(AtomIndex{0}));
 
         simulationBox.applyPBC(dPosition);
 
@@ -332,8 +345,10 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
  */
 TEST_F(TestManostat, testApplyBerendsenManostat)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.99);
-    molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
+    settings::PotentialSettings::setCoulombRadiusCutOff(0.99 * angstrom);
+    molsys::OrthorhombicBox orthoBox{
+        {2.0 * angstrom, 2.0 * angstrom, 2.0 * angstrom}
+    };
     _box->setBox(orthoBox, false);
     const auto boxOld = _box->getBoxDimensions();
 
@@ -341,7 +356,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     const auto atom     = std::make_shared<molsys::Atom>();
     atom->setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
     molecule.addAtom(atom);
-    molecule.setCenterOfMass({1.0, 0.0, 0.0});
+    molecule.setCenterOfMass({1.0 * angstrom, 0.0 * angstrom, 0.0 * angstrom});
 
     _box->addMolecule(molecule);
 
@@ -366,9 +381,21 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
         _data->getPressure().numerical_value_in(bar),
         0.75 * PRESSURE_FACTOR
     );
-    EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
-    EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
-    EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
+    EXPECT_NEAR(
+        boxNew[0].numerical_value_in(angstrom),
+        (boxOld * scaleFactors)[0].numerical_value_in(angstrom),
+        1e-8
+    );
+    EXPECT_NEAR(
+        boxNew[1].numerical_value_in(angstrom),
+        (boxOld * scaleFactors)[1].numerical_value_in(angstrom),
+        1e-8
+    );
+    EXPECT_NEAR(
+        boxNew[2].numerical_value_in(angstrom),
+        (boxOld * scaleFactors)[2].numerical_value_in(angstrom),
+        1e-8
+    );
     EXPECT_TRUE(
         utilities::compare(
             _box->getMolecule(0)
@@ -457,9 +484,13 @@ TEST_F(
     const auto cutDistance    = getMinimumImageDistance(*_box, 0);
     const auto insideDistance = getMinimumImageDistance(*_box, 1);
 
-    EXPECT_NEAR(cutDistance, 0.2, 1e-12);
-    EXPECT_NEAR(insideDistance, 0.2, 1e-12);
-    EXPECT_NEAR(cutDistance, insideDistance, 1e-12);
+    EXPECT_NEAR(cutDistance.numerical_value_in(angstrom), 0.2, 1e-12);
+    EXPECT_NEAR(insideDistance.numerical_value_in(angstrom), 0.2, 1e-12);
+    EXPECT_NEAR(
+        cutDistance.numerical_value_in(angstrom),
+        insideDistance.numerical_value_in(angstrom),
+        1e-12
+    );
 }
 
 /**
@@ -472,8 +503,10 @@ TEST_F(
     testApplyBerendsenManostatCutoffLargerThanHalfOfMinimumBoxDimension
 )
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(10.0);
-    molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
+    settings::PotentialSettings::setCoulombRadiusCutOff(10.0 * angstrom);
+    molsys::OrthorhombicBox orthoBox{
+        {2.0 * angstrom, 2.0 * angstrom, 2.0 * angstrom}
+    };
     _box->setBox(orthoBox, false);
 
     _manostat->calculatePressure(*_box, *_data);
@@ -531,11 +564,13 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 {
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
+    settings::PotentialSettings::setCoulombRadiusCutOff(0.49 * angstrom);
     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     _box->setBox(orthoBox, false);
 
     _data->setVirial(linalg::tensor3D(0.0));
@@ -891,7 +926,9 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
 TEST_F(TestManostat, toSimSpaceScalingOrthorhombicIsIdentityTransform)
 {
     const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
-    const molsys::OrthorhombicBox box{{10.0, 11.0, 12.0}};
+    const molsys::OrthorhombicBox box{
+        {10.0 * angstrom, 11.0 * angstrom, 12.0 * angstrom}
+    };
 
     const auto result =
         TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
@@ -910,7 +947,11 @@ TEST_F(TestManostat, toSimSpaceScalingFullAnisotropicIsIdentityTransform)
         {0.0, 1.1, 0.2},
         {0.0, 0.0, 0.9}
     );
-    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, true};
+    const molsys::TriclinicBox box{
+        {4.0 * angstrom, 5.0 * angstrom, 6.0 * angstrom},
+        {80.0, 75.0, 70.0},
+        true
+    };
 
     const auto result =
         TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
@@ -925,7 +966,11 @@ TEST_F(TestManostat, toSimSpaceScalingFullAnisotropicIsIdentityTransform)
 TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
 {
     const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
-    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false};
+    const molsys::TriclinicBox box{
+        {4.0 * angstrom, 5.0 * angstrom, 6.0 * angstrom},
+        {80.0, 75.0, 70.0},
+        false
+    };
 
     const auto muSim =
         TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box)
@@ -935,7 +980,13 @@ TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
     const auto          expected = box.getBoxMatrix() * (mu * vector);
     const auto          result   = muSim * (box.getBoxMatrix() * vector);
 
-    EXPECT_TRUE(utilities::compare(result, expected, 1e-12));
+    EXPECT_TRUE(
+        utilities::compare(
+            result.numerical_value_in(angstrom),
+            expected.numerical_value_in(angstrom),
+            1e-12
+        )
+    );
 
     // isotropic scaling is invariant under the transformation
     const auto isotropic = linalg::diagonalMatrix(linalg::Vec3D{0.95});

@@ -36,6 +36,7 @@
 #include "hybridSettings.hpp"
 #include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 #include "virial.hpp"
 
@@ -70,7 +71,7 @@ namespace engine
             std::vector<double> weights;
             weights.reserve(recipientMolecules.size());
 
-            const auto       smoothingCOM = smoothingMol.getCenterOfMass();
+            const auto      &smoothingCOM = smoothingMol.getCenterOfMass();
             constexpr double x3Coeff      = 10.0;
             constexpr double x4Coeff      = 15.0;
             constexpr double x5Coeff      = 6.0;
@@ -82,7 +83,7 @@ namespace engine
 
                 const auto distance = linalg::norm(delta);
 
-                auto switchedWeight = 0.0;
+                Quantity switchedWeight = 0.0;
                 if (weightingRadius > 0.0)
                 {
                     const auto x = distance / weightingRadius;
@@ -98,7 +99,7 @@ namespace engine
                     }
                 }
 
-                weights.push_back(switchedWeight);
+                weights.push_back(switchedWeight.numerical_value_in(one));
             }
 
             return weights;
@@ -654,7 +655,8 @@ namespace engine
                  molsys::HybridZone::SMOOTHING
              ))
         {
-            const auto smF = smoothingMol.getSmoothingFactor();
+            const auto smF =
+                smoothingMol.getSmoothingFactor().numerical_value_in(one);
 
             auto deficitForce = linalg::Vec3D{0.0};
             for (auto &atom : smoothingMol.getAtoms())

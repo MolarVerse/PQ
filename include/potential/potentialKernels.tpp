@@ -89,20 +89,20 @@ namespace pot
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
+        auto dxyz = (xyz_i - xyz_j);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
-        if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
+        if (const auto RcCutOff = CoulombPotential::get_coulombRadiusCutOff();
             distanceSquared < RcCutOff * RcCutOff)
         {
-            const double distance   = ::sqrt(distanceSquared);
-            const auto   atomType_i = atom1.getAtomType();
-            const auto   atomType_j = atom2.getAtomType();
+            const auto distance   = mstd::sqrt(distanceSquared);
+            const auto atomType_i = atom1.getAtomType();
+            const auto atomType_j = atom2.getAtomType();
 
             const auto globalVdwType_i = atom1.getInternalGlobalVDWType();
             const auto globalVdwType_j = atom2.getInternalGlobalVDWType();
@@ -141,11 +141,12 @@ namespace pot
                 coulF += nonCoulF;
             }
 
-            coulF /= distance;
+            const auto forcexyz =
+                dxyz.numerical_value_in(mstd::units::angstrom) *
+                (coulF / distance.numerical_value_in(mstd::units::angstrom));
 
-            const auto forcexyz = coulF * dxyz;
-
-            const auto shiftForcexyz = forcexyz * txyz;
+            const auto shiftForcexyz =
+                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -184,18 +185,18 @@ namespace pot
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
+        auto dxyz = xyz_i - xyz_j;
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
-        if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
+        if (const auto RcCutOff = CoulombPotential::get_coulombRadiusCutOff();
             distanceSquared < RcCutOff * RcCutOff)
         {
-            const double distance = ::sqrt(distanceSquared);
+            const auto distance = mstd::sqrt(distanceSquared);
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
@@ -206,11 +207,12 @@ namespace pot
                 _coulombPotential->calculate(distance, coulombPreFactor);
             coulombEnergy = coulE;
 
-            coulF /= distance;
+            const auto forcexyz =
+                dxyz.numerical_value_in(mstd::units::angstrom) *
+                (coulF / distance.numerical_value_in(mstd::units::angstrom));
 
-            const auto forcexyz = coulF * dxyz;
-
-            const auto shiftForcexyz = forcexyz * txyz;
+            const auto shiftForcexyz =
+                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -257,20 +259,20 @@ namespace pot
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
+        auto dxyz = (xyz_i - xyz_j);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
-        if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
+        if (const auto RcCutOff = CoulombPotential::get_coulombRadiusCutOff();
             distanceSquared < RcCutOff * RcCutOff)
         {
-            const double distance   = ::sqrt(distanceSquared);
-            const auto   atomType_i = atom1.getAtomType();
-            const auto   atomType_j = atom2.getAtomType();
+            const auto distance   = mstd::sqrt(distanceSquared);
+            const auto atomType_i = atom1.getAtomType();
+            const auto atomType_j = atom2.getAtomType();
 
             const auto globalVdwType_i = atom1.getInternalGlobalVDWType();
             const auto globalVdwType_j = atom2.getInternalGlobalVDWType();
@@ -309,11 +311,12 @@ namespace pot
                 coulF += nonCoulF;
             }
 
-            coulF /= distance;
+            const auto forcexyz =
+                dxyz.numerical_value_in(mstd::units::angstrom) *
+                (coulF / distance.numerical_value_in(mstd::units::angstrom));
 
-            const auto forcexyz = coulF * dxyz;
-
-            const auto shiftForcexyz = forcexyz * txyz;
+            const auto shiftForcexyz =
+                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
 
             atom1.addForce(forcexyz);
 

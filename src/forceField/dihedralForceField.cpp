@@ -93,13 +93,20 @@ namespace ff
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto position4 = molecule4->getAtomPosition(atomIndices[3]);
 
-        auto dPosition12 = (position1 - position2).numerical_value_in(angstrom);
-        auto dPosition23 = (position2 - position3).numerical_value_in(angstrom);
-        auto dPosition43 = (position4 - position3).numerical_value_in(angstrom);
+        auto dPosition12Quantity = (position1 - position2);
+        auto dPosition23Quantity = (position2 - position3);
+        auto dPosition43Quantity = (position4 - position3);
 
-        simulationBox.applyPBC(dPosition12);
-        simulationBox.applyPBC(dPosition23);
-        simulationBox.applyPBC(dPosition43);
+        simulationBox.applyPBC(dPosition12Quantity);
+        simulationBox.applyPBC(dPosition23Quantity);
+        simulationBox.applyPBC(dPosition43Quantity);
+
+        const auto dPosition12 =
+            dPosition12Quantity.numerical_value_in(angstrom);
+        const auto dPosition23 =
+            dPosition23Quantity.numerical_value_in(angstrom);
+        const auto dPosition43 =
+            dPosition43Quantity.numerical_value_in(angstrom);
 
         const auto crossPosition123 = cross(dPosition12, dPosition23);
         const auto crossPosition432 = cross(dPosition43, dPosition23);
@@ -163,13 +170,13 @@ namespace ff
 
         if (_isLinker)
         {
-            auto dPosition14 =
-                (position1 - position4).numerical_value_in(angstrom);
-            simulationBox.applyPBC(dPosition14);
+            auto dPosition14Quantity = (position1 - position4);
+            simulationBox.applyPBC(dPosition14Quantity);
 
-            const auto distance14 = norm(dPosition14);
+            const auto distance14Quantity = norm(dPosition14Quantity);
 
-            if (distance14 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            if (distance14Quantity <
+                pot::CoulombPotential::get_coulombRadiusCutOff())
             {
                 forceMagnitude = correctLinker<DihedralForceField>(
                     coulombPot,
@@ -179,10 +186,14 @@ namespace ff
                     molecule4,
                     atomIndices[0],
                     atomIndices[3],
-                    distance14
+                    distance14Quantity
                 );
 
-                forceMagnitude /= distance14;
+                const auto dPosition14 =
+                    dPosition14Quantity.numerical_value_in(angstrom);
+
+                forceMagnitude /=
+                    distance14Quantity.numerical_value_in(angstrom);
 
                 const auto forcexyz = forceMagnitude * dPosition14;
 
@@ -194,7 +205,8 @@ namespace ff
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
-                    smF = molecule1->getSmoothingFactor();
+                    smF =
+                        molecule1->getSmoothingFactor().numerical_value_in(one);
 
                 if (!isImproperDihedral)
                     physicalData.addVirial(

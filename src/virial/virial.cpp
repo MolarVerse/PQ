@@ -127,19 +127,19 @@ namespace virial
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
-            const auto centerOfMass = molecule.getCenterOfMass();
+            const auto &centerOfMass = molecule.getCenterOfMass();
 
             for (const auto &atom : molecule.getAtoms())
             {
                 const auto forcexyz = atom->getForce();
-                const auto xyz =
-                    atom->getPosition().numerical_value_in(angstrom);
+                const auto xyz      = atom->getPosition();
 
                 auto dxyz = xyz - centerOfMass;
 
                 simulationBox.applyPBC(dxyz);
 
-                virial -= tensorProduct(dxyz, forcexyz);
+                virial -=
+                    tensorProduct(dxyz.numerical_value_in(angstrom), forcexyz);
             }
         }
 

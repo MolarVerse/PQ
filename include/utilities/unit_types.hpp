@@ -34,6 +34,7 @@
 #include <mstd/units.hpp>
 #include <mstd/units/new_units.hpp>
 
+#include "mp-units/systems/isq/space_and_time.h"
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
@@ -66,9 +67,30 @@ using Frequency =
 
 using Energy = mstd::quantity<mstd::units::kcal_per_mol>;
 
+// TODO: make Distance and Pos incompatible
 using Distance = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
-using Pos      = Distance;
-using Pos3D    = linalg::Vector3D<Distance>;
+using InvDistance = mstd::quantity<
+    mstd::units::one / mstd::units::distance[mstd::units::angstrom]>;
+using DistanceSquared = mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] *
+    mstd::units::distance[mstd::units::angstrom]>;
+using InvDistanceSquared = mstd::quantity<
+    mstd::units::one / (mstd::units::distance[mstd::units::angstrom] *
+                        mstd::units::distance[mstd::units::angstrom])>;
+using Pos    = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
+using InvPos = mstd::quantity<
+    mstd::units::one / mstd::units::distance[mstd::units::angstrom]>;
+using Pos3D          = linalg::Vector3D<Pos>;
+using PosTensor3D    = linalg::StaticMatrix3x3<Pos>;
+using InvPosTensor3D = linalg::StaticMatrix3x3<InvPos>;
+using Volume =
+    mstd::quantity<mstd::units::volume
+                       [mstd::units::angstrom * mstd::units::angstrom *
+                        mstd::units::angstrom]>;
+using InvVolume = mstd::quantity<
+    mstd::units::one / (mstd::units::volume
+                            [mstd::units::angstrom * mstd::units::angstrom *
+                             mstd::units::angstrom])>;
 
 using ForceConstant = mstd::quantity<
     mstd::units::kcal_per_mol / mstd::units::angstrom / mstd::units::angstrom>;

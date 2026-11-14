@@ -90,11 +90,16 @@ namespace ff
         const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
         const auto position3 = molecule3->getAtomPosition(atomIndices[2]);
 
-        auto dPosition12 = (position1 - position2).numerical_value_in(angstrom);
-        auto dPosition13 = (position1 - position3).numerical_value_in(angstrom);
+        auto dPosition12Quantity = position1 - position2;
+        auto dPosition13Quantity = position1 - position3;
 
-        simulationBox.applyPBC(dPosition12);
-        simulationBox.applyPBC(dPosition13);
+        simulationBox.applyPBC(dPosition12Quantity);
+        simulationBox.applyPBC(dPosition13Quantity);
+
+        const auto dPosition12 =
+            dPosition12Quantity.numerical_value_in(angstrom);
+        const auto dPosition13 =
+            dPosition13Quantity.numerical_value_in(angstrom);
 
         const auto distance12Squared = normSquared(dPosition12);
         const auto distance13Squared = normSquared(dPosition13);
@@ -141,13 +146,12 @@ namespace ff
 
         if (_isLinker)
         {
-            auto dPosition23 =
-                (position2 - position3).numerical_value_in(angstrom);
+            auto dPosition23 = (position2 - position3);
             simulationBox.applyPBC(dPosition23);
 
             const auto distance23 = norm(dPosition23);
 
-            if (distance23 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            if (distance23 < pot::CoulombPotential::get_coulombRadiusCutOff())
             {
                 forceMagnitude = correctLinker<AngleForceField>(
                     coulombPot,
@@ -160,9 +164,12 @@ namespace ff
                     distance23
                 );
 
-                forceMagnitude /= distance23;
+                forceMagnitude /= distance23.numerical_value_in(angstrom);
 
-                forcexyz = forceMagnitude * dPosition23;
+                const auto dPosition23Value =
+                    dPosition23.numerical_value_in(angstrom);
+
+                forcexyz = forceMagnitude * dPosition23Value;
 
                 using enum SmoothingMethod;
 
@@ -172,10 +179,11 @@ namespace ff
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
-                    smF = molecule1->getSmoothingFactor();
+                    smF =
+                        molecule1->getSmoothingFactor().numerical_value_in(one);
 
                 physicalData.addVirial(
-                    tensorProduct(dPosition23, forcexyz) * (1 - smF)
+                    tensorProduct(dPosition23Value, forcexyz) * (1 - smF)
                 );
 
                 molecule2->addAtomForce(atomIndices[1], forcexyz);

@@ -28,6 +28,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 
@@ -38,7 +39,7 @@ namespace
         const Pos3D         &pos1,
         const linalg::Vec3D &force0,
         const linalg::Vec3D &force1,
-        const linalg::Vec3D &boxDims
+        const Pos3D         &boxDims
     )
     {
         auto box = std::make_shared<molsys::SimulationBox>();
@@ -71,7 +72,7 @@ namespace
             pos1,
             force0,
             force1,
-            {100.0, 100.0, 100.0}
+            {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
         );
     }
 }   // namespace
@@ -152,7 +153,7 @@ TEST(TestSteepestDescent, updateAppliesPBCToNewPosition)
         linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
         {2.0, 0.0, 0.0},
         {0.0, 0.0, 0.0},
-        {10.0, 10.0, 10.0}
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     );
 
     opt::SteepestDescent opt(1U);

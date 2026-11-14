@@ -161,7 +161,9 @@ namespace
     {
         molsys::SimulationBox simBox;
 
-        molsys::OrthorhombicBox orthoBox{{20.0, 20.0, 20.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {20.0 * angstrom, 20.0 * angstrom, 20.0 * angstrom}
+        };
         simBox.setBox(orthoBox, false);
         simBox.setWaterType(kWaterType);
         addWater(
@@ -284,7 +286,7 @@ namespace
         }
 
         const auto pair = std::make_shared<pot::LennardJonesPair>(
-            kCutOff,
+            kCutOff * angstrom,
             LJParams{.c6 = -1.0, .c12 = 1.0}
         );
 
@@ -371,7 +373,9 @@ namespace
         };
 
         molsys::SimulationBox   simBox;
-        molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+        };
         simBox.setBox(orthoBox, false);
         simBox.setWaterType(kWaterType);
 
@@ -475,16 +479,26 @@ TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
     waterModel::SPCFwIntraWater spcFw;
     expectIntraModelConservesForce(
         spcFw,
-        {.oh1   = spcFw.getEqOHDistance() + 0.04,
-         .oh2   = spcFw.getEqOHDistance() - 0.03,
+        {.oh1 =
+             spcFw.getEqOHDistance().numerical_value_in(mstd::units::angstrom) +
+             0.04,
+         .oh2 =
+             spcFw.getEqOHDistance().numerical_value_in(mstd::units::angstrom) -
+             0.03,
          .angle = spcFw.getEqHOHAngle() + 0.05}
     );
 
     waterModel::qSPCFwIntraWater qSpcFw;
     expectIntraModelConservesForce(
         qSpcFw,
-        {.oh1   = qSpcFw.getEqOHDistance() + 0.03,
-         .oh2   = qSpcFw.getEqOHDistance() - 0.02,
+        {.oh1 = qSpcFw.getEqOHDistance().numerical_value_in(
+                    mstd::units::angstrom
+                ) +
+                0.03,
+         .oh2 = qSpcFw.getEqOHDistance().numerical_value_in(
+                    mstd::units::angstrom
+                ) -
+                0.02,
          .angle = qSpcFw.getEqHOHAngle() - 0.04}
     );
 }
@@ -497,8 +511,14 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
         spcMtr,
         {.oh1 = 1.04, .oh2 = 0.97, .angle = 1.88}
     );
-    EXPECT_DOUBLE_EQ(spcMtr.getEqOHDistance(), 1.0);
-    EXPECT_DOUBLE_EQ(spcMtr.getEqHHDistance(), 1.632993162);
+    EXPECT_DOUBLE_EQ(
+        spcMtr.getEqOHDistance().numerical_value_in(angstrom),
+        1.0
+    );
+    EXPECT_DOUBLE_EQ(
+        spcMtr.getEqHHDistance().numerical_value_in(angstrom),
+        1.632993162
+    );
 
     waterModel::TIP3PMTRIntraWater tip3pMtr;
     settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
@@ -506,8 +526,14 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
         tip3pMtr,
         {.oh1 = 1.00, .oh2 = 0.93, .angle = 1.82}
     );
-    EXPECT_DOUBLE_EQ(tip3pMtr.getEqOHDistance(), 0.9572);
-    EXPECT_DOUBLE_EQ(tip3pMtr.getEqHHDistance(), 1.5139);
+    EXPECT_DOUBLE_EQ(
+        tip3pMtr.getEqOHDistance().numerical_value_in(angstrom),
+        0.9572
+    );
+    EXPECT_DOUBLE_EQ(
+        tip3pMtr.getEqHHDistance().numerical_value_in(angstrom),
+        1.5139
+    );
 }
 
 TEST(IntraWater, SpcModelsRejectDegenerateGeometry)
@@ -644,13 +670,15 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 
 TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+    pot::CoulombPotential::set_coulombForceCutOff(0.0);
 
     molsys::SimulationBox   simBox;
-    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     molsys::Atom atom1;
@@ -666,14 +694,17 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     atom2.setForceToZero();
 
     const auto coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+        std::make_shared<pot::CoulombShiftedPotential>(kCutOff * angstrom);
     const pot::LennardJonesPair nonCoulomb(
-        kCutOff,
+        kCutOff * angstrom,
         LJParams{.c6 = -1.0, .c12 = 1.0}
     );
     ExposedInterWaterStrategy strategy;
 
-    EXPECT_DOUBLE_EQ(nonCoulomb.get_radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(
+        nonCoulomb.get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff
+    );
 
     double coulombEnergy    = 0.0;
     double nonCoulombEnergy = 0.0;
@@ -681,7 +712,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
         atom1,
         atom2,
         coulomb,
-        kCutOff * kCutOff,
+        kCutOff * kCutOff * angstrom * angstrom,
         simBox.getBox(),
         nonCoulomb,
         coulombEnergy,
@@ -701,7 +732,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             atom1,
             atom2,
             coulomb,
-            kCutOff * kCutOff,
+            kCutOff * kCutOff * angstrom * angstrom,
             simBox.getBox(),
             coulombEnergy
         );
@@ -718,7 +749,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             atom1,
             atom2,
             coulomb,
-            kCutOff * kCutOff,
+            kCutOff * kCutOff * angstrom * angstrom,
             simBox.getBox(),
             nonCoulomb,
             coulombEnergy,
@@ -738,7 +769,7 @@ TEST(InterWater, DefaultStrategyIsInert)
     physicalData::PhysicalData data;
     molsys::CellList           cellList;
     const auto                 coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+        std::make_shared<pot::CoulombShiftedPotential>(kCutOff * angstrom);
 
     waterModel::InterWater interWater;
     interWater.calculate(simBox, data, coulomb, cellList);
@@ -752,19 +783,19 @@ TEST(InterWater, DefaultStrategyIsInert)
 
 TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
+    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff * angstrom);
+    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff * angstrom);
 
     auto oxygenOxygen = std::make_unique<pot::LennardJonesPair>(
-        kCutOff,
+        kCutOff * angstrom,
         LJParams{.c6 = -1.0, .c12 = 1.0}
     );
     auto oxygenHydrogen = std::make_unique<pot::LennardJonesPair>(
-        kCutOff,
+        kCutOff * angstrom,
         LJParams{.c6 = -1.0, .c12 = 1.0}
     );
     auto hydrogenHydrogen = std::make_unique<pot::LennardJonesPair>(
-        kCutOff,
+        kCutOff * angstrom,
         LJParams{.c6 = -1.0, .c12 = 1.0}
     );
     const auto *oxygenOxygenView     = oxygenOxygen.get();
@@ -789,14 +820,23 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     physicalData::PhysicalData physicalData;
     molsys::CellList           cellList;
     const auto                 coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+        std::make_shared<pot::CoulombShiftedPotential>(kCutOff * angstrom);
 
     interWater.calculate(simBox, physicalData, coulomb, cellList);
     nullPairs.calculate(simBox, physicalData, coulomb, cellList);
 
-    EXPECT_DOUBLE_EQ(oxygenOxygenView->get_radialCutoff(), kCutOff);
-    EXPECT_DOUBLE_EQ(oxygenHydrogenView->get_radialCutoff(), kCutOff);
-    EXPECT_DOUBLE_EQ(hydrogenHydrogenView->get_radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(
+        oxygenOxygenView->get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff
+    );
+    EXPECT_DOUBLE_EQ(
+        oxygenHydrogenView->get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff
+    );
+    EXPECT_DOUBLE_EQ(
+        hydrogenHydrogenView->get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff
+    );
     EXPECT_TRUE(std::isfinite(oxygenOxygenView->get_energyCutoff()));
     EXPECT_TRUE(std::isfinite(oxygenHydrogenView->get_energyCutoff()));
     EXPECT_TRUE(std::isfinite(hydrogenHydrogenView->get_energyCutoff()));
@@ -808,16 +848,16 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff * angstrom);
+    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+    pot::CoulombPotential::set_coulombForceCutOff(0.0);
     WaterModelSettings waterModelSettings;
     waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
 
     const auto coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+        std::make_shared<pot::CoulombShiftedPotential>(kCutOff * angstrom);
 
     auto                       simBoxBruteForce = makeHybridWaterBox();
     molsys::CellList           unusedCellList;
@@ -871,16 +911,20 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 
 TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+    pot::CoulombPotential::set_coulombForceCutOff(0.0);
 
     pot::PotentialBruteForce potential;
-    potential.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
+    potential.makeCoulombPotential(
+        pot::CoulombShiftedPotential(kCutOff * angstrom)
+    );
     potential.setNonCoulombPotential(makeNonCoulombPotential());
 
-    molsys::OrthorhombicBox box({15.0, 15.0, 15.0});
+    molsys::OrthorhombicBox box(
+        {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+    );
 
     molsys::Molecule mol1;
     mol1.setMoltype(MolType{1});
@@ -928,18 +972,20 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff * angstrom);
+    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff * angstrom);
+    pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+    pot::CoulombPotential::set_coulombForceCutOff(0.0);
     WaterModelSettings waterModelSettings;
 
     auto                       simBoxBruteForce = makeHybridWaterBox();
     molsys::CellList           unusedCellList;
     physicalData::PhysicalData bruteForceData;
     pot::PotentialBruteForce   bruteForce;
-    bruteForce.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
+    bruteForce.makeCoulombPotential(
+        pot::CoulombShiftedPotential(kCutOff * angstrom)
+    );
     bruteForce.setNonCoulombPotential(makeNonCoulombPotential());
 
     bruteForce.calculateForces(
@@ -967,7 +1013,7 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     physicalData::PhysicalData cellListData;
     pot::PotentialCellList     cellListPotential;
     cellListPotential.makeCoulombPotential(
-        pot::CoulombShiftedPotential(kCutOff)
+        pot::CoulombShiftedPotential(kCutOff * angstrom)
     );
     cellListPotential.setNonCoulombPotential(makeNonCoulombPotential());
 
@@ -1023,7 +1069,9 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
 {
     constexpr WaterGeometry geometry{.oh1 = 0.96, .oh2 = 0.96, .angle = 1.82};
     molsys::SimulationBox   simBox;
-    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
     simBox.setWaterType(kWaterType);
     addWater(

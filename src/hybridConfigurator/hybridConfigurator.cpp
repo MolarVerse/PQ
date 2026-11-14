@@ -30,7 +30,6 @@
 #include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace configurator
 {
@@ -61,9 +60,9 @@ namespace configurator
             );
         }
 
-        linalg::Vec3D center     = {0.0, 0.0, 0.0};
-        double        total_mass = 0.0;
-        const auto    positionAtom1 =
+        Pos3D      center{Pos::zero()};
+        double     total_mass = 0.0;
+        const auto positionAtom1 =
             simulationBox.getAtom(indices.at(0)).getPosition();
 
         for (const auto index : indices)
@@ -73,10 +72,8 @@ namespace configurator
             const auto  position = atom.getPosition();
             const auto  deltaPos = position - positionAtom1;
 
-            center     += mass * (position.numerical_value_in(angstrom) -
-                              simulationBox.calcShiftVector(
-                                  deltaPos.numerical_value_in(angstrom)
-                              ));
+            center +=
+                mass * (position - simulationBox.calcShiftVector(deltaPos));
             total_mass += mass;
         }
 
@@ -104,10 +101,9 @@ namespace configurator
     {
         for (auto& atom : simulationBox.getAtoms())
         {
-            auto position = atom->getPosition().numerical_value_in(angstrom) -
-                            _innerRegionCenter;
+            auto position = atom->getPosition() - _innerRegionCenter;
             simulationBox.applyPBC(position);
-            atom->setPosition(position * angstrom);
+            atom->setPosition(position);
         }
 
         simulationBox.calculateCenterOfMassMolecules();
@@ -134,10 +130,9 @@ namespace configurator
     {
         for (auto& atom : simulationBox.getAtoms())
         {
-            auto position = atom->getPosition().numerical_value_in(angstrom) +
-                            _innerRegionCenter;
+            auto position = atom->getPosition() + _innerRegionCenter;
             simulationBox.applyPBC(position);
-            atom->setPosition(position * angstrom);
+            atom->setPosition(position);
         }
 
         simulationBox.calculateCenterOfMassMolecules();
@@ -182,7 +177,7 @@ namespace configurator
             settings::HybridSettings::getSmoothingRegionThickness();
         const auto pointChargeThickness =
             settings::HybridSettings::getPointChargeThickness();
-        const auto coreEpsilon = std::numeric_limits<double>::epsilon();
+        const auto coreEpsilon = std::numeric_limits<Pos>::epsilon();
         const bool coreEnabled = coreRadius > coreEpsilon;
 
         _molChangedZone = false;
@@ -389,9 +384,9 @@ namespace configurator
                 );
             }
 
-            distanceFactor       -= 0.5;
-            const auto dfSquared  = distanceFactor * distanceFactor;
-            const auto smF        = (distanceFactor *
+            distanceFactor       = distanceFactor - 0.5;
+            const auto dfSquared = distanceFactor * distanceFactor;
+            const auto smF       = (distanceFactor *
                               (dfSquared * (-6.0 * dfSquared + 5.0) - 1.875)) +
                              0.5;
 
@@ -406,9 +401,9 @@ namespace configurator
     /**
      * @brief get the inner region center coordinates
      *
-     * @return pq::Vec3D innerRegionCenter
+     * @return Pos3D innerRegionCenter
      */
-    linalg::Vec3D HybridConfigurator::getInnerRegionCenter() const
+    const Pos3D& HybridConfigurator::getInnerRegionCenter() const
     {
         return _innerRegionCenter;
     }

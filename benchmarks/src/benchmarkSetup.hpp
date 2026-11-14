@@ -35,12 +35,12 @@
 
 namespace benchmarkSetup
 {
-    inline constexpr double cellEdge = 3.0;
-    inline constexpr double cutOff   = 4.0;
+    inline constexpr Pos cellEdge = 3.0 * angstrom;
+    inline constexpr Pos cutOff   = 4.0 * angstrom;
 
     inline molsys::SimulationBox makeLattice(const std::size_t cellsPerSide)
     {
-        const double boxEdge = cellEdge * static_cast<double>(cellsPerSide);
+        const auto boxEdge = cellEdge * static_cast<double>(cellsPerSide);
 
         molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
         molsys::SimulationBox   simulationBox;
@@ -53,17 +53,15 @@ namespace benchmarkSetup
             {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
-                    auto        atom = std::make_shared<molsys::Atom>();
-                    const Pos3D position =
-                        linalg::Vec3D{
-                            (-boxEdge / 2.0) +
-                                ((static_cast<double>(x) + 0.5) * cellEdge),
-                            (-boxEdge / 2.0) +
-                                ((static_cast<double>(y) + 0.5) * cellEdge),
-                            (-boxEdge / 2.0) +
-                                ((static_cast<double>(z) + 0.5) * cellEdge),
-                        } *
-                        angstrom;
+                    auto        atom     = std::make_shared<molsys::Atom>();
+                    const Pos3D position = {
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(x) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(y) + 0.5) * cellEdge),
+                        (-boxEdge / 2.0) +
+                            ((static_cast<double>(z) + 0.5) * cellEdge),
+                    };
                     atom->setPosition(position);
                     atom->setPositionOld(position);
                     atom->setVelocity({

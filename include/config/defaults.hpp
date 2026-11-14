@@ -92,8 +92,8 @@ namespace defaults
 
     static constexpr char INNER_REGION_CENTER_ATOM_NAME = 'X';
 
-    static constexpr double COULOMB_CUT_OFF_DEFAULT  = 12.5;   // in Angstrom
-    static constexpr double SCALE_14_COULOMB_DEFAULT = 1.0;
+    static constexpr Pos COULOMB_CUT_OFF_DEFAULT = 12.5 * mstd::units::angstrom;
+    static constexpr double SCALE_14_COULOMB_DEFAULT       = 1.0;
     static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
     // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/903 add unit
     static constexpr double WOLF_PARAM_DEFAULT = 0.25;
@@ -128,7 +128,7 @@ namespace defaults
     static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
 
     static constexpr TimeMs QM_LOOP_TIME_LIMIT_DEFAULT = 3600 * mstd::units::s;
-    static constexpr double VACUUM_BOX_DIMENSION       = 1000;   // in Å
+    static constexpr Pos    VACUUM_BOX_DIMENSION = 1000 * mstd::units::angstrom;
 
     static constexpr auto*  OPTIMIZER_DEFAULT             = "gradient-descent";
     static constexpr size_t N_EPOCHS_DEFAULT              = 100;

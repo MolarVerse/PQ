@@ -36,6 +36,7 @@
 #include "nonCoulombPair.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
 {
@@ -45,7 +46,7 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
     const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     _setNonCoulombPairsMatrix(0, 0, pair);
@@ -64,7 +65,7 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
     const auto replacement = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
-        3.0,
+        3.0 * angstrom,
         LJParams{.c6 = 2.0, .c12 = 1.0}
     );
     _setNonCoulombPairsMatrix(*_nonCoulombPotential, 0, 0, replacement);
@@ -82,7 +83,7 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
     const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     _setNonCoulombPairsMatrix(0, 0, pair);
@@ -104,7 +105,7 @@ TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
     const auto pair = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     _setNonCoulombPairsMatrix(0, 0, pair);
@@ -127,7 +128,7 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -135,7 +136,7 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -168,7 +169,7 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
     auto nonCoulombicPair1 = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     nonCoulombicPair1.setInternalType1(VdwType{0});
@@ -176,7 +177,7 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
     auto nonCoulombicPair2 = pot::LennardJonesPair(
         ExtVdwType(9),
         ExtVdwType(9),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     nonCoulombicPair2.setInternalType1(VdwType{9});
@@ -223,7 +224,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -231,7 +232,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -270,7 +271,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -278,7 +279,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -316,7 +317,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -324,7 +325,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 5.0, .c12 = 1.0}
         )
     );
@@ -332,7 +333,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -376,7 +377,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -417,7 +418,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -425,7 +426,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -433,7 +434,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -485,7 +486,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(1),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -493,7 +494,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(5),
             ExtVdwType(1),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -501,7 +502,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(5),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -553,7 +554,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(1),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -561,7 +562,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -569,7 +570,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -577,7 +578,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -629,7 +630,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -637,7 +638,7 @@ TEST_F(
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(1),
-            5.0,
+            5.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -681,7 +682,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -689,7 +690,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(1),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -697,7 +698,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(2),
             ExtVdwType(2),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -705,7 +706,7 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
         std::make_shared<pot::LennardJonesPair>(
             ExtVdwType(5),
             ExtVdwType(5),
-            2.0,
+            2.0 * angstrom,
             LJParams{.c6 = 1.0, .c12 = 1.0}
         )
     );
@@ -738,7 +739,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     auto pair1 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(1),
         ExtVdwType(1),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     pair1->setInternalType1(VdwType{1});
@@ -747,7 +748,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     auto pair2 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(2),
         ExtVdwType(2),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     pair2->setInternalType1(VdwType{2});
@@ -756,7 +757,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     auto pair3 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(2),
         ExtVdwType(3),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     pair3->setInternalType1(VdwType{2});
@@ -765,7 +766,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     auto pair4 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(1),
         ExtVdwType(4),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     pair4->setInternalType1(VdwType{1});
@@ -786,7 +787,7 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
     auto pair5 = std::make_shared<pot::LennardJonesPair>(
         ExtVdwType(1),
         ExtVdwType(1),
-        2.0,
+        2.0 * angstrom,
         LJParams{.c6 = 1.0, .c12 = 1.0}
     );
     pair5->setInternalType1(VdwType{1});

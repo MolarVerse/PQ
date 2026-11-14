@@ -31,6 +31,7 @@
 #include "guffCoefficients.hpp"
 #include "interWater.hpp"
 #include "lennardJonesPair.hpp"
+#include "units.hpp"
 
 namespace waterModel
 {
@@ -78,9 +79,9 @@ namespace waterModel
             SPC_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct SPCEInterParam
@@ -93,9 +94,9 @@ namespace waterModel
             SPC_E_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct SPCFwInterParam
@@ -108,9 +109,9 @@ namespace waterModel
             SPC_FW_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct qSPCFwInterParam
@@ -123,9 +124,9 @@ namespace waterModel
             QSPC_FW_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct SPCDCInterParam
@@ -138,9 +139,9 @@ namespace waterModel
             SPC_DC_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct H2ODCInterParam
@@ -153,9 +154,9 @@ namespace waterModel
             H2O_DC_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct TIP3PInterParam
@@ -168,9 +169,9 @@ namespace waterModel
             TIP3P_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct OPC3InterParam
@@ -183,9 +184,9 @@ namespace waterModel
             OPC3_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct SPCmTRInterParam
@@ -198,9 +199,9 @@ namespace waterModel
             SPC_MTR_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
     struct TIP3PmTRInterParam
@@ -213,9 +214,9 @@ namespace waterModel
             TIP3P_MTR_LJ_PARAMS_OO
         );
         inline static const auto nonCoulombPairOH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
         inline static const auto nonCoulombPairHH =
-            pot::LennardJonesPair(0.01, LJParams{});
+            pot::LennardJonesPair(0.01 * angstrom, LJParams{});
     };
 
 }   // namespace waterModel

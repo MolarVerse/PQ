@@ -56,7 +56,9 @@ namespace settings
      *
      * @param coulombRadiusCutOff
      */
-    void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
+    void PotentialSettings::setCoulombRadiusCutOff(
+        const Pos& coulombRadiusCutOff
+    )
     {
         _coulombRadiusCutOff = coulombRadiusCutOff;
     }
@@ -67,7 +69,7 @@ namespace settings
      * @param nonCoulombRadiusCutOff
      */
     void PotentialSettings::setNonCoulombRadiusCutOff(
-        double nonCoulombRadiusCutOff
+        const Pos& nonCoulombRadiusCutOff
     )
     {
         _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
@@ -143,9 +145,9 @@ namespace settings
     /**
      * @brief get the Coulomb radius cut off
      *
-     * @return double
+     * @return Pos
      */
-    double PotentialSettings::getCoulombRadiusCutOff()
+    Pos PotentialSettings::getCoulombRadiusCutOff()
     {
         return _coulombRadiusCutOff;
     }
@@ -153,9 +155,9 @@ namespace settings
     /**
      * @brief get the non-Coulomb radius cut off
      *
-     * @return std::optional<double>
+     * @return std::optional<Pos>
      */
-    std::optional<double> PotentialSettings::getNonCoulombRadiusCutOff()
+    std::optional<Pos> PotentialSettings::getNonCoulombRadiusCutOff()
     {
         return _nonCoulombRadiusCutOff;
     }

@@ -333,7 +333,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
     settings::GeneralSettings::activateCellList();
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(0.0 * angstrom);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

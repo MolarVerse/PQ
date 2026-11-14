@@ -129,7 +129,7 @@ namespace benchSetup
         auto pair = pot::LennardJonesPair(
             ExtVdwType(0),
             ExtVdwType(1),
-            12.0,
+            12.0 * angstrom,
             LJParams{.c6 = 2.0, .c12 = 3.0}
         );
         potential.setNonCoulombPairsMatrix(0, 1, pair);
@@ -155,7 +155,9 @@ namespace benchSetup
     {
         auto box = molsys::SimulationBox();
 
-        molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {30.0 * angstrom, 30.0 * angstrom, 30.0 * angstrom}
+        };
         box.setBox(orthoBox, false);
 
         for (std::size_t mol = 0; mol < params.nMolecules; ++mol)

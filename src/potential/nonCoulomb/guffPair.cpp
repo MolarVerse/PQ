@@ -33,7 +33,7 @@ namespace pot
      * @param coefficients
      */
     GuffPair::GuffPair(
-        double                                                     cutOff,
+        const Pos                                                 &cutOff,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients
     )
         : NonCoulombPair(cutOff), _coefficients(coefficients)
@@ -49,7 +49,7 @@ namespace pot
      * @param coefficients
      */
     GuffPair::GuffPair(
-        double                                                     cutOff,
+        const Pos                                                 &cutOff,
         double                                                     energyCutoff,
         double                                                     forceCutoff,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients
@@ -70,10 +70,12 @@ namespace pot
      * @param distance
      * @return std::pair<double, double>
      */
-    std::pair<double, double> GuffPair::calculate(double distance) const
+    std::pair<double, double> GuffPair::calculate(const Pos &distance_) const
     {
         double energy = 0.0;
         double force  = 0.0;
+
+        const auto distance = distance_.numerical_value_in(Pos::unit);
 
         if (const auto coeff1 = _coefficients.at(0); coeff1 != 0.0)
         {
@@ -147,7 +149,7 @@ namespace pot
             const auto rExp21 = _coefficients.at(20);
             const auto n22    = _coefficients.at(21);
 
-            const auto distance_n22 = ::pow(distance - rExp21, n22);
+            const auto distance_n22 = mstd::pow(distance - rExp21, n22);
             const auto helper       = c19 * ::exp(cexp20 * distance_n22);
 
             energy += helper;
@@ -155,8 +157,10 @@ namespace pot
                 -cexp20 * n22 * distance_n22 / (distance - rExp21) * helper;
         }
 
-        energy += -get_energyCutoff() -
-                  get_forceCutoff() * (get_radialCutoff() - distance);
+        energy +=
+            -get_energyCutoff() -
+            get_forceCutoff() *
+                (get_radialCutoff().numerical_value_in(Pos::unit) - distance);
         force += -get_forceCutoff();
 
         return {energy, force};

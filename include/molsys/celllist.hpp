@@ -28,6 +28,7 @@
 
 #include "cell.hpp"
 #include "defaults.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -45,11 +46,11 @@ namespace molsys
        private:
         std::vector<Cell> _cells;
 
-        linalg::Vec3D   _cellSize;
+        Pos3D           _cellSize;
         linalg::Vec3Dul _nNeighbourCells{0, 0, 0};
         linalg::Vec3Dul _nCells{defaults::NUMBER_OF_CELLS_DEFAULT};
 
-        std::optional<linalg::Vec3D> _oldBoxDimensions = std::nullopt;
+        std::optional<Pos3D>         _oldBoxDimensions = std::nullopt;
         std::optional<linalg::Vec3D> _oldBoxAngles     = std::nullopt;
 
        public:
@@ -58,11 +59,11 @@ namespace molsys
         void setup(const SimulationBox &);
         void updateCellList(SimulationBox &);
 
-        void determineCellSize(const linalg::Vec3D &box);
-        void determineCellBoundaries(const linalg::Vec3D &box);
-        void checkCoulombCutoff(double coulombCutoff) const;
+        void determineCellSize(const Pos3D &box);
+        void determineCellBoundaries(const Pos3D &box);
+        void checkCoulombCutoff(const Pos &coulombCutoff) const;
 
-        void addNeighbouringCells(double coulombCutoff);
+        void addNeighbouringCells(const Pos &coulombCutoff);
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
         void assignMoleculeHybridZoneIndices();
@@ -75,8 +76,8 @@ namespace molsys
             const linalg::Vec3Dul &cellIndices
         ) const;
         [[nodiscard]] linalg::Vec3Dul getCellIndexOfAtom(
-            const linalg::Vec3D &,
-            const linalg::Vec3D &
+            const Pos3D &,
+            const Pos3D &
         ) const;
 
         void resizeCells();
@@ -88,7 +89,7 @@ namespace molsys
 
         [[nodiscard]] linalg::Vec3Dul getNumberOfCells() const;
         [[nodiscard]] linalg::Vec3Dul getNumberOfNeighbourCells() const;
-        [[nodiscard]] linalg::Vec3D   getCellSize() const;
+        [[nodiscard]] const Pos3D    &getCellSize() const;
         [[nodiscard]] const std::vector<Cell> &getCells() const;
         [[nodiscard]] Cell                    &getCell(size_t index);
 

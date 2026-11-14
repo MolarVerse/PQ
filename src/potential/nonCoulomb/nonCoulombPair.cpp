@@ -37,7 +37,7 @@ namespace pot
     NonCoulombPair::NonCoulombPair(
         ExtVdwType vanDerWaalsType1,
         ExtVdwType vanDerWaalsType2,
-        double     cutOff
+        const Pos& cutOff
     )
         : _vanDerWaalsTypes{vanDerWaalsType1, vanDerWaalsType2},
           _radialCutoff(cutOff)
@@ -49,7 +49,7 @@ namespace pot
      *
      * @param cutOff
      */
-    NonCoulombPair::NonCoulombPair(double cutOff) : _radialCutoff(cutOff) {}
+    NonCoulombPair::NonCoulombPair(const Pos& cutOff) : _radialCutoff(cutOff) {}
 
     /**
      * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
@@ -59,9 +59,9 @@ namespace pot
      * @param forceCutoff
      */
     NonCoulombPair::NonCoulombPair(
-        double cutoff,
-        double energyCutoff,
-        double forceCutoff
+        const Pos& cutoff,
+        double     energyCutoff,
+        double     forceCutoff
     )
         : _radialCutoff(cutoff),
           _energyCutoff(energyCutoff),
@@ -80,7 +80,7 @@ namespace pot
      * @return true
      * @return false
      */
-    bool NonCoulombPair::operator==(const NonCoulombPair &other) const
+    bool NonCoulombPair::operator==(const NonCoulombPair& other) const
     {
         auto isEq = true;
         isEq = isEq && _vanDerWaalsTypes.first == other._vanDerWaalsTypes.first;
@@ -123,36 +123,6 @@ namespace pot
     void NonCoulombPair::setInternalType2(VdwType internalType2)
     {
         _internalTypes.second = internalType2;
-    }
-
-    /**
-     * @brief set radial cut off
-     *
-     * @param radialCutoff
-     */
-    void NonCoulombPair::setRadialCutOff(double radialCutoff)
-    {
-        _radialCutoff = radialCutoff;
-    }
-
-    /**
-     * @brief set energy cut off
-     *
-     * @param energyCutoff
-     */
-    void NonCoulombPair::setEnergyCutOff(double energyCutoff)
-    {
-        _energyCutoff = energyCutoff;
-    }
-
-    /**
-     * @brief set force cut off
-     *
-     * @param forceCutoff
-     */
-    void NonCoulombPair::setForceCutOff(double forceCutoff)
-    {
-        _forceCutoff = forceCutoff;
     }
 
     /***************************

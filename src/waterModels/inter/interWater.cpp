@@ -197,7 +197,7 @@ namespace waterModel
         const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)
         {
             if (nonCoulombPair != nullptr)
-                nonCoulombPair->setRadialCutOff(radialCutOff);
+                nonCoulombPair->set_radialCutoff(radialCutOff);
         };
 
         setCutOff(_state.nonCoulombPairOO);
@@ -226,8 +226,8 @@ namespace waterModel
 
             const auto [energyCutOff, forceCutOff] =
                 nonCoulombPair->calculate(nonCoulombPair->get_radialCutoff());
-            nonCoulombPair->setEnergyCutOff(energyCutOff);
-            nonCoulombPair->setForceCutOff(forceCutOff);
+            nonCoulombPair->set_energyCutoff(energyCutOff);
+            nonCoulombPair->set_forceCutoff(forceCutOff);
         };
 
         setForceAndEnergyCutOff(_state.nonCoulombPairOO);

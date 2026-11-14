@@ -37,6 +37,7 @@
 #include "moleculeType.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialSettings.hpp"
+#include "units.hpp"
 
 /**
  * @class TestGuffDatReader
@@ -107,7 +108,7 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getSimulationBox().addMoleculeType(moleculeType2);
         _engine->getSimulationBox().addMolecule(molecule1);
 
-        settings::PotentialSettings::setCoulombRadiusCutOff(12.5);
+        settings::PotentialSettings::setCoulombRadiusCutOff(12.5 * angstrom);
 
         _engine->makePotential(pot::PotentialBruteForce());
         _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());

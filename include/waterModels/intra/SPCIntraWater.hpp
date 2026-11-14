@@ -25,6 +25,7 @@
 
 #include "constants/conversionFactors.hpp"
 #include "intraWater.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -47,7 +48,7 @@ namespace waterModel
         ) override;
 
         [[nodiscard]]
-        virtual double getEqOHDistance() const = 0;   // Angström
+        virtual const Distance &getEqOHDistance() const = 0;   // Angström
         [[nodiscard]]
         virtual double getEqHOHAngle() const = 0;   // radians
         [[nodiscard]]
@@ -61,16 +62,16 @@ namespace waterModel
     class SPCFwIntraWater : public SPCIntraWater
     {
        private:
-        static constexpr double _eqOHDistance = 1.012;   // Angström
-        static constexpr double _eqHOHAngle   = 113.24 * DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond =
+        static constexpr Distance _eqOHDistance = 1.012 * mstd::units::angstrom;
+        static constexpr double   _eqHOHAngle   = 113.24 * DEG_TO_RAD;
+        static constexpr double   _forceConstantOHBond =
             1059.162;   // kcal mol^-1 Angström^-2
         static constexpr double _forceConstantHOHAngle =
             75.9;   // kcal mol^-1 rad^-2
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const override
+        const Distance &getEqOHDistance() const override
         {
             return _eqOHDistance;
         }
@@ -94,8 +95,9 @@ namespace waterModel
     class qSPCFwIntraWater : public SPCIntraWater
     {
        private:
-        static constexpr double _eqOHDistance = 1.0;   // Angström
-        static constexpr double _eqHOHAngle   = 112.0 * DEG_TO_RAD;
+        static constexpr Distance _eqOHDistance =
+            1.0 * mstd::units::angstrom;   // Angström
+        static constexpr double _eqHOHAngle = 112.0 * DEG_TO_RAD;
         static constexpr double _forceConstantOHBond =
             1059.162;   // kcal mol^-1 Angström^-2
         static constexpr double _forceConstantHOHAngle =
@@ -103,7 +105,7 @@ namespace waterModel
 
        public:
         [[nodiscard]]
-        double getEqOHDistance() const override
+        const Distance &getEqOHDistance() const override
         {
             return _eqOHDistance;
         }

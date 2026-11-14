@@ -53,16 +53,18 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
 {
     auto box = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0 * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
         ExtVdwType(1),
-        5.0,
+        5.0 * angstrom,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     _setNonCoulombPairsMatrix(

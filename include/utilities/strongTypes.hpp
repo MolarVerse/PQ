@@ -138,9 +138,9 @@ struct LJParams
  */
 struct MorseParams
 {
-    double dissociationEnergy;
-    double wellWidth;
-    double equilibriumDistance;
+    double      dissociationEnergy;
+    InvDistance wellWidth;
+    Distance    equilibriumDistance;
 
     [[nodiscard]]
     bool operator==(const MorseParams &other) const;
@@ -154,9 +154,9 @@ struct MorseParams
  */
 struct BuckinghamParams
 {
-    double scaling;
-    double dRho;
-    double c6;
+    double      scaling;
+    InvDistance dRho;
+    double      c6;
 
     [[nodiscard]]
     bool operator==(const BuckinghamParams &other) const;

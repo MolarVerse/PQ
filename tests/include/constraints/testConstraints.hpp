@@ -90,7 +90,9 @@ class TestConstraints : public ::testing::Test
         _box->addMolecule(molecule1);
         _box->addMolecule(molecule2);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _box->setBox(orthoBox, false);
 
         Settings settings;
@@ -120,14 +122,14 @@ class TestConstraints : public ::testing::Test
             _box->getMolecules().data(),
             AtomIndex{0},
             AtomIndex{1},
-            1.2
+            1.2 * angstrom
         );
         auto bondConstraint2 = constraints::BondConstraint(
             _box->getMolecules().data(),
             &(_box->getMolecules()[1]),
             AtomIndex{2},
             AtomIndex{1},
-            1.3
+            1.3 * angstrom
         );
 
         constraints.addBondConstraint(bondConstraint1);

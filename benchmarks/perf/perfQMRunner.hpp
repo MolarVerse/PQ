@@ -139,7 +139,7 @@ namespace benchQMRunner
 
     inline void buildBox(molsys::SimulationBox &simulationBox)
     {
-        const auto length = SPACING * static_cast<double>(PER_SIDE);
+        const auto length = SPACING * static_cast<double>(PER_SIDE) * angstrom;
         molsys::OrthorhombicBox orthoBox{{length, length, length}};
         simulationBox.setBox(orthoBox, false);
 

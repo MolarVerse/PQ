@@ -37,6 +37,7 @@
 #include "inputKeyAdapter.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -258,10 +259,11 @@ namespace input
             .name        = "core_radius",
             .title       = "Core Radius",
             .description = "Specifies the core radius in hybrid calculations",
+            .unit        = "angstrom"
         };
 
         const auto setValue = [](double value)
-        { settings::HybridSettings::setCoreRadius(value); };
+        { settings::HybridSettings::setCoreRadius(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -280,10 +282,11 @@ namespace input
             .name        = "layer_radius",
             .title       = "Layer Radius",
             .description = "Specifies the layer radius in hybrid calculations",
+            .unit        = "angstrom"
         };
 
         const auto setValue = [](double value)
-        { settings::HybridSettings::setLayerRadius(value); };
+        { settings::HybridSettings::setLayerRadius(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -304,10 +307,15 @@ namespace input
             .description =
                 "Specifies the smoothing region thickness in hybrid "
                 "calculations",
+            .unit = "angstrom"
         };
 
         const auto setValue = [](double value)
-        { settings::HybridSettings::setSmoothingRegionThickness(value); };
+        {
+            settings::HybridSettings::setSmoothingRegionThickness(
+                value * angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -327,10 +335,13 @@ namespace input
             .title = "Point Charge Thickness",
             .description =
                 "Specifies the point charge thickness in hybrid calculations",
+            .unit = "angstrom"
         };
 
         const auto setValue = [](double value)
-        { settings::HybridSettings::setPointChargeThickness(value); };
+        {
+            settings::HybridSettings::setPointChargeThickness(value * angstrom);
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

@@ -27,6 +27,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -41,8 +43,8 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto shifted = pot::CoulombShiftedPotential(9.0);
-    auto wolf    = pot::CoulombWolf(9.0, 0.25);
+    auto shifted = pot::CoulombShiftedPotential(9.0 * angstrom);
+    auto wolf    = pot::CoulombWolf(9.0 * angstrom, 0.25);
 
     perfAllocBegin();
 
@@ -56,8 +58,9 @@ int main()
         const double chargeProduct = 0.5 * -0.5;
 
         const auto [eShift, fShift] =
-            shifted.calculate(distance, chargeProduct);
-        const auto [eWolf, fWolf] = wolf.calculate(distance, chargeProduct);
+            shifted.calculate(distance * angstrom, chargeProduct);
+        const auto [eWolf, fWolf] =
+            wolf.calculate(distance * angstrom, chargeProduct);
 
         sink += eShift + fShift + eWolf + fWolf;
     }

@@ -30,6 +30,7 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace ff
@@ -88,53 +89,56 @@ namespace ff
 
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
-        auto dPosition = (position1 - position2).numerical_value_in(angstrom);
+        auto       dPosition = (position1 - position2);
 
         simulationBox.applyPBC(dPosition);
 
-        const auto distance = norm(dPosition);
-        const auto deltaDistance =
-            distance - _params.equilibrium.numerical_value_in(angstrom);
+        const auto distance      = norm(dPosition);
+        const auto deltaDistance = distance - _params.equilibrium;
 
-        auto forceMagnitude = -_params.forceConstant.numerical_value_in(
-                                  kcal_per_mol / angstrom / angstrom
-                              ) *
-                              deltaDistance;
+        auto       forceMagnitude = -_params.forceConstant * deltaDistance;
+        const auto bondEnergy     = -forceMagnitude * deltaDistance / 2.0;
 
-        physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
+        physicalData.addBondEnergy(bondEnergy.numerical_value_in(Energy::unit));
 
         if (_isLinker &&
-            distance < pot::CoulombPotential::getCoulombRadiusCutOff())
+            distance < pot::CoulombPotential::get_coulombRadiusCutOff())
         {
             forceMagnitude += correctLinker<BondForceField>(
-                coulombPot,
-                nonCoulombPot,
-                physicalData,
-                molecule1,
-                molecule2,
-                atomIndices[0],
-                atomIndices[1],
-                distance
-            );
+                                  coulombPot,
+                                  nonCoulombPot,
+                                  physicalData,
+                                  molecule1,
+                                  molecule2,
+                                  atomIndices[0],
+                                  atomIndices[1],
+                                  distance
+                              ) *
+                              kcal_per_mol / angstrom;
         }
 
-        forceMagnitude /= distance;
-
-        const auto force = forceMagnitude * dPosition;
+        const auto dPositionValue = dPosition.numerical_value_in(angstrom);
+        const auto forcePerDistance =
+            (forceMagnitude / distance)
+                .numerical_value_in(kcal_per_mol / angstrom / angstrom);
+        const auto force = dPositionValue * forcePerDistance;
 
         molecule1->addAtomForce(atomIndices[0], force);
         molecule2->addAtomForce(atomIndices[1], -force);
 
         using enum SmoothingMethod;
 
-        auto       smF       = 0.0;
+        Quantity   smF       = 0.0;
         const auto smoothing = settings::HybridSettings::getSmoothingMethod();
 
         if (smoothing == HOTSPOT &&
             molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
             smF = molecule1->getSmoothingFactor();
 
-        physicalData.addVirial(tensorProduct(dPosition, force) * (1 - smF));
+        physicalData.addVirial(
+            tensorProduct(dPositionValue, force) *
+            (1.0 - smF.numerical_value_in(one))
+        );
     }
 
     /***************************

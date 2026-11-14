@@ -44,8 +44,8 @@ namespace pot
 
         [[nodiscard]]
         std::pair<double, double> calculate(
-            double distance,
-            double chargeProduct
+            const Distance& distance,
+            double          chargeProduct
         ) const override;
     };
 

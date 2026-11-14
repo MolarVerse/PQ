@@ -29,6 +29,8 @@
 #include "matrixNear.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "triclinicBox.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 #include "vectorNear.hpp"
 
 struct TestTriclinicBox
@@ -77,7 +79,7 @@ struct TestTriclinicBox
     }
 
     [[nodiscard]]
-    static linalg::tensor3D getBoxMatrix(molsys::TriclinicBox &box)
+    static PosTensor3D getBoxMatrix(molsys::TriclinicBox &box)
     {
         return box._boxMatrix.get(box);
     }
@@ -90,7 +92,7 @@ struct TestTriclinicBox
         box._set_angles((boxAngles * mstd::units::deg).in(mstd::units::rad));
     }
 
-    static linalg::tensor3D getTransformationMatrix(molsys::TriclinicBox &box)
+    static QuantityTensor3D getTransformationMatrix(molsys::TriclinicBox &box)
     {
         return box._trafoMatrix.get(box);
     }
@@ -98,11 +100,11 @@ struct TestTriclinicBox
 
 TEST(TestTriclinicBox, setBoxDimensions)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    const auto boxDimensions = linalg::Vec3D{1.0, 2.0, 3.0} * angstrom;
     auto box = molsys::TriclinicBox(boxDimensions, {90.0, 90.0, 90.0}, false);
 
     EXPECT_MATRIX_NEAR(
-        TestTriclinicBox::getBoxMatrix(box),
+        TestTriclinicBox::getBoxMatrix(box).numerical_value_in(angstrom),
         linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 2.0, 0.0},
@@ -114,13 +116,13 @@ TEST(TestTriclinicBox, setBoxDimensions)
 
 TEST(TestTriclinicBox, setBoxAngles)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
+    const auto          boxDimensions = linalg::Vec3D{1.0, 2.0, 3.0} * angstrom;
     const linalg::Vec3D boxAngles     = {90.0, 90.0, 90.0};
     auto box = molsys::TriclinicBox(boxDimensions, boxAngles, false);
     EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
     EXPECT_EQ(box.getBoxAngles(), boxAngles);
     EXPECT_MATRIX_NEAR(
-        TestTriclinicBox::getBoxMatrix(box),
+        TestTriclinicBox::getBoxMatrix(box).numerical_value_in(angstrom),
         linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 2.0, 0.0},
@@ -129,7 +131,7 @@ TEST(TestTriclinicBox, setBoxAngles)
         1e-15
     );
     EXPECT_MATRIX_NEAR(
-        TestTriclinicBox::getTransformationMatrix(box),
+        TestTriclinicBox::getTransformationMatrix(box).numerical_value_in(one),
         linalg::StaticMatrix3x3<double>(
             {1.0, 0.0, 0.0},
             {0.0, 1.0, 0.0},
@@ -145,7 +147,7 @@ TEST(TestTriclinicBox, setBoxAngles)
     const auto gamma = 45.0 * DEG_TO_RAD;
 
     EXPECT_MATRIX_NEAR(
-        TestTriclinicBox::getTransformationMatrix(box),
+        TestTriclinicBox::getTransformationMatrix(box).numerical_value_in(one),
         linalg::StaticMatrix3x3<double>(
             {1.0, sqrt(0.5), ::cos(beta)},
             {0.0,
@@ -162,18 +164,26 @@ TEST(TestTriclinicBox, setBoxAngles)
         1e-15
     );
 
-    auto        boxMatrix   = linalg::StaticMatrix3x3<double>();
+    PosTensor3D boxMatrix;
     const auto  trafoMatrix = TestTriclinicBox::getTransformationMatrix(box);
     const auto &boxDims     = box.get_boxDimensions();
     boxMatrix[0]            = {trafoMatrix[0] * boxDims};
     boxMatrix[1]            = {trafoMatrix[1] * boxDims};
     boxMatrix[2]            = {trafoMatrix[2] * boxDims};
-    EXPECT_MATRIX_NEAR(TestTriclinicBox::getBoxMatrix(box), boxMatrix, 1.0e-15);
+    EXPECT_MATRIX_NEAR(
+        TestTriclinicBox::getBoxMatrix(box).numerical_value_in(angstrom),
+        boxMatrix.numerical_value_in(angstrom),
+        1.0e-15
+    );
 }
 
 TEST(TestTriclinicBox, calculateVolume)
 {
-    auto box = molsys::TriclinicBox({1.0, 2.0, 3.0}, {30.0, 60.0, 45.0}, false);
+    auto box = molsys::TriclinicBox(
+        linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
+        {30.0, 60.0, 45.0},
+        false
+    );
 
     const auto alpha = 30.0 * DEG_TO_RAD;
     const auto beta  = 60.0 * DEG_TO_RAD;
@@ -187,19 +197,26 @@ TEST(TestTriclinicBox, calculateVolume)
             (2 * ::cos(alpha) * ::cos(beta) * ::cos(gamma))
         );
 
-    EXPECT_DOUBLE_EQ(box.getVolume(), volume);
+    EXPECT_DOUBLE_EQ(
+        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+        volume
+    );
 }
 
 TEST(TestTriclinicBox, applyPBC)
 {
-    auto box = molsys::TriclinicBox({1.0, 2.0, 3.0}, {30.0, 60.0, 45.0}, false);
+    auto box = molsys::TriclinicBox(
+        linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
+        {30.0, 60.0, 45.0},
+        false
+    );
 
-    auto position = linalg::Vec3D({1.3, 2.3, 3.3});
+    Pos3D position = linalg::Vec3D({1.3, 2.3, 3.3}) * angstrom;
 
     box.applyPBC(position);
 
     EXPECT_VECTOR_NEAR(
-        position,
+        position.numerical_value_in(angstrom),
         linalg::Vec3D(
             {0.12842712474619078, 0.77995789639665647, 0.45556413851582972}
         ),
@@ -209,31 +226,48 @@ TEST(TestTriclinicBox, applyPBC)
 
 TEST(TestTriclinicBox, calculateShiftVectors)
 {
-    auto box = molsys::TriclinicBox({1.0, 2.0, 3.0}, {30.0, 60.0, 45.0}, false);
-
-    const auto position    = linalg::Vec3D({1.3, 2.3, 3.3});
-    const auto newPosition = linalg::Vec3D(
-        {0.12842712474619078, 0.77995789639665647, 0.45556413851582972}
+    auto box = molsys::TriclinicBox(
+        linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
+        {30.0, 60.0, 45.0},
+        false
     );
+
+    const auto position = linalg::Vec3D({1.3, 2.3, 3.3}) * angstrom;
+    const auto newPosition =
+        linalg::Vec3D(
+            {0.12842712474619078, 0.77995789639665647, 0.45556413851582972}
+        ) *
+        angstrom;
 
     const auto shiftVector = box.calcShiftVector(position);
 
-    EXPECT_VECTOR_NEAR(shiftVector, (position - newPosition), 1e-8);
+    EXPECT_VECTOR_NEAR(
+        shiftVector.numerical_value_in(angstrom),
+        (position - newPosition).numerical_value_in(angstrom),
+        1e-8
+    );
 }
 
 TEST(TestTriclinicBox, wrapPositionIntoBox)
 {
-    auto box =
-        molsys::TriclinicBox({60.0, 60.0, 4.542}, {90.0, 90.0, 120.0}, false);
+    auto box = molsys::TriclinicBox(
+        linalg::Vec3D{60.0, 60.0, 4.542} * angstrom,
+        {90.0, 90.0, 120.0},
+        false
+    );
 
-    auto outsidePos = linalg::Vec3D({5.0, -30.0, -0.1});
+    Pos3D outsidePos = linalg::Vec3D({5.0, -30.0, -0.1}) * angstrom;
 
     box.applyPBC(outsidePos);
-    EXPECT_VECTOR_NEAR(outsidePos, linalg::Vec3D(5.0, -30.0, -0.1), 1e-10);
+    EXPECT_VECTOR_NEAR(
+        outsidePos.numerical_value_in(angstrom),
+        linalg::Vec3D(5.0, -30.0, -0.1),
+        1e-10
+    );
 
     const auto wrappedPos = box.wrapPositionIntoBox(outsidePos);
     EXPECT_VECTOR_NEAR(
-        wrappedPos,
+        wrappedPos.numerical_value_in(angstrom),
         linalg::Vec3D(-25.0, 21.96152422706632, -0.1),
         1e-10
     );
@@ -241,39 +275,64 @@ TEST(TestTriclinicBox, wrapPositionIntoBox)
 
 TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
 {
-    molsys::TriclinicBox box({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false);
+    molsys::TriclinicBox box(
+        linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
+        {80.0, 75.0, 70.0},
+        false
+    );
 
     using enum molsys::Periodicity;
     constexpr std::array periodicities{NON_PERIODIC, X, Y, Z, XY, XZ, YZ, XYZ};
     for (const auto periodicity : periodicities)
-        EXPECT_TRUE(std::isfinite(box.getBoxMatrix(periodicity)[0][0]));
+        EXPECT_TRUE(isfinite(box.getBoxMatrix(periodicity)[0][0]));
 
     const auto nonPeriodic = box.getBoxMatrix(NON_PERIODIC);
-    EXPECT_DOUBLE_EQ(nonPeriodic[0][0], defaults::VACUUM_BOX_DIMENSION);
-    EXPECT_DOUBLE_EQ(nonPeriodic[1][1], defaults::VACUUM_BOX_DIMENSION);
-    EXPECT_DOUBLE_EQ(nonPeriodic[2][2], defaults::VACUUM_BOX_DIMENSION);
-    EXPECT_DOUBLE_EQ(nonPeriodic[0][1], 0.0);
-    EXPECT_DOUBLE_EQ(nonPeriodic[0][2], 0.0);
+    EXPECT_DOUBLE_EQ(
+        nonPeriodic[0][0].numerical_value_in(angstrom),
+        defaults::VACUUM_BOX_DIMENSION.numerical_value_in(angstrom)
+    );
+    EXPECT_DOUBLE_EQ(
+        nonPeriodic[1][1].numerical_value_in(angstrom),
+        defaults::VACUUM_BOX_DIMENSION.numerical_value_in(angstrom)
+    );
+    EXPECT_DOUBLE_EQ(
+        nonPeriodic[2][2].numerical_value_in(angstrom),
+        defaults::VACUUM_BOX_DIMENSION.numerical_value_in(angstrom)
+    );
+    EXPECT_DOUBLE_EQ(nonPeriodic[0][1].numerical_value_in(angstrom), 0.0);
+    EXPECT_DOUBLE_EQ(nonPeriodic[0][2].numerical_value_in(angstrom), 0.0);
     EXPECT_EQ(box.getBoxMatrix(XYZ), TestTriclinicBox::getBoxMatrix(box));
 }
 
 TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
 {
-    molsys::TriclinicBox box({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false);
+    molsys::TriclinicBox box(
+        linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
+        {80.0, 75.0, 70.0},
+        false
+    );
 
     box.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
     EXPECT_VECTOR_NEAR(
-        box.get_boxDimensions(),
+        box.get_boxDimensions().numerical_value_in(angstrom),
         linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
-    EXPECT_NEAR(box.getVolume(), box.getVolume(), 1.0e-12);
+    EXPECT_NEAR(
+        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+        1.0e-12
+    );
 
-    molsys::TriclinicBox box2({4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, true);
-    const auto           originalAngles = box2.getBoxAngles();
+    molsys::TriclinicBox box2(
+        linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
+        {80.0, 75.0, 70.0},
+        true
+    );
+    const auto originalAngles = box2.getBoxAngles();
     box2.scaleBox(diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0}));
     EXPECT_VECTOR_NEAR(
-        box2.get_boxDimensions(),
+        box2.get_boxDimensions().numerical_value_in(angstrom),
         linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
@@ -282,7 +341,11 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
     auto [dimensions, angles] = molsys::calcBoxDimAndAnglesFromBoxMatrix(
         TestTriclinicBox::getBoxMatrix(box)
     );
-    EXPECT_VECTOR_NEAR(dimensions, box2.get_boxDimensions(), 1.0e-12);
+    EXPECT_VECTOR_NEAR(
+        dimensions.numerical_value_in(angstrom),
+        box2.get_boxDimensions().numerical_value_in(angstrom),
+        1.0e-12
+    );
     EXPECT_VECTOR_NEAR(
         angles.numerical_value_in(mstd::units::deg),
         box2.getBoxAngles(),

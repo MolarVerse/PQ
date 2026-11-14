@@ -148,20 +148,20 @@ TEST_F(TestVirial, calculateMolecularVirial)
     const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
     const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
 
-    const auto position_mol1_atom1 =
-        molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
-    const auto position_mol1_atom2 =
-        molecule0.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
-    const auto position_mol2_atom1 =
-        molecule1.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto position_mol1_atom1 = molecule0.getAtomPosition(AtomIndex{0});
+    const auto position_mol1_atom2 = molecule0.getAtomPosition(AtomIndex{1});
+    const auto position_mol2_atom1 = molecule1.getAtomPosition(AtomIndex{0});
 
     const auto centerOfMass_mol1 = molecule0.getCenterOfMass();
     const auto centerOfMass_mol2 = molecule1.getCenterOfMass();
 
     const auto virial =
-        -force_mol1_atom1 * (position_mol1_atom1 - centerOfMass_mol1) -
-        force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1) -
-        force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2);
+        -force_mol1_atom1 * (position_mol1_atom1 - centerOfMass_mol1)
+                                .numerical_value_in(angstrom) -
+        force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1)
+                               .numerical_value_in(angstrom) -
+        force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2)
+                               .numerical_value_in(angstrom);
 
     const auto virialCalculated =
         virial::intraMolecularVirialCorrection(*_simBox);

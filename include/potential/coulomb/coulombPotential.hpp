@@ -23,7 +23,10 @@
 #ifndef POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
 #define POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
 
+#include <mstd/utils/members.hpp>
 #include <utility>
+
+#include "unit_types.hpp"
 
 namespace pot
 {
@@ -43,42 +46,27 @@ namespace pot
     class CoulombPotential
     {
        protected:
-        inline static double _coulombRadiusCutOff;
-        inline static double _coulombEnergyCutOff;
-        inline static double _coulombForceCutOff;
-        inline static double _coulombCutOffCubedInverse;
+        inline static Distance  _coulombRadiusCutOff;
+        inline static double    _coulombEnergyCutOff;
+        inline static double    _coulombForceCutOff;
+        inline static InvVolume _coulombCutOffCubedInverse;
 
        public:
         virtual ~CoulombPotential() = default;
-        explicit CoulombPotential(double coulombRadiusCutOff);
+        explicit CoulombPotential(const Distance& coulombRadiusCutOff);
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(double, double) const = 0;
+        virtual std::pair<double, double> calculate(
+            const Distance& distance,
+            double          chargeProduct
+        ) const = 0;
 
-        /***************************
-         * standard setter methods *
-         ***************************/
+        STATIC_GETTER(_coulombRadiusCutOff)
+        STATIC_GETTER_SETTER(_coulombEnergyCutOff)
+        STATIC_GETTER_SETTER(_coulombForceCutOff)
+        STATIC_GETTER(_coulombCutOffCubedInverse)
 
-        static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
-        static void setCoulombEnergyCutOff(double coulombEnergyCutOff);
-        static void setCoulombForceCutOff(double coulombForceCutOff);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static double getCoulombRadiusCutOff()
-        {
-            return _coulombRadiusCutOff;
-        }
-        [[nodiscard]] static double getCoulombEnergyCutOff()
-        {
-            return _coulombEnergyCutOff;
-        }
-        [[nodiscard]] static double getCoulombForceCutOff()
-        {
-            return _coulombForceCutOff;
-        }
+        static void setCoulombRadiusCutOff(const Distance& coulombRadiusCutOff);
     };
 
 }   // namespace pot

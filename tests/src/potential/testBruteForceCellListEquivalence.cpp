@@ -55,10 +55,10 @@ namespace
     // cutoff = 4 yield nNeighbour = 1, so kCellsPerSide = 3 is sufficient and
     // the half-neighbour list in molsys::CellList visits each cell pair exactly
     // once.
-    constexpr double kBoxEdge        = 15.0;
-    constexpr double kCoulombCutOff  = 4.0;
-    constexpr size_t kCellsPerSide   = 3;
-    constexpr double kForceTolerance = 1.0e-10;
+    constexpr Distance kBoxEdge        = 15.0 * angstrom;
+    constexpr Distance kCoulombCutOff  = 4.0 * angstrom;
+    constexpr size_t   kCellsPerSide   = 3;
+    constexpr double   kForceTolerance = 1.0e-10;
 
     struct Placement
     {
@@ -164,8 +164,8 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+    pot::CoulombPotential::set_coulombForceCutOff(0.0);
 
     // Cell layout: box 15 Å, 3 cells per side, cellSize 5 Å, cutoff 4 Å.
     // Cells per axis: [-7.5,-2.5], [-2.5,+2.5], [+2.5,+7.5]. Placements are

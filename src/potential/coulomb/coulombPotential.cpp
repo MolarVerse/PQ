@@ -35,7 +35,7 @@ namespace pot
      *
      * @param coulombRadiusCutOff
      */
-    CoulombPotential::CoulombPotential(double coulombRadiusCutOff)
+    CoulombPotential::CoulombPotential(const Distance& coulombRadiusCutOff)
     {
         setCoulombRadiusCutOff(coulombRadiusCutOff);
     }
@@ -54,37 +54,20 @@ namespace pot
      *
      * @param coulombRadiusCutOff
      */
-    void CoulombPotential::setCoulombRadiusCutOff(double coulombRadiusCutOff)
+    void CoulombPotential::setCoulombRadiusCutOff(
+        const Distance& coulombRadiusCutOff
+    )
     {
         _coulombRadiusCutOff = coulombRadiusCutOff;
-        _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
-        _coulombForceCutOff = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
+        // TODO: WTF
+        _coulombEnergyCutOff =
+            1 / _coulombRadiusCutOff.numerical_value_in(Distance::unit);
+        _coulombForceCutOff =
+            1 / (_coulombRadiusCutOff.numerical_value_in(Distance::unit) *
+                 _coulombRadiusCutOff.numerical_value_in(Distance::unit));
         _coulombCutOffCubedInverse =
             1 / (_coulombRadiusCutOff * _coulombRadiusCutOff *
                  _coulombRadiusCutOff);
     }
-
-    /**
-     * @brief set the coulombEnergyCutOff
-     *
-     * @param coulombEnergyCutOff
-     */
-    void CoulombPotential::setCoulombEnergyCutOff(double coulombEnergyCutOff)
-    {
-        _coulombEnergyCutOff = coulombEnergyCutOff;
-    }
-
-    /**
-     * @brief set the coulombForceCutOff
-     *
-     * @param coulombForceCutOff
-     */
-    void CoulombPotential::setCoulombForceCutOff(double coulombForceCutOff)
-    {
-        _coulombForceCutOff = coulombForceCutOff;
-    }
-
-    // Coulomb cutoff getters are inline in the header so the per-pair call
-    // in Potential::calculateSingleInteraction can be elided without LTO.
 
 }   // namespace pot

@@ -108,6 +108,18 @@ namespace linalg
         const Vector3D<T>        &vec
     );
 
+    // mixed element types, e.g. StaticMatrix3x3<quantity<1/Å>> * Vector3D<Å>
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(const T &lhsElem, const U &rhsElem) {
+                lhsElem * rhsElem;
+                lhsElem * rhsElem + lhsElem * rhsElem;
+            }
+    constexpr auto operator*(
+        const StaticMatrix3x3<T> &mat,
+        const Vector3D<U>        &vec
+    ) -> Vector3D<std::remove_cvref_t<decltype(mat[0][0] * vec[0])>>;
+
     // unit/quantity scalar, e.g. tensor * mstd::units::Pa
     template <typename T, typename V>
     requires(!std::same_as<T, V>) && mstd::NonArithmeticScalar<T, V>
@@ -161,8 +173,11 @@ namespace linalg
     template <typename T>
     StaticMatrix3x3<T> transpose(const StaticMatrix3x3<T> &mat);
 
+    // for quantities the determinant carries the product unit, e.g.
+    // length^3 for a matrix of lengths
     template <typename T>
-    T det(const StaticMatrix3x3<T> &mat);
+    auto det(const StaticMatrix3x3<T> &mat)
+        -> std::remove_cvref_t<decltype(mat[0][0] * mat[0][0] * mat[0][0])>;
 
     template <typename T>
     StaticMatrix3x3<T> tensorProduct(
@@ -171,10 +186,16 @@ namespace linalg
     );
 
     template <typename T>
-    StaticMatrix3x3<T> cofactorMatrix(const StaticMatrix3x3<T> &mat);
+    auto cofactorMatrix(
+        const StaticMatrix3x3<T> &mat
+    ) -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * mat[0][0])>>;
 
+    // for quantities the inverse carries the inverse unit, e.g. 1/length for
+    // a matrix of lengths
     template <typename T>
-    StaticMatrix3x3<T> inverse(const StaticMatrix3x3<T> &mat);
+    auto inverse(const StaticMatrix3x3<T> &mat)
+        -> StaticMatrix3x3<std::remove_cvref_t<
+            decltype(mat[0][0] * mat[0][0] / (mat[0][0] * mat[0][0] * mat[0][0]))>>;
 
     template <typename T>
     Vector3D<T> diagonal(const StaticMatrix3x3<T> &mat);

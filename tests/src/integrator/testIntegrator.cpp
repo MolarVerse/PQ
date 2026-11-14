@@ -130,7 +130,9 @@ TEST_F(TestIntegrator, firstStep)
         linalg::Vec3D(0.0, 0.0, 0.0)
     );
 
-    EXPECT_TRUE(molecule.getCenterOfMass() != linalg::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_TRUE(
+        molecule.getCenterOfMass() != linalg::Vec3D(0.0, 0.0, 0.0) * angstrom
+    );
 }
 
 /**

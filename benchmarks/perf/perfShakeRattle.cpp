@@ -74,7 +74,7 @@ int main()
                 &molecule,
                 AtomIndex{0},
                 AtomIndex{1},
-                0.85
+                0.85 * angstrom
             )
         );
     }

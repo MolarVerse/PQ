@@ -24,6 +24,7 @@
 
 #include "constants/internalConversionFactors.hpp"
 #include "coulombReactionField.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests reaction-field energy, force, and cutoff continuity
@@ -35,7 +36,8 @@ TEST(TestCoulombReactionField, calculate)
     constexpr auto epsilon       = 80.0;
     constexpr auto distance      = 2.0;
 
-    const auto potential = pot::CoulombReactionField(cutoff, epsilon);
+    const auto potential =
+        pot::CoulombReactionField(cutoff * angstrom, epsilon);
 
     const auto reactionFieldPrefactor = (epsilon - 1.0) / (2.0 * epsilon + 1.0);
     const auto cutoffEnergy           = 1.0 / cutoff;
@@ -54,12 +56,13 @@ TEST(TestCoulombReactionField, calculate)
         (1.0 / (distance * distance) - cutoffForce +
          2.0 * reactionFieldPrefactor * cutoffCubedInverse * deltaCutoff);
 
-    const auto [energy, force] = potential.calculate(distance, chargeProduct);
+    const auto [energy, force] =
+        potential.calculate(distance * angstrom, chargeProduct);
     EXPECT_DOUBLE_EQ(energy, expectedEnergy);
     EXPECT_DOUBLE_EQ(force, expectedForce);
 
     const auto [cutoffEnergyValue, cutoffForceValue] =
-        potential.calculate(cutoff, chargeProduct);
+        potential.calculate(cutoff * angstrom, chargeProduct);
     EXPECT_NEAR(cutoffEnergyValue, 0.0, 1.0e-12);
     EXPECT_NEAR(cutoffForceValue, 0.0, 1.0e-12);
 }

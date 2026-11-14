@@ -60,7 +60,9 @@ namespace
     {
         molsys::SimulationBox simulationBox;
         simulationBox.setBox(
-            molsys::OrthorhombicBox{{10.0, 10.0, 10.0}},
+            molsys::OrthorhombicBox{
+                {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+            },
             false
         );
 
@@ -105,7 +107,10 @@ TEST(TestFrame, copiesAtomsInMoleculeOrder)
     EXPECT_EQ(argon.moltype, MolType{2});
     EXPECT_EQ(argon.indexInMolecule, 0);
 
-    EXPECT_EQ(frame.box->get_boxDimensions(), linalg::Vec3D(10.0, 10.0, 10.0));
+    EXPECT_EQ(
+        frame.box->get_boxDimensions(),
+        linalg::Vec3D(10.0, 10.0, 10.0) * angstrom
+    );
     EXPECT_DOUBLE_EQ(frame.totalForce(), simulationBox.calculateTotalForce());
 }
 
@@ -131,8 +136,8 @@ TEST(TestFrame, doesNotFollowLaterChanges)
 
     EXPECT_EQ(frame.atoms[0].position, linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
     EXPECT_EQ(
-        frame.box->wrapPositionIntoBox({6.0, 0.0, 0.0}),
-        linalg::Vec3D(-4.0, 0.0, 0.0)
+        frame.box->wrapPositionIntoBox(linalg::Vec3D{6.0, 0.0, 0.0} * angstrom),
+        linalg::Vec3D(-4.0, 0.0, 0.0) * angstrom
     );
 }
 

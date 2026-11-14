@@ -49,6 +49,7 @@
 #include "coulombPotential.hpp"
 #include "interWater.hpp"
 #include "nonCoulombPair.hpp"
+#include "unit_types.hpp"
 
 namespace waterModel
 {
@@ -63,7 +64,7 @@ namespace waterModel
         molsys::Atom                                 &atom1,
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        double                                        rCutSquared,
+        const DistanceSquared                        &rCutSquared,
         const molsys::Box                            &box,
         const pot::NonCoulombPair                    &nonCoulPair,
         double                                       &coulombEnergy,
@@ -73,7 +74,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
+        auto dxyz = (xyz_i - xyz_j);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
@@ -83,7 +84,7 @@ namespace waterModel
 
         if (distanceSquared < rCutSquared)
         {
-            const auto distance = ::sqrt(distanceSquared);
+            const auto distance = mstd::sqrt(distanceSquared);
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
@@ -101,10 +102,12 @@ namespace waterModel
                 f                += nonCoulF;
             }
 
-            f                   /= distance;
-            const auto forcexyz  = f * dxyz;
+            const auto forcexyz =
+                dxyz.numerical_value_in(mstd::units::angstrom) *
+                (f / distance.numerical_value_in(mstd::units::angstrom));
 
-            const auto shiftForcexyz = forcexyz * txyz;
+            const auto shiftForcexyz =
+                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -124,7 +127,7 @@ namespace waterModel
         molsys::Atom                                 &atom1,
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        double                                        rCutSquared,
+        const DistanceSquared                        &rCutSquared,
         const molsys::Box                            &box,
         double                                       &coulombEnergy
     )
@@ -132,7 +135,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
+        auto dxyz = (xyz_i - xyz_j);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
@@ -142,7 +145,7 @@ namespace waterModel
 
         if (distanceSquared < rCutSquared)
         {
-            const double distance = ::sqrt(distanceSquared);
+            const auto distance = mstd::sqrt(distanceSquared);
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
@@ -152,10 +155,12 @@ namespace waterModel
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
             coulombEnergy += e;
 
-            f                   /= distance;
-            const auto forcexyz  = f * dxyz;
+            const auto forcexyz =
+                dxyz.numerical_value_in(mstd::units::angstrom) *
+                (f / distance.numerical_value_in(mstd::units::angstrom));
 
-            const auto shiftForcexyz = forcexyz * txyz;
+            const auto shiftForcexyz =
+                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -175,7 +180,7 @@ namespace waterModel
         molsys::Atom                                 &atom1,
         molsys::Atom                                 &atom2,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        double                                        rCutSquared,
+        const DistanceSquared                        &rCutSquared,
         const molsys::Box                            &box,
         const pot::NonCoulombPair                    &nonCoulPair,
         double                                       &coulombEnergy,
@@ -185,7 +190,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
+        auto dxyz = (xyz_i - xyz_j);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
@@ -195,7 +200,7 @@ namespace waterModel
 
         if (distanceSquared < rCutSquared)
         {
-            const auto distance = ::sqrt(distanceSquared);
+            const auto distance = mstd::sqrt(distanceSquared);
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
@@ -212,10 +217,12 @@ namespace waterModel
                 f                         += nonCoulF;
             }
 
-            f                   /= distance;
-            const auto forcexyz  = f * dxyz;
+            const auto forcexyz =
+                dxyz.numerical_value_in(mstd::units::angstrom) *
+                (f / distance.numerical_value_in(mstd::units::angstrom));
 
-            const auto shiftForcexyz = forcexyz * txyz;
+            const auto shiftForcexyz =
+                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
 
             atom1.addForce(forcexyz);
 

@@ -41,7 +41,7 @@ TEST_F(TestBondConstraint, calcRefBondLength)
     _bondConstraint->calculateConstraintBondRef(*_box);
     EXPECT_EQ(
         _bondConstraint->getShakeDistanceRef(),
-        linalg::Vec3D(0.0, -1.0, -2.0)
+        linalg::Vec3D(0.0, -1.0, -2.0) * angstrom
     );
 }
 
@@ -52,7 +52,8 @@ TEST_F(TestBondConstraint, calcRefBondLength)
 TEST_F(TestBondConstraint, calculateDistanceDelta)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    const auto distanceSquared = normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
+    const auto distanceSquared =
+        normSquared(linalg::Vec3D(0.0, -1.0, -2.0)) * angstrom * angstrom;
     const auto targetBondLengthSquared = _targetBondLength * _targetBondLength;
     EXPECT_EQ(
         _bondConstraint->calculateDistanceDelta(*_box),
@@ -68,8 +69,9 @@ TEST_F(TestBondConstraint, applyShake)
     _bondConstraint->calculateConstraintBondRef(*_box);
     const auto delta = _bondConstraint->calculateDistanceDelta(*_box);
 
-    const auto shakeForce =
-        delta / (1.0 + 0.5) / normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
+    const auto shakeForce = delta.numerical_value_in(DistanceSquared::unit) /
+                            (1.0 + 0.5) /
+                            normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
     const auto dPos     = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0);
     const auto timestep = 2.0;
     settings::TimingsSettings::setTimeStep(timestep * fs);
@@ -105,7 +107,7 @@ TEST_F(TestBondConstraint, applyShake)
  */
 TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
 {
-    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(0.0, 0.0, 0.0));
+    _bondConstraint->setShakeDistanceRef(Pos3D{Pos::zero()});
 
     EXPECT_THROW_MSG(
         (void) _bondConstraint->applyShake(*_box, 0.0),
@@ -122,7 +124,9 @@ TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
 TEST_F(TestBondConstraint, applyShakeRejectsNonFiniteReference)
 {
     const auto nan = std::numeric_limits<double>::quiet_NaN();
-    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(nan, 0.0, 0.0));
+    _bondConstraint->setShakeDistanceRef(
+        Pos3D{nan * angstrom, 0.0 * angstrom, 0.0 * angstrom}
+    );
 
     EXPECT_THROW_MSG(
         (void) _bondConstraint->applyShake(*_box, 0.0),
@@ -153,8 +157,10 @@ TEST_F(TestBondConstraint, calculateVelocityDelta)
 TEST_F(TestBondConstraint, applyRattle)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    const auto delta    = _bondConstraint->calculateVelocityDelta();
-    const auto deltaVel = delta * _bondConstraint->getShakeDistanceRef();
+    const auto delta = _bondConstraint->calculateVelocityDelta();
+    const auto deltaVel =
+        delta *
+        _bondConstraint->getShakeDistanceRef().numerical_value_in(angstrom);
 
     EXPECT_FALSE(_bondConstraint->applyRattle(0.0));
 

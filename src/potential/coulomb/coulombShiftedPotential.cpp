@@ -34,13 +34,15 @@ namespace pot
      * @return std::pair<double, double>
      */
     std::pair<double, double> CoulombShiftedPotential::calculate(
-        double distance,
-        double chargeProduct
+        const Distance& distance,
+        double          chargeProduct
     ) const
     {
-        const auto prefactor           = chargeProduct * COULOMB_PREFACTOR;
-        const auto dInv                = 1 / distance;
-        const auto deltaCutOff         = _coulombRadiusCutOff - distance;
+        const auto prefactor = chargeProduct * COULOMB_PREFACTOR;
+        const auto dInv = 1.0 / distance.numerical_value_in(Distance::unit);
+        const auto deltaCutOff =
+            _coulombRadiusCutOff.numerical_value_in(Distance::unit) -
+            distance.numerical_value_in(Distance::unit);
         const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
 
         auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;

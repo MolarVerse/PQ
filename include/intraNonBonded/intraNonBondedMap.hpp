@@ -82,9 +82,9 @@ namespace intraNonBonded
 
         [[nodiscard]]
         std::pair<double, double> calculateSingleInteraction(
-            AtomIndex            atomIdx1,
-            int                  atomIdx2,
-            const linalg::Vec3D &box,
+            AtomIndex    atomIdx1,
+            int          atomIdx2,
+            const Pos3D &box,
             physicalData::PhysicalData & /*data*/,
             const pot::CoulombPotential *coulPot,
             pot::NonCoulombPotential    *nonCoulPot

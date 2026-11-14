@@ -223,7 +223,9 @@ class ExternalQMRunnerTest : public testing::Test
         atom->setName("H");
         _simulationBox.addAtom(atom);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _simulationBox.setBox(orthoBox, false);
     }
 
@@ -598,7 +600,9 @@ class QMWriterTest : public ExternalQMRunnerTest
         _addAtom("O", linalg::Vec3D{1.5, 2.25, -3.0} * angstrom);
         _addAtom("H", linalg::Vec3D{0.5, 0.5, 0.5} * angstrom);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 12.0 * angstrom, 14.0 * angstrom}
+        };
         _simulationBox.setBox(orthoBox, false);
     }
 

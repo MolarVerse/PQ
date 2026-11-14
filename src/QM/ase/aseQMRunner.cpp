@@ -121,9 +121,9 @@ namespace QM
 
             constexpr auto                   boxArraySize = 6;
             std::array<double, boxArraySize> box_array    = {
-                boxDimension[0],
-                boxDimension[1],
-                boxDimension[2],
+                boxDimension[0].numerical_value_in(angstrom),
+                boxDimension[1].numerical_value_in(angstrom),
+                boxDimension[2].numerical_value_in(angstrom),
                 boxAngles[0],
                 boxAngles[1],
                 boxAngles[2]
@@ -531,7 +531,9 @@ namespace QM
 
         stress_ = stress_ * EV_TO_KCAL_PER_MOL;
 
-        const auto virial = stress_ * simulationBox.getVolume();
+        const auto virial =
+            stress_ *
+            simulationBox.getVolume().numerical_value_in(Volume::unit);
 
         physicalData.setStressTensor(stress_);
         physicalData.addVirial(virial);

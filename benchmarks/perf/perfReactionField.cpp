@@ -27,6 +27,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -40,7 +42,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    const auto reactionField = pot::CoulombReactionField(9.0, 78.0);
+    const auto reactionField = pot::CoulombReactionField(9.0 * angstrom, 78.0);
 
     perfAllocBegin();
 
@@ -53,7 +55,7 @@ int main()
             1.0 + (static_cast<double>(i & 255U) * 0.03);   // within cutoff
         const double chargeProduct = 0.5 * -0.5;
         const auto [energy, force] =
-            reactionField.calculate(distance, chargeProduct);
+            reactionField.calculate(distance * angstrom, chargeProduct);
         sink += energy + force;
     }
 

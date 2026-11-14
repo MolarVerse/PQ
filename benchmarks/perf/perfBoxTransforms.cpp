@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -44,10 +46,15 @@ int main()
 {
     using linalg::Vec3D;
 
-    auto ortho = molsys::OrthorhombicBox({20.0, 20.0, 20.0});
+    auto ortho = molsys::OrthorhombicBox(
+        {20.0 * angstrom, 20.0 * angstrom, 20.0 * angstrom}
+    );
 
-    auto triclinic =
-        molsys::TriclinicBox({20.0, 20.0, 20.0}, {80.0, 90.0, 100.0}, false);
+    auto triclinic = molsys::TriclinicBox(
+        {20.0 * angstrom, 20.0 * angstrom, 20.0 * angstrom},
+        {80.0, 90.0, 100.0},
+        false
+    );
 
     perfAllocBegin();
 
@@ -57,12 +64,17 @@ int main()
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const double tmp = (static_cast<double>(i & 127U) * 0.3) - 19.0;
-        const Vec3D  pos(tmp, 0.5 * tmp, -tmp);
+        const Pos3D  pos(tmp * angstrom, 0.5 * tmp * angstrom, -tmp * angstrom);
 
-        sink += norm(ortho.wrapPositionIntoBox(pos));
-        sink += norm(triclinic.wrapPositionIntoBox(pos));
-        sink += norm(triclinic.getInverseBoxMatrix() * pos);
-        sink += norm(triclinic.getBoxMatrix() * pos);
+        sink +=
+            norm(ortho.wrapPositionIntoBox(pos)).numerical_value_in(angstrom);
+        sink += norm(triclinic.wrapPositionIntoBox(pos))
+                    .numerical_value_in(angstrom);
+        sink +=
+            norm(triclinic.getInverseBoxMatrix() * pos).numerical_value_in(one);
+        sink +=
+            norm(triclinic.getBoxMatrix().numerical_value_in(angstrom) * pos)
+                .numerical_value_in(angstrom);
     }
 
     std::cout << std::format("{:.6f}\n", sink);

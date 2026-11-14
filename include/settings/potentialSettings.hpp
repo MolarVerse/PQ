@@ -44,10 +44,10 @@ namespace settings
             CoulombLongRangeType::SHIFTED;
         static inline NonCoulombType _nonCoulombType = NonCoulombType::GUFF;
 
-        static inline double _coulombRadiusCutOff =
+        static inline Pos _coulombRadiusCutOff =
             defaults::COULOMB_CUT_OFF_DEFAULT;
-        static inline std::optional<double> _nonCoulombRadiusCutOff;
-        static inline double                _scale14Coulomb =
+        static inline std::optional<Pos> _nonCoulombRadiusCutOff;
+        static inline double             _scale14Coulomb =
             defaults::SCALE_14_COULOMB_DEFAULT;
         static inline double _scale14VanDerWaals =
             defaults::SCALE_14_VAN_DER_WAALS_DEFAULT;
@@ -67,8 +67,10 @@ namespace settings
         static void setNonCoulombType(NonCoulombType type);
         static void setCoulombLongRangeType(CoulombLongRangeType type);
 
-        static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
-        static void setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff);
+        static void setCoulombRadiusCutOff(const Pos& coulombRadiusCutOff);
+        static void setNonCoulombRadiusCutOff(
+            const Pos& nonCoulombRadiusCutOff
+        );
         static void setScale14Coulomb(double scale14Coulomb);
         static void setScale14VanDerWaals(double scale14VanDerWaals);
         static void setReactionFieldEpsilon(double epsilon);
@@ -81,12 +83,12 @@ namespace settings
         [[nodiscard]] static CoulombLongRangeType getCoulombLongRangeType();
         [[nodiscard]] static NonCoulombType       getNonCoulombType();
 
-        [[nodiscard]] static double                getCoulombRadiusCutOff();
-        [[nodiscard]] static std::optional<double> getNonCoulombRadiusCutOff();
-        [[nodiscard]] static double                getScale14Coulomb();
-        [[nodiscard]] static double                getScale14VDW();
-        [[nodiscard]] static double                getReactionFieldEpsilon();
-        [[nodiscard]] static double                getWolfParameter();
+        [[nodiscard]] static Pos                getCoulombRadiusCutOff();
+        [[nodiscard]] static std::optional<Pos> getNonCoulombRadiusCutOff();
+        [[nodiscard]] static double             getScale14Coulomb();
+        [[nodiscard]] static double             getScale14VDW();
+        [[nodiscard]] static double             getReactionFieldEpsilon();
+        [[nodiscard]] static double             getWolfParameter();
     };
 
 }   // namespace settings

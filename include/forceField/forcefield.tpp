@@ -57,7 +57,7 @@ namespace ff
         const molsys::Molecule      *molecule_j,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
-        double                       distance
+        const Distance              &distance
     )
     {
         const auto charge1 = molecule_i->getPartialCharge(atomIndex1);

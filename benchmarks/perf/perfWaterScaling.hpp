@@ -63,27 +63,31 @@
 
 namespace benchWaterScaling
 {
-    inline constexpr MolType WATER_TYPE{1};
-    inline constexpr double  CUTOFF                 = 9.0;
-    inline constexpr double  SPACING                = 4.5;
-    inline constexpr auto    HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
-    inline constexpr auto    OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
+    inline constexpr MolType  WATER_TYPE{1};
+    inline constexpr Distance CUTOFF                 = 9.0 * angstrom;
+    inline constexpr double   SPACING                = 4.5;
+    inline constexpr auto     HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
+    inline constexpr auto     OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
     inline int run(const std::size_t perSide, const std::uint64_t iterations)
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
+        pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+        pot::CoulombPotential::set_coulombForceCutOff(0.0);
 
         WaterModelSettings waterModelSettings;
         waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
 
         const double boxLength = (SPACING * static_cast<double>(perSide)) + 3.0;
-        const auto   numberOfCells = static_cast<size_t>(boxLength / CUTOFF);
+        const auto   numberOfCells = static_cast<size_t>(
+            boxLength / CUTOFF.numerical_value_in(angstrom)
+        );
 
         molsys::SimulationBox   simBox;
-        molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};
+        molsys::OrthorhombicBox orthoBox{
+            {boxLength * angstrom, boxLength * angstrom, boxLength * angstrom}
+        };
         simBox.setBox(orthoBox, false);
         simBox.setWaterType(WATER_TYPE);
 

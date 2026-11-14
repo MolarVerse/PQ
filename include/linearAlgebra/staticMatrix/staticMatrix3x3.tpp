@@ -268,6 +268,36 @@ namespace linalg
     }
 
     /**
+     * @brief operator* for StaticMatrix3x3 and Vector3D of different element
+     * types (e.g. quantity<1/Å> * quantity<Å>)
+     *
+     * @return Vector3D of the product type
+     */
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(const T &lhsElem, const U &rhsElem) {
+                lhsElem * rhsElem;
+                lhsElem * rhsElem + lhsElem * rhsElem;
+            }
+    constexpr auto operator*(
+        const StaticMatrix3x3<T> &mat,
+        const Vector3D<U>        &vec
+    ) -> Vector3D<std::remove_cvref_t<decltype(mat[0][0] * vec[0])>>
+    {
+        using ResultType = std::remove_cvref_t<decltype(mat[0][0] * vec[0])>;
+
+        const auto row = [&](size_t i)
+        {
+            ResultType entry = mat[i][0] * vec[0];
+            entry            = entry + mat[i][1] * vec[1];
+            entry            = entry + mat[i][2] * vec[2];
+            return entry;
+        };
+
+        return Vector3D<ResultType>(row(0), row(1), row(2));
+    }
+
+    /**
      * @brief operator* for StaticMatrix3x3 and a unit/quantity scalar
      *
      * @code
@@ -444,7 +474,8 @@ namespace linalg
      * @return T
      */
     template <typename T>
-    T det(const StaticMatrix3x3<T> &mat)
+    auto det(const StaticMatrix3x3<T> &mat)
+        -> std::remove_cvref_t<decltype(mat[0][0] * mat[0][0] * mat[0][0])>
     {
         auto result = mat[0][0] * mat[1][1] * mat[2][2];
 
@@ -491,9 +522,11 @@ namespace linalg
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> cofactorMatrix(const StaticMatrix3x3<T> &mat)
+    auto cofactorMatrix(const StaticMatrix3x3<T> &mat)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * mat[0][0])>>
     {
-        StaticMatrix3x3<T> result;
+        StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * mat[0][0])>>
+            result;
 
         result[0][0] = mat[1][1] * mat[2][2] - mat[1][2] * mat[2][1];
         result[0][1] = mat[1][2] * mat[2][0] - mat[1][0] * mat[2][2];
@@ -515,19 +548,25 @@ namespace linalg
      * @return StaticMatrix3x3<T>
      */
     template <typename T>
-    StaticMatrix3x3<T> inverse(const StaticMatrix3x3<T> &mat)
+    auto inverse(const StaticMatrix3x3<T> &mat)
+        -> StaticMatrix3x3<std::remove_cvref_t<
+            decltype(mat[0][0] * mat[0][0] / (mat[0][0] * mat[0][0] * mat[0][0]))>>
     {
-        StaticMatrix3x3<T> result = cofactorMatrix(mat);
+        using ResultType = std::remove_cvref_t<
+            decltype(mat[0][0] * mat[0][0] / (mat[0][0] * mat[0][0] * mat[0][0]))>;
 
-        result = transpose(result);
+        const auto cofactorT = transpose(cofactorMatrix(mat));
 
         const auto determinant = det(mat);
 
-        // element-wise and cast back to T: for quantities T / T may carry a
-        // different (derived) quantity spec than T itself
+        StaticMatrix3x3<ResultType> result;
+
+        // element-wise and cast to ResultType: for quantities the quotient
+        // may carry a different (derived) quantity spec than ResultType
         for (size_t i = 0; i < 3; ++i)
             for (size_t j = 0; j < 3; ++j)
-                result[i][j] = static_cast<T>(result[i][j] / determinant);
+                result[i][j] =
+                    static_cast<ResultType>(cofactorT[i][j] / determinant);
 
         return result;
     }

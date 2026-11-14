@@ -25,6 +25,7 @@
 #include <cmath>
 
 #include "guffPair.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests the calculation of the energy and force of a GuffPair
@@ -41,11 +42,15 @@ TEST(TestGuffPair, calculateEnergyAndForces)
     const double energyCutoff = 1.0;
     const double forceCutoff  = 2.0;
 
-    const auto guffNonCoulomb =
-        pot::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
+    const auto guffNonCoulomb = pot::GuffPair(
+        rncCutoff * angstrom,
+        energyCutoff,
+        forceCutoff,
+        coefficients
+    );
 
     auto distance              = 2.0;
-    const auto [energy, force] = guffNonCoulomb.calculate(distance);
+    const auto [energy, force] = guffNonCoulomb.calculate(distance * angstrom);
 
     auto energyREF = (coefficients[0] / ::pow(distance, coefficients[1])) +
                      (coefficients[2] / ::pow(distance, coefficients[3]));
@@ -109,7 +114,7 @@ TEST(TestGuffPair, calculateEnergyAndForces)
 TEST(TestGuffPair, calculateWithSparseCoefficients)
 {
     const auto distance     = 2.0;
-    const auto rncCutoff    = 3.0;
+    const auto rncCutoff    = 3.0 * angstrom;
     const auto energyCutoff = 0.0;
     const auto forceCutoff  = 0.0;
 
@@ -134,7 +139,7 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
     const auto pair =
         pot::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
 
-    const auto [energy, force] = pair.calculate(distance);
+    const auto [energy, force] = pair.calculate(distance * angstrom);
 
     // Only the two non-zero terms contribute. Distance cutoff terms are zero
     // because energyCutoff = forceCutoff = 0.

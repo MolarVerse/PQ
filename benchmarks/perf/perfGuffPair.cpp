@@ -29,6 +29,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -54,8 +56,8 @@ int main()
     sparse[2] = 3.0;
     sparse[3] = 12.0;
 
-    const auto denseGuff  = pot::GuffPair(9.0, 1.0, 2.0, dense);
-    const auto sparseGuff = pot::GuffPair(9.0, 1.0, 2.0, sparse);
+    const auto denseGuff  = pot::GuffPair(9.0 * angstrom, 1.0, 2.0, dense);
+    const auto sparseGuff = pot::GuffPair(9.0 * angstrom, 1.0, 2.0, sparse);
 
     perfAllocBegin();
 
@@ -66,9 +68,10 @@ int main()
     {
         const double distance =
             1.0 + (static_cast<double>(i & 255U) * 0.03);   // within cutoff
-        const auto [eDense, fDense]    = denseGuff.calculate(distance);
-        const auto [eSparse, fSparse]  = sparseGuff.calculate(distance);
-        sink                          += eDense + fDense + eSparse + fSparse;
+        const auto [eDense, fDense] = denseGuff.calculate(distance * angstrom);
+        const auto [eSparse, fSparse] =
+            sparseGuff.calculate(distance * angstrom);
+        sink += eDense + fDense + eSparse + fSparse;
     }
 
     std::cout << std::format("{:.6f}\n", sink);

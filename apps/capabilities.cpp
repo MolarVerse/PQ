@@ -337,7 +337,10 @@ namespace
             "angstrom"
         );
         json.value("minimum", 0);
-        json.value("default", defaults::COULOMB_CUT_OFF_DEFAULT);
+        json.value(
+            "default",
+            defaults::COULOMB_CUT_OFF_DEFAULT.numerical_value_in(angstrom)
+        );
         json.endObject();
 
         json.endObject();

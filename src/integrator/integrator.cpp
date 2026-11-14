@@ -61,16 +61,16 @@ namespace integrator
 
     )
     {
-        auto       position = atom->getPosition().numerical_value_in(angstrom);
+        auto       position = atom->getPosition();
         const auto velocity = atom->getVelocity();
 
         position +=
             settings::TimingsSettings::getTimeStep().numerical_value_in(s) *
-            velocity;
+            velocity * (1.0 * angstrom);
 
         simulationBox.applyPBC(position);
 
-        atom->setPosition(position * angstrom);
+        atom->setPosition(position);
     }
 
 }   // namespace integrator

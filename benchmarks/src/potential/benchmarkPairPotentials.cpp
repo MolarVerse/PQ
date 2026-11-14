@@ -28,6 +28,7 @@
 #include "coulombWolf.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -42,7 +43,7 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(distance);
-            auto result = potential.calculate(distance);
+            auto result = potential.calculate(distance * angstrom);
             benchmark::DoNotOptimize(result);
         }
     }
@@ -60,22 +61,26 @@ namespace
         {
             benchmark::DoNotOptimize(distance);
             benchmark::DoNotOptimize(chargeProduct);
-            auto result = potential.calculate(distance, chargeProduct);
+            auto result =
+                potential.calculate(distance * angstrom, chargeProduct);
             benchmark::DoNotOptimize(result);
         }
     }
 
     void BM_LennardJones(benchmark::State& state)
     {
-        pot::LennardJonesPair potential(9.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+        pot::LennardJonesPair potential(
+            9.0 * angstrom,
+            LJParams{.c6 = 2.0, .c12 = 3.0}
+        );
         runNonCoulombBenchmark(state, potential);
     }
 
     void BM_Buckingham(benchmark::State& state)
     {
         pot::BuckinghamPair potential(
-            9.0,
-            BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
+            9.0 * angstrom,
+            BuckinghamParams{.scaling = 1.0, .dRho = 0.3 / angstrom, .c6 = 2.0}
         );
         runNonCoulombBenchmark(state, potential);
     }
@@ -83,11 +88,11 @@ namespace
     void BM_Morse(benchmark::State& state)
     {
         pot::MorsePair potential(
-            9.0,
+            9.0 * angstrom,
             MorseParams{
                 .dissociationEnergy  = 1.0,
-                .wellWidth           = 2.0,
-                .equilibriumDistance = 1.5
+                .wellWidth           = 2.0 / angstrom,
+                .equilibriumDistance = 1.5 * angstrom
             }
         );
         runNonCoulombBenchmark(state, potential);
@@ -95,19 +100,19 @@ namespace
 
     void BM_CoulombShifted(benchmark::State& state)
     {
-        pot::CoulombShiftedPotential potential(9.0);
+        pot::CoulombShiftedPotential potential(9.0 * angstrom);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombWolf(benchmark::State& state)
     {
-        pot::CoulombWolf potential(9.0, 0.25);
+        pot::CoulombWolf potential(9.0 * angstrom, 0.25);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombReactionField(benchmark::State& state)
     {
-        pot::CoulombReactionField potential(9.0, 78.5);
+        pot::CoulombReactionField potential(9.0 * angstrom, 78.5);
         runCoulombBenchmark(state, potential);
     }
 

@@ -35,7 +35,6 @@
 #include "molecule.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace molsys
 {
@@ -81,15 +80,14 @@ namespace molsys
 
         determineCellSize(simulationBox.getBoxDimensions());
 
-        checkCoulombCutoff(
-            settings::PotentialSettings::getCoulombRadiusCutOff()
-        );
+        const auto &coulCutoff =
+            settings::PotentialSettings::getCoulombRadiusCutOff();
+
+        checkCoulombCutoff(coulCutoff);
 
         determineCellBoundaries(simulationBox.getBoxDimensions());
 
-        addNeighbouringCells(
-            settings::PotentialSettings::getCoulombRadiusCutOff()
-        );
+        addNeighbouringCells(coulCutoff);
     }
 
     /**
@@ -100,9 +98,9 @@ namespace molsys
      * @throws exc::CellListException if a box dimension is non-finite or
      * not positive, meaning the simulation has become unstable
      */
-    void CellList::determineCellSize(const linalg::Vec3D &box)
+    void CellList::determineCellSize(const Pos3D &box)
     {
-        if (!linalg::isFinite(box) || linalg::minimum(box) <= 0.0)
+        if (!linalg::isFinite(box) || linalg::min(box) <= 0.0)
         {
             throw exc::CellListException(
                 "Invalid simulation box dimensions during cell-list setup - "
@@ -123,9 +121,9 @@ namespace molsys
      *
      * @param coulombCutoff
      */
-    void CellList::checkCoulombCutoff(double coulombCutoff) const
+    void CellList::checkCoulombCutoff(const Pos &coulombCutoff) const
     {
-        if (coulombCutoff < maximum(_cellSize) / 2.0)
+        if (coulombCutoff < linalg::max(_cellSize) / 2.0)
             throw exc::CellListException(
                 "Coulomb cutoff is smaller than half of the largest cell size."
             );
@@ -136,7 +134,7 @@ namespace molsys
      *
      * @param box
      */
-    void CellList::determineCellBoundaries(const linalg::Vec3D &box)
+    void CellList::determineCellBoundaries(const Pos3D &box)
     {
         for (size_t i = 0; i < _nCells[0]; ++i)
         {
@@ -166,9 +164,10 @@ namespace molsys
      *
      * @param coulombCutoff
      */
-    void CellList::addNeighbouringCells(double coulombCutoff)
+    void CellList::addNeighbouringCells(const Pos &coulombCutoff)
     {
-        _nNeighbourCells = linalg::Vec3Dul(ceil(coulombCutoff / _cellSize));
+        const auto coulCutoff = Pos3D{coulombCutoff};
+        _nNeighbourCells      = linalg::Vec3Dul(ceil(coulCutoff / _cellSize));
 
         const auto     requiredCells = _nNeighbourCells * 2 + 1;
         constexpr auto axisNames =
@@ -310,9 +309,8 @@ namespace molsys
 
             for (AtomIndex j{0}; j.get() < nAtomsInMolecule; ++j)
             {
-                auto      *atom = &molecule->getAtom(j);
-                const auto position =
-                    molecule->getAtomPosition(j).numerical_value_in(angstrom);
+                auto      *atom     = &molecule->getAtom(j);
+                const auto position = molecule->getAtomPosition(j);
 
                 const auto atomCellIndices = getCellIndexOfAtom(box, position);
                 const auto cellIndexScalar = getCellIndex(atomCellIndices);
@@ -381,8 +379,8 @@ namespace molsys
      * the simulation has become unstable
      */
     linalg::Vec3Dul CellList::getCellIndexOfAtom(
-        const linalg::Vec3D &box,
-        const linalg::Vec3D &position
+        const Pos3D &box,
+        const Pos3D &position
     ) const
     {
         if (!linalg::isFinite(position))
@@ -466,9 +464,9 @@ namespace molsys
     /**
      * @brief get cell size
      *
-     * @return linalg::Vec3D
+     * @return const Pos3D&
      */
-    linalg::Vec3D CellList::getCellSize() const { return _cellSize; }
+    const Pos3D &CellList::getCellSize() const { return _cellSize; }
 
     /**
      * @brief get cells

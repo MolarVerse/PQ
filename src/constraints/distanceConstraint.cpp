@@ -49,8 +49,8 @@ namespace constraints
         molsys::Molecule *molecule2,
         AtomIndex         atomIndex1,
         AtomIndex         atomIndex2,
-        double            lowerDistance,
-        double            upperDistance,
+        const Distance   &lowerDistance,
+        const Distance   &upperDistance,
         double            springConstant,
         double            dSpringConstantDt
     )
@@ -94,7 +94,7 @@ namespace constraints
         const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);
 
-        auto dPos = (pos2 - pos1).numerical_value_in(angstrom);
+        auto dPos = (pos2 - pos1);
         simulationBox.applyPBC(dPos);
 
         const auto distance = norm(dPos);
@@ -103,7 +103,7 @@ namespace constraints
             (_dSpringConstantDt * timeInterval.numerical_value_in(fs));
 
         if ((distance < _lowerDistance || distance > _upperDistance) &&
-            (!std::isfinite(distance) || 0.0 == distance))
+            (!isfinite(distance) || 0.0 == distance))
         {
             throw exc::ShakeException(
                 "Degenerate distance-constraint separation - the atom "
@@ -114,15 +114,21 @@ namespace constraints
 
         if (distance < _lowerDistance)
         {
-            const auto delta = _lowerDistance - distance;
-            _lowerEnergy     = 0.5 * force_constant * delta * delta;
-            _force           = -force_constant * delta * dPos / distance;
+            const auto delta =
+                (_lowerDistance - distance).numerical_value_in(angstrom);
+            _lowerEnergy = 0.5 * force_constant * delta * delta;
+            _force       = -force_constant * delta *
+                     dPos.numerical_value_in(angstrom) /
+                     distance.numerical_value_in(angstrom);
         }
         else if (distance > _upperDistance)
         {
-            const auto delta = distance - _upperDistance;
-            _upperEnergy     = 0.5 * force_constant * delta * delta;
-            _force           = +force_constant * delta * dPos / distance;
+            const auto delta =
+                (distance - _upperDistance).numerical_value_in(angstrom);
+            _upperEnergy = 0.5 * force_constant * delta * delta;
+            _force       = +force_constant * delta *
+                     dPos.numerical_value_in(angstrom) /
+                     distance.numerical_value_in(angstrom);
         }
         else
         {
@@ -138,26 +144,6 @@ namespace constraints
      * standard getter methods *
      *                         *
      ***************************/
-
-    /**
-     * @brief get lower distance
-     *
-     * @return double
-     */
-    double DistanceConstraint::getLowerDistance() const
-    {
-        return _lowerDistance;
-    }
-
-    /**
-     * @brief get upper distance
-     *
-     * @return double
-     */
-    double DistanceConstraint::getUpperDistance() const
-    {
-        return _upperDistance;
-    }
 
     /**
      * @brief get spring constant

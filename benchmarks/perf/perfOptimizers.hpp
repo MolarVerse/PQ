@@ -46,7 +46,7 @@ namespace benchOptimizers
     {
         auto box = std::make_shared<molsys::SimulationBox>();
 
-        const auto              length = SPACING * static_cast<double>(perSide);
+        const auto length = SPACING * static_cast<double>(perSide) * angstrom;
         molsys::OrthorhombicBox orthoBox{{length, length, length}};
         box->setBox(orthoBox, false);
 

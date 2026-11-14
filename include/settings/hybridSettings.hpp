@@ -50,10 +50,10 @@ namespace settings
 
         static inline bool _useQMCharges = true;
 
-        static inline double _coreRadius               = 0.0;
-        static inline double _layerRadius              = 0.0;
-        static inline double _smoothingRegionThickness = 0.0;
-        static inline double _pointChargeThickness     = 0.0;
+        static inline Distance _coreRadius               = Distance::zero();
+        static inline Distance _layerRadius              = Distance::zero();
+        static inline Distance _smoothingRegionThickness = Distance::zero();
+        static inline Distance _pointChargeThickness     = Distance::zero();
 
         static inline SmoothingMethod _smoothing   = SmoothingMethod::HOTSPOT;
         static inline QMForceDist     _qmForceDist = QMForceDist::EQUAL;
@@ -71,10 +71,10 @@ namespace settings
 
         static void setUseQMCharges(bool useQMCharges);
 
-        static void setCoreRadius(double radius);
-        static void setLayerRadius(double radius);
-        static void setSmoothingRegionThickness(double thickness);
-        static void setPointChargeThickness(double radius);
+        static void setCoreRadius(const Distance &radius);
+        static void setLayerRadius(const Distance &radius);
+        static void setSmoothingRegionThickness(const Distance &thickness);
+        static void setPointChargeThickness(const Distance &radius);
 
         static void setSmoothingMethod(SmoothingMethod method);
         static void setQMForceDist(QMForceDist method);
@@ -96,10 +96,10 @@ namespace settings
 
         [[nodiscard]] static bool getUseQMCharges();
 
-        [[nodiscard]] static double getCoreRadius();
-        [[nodiscard]] static double getLayerRadius();
-        [[nodiscard]] static double getSmoothingRegionThickness();
-        [[nodiscard]] static double getPointChargeThickness();
+        [[nodiscard]] static Distance getCoreRadius();
+        [[nodiscard]] static Distance getLayerRadius();
+        [[nodiscard]] static Distance getSmoothingRegionThickness();
+        [[nodiscard]] static Distance getPointChargeThickness();
 
         [[nodiscard]] static SmoothingMethod getSmoothingMethod();
         [[nodiscard]] static QMForceDist     getQMForceDist();

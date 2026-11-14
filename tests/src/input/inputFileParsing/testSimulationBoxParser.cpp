@@ -31,6 +31,7 @@
 #include "simulationBoxSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "density" command
@@ -86,7 +87,10 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
 
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
+    EXPECT_EQ(
+        settings::PotentialSettings::getCoulombRadiusCutOff(),
+        1.0 * angstrom
+    );
 
     _clearParser(parser);
 

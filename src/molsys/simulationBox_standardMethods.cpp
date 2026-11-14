@@ -526,7 +526,7 @@ namespace molsys
      *
      * @param position
      */
-    void SimulationBox::applyPBC(linalg::Vec3D &position) const
+    void SimulationBox::applyPBC(Pos3D &position) const
     {
         _box->applyPBC(position);
     }
@@ -545,16 +545,16 @@ namespace molsys
     /**
      * @brief calculates the volume
      *
-     * @return double
+     * @return Volume
      */
-    double SimulationBox::getVolume() const { return _box->getVolume(); }
+    Volume SimulationBox::getVolume() const { return _box->getVolume(); }
 
     /**
      * @brief gets the minimal box dimension
      *
-     * @return double
+     * @return Pos
      */
-    double SimulationBox::getMinimalBoxDimension() const
+    Pos SimulationBox::getMinimalBoxDimension() const
     {
         return _box->getMinimalBoxDimension();
     }
@@ -562,9 +562,9 @@ namespace molsys
     /**
      * @brief gets the box dimensions
      *
-     * @return const linalg::Vec3D &
+     * @return const Pos3D &
      */
-    const linalg::Vec3D &SimulationBox::getBoxDimensions() const
+    const Pos3D &SimulationBox::getBoxDimensions() const
     {
         return _box->get_boxDimensions();
     }

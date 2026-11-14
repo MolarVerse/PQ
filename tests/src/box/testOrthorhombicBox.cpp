@@ -31,18 +31,21 @@
 #include "defaults.hpp"
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 #include "vectorNear.hpp"
 
 TEST(TestOrthoRhombicBox, setBoxDimensions)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    const Pos3D boxDimensions = linalg::Vec3D{1.0, 2.0, 3.0} * angstrom;
+    auto        box           = molsys::OrthorhombicBox(boxDimensions);
     EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
 }
 
 TEST(TestBox, clonedGeometryIsIndependent)
 {
-    const linalg::Vec3D                         boxDimensions = {1.0, 2.0, 3.0};
+    const Pos3D boxDimensions = linalg::Vec3D{1.0, 2.0, 3.0} * angstrom;
     std::array<std::unique_ptr<molsys::Box>, 2> boxes{
         std::make_unique<molsys::OrthorhombicBox>(boxDimensions),
         std::make_unique<molsys::TriclinicBox>(
@@ -59,31 +62,59 @@ TEST(TestBox, clonedGeometryIsIndependent)
         SCOPED_TRACE(i);
         auto      &box            = *boxes.at(i);
         const auto expectedVolume = expectedVolumes.at(i);
-        EXPECT_NEAR(box.getVolume(), expectedVolume, tolerance);
+        EXPECT_NEAR(
+            box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+            expectedVolume,
+            tolerance
+        );
 
         auto candidate = box.clone();
         candidate->scaleBox(linalg::diagonalMatrix(2.0));
 
         EXPECT_VECTOR_NEAR(
-            candidate->get_boxDimensions(),
+            candidate->get_boxDimensions().numerical_value_in(angstrom),
             linalg::Vec3D(2.0, 4.0, 6.0),
             tolerance
         );
-        EXPECT_NEAR(candidate->getVolume(), 8.0 * expectedVolume, tolerance);
+        EXPECT_NEAR(
+            candidate->getVolume().numerical_value_in(
+                angstrom * angstrom * angstrom
+            ),
+            8.0 * expectedVolume,
+            tolerance
+        );
         EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
-        EXPECT_NEAR(box.getVolume(), expectedVolume, tolerance);
+        EXPECT_NEAR(
+            box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+            expectedVolume,
+            tolerance
+        );
 
         box.scaleBox(linalg::diagonalMatrix(3.0));
-        EXPECT_NEAR(box.getVolume(), 27.0 * expectedVolume, tolerance);
-        EXPECT_NEAR(candidate->getVolume(), 8.0 * expectedVolume, tolerance);
+        EXPECT_NEAR(
+            box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+            27.0 * expectedVolume,
+            tolerance
+        );
+        EXPECT_NEAR(
+            candidate->getVolume().numerical_value_in(
+                angstrom * angstrom * angstrom
+            ),
+            8.0 * expectedVolume,
+            tolerance
+        );
     }
 }
 
 TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    const double        density       = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
-    const double        totalMass     = 1.0;
+    const Pos3D boxDimensions = {
+        1.0 * angstrom,
+        1.0 * angstrom,
+        1.0 * angstrom
+    };
+    const double density   = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
+    const double totalMass = 1.0;
     EXPECT_EQ(
         molsys::OrthorhombicBox::calcBoxDimFromDensity(totalMass, density),
         boxDimensions
@@ -92,64 +123,68 @@ TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
 
 TEST(TestOrthoRhombicBox, calculateVolume)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    auto                box           = molsys::OrthorhombicBox(boxDimensions);
-    EXPECT_EQ(box.getVolume(), 6.0);
+    const Pos3D boxDimensions = linalg::Vector3D{1.0, 2.0, 3.0} * angstrom;
+    auto        box           = molsys::OrthorhombicBox(boxDimensions);
+    EXPECT_EQ(
+        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+        6.0
+    );
 }
 
 TEST(TestOrthoRhombicBox, applyPeriodicBoundaryConditions)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    const Pos3D boxDimensions = linalg::Vector3D{1.0, 2.0, 3.0} * angstrom;
+    auto        box           = molsys::OrthorhombicBox(boxDimensions);
 
-    linalg::Vec3D position = {0.5, 1.5, 2.5};
+    Pos3D position = linalg::Vector3D{0.5, 1.5, 2.5} * angstrom;
     box.applyPBC(position);
 
-    const linalg::Vec3D expectedPosition = {0.5, -0.5, -0.5};
+    const Pos3D expectedPosition = linalg::Vector3D{0.5, -0.5, -0.5} * angstrom;
     EXPECT_EQ(position, expectedPosition);
 }
 
 TEST(TestOrthoRhombicBox, scaleBox)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 2.0, 3.0};
-    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    const Pos3D boxDimensions = linalg::Vector3D{1.0, 2.0, 3.0} * angstrom;
+    auto        box           = molsys::OrthorhombicBox(boxDimensions);
 
     const linalg::tensor3D scaleFactors =
         diagonalMatrix(linalg::Vec3D{2.0, 2.0, 2.0});
     box.scaleBox(scaleFactors);
 
-    const linalg::Vec3D expectedBoxDimensions = {2.0, 4.0, 6.0};
+    const Pos3D expectedBoxDimensions =
+        linalg::Vector3D{2.0, 4.0, 6.0} * angstrom;
     EXPECT_EQ(box.get_boxDimensions(), expectedBoxDimensions);
 }
 
 TEST(TestOrthoRhombicBox, getMinimalBoxDimension)
 {
-    const linalg::Vec3D boxDimensions = {2.0, 1.0, 3.0};
-    auto                box           = molsys::OrthorhombicBox(boxDimensions);
+    const Pos3D boxDimensions = linalg::Vector3D{2.0, 1.0, 3.0} * angstrom;
+    auto        box           = molsys::OrthorhombicBox(boxDimensions);
 
-    EXPECT_EQ(box.getMinimalBoxDimension(), 1.0);
+    EXPECT_EQ(box.getMinimalBoxDimension(), 1.0 * angstrom);
 }
 
 TEST(TestOrthoRhombicBox, calculateShiftVector)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    auto                box           = molsys::OrthorhombicBox(boxDimensions);
-    const linalg::Vec3D vector{0.2, 1.2, -0.8};
+    const Pos3D boxDimensions = linalg::Vector3D{1.0, 1.0, 1.0} * angstrom;
+    auto        box           = molsys::OrthorhombicBox(boxDimensions);
+    const Pos3D vector        = linalg::Vector3D{0.2, 1.2, -0.8} * angstrom;
 
-    EXPECT_EQ(box.calcShiftVector(vector)[0], 0.0);
-    EXPECT_EQ(box.calcShiftVector(vector)[1], 1.0);
-    EXPECT_EQ(box.calcShiftVector(vector)[2], -1.0);
+    EXPECT_EQ(box.calcShiftVector(vector)[0], 0.0 * angstrom);
+    EXPECT_EQ(box.calcShiftVector(vector)[1], 1.0 * angstrom);
+    EXPECT_EQ(box.calcShiftVector(vector)[2], -1.0 * angstrom);
 }
 
 TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 {
-    const linalg::Vec3D boxDimensions = {1.0, 1.0, 1.0};
-    auto                box           = molsys::OrthorhombicBox(boxDimensions);
-    constexpr double    tolerance     = 1e-10;
-    const linalg::Vec3D vector{1.2, 1.7, -0.6};
+    const Pos3D      boxDimensions = linalg::Vector3D{1.0, 1.0, 1.0} * angstrom;
+    auto             box           = molsys::OrthorhombicBox(boxDimensions);
+    constexpr double tolerance     = 1e-10;
+    const Pos3D      vector = linalg::Vector3D{1.2, 1.7, -0.6} * angstrom;
 
     EXPECT_VECTOR_NEAR(
-        box.wrapPositionIntoBox(vector),
+        box.wrapPositionIntoBox(vector).numerical_value_in(angstrom),
         linalg::Vec3D(0.2, -0.3, 0.4),
         tolerance
     );
@@ -157,7 +192,7 @@ TEST(TestOrthoRhombicBox, wrapPositionIntoBox)
 
 TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
 {
-    const linalg::Vec3D     boxDimensions = {1.0, 2.0, 3.0};
+    const Pos3D boxDimensions = linalg::Vector3D{1.0, 2.0, 3.0} * angstrom;
     molsys::OrthorhombicBox box(boxDimensions);
 
     using enum molsys::Periodicity;
@@ -181,7 +216,10 @@ TEST(TestOrthoRhombicBox, periodicityMasksBoxDimensions)
             const auto expected = expectedPeriodicAxes.at(i).at(axis)
                                       ? box.get_boxDimensions()[axis]
                                       : defaults::VACUUM_BOX_DIMENSION;
-            EXPECT_DOUBLE_EQ(matrix[axis][axis], expected);
+            EXPECT_DOUBLE_EQ(
+                matrix[axis][axis].numerical_value_in(angstrom),
+                expected.numerical_value_in(angstrom)
+            );
         }
     }
 }

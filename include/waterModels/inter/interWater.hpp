@@ -27,6 +27,7 @@
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPair.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -104,7 +105,7 @@ namespace waterModel
             molsys::Atom                                 &atom1,
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-            double                                        rCutSquared,
+            const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
@@ -116,7 +117,7 @@ namespace waterModel
             molsys::Atom                                 &atom1,
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-            double                                        rCutSquared,
+            const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
             double                                       &coulombEnergy
         );
@@ -126,7 +127,7 @@ namespace waterModel
             molsys::Atom                                 &atom1,
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-            double                                        rCutSquared,
+            const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,

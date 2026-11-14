@@ -108,25 +108,25 @@ namespace QM
             coordsFile << std::format(
                 "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 "",
-                boxMatrix[0][0],
-                boxMatrix[1][0],
-                boxMatrix[2][0]
+                boxMatrix[0][0].numerical_value_in(angstrom),
+                boxMatrix[1][0].numerical_value_in(angstrom),
+                boxMatrix[2][0].numerical_value_in(angstrom)
             );
 
             coordsFile << std::format(
                 "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 "",
-                boxMatrix[0][1],
-                boxMatrix[1][1],
-                boxMatrix[2][1]
+                boxMatrix[0][1].numerical_value_in(angstrom),
+                boxMatrix[1][1].numerical_value_in(angstrom),
+                boxMatrix[2][1].numerical_value_in(angstrom)
             );
 
             coordsFile << std::format(
                 "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 "",
-                boxMatrix[0][2],
-                boxMatrix[1][2],
-                boxMatrix[2][2]
+                boxMatrix[0][2].numerical_value_in(angstrom),
+                boxMatrix[1][2].numerical_value_in(angstrom),
+                boxMatrix[2][2].numerical_value_in(angstrom)
             );
         }
 
@@ -290,7 +290,9 @@ namespace QM
 
         const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
         stress                = stress * conversion;
-        const auto virial     = stress * box.getVolume();
+        const auto virial =
+            stress *
+            box.getVolume().numerical_value_in(angstrom * angstrom * angstrom);
 
         physicalData.setStressTensor(stress);
         physicalData.addVirial(virial);

@@ -46,10 +46,10 @@ namespace constraints
     class DistanceConstraint : public connectivity::Bond
     {
        private:
-        double _lowerDistance;
-        double _upperDistance;
-        double _springConstant;
-        double _dSpringConstantDt;
+        Distance _lowerDistance;
+        Distance _upperDistance;
+        double   _springConstant;
+        double   _dSpringConstantDt;
 
         double        _lowerEnergy = 0.0;
         double        _upperEnergy = 0.0;
@@ -61,8 +61,8 @@ namespace constraints
             molsys::Molecule *molecule2,
             AtomIndex         atomIndex1,
             AtomIndex         atomIndex2,
-            double            lowerDistance,
-            double            upperDistance,
+            const Distance   &lowerDistance,
+            const Distance   &upperDistance,
             double            springConstant,
             double            dSpringConstantDt
         );
@@ -72,8 +72,9 @@ namespace constraints
             const Time &
         );
 
-        [[nodiscard]] double getLowerDistance() const;
-        [[nodiscard]] double getUpperDistance() const;
+        CONST_GETTER(_lowerDistance);
+        CONST_GETTER(_upperDistance);
+
         [[nodiscard]] double getSpringConstant() const;
         [[nodiscard]] double getDSpringConstantDt() const;
         [[nodiscard]] double getLowerEnergy() const;

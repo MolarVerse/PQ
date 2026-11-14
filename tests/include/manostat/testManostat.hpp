@@ -71,7 +71,8 @@ class TestManostat : public ::testing::Test
         );
 
         _box = std::make_unique<molsys::SimulationBox>();
-        molsys::OrthorhombicBox orthoBox{{cbrt(2.0), cbrt(2.0), cbrt(2.0)}};
+        const auto              boxLength = cbrt(2.0) * angstrom;
+        molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};
         _box->setBox(orthoBox, false);
     }
 };

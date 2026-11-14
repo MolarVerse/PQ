@@ -78,7 +78,7 @@ namespace opt
         {
             auto&      atom  = simulationBox.getAtoms()[i];
             const auto force = atom->getForce();
-            const auto pos   = atom->getPosition().numerical_value_in(angstrom);
+            const auto pos   = atom->getPosition();
 
             _momentum1[i] = _beta1 * _momentum1[i] - (1.0 - _beta1) * force;
             _momentum2[i] =
@@ -88,12 +88,16 @@ namespace opt
             const auto mom2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
 
             constexpr auto epsilon = 1e-8;
-            auto pos_new = pos - learningRate * mom1 / (sqrt(mom2 + epsilon));
+            auto           pos_new =
+                pos -
+                Pos3D{
+                    (learningRate * mom1 / (sqrt(mom2 + epsilon))) * angstrom
+                };
 
             simulationBox.applyPBC(pos_new);
 
-            atom->setPositionOld(pos * angstrom);
-            atom->setPosition(pos_new * angstrom);
+            atom->setPositionOld(pos);
+            atom->setPosition(pos_new);
         }
     }
 

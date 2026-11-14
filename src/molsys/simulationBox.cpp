@@ -34,6 +34,7 @@
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
 #include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 namespace molsys
 {
@@ -805,14 +806,16 @@ namespace molsys
     void SimulationBox::calculateDensity()
     {
         const auto volume = _box->getVolume();
-        _density          = _totalMass / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
+        _density          = _totalMass /
+                   volume.numerical_value_in(angstrom * angstrom * angstrom) *
+                   AMU_PER_ANGSTROM3_TO_KG_PER_L;
     }
 
     /**
      * @brief calculate box dimensions from density
      *
      */
-    linalg::Vec3D SimulationBox::calcBoxDimFromDensity() const
+    Pos3D SimulationBox::calcBoxDimFromDensity() const
     {
         return OrthorhombicBox::calcBoxDimFromDensity(_totalMass, _density);
     }
@@ -821,9 +824,7 @@ namespace molsys
      * @brief calculate shift vector for a given position
      *
      */
-    [[nodiscard]] linalg::Vec3D SimulationBox::calcShiftVector(
-        const linalg::Vec3D& position
-    ) const
+    Pos3D SimulationBox::calcShiftVector(const Pos3D& position) const
     {
         return _box->calcShiftVector(position);
     }
@@ -843,26 +844,25 @@ namespace molsys
      */
     void SimulationBox::initPositions(const double displacement)
     {
-        rng::RandomNumberGenerator randomNumberGenerator{};
+        rng::RandomNumberGenerator rng{};
 
-        auto displacePositions =
-            [&randomNumberGenerator, displacement, this](auto& atom)
+        auto displacePositions = [&rng, displacement, this](auto& atom)
         {
-            const auto random = linalg::Vec3D{
-                randomNumberGenerator
-                    .getUniformRealDistribution(-displacement, displacement),
-                randomNumberGenerator
-                    .getUniformRealDistribution(-displacement, displacement),
-                randomNumberGenerator
-                    .getUniformRealDistribution(-displacement, displacement)
-            };
+            Pos3D position = atom->getPosition();
 
-            auto position =
-                atom->getPosition().numerical_value_in(angstrom) + random;
+            const auto random =
+                linalg::Vec3D{
+                    rng.getUniformRealDistribution(-displacement, displacement),
+                    rng.getUniformRealDistribution(-displacement, displacement),
+                    rng.getUniformRealDistribution(-displacement, displacement)
+                } *
+                Pos3D::value_type::unit;
+
+            position += random;
 
             applyPBC(position);
 
-            atom->setPosition(position * angstrom);
+            atom->setPosition(position);
         };
 
         std::ranges::for_each(_atoms, displacePositions);

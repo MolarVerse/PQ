@@ -39,7 +39,7 @@ namespace ff
         const molsys::Molecule      *molecule_j,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
-        double                       distance
+        const Distance              &distance
     );
 }   // namespace ff
 

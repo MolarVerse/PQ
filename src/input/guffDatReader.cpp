@@ -48,6 +48,7 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 namespace input::guffdat
@@ -277,7 +278,7 @@ namespace input::guffdat
             );
         }
 
-        double rncCutOff = stod(lineCommands[4]);
+        Distance rncCutOff = stod(lineCommands[4]) * angstrom;
 
         if (rncCutOff < 0.0)
             rncCutOff = settings::PotentialSettings::getCoulombRadiusCutOff();
@@ -331,7 +332,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        double                     rncCutOff
+        const Distance            &rncCutOff
     )
     {
         using enum NonCoulombType;
@@ -422,7 +423,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        double                     rncCutOff
+        const Distance            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -474,7 +475,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        double                     rncCutOff
+        const Distance            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -483,7 +484,7 @@ namespace input::guffdat
 
         const auto params = BuckinghamParams{
             .scaling = coefficients[0],
-            .dRho    = coefficients[1],
+            .dRho    = coefficients[1] / angstrom,
             .c6      = coefficients[2]
         };
         const auto buckPair           = pot::BuckinghamPair(rncCutOff, params);
@@ -529,7 +530,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        const double               rncCutOff
+        const Distance            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -538,8 +539,8 @@ namespace input::guffdat
 
         const auto params = MorseParams{
             .dissociationEnergy  = coefficients[0],
-            .wellWidth           = coefficients[1],
-            .equilibriumDistance = coefficients[2]
+            .wellWidth           = coefficients[1] / angstrom,
+            .equilibriumDistance = coefficients[2] * angstrom
         };
 
         const auto morsePair          = pot::MorsePair(rncCutOff, params);
@@ -587,7 +588,7 @@ namespace input::guffdat
         AtomType                                                   atomType1,
         AtomType                                                   atomType2,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients,
-        double                                                     rncCutOff
+        const Distance                                            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(

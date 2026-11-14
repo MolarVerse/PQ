@@ -49,10 +49,10 @@ class TestDistanceConstraint : public ::testing::Test
     std::shared_ptr<molsys::Atom> _atom1;
     std::shared_ptr<molsys::Atom> _atom2;
 
-    double _lowerDistance     = 1.0;
-    double _upperDistance     = 3.0;
-    double _springConstant    = 10.0;
-    double _dSpringConstantDt = 0.0;
+    Distance _lowerDistance     = 1.0 * angstrom;
+    Distance _upperDistance     = 3.0 * angstrom;
+    double   _springConstant    = 10.0;
+    double   _dSpringConstantDt = 0.0;
 
     void SetUp() override
     {
@@ -73,7 +73,9 @@ class TestDistanceConstraint : public ::testing::Test
         _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _box->setBox(orthoBox, false);
 
         _distanceConstraint = std::make_unique<constraints::DistanceConstraint>(

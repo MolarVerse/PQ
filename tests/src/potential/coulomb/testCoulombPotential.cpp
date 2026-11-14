@@ -24,16 +24,21 @@
 
 #include "coulombPotential.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests the general constructor of a coulombPotential
  */
 TEST(TestCoulombPotential, constructor)
 {
-    auto potential = pot::CoulombShiftedPotential(2.0);
-    EXPECT_EQ(potential.getCoulombRadiusCutOff(), 2.0);
-    EXPECT_EQ(potential.getCoulombEnergyCutOff(), 0.5);
-    EXPECT_EQ(potential.getCoulombForceCutOff(), 0.25);
+    auto potential = pot::CoulombShiftedPotential(2.0 * angstrom);
+    EXPECT_EQ(potential.get_coulombRadiusCutOff(), 2.0 * angstrom);
+    EXPECT_EQ(potential.get_coulombEnergyCutOff(), 0.5);
+    EXPECT_EQ(potential.get_coulombForceCutOff(), 0.25);
+    EXPECT_EQ(
+        potential.get_coulombCutOffCubedInverse(),
+        1.0 / (2.0 * angstrom * 2.0 * angstrom * 2.0 * angstrom)
+    );
 }
 
 /**
@@ -41,9 +46,13 @@ TEST(TestCoulombPotential, constructor)
  */
 TEST(TestCoulombPotential, setCoulombRadiusCutOff)
 {
-    pot::CoulombPotential::setCoulombRadiusCutOff(2.0);
+    pot::CoulombPotential::setCoulombRadiusCutOff(2.0 * angstrom);
 
-    EXPECT_EQ(pot::CoulombPotential::getCoulombRadiusCutOff(), 2.0);
-    EXPECT_EQ(pot::CoulombPotential::getCoulombEnergyCutOff(), 0.5);
-    EXPECT_EQ(pot::CoulombPotential::getCoulombForceCutOff(), 0.25);
+    EXPECT_EQ(pot::CoulombPotential::get_coulombRadiusCutOff(), 2.0 * angstrom);
+    EXPECT_EQ(
+        pot::CoulombPotential::get_coulombCutOffCubedInverse(),
+        1.0 / (2.0 * angstrom * 2.0 * angstrom * 2.0 * angstrom)
+    );
+    EXPECT_EQ(pot::CoulombPotential::get_coulombEnergyCutOff(), 0.5);
+    EXPECT_EQ(pot::CoulombPotential::get_coulombForceCutOff(), 0.25);
 }

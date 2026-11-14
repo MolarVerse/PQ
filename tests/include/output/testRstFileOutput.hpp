@@ -51,7 +51,9 @@ class TestRstFileOutput : public ::testing::Test
         _rstFileOutput = std::make_unique<out::RstFileOutput>("default.rst");
         _simulationBox = std::make_unique<molsys::SimulationBox>();
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _simulationBox->setBox(orthoBox, false);
 
         auto molecule1 = molsys::Molecule();

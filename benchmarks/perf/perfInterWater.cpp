@@ -56,7 +56,7 @@
 
 static constexpr std::uint64_t ITERATIONS = 50;
 static constexpr MolType       WATER_TYPE{1};
-static constexpr double        CUTOFF                 = 9.0;
+static constexpr Distance      CUTOFF                 = 9.0 * angstrom;
 static constexpr auto          HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
 static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
@@ -64,8 +64,8 @@ int main()
 {
     settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+    pot::CoulombPotential::set_coulombForceCutOff(0.0);
     WaterModelSettings waterModelSettings;
     waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
 
@@ -75,7 +75,9 @@ int main()
 
     molsys::SimulationBox simBox;
 
-    molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {30.0 * angstrom, 30.0 * angstrom, 30.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
     simBox.setWaterType(WATER_TYPE);
 

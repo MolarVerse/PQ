@@ -73,7 +73,8 @@ namespace benchOutputWriters
         const auto perSide = static_cast<std::size_t>(
             std::ceil(std::cbrt(static_cast<double>(molecules)))
         );
-        const double boxLength = SPACING * static_cast<double>(perSide);
+        const auto boxLength =
+            SPACING * static_cast<double>(perSide) * angstrom;
 
         molsys::SimulationBox   simBox;
         molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};

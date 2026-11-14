@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "hybridSettings.hpp"
+#include "units.hpp"
 
 TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)
 {
@@ -67,20 +68,32 @@ TEST(HybridSettingsTest, BoolAndRadiusSettingsRoundTrip)
     settings::HybridSettings::setUseQMCharges(true);
     EXPECT_TRUE(settings::HybridSettings::getUseQMCharges());
 
-    settings::HybridSettings::setCoreRadius(2.5);
-    EXPECT_DOUBLE_EQ(settings::HybridSettings::getCoreRadius(), 2.5);
-
-    settings::HybridSettings::setLayerRadius(6.75);
-    EXPECT_DOUBLE_EQ(settings::HybridSettings::getLayerRadius(), 6.75);
-
-    settings::HybridSettings::setSmoothingRegionThickness(1.25);
+    settings::HybridSettings::setCoreRadius(2.5 * angstrom);
     EXPECT_DOUBLE_EQ(
-        settings::HybridSettings::getSmoothingRegionThickness(),
+        settings::HybridSettings::getCoreRadius().numerical_value_in(angstrom),
+        2.5
+    );
+
+    settings::HybridSettings::setLayerRadius(6.75 * angstrom);
+    EXPECT_DOUBLE_EQ(
+        settings::HybridSettings::getLayerRadius().numerical_value_in(angstrom),
+        6.75
+    );
+
+    settings::HybridSettings::setSmoothingRegionThickness(1.25 * angstrom);
+    EXPECT_DOUBLE_EQ(
+        settings::HybridSettings::getSmoothingRegionThickness()
+            .numerical_value_in(angstrom),
         1.25
     );
 
-    settings::HybridSettings::setPointChargeThickness(4.5);
-    EXPECT_DOUBLE_EQ(settings::HybridSettings::getPointChargeThickness(), 4.5);
+    settings::HybridSettings::setPointChargeThickness(4.5 * angstrom);
+    EXPECT_DOUBLE_EQ(
+        settings::HybridSettings::getPointChargeThickness().numerical_value_in(
+            angstrom
+        ),
+        4.5
+    );
 }
 
 TEST(HybridSettingsTest, EnumSettingsRoundTrip)

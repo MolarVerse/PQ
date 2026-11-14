@@ -77,14 +77,16 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
     simBox.addAtom(std::make_shared<molsys::Atom>(atom3));
     simBox.addAtom(std::make_shared<molsys::Atom>(atom4));
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
     simBox.addInnerRegionCenterAtoms({0, 1, 2});
 
     hybridConfigurator.calculateInnerRegionCenter(simBox);
 
     EXPECT_VECTOR_NEAR(
-        hybridConfigurator.getInnerRegionCenter(),
+        hybridConfigurator.getInnerRegionCenter().numerical_value_in(angstrom),
         center,
         1e-10
     );
@@ -141,13 +143,15 @@ TEST(testHybridConfigurator, assignHybridZones)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
-    settings::HybridSettings::setCoreRadius(6.0);
-    settings::HybridSettings::setLayerRadius(12.0);
-    settings::HybridSettings::setSmoothingRegionThickness(2.0);
-    settings::HybridSettings::setPointChargeThickness(7.0);
+    settings::HybridSettings::setCoreRadius(6.0 * angstrom);
+    settings::HybridSettings::setLayerRadius(12.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(2.0 * angstrom);
+    settings::HybridSettings::setPointChargeThickness(7.0 * angstrom);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     atom1->setPosition(linalg::Vec3D{3.95, 3.15, 1.95} * angstrom);
@@ -218,13 +222,15 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
-    settings::HybridSettings::setCoreRadius(0.0);
-    settings::HybridSettings::setLayerRadius(7.0);
-    settings::HybridSettings::setSmoothingRegionThickness(0.2);
-    settings::HybridSettings::setPointChargeThickness(7.0);
+    settings::HybridSettings::setCoreRadius(0.0 * angstrom);
+    settings::HybridSettings::setLayerRadius(7.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(0.2 * angstrom);
+    settings::HybridSettings::setPointChargeThickness(7.0 * angstrom);
 
     auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
@@ -240,7 +246,7 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), LAYER);
 
-    settings::HybridSettings::setCoreRadius(0.00001);
+    settings::HybridSettings::setCoreRadius(0.00001 * angstrom);
     configurator::HybridConfigurator::assignHybridZones(simBox);
 
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
@@ -251,13 +257,15 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
-    settings::HybridSettings::setCoreRadius(2.0);
-    settings::HybridSettings::setLayerRadius(4.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
-    settings::HybridSettings::setPointChargeThickness(2.0);
+    settings::HybridSettings::setCoreRadius(2.0 * angstrom);
+    settings::HybridSettings::setLayerRadius(4.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(1.0 * angstrom);
+    settings::HybridSettings::setPointChargeThickness(2.0 * angstrom);
 
     auto makeMolecule = [](const linalg::Vec3D &position)
     {
@@ -378,11 +386,13 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     configurator::HybridConfigurator hybridConfigurator;
     molsys::SimulationBox            simBox;
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
-    settings::HybridSettings::setLayerRadius(12.0);
-    settings::HybridSettings::setSmoothingRegionThickness(2.0);
+    settings::HybridSettings::setLayerRadius(12.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(2.0 * angstrom);
 
     using enum molsys::HybridZone;
 
@@ -428,11 +438,23 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 
     configurator::HybridConfigurator::calculateSmoothingFactors(simBox);
 
-    EXPECT_NEAR(simBox.getMolecule(0).getSmoothingFactor(), 1.0, 1e-10);
-    EXPECT_NEAR(simBox.getMolecule(1).getSmoothingFactor(), 0.5, 1e-10);
-    EXPECT_NEAR(simBox.getMolecule(2).getSmoothingFactor(), 0.0, 1e-10);
     EXPECT_NEAR(
-        simBox.getMolecule(3).getSmoothingFactor(),
+        simBox.getMolecule(0).getSmoothingFactor().numerical_value_in(one),
+        1.0,
+        1e-10
+    );
+    EXPECT_NEAR(
+        simBox.getMolecule(1).getSmoothingFactor().numerical_value_in(one),
+        0.5,
+        1e-10
+    );
+    EXPECT_NEAR(
+        simBox.getMolecule(2).getSmoothingFactor().numerical_value_in(one),
+        0.0,
+        1e-10
+    );
+    EXPECT_NEAR(
+        simBox.getMolecule(3).getSmoothingFactor().numerical_value_in(one),
         0.019890532631249892,
         1e-10
     );
@@ -458,7 +480,12 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
 TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
 {
     molsys::SimulationBox box;
-    box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
+    box.setBox(
+        molsys::OrthorhombicBox(
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        ),
+        false
+    );
     for (const auto &positions :
          {std::vector<double>{4.9}, std::vector<double>{-0.2, 0.2}})
     {
@@ -480,14 +507,24 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
     configurator::HybridConfigurator::assignHybridZones(box);
     configurator.shiftAtomsBackToInitialPositions(box);
 
-    EXPECT_NEAR(box.getMolecule(0).getCenterOfMass()[0], 4.9, 1e-12);
-    EXPECT_NEAR(box.getMolecule(1).getCenterOfMass()[0], 0.0, 1e-12);
+    EXPECT_NEAR(
+        box.getMolecule(0).getCenterOfMass()[0].numerical_value_in(angstrom),
+        4.9,
+        1e-12
+    );
+    EXPECT_NEAR(
+        box.getMolecule(1).getCenterOfMass()[0].numerical_value_in(angstrom),
+        0.0,
+        1e-12
+    );
     auto &molecule = box.getMolecule(1);
     molecule.reconstructAtomsAroundCenterOfMass(box.getBox());
     EXPECT_NEAR(
-        (molecule.getAtomPosition(AtomIndex{1})[0] -
-         molecule.getAtomPosition(AtomIndex{0})[0])
-            .numerical_value_in(angstrom),
+        (molecule.getAtomPosition(AtomIndex{1})[0].numerical_value_in(
+             angstrom
+         ) -
+         molecule.getAtomPosition(AtomIndex{0})[0].numerical_value_in(angstrom)
+        ),
         0.4,
         1e-12
     );

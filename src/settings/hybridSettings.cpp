@@ -178,7 +178,10 @@ namespace settings
      *
      * @param radius
      */
-    void HybridSettings::setCoreRadius(double radius) { _coreRadius = radius; }
+    void HybridSettings::setCoreRadius(const Distance &radius)
+    {
+        _coreRadius = radius;
+    }
 
     /**
      * @brief set the layerRadius in the settings
@@ -187,7 +190,7 @@ namespace settings
      *
      * @param radius
      */
-    void HybridSettings::setLayerRadius(double radius)
+    void HybridSettings::setLayerRadius(const Distance &radius)
     {
         _layerRadius = radius;
     }
@@ -197,7 +200,7 @@ namespace settings
      *
      * @param thickness
      */
-    void HybridSettings::setSmoothingRegionThickness(double thickness)
+    void HybridSettings::setSmoothingRegionThickness(const Distance &thickness)
     {
         _smoothingRegionThickness = thickness;
     }
@@ -210,7 +213,7 @@ namespace settings
      *
      * @param radius
      */
-    void HybridSettings::setPointChargeThickness(double radius)
+    void HybridSettings::setPointChargeThickness(const Distance &radius)
     {
         _pointChargeThickness = radius;
     }
@@ -291,23 +294,23 @@ namespace settings
     /**
      * @brief get the coreRadius
      *
-     * @return double
+     * @return Distance
      */
-    double HybridSettings::getCoreRadius() { return _coreRadius; }
+    Distance HybridSettings::getCoreRadius() { return _coreRadius; }
 
     /**
      * @brief get the layerRadius
      *
-     * @return double
+     * @return Distance
      */
-    double HybridSettings::getLayerRadius() { return _layerRadius; }
+    Distance HybridSettings::getLayerRadius() { return _layerRadius; }
 
     /**
      * @brief get the smoothingRegionThickness
      *
-     * @return double
+     * @return Distance
      */
-    double HybridSettings::getSmoothingRegionThickness()
+    Distance HybridSettings::getSmoothingRegionThickness()
     {
         return _smoothingRegionThickness;
     }
@@ -315,9 +318,9 @@ namespace settings
     /**
      * @brief get the pointChargeThickness
      *
-     * @return double
+     * @return Distance
      */
-    double HybridSettings::getPointChargeThickness()
+    Distance HybridSettings::getPointChargeThickness()
     {
         return _pointChargeThickness;
     }

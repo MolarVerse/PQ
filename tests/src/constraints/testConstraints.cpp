@@ -40,11 +40,11 @@ TEST_F(TestConstraints, calcRefBondLengths)
     _constraints->calculateConstraintBondRefs(*_box);
     EXPECT_EQ(
         _constraints->getBondConstraints()[0].getShakeDistanceRef(),
-        linalg::Vec3D(0.0, -1.0, -2.0)
+        linalg::Vec3D(0.0, -1.0, -2.0) * angstrom
     );
     EXPECT_EQ(
         _constraints->getBondConstraints()[1].getShakeDistanceRef(),
-        linalg::Vec3D(1.0, -2.0, -3.0)
+        linalg::Vec3D(1.0, -2.0, -3.0) * angstrom
     );
 }
 

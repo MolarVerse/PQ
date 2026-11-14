@@ -238,6 +238,28 @@ namespace linalg
         return *this;
     }
 
+    /**
+     * @brief operator /= for quantity elements and a dimensionless scalar
+     *
+     * @tparam T
+     * @tparam S
+     * @param scalar
+     * @return `Vector3D<T>&` (inplace division)
+     */
+    template <typename T>
+    template <typename S>
+    requires(
+        mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+        requires(T &elem, const S &scalar) { elem /= scalar; }
+    )
+    Vector3D<T> &Vector3D<T>::operator/=(const S &scalar)
+    {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return *this;
+    }
+
     /**********************
      *                    *
      * indexing operators *
@@ -281,7 +303,8 @@ namespace linalg
      */
     template <typename T>
     Vector3D<T> Vector3D<T>::operator-() const
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+             mstd::is_quantity_like_v<T>
     {
         return Vector3D<T>(-x, -y, -z);
     }

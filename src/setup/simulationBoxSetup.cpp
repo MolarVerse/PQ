@@ -48,6 +48,7 @@
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace setup
@@ -358,7 +359,9 @@ namespace setup
         {
             const auto volume = simBox.getVolume();
             const auto density =
-                simBox.getTotalMass() / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
+                simBox.getTotalMass() /
+                volume.numerical_value_in(angstrom * angstrom * angstrom) *
+                AMU_PER_ANGSTROM3_TO_KG_PER_L;
 
             simBox.setDensity(density);
         }
@@ -369,7 +372,10 @@ namespace setup
             );
             const auto volume     = simBox.getVolume();
             const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
-            const auto density    = simBox.getTotalMass() / volume * convFactor;
+            const auto density =
+                simBox.getTotalMass() /
+                volume.numerical_value_in(angstrom * angstrom * angstrom) *
+                convFactor;
 
             simBox.setDensity(density);
 
@@ -377,7 +383,11 @@ namespace setup
             out::StdoutOutput::writeDensityWarning();
         }
 
-        _engine.getPhysicalData().setVolume(simBox.getVolume());
+        _engine.getPhysicalData().setVolume(
+            simBox.getVolume().numerical_value_in(
+                angstrom * angstrom * angstrom
+            )
+        );
         _engine.getPhysicalData().setDensity(simBox.getDensity());
     }
 
@@ -400,8 +410,7 @@ namespace setup
             throw exc::InputFileException(
                 std::format(
                     "Rc cutoff is larger than half of the minimal box "
-                    "dimension of "
-                    "{} Angstrom.",
+                    "dimension of {}.",
                     minDim
                 )
             );
@@ -476,10 +485,13 @@ namespace setup
         log.writeSetupInfo(std::format("unconstrained DOF: {:8d}", dof));
         log.writeEmptyLine();
 
-        const auto density = simBox.getDensity();
-        const auto volume  = simBox.getVolume();
-        const auto volumeStr =
-            std::format("{:14.5f} {}³", volume, out::ANGSTROM);
+        const auto density   = simBox.getDensity();
+        const auto volume    = simBox.getVolume();
+        const auto volumeStr = std::format(
+            "{:14.5f} {}³",
+            volume.numerical_value_in(angstrom * angstrom * angstrom),
+            out::ANGSTROM
+        );
 
         log.writeSetupInfo(
             std::format("density:         {:14.5f} kg/L", density)
@@ -491,9 +503,21 @@ namespace setup
         const auto boxB = simBox.getBoxDimensions()[1];
         const auto boxC = simBox.getBoxDimensions()[2];
 
-        const auto boxAStr = std::format("{:14.5f} {}", boxA, out::ANGSTROM);
-        const auto boxBStr = std::format("{:14.5f} {}", boxB, out::ANGSTROM);
-        const auto boxCstr = std::format("{:14.5f} {}", boxC, out::ANGSTROM);
+        const auto boxAStr = std::format(
+            "{:14.5f} {}",
+            boxA.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
+        const auto boxBStr = std::format(
+            "{:14.5f} {}",
+            boxB.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
+        const auto boxCstr = std::format(
+            "{:14.5f} {}",
+            boxC.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
 
         const auto alpha = simBox.getBoxAngles()[0];
         const auto beta  = simBox.getBoxAngles()[1];
@@ -518,8 +542,11 @@ namespace setup
 
         const auto coulombCutoff =
             settings::PotentialSettings::getCoulombRadiusCutOff();
-        const auto coulombCutoffStr =
-            std::format("{:14.5f} {}", coulombCutoff, out::ANGSTROM);
+        const auto coulombCutoffStr = std::format(
+            "{:14.5f} {}",
+            coulombCutoff.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
 
         log.writeSetupInfo(
             std::format("coulomb cutoff:  {}", coulombCutoffStr)

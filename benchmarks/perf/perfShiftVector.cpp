@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -43,10 +45,15 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    molsys::OrthorhombicBox ortho({20.0, 20.0, 20.0});
+    molsys::OrthorhombicBox ortho(
+        {20.0 * angstrom, 20.0 * angstrom, 20.0 * angstrom}
+    );
 
-    auto triclinic =
-        molsys::TriclinicBox({20.0, 20.0, 20.0}, {80.0, 90.0, 100.0}, false);
+    auto triclinic = molsys::TriclinicBox(
+        {20.0 * angstrom, 20.0 * angstrom, 20.0 * angstrom},
+        {80.0, 90.0, 100.0},
+        false
+    );
 
     perfAllocBegin();
 
@@ -55,11 +62,12 @@ int main()
     double sink = 0.0;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        const double        tmp = (static_cast<double>(i & 127U) * 0.3) - 19.0;
-        const linalg::Vec3D pos(tmp, 0.5 * tmp, -tmp);
+        const double tmp = (static_cast<double>(i & 127U) * 0.3) - 19.0;
+        const Pos3D  pos(tmp * angstrom, 0.5 * tmp * angstrom, -tmp * angstrom);
 
-        sink += norm(ortho.calcShiftVector(pos));
-        sink += norm(triclinic.calcShiftVector(pos));
+        sink += norm(ortho.calcShiftVector(pos)).numerical_value_in(angstrom);
+        sink +=
+            norm(triclinic.calcShiftVector(pos)).numerical_value_in(angstrom);
     }
 
     std::cout << std::format("{:.6f}\n", sink);

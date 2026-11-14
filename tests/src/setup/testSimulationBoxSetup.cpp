@@ -43,6 +43,7 @@
 #include "strongTypes.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestSetup, setAtomNames)
 {
@@ -352,12 +353,19 @@ TEST_F(TestSetup, noDensity)
 {
     _engine->getSimulationBox().setTotalMass(6000);
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
+    };
     _engine->getSimulationBox().setBox(orthoBox, true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getVolume().numerical_value_in(
+            angstrom * angstrom * angstrom
+        ),
+        6000.0
+    );
     EXPECT_DOUBLE_EQ(
         _engine->getSimulationBox().getDensity(),
         AMU_PER_ANGSTROM3_TO_KG_PER_L
@@ -373,9 +381,16 @@ TEST_F(TestSetup, testNoBox)
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getBoxDimensions()[2],
+        _engine->getSimulationBox().getVolume().numerical_value_in(
+            angstrom * angstrom * angstrom
+        ),
+        6000.0
+    );
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getBoxDimensions()[2].numerical_value_in(
+            angstrom
+        ),
         cbrt(6000.0)
     );
 }
@@ -387,13 +402,20 @@ TEST_F(TestSetup, testBoxAndDensitySet)
         12341243.1234
     );   // this should be ignored
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
+    };
     _engine->getSimulationBox().setBox(orthoBox, true);
     _settings->simulationBoxSettings.setDensityByUser(0.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getVolume(), 6000.0);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getVolume().numerical_value_in(
+            angstrom * angstrom * angstrom
+        ),
+        6000.0
+    );
     EXPECT_DOUBLE_EQ(
         _engine->getSimulationBox().getDensity(),
         AMU_PER_ANGSTROM3_TO_KG_PER_L
@@ -402,19 +424,20 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 
 TEST_F(TestSetup, testCheckRcCutoff)
 {
-    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
+    };
     _engine->getSimulationBox().setBox(orthoBox, false);
-    settings::PotentialSettings::setCoulombRadiusCutOff(14.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(14.0 * angstrom);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW_MSG(
         simulationBoxSetup.checkRcCutoff(),
         exc::InputFileException,
-        "Rc cutoff is larger than half of the minimal box dimension of 10 "
-        "Angstrom."
+        "Rc cutoff is larger than half of the minimal box dimension of 10 Å."
     );
 
     setup::SimulationBoxSetup simulationBox2Setup(*_engine);
-    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0 * angstrom);
     EXPECT_NO_THROW(simulationBox2Setup.checkRcCutoff());
 }
 
@@ -521,9 +544,11 @@ TEST_F(TestSetup, testFullSetup)
         12341243.1234
     );   // this should be ignored
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
+    };
     _engine->getSimulationBox().setBox(orthoBox, true);
-    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0 * angstrom);
 
     EXPECT_NO_THROW(setup::setupSimulationBox(*_engine));
 }
@@ -544,9 +569,11 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setTotalCharge(-7.03);
     simBox.setDegreesOfFreedom(4);
     simBox.setDensity(12341243.1234);
-    molsys::OrthorhombicBox orthoBox{{5.73, 9.93, 11.14}};
+    molsys::OrthorhombicBox orthoBox{
+        {5.73 * angstrom, 9.93 * angstrom, 11.14 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
-    settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
+    settings::PotentialSettings::setCoulombRadiusCutOff(5.79 * angstrom);
     FileSettings::setStartFileName("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();

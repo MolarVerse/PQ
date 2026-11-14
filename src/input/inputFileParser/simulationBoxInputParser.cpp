@@ -22,13 +22,13 @@
 
 #include "simulationBoxInputParser.hpp"
 
-#include "defaults.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "potentialSettings.hpp"
 #include "rangeValidator.hpp"
 #include "simulationBoxSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -65,18 +65,22 @@ namespace input
             .name  = "rcoulomb",
             .title = "Coulomb cutoff radius",
             .description =
-                "Specifies the cutoff radius for Coulomb interactions"
+                "Specifies the cutoff radius for Coulomb interactions",
+            .unit = "angstrom"
         };
 
         const auto setValue = [](double value)
-        { settings::PotentialSettings::setCoulombRadiusCutOff(value); };
+        {
+            settings::PotentialSettings::setCoulombRadiusCutOff(
+                value * angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
-                .metadata     = metaData,
-                .defaultValue = defaults::COULOMB_CUT_OFF_DEFAULT,
-                .onSet        = setValue,
-                .validators   = {makeShared(PositiveGTDoubleValidator)}
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
             }
         );
 
@@ -92,11 +96,16 @@ namespace input
             .name  = "rnoncoulomb",
             .title = "Non-Coulomb cutoff radius",
             .description =
-                "Specifies the cutoff radius for Non-Coulomb interactions"
+                "Specifies the cutoff radius for Non-Coulomb interactions",
+            .unit = "angstrom"
         };
 
         const auto setValue = [](double value)
-        { settings::PotentialSettings::setNonCoulombRadiusCutOff(value); };
+        {
+            settings::PotentialSettings::setNonCoulombRadiusCutOff(
+                value * angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

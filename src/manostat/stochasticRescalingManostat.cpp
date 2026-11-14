@@ -56,7 +56,10 @@ namespace manostat
 
         calculatePressure(simulationBox, physicalData);
 
-        const auto mu = calculateMu(simulationBox.getVolume());
+        const auto mu =
+            calculateMu(simulationBox.getVolume().numerical_value_in(
+                angstrom * angstrom * angstrom
+            ));
 
         _validateScaling(simulationBox, mu);
 
@@ -79,7 +82,9 @@ namespace manostat
         simulationBox.scaleBox(mu);
         simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
-        physicalData.setVolume(simulationBox.getVolume());
+        physicalData.setVolume(simulationBox.getVolume().numerical_value_in(
+            angstrom * angstrom * angstrom
+        ));
         physicalData.setDensity(simulationBox.getDensity());
 
         auto scalePositions = [&muSimSpace, &box](auto &molecule)

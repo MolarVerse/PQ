@@ -42,20 +42,27 @@ namespace pot
      * @param coulombRadiusCutOff - coulomb radius cut off
      * @param kappa
      */
-    CoulombWolf::CoulombWolf(double coulombRadiusCutOff, double kappa)
+    CoulombWolf::CoulombWolf(const Distance& coulombRadiusCutOff, double kappa)
         : CoulombPotential(coulombRadiusCutOff)
     {
         _kappa = kappa;
         _wolfParam1 =
-            ::erfc(_kappa * coulombRadiusCutOff) / coulombRadiusCutOff;
+            ::erfc(
+                _kappa * coulombRadiusCutOff.numerical_value_in(Distance::unit)
+            ) /
+            coulombRadiusCutOff.numerical_value_in(Distance::unit);
         _wolfParam2 = 2.0 * _kappa / ::sqrt(M_PI);
 
-        const auto kappaSquared  = _kappa * _kappa;
-        const auto coulRCSquared = coulombRadiusCutOff * coulombRadiusCutOff;
-        const auto expFactor     = ::exp(-kappaSquared * coulRCSquared);
+        const auto kappaSquared = _kappa * _kappa;
+        const auto coulRCSquared =
+            coulombRadiusCutOff.numerical_value_in(Distance::unit) *
+            coulombRadiusCutOff.numerical_value_in(Distance::unit);
+        const auto expFactor = ::exp(-kappaSquared * coulRCSquared);
 
-        _wolfParam3  = _wolfParam1 / coulombRadiusCutOff;
-        _wolfParam3 += _wolfParam2 * expFactor / coulombRadiusCutOff;
+        _wolfParam3 = _wolfParam1 /
+                      coulombRadiusCutOff.numerical_value_in(Distance::unit);
+        _wolfParam3 += _wolfParam2 * expFactor /
+                       coulombRadiusCutOff.numerical_value_in(Distance::unit);
     }
 
     /**
@@ -67,22 +74,28 @@ namespace pot
      * @return std::pair<double, double>
      */
     std::pair<double, double> CoulombWolf::calculate(
-        double distance,
-        double chargeProduct
+        const Distance& distance,
+        double          chargeProduct
     ) const
     {
         const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
 
-        const auto kappaDistance = _kappa * distance;
-        const auto erfcFactor    = ::erfc(kappaDistance);
-        const auto expFactor     = ::exp(-kappaDistance * kappaDistance);
+        const auto kappaDistance =
+            _kappa * distance.numerical_value_in(Distance::unit);
+        const auto erfcFactor = ::erfc(kappaDistance);
+        const auto expFactor  = ::exp(-kappaDistance * kappaDistance);
 
-        auto energy  = (erfcFactor / distance) - _wolfParam1;
-        energy      += _wolfParam3 * (distance - _coulombRadiusCutOff);
+        auto energy =
+            (erfcFactor / distance.numerical_value_in(Distance::unit)) -
+            _wolfParam1;
+        energy += _wolfParam3 * (distance - _coulombRadiusCutOff)
+                                    .numerical_value_in(Distance::unit);
 
-        auto force  = erfcFactor / (distance * distance);
-        force      += _wolfParam2 * expFactor / distance;
-        force      -= _wolfParam3;
+        auto force = erfcFactor / (distance.numerical_value_in(Distance::unit) *
+                                   distance.numerical_value_in(Distance::unit));
+        force += _wolfParam2 * expFactor /
+                 distance.numerical_value_in(Distance::unit);
+        force -= _wolfParam3;
 
         energy *= coulombPrefactor;
         force  *= coulombPrefactor;

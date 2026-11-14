@@ -50,18 +50,18 @@ namespace pot
 
        public:
         explicit GuffPair(
-            double,
+            const Pos&,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>&
         );
         explicit GuffPair(
-            double,
+            const Pos&,
             double,
             double,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>&
         );
 
         [[nodiscard]]
-        std::pair<double, double> calculate(double distance) const override;
+        std::pair<double, double> calculate(const Pos& distance) const override;
 
         friend struct ::TestGuffPairUtils;
     };

@@ -38,7 +38,7 @@ namespace molsys
     class OrthorhombicBox : public Box
     {
        public:
-        explicit OrthorhombicBox(const linalg::Vec3D &boxDimensions);
+        explicit OrthorhombicBox(const Pos3D &boxDimensions);
 
         [[nodiscard]]
         std::unique_ptr<Box> clone() const override;
@@ -46,32 +46,26 @@ namespace molsys
         [[nodiscard]]
         static OrthorhombicBox makeVacuumBox();
 
-        void applyPBC(linalg::Vec3D &position) const override;
+        void applyPBC(Pos3D &position) const override;
         void scaleBox(const QuantityTensor3D &scalingTensor) override;
 
-        [[nodiscard]] linalg::Vec3D calcShiftVector(
-            const linalg::Vec3D &shiftVector
-        ) const override;
+        [[nodiscard]]
+        Pos3D calcShiftVector(const Pos3D &shiftVector) const override;
 
         [[nodiscard]]
-        static linalg::Vec3D calcBoxDimFromDensity(
-            double totalMass,
-            double density
-        );
+        static Pos3D calcBoxDimFromDensity(double totalMass, double density);
 
         [[nodiscard]]
-        linalg::Vec3D wrapPositionIntoBox(
-            const linalg::Vec3D &pos
-        ) const override;
+        Pos3D wrapPositionIntoBox(const Pos3D &pos) const override;
 
         [[nodiscard]]
-        double getVolume() const override;
+        Volume getVolume() const override;
 
         [[nodiscard]]
-        double getMinimalBoxDimension() const override;
+        Pos getMinimalBoxDimension() const override;
 
         [[nodiscard]]
-        linalg::tensor3D getBoxMatrix(Periodicity per) const override;
+        PosTensor3D getBoxMatrix(Periodicity per) const override;
 
         [[nodiscard]]
         bool allowChangeOfAngles() const override;
@@ -80,10 +74,10 @@ namespace molsys
         bool isOrthorhombic() const override;
 
         [[nodiscard]]
-        linalg::tensor3D getBoxMatrix() const override;
+        PosTensor3D getBoxMatrix() const override;
 
         [[nodiscard]]
-        linalg::tensor3D getInverseBoxMatrix() const override;
+        InvPosTensor3D getInverseBoxMatrix() const override;
     };
 
 }   // namespace molsys

@@ -90,7 +90,9 @@ namespace manostat
         simulationBox.scaleBox(mu);
         simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
 
-        physicalData.setVolume(simulationBox.getVolume());
+        physicalData.setVolume(simulationBox.getVolume().numerical_value_in(
+            angstrom * angstrom * angstrom
+        ));
         physicalData.setDensity(simulationBox.getDensity());
 
         auto scaleMolecule = [&muSimSpace, &box](auto &molecule)

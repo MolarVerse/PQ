@@ -110,9 +110,9 @@ namespace intraNonBonded
      * for the interaction
      */
     std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-        AtomIndex            atomIdx1,
-        int                  atomIdx2AsInt,
-        const linalg::Vec3D &box,
+        AtomIndex    atomIdx1,
+        int          atomIdx2AsInt,
+        const Pos3D &box,
         physicalData::PhysicalData & /*physicalData*/,
         const pot::CoulombPotential *coulPot,
         pot::NonCoulombPotential    *nonCoulPot
@@ -131,14 +131,14 @@ namespace intraNonBonded
         const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
         const auto &pos2 = _molecule->getAtomPosition(atomIdx2);
 
-        auto       dPos = (pos1 - pos2).numerical_value_in(angstrom);
+        auto       dPos = (pos1 - pos2);
         const auto txyz = -box * round(dPos / box);
         // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/911
 
         dPos                += txyz;
         const auto distance  = norm(dPos);
 
-        if (distance < pot::CoulombPotential::getCoulombRadiusCutOff())
+        if (distance < pot::CoulombPotential::get_coulombRadiusCutOff())
         {
             const auto charge1 = _molecule->getPartialCharge(atomIdx1);
             const auto charge2 = _molecule->getPartialCharge(atomIdx2);
@@ -195,11 +195,13 @@ namespace intraNonBonded
                 force            += nonCoulombForce;
             }
 
-            force /= distance;
+            const auto dPosValue  = dPos.numerical_value_in(angstrom);
+            force                /= distance.numerical_value_in(angstrom);
 
-            const auto forcexyz = force * dPos;
+            const auto forcexyz = force * dPosValue;
 
-            const auto shiftForcexyz = forcexyz * txyz;
+            const auto shiftForcexyz =
+                forcexyz * txyz.numerical_value_in(angstrom);
 
             _molecule->addAtomForce(atomIdx1, forcexyz);
             _molecule->addAtomForce(atomIdx2, -forcexyz);

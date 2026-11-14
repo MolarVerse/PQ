@@ -30,6 +30,7 @@
 #include "exceptions.hpp"
 #include "testTopologySection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /*
  * @brief Test for the DistanceConstraintsSection class
@@ -52,8 +53,8 @@ TEST_F(TestTopologySection, processSectionDistanceConstraints)
     EXPECT_EQ(constraintMolecules[1], &(simBox.getMolecules()[1]));
     EXPECT_EQ(constraintAtomIndices[0], AtomIndex{0});
     EXPECT_EQ(constraintAtomIndices[1], AtomIndex{0});
-    EXPECT_EQ(distanceConstraint.getLowerDistance(), 1.0);
-    EXPECT_EQ(distanceConstraint.getUpperDistance(), 2.0);
+    EXPECT_EQ(distanceConstraint.get_lowerDistance(), 1.0 * angstrom);
+    EXPECT_EQ(distanceConstraint.get_upperDistance(), 2.0 * angstrom);
     EXPECT_EQ(distanceConstraint.getSpringConstant(), 4.0);
     EXPECT_EQ(distanceConstraint.getDSpringConstantDt(), 6.0);
 

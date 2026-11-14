@@ -28,7 +28,6 @@
 #include <mstd/units.hpp>
 #include <mstd/utils.hpp>
 
-#include "staticMatrix.hpp"
 #include "unit_types.hpp"
 #include "vector3d.hpp"
 #include "vector3d/vector3dClass.hpp"
@@ -53,7 +52,7 @@ namespace molsys
     struct BoxTag
     {
     };
-    using BoxVec = mstd::CacheProperty<linalg::Vec3D, BoxTag>;
+    using BoxVec = mstd::CacheProperty<Pos3D, BoxTag>;
 
     using AngleVec = mstd::CacheProperty<Angles3D, BoxTag>;
 
@@ -75,31 +74,29 @@ namespace molsys
         [[nodiscard]]
         virtual std::unique_ptr<Box> clone() const = 0;
 
-        virtual void applyPBC(linalg::Vec3D &position) const = 0;
+        virtual void applyPBC(Pos3D &position) const = 0;
 
         [[nodiscard]]
-        virtual linalg::Vec3D wrapPositionIntoBox(
-            const linalg::Vec3D &
-        ) const = 0;
+        virtual Pos3D wrapPositionIntoBox(const Pos3D &) const = 0;
 
         virtual void scaleBox(const QuantityTensor3D &scalingFactors) = 0;
 
         [[nodiscard]]
-        virtual double getVolume() const = 0;
+        virtual Volume getVolume() const = 0;
 
         [[nodiscard]]
-        virtual linalg::Vec3D calcShiftVector(const linalg::Vec3D &) const = 0;
+        virtual Pos3D calcShiftVector(const Pos3D &) const = 0;
 
         [[nodiscard]]
-        virtual double getMinimalBoxDimension() const = 0;
+        virtual Pos getMinimalBoxDimension() const = 0;
 
         [[nodiscard]]
-        virtual linalg::tensor3D getBoxMatrix(Periodicity per) const = 0;
+        virtual PosTensor3D getBoxMatrix(Periodicity per) const = 0;
 
         [[nodiscard]]
-        virtual linalg::tensor3D getBoxMatrix() const = 0;
+        virtual PosTensor3D getBoxMatrix() const = 0;
         [[nodiscard]]
-        virtual linalg::tensor3D getInverseBoxMatrix() const = 0;
+        virtual InvPosTensor3D getInverseBoxMatrix() const = 0;
 
         [[nodiscard]]
         virtual bool allowChangeOfAngles() const = 0;
@@ -115,10 +112,7 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D getBoxAngles() const;
 
        protected:
-        explicit Box(
-            const linalg::Vec3D &boxDimensions,
-            const linalg::Vec3D &angles
-        );
+        explicit Box(const Pos3D &boxDimensions, const linalg::Vec3D &angles);
 
         static constexpr auto _dimsPtr() { return &Box::_boxDimensions; }
         static constexpr auto _anglesPtr() { return &Box::_angles; }

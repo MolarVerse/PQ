@@ -96,13 +96,15 @@ namespace
 
 int main()
 {
-    settings::HybridSettings::setCoreRadius(4.0);
-    settings::HybridSettings::setLayerRadius(12.0);
-    settings::HybridSettings::setSmoothingRegionThickness(3.0);
-    settings::HybridSettings::setPointChargeThickness(6.0);
+    settings::HybridSettings::setCoreRadius(4.0 * angstrom);
+    settings::HybridSettings::setLayerRadius(12.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(3.0 * angstrom);
+    settings::HybridSettings::setPointChargeThickness(6.0 * angstrom);
 
     auto                    box = molsys::SimulationBox();
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     const auto half = 0.5 * SPACING * static_cast<double>(PER_SIDE);
@@ -154,11 +156,11 @@ int main()
 
     // read state so the loop cannot be optimized away: the sum of all
     // smoothing factors of the last iteration
-    auto sum = 0.0;
+    Quantity sum = 0.0;
     for (const auto &molecule :
          box.getMoleculesInsideZone(molsys::HybridZone::SMOOTHING))
         sum += molecule.getSmoothingFactor();
 
-    std::cout << std::format("{:.6f}\n", sum);
+    std::cout << std::format("{:.6f}\n", sum.numerical_value_in(one));
     return 0;
 }

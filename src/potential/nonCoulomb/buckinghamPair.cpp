@@ -37,7 +37,7 @@ namespace pot
     BuckinghamPair::BuckinghamPair(
         ExtVdwType              vanDerWaalsType1,
         ExtVdwType              vanDerWaalsType2,
-        double                  cutOff,
+        const Pos&              cutOff,
         const BuckinghamParams& params
     )
         : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
@@ -52,7 +52,7 @@ namespace pot
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
-        const double            cutOff,
+        const Pos&              cutOff,
         const BuckinghamParams& params
     )
         : NonCoulombPair(cutOff), _params(params)
@@ -68,7 +68,7 @@ namespace pot
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
-        double                  cutOff,
+        const Pos&              cutOff,
         double                  energyCutoff,
         double                  forceCutoff,
         const BuckinghamParams& params
@@ -96,22 +96,28 @@ namespace pot
      * @param distance
      * @return std::pair<double, double>
      */
-    std::pair<double, double> BuckinghamPair::calculate(double distance) const
+    std::pair<double, double> BuckinghamPair::calculate(
+        const Pos& distance
+    ) const
     {
-        const auto distanceThird = distance * distance * distance;
+        const auto distance_     = distance.numerical_value_in(Pos::unit);
+        const auto distanceThird = distance_ * distance_ * distance_;
         const auto distanceSixth = distanceThird * distanceThird;
-        const auto expTerm = _params.scaling * ::exp(_params.dRho * distance);
+        const auto expTerm =
+            _params.scaling * mstd::exp(_params.dRho * distance);
 
         auto energy =
             expTerm + (_params.c6 / distanceSixth) - get_energyCutoff();
-        energy -= get_forceCutoff() * (get_radialCutoff() - distance);
+        energy -= get_forceCutoff() *
+                  (get_radialCutoff() - distance).numerical_value_in(Pos::unit);
 
-        auto force = -_params.dRho * expTerm;
+        auto force =
+            -_params.dRho.numerical_value_in(InvDistance::unit) * expTerm;
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
         force +=
-            6.0 * _params.c6 / (distanceSixth * distance) - get_forceCutoff();
+            6.0 * _params.c6 / (distanceSixth * distance_) - get_forceCutoff();
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
 

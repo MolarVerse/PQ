@@ -50,8 +50,9 @@ namespace out
     )
     {
         _getFilePointer() << simulationBox.getNumberOfAtoms() * nBeads << "  ";
-        _getFilePointer() << simulationBox.getBoxDimensions() << "  "
-                          << simulationBox.getBoxAngles() << '\n';
+        _getFilePointer(
+        ) << simulationBox.getBoxDimensions().numerical_value_in(angstrom);
+        _getFilePointer() << "  " << simulationBox.getBoxAngles() << '\n';
     }
 
     /**

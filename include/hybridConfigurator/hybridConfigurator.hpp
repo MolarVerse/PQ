@@ -25,7 +25,7 @@
 
 #include <unordered_set>
 
-#include "vector3d.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -38,8 +38,8 @@ namespace configurator
     class HybridConfigurator
     {
        private:
-        linalg::Vec3D      _innerRegionCenter = {0.0};
-        static inline bool _molChangedZone    = false;
+        Pos3D              _innerRegionCenter{Pos::zero()};
+        static inline bool _molChangedZone = false;
 
        public:
         void        calculateInnerRegionCenter(molsys::SimulationBox &);
@@ -60,8 +60,8 @@ namespace configurator
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] linalg::Vec3D getInnerRegionCenter() const;
-        [[nodiscard]] static bool   getMoleculeChangedZone();
+        [[nodiscard]] const Pos3D &getInnerRegionCenter() const;
+        [[nodiscard]] static bool  getMoleculeChangedZone();
 
         static void setMoleculeChangedZone(bool);
     };

@@ -195,8 +195,7 @@ namespace setup
         {
             throw exc::InputFileException(
                 std::format(
-                    "Core radius ({} Å) cannot be larger than layer radius ({} "
-                    "Å)",
+                    "Core radius ({}) cannot be larger than layer radius ({})",
                     coreRadius,
                     layerRadius
                 )
@@ -207,8 +206,8 @@ namespace setup
         {
             throw exc::InputFileException(
                 std::format(
-                    "Smoothing region is too thick ({} Å) for the chosen "
-                    "combination of core ({} Å) and layer radius ({} Å)",
+                    "Smoothing region is too thick ({}) for the chosen "
+                    "combination of core ({}) and layer radius ({})",
                     smoothingRegionThickness,
                     coreRadius,
                     layerRadius
@@ -220,9 +219,9 @@ namespace setup
         {
             throw exc::InputFileException(
                 std::format(
-                    "Layer radius ({} Å) exceeds one quarter of the smallest "
+                    "Layer radius ({}) exceeds one quarter of the smallest "
                     "box "
-                    "dimension ({} Å). This configuration is not allowed to "
+                    "dimension ({}). This configuration is not allowed to "
                     "ensure "
                     "compliance with the minimum image convention.",
                     layerRadius,
@@ -236,9 +235,8 @@ namespace setup
         {
             throw exc::InputFileException(
                 std::format(
-                    "Layer radius ({} Å) plus point charge thickness ({} Å) "
-                    "exceeds three halves of the smallest box dimension ({} "
-                    "Å). "
+                    "Layer radius ({}) plus point charge thickness ({}) "
+                    "exceeds three halves of the smallest box dimension ({}). "
                     "This configuration is not allowed, as it would include "
                     "point "
                     "charges from beyond the immediate neighboring cells.",

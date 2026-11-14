@@ -52,7 +52,7 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 int main()
 {
     settings::TimingsSettings::setTimeStep(0.001 * fs);
-    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(4.0 * angstrom);
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);
 
@@ -77,6 +77,9 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::cout << std::format("{:.6f}\n", box.getVolume());
+    std::cout << std::format(
+        "{:.6f}\n",
+        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom)
+    );
     return 0;
 }

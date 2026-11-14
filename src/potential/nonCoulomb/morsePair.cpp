@@ -24,6 +24,8 @@
 
 #include <cmath>
 
+#include "unit_types.hpp"
+
 namespace pot
 {
 
@@ -38,7 +40,7 @@ namespace pot
     MorsePair::MorsePair(
         ExtVdwType         vanDerWaalsType1,
         ExtVdwType         vanDerWaalsType2,
-        double             cutOff,
+        const Pos         &cutOff,
         const MorseParams &params
     )
         : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
@@ -52,7 +54,7 @@ namespace pot
      * @param cutOff
      * @param params
      */
-    MorsePair::MorsePair(const double cutOff, const MorseParams &params)
+    MorsePair::MorsePair(const Pos &cutOff, const MorseParams &params)
         : NonCoulombPair(cutOff), _params(params)
     {
     }
@@ -66,9 +68,9 @@ namespace pot
      * @param params
      */
     MorsePair::MorsePair(
-        double             cutOff,
-        double             energyCutoff,
-        double             forceCutoff,
+        const Pos         &cutOff,
+        const double       energyCutoff,
+        const double       forceCutoff,
         const MorseParams &params
     )
         : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
@@ -98,20 +100,22 @@ namespace pot
      * @param distance
      * @return std::pair<double, double>
      */
-    std::pair<double, double> MorsePair::calculate(double distance) const
+    std::pair<double, double> MorsePair::calculate(const Pos &distance) const
     {
         const auto deltaEquilibrium = distance - _params.equilibriumDistance;
-        const auto expTerm = std::exp(-_params.wellWidth * deltaEquilibrium);
+        const auto expTerm = mstd::exp(-_params.wellWidth * deltaEquilibrium);
         const auto oneMinusExpTerm = 1.0 - expTerm;
 
         auto energy =
             _params.dissociationEnergy * oneMinusExpTerm * oneMinusExpTerm;
         energy -= get_energyCutoff();
-        energy -= get_forceCutoff() * (get_radialCutoff() - distance);
+        energy -= get_forceCutoff() *
+                  (get_radialCutoff() - distance).numerical_value_in(Pos::unit);
 
-        auto force  = -2.0 * _params.dissociationEnergy * _params.wellWidth;
-        force      *= expTerm * oneMinusExpTerm;
-        force      -= get_forceCutoff();
+        auto force = -2.0 * _params.dissociationEnergy *
+                     _params.wellWidth.numerical_value_in(InvDistance::unit);
+        force *= expTerm * oneMinusExpTerm;
+        force -= get_forceCutoff();
 
         return {energy, force};
     }

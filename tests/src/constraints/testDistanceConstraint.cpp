@@ -58,7 +58,7 @@ TEST_F(TestDistanceConstraint, belowLowerBoundAppliesRestoringForce)
     // dPos = (0, 0.5, 0), distance = 0.5, below lowerDistance = 1.0
     _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
-    const auto delta          = _lowerDistance - 0.5;
+    const auto delta = _lowerDistance.numerical_value_in(angstrom) - 0.5;
     const auto expectedEnergy = 0.5 * _springConstant * delta * delta;
     EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), expectedEnergy);
     EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), 0.0);
@@ -83,7 +83,7 @@ TEST_F(TestDistanceConstraint, aboveUpperBoundAppliesRestoringForce)
     // dPos = (0, 4, 0), distance = 4.0, above upperDistance = 3.0
     _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
-    const auto delta          = 4.0 - _upperDistance;
+    const auto delta = 4.0 - _upperDistance.numerical_value_in(angstrom);
     const auto expectedEnergy = 0.5 * _springConstant * delta * delta;
     EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), expectedEnergy);
     EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), 0.0);

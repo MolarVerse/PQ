@@ -46,6 +46,7 @@
 #include "strongTypes.hpp"
 #include "testNonCoulombPairUtils.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parseLine function of input::guffdat::GuffDatReader
@@ -203,7 +204,7 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
         AtomType{0},
         AtomType{0},
         {1.0, 2.0, 3.0},
-        10.0
+        10.0 * angstrom
     );
 
     const auto &pair = dynamic_cast<pot::LennardJonesPair &>(
@@ -215,7 +216,7 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
 
     EXPECT_EQ(TestLJPairUtils::params(&pair).c6, 1.0);
     EXPECT_EQ(TestLJPairUtils::params(&pair).c12, 3.0);
-    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
 
     // FIXME: Does not work on macos using EXPECT_EQ
     EXPECT_NEAR(
@@ -248,7 +249,7 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
         AtomType{0},
         AtomType{0},
         {1.0, 2.0, 3.0},
-        10.0
+        10.0 * angstrom
     );
 
     const auto &pair = dynamic_cast<pot::BuckinghamPair &>(
@@ -259,9 +260,9 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
     );
 
     EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).scaling, 1.0);
-    EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).dRho, 2.0);
+    EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).dRho, 2.0 / angstrom);
     EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).c6, 3.0);
-    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
     EXPECT_EQ(
         pair.get_energyCutoff(),
         (1.0 * ::exp(10.0 * 2.0)) + (3.0 / ::pow(10.0, 6))
@@ -291,7 +292,7 @@ TEST_F(TestGuffDatReader, addMorsePair)
         AtomType{0},
         AtomType{0},
         {1.0, 2.0, 3.0},
-        10.0
+        10.0 * angstrom
     );
 
     const auto &pair = dynamic_cast<pot::MorsePair &>(
@@ -304,9 +305,9 @@ TEST_F(TestGuffDatReader, addMorsePair)
     const auto &params = TestMorsePairUtils::params(&pair);
 
     EXPECT_EQ(params.dissociationEnergy, 1.0);
-    EXPECT_EQ(params.wellWidth, 2.0);
-    EXPECT_EQ(params.equilibriumDistance, 3.0);
-    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
+    EXPECT_EQ(params.wellWidth, 2.0 / angstrom);
+    EXPECT_EQ(params.equilibriumDistance, 3.0 * angstrom);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
     EXPECT_EQ(
         pair.get_energyCutoff(),
         1.0 * ::pow((1.0 - ::exp(-2.0 * (10.0 - 3.0))), 2)
@@ -337,7 +338,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
         AtomType{0},
         AtomType{0},
         {1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2},
-        10.0
+        10.0 * angstrom
     );
 
     const auto &pair = dynamic_cast<pot::GuffPair &>(
@@ -374,7 +375,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
             2
         )
     );
-    EXPECT_EQ(pair.get_radialCutoff(), 10.0);
+    EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
     EXPECT_EQ(pair.get_energyCutoff(), 3.0121946291700612e+35);
     EXPECT_EQ(pair.get_forceCutoff(), -5.4219503325061099e+36);
 
@@ -412,7 +413,7 @@ TEST_F(TestGuffDatReader, addGuffPair)
             2
         )
     );
-    EXPECT_EQ(pair2.get_radialCutoff(), 10.0);
+    EXPECT_EQ(pair2.get_radialCutoff(), 10.0 * angstrom);
     EXPECT_EQ(pair2.get_energyCutoff(), 3.0121946291700612e+35);
     EXPECT_EQ(pair2.get_forceCutoff(), -5.4219503325061099e+36);
 }
@@ -432,7 +433,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         AtomType{0},
         AtomType{0},
         {guffCoefficients.begin(), guffCoefficients.end()},
-        10.0
+        10.0 * angstrom
     );
 
     EXPECT_NO_THROW(
@@ -455,7 +456,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         AtomType{0},
         AtomType{0},
         {guffCoefficients.begin(), guffCoefficients.end()},
-        10.0
+        10.0 * angstrom
     );
 
     EXPECT_NO_THROW(
@@ -478,7 +479,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         AtomType{0},
         AtomType{0},
         {guffCoefficients.begin(), guffCoefficients.end()},
-        10.0
+        10.0 * angstrom
     );
 
     EXPECT_NO_THROW(
@@ -500,7 +501,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
         AtomType{0},
         AtomType{0},
         {guffCoefficients.begin(), guffCoefficients.end()},
-        10.0
+        10.0 * angstrom
     );
 
     EXPECT_NO_THROW(
@@ -524,7 +525,7 @@ TEST_F(TestGuffDatReader, addNonCoulombPair)
             AtomType{0},
             AtomType{0},
             {guffCoefficients.begin(), guffCoefficients.end()},
-            10.0
+            10.0 * angstrom
         ),
         exc::UserInputException,
         std::format(

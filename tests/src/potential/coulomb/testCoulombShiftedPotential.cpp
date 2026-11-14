@@ -24,6 +24,7 @@
 
 #include "constants/internalConversionFactors.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests calculation of shifted Coulomb potential
@@ -36,11 +37,12 @@ TEST(TestCoulombShiftedPotential, calculate)
     const auto energyCutOff  = 1 / rcCutoff;
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
-    const auto potential = pot::CoulombShiftedPotential(rcCutoff);
+    const auto potential = pot::CoulombShiftedPotential(rcCutoff * angstrom);
 
     auto distance = 2.0;
 
-    const auto [energy, force] = potential.calculate(distance, chargeProduct);
+    const auto [energy, force] =
+        potential.calculate(distance * angstrom, chargeProduct);
 
     EXPECT_DOUBLE_EQ(
         energy,

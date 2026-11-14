@@ -83,7 +83,7 @@ namespace molsys
         // 0 (neutral) as default when molecule has no moltype
         int _charge = 0;
 
-        linalg::Vec3D _centerOfMass{0.0, 0.0, 0.0};
+        Pos3D _centerOfMass;
 
         std::vector<std::shared_ptr<Atom>> _atoms;
 
@@ -94,10 +94,10 @@ namespace molsys
         bool       _isForcedLayer = false;
         bool       _isForcedOuter = false;
 
-        std::optional<double> _smoothingFactor;
+        std::optional<Quantity> _smoothingFactor;
 
        public:
-        Molecule() = default;
+        Molecule();
         explicit Molecule(std::string_view name);
         explicit Molecule(MolType moltype);
 
@@ -106,14 +106,15 @@ namespace molsys
         void scale(const QuantityTensor3D &, const Box &);
         void scaleVelocity(const QuantityTensor3D &);
 
-        [[nodiscard]] size_t                  getNumberOfAtomTypes();
+        [[nodiscard]] size_t                  getNumberOfAtomTypes() const;
         [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
 
         [[nodiscard]] std::vector<double> getAtomMasses() const;
         [[nodiscard]] double              getMolMass() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
-        [[nodiscard]] bool isMMMolecule() const;
+        [[nodiscard]] bool     isMMMolecule() const;
+        [[nodiscard]] Quantity getSmoothingFactor() const;
 
         void setPartialCharges(const std::vector<double> &partialCharges);
         void setAtomForcesToZero();
@@ -179,10 +180,9 @@ namespace molsys
         [[nodiscard]] int         getCharge() const;
         [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] linalg::Vec3D getCenterOfMass() const;
-        [[nodiscard]] HybridZone    getHybridZone() const;
-        [[nodiscard]] bool          isActive() const { return _isActive; }
-        [[nodiscard]] double        getSmoothingFactor() const;
+        [[nodiscard]] const Pos3D &getCenterOfMass() const;
+        [[nodiscard]] HybridZone   getHybridZone() const;
+        [[nodiscard]] bool         isActive() const { return _isActive; }
 
         [[nodiscard]] Atom &getAtom(AtomIndex index);
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
@@ -201,9 +201,9 @@ namespace molsys
         void setMoltype(MolType moltype);
 
         void setCharge(int charge);
-        void setCenterOfMass(const linalg::Vec3D &centerOfMass);
+        void setCenterOfMass(const Pos3D &centerOfMass);
         void setHybridZone(HybridZone hybridZone);
-        void setSmoothingFactor(double factor);
+        void setSmoothingFactor(const Quantity &factor);
 
         void setForcedCore(bool isForcedCore);
         void setForcedLayer(bool isForcedLayer);

@@ -26,6 +26,7 @@
 
 #include "constants/internalConversionFactors.hpp"
 #include "coulombWolf.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests calculation of Coulomb potential with wolf long-range correction
@@ -37,7 +38,7 @@ TEST(TestCoulombWolf, calculate)
     const auto   rcCutoff      = 3.0;
     const double kappa         = 0.25;
 
-    const auto guffWolfCoulomb = pot::CoulombWolf(rcCutoff, kappa);
+    const auto guffWolfCoulomb = pot::CoulombWolf(rcCutoff * angstrom, kappa);
     const auto constParam1     = ::erfc(kappa * rcCutoff) / rcCutoff;
     const auto constParam2     = 2.0 * kappa / ::sqrt(M_PI);
     const auto constParam3 =
@@ -48,7 +49,7 @@ TEST(TestCoulombWolf, calculate)
 
     auto param1 = ::erfc(kappa * distance);
     const auto [energy, force] =
-        guffWolfCoulomb.calculate(distance, chargeProduct);
+        guffWolfCoulomb.calculate(distance * angstrom, chargeProduct);
 
     EXPECT_DOUBLE_EQ(
         energy,

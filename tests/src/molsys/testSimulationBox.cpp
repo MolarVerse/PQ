@@ -92,8 +92,14 @@ TEST_F(TestSimulationBox, centerOfMassOfMolecules)
 
     auto molecules = _simulationBox->getMolecules();
 
-    EXPECT_EQ(molecules[0].getCenterOfMass(), linalg::Vec3D(1 / 3.0, 0.5, 0.0));
-    EXPECT_EQ(molecules[1].getCenterOfMass(), linalg::Vec3D(2 / 3.0, 0.0, 0.0));
+    EXPECT_EQ(
+        molecules[0].getCenterOfMass(),
+        linalg::Vec3D(1 / 3.0, 0.5, 0.0) * angstrom
+    );
+    EXPECT_EQ(
+        molecules[1].getCenterOfMass(),
+        linalg::Vec3D(2 / 3.0, 0.0, 0.0) * angstrom
+    );
 }
 
 /**
@@ -357,9 +363,11 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(1.0);
+    settings::PotentialSettings::setCoulombRadiusCutOff(1.0 * angstrom);
 
-    molsys::OrthorhombicBox orthoBox1{{1.99, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox1{
+        {1.99 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     _simulationBox->setBox(orthoBox1, false);
 
     EXPECT_THROW_MSG(
@@ -376,7 +384,9 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
         "dimension"
     );
 
-    molsys::OrthorhombicBox orthoBox2{{10.0, 1.99, 10.0}};
+    molsys::OrthorhombicBox orthoBox2{
+        {10.0 * angstrom, 1.99 * angstrom, 10.0 * angstrom}
+    };
     _simulationBox->setBox(orthoBox2, false);
 
     EXPECT_THROW_MSG(
@@ -386,7 +396,9 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
         "dimension"
     );
 
-    molsys::OrthorhombicBox orthoBox3{{10.0, 10.0, 1.99}};
+    molsys::OrthorhombicBox orthoBox3{
+        {10.0 * angstrom, 10.0 * angstrom, 1.99 * angstrom}
+    };
     _simulationBox->setBox(orthoBox3, false);
 
     EXPECT_THROW_MSG(

@@ -43,9 +43,10 @@ namespace out
      */
     void TrajectoryOutput::writeHeader(const Frame &frame)
     {
-        _getFilePointer() << frame.atoms.size() << "  "
-                          << frame.box->get_boxDimensions() << "  "
-                          << frame.box->getBoxAngles() << '\n';
+        _getFilePointer(
+        ) << frame.atoms.size()
+          << "  " << frame.box->get_boxDimensions().numerical_value_in(angstrom)
+          << "  " << frame.box->getBoxAngles() << '\n';
     }
 
     /**
@@ -70,9 +71,8 @@ namespace out
         {
             buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &pos = frame.box->wrapPositionIntoBox(
-                atom.position.numerical_value_in(angstrom)
-            );
+            const auto &pos = frame.box->wrapPositionIntoBox(atom.position)
+                                  .numerical_value_in(angstrom);
 
             buffer << std::format("{:15.8f}\t", pos[0]);
             buffer << std::format("{:15.8f}\t", pos[1]);
@@ -110,7 +110,8 @@ namespace out
         std::ostringstream buffer;
         buffer << std::format("{:<5}\t", centerAtomName);
 
-        const auto &pos = configurator.getInnerRegionCenter();
+        const auto &pos =
+            configurator.getInnerRegionCenter().numerical_value_in(angstrom);
 
         buffer << std::format("{:15.8f}\t", pos[0]);
         buffer << std::format("{:15.8f}\t", pos[1]);

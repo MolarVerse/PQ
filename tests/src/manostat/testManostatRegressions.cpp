@@ -75,8 +75,13 @@ namespace
             );
             settings::TimingsSettings::setTimeStep(1.0 * fs);
             ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-            settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
-            _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
+            settings::PotentialSettings::setCoulombRadiusCutOff(0.1 * angstrom);
+            _box.setBox(
+                molsys::OrthorhombicBox(
+                    {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+                ),
+                false
+            );
             _data.setVirial(linalg::tensor3D{0.0});
             _data.setKineticEnergyMolecularVector(linalg::tensor3D{0.0});
             _data.setKineticEnergyAtomicVector(linalg::tensor3D{0.0});
@@ -102,7 +107,7 @@ namespace
             _box.calculateTotalMass();
             _box.calculateDensity();
             _box.calculateDegreesOfFreedom();
-            _data.setVolume(_box.getVolume());
+            _data.setVolume(_box.getVolume().numerical_value_in(Volume::unit));
             _data.setDensity(_box.getDensity());
         }
     };
@@ -111,12 +116,20 @@ namespace
 TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 {
     _box.setBox(
-        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}, true),
+        molsys::TriclinicBox(
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom},
+            {90.0, 90.0, 60.0},
+            true
+        ),
         false
     );
     _addMolecule({0.0}, 0.0);
     _addMolecule({1.0}, 0.0);
-    _data.setVirial(linalg::diagonalMatrix(_box.getVolume() / PRESSURE_FACTOR));
+    _data.setVirial(
+        linalg::diagonalMatrix(
+            _box.getVolume().numerical_value_in(Volume::unit) / PRESSURE_FACTOR
+        )
+    );
     _settings->manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
     manostat::FullAnisotropicBerendsenManostat berendsen(
         _settings->manostatSettings
@@ -136,8 +149,10 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
             for (size_t j = 0; j < 3; ++j)
             {
                 EXPECT_NEAR(
-                    _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ)[i][j],
-                    oldCell[i][j],
+                    _box.getBox()
+                        .getBoxMatrix(molsys::Periodicity::XYZ)[i][j]
+                        .numerical_value_in(angstrom),
+                    oldCell[i][j].numerical_value_in(angstrom),
                     1e-12
                 );
             }
@@ -148,7 +163,11 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
 TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
 {
     _box.setBox(
-        molsys::TriclinicBox({10.0, 10.0, 10.0}, {90.0, 90.0, 60.0}, false),
+        molsys::TriclinicBox(
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom},
+            {90.0, 90.0, 60.0},
+            false
+        ),
         false
     );
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::YZ);
@@ -159,14 +178,16 @@ TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
     pressure.calculatePressure(_box, _data);
     EXPECT_NEAR(
         _data.getPressure().numerical_value_in(bar),
-        0.5 * PRESSURE_FACTOR / _box.getVolume(),
+        0.5 * PRESSURE_FACTOR /
+            _box.getVolume().numerical_value_in(Volume::unit),
         1e-12
     );
     // r=(1,2,3), F=(2,-1,0.5): changing the first cell length
     // moves r_x by (1 - 2/sqrt(3)) times the fractional length change.
     EXPECT_NEAR(
         _data.getCoupledPressure().numerical_value_in(bar),
-        (2.0 - 4.0 / std::sqrt(3.0)) * PRESSURE_FACTOR / _box.getVolume(),
+        (2.0 - 4.0 / std::sqrt(3.0)) * PRESSURE_FACTOR /
+            _box.getVolume().numerical_value_in(Volume::unit),
         1e-12
     );
 }
@@ -305,14 +326,21 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
     {
         SCOPED_TRACE(i);
         _box = molsys::SimulationBox{};
-        _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
+        _box.setBox(
+            molsys::OrthorhombicBox(
+                {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+            ),
+            false
+        );
         _addMolecule({4.95, -4.85}, 1.0);
         const auto oldCenter  = _box.getMolecule(0).getCenterOfMass();
         const auto oldDensity = _box.getDensity();
         proposalSettings.at(i)->setIsotropyByUser(
             i == 0 ? Isotropy::SEMI_ISOTROPIC_XY : Isotropy::ISOTROPIC
         );
-        settings::PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);
+        settings::PotentialSettings::setCoulombRadiusCutOff(
+            i == 4 ? 3.0 * angstrom : 0.1 * angstrom
+        );
         EXPECT_THROW_MSG(
             proposals.at(i)->applyManostat(_box, _data),
             exc::ManostatException,
@@ -321,8 +349,11 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
                   "box dimension"
                 : "Invalid manostat scaling matrix"
         );
-        EXPECT_EQ(_box.getBoxDimensions(), linalg::Vec3D(10.0));
-        EXPECT_DOUBLE_EQ(_box.getVolume(), 1000.0);
+        EXPECT_EQ(_box.getBoxDimensions(), Pos3D(10.0 * angstrom));
+        EXPECT_DOUBLE_EQ(
+            _box.getVolume().numerical_value_in(Volume::unit),
+            1000.0
+        );
         EXPECT_DOUBLE_EQ(_box.getDensity(), oldDensity);
         EXPECT_DOUBLE_EQ(_data.getVolume(), 1000.0);
         EXPECT_DOUBLE_EQ(_data.getDensity(), oldDensity);
@@ -417,10 +448,11 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     const auto noiseFactor =
         BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL *
         temperature.quantity_from_zero().numerical_value_in(K) *
-        compressibility * PRESSURE_FACTOR / (3.0 * tau * _box.getVolume());
-    const auto      lengthSigma = std::sqrt(2.0 * noiseFactor);
-    const auto      shearSigma  = std::sqrt(4.0 * noiseFactor);
-    const auto      volumeSigma = std::sqrt(6.0 * noiseFactor);
+        compressibility * PRESSURE_FACTOR /
+        (3.0 * tau * _box.getVolume().numerical_value_in(Volume::unit));
+    const auto      lengthSigma = mstd::sqrt(2.0 * noiseFactor);
+    const auto      shearSigma  = mstd::sqrt(4.0 * noiseFactor);
+    const auto      volumeSigma = mstd::sqrt(6.0 * noiseFactor);
     NoiseMoments<2> areaHeight;
     NoiseMoments<3> lengths;
     NoiseMoments<3> shape;
@@ -431,18 +463,15 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     for (size_t sample = 0; sample < 8192; ++sample)
     {
         // numerical_value_in(one) can be removed as soon as we have mstd::log
-        const auto semiMu =
-            semi.calculateMu(_box.getVolume()).numerical_value_in(one);
-        const auto anisoMu =
-            aniso.calculateMu(_box.getVolume()).numerical_value_in(one);
-        const auto fullMu =
-            full.calculateMu(_box.getVolume()).numerical_value_in(one);
-        const auto fixedMu =
-            fixed.calculateMu(_box.getVolume()).numerical_value_in(one);
+        const auto volume  = _box.getVolume().numerical_value_in(Volume::unit);
+        const auto semiMu  = semi.calculateMu(volume).numerical_value_in(one);
+        const auto anisoMu = aniso.calculateMu(volume).numerical_value_in(one);
+        const auto fullMu  = full.calculateMu(volume).numerical_value_in(one);
+        const auto fixedMu = fixed.calculateMu(volume).numerical_value_in(one);
         areaHeight.add(
-            {std::log(semiMu[0][0] * semiMu[1][1]) /
-                 (2.0 * std::sqrt(noiseFactor)),
-             std::log(semiMu[2][2]) / lengthSigma}
+            {mstd::log(semiMu[0][0] * semiMu[1][1]) /
+                 (2.0 * mstd::sqrt(noiseFactor)),
+             mstd::log(semiMu[2][2]) / lengthSigma}
         );
         lengths.add(
             {std::log(anisoMu[0][0]) / lengthSigma,
@@ -534,6 +563,6 @@ TEST_F(ManostatRegression, atomicVirialSupportsMonatomicPressureCoupling)
     );
     EXPECT_NO_THROW(berendsen.applyManostat(_box, _data));
     EXPECT_NO_THROW(stochastic.applyManostat(_box, _data));
-    EXPECT_TRUE(std::isfinite(_box.getVolume()));
-    EXPECT_GT(_box.getVolume(), 0.0);
+    EXPECT_TRUE(isfinite(_box.getVolume()));
+    EXPECT_GT(_box.getVolume().numerical_value_in(Volume::unit), 0.0);
 }

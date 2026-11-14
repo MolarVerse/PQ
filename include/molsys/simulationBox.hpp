@@ -36,6 +36,7 @@
 #include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
+#include "vector3d.hpp"
 
 /**
  * @namespace molsys
@@ -134,11 +135,9 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D calculateAngularMomentum(
             const linalg::Vec3D&
         );
-        [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] linalg::Vec3D calcShiftVector(
-            const linalg::Vec3D& position
-        ) const;
-        [[nodiscard]] int calcActiveMolCharge() const;
+        [[nodiscard]] Pos3D calcBoxDimFromDensity() const;
+        [[nodiscard]] Pos3D calcShiftVector(const Pos3D& position) const;
+        [[nodiscard]] int   calcActiveMolCharge() const;
 
         [[nodiscard]]
         bool moleculeTypeExists(MolType moleculeType) const;
@@ -257,14 +256,14 @@ namespace molsys
          * Forwards the box methods to the box object *
          **********************************************/
 
-        void applyPBC(linalg::Vec3D& position) const;
+        void applyPBC(Pos3D& position) const;
         void scaleBox(const QuantityTensor3D& scalingTensor);
 
-        [[nodiscard]] double getVolume() const;
-        [[nodiscard]] double getMinimalBoxDimension() const;
+        [[nodiscard]] Volume getVolume() const;
+        [[nodiscard]] Pos    getMinimalBoxDimension() const;
 
-        [[nodiscard]] const linalg::Vec3D& getBoxDimensions() const;
-        [[nodiscard]] linalg::Vec3D        getBoxAngles() const;
+        [[nodiscard]] const Pos3D&  getBoxDimensions() const;
+        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
     };
 
 }   // namespace molsys

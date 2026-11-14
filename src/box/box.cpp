@@ -22,6 +22,7 @@
 
 #include "box.hpp"
 
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace molsys
@@ -32,7 +33,7 @@ namespace molsys
      * @param boxDimensions
      * @param angles
      */
-    Box::Box(const linalg::Vec3D &boxDimensions, const linalg::Vec3D &angles)
+    Box::Box(const Pos3D &boxDimensions, const linalg::Vec3D &angles)
         : _boxDimensions(boxDimensions), _angles((angles * deg).in(rad))
     {
     }

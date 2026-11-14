@@ -215,16 +215,18 @@ TEST_F(TestForceField, calculateBondedInteractions)
 {
     auto box = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(20.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(20.0 * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
         ExtVdwType(1),
-        15.0,
+        15.0 * angstrom,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     _setNonCoulombPairsMatrix(
@@ -356,12 +358,12 @@ TEST_F(TestForceField, calculateBondedInteractions)
  */
 TEST_F(TestForceField, correctLinker)
 {
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(10.0 * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
         ExtVdwType(1),
-        5.0,
+        5.0 * angstrom,
         LJParams{.c6 = 2.0, .c12 = 4.0}
     );
     _setNonCoulombPairsMatrix(
@@ -396,7 +398,7 @@ TEST_F(TestForceField, correctLinker)
         &molecule,
         AtomIndex{0},
         AtomIndex{1},
-        1.0
+        1.0 * angstrom
     );
 
     EXPECT_NEAR(force, 104.37153798653807, 1e-6);
@@ -416,7 +418,7 @@ TEST_F(TestForceField, correctLinker)
         &molecule,
         AtomIndex{0},
         AtomIndex{1},
-        1.0
+        1.0 * angstrom
     );
 
     EXPECT_NEAR(forceScaled, 11.092884496634518, 1e-6);

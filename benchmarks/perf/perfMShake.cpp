@@ -93,7 +93,9 @@ int main()
     mShake.initMShake();
 
     auto                    box = molsys::SimulationBox();
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     for (std::size_t molecule = 0; molecule < N_MOLECULES; ++molecule)

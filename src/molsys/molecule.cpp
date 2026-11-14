@@ -36,12 +36,17 @@
 namespace molsys
 {
 
+    Molecule::Molecule() : Molecule("") {}
+
     /**
      * @brief Construct a new Molecule:: Molecule object
      *
      * @param name
      */
-    Molecule::Molecule(std::string_view name) : _name(name) {}
+    Molecule::Molecule(std::string_view name)
+        : _name(name), _centerOfMass{Pos::zero(), Pos::zero(), Pos::zero()}
+    {
+    }
 
     /**
      * @brief Construct a new Molecule:: Molecule object
@@ -55,7 +60,7 @@ namespace molsys
      *
      * @return int
      */
-    size_t Molecule::getNumberOfAtomTypes()
+    size_t Molecule::getNumberOfAtomTypes() const
     {
         std::vector<ExtAtomType> extAtomTypes;
 
@@ -77,7 +82,7 @@ namespace molsys
      */
     void Molecule::calculateCenterOfMass(const Box &box)
     {
-        _centerOfMass            = {0.0, 0.0, 0.0};
+        _centerOfMass            = {Pos::zero(), Pos::zero(), Pos::zero()};
         const auto positionAtom1 = _atoms[0]->getPosition();
 
         for (const auto &atom : _atoms)
@@ -86,10 +91,7 @@ namespace molsys
             const auto position = atom->getPosition();
             const auto deltaPos = position - positionAtom1;
 
-            _centerOfMass +=
-                mass *
-                (position.numerical_value_in(angstrom) -
-                 box.calcShiftVector(deltaPos.numerical_value_in(angstrom)));
+            _centerOfMass += mass * (position - box.calcShiftVector(deltaPos));
         }
 
         _centerOfMass /= getMolMass();
@@ -113,9 +115,9 @@ namespace molsys
     {
         auto reconstructAtom = [&box, this](const auto &atom)
         {
-            auto position  = atom->getPosition().numerical_value_in(angstrom);
+            auto position  = atom->getPosition();
             position      -= box.calcShiftVector(position - _centerOfMass);
-            atom->setPosition(position * angstrom);
+            atom->setPosition(position);
         };
 
         std::ranges::for_each(_atoms, reconstructAtom);
@@ -134,18 +136,16 @@ namespace molsys
      */
     void Molecule::scale(const QuantityTensor3D &scalingTensor, const Box &box)
     {
-        const auto shift =
-            scalingTensor.numerical_value_in(one) * _centerOfMass -
-            _centerOfMass;
+        const auto shift = scalingTensor * _centerOfMass - _centerOfMass;
 
         auto scaleAtomPosition = [&box, shift](const auto &atom)
         {
-            auto position  = atom->getPosition().numerical_value_in(angstrom);
+            auto position  = atom->getPosition();
             position      += shift;
 
             box.applyPBC(position);
 
-            atom->setPosition(position * angstrom);
+            atom->setPosition(position);
         };
 
         std::ranges::for_each(_atoms, scaleAtomPosition);
@@ -606,9 +606,9 @@ namespace molsys
     /**
      * @brief returns the center of mass of the molecule
      *
-     * @return linalg::Vec3D
+     * @return const Pos3D &
      */
-    linalg::Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
+    const Pos3D &Molecule::getCenterOfMass() const { return _centerOfMass; }
 
     /**
      * @brief return the Hybrid zone of the molecule
@@ -623,7 +623,7 @@ namespace molsys
      *
      * @return double
      */
-    double Molecule::getSmoothingFactor() const
+    Quantity Molecule::getSmoothingFactor() const
     {
         if (_smoothingFactor.has_value())
             return _smoothingFactor.value();
@@ -717,7 +717,7 @@ namespace molsys
      *
      * @param centerOfMass
      */
-    void Molecule::setCenterOfMass(const linalg::Vec3D &centerOfMass)
+    void Molecule::setCenterOfMass(const Pos3D &centerOfMass)
     {
         _centerOfMass = centerOfMass;
     }
@@ -737,7 +737,7 @@ namespace molsys
      *
      * @param factor
      */
-    void Molecule::setSmoothingFactor(double factor)
+    void Molecule::setSmoothingFactor(const Quantity &factor)
     {
         _smoothingFactor = factor;
     }

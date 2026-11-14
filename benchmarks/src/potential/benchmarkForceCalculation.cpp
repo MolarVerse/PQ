@@ -72,8 +72,8 @@ namespace
             benchmarkSetup::cutOff
         );
         pot::CoulombPotential::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
+        pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
+        pot::CoulombPotential::set_coulombForceCutOff(0.0);
 
         PotentialType forceCalculation;
         forceCalculation.makeCoulombPotential(

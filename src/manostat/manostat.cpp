@@ -67,10 +67,12 @@ namespace manostat
         const auto forceVirial = physicalData.getVirial();
         const auto volume      = simulationBox.getVolume();
 
-        auto pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
-        pressureTensor      *= PRESSURE_FACTOR_PA;
-        _pressureTensor      = pressureTensor * Pa;
-        _pressure            = trace(_pressureTensor) / linalg::tensor3D::size;
+        auto pressureTensor =
+            (2.0 * ekinVirial + forceVirial) /
+            volume.numerical_value_in(angstrom * angstrom * angstrom);
+        pressureTensor  *= PRESSURE_FACTOR_PA;
+        _pressureTensor  = pressureTensor * Pa;
+        _pressure        = trace(_pressureTensor) / linalg::tensor3D::size;
 
         physicalData.setPressure(_pressure);
 
@@ -180,8 +182,8 @@ namespace manostat
         const auto dimensions = candidate.get_boxDimensions();
         const auto angles     = candidate.getBoxAngles();
         const auto matrix = candidate.getBoxMatrix(molsys::Periodicity::XYZ);
-        if (!std::isfinite(volume) || volume <= 0.0 ||
-            !linalg::isFinite(matrix) || !linalg::isFinite(inverse(matrix)))
+        if (!isfinite(volume) || volume <= 0.0 || !linalg::isFinite(matrix) ||
+            !linalg::isFinite(inverse(matrix)))
         {
             throw exc::ManostatException("Invalid manostat cell geometry");
         }
@@ -189,7 +191,7 @@ namespace manostat
         constexpr double straightAngle = 180.0;
         for (size_t i = 0; i < 3; ++i)
         {
-            if (!std::isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
+            if (!isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
                 !std::isfinite(angles[i]) || angles[i] <= 0.0 ||
                 angles[i] >= straightAngle)
             {

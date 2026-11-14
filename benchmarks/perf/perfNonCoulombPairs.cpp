@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -43,17 +45,18 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto lj   = pot::LennardJonesPair(9.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto lj =
+        pot::LennardJonesPair(9.0 * angstrom, LJParams{.c6 = 2.0, .c12 = 3.0});
     auto buck = pot::BuckinghamPair(
-        9.0,
-        BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
+        9.0 * angstrom,
+        BuckinghamParams{.scaling = 1.0, .dRho = 0.3 / angstrom, .c6 = 2.0}
     );
     auto morse = pot::MorsePair(
-        9.0,
+        9.0 * angstrom,
         MorseParams{
             .dissociationEnergy  = 1.0,
-            .wellWidth           = 2.0,
-            .equilibriumDistance = 1.5
+            .wellWidth           = 2.0 / angstrom,
+            .equilibriumDistance = 1.5 * angstrom
         }
     );
 
@@ -67,9 +70,9 @@ int main()
         const double distance =
             1.0 + (static_cast<double>(i & 255U) * 0.03);   // within cutoff
 
-        const auto [eLj, fLj]       = lj.calculate(distance);
-        const auto [eBuck, fBuck]   = buck.calculate(distance);
-        const auto [eMorse, fMorse] = morse.calculate(distance);
+        const auto [eLj, fLj]       = lj.calculate(distance * angstrom);
+        const auto [eBuck, fBuck]   = buck.calculate(distance * angstrom);
+        const auto [eMorse, fMorse] = morse.calculate(distance * angstrom);
 
         sink += eLj + fLj + eBuck + fBuck + eMorse + fMorse;
     }

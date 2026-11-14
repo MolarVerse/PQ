@@ -68,12 +68,14 @@ namespace
         settings::HybridSettings::setForcedLayerList({});
         settings::HybridSettings::setForcedOuterList({});
         settings::HybridSettings::setUseQMCharges(true);
-        settings::HybridSettings::setCoreRadius(2.0);
-        settings::HybridSettings::setLayerRadius(4.0);
-        settings::HybridSettings::setSmoothingRegionThickness(1.0);
-        settings::HybridSettings::setPointChargeThickness(2.0);
+        settings::HybridSettings::setCoreRadius(2.0 * angstrom);
+        settings::HybridSettings::setLayerRadius(4.0 * angstrom);
+        settings::HybridSettings::setSmoothingRegionThickness(1.0 * angstrom);
+        settings::HybridSettings::setPointChargeThickness(2.0 * angstrom);
 
-        molsys::OrthorhombicBox orthoBox{{40.0, 40.0, 40.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {40.0 * angstrom, 40.0 * angstrom, 40.0 * angstrom}
+        };
         engine.getSimulationBox().setBox(orthoBox, false);
     }
 
@@ -161,23 +163,25 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 
 TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
 {
-    molsys::OrthorhombicBox orthoBox{{40.0, 40.0, 40.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {40.0 * angstrom, 40.0 * angstrom, 40.0 * angstrom}
+    };
     _engine->getSimulationBox().setBox(orthoBox, false);
     setup::HybridSetup setup{*_engine};
 
-    settings::HybridSettings::setCoreRadius(5.0);
-    settings::HybridSettings::setLayerRadius(4.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
-    settings::HybridSettings::setPointChargeThickness(0.0);
+    settings::HybridSettings::setCoreRadius(5.0 * angstrom);
+    settings::HybridSettings::setLayerRadius(4.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(1.0 * angstrom);
+    settings::HybridSettings::setPointChargeThickness(0.0 * angstrom);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
         "Core radius (5 Å) cannot be larger than layer radius (4 Å)"
     );
 
-    settings::HybridSettings::setCoreRadius(3.5);
-    settings::HybridSettings::setLayerRadius(4.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
+    settings::HybridSettings::setCoreRadius(3.5 * angstrom);
+    settings::HybridSettings::setLayerRadius(4.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(1.0 * angstrom);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -185,9 +189,9 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "core (3.5 Å) and layer radius (4 Å)"
     );
 
-    settings::HybridSettings::setCoreRadius(2.0);
-    settings::HybridSettings::setLayerRadius(11.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
+    settings::HybridSettings::setCoreRadius(2.0 * angstrom);
+    settings::HybridSettings::setLayerRadius(11.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(1.0 * angstrom);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -196,10 +200,10 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "the minimum image convention."
     );
 
-    settings::HybridSettings::setCoreRadius(1.0);
-    settings::HybridSettings::setLayerRadius(2.0);
-    settings::HybridSettings::setSmoothingRegionThickness(0.5);
-    settings::HybridSettings::setPointChargeThickness(59.0);
+    settings::HybridSettings::setCoreRadius(1.0 * angstrom);
+    settings::HybridSettings::setLayerRadius(2.0 * angstrom);
+    settings::HybridSettings::setSmoothingRegionThickness(0.5 * angstrom);
+    settings::HybridSettings::setPointChargeThickness(59.0 * angstrom);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -209,7 +213,7 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "immediate neighboring cells."
     );
 
-    settings::HybridSettings::setPointChargeThickness(2.0);
+    settings::HybridSettings::setPointChargeThickness(2.0 * angstrom);
     EXPECT_NO_THROW(setup.checkZoneRadii());
 }
 

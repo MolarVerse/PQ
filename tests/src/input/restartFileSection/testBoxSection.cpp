@@ -33,6 +33,7 @@
 #include "restartFileReader/restartFileSection.hpp"
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestBoxSection, testKeyword) { EXPECT_EQ(_section->keyword(), "box"); }
 
@@ -66,7 +67,9 @@ TEST_F(TestBoxSection, testProcess)
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
     _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxDimensions(),
+        _engine->getSimulationBox().getBoxDimensions().numerical_value_in(
+            angstrom
+        ),
         testing::ElementsAre(1.0, 2.0, 3.0)
     );
     ASSERT_THAT(
@@ -77,7 +80,9 @@ TEST_F(TestBoxSection, testProcess)
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
     _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxDimensions(),
+        _engine->getSimulationBox().getBoxDimensions().numerical_value_in(
+            angstrom
+        ),
         testing::ElementsAre(1.0, 2.0, 3.0)
     );
     ASSERT_THAT(

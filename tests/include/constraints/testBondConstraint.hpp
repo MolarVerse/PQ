@@ -45,7 +45,7 @@ class TestBondConstraint : public ::testing::Test
    protected:
     std::unique_ptr<molsys::SimulationBox>       _box;
     std::unique_ptr<constraints::BondConstraint> _bondConstraint;
-    double                                       _targetBondLength = 1.2;
+    Distance _targetBondLength = 1.2 * angstrom;
 
     void SetUp() override
     {
@@ -69,7 +69,9 @@ class TestBondConstraint : public ::testing::Test
         _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _box->setBox(orthoBox, false);
 
         _bondConstraint = std::make_unique<constraints::BondConstraint>(

@@ -38,7 +38,7 @@ namespace
     std::shared_ptr<molsys::SimulationBox> makeBoxWithOneAtom(
         const Pos3D         &pos,
         const linalg::Vec3D &force,
-        const linalg::Vec3D &boxDims
+        const Pos3D         &boxDims
     )
     {
         auto box = std::make_shared<molsys::SimulationBox>();
@@ -59,7 +59,11 @@ namespace
         const linalg::Vec3D &force
     )
     {
-        return makeBoxWithOneAtom(pos, force, {100.0, 100.0, 100.0});
+        return makeBoxWithOneAtom(
+            pos,
+            force,
+            {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+        );
     }
 }   // namespace
 
@@ -160,7 +164,7 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
     auto box = makeBoxWithOneAtom(
         linalg::Vec3D{9.99, 0.0, 0.0} * angstrom,
         {1.0, 0.0, 0.0},
-        {10.0, 10.0, 10.0}
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     );
 
     opt::Adam adam(1U, 1U);

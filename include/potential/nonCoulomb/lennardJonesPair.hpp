@@ -49,30 +49,24 @@ namespace pot
         explicit LennardJonesPair(
             ExtVdwType      vanDerWaalsType1,
             ExtVdwType      vanDerWaalsType2,
-            double          cutOff,
+            const Pos      &cutOff,
             const LJParams &params
         );
 
-        explicit LennardJonesPair(double cutOff, const LJParams &params);
+        explicit LennardJonesPair(const Pos &cutOff, const LJParams &params);
 
         explicit LennardJonesPair(
-            double          cutOff,
+            const Pos      &cutOff,
             double          energyCutoff,
             double          forceCutoff,
             const LJParams &params
         );
 
-        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
-        // explicitly deleted to not implicitly create it with the wrong
-        // types!!! Needs cleanup
-        explicit LennardJonesPair(size_t, size_t, double, const LJParams &) =
-            delete;
-
         [[nodiscard]]
         bool operator==(const LennardJonesPair &other) const;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(double distance) const override;
+        std::pair<double, double> calculate(const Pos &distance) const override;
 
         friend struct ::TestLJPairUtils;
     };

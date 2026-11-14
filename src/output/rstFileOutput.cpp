@@ -78,8 +78,9 @@ namespace out
 
         buffer << "Step " << step << '\n';
 
-        buffer << "Box   " << frame.box->get_boxDimensions() << "  "
-               << frame.box->getBoxAngles() << '\n';
+        buffer << "Box   "
+               << frame.box->get_boxDimensions().numerical_value_in(angstrom)
+               << "  " << frame.box->getBoxAngles() << '\n';
 
         writeNHChain(frame, buffer);
 

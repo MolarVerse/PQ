@@ -35,6 +35,7 @@
 #include "mathUtilities.hpp"
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
+#include "units.hpp"
 
 namespace input::restartFile
 {
@@ -75,14 +76,14 @@ namespace input::restartFile
             );
         }
 
-        const auto boxDimensions = linalg::Vec3D{
-            stod(lineElements[1]),
-            stod(lineElements[2]),
-            stod(lineElements[3])
+        const auto boxDimensions = Pos3D{
+            stod(lineElements[1]) * angstrom,
+            stod(lineElements[2]) * angstrom,
+            stod(lineElements[3]) * angstrom
         };
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        auto checkPositive = [](const double dimension)
+        auto checkPositive = [](const auto dimension)
         { return dimension < 0.0; };
 
         if (std::ranges::any_of(boxDimensions, checkPositive))

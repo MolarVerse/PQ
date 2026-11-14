@@ -37,7 +37,7 @@ namespace molsys
      *
      * @param boxDimensions
      */
-    OrthorhombicBox::OrthorhombicBox(const linalg::Vec3D &boxDimensions)
+    OrthorhombicBox::OrthorhombicBox(const Pos3D &boxDimensions)
         : Box(boxDimensions, {NINETY_DEG})
     {
     }
@@ -65,13 +65,13 @@ namespace molsys
     /**
      * @brief get the volume of the box
      *
-     * @return double
+     * @return Volume
      */
-    double OrthorhombicBox::getVolume() const
+    Volume OrthorhombicBox::getVolume() const
     {
         // NOTE: here we do not use cached values as the overhead is negligible
         // or even negative
-        return prod(get_boxDimensions());
+        return linalg::prod(get_boxDimensions());
     }
 
     /**
@@ -79,7 +79,7 @@ namespace molsys
      *
      * @param position
      */
-    void OrthorhombicBox::applyPBC(linalg::Vec3D &position) const
+    void OrthorhombicBox::applyPBC(Pos3D &position) const
     {
         const auto &boxDims  = get_boxDimensions();
         position            -= boxDims * round(position / boxDims);
@@ -89,11 +89,9 @@ namespace molsys
      * @brief Calculate the shift vector
      *
      * @param shiftVector
-     * @return linalg::Vec3D
+     * @return Pos3D
      */
-    linalg::Vec3D OrthorhombicBox::calcShiftVector(
-        const linalg::Vec3D &shiftVector
-    ) const
+    Pos3D OrthorhombicBox::calcShiftVector(const Pos3D &shiftVector) const
     {
         const auto &boxDims = get_boxDimensions();
         return boxDims * round(shiftVector / boxDims);
@@ -102,9 +100,10 @@ namespace molsys
     /**
      * @brief Calculate the box dimensions from the density
      *
-     * @return vector<double>
+     * @return Pos3D representing the calculated box dimensions based on the
+     * specified density and total mass
      */
-    linalg::Vec3D OrthorhombicBox::calcBoxDimFromDensity(
+    Pos3D OrthorhombicBox::calcBoxDimFromDensity(
         double totalMass,
         double density
     )
@@ -112,14 +111,18 @@ namespace molsys
         const auto volume =
             totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
-        return {::cbrt(volume)};
+        return {::cbrt(volume) * angstrom};
     }
 
-    linalg::Vec3D OrthorhombicBox::wrapPositionIntoBox(
-        const linalg::Vec3D &pos
-    ) const
+    /**
+     * @brief Wrap a position into the box using periodic boundary conditions
+     *
+     * @param pos
+     * @return Pos3D
+     */
+    Pos3D OrthorhombicBox::wrapPositionIntoBox(const Pos3D &pos) const
     {
-        linalg::Vec3D position = pos;
+        Pos3D position = pos;
         applyPBC(position);
         return position;
     }
@@ -140,21 +143,20 @@ namespace molsys
     /**
      * @brief get the minimal box dimension
      *
-     * @return double
+     * @return Pos
      */
-    double OrthorhombicBox::getMinimalBoxDimension() const
+    Pos OrthorhombicBox::getMinimalBoxDimension() const
     {
-        return minimum(get_boxDimensions());
+        return min(get_boxDimensions());
     }
 
     /**
      * @brief get the box matrix
      *
-     * @return linalg::StaticMatrix3x3<double>
+     * @return PosTensor3D representing the box matrix with the specified
+     * periodicity
      */
-    linalg::StaticMatrix3x3<double> OrthorhombicBox::getBoxMatrix(
-        Periodicity periodicity
-    ) const
+    PosTensor3D OrthorhombicBox::getBoxMatrix(Periodicity periodicity) const
     {
         auto boxMatrix = linalg::diagonalMatrix(get_boxDimensions());
 
@@ -181,9 +183,9 @@ namespace molsys
     /**
      * @brief get the box matrix without specifying periodicity
      *
-     * @return linalg::StaticMatrix3x3<double>
+     * @return PosTensor3D
      */
-    linalg::StaticMatrix3x3<double> OrthorhombicBox::getBoxMatrix() const
+    PosTensor3D OrthorhombicBox::getBoxMatrix() const
     {
         return linalg::diagonalMatrix(get_boxDimensions());
     }
@@ -191,9 +193,9 @@ namespace molsys
     /**
      * @brief get the inverse of the box matrix
      *
-     * @return linalg::StaticMatrix3x3<double>
+     * @return InvPosTensor3D
      */
-    linalg::StaticMatrix3x3<double> OrthorhombicBox::getInverseBoxMatrix() const
+    InvPosTensor3D OrthorhombicBox::getInverseBoxMatrix() const
     {
         return linalg::diagonalMatrix(1.0 / get_boxDimensions());
     }

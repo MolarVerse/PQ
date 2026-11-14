@@ -47,12 +47,12 @@ namespace pot
         static inline double _wolfParam3;
 
        public:
-        explicit CoulombWolf(double coulombRadiusCutOff, double kappa);
+        explicit CoulombWolf(const Distance& coulombRadiusCutOff, double kappa);
 
         [[nodiscard]]
         std::pair<double, double> calculate(
-            double distance,
-            double chargeProduct
+            const Distance& distance,
+            double          chargeProduct
         ) const override;
 
         /***************************

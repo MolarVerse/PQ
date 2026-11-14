@@ -28,6 +28,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace input::topology
 {
@@ -76,12 +77,12 @@ namespace input::topology
             );
         }
 
-        auto atom1             = stoul(lineElements[0]);
-        auto atom2             = stoul(lineElements[1]);
-        auto lowerDistance     = stod(lineElements[2]);
-        auto upperDistance     = stod(lineElements[3]);
-        auto springConstant    = stod(lineElements[4]);
-        auto dSpringConstantDt = stod(lineElements[5]);
+        const auto atom1             = stoul(lineElements[0]);
+        const auto atom2             = stoul(lineElements[1]);
+        const auto lowerDistance     = stod(lineElements[2]) * angstrom;
+        const auto upperDistance     = stod(lineElements[3]) * angstrom;
+        const auto springConstant    = stod(lineElements[4]);
+        const auto dSpringConstantDt = stod(lineElements[5]);
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         if (atom1 == atom2)

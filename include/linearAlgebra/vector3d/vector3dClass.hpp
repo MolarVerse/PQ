@@ -157,6 +157,15 @@ namespace linalg
         Vector3D &operator/=(const T &vec)
         requires pq::Arithmetic<T>;
 
+        // quantity elements divided in place by a dimensionless scalar, e.g.
+        // Vector3D<Pos> /= 2.0 or Vector3D<Pos> /= quantity<one>
+        template <typename S>
+        requires(
+            mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+            requires(T &elem, const S &scalar) { elem /= scalar; }
+        )
+        Vector3D &operator/=(const S &scalar);
+
         /**********************
          * indexing operators *
          **********************/
@@ -169,7 +178,8 @@ namespace linalg
          *******************/
 
         Vector3D operator-() const
-        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+                 mstd::is_quantity_like_v<T>;
 
         /********************
          * iterator methods *

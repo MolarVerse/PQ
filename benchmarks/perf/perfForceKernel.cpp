@@ -52,7 +52,7 @@ int main()
 {
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
-    auto coulombPotential    = pot::CoulombShiftedPotential(10.0);
+    auto coulombPotential    = pot::CoulombShiftedPotential(10.0 * angstrom);
 
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.75);
@@ -64,7 +64,9 @@ int main()
 
     auto simulationBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     simulationBox.setBox(orthoBox, false);
 
     auto physicalData = physicalData::PhysicalData();
