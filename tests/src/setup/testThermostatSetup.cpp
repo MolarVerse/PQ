@@ -23,7 +23,6 @@
 #include <gtest/gtest.h>
 
 #include "berendsenThermostat.hpp"
-#include "langevinThermostat.hpp"
 #include "noseHooverThermostat.hpp"
 #include "testSetup.hpp"
 #include "thermostatSettings.hpp"
