@@ -41,20 +41,24 @@
  */
 TEST_F(TestInputFileReader, testParseTemperature)
 {
-    EXPECT_EQ(ThermostatSettings::isTemperatureSet(), false);
-
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp"));
     const auto& parseFunc = funcMap.at("temp");
 
     std::vector<std::string> lineElements = {"temp", "=", "300.0"};
     parseFunc(lineElements, 0);
 
-    EXPECT_EQ(ThermostatSettings::isTemperatureSet(), true);
-    EXPECT_EQ(ThermostatSettings::getTargetTemperature(), toTemperature(300.0));
+    // the target temperature is resolved to the end temperature on finalize
+    kineticsSettings.finalize();
+    EXPECT_EQ(kineticsSettings.getEndTemperature(), toTemperature(300.0));
 
     _clearParser(parser);
 
@@ -84,8 +88,13 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("t_relaxation"));
     const auto& parseFunc = funcMap.at("t_relaxation");
 
@@ -138,8 +147,13 @@ TEST_F(TestInputFileReader, testParseThermostat)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("thermostat"));
     const auto& parseFunc = funcMap.at("thermostat");
 
@@ -209,8 +223,13 @@ TEST_F(TestInputFileReader, testParseFriction)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("friction"));
     const auto& parseFunc = funcMap.at("friction");
 
@@ -251,8 +270,13 @@ TEST_F(TestInputFileReader, testParseChainLength)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nh_chain_length"));
     const auto& parseFunc = funcMap.at("nh_chain_length");
 
@@ -290,8 +314,13 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("coupling_frequency"));
     const auto& parseFunc = funcMap.at("coupling_frequency");
 
@@ -335,14 +364,19 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp_ramp_steps"));
     const auto& parseFunc = funcMap.at("temp_ramp_steps");
 
     std::vector<std::string> lineElements = {"temp_ramp_steps", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getTemperatureRampSteps(), 10);
+    EXPECT_EQ(kineticsSettings.getRampingSteps(), 10);
 
     _clearParser(parser);
 
@@ -365,14 +399,19 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp_ramp_frequency"));
     const auto& parseFunc = funcMap.at("temp_ramp_frequency");
 
     std::vector<std::string> lineElements = {"temp_ramp_frequency", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getTemperatureRampFrequency(), 10);
+    EXPECT_EQ(kineticsSettings.getRampingFrequency(), 10);
 
     _clearParser(parser);
 
@@ -406,14 +445,19 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("start_temp"));
     const auto& parseFunc = funcMap.at("start_temp");
 
     std::vector<std::string> lineElements = {"start_temp", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getStartTemperature(), toTemperature(10));
+    EXPECT_EQ(kineticsSettings.getStartTemperature(), toTemperature(10));
 
     _clearParser(parser);
 
@@ -442,14 +486,19 @@ TEST_F(TestInputFileReader, testParseEndTemperature)
 {
     ThermostatSettings           thermostatSettings;
     NoseHooverSettings           nhSettings;
-    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    KineticsSettings             kineticsSettings;
+    input::ThermostatInputParser parser{
+        thermostatSettings,
+        nhSettings,
+        kineticsSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("end_temp"));
     const auto& parseFunc = funcMap.at("end_temp");
 
     std::vector<std::string> lineElements = {"end_temp", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getEndTemperature(), toTemperature(10));
+    EXPECT_EQ(kineticsSettings.getEndTemperature(), toTemperature(10));
 
     _clearParser(parser);
 

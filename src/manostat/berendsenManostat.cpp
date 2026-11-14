@@ -58,10 +58,12 @@ namespace manostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void BerendsenManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature & /*targetTemperature*/
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Berendsen");

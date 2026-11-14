@@ -66,7 +66,8 @@ namespace manostat
 
         virtual void applyManostat(
             molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const Temperature &targetTemperature
         );
 
         static void rotateMu(QuantityTensor3D &mu);

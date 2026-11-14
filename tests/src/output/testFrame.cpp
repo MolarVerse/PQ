@@ -142,10 +142,7 @@ TEST(TestFrame, copiesNoseHooverChain)
     noseHooverSettings.setZetaByUser({{0, 3.0}, {1, 4.0}});
     noseHooverSettings.setNoseHooverChainLengthByUser(2);
 
-    const thermostat::NoseHooverThermostat noseHoover{
-        noseHooverSettings,
-        toTemperature(300.0)
-    };
+    const thermostat::NoseHooverThermostat noseHoover{noseHooverSettings};
 
     const out::Frame withChain{simulationBox, noseHoover};
     const out::Frame withoutChain{simulationBox, thermostat::Thermostat()};

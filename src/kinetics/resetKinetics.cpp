@@ -34,10 +34,9 @@
 #include "simulationBox.hpp"
 #include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
-#include "thermostatSettings.hpp"
 #include "vector3d.hpp"
 
-namespace resetKinetics
+namespace kinetics
 {
 
     /**
@@ -56,11 +55,13 @@ namespace resetKinetics
      * @param step The current simulation step
      * @param physicalData The physical data of the system
      * @param simulationBox The simulation box containing the system
+     * @param targetTemperature The target temperature for the system
      */
     void ResetKinetics::reset(
         size_t                      step,
         physicalData::PhysicalData &physicalData,
-        molsys::SimulationBox      &simulationBox
+        molsys::SimulationBox      &simulationBox,
+        const Temperature          &targetTemperature
     ) const
     {
         auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
@@ -81,7 +82,7 @@ namespace resetKinetics
 
         if (resetTemp)
         {
-            resetTemperature(simulationBox, temperature);
+            resetTemperature(simulationBox, temperature, targetTemperature);
             momentum = simulationBox.calculateMomentum();
             resetMomentum(simulationBox, momentum);
             temperature     = simulationBox.calculateTemperature();
@@ -117,15 +118,18 @@ namespace resetKinetics
      * temperature and scale all velocities
      *
      * @param simulationBox The simulation box containing the system
-     * @param temperature
+     * @param temperature The current temperature of the system
+     * @param targetTemperature The target temperature to which the system
+     * should be scaled
+     *
      */
     void ResetKinetics::resetTemperature(
         molsys::SimulationBox &simulationBox,
-        const Temperature     &temperature
+        const Temperature     &temperature,
+        const Temperature     &targetTemperature
     )
     {
-        const auto targetTemp =
-            ThermostatSettings::getActualTargetTemperature();
+        const auto targetTemp = targetTemperature;
 
         if (utilities::isZero(temperature))
         {
@@ -237,4 +241,4 @@ namespace resetKinetics
         );
     }
 
-}   // namespace resetKinetics
+}   // namespace kinetics

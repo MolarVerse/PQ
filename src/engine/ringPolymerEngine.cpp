@@ -32,7 +32,6 @@
 #include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
-#include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
 #include "units.hpp"
 
@@ -183,7 +182,8 @@ namespace engine
     {
         const auto nBeads = _ringPolymerBeads.size();
         const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
-        const auto temp   = ThermostatSettings::getActualTargetTemperature()
+        const auto temp   = _getKinetics()
+                              .getCurrentTargetTemperature()
                               .quantity_from_zero()
                               .numerical_value_in(K);
 
