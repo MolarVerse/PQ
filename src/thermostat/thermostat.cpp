@@ -62,6 +62,7 @@ namespace thermostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void Thermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,

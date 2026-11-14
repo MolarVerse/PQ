@@ -34,7 +34,6 @@
 #include "simulationBox.hpp"
 #include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
-#include "thermostatSettings.hpp"
 #include "vector3d.hpp"
 
 namespace kinetics
@@ -56,6 +55,7 @@ namespace kinetics
      * @param step The current simulation step
      * @param physicalData The physical data of the system
      * @param simulationBox The simulation box containing the system
+     * @param targetTemperature The target temperature for the system
      */
     void ResetKinetics::reset(
         size_t                      step,
@@ -118,7 +118,10 @@ namespace kinetics
      * temperature and scale all velocities
      *
      * @param simulationBox The simulation box containing the system
-     * @param temperature
+     * @param temperature The current temperature of the system
+     * @param targetTemperature The target temperature to which the system
+     * should be scaled
+     *
      */
     void ResetKinetics::resetTemperature(
         molsys::SimulationBox &simulationBox,

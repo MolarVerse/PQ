@@ -74,6 +74,7 @@ namespace thermostat
      * and by the degrees of freedom
      *
      * @param simulationBox
+     * @param targetTemperature The target temperature for the system
      *
      * @throw exc::UserInputException for a zero target temperature or zero
      * degrees of freedom
@@ -100,7 +101,8 @@ namespace thermostat
      * @details the Nose-Hoover thermostat is applied on the forces of the atoms
      * after force calculation
      *
-     * @param simulationBox simulation box
+     * @param simulationBox simulation box containing all atoms
+     * @param targetTemperature The target temperature for the system
      */
     void NoseHooverThermostat::applyThermostatOnForces(
         molsys::SimulationBox &simulationBox,
@@ -138,8 +140,9 @@ namespace thermostat
      * @details the Nose-Hoover thermostat is applied on the velocities of the
      * atoms after velocity integration
      *
-     * @param simulationBox simulation box
+     * @param simulationBox simulation box containing all atoms
      * @param physicalData physical data
+     * @param targetTemperature The target temperature for the system
      */
     void NoseHooverThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,

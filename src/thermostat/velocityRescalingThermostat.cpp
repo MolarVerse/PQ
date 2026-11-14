@@ -83,6 +83,7 @@ namespace thermostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void VelocityRescalingThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,

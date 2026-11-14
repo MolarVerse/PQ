@@ -30,7 +30,6 @@
 #include "constants/natureConstants.hpp"
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 #include "units.hpp"
 
 #ifdef WITH_MPI
@@ -48,7 +47,9 @@ namespace maxwellBoltzmann
      * @details using a standard deviation of sqrt(kb*T/m) for each component of
      * the velocity vector
      *
-     * @param simulationBox
+     * @param simulationBox The simulation box containing all atoms for which
+     * velocities should be initialized
+     * @param targetTemperature The target temperature for the system
      */
     void MaxwellBoltzmann::initializeVelocities(
         molsys::SimulationBox &simulationBox,

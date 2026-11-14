@@ -232,6 +232,7 @@ namespace manostat
      *
      * @param simulationBox The simulation box containing the system
      * @param physicalData The physical data of the system
+     * @param targetTemperature The target temperature for the system
      */
     void Manostat::applyManostat(
         molsys::SimulationBox      &simulationBox,

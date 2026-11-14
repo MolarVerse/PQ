@@ -33,7 +33,6 @@
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
@@ -46,6 +45,7 @@ namespace manostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void StochasticRescalingManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
@@ -105,6 +105,7 @@ namespace manostat
      * and the remaining axes are scaled isotropically with stochastic coupling
      *
      * @param volume
+     * @param targetTemperature The target temperature for the system
      * @return linalg::Vec3D
      */
     QuantityTensor3D StochasticRescalingManostat::calculateMu(
@@ -211,7 +212,8 @@ namespace manostat
      * @brief calculate mu as scaling factor for Stochastic Rescaling manostat
      * (semi-isotropic)
      *
-     * @param volume
+     * @param volume The current volume of the simulation box
+     * @param targetTemperature The target temperature for the system
      * @return QuantityTensor3D
      */
     QuantityTensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
@@ -285,6 +287,8 @@ namespace manostat
      * and the other axes are scaled independently with stochastic coupling
      *
      * @param volume
+     * @param targetTemperature The target temperature for the system
+     *
      * @return QuantityTensor3D
      */
     QuantityTensor3D AnisotropicStochasticRescalingManostat::calculateMu(
@@ -336,6 +340,7 @@ namespace manostat
      * are zeroed (no coupling with other axes) and the diagonals are set to 1.0
      *
      * @param volume
+     * @param targetTemperature The target temperature for the system
      * @return QuantityTensor3D
      */
     QuantityTensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(

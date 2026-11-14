@@ -58,6 +58,7 @@ namespace manostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void BerendsenManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,

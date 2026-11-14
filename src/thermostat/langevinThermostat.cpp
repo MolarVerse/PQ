@@ -106,6 +106,7 @@ namespace thermostat
      * applies the Langevin thermostat to the velocities
      *
      * @param simulationBox
+     * @param targetTemperature The target temperature for the system
      */
     void LangevinThermostat::applyLangevin(
         molsys::SimulationBox &simulationBox,
@@ -146,6 +147,7 @@ namespace thermostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void LangevinThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
@@ -166,6 +168,7 @@ namespace thermostat
      * @note no temperature calculation
      *
      * @param simulationBox
+     * @param targetTemperature The target temperature for the system
      */
     void LangevinThermostat::applyThermostatHalfStep(
         molsys::SimulationBox &simulationBox,
