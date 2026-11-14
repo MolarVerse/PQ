@@ -31,7 +31,7 @@
 /**
  * @brief Get the mol descriptor file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getMolDescriptorFileName() const
 {
@@ -41,7 +41,7 @@ const std::string& FileSettings::getMolDescriptorFileName() const
 /**
  * @brief Get the guff dat file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getGuffDatFileName() const
 {
@@ -51,7 +51,7 @@ const std::string& FileSettings::getGuffDatFileName() const
 /**
  * @brief Get the topology file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getTopologyFileName() const
 {
@@ -61,7 +61,7 @@ const std::string& FileSettings::getTopologyFileName() const
 /**
  * @brief Get the parameter file name
  *
- * @return std::string
+ * @return const std::string&
  */
 const std::string& FileSettings::getParameterFileName() const
 {
@@ -71,86 +71,108 @@ const std::string& FileSettings::getParameterFileName() const
 /**
  * @brief Get the intra non bonded file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getIntraNonBondedFileName()
+const std::string& FileSettings::getIntraNonBondedFileName() const
 {
-    return _intraNonBondedFile;
+    return _intraNonBondedFile.get();
 }
 
 /**
  * @brief Get the start file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getStartFileName() { return _startFile; }
+const std::string& FileSettings::getStartFileName() const
+{
+    return _startFile.get();
+}
 
 /**
  * @brief Get the ring polymer start file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getRingPolymerStartFileName()
+const std::string& FileSettings::getRingPolymerStartFileName() const
 {
-    return _rpmdStartFile;
+    return _rpmdStartFile.get();
 }
 
 /**
  * @brief Get the mShake file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getMShakeFileName() { return _mShakeFile; }
+const std::string& FileSettings::getMShakeFileName() const
+{
+    return _mShakeFile.get();
+}
 
 /**
  * @brief Get the DFTB setup file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getDFTBFileName() { return _dftbFile; }
+const std::string& FileSettings::getDFTBFileName() const
+{
+    return _dftbFile.get();
+}
 
 /**
- * @brief Get the TM setup file name
+ * @brief Get the TM file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getTMFileName() { return _tmFile; }
+const std::string& FileSettings::getTMFileName() const { return _tmFile.get(); }
+
+/**
+ * @brief Get the ORCA setup file name
+ *
+ * @return const std::string&
+ */
+const std::string& FileSettings::getOrcaFileName() const
+{
+    return _orcaFile.get();
+}
 
 /**
  * @brief Get the pointcharge file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getPointChargeFileName() { return _pointChargeFile; }
+const std::string& FileSettings::getPointChargeFileName() const
+{
+    return _pointChargeFile.get();
+}
 
-/*
+/**
  * @brief Get the QM forces temp file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getQMForcesTempFileName()
+const std::string& FileSettings::getQMForcesTempFileName() const
 {
-    return _qmForcesTempFile;
+    return _qmForcesTempFile.get();
 }
 
 /**
  * @brief Get the QM charges temp file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getQMChargesTempFileName()
+const std::string& FileSettings::getQMChargesTempFileName() const
 {
-    return _qmChargesTempFile;
+    return _qmChargesTempFile.get();
 }
 
 /**
  * @brief Get the stress tensor temp file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getStressTensorTempFileName()
+const std::string& FileSettings::getStressTensorTempFileName() const
 {
-    return _stressTensorTempFile;
+    return _stressTensorTempFile.get();
 }
 
 /**
@@ -178,34 +200,30 @@ bool FileSettings::isParameterFileNameSetByUser() const
  *
  * @return bool
  */
-bool FileSettings::isIntraNonBondedFileNameSet()
+bool FileSettings::isIntraNonBondedFileNameSetByUser() const
 {
-    return _isIntraNonBondedFileSet;
+    return _intraNonBondedFile.isSetByUser();
 }
 
 /**
- * @brief Check if the ring polymer start file name is set
+ * @brief Check if the ring polymer start file name is set by the user
  *
  * @return bool
  */
-bool FileSettings::isRingPolymerStartFileNameSet()
+bool FileSettings::isRingPolymerStartFileNameSetByUser() const
 {
-    return _isRPMDStartFileSet;
+    return _rpmdStartFile.isSetByUser();
 }
 
 /**
- * @brief Check if the mShake file name is set
+ * @brief Check if the start file name is set by the user
  *
  * @return bool
  */
-bool FileSettings::isMShakeFileNameSet() { return _isMShakeFileSet; }
-
-/**
- * @brief Check if the DFTB setup file name is set
- *
- * @return bool
- */
-bool FileSettings::isDFTBFileNameSet() { return _isDFTBFileSet; }
+bool FileSettings::isStartFileNameSetByUser() const
+{
+    return _startFile.isSetByUser();
+}
 
 /***************************
  *                         *
@@ -258,9 +276,9 @@ void FileSettings::setParameterFileNameByUser(const std::string& name)
  *
  * @param name
  */
-void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
+void FileSettings::setIntraNonBondedFileNameByUser(const std::string& name)
 {
-    FileSettings::_intraNonBondedFile = name;
+    _intraNonBondedFile.setByUser(name);
 }
 
 /**
@@ -268,9 +286,9 @@ void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setStartFileName(const std::string_view& name)
+void FileSettings::setStartFileNameByUser(const std::string& name)
 {
-    FileSettings::_startFile = name;
+    _startFile.setByUser(name);
 }
 
 /**
@@ -278,9 +296,9 @@ void FileSettings::setStartFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setRingPolymerStartFileName(const std::string_view& name)
+void FileSettings::setRingPolymerStartFileNameByUser(const std::string& name)
 {
-    FileSettings::_rpmdStartFile = name;
+    _rpmdStartFile.setByUser(name);
 }
 
 /**
@@ -288,9 +306,9 @@ void FileSettings::setRingPolymerStartFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setMShakeFileName(const std::string_view& name)
+void FileSettings::setMShakeFileNameByUser(const std::string& name)
 {
-    FileSettings::_mShakeFile = name;
+    _mShakeFile.setByUser(name);
 }
 
 /**
@@ -298,9 +316,9 @@ void FileSettings::setMShakeFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setDFTBFileName(const std::string_view& name)
+void FileSettings::setDFTBFileNameByUser(const std::string& name)
 {
-    FileSettings::_dftbFile = name;
+    _dftbFile.setByUser(name);
 }
 
 /**
@@ -308,9 +326,19 @@ void FileSettings::setDFTBFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setTMFileName(const std::string_view& name)
+void FileSettings::setTMFileNameByUser(const std::string& name)
 {
-    FileSettings::_tmFile = name;
+    _tmFile.setByUser(name);
+}
+
+/**
+ * @brief set the ORCA setup file name
+ *
+ * @param name
+ */
+void FileSettings::setOrcaFileNameByUser(const std::string& name)
+{
+    _orcaFile.setByUser(name);
 }
 
 /**
@@ -318,79 +346,17 @@ void FileSettings::setTMFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setPointChargeFileName(const std::string_view& name)
+void FileSettings::setPointChargeFileNameByUser(const std::string& name)
 {
-    FileSettings::_pointChargeFile = name;
+    _pointChargeFile.setByUser(name);
 }
 
 /**
- * @brief set the intra non bonded file name flag to is set
+ * @brief check if the mShake file name was set by the user
  *
+ * @return true if the mShake file name was set by the user, false otherwise
  */
-void FileSettings::setIsIntraNonBondedFileNameSet()
+bool FileSettings::isMShakeFileNameSetByUser() const
 {
-    FileSettings::_isIntraNonBondedFileSet = true;
-}
-
-/**
- * @brief set the ring polymer start file name flag to is set
- *
- */
-void FileSettings::setIsRingPolymerStartFileNameSet()
-{
-    FileSettings::_isRPMDStartFileSet = true;
-}
-
-/**
- * @brief set the mShake file name flag to is set
- *
- */
-void FileSettings::setIsMShakeFileNameSet()
-{
-    FileSettings::_isMShakeFileSet = true;
-}
-
-/**
- * @brief set the DFTB setup file name flag to is set
- *
- */
-void FileSettings::setIsDFTBFileNameSet()
-{
-    FileSettings::_isDFTBFileSet = true;
-}
-
-/**
- * @brief set the intra non bonded file name flag to is not set
- *
- */
-void FileSettings::unsetIsIntraNonBondedFileNameSet()
-{
-    FileSettings::_isIntraNonBondedFileSet = false;
-}
-
-/**
- * @brief set the ring polymer start file name flag to is not set
- *
- */
-void FileSettings::unsetIsRingPolymerStartFileNameSet()
-{
-    FileSettings::_isRPMDStartFileSet = false;
-}
-
-/**
- * @brief set the mShake file name flag to is not set
- *
- */
-void FileSettings::unsetIsMShakeFileNameSet()
-{
-    FileSettings::_isMShakeFileSet = false;
-}
-
-/**
- * @brief set the DFTB setup file name flag to is not set
- *
- */
-void FileSettings::unsetIsDFTBFileNameSet()
-{
-    FileSettings::_isDFTBFileSet = false;
+    return _mShakeFile.isSetByUser();
 }

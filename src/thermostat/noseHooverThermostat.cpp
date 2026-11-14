@@ -42,16 +42,14 @@ namespace thermostat
      * @brief Construct a new Nose Hoover Thermostat:: Nose Hoover Thermostat
      * object
      *
-     * @param targetTemp
      * @param nhSettings Reference to the NoseHooverSettings object containing
      * the Nose-Hoover chain parameters such as chi, zeta, and coupling
      * frequency.
      */
     NoseHooverThermostat::NoseHooverThermostat(
-        const NoseHooverSettings &nhSettings,
-        const Temperature        &targetTemp
+        const NoseHooverSettings &nhSettings
     )
-        : Thermostat(targetTemp), _nhSettings(nhSettings)
+        : _nhSettings(nhSettings)
     {
         const auto length = nhSettings.getNoseHooverChainLength() + 1;
         _chi.reserve(length);
@@ -76,15 +74,17 @@ namespace thermostat
      * and by the degrees of freedom
      *
      * @param simulationBox
+     * @param targetTemperature The target temperature for the system
      *
      * @throw exc::UserInputException for a zero target temperature or zero
      * degrees of freedom
      */
     void NoseHooverThermostat::_requireCoupling(
-        const molsys::SimulationBox &simulationBox
-    ) const
+        const molsys::SimulationBox &simulationBox,
+        const Temperature           &targetTemperature
+    )
     {
-        if (getTargetTemperature().quantity_from_zero() <= 0.0)
+        if (targetTemperature.quantity_from_zero() <= 0.0)
         {
             throw exc::UserInputException(
                 "Cannot apply the Nose-Hoover thermostat with a target "
@@ -101,20 +101,22 @@ namespace thermostat
      * @details the Nose-Hoover thermostat is applied on the forces of the atoms
      * after force calculation
      *
-     * @param simulationBox simulation box
+     * @param simulationBox simulation box containing all atoms
+     * @param targetTemperature The target temperature for the system
      */
     void NoseHooverThermostat::applyThermostatOnForces(
-        molsys::SimulationBox &simulationBox
+        molsys::SimulationBox &simulationBox,
+        const Temperature     &targetTemperature
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
 
-        _requireCoupling(simulationBox);
+        _requireCoupling(simulationBox, targetTemperature);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
         const auto kT_target =
             boltzmannConstant *
-            getTargetTemperature().quantity_from_zero().numerical_value_in(K);
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -138,17 +140,19 @@ namespace thermostat
      * @details the Nose-Hoover thermostat is applied on the velocities of the
      * atoms after velocity integration
      *
-     * @param simulationBox simulation box
+     * @param simulationBox simulation box containing all atoms
      * @param physicalData physical data
+     * @param targetTemperature The target temperature for the system
      */
     void NoseHooverThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature          &targetTemperature
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-        _requireCoupling(simulationBox);
+        _requireCoupling(simulationBox, targetTemperature);
 
         physicalData.calculateTemperature(simulationBox);
 
@@ -169,7 +173,7 @@ namespace thermostat
             getTemperature().quantity_from_zero().numerical_value_in(K);
         const auto thermalEnergyTarget =
             boltzmannConstant *
-            getTargetTemperature().quantity_from_zero().numerical_value_in(K);
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         auto chi = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
         chi -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;

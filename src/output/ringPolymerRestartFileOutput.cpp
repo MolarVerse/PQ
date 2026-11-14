@@ -44,9 +44,6 @@ namespace out
     {
         std::ostringstream buffer;
 
-        _getFilePointer().close();
-        _openFile();
-
         const auto nBeads = beads.size();
 
         for (size_t i = 0; i < nBeads; ++i)
@@ -106,7 +103,6 @@ namespace out
         }
 
         // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _replaceFile(buffer.str());
     }
 }   // namespace out

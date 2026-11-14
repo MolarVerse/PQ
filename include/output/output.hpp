@@ -68,6 +68,7 @@ namespace out
 
        protected:
         void _openFile();
+        void _replaceFile(std::string_view content);
         void _writeComment(size_t, bool includeMetadata);
         void _writeForceComment(size_t, double, bool includeMetadata);
 

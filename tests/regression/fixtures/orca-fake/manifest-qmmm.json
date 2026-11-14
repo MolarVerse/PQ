@@ -1,0 +1,11 @@
+{
+  "input": ["qmmm-dft.in", "qmmm-rimp2.in"],
+  "timeout_seconds": 120,
+  "env": {"ORCA_EXE": "fake_orca.py"},
+  "executables": ["fake_orca.py"],
+  "stdout_contains": ["PQ ended normally"],
+  "stdout_rejects": ["Exception:"],
+  "expected_files": ["qmmm-dft.info", "qmmm-rimp2.info"],
+  "file_rejects": {"qmmm-dft.en": ["nan", "inf"], "qmmm-rimp2.en": ["nan", "inf"]},
+  "check_command": ["check_orca.py", "qmmm"]
+}

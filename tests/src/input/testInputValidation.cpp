@@ -66,14 +66,8 @@ class TestInputValidation : public ::testing::Test
             defaults::BERENDSEN_MANOSTAT_RELAX_TIME
         );
 
-        ThermostatSettings::setTargetTemperature(toTemperature(0.0));
-        ThermostatSettings::setStartTemperature(toTemperature(0.0));
-        ThermostatSettings::setEndTemperature(toTemperature(0.0));
-        ThermostatSettings::setTemperatureSet(false);
-        ThermostatSettings::setStartTemperatureSet(false);
-        ThermostatSettings::setEndTemperatureSet(false);
-        ThermostatSettings::setTemperatureRampSteps(0);
-        ThermostatSettings::setTemperatureRampFrequency(1);
+        _settings.kinetics.setRampingStepsByUser(0);
+        _settings.kinetics.setRampingFrequencyByUser(1);
         ThermostatSettings::setRelaxationTime(
             defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
@@ -112,6 +106,15 @@ class TestInputValidation : public ::testing::Test
         _setKeyword("timestep");
         if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
             _setKeyword("qm_prog");
+    }
+
+    // the value checks moved out of the reader into Settings::validate(),
+    // which runs after Settings::finalize()
+    void _finalizeAndValidate()
+    {
+        _reader->validateInputConfiguration(_settings);
+        _settings.finalize();
+        _settings.validate();
     }
 
     void TearDown() override
@@ -248,15 +251,12 @@ TEST_F(TestInputValidation, acceptsEndTemperatureForThermostat)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setEndTemperature(toTemperature(300.0));
+    _settings.kinetics.setEndTemperatureByUser(toTemperature(300.0));
     _setKeyword("end_temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
-    EXPECT_EQ(ThermostatSettings::getTargetTemperature(), toTemperature(0.0));
-    EXPECT_EQ(
-        ThermostatSettings::getActualTargetTemperature(),
-        toTemperature(0.0)
-    );
+    EXPECT_NO_THROW(_finalizeAndValidate());
+    EXPECT_EQ(_settings.kinetics.getEndTemperature(), toTemperature(300.0));
+    EXPECT_EQ(_settings.kinetics.getStartTemperature(), toTemperature(300.0));
 }
 
 TEST_F(TestInputValidation, requiresTemperatureForVelocityInitialization)
@@ -279,12 +279,12 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::VELOCITY_RESCALING
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     ThermostatSettings::setRelaxationTime(0.0001 * ps);
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
+        _finalizeAndValidate(),
         exc::InputFileException,
         "The timestep must not exceed the thermostat relaxation time"
     );
@@ -296,12 +296,12 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::LANGEVIN
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     ThermostatSettings::setFriction(std::numeric_limits<double>::max());
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
+        _finalizeAndValidate(),
         exc::InputFileException,
         "Langevin thermostat parameters produce a non-finite random-force "
         "scale"
@@ -314,15 +314,15 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinRampScale)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::LANGEVIN
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300.0));
-    ThermostatSettings::setStartTemperature(
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
+    _settings.kinetics.setStartTemperatureByUser(
         toTemperature(std::numeric_limits<double>::max())
     );
     _setKeyword("temp");
     _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
+        _finalizeAndValidate(),
         exc::InputFileException,
         "Langevin thermostat parameters produce a non-finite random-force "
         "scale"
@@ -360,11 +360,11 @@ TEST_F(TestInputValidation, rejectsZeroTemperatureForNoseHoover)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(0.0));
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
+        _finalizeAndValidate(),
         exc::InputFileException,
         "Nose-Hoover target temperature must be greater than zero"
     );
@@ -375,7 +375,7 @@ TEST_F(TestInputValidation, acceptsZeroTemperatureForBerendsen)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(0.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(0.0));
     _setKeyword("temp");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -387,12 +387,14 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTemperatureRampSteps(200);
+    _settings.kinetics.setRampingStepsByUser(200);
+    _settings.kinetics.setStartTemperatureByUser(toTemperature(100.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     _setKeyword("temp");
     _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
+        _finalizeAndValidate(),
         exc::InputFileException,
         "Number of total simulation steps 100 is smaller than the number of "
         "temperature ramping steps 200"
@@ -405,13 +407,15 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTemperatureRampSteps(2);
-    ThermostatSettings::setTemperatureRampFrequency(4);
+    _settings.kinetics.setRampingStepsByUser(2);
+    _settings.kinetics.setRampingFrequencyByUser(4);
+    _settings.kinetics.setStartTemperatureByUser(toTemperature(100.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     _setKeyword("temp");
     _setKeyword("start_temp");
 
     ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
+        _finalizeAndValidate(),
         exc::InputFileException,
         "Temperature ramp frequency 4 is larger than the number of ramping "
         "steps 2"
@@ -424,11 +428,13 @@ TEST_F(TestInputValidation, acceptsDefaultTemperatureRampLength)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
-    ThermostatSettings::setTemperatureRampFrequency(100);
+    _settings.kinetics.setRampingFrequencyByUser(100);
+    _settings.kinetics.setStartTemperatureByUser(toTemperature(100.0));
+    _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     _setKeyword("temp");
     _setKeyword("start_temp");
 
-    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+    EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
 TEST_F(TestInputValidation, requiresReplicaCountForRingPolymer)

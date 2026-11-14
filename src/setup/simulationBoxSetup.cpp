@@ -460,7 +460,10 @@ namespace setup
             return;
 
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-        maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
+        maxwellBoltzmann.initializeVelocities(
+            _engine.getSimulationBox(),
+            _engine.getSettings().kinetics.getStartTemperature()
+        );
     }
 
     /**
@@ -564,7 +567,7 @@ namespace setup
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
-                    FileSettings::getStartFileName()
+                    _engine.getSettings().fileSettings.getStartFileName()
                 )
             );
         }
@@ -581,7 +584,7 @@ namespace setup
             log.writeSetupInfo(
                 std::format(
                     "velocities taken from start file \"{}\"",
-                    FileSettings::getStartFileName()
+                    _engine.getSettings().fileSettings.getStartFileName()
                 )
             );
         }

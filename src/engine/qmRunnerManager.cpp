@@ -28,6 +28,7 @@
 #include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "orcaRunner.hpp"
 #include "pyscfRunner.hpp"
 #include "qmSettings.hpp"
 #include "turbomoleRunner.hpp"
@@ -93,6 +94,12 @@ namespace engine
 
             case TURBOMOLE:
                 return std::make_shared<QM::TurbomoleRunner>(
+                    qmSettings,
+                    externalQMSettings
+                );
+
+            case ORCA:
+                return std::make_shared<QM::OrcaRunner>(
                     qmSettings,
                     externalQMSettings
                 );

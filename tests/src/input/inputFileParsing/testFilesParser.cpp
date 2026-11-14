@@ -142,7 +142,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getIntraNonBondedFileName(),
+        settings.getIntraNonBondedFileName(),
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
 }
@@ -171,10 +171,7 @@ TEST_F(TestInputFileReader, testStartFileName)
 
     lineElements = {"start_file", "=", "data/atomSection/testProcess.rst"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        FileSettings::getStartFileName(),
-        "data/atomSection/testProcess.rst"
-    );
+    EXPECT_EQ(settings.getStartFileName(), "data/atomSection/testProcess.rst");
 }
 
 /**
@@ -295,7 +292,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getRingPolymerStartFileName(),
+        settings.getRingPolymerStartFileName(),
         "data/inputFileReader/inputFile.txt"
     );
 }
@@ -324,10 +321,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
 
     lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        FileSettings::getMShakeFileName(),
-        "data/mshakeReader/mshake.dat"
-    );
+    EXPECT_EQ(settings.getMShakeFileName(), "data/mshakeReader/mshake.dat");
 }
 
 /**
@@ -358,10 +352,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
 
     lineElements = {"dftb_file", "=", "data/dftbReader/dftb_in.template"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        FileSettings::getDFTBFileName(),
-        "data/dftbReader/dftb_in.template"
-    );
+    EXPECT_EQ(settings.getDFTBFileName(), "data/dftbReader/dftb_in.template");
 }
 
 /**
@@ -397,7 +388,30 @@ TEST_F(TestInputFileReader, testTMFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getTMFileName(),
+        settings.getTMFileName(),
         "data/turbomoleReader/tm_define.template"
     );
+}
+
+TEST_F(TestInputFileReader, testOrcaFileName)
+{
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
+    const auto              functions = parser.getKeywordFuncMap();
+    const auto             &parse     = functions.at("orca_file");
+    EXPECT_THROW_MSG(
+        parse({"orca_file", "=", "no-such-orca-template"}, 0),
+        exc::InputFileException,
+        "Invalid value \"no-such-orca-template\" for key \"orca_file\" at "
+        "line 0 in input file. Value must be an existing file path."
+    );
+    _clearParser(parser);
+    parse({"orca_file", "=", "data/atomSection/testProcess.rst"}, 0);
+    EXPECT_EQ(settings.getOrcaFileName(), "data/atomSection/testProcess.rst");
+    input::FilesInputParser portable{false, settings};
+    portable.getKeywordFuncMap().at("orca_file")(
+        {"orca_file", "=", "no-such-orca-template"},
+        0
+    );
+    EXPECT_EQ(settings.getOrcaFileName(), "no-such-orca-template");
 }

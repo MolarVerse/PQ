@@ -38,6 +38,18 @@ if(BUILD_WITH_ASE)
 endif()
 
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
+add_test(NAME testOrcaScript
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testOrcaScript.py
+            ${PROJECT_SOURCE_DIR}/src/QM/scripts/orca_rimp2.py
+            ${PROJECT_SOURCE_DIR}/examples/orca/orca.template)
+set_property(TEST testOrcaScript PROPERTY LABELS QM)
+
+add_test(NAME testOrcaScfScripts
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testOrcaScfScripts.py
+            ${PROJECT_SOURCE_DIR}/src/QM/scripts
+            ${PROJECT_SOURCE_DIR}/examples/orca)
+set_property(TEST testOrcaScfScripts PROPERTY LABELS QM)
+
 find_program(PERL_EXECUTABLE perl)
 if(PERL_EXECUTABLE)
     add_test(NAME testTurbomoleScripts

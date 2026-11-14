@@ -36,7 +36,6 @@
 #include "molecule.hpp"
 #include "potentialSettings.hpp"
 #include "stochasticRescalingManostat.hpp"
-#include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 #include "triclinicBox.hpp"
@@ -374,7 +373,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
         )
     );
 
-    _manostat->applyManostat(*_box, *_data);
+    _manostat->applyManostat(*_box, *_data, toTemperature(0.0));
     auto boxNew = _box->getBoxDimensions();
 
     EXPECT_DOUBLE_EQ(
@@ -419,7 +418,7 @@ TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
     auto manostat = std::make_unique<manostat::BerendsenManostat>(
         _settings->manostatSettings
     );
-    manostat->applyManostat(*_box, *_data);
+    manostat->applyManostat(*_box, *_data, toTemperature(0.0));
 
     expectCutMoleculeScaled(*_box);
 }
@@ -434,7 +433,6 @@ TEST_F(
 )
 {
     setupCutMolecule(*_box, *_data);
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
 
     _settings->manostatSettings.setTargetPressureByUser(
         -3.0 * ::log(0.98) * bar
@@ -442,7 +440,7 @@ TEST_F(
     _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
-    manostat.applyManostat(*_box, *_data);
+    manostat.applyManostat(*_box, *_data, toTemperature(0.0));
 
     expectCutMoleculeScaled(*_box);
 }
@@ -453,7 +451,6 @@ TEST_F(
 )
 {
     setupCutMolecule(*_box, *_data);
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
@@ -479,7 +476,7 @@ TEST_F(
     _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
-    manostat.applyManostat(*_box, *_data);
+    manostat.applyManostat(*_box, *_data, toTemperature(0.0));
 
     const auto cutDistance    = getMinimumImageDistance(*_box, 0);
     const auto insideDistance = getMinimumImageDistance(*_box, 1);
@@ -519,7 +516,7 @@ TEST_F(
     );
 
     EXPECT_THROW_MSG(
-        _manostat->applyManostat(*_box, *_data),
+        _manostat->applyManostat(*_box, *_data, toTemperature(0.0)),
         exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -532,7 +529,7 @@ TEST_F(
  */
 TEST_F(TestManostat, applyNoneManostat)
 {
-    _manostat->applyManostat(*_box, *_data);
+    _manostat->applyManostat(*_box, *_data, toTemperature(0.0));
 
     EXPECT_DOUBLE_EQ(
         _data->getPressure().numerical_value_in(bar),
@@ -542,7 +539,6 @@ TEST_F(TestManostat, applyNoneManostat)
 
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 {
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->manostatSettings.setTargetPressureByUser(7.0 * bar);
@@ -553,7 +549,8 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
         TestableStochasticRescalingManostat(_settings->manostatSettings);
     manostat.setPressure(1.0 * bar);
 
-    const auto mu       = manostat.calculateMu(10.0).numerical_value_in(one);
+    const auto mu =
+        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -565,7 +562,6 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 {
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     settings::PotentialSettings::setCoulombRadiusCutOff(0.49 * angstrom);
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     molsys::OrthorhombicBox orthoBox{
@@ -607,7 +603,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     const auto expectedCenterOfMassVelocity = linalg::Vec3D(3.0 / mu, 0.0, 0.0);
     const auto expectedRelativeVelocity     = linalg::Vec3D(2.0, 0.0, 0.0);
 
-    _manostat->applyManostat(*_box, *_data);
+    _manostat->applyManostat(*_box, *_data, toTemperature(0.0));
 
     const auto mol                  = _box->getMolecule(0);
     const auto velocity0            = mol.getAtomVelocity(AtomIndex{0});
@@ -759,7 +755,6 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 
 TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 {
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // 1 fixed axis: Z
@@ -774,7 +769,8 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
+        const auto mu = manostat.calculateMu(10.0, toTemperature(0.0))
+                            .numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.5) / 2.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -794,7 +790,8 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
+        const auto mu = manostat.calculateMu(10.0, toTemperature(0.0))
+                            .numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 3.0) / 1.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
@@ -814,7 +811,8 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
+        const auto mu = manostat.calculateMu(10.0, toTemperature(0.0))
+                            .numerical_value_in(one);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
@@ -824,7 +822,6 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 {
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
@@ -838,7 +835,8 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
         diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
     );
 
-    const auto mu       = manostat.calculateMu(10.0).numerical_value_in(one);
+    const auto mu =
+        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -848,7 +846,6 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
 {
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
@@ -862,7 +859,8 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
         linalg::tensor3D({{1.0, 0.2, 0.3}, {0.2, 2.0, 0.4}, {0.3, 0.4, 3.0}});
     manostat.setPressureTensor(pTensor * bar);
 
-    const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
+    const auto mu =
+        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
     EXPECT_DOUBLE_EQ(mu[0][1], 0.0);
     EXPECT_DOUBLE_EQ(mu[0][2], 0.0);
@@ -895,7 +893,6 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
 
 TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
 {
-    ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     // xz isotropic (axes 0, 2), y anisotropic (axis 1) with Y fixed
@@ -911,7 +908,8 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
         diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)) * bar
     );
 
-    const auto mu = manostat.calculateMu(10.0).numerical_value_in(one);
+    const auto mu =
+        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
     // xz avg = 2.0, deltaPxy = 7.0 - 2.0 = 5.0
     const auto expected_xz = ::exp(-(0.12 * 0.5 / 0.25) * 5.0 / 3.0);
 

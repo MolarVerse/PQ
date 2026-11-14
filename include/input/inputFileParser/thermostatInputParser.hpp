@@ -29,6 +29,7 @@
 
 class ThermostatSettings;
 class NoseHooverSettings;
+class KineticsSettings;
 
 namespace input
 {
@@ -43,11 +44,13 @@ namespace input
        private:
         mstd::Ref<ThermostatSettings> _thermostatSettings;
         mstd::Ref<NoseHooverSettings> _nhSettings;
+        mstd::Ref<KineticsSettings>   _kineticsSettings;
 
        public:
         explicit ThermostatInputParser(
             ThermostatSettings& thermostatSettings,
-            NoseHooverSettings& nhSettings
+            NoseHooverSettings& nhSettings,
+            KineticsSettings&   kineticsSettings
         );
 
         void addThermostatKey();

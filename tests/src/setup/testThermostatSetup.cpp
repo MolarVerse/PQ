@@ -22,22 +22,25 @@
 
 #include <gtest/gtest.h>
 
-#include <cmath>
-
 #include "berendsenThermostat.hpp"
-#include "constants/conversionFactors.hpp"
-#include "constants/natureConstants.hpp"
-#include "exceptions.hpp"
-#include "inputFileReader.hpp"
-#include "langevinThermostat.hpp"
 #include "noseHooverThermostat.hpp"
 #include "testSetup.hpp"
 #include "thermostatSettings.hpp"
 #include "thermostatSetup.hpp"
-#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 #include "velocityRescalingThermostat.hpp"
+
+namespace
+{
+    // the setup logs the target temperature, which is resolved in finalize()
+    void finalizeTargetTemperature(Settings &settings)
+    {
+        settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
+        settings.kinetics.finalize();
+    }
+}   // namespace
 
 TEST_F(TestSetup, setupThermostatNoThermostat)
 {
@@ -45,149 +48,9 @@ TEST_F(TestSetup, setupThermostatNoThermostat)
 
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     EXPECT_NO_THROW(thermostatSetup.setup());
-}
-
-TEST_F(TestSetup, setupThermostatTempRamping)
-{
-    setup::ThermostatSetup thermostatSetup(*_mdEngine);
-
-    settings::TimingsSettings::setNumberOfSteps(100);
-
-    _settings->thermostatSettings.setThermostatTypeByUser(
-        ThermostatType::BERENDSEN
-    );
-    ThermostatSettings::setTargetTemperature(toTemperature(300));
-    ThermostatSettings::setStartTemperature(toTemperature(200));
-    EXPECT_NO_THROW(thermostatSetup.setup());
-
     EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        mstd::units::delta<K>(1.0)
-    );
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getRampingStepsLeft(),
-        100
-    );
-
-    ThermostatSettings::setTemperatureRampSteps(50);
-    ThermostatSettings::setEndTemperatureSet(false);
-
-    EXPECT_NO_THROW(thermostatSetup.setup());
-
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        mstd::units::delta<K>(2.0)
-    );
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getRampingStepsLeft(),
-        50
-    );
-
-    ThermostatSettings::setTemperatureRampSteps(0);
-    ThermostatSettings::setTemperatureRampFrequency(2);
-    ThermostatSettings::setEndTemperatureSet(false);
-
-    EXPECT_NO_THROW(thermostatSetup.setup());
-
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        mstd::units::delta<K>(2.0)
-    );
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getRampingStepsLeft(),
-        100
-    );
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getRampingFrequency(),
-        2
-    );
-}
-
-TEST_F(TestSetup, temperatureRampReachesEndWithPartialFinalInterval)
-{
-    setup::ThermostatSetup thermostatSetup(*_mdEngine);
-    input::InputFileReader reader("input.in", *_settings);
-
-    reader.process({"nstep", "=", "10"});
-    reader.process({"thermostat", "=", "berendsen"});
-    reader.process({"temp", "=", "300"});
-    reader.process({"start_temp", "=", "200"});
-    reader.process({"temp_ramp_steps", "=", "10"});
-    reader.process({"temp_ramp_frequency", "=", "3"});
-
-    thermostatSetup.setup();
-
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getTemperatureIncrease(),
-        mstd::units::delta<K>(25.0)
-    );
-
-    for (size_t step = 0; step < 10; ++step)
-        thermostatSetup.getEngine().getThermostat().applyTemperatureRamping();
-
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        mstd::units::point<K>(300.0)
-    );
-
-    ThermostatSettings::setTemperatureRampSteps(0);
-    ThermostatSettings::setTemperatureRampFrequency(1);
-}
-
-TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
-{
-    setup::ThermostatSetup thermostatSetup(*_mdEngine);
-
-    settings::TimingsSettings::setNumberOfSteps(0);
-    _settings->thermostatSettings.setThermostatTypeByUser(
-        ThermostatType::BERENDSEN
-    );
-    ThermostatSettings::setTargetTemperature(toTemperature(300));
-    ThermostatSettings::setStartTemperature(toTemperature(200));
-    ThermostatSettings::setTemperatureRampSteps(0);
-
-    EXPECT_THROW_MSG(
-        thermostatSetup.setup(),
-        exc::InputFileException,
-        "Temperature ramp requires at least one simulation step"
-    );
-}
-
-TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
-{
-    setup::ThermostatSetup thermostatSetup(*_mdEngine);
-
-    settings::TimingsSettings::setNumberOfSteps(10);
-    _settings->thermostatSettings.setThermostatTypeByUser(
-        ThermostatType::BERENDSEN
-    );
-    ThermostatSettings::setTargetTemperature(toTemperature(300));
-    ThermostatSettings::setStartTemperature(toTemperature(200));
-    ThermostatSettings::setTemperatureRampSteps(10);
-    ThermostatSettings::setTemperatureRampFrequency(0);
-
-    EXPECT_THROW_MSG(
-        thermostatSetup.setup(),
-        exc::InputFileException,
-        "Temperature ramp frequency must be greater than zero"
-    );
-
-    ThermostatSettings::setTemperatureRampSteps(0);
-    ThermostatSettings::setTemperatureRampFrequency(1);
-}
-
-TEST_F(TestSetup, setupThermostatOnlyEndTempDefined)
-{
-    setup::ThermostatSetup thermostatSetup(*_mdEngine);
-
-    ThermostatSettings::setEndTemperature(toTemperature(300));
-    _settings->thermostatSettings.setThermostatTypeByUser(
-        ThermostatType::BERENDSEN
-    );
-    EXPECT_NO_THROW(thermostatSetup.setup());
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        toTemperature(300)
+        thermostatSetup.getEngine().getThermostat().getThermostatType(),
+        ThermostatType::NONE
     );
 }
 
@@ -196,17 +59,12 @@ TEST_F(TestSetup, setupThermostatBerendsen)
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
+    finalizeTargetTemperature(*_settings);
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    ThermostatSettings::setTargetTemperature(toTemperature(300));
-    ThermostatSettings::setTemperatureSet(true);
     EXPECT_NO_THROW(thermostatSetup.setup());
-    EXPECT_EQ(
-        thermostatSetup.getEngine().getThermostat().getTargetTemperature(),
-        toTemperature(300)
-    );
 
-    const auto berendsenThermostat =
+    const auto &berendsenThermostat =
         dynamic_cast<thermostat::BerendsenThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
@@ -214,22 +72,13 @@ TEST_F(TestSetup, setupThermostatBerendsen)
 
     ThermostatSettings::setRelaxationTime(0.2 * ps);
 
-    // needed because otherwise subsequent executions of .setup() will fail
-    // because the end temperature is automatically set to the target
-    // temperature for consistency
-    ThermostatSettings::setEndTemperatureSet(false);
     EXPECT_NO_THROW(thermostatSetup.setup());
 
-    const auto berendsenThermostat2 =
+    const auto &berendsenThermostat2 =
         dynamic_cast<thermostat::BerendsenThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
     EXPECT_EQ(berendsenThermostat2.getTau(), 0.2 * 1000 * fs);
-
-    // needed because otherwise subsequent executions of .setup() will fail
-    // because the end temperature is automatically set to the target
-    // temperature for consistency
-    ThermostatSettings::setEndTemperatureSet(false);
 }
 
 TEST_F(TestSetup, setupThermostatVelocityRescaling)
@@ -239,11 +88,11 @@ TEST_F(TestSetup, setupThermostatVelocityRescaling)
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::VELOCITY_RESCALING
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300));
+    finalizeTargetTemperature(*_settings);
     ThermostatSettings::setRelaxationTime(0.2 * ps);
     EXPECT_NO_THROW(thermostatSetup.setup());
 
-    const auto velocityRescalingThermostat =
+    const auto &velocityRescalingThermostat =
         dynamic_cast<thermostat::VelocityRescalingThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
@@ -257,31 +106,14 @@ TEST_F(TestSetup, setupThermostatLangevin)
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::LANGEVIN
     );
-    ThermostatSettings::setTargetTemperature(toTemperature(300));
+    finalizeTargetTemperature(*_settings);
     EXPECT_NO_THROW(thermostatSetup.setup());
 
-    // needed because otherwise subsequent executions of .setup() will fail
-    // because the end temperature is automatically set to the target
-    // temperature for consistency
-    ThermostatSettings::setEndTemperatureSet(false);
-
-    const auto langevinThermostat =
-        dynamic_cast<thermostat::LangevinThermostat &>(
-            thermostatSetup.getEngine().getThermostat()
-        );
-    EXPECT_EQ(langevinThermostat.getFriction(), 1.0e11);
-
-    const auto conversionFactor =
-        UNIVERSAL_GAS_CONSTANT * M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
-    const auto sigma = std::sqrt(
-        4.0 * langevinThermostat.getFriction() * conversionFactor *
-        ThermostatSettings::getTargetTemperature()
-            .quantity_from_zero()
-            .numerical_value_in(K) /
-        settings::TimingsSettings::getTimeStep().numerical_value_in(fs)
+    EXPECT_EQ(
+        thermostatSetup.getEngine().getThermostat().getThermostatType(),
+        ThermostatType::LANGEVIN
     );
-
-    EXPECT_EQ(langevinThermostat.getSigma(), sigma);
+    EXPECT_EQ(ThermostatSettings::getFriction(), 1.0e11);
 
     EXPECT_NO_THROW(setup::setupThermostat(*_mdEngine));
 }
@@ -293,11 +125,11 @@ TEST_F(TestSetup, setupThermostatNhChain)
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
+    finalizeTargetTemperature(*_settings);
     _settings->noseHooverSettings.setNoseHooverChainLengthByUser(5);
-    ThermostatSettings::setTargetTemperature(toTemperature(300));
     EXPECT_NO_THROW(thermostatSetup.setup());
 
-    const auto noseHooverThermostat =
+    const auto &noseHooverThermostat =
         dynamic_cast<thermostat::NoseHooverThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );

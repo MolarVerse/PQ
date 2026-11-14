@@ -90,7 +90,7 @@ namespace settings
 #ifdef PYTHON_ENABLED
         auto selection = pq_python::select(
             expression,
-            FileSettings::getStartFileName(),
+            fileSettings.getStartFileName(),
             fileSettings.getMolDescriptorFileName()
         );
 

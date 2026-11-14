@@ -1,0 +1,1 @@
+- A `start_temp` given without `temp` or `end_temp` now fails with a clear error message.

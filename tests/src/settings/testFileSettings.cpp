@@ -50,24 +50,30 @@ TEST(FileSettingsTest, TopologyAndParameterRoundTrip)
 
 TEST(FileSettingsTest, StartAndRingPolymerRoundTrip)
 {
-    FileSettings::setStartFileName("start.rst");
-    EXPECT_EQ(FileSettings::getStartFileName(), "start.rst");
+    FileSettings settings;
+    settings.setStartFileNameByUser("start.rst");
+    EXPECT_EQ(settings.getStartFileName(), "start.rst");
 
-    FileSettings::setRingPolymerStartFileName("rp_start.rst");
-    EXPECT_EQ(FileSettings::getRingPolymerStartFileName(), "rp_start.rst");
+    settings.setRingPolymerStartFileNameByUser("rp_start.rst");
+    EXPECT_EQ(settings.getRingPolymerStartFileName(), "rp_start.rst");
 }
 
 TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
 {
-    FileSettings::setMShakeFileName("mshake.dat");
-    EXPECT_EQ(FileSettings::getMShakeFileName(), "mshake.dat");
+    FileSettings settings;
+    settings.setMShakeFileNameByUser("mshake.dat");
+    EXPECT_EQ(settings.getMShakeFileName(), "mshake.dat");
 
-    FileSettings::setDFTBFileName("dftb_in.hsd");
-    EXPECT_EQ(FileSettings::getDFTBFileName(), "dftb_in.hsd");
+    settings.setDFTBFileNameByUser("dftb_in.hsd");
+    EXPECT_EQ(settings.getDFTBFileName(), "dftb_in.hsd");
+
+    settings.setTMFileNameByUser("tm_in.hsd");
+    EXPECT_EQ(settings.getTMFileName(), "tm_in.hsd");
 }
 
 TEST(FileSettingsTest, IntraNonBondedRoundTrip)
 {
-    FileSettings::setIntraNonBondedFileName("intra.dat");
-    EXPECT_EQ(FileSettings::getIntraNonBondedFileName(), "intra.dat");
+    FileSettings settings;
+    settings.setIntraNonBondedFileNameByUser("intra.dat");
+    EXPECT_EQ(settings.getIntraNonBondedFileName(), "intra.dat");
 }

@@ -53,6 +53,35 @@ runs:
         version: 1.0
         execute_install_scripts: true
 
+    # The cache action reports success even when its apt install failed (a
+    # mirror 404 on libc6-dbg once made it save an empty cache entry, after
+    # which every run restored zero packages and the perf gate found no
+    # valgrind). Check what was asked for, and install what is missing.
+    - name: Verify packages
+      shell: bash
+      env:
+        PACKAGES: gcc-${{ inputs.version }} g++-${{ inputs.version }} ${{ inputs.packages }}
+      run: |
+        missing() {
+          for package in $PACKAGES; do
+            dpkg -s "$package" > /dev/null 2>&1 || echo "$package"
+          done
+        }
+        missing_now="$(missing)"
+        [ -z "$missing_now" ] && exit 0
+        echo "::warning::not installed after the cached restore: $(echo $missing_now). Installing with apt."
+        for attempt in 1 2 3; do
+          sudo apt-get update || true
+          # shellcheck disable=SC2086
+          sudo apt-get install -y --fix-missing $missing_now && break
+          sleep $((attempt * 10))
+        done
+        missing_now="$(missing)"
+        if [ -n "$missing_now" ]; then
+          echo "::error::could not install: $(echo $missing_now)"
+          exit 1
+        fi
+
     - name: Export CC/CXX
       if: inputs.set-env == 'true'
       shell: bash

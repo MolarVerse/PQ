@@ -37,8 +37,15 @@ namespace QM
     {
        public:
         using ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
-        void execute(molsys::SimulationBox &simulationBox) override;
+        void execute(
+            const molsys::SimulationBox &simulationBox,
+            const FileSettings          &fileSettings
+        ) override;
+
+       private:
+        void _writeCoordsFile(
+            const molsys::SimulationBox &simulationBox
+        ) override;
     };
 
 }   // namespace QM

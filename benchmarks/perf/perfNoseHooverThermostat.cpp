@@ -62,8 +62,7 @@ int main()
         std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
     nhSettings.setChiByUser(chiValues);
     nhSettings.setZetaByUser(zetaValues);
-    auto thermostat =
-        thermostat::NoseHooverThermostat(nhSettings, targetTemperature);
+    auto thermostat = thermostat::NoseHooverThermostat(nhSettings);
 
     perfAllocBegin();
 
@@ -71,8 +70,8 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        thermostat.applyThermostat(box, physicalData);
-        thermostat.applyThermostatOnForces(box);
+        thermostat.applyThermostat(box, physicalData, targetTemperature);
+        thermostat.applyThermostatOnForces(box, targetTemperature);
     }
 
     // read state so the loop cannot be optimized away

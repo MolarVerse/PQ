@@ -37,14 +37,15 @@
 
 TEST_F(TestMShakeReader, testConstructor)
 {
-    FileSettings::setMShakeFileName("notExistingFile");
-    const auto reader = input::mShake::MShakeReader(*_engine);
+    const auto reader =
+        input::mShake::MShakeReader(*_engine, "notExistingFile");
     EXPECT_EQ(reader.getFileName(), "notExistingFile");
 }
 
 TEST_F(TestMShakeReader, testProcessCommentLine)
 {
-    auto        reader          = input::mShake::MShakeReader(*_engine);
+    auto reader =
+        input::mShake::MShakeReader(*_engine, "data/mshakeReader/mshake.dat");
     std::string commentLine     = "# this is a comment line";
     auto        mShakeReference = constraints::MShakeReference();
 
@@ -83,7 +84,8 @@ TEST_F(TestMShakeReader, testProcessCommentLine)
 
 TEST_F(TestMShakeReader, testProcessAtomLines)
 {
-    auto        reader          = input::mShake::MShakeReader(*_engine);
+    auto reader =
+        input::mShake::MShakeReader(*_engine, "data/mshakeReader/mshake.dat");
     auto        mShakeReference = constraints::MShakeReference();
     const auto *atomLine1       = "H 0.0 0.0 0.0";
     const auto *atomLine2       = "O 1.0 1.0 1.0  #asdfasdf";
@@ -194,7 +196,9 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
 TEST_F(TestMShakeReader, testReadMemberFunction)
 {
-    FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
+    _settings.fileSettings.setMShakeFileNameByUser(
+        "data/mshakeReader/mshake.dat"
+    );
 
     auto molType = molsys::MoleculeType(MolType{1});
     molType.addAtomName("H");
@@ -285,8 +289,8 @@ TEST_F(TestMShakeReader, testReadMemberFunction)
 
 TEST_F(TestMShakeReader, testRead)
 {
-    FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
-    auto reader = input::mShake::MShakeReader(*_engine);
+    auto reader =
+        input::mShake::MShakeReader(*_engine, "data/mshakeReader/mshake.dat");
 
     auto molType = molsys::MoleculeType(MolType{1});
     molType.addAtomName("H");

@@ -33,7 +33,6 @@
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
@@ -46,20 +45,24 @@ namespace manostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void StochasticRescalingManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature          &targetTemperature
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
 
         calculatePressure(simulationBox, physicalData);
 
-        const auto mu =
-            calculateMu(simulationBox.getVolume().numerical_value_in(
+        const auto mu = calculateMu(
+            simulationBox.getVolume().numerical_value_in(
                 angstrom * angstrom * angstrom
-            ));
+            ),
+            targetTemperature
+        );
 
         _validateScaling(simulationBox, mu);
 
@@ -108,9 +111,13 @@ namespace manostat
      * and the remaining axes are scaled isotropically with stochastic coupling
      *
      * @param volume
+     * @param targetTemperature The target temperature for the system
      * @return linalg::Vec3D
      */
-    QuantityTensor3D StochasticRescalingManostat::calculateMu(double volume)
+    QuantityTensor3D StochasticRescalingManostat::calculateMu(
+        double             volume,
+        const Temperature &targetTemperature
+    )
     {
         const auto &settings  = _getSettings();
         const auto  fixedAxis = settings.getFixedAxis();
@@ -124,12 +131,10 @@ namespace manostat
         const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-        const auto targetTemp =
-            ThermostatSettings::getActualTargetTemperature();
 
         const auto thermalEnergy =
             boltzmannConstant *
-            targetTemp.quantity_from_zero().numerical_value_in(K);
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         const auto random =
             _randomNumberGenerator.getNormalDistribution(0.0, 1.0);
@@ -213,11 +218,13 @@ namespace manostat
      * @brief calculate mu as scaling factor for Stochastic Rescaling manostat
      * (semi-isotropic)
      *
-     * @param volume
+     * @param volume The current volume of the simulation box
+     * @param targetTemperature The target temperature for the system
      * @return QuantityTensor3D
      */
     QuantityTensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
-        double volume
+        double             volume,
+        const Temperature &targetTemperature
     )
     {
         const auto &settings         = _getSettings();
@@ -228,9 +235,8 @@ namespace manostat
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
-            boltzmannConstant * ThermostatSettings::getActualTargetTemperature()
-                                    .quantity_from_zero()
-                                    .numerical_value_in(K);
+            boltzmannConstant *
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         auto stochasticFactor = 1.0 / linalg::tensor3D::size * thermalEnergy *
                                 compress.numerical_value_in(per_Pa) *
@@ -287,10 +293,13 @@ namespace manostat
      * and the other axes are scaled independently with stochastic coupling
      *
      * @param volume
+     * @param targetTemperature The target temperature for the system
+     *
      * @return QuantityTensor3D
      */
     QuantityTensor3D AnisotropicStochasticRescalingManostat::calculateMu(
-        double volume
+        double             volume,
+        const Temperature &targetTemperature
     )
     {
         const auto tau               = _getSettings().getTau();
@@ -300,9 +309,8 @@ namespace manostat
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
-            boltzmannConstant * ThermostatSettings::getActualTargetTemperature()
-                                    .quantity_from_zero()
-                                    .numerical_value_in(K);
+            boltzmannConstant *
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         auto stochasticFactor = 2.0 / linalg::tensor3D::size * thermalEnergy *
                                 compress.numerical_value_in(per_Pa) *
@@ -338,10 +346,12 @@ namespace manostat
      * are zeroed (no coupling with other axes) and the diagonals are set to 1.0
      *
      * @param volume
+     * @param targetTemperature The target temperature for the system
      * @return QuantityTensor3D
      */
     QuantityTensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
-        double volume
+        double             volume,
+        const Temperature &targetTemperature
     )
     {
         const auto &settings         = _getSettings();
@@ -350,12 +360,10 @@ namespace manostat
         const auto  tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto  compress         = settings.getCompressibility();
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-        const auto &targetTemp =
-            ThermostatSettings::getActualTargetTemperature();
 
         const auto thermalEnergy =
             boltzmannConstant *
-            targetTemp.quantity_from_zero().numerical_value_in(K);
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         auto stochasticFactor = 2.0 / linalg::tensor3D::size * thermalEnergy *
                                 compress.numerical_value_in(per_Pa) *

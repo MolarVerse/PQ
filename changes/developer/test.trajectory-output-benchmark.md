@@ -1,1 +1,0 @@
-- Add a Google Benchmark for the trajectory writers and the per-frame copy, to measure the output cost per MD step (#1099).

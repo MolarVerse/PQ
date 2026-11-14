@@ -133,7 +133,9 @@ namespace benchInputReaders
         settings.fileSettings.setMolDescriptorFileNameByUser(
             (directory / "moldescriptor.dat").string()
         );
-        FileSettings::setStartFileName((directory / "input.rst").string());
+        settings.fileSettings.setStartFileNameByUser(
+            (directory / "input.rst").string()
+        );
         settings.fileSettings.setTopologyFileNameByUser(
             (directory / "topology.top").string()
         );

@@ -5,6 +5,8 @@ set(source_files
     testCollectionUtilities.cpp
     testProgressbar.cpp
     testInterrupt.cpp
+    testSerialWorker.cpp
+    testSystemMemory.cpp
 )
 
 foreach(source_file ${source_files})
@@ -31,6 +33,7 @@ foreach(source_file ${source_files})
 endforeach()
 
 target_link_libraries(testInterrupt PRIVATE interrupt)
+target_link_libraries(testSerialWorker PRIVATE serialWorker)
 target_link_libraries(testMathUtilities PRIVATE config_headers)
 
 target_include_directories(testProgressbar

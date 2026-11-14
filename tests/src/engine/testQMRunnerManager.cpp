@@ -27,6 +27,7 @@
 #include "dftbplusRunner.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
+#include "orcaRunner.hpp"
 #include "pyscfRunner.hpp"
 #include "qmRunnerManager.hpp"
 #include "qmSettings.hpp"
@@ -68,6 +69,17 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.xtbSettings,
         settings.externalQMSettings
     );
+
+    settings.qmSettings.setQMMethodByUser(QMMethod::ORCA);
+    const auto orca = QMRunnerManager::createQMRunner(
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
+    EXPECT_NE(dynamic_cast<QM::OrcaRunner *>(orca.get()), nullptr);
 
     EXPECT_NE(dynamic_cast<QM::DFTBPlusRunner *>(dftb.get()), nullptr);
     EXPECT_NE(dynamic_cast<QM::PySCFRunner *>(pyscf.get()), nullptr);

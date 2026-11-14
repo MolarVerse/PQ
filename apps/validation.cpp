@@ -297,7 +297,7 @@ namespace
             );
 
         if (settings.constraintSettings.isMShakeActivated() &&
-            FileSettings::getMShakeFileName().empty())
+            !settings.fileSettings.isMShakeFileNameSetByUser())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
             );
@@ -310,20 +310,20 @@ namespace
 
     void validateEffectiveFiles(const Settings &settings)
     {
-        requireFile(FileSettings::getStartFileName(), "Start file");
+        requireFile(settings.fileSettings.getStartFileName(), "Start file");
 
-        if (FileSettings::isRingPolymerStartFileNameSet())
+        if (settings.fileSettings.isRingPolymerStartFileNameSetByUser())
         {
             requireFile(
-                FileSettings::getRingPolymerStartFileName(),
+                settings.fileSettings.getRingPolymerStartFileName(),
                 "Ring-polymer start file"
             );
         }
 
-        if (FileSettings::isIntraNonBondedFileNameSet())
+        if (settings.fileSettings.isIntraNonBondedFileNameSetByUser())
         {
             requireFile(
-                FileSettings::getIntraNonBondedFileName(),
+                settings.fileSettings.getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
         }
@@ -363,9 +363,12 @@ namespace
             );
         }
 
-        if (FileSettings::isMShakeFileNameSet())
+        if (settings.fileSettings.isMShakeFileNameSetByUser())
         {
-            requireFile(FileSettings::getMShakeFileName(), "M-SHAKE file");
+            requireFile(
+                settings.fileSettings.getMShakeFileName(),
+                "M-SHAKE file"
+            );
         }
 
         if (!settings::GeneralSettings::isQMActivated())
@@ -375,7 +378,10 @@ namespace
 
         if (method == QMMethod::DFTBPLUS)
         {
-            requireFile(FileSettings::getDFTBFileName(), "DFTB setup file");
+            requireFile(
+                settings.fileSettings.getDFTBFileName(),
+                "DFTB setup file"
+            );
         }
 
         if (method == QMMethod::ASE_DFTBPLUS &&
@@ -412,6 +418,14 @@ namespace
             const auto modelPath = settings.maceSettings.getMaceModelPath();
             if (!isRemoteResource(modelPath))
                 requireFile(modelPath, "MACE model file");
+        }
+
+        if (settings.qmSettings.getQMMethod() == QMMethod::ORCA)
+        {
+            requireFile(
+                settings.fileSettings.getOrcaFileName(),
+                "ORCA template"
+            );
         }
 
         validateInstalledExternalQMScript(
@@ -522,6 +536,10 @@ cli::ValidationResult cli::validateInputFile(
         reader.read();
         reader.postProcess();
         reader.validateInputConfiguration(settings);
+        // only the kinetics are resolved here: a full Settings::finalize()
+        // would also rewrite e.g. the qm_script into its full path
+        settings.kinetics.finalize();
+        settings.validate();
         validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {
