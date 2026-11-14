@@ -24,7 +24,6 @@
 
 #include "kinetics.hpp"
 #include "thermostatSettings.hpp"
-#include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 

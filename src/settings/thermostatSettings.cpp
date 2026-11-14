@@ -93,10 +93,12 @@ void KineticsSettings::finalize()
     }
 
     if (!_endTemperature.isSetBySomeone())
+    {
         throw exc::InputFileException(
             "A start temperature requires an end temperature or a target "
             "temperature to be defined"
         );
+    }
 
     /*************************************************************
      * If steps is 0, set the steps to the total number of steps *

@@ -23,7 +23,6 @@
 #include <cmath>
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -37,8 +36,6 @@
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
-#include "unit_types.hpp"
-#include "units.hpp"
 
 namespace input
 {

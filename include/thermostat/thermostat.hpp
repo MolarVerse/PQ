@@ -23,7 +23,6 @@
 #ifndef THERMOSTAT__THERMOSTAT_HPP
 #define THERMOSTAT__THERMOSTAT_HPP
 
-#include <cstddef>
 #include <string>
 
 #include "enums/thermostat.hpp"
