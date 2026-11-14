@@ -1,6 +1,7 @@
-"""Run the Perl Turbomole drivers against a fake Turbomole; usage: <scripts dir>."""
+"""Run the Perl and Python Turbomole drivers against a fake Turbomole; usage: <scripts dir>."""
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -45,30 +46,39 @@ control = Path("control").read_text()
 if "$scfiterlimit      1" in control:
     if os.environ.get("FAKE_TM_BREAK") != "nopc":
         print("   1  -76.0050000000  -120.0000  44.1000  0.000D+00  0.100D-01")
-        print("  |  total energy      =    -76.0050000000  |")
+        print("  |  total energy      =    -.760050000000D+02  |")
     print("  :  kinetic energy    =     75.9000000000  :")
     print(mulliken(-0.64, 0.32))
 else:
     o, h = (-0.70, 0.35) if "$point_charges" in control else (-0.66, 0.33)
-    print(" convergence criteria satisfied after  7 iterations")
+    if os.environ.get("FAKE_TM_BREAK") != "scf":
+        print(" convergence criteria satisfied after  7 iterations")
     print("  |  total energy      =    -76.0100000000  |")
     print("  :  kinetic energy    =     75.9000000000  :")
     print(mulliken(o, h))
 ''',
     "grad": COMMON + '''
 gradient()
-print("grad ended normally")
+if os.environ.get("FAKE_TM_BREAK") != "grad":
+    print("grad ended normally")
 ''',
     "ricc2": COMMON + r'''
 gradient()
 Path("energy").write_text("$energy\n      1   -76.01   0.0   0.0   -0.2\n$end\n")
 print("       R I C C 2")
 print(mulliken(-0.60, 0.30))
-print("  ricc2 : all done")
+if os.environ.get("FAKE_TM_BREAK") != "grad":
+    print("  ricc2 : all done")
 ''',
 }
 FAKE["ridft"] = FAKE["dscf"]
 FAKE["rdgrad"] = FAKE["grad"]
+
+PAIRS = (("turbomole_hf-dft", "turbomole_hf_dft.py"),
+         ("turbomole_ridft", "turbomole_ridft.py"),
+         ("turbomole_ricc2", "turbomole_ricc2.py"))
+SCF_SCRIPTS = [s for pair in PAIRS[:2] for s in pair]
+ALL_SCRIPTS = [s for pair in PAIRS for s in pair]
 
 GRADIENT = [[0.01, 0.0, 0.02], [-0.005, 0.0, -0.01], [-0.005, 0.0, -0.01]]
 
@@ -89,10 +99,13 @@ class TurbomoleScriptTest(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
-    def run_script(self, script, use_pc, **env):
+    def run_script(self, script, use_pc, define=True, work=None, **env):
+        interpreter = sys.executable if script.endswith(".py") else "perl"
         return subprocess.run(
-            ["perl", str(SCRIPTS / script), "0", "1", "1" if use_pc else "0", "tm.template", "pc"],
-            cwd=self.work, env={**self.env, **env}, capture_output=True, text=True, check=False)
+            [interpreter, str(SCRIPTS / script), "0", "1" if define else "0",
+             "1" if use_pc else "0", "tm.template", "pc"],
+            cwd=work or self.work, env={**self.env, **env}, capture_output=True, text=True,
+            check=False)
 
     def check(self, script, use_pc, energy, charges):
         (self.work / "qm_forces").unlink(missing_ok=True)
@@ -113,24 +126,51 @@ class TurbomoleScriptTest(unittest.TestCase):
             self.assertIn("$scfiterlimit     30", control)
 
     def test_scf_pure(self):
-        for script in ("turbomole_hf-dft", "turbomole_ridft"):
+        for script in SCF_SCRIPTS:
             self.check(script, False, -76.01, [-0.66, 0.33, 0.33])
 
     def test_scf_point_charges_use_field_free_energy_and_charges(self):
-        for script in ("turbomole_hf-dft", "turbomole_ridft"):
+        for script in SCF_SCRIPTS:
             self.check(script, True, -76.005, [-0.64, 0.32, 0.32])
 
     def test_ricc2(self):
-        self.check("turbomole_ricc2", False, -76.21, [-0.60, 0.30, 0.30])
-        self.check("turbomole_ricc2", True, -76.205, [-0.60, 0.30, 0.30])
+        for script in ("turbomole_ricc2", "turbomole_ricc2.py"):
+            self.check(script, False, -76.21, [-0.60, 0.30, 0.30])
+            self.check(script, True, -76.205, [-0.60, 0.30, 0.30])
 
     def test_missing_field_free_energy_fails(self):
-        for script in ("turbomole_hf-dft", "turbomole_ridft", "turbomole_ricc2"):
+        for script in ALL_SCRIPTS:
             (self.work / "qm_forces").unlink(missing_ok=True)
             done = self.run_script(script, True, FAKE_TM_BREAK="nopc")
             self.assertNotEqual(done.returncode, 0, script)
             self.assertIn("no SCF energy found", done.stderr)
             self.assertFalse((self.work / "qm_forces").exists(), script)
+
+    def _snapshot(self, script, steps, **env):
+        work = self.work / script.replace(".", "_")
+        shutil.copytree(self.work, work, ignore=shutil.ignore_patterns("bin", "turbomole_*"))
+        codes = [self.run_script(script, pc, define, work=work, **env).returncode
+                 for pc, define in steps]
+        files = {p.name: p.read_bytes() for p in sorted(work.iterdir()) if p.is_file()}
+        return codes, files
+
+    def test_python_matches_perl_byte_for_byte(self):
+        sequences = {
+            "pure": [(False, True), (False, False)],
+            "point charges": [(True, True), (True, False), (False, False)],
+        }
+        for perl, python in PAIRS:
+            for name, steps in sequences.items():
+                for broken in ("", "scf", "nopc", "grad"):
+                    with self.subTest(script=python, case=name, broken=broken):
+                        old = self._snapshot(perl, steps, FAKE_TM_BREAK=broken)
+                        new = self._snapshot(python, steps, FAKE_TM_BREAK=broken)
+                        self.assertEqual([c != 0 for c in old[0]], [c != 0 for c in new[0]])
+                        self.assertEqual(old[1].keys(), new[1].keys())
+                        for key in old[1]:
+                            self.assertEqual(old[1][key], new[1][key], key)
+                        shutil.rmtree(self.work / perl.replace(".", "_"))
+                        shutil.rmtree(self.work / python.replace(".", "_"))
 
 
 if __name__ == "__main__":
