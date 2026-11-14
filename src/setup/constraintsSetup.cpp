@@ -198,10 +198,12 @@ namespace setup
      */
     void ConstraintsSetup::writeTolerance()
     {
+        const auto &settings = _engine.getSettings().constraintSettings;
+
         const auto shakeTolMsg =
-            std::format("SHAKE Tolerance:  {}", _shakeTolerance);
+            std::format("SHAKE Tolerance:  {}", settings.getShakeTolerance());
         const auto rattleTolMsg =
-            std::format("RATTLE Tolerance: {}", _rattleTolerance);
+            std::format("RATTLE Tolerance: {}", settings.getRattleTolerance());
 
         auto &logOutput = _engine.getLogOutput();
 
@@ -216,10 +218,12 @@ namespace setup
      */
     void ConstraintsSetup::writeMaxIter()
     {
+        const auto &settings = _engine.getSettings().constraintSettings;
+
         const auto shakeMaxIterMsg =
-            std::format("SHAKE Max Iter:  {}", _shakeMaxIter);
+            std::format("SHAKE Max Iter:  {}", settings.getShakeMaxIter());
         const auto rattleMaxIterMsg =
-            std::format("RATTLE Max Iter: {}", _rattleMaxIter);
+            std::format("RATTLE Max Iter: {}", settings.getRattleMaxIter());
 
         auto &logOutput = _engine.getLogOutput();
 
