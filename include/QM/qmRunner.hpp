@@ -38,7 +38,8 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-class QMSettings;   // forward declaration
+class QMSettings;     // forward declaration
+class FileSettings;   // forward declaration
 
 namespace QM
 {
@@ -63,11 +64,16 @@ namespace QM
             const TimeMs          &qmLoopTimeLimit
         );
 
-        void         run(molsys::SimulationBox &, physicalData::PhysicalData &);
+        void run(
+            molsys::SimulationBox &,
+            physicalData::PhysicalData &,
+            const FileSettings &
+        );
         virtual void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::Periodicity per
+            molsys::Periodicity per,
+            const FileSettings &fileSettings
         ) = 0;
 
        protected:

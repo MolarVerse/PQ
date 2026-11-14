@@ -130,7 +130,7 @@ namespace engine
                 auto &bead = getRingPolymerBeads()[i];
                 auto &data = getRingPolymerBeadsPhysicalData()[i];
 
-                getQMRunner()->run(bead, data);
+                getQMRunner()->run(bead, data, getSettings().fileSettings);
             }
         }
 
@@ -181,7 +181,8 @@ namespace engine
         {
             getQMRunner()->run(
                 getRingPolymerBeads()[i],
-                getRingPolymerBeadsPhysicalData()[i]
+                getRingPolymerBeadsPhysicalData()[i],
+                getSettings().fileSettings
             );
         }
     }

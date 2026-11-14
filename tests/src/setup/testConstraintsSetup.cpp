@@ -30,7 +30,6 @@
 #include "constraints.hpp"
 #include "constraintsSetup.hpp"
 #include "engine.hpp"
-#include "fileSettings.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
@@ -129,8 +128,6 @@ namespace
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         simBox.setBox(orthoBox, false);
-
-        FileSettings::setMShakeFileName("data/constraintsSetup/mshake.dat");
     }
 }   // namespace
 
@@ -168,6 +165,9 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 TEST_F(TestSetup, constraintsSetupRunsMShakeAndReducesDegreesOfFreedom)
 {
     _settings->constraintSettings.activateMShakeByUser();
+    _settings->fileSettings.setMShakeFileNameByUser(
+        "data/constraintsSetup/mshake.dat"
+    );
 
     setupMShakeMoleculeType(*_engine);
 
