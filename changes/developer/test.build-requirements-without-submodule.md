@@ -1,1 +1,0 @@
-- The build requirements test skips the comparison with the vendored mstd when the submodule is not checked out (the Changelog Fragment Check runs the script tests without submodules).

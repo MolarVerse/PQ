@@ -1,1 +1,0 @@
-- Fix a random failure of the ORCA script tests: the fake ORCA treated any `__` in its input (such as in the temporary directory name) as an unresolved placeholder; it now only matches `__NAME__`.

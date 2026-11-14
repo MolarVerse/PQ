@@ -1,1 +1,0 @@
-- Add an external ORCA QM runner for pure QM as well as QM/MM hybrid type calculations.

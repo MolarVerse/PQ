@@ -1,1 +1,0 @@
-- Check in the setup-gcc action that every requested apt package is installed after the cache restore, and install missing ones with apt (retried), so an empty cache entry from a failed install can no longer leave a job without valgrind.
