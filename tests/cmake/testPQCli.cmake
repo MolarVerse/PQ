@@ -122,6 +122,17 @@ string(
     GET "${output}" input external_qm programs turbomole scripts 0
         required_working_files 0
 )
+string(JSON orca_script_count LENGTH "${output}" input external_qm programs orca scripts)
+string(JSON orca_hf_script GET "${output}" input external_qm programs orca scripts 1 name)
+string(JSON orca_dft_script GET "${output}" input external_qm programs orca scripts 2 name)
+if(NOT orca_script_count EQUAL 3 OR NOT orca_hf_script STREQUAL "orca_hf.py" OR NOT orca_dft_script STREQUAL "orca_dft.py")
+    message(FATAL_ERROR "Missing HF/DFT ORCA script metadata")
+endif()
+string(JSON orca_script GET "${output}" input external_qm programs orca scripts 0 name)
+string(JSON orca_required_keyword GET "${output}" input external_qm programs orca scripts 0 required_file_keywords 0)
+if(NOT orca_script STREQUAL "orca_rimp2.py" OR NOT orca_required_keyword STREQUAL "orca_file")
+    message(FATAL_ERROR "Unexpected ORCA script metadata")
+endif()
 string(JSON nstep_min GET "${output}" input parameters nstep minimum)
 string(JSON nstep_max GET "${output}" input parameters nstep maximum)
 string(
@@ -278,7 +289,7 @@ assert_input_array(
     job_types
     "mm-md;mm-hessian;mm-opt;qm-md;qm-rpmd"
 )
-set(expected_qm_programs "dftbplus;pyscf;turbomole")
+set(expected_qm_programs "dftbplus;pyscf;turbomole;orca")
 if(EXPECTED_ASE)
     list(
         APPEND expected_qm_programs

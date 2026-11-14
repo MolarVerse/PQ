@@ -1,0 +1,1 @@
+- `cmake --install` now also installs `libconfig_headers.so`, so an installed `PQ` starts without a missing-library error.

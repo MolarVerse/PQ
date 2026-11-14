@@ -255,6 +255,10 @@ namespace input
     struct SelectionTag
     {
         std::vector<int> indices;
+
+        /// set if the selection grammar is used: the expression can only be
+        /// resolved once the start/moldescriptor files are known (finalize)
+        std::optional<std::string> expression = std::nullopt;
     };
 
     enum class SelectionError : std::uint8_t

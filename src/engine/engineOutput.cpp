@@ -27,6 +27,7 @@
 #include "boxOutput.hpp"
 #include "defaults.hpp"
 #include "energyOutput.hpp"
+#include "frame.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
 #include "infoOutput.hpp"
@@ -40,7 +41,6 @@
 #include "rstFileOutput.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
-#include "thermostat.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
 #include "virialOutput.hpp"
@@ -204,17 +204,14 @@ namespace engine
     /**
      * @brief wrapper for xyz file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeXyzFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeXyzFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
         _xyzOutput->writeXyz(
-            simulationBox,
+            frame,
             step,
             _outputFileSettings->getIncludeOutputMetadata()
         );
@@ -242,17 +239,14 @@ namespace engine
     /**
      * @brief wrapper for velocity file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeVelFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeVelFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
         _velOutput->writeVelocities(
-            simulationBox,
+            frame,
             step,
             _outputFileSettings->getIncludeOutputMetadata()
         );
@@ -261,17 +255,14 @@ namespace engine
     /**
      * @brief wrapper for force file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeForceFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeForceFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
         _forceOutput->writeForces(
-            simulationBox,
+            frame,
             step,
             _outputFileSettings->getIncludeOutputMetadata()
         );
@@ -280,17 +271,14 @@ namespace engine
     /**
      * @brief wrapper for charge file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeChargeFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeChargeFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
         _chargeOutput->writeCharges(
-            simulationBox,
+            frame,
             step,
             _outputFileSettings->getIncludeOutputMetadata()
         );
@@ -299,18 +287,13 @@ namespace engine
     /**
      * @brief wrapper for restart file output function
      *
-     * @param simulationBox
-     * @param thermostat
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeRstFile(
-        molsys::SimulationBox        &simulationBox,
-        const thermostat::Thermostat &thermostat,
-        size_t                        step
-    )
+    void EngineOutput::writeRstFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-        _rstFileOutput->write(simulationBox, thermostat, step);
+        _rstFileOutput->write(frame, step);
     }
 
     /**
@@ -325,7 +308,7 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-        _rstFileOutput->write(simulationBox, thermostat::Thermostat(), step);
+        _rstFileOutput->write(out::Frame{simulationBox}, step);
     }
 
     /**

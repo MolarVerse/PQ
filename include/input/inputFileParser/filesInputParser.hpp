@@ -23,7 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__FILES_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class FileSettings;
 
 namespace input
 {
@@ -35,11 +39,14 @@ namespace input
      */
     class FilesInputParser : public InputFileParser
     {
-        bool _validateFilePaths;
+        bool                    _validateFilePaths;
+        mstd::Ref<FileSettings> _fileSettings;
 
        public:
-        explicit FilesInputParser(bool validateFilePaths);
-        explicit FilesInputParser();
+        explicit FilesInputParser(
+            bool          validateFilePaths,
+            FileSettings& fileSettings
+        );
 
         void addIntraNonBondedFileKey();
         void addTopologyFileKey();
@@ -52,6 +59,7 @@ namespace input
         void addMShakeFileKey();
         void addDFTBFileKey();
         void addTMFileKey();
+        void addOrcaFileKey();
     };
 
 }   // namespace input

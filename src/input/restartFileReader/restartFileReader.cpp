@@ -28,6 +28,7 @@
 #include "atomSection.hpp"
 #include "boxSection.hpp"
 #include "engine.hpp"
+#include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "noseHooverSection.hpp"
 #include "stepCountSection.hpp"
@@ -125,7 +126,14 @@ namespace input::restartFile
         NoseHooverSettings &noseHooverSettings
     )
     {
-        const auto filename = settings::FileSettings::getStartFileName();
+        const auto &fileSettings = engine.getSettings().fileSettings;
+
+        if (!fileSettings.isStartFileNameSetByUser())
+            throw exc::InputFileException(
+                "\"start_file\" not set in input file"
+            );
+
+        const auto filename = fileSettings.getStartFileName();
 
         out::StdoutOutput::writeRead("Start File", filename);
         engine.getLogOutput().writeRead("Start File", filename);

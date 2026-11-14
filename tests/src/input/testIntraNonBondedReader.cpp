@@ -56,11 +56,11 @@ TEST_F(TestIntraNonBondedReader, findMoleculeType)
 
 TEST_F(TestIntraNonBondedReader, noFileSetByUser)
 {
-    settings::FileSettings::unsetIsIntraNonBondedFileNameSet();
+    _settings.fileSettings = FileSettings{};
     EXPECT_THROW_MSG(
-        _intraNonBondedReader->read(),
+        input::intraNonBondedReader::readIntraNonBondedFile(*_engine),
         exc::IntraNonBondedException,
-        "Intra non bonded file needed for requested simulation setup"
+        "Intra non bonded file not provided by the user"
     );
 }
 
@@ -130,7 +130,7 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
 
 TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 {
-    settings::FileSettings::setIntraNonBondedFileName(
+    _settings.fileSettings.setIntraNonBondedFileNameByUser(
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);

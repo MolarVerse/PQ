@@ -28,6 +28,7 @@
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "hybridSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
@@ -153,6 +154,7 @@ void Settings::finalize()
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
     thermostatSettings.finalize(referenceSettings);
+    settings::HybridSettings::finalize(fileSettings);
 
     const auto& qmMethod = qmSettings.getQMMethod();
 
@@ -167,6 +169,7 @@ void Settings::finalize()
         case QMMethod::FENNOL:
         case QMMethod::PYSCF:
         case QMMethod::TURBOMOLE:
+        case QMMethod::ORCA:
         case QMMethod::NONE: break;
     }
 

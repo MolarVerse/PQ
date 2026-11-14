@@ -25,7 +25,6 @@
 
 #include <gtest/gtest.h>
 
-#include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "intraNonBondedReader.hpp"
 #include "mmmdEngine.hpp"
@@ -66,7 +65,6 @@ class TestIntraNonBondedReader : public ::testing::Test
                 "data/intraNonBondedReader/intraNonBonded.dat",
                 *_engine
             );
-        settings::FileSettings::setIsIntraNonBondedFileNameSet();
     }
 };
 

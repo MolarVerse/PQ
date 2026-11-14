@@ -29,9 +29,8 @@
 
 #include "box.hpp"
 #include "defaults.hpp"
+#include "frame.hpp"
 #include "hybridConfigurator.hpp"
-#include "molecule.hpp"
-#include "simulationBox.hpp"
 
 namespace out
 {
@@ -39,44 +38,38 @@ namespace out
     /**
      * @brief Write the header of a trajectory files
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      */
-    void TrajectoryOutput::writeHeader(
-        const molsys::SimulationBox &simulationBox
-    )
+    void TrajectoryOutput::writeHeader(const Frame &frame)
     {
-        const auto  nAtoms    = simulationBox.getNumberOfAtoms();
-        const auto &boxDims   = simulationBox.getBoxDimensions();
-        const auto &boxAngles = simulationBox.getBoxAngles();
-
-        _getFilePointer() << nAtoms << "  " << boxDims << "  " << boxAngles
-                          << '\n';
+        _getFilePointer() << frame.atoms.size() << "  "
+                          << frame.box->get_boxDimensions() << "  "
+                          << frame.box->getBoxAngles() << '\n';
     }
 
     /**
      * @brief Write xyz file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
      * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeXyz(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step,
-        bool                         includeMetadata
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(simulationBox);
+        writeHeader(frame);
         _writeComment(step, includeMetadata);
 
-        for (const auto &atom : simulationBox.getAtoms())
+        for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", atom->getName());
+            buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &pos =
-                simulationBox.getBox().wrapPositionIntoBox(atom->getPosition());
+            const auto &pos = frame.box->wrapPositionIntoBox(atom.position);
 
             buffer << std::format("{:15.8f}\t", pos[0]);
             buffer << std::format("{:15.8f}\t", pos[1]);
@@ -128,35 +121,30 @@ namespace out
     /**
      * @brief Write velocities file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
      * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeVelocities(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step,
-        bool                         includeMetadata
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(simulationBox);
+        writeHeader(frame);
         _writeComment(step, includeMetadata);
 
-        for (const auto &molecule : simulationBox.getMolecules())
+        for (const auto &atom : frame.atoms)
         {
-            const auto nAtoms = molecule.getNumberOfAtoms();
+            buffer << std::format("{:<5}\t", atom.name);
 
-            for (AtomIndex i{0}; i.get() < nAtoms; ++i)
-            {
-                buffer << std::format("{:<5}\t", molecule.getAtomName(i));
+            const auto &vel = atom.velocity;
 
-                const auto &vel = molecule.getAtomVelocity(i);
-
-                buffer << std::format("{:20.8e}\t", vel[0]);
-                buffer << std::format("{:20.8e}\t", vel[1]);
-                buffer << std::format("{:20.8e}\n", vel[2]);
-            }
+            buffer << std::format("{:20.8e}\t", vel[0]);
+            buffer << std::format("{:20.8e}\t", vel[1]);
+            buffer << std::format("{:20.8e}\n", vel[2]);
         }
 
         // Write the buffer to the file
@@ -167,39 +155,30 @@ namespace out
     /**
      * @brief Write forces file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
      * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeForces(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step,
-        bool                         includeMetadata
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(simulationBox);
-        _writeForceComment(
-            step,
-            simulationBox.calculateTotalForce(),
-            includeMetadata
-        );
+        writeHeader(frame);
+        _writeForceComment(step, frame.totalForce(), includeMetadata);
 
-        for (const auto &molecule : simulationBox.getMolecules())
+        for (const auto &atom : frame.atoms)
         {
-            const auto nAtoms = molecule.getNumberOfAtoms();
+            buffer << std::format("{:<5}\t", atom.name);
 
-            for (AtomIndex i{0}; i.get() < nAtoms; ++i)
-            {
-                buffer << std::format("{:<5}\t", molecule.getAtomName(i));
+            const auto &force = atom.force;
 
-                const auto &force = molecule.getAtomForce(i);
-
-                buffer << std::format("{:15.8f}\t", force[0]);
-                buffer << std::format("{:15.8f}\t", force[1]);
-                buffer << std::format("{:15.8f}\n", force[2]);
-            }
+            buffer << std::format("{:15.8f}\t", force[0]);
+            buffer << std::format("{:15.8f}\t", force[1]);
+            buffer << std::format("{:15.8f}\n", force[2]);
         }
 
         // Write the buffer to the file
@@ -210,28 +189,25 @@ namespace out
     /**
      * @brief Write charges file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
      * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeCharges(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step,
-        bool                         includeMetadata
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(simulationBox);
+        writeHeader(frame);
         _writeComment(step, includeMetadata);
 
-        for (const auto &atom : simulationBox.getAtoms())
+        for (const auto &atom : frame.atoms)
         {
-            const auto charge =
-                atom->getQMCharge().value_or(atom->getPartialCharge());
-
-            buffer << std::format("{:<5}\t", atom->getName());
-            buffer << std::format("{:15.8f}\n", charge);
+            buffer << std::format("{:<5}\t", atom.name);
+            buffer << std::format("{:15.8f}\n", atom.charge);
             buffer << std::flush;
         }
 

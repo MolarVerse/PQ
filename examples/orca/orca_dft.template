@@ -1,0 +1,9 @@
+# Five stage placeholders are filled by the Python driver.
+! __METHOD__ PBE RKS TightSCF def2-SVP
+%pal nprocs 1 end
+%maxcore 1000
+__SCF__
+__GUESS__
+__POINTCHARGES__
+%output Print[P_Mulliken] 1 end
+* xyzfile __CHARGE__ 1 orca_coord.xyz

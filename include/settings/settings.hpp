@@ -25,6 +25,7 @@
 
 #include "constraintSettings.hpp"
 #include "convergenceSettings.hpp"
+#include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
 #include "manostatSettings.hpp"
@@ -57,6 +58,7 @@ struct Settings
     ForceFieldSettings    forceFieldSettings;
     ManostatSettings      manostatSettings;
     OutputFileSettings    outputFiles;
+    FileSettings          fileSettings;
     ReferenceSettings     referenceSettings;
     QMSettings            qmSettings;
     MaceSettings          maceSettings;

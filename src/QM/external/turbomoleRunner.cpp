@@ -45,7 +45,9 @@ namespace QM
      *
      * @param simulationBox
      */
-    void TurbomoleRunner::writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void TurbomoleRunner::writeCoordsFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         const std::string fileName = "coord";
         std::ofstream     coordsFile(fileName);
@@ -76,12 +78,11 @@ namespace QM
      * @param simulationBox
      */
     void TurbomoleRunner::writePointChargeFile(
-        molsys::SimulationBox &simulationBox
+        const molsys::SimulationBox &simulationBox
     )
     {
-        const std::string fileName =
-            settings::FileSettings::getPointChargeFileName();
-        std::ofstream pcFile(fileName);
+        const std::string fileName = FileSettings::getPointChargeFileName();
+        std::ofstream     pcFile(fileName);
 
         using enum molsys::HybridZone;
 
@@ -118,7 +119,7 @@ namespace QM
      * conditions
      *
      */
-    void TurbomoleRunner::execute(molsys::SimulationBox &simulationBox)
+    void TurbomoleRunner::execute(const molsys::SimulationBox &simulationBox)
     {
         using enum SmoothingMethod;
 
@@ -151,10 +152,8 @@ namespace QM
             charge,
             runTMDefine,
             usePointCharges,
-            utilities::shellQuote(settings::FileSettings::getTMFileName()),
-            utilities::shellQuote(
-                settings::FileSettings::getPointChargeFileName()
-            )
+            utilities::shellQuote(FileSettings::getTMFileName()),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
         );
         _executeCommand(command, "Turbomole");
 

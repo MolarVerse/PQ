@@ -1,0 +1,1 @@
+- Add an integration test for the temperature ramp (start_temp, temp_ramp_steps, temp_ramp_frequency) as a new variant of the cgo test; the existing cgo tests are unchanged.

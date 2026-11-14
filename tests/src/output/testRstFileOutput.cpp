@@ -22,12 +22,17 @@
 
 #include "testRstFileOutput.hpp"
 
+#include <filesystem>
+#include <fstream>
 #include <iosfwd>
 #include <string>
 
+#include "exceptions.hpp"
+#include "frame.hpp"
 #include "noseHooverThermostat.hpp"
 #include "thermostat.hpp"
 #include "thermostatSettings.hpp"
+#include "throwWithMessage.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -38,7 +43,10 @@
 TEST_F(TestRstFileOutput, write)
 {
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(*_simulationBox, thermostat::Thermostat(), 10);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        10
+    );
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
@@ -91,7 +99,7 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(*_simulationBox, thermostat, 10);
+    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
@@ -130,4 +138,34 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
         "1.00000000e+00\t     1.00000000e+00\t     1.00000000\t     "
         "1.00000000\t     1.00000000"
     );
+}
+
+/**
+ * @brief a failed write keeps the previous restart file and leaves no
+ * temporary file behind on success
+ *
+ */
+TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
+{
+    const out::Frame frame{*_simulationBox, thermostat::Thermostat()};
+
+    _rstFileOutput->setFilename("default.rst", false);
+    _rstFileOutput->write(frame, 10);
+    EXPECT_FALSE(std::filesystem::exists("default.rst.tmp"));
+
+    // a directory in the way makes writing the temporary file fail
+    std::filesystem::create_directory("default.rst.tmp");
+
+    EXPECT_THROW_MSG(
+        _rstFileOutput->write(frame, 11),
+        exc::InputFileException,
+        "Could not write file - filename = default.rst.tmp"
+    );
+
+    std::filesystem::remove("default.rst.tmp");
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "Step 10");
 }

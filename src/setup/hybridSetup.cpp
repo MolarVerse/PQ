@@ -93,8 +93,8 @@ namespace setup
 
         const auto errorMsg = std::format(
             "QM method \"{}\" is not supported for hybrid type "
-            "calculations. Supported QM methods are \"dftbplus\" and "
-            "\"turbomole\".",
+            "calculations. Supported QM methods are \"dftbplus\", "
+            "\"turbomole\" and \"orca\".",
             QMMethodMeta::toString(qmMethod)
 
         );
@@ -102,7 +102,8 @@ namespace setup
         switch (qmMethod)
         {
             case DFTBPLUS:
-            case TURBOMOLE: break;
+            case TURBOMOLE:
+            case ORCA: break;
             case PYSCF:
             case ASE_DFTBPLUS:
             case ASE_XTB:

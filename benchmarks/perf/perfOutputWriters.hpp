@@ -50,6 +50,7 @@
 #include "atom.hpp"
 #include "berendsenThermostat.hpp"
 #include "energyOutput.hpp"
+#include "frame.hpp"
 #include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
@@ -152,11 +153,13 @@ namespace benchOutputWriters
 
         for (std::uint64_t i = 0; i < iterations; ++i)
         {
-            xyz.writeXyz(simBox, i, true);
-            vel.writeVelocities(simBox, i, true);
-            force.writeForces(simBox, i, true);
-            charge.writeCharges(simBox, i, true);
-            restart.write(simBox, thermostat, i);
+            const out::Frame frame{simBox, thermostat};
+
+            xyz.writeXyz(frame, i, true);
+            vel.writeVelocities(frame, i, true);
+            force.writeForces(frame, i, true);
+            charge.writeCharges(frame, i, true);
+            restart.write(frame, i);
             energy.write(i, physicalData, settings);
         }
 

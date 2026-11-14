@@ -122,26 +122,16 @@ namespace input
      * 9) mshake_file "<string>" 10) dftb_file "<string>" 11) turbomole_file
      * "<string>"
      *
-     */
-    FilesInputParser::FilesInputParser() : FilesInputParser(true) {}
-
-    /**
-     * @brief Construct a new Input File Parser Non Coulomb Type:: Input File
-     * Parser Non Coulomb Type object
+     * @param validateFilePaths Flag indicating whether to validate file paths
+     * @param fileSettings Reference to the FileSettings object to be used for
+     * storing file names and managing the state of which files have been set.
      *
-     * @details following keywords are added to the _keywordFuncMap,
-     * _keywordRequiredMap and _keywordCountMap: 1) intra-nonBonded_file
-     * "<string>" 2) topology_file "<string>" 3) parameter_file "<string>" 4)
-     * start_file
-     * "<string>" (required) 5) rpmd_start_file "<string>" 6) moldescriptor_file
-     * "<string>" 7) guff_path "<string>" (deprecated) 8) guff_file "<string>"
-     * 9) mshake_file "<string>" 10) dftb_file "<string>" 11) turbomole_file
-     * "<string>"
-     *
-     * @param validateFilePaths
      */
-    FilesInputParser::FilesInputParser(bool validateFilePaths)
-        : InputFileParser(), _validateFilePaths(validateFilePaths)
+    FilesInputParser::FilesInputParser(
+        bool          validateFilePaths,
+        FileSettings &fileSettings
+    )
+        : _validateFilePaths(validateFilePaths), _fileSettings(fileSettings)
     {
         addIntraNonBondedFileKey();
         addTopologyFileKey();
@@ -154,6 +144,7 @@ namespace input
         addMShakeFileKey();
         addDFTBFileKey();
         addTMFileKey();
+        addOrcaFileKey();
     }
 
     /**
@@ -169,18 +160,15 @@ namespace input
             .description = "File containing intra non bonded combinations"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             settings::GeneralSettings::activateIntraNonBonded();
 
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setIntraNonBondedFileName(value);
+                _fileSettings->setIntraNonBondedFileNameByUser(value);
             else
-                settings::FileSettings::setIntraNonBondedFileName(
-                    value.fileName()
+                _fileSettings->setIntraNonBondedFileNameByUser(value.fileName()
                 );
-
-            settings::FileSettings::setIsIntraNonBondedFileNameSet();
         };
 
         addFileKeyword(
@@ -206,14 +194,12 @@ namespace input
             .description = "File containing the topology of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setTopologyFileName(value);
+                _fileSettings->setTopologyFileNameByUser(value);
             else
-                settings::FileSettings::setTopologyFileName(value.fileName());
-
-            settings::FileSettings::setIsTopologyFileNameSet();
+                _fileSettings->setTopologyFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -239,14 +225,12 @@ namespace input
             .description = "File containing the parameters of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setParameterFileName(value);
+                _fileSettings->setParameterFileNameByUser(value);
             else
-                settings::FileSettings::setParameterFileName(value.fileName());
-
-            settings::FileSettings::setIsParameterFileNameSet();
+                _fileSettings->setParameterFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -274,12 +258,12 @@ namespace input
                 "File containing the start configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setStartFileName(value);
+                _fileSettings->setStartFileNameByUser(value);
             else
-                settings::FileSettings::setStartFileName(value.fileName());
+                _fileSettings->setStartFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -308,16 +292,15 @@ namespace input
                 "system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setRingPolymerStartFileName(value);
+                _fileSettings->setRingPolymerStartFileNameByUser(value);
             else
-                settings::FileSettings::setRingPolymerStartFileName(
-                    value.fileName()
-                );
-
-            settings::FileSettings::setIsRingPolymerStartFileNameSet();
+            {
+                const auto &name = value.fileName();
+                _fileSettings->setRingPolymerStartFileNameByUser(name);
+            }
         };
 
         addFileKeyword(
@@ -345,13 +328,12 @@ namespace input
                 "File containing the molecular descriptor of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setMolDescriptorFileName(value);
+                _fileSettings->setMolDescriptorFileNameByUser(value);
             else
-                settings::FileSettings::setMolDescriptorFileName(value.fileName(
-                ));
+                _fileSettings->setMolDescriptorFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -379,12 +361,12 @@ namespace input
                 "File containing the guff dat configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setGuffDatFileName(value);
+                _fileSettings->setGuffDatFileNameByUser(value);
             else
-                settings::FileSettings::setGuffDatFileName(value.fileName());
+                _fileSettings->setGuffDatFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -415,9 +397,9 @@ namespace input
         const auto setValue = []<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setMShakeFileName(value);
+                FileSettings::setMShakeFileName(value);
             else
-                settings::FileSettings::setMShakeFileName(value.fileName());
+                FileSettings::setMShakeFileName(value.fileName());
         };
 
         addFileKeyword(
@@ -448,9 +430,9 @@ namespace input
         const auto setValue = []<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setDFTBFileName(value);
+                FileSettings::setDFTBFileName(value);
             else
-                settings::FileSettings::setDFTBFileName(value.fileName());
+                FileSettings::setDFTBFileName(value.fileName());
         };
 
         addFileKeyword(
@@ -481,9 +463,42 @@ namespace input
         const auto setValue = []<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                settings::FileSettings::setTMFileName(value);
+                FileSettings::setTMFileName(value);
             else
-                settings::FileSettings::setTMFileName(value.fileName());
+                FileSettings::setTMFileName(value.fileName());
+        };
+
+        addFileKeyword(
+            metaData,
+            setValue,
+            *this,
+            _getRegistry(),
+            false,
+            _validateFilePaths
+        );
+    }
+
+    /**
+     * @brief Adds the orca_file keyword to the parser
+     *
+     * @details registers the "orca_file" key and associates it with the
+     * appropriate callback that sets the ORCA file name in the settings.
+     */
+    void FilesInputParser::addOrcaFileKey()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "orca_file",
+            .title = "ORCA File",
+            .description =
+                "File containing the ORCA configuration of the system"
+        };
+
+        const auto setValue = []<typename T>(const T &value) -> void
+        {
+            if constexpr (std::is_same_v<T, std::string>)
+                FileSettings::setOrcaFileName(value);
+            else
+                FileSettings::setOrcaFileName(value.fileName());
         };
 
         addFileKeyword(

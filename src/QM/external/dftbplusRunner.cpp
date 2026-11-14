@@ -52,7 +52,9 @@ namespace QM
      *
      * @param simulationBox
      */
-    void DFTBPlusRunner::writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void DFTBPlusRunner::writeCoordsFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         using std::ranges::distance;
         using std::ranges::find;
@@ -143,12 +145,11 @@ namespace QM
      * @param simulationBox Simulation box containing molecules and atoms.
      */
     void DFTBPlusRunner::writePointChargeFile(
-        molsys::SimulationBox &simulationBox
+        const molsys::SimulationBox &simulationBox
     )
     {
-        const std::string fileName =
-            settings::FileSettings::getPointChargeFileName();
-        std::ofstream pcFile(fileName);
+        const std::string fileName = FileSettings::getPointChargeFileName();
+        std::ofstream     pcFile(fileName);
 
         using enum molsys::HybridZone;
 
@@ -183,7 +184,7 @@ namespace QM
      * @param simulationBox Simulation box containing molecules and atoms.
      *
      */
-    void DFTBPlusRunner::execute(molsys::SimulationBox &simulationBox)
+    void DFTBPlusRunner::execute(const molsys::SimulationBox &simulationBox)
     {
         const auto scriptFile = _getExternalQMSettings().getQMScript();
 
@@ -217,10 +218,8 @@ namespace QM
             charge,
             readChargesBin,
             usePointCharges,
-            utilities::shellQuote(settings::FileSettings::getDFTBFileName()),
-            utilities::shellQuote(
-                settings::FileSettings::getPointChargeFileName()
-            )
+            utilities::shellQuote(FileSettings::getDFTBFileName()),
+            utilities::shellQuote(FileSettings::getPointChargeFileName())
         );
         _executeCommand(command, "DFTB+");
 
@@ -237,12 +236,11 @@ namespace QM
      * virial will be added.
      */
     void DFTBPlusRunner::readStressTensor(
-        molsys::Box                &box,
+        const molsys::Box          &box,
         physicalData::PhysicalData &physicalData
     )
     {
-        const auto stressFileName =
-            settings::FileSettings::getStressTensorTempFileName();
+        const auto stressFileName = FileSettings::getStressTensorTempFileName();
 
         std::ifstream stressFile(stressFileName);
 

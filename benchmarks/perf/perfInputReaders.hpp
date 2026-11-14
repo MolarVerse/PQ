@@ -129,18 +129,17 @@ namespace benchInputReaders
         std::filesystem::create_directories(directory);
         writeFiles(directory, molecules);
 
-        settings::FileSettings::setMolDescriptorFileName(
+        Settings settings;
+        settings.fileSettings.setMolDescriptorFileNameByUser(
             (directory / "moldescriptor.dat").string()
         );
-        settings::FileSettings::setStartFileName(
+        settings.fileSettings.setStartFileNameByUser(
             (directory / "input.rst").string()
         );
-        settings::FileSettings::setTopologyFileName(
+        settings.fileSettings.setTopologyFileNameByUser(
             (directory / "topology.top").string()
         );
-        settings::FileSettings::setIsTopologyFileNameSet();
 
-        Settings settings;
         settings.forceFieldSettings.setTypeByUser(ForceFieldType::BONDED);
 
         std::size_t atoms = 0;

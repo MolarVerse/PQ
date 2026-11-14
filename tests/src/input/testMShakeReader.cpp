@@ -36,7 +36,7 @@
 
 TEST_F(TestMShakeReader, testConstructor)
 {
-    settings::FileSettings::setMShakeFileName("notExistingFile");
+    FileSettings::setMShakeFileName("notExistingFile");
     const auto reader = input::mShake::MShakeReader(*_engine);
     EXPECT_EQ(reader.getFileName(), "notExistingFile");
 }
@@ -157,7 +157,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
 TEST_F(TestMShakeReader, testReadMemberFunction)
 {
-    settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
+    FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
 
     auto molType = molsys::MoleculeType(MolType{1});
     molType.addAtomName("H");
@@ -203,7 +203,7 @@ TEST_F(TestMShakeReader, testReadMemberFunction)
 
 TEST_F(TestMShakeReader, testRead)
 {
-    settings::FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
+    FileSettings::setMShakeFileName("data/mshakeReader/mshake.dat");
     auto reader = input::mShake::MShakeReader(*_engine);
 
     auto molType = molsys::MoleculeType(MolType{1});

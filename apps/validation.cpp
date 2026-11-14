@@ -284,20 +284,20 @@ namespace
         if (settings.constraintSettings.isActive() ||
             settings.forceFieldSettings.isActive())
         {
-            if (!settings::FileSettings::isTopologyFileNameSet())
+            if (!settings.fileSettings.isTopologyFileNameSetByUser())
                 throw exc::InputFileException(
                     "Topology file needed for requested simulation setup"
                 );
         }
 
         if (settings.forceFieldSettings.isActive() &&
-            !settings::FileSettings::isParameterFileNameSet())
+            !settings.fileSettings.isParameterFileNameSetByUser())
             throw exc::InputFileException(
                 "Parameter file needed for requested simulation setup"
             );
 
         if (settings.constraintSettings.isMShakeActivated() &&
-            settings::FileSettings::getMShakeFileName().empty())
+            FileSettings::getMShakeFileName().empty())
             throw exc::InputFileException(
                 "M-SHAKE file needed for requested simulation setup"
             );
@@ -310,20 +310,20 @@ namespace
 
     void validateEffectiveFiles(const Settings &settings)
     {
-        requireFile(settings::FileSettings::getStartFileName(), "Start file");
+        requireFile(settings.fileSettings.getStartFileName(), "Start file");
 
-        if (settings::FileSettings::isRingPolymerStartFileNameSet())
+        if (settings.fileSettings.isRingPolymerStartFileNameSetByUser())
         {
             requireFile(
-                settings::FileSettings::getRingPolymerStartFileName(),
+                settings.fileSettings.getRingPolymerStartFileName(),
                 "Ring-polymer start file"
             );
         }
 
-        if (settings::FileSettings::isIntraNonBondedFileNameSet())
+        if (settings.fileSettings.isIntraNonBondedFileNameSetByUser())
         {
             requireFile(
-                settings::FileSettings::getIntraNonBondedFileName(),
+                settings.fileSettings.getIntraNonBondedFileName(),
                 "Intra non-bonded file"
             );
         }
@@ -332,7 +332,7 @@ namespace
             settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             requireFile(
-                settings::FileSettings::getMolDescriptorFileName(),
+                settings.fileSettings.getMolDescriptorFileName(),
                 "Moldescriptor file"
             );
         }
@@ -341,7 +341,7 @@ namespace
             !settings.forceFieldSettings.isNonCoulombicActive())
         {
             requireFile(
-                settings::FileSettings::getGuffDatFileName(),
+                settings.fileSettings.getGuffDatFileName(),
                 "Guff file"
             );
         }
@@ -350,7 +350,7 @@ namespace
             settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings::FileSettings::getTopologyFileName(),
+                settings.fileSettings.getTopologyFileName(),
                 "Topology file"
             );
         }
@@ -358,17 +358,14 @@ namespace
         if (settings.forceFieldSettings.isActive())
         {
             requireFile(
-                settings::FileSettings::getParameterFilename(),
+                settings.fileSettings.getParameterFileName(),
                 "Parameter file"
             );
         }
 
-        if (settings::FileSettings::isMShakeFileNameSet())
+        if (FileSettings::isMShakeFileNameSet())
         {
-            requireFile(
-                settings::FileSettings::getMShakeFileName(),
-                "M-SHAKE file"
-            );
+            requireFile(FileSettings::getMShakeFileName(), "M-SHAKE file");
         }
 
         if (!settings::GeneralSettings::isQMActivated())
@@ -378,10 +375,7 @@ namespace
 
         if (method == QMMethod::DFTBPLUS)
         {
-            requireFile(
-                settings::FileSettings::getDFTBFileName(),
-                "DFTB setup file"
-            );
+            requireFile(FileSettings::getDFTBFileName(), "DFTB setup file");
         }
 
         if (method == QMMethod::ASE_DFTBPLUS &&
@@ -418,6 +412,11 @@ namespace
             const auto modelPath = settings.maceSettings.getMaceModelPath();
             if (!isRemoteResource(modelPath))
                 requireFile(modelPath, "MACE model file");
+        }
+
+        if (settings.qmSettings.getQMMethod() == QMMethod::ORCA)
+        {
+            requireFile(FileSettings::getOrcaFileName(), "ORCA template");
         }
 
         validateInstalledExternalQMScript(

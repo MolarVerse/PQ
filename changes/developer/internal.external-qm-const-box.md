@@ -1,0 +1,1 @@
+- Use const references for simulation boxes in external QM coordinate writers, point-charge writers, and execution hooks, and for the box geometry in stress-tensor readers.

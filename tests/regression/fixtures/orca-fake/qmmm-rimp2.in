@@ -1,0 +1,23 @@
+# K+ in water QM/MM, PQ + orca_rimp2.py + fake ORCA, electrostatic embedding.
+jobtype = qmmm-md;
+nstep = 2;
+timestep = 0.5;
+integrator = v-verlet;
+virial = molecular;
+force-field = off;
+rcoulomb = 15.0;
+long_range = reaction_field;
+rf_epsilon = 73.0;
+water_intra = spc_fw;
+water_inter = spc_fw;
+qm_prog = orca;
+qm_script = orca_rimp2.py;
+orca_file = orca.template;
+smoothing_method = hotspot;
+core_radius = 0.0;
+layer_radius = 3.8;
+smoothing_region_thickness = 0.2;
+point_charge_thickness = 15.0;
+start_file = input.rst;
+file_prefix = qmmm-rimp2;
+overwrite_output = on;
