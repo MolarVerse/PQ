@@ -355,7 +355,7 @@ namespace engine
                 getManostat().applyManostat(
                     bead,
                     data,
-                    _getKinetics().getCurrentTargetPressure()
+                    _getKinetics().getCurrentTargetTemperature()
                 );
             }
         }

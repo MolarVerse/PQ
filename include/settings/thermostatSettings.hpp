@@ -83,8 +83,8 @@ class KineticsSettings
     Setting<Temperature, "Start Temperature">     _startTemperature{
         Temperature::zero()
     };
-    Setting<Temperature, "End Temperature">       _endTemperature;
-    Setting<Temperature, "Target Temperature">    _targetTemperature;
+    Setting<Temperature, "End Temperature">          _endTemperature;
+    Setting<Temperature, "Target Temperature">       _targetTemperature;
     Setting<TemperatureDiff, "Temperature Increase"> _temperatureIncrease{
         TemperatureDiff::zero()
     };
