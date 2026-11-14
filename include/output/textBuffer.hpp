@@ -47,14 +47,6 @@ namespace out
         std::string                    _data;
         std::array<char, SCRATCH_SIZE> _scratch{};
 
-        void             _pad(std::size_t length, std::size_t width);
-        std::string_view _toChars(std::size_t value);
-        std::string_view _toChars(
-            double value,
-            std::chars_format,
-            int precision
-        );
-
        public:
         void clear() noexcept { _data.clear(); }
 
@@ -66,6 +58,15 @@ namespace out
         TextBuffer &left(std::size_t value, std::size_t width);
         TextBuffer &fixed(double value, std::size_t width, int precision);
         TextBuffer &scientific(double value, std::size_t width, int precision);
+
+       private:
+        void             _pad(std::size_t length, std::size_t width);
+        std::string_view _toChars(std::size_t value);
+        std::string_view _toChars(
+            double value,
+            std::chars_format,
+            int precision
+        );
     };
 
 }   // namespace out

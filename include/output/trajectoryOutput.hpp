@@ -49,8 +49,6 @@ namespace out
        private:
         TextBuffer _buffer;
 
-        void _flushBuffer();
-
        public:
         using Output::Output;
 
@@ -72,6 +70,9 @@ namespace out
             size_t       step,
             bool         includeMetadata
         );
+
+       private:
+        void _flushBuffer();
     };
 
 }   // namespace out
