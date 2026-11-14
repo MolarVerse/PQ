@@ -66,6 +66,7 @@ struct ReferenceFiles
     static constexpr auto* GFN2_FILE      = "gfn2.ref";
     static constexpr auto* IPEA1_FILE     = "ipea1.ref";
     static constexpr auto* PYSCF_FILE     = "pyscf.ref";
+    static constexpr auto* ORCA_FILE      = "orca.ref";
     static constexpr auto* TURBOMOLE_FILE = "turbomole.ref";
     static constexpr auto* MACEMP_FILE    = "macemp.ref";
     static constexpr auto* MACEOFF_FILE   = "maceoff.ref";

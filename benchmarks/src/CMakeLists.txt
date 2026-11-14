@@ -60,6 +60,12 @@ add_pq_benchmark(
     molsys
 )
 
+add_pq_benchmark(
+    benchmark_trajectoryOutput
+    output/benchmarkTrajectoryOutput.cpp
+    output
+)
+
 add_custom_target(google_benchmarks)
 add_dependencies(
     google_benchmarks
@@ -70,4 +76,5 @@ add_dependencies(
     benchmark_forceCalculation
     benchmark_integrator
     benchmark_kinetics
+    benchmark_trajectoryOutput
 )

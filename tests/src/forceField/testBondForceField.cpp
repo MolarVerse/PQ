@@ -38,6 +38,7 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -98,7 +99,10 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         BondId{0}
     );
     bondForceField.setParams(
-        BondParams{.equilibrium = 1.2, .forceConstant = 3.0}
+        BondParams{
+            .equilibrium   = 1.2 * angstrom,
+            .forceConstant = 3.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
     bondForceField.setIsLinker(false);
 

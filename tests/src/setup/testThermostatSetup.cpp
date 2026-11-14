@@ -293,7 +293,7 @@ TEST_F(TestSetup, setupThermostatNhChain)
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
     );
-    ThermostatSettings::setNoseHooverChainLength(5);
+    _settings->noseHooverSettings.setNoseHooverChainLengthByUser(5);
     ThermostatSettings::setTargetTemperature(toTemperature(300));
     EXPECT_NO_THROW(thermostatSetup.setup());
 
@@ -301,6 +301,6 @@ TEST_F(TestSetup, setupThermostatNhChain)
         dynamic_cast<thermostat::NoseHooverThermostat &>(
             thermostatSetup.getEngine().getThermostat()
         );
-    EXPECT_EQ(noseHooverThermostat.getCouplingFrequency(), 29979245800000);
-    EXPECT_EQ(noseHooverThermostat.getChi().size(), 6);
+    EXPECT_EQ(noseHooverThermostat.getChi().size(), 5);
+    EXPECT_EQ(noseHooverThermostat.getZeta().size(), 5);
 }

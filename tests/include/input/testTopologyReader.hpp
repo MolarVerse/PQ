@@ -66,11 +66,13 @@ class TestTopologyReader : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
+        _settings.fileSettings.setTopologyFileNameByUser(
+            "data/topologyReader/topology.top"
+        );
         _topologyReader = std::make_unique<input::topology::TopologyReader>(
-            "data/topologyReader/topology.top",
+            _settings.fileSettings.getTopologyFileName(),
             *_engine
         );
-        settings::FileSettings::setIsTopologyFileNameSet();
     }
 };
 

@@ -28,6 +28,20 @@
 
 namespace linalg
 {
+    /**
+     * @brief default constructor, the components are value-initialised
+     *
+     * @details Zero for arithmetic types. A defaulted constructor left the
+     * components uninitialised, which printed garbage (once inf) into the
+     * first output line of a run.
+     *
+     * @tparam T
+     */
+    template <typename T>
+    constexpr Vector3D<T>::Vector3D() : x(), y(), z()
+    {
+    }
+
     /********************
      *                  *
      * assign operators *

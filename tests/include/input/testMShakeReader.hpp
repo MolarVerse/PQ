@@ -28,9 +28,9 @@
 #include "mmmdEngine.hpp"
 
 /**
- * @class TestMoldescriptorReader
+ * @class TestMShakeReader
  *
- * @brief Fixture class for testing the MoldescriptorReader class
+ * @brief Fixture class for testing the MShakeReader class
  *
  */
 class TestMShakeReader : public ::testing::Test

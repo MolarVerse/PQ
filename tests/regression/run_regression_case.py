@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -81,6 +82,13 @@ def main():
             input_files = [input_files]
         timeout = manifest.get("timeout_seconds", 30)
 
+        for name in manifest.get("executables", []):
+            (case_dir / name).chmod(0o755)
+        env = dict(os.environ)
+        for key, value in manifest.get("env", {}).items():
+            local = case_dir / value
+            env[key] = str(local) if local.exists() else value
+
         stdout = ""
         for input_file in input_files:
             completed = subprocess.run(
@@ -91,6 +99,7 @@ def main():
                 text=True,
                 timeout=timeout,
                 check=False,
+                env=env,
             )
 
             stdout += completed.stdout
@@ -149,6 +158,21 @@ def main():
                     f"last frames of {file_a} and {file_b} differ by {diff:.3e}"
                     f" (atol {compare['atol']:.3e})"
                 )
+
+        check_command = manifest.get("check_command")
+        if check_command:
+            checked = subprocess.run(
+                [sys.executable, "-I", *check_command],
+                cwd=case_dir,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
+            print(checked.stdout)
+            if checked.returncode != 0:
+                return fail(f"check {check_command} failed", stdout)
 
     return 0
 

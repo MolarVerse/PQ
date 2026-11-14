@@ -28,6 +28,7 @@
 #include "inputFileParser.hpp"
 
 class ThermostatSettings;
+class NoseHooverSettings;
 
 namespace input
 {
@@ -41,9 +42,13 @@ namespace input
     {
        private:
         mstd::Ref<ThermostatSettings> _thermostatSettings;
+        mstd::Ref<NoseHooverSettings> _nhSettings;
 
        public:
-        explicit ThermostatInputParser(ThermostatSettings& thermostatSettings);
+        explicit ThermostatInputParser(
+            ThermostatSettings& thermostatSettings,
+            NoseHooverSettings& nhSettings
+        );
 
         void addThermostatKey();
         void addTemperatureKey();

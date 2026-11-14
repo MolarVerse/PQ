@@ -25,6 +25,7 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <mstd/units/wave_number.hpp>
 #include <optional>
 
 #include "constants.hpp"
@@ -50,9 +51,10 @@ namespace input
      * nh-chain_length "<size_t>" 6) coupling_frequency "<double>"
      */
     ThermostatInputParser::ThermostatInputParser(
-        ThermostatSettings &thermostatSettings
+        ThermostatSettings &thermostatSettings,
+        NoseHooverSettings &nhSettings
     )
-        : _thermostatSettings(thermostatSettings)
+        : _thermostatSettings(thermostatSettings), _nhSettings(nhSettings)
     {
         addThermostatKey();
         addTemperatureKey();
@@ -269,8 +271,8 @@ namespace input
                 "Specifies the chain length of the nh-chain thermostat"
         };
 
-        const auto setValue = [&](size_t value)
-        { ThermostatSettings::setNoseHooverChainLength(value); };
+        const auto setValue = [this](size_t value)
+        { _nhSettings->setNoseHooverChainLengthByUser(value); };
 
         const auto minValidator =
             RangeValidator<size_t, Greater::GE>{1, std::nullopt};
@@ -292,11 +294,16 @@ namespace input
             .name  = "coupling_frequency",
             .title = "Thermostat Coupling Frequency",
             .description =
-                "Specifies the coupling frequency of the nh-chain thermostat"
+                "Specifies the coupling frequency of the nh-chain thermostat",
+            .unit = "per_cm"
         };
 
-        const auto setValue = [&](double value)
-        { ThermostatSettings::setNoseHooverCouplingFrequency(value); };
+        const auto setValue = [this](double value)
+        {
+            _nhSettings->setNoseHooverCouplingFrequencyByUser(
+                mstd::toFreq(value * per_cm)
+            );
+        };
 
         const auto validator = RangeValidator<double, Greater::GE, Less::LE>{
             0.0,

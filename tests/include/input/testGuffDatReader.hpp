@@ -117,7 +117,7 @@ class TestGuffDatReader : public ::testing::Test
             )
         );
 
-        settings::FileSettings::setGuffDatFileName(
+        _settings.fileSettings.setGuffDatFileNameByUser(
             "data/guffDatReader/guff.dat"
         );
         settings::PotentialSettings::setNonCoulombType(NonCoulombType::GUFF);

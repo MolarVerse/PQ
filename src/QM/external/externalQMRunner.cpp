@@ -32,6 +32,8 @@
 #include <string>
 #include <thread>
 
+#include "units.hpp"
+
 #if !defined(_WIN32)
 #include <sys/wait.h>
 #include <unistd.h>
@@ -44,7 +46,6 @@
 #include "box.hpp"
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
-#include "executablePath.hpp"
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
@@ -263,6 +264,21 @@ namespace
 
 namespace QM
 {
+    /**
+     * @brief Constructs an ExternalQMRunner with the given QM settings and
+     * external QM settings.
+     *
+     * @param qmSettings The QM settings used to configure the runner.
+     * @param externalQMSettings The external QM settings used to configure the
+     * runner.
+     */
+    ExternalQMRunner::ExternalQMRunner(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings
+    )
+        : QMRunner(qmSettings), _externalQMSettings(externalQMSettings)
+    {
+    }
 
     /**
      * @brief reads the force file (including qm energy) and sets the forces of
@@ -274,6 +290,8 @@ namespace QM
      * @param qmSettings The QM settings used to configure the external QM
      * runner, which may include method-specific parameters and computational
      * options
+     * @param forceFileName Path to the file containing the forces and QM
+     * energy.
      *
      * @throw QMRunnerException
      *  - if the force file cannot be opened
@@ -282,12 +300,10 @@ namespace QM
     void ExternalQMRunner::_readForceFile(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const QMSettings           &qmSettings
+        const QMSettings           &qmSettings,
+        const std::string          &forceFileName
     )
     {
-        const auto forceFileName =
-            settings::FileSettings::getQMForcesTempFileName();
-
         std::ifstream forceFile(forceFileName);
 
         if (!forceFile.is_open())
@@ -365,7 +381,7 @@ namespace QM
 
         forceFile.close();
 
-        if (QMSettings::getRemoveNetForce())
+        if (qmSettings.getRemoveNetForce())
             simulationBox.removeNetForce();
     }
 
@@ -377,6 +393,7 @@ namespace QM
      * @param qmSettings The QM settings used to configure the external QM
      * runner, which may include method-specific parameters and computational
      * options
+     * @param chargeFileName Path to the file containing the QM charges.
      *
      * @throw QMRunnerException
      *  - if the charge file cannot be opened
@@ -384,12 +401,10 @@ namespace QM
      */
     void ExternalQMRunner::_readChargeFile(
         molsys::SimulationBox &simulationBox,
-        const QMSettings      &qmSettings
+        const QMSettings      &qmSettings,
+        const std::string     &chargeFileName
     )
     {
-        const auto chargeFileName =
-            settings::FileSettings::getQMChargesTempFileName();
-
         std::ifstream chargeFile(chargeFileName);
 
         if (!chargeFile.is_open())
@@ -442,28 +457,21 @@ namespace QM
         chargeFile.close();
     }
 
-    std::string bundledQMScriptPath(const std::string_view script)
-    {
-        const auto installedPath = utilities::installedDataPath(
-            std::filesystem::path("scripts") / script
-        );
-        if (std::filesystem::is_regular_file(installedPath))
-            return installedPath.string();
-
-        return (std::filesystem::path(SCRIPT_PATH_) / script).string();
-    }
-
     /**
      * @brief run the qm engine
      *
      * @param simulationBox SimulationBox reference
      * @param physicalData PhysicalData reference
      * @param per periodicity of the system
+     * @param fileSettings Object containing file paths and settings required
+     * for the execution of the external QM program.
+     *
      */
     void ExternalQMRunner::run(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::Periodicity         per
+        molsys::Periodicity         per,
+        const FileSettings         &fileSettings
     )
     {
         if (per != molsys::Periodicity::XYZ &&
@@ -479,56 +487,59 @@ namespace QM
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
-            writeCoordsFile(simulationBox);
+            _writeCoordsFile(simulationBox);
         }
 
         if (settings::GeneralSettings::isHybridJobtype())
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
-            writePointChargeFile(simulationBox);
+            _writePointChargeFile(
+                simulationBox,
+                fileSettings.getPointChargeFileName()
+            );
         }
 
         const auto resultFiles = std::array{
-            settings::FileSettings::getQMForcesTempFileName(),
-            settings::FileSettings::getQMChargesTempFileName(),
-            settings::FileSettings::getStressTensorTempFileName()
+            fileSettings.getQMForcesTempFileName(),
+            fileSettings.getQMChargesTempFileName(),
+            fileSettings.getStressTensorTempFileName()
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 
         {
             auto _ =
                 scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
-            execute(simulationBox);
+            execute(simulationBox, fileSettings);
         }
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
-            _readForceFile(simulationBox, physicalData, _getQMSettings());
+            _readForceFile(
+                simulationBox,
+                physicalData,
+                _getQMSettings(),
+                fileSettings.getQMForcesTempFileName()
+            );
         }
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
-            _readChargeFile(simulationBox, _getQMSettings());
+            _readChargeFile(
+                simulationBox,
+                _getQMSettings(),
+                fileSettings.getQMChargesTempFileName()
+            );
         }
 
         if (per != molsys::Periodicity::NON_PERIODIC)
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
-            readStressTensor(simulationBox.getBox(), physicalData);
+            _readStressTensor(
+                simulationBox.getBox(),
+                physicalData,
+                fileSettings.getStressTensorTempFileName()
+            );
         }
-    }
-
-    std::string ExternalQMRunner::_resolveScriptPath(
-        const std::string_view script
-    ) const
-    {
-        if (_scriptPath.empty())
-            return std::string(script);
-
-        if (_scriptPath == SCRIPT_PATH_)
-            return bundledQMScriptPath(script);
-
-        return _scriptPath + std::string(script);
     }
 
     void ExternalQMRunner::_executeCommand(
@@ -551,7 +562,7 @@ namespace QM
         auto       shell         = std::string("sh");
         auto       shellFlag     = std::string("-c");
         auto       commandString = std::string(command);
-        const auto timeLimit     = QMSettings::getQMLoopTimeLimit();
+        const auto timeLimit     = _getQMSettings().getQMLoopTimeLimit();
 
         const pid_t pid = ::fork();
         if (pid < 0)
@@ -574,9 +585,9 @@ namespace QM
 
         ::setpgid(pid, pid);
 
-        // qm_loop_time_limit is given in s
-        const auto deadline = std::chrono::steady_clock::now() +
-                              std::chrono::duration<double>(timeLimit);
+        const auto deadline =
+            std::chrono::steady_clock::now() +
+            std::chrono::duration<double>(timeLimit.numerical_value_in(s));
 
         int status = 0;
         {
@@ -631,37 +642,13 @@ namespace QM
      ********************************/
 
     /**
-     * @brief getter for the script path
+     * @brief getter for the external QM settings
      *
-     * @return const std::string&
+     * @return const ExternalQMSettings&
      */
-    const std::string &ExternalQMRunner::getScriptPath() const
+    const ExternalQMSettings &ExternalQMRunner::_getExternalQMSettings() const
     {
-        return _scriptPath;
-    }
-
-    /**
-     * @brief getter for the singularity path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getSingularity() { return _singularity; }
-
-    /**
-     * @brief getter for the static build path
-     *
-     * @return  std::string
-     */
-    std::string ExternalQMRunner::getStaticBuild() { return _staticBuild; }
-
-    /**
-     * @brief setter for the script path
-     *
-     * @param scriptPath
-     */
-    void ExternalQMRunner::setScriptPath(const std::string_view &scriptPath)
-    {
-        _scriptPath = scriptPath;
+        return _externalQMSettings.get();
     }
 
 }   // namespace QM

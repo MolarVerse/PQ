@@ -28,11 +28,6 @@
 #include "hybridConfigurator.hpp"
 #include "output.hpp"
 
-namespace molsys
-{
-    class SimulationBox;   // forward declaration
-}   // namespace molsys
-
 namespace configurator
 {
     class HybridConfigurator;   // forward declaration
@@ -40,6 +35,8 @@ namespace configurator
 
 namespace out
 {
+    struct Frame;   // forward declaration
+
     /**
      * @brief TrajectoryOutput inherits from Output
      *
@@ -51,31 +48,23 @@ namespace out
        public:
         using Output::Output;
 
-        void writeHeader(const molsys::SimulationBox &simulationBox);
-        void writeXyz(
-            const molsys::SimulationBox &simulationBox,
-            size_t                       step,
-            bool                         includeMetadata
-        );
+        void writeHeader(const Frame &frame);
+        void writeXyz(const Frame &frame, size_t step, bool includeMetadata);
         void writeHybridCenterXyz(
             const configurator::HybridConfigurator &configurator,
             size_t                                  step,
             bool                                    includeMetadata
         );
         void writeVelocities(
-            const molsys::SimulationBox &simulationBox,
-            size_t                       step,
-            bool                         includeMetadata
+            const Frame &frame,
+            size_t       step,
+            bool         includeMetadata
         );
-        void writeForces(
-            const molsys::SimulationBox &simulationBox,
-            size_t                       step,
-            bool                         includeMetadata
-        );
+        void writeForces(const Frame &frame, size_t step, bool includeMetadata);
         void writeCharges(
-            const molsys::SimulationBox &simulationBox,
-            size_t                       step,
-            bool                         includeMetadata
+            const Frame &frame,
+            size_t       step,
+            bool         includeMetadata
         );
     };
 

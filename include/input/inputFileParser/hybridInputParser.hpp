@@ -49,15 +49,6 @@ namespace input
         void addPointChargeThicknessKey();
         void addSmoothingMethodKey();
         void addQMForceDistributionKey();
-
-        static std::vector<int> parseSelection(
-            const std::string &,
-            const std::string &
-        );
-        static std::vector<int> parseSelectionNoPython(
-            const std::string &,
-            const std::string &
-        );
     };
 
 }   // namespace input

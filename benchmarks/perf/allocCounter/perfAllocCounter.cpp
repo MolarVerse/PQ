@@ -40,6 +40,7 @@
 #include <charconv>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <string_view>
 
 // glibc exports its own allocators under these (reserved) names; they are the
@@ -65,6 +66,8 @@ namespace
         std::atomic<std::int64_t>  live{0};
         std::atomic<std::int64_t>  peak{0};
         std::atomic<bool>          active{false};
+        // every calloc of the process, also while not active
+        std::atomic<std::uint64_t> callocs{0};
     };
 
     // constant-initialised, so it is usable from the first malloc of the
@@ -144,6 +147,34 @@ namespace
         length = static_cast<std::size_t>(result.ptr - line.data());
     }
 
+    void doNothing() {}
+
+    // glibc keeps the first 32 exit handlers (atexit / __cxa_atexit, which the
+    // first use of every function-local static with a destructor registers) in
+    // a static block and callocs the next block of 32 only when it is full.
+    // Whether that calloc falls into the measured work therefore depends on how
+    // many static destructors the process registered before the marker, so
+    // adding or removing an unrelated static object would shift one allocation
+    // into or out of the measurement. Registering handlers until glibc has
+    // allocated a fresh block moves that allocation in front of the marker and
+    // leaves 31 free slots for the measured work.
+    void reserveExitHandlers()
+    {
+        constexpr std::size_t maxHandlers = 256;
+
+        auto &state = counters();
+
+        const auto before = state.callocs.load(std::memory_order_relaxed);
+
+        for (std::size_t i = 0; i < maxHandlers; ++i)
+        {
+            const auto _ = std::atexit(doNothing);
+
+            if (state.callocs.load(std::memory_order_relaxed) != before)
+                return;
+        }
+    }
+
     __attribute__((destructor)) void report()
     {
         auto &state = counters();
@@ -179,6 +210,8 @@ extern "C"
     {
         auto &state = counters();
 
+        reserveExitHandlers();
+
         state.calls.store(0, std::memory_order_relaxed);
         state.bytes.store(0, std::memory_order_relaxed);
         state.peak.store(
@@ -202,6 +235,7 @@ extern "C"
 
     void *calloc(std::size_t number, std::size_t size)
     {
+        counters().callocs.fetch_add(1, std::memory_order_relaxed);
         count(number * size);
         return track(__libc_calloc(number, size));
     }

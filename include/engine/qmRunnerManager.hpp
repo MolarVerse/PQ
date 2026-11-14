@@ -32,6 +32,7 @@ class MaceSettings;
 class FennolSettings;
 class DftbSettings;
 class XtbSettings;
+class ExternalQMSettings;
 
 namespace engine
 {
@@ -50,11 +51,12 @@ namespace engine
        public:
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createQMRunner(
-            const QMSettings     &qmSettings,
-            const MaceSettings   &maceSettings,
-            const FennolSettings &fennolSettings,
-            const DftbSettings   &dftbSettings,
-            const XtbSettings    &xtbSettings
+            const QMSettings         &qmSettings,
+            const MaceSettings       &maceSettings,
+            const FennolSettings     &fennolSettings,
+            const DftbSettings       &dftbSettings,
+            const XtbSettings        &xtbSettings,
+            const ExternalQMSettings &externalQMSettings
         );
         [[nodiscard]]
         static std::shared_ptr<QM::QMRunner> createAseDftbRunner(

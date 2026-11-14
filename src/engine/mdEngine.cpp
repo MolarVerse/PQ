@@ -86,6 +86,8 @@ namespace engine
             deleteTmpFiles();
         }
 
+        getEngineOutput().waitForFrames();
+
         timings::GlobalTimer::get().stopSimulationTimer();
 
         const auto elapsedTime =
@@ -205,12 +207,8 @@ namespace engine
 
         if (0 == getStep() % outputFreq)
         {
-            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-            getEngineOutput().writeVelFile(getSimulationBox(), effStep);
-            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
-            getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
             getEngineOutput()
-                .writeRstFile(getSimulationBox(), *_thermostat, effStep);
+                .writeFrame(getSimulationBox(), *_thermostat, effStep);
 
             getEngineOutput().writeVirialFile(
                 effStep,

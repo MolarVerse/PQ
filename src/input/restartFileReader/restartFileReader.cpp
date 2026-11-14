@@ -28,6 +28,7 @@
 #include "atomSection.hpp"
 #include "boxSection.hpp"
 #include "engine.hpp"
+#include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "noseHooverSection.hpp"
 #include "stepCountSection.hpp"
@@ -47,10 +48,12 @@ namespace input::restartFile
      *
      * @param filename
      * @param engine
+     * @param noseHooverSettings Reference to the NoseHooverSettings object
      */
     RestartFileReader::RestartFileReader(
-        const std::string &filename,
-        engine::Engine    &engine
+        const std::string  &filename,
+        engine::Engine     &engine,
+        NoseHooverSettings &noseHooverSettings
     )
         : _fileName(filename),
           _fp(filename),
@@ -58,7 +61,9 @@ namespace input::restartFile
           _atomSection(std::make_unique<AtomSection>())
     {
         _sections.push_back(std::make_unique<BoxSection>());
-        _sections.push_back(std::make_unique<NoseHooverSection>());
+        _sections.push_back(
+            std::make_unique<NoseHooverSection>(noseHooverSettings)
+        );
         _sections.push_back(std::make_unique<StepCountSection>());
     }
 
@@ -113,16 +118,27 @@ namespace input::restartFile
      * @brief wrapper function to construct a RestartFileReader object and call
      * the read function
      *
-     * @param engine
+     * @param engine Reference to the Engine object
+     * @param noseHooverSettings Reference to the NoseHooverSettings object
      */
-    void readRestartFile(engine::Engine &engine)
+    void readRestartFile(
+        engine::Engine     &engine,
+        NoseHooverSettings &noseHooverSettings
+    )
     {
-        const auto filename = settings::FileSettings::getStartFileName();
+        const auto &fileSettings = engine.getSettings().fileSettings;
+
+        if (!fileSettings.isStartFileNameSetByUser())
+            throw exc::InputFileException(
+                "\"start_file\" not set in input file"
+            );
+
+        const auto filename = fileSettings.getStartFileName();
 
         out::StdoutOutput::writeRead("Start File", filename);
         engine.getLogOutput().writeRead("Start File", filename);
 
-        RestartFileReader rstFileReader(filename, engine);
+        RestartFileReader rstFileReader(filename, engine, noseHooverSettings);
         rstFileReader.read();
     }
 

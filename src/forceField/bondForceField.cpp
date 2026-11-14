@@ -30,6 +30,7 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace ff
 {
@@ -91,10 +92,14 @@ namespace ff
 
         simulationBox.applyPBC(dPosition);
 
-        const auto distance      = norm(dPosition);
-        const auto deltaDistance = distance - _params.equilibrium;
+        const auto distance = norm(dPosition);
+        const auto deltaDistance =
+            distance - _params.equilibrium.numerical_value_in(angstrom);
 
-        auto forceMagnitude = -_params.forceConstant * deltaDistance;
+        auto forceMagnitude = -_params.forceConstant.numerical_value_in(
+                                  kcal_per_mol / angstrom / angstrom
+                              ) *
+                              deltaDistance;
 
         physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 

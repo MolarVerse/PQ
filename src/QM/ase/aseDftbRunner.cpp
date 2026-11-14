@@ -32,7 +32,7 @@ namespace QM
     /**
      * @brief Construct a new AseDftbRunner::AseDftbRunner object
      *
-     * @param settings The QM settings to configure the ASE DFTB runner with,
+     * @param qmSettings The QM settings to configure the ASE DFTB runner with,
      * including method-specific parameters such as the DFTB version and any
      * relevant computational options
      * @param dftbSettings The DFTB+ specific settings including the Slakos
@@ -42,10 +42,10 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseDftbRunner::AseDftbRunner(
-        const QMSettings   &settings,
+        const QMSettings   &qmSettings,
         const DftbSettings &dftbSettings
     )
-        : AseQMRunner(settings)
+        : AseQMRunner(qmSettings)
     {
         try
         {
@@ -56,7 +56,7 @@ namespace QM
 
             calculatorArgs["slako_dir"] = dftbSettings.getSlakosPath().c_str();
 
-            if (QMSettings::useDispersionCorr())
+            if (qmSettings.useDispersionCorr())
             {
                 calculatorArgs["Hamiltonian_Dispersion"]            = "DftD3{";
                 calculatorArgs["Hamiltonian_Dispersion_Damping_a1"] = "0.746";

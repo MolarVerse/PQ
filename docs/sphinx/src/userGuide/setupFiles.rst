@@ -156,18 +156,72 @@ Distances in ``SHAKE`` and ``DIST_CONSTRAINTS`` are given in Å. The
 :math:`\frac{\text{kcal}}{\text{mol Å}^2\text{ fs}}`.
 
 The optional fourth field in ``SHAKE`` entries is accepted for legacy input
-files but is not used by the reader. The optional ``*`` marker in the bonded
-sections marks a linker interaction. Topology atom indices are global atom
-indices from the current structure.
+files but is not used by the reader.
+
+Rules of the file
+=================
+
+    - **Atom indices start at 1** and count all atoms of the start file in the
+      order of the molecules (the global atom index). An index of 0 or larger
+      than the number of atoms is an error. The atoms of one line can belong to
+      different molecules.
+    - **The atoms of one line must differ**, otherwise the reader stops with an
+      error. ``DIST_CONSTRAINTS`` additionally requires lower_distance not
+      greater than upper_distance.
+    - **Only the first word of a header line is read.** Further words are
+      ignored, so headers with counts such as ``BONDS 220 330 50`` (written by
+      some tools) are accepted, but the numbers are not checked against the
+      number of lines.
+    - **Every section ends with** ``END`` (case-insensitive). A missing ``END``
+      is an error that names the line. Blank lines and ``#`` comments (also at
+      the end of a line) are allowed everywhere.
+    - **A section may appear more than once**; the entries are added in file
+      order. The sections need not be in any particular order.
+    - **The number of fields per line is fixed** (see the formats above). A
+      different number is an error that names the line and the expected number.
+    - **Types are resolved later.** A ``bond_type``, ``angle_type``,
+      ``dihedral_type`` or ``improper_type`` that has no entry in the
+      :ref:`parameterFile` is reported when the force field is set up, not while
+      the topology is read.
+
+The linker marker ``*``
+=======================
+
+The optional ``*`` at the end of a ``BONDS``, ``ANGLES`` or ``DIHEDRALS`` line
+marks a linker term. For such a term the Coulomb and non-Coulomb energy and
+forces of the pair of terminal atoms are corrected while the term is
+evaluated, and only if the distance of that pair is within the Coulomb cutoff.
+Use it for terms that connect two molecules (the amyloid example marks its
+MM-MM linker bonds this way). Any other extra word at the end of the line is an
+error.
 
 .. code-block:: text
 
+    # rigid water: the two O-H distances of a molecule (Å)
     SHAKE
-    1 2 1.0
+    1 2 0.9572
+    1 3 0.9572
     END
 
     BONDS
     1 2 1
+    13 15 1 *      # linker bond between two molecules
+    END
+
+    ANGLES
+    2 1 3 1
+    END
+
+    DIHEDRALS
+    1 2 3 4 1
+    END
+
+    IMPROPERS
+    1 2 3 4 1
+    END
+
+    DIST_CONSTRAINTS
+    1 2 0.9 1.1 10.0 0.0
     END
 
 .. Note::
@@ -208,8 +262,67 @@ The ``NONCOULOMBICS`` header may be followed by ``LJ``, ``BUCKINGHAM`` or
     | ``NONCOULOMBICS MORSE``: atom_type_1 atom_type_2 dissociation_energy well_width equilibrium_distance [cutoff]
 
 If the optional non-Coulombic cutoff is omitted or set to a negative value, the
-global Coulomb cutoff is used. Angle and phase values in the parameter file are
-read in degrees.
+global Coulomb cutoff is used.
+
+.. _parameterFileUnits:
+
+Units
+=====
+
+All values are plain numbers; the unit is fixed per column. Distances are in
+Å, energies in kcal/mol, angles and phases in degrees. Force constants are per
+squared length or squared angle, the angular one per radian (not per degree).
+
+.. list-table::
+    :header-rows: 1
+    :widths: 22 30 48
+
+    * - Section
+      - Column
+      - Unit and energy expression
+    * - ``TYPES``
+      - scale_14_coulomb, scale_14_vdw
+      - unitless factors between 0 and 1 (the first six columns are not used)
+    * - ``BONDS``
+      - equilibrium_distance
+      - Å
+    * -
+      - force_constant
+      - kcal/mol/Å², :math:`E = \frac{1}{2} k (r - r_0)^2`
+    * - ``ANGLES``
+      - equilibrium_angle
+      - degrees
+    * -
+      - force_constant
+      - kcal/mol/rad², :math:`E = \frac{1}{2} k (\alpha - \alpha_0)^2`
+    * - ``DIHEDRALS``, ``IMPROPERS``
+      - force_constant
+      - kcal/mol, :math:`E = k \, (1 + \cos(n \varphi + \delta))`
+    * -
+      - periodicity :math:`n`
+      - unitless, not negative
+    * -
+      - phase :math:`\delta`
+      - degrees
+    * - ``J_COUPLINGS``
+      - j_0, force_constant, a, b, c
+      - read as plain numbers; the j-coupling term is not part of the force
+        calculation yet
+    * -
+      - phase
+      - degrees
+    * - ``NONCOULOMBICS LJ``
+      - c6, c12
+      - kcal/mol Å\ :sup:`6` and kcal/mol Å\ :sup:`12`, :math:`E = c_{12}/r^{12} + c_6/r^6` (the sign of the attractive part is part of c6)
+    * - ``NONCOULOMBICS BUCKINGHAM``
+      - a, d_rho, c6
+      - kcal/mol, 1/Å and kcal/mol Å\ :sup:`6`, :math:`E = a \, e^{d_\rho r} + c_6/r^6`
+    * - ``NONCOULOMBICS MORSE``
+      - dissociation_energy, well_width, equilibrium_distance
+      - kcal/mol, 1/Å and Å, :math:`E = D \, (1 - e^{-w (r - r_0)})^2`
+    * - ``NONCOULOMBICS``
+      - cutoff
+      - Å (negative or omitted: the global Coulomb cutoff)
 
 .. code-block:: text
 

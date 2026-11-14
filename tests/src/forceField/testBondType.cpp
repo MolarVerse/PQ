@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include "bondType.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests operator== for BondType
@@ -32,23 +33,38 @@ TEST(TestBondType, operatorEqual)
 {
     ff::BondType bondType1(
         BondId{0},
-        BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
+        BondParams{
+            .equilibrium   = 1.0 * angstrom,
+            .forceConstant = 2.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
     ff::BondType bondType2(
         BondId{0},
-        BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
+        BondParams{
+            .equilibrium   = 1.0 * angstrom,
+            .forceConstant = 2.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
     ff::BondType bondType3(
         BondId{1},
-        BondParams{.equilibrium = 1.0, .forceConstant = 2.0}
+        BondParams{
+            .equilibrium   = 1.0 * angstrom,
+            .forceConstant = 2.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
     ff::BondType bondType4(
         BondId{0},
-        BondParams{.equilibrium = 2.0, .forceConstant = 2.0}
+        BondParams{
+            .equilibrium   = 2.0 * angstrom,
+            .forceConstant = 2.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
     ff::BondType bondType5(
         BondId{0},
-        BondParams{.equilibrium = 1.0, .forceConstant = 3.0}
+        BondParams{
+            .equilibrium   = 1.0 * angstrom,
+            .forceConstant = 3.0 * kcal_per_mol / angstrom / angstrom
+        }
     );
 
     EXPECT_TRUE(bondType1 == bondType2);

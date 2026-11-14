@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include "dihedralType.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests operator== for DihedralType
@@ -33,49 +34,49 @@ TEST(TestDihedralType, operatorEqual)
     ff::DihedralType dihedralType1(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 2.0,
-            .phaseShift    = 3.0
+            .phaseShift    = 3.0 * rad
         }
     );
     ff::DihedralType dihedralType2(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 2.0,
-            .phaseShift    = 3.0
+            .phaseShift    = 3.0 * rad
         }
     );
     ff::DihedralType dihedralType3(
         DihedralId{1},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 2.0,
-            .phaseShift    = 3.0
+            .phaseShift    = 3.0 * rad
         }
     );
     ff::DihedralType dihedralType4(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 2.0,
+            .forceConstant = 2.0 * kcal_per_mol,
             .frequency     = 2.0,
-            .phaseShift    = 3.0
+            .phaseShift    = 3.0 * rad
         }
     );
     ff::DihedralType dihedralType5(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 3.0,
-            .phaseShift    = 3.0
+            .phaseShift    = 3.0 * rad
         }
     );
     ff::DihedralType dihedralType6(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0,
+            .forceConstant = 1.0 * kcal_per_mol,
             .frequency     = 2.0,
-            .phaseShift    = 4.0
+            .phaseShift    = 4.0 * rad
         }
     );
 

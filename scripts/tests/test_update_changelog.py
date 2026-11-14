@@ -298,6 +298,46 @@ class ChangelogTests(unittest.TestCase):
             self.assertIn("- Enforce changelog audiences.", dev_text)
             self.assertFalse(developer_fragment.exists())
 
+    def test_release_rejects_a_fragment_already_in_an_earlier_release(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            user_changelog = root / "CHANGELOG.md"
+            dev_changelog = root / "DEV-CHANGELOG.md"
+            changes_dir = root / "changes"
+            (changes_dir / "user").mkdir(parents=True)
+            user_text = (
+                "# Changelog\n\n"
+                "## Next Release\n\n"
+                "<!-- insertion marker -->\n"
+                "## [v1.0.1](release-url) - 2025-01-02\n\n"
+                "### Bug Fixes\n\n"
+                "- Fix MACE startup.\n"
+            )
+            user_changelog.write_text(user_text, encoding="utf-8")
+            dev_changelog.write_text(
+                "# Developer Changelog\n\n## Next Release\n\n",
+                encoding="utf-8",
+            )
+            fragment = changes_dir / "user" / "bugfix.mace.md"
+            fragment.write_text("- Fix MACE startup.\n", encoding="utf-8")
+
+            with (
+                mock.patch.object(CHANGELOG, "USER_CHANGELOG", user_changelog),
+                mock.patch.object(CHANGELOG, "DEV_CHANGELOG", dev_changelog),
+                mock.patch.object(CHANGELOG, "CHANGES_DIR", changes_dir),
+            ):
+                for run in (
+                    CHANGELOG.check_release_changelogs,
+                    lambda: CHANGELOG.update_changelogs("v1.0.2"),
+                ):
+                    with self.assertRaisesRegex(
+                        SystemExit, "changes/user/bugfix.mace.md"
+                    ):
+                        run()
+
+            self.assertEqual(user_text, user_changelog.read_text(encoding="utf-8"))
+            self.assertTrue(fragment.exists())
+
 
 if __name__ == "__main__":
     unittest.main()

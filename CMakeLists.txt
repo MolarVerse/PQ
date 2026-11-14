@@ -1,7 +1,7 @@
 # *********************
 # minimum cmake version
 # *********************
-cmake_minimum_required(VERSION 3.20...3.26)
+cmake_minimum_required(VERSION 3.25...3.26)
 
 # ************************************
 # for generating compile_commands.json
@@ -41,12 +41,13 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 if(PQ_COMPILER_IS_GNU)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13.0)
-        message(FATAL_ERROR "Insufficient gcc version (need >= 13.0)")
+    # the same limit as external/mstd, which is part of every build
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14.0)
+        message(FATAL_ERROR "Insufficient gcc version (need >= 14.0)")
     endif()
 elseif(PQ_COMPILER_IS_CLANG)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16.0)
-        message(FATAL_ERROR "Insufficient clang version (need >= 16.0)")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 20.0)
+        message(WARNING "Only clang >= 20 is tested (the CI builds with clang 20)")
     endif()
 else()
     message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GNU and Clang.")

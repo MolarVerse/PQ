@@ -24,113 +24,111 @@
 #define SETTINGS__FILE_SETTINGS_HPP
 
 #include <string>
-#include <string_view>
 
 #include "defaults.hpp"
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @class FileSettings
+ *
+ * @brief static class to store settings of the files
+ *
+ */
+class FileSettings
 {
-    /**
-     * @class FileSettings
-     *
-     * @brief static class to store settings of the files
-     *
-     */
-    class FileSettings
-    {
-       private:
-        static inline std::string _molDescriptorFile =
-            defaults::MOLDESCRIPTOR_FILE_DEFAULT;
-
-        static inline std::string _guffDatFile = defaults::GUFF_FILE_DEFAULT;
-
-        static inline std::string _topologyFile;
-        static inline std::string _parameterFile;
-        static inline std::string _intraNonBondedFile;
-        static inline std::string _startFile;
-        static inline std::string _rpmdStartFile;
-        static inline std::string _mShakeFile;
-        static inline std::string _dftbFile = defaults::DFTB_FILE_DEFAULT;
-        static inline std::string _tmFile   = defaults::TM_FILE_DEFAULT;
-        static inline std::string _pointChargeFile =
-            defaults::POINTCHARGE_FILE_DEFAULT;
-
-        static inline std::string _qmForcesTempFile =
-            defaults::QM_FORCES_TEMP_FILE_DEFAULT;
-        static inline std::string _qmChargesTempFile =
-            defaults::QM_CHARGES_TEMP_FILE_DEFAULT;
-        static inline std::string _stressTensorTempFile =
-            defaults::STRESS_TENSOR_TEMP_FILE_DEFAULT;
-
-        static bool inline _isTopologyFileSet       = false;
-        static bool inline _isParameterFileSet      = false;
-        static bool inline _isIntraNonBondedFileSet = false;
-        static bool inline _isRPMDStartFileSet      = false;
-        static bool inline _isMShakeFileSet         = false;
-        static bool inline _isDFTBFileSet           = false;
-
-       public:
-        FileSettings()  = default;
-        ~FileSettings() = default;
-
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] static std::string getMolDescriptorFileName();
-        [[nodiscard]] static std::string getGuffDatFileName();
-        [[nodiscard]] static std::string getTopologyFileName();
-        [[nodiscard]] static std::string getParameterFilename();
-        [[nodiscard]] static std::string getIntraNonBondedFileName();
-        [[nodiscard]] static std::string getStartFileName();
-        [[nodiscard]] static std::string getRingPolymerStartFileName();
-        [[nodiscard]] static std::string getMShakeFileName();
-        [[nodiscard]] static std::string getDFTBFileName();
-        [[nodiscard]] static std::string getTMFileName();
-        [[nodiscard]] static std::string getPointChargeFileName();
-
-        [[nodiscard]] static std::string getQMForcesTempFileName();
-        [[nodiscard]] static std::string getQMChargesTempFileName();
-        [[nodiscard]] static std::string getStressTensorTempFileName();
-
-        [[nodiscard]] static bool isTopologyFileNameSet();
-        [[nodiscard]] static bool isParameterFileNameSet();
-        [[nodiscard]] static bool isIntraNonBondedFileNameSet();
-        [[nodiscard]] static bool isRingPolymerStartFileNameSet();
-        [[nodiscard]] static bool isMShakeFileNameSet();
-        [[nodiscard]] static bool isDFTBFileNameSet();
-
-        /********************
-         * standard setters *
-         ********************/
-
-        static void setMolDescriptorFileName(const std::string_view& name);
-        static void setGuffDatFileName(const std::string_view& name);
-        static void setTopologyFileName(const std::string_view& name);
-        static void setParameterFileName(const std::string_view& name);
-        static void setIntraNonBondedFileName(const std::string_view& name);
-        static void setStartFileName(const std::string_view& name);
-        static void setRingPolymerStartFileName(const std::string_view& name);
-        static void setMShakeFileName(const std::string_view& name);
-        static void setDFTBFileName(const std::string_view& name);
-        static void setTMFileName(const std::string_view& name);
-        static void setPointChargeFileName(const std::string_view& name);
-
-        static void setIsTopologyFileNameSet();
-        static void setIsParameterFileNameSet();
-        static void setIsIntraNonBondedFileNameSet();
-        static void setIsRingPolymerStartFileNameSet();
-        static void setIsMShakeFileNameSet();
-        static void setIsDFTBFileNameSet();
-
-        static void unsetIsTopologyFileNameSet();
-        static void unsetIsParameterFileNameSet();
-        static void unsetIsIntraNonBondedFileNameSet();
-        static void unsetIsRingPolymerStartFileNameSet();
-        static void unsetIsMShakeFileNameSet();
-        static void unsetIsDFTBFileNameSet();
+   private:
+    Setting<std::string, "MolDescriptorFile"> _molDescriptorFile{
+        defaults::MOLDESCRIPTOR_FILE_DEFAULT
     };
 
-}   // namespace settings
+    Setting<std::string, "GuffDatFile"> _guffDatFile{
+        defaults::GUFF_FILE_DEFAULT
+    };
+
+    Setting<std::string, "TopologyFile">       _topologyFile;
+    Setting<std::string, "ParameterFile">      _parameterFile;
+    Setting<std::string, "IntraNonBondedFile"> _intraNonBondedFile;
+
+    Setting<std::string, "StartFile">     _startFile;
+    Setting<std::string, "RPMDStartFile"> _rpmdStartFile;
+
+    Setting<std::string, "DFTBFile"> _dftbFile{defaults::DFTB_FILE_DEFAULT};
+    Setting<std::string, "TMFile">   _tmFile{defaults::TM_FILE_DEFAULT};
+
+    Setting<std::string, "OrcaFile"> _orcaFile{defaults::ORCA_FILE_DEFAULT};
+    Setting<std::string, "PointChargeFile"> _pointChargeFile{
+        defaults::POINTCHARGE_FILE_DEFAULT
+    };
+    Setting<std::string, "QMForcesTempFile"> _qmForcesTempFile{
+        defaults::QM_FORCES_TEMP_FILE_DEFAULT
+    };
+    Setting<std::string, "QMChargesTempFile"> _qmChargesTempFile{
+        defaults::QM_CHARGES_TEMP_FILE_DEFAULT
+    };
+    Setting<std::string, "StressTensorTempFile"> _stressTensorTempFile{
+        defaults::STRESS_TENSOR_TEMP_FILE_DEFAULT
+    };
+
+    Setting<std::string, "MShakeFile"> _mShakeFile;
+
+   public:
+    FileSettings()  = default;
+    ~FileSettings() = default;
+
+    /********************
+     * standard getters *
+     ********************/
+
+    [[nodiscard]] const std::string& getMolDescriptorFileName() const;
+    [[nodiscard]] const std::string& getGuffDatFileName() const;
+
+    [[nodiscard]] const std::string& getTopologyFileName() const;
+    [[nodiscard]] const std::string& getParameterFileName() const;
+    [[nodiscard]] const std::string& getIntraNonBondedFileName() const;
+
+    [[nodiscard]] const std::string& getStartFileName() const;
+    [[nodiscard]] const std::string& getRingPolymerStartFileName() const;
+
+    [[nodiscard]] const std::string& getDFTBFileName() const;
+    [[nodiscard]] const std::string& getTMFileName() const;
+
+    [[nodiscard]] const std::string& getMShakeFileName() const;
+
+    [[nodiscard]] const std::string& getOrcaFileName() const;
+    [[nodiscard]] const std::string& getPointChargeFileName() const;
+    [[nodiscard]] const std::string& getQMForcesTempFileName() const;
+    [[nodiscard]] const std::string& getQMChargesTempFileName() const;
+    [[nodiscard]] const std::string& getStressTensorTempFileName() const;
+
+    [[nodiscard]] bool isTopologyFileNameSetByUser() const;
+    [[nodiscard]] bool isParameterFileNameSetByUser() const;
+    [[nodiscard]] bool isIntraNonBondedFileNameSetByUser() const;
+
+    [[nodiscard]] bool isStartFileNameSetByUser() const;
+    [[nodiscard]] bool isRingPolymerStartFileNameSetByUser() const;
+
+    [[nodiscard]] bool isMShakeFileNameSetByUser() const;
+
+    /********************
+     * standard setters *
+     ********************/
+
+    void setMolDescriptorFileNameByUser(const std::string& name);
+    void setGuffDatFileNameByUser(const std::string& name);
+
+    void setTopologyFileNameByUser(const std::string& name);
+    void setParameterFileNameByUser(const std::string& name);
+    void setIntraNonBondedFileNameByUser(const std::string& name);
+
+    void setStartFileNameByUser(const std::string& name);
+    void setRingPolymerStartFileNameByUser(const std::string& name);
+
+    void setDFTBFileNameByUser(const std::string& name);
+    void setTMFileNameByUser(const std::string& name);
+
+    void setMShakeFileNameByUser(const std::string& name);
+    void setOrcaFileNameByUser(const std::string& name);
+    void setPointChargeFileNameByUser(const std::string& name);
+};
 
 #endif   // SETTINGS__FILE_SETTINGS_HPP

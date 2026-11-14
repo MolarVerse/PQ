@@ -33,11 +33,13 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+class NoseHooverSettings;   // forward declaration
+
 namespace input::restartFile
 {
     class RestartFileSection;   // forward declaration
 
-    void readRestartFile(engine::Engine &);
+    void readRestartFile(engine::Engine &, NoseHooverSettings &);
 
     /**
      * @class RestartFileReader
@@ -56,7 +58,11 @@ namespace input::restartFile
         std::vector<std::unique_ptr<RestartFileSection>> _sections;
 
        public:
-        RestartFileReader(const std::string &, engine::Engine &);
+        RestartFileReader(
+            const std::string &,
+            engine::Engine &,
+            NoseHooverSettings &
+        );
 
         void                read();
         RestartFileSection *determineSection(

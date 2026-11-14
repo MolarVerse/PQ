@@ -44,6 +44,7 @@ class OutputFileSettings
 
     Setting<bool>        _overwriteOutputFiles{false};
     Setting<bool>        _includeOutputMetadata{false};
+    Setting<bool>        _asyncOutput{true};
     Setting<std::string> _filePrefix;
 
     Setting<std::string> _energyFile{DefaultFiles::energyFile};
@@ -114,6 +115,7 @@ class OutputFileSettings
 
     void setOverwriteOutputFilesByUser(bool);
     void setIncludeOutputMetadataByUser(bool);
+    void setAsyncOutputByUser(bool);
 
     /***************************
      * standard getter methods *
@@ -152,6 +154,7 @@ class OutputFileSettings
 
     [[nodiscard]] bool getOverwriteOutputFiles() const;
     [[nodiscard]] bool getIncludeOutputMetadata() const;
+    [[nodiscard]] bool getAsyncOutput() const;
 
    private:
     [[nodiscard]] std::string _determineMostCommonPrefix() const;

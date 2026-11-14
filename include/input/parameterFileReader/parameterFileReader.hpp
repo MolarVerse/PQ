@@ -76,9 +76,10 @@ namespace input::parameterFile
 
         void setFilename(const std::string_view &filename);
 
-        [[nodiscard]] std::vector<std::unique_ptr<ParameterFileSection>> &getParameterFileSections(
-        );
-        [[nodiscard]] const std::string &getFilename() const;
+        [[nodiscard]]
+        std::vector<
+            std::unique_ptr<ParameterFileSection>> &getParameterFileSections();
+        [[nodiscard]] const std::string            &getFilename() const;
     };
 
 }   // namespace input::parameterFile

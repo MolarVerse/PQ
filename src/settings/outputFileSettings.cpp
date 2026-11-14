@@ -487,6 +487,17 @@ void OutputFileSettings::setIncludeOutputMetadataByUser(bool includeMetadata)
     _includeOutputMetadata.setByUser(includeMetadata);
 }
 
+/**
+ * @brief sets if MD trajectory and restart files are written on a separate
+ * thread
+ *
+ * @param asyncOutput
+ */
+void OutputFileSettings::setAsyncOutputByUser(bool asyncOutput)
+{
+    _asyncOutput.setByUser(asyncOutput);
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -762,3 +773,11 @@ bool OutputFileSettings::getIncludeOutputMetadata() const
 {
     return _includeOutputMetadata.get();
 }
+
+/**
+ * @brief returns if MD trajectory and restart files are written on a separate
+ * thread
+ *
+ * @return bool
+ */
+bool OutputFileSettings::getAsyncOutput() const { return _asyncOutput.get(); }

@@ -1,5 +1,6 @@
 add_library(output
     output.cpp
+    frame.cpp
     outputMessages.cpp
 
     energyOutput.cpp

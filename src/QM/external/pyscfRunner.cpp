@@ -40,7 +40,9 @@ namespace QM
      *
      * @param simulationBox Simulation box containing molecules and atoms.
      */
-    void PySCFRunner::writeCoordsFile(molsys::SimulationBox &simulationBox)
+    void PySCFRunner::_writeCoordsFile(
+        const molsys::SimulationBox &simulationBox
+    )
     {
         const std::string fileName = "coords.xyz";
         std::ofstream     coordsFile(fileName);
@@ -65,10 +67,12 @@ namespace QM
      * @brief executes the qm script of the external program
      *
      */
-    void PySCFRunner::execute(molsys::SimulationBox & /*simBox*/)
+    void PySCFRunner::execute(
+        const molsys::SimulationBox & /*simBox*/,
+        const FileSettings & /*fileSettings*/
+    )
     {
-        const auto scriptFileName =
-            _resolveScriptPath(QMSettings::getQMScript());
+        const auto scriptFileName = _getExternalQMSettings().getQMScript();
 
         if (!mstd::File(scriptFileName).exists())
         {

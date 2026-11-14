@@ -191,14 +191,12 @@ namespace setup
                 throw exc::UserInputException(
                     std::format(
                         "A water type molecule is included in the bond list of "
-                        "the "
-                        "topology file \"{}\" at entry number {}. Requesting "
-                        "the "
-                        "use of the \"{}\" intramolecular water type model "
-                        "expects "
-                        "the molecules of this moltype not to appear in the "
-                        "topology file.",
-                        settings::FileSettings::getTopologyFileName(),
+                        "the topology file \"{}\" at entry number {}. "
+                        "Requesting the use of the \"{}\" intramolecular water "
+                        "type model expects the molecules of this moltype not "
+                        "to appear in the topology file.",
+                        _engine.getSettings().fileSettings.getTopologyFileName(
+                        ),
                         bondIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()
@@ -236,7 +234,8 @@ namespace setup
                         "expects the molecules of this moltype not to appear "
                         "in "
                         "the topology file.",
-                        settings::FileSettings::getTopologyFileName(),
+                        _engine.getSettings().fileSettings.getTopologyFileName(
+                        ),
                         angleIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()

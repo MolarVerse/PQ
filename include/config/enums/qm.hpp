@@ -40,6 +40,7 @@ enum class QMMethod : std::uint8_t;
     X(ASE_XTB)            \
     X(PYSCF)              \
     X(TURBOMOLE)          \
+    X(ORCA)               \
     X(MACE)               \
     X(FENNOL)
 

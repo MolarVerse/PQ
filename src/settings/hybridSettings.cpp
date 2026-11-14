@@ -23,7 +23,15 @@
 #include "hybridSettings.hpp"
 
 #include <cstddef>
+#include <format>
 #include <vector>
+
+#include "exceptions.hpp"
+#include "fileSettings.hpp"
+
+#ifdef PYTHON_ENABLED
+#include "selection.hpp"
+#endif
 
 namespace settings
 {
@@ -47,6 +55,70 @@ namespace settings
     )
     {
         _innerRegionCenter = innerRegionCenter;
+    }
+
+    /**
+     * @brief set a pending selection expression for the innerRegionCenter
+     *
+     * @details the expression is resolved to atom indices in finalize(),
+     * because the start and moldescriptor files might not be parsed yet
+     *
+     * @param expression
+     */
+    void HybridSettings::setInnerRegionCenterExpression(
+        const std::string &expression
+    )
+    {
+        _innerRegionCenterExpression = expression;
+    }
+
+    /**
+     * @brief resolve the pending innerRegionCenter selection expression
+     *
+     * @param fileSettings
+     *
+     * @throw exc::InputFileException if the selection is invalid or empty
+     */
+    void HybridSettings::finalize(const FileSettings &fileSettings)
+    {
+        if (!_innerRegionCenterExpression.has_value())
+            return;
+
+        const auto expression = *_innerRegionCenterExpression;
+        _innerRegionCenterExpression.reset();
+
+#ifdef PYTHON_ENABLED
+        auto selection = pq_python::select(
+            expression,
+            fileSettings.getStartFileName(),
+            fileSettings.getMolDescriptorFileName()
+        );
+
+        std::ranges::sort(selection);
+        const auto [first, last] = std::ranges::unique(selection);
+        selection.erase(first, last);
+
+        if (selection.empty() || selection.front() < 0)
+            throw exc::InputFileException(
+                std::format(
+                    "Invalid selection \"{}\" for \"inner_region_center\": "
+                    "the selection is empty or contains negative atom indices",
+                    expression
+                )
+            );
+
+        _innerRegionCenter =
+            std::vector<size_t>(selection.begin(), selection.end());
+#else
+        static_cast<void>(fileSettings);
+        throw exc::InputFileException(
+            std::format(
+                "Selection \"{}\" for \"inner_region_center\" requires "
+                "PQ to be built with Python bindings",
+                expression
+            )
+        );
+#endif
     }
 
     /**

@@ -23,9 +23,12 @@
 #ifndef INPUT__RESTART_FILE_READER__NOSE_HOOVER_SECTION_HPP
 #define INPUT__RESTART_FILE_READER__NOSE_HOOVER_SECTION_HPP
 
+#include <mstd/types.hpp>
 #include <string>
 
 #include "restartFileSection.hpp"
+
+class NoseHooverSettings;
 
 namespace input::restartFile
 {
@@ -37,7 +40,11 @@ namespace input::restartFile
      */
     class NoseHooverSection : public RestartFileSection
     {
+        mstd::Ref<NoseHooverSettings> _noseHooverSettings;
+
        public:
+        explicit NoseHooverSection(NoseHooverSettings &noseHooverSettings);
+
         void process(
             std::vector<std::string> &lineElements,
             engine::Engine & /*engine*/,

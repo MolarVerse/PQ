@@ -23,7 +23,7 @@
 #ifndef QM__EXTERNAL__EXTERNAL_QM_RUNNER_HPP
 #define QM__EXTERNAL__EXTERNAL_QM_RUNNER_HPP
 
-#include <string>
+#include <mstd/types.hpp>
 #include <string_view>
 
 #include "qmRunner.hpp"
@@ -41,10 +41,11 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+class ExternalQMSettings;   // forward declaration
+class FileSettings;         // forward declaration
+
 namespace QM
 {
-    [[nodiscard]] std::string bundledQMScriptPath(std::string_view script);
-
     /**
      * @brief ExternalQMRunner inherits from QMRunner
      *
@@ -52,65 +53,68 @@ namespace QM
     class ExternalQMRunner : public QMRunner
     {
        private:
-        std::string            _scriptPath  = SCRIPT_PATH_;
-        constexpr static auto *_singularity = SINGULARITY_;
-        constexpr static auto *_staticBuild = STATIC_BUILD_;
+        mstd::ConstRef<ExternalQMSettings> _externalQMSettings;
 
        public:
-        using QMRunner::QMRunner;
+        explicit ExternalQMRunner(
+            const QMSettings         &qmSettings,
+            const ExternalQMSettings &externalQMSettings
+        );
         ~ExternalQMRunner() override = default;
 
         void run(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::Periodicity         per
+            molsys::Periodicity         per,
+            const FileSettings         &fileSettings
         ) override;
 
-        virtual void execute(molsys::SimulationBox &) = 0;
-
-        virtual void writeCoordsFile(molsys::SimulationBox &) = 0;
-
-        virtual void writePointChargeFile(
-            molsys::SimulationBox & /*simBox*/
-        )
-        {
-        }
-
-        virtual void readStressTensor(
-            molsys::Box & /*simBox*/,
-            physicalData::PhysicalData & /*physData*/
-        )
-        {
-        }
+        virtual void execute(
+            const molsys::SimulationBox &,
+            const FileSettings &
+        ) = 0;
 
         /*******************************
          * standard getter and setters *
          *******************************/
 
-        [[nodiscard]] const std::string &getScriptPath() const;
-        [[nodiscard]] static std::string getSingularity();
-        [[nodiscard]] static std::string getStaticBuild();
-
-        void setScriptPath(const std::string_view &scriptPath);
-
        protected:
-        [[nodiscard]]
-        std::string _resolveScriptPath(std::string_view script) const;
-
         virtual void _executeCommand(
             std::string_view command,
             std::string_view program
         ) const;
 
+        [[nodiscard]]
+        const ExternalQMSettings &_getExternalQMSettings() const;
+
+        virtual void _writeCoordsFile(const molsys::SimulationBox &) = 0;
+
+        virtual void _writePointChargeFile(
+            const molsys::SimulationBox & /*simBox*/,
+            const std::string & /*pointChargeFileName*/
+        )
+        {
+        }
+
+        virtual void _readStressTensor(
+            const molsys::Box & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/,
+            const std::string & /*stressFileName*/
+        )
+        {
+        }
+
        private:
         static void _readForceFile(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const QMSettings           &qmSettings
+            const QMSettings           &qmSettings,
+            const std::string          &forceFileName
         );
         static void _readChargeFile(
             molsys::SimulationBox &simulationBox,
-            const QMSettings      &qmSettings
+            const QMSettings      &qmSettings,
+            const std::string     &chargeFileName
         );
 
         friend class ::ExternalQMRunnerTest;   // for testing private methods

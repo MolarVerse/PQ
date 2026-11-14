@@ -37,7 +37,7 @@ namespace QM
     /**
      * @brief Construct a new AseMaceRunner::AseMaceRunner object
      *
-     * @param settings The QM settings to configure the ASE Mace runner with,
+     * @param qmSettings The QM settings to configure the ASE Mace runner with,
      * including method-specific parameters such as the model type, model path,
      * floating-point precision, and any relevant computational options
      * @param maceSettings The MACE-specific settings including model type,
@@ -47,10 +47,10 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseMaceRunner::AseMaceRunner(
-        const QMSettings   &settings,
+        const QMSettings   &qmSettings,
         const MaceSettings &maceSettings
     )
-        : AseQMRunner(settings)
+        : AseQMRunner(qmSettings)
     {
         const auto enableCueq = maceSettings.getMaceMode() == MaceMode::FAST;
 
@@ -69,7 +69,7 @@ namespace QM
 
             calculatorArgs["model"] = model.c_str();
             calculatorArgs["dispersion"] =
-                pybind11::bool_(QMSettings::useDispersionCorr());
+                pybind11::bool_(qmSettings.useDispersionCorr());
             calculatorArgs["enable_cueq"] = pybind11::bool_(enableCueq);
             calculatorArgs["default_dtype"] =
                 settings::GeneralSettings::getFloatingPointPybindString();

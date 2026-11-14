@@ -7,6 +7,31 @@ implementation changes are documented in
 ## Next Release
 
 <!-- insertion marker -->
+## [v1.1.0](https://github.com/MolarVerse/PQ/releases/tag/v1.1.0) - 2026-11-14
+
+### New Features
+
+- Add an external ORCA QM runner for pure QM as well as QM/MM hybrid type calculations.
+- Add Python versions of the Turbomole drivers (`turbomole_hf_dft.py`, `turbomole_ridft.py`, `turbomole_ricc2.py`); they write the same `qm_forces` and `qm_charges` as the Perl scripts.
+
+### Bug Fixes
+
+- The restart files (also for ring polymer MD) are written to a temporary file and then renamed, so a crash or kill while writing no longer leaves a broken restart file.
+- `inner_region_center` selections using the selection grammar (e.g. `resname SOL`) no longer depend on the position of `start_file`/`moldescriptor_file` in the input file; they are resolved after the whole input file has been read.
+- Fix undefined behaviour when the input file parsers are destroyed: the base class InputFileParser had no virtual destructor but the parsers are owned through a pointer to it (valgrind: mismatched new/delete size).
+- `cmake --install` now also installs `libconfig_headers.so`, so an installed `PQ` starts without a missing-library error.
+- Fix the `malondialdehyde_tm-rpmd` example, which referred to the removed Turbomole script `turbomole_rimp2` instead of `turbomole_ricc2`.
+- Turbomole drivers now stop with an error when no SCF energy is found, instead of passing an empty energy to PQ.
+
+### Performance
+
+- MD runs write the trajectory (xyz, velocity, force, charge) and restart files on a separate thread, so the MD loop no longer waits for text formatting. Output files are unchanged. The new keyword `async_output = false` turns this off.
+
+### Documentation
+
+- Document the units and energy expressions of every column of the parameter file.
+- Improve the topology file documentation: index base, rules of the file (END, repeated sections, header words, field counts), when parameter types are resolved, the meaning of the linker marker and a complete example.
+
 ## [v1.0.2](https://github.com/MolarVerse/PQ/releases/tag/v1.0.2) - 2026-11-08
 
 ### New Features
@@ -19,7 +44,6 @@ implementation changes are documented in
 - Fix Ctrl-C not stopping PQ builds with embedded Python (the default with ASE); MD and optimizer runs now stop at the next step.
 - Fix ASE-DFTB+ with 3ob slakos not actually applying third order DFTB (including the 3ob Hubbard derivatives) by default, although the setup output reported it as enabled; results for such inputs change.
 - Fix garbage in the momentum columns of the first energy and momentum output line: the PhysicalData that holds the averages did not initialise its momenta, angular momenta, virial and stress tensors, so the first line showed whatever the memory held (sometimes inf).
-- Fix MACE runs failing at startup with `module 'mace.calculators' has no attribute 'MACE_OFF'`; PQ again passes the MACE calculator and model names (e.g. `mace_off`, `small-0b`).
 - Manostat position and velocity scaling for triclinic boxes with fixed angles now transforms the scaling tensor from cell-axis to Cartesian space once per step instead of per molecule and atom, which avoids redundant transformations.
 
 ### Performance

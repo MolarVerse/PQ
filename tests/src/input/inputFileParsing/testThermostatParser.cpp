@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>
 
+#include <mstd/units/wave_number.hpp>
 #include <string>
 #include <vector>
 
@@ -43,7 +44,8 @@ TEST_F(TestInputFileReader, testParseTemperature)
     EXPECT_EQ(ThermostatSettings::isTemperatureSet(), false);
 
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp"));
     const auto& parseFunc = funcMap.at("temp");
@@ -81,7 +83,8 @@ TEST_F(TestInputFileReader, testParseTemperature)
 TEST_F(TestInputFileReader, testParseRelaxationTime)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("t_relaxation"));
     const auto& parseFunc = funcMap.at("t_relaxation");
@@ -134,7 +137,8 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
 TEST_F(TestInputFileReader, testParseThermostat)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("thermostat"));
     const auto& parseFunc = funcMap.at("thermostat");
@@ -204,7 +208,8 @@ TEST_F(TestInputFileReader, testParseThermostat)
 TEST_F(TestInputFileReader, testParseFriction)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("friction"));
     const auto& parseFunc = funcMap.at("friction");
@@ -245,14 +250,15 @@ TEST_F(TestInputFileReader, testParseFriction)
 TEST_F(TestInputFileReader, testParseChainLength)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nh_chain_length"));
     const auto& parseFunc = funcMap.at("nh_chain_length");
 
     std::vector<std::string> lineElements = {"nh-chain-length", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getNoseHooverChainLength(), 10);
+    EXPECT_EQ(nhSettings.getNoseHooverChainLength(), 10);
 
     _clearParser(parser);
 
@@ -283,14 +289,18 @@ TEST_F(TestInputFileReader, testParseChainLength)
 TEST_F(TestInputFileReader, testParseCouplingFrequency)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("coupling_frequency"));
     const auto& parseFunc = funcMap.at("coupling_frequency");
 
     std::vector<std::string> lineElements = {"coupling_frequency", "=", "10"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getNoseHooverCouplingFrequency(), 10);
+    EXPECT_EQ(
+        nhSettings.getNoseHooverCouplingFrequency(),
+        mstd::toFreq(10.0 * per_cm).in(Hz)
+    );
 
     _clearParser(parser);
 
@@ -324,7 +334,8 @@ TEST_F(TestInputFileReader, testParseCouplingFrequency)
 TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp_ramp_steps"));
     const auto& parseFunc = funcMap.at("temp_ramp_steps");
@@ -353,7 +364,8 @@ TEST_F(TestInputFileReader, testParseTemperatureRampSteps)
 TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("temp_ramp_frequency"));
     const auto& parseFunc = funcMap.at("temp_ramp_frequency");
@@ -393,7 +405,8 @@ TEST_F(TestInputFileReader, testParseTemperatureRampFrequency)
 TEST_F(TestInputFileReader, testParseStartTemperature)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("start_temp"));
     const auto& parseFunc = funcMap.at("start_temp");
@@ -428,7 +441,8 @@ TEST_F(TestInputFileReader, testParseStartTemperature)
 TEST_F(TestInputFileReader, testParseEndTemperature)
 {
     ThermostatSettings           thermostatSettings;
-    input::ThermostatInputParser parser{thermostatSettings};
+    NoseHooverSettings           nhSettings;
+    input::ThermostatInputParser parser{thermostatSettings, nhSettings};
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("end_temp"));
     const auto& parseFunc = funcMap.at("end_temp");

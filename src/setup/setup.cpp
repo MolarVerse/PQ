@@ -59,12 +59,12 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine The engine to set up.
-     * @param references Reference settings object used to manage and add
-     * necessary reference files for the specified QM method.
+     * @param nhSettings Reference to the NoseHooverSettings object used to
+     * configure the thermostat if applicable.
      */
     void setupRequestedJob(
-        engine::Engine&    engine,
-        ReferenceSettings& references
+        engine::Engine&     engine,
+        NoseHooverSettings& nhSettings
     )
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
@@ -79,9 +79,9 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        readFiles(engine);
+        readFiles(engine, nhSettings);
 
-        setupEngine(engine, references);
+        setupEngine(engine);
 
         // needs setup of engine before reading guff.dat
         input::guffdat::readGuffDat(engine);
@@ -110,12 +110,14 @@ namespace setup
      * @brief reads all the files needed for the simulation
      *
      * @param engine
+     * @param nhSettings Nose-Hoover thermostat settings object used to
+     * configure the thermostat if applicable.
      */
-    void readFiles(engine::Engine& engine)
+    void readFiles(engine::Engine& engine, NoseHooverSettings& nhSettings)
     {
         input::molDescriptor::readMolDescriptor(engine);
 
-        input::restartFile::readRestartFile(engine);
+        input::restartFile::readRestartFile(engine, nhSettings);
 
         input::topology::readTopologyFile(engine);
 
@@ -128,14 +130,12 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine
-     * @param references Reference settings object used to manage and add
-     * necessary reference files for the specified QM method.
      */
-    void setupEngine(engine::Engine& engine, ReferenceSettings& references)
+    void setupEngine(engine::Engine& engine)
     {
         const auto& settings = engine.getSettings();
         if (settings::GeneralSettings::isQMActivated())
-            setupQM(engine, references);
+            setupQM(engine);
 
         if (settings::GeneralSettings::isMDJobType())
         {

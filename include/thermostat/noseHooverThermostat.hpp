@@ -23,9 +23,12 @@
 #ifndef THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP
 #define THERMOSTAT__NOSE_HOOVER_THERMOSTAT_HPP
 
+#include <mstd/types.hpp>
 #include <vector>
 
 #include "thermostat.hpp"
+
+class NoseHooverSettings;
 
 namespace thermostat
 {
@@ -38,18 +41,17 @@ namespace thermostat
     class NoseHooverThermostat : public Thermostat
     {
        private:
+        mstd::ConstRef<NoseHooverSettings> _nhSettings;
+        // chainLength + 1 entries; the last one is a fixed zero boundary term
+        // needed by the chi[i] * chi[i + 1] coupling of the last real link. It
+        // is never updated and never exposed through the getters.
         std::vector<double> _chi{0.0};    // in kcal/mol s
         std::vector<double> _zeta{0.0};   // unitless
 
-        double _couplingFrequency = 0.0;   // in 1/s
-
        public:
-        NoseHooverThermostat() = default;
         explicit NoseHooverThermostat(
-            const Temperature         &targetTemp,
-            const std::vector<double> &chi,
-            const std::vector<double> &zeta,
-            double                     couplingFrequency
+            const NoseHooverSettings &nhSettings,
+            const Temperature        &targetTemp
         );
 
         void applyThermostat(
@@ -67,20 +69,9 @@ namespace thermostat
 
         [[nodiscard]] std::vector<double> getChi() const;
         [[nodiscard]] std::vector<double> getZeta() const;
-        [[nodiscard]] double              getCouplingFrequency() const;
 
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        void setChi(size_t index, double chi);
-        void setChi(const std::vector<double> &chi);
-        void setZeta(size_t index, double zeta);
-        void setZeta(const std::vector<double> &zeta);
-        void setCouplingFrequency(double couplingFrequency);
 
        private:
         void _requireCoupling(const molsys::SimulationBox &simulationBox) const;

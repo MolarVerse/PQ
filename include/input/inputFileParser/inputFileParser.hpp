@@ -57,6 +57,16 @@ namespace input
         InputRegistry _registry;
 
        public:
+        // the derived parsers are owned through
+        // std::unique_ptr<InputFileParser> (InputFileReader::_parsers), so the
+        // destructor has to be virtual
+        InputFileParser()                                   = default;
+        virtual ~InputFileParser()                          = default;
+        InputFileParser(const InputFileParser &)            = default;
+        InputFileParser(InputFileParser &&)                 = default;
+        InputFileParser &operator=(const InputFileParser &) = default;
+        InputFileParser &operator=(InputFileParser &&)      = default;
+
         void addKeyword(const std::string &, ParseFunc, bool);
 
         [[nodiscard]] std::map<std::string, bool> getKeywordRequiredMap() const;

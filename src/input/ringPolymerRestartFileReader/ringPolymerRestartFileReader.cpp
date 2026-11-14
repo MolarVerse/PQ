@@ -122,8 +122,9 @@ namespace input::ringPolymer
      */
     void readRingPolymerRestartFile(engine::RingPolymerEngine &engine)
     {
-        const auto filename =
-            settings::FileSettings::getRingPolymerStartFileName();
+        const auto &fileSettings = engine.getSettings().fileSettings;
+
+        const auto filename = fileSettings.getRingPolymerStartFileName();
 
         RingPolymerRestartFileReader reader(filename, engine);
 
