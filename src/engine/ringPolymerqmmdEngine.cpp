@@ -352,7 +352,11 @@ namespace engine
                 auto &bead = getRingPolymerBeads()[i];
                 auto &data = getRingPolymerBeadsPhysicalData()[i];
 
-                getManostat().applyManostat(bead, data);
+                getManostat().applyManostat(
+                    bead,
+                    data,
+                    _getKinetics().getCurrentTargetPressure()
+                );
             }
         }
 
