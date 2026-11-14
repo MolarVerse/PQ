@@ -1,6 +1,6 @@
 var classinput_1_1ThermostatInputParser =
 [
-    [ "ThermostatInputParser", "classinput_1_1ThermostatInputParser.html#a821a999879a51e478feb50975f6fd05f", null ],
+    [ "ThermostatInputParser", "classinput_1_1ThermostatInputParser.html#a0f23e3fb8e1be40eda99293f7a8237ef", null ],
     [ "addEndTemperatureKey", "classinput_1_1ThermostatInputParser.html#af21e941b8ed9624d2c9a677f5f3066a3", null ],
     [ "addStartTemperatureKey", "classinput_1_1ThermostatInputParser.html#a281a91ff00f0bcbe269f4656a1f5d0fd", null ],
     [ "addTemperatureKey", "classinput_1_1ThermostatInputParser.html#ab6406e09b70122f2a3592c44d72f00c3", null ],
@@ -11,5 +11,6 @@ var classinput_1_1ThermostatInputParser =
     [ "addThermostatFrictionKey", "classinput_1_1ThermostatInputParser.html#a3171d78b07dc0b8e8eef3eabd0ea0df0", null ],
     [ "addThermostatKey", "classinput_1_1ThermostatInputParser.html#a6b1c31f51dc4606315c3c01abfb4657a", null ],
     [ "addThermostatRelaxationTimeKey", "classinput_1_1ThermostatInputParser.html#a43d7387325fd65622cb6c0147d8ebcc5", null ],
+    [ "_nhSettings", "classinput_1_1ThermostatInputParser.html#a8e61d985509f9a97af7c32b9356fb02e", null ],
     [ "_thermostatSettings", "classinput_1_1ThermostatInputParser.html#a73125b099165de34ace3f27280d32618", null ]
 ];

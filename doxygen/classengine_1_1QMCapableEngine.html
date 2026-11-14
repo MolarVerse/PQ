@@ -139,8 +139,8 @@ Collaboration diagram for engine::QMCapableEngine:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab73a5005aaa425cd8ba8872ac9221dbc" id="r_ab73a5005aaa425cd8ba8872ac9221dbc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab73a5005aaa425cd8ba8872ac9221dbc">~QMCapableEngine</a> ()=default</td></tr>
-<tr class="memitem:acb0d7bcaac04a4b4ea2e26f2d7f158cd" id="r_acb0d7bcaac04a4b4ea2e26f2d7f158cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb0d7bcaac04a4b4ea2e26f2d7f158cd">setQMRunner</a> (const <a class="el" href="classQMSettings.html">QMSettings</a> &amp;<a class="el" href="namespacesettings.html">settings</a>, const <a class="el" href="classMaceSettings.html">MaceSettings</a> &amp;maceSettings, const <a class="el" href="classFennolSettings.html">FennolSettings</a> &amp;fennolSettings, const <a class="el" href="classDftbSettings.html">DftbSettings</a> &amp;dftbSettings, const <a class="el" href="classXtbSettings.html">XtbSettings</a> &amp;xtbSettings)</td></tr>
-<tr class="memdesc:acb0d7bcaac04a4b4ea2e26f2d7f158cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the <a class="el" href="namespaceQM.html">QM</a> runner based on the specified method.  <br /></td></tr>
+<tr class="memitem:a1326ed6ee6bd19eb26c634530a59cd2f" id="r_a1326ed6ee6bd19eb26c634530a59cd2f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1326ed6ee6bd19eb26c634530a59cd2f">setQMRunner</a> (const <a class="el" href="classQMSettings.html">QMSettings</a> &amp;<a class="el" href="namespacesettings.html">settings</a>, const <a class="el" href="classMaceSettings.html">MaceSettings</a> &amp;maceSettings, const <a class="el" href="classFennolSettings.html">FennolSettings</a> &amp;fennolSettings, const <a class="el" href="classDftbSettings.html">DftbSettings</a> &amp;dftbSettings, const <a class="el" href="classXtbSettings.html">XtbSettings</a> &amp;xtbSettings, const <a class="el" href="classExternalQMSettings.html">ExternalQMSettings</a> &amp;externalQMSettings)</td></tr>
+<tr class="memdesc:a1326ed6ee6bd19eb26c634530a59cd2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the <a class="el" href="namespaceQM.html">QM</a> runner based on the specified method.  <br /></td></tr>
 <tr class="memitem:a8994a56466dfbd077aa992e40e16da87" id="r_a8994a56466dfbd077aa992e40e16da87"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classQM_1_1QMRunner.html">QM::QMRunner</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8994a56466dfbd077aa992e40e16da87">getQMRunner</a> () const</td></tr>
 <tr class="memdesc:a8994a56466dfbd077aa992e40e16da87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="namespaceQM.html">QM</a> runner.  <br /></td></tr>
 <tr class="memitem:a448467273ebece66025030921d278d89" id="r_a448467273ebece66025030921d278d89"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a448467273ebece66025030921d278d89">hasQMRunner</a> () const</td></tr>
@@ -259,8 +259,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="acb0d7bcaac04a4b4ea2e26f2d7f158cd" name="acb0d7bcaac04a4b4ea2e26f2d7f158cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb0d7bcaac04a4b4ea2e26f2d7f158cd">&#9670;&#160;</a></span>setQMRunner()</h2>
+<a id="a1326ed6ee6bd19eb26c634530a59cd2f" name="a1326ed6ee6bd19eb26c634530a59cd2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1326ed6ee6bd19eb26c634530a59cd2f">&#9670;&#160;</a></span>setQMRunner()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -288,7 +288,12 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classXtbSettings.html">XtbSettings</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xtbSettings</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="classXtbSettings.html">XtbSettings</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>xtbSettings</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classExternalQMSettings.html">ExternalQMSettings</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>externalQMSettings</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -301,16 +306,17 @@ Here is the caller graph for this function:</div>
     <tr><td class="paramname">fennolSettings</td><td>The Fennol settings to configure the <a class="el" href="namespaceQM.html">QM</a> runner with </td></tr>
     <tr><td class="paramname">dftbSettings</td><td>The DFTB settings to configure the <a class="el" href="namespaceQM.html">QM</a> runner with </td></tr>
     <tr><td class="paramname">xtbSettings</td><td>The XTB settings to configure the <a class="el" href="namespaceQM.html">QM</a> runner with </td></tr>
+    <tr><td class="paramname">externalQMSettings</td><td>The external <a class="el" href="namespaceQM.html">QM</a> settings to configure the <a class="el" href="namespaceQM.html">QM</a> runner with </td></tr>
   </table>
   </dd>
 </dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classengine_1_1QMCapableEngine_acb0d7bcaac04a4b4ea2e26f2d7f158cd_cgraph.png" border="0" usemap="#aclassengine_1_1QMCapableEngine_acb0d7bcaac04a4b4ea2e26f2d7f158cd_cgraph" loading="lazy" alt=""/></div>
-<map name="aclassengine_1_1QMCapableEngine_acb0d7bcaac04a4b4ea2e26f2d7f158cd_cgraph" id="aclassengine_1_1QMCapableEngine_acb0d7bcaac04a4b4ea2e26f2d7f158cd_cgraph">
+<div class="center"><img src="classengine_1_1QMCapableEngine_a1326ed6ee6bd19eb26c634530a59cd2f_cgraph.png" border="0" usemap="#aclassengine_1_1QMCapableEngine_a1326ed6ee6bd19eb26c634530a59cd2f_cgraph" loading="lazy" alt=""/></div>
+<map name="aclassengine_1_1QMCapableEngine_a1326ed6ee6bd19eb26c634530a59cd2f_cgraph" id="aclassengine_1_1QMCapableEngine_a1326ed6ee6bd19eb26c634530a59cd2f_cgraph">
 <area shape="rect" title="Set the QM runner based on the specified method." alt="" coords="5,144,198,189"/>
-<area shape="rect" href="classengine_1_1QMRunnerManager.html#aaa5deaf1760a3e528984982a0e4cf336" title="Create a QM runner based on the specified method." alt="" coords="246,144,444,189"/>
+<area shape="rect" href="classengine_1_1QMRunnerManager.html#a84e1eb48e9c136b89c11e93ad8328631" title="Create a QM runner based on the specified method." alt="" coords="246,144,444,189"/>
 <area shape="poly" title=" " alt="" coords="198,164,233,165,228,167,199,169"/>
 <area shape="rect" href="classengine_1_1QMRunnerManager.html#aef145e9347b38947f5eef611eb5436a6" title="Create an ASE DFTB+ QM runner." alt="" coords="492,5,690,50"/>
 <area shape="poly" title=" " alt="" coords="372,141,425,101,491,60,506,55,501,58,493,65,428,105,375,146"/>

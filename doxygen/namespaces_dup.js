@@ -29,6 +29,27 @@ var namespaces_dup =
       [ "SPACING", "namespacebenchWaterScaling.html#ad8413783e89d0e9b7273ffc62bd4b043", null ],
       [ "WATER_TYPE", "namespacebenchWaterScaling.html#a6ea9095afb3920b792c6f670edd9969f", null ]
     ] ],
+    [ "check_orca", "namespacecheck__orca.html", [
+      [ "check", "namespacecheck__orca.html#ae672cbfc84ec39b00b83014ee6aea689", null ],
+      [ "check_point_charges", "namespacecheck__orca.html#aad29c3b57fc565603d40960a2f532378", null ],
+      [ "check_pure", "namespacecheck__orca.html#a321604c53124ca4cf62fb291b92409cd", null ],
+      [ "check_qmmm", "namespacecheck__orca.html#aa3f64d3f25f3831849656a4358cd48e5", null ],
+      [ "common", "namespacecheck__orca.html#a56a56e2cf88a2e7f6bd06fcb531646fa", null ],
+      [ "expected_charges", "namespacecheck__orca.html#af5cd82dd2222ca25c72190a65bb5334f", null ],
+      [ "frames", "namespacecheck__orca.html#aa116bc198d4115db80d4949deb884cb7", null ],
+      [ "info_value", "namespacecheck__orca.html#a27bac310f99fc4ddebb754b75cc85e33", null ],
+      [ "keyword_set", "namespacecheck__orca.html#a9d49b03bf8c23f622412fe2da0a0098b", null ],
+      [ "main", "namespacecheck__orca.html#afe952628a6bfe3d674f7ac3293754592", null ],
+      [ "BASE_CHARGES", "namespacecheck__orca.html#abb4556cb591e48bdc40fe5016456d2b4", null ],
+      [ "BOHR_IN_ANGSTROM", "namespacecheck__orca.html#a85c42df863075cd32c645315f9497fac", null ],
+      [ "errors", "namespacecheck__orca.html#acc56203d8480ded90e2cc90141428d8c", null ],
+      [ "GRAD_TO_FORCE", "namespacecheck__orca.html#a1f9751e0dbf9373ffc5710a2ef7d6920", null ],
+      [ "HARTREE_TO_KCAL", "namespacecheck__orca.html#ab2ab10404bd65919d23207a873215370", null ],
+      [ "LAYER", "namespacecheck__orca.html#abe3f10f9efc0118bfd87a8e3e2b3462a", null ],
+      [ "MM_CHARGES", "namespacecheck__orca.html#a96d9d45958616856cbd62d15e1149150", null ],
+      [ "PC_SHELL", "namespacecheck__orca.html#a90d87fa985f17434c8be9560d567ac64", null ],
+      [ "SMOOTHING", "namespacecheck__orca.html#a4692461ffb84951393be76bd6ee6ab93", null ]
+    ] ],
     [ "cli", "namespacecli.html", "namespacecli" ],
     [ "Color", "namespaceColor.html", "namespaceColor" ],
     [ "conf", "namespaceconf.html", [
@@ -59,6 +80,18 @@ var namespaces_dup =
     [ "driver", "namespacedriver.html", "namespacedriver" ],
     [ "engine", "namespaceengine.html", "namespaceengine" ],
     [ "exc", "namespaceexc.html", "namespaceexc" ],
+    [ "fake_orca", "namespacefake__orca.html", [
+      [ "charges", "namespacefake__orca.html#a8caa95896ce79a7229a9a01c4c3f6600", null ],
+      [ "main", "namespacefake__orca.html#a471b45c6f339e8e70134646d9f62aee5", null ],
+      [ "mulliken", "namespacefake__orca.html#aaed83ee0933f2c9b85aefebff39f6a3e", null ],
+      [ "ATOMIC_NUMBERS", "namespacefake__orca.html#a8f608f75cdbbb6dfe43ac287f1733646", null ],
+      [ "BASE_CHARGES", "namespacefake__orca.html#ad61d986f02e040e033b708a2e534fdb1", null ],
+      [ "BOHR_IN_ANGSTROM", "namespacefake__orca.html#aba0d5612aca30076d29936b9ab0639d2", null ],
+      [ "CORRELATION", "namespacefake__orca.html#a394969024fcec0e450b87c74b41f25be", null ],
+      [ "E0", "namespacefake__orca.html#ab704e3627dfa6881645de908507d0487", null ],
+      [ "K", "namespacefake__orca.html#a82ed7982522c677f7e7f0e66b22f2338", null ],
+      [ "PENALTY", "namespacefake__orca.html#a494ed0bf3c8647bb08f9965c1be96095", null ]
+    ] ],
     [ "fake_qm", "namespacefake__qm.html", [
       [ "number_of_atoms", "namespacefake__qm.html#a0e9ebe08838e4b401408223d228edd06", null ]
     ] ],
@@ -79,6 +112,38 @@ var namespaces_dup =
     [ "molsys", "namespacemolsys.html", "namespacemolsys" ],
     [ "mstd", "namespacemstd.html", "namespacemstd" ],
     [ "opt", "namespaceopt.html", "namespaceopt" ],
+    [ "orca_common", "namespaceorca__common.html", [
+      [ "charges", "namespaceorca__common.html#a29e5f38a49d886089d1bf5b0247830f6", null ],
+      [ "coordinates", "namespaceorca__common.html#a93cd7bfc927e8bf4d331c6f71a6cff3d", null ],
+      [ "energy", "namespaceorca__common.html#a7cb47ab789fd021ee4d4831e6c60ea11", null ],
+      [ "gradient", "namespaceorca__common.html#a4d55c9262593655205bc195d692b2694", null ],
+      [ "number", "namespaceorca__common.html#a08f6c3ff74c5aed3d88d43f0f1fa0b9f", null ],
+      [ "quoted", "namespaceorca__common.html#a4ce3efd1ef4d35a8e2c2f301df51b7b0", null ],
+      [ "run_job", "namespaceorca__common.html#aa0bf288cc6102e90a33873564fde5189", null ],
+      [ "validate_template", "namespaceorca__common.html#a8983d1746b45e9140a6e5557cf89aec5", null ],
+      [ "NUMBER", "namespaceorca__common.html#ad5f8ff14b4a1240ccc86e876cf134579", null ],
+      [ "RESULTS", "namespaceorca__common.html#af98a0ad29d5a9436b8a060ddf54cc590", null ],
+      [ "TOKENS", "namespaceorca__common.html#a73cfccde222027127b9979a9e904ead7", null ]
+    ] ],
+    [ "orca_dft", "namespaceorca__dft.html", [
+      [ "dont_write_bytecode", "namespaceorca__dft.html#a1800bfe34ec0b580c4ee0ed4bfc80cdd", null ]
+    ] ],
+    [ "orca_hf", "namespaceorca__hf.html", [
+      [ "dont_write_bytecode", "namespaceorca__hf.html#aee382f6a98a45be9ac86ab5e55290021", null ]
+    ] ],
+    [ "orca_rimp2", "namespaceorca__rimp2.html", [
+      [ "main", "namespaceorca__rimp2.html#a94539be277941ffe14f0b23057449e20", null ],
+      [ "dont_write_bytecode", "namespaceorca__rimp2.html#ac01c7c0c74ca962aa7eb82923c8b8f01", null ],
+      [ "file", "namespaceorca__rimp2.html#a77af3ef404e2744dd29246778e33a268", null ],
+      [ "missing_ok", "namespaceorca__rimp2.html#a320ea553c90fd65265a4b5b276c2fa13", null ]
+    ] ],
+    [ "orca_scf", "namespaceorca__scf.html", [
+      [ "check_scf_output", "namespaceorca__scf.html#a5fd3f4a0abb0afb243632975d8e28a80", null ],
+      [ "cli", "namespaceorca__scf.html#a74d4d99db7ec57dda64b57bb5dd35c2e", null ],
+      [ "main", "namespaceorca__scf.html#adb207aaab2a2d9bf5c42369ed3296c40", null ],
+      [ "scf_charges", "namespaceorca__scf.html#a2ab04768098e492802ee72963a56f846", null ],
+      [ "validate_scf_template", "namespaceorca__scf.html#ad24774579a0f379378bf9f5bf959a951", null ]
+    ] ],
     [ "out", "namespaceout.html", "namespaceout" ],
     [ "physicalData", "namespacephysicalData.html", "namespacephysicalData" ],
     [ "pot", "namespacepot.html", "namespacepot" ],
@@ -153,36 +218,49 @@ var namespaces_dup =
       [ "qmRunnerSize", "namespacetest.html#a90ecc029591186103cb3db9a002f5393", null ],
       [ "turbomoleRunnerSize", "namespacetest.html#aaa997f8696a88e81e49b1f8070ceeb63", null ]
     ] ],
+    [ "testOrcaScfScripts", "namespacetestOrcaScfScripts.html", "namespacetestOrcaScfScripts" ],
+    [ "testOrcaScript", "namespacetestOrcaScript.html", "namespacetestOrcaScript" ],
     [ "testSettings", "namespacetestSettings.html", "namespacetestSettings" ],
+    [ "testTurbomoleScripts", "namespacetestTurbomoleScripts.html", "namespacetestTurbomoleScripts" ],
     [ "thermostat", "namespacethermostat.html", "namespacethermostat" ],
     [ "timings", "namespacetimings.html", "namespacetimings" ],
-    [ "utilities", "namespaceutilities.html", [
-      [ "addSpaces", "namespaceutilities.html#a4336aad931ffaf5387444bbc8af3a539", null ],
-      [ "compare", "namespaceutilities.html#a6629f026539dbf65576e8844c189a500", null ],
-      [ "compare", "namespaceutilities.html#a8670e011b7aff1badced77aae09d71b0", null ],
-      [ "compare", "namespaceutilities.html#a47348bb3d09c3cb0776e2f4198856d11", null ],
-      [ "compare", "namespaceutilities.html#a23aee153573294170200078b7a215899", null ],
-      [ "executablePath", "namespaceutilities.html#ab45abb83fda00620da00e2a73d56f5e8", null ],
-      [ "firstLetterToUpperCaseCopy", "namespaceutilities.html#a403f7a1fb2a0a9e4b11a42056b9a43f4", null ],
-      [ "getLineCommands", "namespaceutilities.html#a21ee0515bf8768bf6673fd0b376c9b3e", null ],
-      [ "getUniqueElements", "namespaceutilities.html#aaf583bdaf439d7b207cfd5aa4b5715d3", null ],
-      [ "installedDataPath", "namespaceutilities.html#ac17a1d50b00bcf1de310062a44bca2c4", null ],
-      [ "isZero", "namespaceutilities.html#aaae9b2dbd3ac275d4268ad9f73baa500", null ],
-      [ "keywordToBool", "namespaceutilities.html#a44118b013750476468b6f651dc742a13", null ],
-      [ "kroneckerDelta", "namespaceutilities.html#a8409f92fe23c18cba13b6a40afde2975", null ],
-      [ "removeComments", "namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c", null ],
-      [ "shellQuote", "namespaceutilities.html#a4e2fa13e8aad34767f73d168b2494198", null ],
-      [ "sign", "namespaceutilities.html#a752bb70809a2fb9f8f59d58545fd5320", null ],
-      [ "splitString", "namespaceutilities.html#a23accba60faf312a7eaf6df031135304", null ],
-      [ "stringToFiniteDouble", "namespaceutilities.html#a425b73d821b5cacb29c08e1e3f22428c", null ],
-      [ "stringToInt", "namespaceutilities.html#a9e4f1dff151ede7a59f5f5fb84bf1f28", null ],
-      [ "stringToUintFast32t", "namespaceutilities.html#a903ffd59d20f4c5ca871f7beb4ace617", null ],
-      [ "stringToULL", "namespaceutilities.html#ae318e9709a69a1fc3f460347a5fbfcc7", null ],
-      [ "throwIfInterrupted", "namespaceutilities.html#a458d0e1fd27c931bf6fcfa184568ba90", null ],
-      [ "toLowerAndReplaceDashesCopy", "namespaceutilities.html#a888ee862daf82c77f15dcbc387b33ed0", null ],
-      [ "toLowerAndReplaceDashesCopy", "namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7", null ],
-      [ "toLowerCopy", "namespaceutilities.html#a4bd4d8abfe568051a665b47af11ab07e", null ],
-      [ "toLowerCopy", "namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0", null ]
+    [ "turbomole_common", "namespaceturbomole__common.html", "namespaceturbomole__common" ],
+    [ "turbomole_hf_dft", "namespaceturbomole__hf__dft.html", [
+      [ "dont_write_bytecode", "namespaceturbomole__hf__dft.html#a52fb1f9a7b5f9f1f6e8b3ca36bf21d93", null ]
+    ] ],
+    [ "turbomole_ricc2", "namespaceturbomole__ricc2.html", [
+      [ "dont_write_bytecode", "namespaceturbomole__ricc2.html#ac1b932d52530215c8255839dd3f35d7b", null ]
+    ] ],
+    [ "turbomole_ridft", "namespaceturbomole__ridft.html", [
+      [ "dont_write_bytecode", "namespaceturbomole__ridft.html#ac24f0d9378acfdf7a47e9f2bfff1ef19", null ]
+    ] ],
+    [ "utilities", "namespaceutilities.html", "namespaceutilities" ],
+    [ "validate_orca", "namespacevalidate__orca.html", [
+      [ "main", "namespacevalidate__orca.html#a7b041bae94453578d637f799f40036d5", null ],
+      [ "run", "namespacevalidate__orca.html#aa06be46517a7fd3e63ea1ad248469028", null ],
+      [ "validate", "namespacevalidate__orca.html#ad2629c6176eb61e8cdf736d926ee2195", null ],
+      [ "BOHR_IN_ANGSTROM", "namespacevalidate__orca.html#adc75b3eba9c694e9791ec581c69d8e6e", null ],
+      [ "DRIVERS", "namespacevalidate__orca.html#aa1ceb008b3910bd140fac5995f7160f6", null ],
+      [ "FIELD", "namespacevalidate__orca.html#afa72fda684b336adb14c9caceaf14ff2", null ],
+      [ "STEP", "namespacevalidate__orca.html#a11fb80bfdd829f52c5ee292379a3a84f", null ],
+      [ "WATER", "namespacevalidate__orca.html#ae7caca191fff73ce18e65b00051c0b7f", null ]
+    ] ],
+    [ "validate_turbomole", "namespacevalidate__turbomole.html", [
+      [ "field_free_energies", "namespacevalidate__turbomole.html#aa3722917c0c42ef70ac4b2dec17b209a", null ],
+      [ "main", "namespacevalidate__turbomole.html#aedae6275ba7bae720ecc891fc0588586", null ],
+      [ "make_shims", "namespacevalidate__turbomole.html#a33c71be4f03307830e3fe58e84a5eeec", null ],
+      [ "run_sequence", "namespacevalidate__turbomole.html#a633e5c6153b50f360ea339de6c7b0402", null ],
+      [ "scf_template", "namespacevalidate__turbomole.html#a40854d789989b35bd39a6b40b21daf10", null ],
+      [ "write_inputs", "namespacevalidate__turbomole.html#a475910ae182c5c896ea7bc195f8525e0", null ],
+      [ "BOHR", "namespacevalidate__turbomole.html#a98e6cbcd68865f94638d35d3fd56cdb1", null ],
+      [ "COMPARED", "namespacevalidate__turbomole.html#afbc6e749a9c4cdfc3dc82e18ba3c3814", null ],
+      [ "FIELD", "namespacevalidate__turbomole.html#a8b8908028e50fef075bc66d372e65f88", null ],
+      [ "KEPT", "namespacevalidate__turbomole.html#a3e72c353bdc01ef4afdc0e4b179436ce", null ],
+      [ "PAIRS", "namespacevalidate__turbomole.html#a44677d95abe2a1330bd66c7d04cc1d68", null ],
+      [ "PROGRAMS", "namespacevalidate__turbomole.html#a80d83fca0445a2d6f93da1c7cc631237", null ],
+      [ "SHIM", "namespacevalidate__turbomole.html#a2c0c65faeeb4a2441756aefd4d922f5e", null ],
+      [ "STEPS", "namespacevalidate__turbomole.html#a06bd3fe1cd45c99b9aacd8c963b5073c", null ],
+      [ "WATER", "namespacevalidate__turbomole.html#afc92288fab13e05fe21638b23927a837", null ]
     ] ],
     [ "virial", "namespacevirial.html", [
       [ "calculateQMVirial", "namespacevirial.html#afca4152a72f9218bb75edbc7757f73d7", null ],

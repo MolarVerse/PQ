@@ -1,7 +1,9 @@
 <map id="molsys::SimulationBox::calcActiveMolCharge" name="molsys::SimulationBox::calcActiveMolCharge">
-<area shape="rect" id="Node000001" title=" " alt="" coords="219,40,390,85"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1DFTBPlusRunner.html#ae46c4f8ecbf4dc54cb46b0f03bae0cb2" title="executes the qm script of the external program" alt="" coords="9,5,167,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,47,168,43,167,38,206,46"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1TurbomoleRunner.html#ab71ce6c9d02333eff9c092e6d0772246" title="executes the external qm program" alt="" coords="5,75,171,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,79,172,86,171,81,206,78"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="240,65,411,110"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1DFTBPlusRunner.html#a7b7647896d880179af254d25e0720bc5" title="executes the qm script of the external program" alt="" coords="19,5,178,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,62,178,51,178,46,227,60"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1OrcaRunner.html#aea9d9a780dfe21173989f3fc1cab3d5c" title="executes ORCA as the external qm program" alt="" coords="5,74,192,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,88,193,90,192,85,227,87"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1TurbomoleRunner.html#a597afd504f62b7d8a482ec8f8ebc018e" title="executes the external qm program" alt="" coords="16,125,181,170"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="227,114,182,128,181,123,222,115"/>
 </map>

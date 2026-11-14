@@ -1,105 +1,95 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,690,74,718"/>
-<area shape="rect" id="Node000002" href="$classsetup_1_1ThermostatSetup.html#a23dfad4692f1b69805b94fff6d766afc" title="get the engine" alt="" coords="155,232,332,277"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="39,689,45,608,60,487,70,425,84,367,100,320,120,287,142,271,140,276,124,291,105,322,89,369,76,426,65,488,51,608,44,690"/>
-<area shape="rect" id="Node000003" href="$classthermostat_1_1Thermostat.html#a77afc636faec12614e465f85e91589e7" title="get target temperature" alt="" coords="155,301,332,346"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="40,689,48,619,64,520,88,422,103,383,120,357,143,341,140,346,124,360,107,386,93,423,69,521,53,620,45,689"/>
-<area shape="rect" id="Node000004" href="$classengine_1_1MDEngine.html#af9aadbdc0f8fc2279ab07be0f9f1a767" title="get the reference to the thermostat" alt="" coords="122,370,365,398"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="38,689,39,638,48,564,58,523,73,484,93,446,120,414,136,403,134,408,124,418,98,449,78,486,63,525,54,565,44,638,43,689"/>
-<area shape="rect" id="Node000005" href="$classThermostatSettings.html#a072b5a7c22b0510991ff135d8f7094e6" title="set the end temperature set" alt="" coords="991,283,1167,327"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="55,688,356,424,535,275,604,224,647,199,718,175,778,164,807,165,837,171,905,199,923,215,931,233,938,251,953,268,979,284,974,285,950,272,934,254,926,235,919,218,902,203,836,176,807,170,779,169,720,180,649,203,607,229,539,280,360,428,59,691"/>
-<area shape="rect" id="Node000006" href="$classThermostatSettings.html#a784b50c7a6f979862a5bb1a12a7aa367" title="set the relaxation time" alt="" coords="167,1405,320,1450"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="41,715,43,844,51,1044,60,1150,75,1248,96,1329,109,1361,124,1385,137,1398,155,1410,150,1410,134,1402,120,1388,104,1363,91,1331,69,1249,55,1151,45,1045,38,844,40,720"/>
-<area shape="rect" id="Node000007" href="$classThermostatSettings.html#aec3f6c4bb78bbb8e79b9eff31ae4fa3b" title="set the target temperature" alt="" coords="690,1285,862,1330"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="47,715,94,798,173,924,224,994,281,1064,345,1129,415,1187,477,1225,545,1254,613,1275,678,1292,672,1292,612,1280,543,1259,475,1229,411,1191,342,1133,277,1067,219,997,168,927,89,800,48,721"/>
-<area shape="rect" id="Node000009" href="$classThermostatSettings.html#a86ffc12bd69e8731d80593133a048c02" title="set the temperature set" alt="" coords="1003,1355,1155,1399"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="42,715,51,804,65,933,89,1062,105,1113,124,1149,166,1195,213,1236,264,1271,319,1300,377,1325,437,1345,560,1373,683,1388,799,1393,903,1391,985,1388,990,1388,903,1397,799,1399,683,1394,560,1379,436,1350,375,1330,317,1305,261,1275,209,1240,162,1199,119,1152,100,1115,84,1063,60,934,45,804,42,720"/>
-<area shape="rect" id="Node000010" href="$classsetup_1_1ThermostatSetup.html#ab32f25ad3fbb9f01454ce6d895ad6743" title="setup thermostat" alt="" coords="155,711,332,755"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="73,706,141,716,137,720,76,711"/>
-<area shape="rect" id="Node000008" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="973,1285,1185,1330"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="862,1305,960,1307,954,1308,862,1310"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="862,1325,990,1356,985,1356,862,1330"/>
-<area shape="rect" id="Node000011" href="$classsetup_1_1ThermostatSetup.html#a6675307cc5568549cc5e6df267ea939a" title="setup berendsen thermostat" alt="" coords="671,749,881,794"/>
-<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="331,737,658,761,654,765,333,742"/>
-<area shape="rect" id="Node000014" href="$classsetup_1_1ThermostatSetup.html#af02b5595c3d273843fa296dee2045d50" title="setup langevin thermostat" alt="" coords="676,352,876,397"/>
-<area shape="poly" id="edge14_Node000010_Node000014" title=" " alt="" coords="264,709,325,648,415,567,525,481,585,441,647,407,664,401,660,404,650,411,588,446,529,486,418,571,328,652,268,712"/>
-<area shape="rect" id="Node000016" href="$classsetup_1_1ThermostatSetup.html#ab752043b07334b29a5c5cdcf0677ee51" title="setup nose hoover thermostat" alt="" coords="666,93,886,138"/>
-<area shape="poly" id="edge17_Node000010_Node000016" title=" " alt="" coords="255,709,309,620,398,488,453,414,513,339,578,266,647,199,683,170,724,144,721,148,686,174,650,203,582,270,517,342,457,417,402,491,314,623,260,712"/>
-<area shape="rect" id="Node000021" href="$classsetup_1_1ThermostatSetup.html#a1c42969c434c72b24663a81503ede658" title="keeps target and end temperature synchronized" alt="" coords="413,1008,600,1053"/>
-<area shape="poly" id="edge23_Node000010_Node000021" title=" " alt="" coords="265,753,478,995,473,997,264,758"/>
-<area shape="rect" id="Node000026" href="$classsetup_1_1ThermostatSetup.html#aa99f59b269999fc808bfa602c4263f94" title="setup temperature ramp" alt="" coords="683,1216,869,1261"/>
-<area shape="poly" id="edge31_Node000010_Node000026" title=" " alt="" coords="251,753,274,814,307,895,354,983,383,1025,415,1063,471,1115,521,1147,577,1172,649,1201,671,1211,666,1212,647,1206,575,1177,519,1152,467,1119,411,1067,379,1028,350,985,302,897,269,816,251,758"/>
-<area shape="rect" id="Node000033" href="$classsetup_1_1ThermostatSetup.html#a8d5a48f60e0f30dc845ccdb4a15b7df5" title="setup velocity rescaling thermostat" alt="" coords="648,819,904,863"/>
-<area shape="poly" id="edge40_Node000010_Node000033" title=" " alt="" coords="332,748,649,813,645,817,333,753"/>
-<area shape="rect" id="Node000034" href="$classsetup_1_1ThermostatSetup.html#a76610396856794c4ad78ed4b78ddd338" title=" " alt="" coords="418,651,595,695"/>
-<area shape="poly" id="edge43_Node000010_Node000034" title=" " alt="" coords="331,711,405,695,401,698,334,715"/>
-<area shape="rect" id="Node000012" href="$classThermostatSettings.html#aaccf4e57a8900531a2baafe83c867946" title="get the relaxation time" alt="" coords="1002,720,1156,765"/>
-<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="880,759,989,750,984,752,882,764"/>
-<area shape="rect" id="Node000013" href="$classThermostatSettings.html#acbcccfae7bfebf7416bc00d7665d6670" title="get the target temperature" alt="" coords="993,620,1165,665"/>
-<area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="871,746,903,735,927,721,950,705,1020,671,1016,674,953,710,929,725,905,739,874,751"/>
-<area shape="poly" id="edge16_Node000014_Node000013" title=" " alt="" coords="876,392,905,407,958,452,1002,506,1038,559,1063,606,1058,606,1033,562,998,509,954,456,902,411,877,397"/>
-<area shape="rect" id="Node000015" href="$classThermostatSettings.html#a226e768a6ba0731e3504c4307782d31c" title="get the friction" alt="" coords="1004,387,1154,431"/>
-<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="875,383,992,398,987,400,877,388"/>
-<area shape="poly" id="edge21_Node000016_Node000013" title=" " alt="" coords="828,136,871,163,890,180,906,200,924,232,934,263,937,291,938,318,938,375,943,407,954,443,976,489,1001,533,1052,608,1047,607,997,536,971,491,949,445,938,408,933,376,933,318,932,291,928,264,919,235,901,202,886,184,868,167,829,141"/>
-<area shape="rect" id="Node000017" href="$classThermostatSettings.html#a79a433ec13d87caaa29e701837377f02" title="get chi" alt="" coords="1004,5,1154,50"/>
-<area shape="poly" id="edge18_Node000016_Node000017" title=" " alt="" coords="849,91,951,60,991,50,987,53,952,65,852,95"/>
-<area shape="rect" id="Node000018" href="$classThermostatSettings.html#a35d8fe5fe5504de0f0b1535de7697a01" title="get the nose hoover chain length" alt="" coords="973,213,1184,258"/>
-<area shape="poly" id="edge19_Node000016_Node000018" title=" " alt="" coords="863,136,905,155,920,166,930,177,939,188,953,199,966,206,961,208,950,203,935,192,926,181,916,170,902,159,865,141"/>
-<area shape="rect" id="Node000019" href="$classThermostatSettings.html#a0b36754fbb3381ecea17e5bc3d77e459" title="get the nose hoover coupling frequency" alt="" coords="952,144,1206,189"/>
-<area shape="poly" id="edge20_Node000016_Node000019" title=" " alt="" coords="886,132,939,141,934,144,888,137"/>
-<area shape="rect" id="Node000020" href="$classThermostatSettings.html#a9d43f7527289117e62ae5a8469bedad5" title="get zeta" alt="" coords="1004,75,1154,119"/>
-<area shape="poly" id="edge22_Node000016_Node000020" title=" " alt="" coords="885,107,991,101,986,104,888,111"/>
-<area shape="poly" id="edge30_Node000021_Node000007" title=" " alt="" coords="516,1050,534,1098,561,1158,600,1219,623,1247,650,1271,679,1289,673,1289,647,1275,619,1250,595,1222,556,1160,529,1100,514,1055"/>
-<area shape="poly" id="edge25_Node000021_Node000013" title=" " alt="" coords="506,1006,514,938,535,844,552,794,576,745,608,702,647,665,671,653,705,644,790,634,886,631,979,635,974,637,886,637,790,639,706,649,673,658,650,670,612,705,581,748,557,796,540,845,519,939,511,1009"/>
-<area shape="rect" id="Node000022" href="$classThermostatSettings.html#a101dccef52e96a91234478ddf7d7669b" title="get the end temperature" alt="" coords="698,1077,854,1122"/>
-<area shape="poly" id="edge24_Node000021_Node000022" title=" " alt="" coords="596,1051,685,1075,680,1076,597,1056"/>
-<area shape="rect" id="Node000023" href="$classThermostatSettings.html#a6d8d9de585ab81e5c2332daaa77e019b" title="is the end temperature set" alt="" coords="692,1147,860,1191"/>
-<area shape="poly" id="edge26_Node000021_Node000023" title=" " alt="" coords="533,1050,585,1092,650,1132,680,1146,675,1146,647,1137,582,1097,532,1056"/>
-<area shape="rect" id="Node000024" href="$classThermostatSettings.html#a52155c71c089e27c72adb4884bebb1ef" title="is the temperature set" alt="" coords="701,1008,851,1053"/>
-<area shape="poly" id="edge27_Node000021_Node000024" title=" " alt="" coords="600,1028,688,1029,683,1031,602,1033"/>
-<area shape="rect" id="Node000025" href="$classThermostatSettings.html#a732d642850a0fe9a9dcad32ea3a3b912" title="set the end temperature" alt="" coords="698,283,854,327"/>
-<area shape="poly" id="edge28_Node000021_Node000025" title=" " alt="" coords="513,1006,553,880,577,795,598,707,605,625,608,517,611,462,618,412,629,369,646,338,663,324,686,314,682,318,666,328,650,341,634,371,623,413,616,462,613,517,610,625,603,708,582,796,558,882,518,1009"/>
-<area shape="poly" id="edge29_Node000025_Node000005" title=" " alt="" coords="853,303,978,304,973,306,855,307"/>
-<area shape="poly" id="edge38_Node000026_Node000008" title=" " alt="" coords="869,1257,966,1281,961,1281,869,1262"/>
-<area shape="poly" id="edge34_Node000026_Node000013" title=" " alt="" coords="868,1225,886,1216,902,1202,913,1184,921,1161,930,1103,931,1034,928,958,925,883,925,812,932,751,939,726,949,706,968,686,993,671,989,674,971,690,954,709,944,728,937,752,931,812,931,883,934,958,937,1034,935,1104,926,1162,918,1186,906,1205,889,1220,870,1230"/>
-<area shape="rect" id="Node000027" href="$classsettings_1_1TimingsSettings.html#a58a13b00fa1ceae44281aed2a416e959" title="get the number of steps" alt="" coords="986,1216,1172,1261"/>
-<area shape="poly" id="edge32_Node000026_Node000027" title=" " alt="" coords="869,1236,973,1238,968,1239,869,1241"/>
-<area shape="rect" id="Node000028" href="$classThermostatSettings.html#adff95767d20992cd2d869b60cdf0575b" title="get the start temperature" alt="" coords="997,1077,1160,1122"/>
-<area shape="poly" id="edge33_Node000026_Node000028" title=" " alt="" coords="868,1219,902,1202,918,1185,925,1168,933,1150,950,1132,980,1119,985,1117,953,1136,938,1153,930,1170,922,1188,905,1206,870,1224"/>
-<area shape="rect" id="Node000029" href="$classThermostatSettings.html#ab2faf34eec064f60c5a62f0443404ca2" title="get the temperature ramp frequency" alt="" coords="960,1008,1198,1053"/>
-<area shape="poly" id="edge35_Node000026_Node000029" title=" " alt="" coords="868,1222,886,1213,902,1202,915,1185,922,1169,925,1134,928,1099,936,1081,950,1063,953,1063,958,1060,954,1067,940,1083,933,1100,930,1135,927,1170,920,1188,906,1206,889,1218,870,1227"/>
-<area shape="rect" id="Node000030" href="$classThermostatSettings.html#a2e92c3fef47e185475a06517d9b86ca7" title="get the temperature ramp steps" alt="" coords="976,939,1182,983"/>
-<area shape="poly" id="edge36_Node000026_Node000030" title=" " alt="" coords="868,1224,886,1214,902,1202,920,1177,927,1151,928,1126,925,1100,922,1074,923,1047,931,1020,950,994,960,988,965,985,954,997,936,1023,928,1048,928,1073,930,1099,933,1126,932,1152,924,1179,906,1205,889,1219,870,1229"/>
-<area shape="rect" id="Node000031" href="$classThermostatSettings.html#a4dfed947e15455768b7a9a15e7785b4e" title="is the start temperature set" alt="" coords="992,869,1166,914"/>
-<area shape="poly" id="edge37_Node000026_Node000031" title=" " alt="" coords="868,1224,886,1215,902,1202,924,1168,932,1134,931,1100,925,1065,919,1031,918,995,926,960,950,924,976,909,980,906,954,928,931,962,923,996,924,1030,930,1065,936,1099,937,1135,929,1170,906,1205,889,1219,870,1229"/>
-<area shape="rect" id="Node000032" href="$classThermostatSettings.html#aca9b9b2eb48b73d0638c45b242decd59" title="set the temperature ramp steps" alt="" coords="976,1147,1182,1191"/>
-<area shape="poly" id="edge39_Node000026_Node000032" title=" " alt="" coords="868,1215,966,1195,961,1196,870,1220"/>
-<area shape="poly" id="edge41_Node000033_Node000012" title=" " alt="" coords="863,816,903,804,1007,769,1003,772,904,809,866,820"/>
-<area shape="poly" id="edge42_Node000033_Node000013" title=" " alt="" coords="884,816,902,804,920,781,926,758,933,732,950,706,973,686,1003,671,999,674,977,690,954,709,938,734,932,759,925,784,905,808,888,820"/>
-<area shape="poly" id="edge44_Node000034_Node000031" title=" " alt="" coords="516,693,536,736,563,786,601,835,624,856,650,873,689,891,730,904,773,912,816,917,901,917,979,911,974,913,901,922,816,922,772,918,729,909,687,896,647,878,621,860,597,839,559,789,531,738,516,699"/>
-<area shape="rect" id="Node000035" href="$structThermostatTypeMeta.html#aae44edb025175e03030900672c4ed3ac" title=" " alt="" coords="696,491,856,535"/>
-<area shape="poly" id="edge45_Node000034_Node000035" title=" " alt="" coords="525,648,577,596,611,569,647,545,684,531,680,535,650,550,614,573,581,600,530,652"/>
-<area shape="rect" id="Node000036" href="$classsetup_1_1ThermostatSetup.html#aa0a206bad8d043e9225e0d4b9f7e4665" title="write berendsen thermostat info" alt="" coords="687,680,865,725"/>
-<area shape="poly" id="edge46_Node000034_Node000036" title=" " alt="" coords="595,680,674,690,669,692,597,685"/>
-<area shape="rect" id="Node000037" href="$classsetup_1_1ThermostatSetup.html#aa17305f055f21262994bb9a955601734" title="write langevin thermostat info" alt="" coords="687,421,865,466"/>
-<area shape="poly" id="edge49_Node000034_Node000037" title=" " alt="" coords="516,649,535,611,564,565,601,517,647,476,675,463,671,467,650,481,605,520,568,568,539,614,520,652"/>
-<area shape="rect" id="Node000038" href="$classsetup_1_1ThermostatSetup.html#a61eb1fcd350d883b80a06dc444ceb756" title="write nose hoover thermostat info" alt="" coords="687,213,865,258"/>
-<area shape="poly" id="edge52_Node000034_Node000038" title=" " alt="" coords="511,649,531,565,563,451,603,341,624,298,647,268,675,252,671,256,650,272,629,301,608,343,568,453,536,567,516,651"/>
-<area shape="rect" id="Node000039" href="$classsetup_1_1ThermostatSetup.html#a7e85fcedf9bebda39c21dad8c9565392" title="write temperature ramp info" alt="" coords="672,939,880,983"/>
-<area shape="poly" id="edge56_Node000034_Node000039" title=" " alt="" coords="515,693,534,741,561,801,600,864,623,892,650,918,668,931,663,931,647,922,620,896,596,867,557,804,529,743,514,698"/>
-<area shape="rect" id="Node000040" href="$classsetup_1_1ThermostatSetup.html#a94eca0ff1983d8fde4b2ca028df21682" title="write velocity rescaling thermostat info" alt="" coords="675,560,877,605"/>
-<area shape="poly" id="edge61_Node000034_Node000040" title=" " alt="" coords="571,648,647,621,692,608,687,611,649,626,574,652"/>
-<area shape="poly" id="edge47_Node000036_Node000012" title=" " alt="" coords="864,711,989,729,984,731,866,717"/>
-<area shape="poly" id="edge48_Node000036_Node000013" title=" " alt="" coords="864,682,980,661,975,664,866,687"/>
-<area shape="poly" id="edge51_Node000037_Node000013" title=" " alt="" coords="865,459,905,476,949,505,989,540,1053,608,1047,608,986,544,946,510,902,481,866,464"/>
-<area shape="poly" id="edge50_Node000037_Node000015" title=" " alt="" coords="864,431,991,418,986,421,866,436"/>
-<area shape="poly" id="edge55_Node000038_Node000013" title=" " alt="" coords="865,244,887,254,906,268,923,290,933,310,939,351,941,393,945,417,954,443,977,489,1003,533,1054,608,1048,608,999,536,972,491,949,445,940,418,936,394,934,351,928,312,918,292,902,272,884,259,866,250"/>
-<area shape="poly" id="edge53_Node000038_Node000018" title=" " alt="" coords="864,233,960,234,955,237,866,238"/>
-<area shape="poly" id="edge54_Node000038_Node000019" title=" " alt="" coords="864,213,966,191,961,194,866,218"/>
-<area shape="poly" id="edge58_Node000039_Node000013" title=" " alt="" coords="825,936,866,910,902,874,914,852,921,831,924,790,927,750,935,728,950,706,971,686,998,671,994,674,974,690,954,709,940,731,932,751,929,791,926,832,919,854,906,877,869,914,828,940"/>
-<area shape="poly" id="edge57_Node000039_Node000028" title=" " alt="" coords="880,980,905,994,922,1011,930,1029,938,1047,953,1063,985,1081,980,1081,950,1067,933,1050,925,1031,918,1014,902,998,880,985"/>
-<area shape="poly" id="edge59_Node000039_Node000029" title=" " alt="" coords="877,981,966,1004,961,1004,877,987"/>
-<area shape="poly" id="edge60_Node000039_Node000030" title=" " alt="" coords="880,958,963,960,957,962,881,964"/>
-<area shape="poly" id="edge62_Node000040_Node000012" title=" " alt="" coords="819,603,953,675,1022,712,1017,713,950,679,819,608"/>
-<area shape="poly" id="edge63_Node000040_Node000013" title=" " alt="" coords="877,600,980,621,975,623,878,605"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,264,74,292"/>
+<area shape="rect" id="Node000002" href="$classsetup_1_1ThermostatSetup.html#a23dfad4692f1b69805b94fff6d766afc" title="get the engine" alt="" coords="155,5,332,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="39,264,45,224,58,169,82,111,99,84,120,60,142,47,139,51,123,64,103,87,86,114,63,171,50,225,45,265"/>
+<area shape="rect" id="Node000003" href="$classthermostat_1_1Thermostat.html#a77afc636faec12614e465f85e91589e7" title="get target temperature" alt="" coords="155,75,332,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="42,264,67,199,90,162,120,130,143,117,140,121,123,134,94,165,72,202,47,265"/>
+<area shape="rect" id="Node000004" href="$classengine_1_1MDEngine.html#af9aadbdc0f8fc2279ab07be0f9f1a767" title="get the reference to the thermostat" alt="" coords="122,143,365,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="47,263,77,225,97,204,120,187,149,174,146,179,123,191,101,208,81,228,52,265"/>
+<area shape="rect" id="Node000005" href="$classThermostatSettings.html#a072b5a7c22b0510991ff135d8f7094e6" title="set the end temperature set" alt="" coords="1015,24,1192,69"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="72,268,202,232,364,180,453,140,520,101,588,67,630,52,681,38,764,26,848,22,929,24,1002,31,997,34,929,30,848,28,764,32,682,44,631,57,590,72,522,106,455,145,366,185,203,238,76,272"/>
+<area shape="rect" id="Node000006" href="$classThermostatSettings.html#a784b50c7a6f979862a5bb1a12a7aa367" title="set the relaxation time" alt="" coords="167,709,320,754"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="42,290,51,375,65,496,75,559,89,616,105,664,124,695,138,707,155,717,150,719,135,711,120,699,100,666,83,618,70,560,59,497,45,375,42,295"/>
+<area shape="rect" id="Node000007" href="$classThermostatSettings.html#aec3f6c4bb78bbb8e79b9eff31ae4fa3b" title="set the target temperature" alt="" coords="723,331,895,375"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="73,280,413,316,710,343,706,346,413,321,75,285"/>
+<area shape="rect" id="Node000009" href="$classThermostatSettings.html#a86ffc12bd69e8731d80593133a048c02" title="set the temperature set" alt="" coords="1027,224,1180,269"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="63,290,93,304,122,316,302,362,416,387,538,407,658,420,769,423,819,420,864,413,903,401,935,385,948,375,955,363,960,336,964,307,971,293,983,279,1015,262,1011,265,986,283,975,296,969,309,965,337,960,365,952,378,938,390,905,406,866,418,820,425,769,428,657,426,537,412,415,392,300,368,121,321,90,309,66,295"/>
+<area shape="rect" id="Node000010" href="$classsetup_1_1ThermostatSetup.html#ab32f25ad3fbb9f01454ce6d895ad6743" title="setup thermostat" alt="" coords="155,640,332,685"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="49,290,225,625,220,627,48,295"/>
+<area shape="rect" id="Node000008" href="$classThermostatSettings.html#a5a27ed9921c19f86ec7c5ccead775550" title="set the actual target temperature" alt="" coords="997,293,1210,338"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="894,340,984,330,979,332,896,345"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="894,332,935,316,959,298,983,279,1014,268,1010,271,986,283,962,302,938,321,897,337"/>
+<area shape="rect" id="Node000011" href="$classsetup_1_1ThermostatSetup.html#a6675307cc5568549cc5e6df267ea939a" title="setup berendsen thermostat" alt="" coords="704,1157,914,1202"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="332,672,351,682,367,695,389,728,399,760,401,791,397,822,393,854,393,886,399,919,415,954,444,995,471,1026,499,1051,529,1071,596,1104,682,1143,699,1152,694,1151,680,1147,594,1109,526,1075,496,1055,468,1030,440,998,411,957,394,921,387,886,388,853,392,822,395,791,394,761,385,730,363,699,348,686,333,678"/>
+<area shape="rect" id="Node000014" href="$classsetup_1_1ThermostatSetup.html#af02b5595c3d273843fa296dee2045d50" title="setup langevin thermostat" alt="" coords="709,640,909,685"/>
+<area shape="poly" id="edge14_Node000010_Node000014" title=" " alt="" coords="332,660,696,660,692,664,333,665"/>
+<area shape="rect" id="Node000016" href="$classsetup_1_1ThermostatSetup.html#ab752043b07334b29a5c5cdcf0677ee51" title="setup nose hoover thermostat" alt="" coords="413,899,633,943"/>
+<area shape="poly" id="edge17_Node000010_Node000016" title=" " alt="" coords="332,674,367,695,381,711,389,727,395,758,400,790,405,807,415,825,444,859,478,889,473,889,440,862,411,828,400,809,395,791,390,759,384,729,376,714,363,699,333,679"/>
+<area shape="rect" id="Node000017" href="$classsetup_1_1ThermostatSetup.html#a1c42969c434c72b24663a81503ede658" title="keeps target and end temperature synchronized" alt="" coords="430,261,617,306"/>
+<area shape="poly" id="edge19_Node000010_Node000017" title=" " alt="" coords="259,638,497,316,495,321,263,641"/>
+<area shape="rect" id="Node000022" href="$classsetup_1_1ThermostatSetup.html#aa99f59b269999fc808bfa602c4263f94" title="setup temperature ramp" alt="" coords="716,501,902,546"/>
+<area shape="poly" id="edge27_Node000010_Node000022" title=" " alt="" coords="331,638,703,548,700,552,334,643"/>
+<area shape="rect" id="Node000029" href="$classsetup_1_1ThermostatSetup.html#a8d5a48f60e0f30dc845ccdb4a15b7df5" title="setup velocity rescaling thermostat" alt="" coords="681,1227,937,1271"/>
+<area shape="poly" id="edge36_Node000010_Node000029" title=" " alt="" coords="332,672,352,681,367,695,387,723,400,751,408,778,410,805,405,859,392,912,380,965,374,1018,377,1045,384,1071,396,1099,415,1126,440,1152,468,1173,498,1192,531,1207,599,1228,669,1243,663,1243,598,1234,529,1212,496,1196,465,1178,436,1156,411,1129,391,1101,379,1073,371,1046,369,1018,374,964,387,911,400,858,405,805,402,779,395,753,382,726,363,699,349,686,333,677"/>
+<area shape="rect" id="Node000030" href="$classsetup_1_1ThermostatSetup.html#a76610396856794c4ad78ed4b78ddd338" title=" " alt="" coords="434,769,612,814"/>
+<area shape="poly" id="edge39_Node000010_Node000030" title=" " alt="" coords="332,682,366,695,426,725,480,760,475,761,423,730,364,699,333,687"/>
+<area shape="rect" id="Node000012" href="$classThermostatSettings.html#aaccf4e57a8900531a2baafe83c867946" title="get the relaxation time" alt="" coords="1027,1123,1180,1167"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="914,1165,1008,1156,1014,1156,914,1170"/>
+<area shape="rect" id="Node000013" href="$classThermostatSettings.html#acbcccfae7bfebf7416bc00d7665d6670" title="get the target temperature" alt="" coords="1017,899,1190,943"/>
+<area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="913,1155,935,1143,984,1100,1026,1050,1059,999,1083,959,1087,956,1063,1002,1030,1053,988,1104,938,1147,915,1160"/>
+<area shape="poly" id="edge16_Node000014_Node000013" title=" " alt="" coords="909,676,938,695,953,712,961,729,967,763,970,798,976,815,987,834,1015,864,1048,891,1043,890,1011,868,983,837,971,818,965,799,961,764,956,731,949,715,935,699,909,682"/>
+<area shape="rect" id="Node000015" href="$classThermostatSettings.html#a226e768a6ba0731e3504c4307782d31c" title="get the friction" alt="" coords="1029,779,1178,823"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="909,679,938,695,955,712,963,730,971,748,986,764,1017,782,1011,782,983,768,966,751,958,733,951,715,935,699,909,685"/>
+<area shape="poly" id="edge18_Node000016_Node000013" title=" " alt="" coords="612,941,682,953,809,962,936,953,1005,945,1000,946,937,958,809,967,681,958,613,947"/>
+<area shape="poly" id="edge26_Node000017_Node000007" title=" " alt="" coords="616,304,711,328,706,330,618,309"/>
+<area shape="poly" id="edge21_Node000017_Node000013" title=" " alt="" coords="525,304,532,393,540,453,553,518,572,585,599,651,636,712,683,764,714,786,743,798,772,802,801,802,864,799,899,803,938,815,1005,849,1064,890,1059,889,1003,854,936,819,898,808,863,805,801,807,772,808,742,803,711,791,680,768,632,715,595,653,567,587,547,519,534,453,527,394,524,309"/>
+<area shape="rect" id="Node000018" href="$classThermostatSettings.html#a101dccef52e96a91234478ddf7d7669b" title="get the end temperature" alt="" coords="731,261,887,306"/>
+<area shape="poly" id="edge20_Node000017_Node000018" title=" " alt="" coords="616,281,718,282,713,285,618,286"/>
+<area shape="rect" id="Node000019" href="$classThermostatSettings.html#a6d8d9de585ab81e5c2332daaa77e019b" title="is the end temperature set" alt="" coords="725,123,893,167"/>
+<area shape="poly" id="edge22_Node000017_Node000019" title=" " alt="" coords="551,259,609,217,680,177,712,167,708,170,682,182,612,222,555,263"/>
+<area shape="rect" id="Node000020" href="$classThermostatSettings.html#a52155c71c089e27c72adb4884bebb1ef" title="is the temperature set" alt="" coords="734,192,884,237"/>
+<area shape="poly" id="edge23_Node000017_Node000020" title=" " alt="" coords="616,259,722,234,717,238,619,263"/>
+<area shape="rect" id="Node000021" href="$classThermostatSettings.html#a732d642850a0fe9a9dcad32ea3a3b912" title="set the end temperature" alt="" coords="731,53,887,98"/>
+<area shape="poly" id="edge24_Node000017_Node000021" title=" " alt="" coords="537,259,593,185,634,143,680,108,719,92,715,96,683,113,637,147,597,188,541,262"/>
+<area shape="poly" id="edge25_Node000021_Node000005" title=" " alt="" coords="886,66,1002,55,997,58,888,70"/>
+<area shape="poly" id="edge34_Node000022_Node000008" title=" " alt="" coords="848,499,892,468,935,430,949,408,956,388,965,368,983,348,992,345,988,348,986,352,969,371,961,390,954,411,939,433,896,472,852,503"/>
+<area shape="poly" id="edge30_Node000022_Node000013" title=" " alt="" coords="902,533,922,543,939,557,963,591,973,625,974,659,970,692,965,726,964,760,970,796,987,834,1012,864,1045,890,1039,890,1009,868,982,837,965,798,958,761,960,725,965,692,969,659,968,626,958,594,935,560,919,547,903,538"/>
+<area shape="rect" id="Node000023" href="$classsettings_1_1TimingsSettings.html#a58a13b00fa1ceae44281aed2a416e959" title="get the number of steps" alt="" coords="1010,432,1196,477"/>
+<area shape="poly" id="edge28_Node000022_Node000023" title=" " alt="" coords="901,499,997,479,993,481,903,504"/>
+<area shape="rect" id="Node000024" href="$classThermostatSettings.html#adff95767d20992cd2d869b60cdf0575b" title="get the start temperature" alt="" coords="1022,640,1185,685"/>
+<area shape="poly" id="edge29_Node000022_Node000024" title=" " alt="" coords="902,538,938,556,955,574,963,592,971,609,986,626,1010,641,1005,641,983,630,966,612,958,594,951,577,935,560,902,543"/>
+<area shape="rect" id="Node000025" href="$classThermostatSettings.html#ab2faf34eec064f60c5a62f0443404ca2" title="get the temperature ramp frequency" alt="" coords="985,571,1222,615"/>
+<area shape="poly" id="edge31_Node000022_Node000025" title=" " alt="" coords="902,543,993,566,988,567,903,548"/>
+<area shape="rect" id="Node000026" href="$classThermostatSettings.html#a2e92c3fef47e185475a06517d9b86ca7" title="get the temperature ramp steps" alt="" coords="1000,709,1206,754"/>
+<area shape="poly" id="edge32_Node000022_Node000026" title=" " alt="" coords="902,535,922,544,939,556,953,574,960,592,963,627,967,662,973,679,987,695,991,701,986,700,983,699,969,681,961,663,958,628,955,593,948,577,935,560,919,549,902,540"/>
+<area shape="rect" id="Node000027" href="$classThermostatSettings.html#a4dfed947e15455768b7a9a15e7785b4e" title="is the start temperature set" alt="" coords="1016,363,1190,407"/>
+<area shape="poly" id="edge33_Node000022_Node000027" title=" " alt="" coords="900,499,935,480,950,465,958,450,967,433,983,418,1004,408,1000,411,986,422,971,437,963,452,954,468,938,484,903,503"/>
+<area shape="rect" id="Node000028" href="$classThermostatSettings.html#aca9b9b2eb48b73d0638c45b242decd59" title="set the temperature ramp steps" alt="" coords="1001,501,1206,546"/>
+<area shape="poly" id="edge35_Node000022_Node000028" title=" " alt="" coords="901,521,988,523,983,525,903,526"/>
+<area shape="poly" id="edge37_Node000029_Node000012" title=" " alt="" coords="899,1223,936,1212,1035,1175,1041,1174,938,1217,900,1229"/>
+<area shape="poly" id="edge38_Node000029_Node000013" title=" " alt="" coords="918,1224,935,1212,955,1189,964,1166,970,1140,982,1109,1031,1025,1076,958,1080,955,1036,1028,987,1112,975,1142,969,1168,959,1192,938,1216,920,1229"/>
+<area shape="poly" id="edge40_Node000030_Node000027" title=" " alt="" coords="527,768,543,711,572,634,592,594,617,554,646,518,680,487,713,465,743,452,772,445,801,442,862,440,897,437,936,429,1012,411,1007,413,937,434,897,442,862,445,801,447,773,450,745,457,715,470,683,491,650,522,621,557,597,596,577,636,548,712,532,770"/>
+<area shape="rect" id="Node000031" href="$structThermostatTypeMeta.html#aae44edb025175e03030900672c4ed3ac" title=" " alt="" coords="729,829,889,874"/>
+<area shape="poly" id="edge41_Node000030_Node000031" title=" " alt="" coords="612,808,717,831,712,833,613,813"/>
+<area shape="rect" id="Node000032" href="$classsetup_1_1ThermostatSetup.html#aa0a206bad8d043e9225e0d4b9f7e4665" title="write berendsen thermostat info" alt="" coords="720,1019,898,1063"/>
+<area shape="poly" id="edge42_Node000030_Node000032" title=" " alt="" coords="555,812,595,845,635,885,650,904,659,920,668,936,683,954,718,983,756,1011,751,1010,715,988,679,958,664,939,654,923,645,907,631,888,592,849,554,817"/>
+<area shape="rect" id="Node000033" href="$classsetup_1_1ThermostatSetup.html#aa17305f055f21262994bb9a955601734" title="write langevin thermostat info" alt="" coords="720,709,898,754"/>
+<area shape="poly" id="edge45_Node000030_Node000033" title=" " alt="" coords="611,771,708,752,703,755,613,776"/>
+<area shape="rect" id="Node000034" href="$classsetup_1_1ThermostatSetup.html#a61eb1fcd350d883b80a06dc444ceb756" title="write nose hoover thermostat info" alt="" coords="720,899,898,943"/>
+<area shape="poly" id="edge48_Node000030_Node000034" title=" " alt="" coords="556,812,614,849,682,884,708,895,703,896,680,889,612,853,556,817"/>
+<area shape="rect" id="Node000035" href="$classsetup_1_1ThermostatSetup.html#a7e85fcedf9bebda39c21dad8c9565392" title="write temperature ramp info" alt="" coords="705,571,913,615"/>
+<area shape="poly" id="edge50_Node000030_Node000035" title=" " alt="" coords="538,767,595,697,635,658,680,625,694,621,689,624,683,630,638,662,599,701,542,771"/>
+<area shape="rect" id="Node000036" href="$classsetup_1_1ThermostatSetup.html#a94eca0ff1983d8fde4b2ca028df21682" title="write velocity rescaling thermostat info" alt="" coords="708,1088,910,1133"/>
+<area shape="poly" id="edge55_Node000030_Node000036" title=" " alt="" coords="561,812,601,844,636,885,648,912,654,938,654,985,654,1008,657,1030,666,1051,683,1074,697,1087,692,1086,679,1078,661,1054,652,1031,649,1008,649,985,649,939,643,914,631,888,597,847,560,817"/>
+<area shape="poly" id="edge43_Node000032_Node000012" title=" " alt="" coords="898,1061,938,1073,1041,1116,1035,1116,936,1078,898,1066"/>
+<area shape="poly" id="edge44_Node000032_Node000013" title=" " alt="" coords="885,1016,936,997,1042,952,1047,950,938,1002,887,1021"/>
+<area shape="poly" id="edge47_Node000033_Node000013" title=" " alt="" coords="898,750,938,771,955,786,964,801,973,817,987,834,1020,862,1055,890,1050,889,1016,867,983,838,968,820,960,804,951,790,935,775,898,755"/>
+<area shape="poly" id="edge46_Node000033_Node000015" title=" " alt="" coords="898,750,1016,779,1011,780,898,755"/>
+<area shape="poly" id="edge49_Node000034_Node000013" title=" " alt="" coords="898,918,1004,920,999,922,899,924"/>
+<area shape="poly" id="edge52_Node000035_Node000013" title=" " alt="" coords="913,608,939,626,958,652,967,677,970,703,968,728,967,779,973,806,987,834,1013,864,1046,891,1041,890,1010,868,982,837,968,808,962,780,963,728,964,703,962,679,953,654,935,630,913,613"/>
+<area shape="poly" id="edge51_Node000035_Node000024" title=" " alt="" coords="907,613,1009,639,1004,640,907,619"/>
+<area shape="poly" id="edge53_Node000035_Node000025" title=" " alt="" coords="912,590,972,592,967,594,914,596"/>
+<area shape="poly" id="edge54_Node000035_Node000026" title=" " alt="" coords="913,612,938,626,955,643,963,661,971,678,986,695,994,701,989,701,983,699,966,681,958,663,951,646,935,630,913,617"/>
+<area shape="poly" id="edge56_Node000036_Node000012" title=" " alt="" coords="911,1120,1014,1134,1009,1134,911,1125"/>
+<area shape="poly" id="edge57_Node000036_Node000013" title=" " alt="" coords="910,1085,935,1073,976,1046,1013,1015,1072,956,1077,954,1017,1019,979,1051,938,1078,912,1090"/>
 </map>

@@ -17,7 +17,7 @@ var searchData=
   ['aseqmrunner_14',['AseQMRunner',['../classQM_1_1AseQMRunner.html',1,'QM']]],
   ['aseqmrunnertest_15',['AseQMRunnerTest',['../classAseQMRunnerTest.html',1,'']]],
   ['asextbrunner_16',['AseXtbRunner',['../classQM_1_1AseXtbRunner.html',1,'QM']]],
-  ['atom_17',['Atom',['../classmolsys_1_1Atom.html',1,'molsys']]],
+  ['atom_17',['Atom',['../classmolsys_1_1Atom.html',1,'molsys::Atom'],['../structout_1_1Frame_1_1Atom.html',1,'out::Frame::Atom']]],
   ['atomindextag_18',['AtomIndexTag',['../structAtomIndexTag.html',1,'']]],
   ['atomnumbertag_19',['AtomNumberTag',['../structAtomNumberTag.html',1,'']]],
   ['atomsection_20',['AtomSection',['../classinput_1_1restartFile_1_1AtomSection.html',1,'input::restartFile']]],

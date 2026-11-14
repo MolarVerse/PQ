@@ -1,0 +1,7 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,14,59,42"/>
+<area shape="rect" id="Node000002" href="$classutilities_1_1SerialWorker.html#a893ced32f73d4d6a573aba3d74c01392" title="queue a task, blocking while capacity tasks are in flight" alt="" coords="107,5,267,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,25,94,27,89,29,59,30"/>
+<area shape="rect" id="Node000003" href="$classutilities_1_1SerialWorker.html#ab609c5c4d99fbb17a5d979fa0da74357" title="rethrow and clear a stored task error; call with _mutex held" alt="" coords="315,5,475,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="267,25,302,28,297,28,267,30"/>
+</map>

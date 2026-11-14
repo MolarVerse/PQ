@@ -26,42 +26,42 @@
 <area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="1756,594,1689,606,1688,601,1762,593"/>
 <area shape="rect" id="Node000026" href="$namespaceutilities.html#a752bb70809a2fb9f8f59d58545fd5320" title="calculates the sign of a number" alt="" coords="1556,662,1661,690"/>
 <area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="1812,603,1772,631,1727,653,1662,671,1660,666,1725,648,1769,626,1807,605"/>
-<area shape="rect" id="Node000034" href="$testMathUtilities_8cpp.html#a71dabec1dd39a818754bbc83654ba99d" title="tests utilities::compare function for double type" alt="" coords="1582,714,1635,742"/>
-<area shape="poly" id="edge35_Node000001_Node000034" title=" " alt="" coords="1825,606,1784,658,1757,683,1727,703,1680,721,1636,729,1635,724,1679,716,1725,699,1754,678,1780,654,1820,609"/>
-<area shape="rect" id="Node000035" href="$testMathUtilities_8cpp.html#a540fa655496e62ccd1665e4b83f98bcd" title="tests utilities::compare(Vec3D, Vec3D, tolerance) — Vec3D utilities::compare with a user&#45;supplied tol..." alt="" coords="1582,766,1635,794"/>
-<area shape="poly" id="edge36_Node000001_Node000035" title=" " alt="" coords="1831,608,1816,644,1793,684,1764,723,1728,755,1705,767,1681,775,1636,782,1635,777,1679,770,1703,762,1724,751,1760,719,1789,681,1811,642,1827,611"/>
-<area shape="rect" id="Node000036" href="$testMathUtilities_8cpp.html#a653ce49685376613a61c7d30177f7192" title="tests utilities::compare&lt;T&gt;(a, b, tolerance) — 3&#45;arg overload with a user&#45;supplied tolerance." alt="" coords="1582,818,1635,846"/>
-<area shape="poly" id="edge37_Node000001_Node000036" title=" " alt="" coords="1836,608,1823,655,1802,708,1770,762,1751,786,1728,807,1706,820,1681,828,1636,835,1635,829,1680,823,1703,815,1724,803,1747,782,1766,759,1797,706,1818,653,1832,612"/>
-<area shape="rect" id="Node000037" href="$testManostat_8cpp.html#a5337d4cb6608ef861b9f3653bfae6388" title=" " alt="" coords="1574,870,1642,898"/>
-<area shape="poly" id="edge38_Node000001_Node000037" title=" " alt="" coords="1839,608,1830,664,1810,731,1795,766,1777,800,1755,832,1728,859,1708,872,1686,880,1643,887,1642,881,1685,875,1706,867,1724,855,1751,828,1772,798,1790,764,1805,729,1825,663,1835,612"/>
-<area shape="rect" id="Node000038" href="$testManostat_8cpp.html#a5b9def0e7c1219858a826df353f52af2" title="tests application of berendsen manostat" alt="" coords="1574,922,1642,950"/>
-<area shape="poly" id="edge39_Node000001_Node000038" title=" " alt="" coords="1841,609,1835,673,1817,755,1802,797,1783,839,1758,877,1728,911,1708,924,1686,932,1644,939,1643,934,1685,927,1706,919,1724,907,1754,874,1779,836,1798,795,1812,753,1830,673,1837,612"/>
-<area shape="rect" id="Node000039" href="$testManostat_8cpp.html#afbab15ab2e6ee17d737511c827dcb5db" title="for fixed angles the diagonal scaling in orthogonal space is mapped to simulation space: S_sim * (h v..." alt="" coords="1574,974,1642,1002"/>
-<area shape="poly" id="edge40_Node000001_Node000039" title=" " alt="" coords="1843,609,1840,682,1824,777,1810,828,1789,877,1762,923,1728,963,1709,976,1686,985,1643,991,1643,986,1685,980,1706,972,1724,959,1758,920,1785,875,1805,826,1819,776,1834,682,1839,613"/>
-<area shape="rect" id="Node000040" href="$testMolecule_8cpp.html#ab27b545fd87c23d61ca4c414a9952562" title=" " alt="" coords="1574,1026,1642,1054"/>
-<area shape="poly" id="edge41_Node000001_Node000040" title=" " alt="" coords="1838,608,1825,702,1802,824,1769,939,1750,984,1728,1015,1709,1029,1687,1037,1643,1044,1643,1038,1685,1032,1706,1024,1724,1011,1745,982,1764,937,1796,822,1820,701,1835,612"/>
-<area shape="rect" id="Node000041" href="$testMolecule_8cpp.html#a64cd885a3d448bd6484ed3511f9005f1" title=" " alt="" coords="1574,1078,1642,1106"/>
-<area shape="poly" id="edge42_Node000001_Node000041" title=" " alt="" coords="1839,608,1828,713,1805,849,1790,918,1772,981,1752,1032,1728,1067,1709,1081,1687,1089,1643,1096,1642,1090,1685,1084,1706,1076,1724,1063,1747,1029,1767,979,1785,917,1800,848,1822,712,1836,612"/>
-<area shape="rect" id="Node000042" href="$testMolecule_8cpp.html#a995dfc36eb098af8674d3ca5e101a9ae" title=" " alt="" coords="1574,1130,1642,1158"/>
-<area shape="poly" id="edge43_Node000001_Node000042" title=" " alt="" coords="1840,608,1830,722,1809,874,1794,952,1775,1022,1754,1080,1728,1119,1709,1133,1687,1142,1643,1148,1643,1142,1685,1136,1706,1128,1724,1115,1749,1077,1770,1020,1789,950,1804,874,1825,721,1836,612"/>
-<area shape="rect" id="Node000003" href="$classinput_1_1guffdat_1_1GuffDatReader.html#af0821624a7c229b5c59844666a15fd25" title="post process guff.dat reading" alt="" coords="966,507,1179,551"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1311,217,1093,508,1089,504,1306,220"/>
-<area shape="rect" id="Node000004" href="$namespaceinput_1_1guffdat.html#a06c3126a46b9729b8a7e81d7fa1e21cb" title="Construct a new Guff Dat Reader:: Guff Dat Reader object." alt="" coords="712,515,907,543"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="948,530,908,532,907,526,954,528"/>
-<area shape="rect" id="Node000005" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,542,482,570"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="761,509,714,494,656,479,593,473,562,474,531,480,495,492,462,509,409,543,405,539,459,504,493,487,530,474,561,469,593,467,657,474,716,489,766,508"/>
-<area shape="rect" id="Node000009" href="$testGuffDatReader_8cpp.html#ae0485960e13529eb6a1a10c3b7152098" title="readGuffdat function testing" alt="" coords="558,489,627,516"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="694,516,628,509,627,504,699,514"/>
-<area shape="rect" id="Node000010" href="$testGuffDatReader_8cpp.html#a06b0f294d1aa10fa96a6e60f62cc5037" title=" " alt="" coords="558,541,627,568"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="694,543,628,553,626,548,699,541"/>
-<area shape="rect" id="Node000011" href="$testGuffDatReader_8cpp.html#a0a56c765263e849c5a5e62c37a6ee88e" title=" " alt="" coords="558,593,627,620"/>
-<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="752,550,628,597,626,592,756,547"/>
-<area shape="rect" id="Node000006" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,542,244,570"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="275,557,246,558,243,553,279,554"/>
-<area shape="rect" id="Node000007" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,515,60,543"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="90,542,62,536,59,532,94,538"/>
-<area shape="rect" id="Node000008" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,567,60,595"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="91,573,62,578,58,574,94,569"/>
+<area shape="rect" id="Node000035" href="$testMathUtilities_8cpp.html#a71dabec1dd39a818754bbc83654ba99d" title="tests utilities::compare function for double type" alt="" coords="1582,714,1635,742"/>
+<area shape="poly" id="edge36_Node000001_Node000035" title=" " alt="" coords="1825,606,1784,658,1757,683,1727,703,1680,721,1636,729,1635,724,1679,716,1725,699,1754,678,1780,654,1820,609"/>
+<area shape="rect" id="Node000036" href="$testMathUtilities_8cpp.html#a540fa655496e62ccd1665e4b83f98bcd" title="tests utilities::compare(Vec3D, Vec3D, tolerance) — Vec3D utilities::compare with a user&#45;supplied tol..." alt="" coords="1582,766,1635,794"/>
+<area shape="poly" id="edge37_Node000001_Node000036" title=" " alt="" coords="1831,608,1816,644,1793,684,1764,723,1728,755,1705,767,1681,775,1636,782,1635,777,1679,770,1703,762,1724,751,1760,719,1789,681,1811,642,1827,611"/>
+<area shape="rect" id="Node000037" href="$testMathUtilities_8cpp.html#a653ce49685376613a61c7d30177f7192" title="tests utilities::compare&lt;T&gt;(a, b, tolerance) — 3&#45;arg overload with a user&#45;supplied tolerance." alt="" coords="1582,818,1635,846"/>
+<area shape="poly" id="edge38_Node000001_Node000037" title=" " alt="" coords="1836,608,1823,655,1802,708,1770,762,1751,786,1728,807,1706,820,1681,828,1636,835,1635,829,1680,823,1703,815,1724,803,1747,782,1766,759,1797,706,1818,653,1832,612"/>
+<area shape="rect" id="Node000038" href="$testManostat_8cpp.html#a5337d4cb6608ef861b9f3653bfae6388" title=" " alt="" coords="1574,870,1642,898"/>
+<area shape="poly" id="edge39_Node000001_Node000038" title=" " alt="" coords="1839,608,1830,664,1810,731,1795,766,1777,800,1755,832,1728,859,1708,872,1686,880,1643,887,1642,881,1685,875,1706,867,1724,855,1751,828,1772,798,1790,764,1805,729,1825,663,1835,612"/>
+<area shape="rect" id="Node000039" href="$testManostat_8cpp.html#a5b9def0e7c1219858a826df353f52af2" title="tests application of berendsen manostat" alt="" coords="1574,922,1642,950"/>
+<area shape="poly" id="edge40_Node000001_Node000039" title=" " alt="" coords="1841,609,1835,673,1817,755,1802,797,1783,839,1758,877,1728,911,1708,924,1686,932,1644,939,1643,934,1685,927,1706,919,1724,907,1754,874,1779,836,1798,795,1812,753,1830,673,1837,612"/>
+<area shape="rect" id="Node000040" href="$testManostat_8cpp.html#afbab15ab2e6ee17d737511c827dcb5db" title="for fixed angles the diagonal scaling in orthogonal space is mapped to simulation space: S_sim * (h v..." alt="" coords="1574,974,1642,1002"/>
+<area shape="poly" id="edge41_Node000001_Node000040" title=" " alt="" coords="1843,609,1840,682,1824,777,1810,828,1789,877,1762,923,1728,963,1709,976,1686,985,1643,991,1643,986,1685,980,1706,972,1724,959,1758,920,1785,875,1805,826,1819,776,1834,682,1839,613"/>
+<area shape="rect" id="Node000041" href="$testMolecule_8cpp.html#ab27b545fd87c23d61ca4c414a9952562" title=" " alt="" coords="1574,1026,1642,1054"/>
+<area shape="poly" id="edge42_Node000001_Node000041" title=" " alt="" coords="1838,608,1825,702,1802,824,1769,939,1750,984,1728,1015,1709,1029,1687,1037,1643,1044,1643,1038,1685,1032,1706,1024,1724,1011,1745,982,1764,937,1796,822,1820,701,1835,612"/>
+<area shape="rect" id="Node000042" href="$testMolecule_8cpp.html#a64cd885a3d448bd6484ed3511f9005f1" title=" " alt="" coords="1574,1078,1642,1106"/>
+<area shape="poly" id="edge43_Node000001_Node000042" title=" " alt="" coords="1839,608,1828,713,1805,849,1790,918,1772,981,1752,1032,1728,1067,1709,1081,1687,1089,1643,1096,1642,1090,1685,1084,1706,1076,1724,1063,1747,1029,1767,979,1785,917,1800,848,1822,712,1836,612"/>
+<area shape="rect" id="Node000043" href="$testMolecule_8cpp.html#a995dfc36eb098af8674d3ca5e101a9ae" title=" " alt="" coords="1574,1130,1642,1158"/>
+<area shape="poly" id="edge44_Node000001_Node000043" title=" " alt="" coords="1840,608,1830,722,1809,874,1794,952,1775,1022,1754,1080,1728,1119,1709,1133,1687,1142,1643,1148,1643,1142,1685,1136,1706,1128,1724,1115,1749,1077,1770,1020,1789,950,1804,874,1825,721,1836,612"/>
+<area shape="rect" id="Node000003" href="$classinput_1_1guffdat_1_1GuffDatReader.html#af0821624a7c229b5c59844666a15fd25" title="post process guff.dat reading" alt="" coords="966,480,1179,525"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1308,217,1094,482,1091,478,1304,220"/>
+<area shape="rect" id="Node000004" href="$namespaceinput_1_1guffdat.html#a06c3126a46b9729b8a7e81d7fa1e21cb" title="Construct a new Guff Dat Reader:: Guff Dat Reader object." alt="" coords="712,489,907,516"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="948,503,908,505,907,500,953,502"/>
+<area shape="rect" id="Node000005" href="$namespacesetup.html#ace373bc8dbf231fe39d4c21a1e0d4e26" title="setup the engine" alt="" coords="292,515,482,543"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="761,483,714,467,656,453,593,446,562,447,531,453,495,465,462,482,409,517,405,513,459,478,493,461,530,448,561,442,593,441,657,447,716,462,766,481"/>
+<area shape="rect" id="Node000009" href="$testGuffDatReader_8cpp.html#ae0485960e13529eb6a1a10c3b7152098" title="readGuffdat function testing" alt="" coords="558,462,627,490"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="694,490,628,482,627,477,699,488"/>
+<area shape="rect" id="Node000010" href="$testGuffDatReader_8cpp.html#a06b0f294d1aa10fa96a6e60f62cc5037" title=" " alt="" coords="558,514,627,542"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="694,517,628,526,626,521,699,514"/>
+<area shape="rect" id="Node000011" href="$testGuffDatReader_8cpp.html#a0a56c765263e849c5a5e62c37a6ee88e" title=" " alt="" coords="558,566,627,594"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="752,523,628,570,626,565,756,520"/>
+<area shape="rect" id="Node000006" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,515,244,543"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="275,531,246,531,243,527,279,527"/>
+<area shape="rect" id="Node000007" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,489,60,516"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="90,515,62,510,59,505,94,512"/>
+<area shape="rect" id="Node000008" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,541,60,568"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="91,546,62,552,58,548,94,542"/>
 <area shape="rect" id="Node000022" href="$classpot_1_1BuckinghamPair.html#a4cf200e3fdbca9c3bc67a9e1658545ee" title="operator overload for the comparison of two BuckinghamPair objects" alt="" coords="1258,395,1414,439"/>
 <area shape="poly" id="edge21_Node000021_Node000022" title=" " alt="" coords="1513,525,1489,514,1473,499,1464,483,1456,468,1441,454,1414,439,1414,434,1444,450,1460,465,1469,481,1477,495,1492,510,1518,525"/>
 <area shape="rect" id="Node000023" href="$classpot_1_1LennardJonesPair.html#a8c918ede9d9041af4dad5cf5c3c2e258" title="operator overload for the comparison of two LennardJonesPair objects" alt="" coords="1255,464,1417,509"/>
@@ -72,16 +72,18 @@
 <area shape="poly" id="edge26_Node000026_Node000027" title=" " alt="" coords="1538,662,1490,653,1414,632,1413,627,1491,648,1543,662"/>
 <area shape="rect" id="Node000028" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#aa381b1926d6fa64b840de70c930f1838" title="processes the intra nonBonded interactions for a given molecule type" alt="" coords="1229,653,1443,715"/>
 <area shape="poly" id="edge28_Node000026_Node000028" title=" " alt="" coords="1537,678,1444,683,1443,678,1543,677"/>
-<area shape="rect" id="Node000033" href="$testMathUtilities_8cpp.html#a3ba202da8a005517f574ce3dd11539f3" title="tests sign template function (here tests only for double data type)" alt="" coords="1309,739,1363,767"/>
-<area shape="poly" id="edge34_Node000026_Node000033" title=" " alt="" coords="1538,689,1492,705,1468,717,1444,729,1364,751,1362,746,1442,724,1465,712,1490,700,1543,687"/>
-<area shape="poly" id="edge27_Node000027_Node000003" title=" " alt="" coords="1240,579,1151,555,1151,549,1245,579"/>
+<area shape="rect" id="Node000034" href="$testMathUtilities_8cpp.html#a3ba202da8a005517f574ce3dd11539f3" title="tests sign template function (here tests only for double data type)" alt="" coords="1309,739,1363,767"/>
+<area shape="poly" id="edge35_Node000026_Node000034" title=" " alt="" coords="1538,689,1492,705,1468,717,1444,729,1364,751,1362,746,1442,724,1465,712,1490,700,1543,687"/>
+<area shape="poly" id="edge27_Node000027_Node000003" title=" " alt="" coords="1245,579,1228,574,1122,528,1122,523,1230,569,1250,578"/>
 <area shape="rect" id="Node000029" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#abc26f19797ac153464b142dcc91328d7" title="reads the intra non bonded interactions from the intraNonBonded file" alt="" coords="964,661,1181,706"/>
 <area shape="poly" id="edge29_Node000028_Node000029" title=" " alt="" coords="1211,684,1182,686,1181,681,1217,683"/>
 <area shape="rect" id="Node000030" href="$namespaceinput_1_1intraNonBondedReader.html#a21a6f65fde55ed3433bfa28ed9944910" title="construct IntraNonBondedReader object and read the file" alt="" coords="703,661,916,706"/>
 <area shape="poly" id="edge30_Node000029_Node000030" title=" " alt="" coords="946,684,917,686,916,681,951,683"/>
-<area shape="rect" id="Node000031" href="$namespacesetup.html#ad4db282b92cbef07595e5279159209c7" title="reads all the files needed for the simulation" alt="" coords="530,645,655,672"/>
-<area shape="poly" id="edge31_Node000030_Node000031" title=" " alt="" coords="684,670,655,668,654,663,690,669"/>
-<area shape="rect" id="Node000032" href="$testIntraNonBondedReader_8cpp.html#a7336adc80c06905f7b3381897a0fa8b0" title=" " alt="" coords="558,697,627,724"/>
-<area shape="poly" id="edge33_Node000030_Node000032" title=" " alt="" coords="685,700,628,709,626,704,690,698"/>
-<area shape="poly" id="edge32_Node000031_Node000005" title=" " alt="" coords="540,638,529,634,414,573,414,567,532,629,546,637"/>
+<area shape="rect" id="Node000031" href="$namespacesetup.html#afb4fb0d7907525c8cfa2b33d8affe25a" title="reads all the files needed for the simulation" alt="" coords="530,618,655,646"/>
+<area shape="poly" id="edge31_Node000030_Node000031" title=" " alt="" coords="696,658,654,649,653,644,701,657"/>
+<area shape="rect" id="Node000032" href="$testIntraNonBondedReader_8cpp.html#a30d4890ac6ea179dc6314c8162a4572d" title=" " alt="" coords="558,670,627,698"/>
+<area shape="poly" id="edge33_Node000030_Node000032" title=" " alt="" coords="684,685,628,686,627,681,689,683"/>
+<area shape="rect" id="Node000033" href="$testIntraNonBondedReader_8cpp.html#a7336adc80c06905f7b3381897a0fa8b0" title=" " alt="" coords="558,722,627,750"/>
+<area shape="poly" id="edge34_Node000030_Node000033" title=" " alt="" coords="696,711,628,730,626,725,701,709"/>
+<area shape="poly" id="edge32_Node000031_Node000005" title=" " alt="" coords="540,612,529,607,414,546,414,541,532,603,546,611"/>
 </map>

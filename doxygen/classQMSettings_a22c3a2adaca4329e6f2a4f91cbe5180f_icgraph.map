@@ -1,0 +1,13 @@
+<map id="QMSettings::useDispersionCorr" name="QMSettings::useDispersionCorr">
+<area shape="rect" id="Node000001" title="returns if the dispersion correction should be used" alt="" coords="484,83,707,111"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseDftbRunner.html#abf3e21924e7237988628f90161f43898" title="Construct a new AseDftbRunner::AseDftbRunner object." alt="" coords="249,5,405,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="522,79,405,50,406,45,527,78"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1AseMaceRunner.html#a6129e06fd937f15c3a6dfc984cdb494f" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="245,75,409,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="466,97,410,100,409,94,471,97"/>
+<area shape="rect" id="Node000006" href="$classQMSettings.html#ab943f28100fe8b33a10e65a5d1c5cb8b" title="sets if the dispersion correction should be used" alt="" coords="218,144,436,189"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="527,115,417,146,416,141,522,116"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1AseDftbRunner.html#a88e17ef3a6c463ddd575a9c11dd1b885" title=" " alt="" coords="9,5,166,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,29,167,30,165,25,235,26"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1AseMaceRunner.html#ab8223372f370bdbbfbb3151d0a18d674" title=" " alt="" coords="5,75,170,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="227,98,170,100,170,94,232,96"/>
+</map>

@@ -1,19 +1,15 @@
 <map id="QM::TurbomoleRunner" name="QM::TurbomoleRunner">
-<area shape="rect" id="Node000001" title="class for running DFTB+ inheriting from ExternalQMRunner" alt="" coords="331,972,503,1089"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1ExternalQMRunner.html" title="ExternalQMRunner inherits from QMRunner." alt="" coords="267,492,439,877"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="393,889,409,973,404,971,390,894"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="116,168,275,396"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="246,408,281,492,275,492,246,413"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,14,85,86"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="65,83,104,142,110,153,105,154,99,145,66,88"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="108,14,283,86"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="196,84,198,151,193,150,196,89"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="315,246,391,318"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="354,316,356,475,351,474,352,321"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="307,5,434,95"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="367,107,358,246,353,245,365,112"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="415,246,574,318"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="487,316,470,388,445,469,442,477,437,475,440,467,465,387,485,320"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="463,648,502,720"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="480,718,454,877,437,957,433,954,449,876,476,722"/>
+<area shape="rect" id="Node000001" title="class for running Turbomole inheriting from ExternalQMRunner" alt="" coords="208,843,387,983"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1ExternalQMRunner.html" title="ExternalQMRunner inherits from QMRunner." alt="" coords="131,452,325,748"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,761,285,844,279,843,262,765"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="40,151,199,379"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="161,390,183,453,178,453,161,396"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,5,85,78"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="57,75,79,134,74,135,57,80"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="108,5,283,78"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="183,80,167,135,162,134,185,75"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="223,229,452,301"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="327,298,284,438,279,436,325,303"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="348,564,387,636"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="363,634,340,749,321,828,316,826,335,747,359,638"/>
 </map>

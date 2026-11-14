@@ -1,9 +1,11 @@
 <map id="TEST" name="TEST">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,59,33"/>
-<area shape="rect" id="Node000002" href="$namespaceQM.html#a430721cad42818baeb1e9284220c4ed3" title=" " alt="" coords="107,5,297,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,17,93,18,88,20,59,22"/>
-<area shape="rect" id="Node000003" href="$namespaceutilities.html#ac17a1d50b00bcf1de310062a44bca2c4" title=" " alt="" coords="345,5,538,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="298,17,332,19,327,19,298,22"/>
-<area shape="rect" id="Node000004" href="$namespaceutilities.html#ab45abb83fda00620da00e2a73d56f5e8" title=" " alt="" coords="586,5,764,33"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="539,17,573,19,568,19,539,22"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,83,59,111"/>
+<area shape="rect" id="Node000002" href="$classExternalQMSettings.html#a0a8c409895c0a9a84bf84a5cb23052ea" title="finalizes the external QM settings by performing necessary checks and setups" alt="" coords="109,5,260,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,83,106,60,121,55,117,58,108,65,61,87"/>
+<area shape="rect" id="Node000004" href="$classExternalQMSettings.html#a8a7ac0b209a3e6ec88f850879748ae43" title="returns the qmScript" alt="" coords="109,75,260,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="58,94,96,95,92,99,60,100"/>
+<area shape="rect" id="Node000005" href="$classExternalQMSettings.html#aaf1c60165f45a0c0afe05cd601eff37b" title="sets the qmScript in settings" alt="" coords="107,144,262,189"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="59,107,108,129,121,137,116,137,106,134,59,112"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="310,14,473,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="260,25,297,27,292,28,261,30"/>
 </map>

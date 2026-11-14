@@ -1,0 +1,9 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,91,59,119"/>
+<area shape="rect" id="Node000002" href="$classNoseHooverSettings.html#ae4140a53e79c72ff7f896fd22b6b5e24" title="set chi by user" alt="" coords="135,5,289,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="54,89,105,60,123,54,119,58,108,65,57,93"/>
+<area shape="rect" id="Node000003" href="$classNoseHooverSettings.html#abf66666b077876e4b6a974b8838ca553" title="set the nose hoover chain length" alt="" coords="107,74,317,136"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="58,102,93,103,89,107,60,108"/>
+<area shape="rect" id="Node000004" href="$classNoseHooverSettings.html#a5e3787a4286ae37667f6012211ef6e30" title="set zeta by user" alt="" coords="135,160,289,205"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="56,117,108,145,124,154,119,154,105,150,55,122"/>
+</map>

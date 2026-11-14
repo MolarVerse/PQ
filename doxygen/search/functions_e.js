@@ -6,6 +6,8 @@ var searchData=
   ['norm_3',['norm',['../namespacelinalg.html#ac4f14aa5b9548d9a1f34acd89fb782bd',1,'linalg']]],
   ['norms_4',['norms',['../namespacelinalg.html#a57613909938f1ccfc336a43ae538e65b',1,'linalg']]],
   ['normsquared_5',['normSquared',['../namespacelinalg.html#ab23afb58a7b1eab127cd10bdfbbb0597',1,'linalg']]],
-  ['nosehooverthermostat_6',['NoseHooverThermostat',['../classthermostat_1_1NoseHooverThermostat.html#a064ae066323c5967aa49d004706621b6',1,'thermostat::NoseHooverThermostat::NoseHooverThermostat()=default'],['../classthermostat_1_1NoseHooverThermostat.html#a231bd47de979323822499fbf5c50b8d0',1,'thermostat::NoseHooverThermostat::NoseHooverThermostat(const Temperature &amp;targetTemp, const std::vector&lt; double &gt; &amp;chi, const std::vector&lt; double &gt; &amp;zeta, double couplingFrequency)']]],
-  ['numerical_5fvalue_5fin_7',['numerical_value_in',['../classlinalg_1_1StaticMatrix3x3.html#a8019d159a173e1a916e78bbcdec32c55',1,'linalg::StaticMatrix3x3::numerical_value_in()'],['../classlinalg_1_1Vector3D.html#a954e7f8857ca38d55d96a42ab5c931d2',1,'linalg::Vector3D::numerical_value_in()']]]
+  ['nosehooversection_6',['NoseHooverSection',['../classinput_1_1restartFile_1_1NoseHooverSection.html#a358a1feb24b36d7957f6c1bf8e20d503',1,'input::restartFile::NoseHooverSection']]],
+  ['nosehooverthermostat_7',['NoseHooverThermostat',['../classthermostat_1_1NoseHooverThermostat.html#a223503122f8ef311d32c08089b182799',1,'thermostat::NoseHooverThermostat']]],
+  ['number_8',['number',['../namespaceorca__common.html#a08f6c3ff74c5aed3d88d43f0f1fa0b9f',1,'orca_common.number()'],['../namespaceturbomole__common.html#aa2f14af96f32d784b07559cc67aac42f',1,'turbomole_common.number()']]],
+  ['numerical_5fvalue_5fin_9',['numerical_value_in',['../classlinalg_1_1StaticMatrix3x3.html#a8019d159a173e1a916e78bbcdec32c55',1,'linalg::StaticMatrix3x3::numerical_value_in()'],['../classlinalg_1_1Vector3D.html#a954e7f8857ca38d55d96a42ab5c931d2',1,'linalg::Vector3D::numerical_value_in()']]]
 ];

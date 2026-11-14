@@ -1,11 +1,9 @@
 <map id="input::ringPolymer::readRingPolymerRestartFile" name="input::ringPolymer::readRingPolymerRestartFile">
-<area shape="rect" id="Node000001" title="wrapper function to construct a RingPolymerRestartFileReader object and call the read function" alt="" coords="5,40,217,85"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a4cc844ab19b237498424a240da79e629" title="Get the ring polymer start file name." alt="" coords="284,5,510,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,47,271,42,266,44,218,52"/>
-<area shape="rect" id="Node000003" href="$classinput_1_1ringPolymer_1_1RingPolymerRestartFileReader.html#a9a9c77f65fd88daea68743a24f430373" title="Reads a .rpmd.rst file sets the ring polymer beads in the engine." alt="" coords="265,75,530,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,72,252,79,246,79,217,78"/>
-<area shape="rect" id="Node000004" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="578,56,777,84"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="530,82,565,81,560,82,531,87"/>
-<area shape="rect" id="Node000005" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="606,108,750,136"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="531,106,593,114,587,114,531,112"/>
+<area shape="rect" id="Node000001" title="wrapper function to construct a RingPolymerRestartFileReader object and call the read function" alt="" coords="5,24,217,68"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1ringPolymer_1_1RingPolymerRestartFileReader.html#a9a9c77f65fd88daea68743a24f430373" title="Reads a .rpmd.rst file sets the ring polymer beads in the engine." alt="" coords="265,24,530,68"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,43,252,46,246,46,217,48"/>
+<area shape="rect" id="Node000003" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="578,5,777,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="530,31,565,30,560,30,531,36"/>
+<area shape="rect" id="Node000004" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="606,57,750,85"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="531,55,593,63,587,63,531,61"/>
 </map>

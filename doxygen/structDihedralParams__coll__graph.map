@@ -1,5 +1,9 @@
 <map id="DihedralParams" name="DihedralParams">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,195,119,268"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="35,5,90,78"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,76,65,179,60,178,60,79"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="166,168,280,240"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,158,95"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,92,96,119,110,142,129,160,153,177,148,177,126,165,106,145,92,121,86,97"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="196,14,250,86"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="225,84,225,152,221,150,221,88"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="275,5,427,95"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="341,92,330,121,314,145,295,165,292,160,310,142,325,119,337,96"/>
 </map>

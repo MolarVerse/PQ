@@ -1,23 +1,11 @@
 <map id="ExternalQMRunnerTest::SetUp" name="ExternalQMRunnerTest::SetUp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,235,175,279"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a48d588d8fe59fd485990cafd2cc85296" title="Get the DFTB setup file name." alt="" coords="250,5,407,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,233,116,196,143,149,178,101,221,60,238,52,234,56,224,64,182,105,147,152,121,198,103,235"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="236,75,421,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="107,233,156,181,187,153,221,129,235,124,231,128,224,134,190,158,159,185,112,236"/>
-<area shape="rect" id="Node000004" href="$classQMSettings.html#a3b68e2f9f11f9cbdc743204386de5399" title="returns the qmLoopTimeLimit" alt="" coords="223,144,434,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="141,232,222,199,244,192,239,196,224,203,144,236"/>
-<area shape="rect" id="Node000005" href="$classQMSettings.html#accbc248f1dc0bb967aa328aa6c60c5ee" title="returns the qmScript" alt="" coords="236,212,420,240"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="174,244,223,239,218,242,176,248"/>
-<area shape="rect" id="Node000006" href="$classQMSettings.html#a6f017a8fac38f83de6c85db864277506" title="returns if the net force should be removed after reading in the QM forces" alt="" coords="227,264,430,309"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="174,265,214,271,209,273,176,270"/>
-<area shape="rect" id="Node000007" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="236,333,421,378"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="134,277,224,319,243,327,238,328,222,323,134,282"/>
-<area shape="rect" id="Node000010" href="$classQMSettings.html#a9bf600dd42b7946b47084dfc2ce1ba37" title="sets the qmLoopTimeLimit in settings" alt="" coords="223,403,434,447"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="108,277,158,333,189,362,224,388,235,396,229,396,221,393,186,367,154,337,108,282"/>
-<area shape="rect" id="Node000011" href="$classQMSettings.html#a048d92705ee48b44b517df016ff059c8" title="sets if the net force should be removed after reading in the QM forces" alt="" coords="228,472,429,517"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="100,277,120,317,146,365,181,415,224,458,231,464,226,463,221,462,177,418,142,368,115,319,100,282"/>
-<area shape="rect" id="Node000008" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="490,299,677,343"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="421,340,477,335,472,336,422,346"/>
-<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="482,368,685,413"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="421,366,469,374,464,375,422,371"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,40,175,85"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="223,5,408,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,47,209,43,205,45,176,52"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#ad15f820f281b956092bb1b0b94963717" title="sets the jobtype to enum in settings" alt="" coords="223,75,408,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,73,210,80,204,81,175,78"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a12834b05adc6d081c25c8c13181060d5" title="activate ring polymer MD simulations" alt="" coords="464,40,651,85"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="408,81,451,78,446,78,409,86"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a51dcc07d1f262eed027cf2d79fcae8dc" title="deactivate ring polymer MD simulations" alt="" coords="456,109,659,154"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="409,108,443,115,438,115,409,113"/>
 </map>

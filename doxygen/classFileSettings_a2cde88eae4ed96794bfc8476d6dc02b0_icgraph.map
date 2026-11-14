@@ -1,0 +1,5 @@
+<map id="FileSettings::getTMFileName" name="FileSettings::getTMFileName">
+<area shape="rect" id="Node000001" title="Get the TM file name." alt="" coords="219,14,427,42"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1TurbomoleRunner.html#a597afd504f62b7d8a482ec8f8ebc018e" title="executes the external qm program" alt="" coords="5,5,171,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,28,171,30,171,25,206,27"/>
+</map>

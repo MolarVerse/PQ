@@ -1,0 +1,6 @@
+<map id="fake_orca.charges" name="fake_orca.charges">
+<area shape="rect" id="Node000001" title=" " alt="" coords="175,29,314,57"/>
+<area shape="rect" id="Node000002" href="$namespacefake__orca.html#a471b45c6f339e8e70134646d9f62aee5" title=" " alt="" coords="5,29,127,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,43,127,46,127,41,162,43"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="95,14,86,10,66,8,48,10,38,15,35,20,40,29,35,29,30,20,34,11,46,5,66,3,87,5,100,14"/>
+</map>

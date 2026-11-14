@@ -6,6 +6,7 @@ var testFilesParser_8cpp =
     [ "TEST_F", "testFilesParser_8cpp.html#a54b7e2c4d03f6e74e89f4897d763fe6a", null ],
     [ "TEST_F", "testFilesParser_8cpp.html#a78f3098de2338d96eb8de05e4040adf5", null ],
     [ "TEST_F", "testFilesParser_8cpp.html#a834fb91303a5f981c79036cfa45ddcd0", null ],
+    [ "TEST_F", "testFilesParser_8cpp.html#a6086d0c3fe8abeb93a47dad84f27a719", null ],
     [ "TEST_F", "testFilesParser_8cpp.html#ab269d45aff9dda32183251c15cdd7b82", null ],
     [ "TEST_F", "testFilesParser_8cpp.html#ac4e47005dc1e93d10983ecd225d11a3b", null ],
     [ "TEST_F", "testFilesParser_8cpp.html#afb4d860dd436aafd3df12da280fc3e4a", null ],

@@ -4,7 +4,11 @@ var dir_52b4106b6168f13dcdf82e33b1d195ee =
     [ "executablePath.hpp", "executablePath_8hpp.html", "executablePath_8hpp" ],
     [ "interrupt.hpp", "interrupt_8hpp.html", "interrupt_8hpp" ],
     [ "mathUtilities.hpp", "mathUtilities_8hpp.html", "mathUtilities_8hpp" ],
+    [ "serialWorker.hpp", "serialWorker_8hpp.html", "serialWorker_8hpp" ],
     [ "singleton.hpp", "singleton_8hpp.html", "singleton_8hpp" ],
     [ "stringUtilities.hpp", "stringUtilities_8hpp.html", "stringUtilities_8hpp" ],
-    [ "strongTypes.hpp", "strongTypes_8hpp.html", "strongTypes_8hpp" ]
+    [ "strongTypes.hpp", "strongTypes_8hpp.html", "strongTypes_8hpp" ],
+    [ "systemMemory.hpp", "systemMemory_8hpp.html", "systemMemory_8hpp" ],
+    [ "unit_types.hpp", "unit__types_8hpp.html", "unit__types_8hpp" ],
+    [ "units.hpp", "units_8hpp.html", "units_8hpp" ]
 ];

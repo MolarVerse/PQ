@@ -1,0 +1,13 @@
+<map id="turbomole_common.insert_point_charges" name="turbomole_common.insert_point_charges">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,57,199,102"/>
+<area shape="rect" id="Node000002" href="$namespaceturbomole__common.html#aa2f14af96f32d784b07559cc67aac42f" title=" " alt="" coords="247,5,453,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,54,277,36,272,38,198,59"/>
+<area shape="rect" id="Node000003" href="$namespaceturbomole__common.html#a73ec186f1f64ca1027d1c32e15a817ab" title=" " alt="" coords="256,57,444,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,77,243,79,237,80,200,82"/>
+<area shape="rect" id="Node000006" href="$namespaceturbomole__common.html#afeed35fbe00028c9cdb05f0514d8f951" title=" " alt="" coords="255,125,444,153"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="197,99,277,121,272,122,197,105"/>
+<area shape="rect" id="Node000004" href="$namespaceturbomole__common.html#a39f1bf0ca22ca01c957f0cc1a129292d" title=" " alt="" coords="501,65,688,93"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="444,77,488,79,483,79,445,82"/>
+<area shape="rect" id="Node000005" href="$namespaceturbomole__common.html#af7dc1f71858846e42a29514e02942005" title=" " alt="" coords="736,65,922,93"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="689,77,724,79,718,79,689,82"/>
+</map>

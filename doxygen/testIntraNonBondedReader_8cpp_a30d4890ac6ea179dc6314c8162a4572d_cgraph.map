@@ -1,5 +1,33 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,14,74,42"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a283fbb8629e86a08feddca2eda8b475e" title="set the intra non bonded file name flag to is not set" alt="" coords="122,5,386,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,25,108,27,103,28,74,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,244,74,272"/>
+<area shape="rect" id="Node000002" href="$namespaceinput_1_1intraNonBondedReader.html#a21a6f65fde55ed3433bfa28ed9944910" title="construct IntraNonBondedReader object and read the file" alt="" coords="122,236,335,281"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,256,108,257,104,260,75,261"/>
+<area shape="rect" id="Node000003" href="$namespaceinput_1_1intraNonBondedReader.html#a9cbfc04a3f757f05252d1d83da3f7f6f" title="checks if the intra non bonded interactions are needed" alt="" coords="385,87,598,131"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="268,233,440,137,436,141,271,238"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#abc26f19797ac153464b142dcc91328d7" title="reads the intra non bonded interactions from the intraNonBonded file" alt="" coords="383,236,600,281"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="335,256,370,258,365,259,336,261"/>
+<area shape="rect" id="Node000014" href="$classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="420,364,564,409"/>
+<area shape="poly" id="edge15_Node000002_Node000014" title=" " alt="" coords="277,279,433,356,428,358,276,284"/>
+<area shape="rect" id="Node000004" href="$classsettings_1_1GeneralSettings.html#a34e65d220f84e2579e5ca8a7c010d385" title="Returns true if the intra non&#45;bonded interactions are activated." alt="" coords="651,5,859,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="566,84,668,54,663,56,568,88"/>
+<area shape="rect" id="Node000006" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#a64bf1ab7e0cb1b3a2976c68df6f56971" title="checks if a molecule type is defined multiple times" alt="" coords="648,74,862,136"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="519,233,577,190,647,145,654,144,659,142,650,150,580,194,522,238"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#a5ce6a3bbd535ace249b6ccd376a1b77e" title="finds the molecule type either by string" alt="" coords="648,160,862,221"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="580,233,636,221,631,223,582,238"/>
+<area shape="rect" id="Node000008" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#aa381b1926d6fa64b840de70c930f1838" title="processes the intra nonBonded interactions for a given molecule type" alt="" coords="648,296,862,357"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="581,279,636,295,631,295,581,284"/>
+<area shape="rect" id="Node000009" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="910,235,1109,263"/>
+<area shape="poly" id="edge13_Node000005_Node000009" title=" " alt="" coords="601,254,897,250,892,252,601,259"/>
+<area shape="rect" id="Node000012" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="937,391,1082,419"/>
+<area shape="poly" id="edge14_Node000005_Node000012" title=" " alt="" coords="517,279,575,325,611,348,649,367,719,387,791,399,860,405,924,409,919,409,860,410,790,404,718,392,647,371,608,353,572,330,516,284"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="848,292,909,273,935,268,941,267,910,278,850,297"/>
+<area shape="rect" id="Node000010" href="$namespaceutilities.html#a752bb70809a2fb9f8f59d58545fd5320" title="calculates the sign of a number" alt="" coords="957,287,1062,315"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="862,313,944,307,939,308,863,318"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="846,355,910,376,940,387,935,386,909,381,846,360"/>
+<area shape="rect" id="Node000013" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="928,339,1091,367"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="862,335,915,343,910,343,862,340"/>
+<area shape="rect" id="Node000011" href="$namespaceutilities.html#a23aee153573294170200078b7a215899" title="compares two numbers with a tolerance" alt="" coords="1157,287,1292,315"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="1062,298,1144,301,1139,301,1062,304"/>
+<area shape="rect" id="Node000015" href="$namespaceout.html#ae21e45a9e56a9f34636a6df12ee3e2f2" title="Message to inform about reading a file." alt="" coords="686,431,824,459"/>
+<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="565,400,678,427,672,427,564,405"/>
 </map>

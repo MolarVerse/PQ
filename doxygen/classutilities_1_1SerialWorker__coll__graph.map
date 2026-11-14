@@ -1,0 +1,19 @@
+<map id="utilities::SerialWorker" name="utilities::SerialWorker">
+<area shape="rect" id="Node000001" title="runs tasks one after another on a single background thread" alt="" coords="340,318,490,592"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,151,54,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,220,73,258,104,292,157,333,215,367,272,396,327,421,322,422,270,401,212,372,154,337,101,296,69,261,48,225"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="87,151,167,223"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,220,230,292,330,382,325,383,226,296,158,225"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="191,151,322,223"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="278,220,334,314,329,314,276,225"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="346,151,484,223"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="416,221,417,302,413,301,414,225"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="395,5,435,78"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="416,75,418,134,412,133,414,80"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="508,151,546,223"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="514,221,481,304,477,301,511,225"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="570,151,670,223"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="614,221,602,259,584,296,547,344,504,386,501,382,543,340,579,293,598,257,610,225"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="694,151,779,223"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="718,221,693,261,662,296,625,329,585,359,506,409,503,404,582,354,622,325,658,292,689,257,714,224"/>
+</map>

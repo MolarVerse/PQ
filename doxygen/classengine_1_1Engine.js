@@ -11,6 +11,7 @@ var classengine_1_1Engine =
     [ "_setNSteps", "classengine_1_1Engine.html#a0750cb745853e166758febb68b47dcd1", null ],
     [ "_setStep", "classengine_1_1Engine.html#ae9a099a3f3efbb693a6760acf92984f6", null ],
     [ "calculateTotalSimulationTime", "classengine_1_1Engine.html#ac7f586337c685f0dcb798917f704b669", null ],
+    [ "deleteTmpFiles", "classengine_1_1Engine.html#a3288e326a3540c7518e1badf3cf5f0a8", null ],
     [ "getAveragePhysicalData", "classengine_1_1Engine.html#a2fa575804f6cecb570baf93a6aaad88f", null ],
     [ "getCellList", "classengine_1_1Engine.html#ae6560f7079438e25efb0b18555a7c75a", null ],
     [ "getCellList", "classengine_1_1Engine.html#a0c867bc08924f1b060f4a83190dcd78d", null ],

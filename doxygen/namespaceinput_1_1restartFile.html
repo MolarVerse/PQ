@@ -116,12 +116,12 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a10304bceba95a767d00655f9bd722f01" id="r_a10304bceba95a767d00655f9bd722f01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10304bceba95a767d00655f9bd722f01">readRestartFile</a> (<a class="el" href="classengine_1_1Engine.html">engine::Engine</a> &amp;<a class="el" href="namespaceengine.html">engine</a>)</td></tr>
-<tr class="memdesc:a10304bceba95a767d00655f9bd722f01"><td class="mdescLeft">&#160;</td><td class="mdescRight">wrapper function to construct a <a class="el" href="classinput_1_1restartFile_1_1RestartFileReader.html" title="Reads a .rst file and sets the simulation box in the engine.">RestartFileReader</a> object and call the read function  <br /></td></tr>
+<tr class="memitem:aa44e901407c17de1d25b220d38143f95" id="r_aa44e901407c17de1d25b220d38143f95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa44e901407c17de1d25b220d38143f95">readRestartFile</a> (<a class="el" href="classengine_1_1Engine.html">engine::Engine</a> &amp;<a class="el" href="namespaceengine.html">engine</a>, <a class="el" href="classNoseHooverSettings.html">NoseHooverSettings</a> &amp;noseHooverSettings)</td></tr>
+<tr class="memdesc:aa44e901407c17de1d25b220d38143f95"><td class="mdescLeft">&#160;</td><td class="mdescRight">wrapper function to construct a <a class="el" href="classinput_1_1restartFile_1_1RestartFileReader.html" title="Reads a .rst file and sets the simulation box in the engine.">RestartFileReader</a> object and call the read function  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="a10304bceba95a767d00655f9bd722f01" name="a10304bceba95a767d00655f9bd722f01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10304bceba95a767d00655f9bd722f01">&#9670;&#160;</a></span>readRestartFile()</h2>
+<a id="aa44e901407c17de1d25b220d38143f95" name="aa44e901407c17de1d25b220d38143f95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa44e901407c17de1d25b220d38143f95">&#9670;&#160;</a></span>readRestartFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -129,8 +129,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void input::restartFile::readRestartFile </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classengine_1_1Engine.html">engine::Engine</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>engine</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classengine_1_1Engine.html">engine::Engine</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>engine</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classNoseHooverSettings.html">NoseHooverSettings</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>noseHooverSettings</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -138,22 +142,21 @@ Functions</h2></td></tr>
 <p>wrapper function to construct a <a class="el" href="classinput_1_1restartFile_1_1RestartFileReader.html" title="Reads a .rst file and sets the simulation box in the engine.">RestartFileReader</a> object and call the read function </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">engine</td><td></td></tr>
+    <tr><td class="paramname">engine</td><td>Reference to the Engine object </td></tr>
+    <tr><td class="paramname">noseHooverSettings</td><td>Reference to the <a class="el" href="classNoseHooverSettings.html" title="Stores settings specific to the Nose-Hoover thermostat.">NoseHooverSettings</a> object </td></tr>
   </table>
   </dd>
 </dl>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_cgraph.png" border="0" usemap="#anamespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_cgraph" loading="lazy" alt=""/></div>
-<map name="anamespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_cgraph" id="anamespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_cgraph">
-<area shape="rect" title="wrapper function to construct a RestartFileReader object and call the read function" alt="" coords="5,92,134,137"/>
-<area shape="rect" href="classsettings_1_1FileSettings.html#ac98cb135ddaf0981954b758332fae25a" title="Get the start file name." alt="" coords="194,23,352,68"/>
-<area shape="poly" title=" " alt="" coords="133,91,193,72,189,75,136,95"/>
+<div class="center"><img src="namespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_cgraph.png" border="0" usemap="#anamespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_cgraph" loading="lazy" alt=""/></div>
+<map name="anamespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_cgraph" id="anamespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_cgraph">
+<area shape="rect" title="wrapper function to construct a RestartFileReader object and call the read function" alt="" coords="5,135,134,180"/>
 <area shape="rect" href="classinput_1_1restartFile_1_1RestartFileReader.html#aad6cd58ccfec9733eec32086eccb5e6d" title="Reads a restart file and calls the process function of the corresponding section." alt="" coords="182,92,364,137"/>
-<area shape="poly" title=" " alt="" coords="134,112,168,114,164,116,135,117"/>
+<area shape="poly" title=" " alt="" coords="133,141,169,136,164,138,135,147"/>
 <area shape="rect" href="classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="201,170,345,214"/>
-<area shape="poly" title=" " alt="" coords="131,135,200,163,195,165,130,140"/>
+<area shape="poly" title=" " alt="" coords="134,166,188,177,183,178,134,171"/>
 <area shape="rect" href="classinput_1_1restartFile_1_1RestartFileReader.html#aa6b623548ffe77154a7eb51ed886b5ed" title="Determines which section of the .rst file the line belongs to." alt="" coords="439,5,584,67"/>
 <area shape="poly" title=" " alt="" coords="342,89,426,64,421,66,344,94"/>
 <area shape="rect" href="namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="412,92,611,119"/>
@@ -169,16 +172,16 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_icgraph.png" border="0" usemap="#anamespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_icgraph" loading="lazy" alt=""/></div>
-<map name="anamespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_icgraph" id="anamespaceinput_1_1restartFile_a10304bceba95a767d00655f9bd722f01_icgraph">
+<div class="center"><img src="namespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_icgraph.png" border="0" usemap="#anamespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_icgraph" loading="lazy" alt=""/></div>
+<map name="anamespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_icgraph" id="anamespaceinput_1_1restartFile_aa44e901407c17de1d25b220d38143f95_icgraph">
 <area shape="rect" title="wrapper function to construct a RestartFileReader object and call the read function" alt="" coords="754,76,882,120"/>
-<area shape="rect" href="namespacesetup.html#ad4db282b92cbef07595e5279159209c7" title="reads all the files needed for the simulation" alt="" coords="556,32,680,60"/>
+<area shape="rect" href="namespacesetup.html#afb4fb0d7907525c8cfa2b33d8affe25a" title="reads all the files needed for the simulation" alt="" coords="556,32,680,60"/>
 <area shape="poly" title=" " alt="" coords="736,77,674,63,674,58,741,77"/>
 <area shape="rect" href="namespacebenchInputReaders.html#a2b22fa7b51c3adbf281069cdc81de4e1" title=" " alt="" coords="530,84,706,112"/>
 <area shape="poly" title=" " alt="" coords="735,98,706,100,706,95,741,98"/>
 <area shape="rect" href="testRestartFileReader_8cpp.html#adfbc630ae1d431fbc9bcafd81f973417" title="test full read restart file function" alt="" coords="584,136,652,164"/>
 <area shape="poly" title=" " alt="" coords="741,118,653,144,652,139,736,119"/>
-<area shape="rect" href="namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,32,482,60"/>
+<area shape="rect" href="namespacesetup.html#ace373bc8dbf231fe39d4c21a1e0d4e26" title="setup the engine" alt="" coords="292,32,482,60"/>
 <area shape="poly" title=" " alt="" coords="538,46,483,48,483,43,543,45"/>
 <area shape="rect" href="classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,32,244,60"/>
 <area shape="poly" title=" " alt="" coords="274,47,245,48,244,43,279,45"/>

@@ -186,6 +186,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a261ed5907cff13c0f5acfb3fce5ed90b"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets if existing output files will be overwritten  <br /></td></tr>
 <tr class="memitem:af2540090a103872822711f410aad2be5" id="r_af2540090a103872822711f410aad2be5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2540090a103872822711f410aad2be5">setIncludeOutputMetadataByUser</a> (bool)</td></tr>
 <tr class="memdesc:af2540090a103872822711f410aad2be5"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets if output files should include metadata  <br /></td></tr>
+<tr class="memitem:a863ec14516a51da9c3e20d44dc157b1e" id="r_a863ec14516a51da9c3e20d44dc157b1e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a863ec14516a51da9c3e20d44dc157b1e">setAsyncOutputByUser</a> (bool)</td></tr>
+<tr class="memdesc:a863ec14516a51da9c3e20d44dc157b1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets if MD trajectory and restart files are written on a separate thread  <br /></td></tr>
 <tr class="memitem:a0ba696453e3b201ef779dc93dd786926" id="r_a0ba696453e3b201ef779dc93dd786926"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ba696453e3b201ef779dc93dd786926">getOutputFrequency</a> () const</td></tr>
 <tr class="memdesc:a0ba696453e3b201ef779dc93dd786926"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the output frequency  <br /></td></tr>
 <tr class="memitem:ae3a63b3594ef85fa28c36ead36d3cd94" id="r_ae3a63b3594ef85fa28c36ead36d3cd94"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3a63b3594ef85fa28c36ead36d3cd94">getFilePrefix</a> () const</td></tr>
@@ -240,6 +242,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a7b2635db283088a4b141590b0e23da18"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns if existing output files will be overwritten  <br /></td></tr>
 <tr class="memitem:a608a9040a241ac1beb29143dc34fdd64" id="r_a608a9040a241ac1beb29143dc34fdd64"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a608a9040a241ac1beb29143dc34fdd64">getIncludeOutputMetadata</a> () const</td></tr>
 <tr class="memdesc:a608a9040a241ac1beb29143dc34fdd64"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns if output files should include metadata  <br /></td></tr>
+<tr class="memitem:a45beba1b08ce02dfa0013ca33649f986" id="r_a45beba1b08ce02dfa0013ca33649f986"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a45beba1b08ce02dfa0013ca33649f986">getAsyncOutput</a> () const</td></tr>
+<tr class="memdesc:a45beba1b08ce02dfa0013ca33649f986"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns if MD trajectory and restart files are written on a separate thread  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-methods" class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -253,6 +257,7 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a21242de3ca307edd0e9ccc1ff0767f86" id="r_a21242de3ca307edd0e9ccc1ff0767f86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSetting.html">Setting</a>&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21242de3ca307edd0e9ccc1ff0767f86">_outputFrequency</a> {1}</td></tr>
 <tr class="memitem:a2bc30399f8eec46a10c435242522345e" id="r_a2bc30399f8eec46a10c435242522345e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSetting.html">Setting</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bc30399f8eec46a10c435242522345e">_overwriteOutputFiles</a> {false}</td></tr>
 <tr class="memitem:a730ddd0bdb07b6fb660bd1e1b2c70e9c" id="r_a730ddd0bdb07b6fb660bd1e1b2c70e9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSetting.html">Setting</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a730ddd0bdb07b6fb660bd1e1b2c70e9c">_includeOutputMetadata</a> {false}</td></tr>
+<tr class="memitem:a3d319332dbf1ee1824abe225a9fcf319" id="r_a3d319332dbf1ee1824abe225a9fcf319"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSetting.html">Setting</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d319332dbf1ee1824abe225a9fcf319">_asyncOutput</a> {true}</td></tr>
 <tr class="memitem:a1ba74b9f5e633c784f9a5d8af55fc21b" id="r_a1ba74b9f5e633c784f9a5d8af55fc21b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSetting.html">Setting</a>&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1ba74b9f5e633c784f9a5d8af55fc21b">_filePrefix</a></td></tr>
 <tr class="memitem:a328fdbcb3e9300471b91e993f77829f5" id="r_a328fdbcb3e9300471b91e993f77829f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSetting.html">Setting</a>&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a328fdbcb3e9300471b91e993f77829f5">_energyFile</a> {<a class="el" href="structDefaultFiles.html#a25adc4ba671420d192af2238b946927e">DefaultFiles::energyFile</a>}</td></tr>
 <tr class="memitem:af202d244c6f5b5eba313098d1d75747e" id="r_af202d244c6f5b5eba313098d1d75747e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSetting.html">Setting</a>&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af202d244c6f5b5eba313098d1d75747e">_instEnFile</a> {<a class="el" href="structDefaultFiles.html#a8c76c580b49379ae1c34179a70d3d843">DefaultFiles::instEnFile</a>}</td></tr>
@@ -392,6 +397,44 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="146,49,181,46,176,48,148,55"/>
 <area shape="rect" href="classOutputFileSettings.html#ae1ee4c26c0e189f946f360ef801b47a8" title="replaces the default restart file name" alt="" coords="223,75,398,119"/>
 <area shape="poly" title=" " alt="" coords="147,70,210,81,205,82,147,75"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a45beba1b08ce02dfa0013ca33649f986" name="a45beba1b08ce02dfa0013ca33649f986"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45beba1b08ce02dfa0013ca33649f986">&#9670;&#160;</a></span>getAsyncOutput()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool OutputFileSettings::getAsyncOutput </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns if MD trajectory and restart files are written on a separate thread </p>
+<dl class="section return"><dt>Returns</dt><dd>bool </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOutputFileSettings_a45beba1b08ce02dfa0013ca33649f986_icgraph.png" border="0" usemap="#aclassOutputFileSettings_a45beba1b08ce02dfa0013ca33649f986_icgraph" loading="lazy" alt=""/></div>
+<map name="aclassOutputFileSettings_a45beba1b08ce02dfa0013ca33649f986_icgraph" id="aclassOutputFileSettings_a45beba1b08ce02dfa0013ca33649f986_icgraph">
+<area shape="rect" title="returns if MD trajectory and restart files are written on a separate thread" alt="" coords="122,5,263,50"/>
+<area shape="rect" href="testOutputParser_8cpp.html#a19b1014fafccb4cd445241ca227b23f0" title="tests parsing the &quot;async_output&quot; command" alt="" coords="5,14,74,42"/>
+<area shape="poly" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
 </map>
 </div>
 
@@ -1421,6 +1464,31 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a863ec14516a51da9c3e20d44dc157b1e" name="a863ec14516a51da9c3e20d44dc157b1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a863ec14516a51da9c3e20d44dc157b1e">&#9670;&#160;</a></span>setAsyncOutputByUser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void OutputFileSettings::setAsyncOutputByUser </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>asyncOutput</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>sets if MD trajectory and restart files are written on a separate thread </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">asyncOutput</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ac47b3bab28fc1b5add8ff6847c25f2a7" name="ac47b3bab28fc1b5add8ff6847c25f2a7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac47b3bab28fc1b5add8ff6847c25f2a7">&#9670;&#160;</a></span>setBoxFileNameByUser()</h2>
 
@@ -2127,6 +2195,28 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a3d319332dbf1ee1824abe225a9fcf319" name="a3d319332dbf1ee1824abe225a9fcf319"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d319332dbf1ee1824abe225a9fcf319">&#9670;&#160;</a></span>_asyncOutput</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSetting.html">Setting</a>&lt;bool&gt; OutputFileSettings::_asyncOutput {true}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="afd8d98c3bc6c1155a7cdf788f6755c30" name="afd8d98c3bc6c1155a7cdf788f6755c30"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd8d98c3bc6c1155a7cdf788f6755c30">&#9670;&#160;</a></span>_boxFile</h2>
 

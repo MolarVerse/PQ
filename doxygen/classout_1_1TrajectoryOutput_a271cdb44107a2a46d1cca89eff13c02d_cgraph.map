@@ -1,0 +1,8 @@
+<map id="out::TrajectoryOutput::writeHeader" name="out::TrajectoryOutput::writeHeader">
+<area shape="rect" id="Node000001" title="Write the header of a trajectory files." alt="" coords="5,48,164,92"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="212,29,411,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,58,199,56,193,57,165,63"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="212,81,411,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="164,76,199,82,193,82,164,81"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="272,28,266,20,271,11,287,5,311,3,338,5,354,14,349,14,337,10,311,8,288,10,275,15,272,20,277,30"/>
+</map>

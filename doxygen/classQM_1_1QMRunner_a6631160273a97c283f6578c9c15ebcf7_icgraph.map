@@ -1,7 +1,24 @@
 <map id="QM::QMRunner::_getQMSettings" name="QM::QMRunner::_getQMSettings">
-<area shape="rect" id="Node000001" title="returns the QMSettings object associated with the QM runner" alt="" coords="256,44,486,72"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1DFTBPlusRunner.html#aa11b2998959eb698a81de604fa66d5e2" title="reads the stress tensor and adds it to the physical data" alt="" coords="27,5,186,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,44,186,40,186,34,243,43"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1ExternalQMRunner.html#aba331cf87a2e37ef6d081075f24e2bf1" title="run the qm engine" alt="" coords="5,74,208,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="237,73,208,79,208,74,243,73"/>
+<area shape="rect" id="Node000001" title="returns the QMSettings object associated with the QM runner" alt="" coords="749,252,980,280"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1ExternalQMRunner.html#a3e14c0774ecaae0a058d9da02bbdcb77" title=" " alt="" coords="514,105,687,150"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="829,243,771,205,700,165,674,153,674,148,703,160,774,201,834,243"/>
+<area shape="rect" id="Node000007" href="$classQM_1_1DFTBPlusRunner.html#a2881bcb891a9028db94453ae195e6bf8" title="reads the stress tensor and adds it to the physical data" alt="" coords="521,175,679,219"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="792,248,680,220,680,215,797,248"/>
+<area shape="rect" id="Node000008" href="$classQM_1_1AseQMRunner.html#a34118d4ef9785c7696bb0b087043ed04" title="collect the forces from the ASE QM calculation" alt="" coords="503,244,697,289"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="731,267,698,269,697,264,736,266"/>
+<area shape="rect" id="Node000010" href="$classQM_1_1AseQMRunner.html#a6193655bf391e71107db881535b8b398" title="run the ASE QM calculation" alt="" coords="5,287,178,315"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="797,284,702,304,558,314,414,316,178,309,178,304,414,311,558,308,701,298,792,285"/>
+<area shape="rect" id="Node000011" href="$classQM_1_1ExternalQMRunner.html#aef3a81114cd48d7b24eb8108e2cb7af7" title="run the qm engine" alt="" coords="499,363,701,391"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="826,287,702,347,652,365,651,360,700,343,821,288"/>
+<area shape="rect" id="Node000003" href="$classQM_1_1DFTBPlusRunner.html#a7b7647896d880179af254d25e0720bc5" title="executes the qm script of the external program" alt="" coords="259,5,418,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="535,99,450,65,418,53,417,48,452,60,540,98"/>
+<area shape="rect" id="Node000004" href="$classQM_1_1OrcaRunner.html#aea9d9a780dfe21173989f3fc1cab3d5c" title="executes ORCA as the external qm program" alt="" coords="245,74,432,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="495,113,432,105,432,99,501,111"/>
+<area shape="rect" id="Node000005" href="$classQM_1_1PySCFRunner.html#a923ffdda80e1680014c1578904e95cca" title="executes the qm script of the external program" alt="" coords="240,126,437,154"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="495,133,438,138,437,133,500,131"/>
+<area shape="rect" id="Node000006" href="$classQM_1_1TurbomoleRunner.html#a597afd504f62b7d8a482ec8f8ebc018e" title="executes the external qm program" alt="" coords="256,177,421,222"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="499,156,423,179,421,174,504,154"/>
+<area shape="rect" id="Node000009" href="$classQM_1_1AseQMRunner.html#ac90c651d7b04e11e6396ebcffd518282" title="collect the data from the ASE QM calculation" alt="" coords="226,258,451,286"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="485,269,452,272,451,267,490,268"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="208,288,179,293,177,288,213,286"/>
 </map>

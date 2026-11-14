@@ -1,0 +1,5 @@
+<map id="NoseHooverSettings::isChiAndZetaSet" name="NoseHooverSettings::isChiAndZetaSet">
+<area shape="rect" id="Node000001" title="check if both chi and zeta are set" alt="" coords="310,5,464,50"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1NoseHooverThermostat.html#a223503122f8ef311d32c08089b182799" title="Construct a new Nose Hoover Thermostat:: Nose Hoover Thermostat object." alt="" coords="5,5,262,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="292,28,262,30,262,25,297,28"/>
+</map>

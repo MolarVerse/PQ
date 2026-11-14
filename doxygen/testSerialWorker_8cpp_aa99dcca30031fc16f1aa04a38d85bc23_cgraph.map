@@ -1,0 +1,10 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,48,59,76"/>
+<area shape="rect" id="Node000002" href="$classutilities_1_1SerialWorker.html#a893ced32f73d4d6a573aba3d74c01392" title="queue a task, blocking while capacity tasks are in flight" alt="" coords="107,5,267,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,54,94,47,90,51,60,59"/>
+<area shape="rect" id="Node000004" href="$classutilities_1_1SerialWorker.html#a8723af9def289ea88f4344a27eae803d" title="block until all queued tasks are done" alt="" coords="107,75,267,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="59,66,94,74,89,77,59,71"/>
+<area shape="rect" id="Node000003" href="$classutilities_1_1SerialWorker.html#ab609c5c4d99fbb17a5d979fa0da74357" title="rethrow and clear a stored task error; call with _mutex held" alt="" coords="315,40,475,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="267,38,302,46,297,47,267,44"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="267,81,297,79,302,78,268,86"/>
+</map>

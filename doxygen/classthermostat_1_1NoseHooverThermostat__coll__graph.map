@@ -1,16 +1,17 @@
 <map id="thermostat::NoseHooverThermostat" name="thermostat::NoseHooverThermostat">
-<area shape="rect" id="Node000001" title="this class implements the Nose&#45;Hoover thermostat" alt="" coords="569,620,814,983"/>
-<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="329,207,545,525"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="538,536,588,621,583,620,536,541"/>
+<area shape="rect" id="Node000001" title="this class implements the Nose&#45;Hoover thermostat" alt="" coords="469,620,714,827"/>
+<area shape="rect" id="Node000002" href="$classthermostat_1_1Thermostat.html" title="Thermostat is a base class for all thermostats." alt="" coords="236,207,452,525"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="461,531,523,621,518,620,459,536"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,5,215,112"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="139,109,166,146,195,181,254,236,318,286,313,287,251,240,191,185,162,149,140,114"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="145,109,199,181,228,219,223,220,195,185,146,114"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="239,5,448,112"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,109,342,147,347,182,350,191,344,191,342,184,337,147,338,114"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="344,109,346,191,341,190,343,114"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="506,22,554,95"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="524,92,503,184,501,192,496,190,498,182,522,97"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="857,330,1011,402"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="917,400,803,608,799,604,913,404"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="736,22,791,95"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="746,92,724,147,705,208,689,308,681,410,678,511,680,604,675,602,673,510,676,410,684,307,700,206,719,146,744,97"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="784,92,909,315,904,315,782,97"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="530,92,523,140,515,163,503,185,487,198,466,210,463,206,484,193,499,181,510,161,518,138,528,97"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="475,330,708,402"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="593,400,594,604,589,602,590,404"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="732,330,886,402"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="794,400,749,493,688,598,681,608,678,604,684,595,744,490,790,404"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="782,22,836,95"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="810,92,811,314,806,312,807,96"/>
 </map>

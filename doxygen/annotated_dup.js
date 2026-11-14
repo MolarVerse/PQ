@@ -238,6 +238,7 @@ var annotated_dup =
     [ "out", "namespaceout.html", [
       [ "BoxFileOutput", "classout_1_1BoxFileOutput.html", "classout_1_1BoxFileOutput" ],
       [ "EnergyOutput", "classout_1_1EnergyOutput.html", "classout_1_1EnergyOutput" ],
+      [ "Frame", "structout_1_1Frame.html", "structout_1_1Frame" ],
       [ "InfoOutput", "classout_1_1InfoOutput.html", "classout_1_1InfoOutput" ],
       [ "LogOutput", "classout_1_1LogOutput.html", "classout_1_1LogOutput" ],
       [ "MomentumOutput", "classout_1_1MomentumOutput.html", "classout_1_1MomentumOutput" ],
@@ -304,6 +305,7 @@ var annotated_dup =
       [ "AseXtbRunner", "classQM_1_1AseXtbRunner.html", "classQM_1_1AseXtbRunner" ],
       [ "DFTBPlusRunner", "classQM_1_1DFTBPlusRunner.html", "classQM_1_1DFTBPlusRunner" ],
       [ "ExternalQMRunner", "classQM_1_1ExternalQMRunner.html", "classQM_1_1ExternalQMRunner" ],
+      [ "OrcaRunner", "classQM_1_1OrcaRunner.html", "classQM_1_1OrcaRunner" ],
       [ "PySCFRunner", "classQM_1_1PySCFRunner.html", "classQM_1_1PySCFRunner" ],
       [ "TurbomoleRunner", "classQM_1_1TurbomoleRunner.html", "classQM_1_1TurbomoleRunner" ],
       [ "QMRunner", "classQM_1_1QMRunner.html", "classQM_1_1QMRunner" ]
@@ -318,7 +320,6 @@ var annotated_dup =
       [ "RandomNumberGenerator", "classrng_1_1RandomNumberGenerator.html", "classrng_1_1RandomNumberGenerator" ]
     ] ],
     [ "settings", "namespacesettings.html", [
-      [ "FileSettings", "classsettings_1_1FileSettings.html", "classsettings_1_1FileSettings" ],
       [ "GeneralSettings", "classsettings_1_1GeneralSettings.html", null ],
       [ "HybridSettings", "classsettings_1_1HybridSettings.html", null ],
       [ "PotentialSettings", "classsettings_1_1PotentialSettings.html", "classsettings_1_1PotentialSettings" ],
@@ -346,8 +347,17 @@ var annotated_dup =
     [ "std", null, [
       [ "formatter&lt; linalg::Vector3D&lt; T &gt; &gt;", "structstd_1_1formatter_3_01linalg_1_1Vector3D_3_01T_01_4_01_4.html", "structstd_1_1formatter_3_01linalg_1_1Vector3D_3_01T_01_4_01_4" ]
     ] ],
+    [ "testOrcaScfScripts", "namespacetestOrcaScfScripts.html", [
+      [ "OrcaScfScriptsTest", "classtestOrcaScfScripts_1_1OrcaScfScriptsTest.html", "classtestOrcaScfScripts_1_1OrcaScfScriptsTest" ]
+    ] ],
+    [ "testOrcaScript", "namespacetestOrcaScript.html", [
+      [ "OrcaScriptTest", "classtestOrcaScript_1_1OrcaScriptTest.html", "classtestOrcaScript_1_1OrcaScriptTest" ]
+    ] ],
     [ "testSettings", "namespacetestSettings.html", [
       [ "Builder", "classtestSettings_1_1Builder.html", "classtestSettings_1_1Builder" ]
+    ] ],
+    [ "testTurbomoleScripts", "namespacetestTurbomoleScripts.html", [
+      [ "TurbomoleScriptTest", "classtestTurbomoleScripts_1_1TurbomoleScriptTest.html", "classtestTurbomoleScripts_1_1TurbomoleScriptTest" ]
     ] ],
     [ "thermostat", "namespacethermostat.html", [
       [ "BerendsenThermostat", "classthermostat_1_1BerendsenThermostat.html", "classthermostat_1_1BerendsenThermostat" ],
@@ -361,6 +371,13 @@ var annotated_dup =
       [ "Timer", "classtimings_1_1Timer.html", "classtimings_1_1Timer" ],
       [ "TimingsSection", "classtimings_1_1TimingsSection.html", "classtimings_1_1TimingsSection" ],
       [ "TimingsSectionGuard", "classtimings_1_1TimingsSectionGuard.html", "classtimings_1_1TimingsSectionGuard" ]
+    ] ],
+    [ "turbomole_common", "namespaceturbomole__common.html", [
+      [ "Mode", "classturbomole__common_1_1Mode.html", null ],
+      [ "Die", "classturbomole__common_1_1Die.html", null ]
+    ] ],
+    [ "utilities", "namespaceutilities.html", [
+      [ "SerialWorker", "classutilities_1_1SerialWorker.html", "classutilities_1_1SerialWorker" ]
     ] ],
     [ "waterModel", "namespacewaterModel.html", [
       [ "InterWaterState", "structwaterModel_1_1InterWaterState.html", "structwaterModel_1_1InterWaterState" ],
@@ -405,11 +422,14 @@ var annotated_dup =
     [ "DftbSettings", "classDftbSettings.html", "classDftbSettings" ],
     [ "DihedralIdTag", "structDihedralIdTag.html", null ],
     [ "DihedralParams", "structDihedralParams.html", "structDihedralParams" ],
+    [ "Exception", "classException.html", null ],
     [ "ExceptionTypeMeta", "structExceptionTypeMeta.html", "structExceptionTypeMeta" ],
     [ "ExtAtomTypeTag", "structExtAtomTypeTag.html", null ],
     [ "ExternalQMRunnerTest", "classExternalQMRunnerTest.html", "classExternalQMRunnerTest" ],
+    [ "ExternalQMSettings", "classExternalQMSettings.html", "classExternalQMSettings" ],
     [ "ExtVdwTypeTag", "structExtVdwTypeTag.html", null ],
     [ "FennolSettings", "classFennolSettings.html", "classFennolSettings" ],
+    [ "FileSettings", "classFileSettings.html", "classFileSettings" ],
     [ "FixedAxisFlagTest", "structFixedAxisFlagTest.html", "structFixedAxisFlagTest" ],
     [ "FixedAxisMeta", "structFixedAxisMeta.html", "structFixedAxisMeta" ],
     [ "ForceFieldSettings", "classForceFieldSettings.html", "classForceFieldSettings" ],
@@ -433,6 +453,7 @@ var annotated_dup =
     [ "MolTypeTag", "structMolTypeTag.html", null ],
     [ "MorseParams", "structMorseParams.html", "structMorseParams" ],
     [ "NonCoulombTypeMeta", "structNonCoulombTypeMeta.html", "structNonCoulombTypeMeta" ],
+    [ "NoseHooverSettings", "classNoseHooverSettings.html", "classNoseHooverSettings" ],
     [ "OptimizerSettings", "classOptimizerSettings.html", "classOptimizerSettings" ],
     [ "OptimizerTypeMeta", "structOptimizerTypeMeta.html", "structOptimizerTypeMeta" ],
     [ "OutputFileSettings", "classOutputFileSettings.html", "classOutputFileSettings" ],

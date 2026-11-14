@@ -2,6 +2,7 @@ var namespaceout =
 [
     [ "BoxFileOutput", "classout_1_1BoxFileOutput.html", "classout_1_1BoxFileOutput" ],
     [ "EnergyOutput", "classout_1_1EnergyOutput.html", "classout_1_1EnergyOutput" ],
+    [ "Frame", "structout_1_1Frame.html", "structout_1_1Frame" ],
     [ "InfoOutput", "classout_1_1InfoOutput.html", "classout_1_1InfoOutput" ],
     [ "LogOutput", "classout_1_1LogOutput.html", "classout_1_1LogOutput" ],
     [ "MomentumOutput", "classout_1_1MomentumOutput.html", "classout_1_1MomentumOutput" ],

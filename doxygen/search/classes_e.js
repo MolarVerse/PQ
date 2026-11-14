@@ -5,5 +5,6 @@ var searchData=
   ['noncoulombpotential_2',['NonCoulombPotential',['../classpot_1_1NonCoulombPotential.html',1,'pot']]],
   ['noncoulombtypemeta_3',['NonCoulombTypeMeta',['../structNonCoulombTypeMeta.html',1,'']]],
   ['nosehooversection_4',['NoseHooverSection',['../classinput_1_1restartFile_1_1NoseHooverSection.html',1,'input::restartFile']]],
-  ['nosehooverthermostat_5',['NoseHooverThermostat',['../classthermostat_1_1NoseHooverThermostat.html',1,'thermostat']]]
+  ['nosehooversettings_5',['NoseHooverSettings',['../classNoseHooverSettings.html',1,'']]],
+  ['nosehooverthermostat_6',['NoseHooverThermostat',['../classthermostat_1_1NoseHooverThermostat.html',1,'thermostat']]]
 ];

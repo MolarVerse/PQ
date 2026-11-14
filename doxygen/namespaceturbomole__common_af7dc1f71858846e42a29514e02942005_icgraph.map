@@ -1,0 +1,29 @@
+<map id="turbomole_common.read" name="turbomole_common.read">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1236,184,1421,212"/>
+<area shape="rect" id="Node000002" href="$namespaceturbomole__common.html#a39f1bf0ca22ca01c957f0cc1a129292d" title=" " alt="" coords="1001,184,1188,212"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1218,199,1189,201,1188,196,1223,198"/>
+<area shape="rect" id="Node000003" href="$namespaceturbomole__common.html#a73ec186f1f64ca1027d1c32e15a817ab" title=" " alt="" coords="764,176,953,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="982,199,953,201,953,196,988,198"/>
+<area shape="rect" id="Node000004" href="$namespaceturbomole__common.html#adff0cc33b33645b89bfe19741e9f842e" title=" " alt="" coords="502,5,683,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="825,164,777,117,747,93,715,71,677,53,677,48,718,67,750,89,780,114,830,165"/>
+<area shape="rect" id="Node000005" href="$namespaceturbomole__common.html#a6ef38aeda34e3c597b94bce432611f06" title=" " alt="" coords="243,184,420,212"/>
+<area shape="poly" id="edge14_Node000003_Node000005" title=" " alt="" coords="815,166,770,139,715,116,647,99,592,93,537,99,469,116,434,129,401,148,350,186,347,182,398,144,431,125,467,110,536,93,592,88,648,94,717,110,772,134,820,167"/>
+<area shape="rect" id="Node000007" href="$namespaceturbomole__common.html#a980f99bb598c53bfacfb6e1aed212bfb" title=" " alt="" coords="468,124,716,152"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="749,172,716,166,666,155,666,150,717,161,754,172"/>
+<area shape="rect" id="Node000008" href="$namespaceturbomole__common.html#a6e6fc0465d8a9934f781eae46f29cdc4" title=" " alt="" coords="496,176,689,221"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="746,199,690,201,689,196,752,198"/>
+<area shape="rect" id="Node000009" href="$namespaceturbomole__common.html#af7481e69b5abd16d0e472e3d779b191a" title=" " alt="" coords="486,244,698,272"/>
+<area shape="poly" id="edge10_Node000003_Node000009" title=" " alt="" coords="749,226,717,236,666,247,665,241,716,230,754,224"/>
+<area shape="rect" id="Node000010" href="$namespaceturbomole__common.html#a6623dcb88554a02453513df791e8573c" title=" " alt="" coords="489,296,695,341"/>
+<area shape="poly" id="edge12_Node000003_Node000010" title=" " alt="" coords="815,229,768,260,717,286,686,298,684,293,715,281,766,256,810,231"/>
+<area shape="rect" id="Node000011" href="$namespaceturbomole__common.html#adad057a07be45ca6ff336bd68199d72a" title=" " alt="" coords="499,365,685,410"/>
+<area shape="poly" id="edge15_Node000003_Node000011" title=" " alt="" coords="836,232,787,297,754,328,718,355,687,370,685,365,715,351,751,324,783,293,832,235"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="491,58,469,71,431,99,396,131,346,186,342,182,392,127,427,95,467,67,495,55"/>
+<area shape="rect" id="Node000006" href="$namespaceturbomole__common.html#a0575ff5231b6fe5381083d16687abbfe" title=" " alt="" coords="5,184,195,212"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="225,200,196,201,194,196,229,197"/>
+<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="501,157,469,166,387,186,386,181,467,161,506,155"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="477,199,421,201,420,196,483,198"/>
+<area shape="poly" id="edge11_Node000009_Node000005" title=" " alt="" coords="500,241,467,236,387,215,386,210,469,230,506,241"/>
+<area shape="poly" id="edge13_Node000010_Node000005" title=" " alt="" coords="482,290,467,286,401,250,351,215,352,210,404,245,469,281,487,291"/>
+<area shape="poly" id="edge16_Node000011_Node000005" title=" " alt="" coords="482,362,467,355,424,321,387,282,340,215,342,210,391,279,427,318,469,351,487,363"/>
+</map>

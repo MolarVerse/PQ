@@ -9,11 +9,15 @@ var searchData=
   ['requiredworkingfile_6',['requiredWorkingFile',['../structcli_1_1ExternalQMScriptInfo.html#a19f401cf5a30917b7b2c18a2d7226e76',1,'cli::ExternalQMScriptInfo']]],
   ['resetkinetics_7',['resetKinetics',['../structSettings.html#ac3634945055fbb97d47b5956331bd0b5',1,'Settings']]],
   ['restartfile_8',['restartFile',['../structDefaultFiles.html#a470369b64d74f4ac3a1eb22d011bca9c',1,'DefaultFiles']]],
-  ['ringpolymersettings_9',['ringPolymerSettings',['../structSettings.html#a1cd06c9be23de8da9b8e609f68b89346',1,'Settings']]],
-  ['rpmdchargefile_10',['rpmdChargeFile',['../structDefaultFiles.html#a3a16876bbc39f0ad71ce076c078c766e',1,'DefaultFiles']]],
-  ['rpmdenergyfile_11',['rpmdEnergyFile',['../structDefaultFiles.html#aaf472ce4312bb7218e2b9b57b5f5f0e1',1,'DefaultFiles']]],
-  ['rpmdforcefile_12',['rpmdForceFile',['../structDefaultFiles.html#a5a4f0cb7ab948db30815bda20e78873c',1,'DefaultFiles']]],
-  ['rpmdrstfile_13',['rpmdRstFile',['../structDefaultFiles.html#a9b5b86a761f9572f64ae42a2390c827c',1,'DefaultFiles']]],
-  ['rpmdtrajfile_14',['rpmdTrajFile',['../structDefaultFiles.html#a8f10547a0fd72d0475b06368811c8e4b',1,'DefaultFiles']]],
-  ['rpmdvelfile_15',['rpmdVelFile',['../structDefaultFiles.html#a50695fa056e86d8a985038ee7d93a62b',1,'DefaultFiles']]]
+  ['results_9',['RESULTS',['../namespaceorca__common.html#af98a0ad29d5a9436b8a060ddf54cc590',1,'orca_common']]],
+  ['ricc2_10',['RICC2',['../namespaceturbomole__common.html#ad19a77ff48cceecc3843273920d8297a',1,'turbomole_common']]],
+  ['ricc2_11',['ricc2',['../classturbomole__common_1_1Mode.html#a9e355df2dc8f0bedf6811cf5bde816ac',1,'turbomole_common::Mode']]],
+  ['ridft_12',['RIDFT',['../namespaceturbomole__common.html#ab4c64ae4dfee79b2dcbefeb3dd272285',1,'turbomole_common']]],
+  ['ringpolymersettings_13',['ringPolymerSettings',['../structSettings.html#a1cd06c9be23de8da9b8e609f68b89346',1,'Settings']]],
+  ['rpmdchargefile_14',['rpmdChargeFile',['../structDefaultFiles.html#a3a16876bbc39f0ad71ce076c078c766e',1,'DefaultFiles']]],
+  ['rpmdenergyfile_15',['rpmdEnergyFile',['../structDefaultFiles.html#aaf472ce4312bb7218e2b9b57b5f5f0e1',1,'DefaultFiles']]],
+  ['rpmdforcefile_16',['rpmdForceFile',['../structDefaultFiles.html#a5a4f0cb7ab948db30815bda20e78873c',1,'DefaultFiles']]],
+  ['rpmdrstfile_17',['rpmdRstFile',['../structDefaultFiles.html#a9b5b86a761f9572f64ae42a2390c827c',1,'DefaultFiles']]],
+  ['rpmdtrajfile_18',['rpmdTrajFile',['../structDefaultFiles.html#a8f10547a0fd72d0475b06368811c8e4b',1,'DefaultFiles']]],
+  ['rpmdvelfile_19',['rpmdVelFile',['../structDefaultFiles.html#a50695fa056e86d8a985038ee7d93a62b',1,'DefaultFiles']]]
 ];

@@ -1,0 +1,5 @@
+<map id="engine::Engine::deleteTmpFiles" name="engine::Engine::deleteTmpFiles">
+<area shape="rect" id="Node000001" title="Delete temporary files." alt="" coords="5,5,201,50"/>
+<area shape="rect" id="Node000002" href="$classengine_1_1Engine.html#a898232c118e972e1f7bcbaeaa08c348b" title="get the reference to the settings" alt="" coords="249,14,448,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,25,236,27,231,28,201,30"/>
+</map>

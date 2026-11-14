@@ -1,19 +1,21 @@
 <map id="ReferenceSettings::addReferenceFile" name="ReferenceSettings::addReferenceFile">
-<area shape="rect" id="Node000001" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="550,238,699,283"/>
+<area shape="rect" id="Node000001" title="Adds a reference file and its corresponding BibTeX file." alt="" coords="550,269,699,314"/>
 <area shape="rect" id="Node000002" href="$classManostatSettings.html#a9a5f9c461380cb265bbabde942ee0546" title="adds the appropriate reference file for the current manostat type to the given reference settings" alt="" coords="352,49,496,94"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="600,225,558,167,531,136,501,108,484,97,484,91,504,104,535,132,563,163,605,226"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="604,254,563,182,534,143,501,108,485,97,485,91,504,104,538,139,568,179,610,255"/>
 <area shape="rect" id="Node000007" href="$classConstraintSettings.html#a8dde34fb22efc58c10f54d3e6bab4823" title="finalize the constraint settings" alt="" coords="354,118,495,163"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="580,229,501,177,480,166,480,161,504,173,585,229"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="591,257,551,217,501,177,482,166,482,161,504,173,554,214,596,257"/>
 <area shape="rect" id="Node000009" href="$classDftbSettings.html#a165d73160e74c2bbf267c7ba07029366" title="finalizes the DFTB settings by performing necessary checks and setups" alt="" coords="346,187,502,214"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="533,234,473,218,473,212,539,234"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="569,261,501,228,474,218,473,212,503,223,574,260"/>
 <area shape="rect" id="Node000010" href="$classThermostatSettings.html#ae6bdace099417818d6cbfb73e7f7d654" title="finalize the thermostat settings by checking if all required temperatures are set" alt="" coords="350,238,499,283"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="532,261,499,263,498,258,538,260"/>
-<area shape="rect" id="Node000011" href="$testReferencesOutput_8cpp.html#a5d0150df0ba9dd45a503298b00f231f4" title=" " alt="" coords="398,307,451,334"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="538,286,452,315,450,310,533,288"/>
-<area shape="rect" id="Node000012" href="$testReferencesOutput_8cpp.html#a886042122d4b3d0cf7382336d422447b" title=" " alt="" coords="398,359,451,386"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="586,291,547,322,504,348,452,368,450,363,501,343,544,318,581,294"/>
-<area shape="rect" id="Node000013" href="$testReferencesOutput_8cpp.html#a21e498ed61e2d3514958024f012ec8b3" title=" " alt="" coords="398,411,451,438"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="603,294,560,350,533,377,504,400,478,413,452,422,451,416,476,408,501,396,530,373,556,346,598,297"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="532,278,499,275,499,269,538,277"/>
+<area shape="rect" id="Node000011" href="$classXtbSettings.html#adc55e6f4689b5692ac6e4d5575381cdc" title="finalizes the XTB settings by performing necessary checks and setups" alt="" coords="348,307,500,334"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="532,305,501,312,500,307,538,304"/>
+<area shape="rect" id="Node000012" href="$testReferencesOutput_8cpp.html#a5d0150df0ba9dd45a503298b00f231f4" title=" " alt="" coords="398,359,451,386"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="564,320,503,348,452,367,450,362,501,343,559,321"/>
+<area shape="rect" id="Node000013" href="$testReferencesOutput_8cpp.html#a886042122d4b3d0cf7382336d422447b" title=" " alt="" coords="398,411,451,438"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="594,324,553,365,504,400,478,412,452,421,451,416,476,407,501,396,550,361,590,326"/>
+<area shape="rect" id="Node000014" href="$testReferencesOutput_8cpp.html#a21e498ed61e2d3514958024f012ec8b3" title=" " alt="" coords="398,463,451,490"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="606,326,565,391,536,424,504,452,478,466,452,474,451,469,476,461,501,448,532,420,560,388,602,329"/>
 <area shape="rect" id="Node000003" href="$classManostatSettings.html#a55e37d5bcc2e78da3a0d95690a7f8d9b" title="finalizes the settings by setting the fixed axis if it was not explicitly set" alt="" coords="108,57,298,85"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,72,299,74,297,69,339,70"/>
 <area shape="rect" id="Node000004" href="$perfBerendsenManostat_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,5,60,33"/>

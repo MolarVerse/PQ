@@ -6,6 +6,7 @@ var classout_1_1Output =
     [ "Output", "classout_1_1Output.html#a7561fea7922b9c7d1c77b6a5d8fa2f2f", null ],
     [ "_getFilePointer", "classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27", null ],
     [ "_openFile", "classout_1_1Output.html#a9a08c675b2c324bc35868587de8df6fe", null ],
+    [ "_replaceFile", "classout_1_1Output.html#a360b5a6db48b1ce075bd1b8e911bcd96", null ],
     [ "_writeComment", "classout_1_1Output.html#a49a9a1a8097dfbfd6a807a38997a0dcc", null ],
     [ "_writeForceComment", "classout_1_1Output.html#a14ebc6f9e756e1c1b00930442484e829", null ],
     [ "close", "classout_1_1Output.html#ae8558b864274ba5970de16013c09388c", null ],

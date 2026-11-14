@@ -1,22 +1,24 @@
 <map id="setup::QMSetup" name="setup::QMSetup">
-<area shape="rect" id="Node000001" title="Setup QM." alt="" coords="410,827,626,1033"/>
+<area shape="rect" id="Node000001" title="Setup QM." alt="" coords="518,827,734,989"/>
 <area shape="rect" id="Node000002" href="$classengine_1_1QMCapableEngine.html" title="Mixin class providing QM functionality to engines." alt="" coords="30,615,212,754"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,751,115,779,125,802,151,830,180,854,213,873,249,889,322,911,396,925,391,926,321,917,247,894,211,878,177,858,147,834,121,804,110,780,108,756"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,751,114,779,125,801,149,821,185,838,229,853,281,865,393,884,504,898,499,899,393,889,280,870,228,858,183,843,146,825,121,805,109,781,107,756"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="49,452,194,542"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,539,124,598,119,598,121,544"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,539,124,598,119,597,121,544"/>
 <area shape="rect" id="Node000004" href="$classQM_1_1QMRunner.html" title="base class for different qm engines" alt="" coords="42,151,201,379"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="121,377,124,436,119,435,121,382"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="5,5,85,78"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="42,75,45,102,49,126,52,134,46,135,44,127,40,102,42,80"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="150,5,324,78"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="253,74,264,101,280,182,282,264,282,686,285,712,292,738,318,785,355,826,399,862,394,862,352,829,314,788,287,740,280,713,277,686,277,264,275,182,259,102,253,80"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="253,74,264,101,280,182,282,264,282,685,288,723,303,757,326,786,355,811,390,833,427,851,505,881,500,881,425,856,387,837,352,815,322,789,298,759,283,725,277,686,277,264,275,182,259,102,253,80"/>
 <area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="187,80,169,103,152,136,147,134,165,100,189,75"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="317,648,504,720"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="427,718,469,812,464,811,425,722"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="439,717,514,801,527,816,522,815,510,805,438,723"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="529,648,724,720"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="614,718,578,804,574,814,570,810,573,802,610,722"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="628,718,629,812,624,809,625,722"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="749,648,928,720"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="804,719,707,805,642,852,639,847,704,801,799,722"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="816,719,785,763,748,805,735,818,733,813,745,801,781,759,812,722"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="952,648,1127,720"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="995,719,941,756,867,796,789,832,644,890,642,885,787,827,864,791,938,752,990,721"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="998,719,939,764,873,805,813,836,751,863,749,858,810,831,871,801,936,760,993,722"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="1151,648,1380,720"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="1208,720,1141,756,1041,797,938,832,752,882,750,877,937,827,1039,792,1139,752,1203,721"/>
 </map>

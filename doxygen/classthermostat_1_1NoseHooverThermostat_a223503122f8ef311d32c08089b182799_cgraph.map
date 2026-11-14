@@ -1,0 +1,9 @@
+<map id="thermostat::NoseHooverThermostat::NoseHooverThermostat" name="thermostat::NoseHooverThermostat::NoseHooverThermostat">
+<area shape="rect" id="Node000001" title="Construct a new Nose Hoover Thermostat:: Nose Hoover Thermostat object." alt="" coords="5,75,262,119"/>
+<area shape="rect" id="Node000002" href="$classNoseHooverSettings.html#a2bcc15c3f270a6d43b7fc496524bbea5" title="get the nose hoover chain length" alt="" coords="310,5,521,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,71,309,53,304,55,228,77"/>
+<area shape="rect" id="Node000003" href="$classNoseHooverSettings.html#a840bd08ceff2aae9ae6d751859e3fbc8" title="check if both chi and zeta are set" alt="" coords="338,75,492,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="262,94,325,96,320,98,262,100"/>
+<area shape="rect" id="Node000004" href="$classthermostat_1_1Thermostat.html#aee142ae6dafbf7fb8d5460d115425ac9" title="Construct a new Thermostat:: Thermostat object." alt="" coords="327,144,504,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="228,117,315,141,310,141,227,123"/>
+</map>

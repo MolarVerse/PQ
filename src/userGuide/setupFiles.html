@@ -233,15 +233,70 @@ Distances in <code class="docutils literal notranslate"><span class="pre">SHAKE<
 <span class="math notranslate nohighlight">\(\frac{\text{kcal}}{\text{mol Å}^2}\)</span> and <code class="docutils literal notranslate"><span class="pre">dforce_constant_dt</span></code> in
 <span class="math notranslate nohighlight">\(\frac{\text{kcal}}{\text{mol Å}^2\text{ fs}}\)</span>.</p>
 <p>The optional fourth field in <code class="docutils literal notranslate"><span class="pre">SHAKE</span></code> entries is accepted for legacy input
-files but is not used by the reader. The optional <code class="docutils literal notranslate"><span class="pre">*</span></code> marker in the bonded
-sections marks a linker interaction. Topology atom indices are global atom
-indices from the current structure.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SHAKE
-1 2 1.0
+files but is not used by the reader.</p>
+<section id="rules-of-the-file">
+<h3>Rules of the file<a class="headerlink" href="#rules-of-the-file" title="Link to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Atom indices start at 1</strong> and count all atoms of the start file in the
+order of the molecules (the global atom index). An index of 0 or larger
+than the number of atoms is an error. The atoms of one line can belong to
+different molecules.</p></li>
+<li><p><strong>The atoms of one line must differ</strong>, otherwise the reader stops with an
+error. <code class="docutils literal notranslate"><span class="pre">DIST_CONSTRAINTS</span></code> additionally requires lower_distance not
+greater than upper_distance.</p></li>
+<li><p><strong>Only the first word of a header line is read.</strong> Further words are
+ignored, so headers with counts such as <code class="docutils literal notranslate"><span class="pre">BONDS</span> <span class="pre">220</span> <span class="pre">330</span> <span class="pre">50</span></code> (written by
+some tools) are accepted, but the numbers are not checked against the
+number of lines.</p></li>
+<li><p><strong>Every section ends with</strong> <code class="docutils literal notranslate"><span class="pre">END</span></code> (case-insensitive). A missing <code class="docutils literal notranslate"><span class="pre">END</span></code>
+is an error that names the line. Blank lines and <code class="docutils literal notranslate"><span class="pre">#</span></code> comments (also at
+the end of a line) are allowed everywhere.</p></li>
+<li><p><strong>A section may appear more than once</strong>; the entries are added in file
+order. The sections need not be in any particular order.</p></li>
+<li><p><strong>The number of fields per line is fixed</strong> (see the formats above). A
+different number is an error that names the line and the expected number.</p></li>
+<li><p><strong>Types are resolved later.</strong> A <code class="docutils literal notranslate"><span class="pre">bond_type</span></code>, <code class="docutils literal notranslate"><span class="pre">angle_type</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dihedral_type</span></code> or <code class="docutils literal notranslate"><span class="pre">improper_type</span></code> that has no entry in the
+<a class="reference internal" href="#parameterfile"><span class="std std-ref">Parameter File</span></a> is reported when the force field is set up, not while
+the topology is read.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="the-linker-marker">
+<h3>The linker marker <code class="docutils literal notranslate"><span class="pre">*</span></code><a class="headerlink" href="#the-linker-marker" title="Link to this heading"></a></h3>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">*</span></code> at the end of a <code class="docutils literal notranslate"><span class="pre">BONDS</span></code>, <code class="docutils literal notranslate"><span class="pre">ANGLES</span></code> or <code class="docutils literal notranslate"><span class="pre">DIHEDRALS</span></code> line
+marks a linker term. For such a term the Coulomb and non-Coulomb energy and
+forces of the pair of terminal atoms are corrected while the term is
+evaluated, and only if the distance of that pair is within the Coulomb cutoff.
+Use it for terms that connect two molecules (the amyloid example marks its
+MM-MM linker bonds this way). Any other extra word at the end of the line is an
+error.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span># rigid water: the two O-H distances of a molecule (Å)
+SHAKE
+1 2 0.9572
+1 3 0.9572
 END
 
 BONDS
 1 2 1
+13 15 1 *      # linker bond between two molecules
+END
+
+ANGLES
+2 1 3 1
+END
+
+DIHEDRALS
+1 2 3 4 1
+END
+
+IMPROPERS
+1 2 3 4 1
+END
+
+DIST_CONSTRAINTS
+1 2 0.9 1.1 10.0 0.0
 END
 </pre></div>
 </div>
@@ -251,6 +306,7 @@ END
 is set to <code class="docutils literal notranslate"><span class="pre">on</span></code> or <code class="docutils literal notranslate"><span class="pre">bonded</span></code>, or when <a class="reference internal" href="inputFile.html#shakekey"><span class="std std-ref">shake</span></a> is set to
 <code class="docutils literal notranslate"><span class="pre">on</span></code> or <code class="docutils literal notranslate"><span class="pre">shake</span></code>.</p>
 </div>
+</section>
 </section>
 <section id="parameter-file">
 <span id="parameterfile"></span><h2>Parameter File<a class="headerlink" href="#parameter-file" title="Link to this heading"></a></h2>
@@ -282,8 +338,84 @@ underscores.</p>
 </div>
 </div></blockquote>
 <p>If the optional non-Coulombic cutoff is omitted or set to a negative value, the
-global Coulomb cutoff is used. Angle and phase values in the parameter file are
-read in degrees.</p>
+global Coulomb cutoff is used.</p>
+<section id="units">
+<span id="parameterfileunits"></span><h3>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h3>
+<p>All values are plain numbers; the unit is fixed per column. Distances are in
+Å, energies in kcal/mol, angles and phases in degrees. Force constants are per
+squared length or squared angle, the angular one per radian (not per degree).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.0%" />
+<col style="width: 30.0%" />
+<col style="width: 48.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Section</p></th>
+<th class="head"><p>Column</p></th>
+<th class="head"><p>Unit and energy expression</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TYPES</span></code></p></td>
+<td><p>scale_14_coulomb, scale_14_vdw</p></td>
+<td><p>unitless factors between 0 and 1 (the first six columns are not used)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BONDS</span></code></p></td>
+<td><p>equilibrium_distance</p></td>
+<td><p>Å</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>force_constant</p></td>
+<td><p>kcal/mol/Å², <span class="math notranslate nohighlight">\(E = \frac{1}{2} k (r - r_0)^2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ANGLES</span></code></p></td>
+<td><p>equilibrium_angle</p></td>
+<td><p>degrees</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>force_constant</p></td>
+<td><p>kcal/mol/rad², <span class="math notranslate nohighlight">\(E = \frac{1}{2} k (\alpha - \alpha_0)^2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">DIHEDRALS</span></code>, <code class="docutils literal notranslate"><span class="pre">IMPROPERS</span></code></p></td>
+<td><p>force_constant</p></td>
+<td><p>kcal/mol, <span class="math notranslate nohighlight">\(E = k \, (1 + \cos(n \varphi + \delta))\)</span></p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>periodicity <span class="math notranslate nohighlight">\(n\)</span></p></td>
+<td><p>unitless, not negative</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>phase <span class="math notranslate nohighlight">\(\delta\)</span></p></td>
+<td><p>degrees</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">J_COUPLINGS</span></code></p></td>
+<td><p>j_0, force_constant, a, b, c</p></td>
+<td><p>read as plain numbers; the j-coupling term is not part of the force
+calculation yet</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>phase</p></td>
+<td><p>degrees</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NONCOULOMBICS</span> <span class="pre">LJ</span></code></p></td>
+<td><p>c6, c12</p></td>
+<td><p>kcal/mol Å<sup>6</sup> and kcal/mol Å<sup>12</sup>, <span class="math notranslate nohighlight">\(E = c_{12}/r^{12} + c_6/r^6\)</span> (the sign of the attractive part is part of c6)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">NONCOULOMBICS</span> <span class="pre">BUCKINGHAM</span></code></p></td>
+<td><p>a, d_rho, c6</p></td>
+<td><p>kcal/mol, 1/Å and kcal/mol Å<sup>6</sup>, <span class="math notranslate nohighlight">\(E = a \, e^{d_\rho r} + c_6/r^6\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">NONCOULOMBICS</span> <span class="pre">MORSE</span></code></p></td>
+<td><p>dissociation_energy, well_width, equilibrium_distance</p></td>
+<td><p>kcal/mol, 1/Å and Å, <span class="math notranslate nohighlight">\(E = D \, (1 - e^{-w (r - r_0)})^2\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">NONCOULOMBICS</span></code></p></td>
+<td><p>cutoff</p></td>
+<td><p>Å (negative or omitted: the global Coulomb cutoff)</p></td>
+</tr>
+</tbody>
+</table>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BONDS
 1 1.2 1.3
 END
@@ -298,6 +430,7 @@ END
 <p><code class="docutils literal notranslate"><span class="pre">parameter_file</span></code> is mandatory when <a class="reference internal" href="inputFile.html#forcefieldkey"><span class="std std-ref">force-field</span></a>
 is set to <code class="docutils literal notranslate"><span class="pre">on</span></code> or <code class="docutils literal notranslate"><span class="pre">bonded</span></code>.</p>
 </div>
+</section>
 </section>
 <section id="m-shake-file">
 <span id="mshakefile"></span><h2>M-SHAKE File<a class="headerlink" href="#m-shake-file" title="Link to this heading"></a></h2>

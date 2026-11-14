@@ -1,9 +1,11 @@
 <map id="molsys::Box::wrapPositionIntoBox" name="molsys::Box::wrapPositionIntoBox">
-<area shape="rect" id="Node000001" title=" " alt="" coords="542,5,736,50"/>
-<area shape="rect" id="Node000002" href="$classout_1_1TrajectoryOutput.html#aaca49499c6497e99228bfcced9af2e5f" title="Write xyz file." alt="" coords="336,5,494,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="524,28,495,30,495,25,529,28"/>
-<area shape="rect" id="Node000003" href="$namespacebenchOutputWriters.html#aded826eb8be74f772428464eb4242abc" title=" " alt="" coords="108,14,288,42"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="318,28,289,30,288,25,323,28"/>
-<area shape="rect" id="Node000004" href="$perfOutputWritersN100_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,14,60,42"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,29,60,30,60,25,95,27"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="542,28,736,72"/>
+<area shape="rect" id="Node000002" href="$testFrame_8cpp.html#a8b371284faf40a8085f699ae3ccea770" title=" " alt="" coords="388,5,442,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="524,35,442,25,442,20,530,34"/>
+<area shape="rect" id="Node000003" href="$classout_1_1TrajectoryOutput.html#a40b2e30d094ff0b97ccc22fa689e67c7" title="Write xyz file." alt="" coords="336,57,494,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="530,64,495,71,494,66,524,65"/>
+<area shape="rect" id="Node000004" href="$namespacebenchOutputWriters.html#aded826eb8be74f772428464eb4242abc" title=" " alt="" coords="108,65,288,93"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="318,79,289,82,288,77,323,79"/>
+<area shape="rect" id="Node000005" href="$perfOutputWritersN100_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,65,60,93"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="90,80,60,82,60,77,95,78"/>
 </map>

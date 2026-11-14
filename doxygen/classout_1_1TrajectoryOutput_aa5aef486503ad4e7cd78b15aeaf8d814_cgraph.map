@@ -1,0 +1,13 @@
+<map id="out::TrajectoryOutput::writeVelocities" name="out::TrajectoryOutput::writeVelocities">
+<area shape="rect" id="Node000001" title="Write velocities file." alt="" coords="5,42,164,87"/>
+<area shape="rect" id="Node000002" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="466,29,665,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,44,211,37,335,31,453,35,448,36,335,36,212,42,165,49"/>
+<area shape="rect" id="Node000003" href="$classout_1_1Output.html#a49a9a1a8097dfbfd6a807a38997a0dcc" title="Write the shared trajectory frame comment." alt="" coords="212,51,418,78"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="164,62,199,64,193,65,165,67"/>
+<area shape="rect" id="Node000004" href="$classout_1_1TrajectoryOutput.html#a271cdb44107a2a46d1cca89eff13c02d" title="Write the header of a trajectory files." alt="" coords="236,102,394,147"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="164,82,223,99,218,100,164,88"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="523,28,516,20,522,11,538,5,566,3,595,5,612,14,607,14,594,10,566,8,539,10,525,15,521,20,528,30"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="385,99,504,63,509,62,387,104"/>
+<area shape="rect" id="Node000005" href="$classmolsys_1_1Box.html#a371575a75ad2ef4154200f6481634303" title="get the box angles" alt="" coords="466,111,665,138"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="394,122,453,124,448,125,394,127"/>
+</map>

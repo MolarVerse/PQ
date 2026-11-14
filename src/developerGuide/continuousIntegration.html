@@ -213,7 +213,8 @@ A second step compares the CPU time of the measured loop of both builds on the s
 <td><p><code class="docutils literal notranslate"><span class="pre">clang_build.yml</span></code></p></td>
 <td><p>pull requests that touch C++ or build files</p></td>
 <td><p>Not a gate. Builds and tests the project with clang 20 to keep it building with clang. Pull requests use
-ccache; a push to <code class="docutils literal notranslate"><span class="pre">dev</span></code> compiles everything and refreshes the cache.</p></td>
+ccache and a unity build (16 files per compiler call, about 40 % faster when a header changes); a push to
+<code class="docutils literal notranslate"><span class="pre">dev</span></code> compiles every file on its own and refreshes the cache.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Docs</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">jekyll-gh-pages.yml</span></code></p></td>
@@ -382,10 +383,14 @@ action, the clang build and the DevOps check therefore install through <code cla
 caches the <code class="docutils literal notranslate"><span class="pre">.deb</span></code> files per package list: a hit downloads nothing, only a miss (a changed package list, or
 the first run in a branch scope) goes to the mirror. Bump <code class="docutils literal notranslate"><span class="pre">version</span></code> there to drop the cached packages. If a job
 still sits in an install step, cancel and re-run it.</p></li>
-<li><p><strong>The clang job and ccache.</strong> Pull requests build with ccache (the job took 8 to 17 minutes, depending on the CPU
-of the runner, #1045). A push to <code class="docutils literal notranslate"><span class="pre">dev</span></code> ignores the cache for reading (<code class="docutils literal notranslate"><span class="pre">CCACHE_RECACHE</span></code>) and writes it. The
+<li><p><strong>The clang job: ccache and unity.</strong> Pull requests build with ccache (the job took 8 to 17 minutes, depending on the
+CPU of the runner, #1045). A push to <code class="docutils literal notranslate"><span class="pre">dev</span></code> ignores the cache for reading (<code class="docutils literal notranslate"><span class="pre">CCACHE_RECACHE</span></code>) and writes it. The
 build passes <code class="docutils literal notranslate"><span class="pre">-Xclang</span> <span class="pre">-fno-pch-timestamp</span></code>: without it clang puts the date of the precompiled header into the
-<code class="docutils literal notranslate"><span class="pre">.pch</span></code> file and every compile is a ccache miss.</p></li>
+<code class="docutils literal notranslate"><span class="pre">.pch</span></code> file and every compile is a ccache miss. Pull requests also build in unity batches of 16 source files
+(<code class="docutils literal notranslate"><span class="pre">CMAKE_UNITY_BUILD</span></code>): most of the compile time is mp-units template instantiation, which a batch does once
+instead of once per file. A clean build on 4 cores took 451 to 487 s, with batches of 8 324 s and with batches of
+16 283 s, with the same test results (#1088). A unity build can hide a missing <code class="docutils literal notranslate"><span class="pre">#include</span></code>, so a push to <code class="docutils literal notranslate"><span class="pre">dev</span></code>
+stays a normal build, and the GCC jobs, which gate, are not unity builds.</p></li>
 <li><p><strong>The Eigen source</strong> is cached under a key that hashes <code class="docutils literal notranslate"><span class="pre">.cmake/eigen.cmake</span></code> and passed to CMake with
 <code class="docutils literal notranslate"><span class="pre">-DFETCHCONTENT_SOURCE_DIR_EIGEN</span></code>, so that no job clones it again.</p></li>
 <li><p><strong>The conda environment</strong> of the integration tests is cached under a key that hashes <code class="docutils literal notranslate"><span class="pre">ci_build.yml</span></code>. <strong>Every

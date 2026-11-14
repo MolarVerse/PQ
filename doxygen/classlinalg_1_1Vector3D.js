@@ -2,7 +2,7 @@ var classlinalg_1_1Vector3D =
 [
     [ "value_type", "classlinalg_1_1Vector3D.html#a5f1f0aa956180001d2ddaa3e89f46b14", null ],
     [ "~Vector3D", "classlinalg_1_1Vector3D.html#ae4f552c3c246a8ff07039d7761c1000d", null ],
-    [ "Vector3D", "classlinalg_1_1Vector3D.html#aace3aaa2df73a40e36f50185f3c237ef", null ],
+    [ "Vector3D", "classlinalg_1_1Vector3D.html#a101d489f03a5d426b49ab816fd7c0fa8", null ],
     [ "Vector3D", "classlinalg_1_1Vector3D.html#afe954b8affd8f0f64c49bedb412041a6", null ],
     [ "Vector3D", "classlinalg_1_1Vector3D.html#ac8ff3e2591efd1875d92891fa435831b", null ],
     [ "Vector3D", "classlinalg_1_1Vector3D.html#a65170f5a5b99bf79ab5d4898648260ae", null ],

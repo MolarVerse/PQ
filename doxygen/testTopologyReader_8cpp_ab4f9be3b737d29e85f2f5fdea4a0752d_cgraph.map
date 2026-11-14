@@ -1,7 +1,21 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title="tests reading a topology file" alt="" coords="5,48,74,76"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1FileSettings.html#a4c2b04e603fd626b185cf40f7e566c2d" title="Get the topology file name." alt="" coords="145,5,316,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,54,132,44,128,48,75,59"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1FileSettings.html#aec6e7a5f28a454805511a5b44c0c3f2a" title="set the topology file name flag to is not set" alt="" coords="122,75,339,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,66,109,73,104,75,74,71"/>
+<area shape="rect" id="Node000001" title="tests reading a topology file" alt="" coords="5,83,74,111"/>
+<area shape="rect" id="Node000002" href="$namespaceinput_1_1topology.html#a3d1f97a3ae5763b555062e9edfb7481e" title="wrapper to construct a TopologyReader and reads topology file" alt="" coords="122,83,358,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,94,108,95,104,99,75,100"/>
+<area shape="rect" id="Node000003" href="$namespaceinput_1_1topology.html#ac926c9f9d78ae8899010491cea8465bc" title="checks if reading topology file is needed" alt="" coords="406,23,593,51"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="302,80,424,54,419,56,303,85"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1topology_1_1TopologyReader.html#a034670481fb19048b1a96a26113a86c0" title="reads topology file" alt="" coords="408,75,592,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="358,94,394,97,389,97,359,100"/>
+<area shape="rect" id="Node000009" href="$classout_1_1StdoutOutput.html#acd46fc539215f2385239c069524ace71" title="write a message to the stdout to inform about the start of reading a file" alt="" coords="428,152,572,197"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="289,109,415,148,410,149,289,114"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1topology_1_1TopologyReader.html#a6a3d2ffb6d4b189f01cb7b272eb9410e" title="determines which section of the topology file the header line belongs to" alt="" coords="646,5,836,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="579,72,644,55,649,54,580,77"/>
+<area shape="rect" id="Node000007" href="$namespaceutilities.html#abbd684a64c3b01b9a51b4fb24c072d8c" title="Removes comments from a line." alt="" coords="641,74,841,102"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="592,91,628,92,623,92,593,96"/>
+<area shape="rect" id="Node000008" href="$namespaceutilities.html#a23accba60faf312a7eaf6df031135304" title="Splits a string into a vector of strings at every whitespace." alt="" coords="669,126,813,154"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="592,111,656,124,651,124,592,116"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="889,5,1096,50"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="836,25,876,27,871,28,837,30"/>
+<area shape="rect" id="Node000010" href="$namespaceout.html#ae21e45a9e56a9f34636a6df12ee3e2f2" title="Message to inform about reading a file." alt="" coords="672,178,810,206"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="572,177,659,186,654,186,572,182"/>
 </map>

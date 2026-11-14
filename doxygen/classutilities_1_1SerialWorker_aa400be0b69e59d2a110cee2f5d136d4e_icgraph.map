@@ -1,0 +1,11 @@
+<map id="utilities::SerialWorker::SerialWorker" name="utilities::SerialWorker::SerialWorker">
+<area shape="rect" id="Node000001" title="start the background thread" alt="" coords="214,109,374,154"/>
+<area shape="rect" id="Node000002" href="$classutilities_1_1SerialWorker.html#a2968ed3c6001df92fd00065ac675b780" title=" " alt="" coords="5,5,166,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,103,164,65,141,53,140,48,167,60,243,101"/>
+<area shape="rect" id="Node000003" href="$classutilities_1_1SerialWorker.html#ad3b652e081efc4ebee842b47a4edb3f8" title=" " alt="" coords="5,75,166,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,117,167,113,166,108,201,115"/>
+<area shape="rect" id="Node000004" href="$classutilities_1_1SerialWorker.html#a6ba8b9dfc2c70cb00bf5f74255d9a015" title=" " alt="" coords="5,144,166,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="196,149,167,155,165,150,201,146"/>
+<area shape="rect" id="Node000005" href="$classutilities_1_1SerialWorker.html#a383f001d2a8dd387bf7da5bf5fbb0716" title=" " alt="" coords="5,213,166,258"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="243,161,167,203,142,215,140,210,164,199,238,162"/>
+</map>

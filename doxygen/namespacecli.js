@@ -20,6 +20,7 @@ var namespacecli =
     [ "writeValidationText", "namespacecli.html#a29e92d2c51e5fe74a1f737acccaa2fcc", null ],
     [ "dftbPlusScripts", "namespacecli.html#abe321a5d49cf0088b7d37953ef64a069", null ],
     [ "externalQMMethods", "namespacecli.html#ad418baeaa2d32328ec7b3036f9cb35ba", null ],
+    [ "orcaScripts", "namespacecli.html#aff9d809afb87d71b6c87f764d10b7ee4", null ],
     [ "pyScfScripts", "namespacecli.html#a178913066790d8844aec996e08021c82", null ],
     [ "turbomoleScripts", "namespacecli.html#ad56f0542338ff3fb59e26de124e01770", null ]
 ];

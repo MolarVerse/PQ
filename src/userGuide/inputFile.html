@@ -343,6 +343,19 @@ force, and charge frames, including their ring-polymer variants. It is disabled
 by default to preserve the existing file formats.</p>
 <p class="centered">
 <strong><em>default value</em> = false</strong></p></section>
+<section id="asynchronous-output">
+<span id="asyncoutputkey"></span><h3>Asynchronous Output<a class="headerlink" href="#asynchronous-output" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>async_output = {bool} -&gt; true</p>
+</div>
+<p>MD runs write the trajectory, velocity, force, charge and restart files on a
+separate thread, so the simulation does not wait for them. If PQ crashes, the
+last one or two frames may be missing from these files. Set <code class="docutils literal notranslate"><span class="pre">async_output</span></code>
+to false to write them before the next step instead. PQ also writes them
+directly if there is not enough free memory to hold the queued frames.</p>
+<p class="centered">
+<strong><em>default value</em> = true</strong></p></section>
 <section id="file-prefix">
 <span id="fileprefixkey"></span><h3>File Prefix<a class="headerlink" href="#file-prefix" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -609,6 +622,17 @@ is set to <code class="docutils literal notranslate"><span class="pre">on</span>
 </div>
 <p class="centered">
 <strong><em>default value</em> = “tm_define.template”</strong></p></section>
+<section id="orca-setup-file">
+<span id="orcafilekey"></span><h3>ORCA Setup File<a class="headerlink" href="#orca-setup-file" title="Link to this heading"></a></h3>
+<div class="tip admonition">
+<p class="admonition-title">Key</p>
+<p>orca_file = {file} -&gt; “orca.template”</p>
+</div>
+<p>The external <code class="docutils literal notranslate"><span class="pre">orca_rimp2.py</span></code>, <code class="docutils literal notranslate"><span class="pre">orca_hf.py</span></code> and <code class="docutils literal notranslate"><span class="pre">orca_dft.py</span></code> runners read
+this shared template. An example
+and the stage-placeholder contract are provided in <code class="docutils literal notranslate"><span class="pre">examples/orca/</span></code>.
+Load ORCA before running PQ, or set <code class="docutils literal notranslate"><span class="pre">ORCA_EXE</span></code> to its full executable path.</p>
+</section>
 <section id="topology-file">
 <span id="topologyfilekey"></span><h3>Topology File<a class="headerlink" href="#topology-file" title="Link to this heading"></a></h3>
 <div class="tip admonition">
@@ -1253,6 +1277,7 @@ response of the remaining axes.</p>
 <li><p><strong>dftbplus</strong> - <a class="reference external" href="https://dftbplus.org/index.html">DFTB+</a></p></li>
 <li><p><strong>pyscf</strong> - <a class="reference external" href="https://pyscf.org/">PySCF</a></p></li>
 <li><p><strong>turbomole</strong> - <a class="reference external" href="https://www.turbomole.org/">Turbomole</a></p></li>
+<li><p><strong>orca</strong> - <a class="reference external" href="https://www.faccts.de/orca/">ORCA</a></p></li>
 <li><p><strong>mace</strong>  - <a class="reference external" href="https://arxiv.org/abs/2401.00096">MACE-MP</a> same as using <strong>mace_mp</strong></p></li>
 <li><p><strong>mace_off</strong> - <a class="reference external" href="https://arxiv.org/abs/2312.15211">MACE-OFF23</a></p></li>
 <li><p><strong>ase-dftbplus</strong> - <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb">DFTB+</a> called by <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE</a></p></li>

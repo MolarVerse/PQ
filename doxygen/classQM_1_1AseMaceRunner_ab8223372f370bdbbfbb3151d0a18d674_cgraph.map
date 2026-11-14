@@ -1,6 +1,6 @@
 <map id="QM::AseMaceRunner::~AseMaceRunner" name="QM::AseMaceRunner::~AseMaceRunner">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,212,170,257"/>
-<area shape="rect" id="Node000002" href="$classQM_1_1AseMaceRunner.html#a9a22c0b19828554f6d39abbde7ac50d0" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="218,212,382,257"/>
+<area shape="rect" id="Node000002" href="$classQM_1_1AseMaceRunner.html#a6129e06fd937f15c3a6dfc984cdb494f" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="218,212,382,257"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,232,205,233,200,236,171,237"/>
 <area shape="rect" id="Node000003" href="$classQM_1_1AseQMRunner.html#a79ea5f81d1013c30929e441049ac20d8" title="set the ASE calculator" alt="" coords="455,5,657,50"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,210,328,177,354,136,388,95,428,60,443,54,439,57,432,64,392,99,359,139,333,180,314,213"/>
@@ -16,7 +16,7 @@
 <area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="354,255,431,282,466,294,460,294,429,288,354,260"/>
 <area shape="rect" id="Node000012" href="$classMaceSettings.html#a3da31ecdad24669e1fe010d86d2434f3" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="450,349,663,394"/>
 <area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="324,255,372,296,431,335,446,343,441,343,429,339,369,300,323,260"/>
-<area shape="rect" id="Node000014" href="$classQMSettings.html#a6efd4c1cfd2b1eb015aa735195561f2a" title="returns if the dispersion correction should be used" alt="" coords="444,418,668,446"/>
+<area shape="rect" id="Node000014" href="$classQMSettings.html#a22c3a2adaca4329e6f2a4f91cbe5180f" title="returns if the dispersion correction should be used" alt="" coords="444,418,668,446"/>
 <area shape="poly" id="edge14_Node000002_Node000014" title=" " alt="" coords="312,254,332,290,358,330,391,371,432,404,441,412,436,411,428,409,387,374,353,333,327,292,310,259"/>
 <area shape="rect" id="Node000005" href="$classQM_1_1QMRunner.html#ac10db8a298dfddae091119ae69324959" title="constructor for the QMRunner class" alt="" coords="730,74,926,102"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="678,85,717,87,712,88,679,90"/>

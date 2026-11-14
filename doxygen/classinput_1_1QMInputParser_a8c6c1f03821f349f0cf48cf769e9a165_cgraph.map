@@ -1,17 +1,15 @@
 <map id="input::QMInputParser::addQMLoopTimeLimitKey" name="input::QMInputParser::addQMLoopTimeLimitKey">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,125,202,170"/>
-<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="276,5,434,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,123,189,91,249,60,266,55,262,58,251,65,191,96,141,127"/>
-<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="305,74,404,102"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,122,292,101,288,105,201,127"/>
-<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="276,125,434,170"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="201,145,263,147,258,149,203,150"/>
-<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="280,195,430,239"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="187,168,268,191,263,193,187,173"/>
-<area shape="rect" id="Node000008" href="$classQMSettings.html#a9bf600dd42b7946b47084dfc2ce1ba37" title="sets the qmLoopTimeLimit in settings" alt="" coords="250,264,460,309"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="132,168,186,209,251,249,265,258,260,257,248,254,183,213,131,173"/>
-<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="536,61,687,106"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="404,84,523,84,518,86,405,90"/>
-<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="508,131,715,175"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="434,147,495,150,490,151,435,152"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,202,141"/>
+<area shape="rect" id="Node000002" href="$classinput_1_1InputFileParser.html#a5ba8e47681b2606915744025a4dcd4cd" title="get the input registry" alt="" coords="250,5,408,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,93,259,54,255,58,162,98"/>
+<area shape="rect" id="Node000003" href="$namespaceinput.html#a1e6637e091d9a9b9b4b66225cdb6cafd" title="Adapts an InputKeyBase into an InputFileParser::ParseFunc." alt="" coords="279,74,378,102"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,102,267,95,262,98,203,108"/>
+<area shape="rect" id="Node000005" href="$classinput_1_1InputFileParser.html#a1151a9c953bcfffe19e53756d217e737" title="add keyword to different keyword maps" alt="" coords="250,125,408,170"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="202,128,237,135,232,136,202,134"/>
+<area shape="rect" id="Node000007" href="$classinput_1_1InputRegistry.html#a738bbfc104779f6822b01848e45e5c08" title=" " alt="" coords="254,195,404,239"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="157,139,264,187,259,189,156,144"/>
+<area shape="rect" id="Node000004" href="$classinput_1_1InputKeyBase.html#ae0207afd94a31da0a67ae0e4f3558370" title="parses a line from the input file and sets the value of the key" alt="" coords="484,61,635,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="379,84,471,85,466,86,380,89"/>
+<area shape="rect" id="Node000006" href="$namespaceutilities.html#a0d9f85850fd27d02a15942c73db38bb7" title="returns a copy of a string all lower case and with &#39;&#45;&#39; replaced by &#39;_&#39;" alt="" coords="456,131,663,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="408,147,443,150,437,151,408,152"/>
 </map>

@@ -1,6 +1,6 @@
 var classinput_1_1QMInputParser =
 [
-    [ "QMInputParser", "classinput_1_1QMInputParser.html#a7e6c42d87be90aa02b796fb76a73c88f", null ],
+    [ "QMInputParser", "classinput_1_1QMInputParser.html#a2e23de8b0126aeba1916706800ef168c", null ],
     [ "addDispersionKey", "classinput_1_1QMInputParser.html#afadcef9bcfc31a38cb1ab81514f7dc10", null ],
     [ "addFennolModelPathKey", "classinput_1_1QMInputParser.html#a64e1f5e8479346ea8850df664ffe1be4", null ],
     [ "addGPUPreprocessingKey", "classinput_1_1QMInputParser.html#ad2a9a86f52bea60fb9a2ecf7919b71be", null ],
@@ -19,6 +19,7 @@ var classinput_1_1QMInputParser =
     [ "addXtbMethodKey", "classinput_1_1QMInputParser.html#ad5ab25707f5e2d35e11a53c687eeebfd", null ],
     [ "parseMaceQMMethod", "classinput_1_1QMInputParser.html#a34d7f8142fa0da9d011ecae7bb446b0c", null ],
     [ "_dftbSettings", "classinput_1_1QMInputParser.html#a51ffb799c09722dc8f7e52050900d20a", null ],
+    [ "_externalQMSettings", "classinput_1_1QMInputParser.html#a5f14949a86e1c7597a8a67bc401dc8b2", null ],
     [ "_fennolSettings", "classinput_1_1QMInputParser.html#a7f0515fbff442c99e06b70fac7cd5653", null ],
     [ "_maceSettings", "classinput_1_1QMInputParser.html#ae8489fc4dbeb069ea0191b1ad04e406f", null ],
     [ "_qmSettings", "classinput_1_1QMInputParser.html#a7b687512c94caccf0c843e25d7a7de13", null ],

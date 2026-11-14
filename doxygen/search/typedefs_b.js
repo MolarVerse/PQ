@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['optexception_0',['OptException',['../namespaceexc.html#a4111d503fd0ed161830a8751a6169fa3',1,'exc']]],
-  ['optwarning_1',['OptWarning',['../namespaceexc.html#aecc48024e63bccc160ea3d2853918cbf',1,'exc']]]
+  ['ns_0',['ns',['../namespacetimings.html#abdc0afc2cc06484b5011c8c9f5cf156b',1,'timings']]]
 ];

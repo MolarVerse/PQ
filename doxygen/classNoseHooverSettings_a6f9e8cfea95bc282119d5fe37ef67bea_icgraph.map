@@ -1,0 +1,5 @@
+<map id="NoseHooverSettings::getNoseHooverCouplingFrequency" name="NoseHooverSettings::getNoseHooverCouplingFrequency">
+<area shape="rect" id="Node000001" title="get the nose hoover coupling frequency" alt="" coords="122,5,376,50"/>
+<area shape="rect" id="Node000002" href="$testThermostatParser_8cpp.html#a5977059770fcff9c0b1cc66205b77f5f" title="tests parsing the &quot;coupling_frequency&quot; command" alt="" coords="5,14,74,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,28,74,30,74,25,109,27"/>
+</map>

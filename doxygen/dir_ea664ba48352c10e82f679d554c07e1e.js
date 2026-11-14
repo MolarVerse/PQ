@@ -9,7 +9,5 @@ var dir_ea664ba48352c10e82f679d554c07e1e =
     [ "guffCoefficients.hpp", "guffCoefficients_8hpp.html", null ],
     [ "hubbardDerivMap.hpp", "hubbardDerivMap_8hpp.html", "hubbardDerivMap_8hpp" ],
     [ "rigidWaterGeometry.hpp", "rigidWaterGeometry_8hpp.html", null ],
-    [ "systemInfo.hpp", "systemInfo_8hpp.html", "systemInfo_8hpp" ],
-    [ "unit_types.hpp", "unit__types_8hpp.html", "unit__types_8hpp" ],
-    [ "units.hpp", "units_8hpp.html", "units_8hpp" ]
+    [ "systemInfo.hpp", "systemInfo_8hpp.html", "systemInfo_8hpp" ]
 ];

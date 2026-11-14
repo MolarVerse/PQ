@@ -5,5 +5,7 @@ var dir_16664c44860f0fd4943abcc9e1b53b65 =
     [ "testInterrupt.cpp", "testInterrupt_8cpp.html", "testInterrupt_8cpp" ],
     [ "testMathUtilities.cpp", "testMathUtilities_8cpp.html", "testMathUtilities_8cpp" ],
     [ "testProgressbar.cpp", "testProgressbar_8cpp.html", "testProgressbar_8cpp" ],
-    [ "testStringUtilities.cpp", "testStringUtilities_8cpp.html", "testStringUtilities_8cpp" ]
+    [ "testSerialWorker.cpp", "testSerialWorker_8cpp.html", "testSerialWorker_8cpp" ],
+    [ "testStringUtilities.cpp", "testStringUtilities_8cpp.html", "testStringUtilities_8cpp" ],
+    [ "testSystemMemory.cpp", "testSystemMemory_8cpp.html", null ]
 ];

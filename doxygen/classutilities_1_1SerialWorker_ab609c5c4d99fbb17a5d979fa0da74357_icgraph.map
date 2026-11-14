@@ -1,0 +1,23 @@
+<map id="utilities::SerialWorker::_rethrowError" name="utilities::SerialWorker::_rethrowError">
+<area shape="rect" id="Node000001" title="rethrow and clear a stored task error; call with _mutex held" alt="" coords="315,222,475,267"/>
+<area shape="rect" id="Node000002" href="$classutilities_1_1SerialWorker.html#a893ced32f73d4d6a573aba3d74c01392" title="queue a task, blocking while capacity tasks are in flight" alt="" coords="107,170,267,215"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="298,221,268,215,267,210,303,220"/>
+<area shape="rect" id="Node000010" href="$classutilities_1_1SerialWorker.html#a8723af9def289ea88f4344a27eae803d" title="block until all queued tasks are done" alt="" coords="107,257,267,302"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="297,261,268,268,267,263,302,260"/>
+<area shape="rect" id="Node000003" href="$testSerialWorker_8cpp.html#a9239653bf9ae9a977a5fccdb89b7dfb3" title=" " alt="" coords="5,57,59,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="143,161,51,88,52,83,147,159"/>
+<area shape="rect" id="Node000004" href="$testSerialWorker_8cpp.html#a7d43cb0ea8633cebc4024236ac4e3b90" title=" " alt="" coords="5,109,59,137"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="120,165,60,138,59,132,124,162"/>
+<area shape="rect" id="Node000005" href="$testSerialWorker_8cpp.html#a9e9c41e59aee97a785fe0c4df07143b4" title=" " alt="" coords="5,161,59,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="89,183,60,181,58,176,93,180"/>
+<area shape="rect" id="Node000006" href="$testSerialWorker_8cpp.html#aa99dcca30031fc16f1aa04a38d85bc23" title=" " alt="" coords="5,317,59,345"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="131,225,109,246,84,275,61,306,49,319,46,315,57,303,80,272,105,243,135,222"/>
+<area shape="rect" id="Node000007" href="$testSerialWorker_8cpp.html#a930d8e82147f47979bb9da770e36ef5d" title=" " alt="" coords="5,213,59,241"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="90,216,61,224,58,219,93,212"/>
+<area shape="rect" id="Node000008" href="$testSerialWorker_8cpp.html#ade68068d7e90236e553f97036bb54ad4" title=" " alt="" coords="5,5,59,33"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="154,159,57,48,48,36,46,31,61,44,159,157"/>
+<area shape="rect" id="Node000009" href="$testSerialWorker_8cpp.html#af1b3cf0158a92cbce93f65cb9a8497f2" title=" " alt="" coords="5,265,59,293"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="131,225,60,267,57,263,133,220"/>
+<area shape="poly" id="edge10_Node000010_Node000006" title=" " alt="" coords="102,308,60,325,58,320,106,306"/>
+<area shape="poly" id="edge11_Node000010_Node000009" title=" " alt="" coords="89,281,60,282,59,277,93,278"/>
+</map>

@@ -10,7 +10,7 @@ var classQM_1_1AseQMRunner =
     [ "collectForces", "classQM_1_1AseQMRunner.html#a34118d4ef9785c7696bb0b087043ed04", null ],
     [ "collectStress", "classQM_1_1AseQMRunner.html#a430f5cbd90020a14e23dbb41fd5ec703", null ],
     [ "execute", "classQM_1_1AseQMRunner.html#a879349d40e14f1cf07f86416c02545f3", null ],
-    [ "run", "classQM_1_1AseQMRunner.html#afcbff55049c8cdb7ab89153e016f0793", null ],
+    [ "run", "classQM_1_1AseQMRunner.html#a6193655bf391e71107db881535b8b398", null ],
     [ "_ase", "classQM_1_1AseQMRunner.html#a61e8877202c14a4163673813907dcbbc", null ],
     [ "_energy", "classQM_1_1AseQMRunner.html#a2421b040c5863f6d1718cb831cc480ec", null ]
 ];

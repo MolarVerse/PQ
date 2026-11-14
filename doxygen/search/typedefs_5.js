@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['gedoublevalidator_0',['GEDoubleValidator',['../namespaceinput.html#a3417eedd9dff51e3ae964f88dd160bea',1,'input']]],
-  ['guffdatexception_1',['GuffDatException',['../namespaceexc.html#a3091cbca97c6103acf5b8fd5a98eee5d',1,'exc']]]
+  ['forceconstant_0',['ForceConstant',['../unit__types_8hpp.html#ac4c53a7a0741598b1735535605ad2367',1,'unit_types.hpp']]],
+  ['frequency_1',['Frequency',['../unit__types_8hpp.html#ae72b2f53e07f235533fa33766c0c5e25',1,'unit_types.hpp']]]
 ];

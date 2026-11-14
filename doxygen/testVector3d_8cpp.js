@@ -12,6 +12,8 @@ var testVector3d_8cpp =
     [ "TEST", "testVector3d_8cpp.html#a326498208280b315b9e787c61a347481", null ],
     [ "TEST", "testVector3d_8cpp.html#aa9aafcb9d8703f2771364fb6cc1274dc", null ],
     [ "TEST", "testVector3d_8cpp.html#a304d48aa0f96dfdd2f6eac50e7c4a486", null ],
+    [ "TEST", "testVector3d_8cpp.html#a030405e6107576e04de9c7acc593aeb3", null ],
+    [ "TEST", "testVector3d_8cpp.html#a9c63af490902bbc2f1c2e83a6723f3b2", null ],
     [ "TEST", "testVector3d_8cpp.html#a8b3e0a5ea58058336e94c1946db913c5", null ],
     [ "TEST", "testVector3d_8cpp.html#af2aebd3a3ea7b631c44d62c7c3e4af12", null ],
     [ "TEST", "testVector3d_8cpp.html#a4cdfa7df42156f6a049bcb1cb679d4b5", null ],

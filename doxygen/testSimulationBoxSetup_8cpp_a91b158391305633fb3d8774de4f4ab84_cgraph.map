@@ -24,8 +24,8 @@
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="329,560,368,560,363,563,331,565"/>
 <area shape="rect" id="Node000013" href="$classsetup_1_1SimulationBoxSetup.html#a2a233804d10e257473d4e9dbbc4dcb93" title="setup simulation box" alt="" coords="390,856,588,900"/>
 <area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="244,640,456,843,451,845,243,646"/>
-<area shape="rect" id="Node000037" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="417,606,561,651"/>
-<area shape="poly" id="edge42_Node000012_Node000037" title=" " alt="" coords="325,626,403,627,399,630,327,631"/>
+<area shape="rect" id="Node000036" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="417,606,561,651"/>
+<area shape="poly" id="edge41_Node000012_Node000036" title=" " alt="" coords="325,626,403,627,399,630,327,631"/>
 <area shape="rect" id="Node000014" href="$classsetup_1_1SimulationBoxSetup.html#a12e7804741a4189ca25c549bf4d3837d" title="Calculates the total charge of the simulation box." alt="" coords="645,485,843,530"/>
 <area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="501,853,543,770,595,662,606,627,612,597,621,569,643,540,650,537,647,541,647,544,626,572,617,598,612,628,600,664,548,772,505,856"/>
 <area shape="rect" id="Node000015" href="$classsetup_1_1SimulationBoxSetup.html#a3fa0b56ee97daedf0c064952f9994dca" title="Checks if the box dimensions and density are set and calculates the missing values." alt="" coords="645,554,843,599"/>
@@ -34,8 +34,8 @@
 <area shape="poly" id="edge17_Node000013_Node000018" title=" " alt="" coords="573,852,647,834,643,837,575,857"/>
 <area shape="rect" id="Node000020" href="$classsetup_1_1SimulationBoxSetup.html#a6528e27ec9a4f5e6bedf11592ed320a8" title="Check if all velocities of the simulation box are 0." alt="" coords="645,624,843,668"/>
 <area shape="poly" id="edge19_Node000013_Node000020" title=" " alt="" coords="501,853,523,816,555,769,596,721,644,678,654,674,650,678,647,683,600,724,559,772,527,819,505,857"/>
-<area shape="rect" id="Node000022" href="$classsetup_1_1SimulationBoxSetup.html#a0069b7e639b1dae75014cadb59afc028" title="Initialize the velocities of the simulation box." alt="" coords="891,1045,1088,1090"/>
-<area shape="poly" id="edge21_Node000013_Node000022" title=" " alt="" coords="492,898,500,977,509,1028,522,1084,542,1140,568,1194,603,1242,647,1281,697,1307,720,1313,742,1315,789,1305,841,1281,866,1265,889,1244,927,1197,955,1147,974,1105,978,1102,959,1149,931,1200,893,1248,870,1269,844,1286,790,1310,742,1320,719,1319,695,1312,644,1285,599,1245,564,1196,537,1142,517,1085,504,1030,495,978,490,903"/>
+<area shape="rect" id="Node000022" href="$classsetup_1_1SimulationBoxSetup.html#a0069b7e639b1dae75014cadb59afc028" title="Initialize the velocities of the simulation box." alt="" coords="891,976,1088,1020"/>
+<area shape="poly" id="edge21_Node000013_Node000022" title=" " alt="" coords="492,898,500,977,509,1028,522,1084,542,1140,568,1194,603,1242,647,1281,697,1308,720,1314,743,1316,766,1314,789,1307,841,1281,872,1257,898,1229,920,1196,938,1162,964,1093,980,1037,984,1034,970,1094,943,1164,925,1199,902,1232,876,1261,844,1285,791,1312,767,1319,743,1322,719,1320,695,1313,644,1285,599,1245,564,1196,537,1142,517,1085,504,1030,495,978,490,903"/>
 <area shape="rect" id="Node000024" href="$classsetup_1_1SimulationBoxSetup.html#aca83e94af7b1d1c05e7ace5ea7f0bc18" title="Sets the atomic number of each atom in the simulation box." alt="" coords="645,717,843,762"/>
 <area shape="poly" id="edge23_Node000013_Node000024" title=" " alt="" coords="518,853,575,813,644,771,660,766,656,769,647,776,578,817,521,857"/>
 <area shape="rect" id="Node000026" href="$classsetup_1_1SimulationBoxSetup.html#a9e517425af318b53380423f5c9d55774" title="Sets the mass of each atom in the simulation box." alt="" coords="645,949,843,994"/>
@@ -58,26 +58,24 @@
 <area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="842,806,879,808,874,809,844,811"/>
 <area shape="rect" id="Node000021" href="$classsetup_1_1SimulationBoxSetup.html#a47e2a8dd736aee135a41b2e153391976" title="sets if the velocities in the start file are zero" alt="" coords="891,624,1088,668"/>
 <area shape="poly" id="edge20_Node000020_Node000021" title=" " alt="" coords="842,643,878,645,873,647,844,648"/>
-<area shape="rect" id="Node000023" href="$classsetup_1_1SimulationBoxSetup.html#aefee9580f5dfc37bcbb810a262f7cf09" title="returns if the velocities in the start file are zero" alt="" coords="1136,1002,1333,1047"/>
-<area shape="poly" id="edge22_Node000022_Node000023" title=" " alt="" coords="1088,1047,1123,1044,1118,1045,1089,1053"/>
+<area shape="rect" id="Node000023" href="$classsetup_1_1SimulationBoxSetup.html#aefee9580f5dfc37bcbb810a262f7cf09" title="returns if the velocities in the start file are zero" alt="" coords="1136,962,1333,1007"/>
+<area shape="poly" id="edge22_Node000022_Node000023" title=" " alt="" coords="1088,990,1123,990,1118,991,1089,995"/>
 <area shape="poly" id="edge24_Node000024_Node000024" title=" " alt="" coords="697,715,696,707,704,698,720,692,744,690,771,693,788,701,783,702,769,698,744,695,721,697,707,702,701,708,702,717"/>
 <area shape="rect" id="Node000025" href="$namespaceutilities.html#afb2cdc567e8c22ea1ead02ac364db1d0" title="returns a copy of a string all lower case" alt="" coords="908,725,1071,753"/>
 <area shape="poly" id="edge25_Node000024_Node000025" title=" " alt="" coords="842,737,895,738,889,740,844,742"/>
 <area shape="poly" id="edge27_Node000026_Node000026" title=" " alt="" coords="697,947,696,939,704,930,720,924,744,922,771,925,788,934,783,934,769,930,744,927,721,929,707,934,701,940,702,949"/>
 <area shape="poly" id="edge38_Node000031_Node000019" title=" " alt="" coords="825,852,896,835,891,837,827,857"/>
-<area shape="poly" id="edge41_Node000031_Node000022" title=" " alt="" coords="827,898,844,911,857,925,864,940,870,968,875,996,881,1010,893,1024,906,1037,900,1036,889,1028,877,1013,870,998,864,969,859,941,852,928,841,914,827,903"/>
-<area shape="poly" id="edge40_Node000031_Node000023" title=" " alt="" coords="824,898,844,910,860,929,868,947,876,964,892,980,946,1005,1005,1020,1064,1028,1123,1033,1118,1033,1064,1034,1004,1026,945,1010,889,984,872,968,863,949,856,932,841,915,823,903"/>
+<area shape="poly" id="edge40_Node000031_Node000022" title=" " alt="" coords="820,898,844,910,859,922,869,932,892,954,914,968,909,968,889,959,865,936,855,925,841,915,820,903"/>
+<area shape="poly" id="edge39_Node000031_Node000023" title=" " alt="" coords="840,898,891,910,1123,961,1118,962,890,915,840,903"/>
 <area shape="rect" id="Node000032" href="$classsetup_1_1SetupBase.html#a362d3b56078a056d79b12450cf15b13b" title="Writes a setup warning to the log and stdout." alt="" coords="914,856,1065,900"/>
 <area shape="poly" id="edge33_Node000031_Node000032" title=" " alt="" coords="842,875,901,877,896,879,844,880"/>
-<area shape="rect" id="Node000036" href="$classsettings_1_1FileSettings.html#ac98cb135ddaf0981954b758332fae25a" title="Get the start file name." alt="" coords="911,925,1068,970"/>
-<area shape="poly" id="edge39_Node000031_Node000036" title=" " alt="" coords="826,898,899,921,893,921,826,903"/>
-<area shape="rect" id="Node000033" href="$classout_1_1LogOutput.html#a5deed49b92569a735e96b4ad626cb2c7" title="write a message to issue a warning about the setup" alt="" coords="1137,838,1332,883"/>
-<area shape="poly" id="edge34_Node000032_Node000033" title=" " alt="" coords="1065,870,1124,868,1119,869,1066,875"/>
-<area shape="rect" id="Node000035" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="1162,908,1307,952"/>
-<area shape="poly" id="edge37_Node000032_Node000035" title=" " alt="" coords="1065,891,1150,911,1145,912,1066,897"/>
-<area shape="rect" id="Node000034" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="1381,847,1581,874"/>
-<area shape="poly" id="edge35_Node000033_Node000034" title=" " alt="" coords="1332,858,1368,860,1363,861,1333,863"/>
-<area shape="poly" id="edge36_Node000034_Node000034" title=" " alt="" coords="1439,845,1432,838,1438,828,1454,822,1481,820,1510,822,1527,831,1522,831,1509,828,1481,825,1455,827,1441,832,1438,837,1444,847"/>
-<area shape="rect" id="Node000038" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="672,433,816,461"/>
-<area shape="poly" id="edge43_Node000037_Node000038" title=" " alt="" coords="560,613,579,604,596,592,607,577,614,563,618,532,623,501,630,486,644,471,659,462,656,466,647,474,635,489,628,503,624,533,619,564,612,580,599,596,582,608,564,617"/>
+<area shape="rect" id="Node000033" href="$classout_1_1LogOutput.html#a5deed49b92569a735e96b4ad626cb2c7" title="write a message to issue a warning about the setup" alt="" coords="1137,881,1332,926"/>
+<area shape="poly" id="edge34_Node000032_Node000033" title=" " alt="" coords="1065,883,1124,891,1119,892,1066,888"/>
+<area shape="rect" id="Node000035" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="1162,812,1307,856"/>
+<area shape="poly" id="edge37_Node000032_Node000035" title=" " alt="" coords="1065,862,1150,849,1145,850,1066,867"/>
+<area shape="rect" id="Node000034" href="$classout_1_1Output.html#ae611096f30d0d89358bf1a71f7e65e27" title=" " alt="" coords="1381,889,1581,917"/>
+<area shape="poly" id="edge35_Node000033_Node000034" title=" " alt="" coords="1332,901,1368,903,1363,904,1333,906"/>
+<area shape="poly" id="edge36_Node000034_Node000034" title=" " alt="" coords="1439,888,1432,880,1438,871,1454,865,1481,863,1510,865,1527,874,1522,874,1509,870,1481,868,1455,870,1441,875,1438,880,1444,890"/>
+<area shape="rect" id="Node000037" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="672,433,816,461"/>
+<area shape="poly" id="edge42_Node000036_Node000037" title=" " alt="" coords="560,613,579,604,596,592,607,577,614,563,618,532,623,501,630,486,644,471,659,462,656,466,647,474,635,489,628,503,624,533,619,564,612,580,599,596,582,608,564,617"/>
 </map>

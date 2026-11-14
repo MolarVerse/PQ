@@ -1,0 +1,5 @@
+<map id="utilities::SerialWorker::submit" name="utilities::SerialWorker::submit">
+<area shape="rect" id="Node000001" title="queue a task, blocking while capacity tasks are in flight" alt="" coords="5,5,166,50"/>
+<area shape="rect" id="Node000002" href="$classutilities_1_1SerialWorker.html#ab609c5c4d99fbb17a5d979fa0da74357" title="rethrow and clear a stored task error; call with _mutex held" alt="" coords="214,5,374,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,25,201,27,195,28,166,30"/>
+</map>

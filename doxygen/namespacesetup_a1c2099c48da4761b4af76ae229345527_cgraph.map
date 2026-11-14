@@ -1,0 +1,39 @@
+<map id="setup::setupQM" name="setup::setupQM">
+<area shape="rect" id="Node000001" title="wrapper to build QMSetup object and call setup" alt="" coords="5,332,129,360"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a51e17c918732832f099b4bd8a7a7e64f" title="Returns true if the QM simulations are activated." alt="" coords="177,264,362,309"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,330,179,312,175,316,118,334"/>
+<area shape="rect" id="Node000003" href="$classsetup_1_1QMSetup.html#a4eb0f405a39dadc4a3b716066dd0e307" title="setup QM&#45;MD for all subtypes" alt="" coords="185,332,354,360"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,344,171,345,167,348,131,349"/>
+<area shape="rect" id="Node000018" href="$classout_1_1StdoutOutput.html#a2e4ef80695e5ad79973120d3696cb7de" title="write a message to the stdout to inform about the setup" alt="" coords="197,395,342,439"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="109,358,191,387,187,390,110,363"/>
+<area shape="rect" id="Node000004" href="$classsetup_1_1QMSetup.html#a6017a7b4c969e1b528a0c9dd86158878" title="set coulomb radius cutoff to 0.0 for QM&#45;MD, QM&#45;RPMD" alt="" coords="416,75,643,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="340,330,360,319,410,276,451,226,485,176,509,136,513,131,489,178,456,229,413,280,364,323,343,334"/>
+<area shape="rect" id="Node000007" href="$classsetup_1_1QMSetup.html#a612ceceaee6909c71d8730a50f9e9957" title="setup the &quot;QM&quot; method of the system" alt="" coords="410,320,649,348"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="353,340,397,339,392,342,355,345"/>
+<area shape="rect" id="Node000008" href="$classsetup_1_1QMSetup.html#a56b699823a9091c8126cdcdc8cf7c2ff" title="write info about the QM setup" alt="" coords="416,372,644,400"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="353,357,422,369,417,370,354,362"/>
+<area shape="rect" id="Node000005" href="$classsettings_1_1GeneralSettings.html#a7394ead0e6603517c5cdc7c5f700e443" title="get the jobtype" alt="" coords="714,5,899,50"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="621,72,702,53,697,56,623,76"/>
+<area shape="rect" id="Node000006" href="$classsettings_1_1PotentialSettings.html#a5b9c06df8d1c8f7cf0f20e1e0268df9d" title="Set the Coulomb radius cut off in the PotentialSettings class." alt="" coords="710,75,903,119"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="642,94,697,96,692,98,644,100"/>
+<area shape="rect" id="Node000009" href="$classsettings_1_1GeneralSettings.html#a1862423df5853a9d58a116a6c9fd577a" title="get the floating point string representation used in pybind11 bindings" alt="" coords="697,144,916,189"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="630,370,648,358,662,339,670,321,672,281,673,240,680,220,695,199,698,200,702,196,699,203,685,222,678,241,677,281,675,322,667,342,651,362,633,374"/>
+<area shape="rect" id="Node000010" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="714,213,899,258"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="627,370,648,358,665,337,671,315,678,291,695,268,700,268,705,265,699,272,683,294,676,316,669,340,651,362,629,374"/>
+<area shape="rect" id="Node000011" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="712,282,901,310"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="616,369,648,357,662,348,671,339,681,328,696,319,713,314,709,316,699,323,685,332,675,342,665,352,651,362,618,374"/>
+<area shape="rect" id="Node000012" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="723,333,890,378"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="644,371,710,366,705,367,645,376"/>
+<area shape="rect" id="Node000013" href="$structMaceModeMeta.html#a79f8ff947367e111241a67f79169d4d8" title=" " alt="" coords="714,402,899,430"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="644,396,702,404,696,405,645,401"/>
+<area shape="rect" id="Node000014" href="$structQMMethodMeta.html#ac7b17240ca445e36d9a8ba58d5ed7a7c" title=" " alt="" coords="714,454,899,482"/>
+<area shape="poly" id="edge13_Node000008_Node000014" title=" " alt="" coords="611,398,650,411,675,425,698,439,723,449,718,449,696,443,672,429,648,415,611,403"/>
+<area shape="rect" id="Node000015" href="$structSlakosTypeMeta.html#a0e6a1eceb0020c75fb0008b839b6845b" title=" " alt="" coords="714,506,899,534"/>
+<area shape="poly" id="edge14_Node000008_Node000015" title=" " alt="" coords="627,398,651,411,669,431,676,452,683,472,699,491,708,499,703,498,696,495,678,475,671,454,664,434,648,415,627,403"/>
+<area shape="rect" id="Node000016" href="$structXtbMethodMeta.html#a0ca84f339c82f9e42ceb579ec0b7d4d6" title=" " alt="" coords="714,558,899,586"/>
+<area shape="poly" id="edge15_Node000008_Node000016" title=" " alt="" coords="631,398,651,411,665,427,673,444,676,479,679,512,686,528,699,543,705,550,700,549,695,547,682,530,674,513,671,479,667,446,661,430,648,415,631,403"/>
+<area shape="rect" id="Node000017" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="734,609,879,654"/>
+<area shape="poly" id="edge16_Node000008_Node000017" title=" " alt="" coords="633,398,651,411,669,434,677,457,679,481,677,504,677,550,683,573,699,595,723,614,718,613,695,599,679,575,671,551,672,504,673,481,672,458,664,437,647,415,632,403"/>
+<area shape="rect" id="Node000019" href="$namespaceout.html#a47701439cd34f53bf3a4779e236feede" title="Message to inform about starting to setup." alt="" coords="458,424,602,452"/>
+<area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="342,420,445,430,440,432,342,426"/>
+</map>

@@ -16,11 +16,13 @@ var searchData=
   ['enumnames_3c_20slakostype_20_3e_13',['EnumNames&lt; SlakosType &gt;',['../structmstd_1_1EnumNames_3_01SlakosType_01_4.html',1,'mstd']]],
   ['enumnames_3c_20xtbmethod_20_3e_14',['EnumNames&lt; XtbMethod &gt;',['../structmstd_1_1EnumNames_3_01XtbMethod_01_4.html',1,'mstd']]],
   ['evaluator_15',['Evaluator',['../classopt_1_1Evaluator.html',1,'opt']]],
-  ['exceptiontypemeta_16',['ExceptionTypeMeta',['../structExceptionTypeMeta.html',1,'']]],
-  ['expdecaylr_17',['ExpDecayLR',['../classopt_1_1ExpDecayLR.html',1,'opt']]],
-  ['extatomtypetag_18',['ExtAtomTypeTag',['../structExtAtomTypeTag.html',1,'']]],
-  ['externalqmrunner_19',['ExternalQMRunner',['../classQM_1_1ExternalQMRunner.html',1,'QM']]],
-  ['externalqmrunnertest_20',['ExternalQMRunnerTest',['../classExternalQMRunnerTest.html',1,'']]],
-  ['externalqmscriptinfo_21',['ExternalQMScriptInfo',['../structcli_1_1ExternalQMScriptInfo.html',1,'cli']]],
-  ['extvdwtypetag_22',['ExtVdwTypeTag',['../structExtVdwTypeTag.html',1,'']]]
+  ['exception_16',['Exception',['../classException.html',1,'']]],
+  ['exceptiontypemeta_17',['ExceptionTypeMeta',['../structExceptionTypeMeta.html',1,'']]],
+  ['expdecaylr_18',['ExpDecayLR',['../classopt_1_1ExpDecayLR.html',1,'opt']]],
+  ['extatomtypetag_19',['ExtAtomTypeTag',['../structExtAtomTypeTag.html',1,'']]],
+  ['externalqmrunner_20',['ExternalQMRunner',['../classQM_1_1ExternalQMRunner.html',1,'QM']]],
+  ['externalqmrunnertest_21',['ExternalQMRunnerTest',['../classExternalQMRunnerTest.html',1,'']]],
+  ['externalqmscriptinfo_22',['ExternalQMScriptInfo',['../structcli_1_1ExternalQMScriptInfo.html',1,'cli']]],
+  ['externalqmsettings_23',['ExternalQMSettings',['../classExternalQMSettings.html',1,'']]],
+  ['extvdwtypetag_24',['ExtVdwTypeTag',['../structExtVdwTypeTag.html',1,'']]]
 ];

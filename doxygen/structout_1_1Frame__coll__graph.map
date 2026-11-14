@@ -1,0 +1,31 @@
+<map id="out::Frame" name="out::Frame">
+<area shape="rect" id="Node000001" title="copy of the data the trajectory and restart writers read, so they can format it while the simulation ..." alt="" coords="545,1083,647,1200"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="296,921,466,1010"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="435,1007,534,1088,529,1088,433,1012"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1Box.html" title="This class represents the unit cell of a general triclinic box." alt="" coords="164,351,396,848"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="349,845,367,905,362,904,348,850"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,144,162,233"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,231,159,341,154,342,105,236"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="186,144,373,233"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="280,231,282,335,277,334,279,236"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="513,921,678,1010"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="597,1008,598,1067,593,1065,594,1012"/>
+<area shape="rect" id="Node000007" href="$structout_1_1Frame_1_1Atom.html" title=" " alt="" coords="556,563,680,636"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="618,633,602,905,597,903,614,637"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="396,152,472,225"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="451,222,598,547,593,548,449,227"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="370,5,498,95"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="435,107,437,153,432,152,434,112"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="496,144,636,233"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="566,231,571,327,588,445,609,547,603,546,583,446,565,327,564,236"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="661,152,709,225"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="679,222,675,258,629,548,623,546,670,257,677,227"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="756,152,900,225"/>
+<area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="831,222,826,277,816,305,800,329,790,337,779,342,757,342,736,343,716,353,697,374,680,397,655,448,637,500,627,548,622,545,632,499,650,446,676,394,693,370,713,349,735,338,757,337,778,336,787,333,796,325,812,302,821,276,828,227"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="923,152,978,225"/>
+<area shape="poly" id="edge12_Node000007_Node000013" title=" " alt="" coords="950,222,939,279,925,306,905,329,880,344,856,349,832,347,809,342,786,337,763,335,740,340,716,353,695,372,678,395,652,446,635,499,626,547,621,545,630,497,647,444,673,392,691,369,713,349,738,335,763,330,787,332,810,337,833,342,856,343,878,339,902,325,921,303,934,277,947,227"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="702,929,876,1002"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="753,1000,660,1086,658,1081,748,1002"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="726,544,852,655"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="791,653,791,914,787,912,787,657"/>
+</map>

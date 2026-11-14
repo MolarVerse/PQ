@@ -1,35 +1,41 @@
 <map id="/home/runner/work/PQ/PQ/include/settings/hybridSettings.hpp" name="/home/runner/work/PQ/PQ/include/settings/hybridSettings.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1820,5,1986,67"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="2209,5,2376,67"/>
 <area shape="rect" id="Node000002" href="$perfHybridZones_8cpp.html" title=" " alt="" coords="5,115,236,177"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1802,40,1474,52,1025,67,576,89,390,103,249,118,237,119,236,114,248,112,390,97,576,84,1025,62,1474,46,1807,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2191,39,1794,48,1232,62,664,85,428,100,249,118,237,119,236,114,248,112,427,95,664,80,1232,57,1794,43,2196,39"/>
 <area shape="rect" id="Node000003" href="$dftbplusRunner_8cpp.html" title=" " alt="" coords="260,115,466,177"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1802,41,1133,69,754,90,597,103,478,118,467,120,466,114,477,112,597,98,754,85,1132,63,1807,40"/>
-<area shape="rect" id="Node000004" href="$turbomoleRunner_8cpp.html" title=" " alt="" coords="490,115,711,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1802,38,1606,46,1337,58,1031,81,876,97,724,118,712,120,711,114,723,112,875,92,1031,75,1336,52,1605,40,1807,38"/>
-<area shape="rect" id="Node000005" href="$qmmmMDEngine_8cpp.html" title=" " alt="" coords="735,124,994,168"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1802,42,1451,68,1229,89,1005,118,960,126,959,120,1004,112,1228,84,1451,63,1807,42"/>
-<area shape="rect" id="Node000006" href="$angleForceField_8cpp.html" title=" " alt="" coords="1017,115,1226,177"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1808,45,1548,73,1394,93,1240,118,1227,120,1226,115,1239,112,1393,88,1548,68,1802,45"/>
-<area shape="rect" id="Node000007" href="$bondForceField_8cpp.html" title=" " alt="" coords="1251,115,1456,177"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1807,53,1647,83,1469,118,1457,120,1457,115,1468,112,1646,77,1802,53"/>
-<area shape="rect" id="Node000008" href="$dihedralForceField_8cpp.html" title=" " alt="" coords="1481,115,1672,177"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1808,69,1669,117,1668,112,1802,70"/>
-<area shape="rect" id="Node000009" href="$hybridConfigurator_8cpp.html" title=" " alt="" coords="1697,115,1888,177"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1864,77,1825,117,1822,112,1859,79"/>
-<area shape="rect" id="Node000010" href="$hybridInputParser_8cpp.html" title=" " alt="" coords="1912,115,2116,177"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1946,75,1985,115,1980,114,1944,80"/>
-<area shape="rect" id="Node000011" href="$hybridSettings_8cpp.html" title=" " alt="" coords="2140,124,2387,168"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="2001,64,2193,123,2188,123,2001,69"/>
-<area shape="rect" id="Node000012" href="$hybridSetup_8cpp.html" title=" " alt="" coords="2412,124,2627,168"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="2002,48,2187,75,2400,112,2438,123,2433,123,2399,118,2186,80,2002,53"/>
-<area shape="rect" id="Node000013" href="$mTRIntraWater_8cpp.html" title=" " alt="" coords="2650,115,2839,177"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="2002,40,2289,63,2465,84,2640,112,2653,117,2647,117,2639,118,2464,89,2289,68,2002,45"/>
-<area shape="rect" id="Node000014" href="$testHybridConfigurator_8cpp.html" title=" " alt="" coords="2863,115,3090,177"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="2002,38,2164,46,2376,60,2613,81,2852,112,2865,117,2860,117,2851,118,2613,87,2376,65,2164,51,2002,43"/>
-<area shape="rect" id="Node000015" href="$testHybridParser_8cpp.html" title=" " alt="" coords="3115,115,3321,177"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="2002,35,2204,39,2477,50,2788,74,2947,91,3102,112,3117,117,3112,117,3101,118,2947,96,2788,79,2477,56,2204,44,2002,40"/>
-<area shape="rect" id="Node000016" href="$testHybridSettings_8cpp.html" title=" " alt="" coords="3344,115,3518,177"/>
-<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="2002,37,2292,46,2676,61,3056,83,3213,97,3333,112,3347,118,3342,117,3332,118,3213,102,3056,88,2676,66,2292,51,2002,42"/>
-<area shape="rect" id="Node000017" href="$testWaterModels_8cpp.html" title=" " alt="" coords="3541,115,3732,177"/>
-<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="2002,37,2328,44,2769,59,3209,81,3392,96,3530,112,3543,117,3538,117,3529,118,3391,101,3209,87,2769,64,2327,50,2002,42"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="2191,39,1835,49,1340,63,843,86,636,100,480,118,467,120,466,114,479,112,635,95,842,80,1339,58,1835,44,2197,39"/>
+<area shape="rect" id="Node000004" href="$orcaRunner_8cpp.html" title=" " alt="" coords="491,124,745,168"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="2191,37,1942,42,1586,52,1174,76,963,94,757,118,710,125,709,120,756,112,963,89,1174,70,1585,47,1942,37,2196,37"/>
+<area shape="rect" id="Node000005" href="$turbomoleRunner_8cpp.html" title=" " alt="" coords="768,115,990,177"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="2191,38,1978,44,1682,55,1344,78,1171,95,1002,118,990,120,990,114,1001,112,1171,90,1344,73,1682,49,1978,38,2197,37"/>
+<area shape="rect" id="Node000006" href="$qmmmMDEngine_8cpp.html" title=" " alt="" coords="1014,124,1272,168"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="2191,41,2022,51,1795,65,1540,87,1284,118,1238,126,1237,120,1283,112,1540,82,1795,60,2021,46,2196,41"/>
+<area shape="rect" id="Node000007" href="$angleForceField_8cpp.html" title=" " alt="" coords="1296,115,1505,177"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="2196,43,1891,69,1705,90,1518,118,1506,120,1505,115,1517,112,1704,85,1890,64,2191,43"/>
+<area shape="rect" id="Node000008" href="$bondForceField_8cpp.html" title=" " alt="" coords="1530,115,1735,177"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="2197,48,1988,77,1748,118,1736,120,1735,115,1747,112,1987,72,2191,48"/>
+<area shape="rect" id="Node000009" href="$dihedralForceField_8cpp.html" title=" " alt="" coords="1760,115,1951,177"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="2196,59,1964,118,1951,121,1951,115,1963,112,2191,60"/>
+<area shape="rect" id="Node000010" href="$hybridConfigurator_8cpp.html" title=" " alt="" coords="1976,115,2167,177"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="2219,73,2134,117,2133,112,2214,75"/>
+<area shape="rect" id="Node000011" href="$hybridInputParser_8cpp.html" title=" " alt="" coords="2191,115,2394,177"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="2294,81,2294,116,2291,113,2291,84"/>
+<area shape="rect" id="Node000012" href="$hybridSettings_8cpp.html" title=" " alt="" coords="2418,124,2666,168"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="2377,71,2494,123,2489,122,2376,76"/>
+<area shape="rect" id="Node000013" href="$settings_8cpp.html" title=" " alt="" coords="2690,124,2895,168"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="2391,53,2678,112,2713,123,2708,123,2677,118,2391,58"/>
+<area shape="rect" id="Node000014" href="$hybridSetup_8cpp.html" title=" " alt="" coords="2920,124,3135,168"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="2391,44,2627,70,2768,89,2908,112,2947,123,2942,123,2907,118,2767,94,2627,75,2391,49"/>
+<area shape="rect" id="Node000015" href="$mTRIntraWater_8cpp.html" title=" " alt="" coords="3158,115,3347,177"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="2391,38,2539,45,2728,59,2938,81,3148,112,3161,117,3155,117,3147,118,2937,86,2727,64,2539,51,2391,43"/>
+<area shape="rect" id="Node000016" href="$testExternalQMRunner_8cpp.html" title=" " alt="" coords="3371,115,3582,177"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="2391,36,2572,42,2813,55,3086,77,3224,93,3360,112,3373,117,3368,117,3359,118,3224,98,3085,82,2813,60,2572,47,2391,42"/>
+<area shape="rect" id="Node000017" href="$testHybridConfigurator_8cpp.html" title=" " alt="" coords="3607,115,3834,177"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="2391,35,2608,39,2907,50,3249,73,3423,91,3594,112,3609,117,3604,117,3593,118,3423,96,3248,79,2907,55,2608,44,2391,40"/>
+<area shape="rect" id="Node000018" href="$testHybridParser_8cpp.html" title=" " alt="" coords="3859,115,4065,177"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="2392,37,2704,46,3124,62,3541,84,3715,97,3846,112,3861,117,3856,117,3845,118,3714,103,3541,89,3124,67,2704,51,2392,43"/>
+<area shape="rect" id="Node000019" href="$testHybridSettings_8cpp.html" title=" " alt="" coords="4088,115,4262,177"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="2391,36,2745,42,3233,55,3721,78,3923,93,4077,112,4091,117,4086,117,4076,118,3923,99,3720,83,3232,60,2745,47,2391,41"/>
+<area shape="rect" id="Node000020" href="$testWaterModels_8cpp.html" title=" " alt="" coords="4285,115,4476,177"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="2391,36,2780,41,3325,54,3873,77,4102,93,4274,112,4287,117,4282,117,4273,118,4101,98,3873,82,3324,59,2780,46,2391,41"/>
 </map>

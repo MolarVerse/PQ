@@ -1,124 +1,127 @@
 <map id="utilities::toLowerCopy" name="utilities::toLowerCopy">
-<area shape="rect" id="Node000001" title="returns a copy of a string all lower case" alt="" coords="2225,530,2388,558"/>
-<area shape="rect" id="Node000002" href="$classMaceSettings.html#a4f1adea9cf0bc7af23973a65842345a2" title="returns the maceModel as expected by mace.calculators" alt="" coords="1924,14,2177,42"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2299,513,2284,412,2258,273,2240,203,2221,140,2199,89,2175,55,2162,45,2162,39,2179,51,2204,86,2226,138,2246,202,2263,272,2289,411,2304,516"/>
-<area shape="rect" id="Node000005" href="$classMaceSettings.html#a3da31ecdad24669e1fe010d86d2434f3" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="1944,65,2157,110"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="2303,513,2298,437,2280,332,2264,275,2242,220,2212,169,2175,124,2157,111,2158,106,2178,120,2217,166,2247,218,2269,274,2285,330,2303,436,2307,516"/>
-<area shape="rect" id="Node000006" href="$classmolsys_1_1Atom.html#a56fadb03e2caf301456381e422d22256" title="sets the mass of the atom" alt="" coords="1963,134,2138,162"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="2302,513,2294,445,2275,353,2259,304,2237,257,2209,214,2175,176,2157,164,2138,157,2138,151,2160,160,2178,172,2214,211,2242,255,2264,302,2280,351,2300,444,2306,516"/>
-<area shape="rect" id="Node000008" href="$namespaceutilities.html#a44118b013750476468b6f651dc742a13" title="checks if the value of a input file keyword can be interpreted as true or false" alt="" coords="1962,186,2139,214"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="2300,513,2290,454,2268,375,2252,334,2231,295,2206,258,2175,227,2158,216,2139,208,2139,203,2160,211,2178,223,2210,255,2236,292,2257,332,2273,374,2295,453,2305,516"/>
-<area shape="rect" id="Node000010" href="$classinput_1_1GeneralInputParser.html#ac51549baaf0cd80e9945eba027782836" title="parse dimensionality of simulation" alt="" coords="1957,237,2144,282"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="2296,513,2281,467,2257,408,2222,348,2200,320,2175,296,2144,278,2144,273,2178,292,2204,317,2226,345,2262,406,2286,465,2301,516"/>
-<area shape="rect" id="Node000013" href="$classinput_1_1QMInputParser.html#a34d7f8142fa0da9d011ecae7bb446b0c" title="parses the QM method if it starts with &quot;mace&quot;" alt="" coords="1965,307,2136,351"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="2290,515,2272,482,2247,441,2214,400,2175,366,2136,347,2137,341,2178,361,2218,397,2251,438,2277,480,2295,517"/>
-<area shape="rect" id="Node000016" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#a454cc6f09bfcb1657d0e43a9e322ad46" title="reads a general parameter file section" alt="" coords="1967,376,2134,437"/>
-<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="2263,522,2109,440,2110,435,2268,522"/>
-<area shape="rect" id="Node000018" href="$classinput_1_1topology_1_1TopologySection.html#af58a649212f8e5554fdb6557376a3608" title="general process function for topology sections" alt="" coords="1958,487,2143,531"/>
-<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="2207,531,2143,524,2143,519,2212,530"/>
-<area shape="rect" id="Node000023" href="$classinput_1_1mShake_1_1MShakeReader.html#a9ed522769a7b95f77c9658ae5b870a37" title="processes comment line" alt="" coords="1941,556,2160,601"/>
-<area shape="poly" id="edge23_Node000001_Node000023" title=" " alt="" coords="2207,557,2161,566,2160,561,2212,556"/>
-<area shape="rect" id="Node000040" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#a305d676f05de22cdb36ad1c15753e95a" title="processes the nonCoulombics header of the parameter file" alt="" coords="1961,854,2140,916"/>
-<area shape="poly" id="edge40_Node000001_Node000040" title=" " alt="" coords="2302,571,2291,630,2268,702,2231,778,2207,813,2178,844,2141,868,2139,863,2175,840,2203,810,2226,775,2263,701,2286,629,2299,575"/>
-<area shape="rect" id="Node000042" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#aa381b1926d6fa64b840de70c930f1838" title="processes the intra nonBonded interactions for a given molecule type" alt="" coords="1944,769,2157,830"/>
-<area shape="poly" id="edge42_Node000001_Node000042" title=" " alt="" coords="2297,570,2281,614,2255,664,2221,715,2178,759,2159,772,2157,767,2175,755,2217,712,2251,661,2276,612,2293,574"/>
-<area shape="rect" id="Node000047" href="$classsetup_1_1SimulationBoxSetup.html#aca83e94af7b1d1c05e7ace5ea7f0bc18" title="Sets the atomic number of each atom in the simulation box." alt="" coords="1952,700,2149,745"/>
-<area shape="poly" id="edge48_Node000001_Node000047" title=" " alt="" coords="2284,568,2237,618,2178,666,2111,702,2110,697,2175,661,2234,614,2280,571"/>
-<area shape="rect" id="Node000053" href="$classsetup_1_1QMSetup.html#a4dec20bcc319e6878edbd7285b3ef2dd" title="checks if a singularity or static build is used and sets the qm_script accordingly" alt="" coords="1937,624,2164,652"/>
-<area shape="poly" id="edge56_Node000001_Node000053" title=" " alt="" coords="2273,565,2228,593,2178,616,2141,626,2139,621,2176,610,2225,588,2268,567"/>
-<area shape="rect" id="Node000057" href="$testStringUtilities_8cpp.html#a36980161bbde192586076d107e6afb29" title="test toLowerCopy function" alt="" coords="2024,940,2077,968"/>
-<area shape="poly" id="edge61_Node000001_Node000057" title=" " alt="" coords="2306,571,2301,646,2282,742,2266,793,2244,843,2215,890,2178,930,2155,945,2128,954,2078,959,2077,953,2127,948,2152,940,2175,926,2211,886,2239,841,2261,791,2277,741,2296,645,2303,575"/>
-<area shape="rect" id="Node000058" href="$namespaceutilities.html#a4bd4d8abfe568051a665b47af11ab07e" title="returns a copy of a string all lower case" alt="" coords="1969,992,2132,1020"/>
-<area shape="poly" id="edge62_Node000001_Node000058" title=" " alt="" coords="2308,571,2305,654,2300,707,2289,765,2273,824,2250,881,2219,935,2178,982,2157,996,2133,1005,2132,1000,2155,991,2175,978,2215,932,2245,879,2268,822,2284,763,2294,706,2300,654,2304,575"/>
-<area shape="rect" id="Node000059" href="$structinput_1_1Converter_3_01bool_01_4.html#a1a49b62c9ec61dd4374ffa505c903d4b" title="attempts to parse a bool from a raw input&#45;file token" alt="" coords="1966,1044,2135,1089"/>
-<area shape="poly" id="edge63_Node000001_Node000059" title=" " alt="" coords="2303,571,2288,675,2261,813,2244,883,2225,946,2203,998,2179,1034,2159,1048,2136,1059,2135,1053,2156,1044,2175,1030,2198,995,2220,944,2239,881,2256,812,2283,674,2299,574"/>
-<area shape="rect" id="Node000003" href="$classQM_1_1AseMaceRunner.html#a9a22c0b19828554f6d39abbde7ac50d0" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="1684,5,1849,50"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1906,28,1850,30,1848,25,1911,27"/>
-<area shape="rect" id="Node000004" href="$classQM_1_1AseMaceRunner.html#ab8223372f370bdbbfbb3151d0a18d674" title=" " alt="" coords="1420,5,1584,50"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1666,28,1586,30,1584,25,1671,27"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="1926,62,1850,48,1849,42,1931,61"/>
-<area shape="rect" id="Node000007" href="$testHybridConfigurator_8cpp.html#adc4f0c4a4e2f4641f0283792f764c076" title=" " alt="" coords="1740,74,1793,102"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="1960,131,1924,125,1794,96,1794,91,1925,120,1965,130"/>
-<area shape="rect" id="Node000009" href="$testStringUtilities_8cpp.html#a366a109716a1a784c5dd977286c513f0" title="test keywordToBool function" alt="" coords="1740,126,1793,154"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="1964,182,1794,148,1794,143,1969,182"/>
-<area shape="rect" id="Node000011" href="$classinput_1_1GeneralInputParser.html#ab312d856c7cef92268ba8ec3e6fec111" title="Construct a new Input File Parser General:: Input File Parser General object." alt="" coords="1674,177,1860,222"/>
-<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="1939,237,1860,222,1860,217,1945,236"/>
-<area shape="rect" id="Node000012" href="$testGeneralParser_8cpp.html#a6dd45f386cecbfb25e21dbed65c13e8a" title="tests parsing the &quot;dim&quot; command" alt="" coords="1732,246,1801,274"/>
-<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="1939,260,1802,262,1801,257,1944,259"/>
-<area shape="rect" id="Node000014" href="$classinput_1_1QMInputParser.html#a645d21da7128d9dbc5db3c3a8a35b5f2" title=" " alt="" coords="1688,297,1845,342"/>
-<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1946,326,1846,325,1845,320,1952,325"/>
-<area shape="rect" id="Node000015" href="$classinput_1_1QMInputParser.html#a7e6c42d87be90aa02b796fb76a73c88f" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="1424,297,1581,342"/>
-<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="1670,320,1582,322,1581,317,1675,319"/>
-<area shape="rect" id="Node000017" href="$testParameterFileSection_8cpp.html#a641b7a507fd6b339a57ca0f2891aa942" title="tests full process function TODO: think of a clever way to test this" alt="" coords="1732,366,1801,394"/>
-<area shape="poly" id="edge17_Node000016_Node000017" title=" " alt="" coords="1949,397,1802,385,1801,380,1954,397"/>
-<area shape="rect" id="Node000019" href="$testTopologySection_8cpp.html#a44b6e2d20fac9e998040d68a66db34d1" title="tests full process function" alt="" coords="1732,522,1801,550"/>
-<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="1941,520,1802,535,1801,530,1946,519"/>
-<area shape="rect" id="Node000020" href="$testTopologySection_8cpp.html#a1b7cb1de9448339e2ff21e2802b67261" title="tests if incorrect number of elements is correctly handled" alt="" coords="1732,574,1801,602"/>
-<area shape="poly" id="edge20_Node000018_Node000020" title=" " alt="" coords="1952,535,1925,546,1877,564,1802,583,1801,578,1876,558,1923,541,1947,537"/>
-<area shape="rect" id="Node000021" href="$testTopologySection_8cpp.html#aa33bca08e99032080bf415dcb549b1bc" title="tests if missing end statement is correctly handled" alt="" coords="1732,418,1801,446"/>
-<area shape="poly" id="edge21_Node000018_Node000021" title=" " alt="" coords="1957,482,1876,461,1801,442,1801,437,1877,456,1962,482"/>
-<area shape="rect" id="Node000022" href="$testTopologySection_8cpp.html#af8a24fbb26c6e0a27dc5c301cdacdd2f" title="tests if same atom given twice is correctly handled" alt="" coords="1732,470,1801,498"/>
-<area shape="poly" id="edge22_Node000018_Node000022" title=" " alt="" coords="1941,500,1802,489,1801,484,1946,499"/>
-<area shape="rect" id="Node000024" href="$classinput_1_1mShake_1_1MShakeReader.html#a032e0451766bac0cc781b47f7fdd9a8d" title="reads mShake file" alt="" coords="1657,625,1876,670"/>
-<area shape="poly" id="edge24_Node000023_Node000024" title=" " alt="" coords="1938,606,1862,627,1860,622,1944,604"/>
-<area shape="rect" id="Node000025" href="$namespaceinput_1_1mShake.html#a08672b685400c24c4040a33406010079" title="Wrapper to construct MShakeReader and read mShake file." alt="" coords="1401,634,1604,662"/>
-<area shape="poly" id="edge25_Node000024_Node000025" title=" " alt="" coords="1639,648,1604,650,1604,645,1644,647"/>
-<area shape="rect" id="Node000026" href="$classsetup_1_1ConstraintsSetup.html#a1d89079b3c78f08f4359e061d311316b" title="setup M&#45;SHAKE" alt="" coords="1171,576,1348,621"/>
-<area shape="poly" id="edge26_Node000025_Node000026" title=" " alt="" coords="1413,630,1348,619,1348,614,1419,630"/>
-<area shape="rect" id="Node000039" href="$testMShakeReader_8cpp.html#a16baecce3cf7f9c1ce9b7cb60ebef029" title=" " alt="" coords="1225,644,1294,672"/>
-<area shape="poly" id="edge39_Node000025_Node000039" title=" " alt="" coords="1383,653,1295,659,1294,654,1388,652"/>
-<area shape="rect" id="Node000027" href="$classsetup_1_1ConstraintsSetup.html#a2372d212b6be4df2d94fbe99c60280ed" title="sets constraints data in constraints object" alt="" coords="947,576,1123,621"/>
-<area shape="poly" id="edge27_Node000026_Node000027" title=" " alt="" coords="1154,599,1124,601,1123,596,1159,598"/>
-<area shape="rect" id="Node000028" href="$namespacesetup.html#a840c32566a76797a3f7a62301f16ce32" title="constructs a new Constraints Setup:: Constraints Setup object and calls setup" alt="" coords="724,648,899,676"/>
-<area shape="poly" id="edge28_Node000027_Node000028" title=" " alt="" coords="938,626,863,650,861,645,942,624"/>
-<area shape="rect" id="Node000036" href="$testConstraintsSetup_8cpp.html#a9dc71578fbcd6ab8f0ce05e24b9efdfb" title="tests that setup() calculates the shake reference bond vector and reduces the degrees of freedom by t..." alt="" coords="777,492,846,520"/>
-<area shape="poly" id="edge36_Node000027_Node000036" title=" " alt="" coords="975,569,898,535,846,518,846,513,900,531,980,568"/>
-<area shape="rect" id="Node000037" href="$testConstraintsSetup_8cpp.html#a5b9c0f01b3bd8bcf8ab21ceb655b0d7c" title="tests that setup() is a no&#45;op with respect to constraints and degrees of freedom when neither shake n..." alt="" coords="777,544,846,572"/>
-<area shape="poly" id="edge37_Node000027_Node000037" title=" " alt="" coords="929,580,846,567,846,562,934,579"/>
-<area shape="rect" id="Node000038" href="$testConstraintsSetup_8cpp.html#a440b20ee4eabeb795e86f00e7f3d2d9b" title="tests that setup() reads the M&#45;Shake file, initializes M&#45;Shake and reduces the degrees of freedom by ..." alt="" coords="777,596,846,624"/>
-<area shape="poly" id="edge38_Node000027_Node000038" title=" " alt="" coords="929,605,847,611,845,606,934,603"/>
-<area shape="rect" id="Node000029" href="$namespacesetup.html#a5bd12dd316697be71a513cda6b61c701" title="setup the engine" alt="" coords="530,751,676,779"/>
-<area shape="poly" id="edge29_Node000028_Node000029" title=" " alt="" coords="750,683,725,697,671,726,627,753,624,748,669,721,723,692,754,681"/>
-<area shape="rect" id="Node000034" href="$testConstraintsSetup_8cpp.html#a595a9e04e542de4ee20fc89f57dd3e91" title="tests that the setupConstraints wrapper function delegates to ConstraintsSetup and reduces the degree..." alt="" coords="569,623,637,651"/>
-<area shape="poly" id="edge34_Node000028_Node000034" title=" " alt="" coords="706,651,638,644,637,638,711,649"/>
-<area shape="rect" id="Node000035" href="$testConstraintsSetup_8cpp.html#a022f23a342130a76a7ffee2bbe251e35" title="tests that the setupConstraints wrapper function does not touch the degrees of freedom when no constr..." alt="" coords="569,675,637,703"/>
-<area shape="poly" id="edge35_Node000028_Node000035" title=" " alt="" coords="706,676,638,687,637,682,711,675"/>
-<area shape="rect" id="Node000030" href="$namespacesetup.html#aa1a9e0d5e27c090e2ed4862379870df7" title="setup the engine" alt="" coords="292,814,482,842"/>
-<area shape="poly" id="edge30_Node000029_Node000030" title=" " alt="" coords="536,785,439,816,437,811,541,782"/>
-<area shape="rect" id="Node000031" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,814,244,842"/>
-<area shape="poly" id="edge31_Node000030_Node000031" title=" " alt="" coords="274,829,245,830,243,825,279,827"/>
-<area shape="rect" id="Node000032" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,787,60,815"/>
-<area shape="poly" id="edge32_Node000031_Node000032" title=" " alt="" coords="90,814,61,808,59,804,94,810"/>
-<area shape="rect" id="Node000033" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,839,60,867"/>
-<area shape="poly" id="edge33_Node000031_Node000033" title=" " alt="" coords="90,844,62,850,59,846,94,841"/>
-<area shape="rect" id="Node000041" href="$testNonCoulombicTypesSection_8cpp.html#a534c67cb63fcb3169b46f56bac461604" title=" " alt="" coords="1732,987,1801,1015"/>
-<area shape="poly" id="edge41_Node000040_Node000041" title=" " alt="" coords="1949,916,1926,931,1912,943,1903,955,1893,966,1878,978,1839,993,1802,1001,1801,995,1838,988,1875,973,1889,963,1899,951,1908,939,1923,927,1944,918"/>
-<area shape="rect" id="Node000043" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#abc26f19797ac153464b142dcc91328d7" title="reads the intra non bonded interactions from the intraNonBonded file" alt="" coords="1658,919,1875,963"/>
-<area shape="poly" id="edge43_Node000042_Node000043" title=" " alt="" coords="1933,837,1926,844,1911,860,1903,876,1894,892,1878,908,1857,921,1855,916,1875,904,1890,889,1898,873,1907,857,1923,840,1928,839"/>
-<area shape="rect" id="Node000044" href="$namespaceinput_1_1intraNonBondedReader.html#a21a6f65fde55ed3433bfa28ed9944910" title="construct IntraNonBondedReader object and read the file" alt="" coords="1396,919,1609,963"/>
-<area shape="poly" id="edge44_Node000043_Node000044" title=" " alt="" coords="1640,941,1609,944,1609,938,1645,941"/>
-<area shape="rect" id="Node000045" href="$namespacesetup.html#ad4db282b92cbef07595e5279159209c7" title="reads all the files needed for the simulation" alt="" coords="973,888,1097,916"/>
-<area shape="poly" id="edge45_Node000044_Node000045" title=" " alt="" coords="1378,931,1098,910,1098,905,1383,931"/>
-<area shape="rect" id="Node000046" href="$testIntraNonBondedReader_8cpp.html#a7336adc80c06905f7b3381897a0fa8b0" title=" " alt="" coords="1225,952,1294,980"/>
-<area shape="poly" id="edge47_Node000044_Node000046" title=" " alt="" coords="1383,953,1294,965,1294,960,1378,954"/>
-<area shape="poly" id="edge46_Node000045_Node000030" title=" " alt="" coords="956,895,483,841,483,836,960,892"/>
-<area shape="poly" id="edge49_Node000047_Node000047" title=" " alt="" coords="2091,685,2077,681,2050,679,2027,681,2012,685,2006,691,2007,701,2002,698,2000,690,2009,681,2025,675,2051,673,2078,676,2096,685"/>
-<area shape="rect" id="Node000048" href="$classsetup_1_1SimulationBoxSetup.html#a2a233804d10e257473d4e9dbbc4dcb93" title="setup simulation box" alt="" coords="1668,849,1865,894"/>
-<area shape="poly" id="edge50_Node000047_Node000048" title=" " alt="" coords="1940,747,1926,759,1910,778,1903,798,1895,818,1878,839,1859,851,1857,846,1875,835,1891,816,1898,796,1905,775,1923,755,1935,749"/>
-<area shape="rect" id="Node000051" href="$testSimulationBoxSetup_8cpp.html#a4e3147a4fb74d88d19085cde3b8d674d" title=" " alt="" coords="1732,798,1801,826"/>
-<area shape="poly" id="edge54_Node000047_Node000051" title=" " alt="" coords="1945,749,1925,759,1902,773,1877,787,1839,800,1802,809,1801,803,1837,795,1875,783,1899,769,1923,755,1939,751"/>
-<area shape="rect" id="Node000052" href="$testSimulationBoxSetup_8cpp.html#aec4dfe6121ce8169dc61c6711e4c55b9" title=" " alt="" coords="1732,746,1801,774"/>
-<area shape="poly" id="edge55_Node000047_Node000052" title=" " alt="" coords="1934,738,1802,758,1801,753,1939,737"/>
-<area shape="rect" id="Node000049" href="$namespacesetup.html#ab6f3cc208f89f307946eb1b7dd095572" title="wrapper to create SetupSimulationBox object and call setup" alt="" coords="1404,851,1600,879"/>
-<area shape="poly" id="edge51_Node000048_Node000049" title=" " alt="" coords="1650,869,1601,870,1601,865,1655,869"/>
-<area shape="poly" id="edge52_Node000049_Node000029" title=" " alt="" coords="1402,848,1347,842,969,800,676,773,676,768,970,794,1348,837,1407,848"/>
-<area shape="rect" id="Node000050" href="$testSimulationBoxSetup_8cpp.html#a91b158391305633fb3d8774de4f4ab84" title="testing full setup of simulation box" alt="" coords="1225,851,1294,879"/>
-<area shape="poly" id="edge53_Node000049_Node000050" title=" " alt="" coords="1386,865,1294,868,1294,862,1391,865"/>
-<area shape="rect" id="Node000054" href="$classsetup_1_1QMSetup.html#a764f9db17b957219790dbde6ece71b56" title="setup QM&#45;MD for all subtypes" alt="" coords="1682,694,1851,722"/>
-<area shape="poly" id="edge57_Node000053_Node000054" title=" " alt="" coords="1956,655,1925,666,1877,685,1837,696,1836,691,1875,680,1924,661,1950,657"/>
-<area shape="rect" id="Node000055" href="$namespacesetup.html#a4d6e823d1e92ec9eaec7673fd6aaa183" title="wrapper to build QMSetup object and call setup" alt="" coords="1441,699,1564,727"/>
-<area shape="poly" id="edge58_Node000054_Node000055" title=" " alt="" coords="1665,710,1565,714,1564,709,1670,709"/>
-<area shape="poly" id="edge59_Node000055_Node000029" title=" " alt="" coords="1423,720,676,764,675,758,1426,715"/>
-<area shape="rect" id="Node000056" href="$testQMSetup_8cpp.html#a6bf1e0efafea3b7125043e2c9ca94645" title=" " alt="" coords="1233,750,1286,778"/>
-<area shape="poly" id="edge60_Node000055_Node000056" title=" " alt="" coords="1423,729,1287,761,1286,756,1429,728"/>
+<area shape="rect" id="Node000001" title="returns a copy of a string all lower case" alt="" coords="2225,603,2388,631"/>
+<area shape="rect" id="Node000002" href="$classExternalQMSettings.html#a0a8c409895c0a9a84bf84a5cb23052ea" title="finalizes the external QM settings by performing necessary checks and setups" alt="" coords="1975,91,2126,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2302,586,2295,509,2277,400,2260,341,2239,283,2210,227,2175,176,2151,155,2123,139,2124,133,2154,150,2179,173,2215,224,2243,280,2265,340,2282,399,2301,508,2307,589"/>
+<area shape="rect" id="Node000007" href="$classMaceSettings.html#a4f1adea9cf0bc7af23973a65842345a2" title="returns the maceModel as expected by mace.calculators" alt="" coords="1924,186,2177,214"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="2303,586,2297,514,2278,416,2262,364,2240,313,2211,267,2175,227,2161,217,2161,211,2178,223,2216,264,2245,311,2267,362,2283,414,2302,513,2307,589"/>
+<area shape="rect" id="Node000010" href="$classMaceSettings.html#a3da31ecdad24669e1fe010d86d2434f3" title="returns the maceModelType as calculator name in mace.calculators" alt="" coords="1944,237,2157,282"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="2300,586,2289,527,2267,448,2251,407,2230,366,2205,329,2175,296,2158,284,2158,278,2178,292,2209,326,2235,364,2256,404,2272,446,2294,525,2304,589"/>
+<area shape="rect" id="Node000011" href="$classmolsys_1_1Atom.html#a56fadb03e2caf301456381e422d22256" title="sets the mass of the atom" alt="" coords="1963,306,2138,334"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="2298,587,2285,537,2261,471,2226,404,2202,374,2175,348,2157,337,2138,330,2138,324,2159,333,2178,344,2206,371,2230,401,2266,469,2290,535,2302,590"/>
+<area shape="rect" id="Node000013" href="$namespaceutilities.html#a44118b013750476468b6f651dc742a13" title="checks if the value of a input file keyword can be interpreted as true or false" alt="" coords="1962,358,2139,386"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="2295,588,2279,547,2254,494,2220,442,2199,419,2175,399,2139,382,2139,377,2178,395,2202,415,2224,439,2259,492,2284,544,2299,590"/>
+<area shape="rect" id="Node000015" href="$classinput_1_1GeneralInputParser.html#ac51549baaf0cd80e9945eba027782836" title="parse dimensionality of simulation" alt="" coords="1957,409,2144,454"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="2287,589,2242,529,2211,496,2175,469,2144,453,2144,448,2178,464,2214,492,2246,526,2292,591"/>
+<area shape="rect" id="Node000018" href="$classinput_1_1QMInputParser.html#a34d7f8142fa0da9d011ecae7bb446b0c" title="parses the QM method if it starts with &quot;mace&quot;" alt="" coords="1965,479,2136,523"/>
+<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="2271,593,2228,566,2176,538,2136,523,2136,518,2178,533,2231,562,2277,594"/>
+<area shape="rect" id="Node000021" href="$classinput_1_1parameterFile_1_1ParameterFileSection.html#a454cc6f09bfcb1657d0e43a9e322ad46" title="reads a general parameter file section" alt="" coords="1967,548,2134,609"/>
+<area shape="poly" id="edge21_Node000001_Node000021" title=" " alt="" coords="2206,603,2135,594,2134,588,2212,602"/>
+<area shape="rect" id="Node000023" href="$classinput_1_1topology_1_1TopologySection.html#af58a649212f8e5554fdb6557376a3608" title="general process function for topology sections" alt="" coords="1958,633,2143,678"/>
+<area shape="poly" id="edge23_Node000001_Node000023" title=" " alt="" coords="2207,632,2144,644,2143,639,2212,631"/>
+<area shape="rect" id="Node000028" href="$classinput_1_1mShake_1_1MShakeReader.html#a9ed522769a7b95f77c9658ae5b870a37" title="processes comment line" alt="" coords="1941,703,2160,747"/>
+<area shape="poly" id="edge28_Node000001_Node000028" title=" " alt="" coords="2273,639,2228,668,2178,693,2145,705,2144,700,2176,688,2226,663,2268,641"/>
+<area shape="rect" id="Node000045" href="$classinput_1_1parameterFile_1_1NonCoulombicsSection.html#a305d676f05de22cdb36ad1c15753e95a" title="processes the nonCoulombics header of the parameter file" alt="" coords="1961,950,2140,1012"/>
+<area shape="poly" id="edge45_Node000001_Node000045" title=" " alt="" coords="2303,644,2293,707,2271,786,2254,827,2234,868,2209,906,2178,940,2161,954,2141,964,2140,959,2158,949,2175,936,2204,903,2229,865,2249,825,2266,784,2288,706,2300,648"/>
+<area shape="rect" id="Node000047" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#aa381b1926d6fa64b840de70c930f1838" title="processes the intra nonBonded interactions for a given molecule type" alt="" coords="1944,865,2157,926"/>
+<area shape="poly" id="edge47_Node000001_Node000047" title=" " alt="" coords="2299,644,2284,692,2259,748,2224,805,2202,832,2178,855,2159,869,2157,864,2175,851,2199,828,2220,802,2254,745,2279,690,2295,647"/>
+<area shape="rect" id="Node000053" href="$classsetup_1_1SimulationBoxSetup.html#aca83e94af7b1d1c05e7ace5ea7f0bc18" title="Sets the atomic number of each atom in the simulation box." alt="" coords="1952,796,2149,841"/>
+<area shape="poly" id="edge54_Node000001_Node000053" title=" " alt="" coords="2289,642,2242,702,2211,734,2178,762,2147,782,2114,798,2112,793,2144,777,2175,758,2208,730,2238,699,2284,645"/>
+<area shape="rect" id="Node000059" href="$testStringUtilities_8cpp.html#a36980161bbde192586076d107e6afb29" title="test toLowerCopy function" alt="" coords="2024,1036,2077,1064"/>
+<area shape="poly" id="edge62_Node000001_Node000059" title=" " alt="" coords="2307,644,2303,723,2285,825,2269,880,2246,933,2217,983,2178,1026,2155,1041,2128,1050,2078,1055,2077,1049,2127,1045,2153,1036,2175,1022,2212,980,2242,931,2264,878,2280,824,2298,722,2303,648"/>
+<area shape="rect" id="Node000060" href="$namespaceutilities.html#a4bd4d8abfe568051a665b47af11ab07e" title="returns a copy of a string all lower case" alt="" coords="1969,1088,2132,1116"/>
+<area shape="poly" id="edge63_Node000001_Node000060" title=" " alt="" coords="2303,644,2287,744,2260,873,2243,938,2224,997,2202,1045,2179,1078,2157,1092,2133,1101,2132,1096,2155,1087,2175,1074,2198,1042,2219,995,2238,937,2255,872,2282,743,2299,648"/>
+<area shape="rect" id="Node000061" href="$structinput_1_1Converter_3_01bool_01_4.html#a1a49b62c9ec61dd4374ffa505c903d4b" title="attempts to parse a bool from a raw input&#45;file token" alt="" coords="1966,1140,2135,1185"/>
+<area shape="poly" id="edge64_Node000001_Node000061" title=" " alt="" coords="2303,644,2289,753,2263,897,2246,971,2226,1037,2204,1092,2179,1129,2159,1144,2136,1155,2135,1149,2156,1140,2175,1126,2199,1089,2221,1035,2241,969,2258,896,2284,752,2300,648"/>
+<area shape="rect" id="Node000003" href="$classExternalQMRunnerTest.html#a74235473e9428d06e7c96411b76d8d80" title=" " alt="" coords="1676,5,1857,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1958,86,1844,53,1843,48,1963,86"/>
+<area shape="rect" id="Node000004" href="$namespacebenchQMRunner.html#a2690239decd679b6b58a890e799aa975" title=" " alt="" coords="1688,74,1845,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="1957,106,1846,97,1845,92,1963,104"/>
+<area shape="rect" id="Node000006" href="$testQMSetup_8cpp.html#aafc7b5eb486792933ae808bcc4ea593d" title=" " alt="" coords="1740,126,1793,154"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="1957,122,1794,140,1793,135,1962,121"/>
+<area shape="rect" id="Node000005" href="$perfDftbRunnerFiles_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="1475,74,1530,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1670,89,1531,90,1529,85,1675,87"/>
+<area shape="rect" id="Node000008" href="$classQM_1_1AseMaceRunner.html#a6129e06fd937f15c3a6dfc984cdb494f" title="Construct a new AseMaceRunner::AseMaceRunner object." alt="" coords="1684,177,1849,222"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1906,200,1850,202,1849,197,1911,199"/>
+<area shape="rect" id="Node000009" href="$classQM_1_1AseMaceRunner.html#ab8223372f370bdbbfbb3151d0a18d674" title=" " alt="" coords="1420,177,1584,222"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1666,200,1586,202,1584,197,1671,199"/>
+<area shape="poly" id="edge10_Node000010_Node000008" title=" " alt="" coords="1926,234,1850,220,1849,214,1931,234"/>
+<area shape="rect" id="Node000012" href="$testHybridConfigurator_8cpp.html#adc4f0c4a4e2f4641f0283792f764c076" title=" " alt="" coords="1740,246,1793,274"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1960,303,1924,297,1794,268,1794,263,1925,292,1965,302"/>
+<area shape="rect" id="Node000014" href="$testStringUtilities_8cpp.html#a366a109716a1a784c5dd977286c513f0" title="test keywordToBool function" alt="" coords="1740,298,1793,326"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="1964,354,1794,320,1794,315,1969,354"/>
+<area shape="rect" id="Node000016" href="$classinput_1_1GeneralInputParser.html#ab312d856c7cef92268ba8ec3e6fec111" title="Construct a new Input File Parser General:: Input File Parser General object." alt="" coords="1674,349,1860,394"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="1939,409,1860,394,1860,389,1945,408"/>
+<area shape="rect" id="Node000017" href="$testGeneralParser_8cpp.html#a6dd45f386cecbfb25e21dbed65c13e8a" title="tests parsing the &quot;dim&quot; command" alt="" coords="1732,418,1801,446"/>
+<area shape="poly" id="edge17_Node000015_Node000017" title=" " alt="" coords="1939,432,1802,434,1801,429,1944,431"/>
+<area shape="rect" id="Node000019" href="$classinput_1_1QMInputParser.html#a645d21da7128d9dbc5db3c3a8a35b5f2" title=" " alt="" coords="1688,469,1845,514"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="1946,498,1846,497,1845,492,1952,497"/>
+<area shape="rect" id="Node000020" href="$classinput_1_1QMInputParser.html#a2e23de8b0126aeba1916706800ef168c" title="Construct a new QMInputParser:: QMInputParser object." alt="" coords="1424,469,1581,514"/>
+<area shape="poly" id="edge20_Node000019_Node000020" title=" " alt="" coords="1670,492,1582,494,1581,489,1675,491"/>
+<area shape="rect" id="Node000022" href="$testParameterFileSection_8cpp.html#a641b7a507fd6b339a57ca0f2891aa942" title="tests full process function TODO: think of a clever way to test this" alt="" coords="1732,538,1801,566"/>
+<area shape="poly" id="edge22_Node000021_Node000022" title=" " alt="" coords="1949,569,1802,557,1801,552,1954,569"/>
+<area shape="rect" id="Node000024" href="$testTopologySection_8cpp.html#a44b6e2d20fac9e998040d68a66db34d1" title="tests full process function" alt="" coords="1732,590,1801,618"/>
+<area shape="poly" id="edge24_Node000023_Node000024" title=" " alt="" coords="1941,636,1802,613,1801,607,1946,636"/>
+<area shape="rect" id="Node000025" href="$testTopologySection_8cpp.html#a1b7cb1de9448339e2ff21e2802b67261" title="tests if incorrect number of elements is correctly handled" alt="" coords="1732,642,1801,670"/>
+<area shape="poly" id="edge25_Node000023_Node000025" title=" " alt="" coords="1940,656,1802,658,1801,653,1945,655"/>
+<area shape="rect" id="Node000026" href="$testTopologySection_8cpp.html#aa33bca08e99032080bf415dcb549b1bc" title="tests if missing end statement is correctly handled" alt="" coords="1732,694,1801,722"/>
+<area shape="poly" id="edge26_Node000023_Node000026" title=" " alt="" coords="1941,676,1802,704,1801,699,1946,675"/>
+<area shape="rect" id="Node000027" href="$testTopologySection_8cpp.html#af8a24fbb26c6e0a27dc5c301cdacdd2f" title="tests if same atom given twice is correctly handled" alt="" coords="1732,746,1801,774"/>
+<area shape="poly" id="edge27_Node000023_Node000027" title=" " alt="" coords="1946,680,1926,693,1912,703,1902,714,1893,725,1878,735,1839,750,1802,758,1801,753,1838,745,1875,731,1889,721,1898,710,1908,699,1923,688,1941,682"/>
+<area shape="rect" id="Node000029" href="$classinput_1_1mShake_1_1MShakeReader.html#a032e0451766bac0cc781b47f7fdd9a8d" title="reads mShake file" alt="" coords="1657,797,1876,842"/>
+<area shape="poly" id="edge29_Node000028_Node000029" title=" " alt="" coords="1946,752,1925,762,1877,787,1846,799,1845,794,1875,783,1923,757,1941,753"/>
+<area shape="rect" id="Node000030" href="$namespaceinput_1_1mShake.html#a08672b685400c24c4040a33406010079" title="Wrapper to construct MShakeReader and read mShake file." alt="" coords="1401,798,1604,826"/>
+<area shape="poly" id="edge30_Node000029_Node000030" title=" " alt="" coords="1639,816,1604,817,1604,812,1644,816"/>
+<area shape="rect" id="Node000031" href="$classsetup_1_1ConstraintsSetup.html#a1d89079b3c78f08f4359e061d311316b" title="setup M&#45;SHAKE" alt="" coords="1171,789,1348,834"/>
+<area shape="poly" id="edge31_Node000030_Node000031" title=" " alt="" coords="1383,812,1349,814,1348,809,1388,811"/>
+<area shape="rect" id="Node000044" href="$testMShakeReader_8cpp.html#a16baecce3cf7f9c1ce9b7cb60ebef029" title=" " alt="" coords="1225,738,1294,766"/>
+<area shape="poly" id="edge44_Node000030_Node000044" title=" " alt="" coords="1426,794,1294,763,1294,757,1431,793"/>
+<area shape="rect" id="Node000032" href="$classsetup_1_1ConstraintsSetup.html#a2372d212b6be4df2d94fbe99c60280ed" title="sets constraints data in constraints object" alt="" coords="947,781,1123,826"/>
+<area shape="poly" id="edge32_Node000031_Node000032" title=" " alt="" coords="1153,808,1124,809,1124,804,1159,808"/>
+<area shape="rect" id="Node000033" href="$namespacesetup.html#a840c32566a76797a3f7a62301f16ce32" title="constructs a new Constraints Setup:: Constraints Setup object and calls setup" alt="" coords="724,790,899,818"/>
+<area shape="poly" id="edge33_Node000032_Node000033" title=" " alt="" coords="929,804,900,806,899,801,934,803"/>
+<area shape="rect" id="Node000041" href="$testConstraintsSetup_8cpp.html#a9dc71578fbcd6ab8f0ce05e24b9efdfb" title="tests that setup() calculates the shake reference bond vector and reduces the degrees of freedom by t..." alt="" coords="777,842,846,870"/>
+<area shape="poly" id="edge41_Node000032_Node000041" title=" " alt="" coords="929,828,847,850,845,845,934,827"/>
+<area shape="rect" id="Node000042" href="$testConstraintsSetup_8cpp.html#a5b9c0f01b3bd8bcf8ab21ceb655b0d7c" title="tests that setup() is a no&#45;op with respect to constraints and degrees of freedom when neither shake n..." alt="" coords="777,686,846,714"/>
+<area shape="poly" id="edge42_Node000032_Node000042" title=" " alt="" coords="983,773,898,729,846,711,846,705,900,724,989,773"/>
+<area shape="rect" id="Node000043" href="$testConstraintsSetup_8cpp.html#a440b20ee4eabeb795e86f00e7f3d2d9b" title="tests that setup() reads the M&#45;Shake file, initializes M&#45;Shake and reduces the degrees of freedom by ..." alt="" coords="777,738,846,766"/>
+<area shape="poly" id="edge43_Node000032_Node000043" title=" " alt="" coords="929,780,846,762,846,757,934,779"/>
+<area shape="rect" id="Node000034" href="$namespacesetup.html#a74bd3103ffe8b6e276b5c37dc99e08dd" title="setup the engine" alt="" coords="530,892,676,920"/>
+<area shape="poly" id="edge34_Node000033_Node000034" title=" " alt="" coords="739,824,725,833,669,864,625,894,622,890,666,859,723,828,744,822"/>
+<area shape="rect" id="Node000039" href="$testConstraintsSetup_8cpp.html#a595a9e04e542de4ee20fc89f57dd3e91" title="tests that the setupConstraints wrapper function delegates to ConstraintsSetup and reduces the degree..." alt="" coords="569,763,637,791"/>
+<area shape="poly" id="edge39_Node000033_Node000039" title=" " alt="" coords="706,791,638,784,637,779,711,790"/>
+<area shape="rect" id="Node000040" href="$testConstraintsSetup_8cpp.html#a022f23a342130a76a7ffee2bbe251e35" title="tests that the setupConstraints wrapper function does not touch the degrees of freedom when no constr..." alt="" coords="569,815,637,843"/>
+<area shape="poly" id="edge40_Node000033_Node000040" title=" " alt="" coords="706,817,638,827,637,822,711,815"/>
+<area shape="rect" id="Node000035" href="$namespacesetup.html#ace373bc8dbf231fe39d4c21a1e0d4e26" title="setup the engine" alt="" coords="292,956,482,984"/>
+<area shape="poly" id="edge35_Node000034_Node000035" title=" " alt="" coords="537,926,437,958,436,953,542,924"/>
+<area shape="rect" id="Node000036" href="$classdriver_1_1Driver.html#a428513cc668b8fca4563b205c8e9b584" title="Run a PQ simulation from an input file." alt="" coords="108,956,244,984"/>
+<area shape="poly" id="edge36_Node000035_Node000036" title=" " alt="" coords="274,971,245,973,244,968,279,969"/>
+<area shape="rect" id="Node000037" href="$perfEndToEnd_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,930,60,958"/>
+<area shape="poly" id="edge37_Node000036_Node000037" title=" " alt="" coords="90,956,61,951,59,946,94,953"/>
+<area shape="rect" id="Node000038" href="$PQ_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,982,60,1010"/>
+<area shape="poly" id="edge38_Node000036_Node000038" title=" " alt="" coords="90,987,62,993,59,989,94,983"/>
+<area shape="rect" id="Node000046" href="$testNonCoulombicTypesSection_8cpp.html#a534c67cb63fcb3169b46f56bac461604" title=" " alt="" coords="1732,1107,1801,1135"/>
+<area shape="poly" id="edge46_Node000045_Node000046" title=" " alt="" coords="1949,1010,1926,1027,1911,1044,1903,1062,1895,1080,1878,1098,1840,1115,1802,1122,1801,1117,1838,1110,1875,1093,1891,1077,1898,1060,1906,1041,1923,1023,1944,1012"/>
+<area shape="rect" id="Node000048" href="$classinput_1_1intraNonBondedReader_1_1IntraNonBondedReader.html#abc26f19797ac153464b142dcc91328d7" title="reads the intra non bonded interactions from the intraNonBonded file" alt="" coords="1658,1039,1875,1083"/>
+<area shape="poly" id="edge48_Node000047_Node000048" title=" " alt="" coords="1933,932,1926,940,1910,961,1903,983,1896,1006,1878,1028,1859,1041,1857,1036,1875,1024,1891,1003,1898,982,1905,959,1922,936,1928,935"/>
+<area shape="rect" id="Node000049" href="$namespaceinput_1_1intraNonBondedReader.html#a21a6f65fde55ed3433bfa28ed9944910" title="construct IntraNonBondedReader object and read the file" alt="" coords="1396,1039,1609,1083"/>
+<area shape="poly" id="edge49_Node000048_Node000049" title=" " alt="" coords="1640,1061,1609,1064,1609,1058,1645,1061"/>
+<area shape="rect" id="Node000050" href="$namespacesetup.html#afb4fb0d7907525c8cfa2b33d8affe25a" title="reads all the files needed for the simulation" alt="" coords="973,1059,1097,1087"/>
+<area shape="poly" id="edge50_Node000049_Node000050" title=" " alt="" coords="1383,1083,1348,1089,1260,1093,1171,1089,1098,1083,1098,1078,1171,1084,1260,1088,1347,1084,1378,1083"/>
+<area shape="rect" id="Node000051" href="$testIntraNonBondedReader_8cpp.html#a30d4890ac6ea179dc6314c8162a4572d" title=" " alt="" coords="1225,1047,1294,1075"/>
+<area shape="poly" id="edge52_Node000049_Node000051" title=" " alt="" coords="1378,1061,1294,1064,1294,1058,1383,1061"/>
+<area shape="rect" id="Node000052" href="$testIntraNonBondedReader_8cpp.html#a7336adc80c06905f7b3381897a0fa8b0" title=" " alt="" coords="1225,995,1294,1023"/>
+<area shape="poly" id="edge53_Node000049_Node000052" title=" " alt="" coords="1378,1035,1294,1019,1294,1014,1383,1035"/>
+<area shape="poly" id="edge51_Node000050_Node000035" title=" " alt="" coords="955,1063,479,987,480,982,960,1059"/>
+<area shape="poly" id="edge55_Node000053_Node000053" title=" " alt="" coords="2091,781,2077,777,2050,775,2027,777,2012,781,2006,787,2007,797,2002,794,2000,786,2009,777,2025,771,2051,769,2078,772,2096,781"/>
+<area shape="rect" id="Node000054" href="$classsetup_1_1SimulationBoxSetup.html#a2a233804d10e257473d4e9dbbc4dcb93" title="setup simulation box" alt="" coords="1668,867,1865,911"/>
+<area shape="poly" id="edge56_Node000053_Node000054" title=" " alt="" coords="1946,844,1860,869,1859,863,1941,846"/>
+<area shape="rect" id="Node000057" href="$testSimulationBoxSetup_8cpp.html#a4e3147a4fb74d88d19085cde3b8d674d" title=" " alt="" coords="1732,987,1801,1015"/>
+<area shape="poly" id="edge60_Node000053_Node000057" title=" " alt="" coords="1941,841,1926,855,1914,869,1907,884,1903,914,1899,945,1891,961,1878,976,1861,988,1841,996,1802,1003,1801,998,1839,991,1858,983,1875,972,1887,958,1894,944,1898,914,1902,882,1909,866,1923,851,1936,843"/>
+<area shape="rect" id="Node000058" href="$testSimulationBoxSetup_8cpp.html#aec4dfe6121ce8169dc61c6711e4c55b9" title=" " alt="" coords="1732,935,1801,963"/>
+<area shape="poly" id="edge61_Node000053_Node000058" title=" " alt="" coords="1940,844,1926,855,1910,872,1903,890,1895,908,1878,926,1840,943,1802,950,1801,945,1838,938,1875,921,1890,905,1898,888,1906,869,1923,851,1935,846"/>
+<area shape="rect" id="Node000055" href="$namespacesetup.html#ab6f3cc208f89f307946eb1b7dd095572" title="wrapper to create SetupSimulationBox object and call setup" alt="" coords="1404,892,1600,920"/>
+<area shape="poly" id="edge57_Node000054_Node000055" title=" " alt="" coords="1650,897,1601,903,1601,897,1655,896"/>
+<area shape="poly" id="edge58_Node000055_Node000034" title=" " alt="" coords="1387,908,677,909,676,904,1390,904"/>
+<area shape="rect" id="Node000056" href="$testSimulationBoxSetup_8cpp.html#a91b158391305633fb3d8774de4f4ab84" title="testing full setup of simulation box" alt="" coords="1225,943,1294,971"/>
+<area shape="poly" id="edge59_Node000055_Node000056" title=" " alt="" coords="1421,923,1294,953,1293,947,1415,924"/>
 </map>

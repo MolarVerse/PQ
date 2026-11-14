@@ -98,7 +98,8 @@ Workflows
       - ``clang_build.yml``
       - pull requests that touch C++ or build files
       - Not a gate. Builds and tests the project with clang 20 to keep it building with clang. Pull requests use
-        ccache; a push to ``dev`` compiles everything and refreshes the cache.
+        ccache and a unity build (16 files per compiler call, about 40 % faster when a header changes); a push to
+        ``dev`` compiles every file on its own and refreshes the cache.
     * - Docs
       - ``jekyll-gh-pages.yml``
       - pull requests to ``main`` and ``dev`` that touch ``docs``, ``include`` or ``src``; pushes to ``main``
@@ -251,10 +252,14 @@ A job that takes twice as long as usual is rarely a problem in your change. Thes
       caches the ``.deb`` files per package list: a hit downloads nothing, only a miss (a changed package list, or
       the first run in a branch scope) goes to the mirror. Bump ``version`` there to drop the cached packages. If a job
       still sits in an install step, cancel and re-run it.
-    - **The clang job and ccache.** Pull requests build with ccache (the job took 8 to 17 minutes, depending on the CPU
-      of the runner, #1045). A push to ``dev`` ignores the cache for reading (``CCACHE_RECACHE``) and writes it. The
+    - **The clang job: ccache and unity.** Pull requests build with ccache (the job took 8 to 17 minutes, depending on the
+      CPU of the runner, #1045). A push to ``dev`` ignores the cache for reading (``CCACHE_RECACHE``) and writes it. The
       build passes ``-Xclang -fno-pch-timestamp``: without it clang puts the date of the precompiled header into the
-      ``.pch`` file and every compile is a ccache miss.
+      ``.pch`` file and every compile is a ccache miss. Pull requests also build in unity batches of 16 source files
+      (``CMAKE_UNITY_BUILD``): most of the compile time is mp-units template instantiation, which a batch does once
+      instead of once per file. A clean build on 4 cores took 451 to 487 s, with batches of 8 324 s and with batches of
+      16 283 s, with the same test results (#1088). A unity build can hide a missing ``#include``, so a push to ``dev``
+      stays a normal build, and the GCC jobs, which gate, are not unity builds.
     - **The Eigen source** is cached under a key that hashes ``.cmake/eigen.cmake`` and passed to CMake with
       ``-DFETCHCONTENT_SOURCE_DIR_EIGEN``, so that no job clones it again.
     - **The conda environment** of the integration tests is cached under a key that hashes ``ci_build.yml``. **Every

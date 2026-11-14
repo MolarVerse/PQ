@@ -1,27 +1,21 @@
 <map id="setup::QMSetup::setupWriteInfo" name="setup::QMSetup::setupWriteInfo">
-<area shape="rect" id="Node000001" title="write info about the QM setup" alt="" coords="5,355,234,383"/>
-<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a1862423df5853a9d58a116a6c9fd577a" title="get the floating point string representation used in pybind11 bindings" alt="" coords="284,5,502,50"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,354,137,299,168,220,189,177,215,135,245,95,280,60,289,56,285,60,283,64,249,99,219,138,194,180,173,222,142,301,127,355"/>
-<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="301,75,486,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="124,354,144,310,177,250,222,185,250,156,280,130,290,125,286,129,283,134,253,159,226,189,181,253,148,313,129,356"/>
-<area shape="rect" id="Node000004" href="$classQMSettings.html#a3b68e2f9f11f9cbdc743204386de5399" title="returns the qmLoopTimeLimit" alt="" coords="288,144,499,189"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="128,353,187,280,231,236,280,199,293,194,289,198,283,203,234,240,191,283,133,356"/>
-<area shape="rect" id="Node000005" href="$classQMSettings.html#accbc248f1dc0bb967aa328aa6c60c5ee" title="returns the qmScript" alt="" coords="301,212,486,240"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="134,353,196,303,237,275,281,251,303,244,299,247,283,255,239,279,199,307,138,356"/>
-<area shape="rect" id="Node000006" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="299,264,488,292"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="150,353,210,327,281,301,309,295,305,298,282,306,212,332,153,357"/>
-<area shape="rect" id="Node000007" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="310,316,477,361"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="233,354,296,348,292,351,235,359"/>
-<area shape="rect" id="Node000008" href="$structMaceModeMeta.html#a79f8ff947367e111241a67f79169d4d8" title=" " alt="" coords="301,384,486,412"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="233,379,288,386,284,388,235,384"/>
-<area shape="rect" id="Node000009" href="$structQMMethodMeta.html#ac7b17240ca445e36d9a8ba58d5ed7a7c" title=" " alt="" coords="301,436,486,464"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="160,381,282,421,316,432,311,433,281,426,160,386"/>
-<area shape="rect" id="Node000010" href="$structSlakosTypeMeta.html#a0e6a1eceb0020c75fb0008b839b6845b" title=" " alt="" coords="301,488,486,516"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="138,381,201,427,241,452,283,473,305,483,300,484,281,478,238,456,198,431,138,386"/>
-<area shape="rect" id="Node000011" href="$structXtbMethodMeta.html#a0ca84f339c82f9e42ceb579ec0b7d4d6" title=" " alt="" coords="301,540,486,568"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="131,381,191,451,234,491,283,525,299,535,293,535,280,530,231,496,187,455,131,386"/>
-<area shape="rect" id="Node000012" href="$classQMSettings.html#a6efd4c1cfd2b1eb015aa735195561f2a" title="returns if the dispersion correction should be used" alt="" coords="282,592,505,620"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="128,381,150,422,184,475,228,531,255,556,283,577,295,586,290,586,280,582,251,560,225,534,179,478,146,424,127,386"/>
-<area shape="rect" id="Node000013" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="321,644,466,689"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="126,381,146,430,178,497,224,568,252,601,283,630,309,647,304,646,280,634,248,605,220,571,173,499,141,432,125,386"/>
+<area shape="rect" id="Node000001" title="write info about the QM setup" alt="" coords="5,263,234,291"/>
+<area shape="rect" id="Node000002" href="$classsettings_1_1GeneralSettings.html#a1862423df5853a9d58a116a6c9fd577a" title="get the floating point string representation used in pybind11 bindings" alt="" coords="282,5,500,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,261,146,222,180,167,225,110,251,83,280,60,291,56,287,59,283,64,255,87,229,114,184,171,151,224,130,264"/>
+<area shape="rect" id="Node000003" href="$classsettings_1_1GeneralSettings.html#a368adf98ad2522bf095901b58016a146" title="get the floating point type" alt="" coords="298,75,484,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,261,191,198,233,162,280,129,294,124,290,128,283,134,237,166,194,202,135,265"/>
+<area shape="rect" id="Node000004" href="$structMaceModelMeta.html#a9c83386df354e99c74fa80231f13dbc8" title=" " alt="" coords="297,143,485,171"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="139,261,201,221,281,180,303,174,298,177,283,185,203,225,142,265"/>
+<area shape="rect" id="Node000005" href="$structMaceModelTypeMeta.html#a0e7ceea77240cc13feef1a821d8e44db" title=" " alt="" coords="307,195,474,239"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="184,260,294,237,290,241,187,265"/>
+<area shape="rect" id="Node000006" href="$structMaceModeMeta.html#a79f8ff947367e111241a67f79169d4d8" title=" " alt="" coords="299,263,483,291"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="233,274,285,276,280,278,235,280"/>
+<area shape="rect" id="Node000007" href="$structQMMethodMeta.html#ac7b17240ca445e36d9a8ba58d5ed7a7c" title=" " alt="" coords="299,315,483,343"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="195,289,302,310,298,313,196,294"/>
+<area shape="rect" id="Node000008" href="$structSlakosTypeMeta.html#a0e6a1eceb0020c75fb0008b839b6845b" title=" " alt="" coords="298,367,484,395"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="146,289,208,320,283,352,310,362,305,363,281,357,206,325,146,294"/>
+<area shape="rect" id="Node000009" href="$structXtbMethodMeta.html#a0ca84f339c82f9e42ceb579ec0b7d4d6" title=" " alt="" coords="299,419,483,447"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="135,289,196,345,238,377,283,404,302,414,296,414,280,409,235,381,193,350,134,294"/>
+<area shape="rect" id="Node000010" href="$classout_1_1StdoutOutput.html#a7614a4229387a5ac36fdea4cb176ae67" title="write a message to the stdout to issue a warning about the setup" alt="" coords="319,471,463,515"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="130,288,154,323,189,368,233,415,283,456,307,471,301,470,280,461,229,419,185,372,150,327,129,294"/>
 </map>

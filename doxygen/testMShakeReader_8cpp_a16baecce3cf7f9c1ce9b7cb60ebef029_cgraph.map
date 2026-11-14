@@ -1,11 +1,9 @@
 <map id="TEST_F" name="TEST_F">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,239,74,267"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,210,74,238"/>
 <area shape="rect" id="Node000002" href="$classmolsys_1_1MoleculeType.html#a01c9405e4cde289fbb616c5b461a9b2b" title="adds an atom name to the atomNames vector" alt="" coords="140,171,306,215"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,240,140,219,137,223,76,244"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,216,127,207,123,211,76,220"/>
 <area shape="rect" id="Node000003" href="$namespaceinput_1_1mShake.html#a08672b685400c24c4040a33406010079" title="Wrapper to construct MShakeReader and read mShake file." alt="" coords="122,239,324,267"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="72,251,108,251,104,255,75,255"/>
-<area shape="rect" id="Node000017" href="$classsettings_1_1FileSettings.html#a22b9d5ca873fa60d0024ef4d6cc7f495" title="set the mShake file name" alt="" coords="142,291,304,335"/>
-<area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="73,261,140,284,136,287,75,267"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,227,119,234,115,238,75,231"/>
 <area shape="rect" id="Node000004" href="$classinput_1_1mShake_1_1MShakeReader.html#a032e0451766bac0cc781b47f7fdd9a8d" title="reads mShake file" alt="" coords="372,231,591,275"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="323,251,359,252,354,254,325,255"/>
 <area shape="rect" id="Node000005" href="$classinput_1_1mShake_1_1MShakeReader.html#a6fbd2be6c54e7311a264e34f0099f9cd" title="processes atom line" alt="" coords="639,145,859,190"/>

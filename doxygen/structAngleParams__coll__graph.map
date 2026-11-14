@@ -1,5 +1,7 @@
 <map id="AngleParams" name="AngleParams">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,173,119,245"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="35,5,90,78"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,75,65,156,60,156,61,79"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,202,227,274"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,22,158,112"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,109,139,176,144,187,139,186,134,179,102,114"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="183,5,335,129"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,127,243,155,232,179,224,191,221,187,227,176,238,153,247,130"/>
 </map>

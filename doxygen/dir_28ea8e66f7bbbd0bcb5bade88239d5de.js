@@ -3,6 +3,7 @@ var dir_28ea8e66f7bbbd0bcb5bade88239d5de =
     [ "references", "dir_9c693d51fa2648ac4be69e5083482b20.html", "dir_9c693d51fa2648ac4be69e5083482b20" ],
     [ "boxOutput.hpp", "boxOutput_8hpp.html", "boxOutput_8hpp" ],
     [ "energyOutput.hpp", "energyOutput_8hpp.html", "energyOutput_8hpp" ],
+    [ "frame.hpp", "frame_8hpp.html", "frame_8hpp" ],
     [ "infoOutput.hpp", "infoOutput_8hpp.html", "infoOutput_8hpp" ],
     [ "logOutput.hpp", "logOutput_8hpp.html", "logOutput_8hpp" ],
     [ "momentumOutput.hpp", "momentumOutput_8hpp.html", "momentumOutput_8hpp" ],

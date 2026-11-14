@@ -1,0 +1,7 @@
+<map id="out::Frame::Frame" name="out::Frame::Frame">
+<area shape="rect" id="Node000001" title="copy box and per&#45;atom data from the simulation box" alt="" coords="5,48,146,76"/>
+<area shape="rect" id="Node000002" href="$classmolsys_1_1SimulationBox.html#a123d9b807c190d1da6bb02d37645acf6" title="get all molecules" alt="" coords="194,5,365,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,48,181,44,176,46,147,53"/>
+<area shape="rect" id="Node000003" href="$classmolsys_1_1SimulationBox.html#ae16dde6520118fd796cbf4145da598be" title="Get the number of atoms." alt="" coords="194,75,365,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="146,72,181,79,176,80,146,77"/>
+</map>

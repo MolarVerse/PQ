@@ -1,0 +1,13 @@
+<map id="ExternalQMSettings" name="ExternalQMSettings">
+<area shape="rect" id="Node000001" title="ExternalQMSettings." alt="" coords="74,492,288,653"/>
+<area shape="rect" id="Node000002" href="$classSetting.html" title=" " alt="" coords="5,173,156,419"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,416,149,476,143,476,124,421"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="25,5,184,78"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="57,80,44,103,36,129,35,156,29,156,31,128,39,101,59,75"/>
+<area shape="rect" id="Node000005" href="$classSetting.html" title=" " alt="" coords="180,173,382,419"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="110,75,123,113,141,147,152,159,169,172,164,173,149,163,137,151,118,114,111,80"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="241,5,291,78"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="244,80,233,103,222,128,207,151,190,163,171,175,167,172,187,158,203,147,217,125,228,100,246,75"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="286,75,297,101,303,157,297,156,291,102,285,80"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="245,416,229,469,225,477,221,474,223,467,242,420"/>
+</map>
