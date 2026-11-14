@@ -77,7 +77,7 @@ foreach(perf_source ${perf_benchmarks})
         thermostat
         manostat
         maxwellBoltzmann
-        resetKinetics
+        kinetics
         virial
         constraints
         output

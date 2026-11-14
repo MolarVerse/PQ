@@ -42,6 +42,7 @@ namespace manostat
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
             const Time                 &timeStep
         ) override;
 

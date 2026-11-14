@@ -49,8 +49,7 @@ namespace thermostat
         Time _tau;
 
        public:
-        VelocityRescalingThermostat() = default;
-        explicit VelocityRescalingThermostat(const Temperature &, const Time &);
+        explicit VelocityRescalingThermostat(const Time &);
         ~VelocityRescalingThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -67,6 +66,7 @@ namespace thermostat
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
             const Time                 &timeStep
         ) override;
 

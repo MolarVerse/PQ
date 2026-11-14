@@ -45,7 +45,7 @@ target_link_libraries(engine
     integrator
     manostat
     potential
-    resetKinetics
+    kinetics
     settings
     thermostat
     output

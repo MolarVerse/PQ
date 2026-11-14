@@ -40,11 +40,9 @@ namespace thermostat
         rng::RandomNumberGenerator _randomNumberGenerator;
 
         double _friction = 0.0;
-        double _sigma    = 0.0;
 
        public:
-        explicit LangevinThermostat(const Temperature &, double);
-        LangevinThermostat()           = default;
+        explicit LangevinThermostat(double);
         ~LangevinThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -54,39 +52,37 @@ namespace thermostat
         LangevinThermostat(LangevinThermostat &&) noexcept            = delete;
         LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
-        void calculateSigma(double, const Temperature &, const Time &);
+        [[nodiscard]]
+        static double calculateSigma(
+            double friction,
+            const Temperature &,
+            const Time &
+        );
 
-        void applyLangevin(molsys::SimulationBox &, const Time &timeStep);
+        void applyLangevin(
+            molsys::SimulationBox &,
+            const Temperature &,
+            const Time &timeStep
+        );
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
             const Time                 &timeStep
         ) override;
 
         void applyThermostatHalfStep(
             molsys::SimulationBox &simulationBox,
             physicalData::PhysicalData & /*physicalData*/,
-            const Time &timeStep
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) override;
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        void setTargetTemperature(
-            const Temperature &targetTemperature
-        ) override;
-
-        void setFriction(double friction);
-        void setSigma(double sigma);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double getFriction() const;
-        [[nodiscard]] double getSigma() const;
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
     };

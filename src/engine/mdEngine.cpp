@@ -49,6 +49,7 @@ namespace engine
     MDEngine::MDEngine(const Settings &settings)
         : Engine(settings),
           _resetKinetics(settings.resetKinetics),
+          _kinetics(settings.kinetics),
           _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(
@@ -114,7 +115,8 @@ namespace engine
     {
         _thermostat->applyThermostatHalfStep(
             getSimulationBox(),
-            getPhysicalData()
+            getPhysicalData(),
+            _kinetics.getCurrentTargetTemperature()
         );
 
         if (getSettings().constraintSettings.isMShakeActivated())
@@ -148,21 +150,40 @@ namespace engine
             getPhysicalDataPtr()->addVirial(virial);
         }
 
-        _thermostat->applyThermostatOnForces(getSimulationBox());
+        _thermostat->applyThermostatOnForces(
+            getSimulationBox(),
+            _kinetics.getCurrentTargetTemperature()
+        );
 
         _integrator->secondStep(getSimulationBox());
 
         getConstraints()->applyRattle(getSimulationBox());
 
-        _thermostat->applyThermostat(getSimulationBox(), getPhysicalData());
+        _thermostat->applyThermostat(
+            getSimulationBox(),
+            getPhysicalData(),
+            _kinetics.getCurrentTargetTemperature()
+        );
 
         getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
 
-        _manostat->applyManostat(getSimulationBox(), getPhysicalData());
+        const auto &currentTargetTemperature =
+            _kinetics.getCurrentTargetTemperature();
 
-        _resetKinetics.reset(getStep(), getPhysicalData(), getSimulationBox());
+        _manostat->applyManostat(
+            getSimulationBox(),
+            getPhysicalData(),
+            currentTargetTemperature
+        );
 
-        _thermostat->applyTemperatureRamping();
+        _resetKinetics.reset(
+            getStep(),
+            getPhysicalData(),
+            getSimulationBox(),
+            currentTargetTemperature
+        );
+
+        _kinetics.applyTemperatureRamping();
 
         if (settings::GeneralSettings::isQMOnlyJobtype())
         {
@@ -286,9 +307,9 @@ namespace engine
     /**
      * @brief get the reference to the reset kinetics
      *
-     * @return resetKinetics::ResetKinetics&
+     * @return kinetics::ResetKinetics&
      */
-    resetKinetics::ResetKinetics &MDEngine::getResetKinetics()
+    kinetics::ResetKinetics &MDEngine::getResetKinetics()
     {
         return _resetKinetics;
     }
@@ -474,4 +495,21 @@ namespace engine
     {
         return _configurator;
     }
+
+    /**
+     * @brief get the reference to the kinetics (const)
+     *
+     * @return const kinetics::Kinetics&
+     */
+    const kinetics::Kinetics &MDEngine::_getKinetics() const
+    {
+        return _kinetics;
+    }
+
+    /**
+     * @brief get the reference to the kinetics
+     *
+     * @return kinetics::Kinetics&
+     */
+    kinetics::Kinetics &MDEngine::_getKinetics() { return _kinetics; }
 }   // namespace engine

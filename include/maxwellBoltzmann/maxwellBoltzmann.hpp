@@ -24,6 +24,7 @@
 #define MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP
 
 #include "randomNumberGenerator.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -48,7 +49,10 @@ namespace maxwellBoltzmann
         rng::RandomNumberGenerator _randomNumberGenerator;
 
        public:
-        void initializeVelocities(molsys::SimulationBox &);
+        void initializeVelocities(
+            molsys::SimulationBox &simulationBox,
+            const Temperature     &targetTemperature
+        );
     };
 }   // namespace maxwellBoltzmann
 

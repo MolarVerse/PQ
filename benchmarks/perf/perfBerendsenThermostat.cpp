@@ -53,8 +53,7 @@ int main()
     auto              physicalData = physicalData::PhysicalData();
     const Temperature targetTemperature{toTemperature(300.0)};
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat =
-        thermostat::BerendsenThermostat(targetTemperature, 100.0 * fs);
+    auto thermostat = thermostat::BerendsenThermostat(100.0 * fs);
 
     perfAllocBegin();
 
@@ -62,7 +61,7 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        thermostat.applyThermostat(box, physicalData);
+        thermostat.applyThermostat(box, physicalData, targetTemperature);
     }
 
     // read state so the loop cannot be optimized away
