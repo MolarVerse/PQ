@@ -24,6 +24,7 @@
 
 #include <cstddef>
 #include <format>
+#include <initializer_list>
 #include <ostream>
 #include <sstream>
 
@@ -59,6 +60,11 @@ namespace out
             }
         }
 
+        constexpr std::size_t NAME_WIDTH     = 5;
+        constexpr std::size_t FIXED_WIDTH    = 15;
+        constexpr std::size_t VELOCITY_WIDTH = 19;
+        constexpr int         PRECISION      = 8;
+
     }   // namespace
 
     /**
@@ -78,39 +84,31 @@ namespace out
 
         writeNHChain(frame, buffer);
 
+        _buffer.clear();
+        _buffer.append(buffer.str());
+
         for (const auto &atom : frame.atoms)
         {
             const auto &pos   = atom.position;
             const auto &vel   = atom.velocity;
             const auto &force = atom.force;
 
-            buffer << std::format("{:<5}\t", atom.name);
-            buffer << std::format("{:<5}\t", atom.indexInMolecule + 1);
-            buffer << std::format("{:<5}\t", atom.moltype.get());
+            _buffer.left(atom.name, NAME_WIDTH).put('\t');
+            _buffer.left(atom.indexInMolecule + 1, NAME_WIDTH).put('\t');
+            _buffer.left(atom.moltype.get(), NAME_WIDTH).put('\t');
 
-            buffer << std::format(
-                "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-                pos[0],
-                pos[1],
-                pos[2]
-            );
-            buffer << std::format(
-                "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
-                vel[0],
-                vel[1],
-                vel[2]
-            );
-            buffer << std::format(
-                "{:15.8f}\t{:15.8f}\t{:15.8f}",
-                force[0],
-                force[1],
-                force[2]
-            );
+            for (const double value : {pos[0], pos[1], pos[2]})
+                _buffer.fixed(value, FIXED_WIDTH, PRECISION).put('\t');
 
-            buffer << '\n' << std::flush;
+            for (const double value : {vel[0], vel[1], vel[2]})
+                _buffer.scientific(value, VELOCITY_WIDTH, PRECISION).put('\t');
+
+            _buffer.fixed(force[0], FIXED_WIDTH, PRECISION).put('\t');
+            _buffer.fixed(force[1], FIXED_WIDTH, PRECISION).put('\t');
+            _buffer.fixed(force[2], FIXED_WIDTH, PRECISION).put('\n');
         }
 
-        _replaceFile(buffer.str());
+        _replaceFile(_buffer.view());
     }
 
 }   // namespace out
