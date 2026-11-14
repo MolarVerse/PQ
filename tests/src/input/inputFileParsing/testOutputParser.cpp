@@ -588,3 +588,25 @@ TEST_F(TestInputFileReader, parseIncludeOutputMetadata)
         "line 0 in input file. Allowed values: on|off|true|false|yes|no"
     )
 }
+
+/**
+ * @brief tests parsing the "async_output" command
+ *
+ */
+TEST_F(TestInputFileReader, parseAsyncOutput)
+{
+    OutputFileSettings outputFileSettings;
+    EXPECT_TRUE(outputFileSettings.getAsyncOutput());
+    input::OutputInputParser parser(outputFileSettings);
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("async_output"));
+    const auto &parseFunc = funcMap.at("async_output");
+
+    parseFunc({"async_output", "=", "false"}, 0);
+    EXPECT_FALSE(outputFileSettings.getAsyncOutput());
+
+    _clearParser(parser);
+
+    parseFunc({"async_output", "=", "true"}, 0);
+    EXPECT_TRUE(outputFileSettings.getAsyncOutput());
+}

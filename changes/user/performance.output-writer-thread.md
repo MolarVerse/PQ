@@ -1,0 +1,1 @@
+- MD runs write the trajectory (xyz, velocity, force, charge) and restart files on a separate thread, so the MD loop no longer waits for text formatting. Output files are unchanged. The new keyword `async_output = false` turns this off.

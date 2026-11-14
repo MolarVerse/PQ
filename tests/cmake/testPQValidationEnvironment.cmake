@@ -356,3 +356,48 @@ if(EXPECTED_ASE)
 else()
     assert_invalid("mace-remote.in" installed "requires ASE support")
 endif()
+
+# ORCA is available without ASE and accepts a custom template path.
+file(WRITE "${VALIDATION_WORK_DIR}/orca.in"
+    "jobtype = qm-md;\n"
+    "nstep = 1;\n"
+    "timestep = 0.5;\n"
+    "qm_prog = orca;\n"
+    "qm_script = orca_rimp2.py;\n"
+    "orca_file = custom-orca.template;\n"
+    "start_file = start.rst;\n")
+assert_valid("orca.in" portable)
+if(EXPECTED_SHARED AND NOT EXPECTED_SINGULARITY)
+    assert_invalid("orca.in" installed "orca_file.*existing file path")
+    file(WRITE "${VALIDATION_WORK_DIR}/custom-orca.template" "")
+    assert_valid("orca.in" installed)
+endif()
+
+file(WRITE "${VALIDATION_WORK_DIR}/orca-default.in"
+    "jobtype = qm-md;\n"
+    "nstep = 1;\n"
+    "timestep = 0.5;\n"
+    "qm_prog = orca;\n"
+    "qm_script = orca_rimp2.py;\n"
+    "start_file = start.rst;\n")
+assert_valid("orca-default.in" portable)
+if(EXPECTED_SHARED AND NOT EXPECTED_SINGULARITY)
+    assert_invalid("orca-default.in" installed "ORCA template.*does not exist")
+    file(WRITE "${VALIDATION_WORK_DIR}/orca.template" "")
+    assert_valid("orca-default.in" installed)
+endif()
+
+foreach(scf_script IN ITEMS orca_hf.py orca_dft.py)
+    file(WRITE "${VALIDATION_WORK_DIR}/orca-scf.in"
+        "jobtype = qm-md;\n"
+        "nstep = 1;\n"
+        "timestep = 0.5;\n"
+        "qm_prog = orca;\n"
+        "qm_script = ${scf_script};\n"
+        "orca_file = custom-orca.template;\n"
+        "start_file = start.rst;\n")
+    assert_valid("orca-scf.in" portable)
+    if(EXPECTED_SHARED AND NOT EXPECTED_SINGULARITY)
+        assert_valid("orca-scf.in" installed)
+    endif()
+endforeach()

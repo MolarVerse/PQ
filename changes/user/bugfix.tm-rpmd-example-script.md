@@ -1,0 +1,1 @@
+- Fix the `malondialdehyde_tm-rpmd` example, which referred to the removed Turbomole script `turbomole_rimp2` instead of `turbomole_ricc2`.

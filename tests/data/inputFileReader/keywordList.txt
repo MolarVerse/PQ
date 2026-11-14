@@ -56,6 +56,7 @@ intra-nonBonded_file         false      data/atomSection/testProcess.rst
 mshake_file                  false      data/atomSection/testProcess.rst
 dftb_file                    false      data/atomSection/testProcess.rst
 turbomole_file               false      data/atomSection/testProcess.rst
+orca_file                    false      data/atomSection/testProcess.rst
 
 integrator                   false      v-verlet
 
@@ -84,6 +85,7 @@ water_inter                  false      spc
 
 overwrite_output             false      true
 include_output_metadata      false      true
+async_output                 false      false
 output_freq                  false      10
 file_prefix                  false      out
 output_file                  false      output.log

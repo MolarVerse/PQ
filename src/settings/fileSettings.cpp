@@ -73,26 +73,29 @@ const std::string& FileSettings::getParameterFileName() const
  *
  * @return std::string
  */
-std::string FileSettings::getIntraNonBondedFileName()
+const std::string& FileSettings::getIntraNonBondedFileName() const
 {
-    return _intraNonBondedFile;
+    return _intraNonBondedFile.get();
 }
 
 /**
  * @brief Get the start file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getStartFileName() { return _startFile; }
+const std::string& FileSettings::getStartFileName() const
+{
+    return _startFile.get();
+}
 
 /**
  * @brief Get the ring polymer start file name
  *
- * @return std::string
+ * @return const std::string&
  */
-std::string FileSettings::getRingPolymerStartFileName()
+const std::string& FileSettings::getRingPolymerStartFileName() const
 {
-    return _rpmdStartFile;
+    return _rpmdStartFile.get();
 }
 
 /**
@@ -115,6 +118,13 @@ std::string FileSettings::getDFTBFileName() { return _dftbFile; }
  * @return std::string
  */
 std::string FileSettings::getTMFileName() { return _tmFile; }
+
+/**
+ * @brief Get the ORCA setup file name
+ *
+ * @return std::string
+ */
+std::string FileSettings::getOrcaFileName() { return _orcaFile; }
 
 /**
  * @brief Get the pointcharge file name
@@ -178,19 +188,29 @@ bool FileSettings::isParameterFileNameSetByUser() const
  *
  * @return bool
  */
-bool FileSettings::isIntraNonBondedFileNameSet()
+bool FileSettings::isIntraNonBondedFileNameSetByUser() const
 {
-    return _isIntraNonBondedFileSet;
+    return _intraNonBondedFile.isSetByUser();
 }
 
 /**
- * @brief Check if the ring polymer start file name is set
+ * @brief Check if the ring polymer start file name is set by the user
  *
  * @return bool
  */
-bool FileSettings::isRingPolymerStartFileNameSet()
+bool FileSettings::isRingPolymerStartFileNameSetByUser() const
 {
-    return _isRPMDStartFileSet;
+    return _rpmdStartFile.isSetByUser();
+}
+
+/**
+ * @brief Check if the start file name is set by the user
+ *
+ * @return bool
+ */
+bool FileSettings::isStartFileNameSetByUser() const
+{
+    return _startFile.isSetByUser();
 }
 
 /**
@@ -258,9 +278,9 @@ void FileSettings::setParameterFileNameByUser(const std::string& name)
  *
  * @param name
  */
-void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
+void FileSettings::setIntraNonBondedFileNameByUser(const std::string& name)
 {
-    FileSettings::_intraNonBondedFile = name;
+    _intraNonBondedFile.setByUser(name);
 }
 
 /**
@@ -268,9 +288,9 @@ void FileSettings::setIntraNonBondedFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setStartFileName(const std::string_view& name)
+void FileSettings::setStartFileNameByUser(const std::string& name)
 {
-    FileSettings::_startFile = name;
+    _startFile.setByUser(name);
 }
 
 /**
@@ -278,9 +298,9 @@ void FileSettings::setStartFileName(const std::string_view& name)
  *
  * @param name
  */
-void FileSettings::setRingPolymerStartFileName(const std::string_view& name)
+void FileSettings::setRingPolymerStartFileNameByUser(const std::string& name)
 {
-    FileSettings::_rpmdStartFile = name;
+    _rpmdStartFile.setByUser(name);
 }
 
 /**
@@ -314,6 +334,16 @@ void FileSettings::setTMFileName(const std::string_view& name)
 }
 
 /**
+ * @brief set the ORCA setup file name
+ *
+ * @param name
+ */
+void FileSettings::setOrcaFileName(const std::string_view& name)
+{
+    FileSettings::_orcaFile = name;
+}
+
+/**
  * @brief set the pointcharge file name
  *
  * @param name
@@ -321,24 +351,6 @@ void FileSettings::setTMFileName(const std::string_view& name)
 void FileSettings::setPointChargeFileName(const std::string_view& name)
 {
     FileSettings::_pointChargeFile = name;
-}
-
-/**
- * @brief set the intra non bonded file name flag to is set
- *
- */
-void FileSettings::setIsIntraNonBondedFileNameSet()
-{
-    FileSettings::_isIntraNonBondedFileSet = true;
-}
-
-/**
- * @brief set the ring polymer start file name flag to is set
- *
- */
-void FileSettings::setIsRingPolymerStartFileNameSet()
-{
-    FileSettings::_isRPMDStartFileSet = true;
 }
 
 /**
@@ -357,24 +369,6 @@ void FileSettings::setIsMShakeFileNameSet()
 void FileSettings::setIsDFTBFileNameSet()
 {
     FileSettings::_isDFTBFileSet = true;
-}
-
-/**
- * @brief set the intra non bonded file name flag to is not set
- *
- */
-void FileSettings::unsetIsIntraNonBondedFileNameSet()
-{
-    FileSettings::_isIntraNonBondedFileSet = false;
-}
-
-/**
- * @brief set the ring polymer start file name flag to is not set
- *
- */
-void FileSettings::unsetIsRingPolymerStartFileNameSet()
-{
-    FileSettings::_isRPMDStartFileSet = false;
 }
 
 /**

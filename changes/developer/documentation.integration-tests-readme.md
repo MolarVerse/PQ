@@ -1,0 +1,1 @@
+- Add integration_tests/README.md: coverage, gaps, coupled feature combinations and what cannot be covered by the integration tests, with a ranked list of suggested tests.

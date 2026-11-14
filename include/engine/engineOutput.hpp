@@ -26,6 +26,7 @@
 #include <cstddef>
 #include <memory>
 #include <mstd/types.hpp>
+#include <optional>
 #include <vector>
 
 #include "boxOutput.hpp"
@@ -39,6 +40,7 @@
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "rstFileOutput.hpp"
+#include "serialWorker.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
 #include "timingsOutput.hpp"
@@ -54,6 +56,11 @@ namespace out
 {
     struct Frame;   // forward declaration
 }   // namespace out
+
+namespace thermostat
+{
+    class Thermostat;   // forward declaration
+}   // namespace thermostat
 
 class OutputFileSettings;   // forward declaration
 
@@ -102,6 +109,15 @@ namespace engine
 
         references::ReferencesOutput _referencesOutput;
 
+        // created on the first frame if async output is on and fits in
+        // memory; null otherwise. Declared last so it is destroyed first: its
+        // destructor waits for queued frames, which still use the writers
+        // above.
+        std::unique_ptr<utilities::SerialWorker> _frameWriter;
+        bool                                     _frameWriterChecked = false;
+
+        static constexpr std::size_t _frameCapacity = 2;
+
        public:
         explicit EngineOutput(
             const OutputFileSettings &outputFileSettings,
@@ -128,6 +144,17 @@ namespace engine
         void writeForceFile(const out::Frame &, size_t);
         void writeChargeFile(const out::Frame &, size_t);
         void writeRstFile(const out::Frame &, size_t);
+        void writeFrame(
+            const molsys::SimulationBox &,
+            const thermostat::Thermostat &,
+            size_t
+        );
+        void waitForFrames();
+
+        [[nodiscard]] static bool asyncOutputFits(
+            std::size_t                nAtoms,
+            std::optional<std::size_t> availableMemory
+        );
         void writeOptRstFile(molsys::SimulationBox &, size_t);
 
         void writeMomentumFile(size_t step, const physicalData::PhysicalData &);
@@ -199,6 +226,10 @@ namespace engine
         out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
 
         [[nodiscard]] out::TimingsOutput &getTimingsOutput();
+
+       private:
+        void _startFrameWriter(std::size_t nAtoms);
+        void _writeFrame(const out::Frame &, size_t step, bool metadata);
     };
 
 }   // namespace engine

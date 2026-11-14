@@ -62,9 +62,15 @@ namespace input::intraNonBondedReader
         if (!isNeeded())
             return;
 
-        auto &log = engine.getLogOutput();
+        auto       &log          = engine.getLogOutput();
+        const auto &fileSettings = engine.getSettings().fileSettings;
 
-        const auto filename = FileSettings::getIntraNonBondedFileName();
+        if (!fileSettings.isIntraNonBondedFileNameSetByUser())
+            throw exc::IntraNonBondedException(
+                "Intra non bonded file not provided by the user"
+            );
+
+        const auto filename = fileSettings.getIntraNonBondedFileName();
 
         out::StdoutOutput::writeRead("Intra Non-Bonded File", filename);
         log.writeRead("Intra Non-Bonded File", filename);
@@ -106,11 +112,6 @@ namespace input::intraNonBondedReader
      */
     void IntraNonBondedReader::read()
     {
-        if (!FileSettings::isIntraNonBondedFileNameSet())
-            throw exc::IntraNonBondedException(
-                "Intra non bonded file needed for requested simulation setup"
-            );
-
         std::string line;
 
         while (getline(_fp, line))

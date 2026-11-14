@@ -1,0 +1,11 @@
+# Two-step water RI-MP2 smoke test. Load ORCA before running PQ.
+jobtype = qm-md;
+nstep = 2;
+timestep = 0.1;
+force-field = off;
+qm_prog = orca;
+qm_script = orca_rimp2.py;
+orca_file = orca.template;
+start_file = water.rst;
+file_prefix = water-orca;
+overwrite_output = on;
