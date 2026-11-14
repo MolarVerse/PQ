@@ -45,6 +45,7 @@ class QMSettings;              // forward declaration
 class MaceSettings;            // forward declaration
 class DftbSettings;            // forward declaration
 class ThermostatSettings;      // forward declaration
+class KineticsSettings;        // forward declaration
 
 /**
  * @brief namespace for reading input files

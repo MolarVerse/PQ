@@ -40,11 +40,9 @@ namespace thermostat
         rng::RandomNumberGenerator _randomNumberGenerator;
 
         double _friction = 0.0;
-        double _sigma    = 0.0;
 
        public:
-        explicit LangevinThermostat(const Temperature &, double);
-        LangevinThermostat()           = default;
+        explicit LangevinThermostat(double);
         ~LangevinThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -54,37 +52,27 @@ namespace thermostat
         LangevinThermostat(LangevinThermostat &&) noexcept            = delete;
         LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
-        void calculateSigma(double, const Temperature &);
+        [[nodiscard]]
+        static double calculateSigma(double friction, const Temperature &);
 
-        void applyLangevin(molsys::SimulationBox &);
+        void applyLangevin(molsys::SimulationBox &, const Temperature &);
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature
         ) override;
 
         void applyThermostatHalfStep(
             molsys::SimulationBox &simulationBox,
-            physicalData::PhysicalData & /*physicalData*/
-        ) override;
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        void setTargetTemperature(
+            physicalData::PhysicalData & /*physicalData*/,
             const Temperature &targetTemperature
         ) override;
-
-        void setFriction(double friction);
-        void setSigma(double sigma);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double getFriction() const;
-        [[nodiscard]] double getSigma() const;
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
     };

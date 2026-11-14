@@ -23,7 +23,6 @@
 #ifndef THERMOSTAT__THERMOSTAT_HPP
 #define THERMOSTAT__THERMOSTAT_HPP
 
-#include <cstddef>
 #include <string>
 
 #include "enums/thermostat.hpp"
@@ -54,34 +53,28 @@ namespace thermostat
     {
        private:
         Temperature _temperature;
-        Temperature _targetTemperature;
-
-        TemperatureDiff _temperatureIncrease;
-        size_t          _rampingStepsLeft = 0;
-        size_t          _rampingFrequency = 0;
 
        public:
-        explicit Thermostat(const Temperature &targetTemperature);
-
         Thermostat()          = default;
         virtual ~Thermostat() = default;
 
-        void applyTemperatureRamping();
-
         virtual void applyThermostat(
             molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const Temperature &targetTemperature
         );
 
         virtual void applyThermostatOnForces(
-            molsys::SimulationBox & /*simBox*/
+            molsys::SimulationBox & /*simBox*/,
+            const Temperature & /*targetTemperature*/
         )
         {
         }
 
         virtual void applyThermostatHalfStep(
             molsys::SimulationBox & /*simBox*/,
-            physicalData::PhysicalData & /*physData*/
+            physicalData::PhysicalData & /*physData*/,
+            const Temperature & /*targetTemperature*/
         )
         {
         }
@@ -90,22 +83,13 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        virtual void setTargetTemperature(const Temperature &targetTemperature);
-        void         setTemperature(const Temperature &temperature);
-        void setTemperatureIncrease(const TemperatureDiff &temperatureIncrease);
-        void setTemperatureRampingSteps(size_t steps);
-        void setTemperatureRampingFrequency(size_t frequency);
+        void setTemperature(const Temperature &temperature);
 
         /***************************
          * standard getter methods *
          ***************************/
 
         [[nodiscard]] const Temperature &getTemperature() const;
-
-        [[nodiscard]] const Temperature     &getTargetTemperature() const;
-        [[nodiscard]] const TemperatureDiff &getTemperatureIncrease() const;
-        [[nodiscard]] size_t                 getRampingStepsLeft() const;
-        [[nodiscard]] size_t                 getRampingFrequency() const;
 
         [[nodiscard]]
         virtual ThermostatType getThermostatType() const;

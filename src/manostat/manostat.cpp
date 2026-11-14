@@ -232,12 +232,12 @@ namespace manostat
      *
      * @param simulationBox The simulation box containing the system
      * @param physicalData The physical data of the system
+     * @param targetTemperature The target temperature for the system
      */
     void Manostat::applyManostat(
-        molsys::SimulationBox &simulationBox,
-
-        physicalData::PhysicalData &physicalData
-
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData,
+        const Temperature & /*targetTemperature*/
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");

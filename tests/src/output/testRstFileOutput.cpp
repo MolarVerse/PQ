@@ -96,10 +96,7 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     noseHooverSettings.setChiByUser(chis);
     noseHooverSettings.setZetaByUser(zetas);
     noseHooverSettings.setNoseHooverChainLengthByUser(3);
-    auto thermostat = thermostat::NoseHooverThermostat(
-        noseHooverSettings,
-        toTemperature(300.0)
-    );
+    auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);

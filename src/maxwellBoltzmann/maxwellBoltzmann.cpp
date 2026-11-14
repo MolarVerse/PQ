@@ -30,7 +30,6 @@
 #include "constants/natureConstants.hpp"
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
-#include "thermostatSettings.hpp"
 #include "units.hpp"
 
 #ifdef WITH_MPI
@@ -48,19 +47,21 @@ namespace maxwellBoltzmann
      * @details using a standard deviation of sqrt(kb*T/m) for each component of
      * the velocity vector
      *
-     * @param simulationBox
+     * @param simulationBox The simulation box containing all atoms for which
+     * velocities should be initialized
+     * @param targetTemperature The target temperature for the system
      */
     void MaxwellBoltzmann::initializeVelocities(
-        molsys::SimulationBox &simulationBox
+        molsys::SimulationBox &simulationBox,
+        const Temperature     &targetTemperature
     )
     {
-        auto generateVelocities = [this](auto &atom)
+        auto generateVelocities = [this, &targetTemperature](auto &atom)
         {
             const auto mass              = atom->getMass() * AMU_TO_KG;
             const auto boltzmannConstant = BOLTZMANN_CONSTANT;
-            const auto temp = ThermostatSettings::getActualTargetTemperature()
-                                  .quantity_from_zero()
-                                  .numerical_value_in(K);
+            const auto temp =
+                targetTemperature.quantity_from_zero().numerical_value_in(K);
 
             const auto stddev =
                 ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
@@ -91,19 +92,20 @@ namespace maxwellBoltzmann
         std::ranges::for_each(simulationBox.getAtoms(), generateVelocities);
 #endif
 
-        resetKinetics::ResetKinetics::resetMomentum(
+        kinetics::ResetKinetics::resetMomentum(
             simulationBox,
             simulationBox.calculateMomentum()
         );
-        resetKinetics::ResetKinetics::resetAngularMomentum(
+        kinetics::ResetKinetics::resetAngularMomentum(
             simulationBox,
             simulationBox.calculateAngularMomentum(
                 simulationBox.calculateMomentum()
             )
         );
-        resetKinetics::ResetKinetics::resetTemperature(
+        kinetics::ResetKinetics::resetTemperature(
             simulationBox,
-            simulationBox.calculateTemperature()
+            simulationBox.calculateTemperature(),
+            targetTemperature
         );
     }
 

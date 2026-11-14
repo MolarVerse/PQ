@@ -1,4 +1,5 @@
 set(source_files
+    testKinetics.cpp
     testResetKinetics.cpp
 )
 
@@ -8,11 +9,11 @@ foreach(source_file ${source_files})
     target_include_directories(${test_name}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
-        ${PROJECT_SOURCE_DIR}/tests/include/resetKinetics
+        ${PROJECT_SOURCE_DIR}/tests/include/kinetics
     )
     target_link_libraries(${test_name}
         PRIVATE
-        resetKinetics
+        kinetics
         physicalData
         molsys
         gtest
@@ -23,18 +24,17 @@ foreach(source_file ${source_files})
     target_precompile_headers(${test_name} REUSE_FROM pq_test_pch)
     target_link_libraries(${test_name} PRIVATE pq_test_pch)
 
-    set_property(TEST ${test_name} PROPERTY LABELS resetKinetics)
+    set_property(TEST ${test_name} PROPERTY LABELS kinetics)
 endforeach()
 
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)
     setup_target_for_coverage_gcovr_html(
-        NAME coverage_resetKinetics
+        NAME coverage_kinetics
         EXCLUDE ${EXCLUDE_FOR_GCOVR}
 
-        # DEPENDENCIES ${CMAKE_BUILD_DIR}/src/resetKinetics
         EXECUTABLE "ctest"
-        EXECUTABLE_ARGS "-L;resetKinetics"
+        EXECUTABLE_ARGS "-L;kinetics"
         OUTPUT_PATH "coverage"
     )
 endif()

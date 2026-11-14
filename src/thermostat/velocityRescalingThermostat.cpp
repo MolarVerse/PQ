@@ -40,14 +40,10 @@ namespace thermostat
      * @brief Construct a new Velocity Rescaling Thermostat:: Velocity Rescaling
      * Thermostat object
      *
-     * @param targetTemp
      * @param tau
      */
-    VelocityRescalingThermostat::VelocityRescalingThermostat(
-        const Temperature &targetTemp,
-        const Time        &tau
-    )
-        : Thermostat(targetTemp), _tau(tau)
+    VelocityRescalingThermostat::VelocityRescalingThermostat(const Time &tau)
+        : _tau(tau)
     {
     }
 
@@ -87,10 +83,12 @@ namespace thermostat
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void VelocityRescalingThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature          &targetTemperature
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Velocity Rescaling");
@@ -104,7 +102,7 @@ namespace thermostat
 
         if (utilities::isZero(getTemperature().quantity_from_zero()))
         {
-            if (utilities::isZero(getTargetTemperature().quantity_from_zero()))
+            if (utilities::isZero(targetTemperature.quantity_from_zero()))
                 return;
 
             throw exc::UserInputException(
@@ -116,7 +114,7 @@ namespace thermostat
 
         const auto timeStep  = settings::TimingsSettings::getTimeStep();
         const auto timeRatio = static_cast<double>(timeStep / _tau);
-        const auto tempRatio = getTargetTemperature().quantity_from_zero() /
+        const auto tempRatio = targetTemperature.quantity_from_zero() /
                                getTemperature().quantity_from_zero();
         const auto dof =
             static_cast<double>(simulationBox.getDegreesOfFreedom());

@@ -451,7 +451,10 @@ namespace setup
             return;
 
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-        maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
+        maxwellBoltzmann.initializeVelocities(
+            _engine.getSimulationBox(),
+            _engine.getSettings().kinetics.getStartTemperature()
+        );
     }
 
     /**

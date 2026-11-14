@@ -38,26 +38,21 @@ namespace thermostat
     /**
      * @brief Construct a new Berendsen Thermostat object
      *
-     * @param targetTemp
      * @param tau
      */
-    BerendsenThermostat::BerendsenThermostat(
-        const Temperature &targetTemp,
-        const Time        &tau
-    )
-        : Thermostat(targetTemp), _tau(tau)
-    {
-    }
+    BerendsenThermostat::BerendsenThermostat(const Time &tau) : _tau(tau) {}
 
     /**
      * @brief apply thermostat - [Berendsen](https://doi.org/10.1063/1.448118)
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
      */
     void BerendsenThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature          &targetTemperature
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
@@ -68,7 +63,7 @@ namespace thermostat
 
         if (utilities::isZero(getTemperature().quantity_from_zero()))
         {
-            if (utilities::isZero(getTargetTemperature().quantity_from_zero()))
+            if (utilities::isZero(targetTemperature.quantity_from_zero()))
                 return;
 
             throw exc::UserInputException(
@@ -80,7 +75,7 @@ namespace thermostat
 
         const auto &timeStep  = settings::TimingsSettings::getTimeStep();
         const auto  timeRatio = static_cast<double>(timeStep / _tau);
-        const auto  tempRatio = getTargetTemperature().quantity_from_zero() /
+        const auto  tempRatio = targetTemperature.quantity_from_zero() /
                                getTemperature().quantity_from_zero();
 
         const auto berendsenFactor = ::sqrt(

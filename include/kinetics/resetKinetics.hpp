@@ -40,7 +40,7 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
-namespace resetKinetics
+namespace kinetics
 {
     /**
      * @class ResetKinetics
@@ -60,13 +60,15 @@ namespace resetKinetics
         void reset(
             size_t step,
             physicalData::PhysicalData &,
-            molsys::SimulationBox &
+            molsys::SimulationBox &,
+            const Temperature &targetTemperature
         ) const;
         void resetForces(size_t step, molsys::SimulationBox &) const;
 
         static void resetTemperature(
             molsys::SimulationBox &,
-            const Temperature &temperature
+            const Temperature &temperature,
+            const Temperature &targetTemperature
         );
         static void resetMomentum(
             molsys::SimulationBox &,
@@ -78,6 +80,6 @@ namespace resetKinetics
         );
     };
 
-}   // namespace resetKinetics
+}   // namespace kinetics
 
 #endif   // RESET_KINETICS__RESET_KINETICS_HPP

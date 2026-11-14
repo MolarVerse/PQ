@@ -138,10 +138,7 @@ namespace benchOutputWriters
         restart.setFilename(restart.getFilename(), true);
         energy.setFilename(energy.getFilename(), true);
 
-        thermostat::BerendsenThermostat thermostat(
-            mstd::units::point<K>(300.0),
-            0.1 * fs
-        );
+        thermostat::BerendsenThermostat thermostat(0.1 * fs);
         auto physicalData = physicalData::PhysicalData();
         physicalData.setTemperature(toTemperature(300.0));
         physicalData.setPressure(1.0 * bar);
