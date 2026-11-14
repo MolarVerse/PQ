@@ -56,8 +56,29 @@ namespace
         {
         }
 
-        void execute(const molsys::SimulationBox & /*simBox*/) override {}
-        void writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        void execute(
+            const molsys::SimulationBox & /*simBox*/,
+            const FileSettings & /*fileSettings*/
+        ) override
+        {
+        }
+
+        // the optional hooks are protected -> expose the base defaults
+        void callWritePointChargeFile(molsys::SimulationBox &simulationBox)
+        {
+            _writePointChargeFile(simulationBox, "point_charges");
+        }
+
+        void callReadStressTensor(
+            molsys::Box                &box,
+            physicalData::PhysicalData &physicalData
+        )
+        {
+            _readStressTensor(box, physicalData, "stress_tensor");
+        }
+
+       protected:
+        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
         {
         }
     };
@@ -79,11 +100,9 @@ TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
     DefaultExternalQMRunner    runner{qmSettings, externalQMSettings};
     molsys::SimulationBox      simBox;
     physicalData::PhysicalData physicalData;
-    QM::ExternalQMRunner *volatile baseRunner = &runner;
 
-    EXPECT_NO_THROW(baseRunner->writePointChargeFile(simBox));
-    EXPECT_NO_THROW(baseRunner->readStressTensor(simBox.getBox(), physicalData)
-    );
+    EXPECT_NO_THROW(runner.callWritePointChargeFile(simBox));
+    EXPECT_NO_THROW(runner.callReadStressTensor(simBox.getBox(), physicalData));
 }
 
 TEST(TestQMSetup, resolvesBundledQMScript)

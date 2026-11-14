@@ -45,7 +45,7 @@ namespace QM
      *
      * @param simulationBox
      */
-    void TurbomoleRunner::writeCoordsFile(
+    void TurbomoleRunner::_writeCoordsFile(
         const molsys::SimulationBox &simulationBox
     )
     {
@@ -76,13 +76,18 @@ namespace QM
      * @brief writes the point charge file in turbomole format
      *
      * @param simulationBox
+     * @param pointChargeFileName Path to the file where point charges will be
+     * written.
+     *
+     * @throws exc::QMRunnerException if the point charges file cannot be
+     * opened, written to, or if it contains invalid values.
      */
-    void TurbomoleRunner::writePointChargeFile(
-        const molsys::SimulationBox &simulationBox
+    void TurbomoleRunner::_writePointChargeFile(
+        const molsys::SimulationBox &simulationBox,
+        const std::string           &pointChargeFileName
     )
     {
-        const std::string fileName = FileSettings::getPointChargeFileName();
-        std::ofstream     pcFile(fileName);
+        std::ofstream pcFile(pointChargeFileName);
 
         using enum molsys::HybridZone;
 
@@ -109,7 +114,7 @@ namespace QM
         pcFile.close();
 
         if (!_usePointCharges)
-            std::filesystem::remove(fileName);
+            std::filesystem::remove(pointChargeFileName);
     }
 
     /**
@@ -117,9 +122,18 @@ namespace QM
      *
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
+     * @param fileSettings Object containing file paths and settings required
+     * for the execution of the external QM program.
+     *
+     * @throws exc::QMRunnerException if the external QM program cannot be
+     * executed successfully, or if required input files are missing or
+     * invalid.
      *
      */
-    void TurbomoleRunner::execute(const molsys::SimulationBox &simulationBox)
+    void TurbomoleRunner::execute(
+        const molsys::SimulationBox &simulationBox,
+        const FileSettings          &fileSettings
+    )
     {
         using enum SmoothingMethod;
 
@@ -152,8 +166,8 @@ namespace QM
             charge,
             runTMDefine,
             usePointCharges,
-            utilities::shellQuote(FileSettings::getTMFileName()),
-            utilities::shellQuote(FileSettings::getPointChargeFileName())
+            utilities::shellQuote(fileSettings.getTMFileName()),
+            utilities::shellQuote(fileSettings.getPointChargeFileName())
         );
         _executeCommand(command, "Turbomole");
 
