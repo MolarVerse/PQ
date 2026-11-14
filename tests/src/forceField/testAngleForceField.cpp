@@ -40,6 +40,7 @@
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 namespace pot
 {
@@ -79,9 +80,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition({0.0, 0.0, 0.0});
-    atom2->setPosition({1.0, 1.0, 1.0});
-    atom3->setPosition({1.0, 2.0, 3.0});
+    atom1->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    atom2->setPosition(linalg::Vec3D{1.0, 1.0, 1.0} * angstrom);
+    atom3->setPosition(linalg::Vec3D{1.0, 2.0, 3.0} * angstrom);
 
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
@@ -272,9 +273,9 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     // Strictly collinear: atom2 is the central atom, atom1 and atom3 are
     // 180 degrees apart along the x axis. alpha = pi -> sin(alpha) = 0.
-    atom1->setPosition({1.0, 0.0, 0.0});
-    atom2->setPosition({0.0, 0.0, 0.0});
-    atom3->setPosition({-1.0, 0.0, 0.0});
+    atom1->setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
+    atom2->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    atom3->setPosition(linalg::Vec3D{-1.0, 0.0, 0.0} * angstrom);
 
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});

@@ -29,6 +29,7 @@
 #include "fileSettings.hpp"
 #include "mShakeReference.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input::mShake
 {
@@ -217,9 +218,9 @@ namespace input::mShake
             }
 
             const auto &atomName = lineElements[0];
-            const auto  x        = std::stod(lineElements[1]);
-            const auto  y        = std::stod(lineElements[2]);
-            const auto  z        = std::stod(lineElements[3]);
+            const auto  x        = std::stod(lineElements[1]) * angstrom;
+            const auto  y        = std::stod(lineElements[2]) * angstrom;
+            const auto  z        = std::stod(lineElements[3]) * angstrom;
 
             molsys::Atom atom{};
 

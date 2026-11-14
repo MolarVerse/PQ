@@ -30,6 +30,8 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "interrupt.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace opt
 {
@@ -46,7 +48,7 @@ namespace opt
         void displaceCoordinate(
             molsys::SimulationBox &simulationBox,
             size_t                 coordinateIndex,
-            double                 displacement
+            const Pos             &displacement
         )
         {
             const auto atomIndex = coordinateIndex / 3;
@@ -92,7 +94,7 @@ namespace opt
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox,
             size_t                 coordinateIndex,
-            double                 displacement
+            const Pos             &displacement
         )
         {
             utilities::throwIfInterrupted();
@@ -113,7 +115,7 @@ namespace opt
      * @param displacement
      */
     ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder(
-        double displacement
+        const Pos &displacement
     )
         : _displacement(displacement)
     {
@@ -126,8 +128,8 @@ namespace opt
      * @param positions
      */
     void ForceDifferenceHessianBuilder::_restorePositions(
-        molsys::SimulationBox            &simulationBox,
-        const std::vector<linalg::Vec3D> &positions
+        molsys::SimulationBox    &simulationBox,
+        const std::vector<Pos3D> &positions
     )
     {
         for (size_t atomIndex = 0; atomIndex < positions.size(); ++atomIndex)
@@ -183,7 +185,8 @@ namespace opt
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
                 hessian[row][col] =
-                    -(fPlus[row] - fMinus[row]) / (2.0 * displacement);
+                    -(fPlus[row] - fMinus[row]) /
+                    (2.0 * displacement.numerical_value_in(angstrom));
 
             _restorePositions(simulationBox, originalPositions);
         }
@@ -224,7 +227,8 @@ namespace opt
                 evaluateForces(evaluator, simulationBox, col, displacement);
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
-                hessian[row][col] = -(fPlus[row] - forces0[row]) / displacement;
+                hessian[row][col] = -(fPlus[row] - forces0[row]) /
+                                    displacement.numerical_value_in(angstrom);
 
             _restorePositions(simulationBox, originalPositions);
         }
@@ -278,9 +282,10 @@ namespace opt
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
             {
-                const auto derivative = (-fPlus2[row] + 8.0 * fPlus[row] -
-                                         8.0 * fMinus[row] + fMinus2[row]) /
-                                        (12.0 * displacement);
+                const auto derivative =
+                    (-fPlus2[row] + 8.0 * fPlus[row] - 8.0 * fMinus[row] +
+                     fMinus2[row]) /
+                    (12.0 * displacement.numerical_value_in(angstrom));
 
                 hessian[row][col] = -derivative;
             }
@@ -324,7 +329,7 @@ namespace opt
      */
     std::shared_ptr<HessianBuilder> makeHessianBuilder(
         HessianBuilderType builder,
-        double             displacement
+        const Pos         &displacement
     )
     {
         switch (builder)
@@ -352,9 +357,9 @@ namespace opt
     /**
      * @brief Get the displacement used in the ForceDifferenceHessianBuilder
      *
-     * @return double The displacement value
+     * @return Pos
      */
-    double ForceDifferenceHessianBuilder::_getDisplacement() const
+    Pos ForceDifferenceHessianBuilder::_getDisplacement() const
     {
         return _displacement;
     }

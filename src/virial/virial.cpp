@@ -26,6 +26,7 @@
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
 #include "timerId.hpp"
+#include "units.hpp"
 
 namespace virial
 {
@@ -55,7 +56,7 @@ namespace virial
         {
             const auto forcexyz      = atom->getForce();
             const auto shiftForcexyz = atom->getShiftForce();
-            const auto xyz           = atom->getPosition();
+            const auto xyz = atom->getPosition().numerical_value_in(angstrom);
 
             const auto tensor = tensorProduct(xyz, forcexyz);
 
@@ -93,7 +94,7 @@ namespace virial
         for (const auto &atom : simulationBox.getQMAtoms())
         {
             const auto forcexyz = atom->getForce();
-            const auto xyz      = atom->getPosition();
+            const auto xyz = atom->getPosition().numerical_value_in(angstrom);
 
             virial += tensorProduct(xyz, forcexyz);
         }
@@ -131,7 +132,8 @@ namespace virial
             for (const auto &atom : molecule.getAtoms())
             {
                 const auto forcexyz = atom->getForce();
-                const auto xyz      = atom->getPosition();
+                const auto xyz =
+                    atom->getPosition().numerical_value_in(angstrom);
 
                 auto dxyz = xyz - centerOfMass;
 

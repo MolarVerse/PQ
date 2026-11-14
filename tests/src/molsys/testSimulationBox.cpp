@@ -37,6 +37,8 @@
 #include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
+#include "vector3d.hpp"
 #include "vectorNear.hpp"
 
 /**
@@ -610,14 +612,22 @@ TEST_F(TestSimulationBox, removeNetForce)
  */
 TEST_F(TestSimulationBox, updateOldPositions)
 {
-    _simulationBox->getAtoms()[0]->setPositionOld({9.0, 9.0, 9.0});
-    _simulationBox->getAtoms()[1]->setPositionOld({9.0, 9.0, 9.0});
+    _simulationBox->getAtoms()[0]->setPositionOld(
+        linalg::Vec3D{9.0, 9.0, 9.0} * angstrom
+    );
+    _simulationBox->getAtoms()[1]->setPositionOld(
+        linalg::Vec3D{9.0, 9.0, 9.0} * angstrom
+    );
 
     _simulationBox->updateOldPositions();
 
     for (const auto &atom : _simulationBox->getAtoms())
     {
-        EXPECT_VECTOR_NEAR(atom->getPositionOld(), atom->getPosition(), 1e-10);
+        EXPECT_VECTOR_NEAR(
+            atom->getPositionOld().numerical_value_in(angstrom),
+            atom->getPosition().numerical_value_in(angstrom),
+            1e-10
+        );
     }
 }
 

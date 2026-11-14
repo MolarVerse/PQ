@@ -24,6 +24,7 @@
 #define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_HPP
 
 #include <cmath>
+#include <concepts>
 #include <functional>
 #include <mstd/math.hpp>
 #include <mstd/type_traits/quantity_traits.hpp>
@@ -48,6 +49,17 @@ namespace linalg
     template <typename U>
     requires std::equality_comparable<U>
     bool operator!=(const Vector3D<U> &lhs, const Vector3D<U> &rhs);
+
+    // Vector3D<quantity> == quantity<Vector3D<double>>, e.g. a Pos3D compared
+    // with `Vec3D{...} * angstrom` (the reversed order is rewritten by C++20)
+    template <typename U, typename Q>
+    requires(
+        mstd::is_quantity_like_v<U> && mstd::is_quantity_like_v<Q> &&
+        std::same_as<typename Q::rep, Vector3D<double>> &&
+        std::constructible_from<Vector3D<U>, const Q &> &&
+        std::equality_comparable<U>
+    )
+    bool operator==(const Vector3D<U> &lhs, const Q &rhs);
 
     // operator<
     template <typename U, typename V>

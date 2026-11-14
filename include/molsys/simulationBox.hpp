@@ -160,9 +160,9 @@ namespace molsys
         void clearAtomIndexLookup();
 
 #ifdef WITH_MPI
-        [[nodiscard]] std::vector<double> flattenVelocities();
-        [[nodiscard]] std::vector<double> flattenForces();
-        [[nodiscard]] std::vector<double> flattenPartialCharges();
+        [[nodiscard]] std::vector<double> flattenVelocities() const;
+        [[nodiscard]] std::vector<double> flattenForces() const;
+        [[nodiscard]] std::vector<double> flattenPartialCharges() const;
 
         void deFlattenPositions(const std::vector<double>& positions);
         void deFlattenVelocities(const std::vector<double>& velocities);
@@ -228,13 +228,14 @@ namespace molsys
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
-        [[nodiscard]] std::vector<linalg::Vec3D> getPositions() const;
+        [[nodiscard]] std::vector<Pos3D>         getPositions() const;
         [[nodiscard]] std::vector<linalg::Vec3D> getVelocities() const;
         [[nodiscard]] std::vector<linalg::Vec3D> getForces() const;
         [[nodiscard]] std::vector<AtomNumber>    getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>        flattenPositions() const;
+        [[nodiscard]] std::vector<Pos>           flattenPositions() const;
         [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
-        [[nodiscard]] std::vector<double> getFlattenedQMPositions() const;
+        [[nodiscard]]
+        std::vector<double> getFlattenedQMPositionsInAngstrom() const;
 
         [[nodiscard]] bool wasBoxSetViaStartFile() const;
 

@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestBondConstraint
@@ -53,8 +54,8 @@ class TestBondConstraint : public ::testing::Test
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
         atom1->setMass(1.0);
         atom2->setMass(2.0);

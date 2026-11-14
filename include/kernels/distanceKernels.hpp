@@ -23,6 +23,7 @@
 #ifndef KERNELS__DISTANCE_KERNELS_HPP
 #define KERNELS__DISTANCE_KERNELS_HPP
 
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -32,24 +33,21 @@ namespace molsys
 
 namespace kernel
 {
-    [[nodiscard]] double distSquared(
+    [[nodiscard]]
+    double distSquared(
         const linalg::Vec3D &,
         const linalg::Vec3D &,
         const molsys::SimulationBox &
     );
 
-    [[nodiscard]] linalg::Vec3D distVec(
-        const linalg::Vec3D &,
-        const linalg::Vec3D &
-    );
+    [[nodiscard]]
+    Pos3D distVec(const Pos3D &, const Pos3D &);
 
-    [[nodiscard]] linalg::Vec3D distVec(
-        const linalg::Vec3D &,
-        const linalg::Vec3D &,
-        const molsys::SimulationBox &
-    );
+    [[nodiscard]]
+    Pos3D distVec(const Pos3D &, const Pos3D &, const molsys::SimulationBox &);
 
-    [[nodiscard]] std::pair<linalg::Vec3D, double> distVecAndDist2(
+    [[nodiscard]]
+    std::pair<linalg::Vec3D, double> distVecAndDist2(
         const linalg::Vec3D &,
         const linalg::Vec3D &
     );

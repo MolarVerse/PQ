@@ -23,6 +23,7 @@
 #include "distanceKernels.hpp"
 
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @brief calculate the squared distance between two particles
@@ -52,12 +53,9 @@ double kernel::distSquared(
  * @param pos_i
  * @param pos_j
  *
- * @return linalg::Vec3D The distance vector between the two particles.
+ * @return Pos3D The distance vector between the two particles.
  */
-linalg::Vec3D kernel::distVec(
-    const linalg::Vec3D &pos_i,
-    const linalg::Vec3D &pos_j
-)
+Pos3D kernel::distVec(const Pos3D &pos_i, const Pos3D &pos_j)
 {
     return pos_i - pos_j;
 }
@@ -69,19 +67,19 @@ linalg::Vec3D kernel::distVec(
  * @param pos_j
  * @param simulationBox
  *
- * @return linalg::Vec3D The distance vector between the two particles.
+ * @return Pos3D The distance vector between the two particles.
  */
-linalg::Vec3D kernel::distVec(
-    const linalg::Vec3D         &pos_i,
-    const linalg::Vec3D         &pos_j,
+Pos3D kernel::distVec(
+    const Pos3D                 &pos_i,
+    const Pos3D                 &pos_j,
     const molsys::SimulationBox &simulationBox
 )
 {
-    auto r_ij = pos_i - pos_j;
+    auto r_ij = (pos_i - pos_j).numerical_value_in(angstrom);
 
     simulationBox.applyPBC(r_ij);
 
-    return r_ij;
+    return r_ij * angstrom;
 }
 
 /**

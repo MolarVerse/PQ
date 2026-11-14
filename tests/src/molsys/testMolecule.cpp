@@ -26,6 +26,7 @@
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestMolecule, calculateCenterOfMass)
 {
@@ -40,9 +41,12 @@ TEST_F(TestMolecule, calculateCenterOfMass)
 TEST_F(TestMolecule, scaleAtoms)
 {
     const linalg::tensor3D scale = diagonalMatrix(linalg::Vec3D{1.0, 2.0, 3.0});
-    const auto atomPosition1     = _molecule->getAtomPosition(AtomIndex{0});
-    const auto atomPosition2     = _molecule->getAtomPosition(AtomIndex{1});
-    const auto atomPosition3     = _molecule->getAtomPosition(AtomIndex{2});
+    const auto             atomPosition1 =
+        _molecule->getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto atomPosition2 =
+        _molecule->getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
+    const auto atomPosition3 =
+        _molecule->getAtomPosition(AtomIndex{2}).numerical_value_in(angstrom);
 
     molsys::OrthorhombicBox box({10.0, 10.0, 10.0});
 
@@ -54,9 +58,18 @@ TEST_F(TestMolecule, scaleAtoms)
 
     _molecule->scale(scale, box);
 
-    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{0}), atomPosition1 + shift);
-    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{1}), atomPosition2 + shift);
-    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{2}), atomPosition3 + shift);
+    EXPECT_EQ(
+        _molecule->getAtomPosition(AtomIndex{0}),
+        (atomPosition1 + shift) * angstrom
+    );
+    EXPECT_EQ(
+        _molecule->getAtomPosition(AtomIndex{1}),
+        (atomPosition2 + shift) * angstrom
+    );
+    EXPECT_EQ(
+        _molecule->getAtomPosition(AtomIndex{2}),
+        (atomPosition3 + shift) * angstrom
+    );
 }
 
 TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
@@ -65,9 +78,9 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
 
     molsys::OrthorhombicBox box({2.0, 2.0, 2.0});
 
-    _molecule->setAtomPosition(0, {0.9, 0.0, 0.0});
-    _molecule->setAtomPosition(1, {-0.9, 0.0, 0.0});
-    _molecule->setAtomPosition(2, {0.9, 0.1, 0.0});
+    _molecule->setAtomPosition(0, linalg::Vec3D{0.9, 0.0, 0.0} * angstrom);
+    _molecule->setAtomPosition(1, linalg::Vec3D{-0.9, 0.0, 0.0} * angstrom);
+    _molecule->setAtomPosition(2, linalg::Vec3D{0.9, 0.1, 0.0} * angstrom);
     _molecule->calculateCenterOfMass(box);
 
     const auto centerOfMassBeforeScaling = _molecule->getCenterOfMass();
@@ -83,9 +96,18 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
     box.applyPBC(expectedPosition1);
     box.applyPBC(expectedPosition2);
 
-    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{0}), expectedPosition0);
-    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{1}), expectedPosition1);
-    EXPECT_EQ(_molecule->getAtomPosition(AtomIndex{2}), expectedPosition2);
+    EXPECT_EQ(
+        _molecule->getAtomPosition(AtomIndex{0}),
+        expectedPosition0 * angstrom
+    );
+    EXPECT_EQ(
+        _molecule->getAtomPosition(AtomIndex{1}),
+        expectedPosition1 * angstrom
+    );
+    EXPECT_EQ(
+        _molecule->getAtomPosition(AtomIndex{2}),
+        expectedPosition2 * angstrom
+    );
 }
 
 TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
@@ -257,9 +279,12 @@ TEST_F(TestMolecule, scaleAtomsWithNonDiagonalSimSpaceTensor)
         {0.0, 1.2, 0.2},
         {0.0, 0.0, 0.9}
     );
-    const auto atomPosition1 = _molecule->getAtomPosition(AtomIndex{0});
-    const auto atomPosition2 = _molecule->getAtomPosition(AtomIndex{1});
-    const auto atomPosition3 = _molecule->getAtomPosition(AtomIndex{2});
+    const auto atomPosition1 =
+        _molecule->getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto atomPosition2 =
+        _molecule->getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
+    const auto atomPosition3 =
+        _molecule->getAtomPosition(AtomIndex{2}).numerical_value_in(angstrom);
 
     molsys::OrthorhombicBox box({100.0, 100.0, 100.0});
 
@@ -272,21 +297,24 @@ TEST_F(TestMolecule, scaleAtomsWithNonDiagonalSimSpaceTensor)
 
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomPosition(AtomIndex{0}),
+            _molecule->getAtomPosition(AtomIndex{0})
+                .numerical_value_in(angstrom),
             atomPosition1 + shift,
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomPosition(AtomIndex{1}),
+            _molecule->getAtomPosition(AtomIndex{1})
+                .numerical_value_in(angstrom),
             atomPosition2 + shift,
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomPosition(AtomIndex{2}),
+            _molecule->getAtomPosition(AtomIndex{2})
+                .numerical_value_in(angstrom),
             atomPosition3 + shift,
             1e-12
         )

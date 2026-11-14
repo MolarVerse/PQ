@@ -29,6 +29,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "units.hpp"
 
 class TestMolecule : public ::testing::Test
 {
@@ -47,9 +48,9 @@ class TestMolecule : public ::testing::Test
         _atom2->setExternalAtomType(ExtAtomType{2});
         _atom3->setExternalAtomType(ExtAtomType{2});
 
-        _atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+        _atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
+        _atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
 
         _atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
         _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0));

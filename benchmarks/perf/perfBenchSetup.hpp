@@ -41,6 +41,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -100,10 +101,9 @@ namespace benchSetup
                 (0.4 * deviation) + (0.1 * deviation * deviation),
                 0.25 * deviation
             };
-            atom->setPosition(pos);
-            atom->setPositionOld(
-                pos
-            );   // at-rest start (stable for constraints)
+            atom->setPosition(pos * angstrom);
+            // at-rest start (stable for constraints)
+            atom->setPositionOld(pos * angstrom);
             atom->setVelocity({0.01 * (deviation + 1.0), -0.015, 0.02});
             atom->setForce({0.1, -0.2, 0.05});
             atom->setShiftForce({0.0, 0.0, 0.0});

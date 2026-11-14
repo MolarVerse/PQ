@@ -25,6 +25,7 @@
 #include <algorithm>
 
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -33,7 +34,7 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::flattenVelocities()
+    std::vector<double> SimulationBox::flattenVelocities() const
     {
         std::vector<double> velocities;
 
@@ -56,7 +57,7 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::flattenForces()
+    std::vector<double> SimulationBox::flattenForces() const
     {
         std::vector<double> forces;
 
@@ -80,7 +81,7 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::flattenPartialCharges()
+    std::vector<double> SimulationBox::flattenPartialCharges() const
     {
         std::vector<double> partialCharges;
 
@@ -103,11 +104,11 @@ namespace molsys
 
         auto setPositions = [&positions, &index](auto &atom)
         {
-            linalg::Vec3D position;
+            Pos3D position;
 
-            position[0] = positions[index++];
-            position[1] = positions[index++];
-            position[2] = positions[index++];
+            position[0] = positions[index++] * angstrom;
+            position[1] = positions[index++] * angstrom;
+            position[2] = positions[index++] * angstrom;
 
             atom->setPosition(position);
         };

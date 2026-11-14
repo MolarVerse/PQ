@@ -29,6 +29,7 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace intraNonBonded
 {
@@ -130,7 +131,7 @@ namespace intraNonBonded
         const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
         const auto &pos2 = _molecule->getAtomPosition(atomIdx2);
 
-        auto       dPos = pos1 - pos2;
+        auto       dPos = (pos1 - pos2).numerical_value_in(angstrom);
         const auto txyz = -box * round(dPos / box);
         // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/911
 

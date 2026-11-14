@@ -32,6 +32,7 @@
 #include "orthorhombicBox.hpp"
 #include "rstFileOutput.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestRstFileOutput
@@ -58,8 +59,8 @@ class TestRstFileOutput : public ::testing::Test
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
         atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
         atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
@@ -76,7 +77,7 @@ class TestRstFileOutput : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setName("Ar");

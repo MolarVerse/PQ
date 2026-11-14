@@ -74,7 +74,7 @@ namespace constraints
             simulationBox
         );
 
-        _shakeDistanceRef = dxyz;
+        _shakeDistanceRef = dxyz.numerical_value_in(angstrom);
     }
 
     /**
@@ -92,7 +92,7 @@ namespace constraints
         const auto pos2 =
             get_molecules()[1]->getAtomPosition(get_atomIndices()[1]);
 
-        auto dPosition = pos1 - pos2;
+        auto dPosition = (pos1 - pos2).numerical_value_in(angstrom);
         simulationBox.applyPBC(dPosition);
 
         const auto distanceSquared = normSquared(dPosition);
@@ -157,11 +157,11 @@ namespace constraints
 
             molecule1->addAtomPosition(
                 get_atomIndices()[0],
-                +invMass1 * dPosition
+                +invMass1 * dPosition * angstrom
             );
             molecule2->addAtomPosition(
                 get_atomIndices()[1],
-                -invMass2 * dPosition
+                -invMass2 * dPosition * angstrom
             );
 
             const auto timeStep =

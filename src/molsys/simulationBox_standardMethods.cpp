@@ -25,6 +25,7 @@
 
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -357,11 +358,11 @@ namespace molsys
     /**
      * @brief get all positions of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Pos3D>
      */
-    std::vector<linalg::Vec3D> SimulationBox::getPositions() const
+    std::vector<Pos3D> SimulationBox::getPositions() const
     {
-        std::vector<linalg::Vec3D> positions;
+        std::vector<Pos3D> positions;
         positions.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -422,13 +423,14 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::getFlattenedQMPositions() const
+    std::vector<double> SimulationBox::getFlattenedQMPositionsInAngstrom() const
     {
         std::vector<double> positions;
 
         auto addPositions = [&positions](auto &atom)
         {
-            const auto position = atom->getPosition();
+            const auto position =
+                atom->getPosition().numerical_value_in(angstrom);
 
             positions.push_back(position[0]);
             positions.push_back(position[1]);

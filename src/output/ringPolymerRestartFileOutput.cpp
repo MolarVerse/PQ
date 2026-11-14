@@ -29,6 +29,7 @@
 
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -54,15 +55,24 @@ namespace out
                 {
                     const auto atomName = molecule.getAtomName(j);
                     const auto molType  = molecule.getMoltype();
-                    const auto x        = molecule.getAtomPosition(j)[0];
-                    const auto y        = molecule.getAtomPosition(j)[1];
-                    const auto z        = molecule.getAtomPosition(j)[2];
-                    const auto velX     = molecule.getAtomVelocity(j)[0];
-                    const auto velY     = molecule.getAtomVelocity(j)[1];
-                    const auto velZ     = molecule.getAtomVelocity(j)[2];
-                    const auto forceX   = molecule.getAtomForce(j)[0];
-                    const auto forceY   = molecule.getAtomForce(j)[1];
-                    const auto forceZ   = molecule.getAtomForce(j)[2];
+                    const auto x =
+                        molecule.getAtomPosition(j)[0].numerical_value_in(
+                            angstrom
+                        );
+                    const auto y =
+                        molecule.getAtomPosition(j)[1].numerical_value_in(
+                            angstrom
+                        );
+                    const auto z =
+                        molecule.getAtomPosition(j)[2].numerical_value_in(
+                            angstrom
+                        );
+                    const auto velX   = molecule.getAtomVelocity(j)[0];
+                    const auto velY   = molecule.getAtomVelocity(j)[1];
+                    const auto velZ   = molecule.getAtomVelocity(j)[2];
+                    const auto forceX = molecule.getAtomForce(j)[0];
+                    const auto forceY = molecule.getAtomForce(j)[1];
+                    const auto forceZ = molecule.getAtomForce(j)[2];
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
                     buffer << std::format("{:>5}\t", j.get() + 1);

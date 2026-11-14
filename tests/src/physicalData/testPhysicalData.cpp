@@ -356,7 +356,7 @@ TEST(PhysicalDataKinetics, molecularPressureExcludesInternalMotion)
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setMass(1.0);
-            atom->setPosition({0.0, 0.0, 0.0});
+            atom->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
             atom->setVelocity(sign * linalg::Vec3D{1.0, 2.0, 0.0});
             molecule.addAtom(atom);
             box.addAtom(atom);

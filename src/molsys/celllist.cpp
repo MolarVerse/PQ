@@ -35,6 +35,7 @@
 #include "molecule.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -309,8 +310,9 @@ namespace molsys
 
             for (AtomIndex j{0}; j.get() < nAtomsInMolecule; ++j)
             {
-                auto      *atom     = &molecule->getAtom(j);
-                const auto position = molecule->getAtomPosition(j);
+                auto      *atom = &molecule->getAtom(j);
+                const auto position =
+                    molecule->getAtomPosition(j).numerical_value_in(angstrom);
 
                 const auto atomCellIndices = getCellIndexOfAtom(box, position);
                 const auto cellIndexScalar = getCellIndex(atomCellIndices);

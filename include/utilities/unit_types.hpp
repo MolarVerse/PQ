@@ -67,6 +67,8 @@ using Frequency =
 using Energy = mstd::quantity<mstd::units::kcal_per_mol>;
 
 using Distance = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
+using Pos      = Distance;
+using Pos3D    = linalg::Vector3D<Distance>;
 
 using ForceConstant = mstd::quantity<
     mstd::units::kcal_per_mol / mstd::units::angstrom / mstd::units::angstrom>;

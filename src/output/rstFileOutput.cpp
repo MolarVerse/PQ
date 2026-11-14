@@ -28,6 +28,7 @@
 #include <sstream>
 
 #include "frame.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -80,7 +81,7 @@ namespace out
 
         for (const auto &atom : frame.atoms)
         {
-            const auto &pos   = atom.position;
+            const auto &pos   = atom.position.numerical_value_in(angstrom);
             const auto &vel   = atom.velocity;
             const auto &force = atom.force;
 

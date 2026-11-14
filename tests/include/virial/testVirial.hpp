@@ -34,6 +34,7 @@
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 #include "virial.hpp"
 
 class TestVirial : public ::testing::Test
@@ -54,8 +55,8 @@ class TestVirial : public ::testing::Test
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
         atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
         atom2->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
         atom1->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
@@ -68,7 +69,7 @@ class TestVirial : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
         atom3->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
         molecule2.setCenterOfMass(linalg::Vec3D(0.0, 0.0, 0.0));

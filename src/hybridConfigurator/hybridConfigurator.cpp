@@ -30,6 +30,7 @@
 #include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace configurator
 {
@@ -72,8 +73,10 @@ namespace configurator
             const auto  position = atom.getPosition();
             const auto  deltaPos = position - positionAtom1;
 
-            center +=
-                mass * (position - simulationBox.calcShiftVector(deltaPos));
+            center     += mass * (position.numerical_value_in(angstrom) -
+                              simulationBox.calcShiftVector(
+                                  deltaPos.numerical_value_in(angstrom)
+                              ));
             total_mass += mass;
         }
 
@@ -101,9 +104,10 @@ namespace configurator
     {
         for (auto& atom : simulationBox.getAtoms())
         {
-            auto position = atom->getPosition() - _innerRegionCenter;
+            auto position = atom->getPosition().numerical_value_in(angstrom) -
+                            _innerRegionCenter;
             simulationBox.applyPBC(position);
-            atom->setPosition(position);
+            atom->setPosition(position * angstrom);
         }
 
         simulationBox.calculateCenterOfMassMolecules();
@@ -130,9 +134,10 @@ namespace configurator
     {
         for (auto& atom : simulationBox.getAtoms())
         {
-            auto position = atom->getPosition() + _innerRegionCenter;
+            auto position = atom->getPosition().numerical_value_in(angstrom) +
+                            _innerRegionCenter;
             simulationBox.applyPBC(position);
-            atom->setPosition(position);
+            atom->setPosition(position * angstrom);
         }
 
         simulationBox.calculateCenterOfMassMolecules();

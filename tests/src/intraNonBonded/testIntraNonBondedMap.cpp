@@ -39,6 +39,7 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -59,8 +60,8 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition({0.0, 0.0, 0.0});
-    atom2->setPosition({0.0, 0.0, 11.0});
+    atom1->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    atom2->setPosition(linalg::Vec3D{0.0, 0.0, 11.0} * angstrom);
     atom1->setForce({0.0, 0.0, 0.0});
     atom2->setForce({0.0, 0.0, 0.0});
     atom1->setInternalGlobalVDWType(VdwType{0});

@@ -75,7 +75,7 @@ inline void waterModel::SPCIntraWater::calculate(
         const auto posH1 = hydrogen1.getPosition();
         const auto posH2 = hydrogen2.getPosition();
 
-        auto dOH1 = posO - posH1;
+        auto dOH1 = (posO - posH1).numerical_value_in(mstd::units::angstrom);
 
         simulationBox.applyPBC(dOH1);
 
@@ -94,7 +94,7 @@ inline void waterModel::SPCIntraWater::calculate(
         oxygen.addForce(forceOH1);
         hydrogen1.addForce(-forceOH1);
 
-        auto dOH2 = posO - posH2;
+        auto dOH2 = (posO - posH2).numerical_value_in(mstd::units::angstrom);
 
         simulationBox.applyPBC(dOH2);
 

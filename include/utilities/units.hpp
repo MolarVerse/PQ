@@ -56,6 +56,7 @@ inline constexpr auto per_cm = mstd::units::per_cm;
 inline constexpr auto Hz     = mstd::units::Hz;
 
 inline constexpr auto angstrom = mstd::units::angstrom;
+inline constexpr auto bohr     = mstd::units::bohr;
 
 inline constexpr auto kcal_per_mol = mstd::units::kcal_per_mol;
 

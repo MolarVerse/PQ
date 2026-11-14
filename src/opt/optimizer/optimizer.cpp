@@ -271,9 +271,9 @@ namespace opt
     /**
      * @brief get the last position in the history
      *
-     * @return std::vector<pq::Vec3D>
+     * @return std::vector<Pos3D>
      */
-    std::vector<linalg::Vec3D> Optimizer::getPositions() const
+    std::vector<Pos3D> Optimizer::getPositions() const
     {
         return _positionHistory.back();
     }
@@ -281,10 +281,12 @@ namespace opt
     /**
      * @brief get the position in history with negative index offset
      *
-     * @param offset
+     * @param offset negative index offset to access historical positions
      *
+     * @return std::vector<Pos3D> the positions corresponding to the specified
+     * offset in the history
      */
-    std::vector<linalg::Vec3D> Optimizer::getPositions(int offset) const
+    std::vector<Pos3D> Optimizer::getPositions(int offset) const
     {
         const auto index = getHistoryIndex(offset);
 

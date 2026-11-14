@@ -32,6 +32,7 @@
 #include "ringPolymerEngine.hpp"
 #include "ringPolymerSettings.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input::ringPolymer
 {
@@ -93,9 +94,9 @@ namespace input::ringPolymer
                 }
 
                 atom->setPosition(
-                    {stod(lineElements[3]),
-                     stod(lineElements[4]),
-                     stod(lineElements[5])}
+                    {stod(lineElements[3]) * angstrom,
+                     stod(lineElements[4]) * angstrom,
+                     stod(lineElements[5]) * angstrom}
                 );
 
                 atom->setVelocity(

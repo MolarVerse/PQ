@@ -88,7 +88,7 @@ namespace ff
 
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
-        auto       dPosition = position1 - position2;
+        auto dPosition = (position1 - position2).numerical_value_in(angstrom);
 
         simulationBox.applyPBC(dPosition);
 

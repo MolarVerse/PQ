@@ -28,7 +28,6 @@
 #include <mstd/file.hpp>
 #include <string>
 
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "hybridConfigurator.hpp"
@@ -36,6 +35,7 @@
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace QM
 {
@@ -56,7 +56,7 @@ namespace QM
 
         for (const auto &atom : simulationBox.getQMAtoms())
         {
-            const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
+            const auto pos = atom->getPosition().numerical_value_in(bohr);
 
             coordsFile << std::format(
                 "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
@@ -94,7 +94,8 @@ namespace QM
             {
                 for (const auto &atom : mol.getAtoms())
                 {
-                    const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
+                    const auto pos =
+                        atom->getPosition().numerical_value_in(bohr);
                     pcFile << std::format(
                         "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                         pos[0],

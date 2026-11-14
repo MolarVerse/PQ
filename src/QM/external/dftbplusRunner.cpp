@@ -43,6 +43,7 @@
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace QM
 {
@@ -85,9 +86,9 @@ namespace QM
                 "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 atomIndex,
                 atomId,
-                atom->getPosition()[0],
-                atom->getPosition()[1],
-                atom->getPosition()[2]
+                atom->getPosition()[0].numerical_value_in(angstrom),
+                atom->getPosition()[1].numerical_value_in(angstrom),
+                atom->getPosition()[2].numerical_value_in(angstrom)
             );
             ++atomIndex;
         }
@@ -163,9 +164,9 @@ namespace QM
                 {
                     pcFile << std::format(
                         "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-                        atom->getPosition()[0],
-                        atom->getPosition()[1],
-                        atom->getPosition()[2],
+                        atom->getPosition()[0].numerical_value_in(angstrom),
+                        atom->getPosition()[1].numerical_value_in(angstrom),
+                        atom->getPosition()[2].numerical_value_in(angstrom),
                         atom->getPartialCharge()
                     );
                     _usePointCharges = true;

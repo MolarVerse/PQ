@@ -28,13 +28,14 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "steepestDescent.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace
 {
     std::shared_ptr<molsys::SimulationBox> makeBoxWithTwoAtoms(
-        const linalg::Vec3D &pos0,
-        const linalg::Vec3D &pos1,
+        const Pos3D         &pos0,
+        const Pos3D         &pos1,
         const linalg::Vec3D &force0,
         const linalg::Vec3D &force1,
         const linalg::Vec3D &boxDims
@@ -59,8 +60,8 @@ namespace
     }
 
     std::shared_ptr<molsys::SimulationBox> makeBoxWithTwoAtoms(
-        const linalg::Vec3D &pos0,
-        const linalg::Vec3D &pos1,
+        const Pos3D         &pos0,
+        const Pos3D         &pos1,
         const linalg::Vec3D &force0,
         const linalg::Vec3D &force1
     )
@@ -80,8 +81,8 @@ namespace
 TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
 {
     auto box = makeBoxWithTwoAtoms(
-        {0.0, 0.0, 0.0},
-        {1.0, 2.0, 3.0},
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
         {0.5, 1.0, -1.0},
         {-0.2, 0.3, 0.7}
     );
@@ -93,28 +94,28 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
     opt.update(learningRate, 1U);
 
     EXPECT_DOUBLE_EQ(
-        box->getAtoms()[0]->getPosition()[0],
+        box->getAtoms()[0]->getPosition()[0].numerical_value_in(angstrom),
         0.0 + (learningRate * 0.5)
     );
     EXPECT_DOUBLE_EQ(
-        box->getAtoms()[0]->getPosition()[1],
+        box->getAtoms()[0]->getPosition()[1].numerical_value_in(angstrom),
         0.0 + (learningRate * 1.0)
     );
     EXPECT_DOUBLE_EQ(
-        box->getAtoms()[0]->getPosition()[2],
+        box->getAtoms()[0]->getPosition()[2].numerical_value_in(angstrom),
         0.0 + (learningRate * -1.0)
     );
 
     EXPECT_DOUBLE_EQ(
-        box->getAtoms()[1]->getPosition()[0],
+        box->getAtoms()[1]->getPosition()[0].numerical_value_in(angstrom),
         1.0 + (learningRate * -0.2)
     );
     EXPECT_DOUBLE_EQ(
-        box->getAtoms()[1]->getPosition()[1],
+        box->getAtoms()[1]->getPosition()[1].numerical_value_in(angstrom),
         2.0 + (learningRate * 0.3)
     );
     EXPECT_DOUBLE_EQ(
-        box->getAtoms()[1]->getPosition()[2],
+        box->getAtoms()[1]->getPosition()[2].numerical_value_in(angstrom),
         3.0 + (learningRate * 0.7)
     );
 }
@@ -122,8 +123,8 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
 TEST(TestSteepestDescent, updateStoresOldPosition)
 {
     auto box = makeBoxWithTwoAtoms(
-        {1.0, 2.0, 3.0},
-        {4.0, 5.0, 6.0},
+        linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
+        linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
         {0.1, 0.1, 0.1},
         {0.2, 0.2, 0.2}
     );
@@ -134,11 +135,11 @@ TEST(TestSteepestDescent, updateStoresOldPosition)
 
     EXPECT_EQ(
         box->getAtoms()[0]->getPositionOld(),
-        linalg::Vec3D(1.0, 2.0, 3.0)
+        linalg::Vec3D(1.0, 2.0, 3.0) * angstrom
     );
     EXPECT_EQ(
         box->getAtoms()[1]->getPositionOld(),
-        linalg::Vec3D(4.0, 5.0, 6.0)
+        linalg::Vec3D(4.0, 5.0, 6.0) * angstrom
     );
 }
 
@@ -147,8 +148,8 @@ TEST(TestSteepestDescent, updateAppliesPBCToNewPosition)
     // pos + lr * force = 9.0 + 1.0 * 2.0 = 11.0. With a 10.0 box the
     // minimum-image wrap should pull it back to 1.0.
     auto box = makeBoxWithTwoAtoms(
-        {9.0, 0.0, 0.0},
-        {0.0, 0.0, 0.0},
+        linalg::Vec3D{9.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
         {2.0, 0.0, 0.0},
         {0.0, 0.0, 0.0},
         {10.0, 10.0, 10.0}
@@ -158,14 +159,17 @@ TEST(TestSteepestDescent, updateAppliesPBCToNewPosition)
     opt.setSimulationBox(box);
     opt.update(1.0, 1U);
 
-    EXPECT_DOUBLE_EQ(box->getAtoms()[0]->getPosition()[0], 1.0);
+    EXPECT_DOUBLE_EQ(
+        box->getAtoms()[0]->getPosition()[0].numerical_value_in(angstrom),
+        1.0
+    );
 }
 
 TEST(TestSteepestDescent, updateIsNoOpWithZeroLearningRate)
 {
     auto box = makeBoxWithTwoAtoms(
-        {1.0, 2.0, 3.0},
-        {4.0, 5.0, 6.0},
+        linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
+        linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
         {1.0, 1.0, 1.0},
         {1.0, 1.0, 1.0}
     );
@@ -174,6 +178,12 @@ TEST(TestSteepestDescent, updateIsNoOpWithZeroLearningRate)
     opt.setSimulationBox(box);
     opt.update(0.0, 1U);
 
-    EXPECT_EQ(box->getAtoms()[0]->getPosition(), linalg::Vec3D(1.0, 2.0, 3.0));
-    EXPECT_EQ(box->getAtoms()[1]->getPosition(), linalg::Vec3D(4.0, 5.0, 6.0));
+    EXPECT_EQ(
+        box->getAtoms()[0]->getPosition(),
+        linalg::Vec3D(1.0, 2.0, 3.0) * angstrom
+    );
+    EXPECT_EQ(
+        box->getAtoms()[1]->getPosition(),
+        linalg::Vec3D(4.0, 5.0, 6.0) * angstrom
+    );
 }

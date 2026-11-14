@@ -169,7 +169,7 @@ namespace benchQMRunner
             {
                 auto atom = std::make_shared<molsys::Atom>();
                 atom->setName(names.at(i));
-                atom->setPosition(origin + offset.at(i));
+                atom->setPosition((origin + offset.at(i)) * angstrom);
                 atom->setPartialCharge((i == 0) ? -0.82 : 0.41);
                 molecule.addAtom(atom);
                 simulationBox.addAtom(atom);

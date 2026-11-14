@@ -73,7 +73,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
@@ -132,7 +132,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
@@ -185,7 +185,7 @@ namespace waterModel
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j).numerical_value_in(mstd::units::angstrom);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 

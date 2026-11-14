@@ -54,6 +54,8 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 namespace
@@ -70,7 +72,7 @@ namespace
 
     void addWater(
         molsys::SimulationBox   &simulationBox,
-        const linalg::Vec3D     &origin,
+        const Pos3D             &origin,
         const WaterGeometry     &geometry,
         const molsys::HybridZone zone,
         const bool               active,
@@ -92,7 +94,9 @@ namespace
         hydrogen1->setAtomicNumber(AtomNumber{1});
         hydrogen1->setPartialCharge(0.41);
         hydrogen1->setQMCharge(0.45);
-        hydrogen1->setPosition(origin + linalg::Vec3D{geometry.oh1, 0.0, 0.0});
+        hydrogen1->setPosition(
+            origin + Pos3D{linalg::Vec3D{geometry.oh1, 0.0, 0.0} * angstrom}
+        );
         hydrogen1->setAtomType(AtomType{1});
         hydrogen1->setInternalGlobalVDWType(VdwType{0});
         hydrogen1->setForceToZero();
@@ -102,10 +106,13 @@ namespace
         hydrogen2->setQMCharge(0.45);
         hydrogen2->setPosition(
             origin +
-            linalg::Vec3D{
-                geometry.oh2 * std::cos(geometry.angle),
-                geometry.oh2 * std::sin(geometry.angle),
-                0.0
+            Pos3D{
+                linalg::Vec3D{
+                    geometry.oh2 * std::cos(geometry.angle),
+                    geometry.oh2 * std::sin(geometry.angle),
+                    0.0
+                } *
+                angstrom
             }
         );
         hydrogen2->setAtomType(AtomType{1});
@@ -131,7 +138,7 @@ namespace
 
     void addWater(
         molsys::SimulationBox   &simulationBox,
-        const linalg::Vec3D     &origin,
+        const Pos3D             &origin,
         const WaterGeometry     &geometry,
         const molsys::HybridZone zone
     )
@@ -141,7 +148,7 @@ namespace
 
     void addWater(
         molsys::SimulationBox   &simulationBox,
-        const linalg::Vec3D     &origin,
+        const Pos3D             &origin,
         const WaterGeometry     &geometry,
         const molsys::HybridZone zone,
         bool                     active
@@ -159,7 +166,7 @@ namespace
         simBox.setWaterType(kWaterType);
         addWater(
             simBox,
-            {0.0, 0.0, 0.0},
+            linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING
         );
@@ -370,14 +377,14 @@ namespace
 
         addWater(
             simBox,
-            {-5.8, -5.5, -5.5},
+            linalg::Vec3D{-5.8, -5.5, -5.5} * angstrom,
             geometry,
             molsys::HybridZone::CORE,
             false
         );
         addWater(
             simBox,
-            {-5.2, -3.5, -5.5},
+            linalg::Vec3D{-5.2, -3.5, -5.5} * angstrom,
             geometry,
             molsys::HybridZone::CORE,
             false,
@@ -385,14 +392,14 @@ namespace
         );
         addWater(
             simBox,
-            {-4.2, -5.2, -5.2},
+            linalg::Vec3D{-4.2, -5.2, -5.2} * angstrom,
             geometry,
             molsys::HybridZone::LAYER,
             false
         );
         addWater(
             simBox,
-            {-3.8, -3.2, -5.2},
+            linalg::Vec3D{-3.8, -3.2, -5.2} * angstrom,
             geometry,
             molsys::HybridZone::LAYER,
             false,
@@ -400,19 +407,19 @@ namespace
         );
         addWater(
             simBox,
-            {-1.8, -5.0, -5.0},
+            linalg::Vec3D{-1.8, -5.0, -5.0} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING
         );
         addWater(
             simBox,
-            {-0.2, -4.8, -4.8},
+            linalg::Vec3D{-0.2, -4.8, -4.8} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING
         );
         addWater(
             simBox,
-            {-1.0, -3.0, -5.0},
+            linalg::Vec3D{-1.0, -3.0, -5.0} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING,
             true,
@@ -420,13 +427,13 @@ namespace
         );
         addWater(
             simBox,
-            {1.5, -4.6, -4.6},
+            linalg::Vec3D{1.5, -4.6, -4.6} * angstrom,
             geometry,
             molsys::HybridZone::OUTER
         );
         addWater(
             simBox,
-            {-3.5, -3.5, -3.5},
+            linalg::Vec3D{-3.5, -3.5, -3.5} * angstrom,
             geometry,
             molsys::HybridZone::OUTER,
             true,
@@ -647,13 +654,13 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     simBox.setBox(orthoBox, false);
 
     molsys::Atom atom1;
-    atom1.setPosition({0.0, 0.0, 0.0});
+    atom1.setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
     atom1.setPartialCharge(-0.8);
     atom1.setQMCharge(-0.9);
     atom1.setForceToZero();
 
     molsys::Atom atom2;
-    atom2.setPosition({1.2, 0.1, 0.0});
+    atom2.setPosition(linalg::Vec3D{1.2, 0.1, 0.0} * angstrom);
     atom2.setPartialCharge(0.4);
     atom2.setQMCharge(0.45);
     atom2.setForceToZero();
@@ -881,7 +888,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     mol2.setMoltype(MolType{2});
 
     molsys::Atom atom1;
-    atom1.setPosition({0.0, 0.0, 0.0});
+    atom1.setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
     atom1.setPartialCharge(-0.8);
     atom1.setQMCharge(-0.9);
     atom1.setAtomType(AtomType{0});
@@ -889,7 +896,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     atom1.setForceToZero();
 
     molsys::Atom atom2;
-    atom2.setPosition({1.2, 0.1, 0.0});
+    atom2.setPosition(linalg::Vec3D{1.2, 0.1, 0.0} * angstrom);
     atom2.setPartialCharge(0.4);
     atom2.setAtomType(AtomType{0});
     atom2.setInternalGlobalVDWType(VdwType{0});
@@ -1019,17 +1026,22 @@ TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
     molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
     simBox.setBox(orthoBox, false);
     simBox.setWaterType(kWaterType);
-    addWater(simBox, {-2.0, 0.0, 0.0}, geometry, molsys::HybridZone::OUTER);
     addWater(
         simBox,
-        {0.0, 0.0, 0.0},
+        linalg::Vec3D{-2.0, 0.0, 0.0} * angstrom,
+        geometry,
+        molsys::HybridZone::OUTER
+    );
+    addWater(
+        simBox,
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
         geometry,
         molsys::HybridZone::CORE,
         false
     );
     addWater(
         simBox,
-        {2.0, 0.0, 0.0},
+        linalg::Vec3D{2.0, 0.0, 0.0} * angstrom,
         geometry,
         molsys::HybridZone::OUTER,
         true,

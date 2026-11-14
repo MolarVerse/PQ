@@ -32,6 +32,7 @@
 #include "atom.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace benchOptimizers
@@ -58,9 +59,12 @@ namespace benchOptimizers
 
             auto atom = std::make_shared<molsys::Atom>();
             atom->setPosition(
-                {SPACING * static_cast<double>(column),
-                 SPACING * static_cast<double>(row),
-                 SPACING * static_cast<double>(layer)}
+                linalg::Vec3D{
+                    SPACING * static_cast<double>(column),
+                    SPACING * static_cast<double>(row),
+                    SPACING * static_cast<double>(layer)
+                } *
+                angstrom
             );
             atom->setForce({0.5 + phase, -0.25 * phase, 0.1 - phase});
             box->addAtom(atom);
@@ -69,9 +73,9 @@ namespace benchOptimizers
         return box;
     }
 
-    inline double sumOfPositions(const molsys::SimulationBox &simulationBox)
+    inline Pos sumOfPositions(const molsys::SimulationBox &simulationBox)
     {
-        auto sum = 0.0;
+        Pos sum = 0.0 * angstrom;
         for (const auto &position : simulationBox.getPositions())
             sum += position[0] + position[1] + position[2];
         return sum;

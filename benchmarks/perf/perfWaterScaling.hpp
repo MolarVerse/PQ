@@ -37,6 +37,8 @@
 #include <string_view>
 #include <utility>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -91,7 +93,7 @@ namespace benchWaterScaling
         simBox.addMoleculeType(waterType);
 
         const auto makeAtom = [](const std::string_view name,
-                                 const linalg::Vec3D   &pos,
+                                 const Pos3D           &pos,
                                  const double           charge,
                                  const AtomNumber       atomicNumber)
         {
@@ -120,18 +122,21 @@ namespace benchWaterScaling
 
                     molsys::Molecule molecule;
                     molecule.setMoltype(WATER_TYPE);
-                    molecule.addAtom(
-                        makeAtom("O", oxygen, -0.82, OXYGEN_ATOMIC_NUMBER)
-                    );
+                    molecule.addAtom(makeAtom(
+                        "O",
+                        oxygen * angstrom,
+                        -0.82,
+                        OXYGEN_ATOMIC_NUMBER
+                    ));
                     molecule.addAtom(makeAtom(
                         "H",
-                        oxygen + linalg::Vec3D(0.9572, 0.0, 0.0),
+                        (oxygen + linalg::Vec3D(0.9572, 0.0, 0.0)) * angstrom,
                         0.41,
                         HYDROGEN_ATOMIC_NUMBER
                     ));
                     molecule.addAtom(makeAtom(
                         "H",
-                        oxygen + linalg::Vec3D(-0.24, 0.927, 0.0),
+                        (oxygen + linalg::Vec3D(-0.24, 0.927, 0.0)) * angstrom,
                         0.41,
                         HYDROGEN_ATOMIC_NUMBER
                     ));

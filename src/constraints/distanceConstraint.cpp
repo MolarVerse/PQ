@@ -94,7 +94,7 @@ namespace constraints
         const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);
 
-        auto dPos = pos2 - pos1;
+        auto dPos = (pos2 - pos1).numerical_value_in(angstrom);
         simulationBox.applyPBC(dPos);
 
         const auto distance = norm(dPos);

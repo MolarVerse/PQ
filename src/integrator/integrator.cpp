@@ -61,7 +61,7 @@ namespace integrator
 
     )
     {
-        auto       position = atom->getPosition();
+        auto       position = atom->getPosition().numerical_value_in(angstrom);
         const auto velocity = atom->getVelocity();
 
         position +=
@@ -70,7 +70,7 @@ namespace integrator
 
         simulationBox.applyPBC(position);
 
-        atom->setPosition(position);
+        atom->setPosition(position * angstrom);
     }
 
 }   // namespace integrator

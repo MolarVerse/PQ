@@ -38,6 +38,7 @@
 #include "potentialBruteForce.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -56,8 +57,8 @@ namespace
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
-        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0));
         atom2->setForce(linalg::Vec3D(0.0, 0.5, 0.0));
         atom1->setMass(1.0);
@@ -135,7 +136,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     auto mol = molsys::Molecule();
 
     auto atom = std::make_shared<molsys::Atom>();
-    atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
     atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0));
     atom->setMass(1.0);
     mol.addAtom(atom);

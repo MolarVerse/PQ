@@ -35,6 +35,7 @@
 #include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace resetKinetics
@@ -188,7 +189,8 @@ namespace resetKinetics
 
         auto addInertiaOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
         {
-            auto       relativePosition = atom->getPosition() - centerOfMass;
+            auto relativePosition =
+                atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
             const auto tensor =
                 tensorProduct(relativePosition, relativePosition);
             helperMatrix += tensor * atom->getMass();
@@ -203,7 +205,8 @@ namespace resetKinetics
 
         auto correctVelocities = [&angularVelocity, &centerOfMass](auto &atom)
         {
-            auto relativePosition = atom->getPosition() - centerOfMass;
+            auto relativePosition =
+                atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
             atom->addVelocity(-cross(angularVelocity, relativePosition));
         };
 

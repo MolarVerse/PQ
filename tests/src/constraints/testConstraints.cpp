@@ -70,7 +70,7 @@ TEST_F(TestConstraints, applyShakeConverged)
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
-        mol.getAtomPosition(AtomIndex{0}),
+        mol.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(1.23167, 1e-5),
@@ -78,7 +78,7 @@ TEST_F(TestConstraints, applyShakeConverged)
         )
     );
     EXPECT_THAT(
-        mol.getAtomPosition(AtomIndex{1}),
+        mol.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(1.76833, 1e-5),

@@ -33,6 +33,7 @@
 #include "potentialSettings.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -604,7 +605,10 @@ namespace molsys
         _centerOfMass = linalg::Vec3D{0.0};
 
         auto accumulateMassWeightedPos = [this](const auto& atom)
-        { _centerOfMass += atom->getMass() * atom->getPosition(); };
+        {
+            _centerOfMass += atom->getMass() *
+                             atom->getPosition().numerical_value_in(angstrom);
+        };
 
         std::ranges::for_each(_atoms, accumulateMassWeightedPos);
 
@@ -658,7 +662,10 @@ namespace molsys
         {
             const auto mass = atom->getMass();
             angularMom +=
-                mass * cross(atom->getPosition(), atom->getVelocity());
+                mass * cross(
+                           atom->getPosition().numerical_value_in(angstrom),
+                           atom->getVelocity()
+                       );
         };
 
         std::ranges::for_each(_atoms, accumulateAngularMomentum);
@@ -850,11 +857,12 @@ namespace molsys
                     .getUniformRealDistribution(-displacement, displacement)
             };
 
-            auto position = atom->getPosition() + random;
+            auto position =
+                atom->getPosition().numerical_value_in(angstrom) + random;
 
             applyPBC(position);
 
-            atom->setPosition(position);
+            atom->setPosition(position * angstrom);
         };
 
         std::ranges::for_each(_atoms, displacePositions);

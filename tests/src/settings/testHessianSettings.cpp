@@ -23,17 +23,18 @@
 #include <gtest/gtest.h>
 
 #include "hessianSettings.hpp"
+#include "units.hpp"
 
 TEST(TestHessianSettings, setFilesAndDisplacement)
 {
     HessianSettings hessianSettings;
     hessianSettings.setHessianFileByUser("water.hessian");
     hessianSettings.setHessianInfoFileByUser("water.hessian.info");
-    hessianSettings.setDisplacementByUser(0.002);
+    hessianSettings.setDisplacementByUser(0.002 * angstrom);
 
     EXPECT_EQ(hessianSettings.getHessianFile(), "water.hessian");
     EXPECT_EQ(hessianSettings.getHessianInfoFile(), "water.hessian.info");
-    EXPECT_EQ(hessianSettings.getDisplacement(), 0.002);
+    EXPECT_EQ(hessianSettings.getDisplacement(), 0.002 * angstrom);
 }
 
 TEST(TestHessianSettings, setOptimizeBeforeHessian)

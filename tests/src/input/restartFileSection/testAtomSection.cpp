@@ -41,6 +41,7 @@
 #include "restartFileSection.hpp"
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests the keyword function
@@ -238,7 +239,7 @@ TEST_F(TestAtomSection, testProcessAtomLine)
     _processAtomLine(line, _engine->getSimulationBox(), molecule);
 
     ASSERT_THAT(
-        molecule.getAtomPosition(AtomIndex{0}),
+        molecule.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
@@ -271,7 +272,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
 
     ASSERT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 1);
     ASSERT_THAT(
-        first_atom->getPosition(),
+        first_atom->getPosition().numerical_value_in(angstrom),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(

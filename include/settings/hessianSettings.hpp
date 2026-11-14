@@ -27,6 +27,7 @@
 
 #include "enums/hessian.hpp"
 #include "setting.hpp"
+#include "unit_types.hpp"
 
 /**
  * @brief Class representing the settings for Hessian calculations.
@@ -40,22 +41,22 @@ class HessianSettings
    private:
     Setting<std::string>        _hessianFile;
     Setting<std::string>        _hessianInfoFile;
-    Setting<double>             _displacement;
+    Setting<Pos>                _displacement;
     Setting<bool>               _optimizeBeforeHessian;
     Setting<HessianBuilderType> _builder;
 
    public:
     HessianSettings();
 
-    void setHessianFileByUser(const std::string &filename);
-    void setHessianInfoFileByUser(const std::string &filename);
-    void setDisplacementByUser(double displacement);
+    void setHessianFileByUser(const std::string& filename);
+    void setHessianInfoFileByUser(const std::string& filename);
+    void setDisplacementByUser(const Pos& displacement);
     void setOptimizeBeforeHessianByUser(bool optimize);
     void setBuilderByUser(HessianBuilderType builder);
 
     [[nodiscard]] std::string        getHessianFile() const;
     [[nodiscard]] std::string        getHessianInfoFile() const;
-    [[nodiscard]] double             getDisplacement() const;
+    [[nodiscard]] const Pos&         getDisplacement() const;
     [[nodiscard]] bool               optimizeBeforeHessian() const;
     [[nodiscard]] HessianBuilderType getBuilder() const;
 };

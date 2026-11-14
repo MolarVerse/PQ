@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestDistanceConstraint
@@ -60,8 +61,8 @@ class TestDistanceConstraint : public ::testing::Test
         _atom1 = std::make_shared<molsys::Atom>();
         _atom2 = std::make_shared<molsys::Atom>();
 
-        _atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        _atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        _atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        _atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
         _atom1->setForceToZero();
         _atom2->setForceToZero();

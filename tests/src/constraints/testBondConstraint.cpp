@@ -78,11 +78,11 @@ TEST_F(TestBondConstraint, applyShake)
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
-        mol.getAtomPosition(AtomIndex{0}),
+        mol.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
         linalg::Vec3D(1.0, 1.0, 1.0) + dPos
     );
     EXPECT_EQ(
-        mol.getAtomPosition(AtomIndex{1}),
+        mol.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom),
         linalg::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
     );
 

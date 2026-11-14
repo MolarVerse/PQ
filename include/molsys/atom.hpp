@@ -28,6 +28,7 @@
 #include <string_view>
 
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -59,8 +60,8 @@ namespace molsys
         double                _partialCharge;
         std::optional<double> _qmCharge;
 
-        linalg::Vec3D _position;
-        linalg::Vec3D _positionOld;
+        Pos3D _position;
+        Pos3D _positionOld;
 
         linalg::Vec3D _velocity;
         linalg::Vec3D _velocityOld;
@@ -93,7 +94,7 @@ namespace molsys
          * standard adder methods *
          **************************/
 
-        void addPosition(const linalg::Vec3D &position);
+        void addPosition(const Pos3D &position);
         void addVelocity(const linalg::Vec3D &velocity);
         void addForce(const linalg::Vec3D &force) { _force += force; }
         void addForce(double, double, double);
@@ -131,11 +132,8 @@ namespace molsys
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
-        [[nodiscard]] const linalg::Vec3D &getPosition() const
-        {
-            return _position;
-        }
-        [[nodiscard]] linalg::Vec3D getPositionOld() const;
+        [[nodiscard]] const Pos3D  &getPosition() const { return _position; }
+        [[nodiscard]] const Pos3D  &getPositionOld() const;
         [[nodiscard]] linalg::Vec3D getVelocity() const;
         [[nodiscard]] linalg::Vec3D getForce() const;
         [[nodiscard]] linalg::Vec3D getForceOld() const;
@@ -162,14 +160,14 @@ namespace molsys
         void setExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
         void setInternalGlobalVDWType(VdwType internalGlobalVDWType);
 
-        void setPosition(const linalg::Vec3D &position);
+        void setPosition(const Pos3D &position);
         void setVelocity(const linalg::Vec3D &velocity);
         void setForce(const linalg::Vec3D &force);
         void setForceInner(const linalg::Vec3D &force);
         void setForceOuter(const linalg::Vec3D &force);
         void setShiftForce(const linalg::Vec3D &shiftForce);
 
-        void setPositionOld(const linalg::Vec3D &positionOld);
+        void setPositionOld(const Pos3D &positionOld);
         void setVelocityOld(const linalg::Vec3D &velocityOld);
         void setForceOld(const linalg::Vec3D &forceOld);
 

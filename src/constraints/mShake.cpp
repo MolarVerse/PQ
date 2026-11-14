@@ -134,8 +134,10 @@ namespace constraints
                 for (size_t j = i + 1; j < nAtoms; ++j)
                 {
                     const auto mass_j = atoms[j].getMass();
-                    const auto pos_i  = atoms[i].getPosition();
-                    const auto pos_j  = atoms[j].getPosition();
+                    const auto pos_i =
+                        atoms[i].getPosition().numerical_value_in(angstrom);
+                    const auto pos_j =
+                        atoms[j].getPosition().numerical_value_in(angstrom);
 
                     const auto [dxyz_ij, r2_ij] =
                         kernel::distVecAndDist2(pos_i, pos_j);
@@ -150,7 +152,9 @@ namespace constraints
                             const auto pos_k = atoms[k].getPosition();
                             const auto pos_l = atoms[l].getPosition();
 
-                            const auto dxyz_kl = kernel::distVec(pos_k, pos_l);
+                            const auto dxyz_kl =
+                                kernel::distVec(pos_k, pos_l)
+                                    .numerical_value_in(angstrom);
 
                             const auto mShakeElement = calcMatrixElement(
                                 {i, j, k, l},
@@ -225,7 +229,7 @@ namespace constraints
             std::vector<double>        shakeVector(nBonds);
             linalg::Matrix<double>     mShakeMatrix(nBonds, nBonds);
 
-            std::vector<linalg::Vec3D> posUnconstrained;
+            std::vector<Pos3D> posUnconstrained;
 
             /******************************************************
              * initialize the unconstrained positions of all atoms *
@@ -249,8 +253,10 @@ namespace constraints
                      * determine bond vector of integrated positions *
                      *************************************************/
 
-                    const auto pos_i = atoms[i]->getPosition();
-                    const auto pos_j = atoms[j]->getPosition();
+                    const auto pos_i =
+                        atoms[i]->getPosition().numerical_value_in(angstrom);
+                    const auto pos_j =
+                        atoms[j]->getPosition().numerical_value_in(angstrom);
 
                     const auto [dxyz, rSquared] =
                         kernel::distVecAndDist2(pos_i, pos_j, simulationBox);
@@ -278,7 +284,8 @@ namespace constraints
                     const auto posOld_j = atoms[j]->getPositionOld();
 
                     const auto dxyz_prev =
-                        kernel::distVec(posOld_i, posOld_j, simulationBox);
+                        kernel::distVec(posOld_i, posOld_j, simulationBox)
+                            .numerical_value_in(angstrom);
 
                     bondsPrevious[index_ij] = dxyz_prev;
 
@@ -359,8 +366,10 @@ namespace constraints
                         auto posAdjustment  = solution * bondPrev;
                         posAdjustment      *= shakeFactor;
 
-                        posUnconstrained[i] -= posAdjustment / mass_i;
-                        posUnconstrained[j] += posAdjustment / mass_j;
+                        posUnconstrained[i] -=
+                            posAdjustment / mass_i * angstrom;
+                        posUnconstrained[j] +=
+                            posAdjustment / mass_j * angstrom;
 
                         atoms[i]->addVelocity(
                             -posAdjustment / (mass_i * timeStep)
@@ -384,8 +393,8 @@ namespace constraints
                          *************************************************/
 
                         const auto [dxyz, rSquared] = kernel::distVecAndDist2(
-                            posUnconstrained[i],
-                            posUnconstrained[j],
+                            posUnconstrained[i].numerical_value_in(angstrom),
+                            posUnconstrained[j].numerical_value_in(angstrom),
                             simulationBox
                         );
 
@@ -471,10 +480,11 @@ namespace constraints
                 for (size_t j = i + 1; j < nAtoms; ++j)
                 {
                     const auto dxyz = kernel::distVec(
-                        atoms[i]->getPosition(),
-                        atoms[j]->getPosition(),
-                        simulationBox
-                    );
+                                          atoms[i]->getPosition(),
+                                          atoms[j]->getPosition(),
+                                          simulationBox
+                    )
+                                          .numerical_value_in(angstrom);
 
                     const auto v_i     = atoms[i]->getVelocity();
                     const auto v_j     = atoms[j]->getVelocity();

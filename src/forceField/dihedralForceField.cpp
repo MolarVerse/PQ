@@ -93,9 +93,9 @@ namespace ff
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto position4 = molecule4->getAtomPosition(atomIndices[3]);
 
-        auto dPosition12 = position1 - position2;
-        auto dPosition23 = position2 - position3;
-        auto dPosition43 = position4 - position3;
+        auto dPosition12 = (position1 - position2).numerical_value_in(angstrom);
+        auto dPosition23 = (position2 - position3).numerical_value_in(angstrom);
+        auto dPosition43 = (position4 - position3).numerical_value_in(angstrom);
 
         simulationBox.applyPBC(dPosition12);
         simulationBox.applyPBC(dPosition23);
@@ -163,7 +163,8 @@ namespace ff
 
         if (_isLinker)
         {
-            auto dPosition14 = position1 - position4;
+            auto dPosition14 =
+                (position1 - position4).numerical_value_in(angstrom);
             simulationBox.applyPBC(dPosition14);
 
             const auto distance14 = norm(dPosition14);

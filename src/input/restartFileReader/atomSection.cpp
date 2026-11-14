@@ -32,10 +32,12 @@
 #include "atom.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input::restartFile
 {
@@ -59,7 +61,7 @@ namespace input::restartFile
                 const auto y = utilities::stringToFiniteDouble(lineElements[4]);
                 const auto z = utilities::stringToFiniteDouble(lineElements[5]);
 
-                atom->setPosition({x, y, z});
+                atom->setPosition(linalg::Vec3D(x, y, z) * angstrom);
 
                 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 if (lineElements.size() > 6)
@@ -95,7 +97,9 @@ namespace input::restartFile
                     const auto oldZ =
                         utilities::stringToFiniteDouble(lineElements[14]);
 
-                    atom->setPositionOld({oldX, oldY, oldZ});
+                    atom->setPositionOld(
+                        linalg::Vec3D(oldX, oldY, oldZ) * angstrom
+                    );
                 }
 
                 if (lineElements.size() > 15)
