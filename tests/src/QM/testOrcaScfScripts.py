@@ -10,13 +10,14 @@ SCRIPTS = Path(sys.argv.pop(1)).resolve()
 EXAMPLES = Path(sys.argv.pop(1)).resolve()
 FAKE = r'''#!/usr/bin/env python3
 import os
+import re
 from pathlib import Path
 import sys
 inp = Path(sys.argv[1])
 text, stem = inp.read_text(), inp.stem
 with Path('calls').open('a') as stream:
     stream.write(stem + '\n')
-assert '__' not in text
+assert not re.search(r'__[A-Z]+__', text)
 assert '%pointcharges' not in text or stem.endswith('_polarized')
 if os.environ.get('FAIL_STAGE') == stem:
     sys.exit(1)

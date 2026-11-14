@@ -274,6 +274,24 @@ by default to preserve the existing file formats.
 
 .. centered:: *default value* = false
 
+.. _asyncoutputkey:
+
+Asynchronous Output
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    async_output = {bool} -> true
+
+MD runs write the trajectory, velocity, force, charge and restart files on a
+separate thread, so the simulation does not wait for them. If PQ crashes, the
+last one or two frames may be missing from these files. Set ``async_output``
+to false to write them before the next step instead. PQ also writes them
+directly if there is not enough free memory to hold the queued frames.
+
+.. centered:: *default value* = true
+
 .. _fileprefixkey:
 
 File Prefix

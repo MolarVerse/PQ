@@ -1,0 +1,1 @@
+- Add Python versions of the Turbomole drivers (`turbomole_hf_dft.py`, `turbomole_ridft.py`, `turbomole_ricc2.py`); they write the same `qm_forces` and `qm_charges` as the Perl scripts.
