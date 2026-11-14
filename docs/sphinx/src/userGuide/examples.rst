@@ -19,7 +19,7 @@ be run from its own directory so relative setup-file paths resolve as intended.
       - Self-contained classical MD example using ``moldescriptor.dat`` and ``guff.dat``.
     * - ``examples/amyloid-classical``
       - Classical force-field setup
-      - Uses topology, parameter and intramolecular non-bonded setup files.
+      - Uses topology, parameter and intramolecular non-bonded setup files; the solvent water is kept rigid with M-SHAKE (``mshake.top``).
     * - ``examples/umcm-9_dftb+``
       - DFTB+ with SHAKE
       - Uses ``dftb_in.template`` and a topology file with SHAKE constraints.
