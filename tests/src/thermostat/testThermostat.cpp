@@ -31,6 +31,7 @@
 #include "berendsenThermostat.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "langevinThermostat.hpp"
 #include "noseHooverThermostat.hpp"
 #include "physicalData.hpp"
@@ -483,6 +484,181 @@ TEST_F(TestThermostat, langevinThermostatType)
 {
     auto langevin = thermostat::LangevinThermostat(0.1);
     EXPECT_EQ(langevin.getThermostatType(), ThermostatType::LANGEVIN);
+}
+
+namespace
+{
+    constexpr size_t nBathAtoms = 2000;
+
+    /**
+     * @brief a box of non-interacting atoms of mass 12 with zero velocity
+     */
+    std::unique_ptr<molsys::SimulationBox> makeBath()
+    {
+        auto box = std::make_unique<molsys::SimulationBox>();
+
+        for (size_t i = 0; i < nBathAtoms; ++i)
+        {
+            auto molecule = molsys::Molecule();
+            auto atom     = std::make_shared<molsys::Atom>();
+
+            atom->setMass(12.0);
+            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+            molecule.addAtom(atom);
+
+            box->addMolecule(molecule);
+            box->addAtom(atom);
+        }
+
+        box->calculateDegreesOfFreedom();
+
+        return box;
+    }
+
+    double temperatureOf(
+        molsys::SimulationBox      &box,
+        physicalData::PhysicalData &data
+    )
+    {
+        data.calculateTemperature(box);
+        return data.getTemperature().quantity_from_zero().numerical_value_in(K);
+    }
+}   // namespace
+
+TEST_F(TestThermostat, langevinWithoutFrictionLeavesVelocitiesUnchanged)
+{
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    auto langevin = thermostat::LangevinThermostat(0.0);
+
+    langevin
+        .applyThermostatHalfStep(*_simulationBox, *_data, toTemperature(300.0));
+
+    const auto &atoms = _simulationBox->getAtoms();
+    EXPECT_EQ(atoms[0]->getVelocity(), linalg::Vec3D(1.0, 1.0, 1.0));
+    EXPECT_EQ(atoms[1]->getVelocity(), linalg::Vec3D(1.0, 2.0, 3.0));
+    EXPECT_EQ(atoms[2]->getVelocity(), linalg::Vec3D(1.0, 1.0, 1.0));
+}
+
+TEST_F(TestThermostat, langevinAtZeroTemperatureOnlyDampsVelocities)
+{
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    auto langevin = thermostat::LangevinThermostat(1.0e13);
+
+    langevin
+        .applyThermostatHalfStep(*_simulationBox, *_data, toTemperature(0.0));
+
+    for (const auto &atom : _simulationBox->getAtoms())
+    {
+        const auto before = (atom == _simulationBox->getAtoms()[1])
+                                ? linalg::Vec3D(1.0, 2.0, 3.0)
+                                : linalg::Vec3D(1.0, 1.0, 1.0);
+
+        // the damping shrinks every component towards zero, never flips it
+        for (size_t axis = 0; axis < 3; ++axis)
+        {
+            EXPECT_GT(atom->getVelocity()[axis], 0.0);
+            EXPECT_LT(atom->getVelocity()[axis], before[axis]);
+        }
+    }
+}
+
+TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
+{
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+
+    auto run = [this]()
+    {
+        settings::GeneralSettings::setRandomSeed(42);
+        settings::GeneralSettings::setIsRandomSeedSet(true);
+
+        auto       bath     = makeBath();
+        auto       langevin = thermostat::LangevinThermostat(1.0e12);
+        const auto target   = toTemperature(300.0);
+
+        for (size_t step = 0; step < 5; ++step)
+            langevin.applyLangevin(*bath, target);
+
+        settings::GeneralSettings::setIsRandomSeedSet(false);
+
+        return bath->getAtoms()[0]->getVelocity();
+    };
+
+    const auto first  = run();
+    const auto second = run();
+
+    EXPECT_EQ(first, second);
+    EXPECT_NE(first, linalg::Vec3D(0.0, 0.0, 0.0));
+}
+
+TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
+{
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    settings::GeneralSettings::setRandomSeed(7);
+    settings::GeneralSettings::setIsRandomSeedSet(true);
+
+    auto bath     = makeBath();
+    auto data     = physicalData::PhysicalData();
+    auto langevin = thermostat::LangevinThermostat(1.0e13);
+    auto target   = toTemperature(300.0);
+
+    settings::GeneralSettings::setIsRandomSeedSet(false);
+
+    for (size_t step = 0; step < 4000; ++step)
+        langevin.applyLangevin(*bath, target);
+
+    double sum = 0.0;
+    for (size_t step = 0; step < 200; ++step)
+    {
+        langevin.applyLangevin(*bath, target);
+        sum += temperatureOf(*bath, data);
+    }
+
+    // 2000 atoms: the temperature of one frame fluctuates by about 1.3 %
+    // (sqrt(2 / (3 N))), the mean over many frames is much tighter
+    EXPECT_NEAR(sum / 200.0, 300.0, 6.0);
+}
+
+TEST_F(TestThermostat, langevinFullStepUpdatesTemperatureOfPhysicalData)
+{
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    auto langevin = thermostat::LangevinThermostat(1.0e13);
+
+    langevin.applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+
+    const auto temperature =
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K);
+
+    EXPECT_TRUE(std::isfinite(temperature));
+    EXPECT_GT(temperature, 0.0);
+}
+
+TEST_F(TestThermostat, langevinCopyKeepsFriction)
+{
+    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    settings::GeneralSettings::setRandomSeed(3);
+    settings::GeneralSettings::setIsRandomSeedSet(true);
+
+    auto original = thermostat::LangevinThermostat(1.0e13);
+    auto copied   = thermostat::LangevinThermostat(original);
+    auto assigned = thermostat::LangevinThermostat(0.0);
+    assigned      = original;
+
+    settings::GeneralSettings::setIsRandomSeedSet(false);
+
+    const auto target = toTemperature(300.0);
+    auto       boxA   = makeBath();
+    auto       boxB   = makeBath();
+    auto       data   = physicalData::PhysicalData();
+
+    for (size_t step = 0; step < 2000; ++step)
+    {
+        copied.applyLangevin(*boxA, target);
+        assigned.applyLangevin(*boxB, target);
+    }
+
+    // a copy with the friction of zero would stay at zero temperature
+    EXPECT_GT(temperatureOf(*boxA, data), 100.0);
+    EXPECT_GT(temperatureOf(*boxB, data), 100.0);
 }
 
 /* ---------- NoseHooverThermostat ---------- */
