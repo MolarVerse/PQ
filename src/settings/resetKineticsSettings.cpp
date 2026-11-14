@@ -45,7 +45,7 @@ ResetKineticsSettings::ResetKineticsSettings()
  */
 void ResetKineticsSettings::finalize()
 {
-    const auto numberOfSteps = settings::TimingsSettings::getNumberOfSteps();
+    const auto numberOfSteps = TimingsSettings::getNumberOfSteps();
 
     if (_fScale.get() == 0)
         _fScale.setBySystem(numberOfSteps + 1);

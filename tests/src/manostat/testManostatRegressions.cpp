@@ -72,7 +72,7 @@ namespace
             _settings->manostatSettings.setCompressibilityByUser(
                 0.03 * per_bar
             );
-            settings::TimingsSettings::setTimeStep(1.0 * fs);
+            TimingsSettings::setTimeStep(1.0 * fs);
             ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
             settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
             _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);

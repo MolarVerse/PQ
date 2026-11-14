@@ -34,7 +34,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
-#include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -49,14 +48,15 @@ namespace manostat
      */
     void StochasticRescalingManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Time                 &timeStep
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
 
         calculatePressure(simulationBox, physicalData);
 
-        const auto mu = calculateMu(simulationBox.getVolume());
+        const auto mu = calculateMu(simulationBox.getVolume(), timeStep);
 
         _validateScaling(simulationBox, mu);
 
@@ -105,7 +105,10 @@ namespace manostat
      * @param volume
      * @return linalg::Vec3D
      */
-    QuantityTensor3D StochasticRescalingManostat::calculateMu(double volume)
+    QuantityTensor3D StochasticRescalingManostat::calculateMu(
+        double      volume,
+        const Time &timeStep
+    )
     {
         const auto &settings  = _getSettings();
         const auto  fixedAxis = settings.getFixedAxis();
@@ -115,7 +118,6 @@ namespace manostat
 
         const auto compressibility  = settings.getCompressibility();
         const auto tau              = settings.getTau();
-        const auto timeStep         = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -212,12 +214,12 @@ namespace manostat
      * @return QuantityTensor3D
      */
     QuantityTensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
-        double volume
+        double      volume,
+        const Time &timeStep
     )
     {
         const auto &settings         = _getSettings();
         const auto  tau              = settings.getTau();
-        const auto  timeStep         = settings::TimingsSettings::getTimeStep();
         const auto  tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto  compress         = settings.getCompressibility();
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -285,11 +287,11 @@ namespace manostat
      * @return QuantityTensor3D
      */
     QuantityTensor3D AnisotropicStochasticRescalingManostat::calculateMu(
-        double volume
+        double      volume,
+        const Time &timeStep
     )
     {
         const auto tau               = _getSettings().getTau();
-        const auto timeStep          = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio  = (timeStep / tau).numerical_value_in(one);
         const auto compress          = _getSettings().getCompressibility();
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -336,12 +338,12 @@ namespace manostat
      * @return QuantityTensor3D
      */
     QuantityTensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
-        double volume
+        double      volume,
+        const Time &timeStep
     )
     {
         const auto &settings         = _getSettings();
         const auto  tau              = settings.getTau();
-        const auto  timeStep         = settings::TimingsSettings::getTimeStep();
         const auto  tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto  compress         = settings.getCompressibility();
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;

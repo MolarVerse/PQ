@@ -88,7 +88,7 @@ class TestInputValidation : public ::testing::Test
         settings::PotentialSettings::setCoulombRadiusCutOff(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
-        settings::TimingsSettings::setTimeStep(0.5 * fs);
+        TimingsSettings::setTimeStep(0.5 * fs);
 
         _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
         _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
@@ -107,7 +107,7 @@ class TestInputValidation : public ::testing::Test
     void _configureMDJob(const JobType jobType)
     {
         settings::GeneralSettings::setJobtype(jobType);
-        settings::TimingsSettings::setNumberOfSteps(100);
+        TimingsSettings::setNumberOfSteps(100);
         _setKeyword("nstep");
         _setKeyword("timestep");
         if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
@@ -651,7 +651,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT_DECAY
     );
@@ -668,7 +668,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::EXPONENTIAL_DECAY
     );
@@ -685,7 +685,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );
@@ -697,7 +697,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::LINESEARCH_WOLFE
     );
@@ -713,7 +713,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );

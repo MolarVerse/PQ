@@ -77,7 +77,7 @@ namespace input::restartFile
             );
         }
 
-        settings::TimingsSettings::setStepCount(static_cast<size_t>(stepCount));
+        TimingsSettings::setStepCount(static_cast<size_t>(stepCount));
     }
 
     /**

@@ -134,7 +134,7 @@ TEST_F(TestIntegrator, secondStep)
 
 TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
 {
-    settings::TimingsSettings::setTimeStep(0.2 * fs);
+    TimingsSettings::setTimeStep(0.2 * fs);
 
     auto *atom = _box->getAtoms()[1].get();
     atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));

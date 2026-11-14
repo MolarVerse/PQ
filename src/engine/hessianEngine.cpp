@@ -311,7 +311,7 @@ namespace engine
     void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto step0      = TimingsSettings::getStepCount();
         const auto effStep    = getStep() + step0;
 
         if (0 == getStep() % outputFreq)
@@ -485,7 +485,7 @@ namespace engine
 
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
     {
-        const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
+        const auto nEpochs = TimingsSettings::getNumberOfSteps();
         const auto optimizerType =
             getSettings().optimizerSettings.getOptimizer();
 

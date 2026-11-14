@@ -43,7 +43,7 @@ TEST_F(TestSetup, setupThermostatNoThermostat)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::TimingsSettings::setTimeStep(0.1 * fs);
+    TimingsSettings::setTimeStep(0.1 * fs);
     EXPECT_NO_THROW(thermostatSetup.setup());
 }
 
@@ -51,7 +51,7 @@ TEST_F(TestSetup, setupThermostatTempRamping)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
 
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
@@ -138,7 +138,7 @@ TEST_F(TestSetup, rejectsEmptyTemperatureRamp)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::TimingsSettings::setNumberOfSteps(0);
+    TimingsSettings::setNumberOfSteps(0);
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
@@ -157,7 +157,7 @@ TEST_F(TestSetup, rejectsZeroTemperatureRampFrequency)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::TimingsSettings::setNumberOfSteps(10);
+    TimingsSettings::setNumberOfSteps(10);
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
@@ -278,7 +278,7 @@ TEST_F(TestSetup, setupThermostatLangevin)
         ThermostatSettings::getTargetTemperature()
             .quantity_from_zero()
             .numerical_value_in(K) /
-        settings::TimingsSettings::getTimeStep().numerical_value_in(fs)
+        TimingsSettings::getTimeStep().numerical_value_in(fs)
     );
 
     EXPECT_EQ(langevinThermostat.getSigma(), sigma);

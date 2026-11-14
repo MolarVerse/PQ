@@ -125,7 +125,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
     const auto maxIter   = 100;
     const auto tolerance = 1.0e-5;
 
@@ -298,7 +298,7 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     molecule.addAtom(atom3);
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
     const auto maxIter   = 1;
     const auto tolerance = -1.0;
 

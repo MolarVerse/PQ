@@ -31,8 +31,8 @@
  */
 TEST_F(TestEngine, calculateTotalSimulationTimeFreshRun)
 {
-    settings::TimingsSettings::setStepCount(0);
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setStepCount(0);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     // a freshly constructed engine starts at step 1
     EXPECT_EQ(_engine->getStep(), 1);
@@ -41,14 +41,14 @@ TEST_F(TestEngine, calculateTotalSimulationTimeFreshRun)
 
 /**
  * @brief tests that calculateTotalSimulationTime folds in the restart step
- * offset (settings::TimingsSettings::getStepCount()), not just the
+ * offset (TimingsSettings::getStepCount()), not just the
  * engine's own step counter
  *
  */
 TEST_F(TestEngine, calculateTotalSimulationTimeIncludesRestartOffset)
 {
-    settings::TimingsSettings::setStepCount(1000);
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setStepCount(1000);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     // effStep = engine step (1) + restart offset (1000) = 1001
     EXPECT_EQ(_engine->calculateTotalSimulationTime(), 1001 * 0.5 * fs);
@@ -61,8 +61,8 @@ TEST_F(TestEngine, calculateTotalSimulationTimeIncludesRestartOffset)
  */
 TEST_F(TestEngine, calculateTotalSimulationTimeScalesWithTimeStep)
 {
-    settings::TimingsSettings::setStepCount(0);
-    settings::TimingsSettings::setTimeStep(2.0 * fs);
+    TimingsSettings::setStepCount(0);
+    TimingsSettings::setTimeStep(2.0 * fs);
 
     EXPECT_EQ(_engine->calculateTotalSimulationTime(), 2.0 * fs);
 }

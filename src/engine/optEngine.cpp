@@ -195,7 +195,7 @@ namespace engine
     void OptEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto step0      = TimingsSettings::getStepCount();
         const auto effStep    = getStep() + step0;
 
         if (0 == getStep() % outputFreq)

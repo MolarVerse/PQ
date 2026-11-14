@@ -64,7 +64,7 @@ namespace input
         const RangeValidator<double, Greater::GT> validator{0.0, std::nullopt};
 
         const auto setTimeStep = [&](double value)
-        { settings::TimingsSettings::setTimeStep(value * fs); };
+        { TimingsSettings::setTimeStep(value * fs); };
 
         auto &timeStep = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -95,11 +95,7 @@ namespace input
         const RangeValidator<int> validator{1, std::nullopt};
 
         const auto setNumberOfSteps = [&](int value)
-        {
-            settings::TimingsSettings::setNumberOfSteps(
-                static_cast<size_t>(value)
-            );
-        };
+        { TimingsSettings::setNumberOfSteps(static_cast<size_t>(value)); };
 
         auto &numberOfSteps = _getRegistry().registerKey(
             KeyRegistry<int>{

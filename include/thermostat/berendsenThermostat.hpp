@@ -50,7 +50,8 @@ namespace thermostat
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Time                 &timeStep
         ) override;
 
         void setTau(const Time &tau);

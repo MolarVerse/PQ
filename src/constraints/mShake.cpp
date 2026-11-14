@@ -202,7 +202,7 @@ namespace constraints
         auto &molecules = simulationBox.getMolecules();
 
         const auto timeStep =
-            settings::TimingsSettings::getTimeStep().numerical_value_in(s);
+            TimingsSettings::getTimeStep().numerical_value_in(s);
         const auto timeFactor  = 4.0 * timeStep * timeStep;
         const auto shakeFactor = 2.0 * timeStep * timeStep;
 

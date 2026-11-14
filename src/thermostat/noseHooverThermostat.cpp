@@ -32,7 +32,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 
 namespace thermostat
@@ -143,7 +142,8 @@ namespace thermostat
      */
     void NoseHooverThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Time                 &timeStep
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
@@ -160,8 +160,6 @@ namespace thermostat
         const auto couplingFreq = _nhSettings->getNoseHooverCouplingFrequency();
         const auto couplingFreqSquared =
             (couplingFreq * couplingFreq).numerical_value_in(Hz * Hz);
-        const auto timestep =
-            settings::TimingsSettings::getTimeStep().numerical_value_in(s);
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
         const auto thermalEnergy =
@@ -174,12 +172,12 @@ namespace thermostat
         auto chi = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
         chi -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
 
-        _chi[0] += timestep * chi;
+        _chi[0] += timeStep.numerical_value_in(s) * chi;
 
         auto helpRatio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
                          couplingFreqSquared;
 
-        _zeta[0]   += helpRatio * timestep;
+        _zeta[0]   += helpRatio * timeStep.numerical_value_in(s);
         auto ratio  = helpRatio * _chi[0];
 
         auto energyMomentum = ratio;
@@ -192,10 +190,10 @@ namespace thermostat
             chi -= _chi[i] * _chi[i + 1] / thermalEnergyTarget *
                    couplingFreqSquared;
 
-            _chi[i] += timestep * chi;
+            _chi[i] += timeStep.numerical_value_in(s) * chi;
 
             helpRatio  = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
-            _zeta[i]  += helpRatio * timestep;
+            _zeta[i]  += helpRatio * timeStep.numerical_value_in(s);
             ratio      = helpRatio * _chi[i];
 
             energyMomentum += ratio;

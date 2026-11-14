@@ -102,7 +102,7 @@ namespace setup
      */
     std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
     {
-        const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
+        const auto nEpochs = TimingsSettings::getNumberOfSteps();
         const auto simBox  = _optEngine.getSimulationBox();
         const auto optimizerType =
             _optEngine.getSettings().optimizerSettings.getOptimizer();

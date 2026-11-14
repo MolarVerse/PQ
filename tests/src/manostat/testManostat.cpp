@@ -165,7 +165,7 @@ namespace
     )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
-        settings::TimingsSettings::setTimeStep(1.0 * fs);
+        TimingsSettings::setTimeStep(1.0 * fs);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         simulationBox.setBox(orthoBox, false);
@@ -343,7 +343,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
 
     _box->addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
     _settings->manostatSettings.setTauByUser(0.1 * fs);
     _settings->manostatSettings.setCompressibilityByUser(4.5 * per_bar);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
@@ -473,7 +473,7 @@ TEST_F(
     _box->setBox(orthoBox, false);
 
     _manostat->calculatePressure(*_box, *_data);
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
     _settings->manostatSettings.setTargetPressureByUser(_data->getPressure());
     _settings->manostatSettings.setTauByUser(0.1 * fs);
     _settings->manostatSettings.setCompressibilityByUser(4.5 * per_bar);
@@ -506,7 +506,7 @@ TEST_F(TestManostat, applyNoneManostat)
 TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 {
     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->manostatSettings.setTargetPressureByUser(7.0 * bar);
     _settings->manostatSettings.setTauByUser(0.25 * fs);
@@ -529,7 +529,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     _box->setBox(orthoBox, false);
@@ -620,7 +620,7 @@ TEST_F(TestManostat, testRotateMu)
 
 TEST_F(TestManostat, berendsenFixedAxesMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     // 1 fixed axis: X
     {
@@ -679,7 +679,7 @@ TEST_F(TestManostat, berendsenFixedAxesMu)
 
 TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(1.0 * bar);
@@ -699,7 +699,7 @@ TEST_F(TestManostat, anisotropicBerendsenFixedAxesMu)
 
 TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(1.0 * bar);
@@ -723,7 +723,7 @@ TEST_F(TestManostat, fullAnisotropicBerendsenFixedAxesMu)
 TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 {
     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     // 1 fixed axis: Z
     {
@@ -788,7 +788,7 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
 TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 {
     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(7.0 * bar);
@@ -812,7 +812,7 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
 TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
 {
     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     ManostatSettings localSettings;
     localSettings.setTargetPressureByUser(7.0 * bar);
@@ -835,7 +835,7 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
 
 TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     // xy isotropic (axes 0, 1), z anisotropic (axis 2) with Z fixed
     ManostatSettings localSettings;
@@ -859,7 +859,7 @@ TEST_F(TestManostat, semiIsotropicBerendsenFixedAnisotropicAxisMu)
 TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
 {
     ThermostatSettings::setActualTargetTemperature(toTemperature(0.0));
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     // xz isotropic (axes 0, 2), y anisotropic (axis 1) with Y fixed
     ManostatSettings localSettings;

@@ -91,13 +91,13 @@ namespace thermostat
      */
     void LangevinThermostat::calculateSigma(
         double             friction,
-        const Temperature &targetTemperature
+        const Temperature &targetTemperature,
+        const Time        &timeStep
     )
     {
         const auto unitConversion   = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
         const auto conversionFactor = UNIVERSAL_GAS_CONSTANT * unitConversion;
 
-        const auto timeStep = settings::TimingsSettings::getTimeStep();
         const auto force =
             4.0 * friction * conversionFactor *
             targetTemperature.quantity_from_zero().numerical_value_in(K);
@@ -113,12 +113,14 @@ namespace thermostat
      *
      * @param simulationBox
      */
-    void LangevinThermostat::applyLangevin(molsys::SimulationBox &simulationBox)
+    void LangevinThermostat::applyLangevin(
+        molsys::SimulationBox &simulationBox,
+        const Time            &timeStep
+    )
     {
-        auto applyFriction = [this](auto &atom)
+        auto applyFriction = [this, &timeStep](auto &atom)
         {
-            const auto mass     = atom->getMass();
-            const auto timeStep = settings::TimingsSettings::getTimeStep();
+            const auto mass = atom->getMass();
 
             const auto propagationFactor =
                 0.5 * timeStep.numerical_value_in(s) / mass;
@@ -150,13 +152,14 @@ namespace thermostat
      */
     void LangevinThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Time                 &timeStep
     )
     {
         auto _ =
             scopedTimer(TimerId::Thermostat, "LangevinThermostat - Full Step");
 
-        applyLangevin(simulationBox);
+        applyLangevin(simulationBox, timeStep);
         physicalData.calculateTemperature(simulationBox);
     }
 
@@ -169,13 +172,14 @@ namespace thermostat
      */
     void LangevinThermostat::applyThermostatHalfStep(
         molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData & /*physicalData*/
+        physicalData::PhysicalData & /*physicalData*/,
+        const Time &timeStep
     )
     {
         auto _ =
             scopedTimer(TimerId::Thermostat, "LangevinThermostat - Half Step");
 
-        applyLangevin(simulationBox);
+        applyLangevin(simulationBox, timeStep);
     }
 
     /***************************
@@ -194,7 +198,11 @@ namespace thermostat
     )
     {
         Thermostat::setTargetTemperature(targetTemperature);
-        calculateSigma(_friction, targetTemperature);
+        calculateSigma(
+            _friction,
+            targetTemperature,
+            TimingsSettings::getTimeStep()
+        );
     }
 
     /**

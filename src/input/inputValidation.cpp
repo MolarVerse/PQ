@@ -299,7 +299,7 @@ namespace input
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
-            if (settings::TimingsSettings::getTimeStep() >
+            if (TimingsSettings::getTimeStep() >
                 ThermostatSettings::getRelaxationTime())
             {
                 throw exc::InputFileException(
@@ -341,7 +341,7 @@ namespace input
             const auto sigmaSquared =
                 4.0 * ThermostatSettings::getFriction() * conversionFactor *
                 maxTemperature.quantity_from_zero().numerical_value_in(K) /
-                settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
+                TimingsSettings::getTimeStep().numerical_value_in(fs);
 
             if (!std::isfinite(sigmaSquared))
             {
@@ -376,7 +376,7 @@ namespace input
         if (!startTempDefined)
             return;
 
-        const auto totalSteps = settings::TimingsSettings::getNumberOfSteps();
+        const auto totalSteps = TimingsSettings::getNumberOfSteps();
         const auto rampSteps  = ThermostatSettings::getTemperatureRampSteps();
 
         if (rampSteps > totalSteps)
@@ -434,8 +434,7 @@ namespace input
             );
         }
 
-        if (settings::TimingsSettings::getTimeStep() >
-            manostatSettings.getTau())
+        if (TimingsSettings::getTimeStep() > manostatSettings.getTau())
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );

@@ -165,7 +165,7 @@ namespace constraints
             );
 
             const auto timeStep =
-                settings::TimingsSettings::getTimeStep().numerical_value_in(s);
+                TimingsSettings::getTimeStep().numerical_value_in(s);
             const auto dVelocity = dPosition / timeStep;
 
             molecule1->addAtomVelocity(

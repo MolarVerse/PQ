@@ -41,14 +41,19 @@ namespace manostat
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Time                 &timeStep
         ) override;
 
-        [[nodiscard]] virtual QuantityTensor3D calculateMu() const;
+        [[nodiscard]]
+        virtual QuantityTensor3D calculateMu(const Time &timeStep) const;
 
        protected:
         [[nodiscard]]
-        static Compressibility _calcPreFactor(const ManostatSettings &settings);
+        static Compressibility _calcPreFactor(
+            const ManostatSettings &settings,
+            const Time             &timeStep
+        );
     };
 
     /**
@@ -62,7 +67,8 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] QuantityTensor3D calculateMu() const override;
+        [[nodiscard]]
+        QuantityTensor3D calculateMu(const Time &timeStep) const override;
     };
 
     /**
@@ -76,7 +82,8 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] QuantityTensor3D calculateMu() const override;
+        [[nodiscard]]
+        QuantityTensor3D calculateMu(const Time &timeStep) const override;
     };
 
     /**
@@ -93,7 +100,8 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] QuantityTensor3D calculateMu() const override;
+        [[nodiscard]]
+        QuantityTensor3D calculateMu(const Time &timeStep) const override;
     };
 
 }   // namespace manostat

@@ -70,7 +70,8 @@ namespace thermostat
 
         virtual void applyThermostat(
             molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const Time &timeStep
         );
 
         virtual void applyThermostatOnForces(
@@ -81,7 +82,8 @@ namespace thermostat
 
         virtual void applyThermostatHalfStep(
             molsys::SimulationBox & /*simBox*/,
-            physicalData::PhysicalData & /*physData*/
+            physicalData::PhysicalData & /*physData*/,
+            const Time & /*timeStep*/
         )
         {
         }

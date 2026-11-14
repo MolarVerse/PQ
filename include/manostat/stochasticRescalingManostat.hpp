@@ -45,10 +45,14 @@ namespace manostat
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Time                 &timeStep
         ) override;
 
-        [[nodiscard]] virtual QuantityTensor3D calculateMu(double);
+        [[nodiscard]] virtual QuantityTensor3D calculateMu(
+            double      volume,
+            const Time &timeStep
+        );
 
        protected:
         [[nodiscard]]
@@ -71,7 +75,10 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        QuantityTensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(
+            double      volume,
+            const Time &timeStep
+        ) override;
     };
 
     /**
@@ -88,7 +95,10 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        QuantityTensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(
+            double      volume,
+            const Time &timeStep
+        ) override;
     };
 
     /**
@@ -105,7 +115,10 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        QuantityTensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(
+            double      volume,
+            const Time &timeStep
+        ) override;
     };
 
 }   // namespace manostat

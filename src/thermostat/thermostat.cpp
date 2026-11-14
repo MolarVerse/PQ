@@ -76,7 +76,8 @@ namespace thermostat
      */
     void Thermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Time & /*timeStep*/
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Calc Temperature");

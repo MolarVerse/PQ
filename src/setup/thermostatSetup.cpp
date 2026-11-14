@@ -213,7 +213,7 @@ namespace setup
         const auto useFullSimulation = steps == 0;
 
         if (useFullSimulation)
-            steps = settings::TimingsSettings::getNumberOfSteps();
+            steps = TimingsSettings::getNumberOfSteps();
 
         if (steps == 0)
             throw exc::InputFileException(

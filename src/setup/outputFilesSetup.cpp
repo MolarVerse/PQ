@@ -153,7 +153,7 @@ namespace setup
 
             if (outputFileSettings.getIncludeOutputMetadata())
             {
-                const auto timeStep = settings::TimingsSettings::getTimeStep();
+                const auto timeStep = TimingsSettings::getTimeStep();
                 _engine.getEnergyOutput().writeHeader(timeStep);
                 mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
             }

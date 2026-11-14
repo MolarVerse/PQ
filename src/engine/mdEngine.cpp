@@ -71,7 +71,7 @@ namespace engine
             norm(getPhysicalDataPtr()->getMomentum())
         );
 
-        _setNSteps(settings::TimingsSettings::getNumberOfSteps());
+        _setNSteps(TimingsSettings::getNumberOfSteps());
         progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
         const auto &outputFileSettings = getSettings().outputFiles;
 
@@ -202,7 +202,7 @@ namespace engine
     void MDEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto step0      = TimingsSettings::getStepCount();
         const auto effStep    = getStep() + step0;
 
         if (0 == getStep() % outputFreq)
@@ -253,7 +253,7 @@ namespace engine
                 static_cast<double>(outputFreq)
             );
 
-            const auto timeStep      = settings::TimingsSettings::getTimeStep();
+            const auto timeStep      = TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
             const auto simTime       = effStepDouble * timeStep;
 

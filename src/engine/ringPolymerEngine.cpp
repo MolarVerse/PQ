@@ -68,7 +68,7 @@ namespace engine
         auto &rpmdData        = _ringPolymerBeadsPhysicalData;
 
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = settings::TimingsSettings::getStepCount();
+        const auto step0      = TimingsSettings::getStepCount();
         const auto effStep    = getStep() + step0;
 
         if (0 == getStep() % outputFreq)
@@ -131,7 +131,7 @@ namespace engine
             getPhysicalData().copy(mean(rpmdData));
             getAveragePhysicalData() = mean(averageRPMDData);
 
-            const auto timeStep      = settings::TimingsSettings::getTimeStep();
+            const auto timeStep      = TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
             const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
 

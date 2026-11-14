@@ -111,7 +111,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -137,7 +137,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setIncludeOutputMetadataByUser(true);
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    TimingsSettings::setTimeStep(0.5 * fs);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);

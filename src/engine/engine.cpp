@@ -76,8 +76,8 @@ namespace engine
      */
     Time Engine::calculateTotalSimulationTime() const
     {
-        const auto step0    = settings::TimingsSettings::getStepCount();
-        const auto timeStep = settings::TimingsSettings::getTimeStep();
+        const auto step0    = TimingsSettings::getStepCount();
+        const auto timeStep = TimingsSettings::getTimeStep();
         const auto effStep  = _step + step0;
 
         return static_cast<double>(effStep) * timeStep;

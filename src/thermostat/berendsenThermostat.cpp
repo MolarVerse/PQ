@@ -29,7 +29,6 @@
 #include "mathUtilities.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 
 namespace thermostat
@@ -57,7 +56,8 @@ namespace thermostat
      */
     void BerendsenThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Time                 &timeStep
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
@@ -78,9 +78,8 @@ namespace thermostat
             );
         }
 
-        const auto &timeStep  = settings::TimingsSettings::getTimeStep();
-        const auto  timeRatio = static_cast<double>(timeStep / _tau);
-        const auto  tempRatio = getTargetTemperature().quantity_from_zero() /
+        const auto timeRatio = static_cast<double>(timeStep / _tau);
+        const auto tempRatio = getTargetTemperature().quantity_from_zero() /
                                getTemperature().quantity_from_zero();
 
         const auto berendsenFactor = ::sqrt(

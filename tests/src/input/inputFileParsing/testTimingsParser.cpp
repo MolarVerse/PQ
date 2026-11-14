@@ -45,7 +45,7 @@ TEST_F(TestInputFileReader, testParseTimestep)
 
     std::vector<std::string> lineElements = {"timestep", "=", "1"};
     timeStepFunc(lineElements, 0);
-    EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0 * fs);
+    EXPECT_EQ(TimingsSettings::getTimeStep(), 1.0 * fs);
 
     _clearParser(parser);
 
@@ -89,7 +89,7 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
 
     std::vector<std::string> lineElements = {"nstep", "=", "1000"};
     nstepsFunc(lineElements, 0);
-    EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
+    EXPECT_EQ(TimingsSettings::getNumberOfSteps(), 1000);
 
     _clearParser(parser);
 
