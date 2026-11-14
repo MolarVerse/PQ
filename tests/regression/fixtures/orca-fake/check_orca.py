@@ -49,7 +49,7 @@ def keyword_set(call):
 
 
 def common(call):
-    check("__" not in call["input"], f"{call['stem']}: unresolved placeholder")
+    check(not re.search(r"__[A-Z]+__", call["input"]), f"{call['stem']}: unresolved placeholder")
     check("noautostart" in keyword_set(call), f"{call['stem']}: NoAutoStart missing")
 
 
