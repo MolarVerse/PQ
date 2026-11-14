@@ -465,14 +465,15 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     for (size_t sample = 0; sample < 8192; ++sample)
     {
         // numerical_value_in(one) can be removed as soon as we have mstd::log
-        const auto semiMu = semi.calculateMu(_box.getVolume(), temperature)
-                                .numerical_value_in(one);
-        const auto anisoMu = aniso.calculateMu(_box.getVolume(), temperature)
-                                 .numerical_value_in(one);
-        const auto fullMu = full.calculateMu(_box.getVolume(), temperature)
-                                .numerical_value_in(one);
-        const auto fixedMu = fixed.calculateMu(_box.getVolume(), temperature)
-                                 .numerical_value_in(one);
+        const auto volume = _box.getVolume().numerical_value_in(Volume::unit);
+        const auto semiMu =
+            semi.calculateMu(volume, temperature).numerical_value_in(one);
+        const auto anisoMu =
+            aniso.calculateMu(volume, temperature).numerical_value_in(one);
+        const auto fullMu =
+            full.calculateMu(volume, temperature).numerical_value_in(one);
+        const auto fixedMu =
+            fixed.calculateMu(volume, temperature).numerical_value_in(one);
         areaHeight.add(
             {mstd::log(semiMu[0][0] * semiMu[1][1]) /
                  (2.0 * mstd::sqrt(noiseFactor)),

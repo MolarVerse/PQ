@@ -37,6 +37,7 @@
 #include "referenceSettings.hpp"
 #include "simulationBox.hpp"
 #include "thermostat.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -44,7 +45,9 @@ namespace
     {
         molsys::SimulationBox simulationBox;
         simulationBox.setBox(
-            molsys::OrthorhombicBox{{10.0, 10.0, 10.0}},
+            molsys::OrthorhombicBox{
+                {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+            },
             false
         );
 
@@ -55,7 +58,9 @@ namespace
             auto       atom = std::make_shared<molsys::Atom>();
             const auto x    = static_cast<double>(i) + 1.0;
             atom->setName(i == 0 ? "O" : "H");
-            atom->setPosition({x, 2.0 * x, 3.0 * x});
+            atom->setPosition(
+                {x * angstrom, 2.0 * x * angstrom, 3.0 * x * angstrom}
+            );
             atom->setVelocity({0.1 * x, 0.0, 0.0});
             atom->setForce({0.0, -x, 0.0});
             molecule.addAtom(atom);

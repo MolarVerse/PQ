@@ -35,6 +35,7 @@
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace QM
 {
@@ -51,7 +52,7 @@ namespace QM
         file << simulationBox.getNumberOfQMAtoms() << "\n\n";
         for (const auto &atom : simulationBox.getQMAtoms())
         {
-            const auto pos = atom->getPosition();
+            const auto pos = atom->getPosition().numerical_value_in(angstrom);
             file << std::format(
                 "{} {:.12f} {:.12f} {:.12f}\n",
                 atom->getName(),
@@ -88,7 +89,8 @@ namespace QM
             {
                 for (const auto &atom : mol.getAtoms())
                 {
-                    const auto pos = atom->getPosition();
+                    const auto pos =
+                        atom->getPosition().numerical_value_in(angstrom);
                     body << std::format(
                         "{:.12f} {:.12f} {:.12f} {:.12f}\n",
                         atom->getPartialCharge(),
