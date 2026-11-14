@@ -394,12 +394,12 @@ namespace input
                 "File containing the MShake configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setMShakeFileName(value);
+                _fileSettings->setMShakeFileNameByUser(value);
             else
-                FileSettings::setMShakeFileName(value.fileName());
+                _fileSettings->setMShakeFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -427,12 +427,12 @@ namespace input
                 "File containing the DFTB configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setDFTBFileName(value);
+                _fileSettings->setDFTBFileNameByUser(value);
             else
-                FileSettings::setDFTBFileName(value.fileName());
+                _fileSettings->setDFTBFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -460,12 +460,12 @@ namespace input
                 "File containing the Turbomole configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setTMFileName(value);
+                _fileSettings->setTMFileNameByUser(value);
             else
-                FileSettings::setTMFileName(value.fileName());
+                _fileSettings->setTMFileNameByUser(value.fileName());
         };
 
         addFileKeyword(
@@ -493,12 +493,12 @@ namespace input
                 "File containing the ORCA configuration of the system"
         };
 
-        const auto setValue = []<typename T>(const T &value) -> void
+        const auto setValue = [this]<typename T>(const T &value) -> void
         {
             if constexpr (std::is_same_v<T, std::string>)
-                FileSettings::setOrcaFileName(value);
+                _fileSettings->setOrcaFileNameByUser(value);
             else
-                FileSettings::setOrcaFileName(value.fileName());
+                _fileSettings->setOrcaFileNameByUser(value.fileName());
         };
 
         addFileKeyword(

@@ -86,13 +86,17 @@ namespace QM
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
      * @param physicalData the physical data associated with the simulation
+     * @param fileSettings the file settings containing input/output file paths
+     * and related configurations for the QM calculation
      */
     void QMRunner::run(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const FileSettings         &fileSettings
     )
     {
-        run(simulationBox, physicalData, molsys::Periodicity::XYZ);
+        run(simulationBox, physicalData, molsys::Periodicity::XYZ, fileSettings
+        );
     }
 
     /**

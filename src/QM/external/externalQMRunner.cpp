@@ -290,6 +290,8 @@ namespace QM
      * @param qmSettings The QM settings used to configure the external QM
      * runner, which may include method-specific parameters and computational
      * options
+     * @param forceFileName Path to the file containing the forces and QM
+     * energy.
      *
      * @throw QMRunnerException
      *  - if the force file cannot be opened
@@ -298,11 +300,10 @@ namespace QM
     void ExternalQMRunner::_readForceFile(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const QMSettings           &qmSettings
+        const QMSettings           &qmSettings,
+        const std::string          &forceFileName
     )
     {
-        const auto forceFileName = FileSettings::getQMForcesTempFileName();
-
         std::ifstream forceFile(forceFileName);
 
         if (!forceFile.is_open())
@@ -392,6 +393,7 @@ namespace QM
      * @param qmSettings The QM settings used to configure the external QM
      * runner, which may include method-specific parameters and computational
      * options
+     * @param chargeFileName Path to the file containing the QM charges.
      *
      * @throw QMRunnerException
      *  - if the charge file cannot be opened
@@ -399,11 +401,10 @@ namespace QM
      */
     void ExternalQMRunner::_readChargeFile(
         molsys::SimulationBox &simulationBox,
-        const QMSettings      &qmSettings
+        const QMSettings      &qmSettings,
+        const std::string     &chargeFileName
     )
     {
-        const auto chargeFileName = FileSettings::getQMChargesTempFileName();
-
         std::ifstream chargeFile(chargeFileName);
 
         if (!chargeFile.is_open())
@@ -462,11 +463,15 @@ namespace QM
      * @param simulationBox SimulationBox reference
      * @param physicalData PhysicalData reference
      * @param per periodicity of the system
+     * @param fileSettings Object containing file paths and settings required
+     * for the execution of the external QM program.
+     *
      */
     void ExternalQMRunner::run(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::Periodicity         per
+        molsys::Periodicity         per,
+        const FileSettings         &fileSettings
     )
     {
         if (per != molsys::Periodicity::XYZ &&
@@ -482,42 +487,58 @@ namespace QM
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Coordinates");
-            writeCoordsFile(simulationBox);
+            _writeCoordsFile(simulationBox);
         }
 
         if (settings::GeneralSettings::isHybridJobtype())
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
-            writePointChargeFile(simulationBox);
+            _writePointChargeFile(
+                simulationBox,
+                fileSettings.getPointChargeFileName()
+            );
         }
 
         const auto resultFiles = std::array{
-            FileSettings::getQMForcesTempFileName(),
-            FileSettings::getQMChargesTempFileName(),
-            FileSettings::getStressTensorTempFileName()
+            fileSettings.getQMForcesTempFileName(),
+            fileSettings.getQMChargesTempFileName(),
+            fileSettings.getStressTensorTempFileName()
         };
         for (const auto &file : resultFiles) std::filesystem::remove(file);
 
         {
             auto _ =
                 scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
-            execute(simulationBox);
+            execute(simulationBox, fileSettings);
         }
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Forces");
-            _readForceFile(simulationBox, physicalData, _getQMSettings());
+            _readForceFile(
+                simulationBox,
+                physicalData,
+                _getQMSettings(),
+                fileSettings.getQMForcesTempFileName()
+            );
         }
 
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Charges");
-            _readChargeFile(simulationBox, _getQMSettings());
+            _readChargeFile(
+                simulationBox,
+                _getQMSettings(),
+                fileSettings.getQMChargesTempFileName()
+            );
         }
 
         if (per != molsys::Periodicity::NON_PERIODIC)
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Read Stress Tensor");
-            readStressTensor(simulationBox.getBox(), physicalData);
+            _readStressTensor(
+                simulationBox.getBox(),
+                physicalData,
+                fileSettings.getStressTensorTempFileName()
+            );
         }
     }
 

@@ -58,7 +58,7 @@ namespace input::mShake
         engine::Engine &_engine;
 
        public:
-        explicit MShakeReader(engine::Engine &engine);
+        explicit MShakeReader(engine::Engine &engine, std::string fileName);
 
         void read();
         void processCommentLine(

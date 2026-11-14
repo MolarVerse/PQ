@@ -349,7 +349,8 @@ namespace QM
     void AseQMRunner::run(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        molsys::Periodicity         per
+        molsys::Periodicity         per,
+        const FileSettings & /*fileSettings*/
     )
     {
         _setPeriodicity(per);

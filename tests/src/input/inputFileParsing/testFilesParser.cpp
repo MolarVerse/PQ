@@ -321,10 +321,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
 
     lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        FileSettings::getMShakeFileName(),
-        "data/mshakeReader/mshake.dat"
-    );
+    EXPECT_EQ(settings.getMShakeFileName(), "data/mshakeReader/mshake.dat");
 }
 
 /**
@@ -355,10 +352,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
 
     lineElements = {"dftb_file", "=", "data/dftbReader/dftb_in.template"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        FileSettings::getDFTBFileName(),
-        "data/dftbReader/dftb_in.template"
-    );
+    EXPECT_EQ(settings.getDFTBFileName(), "data/dftbReader/dftb_in.template");
 }
 
 /**
@@ -394,7 +388,7 @@ TEST_F(TestInputFileReader, testTMFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        FileSettings::getTMFileName(),
+        settings.getTMFileName(),
         "data/turbomoleReader/tm_define.template"
     );
 }
@@ -405,7 +399,6 @@ TEST_F(TestInputFileReader, testOrcaFileName)
     input::FilesInputParser parser{true, settings};
     const auto              functions = parser.getKeywordFuncMap();
     const auto             &parse     = functions.at("orca_file");
-    const auto              previous  = FileSettings::getOrcaFileName();
     EXPECT_THROW_MSG(
         parse({"orca_file", "=", "no-such-orca-template"}, 0),
         exc::InputFileException,
@@ -414,15 +407,11 @@ TEST_F(TestInputFileReader, testOrcaFileName)
     );
     _clearParser(parser);
     parse({"orca_file", "=", "data/atomSection/testProcess.rst"}, 0);
-    EXPECT_EQ(
-        FileSettings::getOrcaFileName(),
-        "data/atomSection/testProcess.rst"
-    );
+    EXPECT_EQ(settings.getOrcaFileName(), "data/atomSection/testProcess.rst");
     input::FilesInputParser portable{false, settings};
     portable.getKeywordFuncMap().at("orca_file")(
         {"orca_file", "=", "no-such-orca-template"},
         0
     );
-    EXPECT_EQ(FileSettings::getOrcaFileName(), "no-such-orca-template");
-    FileSettings::setOrcaFileName(previous);
+    EXPECT_EQ(settings.getOrcaFileName(), "no-such-orca-template");
 }

@@ -60,11 +60,15 @@ TEST(FileSettingsTest, StartAndRingPolymerRoundTrip)
 
 TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
 {
-    FileSettings::setMShakeFileName("mshake.dat");
-    EXPECT_EQ(FileSettings::getMShakeFileName(), "mshake.dat");
+    FileSettings settings;
+    settings.setMShakeFileNameByUser("mshake.dat");
+    EXPECT_EQ(settings.getMShakeFileName(), "mshake.dat");
 
-    FileSettings::setDFTBFileName("dftb_in.hsd");
-    EXPECT_EQ(FileSettings::getDFTBFileName(), "dftb_in.hsd");
+    settings.setDFTBFileNameByUser("dftb_in.hsd");
+    EXPECT_EQ(settings.getDFTBFileName(), "dftb_in.hsd");
+
+    settings.setTMFileNameByUser("tm_in.hsd");
+    EXPECT_EQ(settings.getTMFileName(), "tm_in.hsd");
 }
 
 TEST(FileSettingsTest, IntraNonBondedRoundTrip)

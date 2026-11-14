@@ -223,8 +223,12 @@ namespace engine
             // anymore
             getSimulationBox().resetQMCharges();
 
-            getQMRunner()
-                ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+            getQMRunner()->run(
+                getSimulationBox(),
+                getPhysicalData(),
+                NON_PERIODIC,
+                getSettings().fileSettings
+            );
             _calculateQMReferenceEnergy();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
@@ -335,7 +339,12 @@ namespace engine
             getSimulationBox()
         );
 
-        getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        getQMRunner()->run(
+            getSimulationBox(),
+            getPhysicalData(),
+            NON_PERIODIC,
+            getSettings().fileSettings
+        );
         _calculateQMReferenceEnergy();
 
         _scaleSmoothingMoleculeForcesInner();

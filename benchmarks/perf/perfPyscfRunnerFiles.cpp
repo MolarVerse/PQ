@@ -27,16 +27,18 @@
 
 #include "perfQMRunner.hpp"
 #include "pyscfRunner.hpp"
+#include "settings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20;
 
 int main()
 {
-    QMSettings qmSettings;
-    qmSettings.setQMMethodByUser(QMMethod::PYSCF);
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
     return benchQMRunner::run<QM::PySCFRunner>(
-        qmSettings,
+        settings.qmSettings,
         molsys::Periodicity::NON_PERIODIC,
-        ITERATIONS
+        ITERATIONS,
+        settings.fileSettings
     );
 }
