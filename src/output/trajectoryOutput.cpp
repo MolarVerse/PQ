@@ -37,10 +37,6 @@ namespace out
 {
     namespace
     {
-        using textFormat::FIXED_WIDTH;
-        using textFormat::NAME_WIDTH;
-        using textFormat::PRECISION;
-
         constexpr std::size_t VEL_FILE_WIDTH = 20;
 
         /**
@@ -52,10 +48,13 @@ namespace out
             const linalg::Vec3D   &vec
         )
         {
-            buffer.left(name, NAME_WIDTH).put('\t');
-            buffer.fixed(vec[0], FIXED_WIDTH, PRECISION).put('\t');
-            buffer.fixed(vec[1], FIXED_WIDTH, PRECISION).put('\t');
-            buffer.fixed(vec[2], FIXED_WIDTH, PRECISION).put('\n');
+            buffer.left(name, textFormat::NAME_WIDTH).put('\t');
+            buffer.fixed(vec[0], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            buffer.fixed(vec[1], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            buffer.fixed(vec[2], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\n');
         }
 
     }   // namespace
@@ -167,10 +166,13 @@ namespace out
         {
             const auto &vel = atom.velocity;
 
-            _buffer.left(atom.name, NAME_WIDTH).put('\t');
-            _buffer.scientific(vel[0], VEL_FILE_WIDTH, PRECISION).put('\t');
-            _buffer.scientific(vel[1], VEL_FILE_WIDTH, PRECISION).put('\t');
-            _buffer.scientific(vel[2], VEL_FILE_WIDTH, PRECISION).put('\n');
+            _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
+            _buffer.scientific(vel[0], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer.scientific(vel[1], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer.scientific(vel[2], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\n');
         }
 
         _flushBuffer();
@@ -220,8 +222,14 @@ namespace out
 
         for (const auto &atom : frame.atoms)
         {
-            _buffer.left(atom.name, NAME_WIDTH).put('\t');
-            _buffer.fixed(atom.charge, FIXED_WIDTH, PRECISION).put('\n');
+            _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
+            _buffer
+                .fixed(
+                    atom.charge,
+                    textFormat::FIXED_WIDTH,
+                    textFormat::PRECISION
+                )
+                .put('\n');
         }
 
         _flushBuffer();
