@@ -156,7 +156,7 @@ jobs:
           # hit) and (re)writes the freshly-known counts to it at the end so
           # actions/cache@v4 saves them at job end (cache miss path).
           PERF_BASE_IR_FILE: base_ir.tsv
-        run: bash scripts/perf_gate.sh build-pr/benchmarks/perf build-base/benchmarks/perf 2
+        run: bash scripts/perf_gate.sh build-pr/benchmarks/perf build-base/benchmarks/perf 1
 
       # CPU time of the measured loop, base against PR on this runner. Fails
       # only on a regression that is above the threshold with its whole 95 %

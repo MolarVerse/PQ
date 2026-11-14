@@ -44,7 +44,7 @@ set -uo pipefail
 
 PR_DIR="${1:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
 BASE_DIR="${2:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
-THRESHOLD="${3:-2}"
+THRESHOLD="${3:-1}"
 # An improvement at least this large is flagged: a benchmark that silently
 # stopped doing its work also looks like a big speed-up. Never fails the check.
 LARGE_DROP="${PERF_LARGE_DROP_PERCENT:-30}"

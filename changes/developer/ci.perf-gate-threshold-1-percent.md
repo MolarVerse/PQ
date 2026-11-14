@@ -1,0 +1,1 @@
+- Lower the threshold of the performance gate for callgrind instruction counts from 2% to 1%.
