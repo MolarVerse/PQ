@@ -67,6 +67,7 @@ namespace QM
      * @brief writes the point charge file in ORCA format
      *
      * @param simulationBox
+     * @param pcFileName the name of the point charge file to be written
      */
     void OrcaRunner::_writePointChargeFile(
         const molsys::SimulationBox &simulationBox,
@@ -117,6 +118,8 @@ namespace QM
      *
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
+     * @param fileSettings the file settings containing the ORCA and point
+     * charge file names
      */
     void OrcaRunner::execute(
         const molsys::SimulationBox &simulationBox,
