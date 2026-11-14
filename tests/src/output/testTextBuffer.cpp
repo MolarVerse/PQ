@@ -27,6 +27,7 @@
 #include <format>
 #include <limits>
 #include <string>
+#include <string_view>
 
 #include "textBuffer.hpp"
 
@@ -82,7 +83,7 @@ TEST(TestTextBuffer, integersAndTextMatchFormat)
         expected += std::format("{:<5}|", value);
     }
 
-    for (const std::string name : {"", "O", "H1", "Na+  ", "LONGNAME"})
+    for (const std::string_view name : {"", "O", "H1", "Na+  ", "LONGNAME"})
     {
         buffer.left(name, 5).append(name);
         expected += std::format("{:<5}{}", name, name);

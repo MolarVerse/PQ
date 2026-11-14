@@ -31,6 +31,14 @@
 
 namespace out
 {
+    // field layout shared by the trajectory and restart files
+    namespace textFormat
+    {
+        constexpr std::size_t NAME_WIDTH  = 5;
+        constexpr std::size_t FIXED_WIDTH = 15;
+        constexpr int         PRECISION   = 8;
+    }   // namespace textFormat
+
     /**
      * @brief reusable text buffer that formats numbers with std::to_chars
      *

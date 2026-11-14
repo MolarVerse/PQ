@@ -37,10 +37,11 @@ namespace out
 {
     namespace
     {
-        constexpr std::size_t NAME_WIDTH     = 5;
-        constexpr std::size_t FIXED_WIDTH    = 15;
-        constexpr std::size_t VELOCITY_WIDTH = 20;
-        constexpr int         PRECISION      = 8;
+        using textFormat::FIXED_WIDTH;
+        using textFormat::NAME_WIDTH;
+        using textFormat::PRECISION;
+
+        constexpr std::size_t VEL_FILE_WIDTH = 20;
 
         /**
          * @brief append "name\tx\ty\tz\n" in fixed notation
@@ -167,9 +168,9 @@ namespace out
             const auto &vel = atom.velocity;
 
             _buffer.left(atom.name, NAME_WIDTH).put('\t');
-            _buffer.scientific(vel[0], VELOCITY_WIDTH, PRECISION).put('\t');
-            _buffer.scientific(vel[1], VELOCITY_WIDTH, PRECISION).put('\t');
-            _buffer.scientific(vel[2], VELOCITY_WIDTH, PRECISION).put('\n');
+            _buffer.scientific(vel[0], VEL_FILE_WIDTH, PRECISION).put('\t');
+            _buffer.scientific(vel[1], VEL_FILE_WIDTH, PRECISION).put('\t');
+            _buffer.scientific(vel[2], VEL_FILE_WIDTH, PRECISION).put('\n');
         }
 
         _flushBuffer();

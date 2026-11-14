@@ -60,10 +60,7 @@ namespace out
             }
         }
 
-        constexpr std::size_t NAME_WIDTH     = 5;
-        constexpr std::size_t FIXED_WIDTH    = 15;
-        constexpr std::size_t VELOCITY_WIDTH = 19;
-        constexpr int         PRECISION      = 8;
+        constexpr std::size_t RST_VELOCITY_WIDTH = 19;
 
     }   // namespace
 
@@ -93,19 +90,38 @@ namespace out
             const auto &vel   = atom.velocity;
             const auto &force = atom.force;
 
-            _buffer.left(atom.name, NAME_WIDTH).put('\t');
-            _buffer.left(atom.indexInMolecule + 1, NAME_WIDTH).put('\t');
-            _buffer.left(atom.moltype.get(), NAME_WIDTH).put('\t');
+            _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
+            _buffer.left(atom.indexInMolecule + 1, textFormat::NAME_WIDTH)
+                .put('\t');
+            _buffer.left(atom.moltype.get(), textFormat::NAME_WIDTH).put('\t');
 
             for (const double value : {pos[0], pos[1], pos[2]})
-                _buffer.fixed(value, FIXED_WIDTH, PRECISION).put('\t');
+                _buffer
+                    .fixed(
+                        value,
+                        textFormat::FIXED_WIDTH,
+                        textFormat::PRECISION
+                    )
+                    .put('\t');
 
             for (const double value : {vel[0], vel[1], vel[2]})
-                _buffer.scientific(value, VELOCITY_WIDTH, PRECISION).put('\t');
+                _buffer
+                    .scientific(
+                        value,
+                        RST_VELOCITY_WIDTH,
+                        textFormat::PRECISION
+                    )
+                    .put('\t');
 
-            _buffer.fixed(force[0], FIXED_WIDTH, PRECISION).put('\t');
-            _buffer.fixed(force[1], FIXED_WIDTH, PRECISION).put('\t');
-            _buffer.fixed(force[2], FIXED_WIDTH, PRECISION).put('\n');
+            _buffer
+                .fixed(force[0], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer
+                .fixed(force[1], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer
+                .fixed(force[2], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\n');
         }
 
         _replaceFile(_buffer.view());
