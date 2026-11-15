@@ -74,15 +74,18 @@ namespace benchQMRunner
     {
        private:
         std::filesystem::path _directory;
+        const FileSettings   &_fileSettings;
 
        public:
         explicit CannedResultsRunner(
             const QMSettings         &qmSettings,
             const ExternalQMSettings &externalQMSettings,
+            const FileSettings       &fileSettings,
             std::filesystem::path     directory
         )
             : Runner(qmSettings, externalQMSettings),
-              _directory(std::move(directory))
+              _directory(std::move(directory)),
+              _fileSettings(fileSettings)
         {
         }
 
@@ -96,17 +99,17 @@ namespace benchQMRunner
                 std::filesystem::copy_options::overwrite_existing;
             std::filesystem::copy_file(
                 _directory / "forces.canned",
-                FileSettings::getQMForcesTempFileName(),
+                _fileSettings.getQMForcesTempFileName(),
                 overwrite
             );
             std::filesystem::copy_file(
                 _directory / "charges.canned",
-                FileSettings::getQMChargesTempFileName(),
+                _fileSettings.getQMChargesTempFileName(),
                 overwrite
             );
             std::filesystem::copy_file(
                 _directory / "stress.canned",
-                FileSettings::getStressTensorTempFileName(),
+                _fileSettings.getStressTensorTempFileName(),
                 overwrite
             );
         }
@@ -194,7 +197,8 @@ namespace benchQMRunner
     inline int run(
         QMSettings               &qmSettings,
         const molsys::Periodicity periodicity,
-        const std::uint64_t       iterations
+        const std::uint64_t       iterations,
+        FileSettings             &fileSettings
     )
     {
         const auto directory =
@@ -224,11 +228,8 @@ namespace benchQMRunner
         molsys::SimulationBox simulationBox;
         buildBox(simulationBox);
 
-        CannedResultsRunner<Runner> runner(
-            qmSettings,
-            externalQMSettings,
-            directory
-        );
+        CannedResultsRunner<Runner>
+             runner(qmSettings, externalQMSettings, fileSettings, directory);
         auto physicalData = physicalData::PhysicalData();
 
         perfAllocBegin();
@@ -236,7 +237,7 @@ namespace benchQMRunner
         CALLGRIND_ZERO_STATS;
 
         for (std::uint64_t i = 0; i < iterations; ++i)
-            runner.run(simulationBox, physicalData, periodicity);
+            runner.run(simulationBox, physicalData, periodicity, fileSettings);
 
         std::filesystem::current_path(original);
         std::filesystem::remove_all(directory);

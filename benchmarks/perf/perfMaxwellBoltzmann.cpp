@@ -40,7 +40,6 @@
 #include "maxwellBoltzmann.hpp"
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
-#include "thermostatSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
@@ -48,7 +47,7 @@ int main()
 {
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);
-    ThermostatSettings::setActualTargetTemperature(toTemperature(300.0));
+    const auto targetTemperature = toTemperature(300.0);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
@@ -59,7 +58,7 @@ int main()
     CALLGRIND_ZERO_STATS;
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
-        maxwellBoltzmann.initializeVelocities(box);
+        maxwellBoltzmann.initializeVelocities(box, targetTemperature);
 
     // read state so the loop cannot be optimized away
     std::cout << std::format(

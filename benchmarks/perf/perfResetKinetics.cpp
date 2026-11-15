@@ -41,14 +41,12 @@
 #include "physicalData.hpp"
 #include "resetKinetics.hpp"
 #include "resetKineticsSettings.hpp"
-#include "thermostatSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
     Temperature temperature{toTemperature(300.0)};
-    ThermostatSettings::setActualTargetTemperature(temperature);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
@@ -66,7 +64,7 @@ int main()
     settings.setNResetAngularByUser(ITERATIONS);
     settings.setFResetAngularByUser(1);
     settings.setFResetForcesByUser(1);
-    const auto resetKinetics = resetKinetics::ResetKinetics(settings);
+    const auto resetKinetics = kinetics::ResetKinetics(settings);
 
     perfAllocBegin();
 
@@ -74,7 +72,7 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        resetKinetics.reset(i, physicalData, box);
+        resetKinetics.reset(i, physicalData, box, temperature);
         resetKinetics.resetForces(i, box);
     }
 

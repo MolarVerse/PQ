@@ -41,13 +41,19 @@ namespace QM
 
        public:
         using ExternalQMRunner::ExternalQMRunner;
-        void writeCoordsFile(
+        void execute(
+            const molsys::SimulationBox &simulationBox,
+            const FileSettings          &fileSettings
+        ) override;
+
+       private:
+        void _writeCoordsFile(
             const molsys::SimulationBox &simulationBox
         ) override;
-        void writePointChargeFile(
-            const molsys::SimulationBox &simulationBox
+        void _writePointChargeFile(
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &pcFileName
         ) override;
-        void execute(const molsys::SimulationBox &simulationBox) override;
     };
 }   // namespace QM
 

@@ -27,6 +27,10 @@ foreach(script IN ITEMS
         pyscf_mp2.py
         turbomole_hf-dft
         turbomole_ricc2
+        turbomole_common.py
+        turbomole_hf_dft.py
+        turbomole_ricc2.py
+        turbomole_ridft.py
         orca_rimp2.py
         orca_hf.py
         orca_dft.py

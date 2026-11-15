@@ -1,1 +1,0 @@
-- Make the stated build requirements match what the build enforces: CMake >= 3.25 and GCC >= 14 (the vendored mstd already required both), in the root CMakeLists.txt, README, installation page, AGENTS.md, the Singularity recipes (gcc-14) and the conda script; clang below 20 now only warns, as clang 20 is what the CI tests. A test keeps them in step.

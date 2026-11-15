@@ -42,6 +42,7 @@ namespace molsys
 }   // namespace molsys
 
 class ExternalQMSettings;   // forward declaration
+class FileSettings;         // forward declaration
 
 namespace QM
 {
@@ -64,25 +65,14 @@ namespace QM
         void run(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            molsys::Periodicity         per
+            molsys::Periodicity         per,
+            const FileSettings         &fileSettings
         ) override;
 
-        virtual void execute(const molsys::SimulationBox &) = 0;
-
-        virtual void writeCoordsFile(const molsys::SimulationBox &) = 0;
-
-        virtual void writePointChargeFile(
-            const molsys::SimulationBox & /*simBox*/
-        )
-        {
-        }
-
-        virtual void readStressTensor(
-            const molsys::Box & /*box*/,
-            physicalData::PhysicalData & /*physData*/
-        )
-        {
-        }
+        virtual void execute(
+            const molsys::SimulationBox &,
+            const FileSettings &
+        ) = 0;
 
         /*******************************
          * standard getter and setters *
@@ -97,15 +87,34 @@ namespace QM
         [[nodiscard]]
         const ExternalQMSettings &_getExternalQMSettings() const;
 
+        virtual void _writeCoordsFile(const molsys::SimulationBox &) = 0;
+
+        virtual void _writePointChargeFile(
+            const molsys::SimulationBox & /*simBox*/,
+            const std::string & /*pointChargeFileName*/
+        )
+        {
+        }
+
+        virtual void _readStressTensor(
+            const molsys::Box & /*simBox*/,
+            physicalData::PhysicalData & /*physData*/,
+            const std::string & /*stressFileName*/
+        )
+        {
+        }
+
        private:
         static void _readForceFile(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const QMSettings           &qmSettings
+            const QMSettings           &qmSettings,
+            const std::string          &forceFileName
         );
         static void _readChargeFile(
             molsys::SimulationBox &simulationBox,
-            const QMSettings      &qmSettings
+            const QMSettings      &qmSettings,
+            const std::string     &chargeFileName
         );
 
         friend class ::ExternalQMRunnerTest;   // for testing private methods
