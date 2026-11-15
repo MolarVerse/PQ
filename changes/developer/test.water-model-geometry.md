@@ -1,0 +1,1 @@
+- Add unit tests for the rigid water geometry of the water models (O-H distance and H-O-H angle of every rigid model, none for the flexible ones) and for the reference files of the intra- and intermolecular models.
