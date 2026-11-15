@@ -228,7 +228,7 @@ namespace molsys
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
         [[nodiscard]] std::vector<Pos3D>         getPositions() const;
-        [[nodiscard]] std::vector<linalg::Vec3D> getVelocities() const;
+        [[nodiscard]] std::vector<Vel3D>         getVelocities() const;
         [[nodiscard]] std::vector<linalg::Vec3D> getForces() const;
         [[nodiscard]] std::vector<AtomNumber>    getAtomicNumbers() const;
         [[nodiscard]] std::vector<Pos>           flattenPositions() const;

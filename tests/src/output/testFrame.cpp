@@ -50,7 +50,7 @@ namespace
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName(name);
         atom->setPosition(position * angstrom);
-        atom->setVelocity(2.0 * position);
+        atom->setVelocity(2.0 * position * angstrom / s);
         atom->setForce(-position);
         atom->setPartialCharge(charge);
         return atom;
@@ -99,7 +99,7 @@ TEST(TestFrame, copiesAtomsInMoleculeOrder)
     EXPECT_EQ(oxygen.moltype, MolType{1});
     EXPECT_EQ(oxygen.indexInMolecule, 1);
     EXPECT_EQ(oxygen.position, linalg::Vec3D(4.0, 5.0, 6.0) * angstrom);
-    EXPECT_EQ(oxygen.velocity, linalg::Vec3D(8.0, 10.0, 12.0));
+    EXPECT_EQ(oxygen.velocity, linalg::Vec3D(8.0, 10.0, 12.0) * angstrom / s);
     EXPECT_EQ(oxygen.force, linalg::Vec3D(-4.0, -5.0, -6.0));
     EXPECT_DOUBLE_EQ(oxygen.charge, -0.8);
 

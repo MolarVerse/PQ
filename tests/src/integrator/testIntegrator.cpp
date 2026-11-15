@@ -37,14 +37,23 @@ TEST_F(TestIntegrator, integrateVelocities)
     integrator::Integrator::integrateVelocities(_box->getAtoms()[0].get());
     EXPECT_EQ(
         _molecule1->getAtomVelocity(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s
     );
     integrator::Integrator::integrateVelocities(_box->getAtoms()[1].get());
 
     const auto vel = _molecule1->getAtomVelocity(AtomIndex{1});
-    EXPECT_DOUBLE_EQ(vel[0], 1.0 + (0.1 * 0.5 * V_VERLET_VELOCITY_FACTOR));
-    EXPECT_DOUBLE_EQ(vel[1], 2.0 + (0.1 * 1.5 * V_VERLET_VELOCITY_FACTOR));
-    EXPECT_DOUBLE_EQ(vel[2], 3.0 + (0.1 * 2.5 * V_VERLET_VELOCITY_FACTOR));
+    EXPECT_DOUBLE_EQ(
+        vel[0].numerical_value_in(angstrom / s),
+        1.0 + (0.1 * 0.5 * V_VERLET_VELOCITY_FACTOR)
+    );
+    EXPECT_DOUBLE_EQ(
+        vel[1].numerical_value_in(angstrom / s),
+        2.0 + (0.1 * 1.5 * V_VERLET_VELOCITY_FACTOR)
+    );
+    EXPECT_DOUBLE_EQ(
+        vel[2].numerical_value_in(angstrom / s),
+        3.0 + (0.1 * 2.5 * V_VERLET_VELOCITY_FACTOR)
+    );
 }
 
 /**
@@ -91,16 +100,16 @@ TEST_F(TestIntegrator, firstStep)
     const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
         molecule.getAtomVelocity(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s
     );
 
     auto velocities = linalg::Vec3D(1.0, 2.0, 3.0);
     velocities += 0.1 * linalg::Vec3D(0.5, 1.5, 2.5) * V_VERLET_VELOCITY_FACTOR;
 
     const auto vel = molecule.getAtomVelocity(AtomIndex{1});
-    EXPECT_DOUBLE_EQ(vel[0], velocities[0]);
-    EXPECT_DOUBLE_EQ(vel[1], velocities[1]);
-    EXPECT_DOUBLE_EQ(vel[2], velocities[2]);
+    EXPECT_DOUBLE_EQ(vel[0].numerical_value_in(angstrom / s), velocities[0]);
+    EXPECT_DOUBLE_EQ(vel[1].numerical_value_in(angstrom / s), velocities[1]);
+    EXPECT_DOUBLE_EQ(vel[2].numerical_value_in(angstrom / s), velocities[2]);
 
     EXPECT_DOUBLE_EQ(
         molecule.getAtomPosition(AtomIndex{0})[0].numerical_value_in(angstrom),
@@ -146,13 +155,22 @@ TEST_F(TestIntegrator, secondStep)
     const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
         molecule.getAtomVelocity(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s
     );
 
     const auto vel = molecule.getAtomVelocity(AtomIndex{1});
-    EXPECT_DOUBLE_EQ(vel[0], 1.0 + (0.1 * 0.5 * V_VERLET_VELOCITY_FACTOR));
-    EXPECT_DOUBLE_EQ(vel[1], 2.0 + (0.1 * 1.5 * V_VERLET_VELOCITY_FACTOR));
-    EXPECT_DOUBLE_EQ(vel[2], 3.0 + (0.1 * 2.5 * V_VERLET_VELOCITY_FACTOR));
+    EXPECT_DOUBLE_EQ(
+        vel[0].numerical_value_in(angstrom / s),
+        1.0 + (0.1 * 0.5 * V_VERLET_VELOCITY_FACTOR)
+    );
+    EXPECT_DOUBLE_EQ(
+        vel[1].numerical_value_in(angstrom / s),
+        2.0 + (0.1 * 1.5 * V_VERLET_VELOCITY_FACTOR)
+    );
+    EXPECT_DOUBLE_EQ(
+        vel[2].numerical_value_in(angstrom / s),
+        3.0 + (0.1 * 2.5 * V_VERLET_VELOCITY_FACTOR)
+    );
 }
 
 TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
@@ -161,7 +179,7 @@ TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
 
     auto *atom = _box->getAtoms()[1].get();
     atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
-    atom->setVelocity(linalg::Vec3D(2.0, -3.0, 4.0));
+    atom->setVelocity(linalg::Vec3D(2.0, -3.0, 4.0) * angstrom / s);
     atom->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
 
     const auto initialPosition =
@@ -172,11 +190,21 @@ TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
     _integrator->secondStep(*_box);
 
     const auto expectedPosition =
-        initialPosition + 0.2 * initialVelocity * FS_TO_S;
+        initialPosition +
+        0.2 * initialVelocity.numerical_value_in(angstrom / s) * FS_TO_S;
 
-    EXPECT_DOUBLE_EQ(atom->getVelocity()[0], initialVelocity[0]);
-    EXPECT_DOUBLE_EQ(atom->getVelocity()[1], initialVelocity[1]);
-    EXPECT_DOUBLE_EQ(atom->getVelocity()[2], initialVelocity[2]);
+    EXPECT_DOUBLE_EQ(
+        atom->getVelocity()[0].numerical_value_in(angstrom / s),
+        initialVelocity[0].numerical_value_in(angstrom / s)
+    );
+    EXPECT_DOUBLE_EQ(
+        atom->getVelocity()[1].numerical_value_in(angstrom / s),
+        initialVelocity[1].numerical_value_in(angstrom / s)
+    );
+    EXPECT_DOUBLE_EQ(
+        atom->getVelocity()[2].numerical_value_in(angstrom / s),
+        initialVelocity[2].numerical_value_in(angstrom / s)
+    );
 
     EXPECT_DOUBLE_EQ(
         atom->getPosition()[0].numerical_value_in(angstrom),

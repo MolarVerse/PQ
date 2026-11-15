@@ -73,7 +73,9 @@ namespace input::restartFile
                     const auto velZ =
                         utilities::stringToFiniteDouble(lineElements[8]);
 
-                    atom->setVelocity({velX, velY, velZ});
+                    atom->setVelocity(
+                        linalg::Vec3D(velX, velY, velZ) * angstrom / s
+                    );
                 }
 
                 if (lineElements.size() > 9)
@@ -111,7 +113,9 @@ namespace input::restartFile
                     const auto oldVz =
                         utilities::stringToFiniteDouble(lineElements[17]);
 
-                    atom->setVelocityOld({oldVx, oldVy, oldVz});
+                    atom->setVelocityOld(
+                        linalg::Vec3D(oldVx, oldVy, oldVz) * angstrom / s
+                    );
                 }
 
                 if (lineElements.size() > 18)

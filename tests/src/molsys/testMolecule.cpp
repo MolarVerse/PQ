@@ -130,24 +130,26 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
 
     EXPECT_TRUE(
         utilities::compare(
-            scaledCenterOfMassVelocity,
-            scale * centerOfMassVelocity,
+            scaledCenterOfMassVelocity.numerical_value_in(angstrom / s),
+            (scale * centerOfMassVelocity).numerical_value_in(angstrom / s),
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomVelocity(AtomIndex{1}) -
-                _molecule->getAtomVelocity(AtomIndex{0}),
-            relativeVelocity10,
+            (_molecule->getAtomVelocity(AtomIndex{1}) -
+             _molecule->getAtomVelocity(AtomIndex{0}))
+                .numerical_value_in(angstrom / s),
+            relativeVelocity10.numerical_value_in(angstrom / s),
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            _molecule->getAtomVelocity(AtomIndex{2}) -
-                _molecule->getAtomVelocity(AtomIndex{0}),
-            relativeVelocity20,
+            (_molecule->getAtomVelocity(AtomIndex{2}) -
+             _molecule->getAtomVelocity(AtomIndex{0}))
+                .numerical_value_in(angstrom / s),
+            relativeVelocity20.numerical_value_in(angstrom / s),
             1e-12
         )
     );
@@ -341,8 +343,8 @@ TEST_F(TestMolecule, scaleVelocityWithNonDiagonalSimSpaceTensor)
 
     EXPECT_TRUE(
         utilities::compare(
-            scaledCenterOfMassVelocity,
-            scale * centerOfMassVelocity,
+            scaledCenterOfMassVelocity.numerical_value_in(angstrom / s),
+            (scale * centerOfMassVelocity).numerical_value_in(angstrom / s),
             1e-12
         )
     );

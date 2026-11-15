@@ -79,8 +79,8 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         atom2_1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
         atom1_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
         atom2_1->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
-        atom1_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2_1->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
+        atom1_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+        atom2_1->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0) * angstrom / s);
         atom1_1->setName("H");
         atom2_1->setName("O");
         atom1_1->setPartialCharge(1.0);
@@ -93,8 +93,12 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
         atom2_2->setPosition((linalg::Vec3D(1.0, 2.0, 3.0) + 1.0) * angstrom);
         atom1_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
         atom2_2->setForce(linalg::Vec3D(2.0, 3.0, 4.0) + 1.0);
-        atom1_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom2_2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0) + 1.0);
+        atom1_2->setVelocity(
+            (linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * angstrom / s
+        );
+        atom2_2->setVelocity(
+            (linalg::Vec3D(3.0, 4.0, 5.0) + 1.0) * angstrom / s
+        );
         atom1_2->setName("H");
         atom2_2->setName("O");
         atom1_2->setPartialCharge(1.0);
@@ -111,7 +115,7 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
 
         atom3_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom3_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
         atom3_1->setName("Ar");
         atom3_1->setPartialCharge(0.0);
         molecule2_1.setMoltype(MolType{2});
@@ -119,7 +123,9 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
 
         atom3_2->setPosition((linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * angstrom);
         atom3_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom3_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+        atom3_2->setVelocity(
+            (linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * angstrom / s
+        );
         atom3_2->setName("Ar");
         atom3_2->setPartialCharge(0.0);
         molecule2_2.setMoltype(MolType{2});

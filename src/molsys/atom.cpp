@@ -108,21 +108,18 @@ namespace molsys
      **************************/
 
     /**
-     * @brief add a linalg::Vec3D to the current position of the atom
+     * @brief add a Pos3D to the current position of the atom
      *
      * @param position
      */
     void Atom::addPosition(const Pos3D &position) { _position += position; }
 
     /**
-     * @brief  add a linalg::Vec3D to the current velocity of the atom
+     * @brief  add a Vel3D to the current velocity of the atom
      *
      * @param velocity
      */
-    void Atom::addVelocity(const linalg::Vec3D &velocity)
-    {
-        _velocity += velocity;
-    }
+    void Atom::addVelocity(const Vel3D &velocity) { _velocity += velocity; }
 
     /**
      * @brief  add a force to the current force of the atom
@@ -287,9 +284,9 @@ namespace molsys
     /**
      * @brief return the velocity of the atom
      *
-     * @return linalg::Vec3D
+     * @return const Vel3D&
      */
-    linalg::Vec3D Atom::getVelocity() const { return _velocity; }
+    const Vel3D &Atom::getVelocity() const { return _velocity; }
 
     /**
      * @brief return the force of the atom
@@ -439,12 +436,9 @@ namespace molsys
     /**
      * @brief set the velocity of the atom
      *
-     * @param velocity
+     * @param velocity the velocity as a Vel3D
      */
-    void Atom::setVelocity(const linalg::Vec3D &velocity)
-    {
-        _velocity = velocity;
-    }
+    void Atom::setVelocity(const Vel3D &velocity) { _velocity = velocity; }
 
     /**
      * @brief set the force of the atom
@@ -513,9 +507,9 @@ namespace molsys
     /**
      * @brief set the old velocity of the atom
      *
-     * @param velocityOld
+     * @param velocityOld the old velocity as a Vel3D
      */
-    void Atom::setVelocityOld(const linalg::Vec3D &velocityOld)
+    void Atom::setVelocityOld(const Vel3D &velocityOld)
     {
         _velocityOld = velocityOld;
     }

@@ -52,9 +52,9 @@ class TestMolecule : public ::testing::Test
         _atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
         _atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
 
-        _atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0));
-        _atom3->setVelocity(linalg::Vec3D(0.0, 1.0, 0.0));
+        _atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+        _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom / s);
+        _atom3->setVelocity(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom / s);
 
         _atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
         _atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));

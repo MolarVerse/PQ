@@ -97,7 +97,9 @@ namespace
                 auto atom = std::make_shared<molsys::Atom>();
                 atom->setMass(1.0);
                 atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
-                atom->setVelocity({speed, 0.0, 0.0});
+                atom->setVelocity(
+                    linalg::Vec3D{speed, 0.0, 0.0} * angstrom / s
+                );
                 molecule.addAtom(atom);
                 _box.addAtom(atom);
             }
@@ -372,7 +374,10 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
             _box.getAtom(1).getPosition()[0].numerical_value_in(angstrom),
             -4.85
         );
-        EXPECT_EQ(_box.getAtom(0).getVelocity(), linalg::Vec3D(1.0, 0.0, 0.0));
+        EXPECT_EQ(
+            _box.getAtom(0).getVelocity(),
+            linalg::Vec3D(1.0, 0.0, 0.0) * angstrom / s
+        );
     }
 }
 

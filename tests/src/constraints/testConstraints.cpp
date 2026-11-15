@@ -87,7 +87,7 @@ TEST_F(TestConstraints, applyShakeConverged)
     );
 
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{0}),
+        mol.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e10),
             testing::DoubleNear(1.15836e14, 1e10),
@@ -95,7 +95,7 @@ TEST_F(TestConstraints, applyShakeConverged)
         )
     );
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{1}),
+        mol.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e10),
             testing::DoubleNear(1.0 - 1.15836e14, 1e10),
@@ -171,7 +171,7 @@ TEST_F(TestConstraints, applyRattleConverged)
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{0}),
+        mol.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-5),
             testing::DoubleNear(0.3, 1e-5),
@@ -179,7 +179,7 @@ TEST_F(TestConstraints, applyRattleConverged)
         )
     );
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{1}),
+        mol.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(0.7, 1e-5),

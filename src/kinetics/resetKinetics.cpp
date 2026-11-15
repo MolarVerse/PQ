@@ -168,7 +168,7 @@ namespace kinetics
         std::ranges::for_each(
             simulationBox.getAtoms(),
             [momentumCorrection](auto &atom)
-            { atom->addVelocity(-momentumCorrection); }
+            { atom->addVelocity(-momentumCorrection * angstrom / s); }
         );
     }
 
@@ -211,7 +211,9 @@ namespace kinetics
         {
             auto relativePosition =
                 atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
-            atom->addVelocity(-cross(angularVelocity, relativePosition));
+            atom->addVelocity(
+                -cross(angularVelocity, relativePosition) * angstrom / s
+            );
         };
 
         std::ranges::for_each(simulationBox.getAtoms(), correctVelocities);

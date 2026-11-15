@@ -62,8 +62,8 @@ class TestIntegrator : public ::testing::Test
         atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
         atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
 
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
 
         atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
         atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0));

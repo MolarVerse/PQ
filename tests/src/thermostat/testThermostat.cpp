@@ -46,15 +46,18 @@ TEST_F(TestThermostat, calculateTemperature)
 {
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
 
-    const auto mol1                = _simulationBox->getMolecule(0);
-    const auto velocity_mol1_atom1 = mol1.getAtomVelocity(AtomIndex{0});
-    const auto velocity_mol1_atom2 = mol1.getAtomVelocity(AtomIndex{1});
-    const auto mass_mol1_atom1     = mol1.getAtomMass(AtomIndex{0});
-    const auto mass_mol1_atom2     = mol1.getAtomMass(AtomIndex{1});
+    const auto mol1 = _simulationBox->getMolecule(0);
+    const auto velocity_mol1_atom1 =
+        mol1.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
+    const auto velocity_mol1_atom2 =
+        mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
+    const auto mass_mol1_atom1 = mol1.getAtomMass(AtomIndex{0});
+    const auto mass_mol1_atom2 = mol1.getAtomMass(AtomIndex{1});
 
-    const auto mol2                = _simulationBox->getMolecule(1);
-    const auto velocity_mol2_atom1 = mol2.getAtomVelocity(AtomIndex{0});
-    const auto mass_mol2_atom1     = mol2.getAtomMass(AtomIndex{0});
+    const auto mol2 = _simulationBox->getMolecule(1);
+    const auto velocity_mol2_atom1 =
+        mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
+    const auto mass_mol2_atom1 = mol2.getAtomMass(AtomIndex{0});
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
@@ -75,15 +78,18 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(100.0 * fs);
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
-    const auto mol1                = _simulationBox->getMolecule(0);
-    const auto velocity_mol1_atom1 = mol1.getAtomVelocity(AtomIndex{0});
-    const auto velocity_mol1_atom2 = mol1.getAtomVelocity(AtomIndex{1});
-    const auto mass_mol1_atom1     = mol1.getAtomMass(AtomIndex{0});
-    const auto mass_mol1_atom2     = mol1.getAtomMass(AtomIndex{1});
+    const auto mol1 = _simulationBox->getMolecule(0);
+    const auto velocity_mol1_atom1 =
+        mol1.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
+    const auto velocity_mol1_atom2 =
+        mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
+    const auto mass_mol1_atom1 = mol1.getAtomMass(AtomIndex{0});
+    const auto mass_mol1_atom2 = mol1.getAtomMass(AtomIndex{1});
 
-    const auto mol2                = _simulationBox->getMolecule(1);
-    const auto velocity_mol2_atom1 = mol2.getAtomVelocity(AtomIndex{0});
-    const auto mass_mol2_atom1     = mol2.getAtomMass(AtomIndex{0});
+    const auto mol2 = _simulationBox->getMolecule(1);
+    const auto velocity_mol2_atom1 =
+        mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
+    const auto mass_mol2_atom1 = mol2.getAtomMass(AtomIndex{0});
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
@@ -148,8 +154,8 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
     {
         for (size_t i = 0; i < 3; ++i)
         {
-            EXPECT_FALSE(std::isnan(atom->getVelocity()[i]));
-            EXPECT_FALSE(std::isinf(atom->getVelocity()[i]));
+            EXPECT_FALSE(isnan(atom->getVelocity()[i]));
+            EXPECT_FALSE(isinf(atom->getVelocity()[i]));
         }
     }
 }
@@ -160,7 +166,7 @@ TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
-        atom->setVelocity({0.0, 0.0, 0.0});
+        atom->setVelocity(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom / s);
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0.0));
 
@@ -171,7 +177,7 @@ TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
     );
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t dimension = 0; dimension < 3; ++dimension)
-            EXPECT_TRUE(std::isfinite(atom->getVelocity()[dimension]));
+            EXPECT_TRUE(isfinite(atom->getVelocity()[dimension]));
 }
 
 TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
@@ -180,7 +186,7 @@ TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
-        atom->setVelocity({0.0, 0.0, 0.0});
+        atom->setVelocity(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom / s);
 
     EXPECT_THROW_MSG(
         _thermostat
@@ -198,7 +204,7 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
-        atom->setVelocity({0.0, 0.0, 0.0});
+        atom->setVelocity(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom / s);
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0.0));
 
@@ -209,7 +215,7 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
     );
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t dimension = 0; dimension < 3; ++dimension)
-            EXPECT_TRUE(std::isfinite(atom->getVelocity()[dimension]));
+            EXPECT_TRUE(isfinite(atom->getVelocity()[dimension]));
 }
 
 TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
@@ -219,7 +225,7 @@ TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
-        atom->setVelocity({0.0, 0.0, 0.0});
+        atom->setVelocity(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom / s);
 
     EXPECT_THROW_MSG(
         _thermostat
@@ -238,7 +244,7 @@ namespace
         {
             for (size_t axis = 0; axis < 3; ++axis)
             {
-                if (!std::isfinite(atom->getVelocity()[axis]))
+                if (!isfinite(atom->getVelocity()[axis]))
                 {
                     return false;
                 }
@@ -270,7 +276,7 @@ TEST_F(TestThermostat, berendsenNearZeroTemperatureStaysFinite)
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
-        atom->setVelocity({1e-12, 0.0, 0.0});
+        atom->setVelocity(linalg::Vec3D{1e-12, 0.0, 0.0} * angstrom / s);
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
 
@@ -554,7 +560,10 @@ TEST_F(TestThermostat, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)
 
     _data->calculateTemperature(*_simulationBox);
     const auto oldTemperature = _data->getTemperature();
-    const auto oldVelocity    = _simulationBox->getAtoms()[1]->getVelocity();
+    const auto oldVelocity =
+        _simulationBox->getAtoms()[1]->getVelocity().numerical_value_in(
+            angstrom / s
+        );
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
 
@@ -562,26 +571,29 @@ TEST_F(TestThermostat, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)
         std::sqrt((_data->getTemperature().quantity_from_zero() /
                    oldTemperature.quantity_from_zero())
                       .numerical_value_in(one));
-    const auto newVelocity = _simulationBox->getAtoms()[1]->getVelocity();
+    const auto newVelocity =
+        _simulationBox->getAtoms()[1]->getVelocity().numerical_value_in(
+            angstrom / s
+        );
     for (size_t axis = 0; axis < 3; ++axis)
         EXPECT_NEAR(newVelocity[axis], factor * oldVelocity[axis], 1e-12);
 }
 
 namespace
 {
-    std::vector<linalg::Vec3D> saveVelocities(
+    std::vector<Vel3D> saveVelocities(
         const molsys::SimulationBox &simulationBox
     )
     {
-        std::vector<linalg::Vec3D> velocities;
+        std::vector<Vel3D> velocities;
         for (const auto &atom : simulationBox.getAtoms())
             velocities.push_back(atom->getVelocity());
         return velocities;
     }
 
     void restoreVelocities(
-        molsys::SimulationBox            &simulationBox,
-        const std::vector<linalg::Vec3D> &velocities
+        molsys::SimulationBox    &simulationBox,
+        const std::vector<Vel3D> &velocities
     )
     {
         for (size_t i = 0; i < velocities.size(); ++i)
@@ -633,8 +645,9 @@ TEST_F(TestThermostat, velocityRescalingLambdaStatistics)
         for (size_t axis = 0; axis < 3; ++axis)
         {
             ASSERT_NEAR(
-                scaled[axis],
-                std::sqrt(lambda) * initial[1][axis],
+                scaled[axis].numerical_value_in(angstrom / s),
+                std::sqrt(lambda) *
+                    initial[1][axis].numerical_value_in(angstrom / s),
                 1e-10
             );
         }
@@ -768,7 +781,9 @@ TEST_F(TestThermostat, noseHooverForceMatchesReference)
         {
             EXPECT_DOUBLE_EQ(
                 atom->getForce()[axis],
-                -factor * atom->getVelocity()[axis] * atom->getMass()
+                -factor *
+                    atom->getVelocity()[axis].numerical_value_in(angstrom / s) *
+                    atom->getMass()
             );
         }
     }

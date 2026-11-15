@@ -26,7 +26,6 @@
 
 #include <limits>
 
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
@@ -72,30 +71,31 @@ TEST_F(TestBondConstraint, applyShake)
     const auto shakeForce = delta.numerical_value_in(DistanceSquared::unit) /
                             (1.0 + 0.5) /
                             normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
-    const auto dPos     = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0);
-    const auto timestep = 2.0;
-    settings::TimingsSettings::setTimeStep(timestep * fs);
+    const auto dPos = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0) * angstrom;
+    const auto timestep = 2.0 * fs;
+    settings::TimingsSettings::setTimeStep(timestep);
 
     EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0));
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
-        mol.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
-        linalg::Vec3D(1.0, 1.0, 1.0) + dPos
+        mol.getAtomPosition(AtomIndex{0}),
+        linalg::Vec3D(1.0, 1.0, 1.0) * angstrom + dPos
     );
     EXPECT_EQ(
-        mol.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom),
-        linalg::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
+        mol.getAtomPosition(AtomIndex{1}),
+        linalg::Vec3D(1.0, 2.0, 3.0) * angstrom - 0.5 * dPos
     );
 
-    const auto expectedDeltaVel = dPos / (timestep * FS_TO_S);
+    const auto expectedDeltaVel = dPos / timestep;
     EXPECT_EQ(
         mol.getAtomVelocity(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel
+        expectedDeltaVel.in(angstrom / s)
     );
     EXPECT_EQ(
         mol.getAtomVelocity(AtomIndex{1}),
-        linalg::Vec3D(1.0, 1.0, 1.0) - 0.5 * expectedDeltaVel
+        linalg::Vec3D(1.0, 1.0, 1.0) * expectedDeltaVel.in(angstrom / s) -
+            0.5 * expectedDeltaVel.in(angstrom / s)
     );
 
     EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0));
@@ -166,11 +166,11 @@ TEST_F(TestBondConstraint, applyRattle)
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{0}),
+        mol.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0) + deltaVel
     );
     EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{1}),
+        mol.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s),
         linalg::Vec3D(1.0, 1.0, 1.0) - 0.5 * deltaVel
     );
 

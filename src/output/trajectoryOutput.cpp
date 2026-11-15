@@ -144,7 +144,7 @@ namespace out
         {
             buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &vel = atom.velocity;
+            const auto &vel = atom.velocity.numerical_value_in(angstrom / s);
 
             buffer << std::format("{:20.8e}\t", vel[0]);
             buffer << std::format("{:20.8e}\t", vel[1]);

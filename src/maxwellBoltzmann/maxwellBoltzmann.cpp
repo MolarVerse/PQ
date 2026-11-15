@@ -31,6 +31,7 @@
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
+#include "vector3d.hpp"
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -67,9 +68,12 @@ namespace maxwellBoltzmann
                 ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
 
             atom->setVelocity(
-                {_randomNumberGenerator.getNormalDistribution(0.0, stddev),
-                 _randomNumberGenerator.getNormalDistribution(0.0, stddev),
-                 _randomNumberGenerator.getNormalDistribution(0.0, stddev)}
+                linalg::Vec3D{
+                    _randomNumberGenerator.getNormalDistribution(0.0, stddev),
+                    _randomNumberGenerator.getNormalDistribution(0.0, stddev),
+                    _randomNumberGenerator.getNormalDistribution(0.0, stddev)
+                } *
+                angstrom / s
             );
         };
 

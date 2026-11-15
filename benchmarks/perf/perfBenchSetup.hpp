@@ -104,7 +104,10 @@ namespace benchSetup
             atom->setPosition(pos * angstrom);
             // at-rest start (stable for constraints)
             atom->setPositionOld(pos * angstrom);
-            atom->setVelocity({0.01 * (deviation + 1.0), -0.015, 0.02});
+            atom->setVelocity(
+                linalg::Vec3D{0.01 * (deviation + 1.0), -0.015, 0.02} *
+                angstrom / s
+            );
             atom->setForce({0.1, -0.2, 0.05});
             atom->setShiftForce({0.0, 0.0, 0.0});
             atom->setMass(12.0);

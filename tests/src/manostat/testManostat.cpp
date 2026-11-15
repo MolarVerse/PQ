@@ -575,7 +575,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     auto molecule = molsys::Molecule();
 
     const auto addAtom =
-        [this, &molecule](const Pos3D& position, const linalg::Vec3D& velocity)
+        [this, &molecule](const Pos3D& position, const Vel3D& velocity)
     {
         auto atom = std::make_shared<molsys::Atom>();
         atom->setMass(1.0);
@@ -585,8 +585,14 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
         _box->addAtom(atom);
     };
 
-    addAtom(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom, {2.0, 0.0, 0.0});
-    addAtom(linalg::Vec3D{2.0, 0.0, 0.0} * angstrom, {4.0, 0.0, 0.0});
+    addAtom(
+        linalg::Vec3D{1.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{2.0, 0.0, 0.0} * angstrom / s
+    );
+    addAtom(
+        linalg::Vec3D{2.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{4.0, 0.0, 0.0} * angstrom / s
+    );
 
     molecule.calculateCenterOfMass(_box->getBox());
     _box->addMolecule(molecule);
@@ -612,14 +618,14 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 
     EXPECT_TRUE(
         utilities::compare(
-            centerOfMassVelocity,
+            centerOfMassVelocity.numerical_value_in(angstrom / s),
             expectedCenterOfMassVelocity,
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            velocity1 - velocity0,
+            (velocity1 - velocity0).numerical_value_in(angstrom / s),
             expectedRelativeVelocity,
             1e-12
         )

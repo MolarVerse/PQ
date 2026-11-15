@@ -120,7 +120,10 @@ int main()
             atom->initMass();
             atom->setPosition(origin * angstrom + refPos.at(i));
             atom->setPositionOld(origin * angstrom + refPos.at(i));
-            atom->setVelocity({0.01, -0.02 * static_cast<double>(i), 0.005});
+            atom->setVelocity(
+                linalg::Vec3D{0.01, -0.02 * static_cast<double>(i), 0.005} *
+                angstrom / s
+            );
             water.addAtom(atom);
         }
 

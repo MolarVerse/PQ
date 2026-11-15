@@ -31,7 +31,6 @@
 #include "generalSettings.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace molsys
 {
@@ -166,15 +165,15 @@ namespace molsys
      */
     void Molecule::scaleVelocity(const QuantityTensor3D &scalingTensor)
     {
-        auto centerOfMassVelocity = linalg::Vec3D(0.0);
+        // TODO: zero value needs different unit
+        Vel3D centerOfMassVelocity = Vel::zero();
 
         for (const auto &atom : _atoms)
             centerOfMassVelocity += atom->getMass() * atom->getVelocity();
 
-        centerOfMassVelocity /= getMolMass();
+        const auto comVelocity = centerOfMassVelocity / getMolMass();
 
-        const auto scaledCenterOfMassVelocity =
-            scalingTensor.numerical_value_in(one) * centerOfMassVelocity;
+        const auto scaledCenterOfMassVelocity = scalingTensor * comVelocity;
 
         const auto velocityShift =
             scaledCenterOfMassVelocity - centerOfMassVelocity;
@@ -332,10 +331,7 @@ namespace molsys
      * @param index
      * @param velocity
      */
-    void Molecule::addAtomVelocity(
-        AtomIndex            index,
-        const linalg::Vec3D &velocity
-    )
+    void Molecule::addAtomVelocity(AtomIndex index, const Vel3D &velocity)
     {
         _atoms[index.get()]->addVelocity(velocity);
     }
@@ -389,7 +385,7 @@ namespace molsys
      * @param index
      * @param velocity
      */
-    void Molecule::setAtomVelocity(size_t index, const linalg::Vec3D &velocity)
+    void Molecule::setAtomVelocity(size_t index, const Vel3D &velocity)
     {
         _atoms[index]->setVelocity(velocity);
     }
@@ -455,9 +451,9 @@ namespace molsys
      * @brief returns the velocity of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const Vel3D&
      */
-    linalg::Vec3D Molecule::getAtomVelocity(AtomIndex index) const
+    const Vel3D &Molecule::getAtomVelocity(AtomIndex index) const
     {
         return _atoms[index.get()]->getVelocity();
     }

@@ -60,8 +60,8 @@ class TestBondConstraint : public ::testing::Test
         atom1->setMass(1.0);
         atom2->setMass(2.0);
 
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom1->setVelocity(Vel::zero());
+        atom2->setVelocity(Vel::zero() + 1.0 * angstrom / s);
 
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);

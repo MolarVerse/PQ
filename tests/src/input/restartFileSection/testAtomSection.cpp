@@ -243,7 +243,7 @@ TEST_F(TestAtomSection, testProcessAtomLine)
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        molecule.getAtomVelocity(AtomIndex{0}),
+        molecule.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
@@ -276,7 +276,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        first_atom->getVelocity(),
+        first_atom->getVelocity().numerical_value_in(angstrom / s),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(

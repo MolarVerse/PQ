@@ -133,8 +133,8 @@ namespace thermostat
             auto       deltaVelocity =
                 -propagationFactor * _friction * mass * velocity;
 
-            deltaVelocity +=
-                propagationFactor * sigma * std::sqrt(mass) * randomFactor;
+            deltaVelocity += propagationFactor * sigma * std::sqrt(mass) *
+                             randomFactor * angstrom / s;
 
             atom->addVelocity(deltaVelocity);
         };

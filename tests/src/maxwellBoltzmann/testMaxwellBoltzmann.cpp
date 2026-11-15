@@ -68,7 +68,7 @@ namespace
                 ) *
                 angstrom
             );
-            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
 
             totalMass += atom->getMass();
             box->addAtom(atom);
@@ -98,11 +98,9 @@ namespace
         SeedGuard &operator=(const SeedGuard &) = delete;
     };
 
-    std::vector<linalg::Vec3D> velocitiesOf(
-        molsys::SimulationBox &simulationBox
-    )
+    std::vector<Vel3D> velocitiesOf(molsys::SimulationBox &simulationBox)
     {
-        std::vector<linalg::Vec3D> velocities;
+        std::vector<Vel3D> velocities;
         for (const auto &atom : simulationBox.getAtoms())
             velocities.push_back(atom->getVelocity());
         return velocities;
@@ -113,7 +111,8 @@ namespace
     {
         auto scale = 0.0;
         for (const auto &atom : simulationBox.getAtoms())
-            scale += atom->getMass() * norm(atom->getVelocity());
+            scale += atom->getMass() *
+                     norm(atom->getVelocity().numerical_value_in(angstrom / s));
         return scale;
     }
 
@@ -129,7 +128,7 @@ namespace
             const auto relativePosition =
                 atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
             scale += atom->getMass() * norm(relativePosition) *
-                     norm(atom->getVelocity());
+                     norm(atom->getVelocity().numerical_value_in(angstrom / s));
         }
         return scale;
     }
@@ -252,8 +251,8 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesGivesFiniteNonZeroVelocities)
     for (const auto &atom : box->getAtoms())
     {
         const auto velocity = atom->getVelocity();
-        EXPECT_GT(norm(velocity), 0.0);
-        for (size_t i = 0; i < 3; ++i) EXPECT_TRUE(std::isfinite(velocity[i]));
+        EXPECT_GT(norm(velocity), 0.0 * angstrom / s);
+        for (size_t i = 0; i < 3; ++i) EXPECT_TRUE(isfinite(velocity[i]));
     }
 
     delete box;
@@ -292,9 +291,9 @@ TEST(
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesIsReproducibleForFixedSeed)
 {
-    std::vector<linalg::Vec3D> first;
-    std::vector<linalg::Vec3D> second;
-    std::vector<linalg::Vec3D> other;
+    std::vector<Vel3D> first;
+    std::vector<Vel3D> second;
+    std::vector<Vel3D> other;
 
     {
         const SeedGuard guard(4711);

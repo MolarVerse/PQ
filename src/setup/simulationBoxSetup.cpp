@@ -421,17 +421,17 @@ namespace setup
      */
     void SimulationBoxSetup::checkZeroVelocities()
     {
-        constexpr double epsilon    = 1e-10;
-        auto            &simBox     = _engine.getSimulationBox();
-        const auto       velocities = simBox.getVelocities();
+        constexpr auto epsilon    = 1e-10 * angstrom / s;
+        auto          &simBox     = _engine.getSimulationBox();
+        const auto     velocities = simBox.getVelocities();
 
         if ((std::ranges::any_of(
                 velocities,
                 [epsilon](const auto &vel)
                 {
-                    return std::abs(vel[0]) > epsilon ||
-                           std::abs(vel[1]) > epsilon ||
-                           std::abs(vel[2]) > epsilon;
+                    return mstd::abs(vel[0]) > epsilon ||
+                           mstd::abs(vel[1]) > epsilon ||
+                           mstd::abs(vel[2]) > epsilon;
                 }
             )))
             setZeroVelocities(false);

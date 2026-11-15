@@ -170,11 +170,11 @@ namespace constraints
 
             molecule1->addAtomVelocity(
                 get_atomIndices()[0],
-                +invMass1 * dVelocity
+                +invMass1 * dVelocity * angstrom / s
             );
             molecule2->addAtomVelocity(
                 get_atomIndices()[1],
-                -invMass2 * dVelocity
+                -invMass2 * dVelocity * angstrom / s
             );
 
             return false;
@@ -189,9 +189,12 @@ namespace constraints
      */
     double BondConstraint::calculateVelocityDelta() const
     {
-        const auto dVelocity =
-            get_molecules()[0]->getAtomVelocity(get_atomIndices()[0]) -
-            get_molecules()[1]->getAtomVelocity(get_atomIndices()[1]);
+        const auto dVelocity = get_molecules()[0]
+                                   ->getAtomVelocity(get_atomIndices()[0])
+                                   .numerical_value_in(angstrom / s) -
+                               get_molecules()[1]
+                                   ->getAtomVelocity(get_atomIndices()[1])
+                                   .numerical_value_in(angstrom / s);
 
         const auto scalarProduct =
             dot(dVelocity, _shakeDistanceRef.numerical_value_in(angstrom));
@@ -233,11 +236,11 @@ namespace constraints
 
             get_molecules()[0]->addAtomVelocity(
                 get_atomIndices()[0],
-                +invMass1 * dVelocity
+                +invMass1 * dVelocity * angstrom / s
             );
             get_molecules()[1]->addAtomVelocity(
                 get_atomIndices()[1],
-                -invMass2 * dVelocity
+                -invMass2 * dVelocity * angstrom / s
             );
 
             return false;

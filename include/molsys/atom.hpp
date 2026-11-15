@@ -63,8 +63,8 @@ namespace molsys
         Pos3D _position;
         Pos3D _positionOld;
 
-        linalg::Vec3D _velocity;
-        linalg::Vec3D _velocityOld;
+        Vel3D _velocity;
+        Vel3D _velocityOld;
 
         linalg::Vec3D _force;
         linalg::Vec3D _forceOld;
@@ -95,7 +95,7 @@ namespace molsys
          **************************/
 
         void addPosition(const Pos3D &position);
-        void addVelocity(const linalg::Vec3D &velocity);
+        void addVelocity(const Vel3D &velocity);
         void addForce(const linalg::Vec3D &force) { _force += force; }
         void addForce(double, double, double);
         void addForceInner(const linalg::Vec3D &force);
@@ -134,7 +134,7 @@ namespace molsys
 
         [[nodiscard]] const Pos3D  &getPosition() const { return _position; }
         [[nodiscard]] const Pos3D  &getPositionOld() const;
-        [[nodiscard]] linalg::Vec3D getVelocity() const;
+        [[nodiscard]] const Vel3D  &getVelocity() const;
         [[nodiscard]] linalg::Vec3D getForce() const;
         [[nodiscard]] linalg::Vec3D getForceOld() const;
         [[nodiscard]] linalg::Vec3D getForceInner() const;
@@ -161,14 +161,14 @@ namespace molsys
         void setInternalGlobalVDWType(VdwType internalGlobalVDWType);
 
         void setPosition(const Pos3D &position);
-        void setVelocity(const linalg::Vec3D &velocity);
+        void setVelocity(const Vel3D &velocity);
         void setForce(const linalg::Vec3D &force);
         void setForceInner(const linalg::Vec3D &force);
         void setForceOuter(const linalg::Vec3D &force);
         void setShiftForce(const linalg::Vec3D &shiftForce);
 
         void setPositionOld(const Pos3D &positionOld);
-        void setVelocityOld(const linalg::Vec3D &velocityOld);
+        void setVelocityOld(const Vel3D &velocityOld);
         void setForceOld(const linalg::Vec3D &forceOld);
 
         void setForceToZero();

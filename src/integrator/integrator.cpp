@@ -43,7 +43,8 @@ namespace integrator
         const auto timeStamp =
             settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
 
-        velocity += timeStamp * force / mass * V_VERLET_VELOCITY_FACTOR;
+        velocity +=
+            timeStamp * force / mass * V_VERLET_VELOCITY_FACTOR * angstrom / s;
 
         atom->setVelocity(velocity);
     }
@@ -64,9 +65,7 @@ namespace integrator
         auto       position = atom->getPosition();
         const auto velocity = atom->getVelocity();
 
-        position +=
-            settings::TimingsSettings::getTimeStep().numerical_value_in(s) *
-            velocity * (1.0 * angstrom);
+        position += settings::TimingsSettings::getTimeStep() * velocity;
 
         simulationBox.applyPBC(position);
 

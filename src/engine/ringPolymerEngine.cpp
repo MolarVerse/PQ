@@ -234,8 +234,8 @@ namespace engine
             getSimulationBox().getAtoms(),
             [](auto &atom)
             {
-                atom->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
-                atom->setVelocity({0.0, 0.0, 0.0});
+                atom->setPosition(Pos::zero());
+                atom->setVelocity(Vel::zero());
                 atom->setForce({0.0, 0.0, 0.0});
             }
         );

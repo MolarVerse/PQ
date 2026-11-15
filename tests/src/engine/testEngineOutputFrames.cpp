@@ -38,6 +38,7 @@
 #include "simulationBox.hpp"
 #include "thermostat.hpp"
 #include "units.hpp"
+#include "vector3d.hpp"
 
 namespace
 {
@@ -61,7 +62,7 @@ namespace
             atom->setPosition(
                 {x * angstrom, 2.0 * x * angstrom, 3.0 * x * angstrom}
             );
-            atom->setVelocity({0.1 * x, 0.0, 0.0});
+            atom->setVelocity(linalg::Vec3D{0.1 * x, 0.0, 0.0} * angstrom / s);
             atom->setForce({0.0, -x, 0.0});
             molecule.addAtom(atom);
             simulationBox.addAtom(atom);

@@ -139,9 +139,13 @@ namespace out
                 for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
-                    const auto velX     = molecule.getAtomVelocity(j)[0];
-                    const auto velY     = molecule.getAtomVelocity(j)[1];
-                    const auto velZ     = molecule.getAtomVelocity(j)[2];
+                    const auto vel =
+                        molecule.getAtomVelocity(j).numerical_value_in(
+                            angstrom / s
+                        );
+                    const auto velX = vel[0];
+                    const auto velY = vel[1];
+                    const auto velZ = vel[2];
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
 

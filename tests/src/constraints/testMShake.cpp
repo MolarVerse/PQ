@@ -120,9 +120,9 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     atom2->setPositionOld(refPos1);
     atom3->setPositionOld(refPos2);
 
-    atom1->setVelocity({0.0, 0.0, 0.0});
-    atom2->setVelocity({0.0, 0.0, 0.0});
-    atom3->setVelocity({0.0, 0.0, 0.0});
+    atom1->setVelocity(Vel::zero());
+    atom2->setVelocity(Vel::zero());
+    atom3->setVelocity(Vel::zero());
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -191,15 +191,15 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
     molecule.setMoltype(MolType{1});
 
     // same geometry as the reference, rotated and shifted
-    const auto pos = std::vector<linalg::Vec3D>{
-        {10.0, 10.0, 10.0},
-        {10.0, 10.585882, 10.756950},
-        {10.0, 10.585882, 9.243050}
+    const auto pos = std::vector<Pos3D>{
+        linalg::Vec3D{10.0, 10.0, 10.0} * angstrom,
+        linalg::Vec3D{10.0, 10.585882, 10.756950} * angstrom,
+        linalg::Vec3D{10.0, 10.585882, 9.243050} * angstrom
     };
-    const auto vel = std::vector<linalg::Vec3D>{
-        {0.3, -0.2, 0.1},
-        {-1.1, 2.0, 0.7},
-        {0.9, -1.4, -2.3}
+    const auto vel = std::vector<Vel3D>{
+        linalg::Vec3D{0.3, -0.2, 0.1} * angstrom / s,
+        linalg::Vec3D{-1.1, 2.0, 0.7} * angstrom / s,
+        linalg::Vec3D{0.9, -1.4, -2.3} * angstrom / s,
     };
 
     auto atoms = std::vector<std::shared_ptr<molsys::Atom>>();
@@ -208,7 +208,7 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName(names[i]);
         atom->initMass();
-        atom->setPosition(linalg::Vec3D{pos[i]} * angstrom);
+        atom->setPosition(pos[i]);
         atom->setVelocity(vel[i]);
         molecule.addAtom(atom);
         atoms.push_back(atom);
@@ -219,7 +219,8 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
     auto momentumBefore = linalg::Vec3D(0.0, 0.0, 0.0);
     for (const auto &atom : atoms)
     {
-        momentumBefore += atom->getMass() * atom->getVelocity();
+        momentumBefore += atom->getMass() *
+                          atom->getVelocity().numerical_value_in(angstrom / s);
     }
 
     mShake.applyMRattle(simBox);
@@ -232,14 +233,19 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
                 (atoms[i]->getPosition() - atoms[j]->getPosition())
                     .numerical_value_in(angstrom);
             const auto dVel = atoms[i]->getVelocity() - atoms[j]->getVelocity();
-            EXPECT_NEAR(dot(bond, dVel), 0.0, 1.0e-10);
+            EXPECT_NEAR(
+                dot(bond, dVel.numerical_value_in(angstrom / s)),
+                0.0,
+                1.0e-10
+            );
         }
     }
 
     auto momentumAfter = linalg::Vec3D(0.0, 0.0, 0.0);
     for (const auto &atom : atoms)
     {
-        momentumAfter += atom->getMass() * atom->getVelocity();
+        momentumAfter += atom->getMass() *
+                         atom->getVelocity().numerical_value_in(angstrom / s);
     }
 
     for (size_t k = 0; k < 3; ++k)
@@ -306,9 +312,9 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     atom1->setPositionOld(refPos0);
     atom2->setPositionOld(refPos1);
     atom3->setPositionOld(refPos2);
-    atom1->setVelocity({0.0, 0.0, 0.0});
-    atom2->setVelocity({0.0, 0.0, 0.0});
-    atom3->setVelocity({0.0, 0.0, 0.0});
+    atom1->setVelocity(Vel::zero());
+    atom2->setVelocity(Vel::zero());
+    atom3->setVelocity(Vel::zero());
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);

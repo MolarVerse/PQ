@@ -374,11 +374,11 @@ namespace molsys
     /**
      * @brief get all velocities of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Vel3D>
      */
-    std::vector<linalg::Vec3D> SimulationBox::getVelocities() const
+    std::vector<Vel3D> SimulationBox::getVelocities() const
     {
-        std::vector<linalg::Vec3D> velocities;
+        std::vector<Vel3D> velocities;
         velocities.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)

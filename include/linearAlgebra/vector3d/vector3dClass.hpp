@@ -166,6 +166,24 @@ namespace linalg
         )
         Vector3D &operator/=(const S &scalar);
 
+        // quantity elements multiplied in place by a dimensionless scalar,
+        // e.g. Vector3D<Vel> *= 2.0 or Vector3D<Vel> *= quantity<one>
+        template <typename S>
+        requires(
+            mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+            requires(T &elem, const S &scalar) { elem *= scalar; }
+        )
+        Vector3D &operator*=(const S &scalar);
+
+        // quantity elements multiplied component-wise by a vector of
+        // dimensionless values, e.g. Vector3D<Vel> *= Vector3D<double>
+        template <typename S>
+        requires(
+            mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+            requires(T &elem, const S &scalar) { elem *= scalar; }
+        )
+        Vector3D &operator*=(const Vector3D<S> &vec);
+
         /**********************
          * indexing operators *
          **********************/

@@ -366,11 +366,11 @@ namespace constraints
 
                         atoms[i]->addVelocity(
                             -posAdjustment.numerical_value_in(angstrom) /
-                            (mass_i * timeStep)
+                            (mass_i * timeStep) * angstrom / s
                         );
                         atoms[j]->addVelocity(
                             posAdjustment.numerical_value_in(angstrom) /
-                            (mass_j * timeStep)
+                            (mass_j * timeStep) * angstrom / s
                         );
 
                         ++index_ij;
@@ -488,8 +488,9 @@ namespace constraints
                     const auto v_j     = atoms[j]->getVelocity();
                     const auto delta_v = v_i - v_j;
 
-                    bonds[index_ij]        = dxyz;
-                    rattleVector[index_ij] = dot(dxyz, delta_v);
+                    bonds[index_ij] = dxyz;
+                    rattleVector[index_ij] =
+                        dot(dxyz, delta_v.numerical_value_in(angstrom / s));
 
                     ++index_ij;
                 }
@@ -509,8 +510,12 @@ namespace constraints
 
                     const auto velAdjustment = velConstraint * bonds[index_ij];
 
-                    atoms[i]->addVelocity(velAdjustment / mass_i);
-                    atoms[j]->addVelocity(-velAdjustment / mass_j);
+                    atoms[i]->addVelocity(
+                        velAdjustment / mass_i * angstrom / s
+                    );
+                    atoms[j]->addVelocity(
+                        -velAdjustment / mass_j * angstrom / s
+                    );
 
                     ++index_ij;
                 }

@@ -100,9 +100,9 @@ namespace input::ringPolymer
                 );
 
                 atom->setVelocity(
-                    {stod(lineElements[6]),
-                     stod(lineElements[7]),
-                     stod(lineElements[8])}
+                    {stod(lineElements[6]) * angstrom / s,
+                     stod(lineElements[7]) * angstrom / s,
+                     stod(lineElements[8]) * angstrom / s}
                 );
 
                 atom->setForce(

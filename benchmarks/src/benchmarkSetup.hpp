@@ -64,11 +64,14 @@ namespace benchmarkSetup
                     };
                     atom->setPosition(position);
                     atom->setPositionOld(position);
-                    atom->setVelocity({
-                        0.001 * static_cast<double>(atomIndex + 1),
-                        -0.015,
-                        0.02,
-                    });
+                    atom->setVelocity(
+                        linalg::Vec3D{
+                            0.001 * static_cast<double>(atomIndex + 1),
+                            -0.015,
+                            0.02,
+                        } *
+                        angstrom / s
+                    );
                     atom->setForce({0.1, -0.2, 0.05});
                     atom->setMass(12.0);
                     atom->setAtomType(AtomType{0});

@@ -797,7 +797,7 @@ TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)
     for (auto &atom : _simulationBox->getAtoms())
     {
         const auto value = static_cast<double>(index++);
-        atom->setVelocity({value, 0.0, 0.0});
+        atom->setVelocity(linalg::Vec3D{value, 0.0, 0.0} * angstrom / s);
         atom->setForce({value, -value, 0.0});
         atom->setForceInner({value, 0.0, 0.0});
         atom->setForceOuter({0.0, value, 0.0});

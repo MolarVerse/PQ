@@ -109,7 +109,10 @@ namespace benchOutputWriters
                 auto       atom   = std::make_shared<molsys::Atom>();
                 atom->setName(names.at(i));
                 atom->setPosition((origin + shift.at(i)) * angstrom);
-                atom->setVelocity({0.01 + offset, -0.02, 0.005 * index});
+                atom->setVelocity(
+                    linalg::Vec3D{0.01 + offset, -0.02, 0.005 * index} *
+                    angstrom / s
+                );
                 atom->setForce({1.5 - offset, 0.25 * index, -0.75});
                 atom->setPartialCharge(i == 0 ? -0.82 : 0.41);
                 molecule.addAtom(atom);

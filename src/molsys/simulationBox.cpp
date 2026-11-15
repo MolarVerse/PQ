@@ -638,7 +638,10 @@ namespace molsys
         auto momentum = linalg::Vec3D{0.0};
 
         auto accumulateAtomicMomentum = [&momentum](const auto& atom)
-        { momentum += atom->getMass() * atom->getVelocity(); };
+        {
+            momentum += atom->getMass() *
+                        atom->getVelocity().numerical_value_in(angstrom / s);
+        };
 
         std::ranges::for_each(_atoms, accumulateAtomicMomentum);
 
@@ -665,7 +668,7 @@ namespace molsys
             angularMom +=
                 mass * cross(
                            atom->getPosition().numerical_value_in(angstrom),
-                           atom->getVelocity()
+                           atom->getVelocity().numerical_value_in(angstrom / s)
                        );
         };
 
@@ -762,7 +765,12 @@ namespace molsys
         auto temperature = 0.0;
 
         auto accumulateTemperature = [&temperature](const auto& atom)
-        { temperature += atom->getMass() * normSquared(atom->getVelocity()); };
+        {
+            temperature +=
+                atom->getMass() *
+                normSquared(atom->getVelocity().numerical_value_in(angstrom / s)
+                );
+        };
 
         std::ranges::for_each(_atoms, accumulateTemperature);
 

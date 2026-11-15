@@ -127,7 +127,7 @@ namespace molsys
 
         void addAtom(const std::shared_ptr<Atom> &atom);
         void addAtomPosition(AtomIndex index, const Pos3D &position);
-        void addAtomVelocity(AtomIndex index, const linalg::Vec3D &velocity);
+        void addAtomVelocity(AtomIndex index, const Vel3D &velocity);
         void addAtomForce(AtomIndex index, const linalg::Vec3D &force);
         void addAtomShiftForce(
             AtomIndex            index,
@@ -139,7 +139,7 @@ namespace molsys
          ****************************************/
 
         void setAtomPosition(size_t index, const Pos3D &position);
-        void setAtomVelocity(size_t index, const linalg::Vec3D &velocity);
+        void setAtomVelocity(size_t index, const Vel3D &velocity);
         void setAtomForce(size_t index, const linalg::Vec3D &force);
         void setAtomShiftForce(size_t index, const linalg::Vec3D &shiftForce);
 
@@ -154,12 +154,13 @@ namespace molsys
         std::vector<Pos3D> getAtomPositions() const;
 
         [[nodiscard]]
-        linalg::Vec3D getAtomVelocity(AtomIndex index) const;
+        const Vel3D &getAtomVelocity(AtomIndex index) const;
 
         [[nodiscard]]
         linalg::Vec3D getAtomForce(AtomIndex) const;
 
-        [[nodiscard]] linalg::Vec3D getAtomShiftForce(size_t index) const;
+        [[nodiscard]]
+        linalg::Vec3D getAtomShiftForce(size_t index) const;
 
         [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
         [[nodiscard]] double      getAtomMass(AtomIndex index) const;

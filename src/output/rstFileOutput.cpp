@@ -83,7 +83,7 @@ namespace out
         for (const auto &atom : frame.atoms)
         {
             const auto &pos   = atom.position.numerical_value_in(angstrom);
-            const auto &vel   = atom.velocity;
+            const auto &vel   = atom.velocity.numerical_value_in(angstrom / s);
             const auto &force = atom.force;
 
             buffer << std::format("{:<5}\t", atom.name);

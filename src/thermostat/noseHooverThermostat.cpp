@@ -129,7 +129,12 @@ namespace thermostat
         factor      *= MOMENTUM_TO_FORCE;
 
         auto applyNoseHoover = [factor](auto &atom)
-        { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
+        {
+            atom->addForce(
+                -factor * atom->getVelocity().numerical_value_in(angstrom / s) *
+                atom->getMass()
+            );
+        };
 
         std::ranges::for_each(simulationBox.getAtoms(), applyNoseHoover);
     }

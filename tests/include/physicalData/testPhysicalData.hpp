@@ -69,8 +69,8 @@ class TestPhysicalData : public ::testing::Test
 
         atom1->setMass(1.0);
         atom2->setMass(1.0);
-        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
@@ -78,7 +78,7 @@ class TestPhysicalData : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
         atom3->setMass(1.0);
-        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
         molecule2.addAtom(atom3);
 
         _simulationBox->addMolecule(molecule1);

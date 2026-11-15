@@ -29,6 +29,7 @@
 #include "constants/internalConversionFactors.hpp"
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace physicalData
 {
@@ -75,7 +76,10 @@ namespace physicalData
 
             for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
             {
-                const auto velocities = molecule.getAtomVelocity(i);
+                const auto velocities =
+                    molecule.getAtomVelocity(i).numerical_value_in(
+                        angstrom / s
+                    );
 
                 const auto momentum = velocities * molecule.getAtomMass(i);
 

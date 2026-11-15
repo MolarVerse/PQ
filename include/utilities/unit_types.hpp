@@ -92,6 +92,10 @@ using InvVolume = mstd::quantity<
                             [mstd::units::angstrom * mstd::units::angstrom *
                              mstd::units::angstrom])>;
 
+using Vel = mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] / mstd::units::s>;
+using Vel3D = linalg::Vector3D<Vel>;
+
 using ForceConstant = mstd::quantity<
     mstd::units::kcal_per_mol / mstd::units::angstrom / mstd::units::angstrom>;
 

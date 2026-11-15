@@ -448,20 +448,20 @@ TEST_F(TestSetup, testCheckZeroVelocities)
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
-    atom1->setVelocity({8e-10, 0.0, 0.0});
-    atom2->setVelocity({1.0, 2.0, 3.0});
+    atom1->setVelocity(linalg::Vec3D{8e-10, 0.0, 0.0} * angstrom / s);
+    atom2->setVelocity(linalg::Vec3D{1.0, 2.0, 3.0} * angstrom / s);
     simBox.getAtoms().push_back(atom1);
     simBox.getAtoms().push_back(atom2);
     simBoxSetup.checkZeroVelocities();
 
     EXPECT_FALSE(setup::SimulationBoxSetup::getZeroVelocities());
 
-    atom2->setVelocity({0.0, 0.0, 0.0});
+    atom2->setVelocity(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom / s);
     simBoxSetup.checkZeroVelocities();
 
     EXPECT_FALSE(setup::SimulationBoxSetup::getZeroVelocities());
 
-    atom1->setVelocity({0.0, 0.0, 0.0});
+    atom1->setVelocity(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom / s);
     simBoxSetup.checkZeroVelocities();
 
     EXPECT_TRUE(setup::SimulationBoxSetup::getZeroVelocities());
