@@ -312,12 +312,24 @@ TEST(TestWaterModelSettings, RigidGeometryMatchesTheModels)
     constexpr double tip3pAngle  = 104.52;
 
     const std::array cases = {
-        Case{WaterIntraModel::SPC, 1.0, tetrahedral},
-        Case{WaterIntraModel::SPC_E, 1.0, tetrahedral},
-        Case{WaterIntraModel::SPC_DC, 1.0, tetrahedral},
-        Case{WaterIntraModel::H2O_DC, 0.958, tetrahedral},
-        Case{WaterIntraModel::TIP3P, 0.9572, tip3pAngle},
-        Case{WaterIntraModel::OPC3, 0.97888, 109.47},
+        Case{.model = WaterIntraModel::SPC, .dOH = 1.0, .angle = tetrahedral},
+        Case{.model = WaterIntraModel::SPC_E, .dOH = 1.0, .angle = tetrahedral},
+        Case{
+            .model = WaterIntraModel::SPC_DC,
+            .dOH   = 1.0,
+            .angle = tetrahedral
+        },
+        Case{
+            .model = WaterIntraModel::H2O_DC,
+            .dOH   = 0.958,
+            .angle = tetrahedral
+        },
+        Case{
+            .model = WaterIntraModel::TIP3P,
+            .dOH   = 0.9572,
+            .angle = tip3pAngle
+        },
+        Case{.model = WaterIntraModel::OPC3, .dOH = 0.97888, .angle = 109.47},
     };
 
     for (const auto &testCase : cases)
