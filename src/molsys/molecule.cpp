@@ -175,8 +175,7 @@ namespace molsys
 
         const auto scaledCenterOfMassVelocity = scalingTensor * comVelocity;
 
-        const auto velocityShift =
-            scaledCenterOfMassVelocity - centerOfMassVelocity;
+        const auto velocityShift = scaledCenterOfMassVelocity - comVelocity;
 
         auto shiftAtomVelocity = [velocityShift](const auto &atom)
         { atom->addVelocity(velocityShift); };

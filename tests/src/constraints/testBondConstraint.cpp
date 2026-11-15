@@ -87,16 +87,27 @@ TEST_F(TestBondConstraint, applyShake)
         linalg::Vec3D(1.0, 2.0, 3.0) * angstrom - 0.5 * dPos
     );
 
-    const auto expectedDeltaVel = dPos / timestep;
-    EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{0}),
-        expectedDeltaVel.in(angstrom / s)
-    );
-    EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{1}),
-        linalg::Vec3D(1.0, 1.0, 1.0) * expectedDeltaVel.in(angstrom / s) -
-            0.5 * expectedDeltaVel.in(angstrom / s)
-    );
+    const auto expectedDeltaVel = (dPos / timestep).in(angstrom / s);
+    const auto expectedVel0     = expectedDeltaVel;
+    const auto expectedVel1 =
+        linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s - 0.5 * expectedDeltaVel;
+
+    const auto vel0 = mol.getAtomVelocity(AtomIndex{0});
+    const auto vel1 = mol.getAtomVelocity(AtomIndex{1});
+
+    // the velocity is computed via a different unit conversion path than the
+    // expected value, so the results may differ in the last digits
+    for (std::size_t i = 0; i < 3; ++i)
+    {
+        EXPECT_DOUBLE_EQ(
+            vel0[i].numerical_value_in(angstrom / s),
+            expectedVel0.numerical_value_in(angstrom / s)[i]
+        );
+        EXPECT_DOUBLE_EQ(
+            vel1[i].numerical_value_in(angstrom / s),
+            expectedVel1.numerical_value_in(angstrom / s)[i]
+        );
+    }
 
     EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0));
 }
