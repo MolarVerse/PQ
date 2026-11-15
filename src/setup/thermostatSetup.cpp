@@ -102,7 +102,8 @@ namespace setup
      */
     void ThermostatSetup::setupBerendsenThermostat()
     {
-        const auto tau = ThermostatSettings::getRelaxationTime();
+        const auto tau =
+            _engine.getSettings().thermostatSettings.getRelaxationTime();
 
         _engine.makeThermostat(thermostat::BerendsenThermostat(tau));
     }
@@ -116,7 +117,8 @@ namespace setup
      */
     void ThermostatSetup::setupVelocityRescalingThermostat()
     {
-        const auto tau = ThermostatSettings::getRelaxationTime();
+        const auto tau =
+            _engine.getSettings().thermostatSettings.getRelaxationTime();
 
         _engine.makeThermostat(thermostat::VelocityRescalingThermostat(tau));
     }
@@ -129,7 +131,8 @@ namespace setup
      */
     void ThermostatSetup::setupLangevinThermostat()
     {
-        const auto friction = ThermostatSettings::getFriction();
+        const auto friction =
+            _engine.getSettings().thermostatSettings.getFriction();
 
         _engine.makeThermostat(thermostat::LangevinThermostat(friction));
     }
@@ -194,7 +197,8 @@ namespace setup
 
         const auto &kineticsSettings = _engine.getSettings().kinetics;
         const auto  targetTemp       = kineticsSettings.getEndTemperature();
-        const auto  tau              = ThermostatSettings::getRelaxationTime();
+        const auto  tau =
+            _engine.getSettings().thermostatSettings.getRelaxationTime();
 
         log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
         log.writeSetupInfo(std::format("Relaxation time:    {}", tau.in(ps)));
@@ -211,7 +215,8 @@ namespace setup
 
         const auto &kineticsSettings = _engine.getSettings().kinetics;
         const auto  targetTemp       = kineticsSettings.getEndTemperature();
-        const auto  friction         = ThermostatSettings::getFriction();
+        const auto  friction =
+            _engine.getSettings().thermostatSettings.getFriction();
 
         log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
         log.writeSetupInfo(
@@ -282,7 +287,8 @@ namespace setup
         const auto &settings = _engine.getSettings();
 
         const auto targetTemp = settings.kinetics.getEndTemperature();
-        const auto tau        = ThermostatSettings::getRelaxationTime();
+        const auto tau =
+            _engine.getSettings().thermostatSettings.getRelaxationTime();
 
         log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
         log.writeSetupInfo(std::format("Relaxation time:    {}", tau.in(ps)));

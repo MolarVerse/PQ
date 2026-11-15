@@ -68,10 +68,12 @@ class TestInputValidation : public ::testing::Test
 
         _settings.kinetics.setRampingStepsByUser(0);
         _settings.kinetics.setRampingFrequencyByUser(1);
-        ThermostatSettings::setRelaxationTime(
+        _settings.thermostatSettings.setRelaxationTimeByUser(
             defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
         );
-        ThermostatSettings::setFriction(defaults::LANGEVIN_THERMOSTAT_FRICTION);
+        _settings.thermostatSettings.setFrictionByUser(
+            defaults::LANGEVIN_THERMOSTAT_FRICTION
+        );
         _settings.simulationBoxSettings.setInitializeVelocsByUser(
             InitVelocities::FALSE
         );
@@ -280,7 +282,7 @@ TEST_F(TestInputValidation, rejectsUnstableThermostatRelaxationTime)
         ThermostatType::VELOCITY_RESCALING
     );
     _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
-    ThermostatSettings::setRelaxationTime(0.0001 * ps);
+    _settings.thermostatSettings.setRelaxationTimeByUser(0.0001 * ps);
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
@@ -297,7 +299,9 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
         ThermostatType::LANGEVIN
     );
     _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
-    ThermostatSettings::setFriction(std::numeric_limits<double>::max());
+    _settings.thermostatSettings.setFrictionByUser(
+        std::numeric_limits<double>::max()
+    );
     _setKeyword("temp");
 
     ASSERT_THROW_MSG(
