@@ -120,7 +120,9 @@ class TestGuffDatReader : public ::testing::Test
         _settings.fileSettings.setGuffDatFileNameByUser(
             "data/guffDatReader/guff.dat"
         );
-        PotentialSettings::setNonCoulombType(NonCoulombType::GUFF);
+        _settings.potentialSettings.setNonCoulombTypeByUser(
+            NonCoulombType::GUFF
+        );
 
         _guffDatReader =
             std::make_unique<input::guffdat::GuffDatReader>(*_engine);

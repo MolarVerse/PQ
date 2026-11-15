@@ -48,7 +48,8 @@ namespace input::parameterFile
      */
     ParameterFileReader::ParameterFileReader(
         const std::string &filename,
-        engine::Engine    &engine
+        engine::Engine    &engine,
+        PotentialSettings &potentialSettings
     )
         : _fileName(filename), _fp(filename), _engine(engine)
     {
@@ -61,7 +62,7 @@ namespace input::parameterFile
         );
         _parameterFileSections.push_back(std::make_unique<JCouplingSection>());
         _parameterFileSections.push_back(
-            std::make_unique<NonCoulombicsSection>()
+            std::make_unique<NonCoulombicsSection>(potentialSettings)
         );
     }
 
@@ -151,7 +152,10 @@ namespace input::parameterFile
      *
      * @param engine
      */
-    void readParameterFile(engine::Engine &engine)
+    void readParameterFile(
+        engine::Engine    &engine,
+        PotentialSettings &potentialSettings
+    )
     {
         const auto &settings = engine.getSettings();
         if (!settings.forceFieldSettings.isActive())
@@ -167,7 +171,11 @@ namespace input::parameterFile
         out::StdoutOutput::writeRead("Parameter File", filename);
         engine.getLogOutput().writeRead("Parameter File", filename);
 
-        ParameterFileReader parameterFileReader(filename, engine);
+        ParameterFileReader parameterFileReader(
+            filename,
+            engine,
+            potentialSettings
+        );
         parameterFileReader.read();
     }
 

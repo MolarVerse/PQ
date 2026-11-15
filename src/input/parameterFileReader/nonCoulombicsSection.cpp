@@ -40,6 +40,18 @@ namespace input::parameterFile
 {
 
     /**
+     * @brief Construct a new NonCoulombicsSection object
+     *
+     * @param potentialSettings Reference to the PotentialSettings object
+     */
+    NonCoulombicsSection::NonCoulombicsSection(
+        PotentialSettings &potentialSettings
+    )
+        : _potentialSettings(potentialSettings)
+    {
+    }
+
+    /**
      * @brief keyword for nonCoulombics section
      *
      * @return "noncoulombics"
@@ -72,13 +84,13 @@ namespace input::parameterFile
             const auto type = utilities::toLowerCopy(lineElements[1]);
 
             if (type == "lj")
-                PotentialSettings::setNonCoulombType(LJ);
+                _potentialSettings->setNonCoulombTypeByUser(LJ);
 
             else if (type == "buckingham")
-                PotentialSettings::setNonCoulombType(BUCKINGHAM);
+                _potentialSettings->setNonCoulombTypeByUser(BUCKINGHAM);
 
             else if (type == "morse")
-                PotentialSettings::setNonCoulombType(MORSE);
+                _potentialSettings->setNonCoulombTypeByUser(MORSE);
 
             else
             {
@@ -96,7 +108,7 @@ namespace input::parameterFile
         else
         {
             // default of guff gets overriden
-            PotentialSettings::setNonCoulombType(LJ);
+            _potentialSettings->setNonCoulombTypeByUser(LJ);
         }
     }
 
@@ -118,7 +130,7 @@ namespace input::parameterFile
     {
         using enum NonCoulombType;
 
-        switch (PotentialSettings::getNonCoulombType())
+        switch (_potentialSettings->getNonCoulombType())
         {
             case LJ: processLJ(lineElements, engine, lineNumber); break;
             case BUCKINGHAM:

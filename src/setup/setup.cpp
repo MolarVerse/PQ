@@ -64,7 +64,8 @@ namespace setup
      */
     void setupRequestedJob(
         engine::Engine&     engine,
-        NoseHooverSettings& nhSettings
+        NoseHooverSettings& nhSettings,
+        PotentialSettings&  potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
@@ -79,7 +80,7 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        readFiles(engine, nhSettings);
+        readFiles(engine, nhSettings, potentialSettings);
 
         setupEngine(engine);
 
@@ -113,7 +114,11 @@ namespace setup
      * @param nhSettings Nose-Hoover thermostat settings object used to
      * configure the thermostat if applicable.
      */
-    void readFiles(engine::Engine& engine, NoseHooverSettings& nhSettings)
+    void readFiles(
+        engine::Engine&     engine,
+        NoseHooverSettings& nhSettings,
+        PotentialSettings&  potentialSettings
+    )
     {
         input::molDescriptor::readMolDescriptor(engine);
 
@@ -121,7 +126,7 @@ namespace setup
 
         input::topology::readTopologyFile(engine);
 
-        input::parameterFile::readParameterFile(engine);
+        input::parameterFile::readParameterFile(engine, potentialSettings);
 
         input::intraNonBondedReader::readIntraNonBondedFile(engine);
     }

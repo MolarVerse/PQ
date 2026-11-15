@@ -117,7 +117,8 @@ namespace input
         _parsers.push_back(
             std::make_unique<MMInputParser>(
                 settings.waterModelSettings,
-                settings.forceFieldSettings
+                settings.forceFieldSettings,
+                settings.potentialSettings
             )
         );
         _parsers.push_back(std::make_unique<GeneralInputParser>());

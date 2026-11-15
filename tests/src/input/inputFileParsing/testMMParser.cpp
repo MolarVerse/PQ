@@ -44,7 +44,8 @@ TEST_F(TestInputFileReader, testParseForceField)
     Settings             settings;
     input::MMInputParser parser{
         settings.waterModelSettings,
-        settings.forceFieldSettings
+        settings.forceFieldSettings,
+        settings.potentialSettings
     };
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("force_field"));
@@ -96,7 +97,8 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
 
     input::MMInputParser parser{
         settings.waterModelSettings,
-        settings.forceFieldSettings
+        settings.forceFieldSettings,
+        settings.potentialSettings
     };
     const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("noncoulomb"));
@@ -104,20 +106,26 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
 
     std::vector<std::string> lineElements = {"noncoulomb", "=", "guff"};
     parseNonCoulombFunc(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::GUFF);
+    EXPECT_EQ(
+        settings.potentialSettings.getNonCoulombType(),
+        NonCoulombType::GUFF
+    );
 
     _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "lj"};
     parseNonCoulombFunc(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::LJ);
+    EXPECT_EQ(
+        settings.potentialSettings.getNonCoulombType(),
+        NonCoulombType::LJ
+    );
 
     _clearParser(parser);
 
     lineElements = {"noncoulomb", "=", "buck"};
     parseNonCoulombFunc(lineElements, 0);
     EXPECT_EQ(
-        PotentialSettings::getNonCoulombType(),
+        settings.potentialSettings.getNonCoulombType(),
         NonCoulombType::BUCKINGHAM
     );
 
@@ -125,7 +133,10 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
 
     lineElements = {"noncoulomb", "=", "morse"};
     parseNonCoulombFunc(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::MORSE);
+    EXPECT_EQ(
+        settings.potentialSettings.getNonCoulombType(),
+        NonCoulombType::MORSE
+    );
 
     _clearParser(parser);
 

@@ -23,6 +23,7 @@
 #ifndef INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP
 #define INPUT__PARAMETER_FILE_READER__NON_COULOMBICS_SECTION_HPP
 
+#include <mstd/types.hpp>
 #include <string>
 #include <vector>
 
@@ -32,6 +33,8 @@ namespace engine
 {
     class Engine;   // forward declaration
 }   // namespace engine
+
+class PotentialSettings;   // forward declaration
 
 namespace input::parameterFile
 {
@@ -43,7 +46,11 @@ namespace input::parameterFile
      */
     class NonCoulombicsSection : public ParameterFileSection
     {
+        mstd::Ref<PotentialSettings> _potentialSettings;
+
        public:
+        explicit NonCoulombicsSection(PotentialSettings &potentialSettings);
+
         [[nodiscard]] std::string keyword() override;
 
         void processSection(

@@ -33,9 +33,9 @@
  *
  * @param type
  */
-void PotentialSettings::setNonCoulombType(NonCoulombType type)
+void PotentialSettings::setNonCoulombTypeByUser(NonCoulombType type)
 {
-    _nonCoulombType = type;
+    _nonCoulombType.setByUser(type);
 }
 
 /**
@@ -130,9 +130,9 @@ CoulombLongRangeType PotentialSettings::getCoulombLongRangeType() const
  *
  * @return NonCoulombType
  */
-NonCoulombType PotentialSettings::getNonCoulombType()
+NonCoulombType PotentialSettings::getNonCoulombType() const
 {
-    return _nonCoulombType;
+    return _nonCoulombType.get();
 }
 
 /**

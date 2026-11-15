@@ -35,6 +35,7 @@
 #include "constants.hpp"
 #include "defaults.hpp"
 #include "engine.hpp"
+#include "enums/potential.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
@@ -334,10 +335,9 @@ namespace input::guffdat
         double                     rncCutOff
     )
     {
-        using enum NonCoulombType;
-        switch (PotentialSettings::getNonCoulombType())
+        switch (_engine.getSettings().potentialSettings.getNonCoulombType())
         {
-            case LJ:
+            case NonCoulombType::LJ:
             {
                 addLennardJonesPair(
                     molType1,
@@ -349,7 +349,7 @@ namespace input::guffdat
                 );
                 break;
             }
-            case BUCKINGHAM:
+            case NonCoulombType::BUCKINGHAM:
             {
                 addBuckinghamPair(
                     molType1,
@@ -361,7 +361,7 @@ namespace input::guffdat
                 );
                 break;
             }
-            case MORSE:
+            case NonCoulombType::MORSE:
             {
                 addMorsePair(
                     molType1,
@@ -373,7 +373,7 @@ namespace input::guffdat
                 );
                 break;
             }
-            case GUFF:
+            case NonCoulombType::GUFF:
             {
                 std::array<double, defaults::NUM_GUFF_COEFFICIENTS> coeffs;
                 for (size_t i = 0; i < coefficients.size(); ++i)
@@ -389,14 +389,15 @@ namespace input::guffdat
                 );
                 break;
             }
-            case LJ_9_12:
-            case NONE:
+            case NonCoulombType::LJ_9_12:
+            case NonCoulombType::NONE:
             {
                 throw exc::UserInputException(
                     std::format(
                         "Invalid nonCoulombic type {} given",
                         NonCoulombTypeMeta::toString(
-                            PotentialSettings::getNonCoulombType()
+                            _engine.getSettings()
+                                .potentialSettings.getNonCoulombType()
                         )
                     )
                 );

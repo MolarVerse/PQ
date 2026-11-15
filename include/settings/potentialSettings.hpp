@@ -42,7 +42,9 @@ class PotentialSettings
     Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType{
         CoulombLongRangeType::SHIFTED
     };
-    static inline NonCoulombType _nonCoulombType = NonCoulombType::GUFF;
+    Setting<NonCoulombType, "Non coulomb type"> _nonCoulombType{
+        NonCoulombType::GUFF
+    };
 
     static inline double _coulombRadiusCutOff =
         defaults::COULOMB_CUT_OFF_DEFAULT;
@@ -62,8 +64,8 @@ class PotentialSettings
      * standard setters *
      ********************/
 
-    static void setNonCoulombType(NonCoulombType type);
-    void        setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
+    void setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
+    void setNonCoulombTypeByUser(NonCoulombType type);
 
     static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
     static void setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff);
@@ -76,8 +78,8 @@ class PotentialSettings
      * standard getters *
      ********************/
 
-    [[nodiscard]] CoulombLongRangeType  getCoulombLongRangeType() const;
-    [[nodiscard]] static NonCoulombType getNonCoulombType();
+    [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
+    [[nodiscard]] NonCoulombType       getNonCoulombType() const;
 
     [[nodiscard]] static double                getCoulombRadiusCutOff();
     [[nodiscard]] static std::optional<double> getNonCoulombRadiusCutOff();

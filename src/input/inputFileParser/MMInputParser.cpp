@@ -48,10 +48,12 @@ namespace input
      */
     MMInputParser::MMInputParser(
         WaterModelSettings &waterModelSettings,
-        ForceFieldSettings &forceFieldSettings
+        ForceFieldSettings &forceFieldSettings,
+        PotentialSettings  &potentialSettings
     )
         : _waterModelSettings(waterModelSettings),
-          _forceFieldSettings(forceFieldSettings)
+          _forceFieldSettings(forceFieldSettings),
+          _potentialSettings(potentialSettings)
     {
         addForceFieldTypeKey();
         addNonCoulombTypeKey();
@@ -103,8 +105,8 @@ namespace input
                 "(guff, lj, buck, morse)",
         };
 
-        const auto setValue = [](NonCoulombType value)
-        { PotentialSettings::setNonCoulombType(value); };
+        const auto setValue = [this](NonCoulombType value)
+        { _potentialSettings->setNonCoulombTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<NonCoulombType>{
