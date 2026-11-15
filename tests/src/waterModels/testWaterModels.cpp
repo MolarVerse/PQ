@@ -1012,9 +1012,9 @@ namespace
         }
 
         return {
-            physicalData.getCoulombEnergy(),
-            physicalData.getNonCoulombEnergy(),
-            collectForces(simulationBox)
+            .coulombEnergy    = physicalData.getCoulombEnergy(),
+            .nonCoulombEnergy = physicalData.getNonCoulombEnergy(),
+            .forces           = collectForces(simulationBox)
         };
     }
 
