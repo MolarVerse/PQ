@@ -32,7 +32,6 @@
 
 #include "enums/jobtype.hpp"
 #include "inputFileParser.hpp"
-#include "unit_types.hpp"
 
 namespace engine
 {
