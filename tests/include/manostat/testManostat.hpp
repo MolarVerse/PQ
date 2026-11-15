@@ -61,7 +61,7 @@ class TestManostat : public ::testing::Test
             std::make_unique<manostat::Manostat>(_settings->manostatSettings);
         _data = std::make_unique<physicalData::PhysicalData>();
 
-        _data->setVolume(2.0);
+        _data->setVolume(2.0 * angstrom3);
         _data->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));
         _data->setKineticEnergyMolecularVector(
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))

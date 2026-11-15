@@ -53,7 +53,7 @@ class TestPhysicalData : public ::testing::Test
         _physicalData->setTemperature(mstd::units::point<K>(3.0));
         _physicalData->setMomentum(linalg::Vec3D(4.0));
         _physicalData->setKineticEnergy(5.0);
-        _physicalData->setVolume(6.0);
+        _physicalData->setVolume(6.0 * angstrom3);
         _physicalData->setDensity(7.0);
         _physicalData->setPressure(8.0 * bar);
         _physicalData->setCoupledPressure(8.5 * bar);

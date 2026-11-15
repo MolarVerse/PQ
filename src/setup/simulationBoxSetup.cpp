@@ -383,11 +383,7 @@ namespace setup
             out::StdoutOutput::writeDensityWarning();
         }
 
-        _engine.getPhysicalData().setVolume(
-            simBox.getVolume().numerical_value_in(
-                angstrom * angstrom * angstrom
-            )
-        );
+        _engine.getPhysicalData().setVolume(simBox.getVolume());
         _engine.getPhysicalData().setDensity(simBox.getDensity());
     }
 

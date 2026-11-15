@@ -163,7 +163,7 @@ namespace physicalData
      *
      * @param volume
      */
-    void PhysicalData::setVolume(double volume) { _volume = volume; }
+    void PhysicalData::setVolume(const Volume& volume) { _volume = volume; }
 
     /**
      * @brief set the density
@@ -458,9 +458,9 @@ namespace physicalData
     /**
      * @brief get the volume
      *
-     * @return double
+     * @return const Volume&
      */
-    double PhysicalData::getVolume() const { return _volume; }
+    const Volume& PhysicalData::getVolume() const { return _volume; }
 
     /**
      * @brief get the density

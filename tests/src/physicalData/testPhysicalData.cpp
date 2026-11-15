@@ -44,7 +44,7 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(1.5));
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(2.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5);
-    EXPECT_EQ(_physicalData->getVolume(), 3.0);
+    EXPECT_EQ(_physicalData->getVolume(), 3.0 * angstrom3);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
     EXPECT_EQ(_physicalData->getPressure(), 4.0 * bar);
     EXPECT_EQ(_physicalData->getQMEnergy(), 4.5);
@@ -64,7 +64,7 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getTemperature(), toTemperature(3.0));
     EXPECT_EQ(physicalData2.getMomentum(), linalg::Vec3D(4.0));
     EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
-    EXPECT_EQ(physicalData2.getVolume(), 6.0);
+    EXPECT_EQ(physicalData2.getVolume(), 6.0 * angstrom3);
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
     EXPECT_EQ(physicalData2.getPressure(), 8.0 * bar);
     EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5 * bar);
@@ -86,7 +86,7 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(6.0));
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(8.0));
     EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0);
-    EXPECT_EQ(_physicalData->getVolume(), 12.0);
+    EXPECT_EQ(_physicalData->getVolume(), 12.0 * angstrom3);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0 * bar);
     EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0 * bar);
@@ -197,7 +197,7 @@ TEST_F(TestPhysicalData, reset)
 
     _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setMomentum(linalg::Vec3D(1.0));
-    _physicalData->setVolume(1.0);
+    _physicalData->setVolume(1.0 * angstrom3);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0 * bar);
     _physicalData->setCoupledPressure(1.0 * bar);
@@ -220,7 +220,7 @@ TEST_F(TestPhysicalData, reset)
 
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(0.0));
     EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(0.0));
-    EXPECT_EQ(_physicalData->getVolume(), 0.0);
+    EXPECT_EQ(_physicalData->getVolume(), 0.0 * angstrom3);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0 * bar);
     EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0 * bar);

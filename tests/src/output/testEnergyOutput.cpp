@@ -148,7 +148,7 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
-    _physicalData->setVolume(19.0);
+    _physicalData->setVolume(19.0 * angstrom3);
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
@@ -192,7 +192,7 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
-    _physicalData->setVolume(19.0);
+    _physicalData->setVolume(19.0 * angstrom3);
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 
@@ -237,7 +237,7 @@ TEST_F(TestEnergyOutput, qmActive)
 
     _physicalData->setQMEnergy(5.0);
 
-    _physicalData->setVolume(19.0);
+    _physicalData->setVolume(19.0 * angstrom3);
     _physicalData->setDensity(20.0);
     _physicalData->setLoopTime(0.1);
 

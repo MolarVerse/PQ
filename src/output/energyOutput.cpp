@@ -131,8 +131,10 @@ namespace out
 
         if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getVolume());
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getVolume().numerical_value_in(angstrom3)
+            );
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getDensity());
 

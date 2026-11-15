@@ -106,7 +106,7 @@ namespace
             _box.calculateTotalMass();
             _box.calculateDensity();
             _box.calculateDegreesOfFreedom();
-            _data.setVolume(_box.getVolume().numerical_value_in(Volume::unit));
+            _data.setVolume(_box.getVolume());
             _data.setDensity(_box.getDensity());
         }
     };
@@ -354,11 +354,14 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         );
         EXPECT_EQ(_box.getBoxDimensions(), Pos3D(10.0 * angstrom));
         EXPECT_DOUBLE_EQ(
-            _box.getVolume().numerical_value_in(Volume::unit),
+            _box.getVolume().numerical_value_in(angstrom3),
             1000.0
         );
         EXPECT_DOUBLE_EQ(_box.getDensity(), oldDensity);
-        EXPECT_DOUBLE_EQ(_data.getVolume(), 1000.0);
+        EXPECT_DOUBLE_EQ(
+            _data.getVolume().numerical_value_in(angstrom3),
+            1000.0
+        );
         EXPECT_DOUBLE_EQ(_data.getDensity(), oldDensity);
         EXPECT_EQ(_box.getMolecule(0).getCenterOfMass(), oldCenter);
         EXPECT_DOUBLE_EQ(

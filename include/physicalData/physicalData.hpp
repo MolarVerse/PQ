@@ -70,7 +70,7 @@ namespace physicalData
         double _numberOfQMAtoms = 0.0;
         double _loopTime        = 0.0;
 
-        double      _volume  = 0.0;
+        Volume      _volume  = Volume::zero();
         double      _density = 0.0;
         Temperature _temperature{Temperature::zero()};
 
@@ -154,7 +154,7 @@ namespace physicalData
         void setNumberOfQMAtoms(double nQMAtoms);
         void setLoopTime(double loopTime);
 
-        void setVolume(double volume);
+        void setVolume(const Volume& volume);
         void setDensity(double density);
         void setTemperature(const Temperature& temperature);
         void setPressure(const Pressure& pressure);
@@ -200,7 +200,7 @@ namespace physicalData
         [[nodiscard]] double getNumberOfQMAtoms() const;
         [[nodiscard]] double getLoopTime() const;
 
-        [[nodiscard]] double             getVolume() const;
+        [[nodiscard]] const Volume&      getVolume() const;
         [[nodiscard]] double             getDensity() const;
         [[nodiscard]] const Temperature& getTemperature() const;
         [[nodiscard]] const Pressure&    getPressure() const;

@@ -239,7 +239,7 @@ namespace physicalData
         _numberOfQMAtoms = 0.0;
         _loopTime        = 0.0;
 
-        _volume          = 0.0;
+        _volume          = Volume::zero();
         _density         = 0.0;
         _temperature     = Temperature::zero();
         _pressure        = Pressure::zero();
