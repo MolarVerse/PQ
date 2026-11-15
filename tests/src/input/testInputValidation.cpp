@@ -169,6 +169,47 @@ TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
 
+/**
+ * @brief a Hessian job without optimization sets neither timestep nor nstep:
+ * validation, finalize and validate must not read the unset timings
+ */
+TEST_F(TestInputValidation, hessianWithoutOptimizationRunsWithUnsetTimings)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.timings = TimingsSettings();
+
+    EXPECT_NO_THROW(_finalizeAndValidate());
+    EXPECT_EQ(_settings.timings.getNumberOfSteps(), 0);
+}
+
+/**
+ * @brief an optimization needs nstep but no timestep
+ */
+TEST_F(TestInputValidation, optimizationRunsWithoutTimeStep)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.timings = TimingsSettings();
+    _settings.timings.setNumberOfStepsByUser(100U);
+    _setKeyword("nstep");
+
+    EXPECT_NO_THROW(_finalizeAndValidate());
+}
+
+/**
+ * @brief a manostat is only compared with the time step of a job that has one;
+ * a Hessian job with a manostat setting and no timestep is not rejected for the
+ * missing time step
+ */
+TEST_F(TestInputValidation, manostatDoesNotNeedTimeStepOutsideMD)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.timings = TimingsSettings();
+    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _setKeyword("pressure");
+
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+}
+
 TEST_F(TestInputValidation, requiresTimeStepForMD)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_MD);

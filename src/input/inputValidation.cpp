@@ -321,10 +321,14 @@ namespace input
             );
         }
 
-        if (timings.getTimeStep() > manostatSettings.getTau())
+        // only an MD job has a time step
+        if (settings::GeneralSettings::isMDJobType() &&
+            timings.getTimeStep() > manostatSettings.getTau())
+        {
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );
+        }
     }
 
     /**
