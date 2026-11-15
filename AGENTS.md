@@ -179,6 +179,22 @@ clang-format -i <file>
 
 ---
 
+## Static Analysis Rules (CI)
+
+Two gating checks fail PRs on style that neither clang-format nor a GCC build catches: `lint.yml` (clang-tidy via `clangd-tidy`, config in `.clang-tidy`, `tests/.clang-tidy`, `benchmarks/.clang-tidy`) and `devops_cpp_check.yml` (`cpp_checks`, rules in `devops.toml`). The clang 20 build (`clang_build.yml`) is non-gating but builds with `-Werror`, so its warnings show up as red checks too. Write new code, tests included, to these rules from the start:
+
+- **Braces on every `if`/`for`/`while` body**, also single statements and nested loops (`google-readability-braces-around-statements`).
+- **Parentheses around every `*` or `/` that sits next to a `+` or `-`**: `(a * b) + c`, `std::sin((7.0 * i) + phase)` (`readability-math-missing-parentheses`).
+- **Identifiers of at least 3 characters**, so `atomIndex`, not `k` (`readability-identifier-length`).
+- **Designated initializers for aggregates**: `Case{.model = ..., .dOH = ..., .angle = ...}`, not `Case{x, y, z}` (`modernize-use-designated-initializers`).
+- **Parameters of type `X` are named after the type**: `simulationBox` for `molsys::SimulationBox`, `physicalData` for `physicalData::PhysicalData`, or `other`; not `box` or `data` (`cpp_checks`, `paramNameForType`).
+- **Class members: data first, then functions** (public, protected, private); private member functions start with an underscore (`cpp_checks`).
+- **No unused lambda captures**: `[]` instead of `[this]` if `this` is not used (`-Wunused-lambda-capture`, an error in the clang build).
+
+`clang-tidy`, `clang-20` and `cpp_checks` need a clang toolchain that is not always available locally; `cpp_checks` takes about 12 s on a branch once set up (see `.github/workflows/devops_cpp_check.yml` for the exact recipe, it needs the `external/devops` commit pinned by the repository and a clang-generated `compile_commands.json`).
+
+---
+
 ## License Header (Mandatory)
 
 Every `.cpp`, `.hpp`, `.c`, `.h` file under `src/`, `tests/`, `include/`, `apps/`, `benchmarks/` must start with the **exact** GPL header from `config/licenseHeader.txt`. CI (`license_check.yml`) does a byte-for-byte comparison and fails on any mismatch. To add/fix headers:
