@@ -80,7 +80,7 @@ int main()
         physicalData.getTemperature().quantity_from_zero().numerical_value_in(
             K
         ),
-        box.calculateMomentum()[0]
+        box.calculateMomentum()[0].numerical_value_in(amu * angstrom / fs)
     );
     return 0;
 }

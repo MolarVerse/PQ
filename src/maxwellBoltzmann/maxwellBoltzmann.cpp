@@ -25,13 +25,9 @@
 #include <algorithm>
 #include <cmath>
 
-#include "constants/conversionFactors.hpp"
-#include "constants/internalConversionFactors.hpp"
-#include "constants/natureConstants.hpp"
 #include "resetKinetics.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
-#include "vector3d.hpp"
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -59,21 +55,20 @@ namespace maxwellBoltzmann
     {
         auto generateVelocities = [this, &targetTemperature](auto &atom)
         {
-            const auto mass              = atom->getMass() * AMU_TO_KG;
-            const auto boltzmannConstant = BOLTZMANN_CONSTANT;
-            const auto temp =
-                targetTemperature.quantity_from_zero().numerical_value_in(K);
+            const auto mass = atom->getMass();
+            const auto temp = targetTemperature.quantity_from_zero();
 
-            const auto stddev =
-                ::sqrt(boltzmannConstant * temp / mass) / VELOCITY_UNIT_TO_SI;
+            const Vel stddev{mstd::sqrt((temp / mass) * kb)};
 
             atom->setVelocity(
-                linalg::Vec3D{
-                    _randomNumberGenerator.getNormalDistribution(0.0, stddev),
-                    _randomNumberGenerator.getNormalDistribution(0.0, stddev),
-                    _randomNumberGenerator.getNormalDistribution(0.0, stddev)
-                } *
-                angstrom / s
+                Vel3D{
+                    _randomNumberGenerator
+                        .getNormalDistribution(Vel::zero(), stddev),
+                    _randomNumberGenerator
+                        .getNormalDistribution(Vel::zero(), stddev),
+                    _randomNumberGenerator
+                        .getNormalDistribution(Vel::zero(), stddev)
+                }
             );
         };
 

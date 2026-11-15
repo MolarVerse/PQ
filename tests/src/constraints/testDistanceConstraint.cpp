@@ -41,9 +41,15 @@ TEST_F(TestDistanceConstraint, withinBoundsAppliesNoForce)
     EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), 0.0);
 
-    const auto mol = _box->getMolecules()[0];
-    EXPECT_EQ(mol.getAtomForce(AtomIndex{0}), linalg::Vec3D(0.0, 0.0, 0.0));
-    EXPECT_EQ(mol.getAtomForce(AtomIndex{1}), linalg::Vec3D(0.0, 0.0, 0.0));
+    const auto molecule = _box->getMolecules()[0];
+    EXPECT_EQ(
+        molecule.getAtomForce(AtomIndex{0}),
+        linalg::Vec3D(0.0, 0.0, 0.0)
+    );
+    EXPECT_EQ(
+        molecule.getAtomForce(AtomIndex{1}),
+        linalg::Vec3D(0.0, 0.0, 0.0)
+    );
 }
 
 /**
@@ -66,9 +72,9 @@ TEST_F(TestDistanceConstraint, belowLowerBoundAppliesRestoringForce)
     const auto expectedForce =
         -_springConstant * delta * linalg::Vec3D(0.0, 0.5, 0.0) / 0.5;
 
-    const auto mol = _box->getMolecules()[0];
-    EXPECT_EQ(mol.getAtomForce(AtomIndex{0}), expectedForce);
-    EXPECT_EQ(mol.getAtomForce(AtomIndex{1}), -expectedForce);
+    const auto molecule = _box->getMolecules()[0];
+    EXPECT_EQ(molecule.getAtomForce(AtomIndex{0}), expectedForce);
+    EXPECT_EQ(molecule.getAtomForce(AtomIndex{1}), -expectedForce);
 }
 
 /**
@@ -91,9 +97,9 @@ TEST_F(TestDistanceConstraint, aboveUpperBoundAppliesRestoringForce)
     const auto expectedForce =
         _springConstant * delta * linalg::Vec3D(0.0, 4.0, 0.0) / 4.0;
 
-    const auto mol = _box->getMolecules()[0];
-    EXPECT_EQ(mol.getAtomForce(AtomIndex{0}), expectedForce);
-    EXPECT_EQ(mol.getAtomForce(AtomIndex{1}), -expectedForce);
+    const auto molecule = _box->getMolecules()[0];
+    EXPECT_EQ(molecule.getAtomForce(AtomIndex{0}), expectedForce);
+    EXPECT_EQ(molecule.getAtomForce(AtomIndex{1}), -expectedForce);
 }
 
 /**

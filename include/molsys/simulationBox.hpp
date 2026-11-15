@@ -74,14 +74,14 @@ namespace molsys
 
         size_t _degreesOfFreedom = 0;
 
-        double _totalMass   = 0.0;
+        Mass   _totalMass   = Mass::zero();
         double _totalCharge = 0.0;
         double _density     = 0.0;
 
         std::shared_ptr<Box> _box;
         bool                 _boxSetViaStartFile = false;
 
-        linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
+        Pos3D                              _centerOfMass = {Pos::zero()};
         std::vector<std::shared_ptr<Atom>> _atoms;
         std::vector<size_t>                _innerRegionCenterAtomIndices;
         std::vector<Molecule>              _molecules;
@@ -131,10 +131,9 @@ namespace molsys
         [[nodiscard]] double        calculateMaxForce() const;
         [[nodiscard]] double        calculateRMSForceOld() const;
         [[nodiscard]] double        calculateMaxForceOld() const;
-        [[nodiscard]] linalg::Vec3D calculateMomentum();
-        [[nodiscard]] linalg::Vec3D calculateAngularMomentum(
-            const linalg::Vec3D&
-        );
+        [[nodiscard]] Momentum3D    calculateMomentum();
+        [[nodiscard]]
+        AngularMomentum3D   calculateAngularMomentum(const Momentum3D&);
         [[nodiscard]] Pos3D calcBoxDimFromDensity() const;
         [[nodiscard]] Pos3D calcShiftVector(const Pos3D& position) const;
         [[nodiscard]] int   calcActiveMolCharge() const;
@@ -195,10 +194,10 @@ namespace molsys
         [[nodiscard]] size_t                 getDegreesOfFreedom() const;
         [[nodiscard]] size_t                 getNumberOfAtoms() const;
         [[nodiscard]] size_t                 getNumberOfQMAtoms() const;
-        [[nodiscard]] double                 getTotalMass() const;
+        [[nodiscard]] const Mass&            getTotalMass() const;
         [[nodiscard]] double                 getTotalCharge() const;
         [[nodiscard]] double                 getDensity() const;
-        [[nodiscard]] linalg::Vec3D&         getCenterOfMass();
+        [[nodiscard]] const Pos3D&           getCenterOfMass() const;
         [[nodiscard]] std::vector<size_t>    getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(size_t index);
@@ -244,7 +243,7 @@ namespace molsys
 
         void setWaterType(MolType waterType);
         void setAmmoniaType(MolType ammoniaType);
-        void setTotalMass(double totalMass);
+        void setTotalMass(const Mass& totalMass);
         void setTotalCharge(double totalCharge);
         void setDensity(double density);
         void setDegreesOfFreedom(size_t degreesOfFreedom);

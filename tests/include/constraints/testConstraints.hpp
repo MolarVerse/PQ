@@ -63,9 +63,9 @@ class TestConstraints : public ::testing::Test
         atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
         atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
         atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0) * angstrom / s);
-        atom1->setMass(1.0);
-        atom2->setMass(1.0);
-        atom3->setMass(1.0);
+        atom1->setMass(1.0 * amu);
+        atom2->setMass(1.0 * amu);
+        atom3->setMass(1.0 * amu);
 
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
@@ -80,8 +80,8 @@ class TestConstraints : public ::testing::Test
         atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
         atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
         atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
-        atom4->setMass(1.0);
-        atom5->setMass(1.0);
+        atom4->setMass(1.0 * amu);
+        atom5->setMass(1.0 * amu);
 
         molecule2.addAtom(atom4);
         molecule2.addAtom(atom5);

@@ -217,9 +217,9 @@ TEST(TestSimulationBoxAtomIndexLookup, sameResultAsTheWalkForManyMolecules)
     molsys::SimulationBox box;
 
     size_t totalAtoms = 0;
-    for (size_t mol = 0; mol < 300; ++mol)
+    for (size_t molIndex = 0; molIndex < 300; ++molIndex)
     {
-        const size_t nAtoms = ((mol * 7) + (mol / 3)) % 6;
+        const size_t nAtoms = ((molIndex * 7) + (molIndex / 3)) % 6;
 
         molsys::Molecule molecule;
         molecule.setMoltype(MolType{1});

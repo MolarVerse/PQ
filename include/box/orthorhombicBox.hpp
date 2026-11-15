@@ -53,7 +53,10 @@ namespace molsys
         Pos3D calcShiftVector(const Pos3D &shiftVector) const override;
 
         [[nodiscard]]
-        static Pos3D calcBoxDimFromDensity(double totalMass, double density);
+        static Pos3D calcBoxDimFromDensity(
+            const Mass &totalMass,
+            double      density
+        );
 
         [[nodiscard]]
         Pos3D wrapPositionIntoBox(const Pos3D &pos) const override;

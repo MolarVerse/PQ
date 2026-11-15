@@ -110,7 +110,7 @@ namespace benchSetup
             );
             atom->setForce({0.1, -0.2, 0.05});
             atom->setShiftForce({0.0, 0.0, 0.0});
-            atom->setMass(12.0);
+            atom->setMass(12.0 * amu);
             atom->setAtomType(AtomType{i % 2});
             atom->setInternalGlobalVDWType(VdwType{i % 2});
             atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);

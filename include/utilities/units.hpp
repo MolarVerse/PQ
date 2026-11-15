@@ -33,6 +33,8 @@
 
 #include <mstd/units.hpp>
 
+#include "mp-units/systems/si/constants.h"
+
 // NOLINTBEGIN(readability-identifier-length)
 
 inline constexpr auto one = mstd::units::one;
@@ -60,7 +62,17 @@ inline constexpr auto bohr     = mstd::units::bohr;
 
 inline constexpr auto angstrom3 = angstrom * angstrom * angstrom;
 
+inline constexpr auto amu = mstd::units::amu;
+inline constexpr auto g   = mstd::units::g;
+
 inline constexpr auto kcal_per_mol = mstd::units::kcal_per_mol;
+
+inline constexpr auto mol = mstd::units::mol;
+
+// constants
+
+inline constexpr auto kb                = mstd::units::boltzmann_constant;
+inline constexpr auto avogadro_constant = mstd::units::avogadro_constant;
 
 // NOLINTEND(readability-identifier-length)
 #endif   // UTILITIES__UNITS_HPP

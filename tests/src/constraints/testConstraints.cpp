@@ -29,6 +29,7 @@
 #include "testSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 /**
@@ -68,9 +69,9 @@ TEST_F(TestConstraints, applyShakeConverged)
 
     EXPECT_NO_THROW(constraints.applyShake(*_box));
 
-    const auto mol = _box->getMolecules()[0];
+    const auto molecule = _box->getMolecules()[0];
     EXPECT_THAT(
-        mol.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
+        molecule.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(1.23167, 1e-5),
@@ -78,7 +79,7 @@ TEST_F(TestConstraints, applyShakeConverged)
         )
     );
     EXPECT_THAT(
-        mol.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom),
+        molecule.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(1.76833, 1e-5),
@@ -87,7 +88,7 @@ TEST_F(TestConstraints, applyShakeConverged)
     );
 
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
+        molecule.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e10),
             testing::DoubleNear(1.15836e14, 1e10),
@@ -95,7 +96,7 @@ TEST_F(TestConstraints, applyShakeConverged)
         )
     );
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s),
+        molecule.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e10),
             testing::DoubleNear(1.0 - 1.15836e14, 1e10),
@@ -160,7 +161,10 @@ TEST_F(TestConstraints, applyRattleConverged)
     const auto settings =
         testSettings::make<ConstraintSettings>()
             .with(&ConstraintSettings::setRattleMaxIterByUser, 1000)
-            .with(&ConstraintSettings::setRattleToleranceByUser, 1.0e-4)
+            .with(
+                &ConstraintSettings::setRattleToleranceByUser,
+                1.0e-4 * amu / s
+            )
             .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
@@ -169,9 +173,9 @@ TEST_F(TestConstraints, applyRattleConverged)
 
     EXPECT_NO_THROW(_constraints->applyRattle(*_box));
 
-    const auto mol = _box->getMolecules()[0];
+    const auto molecule = _box->getMolecules()[0];
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
+        molecule.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-5),
             testing::DoubleNear(0.3, 1e-5),
@@ -179,7 +183,7 @@ TEST_F(TestConstraints, applyRattleConverged)
         )
     );
     EXPECT_THAT(
-        mol.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s),
+        molecule.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s),
         testing::ElementsAre(
             testing::DoubleNear(1.0, 1e-5),
             testing::DoubleNear(0.7, 1e-5),
@@ -198,7 +202,10 @@ TEST_F(TestConstraints, applyRattleNotConverged)
     const auto settings =
         testSettings::make<ConstraintSettings>()
             .with(&ConstraintSettings::setRattleMaxIterByUser, 10)
-            .with(&ConstraintSettings::setRattleToleranceByUser, 0.0)
+            .with(
+                &ConstraintSettings::setRattleToleranceByUser,
+                MassPerTime::zero()
+            )
             .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
@@ -222,7 +229,10 @@ TEST_F(TestConstraints, applyRattleNotConvergedDeactivated)
     const auto settings =
         testSettings::make<ConstraintSettings>()
             .with(&ConstraintSettings::setRattleMaxIterByUser, 10)
-            .with(&ConstraintSettings::setRattleToleranceByUser, 0.0)
+            .with(
+                &ConstraintSettings::setRattleToleranceByUser,
+                MassPerTime::zero()
+            )
             .build();
     _constraints = std::make_unique<constraints::Constraints>(settings);
     _addDefaultBondConstraints(*_constraints);

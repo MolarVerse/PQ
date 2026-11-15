@@ -52,13 +52,16 @@ TEST_F(TestThermostat, calculateTemperature)
         mol1.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
     const auto velocity_mol1_atom2 =
         mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
-    const auto mass_mol1_atom1 = mol1.getAtomMass(AtomIndex{0});
-    const auto mass_mol1_atom2 = mol1.getAtomMass(AtomIndex{1});
+    const auto mass_mol1_atom1 =
+        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+    const auto mass_mol1_atom2 =
+        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(amu);
 
     const auto mol2 = _simulationBox->getMolecule(1);
     const auto velocity_mol2_atom1 =
         mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
-    const auto mass_mol2_atom1 = mol2.getAtomMass(AtomIndex{0});
+    const auto mass_mol2_atom1 =
+        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
@@ -84,13 +87,16 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
         mol1.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
     const auto velocity_mol1_atom2 =
         mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
-    const auto mass_mol1_atom1 = mol1.getAtomMass(AtomIndex{0});
-    const auto mass_mol1_atom2 = mol1.getAtomMass(AtomIndex{1});
+    const auto mass_mol1_atom1 =
+        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+    const auto mass_mol1_atom2 =
+        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(amu);
 
     const auto mol2 = _simulationBox->getMolecule(1);
     const auto velocity_mol2_atom1 =
         mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
-    const auto mass_mol2_atom1 = mol2.getAtomMass(AtomIndex{0});
+    const auto mass_mol2_atom1 =
+        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
@@ -508,8 +514,8 @@ namespace
             auto molecule = molsys::Molecule();
             auto atom     = std::make_shared<molsys::Atom>();
 
-            atom->setMass(12.0);
-            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+            atom->setMass(12.0 * amu);
+            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
             molecule.addAtom(atom);
 
             box->addMolecule(molecule);
@@ -542,9 +548,18 @@ TEST_F(TestThermostat, langevinWithoutFrictionLeavesVelocitiesUnchanged)
         .applyThermostatHalfStep(*_simulationBox, *_data, toTemperature(300.0));
 
     const auto &atoms = _simulationBox->getAtoms();
-    EXPECT_EQ(atoms[0]->getVelocity(), linalg::Vec3D(1.0, 1.0, 1.0));
-    EXPECT_EQ(atoms[1]->getVelocity(), linalg::Vec3D(1.0, 2.0, 3.0));
-    EXPECT_EQ(atoms[2]->getVelocity(), linalg::Vec3D(1.0, 1.0, 1.0));
+    EXPECT_EQ(
+        atoms[0]->getVelocity(),
+        linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s
+    );
+    EXPECT_EQ(
+        atoms[1]->getVelocity(),
+        linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s
+    );
+    EXPECT_EQ(
+        atoms[2]->getVelocity(),
+        linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s
+    );
 }
 
 TEST_F(TestThermostat, langevinAtZeroTemperatureOnlyDampsVelocities)
@@ -557,14 +572,14 @@ TEST_F(TestThermostat, langevinAtZeroTemperatureOnlyDampsVelocities)
 
     for (const auto &atom : _simulationBox->getAtoms())
     {
-        const auto before = (atom == _simulationBox->getAtoms()[1])
-                                ? linalg::Vec3D(1.0, 2.0, 3.0)
-                                : linalg::Vec3D(1.0, 1.0, 1.0);
+        const Vel3D before = (atom == _simulationBox->getAtoms()[1])
+                                 ? linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s
+                                 : linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s;
 
         // the damping shrinks every component towards zero, never flips it
         for (size_t axis = 0; axis < 3; ++axis)
         {
-            EXPECT_GT(atom->getVelocity()[axis], 0.0);
+            EXPECT_GT(atom->getVelocity()[axis], Vel::zero());
             EXPECT_LT(atom->getVelocity()[axis], before[axis]);
         }
     }
@@ -597,7 +612,7 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
     const auto second = run();
 
     EXPECT_EQ(first, second);
-    EXPECT_NE(first, linalg::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_NE(first, linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
 }
 
 TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
@@ -965,7 +980,7 @@ TEST_F(TestThermostat, noseHooverForceMatchesReference)
                 atom->getForce()[axis],
                 -factor *
                     atom->getVelocity()[axis].numerical_value_in(angstrom / s) *
-                    atom->getMass()
+                    atom->getMass().numerical_value_in(amu)
             );
         }
     }

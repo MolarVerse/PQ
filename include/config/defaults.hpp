@@ -100,13 +100,14 @@ namespace defaults
     static constexpr double WOLF_PARAM_DEFAULT = 0.25;
     static constexpr double RF_EPSILON_DEFAULT = 1.0;
 
-    static constexpr bool   CONSTRAINTS_ACTIVE_DEFAULT = false;
-    static constexpr size_t SHAKE_MAX_ITER_DEFAULT     = 20;
-    static constexpr size_t RATTLE_MAX_ITER_DEFAULT    = 20;
-    static constexpr size_t MSHAKE_MAX_ITER_DEFAULT    = 20;
-    static constexpr double SHAKE_TOLERANCE_DEFAULT    = 1e-8;
-    static constexpr double RATTLE_TOLERANCE_DEFAULT   = 1e-8 * 1e12;
-    static constexpr double MSHAKE_TOLERANCE_DEFAULT   = 1e-8;
+    static constexpr bool        CONSTRAINTS_ACTIVE_DEFAULT = false;
+    static constexpr size_t      SHAKE_MAX_ITER_DEFAULT     = 20;
+    static constexpr size_t      RATTLE_MAX_ITER_DEFAULT    = 20;
+    static constexpr size_t      MSHAKE_MAX_ITER_DEFAULT    = 20;
+    static constexpr double      SHAKE_TOLERANCE_DEFAULT    = 1e-8;
+    static constexpr MassPerTime RATTLE_TOLERANCE_DEFAULT =
+        1e-8 * mstd::units::amu / mstd::units::ps;
+    static constexpr double MSHAKE_TOLERANCE_DEFAULT = 1e-8;
 
     static constexpr bool CELL_LIST_IS_ACTIVE_DEFAULT =
         false;   // default is brute force routine

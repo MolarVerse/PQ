@@ -207,8 +207,9 @@ namespace engine
                     (atom2.getPosition() - atom1.getPosition())
                         .numerical_value_in(angstrom);
 
-                const auto forceConstant = rpmd_factor * atom1.getMass();
-                const auto force         = forceConstant * deltaPos;
+                const auto forceConstant =
+                    rpmd_factor * atom1.getMass().numerical_value_in(amu);
+                const auto force = forceConstant * deltaPos;
 
                 const auto energy = 0.5 * forceConstant * normSquared(deltaPos);
 

@@ -27,6 +27,8 @@
 #include <string>
 
 #include "outputMessages.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -99,14 +101,14 @@ namespace out
      *
      * @param momentum
      */
-    void LogOutput::writeInitialMomentum(double momentum)
+    void LogOutput::writeInitialMomentum(const Momentum &momentum)
     {
         _getFilePointer() << "\n" << std::flush;
 
         _getFilePointer() << std::format(
             "{}Initial momentum = {:.5e} {}*amu/fs\n",
             INFO,
-            momentum,
+            momentum.numerical_value_in(amu * angstrom / fs),
             ANGSTROM
         );
 

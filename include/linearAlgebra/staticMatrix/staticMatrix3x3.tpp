@@ -349,8 +349,9 @@ namespace linalg
      * @param lhs
      * @param scalar
      */
-    template <typename T>
-    void operator*=(StaticMatrix3x3<T> &lhs, const T &scalar)
+    template <typename T, typename U>
+    requires requires(T &elem, const U &val) { elem *= val; }
+    void operator*=(StaticMatrix3x3<T> &lhs, const U &scalar)
     {
         lhs[0] *= scalar;
         lhs[1] *= scalar;
@@ -429,8 +430,9 @@ namespace linalg
      * @param lhs
      * @param scalar
      */
-    template <typename T>
-    void operator/=(StaticMatrix3x3<T> &lhs, const T &scalar)
+    template <typename T, typename U>
+    requires requires(T &elem, const U &val) { elem /= val; }
+    void operator/=(StaticMatrix3x3<T> &lhs, const U &scalar)
     {
         lhs[0] /= scalar;
         lhs[1] /= scalar;
@@ -498,21 +500,28 @@ namespace linalg
      * @param rhs
      * @return StaticMatrix3x3<T>
      */
-    template <typename T>
-    StaticMatrix3x3<T> tensorProduct(
-        const Vector3D<T> &lhs,
-        const Vector3D<T> &rhs
-    )
+    template <typename T, typename U>
+    auto tensorProduct(const Vector3D<T> &lhs, const Vector3D<U> &rhs)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0] * rhs[0])>>
     {
-        StaticMatrix3x3<T> lhsMatrix{};
-        StaticMatrix3x3<T> rhsMatrix{};
+        StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0] * rhs[0])>>
+            result{};
 
-        lhsMatrix[0] = lhs;
-        rhsMatrix[0] = rhs;
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) result[i][j] = lhs[i] * rhs[j];
 
-        lhsMatrix = transpose(lhsMatrix);
+        return result;
+    }
 
-        return lhsMatrix * rhsMatrix;
+    template <typename Q, typename U>
+    requires(
+        mstd::is_quantity_like_v<Q> &&
+        std::same_as<typename Q::rep, Vector3D<double>>
+    )
+    auto tensorProduct(const Q &lhs, const Vector3D<U> &rhs)
+        -> StaticMatrix3x3<double>
+    {
+        return tensorProduct(lhs.numerical_value_in(Q::unit), rhs);
     }
 
     /**

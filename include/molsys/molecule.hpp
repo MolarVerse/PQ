@@ -109,8 +109,8 @@ namespace molsys
         [[nodiscard]] size_t                  getNumberOfAtomTypes() const;
         [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
 
-        [[nodiscard]] std::vector<double> getAtomMasses() const;
-        [[nodiscard]] double              getMolMass() const;
+        [[nodiscard]] std::vector<Mass>   getAtomMasses() const;
+        [[nodiscard]] Mass                getMolMass() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
         [[nodiscard]] bool     isMMMolecule() const;
@@ -163,7 +163,7 @@ namespace molsys
         linalg::Vec3D getAtomShiftForce(size_t index) const;
 
         [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
-        [[nodiscard]] double      getAtomMass(AtomIndex index) const;
+        [[nodiscard]] const Mass &getAtomMass(AtomIndex index) const;
         [[nodiscard]] double      getPartialCharge(AtomIndex index) const;
         [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
         [[nodiscard]] std::string getAtomName(AtomIndex index) const;

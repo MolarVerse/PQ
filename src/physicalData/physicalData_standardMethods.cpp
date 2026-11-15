@@ -22,6 +22,7 @@
 
 #include "physicalData.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -227,7 +228,7 @@ namespace physicalData
      *
      * @param momentum
      */
-    void PhysicalData::setMomentum(const linalg::Vec3D& momentum)
+    void PhysicalData::setMomentum(const Momentum3D& momentum)
     {
         _momentum = momentum;
     }
@@ -237,7 +238,9 @@ namespace physicalData
      *
      * @param angularMomentum
      */
-    void PhysicalData::setAngularMomentum(const linalg::Vec3D& angularMomentum)
+    void PhysicalData::setAngularMomentum(
+        const AngularMomentum3D& angularMomentum
+    )
     {
         _angularMomentum = angularMomentum;
     }
@@ -247,7 +250,7 @@ namespace physicalData
      *
      * @param kineticEnergy
      */
-    void PhysicalData::setKineticEnergy(double kineticEnergy)
+    void PhysicalData::setKineticEnergy(const Energy& kineticEnergy)
     {
         _kineticEnergy = kineticEnergy;
     }
@@ -257,7 +260,7 @@ namespace physicalData
      *
      * @param vec
      */
-    void PhysicalData::setKineticEnergyAtomicVector(const linalg::tensor3D& vec)
+    void PhysicalData::setKineticEnergyAtomicVector(const EnergyTensor3D& vec)
     {
         _kinEnergyVirialTensor.atomic = vec;
     }
@@ -268,7 +271,7 @@ namespace physicalData
      * @param vec
      */
     void PhysicalData::setKineticEnergyMolecularVector(
-        const linalg::tensor3D& vec
+        const EnergyTensor3D& vec
     )
     {
         _kinEnergyVirialTensor.molecular = vec;
@@ -499,9 +502,12 @@ namespace physicalData
     /**
      * @brief get the kinetic energy
      *
-     * @return double
+     * @return const Energy&
      */
-    double PhysicalData::getKineticEnergy() const { return _kineticEnergy; }
+    const Energy& PhysicalData::getKineticEnergy() const
+    {
+        return _kineticEnergy;
+    }
 
     /**
      * @brief get the non coulomb energy
@@ -660,7 +666,7 @@ namespace physicalData
      *
      * @return linalg::tensor3D
      */
-    linalg::tensor3D PhysicalData::getKinEnergyAtomTensor() const
+    const EnergyTensor3D& PhysicalData::getKinEnergyAtomTensor() const
     {
         return _kinEnergyVirialTensor.atomic;
     }
@@ -670,7 +676,7 @@ namespace physicalData
      *
      * @return linalg::tensor3D
      */
-    linalg::tensor3D PhysicalData::getKinEnergyMolTensor() const
+    const EnergyTensor3D& PhysicalData::getKinEnergyMolTensor() const
     {
         return _kinEnergyVirialTensor.molecular;
     }
@@ -681,9 +687,9 @@ namespace physicalData
      * @param virialType - the virial type to get the kinetic energy virial
      * tensor for
      *
-     * @return const linalg::tensor3D&
+     * @return const EnergyTensor3D&
      */
-    const linalg::tensor3D& PhysicalData::getKinEnergyVirialTensor(
+    const EnergyTensor3D& PhysicalData::getKinEnergyVirialTensor(
         VirialType virialType
     ) const
     {
@@ -710,16 +716,16 @@ namespace physicalData
     /**
      * @brief get the linear momentum
      *
-     * @return linalg::Vec3D
+     * @return const Momentum3D&
      */
-    linalg::Vec3D PhysicalData::getMomentum() const { return _momentum; }
+    const Momentum3D& PhysicalData::getMomentum() const { return _momentum; }
 
     /**
      * @brief get the angular momentum
      *
-     * @return linalg::Vec3D
+     * @return const AngularMomentum3D&
      */
-    linalg::Vec3D PhysicalData::getAngularMomentum() const
+    const AngularMomentum3D& PhysicalData::getAngularMomentum() const
     {
         return _angularMomentum;
     }

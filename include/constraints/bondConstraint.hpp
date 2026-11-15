@@ -62,12 +62,12 @@ namespace constraints
         DistanceSquared calculateDistanceDelta(
             const molsys::SimulationBox &
         ) const;
-        [[nodiscard]] double calculateVelocityDelta() const;
+        [[nodiscard]] MassPerTime calculateVelocityDelta() const;
 
         [[nodiscard]]
         bool applyShake(const molsys::SimulationBox &, double);
 
-        [[nodiscard]] bool applyRattle(double);
+        [[nodiscard]] bool applyRattle(const MassPerTime &tolerance);
 
         /***************************
          * standard setter methods *

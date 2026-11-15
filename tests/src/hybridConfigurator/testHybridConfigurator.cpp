@@ -237,9 +237,9 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     atom->setName("Dy");
     atom->initMass();
 
-    auto mol = molsys::Molecule();
-    mol.addAtom(atom);
-    simBox.addMolecule(mol);
+    auto molecule = molsys::Molecule();
+    molecule.addAtom(atom);
+    simBox.addMolecule(molecule);
 
     configurator::HybridConfigurator::assignHybridZones(simBox);
 
@@ -271,7 +271,7 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     {
         auto atom = std::make_shared<molsys::Atom>();
         atom->setPosition(linalg::Vec3D{position} * angstrom);
-        atom->setMass(1.0);
+        atom->setMass(1.0 * amu);
 
         auto molecule = molsys::Molecule();
         molecule.addAtom(atom);
@@ -342,9 +342,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     const auto &nMol = simBox.getMolecules().size();
     for (size_t i = 0; i < nMol; ++i)
     {
-        auto &mol = simBox.getMolecule(i);
-        EXPECT_EQ(mol.isActive(), true);
-        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), true);
+        auto &molecule = simBox.getMolecule(i);
+        EXPECT_EQ(molecule.isActive(), true);
+        EXPECT_EQ(molecule.getAtom(AtomIndex{0}).isActive(), true);
     }
 
     configurator::HybridConfigurator::deactivateOuterMolecules(simBox);
@@ -352,9 +352,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     std::vector<bool> expected = {true, true, true, true, false, false};
     for (size_t i = 0; i < 6; ++i)
     {
-        auto &mol = simBox.getMolecule(i);
-        EXPECT_EQ(mol.isActive(), expected[i]);
-        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), expected[i]);
+        auto &molecule = simBox.getMolecule(i);
+        EXPECT_EQ(molecule.isActive(), expected[i]);
+        EXPECT_EQ(molecule.getAtom(AtomIndex{0}).isActive(), expected[i]);
     }
 
     configurator::HybridConfigurator::deactivateSmoothingMolecules(
@@ -365,9 +365,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     expected = {true, true, false, true, false, false};
     for (size_t i = 0; i < 6; ++i)
     {
-        auto &mol = simBox.getMolecule(i);
-        EXPECT_EQ(mol.isActive(), expected[i]);
-        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), expected[i]);
+        auto &molecule = simBox.getMolecule(i);
+        EXPECT_EQ(molecule.isActive(), expected[i]);
+        EXPECT_EQ(molecule.getAtom(AtomIndex{0}).isActive(), expected[i]);
     }
 
     configurator::HybridConfigurator::toggleMoleculeActivation(simBox);
@@ -375,9 +375,9 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
     expected = {false, false, true, false, true, true};
     for (size_t i = 0; i < 6; ++i)
     {
-        auto &mol = simBox.getMolecule(i);
-        EXPECT_EQ(mol.isActive(), expected[i]);
-        EXPECT_EQ(mol.getAtom(AtomIndex{0}).isActive(), expected[i]);
+        auto &molecule = simBox.getMolecule(i);
+        EXPECT_EQ(molecule.isActive(), expected[i]);
+        EXPECT_EQ(molecule.getAtom(AtomIndex{0}).isActive(), expected[i]);
     }
 }
 
@@ -494,7 +494,7 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
-            atom->setMass(1.0);
+            atom->setMass(1.0 * amu);
             box.addAtom(atom);
             molecule.addAtom(atom);
         }

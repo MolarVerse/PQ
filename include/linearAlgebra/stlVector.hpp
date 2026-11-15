@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <cmath>
 #include <numeric>
+#include <type_traits>
 #include <vector>
 
 namespace stl
@@ -73,14 +74,23 @@ namespace stl
      * @brief dot product of two vectors
      *
      * @param lhs std::vector<T>
-     * @param rhs std::vector<T>
+     * @param rhs std::vector<U>
      *
-     * @return T dot product of lhs and rhs
+     * @return product type of T and U (e.g. Pos^2/Mass * 1/Time^2 for
+     * quantities) holding the dot product of lhs and rhs
      */
-    template <typename T>
-    T dot(const std::vector<T> &lhs, const std::vector<T> &rhs)
+    template <typename T, typename U>
+    auto dot(const std::vector<T> &lhs, const std::vector<U> &rhs)
+        -> std::remove_cvref_t<decltype(lhs[0] * rhs[0])>
     {
-        return std::inner_product(lhs.begin(), lhs.end(), rhs.begin(), T());
+        using Result = std::remove_cvref_t<decltype(lhs[0] * rhs[0])>;
+
+        return std::inner_product(
+            lhs.begin(),
+            lhs.end(),
+            rhs.begin(),
+            Result{}
+        );
     }
 
     /**

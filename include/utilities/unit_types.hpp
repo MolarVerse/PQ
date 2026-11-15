@@ -65,7 +65,10 @@ using TemperatureDiff =
 using Frequency =
     mstd::units::quantity<mstd::units::frequency[mstd::units::Hz]>;
 
-using Energy = mstd::quantity<mstd::units::kcal_per_mol>;
+using Energy         = mstd::quantity<mstd::units::kcal_per_mol>;
+using EnergyTensor3D = linalg::StaticMatrix3x3<Energy>;
+
+using Mass = mstd::quantity<mstd::units::amu>;
 
 // TODO: make Distance and Pos incompatible
 using Distance = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
@@ -77,12 +80,31 @@ using DistanceSquared = mstd::quantity<
 using InvDistanceSquared = mstd::quantity<
     mstd::units::one / (mstd::units::distance[mstd::units::angstrom] *
                         mstd::units::distance[mstd::units::angstrom])>;
-using Pos    = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
-using InvPos = mstd::quantity<
-    mstd::units::one / mstd::units::distance[mstd::units::angstrom]>;
+using Pos     = mstd::quantity<mstd::units::distance[mstd::units::angstrom]>;
+using PosMass = mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] * mstd::units::amu>;
+using PosMass3D = linalg::Vector3D<PosMass>;
+using InvPos    = mstd::quantity<
+       mstd::units::one / mstd::units::distance[mstd::units::angstrom]>;
 using Pos3D          = linalg::Vector3D<Pos>;
 using PosTensor3D    = linalg::StaticMatrix3x3<Pos>;
 using InvPosTensor3D = linalg::StaticMatrix3x3<InvPos>;
+
+using PosSquaredInvMass = mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] *
+    mstd::units::distance[mstd::units::angstrom] / mstd::units::amu>;
+
+using MassInvPosSquared = mstd::quantity<
+    mstd::units::amu / (mstd::units::distance[mstd::units::angstrom] *
+                        mstd::units::distance[mstd::units::angstrom])>;
+
+using InertiaTensor3D = linalg::StaticMatrix3x3<mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] *
+    mstd::units::distance[mstd::units::angstrom] * mstd::units::amu>>;
+
+using MassPerTime = mstd::quantity<mstd::units::amu / mstd::units::s>;
+using MassPerTimeSquared =
+    mstd::quantity<mstd::units::amu / (mstd::units::s * mstd::units::s)>;
 using Volume =
     mstd::quantity<mstd::units::volume
                        [mstd::units::angstrom * mstd::units::angstrom *
@@ -94,13 +116,40 @@ using InvVolume = mstd::quantity<
 
 using Vel = mstd::quantity<
     mstd::units::distance[mstd::units::angstrom] / mstd::units::s>;
-using Vel3D = linalg::Vector3D<Vel>;
+using VelSquared = mstd::quantity<
+    (mstd::units::distance[mstd::units::angstrom] / mstd::units::s) *
+    (mstd::units::distance[mstd::units::angstrom] / mstd::units::s)>;
+using Vel3D        = linalg::Vector3D<Vel>;
+using VelSquared3D = linalg::Vector3D<VelSquared>;
+
+using PosVel = mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] *
+    mstd::units::distance[mstd::units::angstrom] / mstd::units::s>;
+using PosVel3D = linalg::Vector3D<PosVel>;
+
+using Momentum = mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] * mstd::units::amu /
+    mstd::units::s>;
+using Momentum3D = linalg::Vector3D<Momentum>;
+
+using AngularMomentum = mstd::quantity<
+    mstd::units::distance[mstd::units::angstrom] *
+    mstd::units::distance[mstd::units::angstrom] * mstd::units::amu /
+    mstd::units::s>;
+using AngularMomentum3D = linalg::Vector3D<AngularMomentum>;
 
 using ForceConstant = mstd::quantity<
     mstd::units::kcal_per_mol / mstd::units::angstrom / mstd::units::angstrom>;
 
 using AngleForceConstant = mstd::quantity<
     mstd::units::kcal_per_mol / mstd::units::rad / mstd::units::rad>;
+
+using MassVelSquared = mstd::quantity<
+    mstd::units::amu * mstd::units::distance[mstd::units::angstrom] *
+    mstd::units::distance[mstd::units::angstrom] /
+    (mstd::units::s * mstd::units::s)>;
+
+using MassVelSquaredTensor3D = linalg::StaticMatrix3x3<MassVelSquared>;
 
 [[nodiscard]]
 static inline Temperature toTemperature(double temperature)

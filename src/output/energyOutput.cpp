@@ -94,8 +94,10 @@ namespace out
             ) << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
         }
 
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getKineticEnergy());
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getKineticEnergy().numerical_value_in(kcal_per_mol)
+        );
         _getFilePointer(
         ) << std::format("{:20.12f}\t", physicalData.getIntraEnergy());
 
@@ -172,8 +174,10 @@ namespace out
             );
         }
 
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", norm(physicalData.getMomentum()));
+        const auto mom =
+            physicalData.getMomentum().numerical_value_in(amu * angstrom / fs);
+
+        _getFilePointer() << std::format("{:20.5e}\t", norm(mom));
         _getFilePointer(
         ) << std::format("{:12.5f}\n", physicalData.getLoopTime());
 

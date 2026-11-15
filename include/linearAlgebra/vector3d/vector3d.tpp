@@ -999,9 +999,12 @@ namespace linalg
      * @return decltype(lhs.x * rhs.x) (for quantities, the product quantity,
      * e.g. length^2 for two Vector3D's of lengths)
      */
-    template <typename U>
-    requires pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>
-    auto dot(const U &lhs, const U &rhs)
+    template <typename U, typename V>
+    requires(
+        (pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>) &&
+        (pq::ArithmeticVector3D<V> || pq::QuantityLikeVector3D<V>)
+    )
+    auto dot(const U &lhs, const V &rhs)
         -> std::remove_cvref_t<decltype(lhs[0] * rhs[0])>
     {
         return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
@@ -1026,9 +1029,12 @@ namespace linalg
      * @param rhs
      * @return `Vector3D<decltype(lhs.x * rhs.x)>`
      */
-    template <typename U>
-    requires pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>
-    auto cross(const U &lhs, const U &rhs)
+    template <typename U, typename V>
+    requires(
+        (pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>) &&
+        (pq::ArithmeticVector3D<V> || pq::QuantityLikeVector3D<V>)
+    )
+    auto cross(const U &lhs, const V &rhs)
         -> Vector3D<std::remove_cvref_t<decltype(lhs[0] * rhs[0])>>
     {
         return Vector3D<std::remove_cvref_t<decltype(lhs[0] * rhs[0])>>(

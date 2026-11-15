@@ -37,6 +37,7 @@
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 /**
@@ -104,9 +105,9 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setMass(1.0);
-    atom2->setMass(1.0);
-    atom3->setMass(1.0);
+    atom1->setMass(1.0 * amu);
+    atom2->setMass(1.0 * amu);
+    atom3->setMass(1.0 * amu);
 
     // Stretch bond 0-1 by a small amount; M-SHAKE must pull atom 1
     // back along the bond to restore the rigid triangle. The
@@ -216,11 +217,10 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
 
     simBox.addMolecule(molecule);
 
-    auto momentumBefore = linalg::Vec3D(0.0, 0.0, 0.0);
+    Momentum3D momentumBefore = Momentum::zero();
     for (const auto &atom : atoms)
     {
-        momentumBefore += atom->getMass() *
-                          atom->getVelocity().numerical_value_in(angstrom / s);
+        momentumBefore += atom->getMass() * atom->getVelocity();
     }
 
     mShake.applyMRattle(simBox);
@@ -241,16 +241,19 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
         }
     }
 
-    auto momentumAfter = linalg::Vec3D(0.0, 0.0, 0.0);
+    Momentum3D momentumAfter = Momentum::zero();
     for (const auto &atom : atoms)
     {
-        momentumAfter += atom->getMass() *
-                         atom->getVelocity().numerical_value_in(angstrom / s);
+        momentumAfter += atom->getMass() * atom->getVelocity();
     }
 
     for (size_t k = 0; k < 3; ++k)
     {
-        EXPECT_NEAR(momentumAfter[k], momentumBefore[k], 1.0e-10);
+        EXPECT_NEAR(
+            momentumAfter[k].numerical_value_in(amu * angstrom / s),
+            momentumBefore[k].numerical_value_in(amu * angstrom / s),
+            1.0e-10
+        );
     }
 }
 
@@ -302,9 +305,9 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
-    atom1->setMass(1.0);
-    atom2->setMass(1.0);
-    atom3->setMass(1.0);
+    atom1->setMass(1.0 * amu);
+    atom2->setMass(1.0 * amu);
+    atom3->setMass(1.0 * amu);
     // Large perturbation so the solver cannot converge in 1 iteration.
     atom1->setPosition(refPos0);
     atom2->setPosition(linalg::Vec3D{1.5, 0.0, 0.0} * angstrom);

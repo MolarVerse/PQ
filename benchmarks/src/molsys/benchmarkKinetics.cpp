@@ -26,6 +26,7 @@
 #include <cstdint>
 
 #include "benchmarkSetup.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace
@@ -71,9 +72,10 @@ namespace
 
     void BM_AngularMomentum(benchmark::State& state)
     {
-        const auto    cellsPerSide = static_cast<std::size_t>(state.range(0));
-        auto          simBox       = benchmarkSetup::makeLattice(cellsPerSide);
-        linalg::Vec3D momentum{0.1, -0.2, 0.3};
+        const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
+        auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
+        Momentum3D momentum =
+            linalg::Vec3D{0.1, -0.2, 0.3} * (amu * angstrom / s);
 
         for (auto _ : state)
         {

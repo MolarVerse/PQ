@@ -28,6 +28,7 @@
 
 #include "outputMessages.hpp"
 #include "systemInfo.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests writing header to log file
@@ -197,7 +198,7 @@ TEST_F(TestLogOutput, writeDensityWarning)
 TEST_F(TestLogOutput, writeInitialMomentum)
 {
     _logOutput->setFilename("default.log", false);
-    _logOutput->writeInitialMomentum(0.1);
+    _logOutput->writeInitialMomentum(0.1 * amu * angstrom / fs);
     _logOutput->close();
     std::ifstream file("default.log");
     std::string   line;

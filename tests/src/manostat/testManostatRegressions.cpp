@@ -82,8 +82,12 @@ namespace
                 false
             );
             _data.setVirial(linalg::tensor3D{0.0});
-            _data.setKineticEnergyMolecularVector(linalg::tensor3D{0.0});
-            _data.setKineticEnergyAtomicVector(linalg::tensor3D{0.0});
+            _data.setKineticEnergyMolecularVector(
+                linalg::tensor3D{0.0} * kcal_per_mol
+            );
+            _data.setKineticEnergyAtomicVector(
+                linalg::tensor3D{0.0} * kcal_per_mol
+            );
         }
 
         void _addMolecule(
@@ -95,7 +99,7 @@ namespace
             for (const auto x : positions)
             {
                 auto atom = std::make_shared<molsys::Atom>();
-                atom->setMass(1.0);
+                atom->setMass(1.0 * amu);
                 atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
                 atom->setVelocity(
                     linalg::Vec3D{speed, 0.0, 0.0} * angstrom / s
@@ -537,21 +541,32 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     );
     stochastic.applyManostat(_box, _data, toTemperature(0.0));
 
-    EXPECT_NEAR(_data.getKineticEnergy() / expectedEnergy, 1.0, 1e-12);
+    EXPECT_NEAR(
+        (_data.getKineticEnergy() / expectedEnergy).numerical_value_in(one),
+        1.0,
+        1e-12
+    );
     EXPECT_NEAR(
         tempRatio(_data.getTemperature(), _box.calculateTemperature())
             .numerical_value_in(one),
         1.0,
         1e-12
     );
-    EXPECT_NEAR(_data.getMomentum()[0] / (speed * FS_TO_S), 2.0 / scale, 1e-12);
     EXPECT_NEAR(
-        _data.getKinEnergyMolTensor()[0][0] / expectedEnergy,
+        _data.getMomentum()[0].numerical_value_in(amu * angstrom / fs) /
+            (speed * FS_TO_S),
+        2.0 / scale,
+        1e-12
+    );
+    EXPECT_NEAR(
+        (_data.getKinEnergyMolTensor()[0][0] / expectedEnergy)
+            .numerical_value_in(one),
         1.0,
         1e-12
     );
     EXPECT_NEAR(
-        _data.getKinEnergyAtomTensor()[0][0] / expectedEnergy,
+        (_data.getKinEnergyAtomTensor()[0][0] / expectedEnergy)
+            .numerical_value_in(one),
         1.0,
         1e-12
     );
@@ -562,7 +577,12 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     resetSettings.setFResetAngularByUser(100);
     kinetics::ResetKinetics reset(resetSettings);
     reset.reset(1, _data, _box, toTemperature(0.0));
-    EXPECT_NEAR(_box.calculateMomentum()[0] / speed, 0.0, 1e-12);
+    EXPECT_NEAR(
+        _box.calculateMomentum()[0].numerical_value_in(amu * angstrom / fs) /
+            (speed * FS_TO_S),
+        0.0,
+        1e-12
+    );
 }
 
 TEST_F(ManostatRegression, atomicVirialSupportsMonatomicPressureCoupling)

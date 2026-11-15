@@ -263,9 +263,9 @@ namespace molsys
     /**
      * @brief return the mass of the atom
      *
-     * @return double
+     * @return const Mass&
      */
-    double Atom::getMass() const { return _mass; }
+    const Mass &Atom::getMass() const { return _mass; }
 
     /*
      * @brief return the qm charge of the atom
@@ -370,7 +370,7 @@ namespace molsys
      *
      * @param mass
      */
-    void Atom::setMass(double mass) { _mass = mass; }
+    void Atom::setMass(const Mass &mass) { _mass = mass; }
 
     /**
      * @brief set the partial charge of the atom

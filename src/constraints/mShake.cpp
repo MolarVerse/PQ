@@ -32,7 +32,6 @@
 #include "stlVector.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace constraints
@@ -44,9 +43,9 @@ namespace constraints
          *
          */
         [[nodiscard]]
-        double calcMatrixElement(
+        PosSquaredInvMass calcMatrixElement(
             const std::tuple<size_t, size_t, size_t, size_t> &indices,
-            const std::pair<double, double>                  &masses,
+            const std::pair<Mass, Mass>                      &masses,
             const std::pair<Pos3D, Pos3D>                    &pos
         )
         {
@@ -75,9 +74,7 @@ namespace constraints
 
             auto mShakeElement  = (kronecker_ik - kronecker_il) / mass_i;
             mShakeElement      += (kronecker_jl - kronecker_jk) / mass_j;
-            return mShakeElement *
-                   dot(pos_ij, pos_kl)
-                       .numerical_value_in(DistanceSquared::unit);
+            return mShakeElement * dot(pos_ij, pos_kl);
         }
     }   // namespace
 
@@ -87,8 +84,8 @@ namespace constraints
      */
     struct MShake::MShakeMatrices
     {
-        std::vector<linalg::Matrix<double>> mShakeMatrices;
-        std::vector<linalg::Matrix<double>> mShakeInvMatrices;
+        std::vector<linalg::Matrix<PosSquaredInvMass>> mShakeMatrices;
+        std::vector<linalg::Matrix<MassInvPosSquared>> mShakeInvMatrices;
     };
 
     /**
@@ -123,8 +120,8 @@ namespace constraints
             const auto nAtoms = mShakeReference.getNumberOfAtoms();
             const auto nBonds = nAtoms * (nAtoms - 1) / 2;
 
-            std::vector<DistanceSquared> rSquaredRefs;
-            linalg::Matrix<double>       mShakeMatrix(nBonds, nBonds);
+            std::vector<DistanceSquared>      rSquaredRefs;
+            linalg::Matrix<PosSquaredInvMass> mShakeMatrix(nBonds, nBonds);
 
             size_t bond_ij = 0;
 
@@ -202,8 +199,7 @@ namespace constraints
     {
         auto &molecules = simulationBox.getMolecules();
 
-        const auto timeStep =
-            settings::TimingsSettings::getTimeStep().numerical_value_in(s);
+        const auto timeStep    = settings::TimingsSettings::getTimeStep();
         const auto timeFactor  = 4.0 * timeStep * timeStep;
         const auto shakeFactor = 2.0 * timeStep * timeStep;
 
@@ -221,10 +217,10 @@ namespace constraints
                 _mShakeMatrices->mShakeInvMatrices[mShakeIndex].rows();
             auto &atoms = molecule.getAtoms();
 
-            std::vector<Pos3D>     bondsUnconstrained(nBonds);
-            std::vector<Pos3D>     bondsPrevious(nBonds);
-            std::vector<double>    shakeVector(nBonds);
-            linalg::Matrix<double> mShakeMatrix(nBonds, nBonds);
+            std::vector<Pos3D>                bondsUnconstrained(nBonds);
+            std::vector<Pos3D>                bondsPrevious(nBonds);
+            std::vector<VelSquared>           shakeVector(nBonds);
+            linalg::Matrix<PosSquaredInvMass> mShakeMatrix(nBonds, nBonds);
 
             std::vector<Pos3D> posUnconstrained;
 
@@ -269,9 +265,7 @@ namespace constraints
 
                     const auto r2Deviation = rSquared - r2Ref;
 
-                    shakeVector[index_ij] =
-                        r2Deviation.numerical_value_in(DistanceSquared::unit) /
-                        timeFactor;
+                    shakeVector[index_ij] = r2Deviation / timeFactor;
 
                     /*****************************************************
                      * determine bond vector of not integrated positions *
@@ -365,12 +359,10 @@ namespace constraints
                         posUnconstrained[j] += posAdjustment / mass_j;
 
                         atoms[i]->addVelocity(
-                            -posAdjustment.numerical_value_in(angstrom) /
-                            (mass_i * timeStep) * angstrom / s
+                            -posAdjustment / (mass_i * timeStep)
                         );
                         atoms[j]->addVelocity(
-                            posAdjustment.numerical_value_in(angstrom) /
-                            (mass_j * timeStep) * angstrom / s
+                            posAdjustment / (mass_j * timeStep)
                         );
 
                         ++index_ij;
@@ -404,10 +396,7 @@ namespace constraints
 
                         const auto r2Ref       = mShakeR2Refs[index_ij];
                         const auto r2Deviation = rSquared - r2Ref;
-                        shakeVector[index_ij]  = r2Deviation.numerical_value_in(
-                                                    angstrom * angstrom
-                                                ) /
-                                                timeFactor;
+                        shakeVector[index_ij]  = r2Deviation / timeFactor;
 
                         /******************************************************
                          * check if the deviation of the bond length from the *
@@ -463,14 +452,15 @@ namespace constraints
 
             const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
             const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
-            auto mShakeMatrix = _mShakeMatrices->mShakeInvMatrices[mShakeIndex];
+            auto       mShakeInvMatrix =
+                _mShakeMatrices->mShakeInvMatrices[mShakeIndex];
             const auto nAtoms = molecule.getNumberOfAtoms();
-            const auto nBonds = mShakeMatrix.rows();
+            const auto nBonds = mShakeInvMatrix.rows();
 
             auto &atoms = molecule.getAtoms();
 
-            std::vector<double>        rattleVector(nBonds);
-            std::vector<linalg::Vec3D> bonds(nBonds);
+            std::vector<PosVel3D> rattleVector(nBonds);
+            std::vector<Pos3D>    bonds(nBonds);
 
             size_t index_ij = 0;
             for (size_t i = 0; i < nAtoms - 1; ++i)
@@ -478,19 +468,17 @@ namespace constraints
                 for (size_t j = i + 1; j < nAtoms; ++j)
                 {
                     const auto dxyz = kernel::distVec(
-                                          atoms[i]->getPosition(),
-                                          atoms[j]->getPosition(),
-                                          simulationBox
-                    )
-                                          .numerical_value_in(angstrom);
+                        atoms[i]->getPosition(),
+                        atoms[j]->getPosition(),
+                        simulationBox
+                    );
 
                     const auto v_i     = atoms[i]->getVelocity();
                     const auto v_j     = atoms[j]->getVelocity();
                     const auto delta_v = v_i - v_j;
 
-                    bonds[index_ij] = dxyz;
-                    rattleVector[index_ij] =
-                        dot(dxyz, delta_v.numerical_value_in(angstrom / s));
+                    bonds[index_ij]        = dxyz;
+                    rattleVector[index_ij] = dot(dxyz, delta_v);
 
                     ++index_ij;
                 }
@@ -506,16 +494,12 @@ namespace constraints
                     const auto mass_j = atoms[j]->getMass();
 
                     auto velConstraint =
-                        -stl::dot(mShakeMatrix(index_ij), rattleVector);
+                        -stl::dot(mShakeInvMatrix(index_ij), rattleVector);
 
                     const auto velAdjustment = velConstraint * bonds[index_ij];
 
-                    atoms[i]->addVelocity(
-                        velAdjustment / mass_i * angstrom / s
-                    );
-                    atoms[j]->addVelocity(
-                        -velAdjustment / mass_j * angstrom / s
-                    );
+                    atoms[i]->addVelocity(velAdjustment / mass_i);
+                    atoms[j]->addVelocity(-velAdjustment / mass_j);
 
                     ++index_ij;
                 }

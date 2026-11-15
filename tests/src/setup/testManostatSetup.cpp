@@ -384,7 +384,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
     for (size_t i = 0; i < 2; ++i)
     {
         auto atom = std::make_shared<molsys::Atom>();
-        atom->setMass(1.0);
+        atom->setMass(1.0 * amu);
         molecule.addAtom(atom);
     }
     _mdEngine->getSimulationBox().addMolecule(molecule);

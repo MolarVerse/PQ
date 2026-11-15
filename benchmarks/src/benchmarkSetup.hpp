@@ -73,7 +73,7 @@ namespace benchmarkSetup
                         angstrom / s
                     );
                     atom->setForce({0.1, -0.2, 0.05});
-                    atom->setMass(12.0);
+                    atom->setMass(12.0 * amu);
                     atom->setAtomType(AtomType{0});
                     atom->setInternalGlobalVDWType(VdwType{0});
                     atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);

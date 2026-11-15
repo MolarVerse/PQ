@@ -131,8 +131,9 @@ namespace linalg
     constexpr auto operator*(const V &scalar, const StaticMatrix3x3<T> &mat)
         -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>;
 
-    template <typename T>
-    void operator*=(StaticMatrix3x3<T> &lhs, const T &scalar);
+    template <typename T, typename U>
+    requires requires(T &elem, const U &val) { elem *= val; }
+    void operator*=(StaticMatrix3x3<T> &lhs, const U &scalar);
 
     /****************************
      * operator/ and operator/= *
@@ -160,8 +161,9 @@ namespace linalg
     constexpr auto operator/(const StaticMatrix3x3<T> &mat, const U &scalar)
         -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] / scalar)>>;
 
-    template <typename T>
-    void operator/=(StaticMatrix3x3<T> &lhs, const T &scalar);
+    template <typename T, typename U>
+    requires requires(T &elem, const U &val) { elem /= val; }
+    void operator/=(StaticMatrix3x3<T> &lhs, const U &scalar);
 
     /****************************
      * general matrix functions *
@@ -179,11 +181,21 @@ namespace linalg
     auto det(const StaticMatrix3x3<T> &mat)
         -> std::remove_cvref_t<decltype(mat[0][0] * mat[0][0] * mat[0][0])>;
 
-    template <typename T>
-    StaticMatrix3x3<T> tensorProduct(
-        const Vector3D<T> &lhs,
-        const Vector3D<T> &rhs
-    );
+    // lhs and rhs may differ (e.g. momentum x velocity); the element type is
+    // the product type
+    template <typename T, typename U>
+    auto tensorProduct(const Vector3D<T> &lhs, const Vector3D<U> &rhs)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0] * rhs[0])>>;
+
+    // lhs is a quantity holding a Vector3D (e.g. `vec * mass`); the result is
+    // the plain tensor product of its numerical values
+    template <typename Q, typename U>
+    requires(
+        mstd::is_quantity_like_v<Q> &&
+        std::same_as<typename Q::rep, Vector3D<double>>
+    )
+    auto tensorProduct(const Q &lhs, const Vector3D<U> &rhs)
+        -> StaticMatrix3x3<double>;
 
     template <typename T>
     auto cofactorMatrix(

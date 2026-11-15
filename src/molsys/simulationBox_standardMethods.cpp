@@ -158,9 +158,9 @@ namespace molsys
     /**
      * @brief get the total mass
      *
-     * @return double
+     * @return const Mass&
      */
-    double SimulationBox::getTotalMass() const { return _totalMass; }
+    const Mass &SimulationBox::getTotalMass() const { return _totalMass; }
 
     /**
      * @brief get the total charge
@@ -179,9 +179,12 @@ namespace molsys
     /**
      * @brief get the center of mass
      *
-     * @return linalg::Vec3D&
+     * @return const Pos3D&
      */
-    linalg::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
+    const Pos3D &SimulationBox::getCenterOfMass() const
+    {
+        return _centerOfMass;
+    }
 
     /**
      * @brief get the indices of the atoms marking the center of the inner
@@ -483,7 +486,7 @@ namespace molsys
      *
      * @param totalMass
      */
-    void SimulationBox::setTotalMass(const double totalMass)
+    void SimulationBox::setTotalMass(const Mass &totalMass)
     {
         _totalMass = totalMass;
     }

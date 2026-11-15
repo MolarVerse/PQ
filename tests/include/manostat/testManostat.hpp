@@ -64,10 +64,10 @@ class TestManostat : public ::testing::Test
         _data->setVolume(2.0 * angstrom3);
         _data->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));
         _data->setKineticEnergyMolecularVector(
-            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
+            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
         );
         _data->setKineticEnergyAtomicVector(
-            diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0))
+            diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)) * kcal_per_mol
         );
 
         _box = std::make_unique<molsys::SimulationBox>();

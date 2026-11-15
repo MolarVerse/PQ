@@ -30,6 +30,7 @@
 #include "exceptions.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "shake" command
@@ -184,7 +185,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
 
     std::vector<std::string> lineElements = {"rattle-tolerance", "=", "0.0001"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getRattleTolerance(), 0.0001);
+    EXPECT_EQ(constraintSettings.getRattleTolerance(), 0.0001 * amu / s);
 
     _clearParser(parser);
 

@@ -49,10 +49,10 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
 {
     _physicalData->setTemperature(mstd::units::point<K>(1.0));
     _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(linalg::Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0) * amu * angstrom / fs);
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setLoopTime(0.1);
@@ -132,10 +132,10 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
 {
     _physicalData->setTemperature(mstd::units::point<K>(1.0));
     _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(linalg::Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0) * amu * angstrom / fs);
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -232,10 +232,10 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
 {
     _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(linalg::Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0) * amu * angstrom / fs);
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -327,10 +327,10 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0 * bar);
     _physicalData->setCoupledPressure(2.5 * bar);
-    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(linalg::Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0) * amu * angstrom / fs);
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
 
@@ -429,8 +429,8 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
 
     _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0);
-    _physicalData->setMomentum(linalg::Vec3D(6.0));
+    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->setMomentum(linalg::Vec3D(6.0) * amu * angstrom / fs);
     _physicalData->setIntraCoulombEnergy(0.0);
     _physicalData->setIntraNonCoulombEnergy(0.0);
 
@@ -516,10 +516,10 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
 {
     _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0);
+    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
     _physicalData->setCoulombEnergy(4.0);
     _physicalData->setNonCoulombEnergy(5.0);
-    _physicalData->setMomentum(linalg::Vec3D(6.0));
+    _physicalData->setMomentum(linalg::Vec3D(6.0) * amu * angstrom / fs);
     _physicalData->setIntraCoulombEnergy(9.0);
     _physicalData->setIntraNonCoulombEnergy(10.0);
     _physicalData->setNoseHooverMomentumEnergy(11.0);

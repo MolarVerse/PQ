@@ -81,7 +81,7 @@ namespace molsys
      */
     void Molecule::calculateCenterOfMass(const Box &box)
     {
-        _centerOfMass            = {Pos::zero(), Pos::zero(), Pos::zero()};
+        PosMass3D  comHelper     = PosMass::zero();
         const auto positionAtom1 = _atoms[0]->getPosition();
 
         for (const auto &atom : _atoms)
@@ -90,10 +90,10 @@ namespace molsys
             const auto position = atom->getPosition();
             const auto deltaPos = position - positionAtom1;
 
-            _centerOfMass += mass * (position - box.calcShiftVector(deltaPos));
+            comHelper += mass * (position - box.calcShiftVector(deltaPos));
         }
 
-        _centerOfMass /= getMolMass();
+        _centerOfMass = comHelper / getMolMass();
 
         _centerOfMass -= box.calcShiftVector(_centerOfMass);
     }
@@ -165,8 +165,7 @@ namespace molsys
      */
     void Molecule::scaleVelocity(const QuantityTensor3D &scalingTensor)
     {
-        // TODO: zero value needs different unit
-        Vel3D centerOfMassVelocity = Vel::zero();
+        Momentum3D centerOfMassVelocity = Momentum::zero();
 
         for (const auto &atom : _atoms)
             centerOfMassVelocity += atom->getMass() * atom->getVelocity();
@@ -202,11 +201,11 @@ namespace molsys
     /**
      * @brief returns the atom masses of the atoms in the molecule
      *
-     * @return std::vector<double>
+     * @return std::vector<Mass>
      */
-    std::vector<double> Molecule::getAtomMasses() const
+    std::vector<Mass> Molecule::getAtomMasses() const
     {
-        std::vector<double> atomMasses(getNumberOfAtoms());
+        std::vector<Mass> atomMasses(getNumberOfAtoms());
 
         for (size_t i = 0; i < getNumberOfAtoms(); ++i)
             atomMasses[i] = _atoms[i]->getMass();
@@ -494,9 +493,9 @@ namespace molsys
      * @brief returns the mass of the atom by index
      *
      * @param index
-     * @return double
+     * @return const Mass&
      */
-    double Molecule::getAtomMass(AtomIndex index) const
+    const Mass &Molecule::getAtomMass(AtomIndex index) const
     {
         return _atoms[index.get()]->getMass();
     }
@@ -579,15 +578,15 @@ namespace molsys
     /**
      * @brief returns the molecular mass of the molecule
      *
-     * @return double
+     * @return Mass
      */
-    double Molecule::getMolMass() const
+    Mass Molecule::getMolMass() const
     {
         return std::accumulate(
             _atoms.begin(),
             _atoms.end(),
-            0.0,
-            [](double sum, const auto &atom) { return sum + atom->getMass(); }
+            Mass::zero(),
+            [](Mass sum, const auto &atom) { return sum + atom->getMass(); }
         );
     }
 

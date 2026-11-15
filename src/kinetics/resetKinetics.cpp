@@ -33,8 +33,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "staticMatrix.hpp"
-#include "staticMatrix/staticMatrix3x3Class.hpp"
-#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace kinetics
@@ -160,7 +158,7 @@ namespace kinetics
      */
     void ResetKinetics::resetMomentum(
         molsys::SimulationBox &simulationBox,
-        const linalg::Vec3D   &momentum
+        const Momentum3D      &momentum
     )
     {
         const auto momentumCorrection = momentum / simulationBox.getTotalMass();
@@ -168,7 +166,7 @@ namespace kinetics
         std::ranges::for_each(
             simulationBox.getAtoms(),
             [momentumCorrection](auto &atom)
-            { atom->addVelocity(-momentumCorrection * angstrom / s); }
+            { atom->addVelocity(-momentumCorrection); }
         );
     }
 
@@ -182,19 +180,18 @@ namespace kinetics
      * @param angularMomentum the current angular momentum of the system
      */
     void ResetKinetics::resetAngularMomentum(
-        molsys::SimulationBox &simulationBox,
-        const linalg::Vec3D   &angularMomentum
+        molsys::SimulationBox   &simulationBox,
+        const AngularMomentum3D &angularMomentum
     )
     {
         simulationBox.calculateCenterOfMass();
         const auto centerOfMass = simulationBox.getCenterOfMass();
 
-        linalg::StaticMatrix3x3 helperMatrix{0.0};
+        InertiaTensor3D helperMatrix{Pos::zero() * Pos::zero() * Mass::zero()};
 
         auto addInertiaOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
         {
-            auto relativePosition =
-                atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
+            auto       relativePosition = atom->getPosition() - centerOfMass;
             const auto tensor =
                 tensorProduct(relativePosition, relativePosition);
             helperMatrix += tensor * atom->getMass();
@@ -209,11 +206,8 @@ namespace kinetics
 
         auto correctVelocities = [&angularVelocity, &centerOfMass](auto &atom)
         {
-            auto relativePosition =
-                atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
-            atom->addVelocity(
-                -cross(angularVelocity, relativePosition) * angstrom / s
-            );
+            auto relativePosition = atom->getPosition() - centerOfMass;
+            atom->addVelocity(-cross(angularVelocity, relativePosition));
         };
 
         std::ranges::for_each(simulationBox.getAtoms(), correctVelocities);

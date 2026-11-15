@@ -62,7 +62,7 @@ int main()
     settings.constraintSettings.setShakeMaxIterByUser(100);
     settings.constraintSettings.setRattleMaxIterByUser(100);
     settings.constraintSettings.setShakeToleranceByUser(1.0e-8);
-    settings.constraintSettings.setRattleToleranceByUser(1.0e-8);
+    settings.constraintSettings.setRattleToleranceByUser(1.0e-8 * amu / s);
     settings.constraintSettings.activateShakeByUser();
     auto constr = constraints::Constraints(settings.constraintSettings);
 
@@ -101,6 +101,9 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::cout << std::format("{:.6f}\n", box.calculateMomentum()[0]);
+    std::cout << std::format(
+        "{:.6f}\n",
+        box.calculateMomentum()[0].numerical_value_in(amu * angstrom / fs)
+    );
     return 0;
 }

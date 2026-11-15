@@ -104,12 +104,12 @@ namespace molsys
      * specified density and total mass
      */
     Pos3D OrthorhombicBox::calcBoxDimFromDensity(
-        double totalMass,
-        double density
+        const Mass &totalMass,
+        double      density
     )
     {
-        const auto volume =
-            totalMass / (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
+        const auto volume = totalMass.numerical_value_in(amu) /
+                            (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
         return {::cbrt(volume) * angstrom};
     }

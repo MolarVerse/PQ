@@ -31,7 +31,6 @@
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace constraints
 {
@@ -163,18 +162,16 @@ namespace constraints
                 -invMass2 * dPosition
             );
 
-            const auto timeStep =
-                settings::TimingsSettings::getTimeStep().numerical_value_in(s);
-            const auto dVelocity =
-                dPosition.numerical_value_in(angstrom) / timeStep;
+            const auto timeStep  = settings::TimingsSettings::getTimeStep();
+            const auto dVelocity = dPosition / timeStep;
 
             molecule1->addAtomVelocity(
                 get_atomIndices()[0],
-                +invMass1 * dVelocity * angstrom / s
+                +invMass1 * dVelocity
             );
             molecule2->addAtomVelocity(
                 get_atomIndices()[1],
-                -invMass2 * dVelocity * angstrom / s
+                -invMass2 * dVelocity
             );
 
             return false;
@@ -187,17 +184,13 @@ namespace constraints
      * @brief calculates the velocity delta of a bond constraint
      *
      */
-    double BondConstraint::calculateVelocityDelta() const
+    MassPerTime BondConstraint::calculateVelocityDelta() const
     {
-        const auto dVelocity = get_molecules()[0]
-                                   ->getAtomVelocity(get_atomIndices()[0])
-                                   .numerical_value_in(angstrom / s) -
-                               get_molecules()[1]
-                                   ->getAtomVelocity(get_atomIndices()[1])
-                                   .numerical_value_in(angstrom / s);
+        const auto dVelocity =
+            get_molecules()[0]->getAtomVelocity(get_atomIndices()[0]) -
+            get_molecules()[1]->getAtomVelocity(get_atomIndices()[1]);
 
-        const auto scalarProduct =
-            dot(dVelocity, _shakeDistanceRef.numerical_value_in(angstrom));
+        const auto scalarProduct = dot(dVelocity, _shakeDistanceRef);
 
         const auto invMass1 =
             1 / get_molecules()[0]->getAtomMass(get_atomIndices()[0]);
@@ -210,7 +203,7 @@ namespace constraints
         const auto delta =
             -scalarProduct / (sumInvMass) / shakeDistanceRefSquared;
 
-        return delta.numerical_value_in(InvDistanceSquared::unit);
+        return delta;
     }
 
     /**
@@ -220,14 +213,13 @@ namespace constraints
      * applied
      *
      */
-    bool BondConstraint::applyRattle(double tolerance)
+    bool BondConstraint::applyRattle(const MassPerTime &tolerance)
     {
         const auto delta = calculateVelocityDelta();
 
-        if (std::fabs(delta) > tolerance)
+        if (mstd::fabs(delta) > tolerance)
         {
-            const auto dVelocity =
-                delta * _shakeDistanceRef.numerical_value_in(angstrom);
+            const auto dVelocity = delta * _shakeDistanceRef;
 
             const auto invMass1 =
                 1 / get_molecules()[0]->getAtomMass(get_atomIndices()[0]);
@@ -236,11 +228,11 @@ namespace constraints
 
             get_molecules()[0]->addAtomVelocity(
                 get_atomIndices()[0],
-                +invMass1 * dVelocity * angstrom / s
+                +invMass1 * dVelocity
             );
             get_molecules()[1]->addAtomVelocity(
                 get_atomIndices()[1],
-                -invMass2 * dVelocity * angstrom / s
+                -invMass2 * dVelocity
             );
 
             return false;

@@ -33,6 +33,7 @@
 #include "potentialSettings.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 #include "vector3d/vector3dClass.hpp"
 
@@ -589,7 +590,7 @@ namespace molsys
      */
     void SimulationBox::calculateTotalMass()
     {
-        _totalMass = 0.0;
+        _totalMass = Mass::zero();
 
         auto accumulateMass = [this](const auto& atom)
         { _totalMass += atom->getMass(); };
@@ -603,17 +604,14 @@ namespace molsys
      */
     void SimulationBox::calculateCenterOfMass()
     {
-        _centerOfMass = linalg::Vec3D{0.0};
+        PosMass3D comHelper = PosMass::zero();
 
-        auto accumulateMassWeightedPos = [this](const auto& atom)
-        {
-            _centerOfMass += atom->getMass() *
-                             atom->getPosition().numerical_value_in(angstrom);
-        };
+        auto accumulateMassWeightedPos = [&comHelper](const auto& atom)
+        { comHelper += atom->getMass() * atom->getPosition(); };
 
         std::ranges::for_each(_atoms, accumulateMassWeightedPos);
 
-        _centerOfMass /= _totalMass;
+        _centerOfMass = comHelper / _totalMass;
     }
 
     /**
@@ -631,17 +629,14 @@ namespace molsys
     /**
      * @brief calculate momentum of simulationBox
      *
-     * @return linalg::Vec3D
+     * @return Momentum3D
      */
-    linalg::Vec3D SimulationBox::calculateMomentum()
+    Momentum3D SimulationBox::calculateMomentum()
     {
-        auto momentum = linalg::Vec3D{0.0};
+        Momentum3D momentum = Momentum::zero();
 
         auto accumulateAtomicMomentum = [&momentum](const auto& atom)
-        {
-            momentum += atom->getMass() *
-                        atom->getVelocity().numerical_value_in(angstrom / s);
-        };
+        { momentum += atom->getMass() * atom->getVelocity(); };
 
         std::ranges::for_each(_atoms, accumulateAtomicMomentum);
 
@@ -652,13 +647,11 @@ namespace molsys
      * @brief calculate angular momentum of simulationBox
      *
      */
-    linalg::Vec3D SimulationBox::calculateAngularMomentum(
-        const linalg::Vec3D& momentum
+    AngularMomentum3D SimulationBox::calculateAngularMomentum(
+        const Momentum3D& momentum
     )
     {
-        auto angularMom = linalg::Vec3D{0.0};
-
-        calculateCenterOfMass();
+        AngularMomentum3D angularMom = AngularMomentum::zero();
 
         calculateCenterOfMass();
 
@@ -666,10 +659,7 @@ namespace molsys
         {
             const auto mass = atom->getMass();
             angularMom +=
-                mass * cross(
-                           atom->getPosition().numerical_value_in(angstrom),
-                           atom->getVelocity().numerical_value_in(angstrom / s)
-                       );
+                mass * cross(atom->getPosition(), atom->getVelocity());
         };
 
         std::ranges::for_each(_atoms, accumulateAngularMomentum);
@@ -762,22 +752,17 @@ namespace molsys
      */
     Temperature SimulationBox::calculateTemperature()
     {
-        auto temperature = 0.0;
+        MassVelSquared twoEkinSum = MassVelSquared::zero();
 
-        auto accumulateTemperature = [&temperature](const auto& atom)
-        {
-            temperature +=
-                atom->getMass() *
-                normSquared(atom->getVelocity().numerical_value_in(angstrom / s)
-                );
-        };
+        auto accumulateTemperature = [&twoEkinSum](const auto& atom)
+        { twoEkinSum += atom->getMass() * normSquared(atom->getVelocity()); };
 
         std::ranges::for_each(_atoms, accumulateTemperature);
 
-        temperature *=
-            TEMPERATURE_FACTOR / static_cast<double>(_degreesOfFreedom);
+        const auto temperature =
+            twoEkinSum / static_cast<double>(_degreesOfFreedom) / kb;
 
-        return toTemperature(temperature);
+        return Temperature(temperature);
     }
 
     /**
@@ -814,7 +799,7 @@ namespace molsys
     void SimulationBox::calculateDensity()
     {
         const auto volume = _box->getVolume();
-        _density          = _totalMass /
+        _density          = _totalMass.numerical_value_in(amu) /
                    volume.numerical_value_in(angstrom * angstrom * angstrom) *
                    AMU_PER_ANGSTROM3_TO_KG_PER_L;
     }

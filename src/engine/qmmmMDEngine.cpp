@@ -716,7 +716,9 @@ namespace engine
                 for (auto &atom : recipientMol.getAtoms())
                 {
                     const auto massFraction = atom->getMass() / molMass;
-                    atom->addForce(molShare * massFraction);
+                    atom->addForce(
+                        molShare * massFraction.numerical_value_in(one)
+                    );
                 }
             }
         }

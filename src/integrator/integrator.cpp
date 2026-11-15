@@ -39,7 +39,7 @@ namespace integrator
     {
         auto       velocity = atom->getVelocity();
         const auto force    = atom->getForce();
-        const auto mass     = atom->getMass();
+        const auto mass     = atom->getMass().numerical_value_in(amu);
         const auto timeStamp =
             settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
 

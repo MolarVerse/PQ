@@ -51,11 +51,12 @@ namespace physicalData
      */
     struct KineticEnergyVirialTensor
     {
-        linalg::tensor3D atomic    = linalg::tensor3D(0.0);
-        linalg::tensor3D molecular = linalg::tensor3D(0.0);
+        // TODO: might be worth of using Virial as type here
+        EnergyTensor3D atomic    = Energy::zero();
+        EnergyTensor3D molecular = Energy::zero();
 
         [[nodiscard]]
-        const linalg::tensor3D& getVirialTensor(VirialType virialType) const;
+        const EnergyTensor3D& getVirialTensor(VirialType virialType) const;
     };
 
     /**
@@ -77,7 +78,7 @@ namespace physicalData
         Pressure _pressure{Pressure::zero()};
         Pressure _coupledPressure{Pressure::zero()};
 
-        double _kineticEnergy         = 0.0;
+        Energy _kineticEnergy         = Energy::zero();
         double _coulombEnergy         = 0.0;
         double _nonCoulombEnergy      = 0.0;
         double _intraCoulombEnergy    = 0.0;
@@ -103,8 +104,8 @@ namespace physicalData
         // constructed PhysicalData (also the one that resets the averages after
         // every output) would otherwise write garbage, sometimes inf, into the
         // first energy and momentum line
-        linalg::Vec3D _momentum        = linalg::Vec3D(0.0);
-        linalg::Vec3D _angularMomentum = linalg::Vec3D(0.0);
+        Momentum3D        _momentum        = Momentum::zero();
+        AngularMomentum3D _angularMomentum = AngularMomentum::zero();
 
         KineticEnergyVirialTensor _kinEnergyVirialTensor;
 
@@ -163,12 +164,12 @@ namespace physicalData
         void setVirial(const linalg::tensor3D& virial);
         void setStressTensor(const linalg::tensor3D& stressTensor);
 
-        void setMomentum(const linalg::Vec3D& momentum);
-        void setAngularMomentum(const linalg::Vec3D& angularMomentum);
+        void setMomentum(const Momentum3D& momentum);
+        void setAngularMomentum(const AngularMomentum3D& angularMomentum);
 
-        void setKineticEnergy(double kineticEnergy);
-        void setKineticEnergyAtomicVector(const linalg::tensor3D& vec);
-        void setKineticEnergyMolecularVector(const linalg::tensor3D& vec);
+        void setKineticEnergy(const Energy& kineticEnergy);
+        void setKineticEnergyAtomicVector(const EnergyTensor3D& vec);
+        void setKineticEnergyMolecularVector(const EnergyTensor3D& vec);
 
         void setCoulombEnergy(double coulombEnergy);
         void setNonCoulombEnergy(double nonCoulombEnergy);
@@ -206,12 +207,12 @@ namespace physicalData
         [[nodiscard]] const Pressure&    getPressure() const;
         [[nodiscard]] const Pressure&    getCoupledPressure() const;
 
-        [[nodiscard]] double getKineticEnergy() const;
-        [[nodiscard]] double getNonCoulombEnergy() const;
-        [[nodiscard]] double getCoulombEnergy() const;
-        [[nodiscard]] double getIntraCoulombEnergy() const;
-        [[nodiscard]] double getIntraNonCoulombEnergy() const;
-        [[nodiscard]] double getIntraEnergy() const;
+        [[nodiscard]] const Energy& getKineticEnergy() const;
+        [[nodiscard]] double        getNonCoulombEnergy() const;
+        [[nodiscard]] double        getCoulombEnergy() const;
+        [[nodiscard]] double        getIntraCoulombEnergy() const;
+        [[nodiscard]] double        getIntraNonCoulombEnergy() const;
+        [[nodiscard]] double        getIntraEnergy() const;
 
         [[nodiscard]] double getBondEnergy() const;
         [[nodiscard]] double getAngleEnergy() const;
@@ -231,19 +232,19 @@ namespace physicalData
 
         [[nodiscard]] double getRingPolymerEnergy() const;
 
-        [[nodiscard]] linalg::tensor3D getKinEnergyAtomTensor() const;
-        [[nodiscard]] linalg::tensor3D getKinEnergyMolTensor() const;
+        [[nodiscard]] const EnergyTensor3D& getKinEnergyAtomTensor() const;
+        [[nodiscard]] const EnergyTensor3D& getKinEnergyMolTensor() const;
 
         [[nodiscard]]
-        const linalg::tensor3D& getKinEnergyVirialTensor(
+        const EnergyTensor3D& getKinEnergyVirialTensor(
             VirialType virialType
         ) const;
 
         [[nodiscard]] linalg::tensor3D getVirial() const;
         [[nodiscard]] linalg::tensor3D getStressTensor() const;
 
-        [[nodiscard]] linalg::Vec3D getMomentum() const;
-        [[nodiscard]] linalg::Vec3D getAngularMomentum() const;
+        [[nodiscard]] const Momentum3D&        getMomentum() const;
+        [[nodiscard]] const AngularMomentum3D& getAngularMomentum() const;
     };
 
 }   // namespace physicalData

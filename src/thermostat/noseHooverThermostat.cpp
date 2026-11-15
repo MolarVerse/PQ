@@ -132,7 +132,7 @@ namespace thermostat
         {
             atom->addForce(
                 -factor * atom->getVelocity().numerical_value_in(angstrom / s) *
-                atom->getMass()
+                atom->getMass().numerical_value_in(amu)
             );
         };
 

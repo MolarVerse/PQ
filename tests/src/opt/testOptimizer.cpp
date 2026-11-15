@@ -38,7 +38,7 @@ namespace
 {
     struct Sample
     {
-        double        energy;
+        Energy        energy;
         linalg::Vec3D force0;
         linalg::Vec3D force1;
         linalg::Vec3D pos0;
@@ -110,7 +110,7 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 
     pushSample(
         opt,
-        {.energy = 1.0,
+        {.energy = 1.0 * kcal_per_mol,
          .force0 = {1.0, 0.0, 0.0},
          .force1 = {0.0, 2.0, 0.0},
          .pos0   = {0.1, 0.2, 0.3},
@@ -146,7 +146,7 @@ TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
     {
         pushSample(
             opt,
-            {.energy = static_cast<double>(i),
+            {.energy = static_cast<double>(i) * kcal_per_mol,
              .force0 = {static_cast<double>(i), 0.0, 0.0},
              .force1 = {0.0, static_cast<double>(i), 0.0},
              .pos0   = {static_cast<double>(i), 0.0, 0.0},
@@ -211,7 +211,7 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
     // Two history entries with identical energy and zero forces → converged.
     pushSample(
         opt,
-        {.energy = 1.0,
+        {.energy = 1.0 * kcal_per_mol,
          .force0 = {0.0, 0.0, 0.0},
          .force1 = {0.0, 0.0, 0.0},
          .pos0   = {0.0, 0.0, 0.0},
@@ -219,7 +219,7 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
     );
     pushSample(
         opt,
-        {.energy = 1.0,
+        {.energy = 1.0 * kcal_per_mol,
          .force0 = {0.0, 0.0, 0.0},
          .force1 = {0.0, 0.0, 0.0},
          .pos0   = {0.0, 0.0, 0.0},
@@ -246,7 +246,7 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 
     pushSample(
         opt,
-        {.energy = 1.0,
+        {.energy = 1.0 * kcal_per_mol,
          .force0 = {0.0, 0.0, 0.0},
          .force1 = {0.0, 0.0, 0.0},
          .pos0   = {0.0, 0.0, 0.0},
@@ -254,7 +254,7 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
     );
     pushSample(
         opt,
-        {.energy = 1.0,
+        {.energy = 1.0 * kcal_per_mol,
          .force0 = {1.0, 0.0, 0.0},
          .force1 = {0.0, 0.0, 0.0},
          .pos0   = {0.0, 0.0, 0.0},
@@ -270,6 +270,6 @@ TEST(TestOptimizer, setPhysicalDataOldStoresPointer)
 {
     opt::SteepestDescent opt(1U);
     auto                 phys = std::make_shared<physicalData::PhysicalData>();
-    phys->setKineticEnergy(0.42);
+    phys->setKineticEnergy(0.42 * kcal_per_mol);
     EXPECT_NO_THROW(opt.setPhysicalDataOld(phys));
 }

@@ -38,6 +38,7 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -123,10 +124,19 @@ TEST_F(TestRingPolymerRestartFileReader, readsPositionsVelocitiesAndForces)
 
     const auto &beads = _engine->getRingPolymerBeads();
 
-    EXPECT_EQ(beads[0].getAtoms()[0]->getPosition(), linalg::Vec3D(1, 2, 3));
-    EXPECT_EQ(beads[0].getAtoms()[1]->getVelocity(), linalg::Vec3D(.4, .5, .6));
+    EXPECT_EQ(
+        beads[0].getAtoms()[0]->getPosition(),
+        linalg::Vec3D(1, 2, 3) * angstrom
+    );
+    EXPECT_EQ(
+        beads[0].getAtoms()[1]->getVelocity(),
+        linalg::Vec3D(.4, .5, .6) * angstrom / s
+    );
     EXPECT_EQ(beads[0].getAtoms()[1]->getForce(), linalg::Vec3D(40, 50, 60));
-    EXPECT_EQ(beads[1].getAtoms()[0]->getPosition(), linalg::Vec3D(7, 8, 9));
+    EXPECT_EQ(
+        beads[1].getAtoms()[0]->getPosition(),
+        linalg::Vec3D(7, 8, 9) * angstrom
+    );
     EXPECT_EQ(beads[1].getAtoms()[1]->getForce(), linalg::Vec3D(11, 12, 13));
 }
 
@@ -220,7 +230,7 @@ TEST_F(TestRingPolymerRestartFileReader, wrapperUsesSettings)
     ASSERT_NO_THROW(input::ringPolymer::readRingPolymerRestartFile(*_engine));
     EXPECT_EQ(
         _engine->getRingPolymerBeads()[1].getAtoms()[0]->getPosition(),
-        linalg::Vec3D(7, 8, 9)
+        linalg::Vec3D(7, 8, 9) * angstrom
     );
 }
 
@@ -236,8 +246,13 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
     {
         for (auto &atom : bead.getAtoms())
         {
-            atom->setPosition({value, value + 1.0, value + 2.0});
-            atom->setVelocity({value * 1e-3, value * 2e-3, value * 3e-3});
+            atom->setPosition(
+                linalg::Vec3D{value, value + 1.0, value + 2.0} * angstrom
+            );
+            atom->setVelocity(
+                linalg::Vec3D{value * 1e-3, value * 2e-3, value * 3e-3} *
+                angstrom / s
+            );
             atom->setForce({-value, value * 2.0, -value * 3.0});
             value += 0.5;
         }
@@ -253,7 +268,8 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
     {
         for (const auto &atom : bead.getAtoms())
         {
-            expected.push_back(atom->getPosition());
+            expected.push_back(atom->getPosition().numerical_value_in(angstrom)
+            );
         }
     }
 
@@ -261,9 +277,9 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
     {
         for (auto &atom : bead.getAtoms())
         {
-            atom->setPosition({0, 0, 0});
-            atom->setVelocity({0, 0, 0});
-            atom->setForce({0, 0, 0});
+            atom->setPosition(linalg::Vec3D{0, 0, 0} * angstrom);
+            atom->setVelocity(linalg::Vec3D{0, 0, 0} * angstrom / s);
+            atom->setForce(linalg::Vec3D{0, 0, 0});
         }
     }
 
@@ -281,13 +297,16 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
             for (size_t axis = 0; axis < 3; ++axis)
             {
                 EXPECT_NEAR(
-                    atom->getPosition()[axis],
+                    atom->getPosition()[axis].numerical_value_in(angstrom),
                     expected[atomIndex][axis],
                     1e-7
                 );
             }
 
-            EXPECT_NE(atom->getVelocity(), linalg::Vec3D(0, 0, 0));
+            EXPECT_NE(
+                atom->getVelocity(),
+                linalg::Vec3D(0, 0, 0) * angstrom / s
+            );
             EXPECT_NE(atom->getForce(), linalg::Vec3D(0, 0, 0));
             ++atomIndex;
         }

@@ -60,9 +60,9 @@ class TestMolecule : public ::testing::Test
         _atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));
         _atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0));
 
-        _atom1->setMass(1.0);
-        _atom2->setMass(2.0);
-        _atom3->setMass(3.0);
+        _atom1->setMass(1.0 * amu);
+        _atom2->setMass(2.0 * amu);
+        _atom3->setMass(3.0 * amu);
 
         _molecule->addAtom(_atom1);
         _molecule->addAtom(_atom2);

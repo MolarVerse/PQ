@@ -60,8 +60,9 @@ namespace configurator
             );
         }
 
-        Pos3D      center{Pos::zero()};
-        double     total_mass = 0.0;
+        PosMass3D center{PosMass::zero()};
+        Mass      total_mass{Mass::zero()};
+
         const auto positionAtom1 =
             simulationBox.getAtom(indices.at(0)).getPosition();
 
@@ -77,8 +78,8 @@ namespace configurator
             total_mass += mass;
         }
 
-        center             /= total_mass;
-        _innerRegionCenter  = center - simulationBox.calcShiftVector(center);
+        const auto com     = center / total_mass;
+        _innerRegionCenter = com - simulationBox.calcShiftVector(com);
     }   // TODO(ape): https://github.com/MolarVerse/PQ/issues/196
 
     /**

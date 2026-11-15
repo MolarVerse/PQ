@@ -56,7 +56,7 @@ namespace molsys
         bool _isActive = true;
 
         AtomNumber            _atomicNumber;
-        double                _mass;
+        Mass                  _mass;
         double                _partialCharge;
         std::optional<double> _qmCharge;
 
@@ -128,7 +128,7 @@ namespace molsys
             return _atomicNumber;
         }
 
-        [[nodiscard]] double getMass() const;
+        [[nodiscard]] const Mass &getMass() const;
         [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
@@ -151,7 +151,7 @@ namespace molsys
         void setAtomTypeName(const std::string_view &atomTypeName);
         void setAtomicNumber(AtomNumber atomicNumber);
 
-        void setMass(double mass);
+        void setMass(const Mass &mass);
         void setPartialCharge(double partialCharge);
         void setQMCharge(double charge);
 

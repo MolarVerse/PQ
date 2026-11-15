@@ -69,7 +69,7 @@ namespace engine
         getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
 
         getEngineOutput().getLogOutput().writeInitialMomentum(
-            norm(getPhysicalDataPtr()->getMomentum())
+            norm(getPhysicalData().getMomentum())
         );
 
         _setNSteps(settings::TimingsSettings::getNumberOfSteps());

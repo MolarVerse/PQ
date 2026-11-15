@@ -26,7 +26,6 @@
 #include <cstddef>
 #include <new>
 
-#include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "physicalData.hpp"
 #include "units.hpp"
@@ -42,8 +41,11 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.5);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(1.5));
-    EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(2.0));
-    EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5);
+    EXPECT_EQ(
+        _physicalData->getMomentum(),
+        linalg::Vec3D(2.0) * amu * angstrom / s
+    );
+    EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getVolume(), 3.0 * angstrom3);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
     EXPECT_EQ(_physicalData->getPressure(), 4.0 * bar);
@@ -62,8 +64,11 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0);
     EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0);
     EXPECT_EQ(physicalData2.getTemperature(), toTemperature(3.0));
-    EXPECT_EQ(physicalData2.getMomentum(), linalg::Vec3D(4.0));
-    EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0);
+    EXPECT_EQ(
+        physicalData2.getMomentum(),
+        linalg::Vec3D(4.0) * amu * angstrom / s
+    );
+    EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0 * kcal_per_mol);
     EXPECT_EQ(physicalData2.getVolume(), 6.0 * angstrom3);
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
     EXPECT_EQ(physicalData2.getPressure(), 8.0 * bar);
@@ -84,8 +89,11 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 2.0);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 4.0);
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(6.0));
-    EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(8.0));
-    EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0);
+    EXPECT_EQ(
+        _physicalData->getMomentum(),
+        linalg::Vec3D(8.0) * amu * angstrom / s
+    );
+    EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getVolume(), 12.0 * angstrom3);
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0 * bar);
@@ -107,13 +115,16 @@ TEST_F(TestPhysicalData, calculateKinetics)
         mol1.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
     const auto velocity_mol1_atom2 =
         mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
-    const auto mass_mol1_atom1 = mol1.getAtomMass(AtomIndex{0});
-    const auto mass_mol1_atom2 = mol1.getAtomMass(AtomIndex{1});
+    const auto mass_mol1_atom1 =
+        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+    const auto mass_mol1_atom2 =
+        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(amu);
 
     const auto mol2 = _simulationBox->getMolecule(1);
     const auto velocity_mol2_atom1 =
         mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
-    const auto mass_mol2_atom1 = mol2.getAtomMass(AtomIndex{0});
+    const auto mass_mol2_atom1 =
+        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
 
     const auto momentumVector = velocity_mol1_atom1 * mass_mol1_atom1 +
                                 velocity_mol1_atom2 * mass_mol1_atom2 +
@@ -131,17 +142,22 @@ TEST_F(TestPhysicalData, calculateKinetics)
             (mass_mol1_atom1 + mass_mol1_atom2) +
         mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
 
-    EXPECT_EQ(_physicalData->getMomentum(), momentumVector * FS_TO_S);
     EXPECT_EQ(
-        diagonal(_physicalData->getKinEnergyAtomTensor()),
+        _physicalData->getMomentum().numerical_value_in(amu * angstrom / s),
+        momentumVector
+    );
+    EXPECT_EQ(
+        diagonal(_physicalData->getKinEnergyAtomTensor())
+            .numerical_value_in(kcal_per_mol),
         kineticEnergyAtomicVector * KINETIC_ENERGY_FACTOR
     );
     EXPECT_EQ(
-        diagonal(_physicalData->getKinEnergyMolTensor()),
+        diagonal(_physicalData->getKinEnergyMolTensor())
+            .numerical_value_in(kcal_per_mol),
         kineticEnergyMolecularVector * KINETIC_ENERGY_FACTOR
     );
     EXPECT_EQ(
-        _physicalData->getKineticEnergy(),
+        _physicalData->getKineticEnergy().numerical_value_in(kcal_per_mol),
         sum(kineticEnergyAtomicVector) * KINETIC_ENERGY_FACTOR
     );
 }
@@ -159,13 +175,16 @@ TEST_F(TestPhysicalData, calculateTemperature)
         mol1.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
     const auto velocity_mol1_atom2 =
         mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
-    const auto mass_mol1_atom1 = mol1.getAtomMass(AtomIndex{0});
-    const auto mass_mol1_atom2 = mol1.getAtomMass(AtomIndex{1});
+    const auto mass_mol1_atom1 =
+        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+    const auto mass_mol1_atom2 =
+        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(amu);
 
     const auto mol2 = _simulationBox->getMolecule(1);
     const auto velocity_mol2_atom1 =
         mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
-    const auto mass_mol2_atom1 = mol2.getAtomMass(AtomIndex{0});
+    const auto mass_mol2_atom1 =
+        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
@@ -190,7 +209,7 @@ TEST_F(TestPhysicalData, calculateTemperature)
  */
 TEST_F(TestPhysicalData, reset)
 {
-    _physicalData->setKineticEnergy(1.0);
+    _physicalData->setKineticEnergy(1.0 * kcal_per_mol);
     _physicalData->setCoulombEnergy(1.0);
     _physicalData->setNonCoulombEnergy(1.0);
     _physicalData->setIntraCoulombEnergy(1.0);
@@ -202,7 +221,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setImproperEnergy(1.0);
 
     _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setMomentum(linalg::Vec3D(1.0));
+    _physicalData->setMomentum(linalg::Vec3D(1.0) * amu * angstrom / s);
     _physicalData->setVolume(1.0 * angstrom3);
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0 * bar);
@@ -213,7 +232,7 @@ TEST_F(TestPhysicalData, reset)
 
     _physicalData->reset();
 
-    EXPECT_EQ(_physicalData->getKineticEnergy(), 0.0);
+    EXPECT_EQ(_physicalData->getKineticEnergy(), 0.0 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.0);
     EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 0.0);
     EXPECT_EQ(_physicalData->getIntraCoulombEnergy(), 0.0);
@@ -225,7 +244,10 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getImproperEnergy(), 0.0);
 
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(0.0));
-    EXPECT_EQ(_physicalData->getMomentum(), linalg::Vec3D(0.0));
+    EXPECT_EQ(
+        _physicalData->getMomentum(),
+        linalg::Vec3D(0.0) * amu * angstrom / s
+    );
     EXPECT_EQ(_physicalData->getVolume(), 0.0 * angstrom3);
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0 * bar);
@@ -252,7 +274,7 @@ TEST_F(TestPhysicalData, getTotalEnergy)
     _physicalData->setDihedralEnergy(7.0);
     _physicalData->setImproperEnergy(8.0);
 
-    _physicalData->setKineticEnergy(9.0);
+    _physicalData->setKineticEnergy(9.0 * kcal_per_mol);
     _physicalData->setQMEnergy(10.0);
     _physicalData->setQMReferenceEnergy(11.0);
 
@@ -361,7 +383,7 @@ TEST(PhysicalDataKinetics, molecularPressureExcludesInternalMotion)
         for (const auto sign : {1.0, opposing ? -1.0 : 1.0})
         {
             auto atom = std::make_shared<molsys::Atom>();
-            atom->setMass(1.0);
+            atom->setMass(1.0 * amu);
             atom->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
             atom->setVelocity(
                 sign * linalg::Vec3D{1.0, 2.0, 0.0} * angstrom / s
@@ -385,12 +407,17 @@ TEST(PhysicalDataKinetics, molecularPressureExcludesInternalMotion)
             for (size_t j = 0; j < 3; ++j)
             {
                 EXPECT_DOUBLE_EQ(
-                    data.getKinEnergyMolTensor()[i][j],
+                    data.getKinEnergyMolTensor()[i][j].numerical_value_in(
+                        kcal_per_mol
+                    ),
                     expected[i][j] * KINETIC_ENERGY_FACTOR
                 );
             }
         }
-        EXPECT_DOUBLE_EQ(data.getKineticEnergy(), 10.0 * KINETIC_ENERGY_FACTOR);
+        EXPECT_DOUBLE_EQ(
+            data.getKineticEnergy().numerical_value_in(kcal_per_mol),
+            10.0 * KINETIC_ENERGY_FACTOR
+        );
     }
 }
 
@@ -416,15 +443,15 @@ TEST_F(TestPhysicalData, defaultConstructedIsZero)
 
     for (size_t i = 0; i < 3; ++i)
     {
-        EXPECT_EQ(data->getMomentum()[i], 0.0);
-        EXPECT_EQ(data->getAngularMomentum()[i], 0.0);
+        EXPECT_EQ(data->getMomentum()[i], Momentum::zero());
+        EXPECT_EQ(data->getAngularMomentum()[i], AngularMomentum::zero());
 
         for (size_t j = 0; j < 3; ++j)
         {
             EXPECT_EQ(data->getVirial()[i][j], 0.0);
             EXPECT_EQ(data->getStressTensor()[i][j], 0.0);
-            EXPECT_EQ(data->getKinEnergyAtomTensor()[i][j], 0.0);
-            EXPECT_EQ(data->getKinEnergyMolTensor()[i][j], 0.0);
+            EXPECT_EQ(data->getKinEnergyAtomTensor()[i][j], Energy::zero());
+            EXPECT_EQ(data->getKinEnergyMolTensor()[i][j], Energy::zero());
         }
     }
 

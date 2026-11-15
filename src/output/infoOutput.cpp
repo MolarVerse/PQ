@@ -119,7 +119,11 @@ namespace out
             _writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
         }
 
-        _writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
+        _writeLeft(
+            physicalData.getKineticEnergy().numerical_value_in(kcal_per_mol),
+            "E(KIN)",
+            "kcal/mol"
+        );
         _writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
         if (settings::GeneralSettings::isMMActivated())
@@ -211,11 +215,10 @@ namespace out
             );
         }
 
-        _writeLeftScientific(
-            norm(physicalData.getMomentum()),
-            "MOMENTUM",
-            "amuA/fs"
+        const auto momentumNorm = norm(
+            physicalData.getMomentum().numerical_value_in(amu * angstrom / fs)
         );
+        _writeLeftScientific(momentumNorm, "MOMENTUM", "amuA/fs");
         _writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
 
         _getFilePointer() << std::format("{:-^89}", "") << "\n\n";

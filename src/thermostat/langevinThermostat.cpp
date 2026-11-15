@@ -117,7 +117,7 @@ namespace thermostat
 
         auto applyFriction = [this, sigma](auto &atom)
         {
-            const auto mass     = atom->getMass();
+            const auto mass     = atom->getMass().numerical_value_in(amu);
             const auto timeStep = settings::TimingsSettings::getTimeStep();
 
             const auto propagationFactor =

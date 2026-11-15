@@ -25,6 +25,7 @@
 #include <format>
 
 #include "physicalData.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -50,23 +51,23 @@ namespace out
         const physicalData::PhysicalData &physicalData
     )
     {
+        const auto mom =
+            physicalData.getMomentum().numerical_value_in(amu * angstrom / fs);
+
+        const auto angularMom =
+            physicalData.getAngularMomentum().numerical_value_in(
+                amu * angstrom * angstrom / fs
+            );
+
         _getFilePointer() << std::format("{:10d}\t", step);
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", norm(physicalData.getMomentum()));
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", physicalData.getMomentum()[0]);
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", physicalData.getMomentum()[1]);
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", physicalData.getMomentum()[2]);
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", norm(physicalData.getAngularMomentum()));
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", physicalData.getAngularMomentum()[0]);
-        _getFilePointer(
-        ) << std::format("{:20.5e}\t", physicalData.getAngularMomentum()[1]);
-        _getFilePointer(
-        ) << std::format("{:20.5e}\n", physicalData.getAngularMomentum()[2]);
+        _getFilePointer() << std::format("{:20.5e}\t", norm(mom));
+        _getFilePointer() << std::format("{:20.5e}\t", mom[0]);
+        _getFilePointer() << std::format("{:20.5e}\t", mom[1]);
+        _getFilePointer() << std::format("{:20.5e}\t", mom[2]);
+        _getFilePointer() << std::format("{:20.5e}\t", norm(angularMom));
+        _getFilePointer() << std::format("{:20.5e}\t", angularMom[0]);
+        _getFilePointer() << std::format("{:20.5e}\t", angularMom[1]);
+        _getFilePointer() << std::format("{:20.5e}\n", angularMom[2]);
 
         _getFilePointer() << std::flush;
     }

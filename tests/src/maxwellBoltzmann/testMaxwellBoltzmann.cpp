@@ -47,9 +47,14 @@ namespace
     {
         auto *box = new molsys::SimulationBox();
 
-        const std::vector<double> masses{1.0, 12.0, 14.0, 16.0};
+        const std::vector<Mass> masses{
+            1.0 * amu,
+            12.0 * amu,
+            14.0 * amu,
+            16.0 * amu
+        };
 
-        auto totalMass = 0.0;
+        Mass totalMass = Mass::zero();
         for (size_t i = 0; i < 27; ++i)
         {
             const auto x      = static_cast<double>(i % 3);
@@ -107,33 +112,31 @@ namespace
     }
 
     // sum of |m v| - natural scale of the total linear momentum
-    double momentumScale(molsys::SimulationBox &simulationBox)
+    Momentum momentumScale(molsys::SimulationBox &simulationBox)
     {
-        auto scale = 0.0;
+        Momentum scale = Momentum::zero();
         for (const auto &atom : simulationBox.getAtoms())
-            scale += atom->getMass() *
-                     norm(atom->getVelocity().numerical_value_in(angstrom / s));
+            scale += atom->getMass() * norm(atom->getVelocity());
         return scale;
     }
 
     // sum of |m (r - R)| |v| - natural scale of the total angular momentum
-    double angularMomentumScale(molsys::SimulationBox &simulationBox)
+    AngularMomentum angularMomentumScale(molsys::SimulationBox &simulationBox)
     {
         simulationBox.calculateCenterOfMass();
         const auto centerOfMass = simulationBox.getCenterOfMass();
 
-        auto scale = 0.0;
+        AngularMomentum scale = AngularMomentum::zero();
         for (const auto &atom : simulationBox.getAtoms())
         {
-            const auto relativePosition =
-                atom->getPosition().numerical_value_in(angstrom) - centerOfMass;
+            const auto relativePosition = atom->getPosition() - centerOfMass;
             scale += atom->getMass() * norm(relativePosition) *
-                     norm(atom->getVelocity().numerical_value_in(angstrom / s));
+                     norm(atom->getVelocity());
         }
         return scale;
     }
 
-    linalg::Vec3D angularMomentumOf(molsys::SimulationBox &simulationBox)
+    AngularMomentum3D angularMomentumOf(molsys::SimulationBox &simulationBox)
     {
         simulationBox.calculateCenterOfMass();
         return simulationBox.calculateAngularMomentum(
@@ -152,9 +155,16 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 
     const auto momentum = box->calculateMomentum();
     const auto scale    = momentumScale(*box);
-    ASSERT_GT(scale, 0.0);
+    ASSERT_GT(scale, Momentum::zero());
 
-    for (size_t i = 0; i < 3; ++i) EXPECT_NEAR(momentum[i], 0.0, 1e-10 * scale);
+    for (size_t i = 0; i < 3; ++i)
+    {
+        EXPECT_NEAR(
+            momentum[i].numerical_value_in(amu * angstrom / s),
+            0.0,
+            1e-10 * scale.numerical_value_in(amu * angstrom / s)
+        );
+    }
 
     delete box;
 }
@@ -169,10 +179,18 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesAngularMomentum)
 
     const auto angularMomentum = angularMomentumOf(*box);
     const auto scale           = angularMomentumScale(*box);
-    ASSERT_GT(scale, 0.0);
+    ASSERT_GT(scale, AngularMomentum::zero());
 
     for (size_t i = 0; i < 3; ++i)
-        EXPECT_NEAR(angularMomentum[i], 0.0, 1e-10 * scale);
+    {
+        EXPECT_NEAR(
+            angularMomentum[i].numerical_value_in(
+                amu * angstrom * angstrom / s
+            ),
+            0.0,
+            1e-10 * scale.numerical_value_in(amu * angstrom * angstrom / s)
+        );
+    }
 
     delete box;
 }
@@ -225,8 +243,18 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
 
         for (size_t i = 0; i < 3; ++i)
         {
-            EXPECT_NEAR(momentum[i], 0.0, 1e-10 * pScale);
-            EXPECT_NEAR(angularMomentum[i], 0.0, 1e-10 * lScale);
+            EXPECT_NEAR(
+                momentum[i].numerical_value_in(amu * angstrom / s),
+                0.0,
+                1e-10 * pScale.numerical_value_in(amu * angstrom / s)
+            );
+            EXPECT_NEAR(
+                angularMomentum[i].numerical_value_in(
+                    amu * angstrom * angstrom / s
+                ),
+                0.0,
+                1e-10 * lScale.numerical_value_in(amu * angstrom * angstrom / s)
+            );
         }
         EXPECT_NEAR(
             box->calculateTemperature().quantity_from_zero().numerical_value_in(
@@ -278,12 +306,12 @@ TEST(
             box->getAtoms()[i]->getPosition(),
             reference->getAtoms()[i]->getPosition()
         );
-        EXPECT_DOUBLE_EQ(
+        EXPECT_EQ(
             box->getAtoms()[i]->getMass(),
             reference->getAtoms()[i]->getMass()
         );
     }
-    EXPECT_DOUBLE_EQ(box->getTotalMass(), reference->getTotalMass());
+    EXPECT_EQ(box->getTotalMass(), reference->getTotalMass());
 
     delete reference;
     delete box;
