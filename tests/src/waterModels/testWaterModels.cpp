@@ -902,12 +902,12 @@ namespace
                 for (int iz = 0; iz < perAxis; ++iz)
                 {
                     const auto jitter = [index](const double phase)
-                    { return 0.4 * std::sin(7.0 * index + phase); };
+                    { return 0.4 * std::sin((7.0 * index) + phase); };
 
                     const linalg::Vec3D origin = {
-                        -0.5 * length + spacing * (ix + 0.5) + jitter(0.0),
-                        -0.5 * length + spacing * (iy + 0.5) + jitter(1.0),
-                        -0.5 * length + spacing * (iz + 0.5) + jitter(2.0)
+                        (-0.5 * length) + (spacing * (ix + 0.5)) + jitter(0.0),
+                        (-0.5 * length) + (spacing * (iy + 0.5)) + jitter(1.0),
+                        (-0.5 * length) + (spacing * (iz + 0.5)) + jitter(2.0)
                     };
 
                     const auto zone = zones.at(static_cast<size_t>(index) % 4);
