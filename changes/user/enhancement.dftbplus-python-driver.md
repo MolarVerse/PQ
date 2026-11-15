@@ -1,0 +1,1 @@
+- The DFTB+ script `dftbplus_periodic_stress` now runs on Python instead of Perl. Results are unchanged.

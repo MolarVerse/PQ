@@ -57,3 +57,9 @@ if(PERL_EXECUTABLE)
                 ${PROJECT_SOURCE_DIR}/src/QM/scripts)
     set_property(TEST testTurbomoleScripts PROPERTY LABELS QM)
 endif()
+
+add_test(NAME testDftbplusScript
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testDftbplusScript.py
+            ${PROJECT_SOURCE_DIR}/src/QM/scripts/dftbplus_periodic_stress
+            ${PROJECT_SOURCE_DIR}/tests/data/dftbplusScript)
+set_property(TEST testDftbplusScript PROPERTY LABELS QM)
