@@ -22,8 +22,6 @@
 
 #include "resetKineticsSettings.hpp"
 
-#include "timingsSettings.hpp"
-
 /**
  * @brief Construct a new Reset Kinetics Settings object
  *
@@ -43,10 +41,8 @@ ResetKineticsSettings::ResetKineticsSettings()
  * @brief Finalize the reset kinetics settings by setting default values for
  * certain fields if they are zero
  */
-void ResetKineticsSettings::finalize()
+void ResetKineticsSettings::finalize(size_t numberOfSteps)
 {
-    const auto numberOfSteps = TimingsSettings::getNumberOfSteps();
-
     if (_fScale.get() == 0)
         _fScale.setBySystem(numberOfSteps + 1);
 

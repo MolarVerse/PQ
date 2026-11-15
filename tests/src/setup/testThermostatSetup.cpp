@@ -38,7 +38,8 @@ namespace
     void finalizeTargetTemperature(Settings &settings)
     {
         settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
-        settings.kinetics.finalize();
+        settings.timings.setNumberOfStepsByUser(100U);
+        settings.kinetics.finalize(settings.timings.getNumberOfSteps());
     }
 }   // namespace
 

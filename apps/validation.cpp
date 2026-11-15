@@ -538,7 +538,7 @@ cli::ValidationResult cli::validateInputFile(
         reader.validateInputConfiguration(settings);
         // only the kinetics are resolved here: a full Settings::finalize()
         // would also rewrite e.g. the qm_script into its full path
-        settings.kinetics.finalize();
+        settings.kinetics.finalize(settings.timings.getNumberOfSteps());
         settings.validate();
         validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)

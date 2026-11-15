@@ -382,20 +382,6 @@ namespace engine
     }
 
     /**
-     * @brief get the number of steps
-     *
-     * @return size_t
-     */
-    size_t Engine::_getNSteps() const { return _nSteps; }
-
-    /**
-     * @brief set the number of steps
-     *
-     * @param nSteps
-     */
-    void Engine::_setNSteps(size_t nSteps) { _nSteps = nSteps; }
-
-    /**
      * @brief set the current step
      *
      * @param step

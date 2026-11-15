@@ -228,7 +228,8 @@ namespace
         size_t fReset,
         size_t nResetAngular,
         size_t fResetAngular,
-        size_t fResetForces
+        size_t fResetForces,
+        size_t numberOfSteps
     )
     {
         return testSettings::make<ResetKineticsSettings>()
@@ -239,7 +240,8 @@ namespace
             .with(&ResetKineticsSettings::setNResetAngularByUser, nResetAngular)
             .with(&ResetKineticsSettings::setFResetAngularByUser, fResetAngular)
             .with(&ResetKineticsSettings::setFResetForcesByUser, fResetForces)
-            .apply([](auto &config) { config.finalize(); })
+            .apply([numberOfSteps](auto &config)
+                   { config.finalize(numberOfSteps); })
             .build();
     }
 }   // namespace
@@ -377,8 +379,9 @@ TEST(TestResetKinetics, resetAngularMomentumLeavesVelocitiesFinite)
 
 TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
 {
-    auto                   *box      = makeBox();
-    ResetKineticsSettings   settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 1U);
+    auto                 *box = makeBox();
+    ResetKineticsSettings settings =
+        makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 1U, 100U);
     kinetics::ResetKinetics reset{settings};
 
     // Seed atom forces with non-zero values.
@@ -917,7 +920,8 @@ TEST(TestResetKinetics, resetWithoutScheduledResetLeavesBoxUntouched)
     auto  data = makeData(*box);
 
     // reset() must be callable on a const object
-    const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
+    const auto settings =
+        makeSettings(0U, never, 0U, never, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     const auto velocities      = velocitiesOf(*box);
@@ -944,7 +948,8 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
     auto *box  = makeBox();
     auto  data = physicalData::PhysicalData();
 
-    const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
+    const auto settings =
+        makeSettings(0U, never, 0U, never, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     // values in PhysicalData deliberately do not match the box
@@ -976,7 +981,7 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     const auto before = velocitiesOf(*box);
@@ -1028,7 +1033,7 @@ TEST(TestResetKinetics, resetMomentumBranchOnlyShiftsVelocities)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, never, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     const auto before = velocitiesOf(*box);
@@ -1066,7 +1071,7 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, never, 0U, never, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     const auto momentum = box->calculateMomentum();
@@ -1105,9 +1110,9 @@ TEST(TestResetKinetics, resetTemperatureAndMomentumDueTogetherActOnlyOnce)
     auto  dataBoth        = makeData(*boxBoth);
 
     const auto settingsOnlyTemperature =
-        makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
+        makeSettings(0U, 7U, 0U, never, 0U, never, 1U, 100U);
     const auto settingsTemperatureAndMomentum =
-        makeSettings(0U, 7U, 0U, 7U, 0U, never, 1U);
+        makeSettings(0U, 7U, 0U, 7U, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics onlyTemperature{settingsOnlyTemperature};
     const kinetics::ResetKinetics temperatureAndMomentum{
         settingsTemperatureAndMomentum
@@ -1136,7 +1141,7 @@ TEST(TestResetKinetics, resetAllBranchesMatchSequentialStaticCalls)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     // reference: temperature -> momentum -> angular momentum
@@ -1196,7 +1201,7 @@ TEST(TestResetKinetics, resetTemperatureAndAngularDueTogetherKeepMomentumZero)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box, toTemperature(300.0));
@@ -1221,7 +1226,7 @@ TEST(TestResetKinetics, resetMomentumAndAngularDueTogetherZeroBoth)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box, toTemperature(300.0));
@@ -1249,7 +1254,8 @@ TEST(TestResetKinetics, resetMomentumAndAngularDueTogetherZeroBoth)
 
 TEST(TestResetKinetics, resetTemperatureIsScheduledByStepsAndFrequency)
 {
-    const auto settings = makeSettings(5U, 1000U, 0U, never, 0U, never, 1U);
+    const auto settings =
+        makeSettings(5U, 1000U, 0U, never, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     EXPECT_TRUE(resetModifiesVelocities(reset, 1U));      // within nSteps
@@ -1263,7 +1269,8 @@ TEST(TestResetKinetics, resetTemperatureIsScheduledByStepsAndFrequency)
 
 TEST(TestResetKinetics, resetMomentumIsScheduledByStepsAndFrequency)
 {
-    const auto settings = makeSettings(0U, never, 5U, 1000U, 0U, never, 1U);
+    const auto settings =
+        makeSettings(0U, never, 5U, 1000U, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     EXPECT_TRUE(resetModifiesVelocities(reset, 1U));
@@ -1277,7 +1284,8 @@ TEST(TestResetKinetics, resetMomentumIsScheduledByStepsAndFrequency)
 
 TEST(TestResetKinetics, resetAngularMomentumIsScheduledByStepsAndFrequency)
 {
-    const auto settings = makeSettings(0U, never, 0U, never, 5U, 1000U, 1U);
+    const auto settings =
+        makeSettings(0U, never, 0U, never, 5U, 1000U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     EXPECT_TRUE(resetModifiesVelocities(reset, 1U));
@@ -1295,7 +1303,8 @@ TEST(TestResetKinetics, stepZeroTriggersEveryResetIndependentOfSchedule)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, never, 0U, never, 0U, never, 1U);
+    const auto settings =
+        makeSettings(0U, never, 0U, never, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     reset.reset(0U, data, *box, toTemperature(300.0));
@@ -1328,7 +1337,7 @@ TEST(TestResetKinetics, resetThrowsForZeroTemperatureInDataWhenScheduled)
     // PhysicalData has not been filled -> temperature 0.0
     auto data = physicalData::PhysicalData();
 
-    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, never, 0U, never, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     const auto velocities = velocitiesOf(*box);
@@ -1355,7 +1364,7 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
         0.0
     );
 
-    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     EXPECT_NO_THROW(reset.reset(7U, data, *box, toTemperature(300.0)));
@@ -1375,7 +1384,7 @@ TEST(TestResetKinetics, resetIsIdempotentForMomentumAndAngularMomentum)
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, 7U, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box, toTemperature(300.0));
@@ -1391,7 +1400,7 @@ TEST(TestResetKinetics, resetIsIdempotentForMomentumAndAngularMomentum)
 
 TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
 {
-    const auto settings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reused{settings};
 
     // first call with a very different system
@@ -1405,7 +1414,7 @@ TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
     auto  dataB = makeData(*boxB);
     reused.reset(7U, dataB, *boxB, toTemperature(300.0));
 
-    const auto freshSettings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U);
+    const auto freshSettings = makeSettings(0U, 7U, 0U, 7U, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics fresh{freshSettings};
     auto                         *boxC  = makeBox();
     auto                          dataC = makeData(*boxC);
@@ -1427,7 +1436,7 @@ TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
 TEST(TestResetKinetics, resetForcesRespectsStepFrequency)
 {
     auto      *box      = makeBox();
-    const auto settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 3U);
+    const auto settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 3U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     for (auto &atom : box->getAtoms())
@@ -1459,7 +1468,7 @@ TEST(TestResetKinetics, resetAngularBranchUsesFreshCentreOfMass)
     data.calculateKinetics(*box);
     data.calculateTemperature(*box);
 
-    const auto settings = makeSettings(0U, never, 0U, never, 0U, 7U, 1U);
+    const auto settings = makeSettings(0U, never, 0U, never, 0U, 7U, 1U, 100U);
     const kinetics::ResetKinetics reset{settings};
 
     reset.reset(7U, data, *box, toTemperature(300.0));

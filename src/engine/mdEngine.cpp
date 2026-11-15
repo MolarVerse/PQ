@@ -72,11 +72,11 @@ namespace engine
             norm(getPhysicalDataPtr()->getMomentum())
         );
 
-        _setNSteps(TimingsSettings::getNumberOfSteps());
-        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+        const auto  nSteps = getSettings().timings.getNumberOfSteps();
+        progressbar bar(static_cast<int>(nSteps), true, std::cout);
         const auto &outputFileSettings = getSettings().outputFiles;
 
-        for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
+        for (; getStep() <= nSteps; _setStep(getStep() + 1))
         {
             utilities::throwIfInterrupted();
 

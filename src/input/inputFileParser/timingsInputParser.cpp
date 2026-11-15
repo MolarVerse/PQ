@@ -95,8 +95,12 @@ namespace input
 
         const RangeValidator<int> validator{1, std::nullopt};
 
-        const auto setNumberOfSteps = [&](int value)
-        { TimingsSettings::setNumberOfSteps(static_cast<size_t>(value)); };
+        const auto setNumberOfSteps = [this](int value)
+        {
+            _timingsSettings->setNumberOfStepsByUser(
+                static_cast<size_t>(value)
+            );
+        };
 
         auto &numberOfSteps = _getRegistry().registerKey(
             KeyRegistry<int>{

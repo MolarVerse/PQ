@@ -68,6 +68,8 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     EXPECT_NO_THROW(setup::setupOutputFiles(*_engine));
@@ -91,6 +93,8 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -112,6 +116,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -138,6 +143,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setIncludeOutputMetadataByUser(true);
     _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -164,6 +170,7 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);

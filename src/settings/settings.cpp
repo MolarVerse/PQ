@@ -47,7 +47,7 @@ namespace
     void validateThermostat(
         const ThermostatSettings& thermostatSettings,
         const KineticsSettings&   kinetics,
-        const Time&               timeStep
+        const TimingsSettings&    timings
     )
     {
         const auto thermostatType = thermostatSettings.getThermostatType();
@@ -57,7 +57,7 @@ namespace
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
-            if (timeStep > ThermostatSettings::getRelaxationTime())
+            if (timings.getTimeStep() > ThermostatSettings::getRelaxationTime())
             {
                 throw exc::InputFileException(
                     "The timestep must not exceed the thermostat relaxation "
@@ -82,7 +82,7 @@ namespace
             const auto sigmaSquared =
                 4.0 * ThermostatSettings::getFriction() * conversionFactor *
                 maxTemperature.quantity_from_zero().numerical_value_in(K) /
-                timeStep.numerical_value_in(fs);
+                timings.getTimeStep().numerical_value_in(fs);
 
             if (!std::isfinite(sigmaSquared))
             {
@@ -110,7 +110,7 @@ namespace
         if (!hasRamp)
             return;
 
-        const auto totalSteps = TimingsSettings::getNumberOfSteps();
+        const auto totalSteps = timings.getNumberOfSteps();
         const auto rampSteps  = kinetics.getRampingSteps();
 
         if (rampSteps > totalSteps)
@@ -147,8 +147,8 @@ namespace
  */
 void Settings::finalize()
 {
-    resetKinetics.finalize();
-    kinetics.finalize();
+    kinetics.finalize(timings.getNumberOfSteps());
+    resetKinetics.finalize(timings.getNumberOfSteps());
     manostatSettings.finalize(referenceSettings);
     outputFiles.finalize();
     waterModelSettings.finalize(referenceSettings);
@@ -185,5 +185,5 @@ void Settings::finalize()
  */
 void Settings::validate() const
 {
-    validateThermostat(thermostatSettings, kinetics, timings.getTimeStep());
+    validateThermostat(thermostatSettings, kinetics, timings);
 }

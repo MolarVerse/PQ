@@ -50,9 +50,9 @@ void TimingsSettings::setStepCount(size_t stepCount) { _stepCount = stepCount; }
  *
  * @param numberOfSteps
  */
-void TimingsSettings::setNumberOfSteps(size_t numberOfSteps)
+void TimingsSettings::setNumberOfStepsByUser(size_t numberOfSteps)
 {
-    _numberOfSteps = numberOfSteps;
+    _numberOfSteps.setByUser(numberOfSteps);
 }
 
 /********************
@@ -80,4 +80,7 @@ size_t TimingsSettings::getStepCount() { return _stepCount; }
  *
  * @return size_t
  */
-size_t TimingsSettings::getNumberOfSteps() { return _numberOfSteps; }
+size_t TimingsSettings::getNumberOfSteps() const
+{
+    return _numberOfSteps.get();
+}

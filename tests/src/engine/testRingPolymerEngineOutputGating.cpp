@@ -107,6 +107,7 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
         _settings->outputFiles.setFilePrefixByUser(PREFIX);
         _settings->outputFiles.setOutputFrequencyByUser(1);
         _settings->timings.setTimeStepByUser(0.5 * fs);
+        _settings->timings.setNumberOfStepsByUser(100U);
         _settings->finalize();
 
         _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);

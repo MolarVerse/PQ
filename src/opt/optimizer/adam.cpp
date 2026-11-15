@@ -35,7 +35,7 @@ namespace opt
      * @param nEpochs
      * @param nAtoms
      */
-    Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
+    Adam::Adam(size_t nAtoms)
     {
         _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
         _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
@@ -49,12 +49,20 @@ namespace opt
      * @param beta2
      * @param nAtoms
      */
-    Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
-        : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
+    Adam::Adam(double beta1, double beta2, size_t nAtoms)
+        : _beta1(beta1), _beta2(beta2)
     {
         _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
         _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
     }
+
+    /**
+     * @brief Default constructor
+     *
+     */
+    Adam::Adam() = default;
+
+    Adam::~Adam() = default;
 
     /**
      * @brief get the maximum history length

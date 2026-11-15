@@ -37,9 +37,9 @@
 class TimingsSettings
 {
    private:
-    Setting<Time, "Time Step"> _timeStep;
-    static inline size_t       _numberOfSteps;
-    static inline size_t       _stepCount = 0;
+    Setting<Time, "Time Step">         _timeStep;
+    Setting<size_t, "Number of Steps"> _numberOfSteps;
+    static inline size_t               _stepCount = 0;
 
    public:
     /********************
@@ -48,15 +48,15 @@ class TimingsSettings
 
     void        setTimeStepByUser(const Time& timeStep);
     static void setStepCount(size_t stepCount);
-    static void setNumberOfSteps(size_t numberOfSteps);
+    void        setNumberOfStepsByUser(size_t numberOfSteps);
 
     /********************
-     * standard setters *
+     * standard getters *
      ********************/
 
     [[nodiscard]] const Time&   getTimeStep() const;
     [[nodiscard]] static size_t getStepCount();
-    [[nodiscard]] static size_t getNumberOfSteps();
+    [[nodiscard]] size_t        getNumberOfSteps() const;
 };
 
 #endif   // SETTINGS__TIMINGS_SETTINGS_HPP

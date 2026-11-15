@@ -46,7 +46,7 @@ int main()
 {
     const auto box = benchOptimizers::makeBox(ATOMS, PER_SIDE);
 
-    opt::SteepestDescent optimizer(ITERATIONS);
+    opt::SteepestDescent optimizer;
     optimizer.setSimulationBox(box);
 
     perfAllocBegin();

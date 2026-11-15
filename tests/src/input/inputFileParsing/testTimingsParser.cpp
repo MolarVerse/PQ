@@ -91,7 +91,7 @@ TEST_F(TestInputFileReader, testParseNumberOfSteps)
 
     std::vector<std::string> lineElements = {"nstep", "=", "1000"};
     nstepsFunc(lineElements, 0);
-    EXPECT_EQ(TimingsSettings::getNumberOfSteps(), 1000);
+    EXPECT_EQ(settings.getNumberOfSteps(), 1000);
 
     _clearParser(parser);
 
