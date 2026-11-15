@@ -44,12 +44,12 @@ set -uo pipefail
 
 PR_DIR="${1:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
 BASE_DIR="${2:?usage: perf_gate.sh <pr_bench_dir> <base_bench_dir> [threshold%]}"
-THRESHOLD="${3:-2}"
+THRESHOLD="${3:-1}"
 # An improvement at least this large is flagged: a benchmark that silently
 # stopped doing its work also looks like a big speed-up. Never fails the check.
 LARGE_DROP="${PERF_LARGE_DROP_PERCENT:-30}"
 ALLOC_LIB="${PERF_ALLOC_LIB:-$PR_DIR/libperf_alloc_counter.so}"
-ALLOC_THRESHOLD="${PERF_ALLOC_THRESHOLD_PERCENT:-2}"
+ALLOC_THRESHOLD="${PERF_ALLOC_THRESHOLD_PERCENT:-1}"
 VALGRIND_BIN="$(command -v valgrind || echo valgrind)"
 # PERF_CACHE_SIM=0 skips the simulation (about 3 times faster, no cache/branch
 # table); the pull request workflow does that and a nightly run keeps it on.

@@ -485,7 +485,7 @@ namespace
 
         if (settings.thermostatSettings.getThermostatType() ==
                 ThermostatType::LANGEVIN &&
-            utilities::isZero(ThermostatSettings::getFriction()))
+            utilities::isZero(settings.thermostatSettings.getFriction()))
         {
             result.diagnostics.push_back(
                 {cli::ValidationSeverity::WARNING,

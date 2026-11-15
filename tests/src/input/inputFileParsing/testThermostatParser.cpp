@@ -100,7 +100,7 @@ TEST_F(TestInputFileReader, testParseRelaxationTime)
 
     std::vector<std::string> lineElements = {"t_relaxation", "=", "10.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getRelaxationTime(), 10.0 * ps);
+    EXPECT_EQ(thermostatSettings.getRelaxationTime(), 10.0 * ps);
 
     _clearParser(parser);
 
@@ -235,7 +235,7 @@ TEST_F(TestInputFileReader, testParseFriction)
 
     std::vector<std::string> lineElements = {"friction", "=", "0.1"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(ThermostatSettings::getFriction(), 0.1 * 1.0e12);
+    EXPECT_EQ(thermostatSettings.getFriction(), 0.1 * 1.0e12);
 
     _clearParser(parser);
 

@@ -1,0 +1,1 @@
+- finish removing static access from `ThermostatSettings`

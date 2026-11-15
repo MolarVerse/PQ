@@ -1,0 +1,1 @@
+- Add unit tests for the Langevin thermostat (equilibrium temperature of a bath, seeded reproducibility, damping, copies) and for the ring polymer restart file reader (formats, comments, errors, round trip with the writer).

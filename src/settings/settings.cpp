@@ -57,7 +57,7 @@ namespace
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
-            if (timings.getTimeStep() > ThermostatSettings::getRelaxationTime())
+            if (timings.getTimeStep() > thermostatSettings.getRelaxationTime())
             {
                 throw exc::InputFileException(
                     "The timestep must not exceed the thermostat relaxation "
@@ -80,7 +80,7 @@ namespace
             const auto conversionFactor =
                 UNIVERSAL_GAS_CONSTANT * unitConversion;
             const auto sigmaSquared =
-                4.0 * ThermostatSettings::getFriction() * conversionFactor *
+                4.0 * thermostatSettings.getFriction() * conversionFactor *
                 maxTemperature.quantity_from_zero().numerical_value_in(K) /
                 timings.getTimeStep().numerical_value_in(fs);
 

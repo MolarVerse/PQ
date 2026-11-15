@@ -195,9 +195,9 @@ void KineticsSettings::setRampingStepsByUser(size_t steps)
  *
  * @param relaxationTime
  */
-void ThermostatSettings::setRelaxationTime(const Time& relaxationTime)
+void ThermostatSettings::setRelaxationTimeByUser(const Time& relaxationTime)
 {
-    _relaxationTime = relaxationTime;
+    _relaxationTime.setByUser(relaxationTime);
 }
 
 /**
@@ -205,7 +205,10 @@ void ThermostatSettings::setRelaxationTime(const Time& relaxationTime)
  *
  * @param friction
  */
-void ThermostatSettings::setFriction(double friction) { _friction = friction; }
+void ThermostatSettings::setFrictionByUser(double friction)
+{
+    _friction.setByUser(friction);
+}
 
 /**
  * @brief set the nose hoover coupling frequency
@@ -299,14 +302,17 @@ ThermostatType ThermostatSettings::getThermostatType() const
  *
  * @return const Time&
  */
-const Time& ThermostatSettings::getRelaxationTime() { return _relaxationTime; }
+const Time& ThermostatSettings::getRelaxationTime() const
+{
+    return _relaxationTime.get();
+}
 
 /**
  * @brief get the friction
  *
  * @return double
  */
-double ThermostatSettings::getFriction() { return _friction; }
+double ThermostatSettings::getFriction() const { return _friction.get(); }
 
 /**
  * @brief get the nose hoover coupling frequency

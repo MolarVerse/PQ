@@ -48,12 +48,6 @@ namespace setup
         size_t _shakeConstraints  = 0;
         size_t _mShakeConstraints = 0;
 
-        size_t _shakeMaxIter  = 0;
-        size_t _rattleMaxIter = 0;
-
-        double _shakeTolerance  = 0.0;
-        double _rattleTolerance = 0.0;
-
        public:
         explicit ConstraintsSetup(engine::Engine &engine);
 

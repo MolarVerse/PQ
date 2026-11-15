@@ -216,8 +216,8 @@ namespace input
             .unit        = "ps"
         };
 
-        const auto setValue = [&](double value)
-        { ThermostatSettings::setRelaxationTime(value * ps); };
+        const auto setValue = [this](double value)
+        { _thermostatSettings->setRelaxationTimeByUser(value * ps); };
 
         const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
             0.0,
@@ -243,9 +243,9 @@ namespace input
             .description = "Specifies the friction of the thermostat"
         };
 
-        const auto setValue = [&](double value)
+        const auto setValue = [this](double value)
         {
-            ThermostatSettings::setFriction(
+            _thermostatSettings->setFrictionByUser(
                 value * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
             );
         };

@@ -218,7 +218,7 @@ All pipelines are in `.github/workflows/`:
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| `ci_build.yml` | PRs (any branch), push to `dev`/`main`/`NEXT`, nightly, manual | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build + Python bindings |
+| `ci_build.yml` | PRs (any branch), push to `dev`/`main`/`NEXT`, nightly, manual | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`, and on PRs into `main`) + static Singularity build (nightly, manual, PRs into `main`) + MPI build + Python bindings |
 | `lint.yml` | PRs, push to `dev`/`main`/`NEXT`, manual | `clangd-tidy` on changed C++ files |
 | `devops_cpp_check.yml` | PRs to `main`/`dev`/`NEXT` | `cpp_checks` from `external/devops` (style and AST rules, `devops.toml`) |
 | `clang_format.yml` | PRs to `main`/`dev`/`NEXT` | clang-format 20.1.3 on every touched C/C++ file, as a whole file |
