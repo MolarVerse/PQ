@@ -42,6 +42,7 @@ namespace engine
 struct Settings;               // forward declaration
 class SimulationBoxSettings;   // forward declaration
 class ManostatSettings;        // forward declaration
+class TimingsSettings;         // forward declaration
 class QMSettings;              // forward declaration
 class MaceSettings;            // forward declaration
 class DftbSettings;            // forward declaration
@@ -135,7 +136,7 @@ namespace input
         ) const;
         void _validateManostat(
             const ManostatSettings &manostatSettings,
-            const Time             &timeStep
+            const TimingsSettings  &timings
         ) const;
         void        _validateReactionFieldCoulomb() const;
         void        _validateRingPolymer() const;

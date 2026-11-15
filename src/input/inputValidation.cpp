@@ -84,10 +84,7 @@ namespace input
             settings.simulationBoxSettings,
             settings.thermostatSettings
         );
-        _validateManostat(
-            settings.manostatSettings,
-            settings.timings.getTimeStep()
-        );
+        _validateManostat(settings.manostatSettings, settings.timings);
         _validateCellList();
         _validateReactionFieldCoulomb();
         _validateRingPolymer();
@@ -306,7 +303,7 @@ namespace input
      */
     void InputFileReader::_validateManostat(
         const ManostatSettings& manostatSettings,
-        const Time&             timeStep
+        const TimingsSettings&  timings
     ) const
     {
         const auto manostatType = manostatSettings.getManostatType();
@@ -324,7 +321,7 @@ namespace input
             );
         }
 
-        if (timeStep > manostatSettings.getTau())
+        if (timings.getTimeStep() > manostatSettings.getTau())
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );

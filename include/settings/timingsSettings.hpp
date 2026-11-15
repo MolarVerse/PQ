@@ -38,7 +38,7 @@ class TimingsSettings
 {
    private:
     Setting<Time, "Time Step">             _timeStep;
-    Setting<size_t, "Number of Steps">     _numberOfSteps;
+    Setting<size_t, "Number of Steps">     _numberOfSteps{0};
     Setting<size_t, "Starting Step Count"> _startingStepCount{0};
 
    public:
