@@ -70,7 +70,10 @@ namespace engine
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
             getPhysicalData(),
-            calculateTotalSimulationTime(timeStep)
+            calculateTotalSimulationTime(
+                timeStep,
+                getSettings().timings.getStartingStepCount()
+            )
         );
 
         coupleRingPolymerBeads();

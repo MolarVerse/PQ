@@ -67,7 +67,8 @@ namespace engine
         void writeOutput(const OutputFileSettings &outputSettings) override;
         void writeOutput(
             const OutputFileSettings &outputSettings,
-            const Time               &timeStep
+            const Time               &timeStep,
+            size_t                    startingStepCount
         );
         virtual void takeStep();
 

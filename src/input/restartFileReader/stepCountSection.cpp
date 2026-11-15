@@ -35,6 +35,16 @@ namespace input::restartFile
 {
 
     /**
+     * @brief constructs a StepCountSection with the given TimingsSettings
+     *
+     * @param timingsSettings reference to the TimingsSettings object
+     */
+    StepCountSection::StepCountSection(TimingsSettings &timingsSettings)
+        : _timingsSettings(timingsSettings)
+    {
+    }
+
+    /**
      * @brief processes the step count section of the rst file
      *
      * @details The step count section is a header section and must have 2
@@ -77,7 +87,9 @@ namespace input::restartFile
             );
         }
 
-        TimingsSettings::setStepCount(static_cast<size_t>(stepCount));
+        _timingsSettings->setStartingStepCountByUser(
+            static_cast<size_t>(stepCount)
+        );
     }
 
     /**

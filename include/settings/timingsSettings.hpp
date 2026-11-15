@@ -37,26 +37,26 @@
 class TimingsSettings
 {
    private:
-    Setting<Time, "Time Step">         _timeStep;
-    Setting<size_t, "Number of Steps"> _numberOfSteps;
-    static inline size_t               _stepCount = 0;
+    Setting<Time, "Time Step">             _timeStep;
+    Setting<size_t, "Number of Steps">     _numberOfSteps;
+    Setting<size_t, "Starting Step Count"> _startingStepCount{0};
 
    public:
     /********************
      * standard setters *
      ********************/
 
-    void        setTimeStepByUser(const Time& timeStep);
-    static void setStepCount(size_t stepCount);
-    void        setNumberOfStepsByUser(size_t numberOfSteps);
+    void setTimeStepByUser(const Time& timeStep);
+    void setStartingStepCountByUser(size_t stepCount);
+    void setNumberOfStepsByUser(size_t numberOfSteps);
 
     /********************
      * standard getters *
      ********************/
 
-    [[nodiscard]] const Time&   getTimeStep() const;
-    [[nodiscard]] static size_t getStepCount();
-    [[nodiscard]] size_t        getNumberOfSteps() const;
+    [[nodiscard]] const Time& getTimeStep() const;
+    [[nodiscard]] size_t      getStartingStepCount() const;
+    [[nodiscard]] size_t      getNumberOfSteps() const;
 };
 
 #endif   // SETTINGS__TIMINGS_SETTINGS_HPP

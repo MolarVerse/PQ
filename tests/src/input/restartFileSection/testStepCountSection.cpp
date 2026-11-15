@@ -77,5 +77,5 @@ TEST_F(TestStepCountSection, testProcess)
     line[1]           = "1000";
     size_t lineNumber = 0;
     _section->process(line, *_engine, lineNumber);
-    EXPECT_EQ(TimingsSettings::getStepCount(), 1000);
+    EXPECT_EQ(_settings.timings.getStartingStepCount(), 1000);
 }

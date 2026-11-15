@@ -156,7 +156,8 @@ namespace benchInputReaders
             moldescriptor.read();
             input::restartFile::readRestartFile(
                 engine,
-                settings.noseHooverSettings
+                settings.noseHooverSettings,
+                settings.timings
             );
             input::topology::readTopologyFile(engine);
 

@@ -195,9 +195,26 @@ namespace engine
      */
     void OptEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
+     * @brief Writes output files.
+     *
+     * @details output files are written if the step is a multiple of the output
+     * frequency.
+     *
+     */
+    void OptEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        size_t                    startingStepCount
+    )
+    {
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = TimingsSettings::getStepCount();
-        const auto effStep    = getStep() + step0;
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {

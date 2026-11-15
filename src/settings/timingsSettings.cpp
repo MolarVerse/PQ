@@ -43,7 +43,10 @@ void TimingsSettings::setTimeStepByUser(const Time& timeStep)
  *
  * @param stepCount
  */
-void TimingsSettings::setStepCount(size_t stepCount) { _stepCount = stepCount; }
+void TimingsSettings::setStartingStepCountByUser(size_t stepCount)
+{
+    _startingStepCount.setByUser(stepCount);
+}
 
 /**
  * @brief Set the number of steps
@@ -73,7 +76,10 @@ const Time& TimingsSettings::getTimeStep() const { return _timeStep.get(); }
  *
  * @return size_t
  */
-size_t TimingsSettings::getStepCount() { return _stepCount; }
+size_t TimingsSettings::getStartingStepCount() const
+{
+    return _startingStepCount.get();
+}
 
 /**
  * @brief get the number of steps

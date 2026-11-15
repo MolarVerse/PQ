@@ -83,7 +83,10 @@ namespace engine
         void         deleteTmpFiles() const;
 
         [[nodiscard]]
-        Time calculateTotalSimulationTime(const Time &timeStep) const;
+        Time calculateTotalSimulationTime(
+            const Time &timeStep,
+            size_t      startingStepCount
+        ) const;
 
         /***************************
          * standard getter methods *

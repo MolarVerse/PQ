@@ -42,7 +42,8 @@ TEST_F(TestRstFileReader, determineSection)
     input::restartFile::RestartFileReader rstFileReader(
         filename,
         *_engine,
-        _settings.noseHooverSettings
+        _settings.noseHooverSettings,
+        _settings.timings
     );
 
     auto  lineElements = std::vector<std::string>{"sTeP", "1"};
@@ -76,7 +77,8 @@ TEST_F(TestRstFileReader, rstFileReading)
     ASSERT_NO_THROW(
         input::restartFile::readRestartFile(
             *_engine,
-            _settings.noseHooverSettings
+            _settings.noseHooverSettings,
+            _settings.timings
         )
     );
 }

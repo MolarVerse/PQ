@@ -310,9 +310,26 @@ namespace engine
      */
     void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
+     * @brief Writes output files for the Hessian engine.
+     *
+     * @param outputSettings The settings for output files.
+     * @param startingStepCount The step count from which to start writing
+     * output files.
+     */
+    void HessianEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        size_t                    startingStepCount
+    )
+    {
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = TimingsSettings::getStepCount();
-        const auto effStep    = getStep() + step0;
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {

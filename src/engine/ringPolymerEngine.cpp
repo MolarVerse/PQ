@@ -64,7 +64,11 @@ namespace engine
         const OutputFileSettings &outputSettings
     )
     {
-        writeOutput(outputSettings, getSettings().timings.getTimeStep());
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getTimeStep(),
+            getSettings().timings.getStartingStepCount()
+        );
     }
 
     /**
@@ -73,15 +77,15 @@ namespace engine
      */
     void RingPolymerEngine::writeOutput(
         const OutputFileSettings &outputSettings,
-        const Time               &timeStep
+        const Time               &timeStep,
+        size_t                    startingStepCount
     )
     {
         auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
         auto &rpmdData        = _ringPolymerBeadsPhysicalData;
 
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = TimingsSettings::getStepCount();
-        const auto effStep    = getStep() + step0;
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {
@@ -171,7 +175,7 @@ namespace engine
                 );
 
                 getEngineOutput().writeRingPolymerEnergyFile(
-                    step0 + getStep(),
+                    startingStepCount + getStep(),
                     averageRPMDData
                 );
             }

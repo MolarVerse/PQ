@@ -26,7 +26,6 @@
 #include <gtest/gtest.h>
 
 #include "mmmdEngine.hpp"
-#include "timingsSettings.hpp"
 
 /**
  * @class TestEngine
@@ -47,7 +46,7 @@ class TestEngine : public ::testing::Test
         _engine = std::make_unique<engine::MMMDEngine>(_settings);
     }
 
-    void TearDown() override { TimingsSettings::setStepCount(0); }
+    void TearDown() override {}
 };
 
 #endif   // TESTS__INCLUDE__ENGINE__TEST_ENGINE_HPP

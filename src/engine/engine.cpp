@@ -31,7 +31,6 @@
 #include "potentialBruteForce.hpp"
 #include "settings.hpp"
 #include "stdoutOutput.hpp"
-#include "timingsSettings.hpp"
 
 namespace engine
 {
@@ -74,10 +73,12 @@ namespace engine
      *
      * @return Time
      */
-    Time Engine::calculateTotalSimulationTime(const Time &timeStep) const
+    Time Engine::calculateTotalSimulationTime(
+        const Time &timeStep,
+        size_t      startingStepCount
+    ) const
     {
-        const auto step0   = TimingsSettings::getStepCount();
-        const auto effStep = _step + step0;
+        const auto effStep = _step + startingStepCount;
 
         return static_cast<double>(effStep) * timeStep;
     }
