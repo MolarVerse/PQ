@@ -181,7 +181,7 @@ clang-format -i <file>
 
 ## Static Analysis Rules (CI)
 
-Three checks fail PRs on style, none of which clang-format or a plain GCC build catches: `lint.yml` (clang-tidy via `clangd-tidy`, config in `.clang-tidy`, `tests/.clang-tidy`, `benchmarks/.clang-tidy`), `devops_cpp_check.yml` (`cpp_checks`, rules in `devops.toml`) and the non-gating-looking but `-Werror` clang build (`clang_build.yml`). Write new code, tests included, to these rules from the start:
+Two gating checks fail PRs on style that neither clang-format nor a GCC build catches: `lint.yml` (clang-tidy via `clangd-tidy`, config in `.clang-tidy`, `tests/.clang-tidy`, `benchmarks/.clang-tidy`) and `devops_cpp_check.yml` (`cpp_checks`, rules in `devops.toml`). The clang 20 build (`clang_build.yml`) is non-gating but builds with `-Werror`, so its warnings show up as red checks too. Write new code, tests included, to these rules from the start:
 
 - **Braces on every `if`/`for`/`while` body**, also single statements and nested loops (`google-readability-braces-around-statements`).
 - **Parentheses around every `*` or `/` that sits next to a `+` or `-`**: `(a * b) + c`, `std::sin((7.0 * i) + phase)` (`readability-math-missing-parentheses`).
