@@ -573,11 +573,14 @@ namespace
 
 TEST_F(TestThermostat, langevinWithoutFrictionLeavesVelocitiesUnchanged)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
     auto langevin = thermostat::LangevinThermostat(0.0);
 
-    langevin
-        .applyThermostatHalfStep(*_simulationBox, *_data, toTemperature(300.0));
+    langevin.applyThermostatHalfStep(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.5 * fs
+    );
 
     const auto &atoms = _simulationBox->getAtoms();
     EXPECT_EQ(atoms[0]->getVelocity(), linalg::Vec3D(1.0, 1.0, 1.0));
@@ -587,11 +590,14 @@ TEST_F(TestThermostat, langevinWithoutFrictionLeavesVelocitiesUnchanged)
 
 TEST_F(TestThermostat, langevinAtZeroTemperatureOnlyDampsVelocities)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
     auto langevin = thermostat::LangevinThermostat(1.0e13);
 
-    langevin
-        .applyThermostatHalfStep(*_simulationBox, *_data, toTemperature(0.0));
+    langevin.applyThermostatHalfStep(
+        *_simulationBox,
+        *_data,
+        toTemperature(0.0),
+        0.5 * fs
+    );
 
     for (const auto &atom : _simulationBox->getAtoms())
     {
@@ -610,8 +616,6 @@ TEST_F(TestThermostat, langevinAtZeroTemperatureOnlyDampsVelocities)
 
 TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
-
     auto run = []()
     {
         settings::GeneralSettings::setRandomSeed(42);
@@ -623,7 +627,7 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
 
         for (size_t step = 0; step < 5; ++step)
         {
-            langevin.applyLangevin(*bath, target);
+            langevin.applyLangevin(*bath, target, 0.5 * fs);
         }
 
         settings::GeneralSettings::setIsRandomSeedSet(false);
@@ -640,7 +644,6 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
 
 TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
     settings::GeneralSettings::setRandomSeed(7);
     settings::GeneralSettings::setIsRandomSeedSet(true);
 
@@ -653,13 +656,13 @@ TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
 
     for (size_t step = 0; step < 4000; ++step)
     {
-        langevin.applyLangevin(*bath, target);
+        langevin.applyLangevin(*bath, target, 0.5 * fs);
     }
 
     double sum = 0.0;
     for (size_t step = 0; step < 200; ++step)
     {
-        langevin.applyLangevin(*bath, target);
+        langevin.applyLangevin(*bath, target, 0.5 * fs);
         sum += temperatureOf(*bath, data);
     }
 
@@ -670,10 +673,14 @@ TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
 
 TEST_F(TestThermostat, langevinFullStepUpdatesTemperatureOfPhysicalData)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
     auto langevin = thermostat::LangevinThermostat(1.0e13);
 
-    langevin.applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    langevin.applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.5 * fs
+    );
 
     const auto temperature =
         _data->getTemperature().quantity_from_zero().numerical_value_in(K);
@@ -684,7 +691,6 @@ TEST_F(TestThermostat, langevinFullStepUpdatesTemperatureOfPhysicalData)
 
 TEST_F(TestThermostat, langevinCopyKeepsFriction)
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
     settings::GeneralSettings::setRandomSeed(3);
     settings::GeneralSettings::setIsRandomSeedSet(true);
 
@@ -702,8 +708,8 @@ TEST_F(TestThermostat, langevinCopyKeepsFriction)
 
     for (size_t step = 0; step < 2000; ++step)
     {
-        copied.applyLangevin(*boxA, target);
-        assigned.applyLangevin(*boxB, target);
+        copied.applyLangevin(*boxA, target, 0.5 * fs);
+        assigned.applyLangevin(*boxB, target, 0.5 * fs);
     }
 
     // a copy with the friction of zero would stay at zero temperature
