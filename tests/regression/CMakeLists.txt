@@ -205,35 +205,40 @@ function(pq_add_orca_regression NAME MANIFEST TIMEOUT)
     set_property(TEST ${NAME} PROPERTY TIMEOUT ${TIMEOUT})
 endfunction()
 
-set(ORCA_FIXTURE ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/orca-fake)
 set(ORCA_EXAMPLE ${PROJECT_SOURCE_DIR}/examples/orca)
-set(ORCA_COMMON
-    ${ORCA_FIXTURE}/fake_orca.py
-    ${ORCA_FIXTURE}/check_orca.py
-    ${ORCA_EXAMPLE}/orca.template
-    ${ORCA_EXAMPLE}/orca_hf.template
-    ${ORCA_EXAMPLE}/orca_dft.template
-)
 
-pq_add_orca_regression(regression_orca_qm_fake manifest-qm.json 60
-    ${ORCA_COMMON}
-    ${ORCA_FIXTURE}/manifest-qm.json
-    ${ORCA_FIXTURE}/qm-hf.in
-    ${ORCA_FIXTURE}/qm-dft.in
-    ${ORCA_FIXTURE}/qm-rimp2.in
-    ${ORCA_EXAMPLE}/water.rst
-)
+# The fake-ORCA cases select the driver with 'qm_script', which static and
+# Singularity builds reject (qm_script_full_path is required there).
+if(BUILD_SHARED_LIBS AND NOT BUILD_WITH_SINGULARITY)
+    set(ORCA_FIXTURE ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/orca-fake)
+    set(ORCA_COMMON
+        ${ORCA_FIXTURE}/fake_orca.py
+        ${ORCA_FIXTURE}/check_orca.py
+        ${ORCA_EXAMPLE}/orca.template
+        ${ORCA_EXAMPLE}/orca_hf.template
+        ${ORCA_EXAMPLE}/orca_dft.template
+    )
 
-set(QMMM_EXAMPLE ${PROJECT_SOURCE_DIR}/examples/potassium_water_qmmm)
-pq_add_orca_regression(regression_orca_qmmm_fake manifest-qmmm.json 120
-    ${ORCA_COMMON}
-    ${ORCA_FIXTURE}/manifest-qmmm.json
-    ${ORCA_FIXTURE}/qmmm-dft.in
-    ${ORCA_FIXTURE}/qmmm-rimp2.in
-    ${QMMM_EXAMPLE}/input.rst
-    ${QMMM_EXAMPLE}/moldescriptor.dat
-    ${QMMM_EXAMPLE}/guff.dat
-)
+    pq_add_orca_regression(regression_orca_qm_fake manifest-qm.json 60
+        ${ORCA_COMMON}
+        ${ORCA_FIXTURE}/manifest-qm.json
+        ${ORCA_FIXTURE}/qm-hf.in
+        ${ORCA_FIXTURE}/qm-dft.in
+        ${ORCA_FIXTURE}/qm-rimp2.in
+        ${ORCA_EXAMPLE}/water.rst
+    )
+
+    set(QMMM_EXAMPLE ${PROJECT_SOURCE_DIR}/examples/potassium_water_qmmm)
+    pq_add_orca_regression(regression_orca_qmmm_fake manifest-qmmm.json 120
+        ${ORCA_COMMON}
+        ${ORCA_FIXTURE}/manifest-qmmm.json
+        ${ORCA_FIXTURE}/qmmm-dft.in
+        ${ORCA_FIXTURE}/qmmm-rimp2.in
+        ${QMMM_EXAMPLE}/input.rst
+        ${QMMM_EXAMPLE}/moldescriptor.dat
+        ${QMMM_EXAMPLE}/guff.dat
+    )
+endif()
 
 # Real ORCA, only where it is installed: -DORCA_EXECUTABLE=/path/to/orca.
 # Only the quantum chemistry ORCA banner counts (not the GNOME screen reader).
