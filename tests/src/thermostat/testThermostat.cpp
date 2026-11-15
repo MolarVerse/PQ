@@ -516,12 +516,14 @@ namespace
     }
 
     double temperatureOf(
-        molsys::SimulationBox      &box,
-        physicalData::PhysicalData &data
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
     )
     {
-        data.calculateTemperature(box);
-        return data.getTemperature().quantity_from_zero().numerical_value_in(K);
+        physicalData.calculateTemperature(simulationBox);
+        return physicalData.getTemperature()
+            .quantity_from_zero()
+            .numerical_value_in(K);
     }
 }   // namespace
 
@@ -566,7 +568,7 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
 {
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
-    auto run = [this]()
+    auto run = []()
     {
         settings::GeneralSettings::setRandomSeed(42);
         settings::GeneralSettings::setIsRandomSeedSet(true);

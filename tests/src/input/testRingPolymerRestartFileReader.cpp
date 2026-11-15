@@ -233,15 +233,15 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
 
     double value = 0.25;
     for (auto &bead : beads)
-        for (auto &molecule : bead.getMolecules())
-            for (size_t i = 0; i < molecule.getNumberOfAtoms(); ++i)
-            {
-                auto &atom = molecule.getAtoms()[i];
-                atom->setPosition({value, value + 1.0, value + 2.0});
-                atom->setVelocity({value * 1e-3, value * 2e-3, value * 3e-3});
-                atom->setForce({-value, value * 2.0, -value * 3.0});
-                value += 0.5;
-            }
+    {
+        for (auto &atom : bead.getAtoms())
+        {
+            atom->setPosition({value, value + 1.0, value + 2.0});
+            atom->setVelocity({value * 1e-3, value * 2e-3, value * 3e-3});
+            atom->setForce({-value, value * 2.0, -value * 3.0});
+            value += 0.5;
+        }
+    }
 
     out::RingPolymerRestartFileOutput writer(FILE_NAME);
     writer.setFilename(FILE_NAME, true);
@@ -250,16 +250,22 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
 
     auto expected = std::vector<linalg::Vec3D>();
     for (const auto &bead : beads)
+    {
         for (const auto &atom : bead.getAtoms())
+        {
             expected.push_back(atom->getPosition());
+        }
+    }
 
     for (auto &bead : beads)
+    {
         for (auto &atom : bead.getAtoms())
         {
             atom->setPosition({0, 0, 0});
             atom->setVelocity({0, 0, 0});
             atom->setForce({0, 0, 0});
         }
+    }
 
     input::ringPolymer::RingPolymerRestartFileReader reader(
         FILE_NAME,
@@ -267,15 +273,23 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
     );
     ASSERT_NO_THROW(reader.read(2));
 
-    size_t k = 0;
+    size_t atomIndex = 0;
     for (const auto &bead : beads)
+    {
         for (const auto &atom : bead.getAtoms())
         {
             for (size_t axis = 0; axis < 3; ++axis)
-                EXPECT_NEAR(atom->getPosition()[axis], expected[k][axis], 1e-7);
+            {
+                EXPECT_NEAR(
+                    atom->getPosition()[axis],
+                    expected[atomIndex][axis],
+                    1e-7
+                );
+            }
 
             EXPECT_NE(atom->getVelocity(), linalg::Vec3D(0, 0, 0));
             EXPECT_NE(atom->getForce(), linalg::Vec3D(0, 0, 0));
-            ++k;
+            ++atomIndex;
         }
+    }
 }
