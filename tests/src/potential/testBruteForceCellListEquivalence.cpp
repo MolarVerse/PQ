@@ -160,7 +160,7 @@ namespace
 
 TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
+    PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);

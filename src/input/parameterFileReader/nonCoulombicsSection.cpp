@@ -72,13 +72,13 @@ namespace input::parameterFile
             const auto type = utilities::toLowerCopy(lineElements[1]);
 
             if (type == "lj")
-                settings::PotentialSettings::setNonCoulombType(LJ);
+                PotentialSettings::setNonCoulombType(LJ);
 
             else if (type == "buckingham")
-                settings::PotentialSettings::setNonCoulombType(BUCKINGHAM);
+                PotentialSettings::setNonCoulombType(BUCKINGHAM);
 
             else if (type == "morse")
-                settings::PotentialSettings::setNonCoulombType(MORSE);
+                PotentialSettings::setNonCoulombType(MORSE);
 
             else
             {
@@ -96,7 +96,7 @@ namespace input::parameterFile
         else
         {
             // default of guff gets overriden
-            settings::PotentialSettings::setNonCoulombType(LJ);
+            PotentialSettings::setNonCoulombType(LJ);
         }
     }
 
@@ -118,7 +118,7 @@ namespace input::parameterFile
     {
         using enum NonCoulombType;
 
-        switch (settings::PotentialSettings::getNonCoulombType())
+        switch (PotentialSettings::getNonCoulombType())
         {
             case LJ: processLJ(lineElements, engine, lineNumber); break;
             case BUCKINGHAM:
@@ -188,8 +188,7 @@ namespace input::parameterFile
         auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
         cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
@@ -256,8 +255,7 @@ namespace input::parameterFile
         auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
         cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
@@ -324,8 +322,7 @@ namespace input::parameterFile
         auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
         cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 

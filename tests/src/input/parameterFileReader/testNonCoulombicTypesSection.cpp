@@ -205,31 +205,22 @@ TEST_F(TestParameterFileSection, processHeader)
     std::vector<std::string>                   lineElements = {"noncoulombics"};
     input::parameterFile::NonCoulombicsSection nonCoulombicsSection;
     nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        NonCoulombType::LJ
-    );
+    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::LJ);
 
     lineElements = {"noncoulombics", "lj"};
     nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        NonCoulombType::LJ
-    );
+    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::LJ);
 
     lineElements = {"noncoulombics", "buckingham"};
     nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
     EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
+        PotentialSettings::getNonCoulombType(),
         NonCoulombType::BUCKINGHAM
     );
 
     lineElements = {"noncoulombics", "morse"};
     nonCoulombicsSection.processHeader(lineElements, *_engine, 0);
-    EXPECT_EQ(
-        settings::PotentialSettings::getNonCoulombType(),
-        NonCoulombType::MORSE
-    );
+    EXPECT_EQ(PotentialSettings::getNonCoulombType(), NonCoulombType::MORSE);
 
     lineElements = {"noncoulombics", "lj", "dummy"};
     EXPECT_NO_THROW(
@@ -254,7 +245,7 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
     std::vector<std::string> lineElements =
         {"0", "1", "1.22", "234.3", "324.3"};
     input::parameterFile::NonCoulombicsSection nonCoulombicsSection;
-    settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
+    PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
     nonCoulombicsSection.processSection(lineElements, *_engine, 0);
     EXPECT_EQ(potential.getNonCoulombPairsVector().size(), 1);
     EXPECT_NO_THROW(
@@ -264,7 +255,7 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
     );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    settings::PotentialSettings::setNonCoulombType(NonCoulombType::BUCKINGHAM);
+    PotentialSettings::setNonCoulombType(NonCoulombType::BUCKINGHAM);
     EXPECT_NO_THROW(
         nonCoulombicsSection.processSection(lineElements, *_engine, 0)
     );
@@ -276,7 +267,7 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
     );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    settings::PotentialSettings::setNonCoulombType(NonCoulombType::MORSE);
+    PotentialSettings::setNonCoulombType(NonCoulombType::MORSE);
     EXPECT_NO_THROW(
         nonCoulombicsSection.processSection(lineElements, *_engine, 0)
     );
@@ -288,7 +279,7 @@ TEST_F(TestParameterFileSection, processSectionNonCoulombics)
     );
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
-    settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ_9_12);
+    PotentialSettings::setNonCoulombType(NonCoulombType::LJ_9_12);
     EXPECT_THROW_MSG(
         nonCoulombicsSection.processSection(lineElements, *_engine, 0),
         exc::ParameterFileException,

@@ -637,7 +637,7 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 
 TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
@@ -745,8 +745,8 @@ TEST(InterWater, DefaultStrategyIsInert)
 
 TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
 
     auto oxygenOxygen = std::make_unique<pot::LennardJonesPair>(
         kCutOff,
@@ -801,8 +801,8 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
@@ -864,7 +864,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 
 TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
@@ -921,8 +921,8 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-    settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
+    PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);

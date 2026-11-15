@@ -355,7 +355,7 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(1.0);
+    PotentialSettings::setCoulombRadiusCutOff(1.0);
 
     molsys::OrthorhombicBox orthoBox1{{1.99, 10.0, 10.0}};
     _simulationBox->setBox(orthoBox1, false);

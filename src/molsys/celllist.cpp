@@ -80,15 +80,11 @@ namespace molsys
 
         determineCellSize(simulationBox.getBoxDimensions());
 
-        checkCoulombCutoff(
-            settings::PotentialSettings::getCoulombRadiusCutOff()
-        );
+        checkCoulombCutoff(PotentialSettings::getCoulombRadiusCutOff());
 
         determineCellBoundaries(simulationBox.getBoxDimensions());
 
-        addNeighbouringCells(
-            settings::PotentialSettings::getCoulombRadiusCutOff()
-        );
+        addNeighbouringCells(PotentialSettings::getCoulombRadiusCutOff());
     }
 
     /**

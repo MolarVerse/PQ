@@ -86,7 +86,7 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
 
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
+    EXPECT_EQ(PotentialSettings::getCoulombRadiusCutOff(), 1.0);
 
     _clearParser(parser);
 

@@ -776,7 +776,7 @@ namespace molsys
     ) const
     {
         const auto coulRadiusCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+            PotentialSettings::getCoulombRadiusCutOff();
 
         if (getMinimalBoxDimension() < 2.0 * coulRadiusCutOff)
         {

@@ -78,10 +78,10 @@ class TestInputValidation : public ::testing::Test
             InitVelocities::FALSE
         );
 
-        settings::PotentialSettings::setCoulombLongRangeType(
+        PotentialSettings::setCoulombLongRangeType(
             CoulombLongRangeType::SHIFTED
         );
-        settings::PotentialSettings::setCoulombRadiusCutOff(
+        PotentialSettings::setCoulombRadiusCutOff(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
         settings::TimingsSettings::setTimeStep(0.5 * fs);
@@ -337,7 +337,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
     settings::GeneralSettings::activateCellList();
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
+    PotentialSettings::setCoulombRadiusCutOff(0.0);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

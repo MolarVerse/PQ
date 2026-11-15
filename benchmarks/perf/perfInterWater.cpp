@@ -61,7 +61,7 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
 int main()
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
+    PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);

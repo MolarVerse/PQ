@@ -207,7 +207,7 @@ TEST_F(TestCellList, addNeighbouringCells)
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
     _cellList->addNeighbouringCells(
-        settings::PotentialSettings::getCoulombRadiusCutOff()
+        PotentialSettings::getCoulombRadiusCutOff()
     );
 
     for (const auto &cell : _cellList->getCells())
@@ -356,7 +356,7 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    PotentialSettings::setCoulombRadiusCutOff(4.0);
     _cellList->setNumberOfCells(11);
     _cellList->resizeCells();
 

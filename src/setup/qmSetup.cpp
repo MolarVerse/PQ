@@ -158,7 +158,7 @@ namespace setup
         const auto jobType = settings::GeneralSettings::getJobtype();
 
         if (jobType == QM_MD || jobType == RING_POLYMER_QM_MD)
-            settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
+            PotentialSettings::setCoulombRadiusCutOff(0.0);
     }
 
     /**

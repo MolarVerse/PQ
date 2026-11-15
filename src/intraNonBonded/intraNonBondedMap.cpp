@@ -148,10 +148,9 @@ namespace intraNonBonded
 
             if (scale)
             {
-                const auto scaling =
-                    settings::PotentialSettings::getScale14Coulomb();
-                energy *= scaling;
-                force  *= scaling;
+                const auto scaling  = PotentialSettings::getScale14Coulomb();
+                energy             *= scaling;
+                force              *= scaling;
             }
             coulombEnergy = energy;
 
@@ -184,8 +183,7 @@ namespace intraNonBonded
 
                 if (scale)
                 {
-                    const auto scaling =
-                        settings::PotentialSettings::getScale14VDW();
+                    const auto scaling     = PotentialSettings::getScale14VDW();
                     nonCoulombEnergyLocal *= scaling;
                     nonCoulombForce       *= scaling;
                 }

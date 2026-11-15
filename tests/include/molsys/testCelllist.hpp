@@ -49,7 +49,7 @@ class TestCellList : public ::testing::Test
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         _simulationBox->setBox(orthoBox, false);
-        settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
+        PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
 };
 

@@ -322,8 +322,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
     }});
     improperDihedralForceField.setIsLinker(false);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.5);
 
     auto forceField = ff::ForceField();
 
@@ -404,8 +404,8 @@ TEST_F(TestForceField, correctLinker)
 
     physicalData.reset();
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.5);
 
     const auto forceScaled = ff::correctLinker<ff::DihedralForceField>(
         coulombPotential,

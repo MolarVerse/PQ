@@ -107,20 +107,20 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getSimulationBox().addMoleculeType(moleculeType2);
         _engine->getSimulationBox().addMolecule(molecule1);
 
-        settings::PotentialSettings::setCoulombRadiusCutOff(12.5);
+        PotentialSettings::setCoulombRadiusCutOff(12.5);
 
         _engine->makePotential(pot::PotentialBruteForce());
         _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
         _engine->getPotential()->makeCoulombPotential(
             pot::CoulombShiftedPotential(
-                settings::PotentialSettings::getCoulombRadiusCutOff()
+                PotentialSettings::getCoulombRadiusCutOff()
             )
         );
 
         _settings.fileSettings.setGuffDatFileNameByUser(
             "data/guffDatReader/guff.dat"
         );
-        settings::PotentialSettings::setNonCoulombType(NonCoulombType::GUFF);
+        PotentialSettings::setNonCoulombType(NonCoulombType::GUFF);
 
         _guffDatReader =
             std::make_unique<input::guffdat::GuffDatReader>(*_engine);

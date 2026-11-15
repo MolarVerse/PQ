@@ -61,7 +61,7 @@ namespace input
         };
 
         const auto setValue = [](CoulombLongRangeType type)
-        { settings::PotentialSettings::setCoulombLongRangeType(type); };
+        { PotentialSettings::setCoulombLongRangeType(type); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<CoulombLongRangeType>{
@@ -88,7 +88,7 @@ namespace input
         };
 
         const auto setValue = [](double wolfParameter)
-        { settings::PotentialSettings::setWolfParameter(wolfParameter); };
+        { PotentialSettings::setWolfParameter(wolfParameter); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -117,7 +117,7 @@ namespace input
         };
 
         const auto setValue = [](double epsilon)
-        { settings::PotentialSettings::setReactionFieldEpsilon(epsilon); };
+        { PotentialSettings::setReactionFieldEpsilon(epsilon); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

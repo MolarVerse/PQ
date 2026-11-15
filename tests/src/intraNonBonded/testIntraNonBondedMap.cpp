@@ -73,8 +73,8 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.75);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
         intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});

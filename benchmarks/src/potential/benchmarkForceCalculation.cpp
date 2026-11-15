@@ -68,9 +68,7 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        settings::PotentialSettings::setCoulombRadiusCutOff(
-            benchmarkSetup::cutOff
-        );
+        PotentialSettings::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
         pot::CoulombPotential::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
         pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
         pot::CoulombPotential::setCoulombForceCutOff(0.0);

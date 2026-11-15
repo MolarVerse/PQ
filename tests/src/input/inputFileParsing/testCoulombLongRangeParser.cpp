@@ -46,22 +46,19 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
 
     std::vector<std::string> lineElements = {"long-range", "=", "none"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), SHIFTED);
+    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), SHIFTED);
 
     _clearParser(parser);
 
     lineElements = {"long-range", "=", "reaction-field"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::PotentialSettings::getCoulombLongRangeType(),
-        REACTION_FIELD
-    );
+    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), REACTION_FIELD);
 
     _clearParser(parser);
 
     lineElements = {"long-range", "=", "wolf"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), WOLF);
+    EXPECT_EQ(PotentialSettings::getCoulombLongRangeType(), WOLF);
 
     _clearParser(parser);
 
@@ -89,7 +86,7 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
 
     std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);
+    EXPECT_EQ(PotentialSettings::getWolfParameter(), 1.0);
 
     _clearParser(parser);
 
@@ -115,7 +112,7 @@ TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
 
     std::vector<std::string> lineElements = {"rf-epsilon", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 1.0);
+    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 1.0);
 
     _clearParser(parser);
 

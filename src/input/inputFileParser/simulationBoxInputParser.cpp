@@ -69,7 +69,7 @@ namespace input
         };
 
         const auto setValue = [](double value)
-        { settings::PotentialSettings::setCoulombRadiusCutOff(value); };
+        { PotentialSettings::setCoulombRadiusCutOff(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -96,7 +96,7 @@ namespace input
         };
 
         const auto setValue = [](double value)
-        { settings::PotentialSettings::setNonCoulombRadiusCutOff(value); };
+        { PotentialSettings::setNonCoulombRadiusCutOff(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

@@ -344,7 +344,7 @@ namespace input
                 "Cell lists are not available for pure QM simulations"
             );
 
-        if (settings::PotentialSettings::getCoulombRadiusCutOff() <= 0.0)
+        if (PotentialSettings::getCoulombRadiusCutOff() <= 0.0)
             throw exc::InputFileException(
                 "An active cell list requires rcoulomb to be greater than zero"
             );
@@ -363,7 +363,7 @@ namespace input
         using enum CoulombLongRangeType;
 
         const auto longRangeCorrection =
-            settings::PotentialSettings::getCoulombLongRangeType();
+            PotentialSettings::getCoulombLongRangeType();
 
         if (longRangeCorrection == REACTION_FIELD &&
             !getKeywordSet("rf_epsilon"))

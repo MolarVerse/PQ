@@ -280,7 +280,7 @@ namespace input::guffdat
         double rncCutOff = stod(lineCommands[4]);
 
         if (rncCutOff < 0.0)
-            rncCutOff = settings::PotentialSettings::getCoulombRadiusCutOff();
+            rncCutOff = PotentialSettings::getCoulombRadiusCutOff();
 
         constexpr auto coulombCoeffIndex = 5;
         const double   coulombCoeff = stod(lineCommands[coulombCoeffIndex]);
@@ -335,7 +335,7 @@ namespace input::guffdat
     )
     {
         using enum NonCoulombType;
-        switch (settings::PotentialSettings::getNonCoulombType())
+        switch (PotentialSettings::getNonCoulombType())
         {
             case LJ:
             {
@@ -396,7 +396,7 @@ namespace input::guffdat
                     std::format(
                         "Invalid nonCoulombic type {} given",
                         NonCoulombTypeMeta::toString(
-                            settings::PotentialSettings::getNonCoulombType()
+                            PotentialSettings::getNonCoulombType()
                         )
                     )
                 );

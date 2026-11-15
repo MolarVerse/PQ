@@ -190,10 +190,10 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
 
     ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
-        settings::PotentialSettings::getCoulombLongRangeType(),
+        PotentialSettings::getCoulombLongRangeType(),
         CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)

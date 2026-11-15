@@ -62,8 +62,8 @@ int main()
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.5);
 
     auto bond = ff::BondForceField(
         &molecule,

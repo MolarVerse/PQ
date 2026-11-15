@@ -198,7 +198,7 @@ namespace manostat
         }
 
         if (candidate.getMinimalBoxDimension() <
-            2.0 * settings::PotentialSettings::getCoulombRadiusCutOff())
+            2.0 * PotentialSettings::getCoulombRadiusCutOff())
         {
             throw exc::ManostatException(
                 "Coulomb radius cut off is larger than half of the minimal "

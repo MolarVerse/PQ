@@ -73,7 +73,7 @@ namespace
                 0.03 * per_bar
             );
             settings::TimingsSettings::setTimeStep(1.0 * fs);
-            settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
+            PotentialSettings::setCoulombRadiusCutOff(0.1);
             _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
             _data.setVirial(linalg::tensor3D{0.0});
             _data.setKineticEnergyMolecularVector(linalg::tensor3D{0.0});
@@ -312,7 +312,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         proposalSettings.at(i)->setIsotropyByUser(
             i == 0 ? Isotropy::SEMI_ISOTROPIC_XY : Isotropy::ISOTROPIC
         );
-        settings::PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);
+        PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);
         EXPECT_THROW_MSG(
             proposals.at(i)->applyManostat(_box, _data, toTemperature(0.0)),
             exc::ManostatException,

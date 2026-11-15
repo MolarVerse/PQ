@@ -190,8 +190,8 @@ namespace waterModel
     void InterWater::_setNonCoulombCutOffRadii() const
     {
         const auto radialCutOff =
-            settings::PotentialSettings::getNonCoulombRadiusCutOff().value_or(
-                settings::PotentialSettings::getCoulombRadiusCutOff()
+            PotentialSettings::getNonCoulombRadiusCutOff().value_or(
+                PotentialSettings::getCoulombRadiusCutOff()
             );
 
         const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)

@@ -46,21 +46,19 @@
  */
 TEST_F(TestSetup, setupReactionFieldPotential)
 {
-    settings::PotentialSettings::setCoulombLongRangeType(
+    PotentialSettings::setCoulombLongRangeType(
         CoulombLongRangeType::REACTION_FIELD
     );
     setup::PotentialSetup potentialSetup(*_engine);
 
-    settings::PotentialSettings::setReactionFieldEpsilon(80.0);
+    PotentialSettings::setReactionFieldEpsilon(80.0);
     EXPECT_NO_THROW(potentialSetup.setup());
     test::checkType(
         &(_engine->getPotential()->getCoulombPotential()),
         typeid(pot::CoulombReactionField)
     );
 
-    settings::PotentialSettings::setCoulombLongRangeType(
-        CoulombLongRangeType::SHIFTED
-    );
+    PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType::SHIFTED);
 }
 
 /**
@@ -68,9 +66,7 @@ TEST_F(TestSetup, setupReactionFieldPotential)
  */
 TEST_F(TestSetup, setupCoulombPotential)
 {
-    settings::PotentialSettings::setCoulombLongRangeType(
-        CoulombLongRangeType::SHIFTED
-    );
+    PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType::SHIFTED);
     setup::PotentialSetup potentialSetup(*_engine);
     potentialSetup.setupCoulomb();
 
@@ -79,9 +75,7 @@ TEST_F(TestSetup, setupCoulombPotential)
         typeid(pot::CoulombShiftedPotential)
     );
 
-    settings::PotentialSettings::setCoulombLongRangeType(
-        CoulombLongRangeType::WOLF
-    );
+    PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType::WOLF);
     setup::PotentialSetup potentialSetup2(*_engine);
     potentialSetup2.setup();
 

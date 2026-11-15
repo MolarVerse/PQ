@@ -118,14 +118,12 @@ namespace setup
      */
     void PotentialSetup::setupCoulomb()
     {
-        const auto coulRCut =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
-        const auto wolfParam = settings::PotentialSettings::getWolfParameter();
-        const auto rfEpsilon =
-            settings::PotentialSettings::getReactionFieldEpsilon();
+        const auto  coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
+        const auto  wolfParam = PotentialSettings::getWolfParameter();
+        const auto  rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
         const auto &potential = _engine.getPotential();
 
-        switch (settings::PotentialSettings::getCoulombLongRangeType())
+        switch (PotentialSettings::getCoulombLongRangeType())
         {
             using enum CoulombLongRangeType;
 
@@ -253,8 +251,7 @@ namespace setup
     {
         auto &log = _engine.getLogOutput();
 
-        const auto coulLRType =
-            settings::PotentialSettings::getCoulombLongRangeType();
+        const auto coulLRType = PotentialSettings::getCoulombLongRangeType();
 
         log.writeSetupInfo(
             std::format(
@@ -264,16 +261,15 @@ namespace setup
         );
         log.writeEmptyLine();
 
-        const auto coulRCut =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
-        auto wolfParam = 0.0;
-        auto rfEpsilon = 0.0;
+        const auto coulRCut  = PotentialSettings::getCoulombRadiusCutOff();
+        auto       wolfParam = 0.0;
+        auto       rfEpsilon = 0.0;
 
         if (coulLRType == CoulombLongRangeType::WOLF)
-            wolfParam = settings::PotentialSettings::getWolfParameter();
+            wolfParam = PotentialSettings::getWolfParameter();
 
         if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
-            rfEpsilon = settings::PotentialSettings::getReactionFieldEpsilon();
+            rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
 
         const auto coulRCutStr =
             std::format("Coulomb radius cut-off: {}", coulRCut);

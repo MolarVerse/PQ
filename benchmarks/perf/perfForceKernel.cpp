@@ -54,8 +54,8 @@ int main()
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
     auto coulombPotential    = pot::CoulombShiftedPotential(10.0);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.75);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
         intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});

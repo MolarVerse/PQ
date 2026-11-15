@@ -22,173 +22,166 @@
 
 #include "potentialSettings.hpp"
 
-namespace settings
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+
+/**
+ * @brief Set the nonCoulomb type as enum in the PotentialSettings class
+ *
+ * @param type
+ */
+void PotentialSettings::setNonCoulombType(NonCoulombType type)
 {
+    _nonCoulombType = type;
+}
 
-    /********************
-     *                  *
-     * standard setters *
-     *                  *
-     ********************/
+/**
+ * @brief Set the Coulomb long range type in the PotentialSettings class
+ *
+ * @param type
+ */
+void PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType type)
+{
+    _coulombLRType = type;
+}
 
-    /**
-     * @brief Set the nonCoulomb type as enum in the PotentialSettings class
-     *
-     * @param type
-     */
-    void PotentialSettings::setNonCoulombType(NonCoulombType type)
-    {
-        _nonCoulombType = type;
-    }
+/**
+ * @brief Set the Coulomb radius cut off in the PotentialSettings class
+ *
+ * @param coulombRadiusCutOff
+ */
+void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
+{
+    _coulombRadiusCutOff = coulombRadiusCutOff;
+}
 
-    /**
-     * @brief Set the Coulomb long range type in the PotentialSettings class
-     *
-     * @param type
-     */
-    void PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType type)
-    {
-        _coulombLRType = type;
-    }
+/**
+ * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
+ *
+ * @param nonCoulombRadiusCutOff
+ */
+void PotentialSettings::setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff)
+{
+    _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
+}
 
-    /**
-     * @brief Set the Coulomb radius cut off in the PotentialSettings class
-     *
-     * @param coulombRadiusCutOff
-     */
-    void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
-    {
-        _coulombRadiusCutOff = coulombRadiusCutOff;
-    }
+/**
+ * @brief Set the 1-4 Coulomb scaling factor in the PotentialSettings class
+ *
+ * @param scale14Coulomb
+ */
+void PotentialSettings::setScale14Coulomb(double scale14Coulomb)
+{
+    _scale14Coulomb = scale14Coulomb;
+}
 
-    /**
-     * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
-     *
-     * @param nonCoulombRadiusCutOff
-     */
-    void PotentialSettings::setNonCoulombRadiusCutOff(
-        double nonCoulombRadiusCutOff
-    )
-    {
-        _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
-    }
+/**
+ * @brief Set the 1-4 Van der Waals scaling factor in the PotentialSettings
+ * class
+ *
+ * @param scale14VanDerWaals
+ */
+void PotentialSettings::setScale14VanDerWaals(double scale14VanDerWaals)
+{
+    _scale14VanDerWaals = scale14VanDerWaals;
+}
 
-    /**
-     * @brief Set the 1-4 Coulomb scaling factor in the PotentialSettings class
-     *
-     * @param scale14Coulomb
-     */
-    void PotentialSettings::setScale14Coulomb(double scale14Coulomb)
-    {
-        _scale14Coulomb = scale14Coulomb;
-    }
+/**
+ * @brief Set the reaction field epsilon in the PotentialSettings class
+ *
+ * @param epsilon
+ */
+void PotentialSettings::setReactionFieldEpsilon(double epsilon)
+{
+    _reactionFieldEpsilon = epsilon;
+}
 
-    /**
-     * @brief Set the 1-4 Van der Waals scaling factor in the PotentialSettings
-     * class
-     *
-     * @param scale14VanDerWaals
-     */
-    void PotentialSettings::setScale14VanDerWaals(double scale14VanDerWaals)
-    {
-        _scale14VanDerWaals = scale14VanDerWaals;
-    }
+/**
+ * @brief Set the Wolf parameter in the PotentialSettings class
+ *
+ * @param wolfParameter
+ */
+void PotentialSettings::setWolfParameter(double wolfParameter)
+{
+    _wolfParameter = wolfParameter;
+}
 
-    /**
-     * @brief Set the reaction field epsilon in the PotentialSettings class
-     *
-     * @param epsilon
-     */
-    void PotentialSettings::setReactionFieldEpsilon(double epsilon)
-    {
-        _reactionFieldEpsilon = epsilon;
-    }
+/********************
+ *                  *
+ * standard getters *
+ *                  *
+ ********************/
 
-    /**
-     * @brief Set the Wolf parameter in the PotentialSettings class
-     *
-     * @param wolfParameter
-     */
-    void PotentialSettings::setWolfParameter(double wolfParameter)
-    {
-        _wolfParameter = wolfParameter;
-    }
+/**
+ * @brief get the Coulomb long range type
+ *
+ * @return CoulombLongRangeType
+ */
+CoulombLongRangeType PotentialSettings::getCoulombLongRangeType()
+{
+    return _coulombLRType;
+}
 
-    /********************
-     *                  *
-     * standard getters *
-     *                  *
-     ********************/
+/**
+ * @brief get the nonCoulomb type
+ *
+ * @return NonCoulombType
+ */
+NonCoulombType PotentialSettings::getNonCoulombType()
+{
+    return _nonCoulombType;
+}
 
-    /**
-     * @brief get the Coulomb long range type
-     *
-     * @return CoulombLongRangeType
-     */
-    CoulombLongRangeType PotentialSettings::getCoulombLongRangeType()
-    {
-        return _coulombLRType;
-    }
+/**
+ * @brief get the Coulomb radius cut off
+ *
+ * @return double
+ */
+double PotentialSettings::getCoulombRadiusCutOff()
+{
+    return _coulombRadiusCutOff;
+}
 
-    /**
-     * @brief get the nonCoulomb type
-     *
-     * @return NonCoulombType
-     */
-    NonCoulombType PotentialSettings::getNonCoulombType()
-    {
-        return _nonCoulombType;
-    }
+/**
+ * @brief get the non-Coulomb radius cut off
+ *
+ * @return std::optional<double>
+ */
+std::optional<double> PotentialSettings::getNonCoulombRadiusCutOff()
+{
+    return _nonCoulombRadiusCutOff;
+}
 
-    /**
-     * @brief get the Coulomb radius cut off
-     *
-     * @return double
-     */
-    double PotentialSettings::getCoulombRadiusCutOff()
-    {
-        return _coulombRadiusCutOff;
-    }
+/**
+ * @brief get the 1-4 Coulomb scaling factor
+ *
+ * @return double
+ */
+double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
 
-    /**
-     * @brief get the non-Coulomb radius cut off
-     *
-     * @return std::optional<double>
-     */
-    std::optional<double> PotentialSettings::getNonCoulombRadiusCutOff()
-    {
-        return _nonCoulombRadiusCutOff;
-    }
+/**
+ * @brief get the 1-4 Van der Waals scaling factor
+ *
+ * @return double
+ */
+double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
 
-    /**
-     * @brief get the 1-4 Coulomb scaling factor
-     *
-     * @return double
-     */
-    double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
+/**
+ * @brief get the reaction field epsilon
+ *
+ * @return double
+ */
+double PotentialSettings::getReactionFieldEpsilon()
+{
+    return _reactionFieldEpsilon;
+}
 
-    /**
-     * @brief get the 1-4 Van der Waals scaling factor
-     *
-     * @return double
-     */
-    double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
-
-    /**
-     * @brief get the reaction field epsilon
-     *
-     * @return double
-     */
-    double PotentialSettings::getReactionFieldEpsilon()
-    {
-        return _reactionFieldEpsilon;
-    }
-
-    /**
-     * @brief get the Wolf parameter
-     *
-     * @return double
-     */
-    double PotentialSettings::getWolfParameter() { return _wolfParameter; }
-
-}   // namespace settings
+/**
+ * @brief get the Wolf parameter
+ *
+ * @return double
+ */
+double PotentialSettings::getWolfParameter() { return _wolfParameter; }

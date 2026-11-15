@@ -163,7 +163,7 @@ namespace
         physicalData::PhysicalData& physicalData
     )
     {
-        settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+        PotentialSettings::setCoulombRadiusCutOff(4.0);
         settings::TimingsSettings::setTimeStep(1.0 * fs);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
@@ -329,7 +329,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
  */
 TEST_F(TestManostat, testApplyBerendsenManostat)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.99);
+    PotentialSettings::setCoulombRadiusCutOff(0.99);
     molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
     _box->setBox(orthoBox, false);
     const auto boxOld = _box->getBoxDimensions();
@@ -465,7 +465,7 @@ TEST_F(
     testApplyBerendsenManostatCutoffLargerThanHalfOfMinimumBoxDimension
 )
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(10.0);
+    PotentialSettings::setCoulombRadiusCutOff(10.0);
     molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
     _box->setBox(orthoBox, false);
 
@@ -524,7 +524,7 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 {
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.49);
+    PotentialSettings::setCoulombRadiusCutOff(0.49);
     settings::TimingsSettings::setTimeStep(0.5 * fs);
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};

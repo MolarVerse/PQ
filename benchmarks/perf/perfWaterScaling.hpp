@@ -69,7 +69,7 @@ namespace benchWaterScaling
 
     inline int run(const std::size_t perSide, const std::uint64_t iterations)
     {
-        settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
+        PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
         pot::CoulombPotential::setCoulombForceCutOff(0.0);

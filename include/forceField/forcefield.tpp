@@ -70,7 +70,7 @@ namespace ff
 
         if constexpr (std::is_same_v<T, DihedralForceField>)
         {
-            const auto scale = settings::PotentialSettings::getScale14Coulomb();
+            const auto scale = PotentialSettings::getScale14Coulomb();
 
             // NOLINTBEGIN(readability-magic-numbers)
             coulombEnergy *= (1.0 - scale);
@@ -100,7 +100,7 @@ namespace ff
 
             if constexpr (std::is_same_v<T, DihedralForceField>)
             {
-                const auto scale = settings::PotentialSettings::getScale14VDW();
+                const auto scale = PotentialSettings::getScale14VDW();
 
                 // NOLINTBEGIN(readability-magic-numbers)
                 nonCoulombEnergy *= (1.0 - scale);
