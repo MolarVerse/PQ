@@ -103,7 +103,11 @@ namespace input
             std::make_unique<ConstraintsInputParser>(settings.constraintSettings
             )
         );
-        _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
+        _parsers.push_back(
+            std::make_unique<CoulombLongRangeInputParser>(
+                settings.potentialSettings
+            )
+        );
         _parsers.push_back(
             std::make_unique<FilesInputParser>(
                 validateFilePaths,

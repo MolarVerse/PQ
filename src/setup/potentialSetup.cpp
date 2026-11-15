@@ -122,8 +122,9 @@ namespace setup
         const auto  wolfParam = PotentialSettings::getWolfParameter();
         const auto  rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
         const auto &potential = _engine.getPotential();
+        const auto &potentialSettings = _engine.getSettings().potentialSettings;
 
-        switch (PotentialSettings::getCoulombLongRangeType())
+        switch (potentialSettings.getCoulombLongRangeType())
         {
             using enum CoulombLongRangeType;
 
@@ -249,9 +250,10 @@ namespace setup
      */
     void PotentialSetup::writeCoulombInfo() const
     {
-        auto &log = _engine.getLogOutput();
+        auto       &log               = _engine.getLogOutput();
+        const auto &potentialSettings = _engine.getSettings().potentialSettings;
 
-        const auto coulLRType = PotentialSettings::getCoulombLongRangeType();
+        const auto coulLRType = potentialSettings.getCoulombLongRangeType();
 
         log.writeSetupInfo(
             std::format(

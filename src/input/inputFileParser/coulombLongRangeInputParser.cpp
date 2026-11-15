@@ -39,7 +39,10 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) long_range "<string>" 2)
      * wolf_param "<double>"
      */
-    CoulombLongRangeInputParser::CoulombLongRangeInputParser()
+    CoulombLongRangeInputParser::CoulombLongRangeInputParser(
+        PotentialSettings &potentialSettings
+    )
+        : _potentialSettings(potentialSettings)
     {
         addCoulombLongRangeKey();
         addWolfParameterKey();
@@ -60,8 +63,8 @@ namespace input
                 "the simulation",
         };
 
-        const auto setValue = [](CoulombLongRangeType type)
-        { PotentialSettings::setCoulombLongRangeType(type); };
+        const auto setValue = [this](CoulombLongRangeType type)
+        { _potentialSettings->setCoulombLongRangeTypeByUser(type); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<CoulombLongRangeType>{

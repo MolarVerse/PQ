@@ -43,9 +43,9 @@ void PotentialSettings::setNonCoulombType(NonCoulombType type)
  *
  * @param type
  */
-void PotentialSettings::setCoulombLongRangeType(CoulombLongRangeType type)
+void PotentialSettings::setCoulombLongRangeTypeByUser(CoulombLongRangeType type)
 {
-    _coulombLRType = type;
+    _coulombLRType.setByUser(type);
 }
 
 /**
@@ -120,9 +120,9 @@ void PotentialSettings::setWolfParameter(double wolfParameter)
  *
  * @return CoulombLongRangeType
  */
-CoulombLongRangeType PotentialSettings::getCoulombLongRangeType()
+CoulombLongRangeType PotentialSettings::getCoulombLongRangeType() const
 {
-    return _coulombLRType;
+    return _coulombLRType.get();
 }
 
 /**

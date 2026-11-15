@@ -78,7 +78,7 @@ class TestInputValidation : public ::testing::Test
             InitVelocities::FALSE
         );
 
-        PotentialSettings::setCoulombLongRangeType(
+        _settings.potentialSettings.setCoulombLongRangeTypeByUser(
             CoulombLongRangeType::SHIFTED
         );
         PotentialSettings::setCoulombRadiusCutOff(

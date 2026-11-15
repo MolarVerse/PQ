@@ -28,6 +28,7 @@
 
 #include "defaults.hpp"
 #include "enums/potential.hpp"
+#include "setting.hpp"
 
 /**
  * @class PotentialSettings
@@ -38,8 +39,9 @@
 class PotentialSettings
 {
    private:
-    static inline CoulombLongRangeType _coulombLRType =
-        CoulombLongRangeType::SHIFTED;
+    Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType{
+        CoulombLongRangeType::SHIFTED
+    };
     static inline NonCoulombType _nonCoulombType = NonCoulombType::GUFF;
 
     static inline double _coulombRadiusCutOff =
@@ -61,7 +63,7 @@ class PotentialSettings
      ********************/
 
     static void setNonCoulombType(NonCoulombType type);
-    static void setCoulombLongRangeType(CoulombLongRangeType type);
+    void        setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
 
     static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
     static void setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff);
@@ -74,8 +76,8 @@ class PotentialSettings
      * standard getters *
      ********************/
 
-    [[nodiscard]] static CoulombLongRangeType getCoulombLongRangeType();
-    [[nodiscard]] static NonCoulombType       getNonCoulombType();
+    [[nodiscard]] CoulombLongRangeType  getCoulombLongRangeType() const;
+    [[nodiscard]] static NonCoulombType getNonCoulombType();
 
     [[nodiscard]] static double                getCoulombRadiusCutOff();
     [[nodiscard]] static std::optional<double> getNonCoulombRadiusCutOff();

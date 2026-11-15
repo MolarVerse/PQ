@@ -23,8 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__COULOMB_LONG_RANGE_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__COULOMB_LONG_RANGE_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
 
+class PotentialSettings;
 namespace input
 {
     /**
@@ -35,8 +38,12 @@ namespace input
      */
     class CoulombLongRangeInputParser : public InputFileParser
     {
+        mstd::Ref<PotentialSettings> _potentialSettings;
+
        public:
-        CoulombLongRangeInputParser();
+        explicit CoulombLongRangeInputParser(
+            PotentialSettings& potentialSettings
+        );
 
         void addCoulombLongRangeKey();
         void addReactionFieldEpsilonKey();

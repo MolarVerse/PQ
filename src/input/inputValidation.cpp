@@ -87,7 +87,9 @@ namespace input
         );
         _validateManostat(settings.manostatSettings);
         _validateCellList();
-        _validateReactionFieldCoulomb();
+        _validateReactionFieldCoulomb(
+            settings.potentialSettings.getCoulombLongRangeType()
+        );
         _validateRingPolymer();
     }
 
@@ -358,12 +360,11 @@ namespace input
      * correction is selected but `rf_epsilon` is missing in the current input
      * file
      */
-    void InputFileReader::_validateReactionFieldCoulomb() const
+    void InputFileReader::_validateReactionFieldCoulomb(
+        CoulombLongRangeType longRangeCorrection
+    ) const
     {
         using enum CoulombLongRangeType;
-
-        const auto longRangeCorrection =
-            PotentialSettings::getCoulombLongRangeType();
 
         if (longRangeCorrection == REACTION_FIELD &&
             !getKeywordSet("rf_epsilon"))
