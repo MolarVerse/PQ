@@ -72,7 +72,7 @@ namespace pot
      * @throws std::abort() Always aborts as this should never be called
      */
     template <typename T>
-    double Potential::getPartialCharge(molsys::Atom & /*atom*/) const
+    Charge Potential::getPartialCharge(molsys::Atom & /*atom*/) const
     {
         std::abort();
     }
@@ -86,11 +86,11 @@ namespace pot
      * charge if no QM charge is present.
      *
      * @param atom Reference to the atom from which to extract the QM charge
-     * @return double The QM charge if available, otherwise the standard partial
+     * @return Charge The QM charge if available, otherwise the standard partial
      * charge
      */
     template <>
-    inline double Potential::getPartialCharge<QMChargeTag>(
+    inline Charge Potential::getPartialCharge<QMChargeTag>(
         molsys::Atom &atom
     ) const
     {
@@ -109,10 +109,10 @@ namespace pot
      * used in classical force fields.
      *
      * @param atom Reference to the atom from which to extract the MM charge
-     * @return double The molecular mechanics partial charge
+     * @return Charge The molecular mechanics partial charge
      */
     template <>
-    inline double Potential::getPartialCharge<MMChargeTag>(
+    inline Charge Potential::getPartialCharge<MMChargeTag>(
         molsys::Atom &atom
     ) const
     {

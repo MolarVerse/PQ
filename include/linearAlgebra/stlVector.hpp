@@ -29,6 +29,8 @@
 #include <type_traits>
 #include <vector>
 
+#include "mstd/math.hpp"
+
 namespace stl
 {
     /**
@@ -103,7 +105,9 @@ namespace stl
     template <typename T>
     T rms(const std::vector<T> &vec)
     {
-        return std::sqrt(dot(vec, vec) / static_cast<T>(vec.size()));
+        return static_cast<T>(
+            mstd::sqrt(dot(vec, vec) / static_cast<double>(vec.size()))
+        );
     }
 
 }   // namespace stl

@@ -50,9 +50,9 @@ namespace pot
         );
 
         [[nodiscard]]
-        std::pair<double, double> calculate(
-            const Distance& distance,
-            double          chargeProduct
+        std::pair<EnergyPerMol, Force> calculate(
+            const Distance&      distance,
+            const ChargeSquared& chargeProduct
         ) const override;
     };
 

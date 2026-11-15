@@ -78,6 +78,18 @@ namespace linalg
         ~Vector3D() = default;
 
         constexpr Vector3D();
+
+        /**
+         * @brief vector with all components zero (uses T::zero() for
+         * quantities, value initialization otherwise)
+         */
+        [[nodiscard]] static constexpr Vector3D zero()
+        {
+            if constexpr (requires { T::zero(); })
+                return Vector3D(T::zero(), T::zero(), T::zero());
+            else
+                return Vector3D(T{}, T{}, T{});
+        }
         Vector3D(const T xValue, const T yValue, const T zValue)
             : x(xValue), y(yValue), z(zValue)
         {

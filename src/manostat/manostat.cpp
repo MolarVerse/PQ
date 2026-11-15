@@ -25,7 +25,6 @@
 #include <cmath>
 
 #include "box.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -61,21 +60,15 @@ namespace manostat
         physicalData::PhysicalData  &physicalData
     )
     {
-        const auto ekinVirial =
-            physicalData
-                .getKinEnergyVirialTensor(
-                    settings::GeneralSettings::getVirialType()
-                )
-                .numerical_value_in(kcal_per_mol);
+        const auto ekinVirial = physicalData.getKinEnergyVirialTensor(
+            settings::GeneralSettings::getVirialType()
+        );
         const auto forceVirial = physicalData.getVirial();
         const auto volume      = simulationBox.getVolume();
 
-        auto pressureTensor =
-            (2.0 * ekinVirial + forceVirial) /
-            volume.numerical_value_in(angstrom * angstrom * angstrom);
-        pressureTensor  *= PRESSURE_FACTOR_PA;
-        _pressureTensor  = pressureTensor * Pa;
-        _pressure        = trace(_pressureTensor) / linalg::tensor3D::size;
+        auto pressureTensor = (2.0 * ekinVirial + forceVirial) / volume;
+        _pressureTensor     = pressureTensor / avogadro_constant;
+        _pressure           = trace(_pressureTensor) / linalg::tensor3D::size;
 
         physicalData.setPressure(_pressure);
 

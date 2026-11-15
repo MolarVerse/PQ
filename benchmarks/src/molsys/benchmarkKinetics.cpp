@@ -75,7 +75,7 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
         Momentum3D momentum =
-            linalg::Vec3D{0.1, -0.2, 0.3} * (amu * angstrom / s);
+            linalg::Vec3D{0.1, -0.2, 0.3} * (g_per_mol * angstrom / s);
 
         for (auto _ : state)
         {

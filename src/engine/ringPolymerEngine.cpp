@@ -208,7 +208,7 @@ namespace engine
                         .numerical_value_in(angstrom);
 
                 const auto forceConstant =
-                    rpmd_factor * atom1.getMass().numerical_value_in(amu);
+                    rpmd_factor * atom1.getMass().numerical_value_in(g_per_mol);
                 const auto force = forceConstant * deltaPos;
 
                 const auto energy = 0.5 * forceConstant * normSquared(deltaPos);

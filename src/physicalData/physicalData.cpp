@@ -28,7 +28,6 @@
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace physicalData
 {
@@ -40,7 +39,7 @@ namespace physicalData
      *
      * @return const linalg::tensor3D&
      */
-    const EnergyTensor3D& KineticEnergyVirialTensor::getVirialTensor(
+    const VirialPerMol& KineticEnergyVirialTensor::getVirialTensor(
         VirialType virialType
     ) const
     {
@@ -98,9 +97,8 @@ namespace physicalData
             kinEnergyAndMomOfMol
         );
 
-        const auto atomicEnergyTensor = kineticEnergyAtomicTensor / (2.0 * mol);
-        const auto molecularEnergyTensor =
-            kineticEnergyMolecularTensor / (2.0 * mol);
+        const auto atomicEnergyTensor    = kineticEnergyAtomicTensor / 2.0;
+        const auto molecularEnergyTensor = kineticEnergyMolecularTensor / 2.0;
 
         _kinEnergyVirialTensor.atomic    = atomicEnergyTensor;
         _kinEnergyVirialTensor.molecular = molecularEnergyTensor;
@@ -246,40 +244,40 @@ namespace physicalData
         _pressure        = Pressure::zero();
         _coupledPressure = Pressure::zero();
 
-        _kineticEnergy         = Energy::zero();
-        _coulombEnergy         = 0.0;
-        _nonCoulombEnergy      = 0.0;
-        _intraCoulombEnergy    = 0.0;
-        _intraNonCoulombEnergy = 0.0;
+        _kineticEnergy         = EnergyPerMol::zero();
+        _coulombEnergy         = EnergyPerMol::zero();
+        _nonCoulombEnergy      = EnergyPerMol::zero();
+        _intraCoulombEnergy    = EnergyPerMol::zero();
+        _intraNonCoulombEnergy = EnergyPerMol::zero();
 
-        _bondEnergy     = 0.0;
-        _angleEnergy    = 0.0;
-        _dihedralEnergy = 0.0;
-        _improperEnergy = 0.0;
+        _bondEnergy     = EnergyPerMol::zero();
+        _angleEnergy    = EnergyPerMol::zero();
+        _dihedralEnergy = EnergyPerMol::zero();
+        _improperEnergy = EnergyPerMol::zero();
 
-        _qmEnergy          = 0.0;
-        _qmReferenceEnergy = 0.0;
+        _qmEnergy          = EnergyPerMol::zero();
+        _qmReferenceEnergy = EnergyPerMol::zero();
 
         _numberOfSmoothingMol = 0.0;
 
         _momentum        = Momentum::zero();
         _angularMomentum = AngularMomentum::zero();
 
-        _noseHooverMomentumEnergy = 0.0;
+        _noseHooverMomentumEnergy = EnergyPerMol::zero();
         _noseHooverFrictionEnergy = 0.0;
 
-        _lowerDistanceConstraints = 0.0;
-        _upperDistanceConstraints = 0.0;
+        _lowerDistanceConstraints = EnergyPerMol::zero();
+        _upperDistanceConstraints = EnergyPerMol::zero();
 
-        _virial       = {0.0};
-        _stressTensor = {0.0};
+        _virial       = VirialPerMol::zero();
+        _stressTensor = Stress::zero();
 
-        _ringPolymerEnergy = 0.0;
+        _ringPolymerEnergy = EnergyPerMol::zero();
 
         // reset kinetic energy virial tensor, but make sure to keep the
         // isVirialAtomic flag as it is
-        _kinEnergyVirialTensor.atomic    = Energy::zero();
-        _kinEnergyVirialTensor.molecular = Energy::zero();
+        _kinEnergyVirialTensor.atomic    = EnergyPerMol::zero();
+        _kinEnergyVirialTensor.molecular = EnergyPerMol::zero();
     }
 
     /**
@@ -288,22 +286,22 @@ namespace physicalData
      */
     void PhysicalData::resetEnergies()
     {
-        _kineticEnergy         = Energy::zero();
-        _coulombEnergy         = 0.0;
-        _nonCoulombEnergy      = 0.0;
-        _intraCoulombEnergy    = 0.0;
-        _intraNonCoulombEnergy = 0.0;
+        _kineticEnergy         = EnergyPerMol::zero();
+        _coulombEnergy         = EnergyPerMol::zero();
+        _nonCoulombEnergy      = EnergyPerMol::zero();
+        _intraCoulombEnergy    = EnergyPerMol::zero();
+        _intraNonCoulombEnergy = EnergyPerMol::zero();
 
-        _bondEnergy     = 0.0;
-        _angleEnergy    = 0.0;
-        _dihedralEnergy = 0.0;
-        _improperEnergy = 0.0;
+        _bondEnergy     = EnergyPerMol::zero();
+        _angleEnergy    = EnergyPerMol::zero();
+        _dihedralEnergy = EnergyPerMol::zero();
+        _improperEnergy = EnergyPerMol::zero();
 
-        _qmEnergy          = 0.0;
-        _qmReferenceEnergy = 0.0;
+        _qmEnergy          = EnergyPerMol::zero();
+        _qmReferenceEnergy = EnergyPerMol::zero();
 
-        _kinEnergyVirialTensor.atomic    = Energy::zero();
-        _kinEnergyVirialTensor.molecular = Energy::zero();
+        _kinEnergyVirialTensor.atomic    = EnergyPerMol::zero();
+        _kinEnergyVirialTensor.molecular = EnergyPerMol::zero();
     }
 
     /**
@@ -321,11 +319,11 @@ namespace physicalData
     /**
      * @brief calculate total energy
      *
-     * @return double
+     * @return EnergyPerMol
      */
-    double PhysicalData::getTotalEnergy() const
+    EnergyPerMol PhysicalData::getTotalEnergy() const
     {
-        auto totalEnergy = 0.0;
+        auto totalEnergy = EnergyPerMol::zero();
 
         totalEnergy += _bondEnergy;
         totalEnergy += _angleEnergy;
@@ -335,7 +333,7 @@ namespace physicalData
         totalEnergy += _coulombEnergy;      // intra + inter
         totalEnergy += _nonCoulombEnergy;   // intra + inter
 
-        totalEnergy += _kineticEnergy.numerical_value_in(kcal_per_mol);
+        totalEnergy += _kineticEnergy;
 
         totalEnergy += _qmEnergy;
         totalEnergy -= _qmReferenceEnergy;
@@ -351,7 +349,9 @@ namespace physicalData
      *
      * @param intraCoulombEnergy
      */
-    void PhysicalData::addIntraCoulombEnergy(const double intraCoulombEnergy)
+    void PhysicalData::addIntraCoulombEnergy(
+        const EnergyPerMol& intraCoulombEnergy
+    )
     {
         _intraCoulombEnergy += intraCoulombEnergy;
         _coulombEnergy      += intraCoulombEnergy;
@@ -366,7 +366,7 @@ namespace physicalData
      * @param intraNonCoulombEnergy
      */
     void PhysicalData::addIntraNonCoulombEnergy(
-        const double intraNonCoulombEnergy
+        const EnergyPerMol& intraNonCoulombEnergy
     )
     {
         _intraNonCoulombEnergy += intraNonCoulombEnergy;

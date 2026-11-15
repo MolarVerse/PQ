@@ -23,9 +23,11 @@
 #ifndef POTENTIAL__COULOMB__COULOMB_WOLF_HPP
 #define POTENTIAL__COULOMB__COULOMB_WOLF_HPP
 
+#include <mstd/utils/members.hpp>
 #include <utility>
 
 #include "coulombPotential.hpp"
+#include "unit_types.hpp"
 
 namespace pot
 {
@@ -41,37 +43,27 @@ namespace pot
     class CoulombWolf : public CoulombPotential
     {
        protected:
-        static inline double _kappa;
-        static inline double _wolfParam1;
-        static inline double _wolfParam2;
-        static inline double _wolfParam3;
+        static inline InvDistance        _kappa;
+        static inline InvDistance        _wolfParam1;
+        static inline InvDistance        _wolfParam2;
+        static inline InvDistanceSquared _wolfParam3;
 
        public:
-        explicit CoulombWolf(const Distance& coulombRadiusCutOff, double kappa);
+        explicit CoulombWolf(
+            const Distance&    coulombRadiusCutOff,
+            const InvDistance& kappa
+        );
 
         [[nodiscard]]
-        std::pair<double, double> calculate(
-            const Distance& distance,
-            double          chargeProduct
+        std::pair<EnergyPerMol, Force> calculate(
+            const Distance&      distance,
+            const ChargeSquared& chargeProduct
         ) const override;
 
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        static void setKappa(double kappa);
-        static void setWolfParameter1(double wolfParameter1);
-        static void setWolfParameter2(double wolfParameter2);
-        static void setWolfParameter3(double wolfParameter3);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static double getKappa();
-        [[nodiscard]] static double getWolfParameter1();
-        [[nodiscard]] static double getWolfParameter2();
-        [[nodiscard]] static double getWolfParameter3();
+        CONST_GETTER_SETTER(_kappa);
+        CONST_GETTER_SETTER(_wolfParam1);
+        CONST_GETTER_SETTER(_wolfParam2);
+        CONST_GETTER_SETTER(_wolfParam3);
     };
 
 }   // namespace pot

@@ -57,8 +57,8 @@ class TestBondConstraint : public ::testing::Test
         atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
-        atom1->setMass(1.0 * amu);
-        atom2->setMass(2.0 * amu);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(2.0 * g_per_mol);
 
         atom1->setVelocity(Vel::zero());
         atom2->setVelocity(Vel::zero() + 1.0 * angstrom / s);

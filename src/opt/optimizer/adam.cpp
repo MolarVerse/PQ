@@ -25,7 +25,7 @@
 #include <cmath>
 
 #include "simulationBox.hpp"
-#include "units.hpp"
+#include "unit_types.hpp"
 
 namespace opt
 {
@@ -38,8 +38,8 @@ namespace opt
      */
     Adam::Adam(size_t nEpochs, size_t nAtoms) : Optimizer(nEpochs)
     {
-        _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-        _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+        _momentum1.resize(nAtoms, Force3D::zero());
+        _momentum2.resize(nAtoms, Force3DSquared::zero());
     }
 
     /**
@@ -53,8 +53,8 @@ namespace opt
     Adam::Adam(size_t nEpochs, double beta1, double beta2, size_t nAtoms)
         : Optimizer(nEpochs), _beta1(beta1), _beta2(beta2)
     {
-        _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-        _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+        _momentum1.resize(nAtoms, Force3D::zero());
+        _momentum2.resize(nAtoms, Force3DSquared::zero());
     }
 
     /**
@@ -70,7 +70,7 @@ namespace opt
      * @param learningRate
      * @param step
      */
-    void Adam::update(double learningRate, size_t step)
+    void Adam::update(const Pos& learningRate, size_t step)
     {
         auto& simulationBox = _getSimulationBox();
 
@@ -84,15 +84,19 @@ namespace opt
             _momentum2[i] =
                 _beta2 * _momentum2[i] + (1.0 - _beta2) * force * force;
 
-            const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
-            const auto mom2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
+            const auto epsilon = Force3DSquared{1e-8 * ForceSquared::unit};
 
-            constexpr auto epsilon = 1e-8;
-            auto           pos_new =
-                pos -
-                Pos3D{
-                    (learningRate * mom1 / (sqrt(mom2 + epsilon))) * angstrom
-                };
+            const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
+            const auto mom2 =
+                _momentum2[i] / (1.0 - std::pow(_beta2, step)) + epsilon;
+
+            const auto mom2sqrt = Force3D{
+                mstd::sqrt(mom2[0]),
+                mstd::sqrt(mom2[1]),
+                mstd::sqrt(mom2[2])
+            };
+
+            auto pos_new = pos - learningRate * mom1 / mom2sqrt;
 
             simulationBox.applyPBC(pos_new);
 

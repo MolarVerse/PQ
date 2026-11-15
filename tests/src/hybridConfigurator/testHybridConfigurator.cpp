@@ -271,7 +271,7 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     {
         auto atom = std::make_shared<molsys::Atom>();
         atom->setPosition(linalg::Vec3D{position} * angstrom);
-        atom->setMass(1.0 * amu);
+        atom->setMass(1.0 * g_per_mol);
 
         auto molecule = molsys::Molecule();
         molecule.addAtom(atom);
@@ -494,7 +494,7 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
-            atom->setMass(1.0 * amu);
+            atom->setMass(1.0 * g_per_mol);
             box.addAtom(atom);
             molecule.addAtom(atom);
         }

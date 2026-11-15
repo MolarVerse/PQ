@@ -105,6 +105,42 @@ namespace linalg
         lhs[2] += rhs[2];
     }
 
+    /**
+     * @brief operator+ for two StaticMatrix3x3's of different element types
+     */
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(const T &lhs, const U &rhs) { lhs + rhs; }
+    constexpr auto operator+(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<U> &rhs
+    ) -> StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0][0] + rhs[0][0])>>
+    {
+        using R = std::remove_cvref_t<decltype(lhs[0][0] + rhs[0][0])>;
+
+        StaticMatrix3x3<R> result;
+
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) result[i][j] = lhs[i][j] + rhs[i][j];
+
+        return result;
+    }
+
+    /**
+     * @brief operator+= for two StaticMatrix3x3's of different element types
+     */
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(T &lhs, const U &rhs) { lhs += rhs; }
+    constexpr void operator+=(
+        StaticMatrix3x3<T>       &lhs,
+        const StaticMatrix3x3<U> &rhs
+    )
+    {
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) lhs[i][j] += rhs[i][j];
+    }
+
     /****************************
      *                          *
      * operator- and operator-= *
@@ -169,6 +205,59 @@ namespace linalg
         lhs[0] -= rhs[0];
         lhs[1] -= rhs[1];
         lhs[2] -= rhs[2];
+    }
+
+    /**
+     * @brief operator-= for two StaticMatrix3x3's of different element types
+     */
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(T &lhs, const U &rhs) { lhs -= rhs; }
+    constexpr void operator-=(
+        StaticMatrix3x3<T>       &lhs,
+        const StaticMatrix3x3<U> &rhs
+    )
+    {
+        for (size_t i = 0; i < 3; ++i)
+            for (size_t j = 0; j < 3; ++j) lhs[i][j] -= rhs[i][j];
+    }
+
+    /**
+     * @brief operator* for StaticMatrix3x3 of quantities and a plain number
+     *
+     * @code
+     * 2.0 * virial
+     * @endcode
+     *
+     * @return StaticMatrix3x3 of the product type (same element type)
+     */
+    template <typename T, typename V>
+    requires(!std::same_as<T, V>) && std::is_arithmetic_v<V> &&
+            requires(const T &elem, const V &val) { elem * val; }
+    constexpr auto operator*(const StaticMatrix3x3<T> &mat, const V &scalar)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>
+    {
+        using ResultType = std::remove_cvref_t<decltype(mat[0][0] * scalar)>;
+
+        StaticMatrix3x3<ResultType> result;
+
+        for (size_t row = 0; row < 3; ++row)
+            for (size_t col = 0; col < 3; ++col)
+                result[row][col] = mat[row][col] * scalar;
+
+        return result;
+    }
+
+    /**
+     * @brief operator* for a plain number and a StaticMatrix3x3 of quantities
+     */
+    template <typename T, typename V>
+    requires(!std::same_as<T, V>) && std::is_arithmetic_v<V> &&
+            requires(const T &elem, const V &val) { elem * val; }
+    constexpr auto operator*(const V &scalar, const StaticMatrix3x3<T> &mat)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>
+    {
+        return mat * scalar;
     }
 
     /****************************

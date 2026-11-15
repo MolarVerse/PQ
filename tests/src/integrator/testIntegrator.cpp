@@ -130,14 +130,8 @@ TEST_F(TestIntegrator, firstStep)
         1.0 + (0.1 * velocities[2] * FS_TO_S)
     );
 
-    EXPECT_EQ(
-        molecule.getAtomForce(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0)
-    );
-    EXPECT_EQ(
-        molecule.getAtomForce(AtomIndex{1}),
-        linalg::Vec3D(0.0, 0.0, 0.0)
-    );
+    EXPECT_EQ(molecule.getAtomForce(AtomIndex{0}), Force3D::zero());
+    EXPECT_EQ(molecule.getAtomForce(AtomIndex{1}), Force3D::zero());
 
     EXPECT_TRUE(
         molecule.getCenterOfMass() != linalg::Vec3D(0.0, 0.0, 0.0) * angstrom
@@ -180,7 +174,7 @@ TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
     auto *atom = _box->getAtoms()[1].get();
     atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
     atom->setVelocity(linalg::Vec3D(2.0, -3.0, 4.0) * angstrom / s);
-    atom->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom->setForce(Force3D::zero());
 
     const auto initialPosition =
         atom->getPosition().numerical_value_in(angstrom);

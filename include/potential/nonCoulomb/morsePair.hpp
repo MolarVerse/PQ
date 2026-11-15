@@ -54,16 +54,18 @@ namespace pot
         explicit MorsePair(const Pos &cutOff, const MorseParams &params);
 
         explicit MorsePair(
-            const Pos         &cutOff,
-            double             energyCutoff,
-            double             forceCutoff,
-            const MorseParams &params
+            const Pos          &cutOff,
+            const EnergyPerMol &energyCutoff,
+            const Force        &forceCutoff,
+            const MorseParams  &params
         );
 
         [[nodiscard]] bool operator==(const MorsePair &other) const;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(const Pos &distance) const override;
+        std::pair<EnergyPerMol, Force> calculate(
+            const Pos &distance
+        ) const override;
 
         friend struct ::TestMorsePairUtils;
     };

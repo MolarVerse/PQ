@@ -22,7 +22,7 @@
 
 #include "coulombShiftedPotential.hpp"
 
-#include "constants/internalConversionFactors.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -33,24 +33,20 @@ namespace pot
      * @param chargeProduct
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombShiftedPotential::calculate(
-        const Distance& distance,
-        double          chargeProduct
+    std::pair<EnergyPerMol, Force> CoulombShiftedPotential::calculate(
+        const Distance&      distance,
+        const ChargeSquared& chargeProduct
     ) const
     {
-        const auto prefactor = chargeProduct * COULOMB_PREFACTOR;
-        const auto dInv = 1.0 / distance.numerical_value_in(Distance::unit);
-        const auto deltaCutOff =
-            _coulombRadiusCutOff.numerical_value_in(Distance::unit) -
-            distance.numerical_value_in(Distance::unit);
+        const auto dInv                = 1.0 / distance;
+        const auto deltaCutOff         = _coulombRadiusCutOff - distance;
         const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
 
         auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;
         auto force  = (dInv * dInv) - _coulombForceCutOff;
 
-        energy *= prefactor;
-        force  *= prefactor;
+        const auto prefactor = chargeProduct * coulomb_prefactor;
 
-        return {energy, force};
+        return {energy * prefactor, force * prefactor};
     }
 }   // namespace pot

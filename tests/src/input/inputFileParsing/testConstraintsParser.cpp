@@ -185,7 +185,7 @@ TEST_F(TestInputFileReader, testParseRattleTolerance)
 
     std::vector<std::string> lineElements = {"rattle-tolerance", "=", "0.0001"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(constraintSettings.getRattleTolerance(), 0.0001 * amu / s);
+    EXPECT_EQ(constraintSettings.getRattleTolerance(), 0.0001 * g_per_mol / s);
 
     _clearParser(parser);
 

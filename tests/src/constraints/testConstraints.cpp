@@ -163,7 +163,7 @@ TEST_F(TestConstraints, applyRattleConverged)
             .with(&ConstraintSettings::setRattleMaxIterByUser, 1000)
             .with(
                 &ConstraintSettings::setRattleToleranceByUser,
-                1.0e-4 * amu / s
+                1.0e-4 * g_per_mol / s
             )
             .apply([](auto &config) { config.activateShakeByUser(); })
             .build();

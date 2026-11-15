@@ -50,8 +50,8 @@ namespace
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
-        atom1->setMass(1.0 * amu);
-        atom2->setMass(1.0 * amu);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(1.0 * g_per_mol);
         atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
         atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
@@ -61,7 +61,7 @@ namespace
 
         auto molecule2 = molsys::Molecule();
         auto atom3     = std::make_shared<molsys::Atom>();
-        atom3->setMass(1.0 * amu);
+        atom3->setMass(1.0 * g_per_mol);
         atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
         atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
         molecule2.addAtom(atom3);
@@ -71,7 +71,7 @@ namespace
         box->addAtom(atom1);
         box->addAtom(atom2);
         box->addAtom(atom3);
-        box->setTotalMass(3.0 * amu);
+        box->setTotalMass(3.0 * g_per_mol);
         box->calculateDegreesOfFreedom();
 
         return box;
@@ -168,7 +168,7 @@ namespace
     {
         const auto tolerance =
             velocityTolerance(simulationBox) *
-            mstd::max(1.0 * amu, simulationBox.getTotalMass());
+            mstd::max(1.0 * g_per_mol, simulationBox.getTotalMass());
 
         const auto momentum        = simulationBox.calculateMomentum();
         const auto angularMomentum = angularMomentumOf(simulationBox);
@@ -183,16 +183,20 @@ namespace
             1e-9
         );
         expectVec3DNear(
-            physicalData.getMomentum().numerical_value_in(amu * angstrom / s),
-            momentum.numerical_value_in(amu * angstrom / s),
-            tolerance.numerical_value_in(angstrom * amu / s)
+            physicalData.getMomentum().numerical_value_in(
+                g_per_mol * angstrom / s
+            ),
+            momentum.numerical_value_in(g_per_mol * angstrom / s),
+            tolerance.numerical_value_in(angstrom * g_per_mol / s)
         );
         expectVec3DNear(
             physicalData.getAngularMomentum().numerical_value_in(
-                amu * angstrom * angstrom / s
+                g_per_mol * angstrom * angstrom / s
             ),
-            angularMomentum.numerical_value_in(amu * angstrom * angstrom / s),
-            tolerance.numerical_value_in(angstrom * amu / s)
+            angularMomentum.numerical_value_in(
+                g_per_mol * angstrom * angstrom / s
+            ),
+            tolerance.numerical_value_in(angstrom * g_per_mol / s)
         );
     }
 
@@ -219,9 +223,9 @@ namespace
         const std::vector<double> masses = {1.0, 2.0, 4.0};
 
         for (size_t i = 0; i < masses.size(); ++i)
-            simulationBox.getAtoms()[i]->setMass(masses[i] * amu);
+            simulationBox.getAtoms()[i]->setMass(masses[i] * g_per_mol);
 
-        simulationBox.setTotalMass(7.0 * amu);
+        simulationBox.setTotalMass(7.0 * g_per_mol);
     }
 
     ResetKineticsSettings makeSettings(
@@ -358,17 +362,17 @@ TEST(TestResetKinetics, resetMomentumZerosTotalLinearMomentum)
         totalPAfter += atom->getMass() * atom->getVelocity();
 
     EXPECT_NEAR(
-        totalPAfter[0].numerical_value_in(amu * angstrom / s),
+        totalPAfter[0].numerical_value_in(g_per_mol * angstrom / s),
         0.0,
         1e-12
     );
     EXPECT_NEAR(
-        totalPAfter[1].numerical_value_in(amu * angstrom / s),
+        totalPAfter[1].numerical_value_in(g_per_mol * angstrom / s),
         0.0,
         1e-12
     );
     EXPECT_NEAR(
-        totalPAfter[2].numerical_value_in(amu * angstrom / s),
+        totalPAfter[2].numerical_value_in(g_per_mol * angstrom / s),
         0.0,
         1e-12
     );
@@ -405,13 +409,20 @@ TEST(TestResetKinetics, resetForcesZerosForcesEachStep)
 
     // Seed atom forces with non-zero values.
     for (auto &atom : box->getAtoms())
-        atom->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom->setForce(linalg::Vec3D(1.0, 2.0, 3.0) * kcal_per_mol / angstrom);
 
     reset.resetForces(0U, *box);
 
     for (const auto &atom : box->getAtoms())
+    {
         for (size_t i = 0; i < 3; ++i)
-            EXPECT_DOUBLE_EQ(atom->getForce()[i], 0.0);
+        {
+            EXPECT_DOUBLE_EQ(
+                atom->getForce()[i].numerical_value_in(kcal_per_mol / angstrom),
+                0.0
+            );
+        }
+    }
 
     delete box;
 }
@@ -643,7 +654,7 @@ TEST(TestResetKinetics, resetMomentumZerosMomentumForNonUniformMasses)
     kinetics::ResetKinetics::resetMomentum(*box, momentum);
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
     );
@@ -681,9 +692,9 @@ TEST(TestResetKinetics, resetMomentumShiftsAllVelocitiesByCentreOfMassVelocity)
 TEST(TestResetKinetics, resetMomentumSubtractsExactlyThePassedMomentum)
 {
     const std::vector<Momentum3D> corrections = {
-        linalg::Vec3D(0.0, 0.0, 0.0) * angstrom * amu / s,
-        linalg::Vec3D(1.0, -2.0, 3.0) * angstrom * amu / s,
-        linalg::Vec3D(-10.0, 0.5, 0.25) * angstrom * amu / s,
+        linalg::Vec3D(0.0, 0.0, 0.0) * angstrom * g_per_mol / s,
+        linalg::Vec3D(1.0, -2.0, 3.0) * angstrom * g_per_mol / s,
+        linalg::Vec3D(-10.0, 0.5, 0.25) * angstrom * g_per_mol / s,
     };
 
     for (const auto &correction : corrections)
@@ -692,12 +703,14 @@ TEST(TestResetKinetics, resetMomentumSubtractsExactlyThePassedMomentum)
         makeMassesNonUniform(*box);
 
         const auto expected = (box->calculateMomentum() - correction)
-                                  .numerical_value_in(amu * angstrom / s);
+                                  .numerical_value_in(g_per_mol * angstrom / s);
 
         kinetics::ResetKinetics::resetMomentum(*box, correction);
 
         expectVec3DNear(
-            box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+            box->calculateMomentum().numerical_value_in(
+                g_per_mol * angstrom / s
+            ),
             expected,
             1e-12
         );
@@ -714,7 +727,7 @@ TEST(TestResetKinetics, resetMomentumWithZeroMomentumLeavesVelocitiesUnchanged)
 
     kinetics::ResetKinetics::resetMomentum(
         *box,
-        linalg::Vec3D(0.0, 0.0, 0.0) * angstrom * amu / s
+        linalg::Vec3D(0.0, 0.0, 0.0) * angstrom * g_per_mol / s
     );
 
     EXPECT_EQ(velocitiesOf(*box), before);
@@ -774,7 +787,7 @@ TEST(TestResetKinetics, resetAngularMomentumZerosAngularMomentum)
 
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
@@ -799,7 +812,7 @@ TEST(
 
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
@@ -819,8 +832,8 @@ TEST(TestResetKinetics, resetAngularMomentumPreservesLinearMomentum)
     kinetics::ResetKinetics::resetAngularMomentum(*box, angularMomentum);
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
-        momentum.numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        momentum.numerical_value_in(g_per_mol * angstrom / s),
         1e-12
     );
 
@@ -839,7 +852,7 @@ TEST(TestResetKinetics, resetAngularMomentumSubtractsExactlyThePassedValue)
     const std::vector<AngularMomentum3D> corrections = {
         AngularMomentum::zero(),
         scaled(angularMomentum0, 0.5),
-        linalg::Vec3D(0.3, -0.2, 0.5) * amu * angstrom * angstrom / s,
+        linalg::Vec3D(0.3, -0.2, 0.5) * g_per_mol * angstrom * angstrom / s,
     };
 
     for (const auto &correction : corrections)
@@ -848,13 +861,13 @@ TEST(TestResetKinetics, resetAngularMomentumSubtractsExactlyThePassedValue)
 
         const auto expected =
             (angularMomentumOf(*box) - correction)
-                .numerical_value_in(amu * angstrom * angstrom / s);
+                .numerical_value_in(g_per_mol * angstrom * angstrom / s);
 
         kinetics::ResetKinetics::resetAngularMomentum(*box, correction);
 
         expectVec3DNear(
             angularMomentumOf(*box).numerical_value_in(
-                amu * angstrom * angstrom / s
+                g_per_mol * angstrom * angstrom / s
             ),
             expected,
             1e-12
@@ -872,7 +885,7 @@ TEST(TestResetKinetics, resetAngularMomentumWithZeroLeavesVelocitiesUnchanged)
 
     kinetics::ResetKinetics::resetAngularMomentum(
         *box,
-        linalg::Vec3D(0.0, 0.0, 0.0) * amu * angstrom * angstrom / s
+        linalg::Vec3D(0.0, 0.0, 0.0) * g_per_mol * angstrom * angstrom / s
     );
 
     EXPECT_EQ(velocitiesOf(*box), before);
@@ -897,7 +910,7 @@ TEST(TestResetKinetics, resetAngularMomentumRemovesRigidRotationCompletely)
     }
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
     );
@@ -948,7 +961,7 @@ TEST(TestResetKinetics, resetAngularMomentumRefreshesCentreOfMass)
     // makeBox never calculated the centre of mass -> stale value
     kinetics::ResetKinetics::resetAngularMomentum(
         *box,
-        linalg::Vec3D(0.0, 0.0, 0.0) * amu * angstrom * angstrom / s
+        linalg::Vec3D(0.0, 0.0, 0.0) * g_per_mol * angstrom * angstrom / s
     );
 
     // positions (0,0,0), (1,0,0), (0,1,0), equal masses
@@ -1004,15 +1017,15 @@ TEST(TestResetKinetics, resetWithoutScheduledResetLeavesBoxUntouched)
     EXPECT_EQ(velocitiesOf(*box), velocities);
     EXPECT_EQ(data.getTemperature(), temp);
     expectVec3DNear(
-        data.getMomentum().numerical_value_in(amu * angstrom / s),
-        momentum.numerical_value_in(amu * angstrom / s),
+        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        momentum.numerical_value_in(g_per_mol * angstrom / s),
         1e-12
     );
     expectVec3DNear(
         data.getAngularMomentum().numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
-        angularMomentum.numerical_value_in(amu * angstrom * angstrom / s),
+        angularMomentum.numerical_value_in(g_per_mol * angstrom * angstrom / s),
         1e-12
     );
 
@@ -1031,8 +1044,10 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
     const linalg::Vec3D momentum(1.0, 2.0, 3.0);
     const linalg::Vec3D angularMomentum(-4.0, 5.0, -6.0);
     data.setTemperature(toTemperature(123.0));
-    data.setMomentum(momentum * amu * angstrom / s);
-    data.setAngularMomentum(angularMomentum * amu * angstrom * angstrom / s);
+    data.setMomentum(momentum * g_per_mol * angstrom / s);
+    data.setAngularMomentum(
+        angularMomentum * g_per_mol * angstrom * angstrom / s
+    );
 
     const auto velocities = velocitiesOf(*box);
 
@@ -1042,13 +1057,13 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
     EXPECT_EQ(velocitiesOf(*box), velocities);
     EXPECT_EQ(data.getTemperature(), toTemperature(123.0));
     expectVec3DNear(
-        data.getMomentum().numerical_value_in(amu * angstrom / s),
+        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
         momentum,
         1e-12
     );
     expectVec3DNear(
         data.getAngularMomentum().numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         angularMomentum,
         1e-12
@@ -1086,7 +1101,7 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
     }
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
     );
@@ -1135,12 +1150,12 @@ TEST(TestResetKinetics, resetMomentumBranchOnlyShiftsVelocities)
     }
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
     );
     EXPECT_NEAR(
-        data.getMomentum().numerical_value_in(amu * angstrom / s)[0],
+        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s)[0],
         0.0,
         1e-12
     );
@@ -1173,7 +1188,7 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
 
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
@@ -1182,18 +1197,18 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
     // linear momentum is a conserved quantity of the rotation correction, and
     // has to be reported unchanged (in SI units) in PhysicalData
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
-        momentum.numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        momentum.numerical_value_in(g_per_mol * angstrom / s),
         1e-12
     );
     expectVec3DNear(
-        data.getMomentum().numerical_value_in(amu * angstrom / s),
-        momentum.numerical_value_in(amu * angstrom / s),
+        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        momentum.numerical_value_in(g_per_mol * angstrom / s),
         1e-12
     );
     expectVec3DNear(
         data.getAngularMomentum().numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
@@ -1273,13 +1288,13 @@ TEST(TestResetKinetics, resetAllBranchesMatchSequentialStaticCalls)
         velocityTolerance(*box)
     );
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
     );
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
@@ -1288,13 +1303,13 @@ TEST(TestResetKinetics, resetAllBranchesMatchSequentialStaticCalls)
 
     // data reports the final state: no momentum, no angular momentum
     expectVec3DNear(
-        data.getMomentum().numerical_value_in(amu * angstrom / s),
+        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
     );
     expectVec3DNear(
         data.getAngularMomentum().numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
@@ -1315,13 +1330,13 @@ TEST(TestResetKinetics, resetTemperatureAndAngularDueTogetherKeepMomentumZero)
     reset.reset(7U, data, *box, toTemperature(300.0));
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
     );
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
@@ -1342,13 +1357,13 @@ TEST(TestResetKinetics, resetMomentumAndAngularDueTogetherZeroBoth)
     reset.reset(7U, data, *box, toTemperature(300.0));
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
     );
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
@@ -1418,13 +1433,13 @@ TEST(TestResetKinetics, stepZeroTriggersEveryResetIndependentOfSchedule)
     reset.reset(0U, data, *box, toTemperature(300.0));
 
     expectVec3DNear(
-        box->calculateMomentum().numerical_value_in(amu * angstrom / s),
+        box->calculateMomentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
     );
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
@@ -1557,7 +1572,7 @@ TEST(TestResetKinetics, resetForcesRespectsStepFrequency)
     const kinetics::ResetKinetics reset{settings};
 
     for (auto &atom : box->getAtoms())
-        atom->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom->setForce(linalg::Vec3D(1.0, 2.0, 3.0) * kcal_per_mol / angstrom);
 
     // step 1 and 2 are not multiples of 3
     reset.resetForces(1U, *box);
@@ -1567,7 +1582,13 @@ TEST(TestResetKinetics, resetForcesRespectsStepFrequency)
 
     reset.resetForces(3U, *box);
     for (const auto &atom : box->getAtoms())
-        expectVec3DNear(atom->getForce(), linalg::Vec3D(0.0, 0.0, 0.0), 1e-12);
+    {
+        expectVec3DNear(
+            atom->getForce().numerical_value_in(kcal_per_mol / angstrom),
+            linalg::Vec3D(0.0, 0.0, 0.0),
+            1e-12
+        );
+    }
 
     delete box;
 }
@@ -1592,14 +1613,14 @@ TEST(TestResetKinetics, resetAngularBranchUsesFreshCentreOfMass)
 
     expectVec3DNear(
         angularMomentumOf(*box).numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
     );
     expectVec3DNear(
         data.getAngularMomentum().numerical_value_in(
-            amu * angstrom * angstrom / s
+            g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12

@@ -222,15 +222,15 @@ TEST_F(TestSetup, testSetAtomMasses)
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
 
     EXPECT_DOUBLE_EQ(
-        moleculeResult.getAtomMass(AtomIndex{0}).numerical_value_in(amu),
+        moleculeResult.getAtomMass(AtomIndex{0}).numerical_value_in(g_per_mol),
         12.0107
     );
     EXPECT_DOUBLE_EQ(
-        moleculeResult.getAtomMass(AtomIndex{1}).numerical_value_in(amu),
+        moleculeResult.getAtomMass(AtomIndex{1}).numerical_value_in(g_per_mol),
         1.00794
     );
     EXPECT_DOUBLE_EQ(
-        moleculeResult.getAtomMass(AtomIndex{2}).numerical_value_in(amu),
+        moleculeResult.getAtomMass(AtomIndex{2}).numerical_value_in(g_per_mol),
         15.9994
     );
 }
@@ -333,7 +333,7 @@ TEST_F(TestSetup, testSetMolMass)
         _engine->getSimulationBox()
             .getMolecules()[0]
             .getMolMass()
-            .numerical_value_in(amu),
+            .numerical_value_in(g_per_mol),
         12.0107 + (1 * 1.00794) + 15.9994
     );
 }
@@ -372,7 +372,7 @@ TEST_F(TestSetup, noDensityNoBox)
 
 TEST_F(TestSetup, noDensity)
 {
-    _engine->getSimulationBox().setTotalMass(6000 * amu);
+    _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
 
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
@@ -395,7 +395,7 @@ TEST_F(TestSetup, noDensity)
 
 TEST_F(TestSetup, testNoBox)
 {
-    _engine->getSimulationBox().setTotalMass(6000 * amu);
+    _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
     _settings->simulationBoxSettings.setDensityByUser(
         AMU_PER_ANGSTROM3_TO_KG_PER_L
     );
@@ -418,7 +418,7 @@ TEST_F(TestSetup, testNoBox)
 
 TEST_F(TestSetup, testBoxAndDensitySet)
 {
-    _engine->getSimulationBox().setTotalMass(6000 * amu);
+    _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
     _engine->getSimulationBox().setDensity(
         12341243.1234
     );   // this should be ignored
@@ -560,7 +560,7 @@ TEST_F(TestSetup, testFullSetup)
     _engine->getSimulationBox().addMoleculeType(moleculeType1);
     _engine->getSimulationBox().addMoleculeType(moleculeType2);
 
-    _engine->getSimulationBox().setTotalMass(33.0 * amu);
+    _engine->getSimulationBox().setTotalMass(33.0 * g_per_mol);
     _engine->getSimulationBox().setDensity(
         12341243.1234
     );   // this should be ignored
@@ -587,7 +587,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     auto simBox2 = simBox;
     simBox.copy(simBox2);
 
-    simBox.setTotalMass(13.05 * amu);
+    simBox.setTotalMass(13.05 * g_per_mol);
     simBox.setTotalCharge(-7.03);
     simBox.setDegreesOfFreedom(4);
     simBox.setDensity(12341243.1234);

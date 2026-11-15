@@ -72,10 +72,11 @@ namespace pot
      * @param mol2 Second molecule containing atom2
      * @param atom1 First atom in the interaction pair
      * @param atom2 Second atom in the interaction pair
-     * @return std::pair<double, double> Coulomb energy and non-Coulomb energy
+     * @return std::pair<EnergyPerMol, EnergyPerMol> Coulomb energy and
+     * non-Coulomb energy
      */
     template <typename ChargeTag1, typename ChargeTag2>
-    std::pair<double, double> Potential::calculateSingleInteraction(
+    std::pair<EnergyPerMol, EnergyPerMol> Potential::calculateSingleInteraction(
         const molsys::Box &box,
         molsys::Molecule  &mol1,
         molsys::Molecule  &mol2,
@@ -83,8 +84,8 @@ namespace pot
         molsys::Atom      &atom2
     ) const
     {
-        auto coulombEnergy    = 0.0;
-        auto nonCoulombEnergy = 0.0;
+        auto coulombEnergy    = EnergyPerMol::zero();
+        auto nonCoulombEnergy = EnergyPerMol::zero();
 
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
@@ -141,12 +142,9 @@ namespace pot
                 coulF += nonCoulF;
             }
 
-            const auto forcexyz =
-                dxyz.numerical_value_in(mstd::units::angstrom) *
-                (coulF / distance.numerical_value_in(mstd::units::angstrom));
+            const auto forcexyz = dxyz * (coulF / distance);
 
-            const auto shiftForcexyz =
-                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
+            const auto shiftForcexyz = forcexyz * txyz;
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -163,24 +161,24 @@ namespace pot
      * @details This template function computes only the electrostatic
      * interaction between two atoms, ignoring van der Waals forces. It's
      * optimized for cases where only Coulombic interactions are needed. The
-     * function applies periodic boundary conditions and respects the Coulomb
-     * cutoff radius.
+     * function applies periodic boundary conditions and respects the
+     * Coulomb cutoff radius.
      *
      * @tparam ChargeTag1 Charge type for atom1 (QMChargeTag or MMChargeTag)
      * @tparam ChargeTag2 Charge type for atom2 (QMChargeTag or MMChargeTag)
      * @param box Simulation box for periodic boundary conditions
      * @param atom1 First atom in the interaction pair
      * @param atom2 Second atom in the interaction pair
-     * @return double Coulomb energy of the interaction
+     * @return EnergyPerMol Coulomb energy of the interaction
      */
     template <typename ChargeTag1, typename ChargeTag2>
-    double Potential::calculateSingleCoulombInteraction(
+    EnergyPerMol Potential::calculateSingleCoulombInteraction(
         const molsys::Box &box,
         molsys::Atom      &atom1,
         molsys::Atom      &atom2
     ) const
     {
-        auto coulombEnergy = 0.0;
+        auto coulombEnergy = EnergyPerMol::zero();
 
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
@@ -207,12 +205,9 @@ namespace pot
                 _coulombPotential->calculate(distance, coulombPreFactor);
             coulombEnergy = coulE;
 
-            const auto forcexyz =
-                dxyz.numerical_value_in(mstd::units::angstrom) *
-                (coulF / distance.numerical_value_in(mstd::units::angstrom));
+            const auto forcexyz = dxyz * (coulF / distance);
 
-            const auto shiftForcexyz =
-                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
+            const auto shiftForcexyz = forcexyz * txyz;
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -241,20 +236,21 @@ namespace pot
      * @param mol2 Second molecule containing atom2
      * @param atom1 First atom in the interaction pair (receives forces)
      * @param atom2 Second atom in the interaction pair (no forces applied)
-     * @return std::pair<double, double> Coulomb energy and non-Coulomb
-     * energy
+     * @return std::pair<EnergyPerMol, EnergyPerMol> Coulomb energy and
+     * non-Coulomb energy
      */
     template <typename ChargeTag1, typename ChargeTag2>
-    std::pair<double, double> Potential::calculateSingleInteractionOneWay(
-        const molsys::Box &box,
-        molsys::Molecule  &mol1,
-        molsys::Molecule  &mol2,
-        molsys::Atom      &atom1,
-        molsys::Atom      &atom2
-    ) const
+    std::pair<EnergyPerMol, EnergyPerMol> Potential::
+        calculateSingleInteractionOneWay(
+            const molsys::Box &box,
+            molsys::Molecule  &mol1,
+            molsys::Molecule  &mol2,
+            molsys::Atom      &atom1,
+            molsys::Atom      &atom2
+        ) const
     {
-        auto coulombEnergy    = 0.0;
-        auto nonCoulombEnergy = 0.0;
+        auto coulombEnergy    = EnergyPerMol::zero();
+        auto nonCoulombEnergy = EnergyPerMol::zero();
 
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
@@ -311,12 +307,9 @@ namespace pot
                 coulF += nonCoulF;
             }
 
-            const auto forcexyz =
-                dxyz.numerical_value_in(mstd::units::angstrom) *
-                (coulF / distance.numerical_value_in(mstd::units::angstrom));
+            const auto forcexyz = dxyz * (coulF / distance);
 
-            const auto shiftForcexyz =
-                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
+            const auto shiftForcexyz = forcexyz * txyz;
 
             atom1.addForce(forcexyz);
 

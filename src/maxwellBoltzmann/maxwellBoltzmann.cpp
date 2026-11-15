@@ -58,7 +58,7 @@ namespace maxwellBoltzmann
             const auto mass = atom->getMass();
             const auto temp = targetTemperature.quantity_from_zero();
 
-            const Vel stddev{mstd::sqrt((temp / mass) * kb)};
+            const Vel stddev{mstd::sqrt((temp / mass) * gas_constant)};
 
             atom->setVelocity(
                 Vel3D{

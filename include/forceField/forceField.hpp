@@ -31,7 +31,7 @@
 namespace ff
 {
     template <typename T>
-    double correctLinker(
+    Force correctLinker(
         const pot::CoulombPotential &coulombPotential,
         pot::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData  &physicalData,

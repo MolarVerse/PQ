@@ -114,7 +114,7 @@ TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
         1.0 * angstrom
     };
     const double density   = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
-    const auto totalMass = 1.0 * amu;
+    const auto   totalMass = 1.0 * g_per_mol;
     EXPECT_EQ(
         molsys::OrthorhombicBox::calcBoxDimFromDensity(totalMass, density),
         boxDimensions

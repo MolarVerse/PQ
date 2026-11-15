@@ -57,8 +57,8 @@ namespace molsys
 
         AtomNumber            _atomicNumber;
         Mass                  _mass;
-        double                _partialCharge;
-        std::optional<double> _qmCharge;
+        Charge                _partialCharge;
+        std::optional<Charge> _qmCharge;
 
         Pos3D _position;
         Pos3D _positionOld;
@@ -66,11 +66,11 @@ namespace molsys
         Vel3D _velocity;
         Vel3D _velocityOld;
 
-        linalg::Vec3D _force;
-        linalg::Vec3D _forceOld;
-        linalg::Vec3D _forceInner;
-        linalg::Vec3D _forceOuter;
-        linalg::Vec3D _shiftForce;
+        Force3D      _force;
+        Force3D      _forceOld;
+        Force3D      _forceInner;
+        Force3D      _forceOuter;
+        ShiftForce3D _shiftForce;
 
        public:
         Atom() = default;
@@ -96,11 +96,10 @@ namespace molsys
 
         void addPosition(const Pos3D &position);
         void addVelocity(const Vel3D &velocity);
-        void addForce(const linalg::Vec3D &force) { _force += force; }
-        void addForce(double, double, double);
-        void addForceInner(const linalg::Vec3D &force);
-        void addForceOuter(const linalg::Vec3D &force);
-        void addShiftForce(const linalg::Vec3D &shiftForce)
+        void addForce(const Force3D &force) { _force += force; }
+        void addForceInner(const Force3D &force);
+        void addForceOuter(const Force3D &force);
+        void addShiftForce(const ShiftForce3D &shiftForce)
         {
             _shiftForce += shiftForce;
         }
@@ -128,18 +127,21 @@ namespace molsys
             return _atomicNumber;
         }
 
-        [[nodiscard]] const Mass &getMass() const;
-        [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
-        [[nodiscard]] std::optional<double> getQMCharge() const;
+        [[nodiscard]] const Mass   &getMass() const;
+        [[nodiscard]] const Charge &getPartialCharge() const
+        {
+            return _partialCharge;
+        }
+        [[nodiscard]] const std::optional<Charge> &getQMCharge() const;
 
-        [[nodiscard]] const Pos3D  &getPosition() const { return _position; }
-        [[nodiscard]] const Pos3D  &getPositionOld() const;
-        [[nodiscard]] const Vel3D  &getVelocity() const;
-        [[nodiscard]] linalg::Vec3D getForce() const;
-        [[nodiscard]] linalg::Vec3D getForceOld() const;
-        [[nodiscard]] linalg::Vec3D getForceInner() const;
-        [[nodiscard]] linalg::Vec3D getForceOuter() const;
-        [[nodiscard]] linalg::Vec3D getShiftForce() const;
+        [[nodiscard]] const Pos3D   &getPosition() const { return _position; }
+        [[nodiscard]] const Pos3D   &getPositionOld() const;
+        [[nodiscard]] const Vel3D   &getVelocity() const;
+        [[nodiscard]] const Force3D &getForce() const;
+        [[nodiscard]] const Force3D &getForceOld() const;
+        [[nodiscard]] const Force3D &getForceInner() const;
+        [[nodiscard]] const Force3D &getForceOuter() const;
+        [[nodiscard]] const ShiftForce3D &getShiftForce() const;
 
         /***************************
          * standard setter methods *
@@ -152,8 +154,8 @@ namespace molsys
         void setAtomicNumber(AtomNumber atomicNumber);
 
         void setMass(const Mass &mass);
-        void setPartialCharge(double partialCharge);
-        void setQMCharge(double charge);
+        void setPartialCharge(const Charge &partialCharge);
+        void setQMCharge(const Charge &charge);
 
         void setAtomType(AtomType atomType);
         void setExternalAtomType(ExtAtomType externalAtomType);
@@ -162,14 +164,14 @@ namespace molsys
 
         void setPosition(const Pos3D &position);
         void setVelocity(const Vel3D &velocity);
-        void setForce(const linalg::Vec3D &force);
-        void setForceInner(const linalg::Vec3D &force);
-        void setForceOuter(const linalg::Vec3D &force);
-        void setShiftForce(const linalg::Vec3D &shiftForce);
+        void setForce(const Force3D &force);
+        void setForceInner(const Force3D &force);
+        void setForceOuter(const Force3D &force);
+        void setShiftForce(const ShiftForce3D &shiftForce);
 
         void setPositionOld(const Pos3D &positionOld);
         void setVelocityOld(const Vel3D &velocityOld);
-        void setForceOld(const linalg::Vec3D &forceOld);
+        void setForceOld(const Force3D &forceOld);
 
         void setForceToZero();
         void setInnerForceToZero();

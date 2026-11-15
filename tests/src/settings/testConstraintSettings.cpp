@@ -67,8 +67,8 @@ TEST(ConstraintSettingsTest, ShakeToleranceRoundTrip)
 TEST(ConstraintSettingsTest, RattleToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setRattleToleranceByUser(1.0e-6 * amu / s);
-    EXPECT_EQ(settings.getRattleTolerance(), 1.0e-6 * amu / s);
+    settings.setRattleToleranceByUser(1.0e-6 * g_per_mol / s);
+    EXPECT_EQ(settings.getRattleTolerance(), 1.0e-6 * g_per_mol / s);
 }
 
 TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)

@@ -49,21 +49,25 @@ namespace pot
         };
         std::pair<VdwType, VdwType> _internalTypes{VdwType{0}, VdwType{0}};
 
-        Pos    _radialCutoff;
-        double _energyCutoff = 0.0;
-        double _forceCutoff  = 0.0;
+        Pos          _radialCutoff;
+        EnergyPerMol _energyCutoff = EnergyPerMol::zero();
+        Force        _forceCutoff  = Force::zero();
 
        public:
         explicit NonCoulombPair(ExtVdwType, ExtVdwType, const Pos &);
         explicit NonCoulombPair(const Pos &);
-        explicit NonCoulombPair(const Pos &, double, double);
+        explicit NonCoulombPair(
+            const Pos &,
+            const EnergyPerMol &energyCutoff,
+            const Force        &forceCutoff
+        );
 
         virtual ~NonCoulombPair() = default;
 
         [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(
+        virtual std::pair<EnergyPerMol, Force> calculate(
             const Pos &distance
         ) const = 0;
 

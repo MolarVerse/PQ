@@ -34,7 +34,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace waterModel
 {
@@ -94,36 +93,28 @@ namespace waterModel
             const auto gaussianFactor =
                 mstd::exp(-beta * (deltaOH1 * deltaOH1 + deltaOH2 * deltaOH2));
 
-            const auto bondEnergy = DOH * (morseFactorOH1 * morseFactorOH1 +
-                                           morseFactorOH2 * morseFactorOH2);
+            const EnergyPerMol bondEnergy =
+                DOH * ((morseFactorOH1 * morseFactorOH1) +
+                       (morseFactorOH2 * morseFactorOH2));
 
-            auto angleEnergy  = Lrr * deltaOH1 * deltaOH2;
-            angleEnergy      += Lrt * (deltaOH1 + deltaOH2) * deltaHH;
-            angleEnergy      += 0.5 * Ltt * deltaHH * deltaHH;
-            angleEnergy      *= gaussianFactor;
+            EnergyPerMol angleEnergy  = Lrr * deltaOH1 * deltaOH2;
+            angleEnergy              += Lrt * (deltaOH1 + deltaOH2) * deltaHH;
+            angleEnergy              += 0.5 * Ltt * deltaHH * deltaHH;
+            angleEnergy              *= gaussianFactor;
 
-            auto fOH1 = 2.0 * DOH *
-                        alpha.numerical_value_in(InvDistance::unit) *
-                        morseFactorOH1 * expFactorOH1;
-            fOH1 += (gaussianFactor * (Lrr * deltaOH2 + Lrt * deltaHH) -
-                     2.0 * beta * deltaOH1 * angleEnergy)
-                        .numerical_value_in(Distance::unit);
-            auto fOH2 = 2.0 * DOH *
-                        alpha.numerical_value_in(InvDistance::unit) *
-                        morseFactorOH2 * expFactorOH2;
-            fOH2 += (gaussianFactor * (Lrr * deltaOH1 + Lrt * deltaHH) -
-                     2.0 * beta * deltaOH2 * angleEnergy)
-                        .numerical_value_in(Distance::unit);
+            Force fOH1  = 2.0 * DOH * alpha * morseFactorOH1 * expFactorOH1;
+            fOH1       += gaussianFactor * (Lrr * deltaOH2 + Lrt * deltaHH) -
+                    2.0 * beta * deltaOH1 * angleEnergy;
+            Force fOH2 = 2.0 * DOH * alpha * morseFactorOH2 * expFactorOH2;
+            fOH2 +=
+                (gaussianFactor * (Lrr * deltaOH1 + Lrt * deltaHH) -
+                 2.0 * beta * deltaOH2 * angleEnergy);
             const auto fAngle =
-                gaussianFactor * (Lrt * (deltaOH1 + deltaOH2) + Ltt * deltaHH)
-                                     .numerical_value_in(Distance::unit);
+                gaussianFactor * (Lrt * (deltaOH1 + deltaOH2) + Ltt * deltaHH);
 
-            const auto forceOH1 =
-                (fOH1 * dOH1 / distOH1).numerical_value_in(one);
-            const auto forceOH2 =
-                (fOH2 * dOH2 / distOH2).numerical_value_in(one);
-            const auto forceAngle =
-                (fAngle * dHH / distHH).numerical_value_in(one);
+            const auto forceOH1   = fOH1 * dOH1 / distOH1;
+            const auto forceOH2   = fOH2 * dOH2 / distOH2;
+            const auto forceAngle = fAngle * dHH / distHH;
 
             oxygen.addForce(-forceOH1 - forceOH2);
             hydrogen1.addForce(forceOH1 - forceAngle);
@@ -139,33 +130,12 @@ namespace waterModel
             if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
                 smF = water.getSmoothingFactor();
 
-            physicalData.addVirial(
-                -tensorProduct(
-                    dOH1.numerical_value_in(Distance::unit),
-                    forceOH1
-                ) *
-                (1 - smF.numerical_value_in(one))
-            );
-            physicalData.addVirial(
-                -tensorProduct(
-                    dOH2.numerical_value_in(Distance::unit),
-                    forceOH2
-                ) *
-                (1 - smF.numerical_value_in(one))
-            );
-            physicalData.addVirial(
-                -tensorProduct(
-                    dHH.numerical_value_in(Distance::unit),
-                    forceAngle
-                ) *
-                (1 - smF.numerical_value_in(one))
-            );
+            physicalData.addVirial(-tensorProduct(dOH1, forceOH1) * (1 - smF));
+            physicalData.addVirial(-tensorProduct(dOH2, forceOH2) * (1 - smF));
+            physicalData.addVirial(-tensorProduct(dHH, forceAngle) * (1 - smF));
 
             physicalData.addBondEnergy(bondEnergy);
-            physicalData.addAngleEnergy(angleEnergy.numerical_value_in(
-                DistanceSquared::unit
-            )   // TODO: ????
-            );
+            physicalData.addAngleEnergy(angleEnergy);
         }
     }
 

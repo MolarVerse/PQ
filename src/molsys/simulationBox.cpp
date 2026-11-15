@@ -672,9 +672,9 @@ namespace molsys
     /**
      * @brief calculate total force of simulationBox as scalar
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateTotalForce() const
+    Force SimulationBox::calculateTotalForce() const
     {
         const auto totalForce = calculateTotalForceVector();
 
@@ -684,11 +684,11 @@ namespace molsys
     /**
      * @brief calculate total force of simulationBox as vector
      *
-     * @return linalg::Vec3D
+     * @return Force3D
      */
-    linalg::Vec3D SimulationBox::calculateTotalForceVector() const
+    Force3D SimulationBox::calculateTotalForceVector() const
     {
-        linalg::Vec3D totalForce(0.0);
+        Force3D totalForce = Force::zero();
 
         auto accumulateForce = [&totalForce](const auto& atom)
         { totalForce += atom->getForce(); };
@@ -701,9 +701,9 @@ namespace molsys
     /**
      * @brief calculate RMS force of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateRMSForce() const
+    Force SimulationBox::calculateRMSForce() const
     {
         const auto scalarForces = getAtomicScalarForces();
 
@@ -713,9 +713,9 @@ namespace molsys
     /**
      * @brief calculate max scalar force of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateMaxForce() const
+    Force SimulationBox::calculateMaxForce() const
     {
         const auto scalarForces = getAtomicScalarForces();
 
@@ -725,9 +725,9 @@ namespace molsys
     /**
      * @brief calculate rms old force of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateRMSForceOld() const
+    Force SimulationBox::calculateRMSForceOld() const
     {
         const auto scalarForces = getAtomicScalarForcesOld();
 
@@ -737,9 +737,9 @@ namespace molsys
     /**
      * @brief calculate max force old of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateMaxForceOld() const
+    Force SimulationBox::calculateMaxForceOld() const
     {
         const auto scalarForces = getAtomicScalarForcesOld();
 
@@ -760,7 +760,7 @@ namespace molsys
         std::ranges::for_each(_atoms, accumulateTemperature);
 
         const auto temperature =
-            twoEkinSum / static_cast<double>(_degreesOfFreedom) / kb;
+            twoEkinSum / static_cast<double>(_degreesOfFreedom) / gas_constant;
 
         return Temperature(temperature);
     }
@@ -799,7 +799,7 @@ namespace molsys
     void SimulationBox::calculateDensity()
     {
         const auto volume = _box->getVolume();
-        _density          = _totalMass.numerical_value_in(amu) /
+        _density          = _totalMass.numerical_value_in(g_per_mol) /
                    volume.numerical_value_in(angstrom * angstrom * angstrom) *
                    AMU_PER_ANGSTROM3_TO_KG_PER_L;
     }
@@ -973,7 +973,7 @@ namespace molsys
         if (nAtoms == 0)
             return;
 
-        auto totalForce = linalg::Vec3D(0.0);
+        Force3D totalForce = Force::zero();
 
         for (const auto& atom : getQMAtoms()) totalForce += atom->getForce();
 

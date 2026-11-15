@@ -25,12 +25,11 @@
 #include <algorithm>
 #include <cmath>
 
-#include "constants/conversionFactors.hpp"
-#include "constants/natureConstants.hpp"
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace thermostat
@@ -44,7 +43,7 @@ namespace thermostat
      *
      * @param friction
      */
-    LangevinThermostat::LangevinThermostat(double friction)
+    LangevinThermostat::LangevinThermostat(const Frequency &friction)
         : _friction(friction)
     {
     }
@@ -83,20 +82,17 @@ namespace thermostat
      * @param friction
      * @param targetTemperature
      */
-    double LangevinThermostat::calculateSigma(
-        double             friction,
+    auto LangevinThermostat::calculateSigma(
+        const Frequency   &friction,
         const Temperature &targetTemperature
-    )
+    ) -> decltype(mstd::sqrt(EnergyPerMol{} / TimeSquared{}))
     {
-        const auto unitConversion   = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
-        const auto conversionFactor = UNIVERSAL_GAS_CONSTANT * unitConversion;
-
         const auto timeStep = settings::TimingsSettings::getTimeStep();
-        const auto force =
-            4.0 * friction * conversionFactor *
-            targetTemperature.quantity_from_zero().numerical_value_in(K);
+        const auto force    = 4.0 * friction *
+                           targetTemperature.quantity_from_zero() *
+                           gas_constant;
 
-        return std::sqrt(force / timeStep.numerical_value_in(fs));
+        return mstd::sqrt(force / timeStep);
     }
 
     /**
@@ -117,11 +113,10 @@ namespace thermostat
 
         auto applyFriction = [this, sigma](auto &atom)
         {
-            const auto mass     = atom->getMass().numerical_value_in(amu);
+            const auto mass     = atom->getMass();
             const auto timeStep = settings::TimingsSettings::getTimeStep();
 
-            const auto propagationFactor =
-                0.5 * timeStep.numerical_value_in(s) / mass;
+            const auto propagationFactor = 0.5 * timeStep / mass;
 
             const linalg::Vec3D randomFactor = {
                 _randomNumberGenerator.getNormalDistribution(0.0, 1.0),
@@ -133,8 +128,8 @@ namespace thermostat
             auto       deltaVelocity =
                 -propagationFactor * _friction * mass * velocity;
 
-            deltaVelocity += propagationFactor * sigma * std::sqrt(mass) *
-                             randomFactor * angstrom / s;
+            deltaVelocity +=
+                propagationFactor * sigma * mstd::sqrt(mass) * randomFactor;
 
             atom->addVelocity(deltaVelocity);
         };

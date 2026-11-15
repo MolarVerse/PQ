@@ -81,7 +81,7 @@ namespace molsys
      *
      * @param partialCharge
      */
-    void MoleculeType::addPartialCharge(double partialCharge)
+    void MoleculeType::addPartialCharge(const Charge &partialCharge)
     {
         _partialCharges.push_back(partialCharge);
     }
@@ -179,7 +179,10 @@ namespace molsys
      * @param index
      * @param partialCharge
      */
-    void MoleculeType::setPartialCharge(AtomIndex index, double partialCharge)
+    void MoleculeType::setPartialCharge(
+        AtomIndex     index,
+        const Charge &partialCharge
+    )
     {
         _partialCharges[index.get()] = partialCharge;
     }
@@ -190,7 +193,7 @@ namespace molsys
      * @param partialCharges
      */
     void MoleculeType::setPartialCharges(
-        const std::vector<double> &partialCharges
+        const std::vector<Charge> &partialCharges
     )
     {
         _partialCharges = partialCharges;
@@ -288,9 +291,9 @@ namespace molsys
      * @brief get the partial charge of an atom
      *
      * @param index
-     * @return double
+     * @return const Charge&
      */
-    double MoleculeType::getPartialCharge(AtomIndex index) const
+    const Charge &MoleculeType::getPartialCharge(AtomIndex index) const
     {
         return _partialCharges[index.get()];
     }
@@ -346,9 +349,9 @@ namespace molsys
     /**
      * @brief get the partial charges of the molecule
      *
-     * @return std::vector<double>&
+     * @return std::vector<Charge>&
      */
-    std::vector<double> &MoleculeType::getPartialCharges()
+    const std::vector<Charge> &MoleculeType::getPartialCharges() const
     {
         return _partialCharges;
     }

@@ -108,7 +108,7 @@ namespace out
         _getFilePointer() << std::format(
             "{}Initial momentum = {:.5e} {}*amu/fs\n",
             INFO,
-            momentum.numerical_value_in(amu * angstrom / fs),
+            momentum.numerical_value_in(g_per_mol * angstrom / fs),
             ANGSTROM
         );
 

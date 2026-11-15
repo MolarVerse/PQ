@@ -38,13 +38,13 @@ namespace waterModel
      * @tparam T Charge tag type.
      */
     template <typename T>
-    double InterWaterStrategy::getPartialCharge(molsys::Atom & /*atom*/) const
+    Charge InterWaterStrategy::getPartialCharge(molsys::Atom & /*atom*/) const
     {
         std::abort();
     }
 
     template <>
-    inline double InterWaterStrategy::getPartialCharge<pot::QMChargeTag>(
+    inline Charge InterWaterStrategy::getPartialCharge<pot::QMChargeTag>(
         molsys::Atom &atom
     ) const
     {
@@ -57,7 +57,7 @@ namespace waterModel
     }
 
     template <>
-    inline double InterWaterStrategy::getPartialCharge<pot::MMChargeTag>(
+    inline Charge InterWaterStrategy::getPartialCharge<pot::MMChargeTag>(
         molsys::Atom &atom
     ) const
     {

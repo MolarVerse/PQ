@@ -171,9 +171,9 @@ namespace
             {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
         };
         simulationBox.setBox(orthoBox, false);
-        simulationBox.setTotalMass(2.0 * amu);
+        simulationBox.setTotalMass(2.0 * g_per_mol);
 
-        physicalData.setVirial(diagonalMatrix(linalg::Vec3D(0.0)));
+        physicalData.setVirial(VirialPerMol::zero());
         physicalData.setKineticEnergyMolecularVector(
             diagonalMatrix(linalg::Vec3D(0.0)) * kcal_per_mol
         );
@@ -186,8 +186,8 @@ namespace
 
         atom1->setPosition(linalg::Vec3D{4.95, 0.0, 0.0} * angstrom);
         atom2->setPosition(linalg::Vec3D{-4.85, 0.0, 0.0} * angstrom);
-        atom1->setMass(1.0 * amu);
-        atom2->setMass(1.0 * amu);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(1.0 * g_per_mol);
 
         auto molecule = molsys::Molecule();
         molecule.addAtom(atom1);
@@ -457,8 +457,8 @@ TEST_F(
 
     atom1->setPosition(linalg::Vec3D{-1.0, 0.0, 0.0} * angstrom);
     atom2->setPosition(linalg::Vec3D{-0.8, 0.0, 0.0} * angstrom);
-    atom1->setMass(1.0 * amu);
-    atom2->setMass(1.0 * amu);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
 
     auto molecule = molsys::Molecule();
     molecule.addAtom(atom1);
@@ -468,7 +468,7 @@ TEST_F(
     _box->addAtom(atom1);
     _box->addAtom(atom2);
     _box->addMolecule(molecule);
-    _box->setTotalMass(4.0 * amu);
+    _box->setTotalMass(4.0 * g_per_mol);
 
     _settings->manostatSettings.setTargetPressureByUser(
         -3.0 * ::log(0.98) * bar
@@ -569,10 +569,8 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     };
     _box->setBox(orthoBox, false);
 
-    _data->setVirial(linalg::tensor3D(0.0));
-    _data->setKineticEnergyMolecularVector(
-        linalg::tensor3D(0.0) * kcal_per_mol
-    );
+    _data->setVirial(VirialPerMol::zero());
+    _data->setKineticEnergyMolecularVector(VirialPerMol::zero());
 
     auto molecule = molsys::Molecule();
 
@@ -580,7 +578,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
         [this, &molecule](const Pos3D& position, const Vel3D& velocity)
     {
         auto atom = std::make_shared<molsys::Atom>();
-        atom->setMass(1.0 * amu);
+        atom->setMass(1.0 * g_per_mol);
         atom->setPosition(position);
         atom->setVelocity(velocity);
         molecule.addAtom(atom);

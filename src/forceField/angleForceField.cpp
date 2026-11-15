@@ -32,7 +32,6 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace ff
 {
@@ -90,49 +89,40 @@ namespace ff
         const auto position2 = molecule2->getAtomPosition(atomIndices[1]);
         const auto position3 = molecule3->getAtomPosition(atomIndices[2]);
 
-        auto dPosition12Quantity = position1 - position2;
-        auto dPosition13Quantity = position1 - position3;
+        auto dPosition12 = position1 - position2;
+        auto dPosition13 = position1 - position3;
 
-        simulationBox.applyPBC(dPosition12Quantity);
-        simulationBox.applyPBC(dPosition13Quantity);
-
-        const auto dPosition12 =
-            dPosition12Quantity.numerical_value_in(angstrom);
-        const auto dPosition13 =
-            dPosition13Quantity.numerical_value_in(angstrom);
+        simulationBox.applyPBC(dPosition12);
+        simulationBox.applyPBC(dPosition13);
 
         const auto distance12Squared = normSquared(dPosition12);
         const auto distance13Squared = normSquared(dPosition13);
 
-        const auto distance12 = ::sqrt(distance12Squared);
-        const auto distance13 = ::sqrt(distance13Squared);
+        const auto distance12 = mstd::sqrt(distance12Squared);
+        const auto distance13 = mstd::sqrt(distance13Squared);
 
-        const auto alpha = angle(dPosition12, dPosition13);
-        const auto equilibriumAngle =
-            _params.equilibrium.numerical_value_in(rad);
-        const auto deltaAngle = alpha - equilibriumAngle;
+        const auto alpha            = angle(dPosition12, dPosition13);
+        const auto equilibriumAngle = _params.equilibrium;
+        const auto deltaAngle       = alpha - equilibriumAngle;
 
-        auto forceMagnitude = -_params.forceConstant.numerical_value_in(
-                                  kcal_per_mol / rad / rad
-                              ) *
-                              deltaAngle;
+        auto forceMagnitude = -_params.forceConstant * deltaAngle;
 
         physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-        auto forcexyz = linalg::Vec3D{0.0, 0.0, 0.0};
+        auto forcexyz = Force3D::zero();
 
         // Guard against near-collinear angles where division by sin(alpha) is
         // unstable.
-        const auto sinAlpha = ::sin(alpha);
+        const auto sinAlpha = mstd::sin(alpha);
         if (std::fabs(sinAlpha) >= COLINEAR_SINALPHA_THRESHOLD)
         {
             const auto normalDistance = distance12 * distance13 * sinAlpha;
 
-            auto normalPosition  = cross(dPosition13, dPosition12);
-            normalPosition      /= normalDistance;
+            auto normalPosition =
+                cross(dPosition13, dPosition12) / normalDistance;
 
             auto force = forceMagnitude / distance12Squared;
-            forcexyz   = force * cross(dPosition12, normalPosition);
+            forcexyz   = force * cross(normalPosition, dPosition12);
 
             molecule1->addAtomForce(atomIndices[0], -forcexyz);
             molecule2->addAtomForce(atomIndices[1], forcexyz);
@@ -153,37 +143,32 @@ namespace ff
 
             if (distance23 < pot::CoulombPotential::get_coulombRadiusCutOff())
             {
-                forceMagnitude = correctLinker<AngleForceField>(
-                    coulombPot,
-                    nonCoulombPot,
-                    physicalData,
-                    molecule2,
-                    molecule3,
-                    atomIndices[1],
-                    atomIndices[2],
-                    distance23
-                );
+                const auto forceMagnitudeLinker =
+                    correctLinker<AngleForceField>(
+                        coulombPot,
+                        nonCoulombPot,
+                        physicalData,
+                        molecule2,
+                        molecule3,
+                        atomIndices[1],
+                        atomIndices[2],
+                        distance23
+                    );
 
-                forceMagnitude /= distance23.numerical_value_in(angstrom);
-
-                const auto dPosition23Value =
-                    dPosition23.numerical_value_in(angstrom);
-
-                forcexyz = forceMagnitude * dPosition23Value;
+                forcexyz = forceMagnitudeLinker * dPosition23 / distance23;
 
                 using enum SmoothingMethod;
 
-                auto       smF = 0.0;
+                Quantity   smF = 0.0;
                 const auto smoothing =
                     settings::HybridSettings::getSmoothingMethod();
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)
-                    smF =
-                        molecule1->getSmoothingFactor().numerical_value_in(one);
+                    smF = molecule1->getSmoothingFactor();
 
                 physicalData.addVirial(
-                    tensorProduct(dPosition23Value, forcexyz) * (1 - smF)
+                    tensorProduct(dPosition23, forcexyz) * (1 - smF)
                 );
 
                 molecule2->addAtomForce(atomIndices[1], forcexyz);

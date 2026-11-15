@@ -68,10 +68,10 @@ namespace pot
      * @param params
      */
     MorsePair::MorsePair(
-        const Pos         &cutOff,
-        const double       energyCutoff,
-        const double       forceCutoff,
-        const MorseParams &params
+        const Pos          &cutOff,
+        const EnergyPerMol &energyCutoff,
+        const Force        &forceCutoff,
+        const MorseParams  &params
     )
         : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
     {
@@ -98,9 +98,11 @@ namespace pot
      * @brief calculates the energy and force of a MorsePair
      *
      * @param distance
-     * @return std::pair<double, double>
+     * @return std::pair<EnergyPerMol, Force>
      */
-    std::pair<double, double> MorsePair::calculate(const Pos &distance) const
+    std::pair<EnergyPerMol, Force> MorsePair::calculate(
+        const Pos &distance
+    ) const
     {
         const auto deltaEquilibrium = distance - _params.equilibriumDistance;
         const auto expTerm = mstd::exp(-_params.wellWidth * deltaEquilibrium);
@@ -109,13 +111,11 @@ namespace pot
         auto energy =
             _params.dissociationEnergy * oneMinusExpTerm * oneMinusExpTerm;
         energy -= get_energyCutoff();
-        energy -= get_forceCutoff() *
-                  (get_radialCutoff() - distance).numerical_value_in(Pos::unit);
+        energy -= get_forceCutoff() * (get_radialCutoff() - distance);
 
-        auto force = -2.0 * _params.dissociationEnergy *
-                     _params.wellWidth.numerical_value_in(InvDistance::unit);
-        force *= expTerm * oneMinusExpTerm;
-        force -= get_forceCutoff();
+        auto force  = -2.0 * _params.dissociationEnergy * _params.wellWidth;
+        force      *= expTerm * oneMinusExpTerm;
+        force      -= get_forceCutoff();
 
         return {energy, force};
     }

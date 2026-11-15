@@ -216,11 +216,11 @@ namespace molsys
     /**
      * @brief returns the partial charges of the atoms in the molecule
      *
-     * @return std::vector<double>
+     * @return std::vector<Charge>
      */
-    std::vector<double> Molecule::getPartialCharges() const
+    std::vector<Charge> Molecule::getPartialCharges() const
     {
-        std::vector<double> partialCharges(getNumberOfAtoms());
+        std::vector<Charge> partialCharges(getNumberOfAtoms());
 
         for (size_t i = 0; i < getNumberOfAtoms(); ++i)
             partialCharges[i] = _atoms[i]->getPartialCharge();
@@ -258,7 +258,7 @@ namespace molsys
      *
      * @param partialCharges
      */
-    void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
+    void Molecule::setPartialCharges(const std::vector<Charge> &partialCharges)
     {
         for (size_t i = 0; i < getNumberOfAtoms(); ++i)
             _atoms[i]->setPartialCharge(partialCharges[i]);
@@ -335,26 +335,26 @@ namespace molsys
     }
 
     /**
-     * @brief add a linalg::Vec3D to the current force of the atom by index
+     * @brief add a Force3D to the current force of the atom by index
      *
      * @param index
      * @param force
      */
-    void Molecule::addAtomForce(AtomIndex index, const linalg::Vec3D &force)
+    void Molecule::addAtomForce(AtomIndex index, const Force3D &force)
     {
         _atoms[index.get()]->addForce(force);
     }
 
     /**
-     * @brief add a linalg::Vec3D to the current shift force of the atom by
+     * @brief add a ShiftForce3D to the current shift force of the atom by
      * index
      *
      * @param index
      * @param shiftForce
      */
     void Molecule::addAtomShiftForce(
-        AtomIndex            index,
-        const linalg::Vec3D &shiftForce
+        AtomIndex           index,
+        const ShiftForce3D &shiftForce
     )
     {
         _atoms[index.get()]->addShiftForce(shiftForce);
@@ -372,9 +372,9 @@ namespace molsys
      * @param index
      * @param position
      */
-    void Molecule::setAtomPosition(size_t index, const Pos3D &position)
+    void Molecule::setAtomPosition(AtomIndex index, const Pos3D &position)
     {
-        _atoms[index]->setPosition(position);
+        _atoms[index.get()]->setPosition(position);
     }
 
     /**
@@ -383,9 +383,9 @@ namespace molsys
      * @param index
      * @param velocity
      */
-    void Molecule::setAtomVelocity(size_t index, const Vel3D &velocity)
+    void Molecule::setAtomVelocity(AtomIndex index, const Vel3D &velocity)
     {
-        _atoms[index]->setVelocity(velocity);
+        _atoms[index.get()]->setVelocity(velocity);
     }
 
     /**
@@ -394,23 +394,23 @@ namespace molsys
      * @param index
      * @param force
      */
-    void Molecule::setAtomForce(size_t index, const linalg::Vec3D &force)
+    void Molecule::setAtomForce(AtomIndex index, const Force3D &force)
     {
-        _atoms[index]->setForce(force);
+        _atoms[index.get()]->setForce(force);
     }
 
     /**
-     * @brief set the shift force of the atom by index
+     * @brief set the ShiftForce3D of the atom by index
      *
      * @param index
      * @param shiftForce
      */
     void Molecule::setAtomShiftForce(
-        size_t               index,
-        const linalg::Vec3D &shiftForce
+        AtomIndex           index,
+        const ShiftForce3D &shiftForce
     )
     {
-        _atoms[index]->setShiftForce(shiftForce);
+        _atoms[index.get()]->setShiftForce(shiftForce);
     }
 
     /****************************************
@@ -460,9 +460,9 @@ namespace molsys
      * @brief returns the force of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const Force3D&
      */
-    linalg::Vec3D Molecule::getAtomForce(AtomIndex index) const
+    const Force3D &Molecule::getAtomForce(AtomIndex index) const
     {
         return _atoms[index.get()]->getForce();
     }
@@ -471,11 +471,11 @@ namespace molsys
      * @brief returns the shift force of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const ShiftForce3D&
      */
-    linalg::Vec3D Molecule::getAtomShiftForce(size_t index) const
+    const ShiftForce3D &Molecule::getAtomShiftForce(AtomIndex index) const
     {
-        return _atoms[index]->getShiftForce();
+        return _atoms[index.get()]->getShiftForce();
     }
 
     /**
@@ -484,9 +484,9 @@ namespace molsys
      * @param index
      * @return AtomNumber
      */
-    AtomNumber Molecule::getAtomicNumber(size_t index) const
+    AtomNumber Molecule::getAtomicNumber(AtomIndex index) const
     {
-        return _atoms[index]->getAtomicNumber();
+        return _atoms[index.get()]->getAtomicNumber();
     }
 
     /**
@@ -504,9 +504,9 @@ namespace molsys
      * @brief returns the partial charge of the atom by index
      *
      * @param index
-     * @return double
+     * @return const Charge&
      */
-    double Molecule::getPartialCharge(AtomIndex index) const
+    const Charge &Molecule::getPartialCharge(AtomIndex index) const
     {
         return _atoms[index.get()]->getPartialCharge();
     }

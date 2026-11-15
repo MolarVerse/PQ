@@ -122,38 +122,20 @@ namespace molsys
     void Atom::addVelocity(const Vel3D &velocity) { _velocity += velocity; }
 
     /**
-     * @brief  add a force to the current force of the atom
-     *
-     * @param force_x
-     * @param force_y
-     * @param force_z
-     */
-    void Atom::addForce(double force_x, double force_y, double force_z)
-    {
-        _force += {force_x, force_y, force_z};
-    }
-
-    /**
-     * @brief add a linalg::Vec3D to the current force of the atom calculated
+     * @brief add a Force3D to the current force of the atom calculated
      * from the inner region method of the hybrid calculation
      *
      * @param force
      */
-    void Atom::addForceInner(const linalg::Vec3D &force)
-    {
-        _forceInner += force;
-    }
+    void Atom::addForceInner(const Force3D &force) { _forceInner += force; }
 
     /**
-     * @brief add a linalg::Vec3D to the current force of the atom calculated
+     * @brief add a Force3D to the current force of the atom calculated
      * from the outer region method of the hybrid calculation
      *
      * @param force
      */
-    void Atom::addForceOuter(const linalg::Vec3D &force)
-    {
-        _forceOuter += force;
-    }
+    void Atom::addForceOuter(const Force3D &force) { _forceOuter += force; }
 
     /***************************
      *                         *
@@ -270,9 +252,9 @@ namespace molsys
     /*
      * @brief return the qm charge of the atom
      *
-     * @return std::optional<double>
+     * @return std::optional<Charge>
      */
-    std::optional<double> Atom::getQMCharge() const { return _qmCharge; }
+    const std::optional<Charge> &Atom::getQMCharge() const { return _qmCharge; }
 
     /**
      * @brief return the old position of the atom
@@ -291,39 +273,39 @@ namespace molsys
     /**
      * @brief return the force of the atom
      *
-     * @return linalg::Vec3D
+     * @return const Force3D&
      */
-    linalg::Vec3D Atom::getForce() const { return _force; }
+    const Force3D &Atom::getForce() const { return _force; }
 
     /**
      * @brief return the old force of the atom
      *
-     * @return linalg::Vec3D
+     * @return const Force3D&
      */
-    linalg::Vec3D Atom::getForceOld() const { return _forceOld; }
+    const Force3D &Atom::getForceOld() const { return _forceOld; }
 
     /**
      * @brief return the force of the atom calculated from the inner region
      * method of the hybrid calculation
      *
-     * @return linalg::Vec3D
+     * @return const Force3D&
      */
-    linalg::Vec3D Atom::getForceInner() const { return _forceInner; }
+    const Force3D &Atom::getForceInner() const { return _forceInner; }
 
     /**
      * @brief return the force of the atom calculated from the outer region
      * method of the hybrid calculation
      *
-     * @return linalg::Vec3D
+     * @return const Force3D&
      */
-    linalg::Vec3D Atom::getForceOuter() const { return _forceOuter; }
+    const Force3D &Atom::getForceOuter() const { return _forceOuter; }
 
     /**
      * @brief return the shift force of the atom
      *
-     * @return linalg::Vec3D
+     * @return const ShiftForce3D&
      */
-    linalg::Vec3D Atom::getShiftForce() const { return _shiftForce; }
+    const ShiftForce3D &Atom::getShiftForce() const { return _shiftForce; }
 
     /***************************
      *                         *
@@ -377,7 +359,7 @@ namespace molsys
      *
      * @param partialCharge
      */
-    void Atom::setPartialCharge(double partialCharge)
+    void Atom::setPartialCharge(const Charge &partialCharge)
     {
         _partialCharge = partialCharge;
     }
@@ -387,7 +369,7 @@ namespace molsys
      *
      * @param charge
      */
-    void Atom::setQMCharge(double charge) { _qmCharge = charge; }
+    void Atom::setQMCharge(const Charge &charge) { _qmCharge = charge; }
 
     /**
      * @brief set the atom type (internal)
@@ -445,34 +427,28 @@ namespace molsys
      *
      * @param force
      */
-    void Atom::setForce(const linalg::Vec3D &force) { _force = force; }
+    void Atom::setForce(const Force3D &force) { _force = force; }
 
     /**
      * @brief set the force of the atom calculated from the inner region method
      * of the hybrid calculation
      * @param force
      */
-    void Atom::setForceInner(const linalg::Vec3D &force)
-    {
-        _forceInner = force;
-    }
+    void Atom::setForceInner(const Force3D &force) { _forceInner = force; }
 
     /**
      * @brief set the force of the atom calculated from the outer region method
      * of the hybrid calculation
      * @param force
      */
-    void Atom::setForceOuter(const linalg::Vec3D &force)
-    {
-        _forceOuter = force;
-    }
+    void Atom::setForceOuter(const Force3D &force) { _forceOuter = force; }
 
     /**
      * @brief set the shift force of the atom
      *
      * @param shiftForce
      */
-    void Atom::setShiftForce(const linalg::Vec3D &shiftForce)
+    void Atom::setShiftForce(const ShiftForce3D &shiftForce)
     {
         _shiftForce = shiftForce;
     }
@@ -480,19 +456,19 @@ namespace molsys
     /**
      * @brief set the force of the atom to zero
      */
-    void Atom::setForceToZero() { _force = {0.0, 0.0, 0.0}; }
+    void Atom::setForceToZero() { _force = Force::zero(); }
 
     /**
      * @brief set the inner force of the atom calculated from the outer region
      * method of the hybrid calculation to zero
      */
-    void Atom::setInnerForceToZero() { _forceInner = {0.0, 0.0, 0.0}; }
+    void Atom::setInnerForceToZero() { _forceInner = Force::zero(); }
 
     /**
      * @brief set the outer force of the atom calculated from the outer region
      * method of the hybrid calculation to zero
      */
-    void Atom::setOuterForceToZero() { _forceOuter = {0.0, 0.0, 0.0}; }
+    void Atom::setOuterForceToZero() { _forceOuter = Force::zero(); }
 
     /**
      * @brief set the old position of the atom
@@ -519,13 +495,13 @@ namespace molsys
      *
      * @param forceOld
      */
-    void Atom::setForceOld(const linalg::Vec3D &forceOld)
-    {
-        _forceOld = forceOld;
-    }
+    void Atom::setForceOld(const Force3D &forceOld) { _forceOld = forceOld; }
 
-    /*
-     * @brief reset the qm charge of the atom
+    /**
+     * @brief reset the qm charge of the atom to its default state
+     *
+     * This function clears the current QM charge, effectively setting it to an
+     * uninitialized or default state.
      */
     void Atom::resetQMCharge() { _qmCharge.reset(); }
 

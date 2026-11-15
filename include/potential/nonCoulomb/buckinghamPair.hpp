@@ -58,15 +58,17 @@ namespace pot
 
         explicit BuckinghamPair(
             const Pos&              cutOff,
-            double                  energyCutoff,
-            double                  forceCutoff,
+            const EnergyPerMol&     energyCutoff,
+            const Force&            forceCutoff,
             const BuckinghamParams& params
         );
 
         [[nodiscard]] bool operator==(const BuckinghamPair& other) const;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(const Pos& distance) const override;
+        std::pair<EnergyPerMol, Force> calculate(
+            const Pos& distance
+        ) const override;
 
         friend struct ::TestBuckinghamPairUtils;
     };

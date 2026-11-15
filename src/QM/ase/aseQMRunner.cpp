@@ -473,9 +473,9 @@ namespace QM
             for (size_t i = 0; i < nAtoms; ++i)
             {
                 simulationBox.getAtoms()[i]->setForce(
-                    {forces(i, 0) * EV_TO_KCAL_PER_MOL,
-                     forces(i, 1) * EV_TO_KCAL_PER_MOL,
-                     forces(i, 2) * EV_TO_KCAL_PER_MOL}
+                    {forces(i, 0) * eV * avogadro_constant / angstrom,
+                     forces(i, 1) * eV * avogadro_constant / angstrom,
+                     forces(i, 2) * eV * avogadro_constant / angstrom}
                 );
             }
         }
@@ -498,7 +498,7 @@ namespace QM
         physicalData::PhysicalData &physicalData
     ) const
     {
-        physicalData.setQMEnergy(_energy * EV_TO_KCAL_PER_MOL);
+        physicalData.setQMEnergy(_energy * eV * avogadro_constant);
     }
 
     /**
@@ -530,13 +530,11 @@ namespace QM
             throw;
         }
 
-        stress_ = stress_ * EV_TO_KCAL_PER_MOL;
+        const Stress stress = stress_ * eV * avogadro_constant / angstrom3;
 
-        const auto virial =
-            stress_ *
-            simulationBox.getVolume().numerical_value_in(Volume::unit);
+        const auto virial = stress * simulationBox.getVolume();
 
-        physicalData.setStressTensor(stress_);
+        physicalData.setStressTensor(stress);
         physicalData.addVirial(virial);
     }
 

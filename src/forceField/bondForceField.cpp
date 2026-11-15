@@ -31,7 +31,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace ff
 {
@@ -99,29 +98,26 @@ namespace ff
         auto       forceMagnitude = -_params.forceConstant * deltaDistance;
         const auto bondEnergy     = -forceMagnitude * deltaDistance / 2.0;
 
-        physicalData.addBondEnergy(bondEnergy.numerical_value_in(Energy::unit));
+        physicalData.addBondEnergy(bondEnergy);
 
         if (_isLinker &&
             distance < pot::CoulombPotential::get_coulombRadiusCutOff())
         {
             forceMagnitude += correctLinker<BondForceField>(
-                                  coulombPot,
-                                  nonCoulombPot,
-                                  physicalData,
-                                  molecule1,
-                                  molecule2,
-                                  atomIndices[0],
-                                  atomIndices[1],
-                                  distance
-                              ) *
-                              kcal_per_mol / angstrom;
+                coulombPot,
+                nonCoulombPot,
+                physicalData,
+                molecule1,
+                molecule2,
+                atomIndices[0],
+                atomIndices[1],
+                distance
+            );
         }
 
-        const auto dPositionValue = dPosition.numerical_value_in(angstrom);
-        const auto forcePerDistance =
-            (forceMagnitude / distance)
-                .numerical_value_in(kcal_per_mol / angstrom / angstrom);
-        const auto force = dPositionValue * forcePerDistance;
+        const auto dPositionValue   = dPosition;
+        const auto forcePerDistance = (forceMagnitude / distance);
+        const auto force            = dPositionValue * forcePerDistance;
 
         molecule1->addAtomForce(atomIndices[0], force);
         molecule2->addAtomForce(atomIndices[1], -force);
@@ -136,8 +132,7 @@ namespace ff
             smF = molecule1->getSmoothingFactor();
 
         physicalData.addVirial(
-            tensorProduct(dPositionValue, force) *
-            (1.0 - smF.numerical_value_in(one))
+            tensorProduct(dPositionValue, force) * (1.0 - smF)
         );
     }
 

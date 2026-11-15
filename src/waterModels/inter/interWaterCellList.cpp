@@ -31,6 +31,7 @@
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 
 namespace waterModel
 {
@@ -57,8 +58,8 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterType = simulationBox.getWaterType();
 
@@ -232,7 +233,7 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy = 0.0;
+        auto totalCoulombEnergy = EnergyPerMol::zero();
 
         const auto singleCoulombInteraction = [&](auto &atomA, auto &atomB)
         {
@@ -361,8 +362,8 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto singleInteraction =
             [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
@@ -599,8 +600,8 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto singleInteraction =
             [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
@@ -782,8 +783,8 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto singleInteraction =
             [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)

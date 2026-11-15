@@ -111,12 +111,12 @@ namespace molsys
 
         [[nodiscard]] std::vector<Mass>   getAtomMasses() const;
         [[nodiscard]] Mass                getMolMass() const;
-        [[nodiscard]] std::vector<double> getPartialCharges() const;
+        [[nodiscard]] std::vector<Charge> getPartialCharges() const;
 
         [[nodiscard]] bool     isMMMolecule() const;
         [[nodiscard]] Quantity getSmoothingFactor() const;
 
-        void setPartialCharges(const std::vector<double> &partialCharges);
+        void setPartialCharges(const std::vector<Charge> &partialCharges);
         void setAtomForcesToZero();
         void activateMolecule();
         void deactivateMolecule();
@@ -128,20 +128,17 @@ namespace molsys
         void addAtom(const std::shared_ptr<Atom> &atom);
         void addAtomPosition(AtomIndex index, const Pos3D &position);
         void addAtomVelocity(AtomIndex index, const Vel3D &velocity);
-        void addAtomForce(AtomIndex index, const linalg::Vec3D &force);
-        void addAtomShiftForce(
-            AtomIndex            index,
-            const linalg::Vec3D &shiftForce
-        );
+        void addAtomForce(AtomIndex index, const Force3D &force);
+        void addAtomShiftForce(AtomIndex index, const ShiftForce3D &shiftForce);
 
         /*****************************************
          * standard setter methods for atom data *
          ****************************************/
 
-        void setAtomPosition(size_t index, const Pos3D &position);
-        void setAtomVelocity(size_t index, const Vel3D &velocity);
-        void setAtomForce(size_t index, const linalg::Vec3D &force);
-        void setAtomShiftForce(size_t index, const linalg::Vec3D &shiftForce);
+        void setAtomPosition(AtomIndex index, const Pos3D &position);
+        void setAtomVelocity(AtomIndex index, const Vel3D &velocity);
+        void setAtomForce(AtomIndex index, const Force3D &force);
+        void setAtomShiftForce(AtomIndex index, const ShiftForce3D &shiftForce);
 
         /****************************************
          * standard getters for atom properties *
@@ -157,16 +154,16 @@ namespace molsys
         const Vel3D &getAtomVelocity(AtomIndex index) const;
 
         [[nodiscard]]
-        linalg::Vec3D getAtomForce(AtomIndex) const;
+        const Force3D &getAtomForce(AtomIndex index) const;
 
         [[nodiscard]]
-        linalg::Vec3D getAtomShiftForce(size_t index) const;
+        const ShiftForce3D &getAtomShiftForce(AtomIndex index) const;
 
-        [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
-        [[nodiscard]] const Mass &getAtomMass(AtomIndex index) const;
-        [[nodiscard]] double      getPartialCharge(AtomIndex index) const;
-        [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
-        [[nodiscard]] std::string getAtomName(AtomIndex index) const;
+        [[nodiscard]] AtomNumber    getAtomicNumber(AtomIndex index) const;
+        [[nodiscard]] const Mass   &getAtomMass(AtomIndex index) const;
+        [[nodiscard]] const Charge &getPartialCharge(AtomIndex index) const;
+        [[nodiscard]] AtomType      getAtomType(AtomIndex index) const;
+        [[nodiscard]] std::string   getAtomName(AtomIndex index) const;
         [[nodiscard]]
         VdwType getInternalGlobalVDWType(AtomIndex index) const;
 

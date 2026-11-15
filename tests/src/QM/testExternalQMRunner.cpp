@@ -705,10 +705,10 @@ class QMWriterTest : public ExternalQMRunnerTest
     }
 
     void _addMolecule(
-        const molsys::HybridZone zone,
-        const bool               active,
-        const Pos3D             &position,
-        const double             charge
+        molsys::HybridZone zone,
+        bool               active,
+        const Pos3D       &position,
+        const Charge      &charge
     )
     {
         auto atom = std::make_shared<molsys::Atom>();
@@ -734,25 +734,25 @@ class QMWriterTest : public ExternalQMRunnerTest
             SMOOTHING,
             false,
             linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
-            0.5
+            0.5 * elementary_charge
         );
         _addMolecule(
             POINT_CHARGE,
             false,
             linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
-            -0.8
+            -0.8 * elementary_charge
         );
         _addMolecule(
             OUTER,
             false,
             linalg::Vec3D{7.0, 8.0, 9.0} * angstrom,
-            0.1
+            0.1 * elementary_charge
         );
         _addMolecule(
             POINT_CHARGE,
             true,
             linalg::Vec3D{1.0, 1.0, 1.0} * angstrom,
-            0.3
+            0.3 * elementary_charge
         );
     }
 };
@@ -800,7 +800,7 @@ TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
         molsys::HybridZone::OUTER,
         false,
         linalg::Vec3D{7.0, 8.0, 9.0} * angstrom,
-        0.1
+        0.1 * elementary_charge
     );
 
     _writePointChargeFile(

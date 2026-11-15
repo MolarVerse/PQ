@@ -273,19 +273,19 @@ namespace constraints
             }
         );
 
-        auto lowerEnergy = 0.0;
-        auto upperEnergy = 0.0;
+        auto lowerEnergy = EnergyPerMol::zero();
+        auto upperEnergy = EnergyPerMol::zero();
 
         std::ranges::for_each(
             _distanceConstraints,
             [&lowerEnergy](const auto &distanceConstraint)
-            { lowerEnergy += distanceConstraint.getLowerEnergy(); }
+            { lowerEnergy += distanceConstraint.get_lowerEnergy(); }
         );
 
         std::ranges::for_each(
             _distanceConstraints,
             [&upperEnergy](const auto &distanceConstraint)
-            { upperEnergy += distanceConstraint.getUpperEnergy(); }
+            { upperEnergy += distanceConstraint.get_upperEnergy(); }
         );
 
         physicalData.setLowerDistanceConstraints(lowerEnergy);

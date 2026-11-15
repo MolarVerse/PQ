@@ -106,7 +106,7 @@ namespace defaults
     static constexpr size_t      MSHAKE_MAX_ITER_DEFAULT    = 20;
     static constexpr double      SHAKE_TOLERANCE_DEFAULT    = 1e-8;
     static constexpr MassPerTime RATTLE_TOLERANCE_DEFAULT =
-        1e-8 * mstd::units::amu / mstd::units::ps;
+        1e-8 * mstd::units::g / mstd::units::mol / mstd::units::ps;
     static constexpr double MSHAKE_TOLERANCE_DEFAULT = 1e-8;
 
     static constexpr bool CELL_LIST_IS_ACTIVE_DEFAULT =

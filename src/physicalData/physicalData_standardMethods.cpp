@@ -21,7 +21,6 @@
 ******************************************************************************/
 
 #include "physicalData.hpp"
-#include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "unit_types.hpp"
 
 namespace physicalData
@@ -37,7 +36,7 @@ namespace physicalData
      *
      * @param virial
      */
-    void PhysicalData::addVirial(const linalg::tensor3D& virial)
+    void PhysicalData::addVirial(const VirialPerMol& virial)
     {
         _virial += virial;
     }
@@ -48,14 +47,19 @@ namespace physicalData
      *
      * @param qmEnergy
      */
-    void PhysicalData::addQMEnergy(double qmEnergy) { _qmEnergy += qmEnergy; }
+    void PhysicalData::addQMEnergy(const EnergyPerMol& qmEnergy)
+    {
+        _qmEnergy += qmEnergy;
+    }
 
     /**
      * @brief add QM reference energy to the current QM reference energy
      *
      * @param qmReferenceEnergy
      */
-    void PhysicalData::addQMReferenceEnergy(double qmReferenceEnergy)
+    void PhysicalData::addQMReferenceEnergy(
+        const EnergyPerMol& qmReferenceEnergy
+    )
     {
         _qmReferenceEnergy += qmReferenceEnergy;
     }
@@ -66,7 +70,7 @@ namespace physicalData
      *
      * @param coulombEnergy
      */
-    void PhysicalData::addCoulombEnergy(double coulombEnergy)
+    void PhysicalData::addCoulombEnergy(const EnergyPerMol& coulombEnergy)
     {
         _coulombEnergy += coulombEnergy;
     }
@@ -77,7 +81,7 @@ namespace physicalData
      *
      * @param nonCoulombEnergy
      */
-    void PhysicalData::addNonCoulombEnergy(double nonCoulombEnergy)
+    void PhysicalData::addNonCoulombEnergy(const EnergyPerMol& nonCoulombEnergy)
     {
         _nonCoulombEnergy += nonCoulombEnergy;
     }
@@ -87,7 +91,7 @@ namespace physicalData
      *
      * @param bondEnergy
      */
-    void PhysicalData::addBondEnergy(double bondEnergy)
+    void PhysicalData::addBondEnergy(const EnergyPerMol& bondEnergy)
     {
         _bondEnergy += bondEnergy;
     }
@@ -98,7 +102,7 @@ namespace physicalData
      *
      * @param angleEnergy
      */
-    void PhysicalData::addAngleEnergy(double angleEnergy)
+    void PhysicalData::addAngleEnergy(const EnergyPerMol& angleEnergy)
     {
         _angleEnergy += angleEnergy;
     }
@@ -109,7 +113,7 @@ namespace physicalData
      *
      * @param dihedralEnergy
      */
-    void PhysicalData::addDihedralEnergy(double dihedralEnergy)
+    void PhysicalData::addDihedralEnergy(const EnergyPerMol& dihedralEnergy)
     {
         _dihedralEnergy += dihedralEnergy;
     }
@@ -120,7 +124,7 @@ namespace physicalData
      *
      * @param improperEnergy
      */
-    void PhysicalData::addImproperEnergy(double improperEnergy)
+    void PhysicalData::addImproperEnergy(const EnergyPerMol& improperEnergy)
     {
         _improperEnergy += improperEnergy;
     }
@@ -131,7 +135,9 @@ namespace physicalData
      *
      * @param ringPolymerEnergy
      */
-    void PhysicalData::addRingPolymerEnergy(double ringPolymerEnergy)
+    void PhysicalData::addRingPolymerEnergy(
+        const EnergyPerMol& ringPolymerEnergy
+    )
     {
         _ringPolymerEnergy += ringPolymerEnergy;
     }
@@ -208,7 +214,7 @@ namespace physicalData
      *
      * @param virial
      */
-    void PhysicalData::setVirial(const linalg::tensor3D& virial)
+    void PhysicalData::setVirial(const VirialPerMol& virial)
     {
         _virial = virial;
     }
@@ -218,7 +224,7 @@ namespace physicalData
      *
      * @param stressTensor
      */
-    void PhysicalData::setStressTensor(const linalg::tensor3D& stressTensor)
+    void PhysicalData::setStressTensor(const Stress& stressTensor)
     {
         _stressTensor = stressTensor;
     }
@@ -250,7 +256,7 @@ namespace physicalData
      *
      * @param kineticEnergy
      */
-    void PhysicalData::setKineticEnergy(const Energy& kineticEnergy)
+    void PhysicalData::setKineticEnergy(const EnergyPerMol& kineticEnergy)
     {
         _kineticEnergy = kineticEnergy;
     }
@@ -260,7 +266,7 @@ namespace physicalData
      *
      * @param vec
      */
-    void PhysicalData::setKineticEnergyAtomicVector(const EnergyTensor3D& vec)
+    void PhysicalData::setKineticEnergyAtomicVector(const VirialPerMol& vec)
     {
         _kinEnergyVirialTensor.atomic = vec;
     }
@@ -270,9 +276,7 @@ namespace physicalData
      *
      * @param vec
      */
-    void PhysicalData::setKineticEnergyMolecularVector(
-        const EnergyTensor3D& vec
-    )
+    void PhysicalData::setKineticEnergyMolecularVector(const VirialPerMol& vec)
     {
         _kinEnergyVirialTensor.molecular = vec;
     }
@@ -282,7 +286,7 @@ namespace physicalData
      *
      * @param coulombEnergy
      */
-    void PhysicalData::setCoulombEnergy(double coulombEnergy)
+    void PhysicalData::setCoulombEnergy(const EnergyPerMol& coulombEnergy)
     {
         _coulombEnergy = coulombEnergy;
     }
@@ -292,7 +296,7 @@ namespace physicalData
      *
      * @param nonCoulombEnergy
      */
-    void PhysicalData::setNonCoulombEnergy(double nonCoulombEnergy)
+    void PhysicalData::setNonCoulombEnergy(const EnergyPerMol& nonCoulombEnergy)
     {
         _nonCoulombEnergy = nonCoulombEnergy;
     }
@@ -302,7 +306,9 @@ namespace physicalData
      *
      * @param intraCoulombEnergy
      */
-    void PhysicalData::setIntraCoulombEnergy(double intraCoulombEnergy)
+    void PhysicalData::setIntraCoulombEnergy(
+        const EnergyPerMol& intraCoulombEnergy
+    )
     {
         _intraCoulombEnergy = intraCoulombEnergy;
     }
@@ -312,7 +318,9 @@ namespace physicalData
      *
      * @param intraNonCoulombEnergy
      */
-    void PhysicalData::setIntraNonCoulombEnergy(double intraNonCoulombEnergy)
+    void PhysicalData::setIntraNonCoulombEnergy(
+        const EnergyPerMol& intraNonCoulombEnergy
+    )
     {
         _intraNonCoulombEnergy = intraNonCoulombEnergy;
     }
@@ -322,7 +330,7 @@ namespace physicalData
      *
      * @param bondEnergy
      */
-    void PhysicalData::setBondEnergy(double bondEnergy)
+    void PhysicalData::setBondEnergy(const EnergyPerMol& bondEnergy)
     {
         _bondEnergy = bondEnergy;
     }
@@ -332,7 +340,7 @@ namespace physicalData
      *
      * @param angleEnergy
      */
-    void PhysicalData::setAngleEnergy(double angleEnergy)
+    void PhysicalData::setAngleEnergy(const EnergyPerMol& angleEnergy)
     {
         _angleEnergy = angleEnergy;
     }
@@ -342,7 +350,7 @@ namespace physicalData
      *
      * @param dihedralEnergy
      */
-    void PhysicalData::setDihedralEnergy(double dihedralEnergy)
+    void PhysicalData::setDihedralEnergy(const EnergyPerMol& dihedralEnergy)
     {
         _dihedralEnergy = dihedralEnergy;
     }
@@ -352,7 +360,7 @@ namespace physicalData
      *
      * @param improperEnergy
      */
-    void PhysicalData::setImproperEnergy(double improperEnergy)
+    void PhysicalData::setImproperEnergy(const EnergyPerMol& improperEnergy)
     {
         _improperEnergy = improperEnergy;
     }
@@ -362,14 +370,19 @@ namespace physicalData
      *
      * @param qmEnergy
      */
-    void PhysicalData::setQMEnergy(double qmEnergy) { _qmEnergy = qmEnergy; }
+    void PhysicalData::setQMEnergy(const EnergyPerMol& qmEnergy)
+    {
+        _qmEnergy = qmEnergy;
+    }
 
     /**
      * @brief set the qm reference energy
      *
      * @param qmReferenceEnergy
      */
-    void PhysicalData::setQMReferenceEnergy(double qmReferenceEnergy)
+    void PhysicalData::setQMReferenceEnergy(
+        const EnergyPerMol& qmReferenceEnergy
+    )
     {
         _qmReferenceEnergy = qmReferenceEnergy;
     }
@@ -389,7 +402,9 @@ namespace physicalData
      *
      * @param momentumEnergy
      */
-    void PhysicalData::setNoseHooverMomentumEnergy(double momentumEnergy)
+    void PhysicalData::setNoseHooverMomentumEnergy(
+        const EnergyPerMol& momentumEnergy
+    )
     {
         _noseHooverMomentumEnergy = momentumEnergy;
     }
@@ -399,7 +414,9 @@ namespace physicalData
      *
      * @param frictionEnergy
      */
-    void PhysicalData::setNoseHooverFrictionEnergy(double frictionEnergy)
+    void PhysicalData::setNoseHooverFrictionEnergy(
+        const Quantity& frictionEnergy
+    )
     {
         _noseHooverFrictionEnergy = frictionEnergy;
     }
@@ -410,7 +427,7 @@ namespace physicalData
      * @param lowerDistanceConstraints
      */
     void PhysicalData::setLowerDistanceConstraints(
-        double lowerDistanceConstraints
+        const EnergyPerMol& lowerDistanceConstraints
     )
     {
         _lowerDistanceConstraints = lowerDistanceConstraints;
@@ -422,7 +439,7 @@ namespace physicalData
      * @param upperDistanceConstraints
      */
     void PhysicalData::setUpperDistanceConstraints(
-        double upperDistanceConstraints
+        const EnergyPerMol& upperDistanceConstraints
     )
     {
         _upperDistanceConstraints = upperDistanceConstraints;
@@ -433,7 +450,9 @@ namespace physicalData
      *
      * @param ringPolymerEnergy
      */
-    void PhysicalData::setRingPolymerEnergy(double ringPolymerEnergy)
+    void PhysicalData::setRingPolymerEnergy(
+        const EnergyPerMol& ringPolymerEnergy
+    )
     {
         _ringPolymerEnergy = ringPolymerEnergy;
     }
@@ -502,9 +521,9 @@ namespace physicalData
     /**
      * @brief get the kinetic energy
      *
-     * @return const Energy&
+     * @return const EnergyPerMol&
      */
-    const Energy& PhysicalData::getKineticEnergy() const
+    const EnergyPerMol& PhysicalData::getKineticEnergy() const
     {
         return _kineticEnergy;
     }
@@ -512,9 +531,9 @@ namespace physicalData
     /**
      * @brief get the non coulomb energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getNonCoulombEnergy() const
+    const EnergyPerMol& PhysicalData::getNonCoulombEnergy() const
     {
         return _nonCoulombEnergy;
     }
@@ -522,16 +541,19 @@ namespace physicalData
     /**
      * @brief get the coulomb energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getCoulombEnergy() const { return _coulombEnergy; }
+    const EnergyPerMol& PhysicalData::getCoulombEnergy() const
+    {
+        return _coulombEnergy;
+    }
 
     /**
      * @brief get the intra coulomb energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getIntraCoulombEnergy() const
+    const EnergyPerMol& PhysicalData::getIntraCoulombEnergy() const
     {
         return _intraCoulombEnergy;
     }
@@ -539,9 +561,9 @@ namespace physicalData
     /**
      * @brief get the intra non coulomb energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getIntraNonCoulombEnergy() const
+    const EnergyPerMol& PhysicalData::getIntraNonCoulombEnergy() const
     {
         return _intraNonCoulombEnergy;
     }
@@ -549,9 +571,9 @@ namespace physicalData
     /**
      * @brief get the intra energy
      *
-     * @return double
+     * @return EnergyPerMol
      */
-    double PhysicalData::getIntraEnergy() const
+    EnergyPerMol PhysicalData::getIntraEnergy() const
     {
         return _intraCoulombEnergy + _intraNonCoulombEnergy;
     }
@@ -559,44 +581,56 @@ namespace physicalData
     /**
      * @brief get the bond energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getBondEnergy() const { return _bondEnergy; }
+    const EnergyPerMol& PhysicalData::getBondEnergy() const
+    {
+        return _bondEnergy;
+    }
 
     /**
      * @brief get the angle energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getAngleEnergy() const { return _angleEnergy; }
+    const EnergyPerMol& PhysicalData::getAngleEnergy() const
+    {
+        return _angleEnergy;
+    }
 
     /**
      * @brief get the dihedral energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getDihedralEnergy() const { return _dihedralEnergy; }
+    const EnergyPerMol& PhysicalData::getDihedralEnergy() const
+    {
+        return _dihedralEnergy;
+    }
 
     /**
      * @brief get the improper energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getImproperEnergy() const { return _improperEnergy; }
+    const EnergyPerMol& PhysicalData::getImproperEnergy() const
+    {
+        return _improperEnergy;
+    }
 
     /**
      * @brief get the qm energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getQMEnergy() const { return _qmEnergy; }
+    const EnergyPerMol& PhysicalData::getQMEnergy() const { return _qmEnergy; }
 
     /**
      * @brief get the qm reference energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getQMReferenceEnergy() const
+    const EnergyPerMol& PhysicalData::getQMReferenceEnergy() const
     {
         return _qmReferenceEnergy;
     }
@@ -614,9 +648,9 @@ namespace physicalData
     /**
      * @brief get the nose hoover momentum energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getNoseHooverMomentumEnergy() const
+    const EnergyPerMol& PhysicalData::getNoseHooverMomentumEnergy() const
     {
         return _noseHooverMomentumEnergy;
     }
@@ -624,9 +658,9 @@ namespace physicalData
     /**
      * @brief get the nose hoover friction energy
      *
-     * @return double
+     * @return const Quantity&
      */
-    double PhysicalData::getNoseHooverFrictionEnergy() const
+    const Quantity& PhysicalData::getNoseHooverFrictionEnergy() const
     {
         return _noseHooverFrictionEnergy;
     }
@@ -634,9 +668,9 @@ namespace physicalData
     /**
      * @brief get the lower distance constraints energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getLowerDistanceConstraints() const
+    const EnergyPerMol& PhysicalData::getLowerDistanceConstraints() const
     {
         return _lowerDistanceConstraints;
     }
@@ -644,9 +678,9 @@ namespace physicalData
     /**
      * @brief get the upper distance constraints energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getUpperDistanceConstraints() const
+    const EnergyPerMol& PhysicalData::getUpperDistanceConstraints() const
     {
         return _upperDistanceConstraints;
     }
@@ -654,9 +688,9 @@ namespace physicalData
     /**
      * @brief get the ring polymer energy
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double PhysicalData::getRingPolymerEnergy() const
+    const EnergyPerMol& PhysicalData::getRingPolymerEnergy() const
     {
         return _ringPolymerEnergy;
     }
@@ -666,7 +700,7 @@ namespace physicalData
      *
      * @return linalg::tensor3D
      */
-    const EnergyTensor3D& PhysicalData::getKinEnergyAtomTensor() const
+    const VirialPerMol& PhysicalData::getKinEnergyAtomTensor() const
     {
         return _kinEnergyVirialTensor.atomic;
     }
@@ -676,7 +710,7 @@ namespace physicalData
      *
      * @return linalg::tensor3D
      */
-    const EnergyTensor3D& PhysicalData::getKinEnergyMolTensor() const
+    const VirialPerMol& PhysicalData::getKinEnergyMolTensor() const
     {
         return _kinEnergyVirialTensor.molecular;
     }
@@ -687,9 +721,9 @@ namespace physicalData
      * @param virialType - the virial type to get the kinetic energy virial
      * tensor for
      *
-     * @return const EnergyTensor3D&
+     * @return const VirialPerMol&
      */
-    const EnergyTensor3D& PhysicalData::getKinEnergyVirialTensor(
+    const VirialPerMol& PhysicalData::getKinEnergyVirialTensor(
         VirialType virialType
     ) const
     {
@@ -699,16 +733,16 @@ namespace physicalData
     /**
      * @brief get the virial
      *
-     * @return linalg::tensor3D
+     * @return const VirialPerMol&
      */
-    linalg::tensor3D PhysicalData::getVirial() const { return _virial; }
+    const VirialPerMol& PhysicalData::getVirial() const { return _virial; }
 
     /**
      * @brief get the stress tensor
      *
-     * @return linalg::tensor3D
+     * @return const Stress&
      */
-    linalg::tensor3D PhysicalData::getStressTensor() const
+    const Stress& PhysicalData::getStressTensor() const
     {
         return _stressTensor;
     }

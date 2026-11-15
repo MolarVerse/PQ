@@ -71,7 +71,7 @@ namespace opt
         Optimizer() = default;
         virtual ~Optimizer();
 
-        virtual void update(double, size_t) = 0;
+        virtual void update(const Pos&, size_t) = 0;
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 

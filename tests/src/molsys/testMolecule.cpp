@@ -213,13 +213,19 @@ TEST_F(TestMolecule, getNumberOfAtomsIsDerivedFromAtoms)
 
 TEST_F(TestMolecule, getMolMassIsSumOfAtomMasses)
 {
-    EXPECT_DOUBLE_EQ(_molecule->getMolMass().numerical_value_in(amu), 6.0);
+    EXPECT_DOUBLE_EQ(
+        _molecule->getMolMass().numerical_value_in(g_per_mol),
+        6.0
+    );
 
     auto atom = std::make_shared<molsys::Atom>();
-    atom->setMass(4.5 * amu);
+    atom->setMass(4.5 * g_per_mol);
     _molecule->addAtom(atom);
 
-    EXPECT_DOUBLE_EQ(_molecule->getMolMass().numerical_value_in(amu), 10.5);
+    EXPECT_DOUBLE_EQ(
+        _molecule->getMolMass().numerical_value_in(g_per_mol),
+        10.5
+    );
 }
 
 TEST_F(TestMolecule, getMolMassOfEmptyMoleculeIsZero)

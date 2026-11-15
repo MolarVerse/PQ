@@ -57,10 +57,10 @@ class TestVirial : public ::testing::Test
 
         atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
-        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom1->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setShiftForce(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(1.0, 2.0, 3.0) * kcal_per_mol / angstrom);
+        atom1->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol);
+        atom2->setShiftForce(linalg::Vec3D(1.0, 2.0, 3.0) * kcal_per_mol);
         molecule1.setCenterOfMass(
             Pos3D{1.0 * angstrom, 1.0 * angstrom, 1.0 * angstrom}
         );
@@ -72,8 +72,8 @@ class TestVirial : public ::testing::Test
         auto atom3 = std::make_shared<molsys::Atom>();
 
         atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
-        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom);
+        atom3->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol);
         molecule2.setCenterOfMass(Pos3D{Pos::zero()});
         molecule2.addAtom(atom3);
 

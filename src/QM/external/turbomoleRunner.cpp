@@ -106,7 +106,9 @@ namespace QM
                         pos[0],
                         pos[1],
                         pos[2],
-                        atom->getPartialCharge()
+                        atom->getPartialCharge().numerical_value_in(
+                            elementary_charge
+                        )
                     );
                     _usePointCharges = true;
                 }

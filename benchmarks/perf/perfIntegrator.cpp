@@ -63,7 +63,7 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f}\n",
-        box.calculateMomentum()[0].numerical_value_in(amu * angstrom / fs)
+        box.calculateMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs)
     );
     return 0;
 }

@@ -24,7 +24,8 @@
 
 #include <cmath>
 
-#include "constants/internalConversionFactors.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 #ifndef M_PI
 #define M_PI std::numbers::pi
@@ -42,27 +43,23 @@ namespace pot
      * @param coulombRadiusCutOff - coulomb radius cut off
      * @param kappa
      */
-    CoulombWolf::CoulombWolf(const Distance& coulombRadiusCutOff, double kappa)
+    CoulombWolf::CoulombWolf(
+        const Distance&    coulombRadiusCutOff,
+        const InvDistance& kappa
+    )
         : CoulombPotential(coulombRadiusCutOff)
     {
         _kappa = kappa;
         _wolfParam1 =
-            ::erfc(
-                _kappa * coulombRadiusCutOff.numerical_value_in(Distance::unit)
-            ) /
-            coulombRadiusCutOff.numerical_value_in(Distance::unit);
+            mstd::erfc(_kappa * coulombRadiusCutOff) / coulombRadiusCutOff;
         _wolfParam2 = 2.0 * _kappa / ::sqrt(M_PI);
 
-        const auto kappaSquared = _kappa * _kappa;
-        const auto coulRCSquared =
-            coulombRadiusCutOff.numerical_value_in(Distance::unit) *
-            coulombRadiusCutOff.numerical_value_in(Distance::unit);
-        const auto expFactor = ::exp(-kappaSquared * coulRCSquared);
+        const auto kappaSquared  = _kappa * _kappa;
+        const auto coulRCSquared = coulombRadiusCutOff * coulombRadiusCutOff;
+        const auto expFactor     = mstd::exp(-kappaSquared * coulRCSquared);
 
-        _wolfParam3 = _wolfParam1 /
-                      coulombRadiusCutOff.numerical_value_in(Distance::unit);
-        _wolfParam3 += _wolfParam2 * expFactor /
-                       coulombRadiusCutOff.numerical_value_in(Distance::unit);
+        _wolfParam3  = _wolfParam1 / coulombRadiusCutOff;
+        _wolfParam3 += _wolfParam2 * expFactor / coulombRadiusCutOff;
     }
 
     /**
@@ -73,111 +70,25 @@ namespace pot
      * @param chargeProduct
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombWolf::calculate(
-        const Distance& distance,
-        double          chargeProduct
+    std::pair<EnergyPerMol, Force> CoulombWolf::calculate(
+        const Distance&      distance,
+        const ChargeSquared& chargeProduct
     ) const
     {
-        const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
+        const auto kappaDistance = _kappa * distance;
+        const auto erfcFactor    = mstd::erfc(kappaDistance);
+        const auto expFactor     = mstd::exp(-kappaDistance * kappaDistance);
 
-        const auto kappaDistance =
-            _kappa * distance.numerical_value_in(Distance::unit);
-        const auto erfcFactor = ::erfc(kappaDistance);
-        const auto expFactor  = ::exp(-kappaDistance * kappaDistance);
+        auto energy  = (erfcFactor / distance) - _wolfParam1;
+        energy      += _wolfParam3 * (distance - _coulombRadiusCutOff);
 
-        auto energy =
-            (erfcFactor / distance.numerical_value_in(Distance::unit)) -
-            _wolfParam1;
-        energy += _wolfParam3 * (distance - _coulombRadiusCutOff)
-                                    .numerical_value_in(Distance::unit);
+        auto force  = erfcFactor / (distance * distance);
+        force      += _wolfParam2 * expFactor / distance;
+        force      -= _wolfParam3;
 
-        auto force = erfcFactor / (distance.numerical_value_in(Distance::unit) *
-                                   distance.numerical_value_in(Distance::unit));
-        force += _wolfParam2 * expFactor /
-                 distance.numerical_value_in(Distance::unit);
-        force -= _wolfParam3;
+        const auto coulHelper = chargeProduct * coulomb_prefactor;
 
-        energy *= coulombPrefactor;
-        force  *= coulombPrefactor;
-
-        return {energy, force};
+        return {energy * coulHelper, force * coulHelper};
     }
-
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief set the kappa parameter
-     *
-     * @param kappa
-     */
-    void CoulombWolf::setKappa(double kappa) { _kappa = kappa; }
-
-    /**
-     * @brief set the wolf parameter 1
-     *
-     * @param wolfParameter1
-     */
-    void CoulombWolf::setWolfParameter1(double wolfParameter1)
-    {
-        _wolfParam1 = wolfParameter1;
-    }
-
-    /**
-     * @brief set the wolf parameter 2
-     *
-     * @param wolfParameter2
-     */
-    void CoulombWolf::setWolfParameter2(double wolfParameter2)
-    {
-        _wolfParam2 = wolfParameter2;
-    }
-
-    /**
-     * @brief set the wolf parameter 3
-     *
-     * @param wolfParameter3
-     */
-    void CoulombWolf::setWolfParameter3(double wolfParameter3)
-    {
-        _wolfParam3 = wolfParameter3;
-    }
-
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief get the kappa parameter
-     *
-     * @return double
-     */
-    double CoulombWolf::getKappa() { return _kappa; }
-
-    /**
-     * @brief get the wolf parameter 1
-     *
-     * @return double
-     */
-    double CoulombWolf::getWolfParameter1() { return _wolfParam1; }
-
-    /**
-     * @brief get the wolf parameter 2
-     *
-     * @return double
-     */
-    double CoulombWolf::getWolfParameter2() { return _wolfParam2; }
-
-    /**
-     * @brief get the wolf parameter 3
-     *
-     * @return double
-     */
-    double CoulombWolf::getWolfParameter3() { return _wolfParam3; }
 
 }   // namespace pot

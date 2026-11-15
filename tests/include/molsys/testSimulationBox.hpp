@@ -56,9 +56,9 @@ class TestSimulationBox : public ::testing::Test
         atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
         atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));
         atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0));
-        atom1->setMass(1.0 * amu);
-        atom2->setMass(2.0 * amu);
-        atom3->setMass(3.0 * amu);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(2.0 * g_per_mol);
+        atom3->setMass(3.0 * g_per_mol);
 
         molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
@@ -72,8 +72,8 @@ class TestSimulationBox : public ::testing::Test
         atom5->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
         atom4->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
         atom5->setForce(linalg::Vec3D(0.0, 0.0, 1.0));
-        atom4->setMass(1.0 * amu);
-        atom5->setMass(2.0 * amu);
+        atom4->setMass(1.0 * g_per_mol);
+        atom5->setMass(2.0 * g_per_mol);
 
         molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom4);

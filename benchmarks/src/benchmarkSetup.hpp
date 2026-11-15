@@ -72,12 +72,17 @@ namespace benchmarkSetup
                         } *
                         angstrom / s
                     );
-                    atom->setForce({0.1, -0.2, 0.05});
-                    atom->setMass(12.0 * amu);
+                    atom->setForce(
+                        linalg::Vec3D{0.1, -0.2, 0.05} * kcal_per_mol / angstrom
+                    );
+                    atom->setMass(12.0 * g_per_mol);
                     atom->setAtomType(AtomType{0});
                     atom->setInternalGlobalVDWType(VdwType{0});
-                    atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);
-                    atom->setShiftForce({0.0, 0.0, 0.0});
+                    const auto charge = atomIndex++ % 2 == 0 ? 0.4 : -0.4;
+                    atom->setPartialCharge(charge * elementary_charge);
+                    atom->setShiftForce(
+                        linalg::Vec3D{0.0, 0.0, 0.0} * kcal_per_mol
+                    );
 
                     molsys::Molecule molecule;
                     molecule.setMoltype(MolType{1});
@@ -100,7 +105,7 @@ namespace benchmarkSetup
     {
         simulationBox.resetForces();
         for (const auto& atom : simulationBox.getAtoms())
-            atom->setShiftForce({0.0, 0.0, 0.0});
+            atom->setShiftForce(linalg::Vec3D{0.0, 0.0, 0.0} * kcal_per_mol);
     }
 }   // namespace benchmarkSetup
 

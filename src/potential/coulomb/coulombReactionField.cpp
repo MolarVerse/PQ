@@ -22,7 +22,7 @@
 
 #include "coulombReactionField.hpp"
 
-#include "constants/internalConversionFactors.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -50,33 +50,26 @@ namespace pot
      * @param chargeProduct
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombReactionField::calculate(
-        const Distance& dist,
-        double          chargeProduct
+    std::pair<EnergyPerMol, Force> CoulombReactionField::calculate(
+        const Distance&      dist,
+        const ChargeSquared& chargeProduct
     ) const
     {
-        const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
-        const auto dInv = 1.0 / dist.numerical_value_in(Distance::unit);
-        const auto deltaCutOff =
-            _coulombRadiusCutOff.numerical_value_in(Distance::unit) -
-            dist.numerical_value_in(Distance::unit);
-        const auto rCutEnergy = _coulombEnergyCutOff;
-        const auto rCutForce  = _coulombForceCutOff;
-        const auto rfCutOffCubed =
-            _rfPrefactor *
-            _coulombCutOffCubedInverse.numerical_value_in(InvVolume::unit);
+        const auto dInv          = 1.0 / dist;
+        const auto deltaCutOff   = _coulombRadiusCutOff - dist;
+        const auto rCutEnergy    = _coulombEnergyCutOff;
+        const auto rCutForce     = _coulombForceCutOff;
+        const auto rfCutOffCubed = _rfPrefactor * _coulombCutOffCubedInverse;
 
-        auto energy = dInv - (2.0 * rCutEnergy) +
-                      (dist.numerical_value_in(Distance::unit) * rCutForce);
-        energy += rfCutOffCubed * deltaCutOff * deltaCutOff;
+        auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
+        energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;
 
         auto force  = (dInv * dInv) - rCutForce;
         force      += 2.0 * rfCutOffCubed * deltaCutOff;
 
-        energy *= coulombPrefactor;
-        force  *= coulombPrefactor;
+        const auto prefactor = chargeProduct * coulomb_prefactor;
 
-        return {energy, force};
+        return {energy * prefactor, force * prefactor};
     }
 
 }   // namespace pot

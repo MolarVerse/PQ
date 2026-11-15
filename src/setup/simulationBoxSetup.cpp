@@ -359,7 +359,7 @@ namespace setup
         {
             const auto volume = simBox.getVolume();
             const auto density =
-                simBox.getTotalMass().numerical_value_in(amu) /
+                simBox.getTotalMass().numerical_value_in(g_per_mol) /
                 volume.numerical_value_in(angstrom * angstrom * angstrom) *
                 AMU_PER_ANGSTROM3_TO_KG_PER_L;
 
@@ -373,7 +373,7 @@ namespace setup
             const auto volume     = simBox.getVolume();
             const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
             const auto density =
-                simBox.getTotalMass().numerical_value_in(amu) /
+                simBox.getTotalMass().numerical_value_in(g_per_mol) /
                 volume.numerical_value_in(angstrom * angstrom * angstrom) *
                 convFactor;
 
@@ -480,7 +480,7 @@ namespace setup
         log.writeSetupInfo(
             std::format(
                 "total mass:        {:14.5f} g/mol",
-                mass.numerical_value_in(amu)   // amu matches g/mol
+                mass.numerical_value_in(g_per_mol)   // amu matches g/mol
             )
         );
         log.writeSetupInfo(std::format("total charge:      {:14.5f}", charge));

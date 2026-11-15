@@ -23,10 +23,8 @@
 #include "integrator.hpp"
 
 #include "atom.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "simulationBox.hpp"
 #include "timingsSettings.hpp"
-#include "units.hpp"
 
 namespace integrator
 {
@@ -37,14 +35,12 @@ namespace integrator
      */
     void Integrator::integrateVelocities(molsys::Atom *atom)
     {
-        auto       velocity = atom->getVelocity();
-        const auto force    = atom->getForce();
-        const auto mass     = atom->getMass().numerical_value_in(amu);
-        const auto timeStamp =
-            settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
+        auto       velocity  = atom->getVelocity();
+        const auto force     = atom->getForce();
+        const auto mass      = atom->getMass();
+        const auto timeStamp = settings::TimingsSettings::getTimeStep();
 
-        velocity +=
-            timeStamp * force / mass * V_VERLET_VELOCITY_FACTOR * angstrom / s;
+        velocity += timeStamp * force / mass;
 
         atom->setVelocity(velocity);
     }

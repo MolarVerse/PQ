@@ -124,14 +124,14 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] Temperature   calculateTemperature();
-        [[nodiscard]] double        calculateTotalForce() const;
-        [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
-        [[nodiscard]] double        calculateRMSForce() const;
-        [[nodiscard]] double        calculateMaxForce() const;
-        [[nodiscard]] double        calculateRMSForceOld() const;
-        [[nodiscard]] double        calculateMaxForceOld() const;
-        [[nodiscard]] Momentum3D    calculateMomentum();
+        [[nodiscard]] Temperature calculateTemperature();
+        [[nodiscard]] Force       calculateTotalForce() const;
+        [[nodiscard]] Force3D     calculateTotalForceVector() const;
+        [[nodiscard]] Force       calculateRMSForce() const;
+        [[nodiscard]] Force       calculateMaxForce() const;
+        [[nodiscard]] Force       calculateRMSForceOld() const;
+        [[nodiscard]] Force       calculateMaxForceOld() const;
+        [[nodiscard]] Momentum3D  calculateMomentum();
         [[nodiscard]]
         AngularMomentum3D   calculateAngularMomentum(const Momentum3D&);
         [[nodiscard]] Pos3D calcBoxDimFromDensity() const;
@@ -204,8 +204,8 @@ namespace molsys
         [[nodiscard]] Molecule&     getMolecule(size_t index);
         [[nodiscard]] MoleculeType& getMoleculeType(size_t index);
 
-        [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
-        [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
+        [[nodiscard]] std::vector<Force> getAtomicScalarForces() const;
+        [[nodiscard]] std::vector<Force> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>&       getAtoms();
         [[nodiscard]] const std::vector<std::shared_ptr<Atom>>& getAtoms(
@@ -226,12 +226,12 @@ namespace molsys
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
-        [[nodiscard]] std::vector<Pos3D>         getPositions() const;
-        [[nodiscard]] std::vector<Vel3D>         getVelocities() const;
-        [[nodiscard]] std::vector<linalg::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<AtomNumber>    getAtomicNumbers() const;
-        [[nodiscard]] std::vector<Pos>           flattenPositions() const;
-        [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
+        [[nodiscard]] std::vector<Pos3D>      getPositions() const;
+        [[nodiscard]] std::vector<Vel3D>      getVelocities() const;
+        [[nodiscard]] std::vector<Force3D>    getForces() const;
+        [[nodiscard]] std::vector<AtomNumber> getAtomicNumbers() const;
+        [[nodiscard]] std::vector<Pos>        flattenPositions() const;
+        [[nodiscard]] std::set<std::string>   getUniqueQMAtomNames() const;
         [[nodiscard]]
         std::vector<double> getFlattenedQMPositionsInAngstrom() const;
 

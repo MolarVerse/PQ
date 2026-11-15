@@ -57,12 +57,13 @@ int main()
             box.calculateTemperature().quantity_from_zero().numerical_value_in(
                 K
             );
-        sink +=
-            box.calculateMomentum()[0].numerical_value_in(amu * angstrom / fs);
+        sink += box.calculateMomentum()[0].numerical_value_in(
+            g_per_mol * angstrom / fs
+        );
         sink += box.calculateAngularMomentum(
-                       linalg::Vec3D{0.0, 0.0, 0.0} * amu * angstrom / fs
+                       linalg::Vec3D{0.0, 0.0, 0.0} * g_per_mol * angstrom / fs
         )[0]
-                    .numerical_value_in(amu * angstrom * angstrom / fs);
+                    .numerical_value_in(g_per_mol * angstrom * angstrom / fs);
         sink += box.calculateTotalForce();
     }
 

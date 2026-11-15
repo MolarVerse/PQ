@@ -59,12 +59,8 @@ namespace pot
     )
     {
         _coulombRadiusCutOff = coulombRadiusCutOff;
-        // TODO: WTF
-        _coulombEnergyCutOff =
-            1 / _coulombRadiusCutOff.numerical_value_in(Distance::unit);
-        _coulombForceCutOff =
-            1 / (_coulombRadiusCutOff.numerical_value_in(Distance::unit) *
-                 _coulombRadiusCutOff.numerical_value_in(Distance::unit));
+        _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
+        _coulombForceCutOff = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
         _coulombCutOffCubedInverse =
             1 / (_coulombRadiusCutOff * _coulombRadiusCutOff *
                  _coulombRadiusCutOff);

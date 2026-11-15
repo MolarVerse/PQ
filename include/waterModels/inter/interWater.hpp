@@ -108,8 +108,8 @@ namespace waterModel
             const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
-            double                                       &coulombEnergy,
-            double                                       &nonCoulombEnergy
+            EnergyPerMol                                 &coulombEnergy,
+            EnergyPerMol                                 &nonCoulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -119,7 +119,7 @@ namespace waterModel
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
-            double                                       &coulombEnergy
+            EnergyPerMol                                 &coulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -130,12 +130,12 @@ namespace waterModel
             const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
-            double                                       &coulombEnergy,
-            double                                       &nonCoulombEnergy
+            EnergyPerMol                                 &coulombEnergy,
+            EnergyPerMol                                 &nonCoulombEnergy
         );
 
         template <typename T>
-        double getPartialCharge(molsys::Atom &atom) const;
+        Charge getPartialCharge(molsys::Atom &atom) const;
     };
 
     class InterWater

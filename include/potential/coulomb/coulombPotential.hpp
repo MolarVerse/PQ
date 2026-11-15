@@ -46,19 +46,19 @@ namespace pot
     class CoulombPotential
     {
        protected:
-        inline static Distance  _coulombRadiusCutOff;
-        inline static double    _coulombEnergyCutOff;
-        inline static double    _coulombForceCutOff;
-        inline static InvVolume _coulombCutOffCubedInverse;
+        inline static Distance           _coulombRadiusCutOff;
+        inline static InvDistance        _coulombEnergyCutOff;
+        inline static InvDistanceSquared _coulombForceCutOff;
+        inline static InvDistanceCubed   _coulombCutOffCubedInverse;
 
        public:
         virtual ~CoulombPotential() = default;
         explicit CoulombPotential(const Distance& coulombRadiusCutOff);
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(
-            const Distance& distance,
-            double          chargeProduct
+        virtual std::pair<EnergyPerMol, Force> calculate(
+            const Distance&      distance,
+            const ChargeSquared& chargeProduct
         ) const = 0;
 
         STATIC_GETTER(_coulombRadiusCutOff)

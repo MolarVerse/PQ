@@ -198,7 +198,7 @@ TEST_F(TestLogOutput, writeDensityWarning)
 TEST_F(TestLogOutput, writeInitialMomentum)
 {
     _logOutput->setFilename("default.log", false);
-    _logOutput->writeInitialMomentum(0.1 * amu * angstrom / fs);
+    _logOutput->writeInitialMomentum(0.1 * g_per_mol * angstrom / fs);
     _logOutput->close();
     std::ifstream file("default.log");
     std::string   line;

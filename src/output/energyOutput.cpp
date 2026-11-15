@@ -174,8 +174,9 @@ namespace out
             );
         }
 
-        const auto mom =
-            physicalData.getMomentum().numerical_value_in(amu * angstrom / fs);
+        const auto mom = physicalData.getMomentum().numerical_value_in(
+            g_per_mol * angstrom / fs
+        );
 
         _getFilePointer() << std::format("{:20.5e}\t", norm(mom));
         _getFilePointer(

@@ -56,17 +56,19 @@ namespace pot
         explicit LennardJonesPair(const Pos &cutOff, const LJParams &params);
 
         explicit LennardJonesPair(
-            const Pos      &cutOff,
-            double          energyCutoff,
-            double          forceCutoff,
-            const LJParams &params
+            const Pos          &cutOff,
+            const EnergyPerMol &energyCutoff,
+            const Force        &forceCutoff,
+            const LJParams     &params
         );
 
         [[nodiscard]]
         bool operator==(const LennardJonesPair &other) const;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(const Pos &distance) const override;
+        std::pair<EnergyPerMol, Force> calculate(
+            const Pos &distance
+        ) const override;
 
         friend struct ::TestLJPairUtils;
     };

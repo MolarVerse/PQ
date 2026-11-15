@@ -26,7 +26,6 @@
 #include "bond.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
-#include "vector3d.hpp"
 
 namespace molsys
 {
@@ -46,25 +45,24 @@ namespace constraints
     class DistanceConstraint : public connectivity::Bond
     {
        private:
-        Distance _lowerDistance;
-        Distance _upperDistance;
-        double   _springConstant;
-        double   _dSpringConstantDt;
+        Distance             _lowerDistance;
+        Distance             _upperDistance;
+        ForceConstant        _springConstant;
+        ForceConstantPerTime _dSpringConstantDt;
 
-        double        _lowerEnergy = 0.0;
-        double        _upperEnergy = 0.0;
-        linalg::Vec3D _force;
+        EnergyPerMol _lowerEnergy = EnergyPerMol::zero();
+        EnergyPerMol _upperEnergy = EnergyPerMol::zero();
 
        public:
         DistanceConstraint(
-            molsys::Molecule *molecule1,
-            molsys::Molecule *molecule2,
-            AtomIndex         atomIndex1,
-            AtomIndex         atomIndex2,
-            const Distance   &lowerDistance,
-            const Distance   &upperDistance,
-            double            springConstant,
-            double            dSpringConstantDt
+            molsys::Molecule           *molecule1,
+            molsys::Molecule           *molecule2,
+            AtomIndex                   atomIndex1,
+            AtomIndex                   atomIndex2,
+            const Distance             &lowerDistance,
+            const Distance             &upperDistance,
+            const ForceConstant        &springConstant,
+            const ForceConstantPerTime &dSpringConstantDt
         );
 
         void applyDistanceConstraint(
@@ -74,11 +72,10 @@ namespace constraints
 
         CONST_GETTER(_lowerDistance);
         CONST_GETTER(_upperDistance);
-
-        [[nodiscard]] double getSpringConstant() const;
-        [[nodiscard]] double getDSpringConstantDt() const;
-        [[nodiscard]] double getLowerEnergy() const;
-        [[nodiscard]] double getUpperEnergy() const;
+        CONST_GETTER(_springConstant);
+        CONST_GETTER(_dSpringConstantDt);
+        CONST_GETTER(_lowerEnergy);
+        CONST_GETTER(_upperEnergy);
     };
 
 }   // namespace constraints

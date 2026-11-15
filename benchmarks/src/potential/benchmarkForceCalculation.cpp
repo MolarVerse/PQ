@@ -38,6 +38,7 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 namespace
@@ -52,7 +53,10 @@ namespace
 
         const auto pair = std::make_shared<pot::LennardJonesPair>(
             benchmarkSetup::cutOff,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         );
         nonCoulomb->setGuffNonCoulPair(
             {MolType{1}, MolType{1}, AtomType{0}, AtomType{0}},
@@ -72,8 +76,8 @@ namespace
             benchmarkSetup::cutOff
         );
         pot::CoulombPotential::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
-        pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
-        pot::CoulombPotential::set_coulombForceCutOff(0.0);
+        pot::CoulombPotential::set_coulombEnergyCutOff(0.0 / angstrom);
+        pot::CoulombPotential::set_coulombForceCutOff(0.0 / angstrom2);
 
         PotentialType forceCalculation;
         forceCalculation.makeCoulombPotential(
@@ -106,8 +110,10 @@ namespace
                 cellList,
                 waterModelSettings
             );
-            benchmark::DoNotOptimize(physicalData.getCoulombEnergy());
-            benchmark::DoNotOptimize(physicalData.getNonCoulombEnergy());
+            auto tmp = physicalData.getCoulombEnergy();
+            benchmark::DoNotOptimize(tmp);
+            auto tmpNonCoulomb = physicalData.getNonCoulombEnergy();
+            benchmark::DoNotOptimize(tmpNonCoulomb);
         }
 
         const auto numberOfMolecules =

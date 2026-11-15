@@ -206,7 +206,11 @@ namespace input
         };
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setRattleToleranceByUser(value * amu / s); };
+        {
+            _constraintSettings->setRattleToleranceByUser(
+                value * g_per_mol / s
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

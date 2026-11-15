@@ -215,9 +215,10 @@ namespace out
             );
         }
 
-        const auto momentumNorm = norm(
-            physicalData.getMomentum().numerical_value_in(amu * angstrom / fs)
-        );
+        const auto momentumNorm =
+            norm(physicalData.getMomentum().numerical_value_in(
+                g_per_mol * angstrom / fs
+            ));
         _writeLeftScientific(momentumNorm, "MOMENTUM", "amuA/fs");
         _writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
 

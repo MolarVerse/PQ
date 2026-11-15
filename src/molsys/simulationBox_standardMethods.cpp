@@ -233,11 +233,11 @@ namespace molsys
     /**
      * @brief get atomic scalar forces
      *
-     * @return std::vector<double>
+     * @return std::vector<Force>
      */
-    std::vector<double> SimulationBox::getAtomicScalarForces() const
+    std::vector<Force> SimulationBox::getAtomicScalarForces() const
     {
-        std::vector<double> atomicScalarForces;
+        std::vector<Force> atomicScalarForces;
         atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -249,11 +249,11 @@ namespace molsys
     /**
      * @brief get atomic scalar forces old
      *
-     * @return std::vector<double>
+     * @return std::vector<Force>
      */
-    std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
+    std::vector<Force> SimulationBox::getAtomicScalarForcesOld() const
     {
-        std::vector<double> atomicScalarForces;
+        std::vector<Force> atomicScalarForces;
         atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -393,11 +393,11 @@ namespace molsys
     /**
      * @brief get all forces of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Force3D>
      */
-    std::vector<linalg::Vec3D> SimulationBox::getForces() const
+    std::vector<Force3D> SimulationBox::getForces() const
     {
-        std::vector<linalg::Vec3D> forces;
+        std::vector<Force3D> forces;
         forces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms) forces.push_back(atom->getForce());

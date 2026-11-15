@@ -69,8 +69,8 @@ namespace pot
      */
     BuckinghamPair::BuckinghamPair(
         const Pos&              cutOff,
-        double                  energyCutoff,
-        double                  forceCutoff,
+        const EnergyPerMol&     energyCutoff,
+        const Force&            forceCutoff,
         const BuckinghamParams& params
     )
         : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
@@ -94,13 +94,13 @@ namespace pot
      * [BuckinghamPair](https://doi.org/10.1098/rspa.1938.0173)
      *
      * @param distance
-     * @return std::pair<double, double>
+     * @return std::pair<EnergyPerMol, Force>
      */
-    std::pair<double, double> BuckinghamPair::calculate(
+    std::pair<EnergyPerMol, Force> BuckinghamPair::calculate(
         const Pos& distance
     ) const
     {
-        const auto distance_     = distance.numerical_value_in(Pos::unit);
+        const auto distance_     = distance;
         const auto distanceThird = distance_ * distance_ * distance_;
         const auto distanceSixth = distanceThird * distanceThird;
         const auto expTerm =
@@ -108,11 +108,9 @@ namespace pot
 
         auto energy =
             expTerm + (_params.c6 / distanceSixth) - get_energyCutoff();
-        energy -= get_forceCutoff() *
-                  (get_radialCutoff() - distance).numerical_value_in(Pos::unit);
+        energy -= get_forceCutoff() * (get_radialCutoff() - distance);
 
-        auto force =
-            -_params.dRho.numerical_value_in(InvDistance::unit) * expTerm;
+        auto force = -_params.dRho * expTerm;
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)

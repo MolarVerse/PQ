@@ -81,7 +81,7 @@ namespace
                 ),
                 false
             );
-            _data.setVirial(linalg::tensor3D{0.0});
+            _data.setVirial(linalg::tensor3D{0.0} * kcal_per_mol);
             _data.setKineticEnergyMolecularVector(
                 linalg::tensor3D{0.0} * kcal_per_mol
             );
@@ -99,7 +99,7 @@ namespace
             for (const auto x : positions)
             {
                 auto atom = std::make_shared<molsys::Atom>();
-                atom->setMass(1.0 * amu);
+                atom->setMass(1.0 * g_per_mol);
                 atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
                 atom->setVelocity(
                     linalg::Vec3D{speed, 0.0, 0.0} * angstrom / s
@@ -132,7 +132,8 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
     _addMolecule({1.0}, 0.0);
     _data.setVirial(
         linalg::diagonalMatrix(
-            _box.getVolume().numerical_value_in(Volume::unit) / PRESSURE_FACTOR
+            _box.getVolume().numerical_value_in(angstrom3) / PRESSURE_FACTOR *
+            kcal_per_mol
         )
     );
     _settings->manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
@@ -177,7 +178,8 @@ TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
     );
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::YZ);
     _data.setVirial(
-        linalg::tensor3D{{2.0, -1.0, 0.5}, {4.0, -2.0, 1.0}, {6.0, -3.0, 1.5}}
+        linalg::tensor3D{{2.0, -1.0, 0.5}, {4.0, -2.0, 1.0}, {6.0, -3.0, 1.5}} *
+        kcal_per_mol
     );
     manostat::Manostat pressure(_settings->manostatSettings);
     pressure.calculatePressure(_box, _data);
@@ -553,7 +555,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
         1e-12
     );
     EXPECT_NEAR(
-        _data.getMomentum()[0].numerical_value_in(amu * angstrom / fs) /
+        _data.getMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs) /
             (speed * FS_TO_S),
         2.0 / scale,
         1e-12
@@ -578,8 +580,9 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     kinetics::ResetKinetics reset(resetSettings);
     reset.reset(1, _data, _box, toTemperature(0.0));
     EXPECT_NEAR(
-        _box.calculateMomentum()[0].numerical_value_in(amu * angstrom / fs) /
-            (speed * FS_TO_S),
+        _box.calculateMomentum()[0].numerical_value_in(
+            g_per_mol * angstrom / fs
+        ) / (speed * FS_TO_S),
         0.0,
         1e-12
     );

@@ -65,11 +65,11 @@ class TestIntegrator : public ::testing::Test
         atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
         atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
 
-        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0));
+        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0) * kcal_per_mol / angstrom);
 
-        atom1->setMass(1.0 * amu);
-        atom2->setMass(2.0 * amu);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(2.0 * g_per_mol);
 
         _molecule1->addAtom(atom1);
         _molecule1->addAtom(atom2);

@@ -227,7 +227,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
         ExtVdwType(0),
         ExtVdwType(1),
         15.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 4.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 4.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
@@ -248,10 +251,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     atom3->setPosition(linalg::Vec3D{1.0, 2.0, 3.0} * angstrom);
     atom4->setPosition(linalg::Vec3D{4.0, 2.0, 3.0} * angstrom);
 
-    atom1->setForce({0.0, 0.0, 0.0});
-    atom2->setForce({0.0, 0.0, 0.0});
-    atom3->setForce({0.0, 0.0, 0.0});
-    atom4->setForce({0.0, 0.0, 0.0});
+    atom1->setForce(Force3D::zero());
+    atom2->setForce(Force3D::zero());
+    atom3->setForce(Force3D::zero());
+    atom4->setForce(Force3D::zero());
 
     atom1->setInternalGlobalVDWType(VdwType{0});
     atom2->setInternalGlobalVDWType(VdwType{1});
@@ -263,10 +266,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     atom3->setAtomType(AtomType{0});
     atom4->setAtomType(AtomType{1});
 
-    atom1->setPartialCharge(1.0);
-    atom2->setPartialCharge(-0.5);
-    atom3->setPartialCharge(1.0);
-    atom4->setPartialCharge(-0.5);
+    atom1->setPartialCharge(1.0 * elementary_charge);
+    atom2->setPartialCharge(-0.5 * elementary_charge);
+    atom3->setPartialCharge(1.0 * elementary_charge);
+    atom4->setPartialCharge(-0.5 * elementary_charge);
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -343,13 +346,13 @@ TEST_F(TestForceField, calculateBondedInteractions)
 
     forceField.calculateBondedInteractions(box, physicalData);
 
-    EXPECT_NE(physicalData.getBondEnergy(), 0.0);
-    EXPECT_NE(physicalData.getAngleEnergy(), 0.0);
-    EXPECT_NE(physicalData.getDihedralEnergy(), 0.0);
-    EXPECT_NE(physicalData.getImproperEnergy(), 0.0);
-    EXPECT_NE(physicalData.getCoulombEnergy(), 0.0);
-    EXPECT_NE(physicalData.getNonCoulombEnergy(), 0.0);
-    EXPECT_NE(physicalData.getVirial(), linalg::tensor3D(0.0));
+    EXPECT_NE(physicalData.getBondEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.getAngleEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.getDihedralEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.getImproperEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.getCoulombEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.getNonCoulombEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.getVirial(), VirialPerMol::zero());
 }
 
 /**
@@ -364,7 +367,10 @@ TEST_F(TestForceField, correctLinker)
         ExtVdwType(0),
         ExtVdwType(1),
         5.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 4.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 4.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
@@ -376,14 +382,14 @@ TEST_F(TestForceField, correctLinker)
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setForce({0.0, 0.0, 0.0});
-    atom2->setForce({0.0, 0.0, 0.0});
+    atom1->setForce(Force3D::zero());
+    atom2->setForce(Force3D::zero());
     atom1->setInternalGlobalVDWType(VdwType{0});
     atom2->setInternalGlobalVDWType(VdwType{1});
     atom1->setAtomType(AtomType{0});
     atom2->setAtomType(AtomType{1});
-    atom1->setPartialCharge(1.0);
-    atom2->setPartialCharge(-0.5);
+    atom1->setPartialCharge(1.0 * elementary_charge);
+    atom2->setPartialCharge(-0.5 * elementary_charge);
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -401,9 +407,21 @@ TEST_F(TestForceField, correctLinker)
         1.0 * angstrom
     );
 
-    EXPECT_NEAR(force, 104.37153798653807, 1e-6);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -6, 1e-6);
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), 134.48580380716751, 1e-6);
+    EXPECT_NEAR(
+        force.numerical_value_in(kcal_per_mol / angstrom),
+        104.37153798653807,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        -6,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        134.48580380716751,
+        1e-6
+    );
 
     physicalData.reset();
 
@@ -421,7 +439,19 @@ TEST_F(TestForceField, correctLinker)
         1.0 * angstrom
     );
 
-    EXPECT_NEAR(forceScaled, 11.092884496634518, 1e-6);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), -3, 1e-6);
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), 33.621450951791878, 1e-6);
+    EXPECT_NEAR(
+        forceScaled.numerical_value_in(kcal_per_mol / angstrom),
+        11.092884496634518,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        -3,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        33.621450951791878,
+        1e-6
+    );
 }

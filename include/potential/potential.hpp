@@ -28,6 +28,7 @@
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -124,7 +125,8 @@ namespace pot
         virtual std::shared_ptr<Potential> clone() const = 0;
 
         template <typename ChargeTag1, typename ChargeTag2>
-        std::pair<double, double> calculateSingleInteraction(
+        [[nodiscard]]
+        std::pair<EnergyPerMol, EnergyPerMol> calculateSingleInteraction(
             const molsys::Box &box,
             molsys::Molecule  &mol1,
             molsys::Molecule  &mol2,
@@ -133,14 +135,16 @@ namespace pot
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
-        double calculateSingleCoulombInteraction(
+        [[nodiscard]]
+        EnergyPerMol calculateSingleCoulombInteraction(
             const molsys::Box &box,
             molsys::Atom      &atom1,
             molsys::Atom      &atom2
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
-        std::pair<double, double> calculateSingleInteractionOneWay(
+        [[nodiscard]]
+        std::pair<EnergyPerMol, EnergyPerMol> calculateSingleInteractionOneWay(
             const molsys::Box &box,
             molsys::Molecule  &mol1,
             molsys::Molecule  &mol2,
@@ -155,7 +159,8 @@ namespace pot
         void makeNonCoulombPotential(const T &nonCoulombPot);
 
         template <typename T>
-        double getPartialCharge(molsys::Atom &atom) const;
+        [[nodiscard]]
+        Charge getPartialCharge(molsys::Atom &atom) const;
 
         /***************************
          * standard setter methods *

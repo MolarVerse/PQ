@@ -108,7 +108,7 @@ namespace molsys
         double      density
     )
     {
-        const auto volume = totalMass.numerical_value_in(amu) /
+        const auto volume = totalMass.numerical_value_in(g_per_mol) /
                             (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
 
         return {::cbrt(volume) * angstrom};

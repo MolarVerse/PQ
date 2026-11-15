@@ -91,9 +91,12 @@ namespace QM
                 {
                     const auto pos =
                         atom->getPosition().numerical_value_in(angstrom);
+
                     body << std::format(
                         "{:.12f} {:.12f} {:.12f} {:.12f}\n",
-                        atom->getPartialCharge(),
+                        atom->getPartialCharge().numerical_value_in(
+                            elementary_charge
+                        ),
                         pos[0],
                         pos[1],
                         pos[2]

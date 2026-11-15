@@ -63,13 +63,13 @@ namespace
 
         auto atom1 = std::make_shared<molsys::Atom>();
         atom1->setPosition(position1);
-        atom1->setMass(1.0 * amu);
+        atom1->setMass(1.0 * g_per_mol);
         molecule.addAtom(atom1);
         simBox.addAtom(atom1);
 
         auto atom2 = std::make_shared<molsys::Atom>();
         atom2->setPosition(position2);
-        atom2->setMass(1.0 * amu);
+        atom2->setMass(1.0 * g_per_mol);
         molecule.addAtom(atom2);
         simBox.addAtom(atom2);
 
@@ -270,7 +270,7 @@ TEST_F(TestSetup, constraintsSetupLogsToleranceAndMaxIterOfSettings)
     auto &constraintSettings = _settings->constraintSettings;
     constraintSettings.activateShakeByUser();
     constraintSettings.setShakeToleranceByUser(1e-5);
-    constraintSettings.setRattleToleranceByUser(1e-4 * amu / s);
+    constraintSettings.setRattleToleranceByUser(1e-4 * g_per_mol / s);
     constraintSettings.setShakeMaxIterByUser(37);
     constraintSettings.setRattleMaxIterByUser(41);
 

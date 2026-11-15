@@ -53,15 +53,15 @@ TEST_F(TestThermostat, calculateTemperature)
     const auto velocity_mol1_atom2 =
         mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
     const auto mass_mol1_atom1 =
-        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(g_per_mol);
     const auto mass_mol1_atom2 =
-        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(amu);
+        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(g_per_mol);
 
     const auto mol2 = _simulationBox->getMolecule(1);
     const auto velocity_mol2_atom1 =
         mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
     const auto mass_mol2_atom1 =
-        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(g_per_mol);
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
@@ -88,15 +88,15 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
     const auto velocity_mol1_atom2 =
         mol1.getAtomVelocity(AtomIndex{1}).numerical_value_in(angstrom / s);
     const auto mass_mol1_atom1 =
-        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+        mol1.getAtomMass(AtomIndex{0}).numerical_value_in(g_per_mol);
     const auto mass_mol1_atom2 =
-        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(amu);
+        mol1.getAtomMass(AtomIndex{1}).numerical_value_in(g_per_mol);
 
     const auto mol2 = _simulationBox->getMolecule(1);
     const auto velocity_mol2_atom1 =
         mol2.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s);
     const auto mass_mol2_atom1 =
-        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(amu);
+        mol2.getAtomMass(AtomIndex{0}).numerical_value_in(g_per_mol);
 
     const auto kineticEnergyAtomicVector =
         mass_mol1_atom1 * velocity_mol1_atom1 * velocity_mol1_atom1 +
@@ -177,11 +177,9 @@ TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0.0));
 
-    EXPECT_TRUE(
-        std::isfinite(
-            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
-        )
-    );
+    EXPECT_TRUE(isfinite(
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+    ));
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t dimension = 0; dimension < 3; ++dimension)
             EXPECT_TRUE(isfinite(atom->getVelocity()[dimension]));
@@ -215,11 +213,9 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0.0));
 
-    EXPECT_TRUE(
-        std::isfinite(
-            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
-        )
-    );
+    EXPECT_TRUE(isfinite(
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+    ));
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t dimension = 0; dimension < 3; ++dimension)
             EXPECT_TRUE(isfinite(atom->getVelocity()[dimension]));
@@ -269,11 +265,9 @@ TEST_F(TestThermostat, berendsenRelaxationTimeEqualToTimestepStaysFinite)
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0));
 
-    EXPECT_TRUE(
-        std::isfinite(
-            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
-        )
-    );
+    EXPECT_TRUE(isfinite(
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+    ));
     EXPECT_TRUE(velocitiesAreFinite(*_simulationBox));
 }
 
@@ -287,11 +281,9 @@ TEST_F(TestThermostat, berendsenNearZeroTemperatureStaysFinite)
 
     _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
 
-    EXPECT_TRUE(
-        std::isfinite(
-            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
-        )
-    );
+    EXPECT_TRUE(isfinite(
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+    ));
     EXPECT_TRUE(velocitiesAreFinite(*_simulationBox));
 }
 
@@ -324,11 +316,9 @@ TEST_F(TestThermostat, velocityRescalingRelaxationTimeShorterThanTimestep)
         Temperature{0.5 * _data->getTemperature().quantity_from_zero()}
     );
 
-    EXPECT_TRUE(
-        std::isfinite(
-            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
-        )
-    );
+    EXPECT_TRUE(isfinite(
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+    ));
     EXPECT_TRUE(velocitiesAreFinite(*_simulationBox));
 }
 
@@ -338,10 +328,13 @@ namespace
     {
         NoseHooverSettings settings;
         settings.setNoseHooverCouplingFrequencyByUser(1.0 * Hz);
-        const auto chis =
-            std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
+        const auto chis = std::map<size_t, Action>{
+            {0, 0.1 * kcal_per_mol * s},
+            {1, 0.2 * kcal_per_mol * s},
+            {2, 0.3 * kcal_per_mol * s}
+        };
         const auto zetas =
-            std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+            std::map<size_t, Quantity>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
         settings.setChiByUser(chis);
         settings.setZetaByUser(zetas);
         return settings;
@@ -416,8 +409,8 @@ TEST_F(TestThermostat, noseHooverTinyPositiveTargetTemperatureStaysFinite)
 
     thermostat.applyThermostat(*_simulationBox, *_data, toTemperature(1e-6));
 
-    EXPECT_TRUE(std::isfinite(_data->getNoseHooverMomentumEnergy()));
-    EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
+    EXPECT_TRUE(isfinite(_data->getNoseHooverMomentumEnergy()));
+    EXPECT_TRUE(isfinite(_data->getNoseHooverFrictionEnergy()));
 }
 
 TEST_F(TestThermostat, langevinTinyTimestepSigmaStaysFinite)
@@ -425,13 +418,13 @@ TEST_F(TestThermostat, langevinTinyTimestepSigmaStaysFinite)
     const auto previousTimeStep = settings::TimingsSettings::getTimeStep();
     settings::TimingsSettings::setTimeStep(1e-12 * fs);
     const auto sigma = thermostat::LangevinThermostat::calculateSigma(
-        0.01,
+        0.01 / s,
         toTemperature(300.0)
     );
     settings::TimingsSettings::setTimeStep(previousTimeStep);
 
-    EXPECT_TRUE(std::isfinite(sigma));
-    EXPECT_GT(sigma, 0.0);
+    EXPECT_TRUE(isfinite(sigma));
+    EXPECT_GT(sigma.numerical_value_in(decltype(sigma)::unit), 0.0);
 }
 
 /* ---------- LangevinThermostat ---------- */
@@ -441,60 +434,72 @@ TEST_F(TestThermostat, langevinConstructorComputesSigma)
     // sigma > 0 once friction and targetTemp are non-zero.
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigma = thermostat::LangevinThermostat::calculateSigma(
-        0.1,
+        0.1 / s,
         toTemperature(300.0)
     );
-    EXPECT_GT(sigma, 0.0);
+    EXPECT_GT(sigma.numerical_value_in(decltype(sigma)::unit), 0.0);
 }
 
 TEST_F(TestThermostat, langevinZeroFrictionHasZeroSigma)
 {
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigma = thermostat::LangevinThermostat::calculateSigma(
-        0.0,
+        0.0 / s,
         toTemperature(300.0)
     );
 
-    EXPECT_DOUBLE_EQ(sigma, 0.0);
+    EXPECT_DOUBLE_EQ(sigma.numerical_value_in(decltype(sigma)::unit), 0.0);
 }
 
 TEST_F(TestThermostat, langevinSigmaScalesWithTargetTemperature)
 {
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaAt300 = thermostat::LangevinThermostat::calculateSigma(
-        0.1,
+        0.1 / s,
         toTemperature(300.0)
     );
     const auto sigmaAt600 = thermostat::LangevinThermostat::calculateSigma(
-        0.1,
+        0.5 / s,
         toTemperature(600.0)
     );
 
     // a higher target temperature must give a larger sigma (the
     // Langevin Gaussian-noise amplitude scales with sqrt(kBT)).
-    EXPECT_NE(sigmaAt300, sigmaAt600);
-    EXPECT_GT(sigmaAt600, sigmaAt300);
+    EXPECT_NE(
+        sigmaAt300.numerical_value_in(decltype(sigmaAt300)::unit),
+        sigmaAt600.numerical_value_in(decltype(sigmaAt600)::unit)
+    );
+    EXPECT_GT(
+        sigmaAt600.numerical_value_in(decltype(sigmaAt600)::unit),
+        sigmaAt300.numerical_value_in(decltype(sigmaAt300)::unit)
+    );
 }
 
 TEST_F(TestThermostat, langevinSigmaScalesWithFriction)
 {
     settings::TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaLow = thermostat::LangevinThermostat::calculateSigma(
-        0.1,
+        0.1 / s,
         toTemperature(300.0)
     );
     const auto sigmaHigh = thermostat::LangevinThermostat::calculateSigma(
-        0.5,
+        0.5 / s,
         toTemperature(300.0)
     );
 
-    EXPECT_NE(sigmaLow, sigmaHigh);
-    EXPECT_GT(sigmaHigh, sigmaLow);
+    EXPECT_NE(
+        sigmaLow.numerical_value_in(decltype(sigmaLow)::unit),
+        sigmaHigh.numerical_value_in(decltype(sigmaHigh)::unit)
+    );
+    EXPECT_GT(
+        sigmaHigh.numerical_value_in(decltype(sigmaHigh)::unit),
+        sigmaLow.numerical_value_in(decltype(sigmaLow)::unit)
+    );
 }
 
 TEST_F(TestThermostat, langevinThermostatType)
 {
-    auto langevin = thermostat::LangevinThermostat(0.1);
+    auto langevin = thermostat::LangevinThermostat(0.1 / s);
     EXPECT_EQ(langevin.getThermostatType(), ThermostatType::LANGEVIN);
 }
 
@@ -514,7 +519,7 @@ namespace
             auto molecule = molsys::Molecule();
             auto atom     = std::make_shared<molsys::Atom>();
 
-            atom->setMass(12.0 * amu);
+            atom->setMass(12.0 * g_per_mol);
             atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
             molecule.addAtom(atom);
 
@@ -542,7 +547,7 @@ namespace
 TEST_F(TestThermostat, langevinWithoutFrictionLeavesVelocitiesUnchanged)
 {
     settings::TimingsSettings::setTimeStep(0.5 * fs);
-    auto langevin = thermostat::LangevinThermostat(0.0);
+    auto langevin = thermostat::LangevinThermostat(0.0 / s);
 
     langevin
         .applyThermostatHalfStep(*_simulationBox, *_data, toTemperature(300.0));
@@ -565,7 +570,7 @@ TEST_F(TestThermostat, langevinWithoutFrictionLeavesVelocitiesUnchanged)
 TEST_F(TestThermostat, langevinAtZeroTemperatureOnlyDampsVelocities)
 {
     settings::TimingsSettings::setTimeStep(0.5 * fs);
-    auto langevin = thermostat::LangevinThermostat(1.0e13);
+    auto langevin = thermostat::LangevinThermostat(1.0e13 / s);
 
     langevin
         .applyThermostatHalfStep(*_simulationBox, *_data, toTemperature(0.0));
@@ -595,7 +600,7 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
         settings::GeneralSettings::setIsRandomSeedSet(true);
 
         auto       bath     = makeBath();
-        auto       langevin = thermostat::LangevinThermostat(1.0e12);
+        auto       langevin = thermostat::LangevinThermostat(1.0e12 / s);
         const auto target   = toTemperature(300.0);
 
         for (size_t step = 0; step < 5; ++step)
@@ -623,7 +628,7 @@ TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
 
     auto bath     = makeBath();
     auto data     = physicalData::PhysicalData();
-    auto langevin = thermostat::LangevinThermostat(1.0e13);
+    auto langevin = thermostat::LangevinThermostat(1.0e13 / s);
     auto target   = toTemperature(300.0);
 
     settings::GeneralSettings::setIsRandomSeedSet(false);
@@ -648,14 +653,14 @@ TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
 TEST_F(TestThermostat, langevinFullStepUpdatesTemperatureOfPhysicalData)
 {
     settings::TimingsSettings::setTimeStep(0.5 * fs);
-    auto langevin = thermostat::LangevinThermostat(1.0e13);
+    auto langevin = thermostat::LangevinThermostat(1.0e13 / s);
 
     langevin.applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
 
     const auto temperature =
         _data->getTemperature().quantity_from_zero().numerical_value_in(K);
 
-    EXPECT_TRUE(std::isfinite(temperature));
+    EXPECT_TRUE(isfinite(temperature));
     EXPECT_GT(temperature, 0.0);
 }
 
@@ -665,9 +670,9 @@ TEST_F(TestThermostat, langevinCopyKeepsFriction)
     settings::GeneralSettings::setRandomSeed(3);
     settings::GeneralSettings::setIsRandomSeedSet(true);
 
-    auto original = thermostat::LangevinThermostat(1.0e13);
+    auto original = thermostat::LangevinThermostat(1.0e13 / s);
     auto copied   = thermostat::LangevinThermostat(original);
-    auto assigned = thermostat::LangevinThermostat(0.0);
+    auto assigned = thermostat::LangevinThermostat(0.0 / s);
     assigned      = original;
 
     settings::GeneralSettings::setIsRandomSeedSet(false);
@@ -702,8 +707,12 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
 {
     NoseHooverSettings noseHooverSettings;
     noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
-    const auto chis  = std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
-    const auto zetas = std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+    const auto chis = std::map<size_t, Action>{
+        {0, 0.1 * kcal_per_mol * s},
+        {1, 0.2 * kcal_per_mol * s},
+        {2, 0.3 * kcal_per_mol * s}
+    };
+    const auto zetas = std::map<size_t, Quantity>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
     noseHooverSettings.setChiByUser(chis);
     noseHooverSettings.setZetaByUser(zetas);
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
@@ -712,19 +721,17 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
     thermostat.applyThermostatOnForces(*_simulationBox, toTemperature(300.0));
     for (const auto &atom : _simulationBox->getAtoms())
         for (size_t axis = 0; axis < 3; ++axis)
-            EXPECT_TRUE(std::isfinite(atom->getForce()[axis]));
+            EXPECT_TRUE(isfinite(atom->getForce()[axis]));
 
     const auto chiBefore  = thermostat.getChi();
     const auto zetaBefore = thermostat.getZeta();
     thermostat.applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
 
-    EXPECT_TRUE(
-        std::isfinite(
-            _data->getTemperature().quantity_from_zero().numerical_value_in(K)
-        )
-    );
-    EXPECT_TRUE(std::isfinite(_data->getNoseHooverMomentumEnergy()));
-    EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
+    EXPECT_TRUE(isfinite(
+        _data->getTemperature().quantity_from_zero().numerical_value_in(K)
+    ));
+    EXPECT_TRUE(isfinite(_data->getNoseHooverMomentumEnergy()));
+    EXPECT_TRUE(isfinite(_data->getNoseHooverFrictionEnergy()));
     EXPECT_NE(thermostat.getChi(), chiBefore);
     EXPECT_NE(thermostat.getZeta(), zetaBefore);
 }
@@ -895,7 +902,11 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
     NoseHooverSettings noseHooverSettings;
     noseHooverSettings.setNoseHooverChainLengthByUser(chi.size() - 1);
     noseHooverSettings.setNoseHooverCouplingFrequencyByUser(freq * Hz);
-    noseHooverSettings.setChiByUser({{0, 0.1}, {1, 0.2}, {2, 0.3}});
+    noseHooverSettings.setChiByUser(
+        {{0, 0.1 * kcal_per_mol * s},
+         {1, 0.2 * kcal_per_mol * s},
+         {2, 0.3 * kcal_per_mol * s}}
+    );
     noseHooverSettings.setZetaByUser({{0, 0.0}, {1, 0.0}, {2, 0.0}});
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
@@ -936,11 +947,23 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
     ASSERT_EQ(thermostat.getZeta().size(), zeta.size() - 1);
     for (size_t i = 0; i < chi.size() - 1; ++i)
     {
-        EXPECT_DOUBLE_EQ(thermostat.getChi()[i], chi[i]);
-        EXPECT_DOUBLE_EQ(thermostat.getZeta()[i], zeta[i]);
+        EXPECT_DOUBLE_EQ(
+            thermostat.getChi()[i].numerical_value_in(kcal_per_mol * s),
+            chi[i]
+        );
+        EXPECT_DOUBLE_EQ(
+            thermostat.getZeta()[i].numerical_value_in(one),
+            zeta[i]
+        );
     }
-    EXPECT_DOUBLE_EQ(_data->getNoseHooverMomentumEnergy(), eMom);
-    EXPECT_DOUBLE_EQ(_data->getNoseHooverFrictionEnergy(), eFri);
+    EXPECT_DOUBLE_EQ(
+        _data->getNoseHooverMomentumEnergy().numerical_value_in(kcal_per_mol),
+        eMom
+    );
+    EXPECT_DOUBLE_EQ(
+        _data->getNoseHooverFrictionEnergy().numerical_value_in(one),
+        eFri
+    );
     EXPECT_EQ(thermostat.getTemperature(), temperature);
 }
 
@@ -952,14 +975,22 @@ TEST_F(TestThermostat, noseHooverForceMatchesReference)
 
     NoseHooverSettings noseHooverSettings;
     noseHooverSettings.setNoseHooverCouplingFrequencyByUser(freq * Hz);
-    const auto chis  = std::map<size_t, double>{{0, chi0}, {1, 0.2}, {2, 0.3}};
-    const auto zetas = std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+    const auto chis = std::map<size_t, Action>{
+        {0, chi0 * kcal_per_mol * s},
+        {1, 0.2 * kcal_per_mol * s},
+        {2, 0.3 * kcal_per_mol * s}
+    };
+    const auto zetas = std::map<size_t, Quantity>{
+        {0, 0.0 * one},
+        {1, 0.0 * one},
+        {2, 0.0 * one}
+    };
     noseHooverSettings.setChiByUser(chis);
     noseHooverSettings.setZetaByUser(zetas);
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
     for (auto &atom : _simulationBox->getAtoms())
-        atom->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom->setForce(Force3D::zero());
 
     thermostat.applyThermostatOnForces(
         *_simulationBox,
@@ -977,10 +1008,12 @@ TEST_F(TestThermostat, noseHooverForceMatchesReference)
         for (size_t axis = 0; axis < 3; ++axis)
         {
             EXPECT_DOUBLE_EQ(
-                atom->getForce()[axis],
+                atom->getForce()[axis].numerical_value_in(
+                    kcal_per_mol / angstrom
+                ),
                 -factor *
                     atom->getVelocity()[axis].numerical_value_in(angstrom / s) *
-                    atom->getMass().numerical_value_in(amu)
+                    atom->getMass().numerical_value_in(g_per_mol)
             );
         }
     }
@@ -1006,7 +1039,7 @@ TEST_F(TestThermostat, langevinSigmaMatchesReference)
 
     const auto friction = 0.1;
     const auto sigma    = thermostat::LangevinThermostat::calculateSigma(
-        friction,
+        friction / s,
         toTemperature(300.0)
     );
 
@@ -1015,12 +1048,16 @@ TEST_F(TestThermostat, langevinSigmaMatchesReference)
         4.0 * friction * UNIVERSAL_GAS_CONSTANT * unitConversion * 300.0 / 0.1
     );
 
-    EXPECT_DOUBLE_EQ(sigma, expected);
+    EXPECT_DOUBLE_EQ(sigma.numerical_value_in(decltype(sigma)::unit), expected);
 
     // sigma scales with sqrt(T)
     const auto sigma4 = thermostat::LangevinThermostat::calculateSigma(
-        friction,
+        friction / s,
         toTemperature(1200.0)
     );
-    EXPECT_NEAR(sigma4, 2.0 * sigma, 1e-12 * expected);
+    EXPECT_NEAR(
+        sigma4.numerical_value_in(decltype(sigma4)::unit),
+        2.0 * sigma.numerical_value_in(decltype(sigma)::unit),
+        1e-12 * expected
+    );
 }

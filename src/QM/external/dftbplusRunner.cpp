@@ -34,7 +34,6 @@
 #include <string>
 
 #include "box.hpp"
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "hybridConfigurator.hpp"
@@ -172,7 +171,9 @@ namespace QM
                         atom->getPosition()[0].numerical_value_in(angstrom),
                         atom->getPosition()[1].numerical_value_in(angstrom),
                         atom->getPosition()[2].numerical_value_in(angstrom),
-                        atom->getPartialCharge()
+                        atom->getPartialCharge().numerical_value_in(
+                            elementary_charge
+                        )
                     );
                     _usePointCharges = true;
                 }
@@ -302,13 +303,10 @@ namespace QM
             }
         }
 
-        const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
-        stress                = stress * conversion;
-        const auto virial =
-            stress *
-            box.getVolume().numerical_value_in(angstrom * angstrom * angstrom);
+        const Stress stress_ = stress * hartree / bohr3 * avogadro_constant;
+        const auto   virial  = stress_ * box.getVolume();
 
-        physicalData.setStressTensor(stress);
+        physicalData.setStressTensor(stress_);
         physicalData.addVirial(virial);
 
         stressFile.close();

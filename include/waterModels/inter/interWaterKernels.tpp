@@ -67,8 +67,8 @@ namespace waterModel
         const DistanceSquared                        &rCutSquared,
         const molsys::Box                            &box,
         const pot::NonCoulombPair                    &nonCoulPair,
-        double                                       &coulombEnergy,
-        double                                       &nonCoulombEnergy
+        EnergyPerMol                                 &coulombEnergy,
+        EnergyPerMol                                 &nonCoulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -102,12 +102,9 @@ namespace waterModel
                 f                += nonCoulF;
             }
 
-            const auto forcexyz =
-                dxyz.numerical_value_in(mstd::units::angstrom) *
-                (f / distance.numerical_value_in(mstd::units::angstrom));
+            const auto forcexyz = dxyz * (f / distance);
 
-            const auto shiftForcexyz =
-                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
+            const auto shiftForcexyz = forcexyz * txyz;
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -129,7 +126,7 @@ namespace waterModel
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
         const DistanceSquared                        &rCutSquared,
         const molsys::Box                            &box,
-        double                                       &coulombEnergy
+        EnergyPerMol                                 &coulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -155,12 +152,9 @@ namespace waterModel
             auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
             coulombEnergy += e;
 
-            const auto forcexyz =
-                dxyz.numerical_value_in(mstd::units::angstrom) *
-                (f / distance.numerical_value_in(mstd::units::angstrom));
+            const auto forcexyz = dxyz * (f / distance);
 
-            const auto shiftForcexyz =
-                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
+            const auto shiftForcexyz = forcexyz * txyz;
 
             atom1.addForce(forcexyz);
             atom2.addForce(-forcexyz);
@@ -183,8 +177,8 @@ namespace waterModel
         const DistanceSquared                        &rCutSquared,
         const molsys::Box                            &box,
         const pot::NonCoulombPair                    &nonCoulPair,
-        double                                       &coulombEnergy,
-        double                                       &nonCoulombEnergy
+        EnergyPerMol                                 &coulombEnergy,
+        EnergyPerMol                                 &nonCoulombEnergy
     )
     {
         const auto xyz_i = atom1.getPosition();
@@ -217,12 +211,9 @@ namespace waterModel
                 f                         += nonCoulF;
             }
 
-            const auto forcexyz =
-                dxyz.numerical_value_in(mstd::units::angstrom) *
-                (f / distance.numerical_value_in(mstd::units::angstrom));
+            const auto forcexyz = dxyz * (f / distance);
 
-            const auto shiftForcexyz =
-                forcexyz * txyz.numerical_value_in(mstd::units::angstrom);
+            const auto shiftForcexyz = forcexyz * txyz;
 
             atom1.addForce(forcexyz);
 

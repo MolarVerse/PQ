@@ -69,10 +69,10 @@ namespace pot
      * @param params
      */
     LennardJonesPair::LennardJonesPair(
-        const Pos      &cutOff,
-        double          energyCutoff,
-        double          forceCutoff,
-        const LJParams &params
+        const Pos          &cutOff,
+        const EnergyPerMol &energyCutoff,
+        const Force        &forceCutoff,
+        const LJParams     &params
     )
         : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
     {
@@ -100,13 +100,13 @@ namespace pot
      * @brief calculates the energy and force of a LennardJonesPair
      *
      * @param distance
-     * @return std::pair<double, double>
+     * @return std::pair<EnergyPerMol, Force>
      */
-    std::pair<double, double> LennardJonesPair::calculate(
+    std::pair<EnergyPerMol, Force> LennardJonesPair::calculate(
         const Pos &distance
     ) const
     {
-        const auto distance_       = distance.numerical_value_in(Pos::unit);
+        const auto distance_       = distance;
         const auto distanceThird   = distance_ * distance_ * distance_;
         const auto distanceSixth   = distanceThird * distanceThird;
         const auto distanceTwelfth = distanceSixth * distanceSixth;
@@ -114,8 +114,7 @@ namespace pot
         auto energy  = _params.c12 / distanceTwelfth;
         energy      += _params.c6 / distanceSixth;
         energy      -= get_energyCutoff();
-        energy      -= get_forceCutoff() *
-                  (get_radialCutoff() - distance).numerical_value_in(Pos::unit);
+        energy      -= get_forceCutoff() * (get_radialCutoff() - distance);
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         auto force  = 12.0 * _params.c12 / (distanceTwelfth * distance_);

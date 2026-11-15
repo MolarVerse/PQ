@@ -55,7 +55,7 @@ namespace
     )
     {
         double distance      = static_cast<double>(state.range(0)) / 1000.0;
-        double chargeProduct = -0.25;
+        auto   chargeProduct = -0.25 * (elementary_charge * elementary_charge);
 
         for (auto _ : state)
         {
@@ -71,7 +71,10 @@ namespace
     {
         pot::LennardJonesPair potential(
             9.0 * angstrom,
-            LJParams{.c6 = 2.0, .c12 = 3.0}
+            LJParams{
+                .c6  = 2.0 * kcal_per_mol * angstrom6,
+                .c12 = 3.0 * kcal_per_mol * angstrom12
+            }
         );
         runNonCoulombBenchmark(state, potential);
     }
@@ -80,7 +83,11 @@ namespace
     {
         pot::BuckinghamPair potential(
             9.0 * angstrom,
-            BuckinghamParams{.scaling = 1.0, .dRho = 0.3 / angstrom, .c6 = 2.0}
+            BuckinghamParams{
+                .scaling = 1.0 * kcal_per_mol,
+                .dRho    = 0.3 / angstrom,
+                .c6      = 2.0 * kcal_per_mol * angstrom6
+            }
         );
         runNonCoulombBenchmark(state, potential);
     }
@@ -90,7 +97,7 @@ namespace
         pot::MorsePair potential(
             9.0 * angstrom,
             MorseParams{
-                .dissociationEnergy  = 1.0,
+                .dissociationEnergy  = 1.0 * kcal_per_mol,
                 .wellWidth           = 2.0 / angstrom,
                 .equilibriumDistance = 1.5 * angstrom
             }
@@ -106,7 +113,7 @@ namespace
 
     void BM_CoulombWolf(benchmark::State& state)
     {
-        pot::CoulombWolf potential(9.0 * angstrom, 0.25);
+        pot::CoulombWolf potential(9.0 * angstrom, 0.25 / angstrom);
         runCoulombBenchmark(state, potential);
     }
 

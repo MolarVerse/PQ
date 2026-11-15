@@ -54,6 +54,24 @@ namespace linalg
     template <typename T>
     void operator+=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs);
 
+    // mixed element types, e.g. quantity<kcal/mol> + quantity<energy/...>
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(const T &lhs, const U &rhs) { lhs + rhs; }
+    constexpr auto operator+(
+        const StaticMatrix3x3<T> &lhs,
+        const StaticMatrix3x3<U> &rhs
+    ) -> StaticMatrix3x3<std::remove_cvref_t<decltype(lhs[0][0] + rhs[0][0])>>;
+
+    // the result keeps the element type of lhs
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(T &lhs, const U &rhs) { lhs += rhs; }
+    constexpr void operator+=(
+        StaticMatrix3x3<T>       &lhs,
+        const StaticMatrix3x3<U> &rhs
+    );
+
     /****************************
      * operator- and operator-= *
      ****************************/
@@ -75,6 +93,15 @@ namespace linalg
 
     template <typename T>
     void operator-=(StaticMatrix3x3<T> &lhs, const StaticMatrix3x3<T> &rhs);
+
+    // the result keeps the element type of lhs
+    template <typename T, typename U>
+    requires(!std::same_as<T, U>) &&
+            requires(T &lhs, const U &rhs) { lhs -= rhs; }
+    constexpr void operator-=(
+        StaticMatrix3x3<T>       &lhs,
+        const StaticMatrix3x3<U> &rhs
+    );
 
     /****************************
      * operator* and operator*= *
@@ -128,6 +155,19 @@ namespace linalg
 
     template <typename T, typename V>
     requires(!std::same_as<T, V>) && mstd::NonArithmeticScalar<T, V>
+    constexpr auto operator*(const V &scalar, const StaticMatrix3x3<T> &mat)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>;
+
+    // plain number times a matrix of quantities, e.g. 2.0 * virial
+    template <typename T, typename V>
+    requires(!std::same_as<T, V>) && std::is_arithmetic_v<V> &&
+            requires(const T &elem, const V &val) { elem * val; }
+    constexpr auto operator*(const StaticMatrix3x3<T> &mat, const V &scalar)
+        -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>;
+
+    template <typename T, typename V>
+    requires(!std::same_as<T, V>) && std::is_arithmetic_v<V> &&
+            requires(const T &elem, const V &val) { elem * val; }
     constexpr auto operator*(const V &scalar, const StaticMatrix3x3<T> &mat)
         -> StaticMatrix3x3<std::remove_cvref_t<decltype(mat[0][0] * scalar)>>;
 

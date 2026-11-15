@@ -25,6 +25,7 @@
 
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -39,10 +40,10 @@ namespace thermostat
        private:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
-        double _friction = 0.0;
+        Frequency _friction = Frequency::zero();
 
        public:
-        explicit LangevinThermostat(double);
+        explicit LangevinThermostat(const Frequency &friction);
         ~LangevinThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -53,7 +54,10 @@ namespace thermostat
         LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
         [[nodiscard]]
-        static double calculateSigma(double friction, const Temperature &);
+        static auto calculateSigma(
+            const Frequency   &friction,
+            const Temperature &targetTemperature
+        ) -> decltype(mstd::sqrt(EnergyPerMol{} / TimeSquared{}));
 
         void applyLangevin(molsys::SimulationBox &, const Temperature &);
 

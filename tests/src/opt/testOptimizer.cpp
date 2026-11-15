@@ -38,7 +38,7 @@ namespace
 {
     struct Sample
     {
-        Energy        energy;
+        EnergyPerMol  energy;
         linalg::Vec3D force0;
         linalg::Vec3D force1;
         linalg::Vec3D pos0;

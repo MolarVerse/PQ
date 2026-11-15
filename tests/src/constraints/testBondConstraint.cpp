@@ -201,5 +201,5 @@ TEST_F(TestBondConstraint, applyRattle)
         );
     }
 
-    EXPECT_TRUE(_bondConstraint->applyRattle(1000.0 * amu / s));
+    EXPECT_TRUE(_bondConstraint->applyRattle(1000.0 * g_per_mol / s));
 }

@@ -55,13 +55,15 @@ namespace pot
         );
         explicit GuffPair(
             const Pos&,
-            double,
-            double,
+            const EnergyPerMol&,
+            const Force&,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>&
         );
 
         [[nodiscard]]
-        std::pair<double, double> calculate(const Pos& distance) const override;
+        std::pair<EnergyPerMol, Force> calculate(
+            const Pos& distance
+        ) const override;
 
         friend struct ::TestGuffPairUtils;
     };

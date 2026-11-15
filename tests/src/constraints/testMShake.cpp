@@ -105,9 +105,9 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setMass(1.0 * amu);
-    atom2->setMass(1.0 * amu);
-    atom3->setMass(1.0 * amu);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom3->setMass(1.0 * g_per_mol);
 
     // Stretch bond 0-1 by a small amount; M-SHAKE must pull atom 1
     // back along the bond to restore the rigid triangle. The
@@ -250,8 +250,8 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
     for (size_t k = 0; k < 3; ++k)
     {
         EXPECT_NEAR(
-            momentumAfter[k].numerical_value_in(amu * angstrom / s),
-            momentumBefore[k].numerical_value_in(amu * angstrom / s),
+            momentumAfter[k].numerical_value_in(g_per_mol * angstrom / s),
+            momentumBefore[k].numerical_value_in(g_per_mol * angstrom / s),
             1.0e-10
         );
     }
@@ -305,9 +305,9 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
-    atom1->setMass(1.0 * amu);
-    atom2->setMass(1.0 * amu);
-    atom3->setMass(1.0 * amu);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom3->setMass(1.0 * g_per_mol);
     // Large perturbation so the solver cannot converge in 1 iteration.
     atom1->setPosition(refPos0);
     atom2->setPosition(linalg::Vec3D{1.5, 0.0, 0.0} * angstrom);

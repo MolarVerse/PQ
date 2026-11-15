@@ -25,6 +25,7 @@
 #include "physicalData.hpp"
 #include "potential.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 
 namespace waterModel
 {
@@ -49,8 +50,8 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         size_t idxI = 0;
         for (auto &water1 : simulationBox.getWaterTypeMolecules())
@@ -133,7 +134,7 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy = 0.0;
+        auto totalCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
@@ -212,8 +213,8 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
@@ -326,8 +327,8 @@ namespace waterModel
         const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});

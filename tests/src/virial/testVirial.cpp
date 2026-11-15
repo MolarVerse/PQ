@@ -32,9 +32,15 @@ TEST_F(TestVirial, calculateVirial)
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
 
-    const auto force_mol1_atom1 = molecule0.getAtomForce(AtomIndex{0});
-    const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
-    const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
+    const auto force_mol1_atom1 =
+        molecule0.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom);
+    const auto force_mol1_atom2 =
+        molecule0.getAtomForce(AtomIndex{1})
+            .numerical_value_in(kcal_per_mol / angstrom);
+    const auto force_mol2_atom1 =
+        molecule1.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom);
 
     const auto position_mol1_atom1 =
         molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
@@ -43,9 +49,12 @@ TEST_F(TestVirial, calculateVirial)
     const auto position_mol2_atom1 =
         molecule1.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
 
-    const auto shiftForce_mol1_atom1 = molecule0.getAtomShiftForce(0);
-    const auto shiftForce_mol1_atom2 = molecule0.getAtomShiftForce(1);
-    const auto shiftForce_mol2_atom1 = molecule1.getAtomShiftForce(0);
+    const auto shiftForce_mol1_atom1 = molecule0.getAtomShiftForce(AtomIndex{0})
+                                           .numerical_value_in(kcal_per_mol);
+    const auto shiftForce_mol1_atom2 = molecule0.getAtomShiftForce(AtomIndex{1})
+                                           .numerical_value_in(kcal_per_mol);
+    const auto shiftForce_mol2_atom1 = molecule1.getAtomShiftForce(AtomIndex{0})
+                                           .numerical_value_in(kcal_per_mol);
 
     const auto virial = force_mol1_atom1 * position_mol1_atom1 +
                         force_mol1_atom2 * position_mol1_atom2 +
@@ -55,9 +64,24 @@ TEST_F(TestVirial, calculateVirial)
 
     const auto virialCalc = virial::calculateVirial(*_simBox);
     EXPECT_EQ(diagonal(virialCalc), virial);
-    EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(0), linalg::Vec3D{0});
-    EXPECT_EQ(_simBox->getMolecule(0).getAtomShiftForce(1), linalg::Vec3D{0});
-    EXPECT_EQ(_simBox->getMolecule(1).getAtomShiftForce(0), linalg::Vec3D{0});
+    EXPECT_EQ(
+        _simBox->getMolecule(0)
+            .getAtomShiftForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol),
+        linalg::Vec3D{0}
+    );
+    EXPECT_EQ(
+        _simBox->getMolecule(0)
+            .getAtomShiftForce(AtomIndex{1})
+            .numerical_value_in(kcal_per_mol),
+        linalg::Vec3D{0}
+    );
+    EXPECT_EQ(
+        _simBox->getMolecule(1)
+            .getAtomShiftForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol),
+        linalg::Vec3D{0}
+    );
 }
 
 TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
@@ -73,9 +97,15 @@ TEST_F(TestVirial, intramolecularCorrection)
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
 
-    const auto force_mol1_atom1 = molecule0.getAtomForce(AtomIndex{0});
-    const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
-    const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
+    const auto force_mol1_atom1 =
+        molecule0.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom);
+    const auto force_mol1_atom2 =
+        molecule0.getAtomForce(AtomIndex{1})
+            .numerical_value_in(kcal_per_mol / angstrom);
+    const auto force_mol2_atom1 =
+        molecule1.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom);
 
     const auto position_mol1_atom1 =
         molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
@@ -84,9 +114,12 @@ TEST_F(TestVirial, intramolecularCorrection)
     const auto position_mol2_atom1 =
         molecule1.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
 
-    const auto shiftForce_mol1_atom1 = molecule0.getAtomShiftForce(0);
-    const auto shiftForce_mol1_atom2 = molecule0.getAtomShiftForce(1);
-    const auto shiftForce_mol2_atom1 = molecule1.getAtomShiftForce(0);
+    const auto shiftForce_mol1_atom1 = molecule0.getAtomShiftForce(AtomIndex{0})
+                                           .numerical_value_in(kcal_per_mol);
+    const auto shiftForce_mol1_atom2 = molecule0.getAtomShiftForce(AtomIndex{1})
+                                           .numerical_value_in(kcal_per_mol);
+    const auto shiftForce_mol2_atom1 = molecule1.getAtomShiftForce(AtomIndex{0})
+                                           .numerical_value_in(kcal_per_mol);
 
     auto virial = force_mol1_atom1 * position_mol1_atom1 +
                   force_mol1_atom2 * position_mol1_atom2 +
@@ -96,7 +129,7 @@ TEST_F(TestVirial, intramolecularCorrection)
 
     const auto virialCalc = virial::calculateVirial(*_simBox);
 
-    EXPECT_EQ(diagonal(virialCalc), virial);
+    EXPECT_EQ(diagonal(virialCalc).numerical_value_in(kcal_per_mol), virial);
 }
 
 TEST_F(TestVirial, calculateQMVirialWithNoQMAtomsIsZero)
@@ -115,9 +148,15 @@ TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
 
-    const auto force_mol1_atom1 = molecule0.getAtomForce(AtomIndex{0});
-    const auto force_mol1_atom2 = molecule0.getAtomForce(AtomIndex{1});
-    const auto force_mol2_atom1 = molecule1.getAtomForce(AtomIndex{0});
+    const auto force_mol1_atom1 =
+        molecule0.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom);
+    const auto force_mol1_atom2 =
+        molecule0.getAtomForce(AtomIndex{1})
+            .numerical_value_in(kcal_per_mol / angstrom);
+    const auto force_mol2_atom1 =
+        molecule1.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom);
 
     const auto position_mol1_atom1 =
         molecule0.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
@@ -134,7 +173,11 @@ TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
                         force_mol1_atom2 * position_mol1_atom2 +
                         force_mol2_atom1 * position_mol2_atom1;
 
-    EXPECT_EQ(diagonal(virial::calculateQMVirial(*_simBox)), virial);
+    EXPECT_EQ(
+        diagonal(virial::calculateQMVirial(*_simBox))
+            .numerical_value_in(kcal_per_mol),
+        virial
+    );
 }
 
 TEST_F(TestVirial, calculateMolecularVirial)
@@ -166,5 +209,8 @@ TEST_F(TestVirial, calculateMolecularVirial)
     const auto virialCalculated =
         virial::intraMolecularVirialCorrection(*_simBox);
 
-    EXPECT_EQ(diagonal(virialCalculated), virial);
+    EXPECT_EQ(
+        diagonal(virialCalculated).numerical_value_in(kcal_per_mol),
+        virial
+    );
 }

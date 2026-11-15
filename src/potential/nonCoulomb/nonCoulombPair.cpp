@@ -59,9 +59,9 @@ namespace pot
      * @param forceCutoff
      */
     NonCoulombPair::NonCoulombPair(
-        const Pos& cutoff,
-        double     energyCutoff,
-        double     forceCutoff
+        const Pos&          cutoff,
+        const EnergyPerMol& energyCutoff,
+        const Force&        forceCutoff
     )
         : _radialCutoff(cutoff),
           _energyCutoff(energyCutoff),

@@ -48,10 +48,10 @@ namespace
         auto *box = new molsys::SimulationBox();
 
         const std::vector<Mass> masses{
-            1.0 * amu,
-            12.0 * amu,
-            14.0 * amu,
-            16.0 * amu
+            1.0 * g_per_mol,
+            12.0 * g_per_mol,
+            14.0 * g_per_mol,
+            16.0 * g_per_mol
         };
 
         Mass totalMass = Mass::zero();
@@ -160,9 +160,9 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
     for (size_t i = 0; i < 3; ++i)
     {
         EXPECT_NEAR(
-            momentum[i].numerical_value_in(amu * angstrom / s),
+            momentum[i].numerical_value_in(g_per_mol * angstrom / s),
             0.0,
-            1e-10 * scale.numerical_value_in(amu * angstrom / s)
+            1e-10 * scale.numerical_value_in(g_per_mol * angstrom / s)
         );
     }
 
@@ -188,7 +188,8 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesAngularMomentum)
                 amu * angstrom * angstrom / s
             ),
             0.0,
-            1e-10 * scale.numerical_value_in(amu * angstrom * angstrom / s)
+            1e-10 *
+                scale.numerical_value_in(g_per_mol * angstrom * angstrom / s)
         );
     }
 
@@ -244,16 +245,18 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
         for (size_t i = 0; i < 3; ++i)
         {
             EXPECT_NEAR(
-                momentum[i].numerical_value_in(amu * angstrom / s),
+                momentum[i].numerical_value_in(g_per_mol * angstrom / s),
                 0.0,
-                1e-10 * pScale.numerical_value_in(amu * angstrom / s)
+                1e-10 * pScale.numerical_value_in(g_per_mol * angstrom / s)
             );
             EXPECT_NEAR(
                 angularMomentum[i].numerical_value_in(
                     amu * angstrom * angstrom / s
                 ),
                 0.0,
-                1e-10 * lScale.numerical_value_in(amu * angstrom * angstrom / s)
+                1e-10 * lScale.numerical_value_in(
+                            g_per_mol * angstrom * angstrom / s
+                        )
             );
         }
         EXPECT_NEAR(

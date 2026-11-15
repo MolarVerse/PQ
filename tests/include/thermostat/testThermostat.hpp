@@ -53,8 +53,8 @@ class TestThermostat : public ::testing::Test
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setMass(1.0 * amu);
-        atom2->setMass(1.0 * amu);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(1.0 * g_per_mol);
         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
         atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
         molecule1.addAtom(atom1);
@@ -64,7 +64,7 @@ class TestThermostat : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom3->setMass(1.0 * amu);
+        atom3->setMass(1.0 * g_per_mol);
         atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
 
         molecule2.addAtom(atom3);
