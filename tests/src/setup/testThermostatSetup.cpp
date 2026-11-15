@@ -70,7 +70,7 @@ TEST_F(TestSetup, setupThermostatBerendsen)
         );
     EXPECT_EQ(berendsenThermostat.getTau(), 0.1 * 1000 * fs);
 
-    ThermostatSettings::setRelaxationTime(0.2 * ps);
+    _settings->thermostatSettings.setRelaxationTimeByUser(0.2 * ps);
 
     EXPECT_NO_THROW(thermostatSetup.setup());
 
@@ -89,7 +89,7 @@ TEST_F(TestSetup, setupThermostatVelocityRescaling)
         ThermostatType::VELOCITY_RESCALING
     );
     finalizeTargetTemperature(*_settings);
-    ThermostatSettings::setRelaxationTime(0.2 * ps);
+    _settings->thermostatSettings.setRelaxationTimeByUser(0.2 * ps);
     EXPECT_NO_THROW(thermostatSetup.setup());
 
     const auto &velocityRescalingThermostat =
@@ -113,7 +113,7 @@ TEST_F(TestSetup, setupThermostatLangevin)
         thermostatSetup.getEngine().getThermostat().getThermostatType(),
         ThermostatType::LANGEVIN
     );
-    EXPECT_EQ(ThermostatSettings::getFriction(), 1.0e11);
+    EXPECT_EQ(_settings->thermostatSettings.getFriction(), 1.0e11);
 
     EXPECT_NO_THROW(setup::setupThermostat(*_mdEngine));
 }
