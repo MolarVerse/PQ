@@ -27,6 +27,7 @@
 #include <filesystem>
 #include <fstream>
 #include <memory>
+#include <string>
 #include <typeinfo>
 #include <vector>
 
@@ -39,6 +40,7 @@
 #include "ringPolymerqmmdEngine.hpp"
 #include "simulationBox.hpp"
 #include "testSetup.hpp"
+#include "throwWithMessage.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -339,7 +341,11 @@ TEST_F(TestSetup, setupRingPolymerWithPlainEngineThrows)
 {
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
 
-    EXPECT_THROW(setup::setupRingPolymer(*_engine), std::bad_cast);
+    EXPECT_THROW_MSG(
+        setup::setupRingPolymer(*_engine),
+        std::bad_cast,
+        std::string(std::bad_cast().what())
+    );
 
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
 }
