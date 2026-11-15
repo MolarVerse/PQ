@@ -23,7 +23,6 @@
 #include "thermostatSettings.hpp"
 
 #include "referenceSettings.hpp"
-#include "timingsSettings.hpp"
 
 /**
  * @brief finalize the thermostat settings by checking if all required
@@ -55,7 +54,12 @@ void ThermostatSettings::finalize(ReferenceSettings& referenceSettings)
     }
 }
 
-void KineticsSettings::finalize()
+/**
+ * @brief Finalize the kinetics settings by resolving dependent values
+ *
+ * @param numberOfSteps The total number of simulation steps
+ */
+void KineticsSettings::finalize(size_t numberOfSteps)
 {
     if (_endTemperature.isSetByUser() && _targetTemperature.isSetByUser())
     {
@@ -108,7 +112,7 @@ void KineticsSettings::finalize()
     const auto useFullSimulation = steps == 0;
 
     if (useFullSimulation)
-        steps = settings::TimingsSettings::getNumberOfSteps();
+        steps = numberOfSteps;
 
     if (steps == 0)
         throw exc::InputFileException(

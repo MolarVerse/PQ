@@ -144,7 +144,9 @@ namespace input
                 settings.kinetics
             )
         );
-        _parsers.push_back(std::make_unique<TimingsInputParser>());
+        _parsers.push_back(
+            std::make_unique<TimingsInputParser>(settings.timings)
+        );
         _parsers.push_back(std::make_unique<VirialInputParser>());
         _parsers.push_back(std::make_unique<HybridInputParser>());
         _parsers.push_back(

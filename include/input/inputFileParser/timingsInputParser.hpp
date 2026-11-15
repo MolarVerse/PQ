@@ -23,8 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
 
+class TimingsSettings;
 namespace input
 {
     /**
@@ -35,8 +38,10 @@ namespace input
      */
     class TimingsInputParser : public InputFileParser
     {
+        mstd::Ref<TimingsSettings> _timingsSettings;
+
        public:
-        TimingsInputParser();
+        explicit TimingsInputParser(TimingsSettings& settings);
 
         void addTimeStep();
         void addNumberOfSteps();

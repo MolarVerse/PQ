@@ -33,7 +33,6 @@
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -46,11 +45,13 @@ namespace manostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void StochasticRescalingManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const Temperature          &targetTemperature
+        const Temperature          &targetTemperature,
+        const Time                 &timeStep
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
@@ -58,7 +59,7 @@ namespace manostat
         calculatePressure(simulationBox, physicalData);
 
         const auto mu =
-            calculateMu(simulationBox.getVolume(), targetTemperature);
+            calculateMu(simulationBox.getVolume(), targetTemperature, timeStep);
 
         _validateScaling(simulationBox, mu);
 
@@ -106,11 +107,13 @@ namespace manostat
      *
      * @param volume
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      * @return linalg::Vec3D
      */
     QuantityTensor3D StochasticRescalingManostat::calculateMu(
         double             volume,
-        const Temperature &targetTemperature
+        const Temperature &targetTemperature,
+        const Time        &timeStep
     )
     {
         const auto &settings  = _getSettings();
@@ -121,7 +124,6 @@ namespace manostat
 
         const auto compressibility  = settings.getCompressibility();
         const auto tau              = settings.getTau();
-        const auto timeStep         = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -214,16 +216,17 @@ namespace manostat
      *
      * @param volume The current volume of the simulation box
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      * @return QuantityTensor3D
      */
     QuantityTensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
         double             volume,
-        const Temperature &targetTemperature
+        const Temperature &targetTemperature,
+        const Time        &timeStep
     )
     {
         const auto &settings         = _getSettings();
         const auto  tau              = settings.getTau();
-        const auto  timeStep         = settings::TimingsSettings::getTimeStep();
         const auto  tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto  compress         = settings.getCompressibility();
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -288,16 +291,17 @@ namespace manostat
      *
      * @param volume
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      *
      * @return QuantityTensor3D
      */
     QuantityTensor3D AnisotropicStochasticRescalingManostat::calculateMu(
         double             volume,
-        const Temperature &targetTemperature
+        const Temperature &targetTemperature,
+        const Time        &timeStep
     )
     {
         const auto tau               = _getSettings().getTau();
-        const auto timeStep          = settings::TimingsSettings::getTimeStep();
         const auto tauTimeStepRatio  = (timeStep / tau).numerical_value_in(one);
         const auto compress          = _getSettings().getCompressibility();
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
@@ -341,16 +345,18 @@ namespace manostat
      *
      * @param volume
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
+     *
      * @return QuantityTensor3D
      */
     QuantityTensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(
         double             volume,
-        const Temperature &targetTemperature
+        const Temperature &targetTemperature,
+        const Time        &timeStep
     )
     {
         const auto &settings         = _getSettings();
         const auto  tau              = settings.getTau();
-        const auto  timeStep         = settings::TimingsSettings::getTimeStep();
         const auto  tauTimeStepRatio = (timeStep / tau).numerical_value_in(one);
         const auto  compress         = settings.getCompressibility();
         const auto  boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;

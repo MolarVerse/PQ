@@ -39,7 +39,6 @@
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "steepestDescent.hpp"
-#include "timingsSettings.hpp"
 
 namespace setup
 {
@@ -102,8 +101,7 @@ namespace setup
      */
     std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
     {
-        const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
-        const auto simBox  = _optEngine.getSimulationBox();
+        const auto simBox = _optEngine.getSimulationBox();
         const auto optimizerType =
             _optEngine.getSettings().optimizerSettings.getOptimizer();
 
@@ -115,14 +113,14 @@ namespace setup
 
             case STEEPEST_DESCENT:
             {
-                optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
+                optimizer = std::make_shared<opt::SteepestDescent>();
                 break;
             }
 
             case ADAM:
             {
                 const auto nAtoms = simBox.getNumberOfAtoms();
-                optimizer = std::make_shared<opt::Adam>(nEpochs, nAtoms);
+                optimizer         = std::make_shared<opt::Adam>(nAtoms);
                 break;
             }
         }

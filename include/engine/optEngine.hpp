@@ -60,6 +60,10 @@ namespace engine
         void run() override;
         void takeStep();
         void writeOutput(const OutputFileSettings &outputSettings) override;
+        void writeOutput(
+            const OutputFileSettings &outputSettings,
+            size_t                    startingStepCount
+        );
 
         static void throwOnFailure(
             bool                            converged,

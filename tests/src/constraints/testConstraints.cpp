@@ -28,7 +28,6 @@
 #include "gmock/gmock.h"
 #include "testSettings.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 
 /**
@@ -64,9 +63,7 @@ TEST_F(TestConstraints, applyShakeConverged)
     _addDefaultBondConstraints(constraints);
     constraints.calculateConstraintBondRefs(*_box);
 
-    settings::TimingsSettings::setTimeStep(2.0 * fs);
-
-    EXPECT_NO_THROW(constraints.applyShake(*_box));
+    EXPECT_NO_THROW(constraints.applyShake(*_box, 2.0 * fs));
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_THAT(
@@ -121,10 +118,8 @@ TEST_F(TestConstraints, applyShakeNotConverged)
     _addDefaultBondConstraints(constraints);
     constraints.calculateConstraintBondRefs(*_box);
 
-    settings::TimingsSettings::setTimeStep(2.0 * fs);
-
     EXPECT_THROW_MSG(
-        constraints.applyShake(*_box),
+        constraints.applyShake(*_box, 2.0 * fs),
         exc::ShakeException,
         "Shake algorithm did not converge for 2 bonds."
     );
@@ -146,9 +141,7 @@ TEST_F(TestConstraints, applyShakeNotConvergedDeactivated)
     _addDefaultBondConstraints(*_constraints);
     _constraints->calculateConstraintBondRefs(*_box);
 
-    settings::TimingsSettings::setTimeStep(2.0 * fs);
-
-    EXPECT_NO_THROW(_constraints->applyShake(*_box));
+    EXPECT_NO_THROW(_constraints->applyShake(*_box, 2.0 * fs));
 }
 
 /**

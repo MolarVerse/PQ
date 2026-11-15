@@ -47,7 +47,7 @@ class ResetKineticsSettings
    public:
     ResetKineticsSettings();
 
-    void finalize();
+    void finalize(size_t numberOfSteps);
 
     /***************************
      * standard setter methods *

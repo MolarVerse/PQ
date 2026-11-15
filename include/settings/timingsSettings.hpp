@@ -25,43 +25,38 @@
 
 #include <cstddef>
 
+#include "setting.hpp"
 #include "unit_types.hpp"
 
-namespace settings
+/**
+ * @class TimingsSettings
+ *
+ * @brief static class to store settings of timings
+ *
+ */
+class TimingsSettings
 {
-    /**
-     * @class TimingsSettings
-     *
-     * @brief static class to store settings of timings
-     *
-     */
-    class TimingsSettings
-    {
-       private:
-        static inline Time   _timeStep;
-        static inline size_t _numberOfSteps;
-        static inline size_t _stepCount = 0;
+   private:
+    Setting<Time, "Time Step">             _timeStep;
+    Setting<size_t, "Number of Steps">     _numberOfSteps{0};
+    Setting<size_t, "Starting Step Count"> _startingStepCount{0};
 
-       public:
-        TimingsSettings()  = default;
-        ~TimingsSettings() = default;
+   public:
+    /********************
+     * standard setters *
+     ********************/
 
-        /********************
-         * standard setters *
-         ********************/
+    void setTimeStepByUser(const Time& timeStep);
+    void setStartingStepCountByUser(size_t stepCount);
+    void setNumberOfStepsByUser(size_t numberOfSteps);
 
-        static void setTimeStep(const Time& timeStep);
-        static void setStepCount(size_t stepCount);
-        static void setNumberOfSteps(size_t numberOfSteps);
+    /********************
+     * standard getters *
+     ********************/
 
-        /********************
-         * standard setters *
-         ********************/
-
-        [[nodiscard]] static const Time& getTimeStep();
-        [[nodiscard]] static size_t      getStepCount();
-        [[nodiscard]] static size_t      getNumberOfSteps();
-    };
-}   // namespace settings
+    [[nodiscard]] const Time& getTimeStep() const;
+    [[nodiscard]] size_t      getStartingStepCount() const;
+    [[nodiscard]] size_t      getNumberOfSteps() const;
+};
 
 #endif   // SETTINGS__TIMINGS_SETTINGS_HPP

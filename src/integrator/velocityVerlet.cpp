@@ -30,17 +30,22 @@ namespace integrator
     /**
      * @brief applies first half step of velocity verlet algorithm
      *
-     * @param simulationBox
+     * @param simulationBox the simulation box containing the atoms and
+     * molecules
+     * @param timeStep the integration time step used for velocity updates
      */
-    void VelocityVerlet::firstStep(molsys::SimulationBox &simulationBox)
+    void VelocityVerlet::firstStep(
+        molsys::SimulationBox &simulationBox,
+        const Time            &timeStep
+    )
     {
         auto _ =
             scopedTimer(TimerId::Integrator, "Velocity Verlet - First Step");
 
-        auto integrate = [&simulationBox](auto &atom)
+        auto integrate = [&simulationBox, &timeStep](auto &atom)
         {
-            integrateVelocities(atom.get());
-            integratePositions(atom.get(), simulationBox);
+            integrateVelocities(atom.get(), timeStep);
+            integratePositions(atom.get(), simulationBox, timeStep);
         };
 
         std::ranges::for_each(simulationBox.getAtoms(), integrate);
@@ -59,16 +64,22 @@ namespace integrator
     /**
      * @brief applies second half step of velocity verlet algorithm
      *
-     * @param simulationBox
+     * @param simulationBox the simulation box containing the atoms and
+     * molecules
+     * @param timeStep the integration time step used for velocity updates
      */
-    void VelocityVerlet::secondStep(molsys::SimulationBox &simulationBox)
+    void VelocityVerlet::secondStep(
+        molsys::SimulationBox &simulationBox,
+        const Time            &timeStep
+    )
     {
         auto _ =
             scopedTimer(TimerId::Integrator, "Velocity Verlet - Second Step");
 
         std::ranges::for_each(
             simulationBox.getAtoms(),
-            [](const auto &atom) { integrateVelocities(atom.get()); }
+            [&timeStep](const auto &atom)
+            { integrateVelocities(atom.get(), timeStep); }
         );
     }
 

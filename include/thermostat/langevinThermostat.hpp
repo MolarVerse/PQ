@@ -53,20 +53,30 @@ namespace thermostat
         LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
         [[nodiscard]]
-        static double calculateSigma(double friction, const Temperature &);
+        static double calculateSigma(
+            double friction,
+            const Temperature &,
+            const Time &
+        );
 
-        void applyLangevin(molsys::SimulationBox &, const Temperature &);
+        void applyLangevin(
+            molsys::SimulationBox &,
+            const Temperature &,
+            const Time &timeStep
+        );
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const Temperature          &targetTemperature
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
         ) override;
 
         void applyThermostatHalfStep(
             molsys::SimulationBox &simulationBox,
             physicalData::PhysicalData & /*physicalData*/,
-            const Temperature &targetTemperature
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) override;
 
         /***************************

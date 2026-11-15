@@ -39,8 +39,6 @@ namespace opt
         constexpr static size_t _maxHistoryLength = 2;
 
        public:
-        explicit SteepestDescent(size_t nEpochs);
-
         SteepestDescent()           = default;
         ~SteepestDescent() override = default;
 

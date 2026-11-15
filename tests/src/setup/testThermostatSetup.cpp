@@ -38,7 +38,8 @@ namespace
     void finalizeTargetTemperature(Settings &settings)
     {
         settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
-        settings.kinetics.finalize();
+        settings.timings.setNumberOfStepsByUser(100U);
+        settings.kinetics.finalize(settings.timings.getNumberOfSteps());
     }
 }   // namespace
 
@@ -46,7 +47,7 @@ TEST_F(TestSetup, setupThermostatNoThermostat)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::TimingsSettings::setTimeStep(0.1 * fs);
+    _settings->timings.setTimeStepByUser(0.1 * fs);
     EXPECT_NO_THROW(thermostatSetup.setup());
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getThermostatType(),

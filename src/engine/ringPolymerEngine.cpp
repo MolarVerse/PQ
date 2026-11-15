@@ -56,19 +56,36 @@ namespace engine
     }
 
     /**
+     * @brief writes the ring polymer output files using the default time step.
+     *
+     * @param outputSettings
+     */
+    void RingPolymerEngine::writeOutput(
+        const OutputFileSettings &outputSettings
+    )
+    {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getTimeStep(),
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
      * @brief writes the ring polymer output files.
      *
      */
     void RingPolymerEngine::writeOutput(
-        const OutputFileSettings &outputSettings
+        const OutputFileSettings &outputSettings,
+        const Time               &timeStep,
+        size_t                    startingStepCount
     )
     {
         auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
         auto &rpmdData        = _ringPolymerBeadsPhysicalData;
 
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = settings::TimingsSettings::getStepCount();
-        const auto effStep    = getStep() + step0;
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {
@@ -130,9 +147,8 @@ namespace engine
             getPhysicalData().copy(mean(rpmdData));
             getAveragePhysicalData() = mean(averageRPMDData);
 
-            const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
+            const auto simTime       = effStepDouble * timeStep;
 
 #ifdef WITH_MPI
             if (mpi::MPI::isRoot())
@@ -159,7 +175,7 @@ namespace engine
                 );
 
                 getEngineOutput().writeRingPolymerEnergyFile(
-                    step0 + getStep(),
+                    startingStepCount + getStep(),
                     averageRPMDData
                 );
             }

@@ -51,8 +51,7 @@ namespace engine
     class Engine
     {
        private:
-        size_t _step   = 1;
-        size_t _nSteps = 0;
+        size_t _step = 1;
 
         EngineOutput _engineOutput;
 
@@ -83,7 +82,11 @@ namespace engine
         virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
         void         deleteTmpFiles() const;
 
-        [[nodiscard]] Time calculateTotalSimulationTime() const;
+        [[nodiscard]]
+        Time calculateTotalSimulationTime(
+            const Time &timeStep,
+            size_t      startingStepCount
+        ) const;
 
         /***************************
          * standard getter methods *
@@ -170,9 +173,7 @@ namespace engine
         [[nodiscard]]
         const waterModel::IntraWater &_getIntraWater() const;
 
-        [[nodiscard]] size_t _getNSteps() const;
-        void                 _setNSteps(size_t nSteps);
-        void                 _setStep(size_t step);
+        void _setStep(size_t step);
     };
 }   // namespace engine
 

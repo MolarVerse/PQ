@@ -45,13 +45,12 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "stochasticRescalingManostat.hpp"
-#include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001 * fs);
+    const auto timeStep = 0.001 * fs;
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);
@@ -73,7 +72,8 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        manostat.applyManostat(box, physicalData, toTemperature(300.0));
+        manostat
+            .applyManostat(box, physicalData, toTemperature(300.0), timeStep);
     }
 
     // read state so the loop cannot be optimized away

@@ -26,10 +26,8 @@
 
 #include <limits>
 
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 
 /**
@@ -71,10 +69,9 @@ TEST_F(TestBondConstraint, applyShake)
     const auto shakeForce =
         delta / (1.0 + 0.5) / normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
     const auto dPos     = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0);
-    const auto timestep = 2.0;
-    settings::TimingsSettings::setTimeStep(timestep * fs);
+    const auto timestep = 2.0 * fs;
 
-    EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0));
+    EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0, timestep));
 
     const auto mol = _box->getMolecules()[0];
     EXPECT_EQ(
@@ -86,7 +83,7 @@ TEST_F(TestBondConstraint, applyShake)
         linalg::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
     );
 
-    const auto expectedDeltaVel = dPos / (timestep * FS_TO_S);
+    const auto expectedDeltaVel = dPos / (timestep.numerical_value_in(s));
     EXPECT_EQ(
         mol.getAtomVelocity(AtomIndex{0}),
         linalg::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel
@@ -96,7 +93,7 @@ TEST_F(TestBondConstraint, applyShake)
         linalg::Vec3D(1.0, 1.0, 1.0) - 0.5 * expectedDeltaVel
     );
 
-    EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0));
+    EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0, timestep));
 }
 
 /**
@@ -108,7 +105,7 @@ TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
     _bondConstraint->setShakeDistanceRef(linalg::Vec3D(0.0, 0.0, 0.0));
 
     EXPECT_THROW_MSG(
-        (void) _bondConstraint->applyShake(*_box, 0.0),
+        (void) _bondConstraint->applyShake(*_box, 0.0, 0.5 * fs),
         exc::ShakeException,
         "Degenerate shake reference bond vector - the reference distance is "
         "zero-length or non-finite, the simulation has become unstable"
@@ -125,7 +122,7 @@ TEST_F(TestBondConstraint, applyShakeRejectsNonFiniteReference)
     _bondConstraint->setShakeDistanceRef(linalg::Vec3D(nan, 0.0, 0.0));
 
     EXPECT_THROW_MSG(
-        (void) _bondConstraint->applyShake(*_box, 0.0),
+        (void) _bondConstraint->applyShake(*_box, 0.0, 0.5 * fs),
         exc::ShakeException,
         "Degenerate shake reference bond vector - the reference distance is "
         "zero-length or non-finite, the simulation has become unstable"

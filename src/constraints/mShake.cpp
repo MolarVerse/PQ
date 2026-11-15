@@ -30,7 +30,6 @@
 #include "matrix.hpp"
 #include "simulationBox.hpp"
 #include "stlVector.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 
@@ -191,20 +190,21 @@ namespace constraints
      * @param simulationBox the simulation box containing the molecules
      * @param maxIter the maximum number of iterations for the mShake algorithm
      * @param tolerance the convergence tolerance for the mShake algorithm
+     * @param timeStep the integration time step used for velocity updates
      *
      */
     void MShake::applyMShake(
         molsys::SimulationBox &simulationBox,
         size_t                 maxIter,
-        double                 tolerance
+        double                 tolerance,
+        const Time            &timeStep
     )
     {
         auto &molecules = simulationBox.getMolecules();
 
-        const auto timeStep =
-            settings::TimingsSettings::getTimeStep().numerical_value_in(s);
-        const auto timeFactor  = 4.0 * timeStep * timeStep;
-        const auto shakeFactor = 2.0 * timeStep * timeStep;
+        const auto timeStepValue = timeStep.numerical_value_in(s);
+        const auto timeFactor    = 4.0 * timeStepValue * timeStepValue;
+        const auto shakeFactor   = 2.0 * timeStepValue * timeStepValue;
 
         for (auto &molecule : molecules)
         {
@@ -363,10 +363,12 @@ namespace constraints
                         posUnconstrained[j] += posAdjustment / mass_j;
 
                         atoms[i]->addVelocity(
-                            -posAdjustment / (mass_i * timeStep)
+                            -posAdjustment /
+                            (mass_i * timeStep.numerical_value_in(s))
                         );
                         atoms[j]->addVelocity(
-                            posAdjustment / (mass_j * timeStep)
+                            posAdjustment /
+                            (mass_j * timeStep.numerical_value_in(s))
                         );
 
                         ++index_ij;
