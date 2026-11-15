@@ -1,0 +1,1 @@
+- Add a unit test that the potential cell list strategy gives the same energies and forces as the brute force strategy for the MM, QM/MM and hotspot smoothing forces on a box that fills the periodic cell, with and without an intermolecular water model.
