@@ -1,0 +1,1 @@
+- Add unit tests for the key:value map converter, the selection error messages and the reference_file and opt_file keywords of the input parsers.
