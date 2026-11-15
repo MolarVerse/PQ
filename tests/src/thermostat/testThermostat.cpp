@@ -578,7 +578,9 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
         const auto target   = toTemperature(300.0);
 
         for (size_t step = 0; step < 5; ++step)
+        {
             langevin.applyLangevin(*bath, target);
+        }
 
         settings::GeneralSettings::setIsRandomSeedSet(false);
 
@@ -606,7 +608,9 @@ TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
     settings::GeneralSettings::setIsRandomSeedSet(false);
 
     for (size_t step = 0; step < 4000; ++step)
+    {
         langevin.applyLangevin(*bath, target);
+    }
 
     double sum = 0.0;
     for (size_t step = 0; step < 200; ++step)
