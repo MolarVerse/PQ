@@ -32,7 +32,6 @@ namespace opt
     /**
      * @brief Constructor
      *
-     * @param nEpochs
      * @param nAtoms
      */
     Adam::Adam(size_t nAtoms)
@@ -44,7 +43,6 @@ namespace opt
     /**
      * @brief Constructor
      *
-     * @param nEpochs
      * @param beta1
      * @param beta2
      * @param nAtoms

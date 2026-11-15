@@ -49,6 +49,7 @@ namespace input::restartFile
      * @param filename
      * @param engine
      * @param noseHooverSettings Reference to the NoseHooverSettings object
+     * @param timingsSettings Reference to the TimingsSettings object
      */
     RestartFileReader::RestartFileReader(
         const std::string  &filename,
@@ -123,6 +124,7 @@ namespace input::restartFile
      *
      * @param engine Reference to the Engine object
      * @param noseHooverSettings Reference to the NoseHooverSettings object
+     * @param timingsSettings Reference to the TimingsSettings object
      */
     void readRestartFile(
         engine::Engine     &engine,
