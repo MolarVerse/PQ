@@ -1,4 +1,5 @@
-"""Run the Perl and Python Turbomole drivers against a fake Turbomole; usage: <scripts dir>."""
+"""Run the Turbomole drivers against a fake Turbomole; usage: <scripts dir> <perl_reference.json>."""
+import json
 import os
 from pathlib import Path
 import shutil
@@ -8,6 +9,8 @@ import tempfile
 import unittest
 
 SCRIPTS = Path(sys.argv.pop(1)).resolve()
+# outputs of the removed Perl drivers on this fake Turbomole
+REFERENCE = json.loads(Path(sys.argv.pop(1)).read_text())
 
 COMMON = r'''#!/usr/bin/env python3
 import os
@@ -100,9 +103,8 @@ class TurbomoleScriptTest(unittest.TestCase):
         self.temp.cleanup()
 
     def run_script(self, script, use_pc, define=True, work=None, **env):
-        interpreter = sys.executable if script.endswith(".py") else "perl"
         return subprocess.run(
-            [interpreter, str(SCRIPTS / script), "0", "1" if define else "0",
+            [sys.executable, str(SCRIPTS / script), "0", "1" if define else "0",
              "1" if use_pc else "0", "tm.template", "pc"],
             cwd=work or self.work, env={**self.env, **env}, capture_output=True, text=True,
             check=False)
@@ -154,23 +156,23 @@ class TurbomoleScriptTest(unittest.TestCase):
         files = {p.name: p.read_bytes() for p in sorted(work.iterdir()) if p.is_file()}
         return codes, files
 
-    def test_python_matches_perl_byte_for_byte(self):
+    def test_matches_perl_byte_for_byte(self):
         sequences = {
             "pure": [(False, True), (False, False)],
             "point charges": [(True, True), (True, False), (False, False)],
         }
         for perl, python in PAIRS:
-            for name, steps in sequences.items():
-                for broken in ("", "scf", "nopc", "grad"):
-                    with self.subTest(script=python, case=name, broken=broken):
-                        old = self._snapshot(perl, steps, FAKE_TM_BREAK=broken)
-                        new = self._snapshot(python, steps, FAKE_TM_BREAK=broken)
-                        self.assertEqual([c != 0 for c in old[0]], [c != 0 for c in new[0]])
-                        self.assertEqual(old[1].keys(), new[1].keys())
-                        for key in old[1]:
-                            self.assertEqual(old[1][key], new[1][key], key)
-                        shutil.rmtree(self.work / perl.replace(".", "_"))
-                        shutil.rmtree(self.work / python.replace(".", "_"))
+            for script in (perl, python):
+                for name, steps in sequences.items():
+                    for broken in ("", "scf", "nopc", "grad"):
+                        with self.subTest(script=script, case=name, broken=broken):
+                            want = REFERENCE[f"{perl}|{name}|{broken}"]
+                            codes, files = self._snapshot(script, steps, FAKE_TM_BREAK=broken)
+                            self.assertEqual(want["failed"], [c != 0 for c in codes])
+                            self.assertEqual(sorted(want["files"]), sorted(files))
+                            for key, text in want["files"].items():
+                                self.assertEqual(text.encode("latin-1"), files[key], key)
+                            shutil.rmtree(self.work / script.replace(".", "_"))
 
 
 if __name__ == "__main__":
