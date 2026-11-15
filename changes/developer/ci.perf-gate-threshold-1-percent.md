@@ -1,0 +1,1 @@
+- Lower the thresholds of the performance gate for callgrind instruction counts and for heap allocation counts from 2% to 1%.

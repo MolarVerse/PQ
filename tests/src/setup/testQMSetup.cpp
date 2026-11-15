@@ -107,6 +107,10 @@ TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 
 TEST(TestQMSetup, resolvesBundledQMScript)
 {
+#ifdef PQ_TEST_NO_BUNDLED_SCRIPTS
+    GTEST_SKIP() << "static and Singularity builds need qm_script_full_path";
+#endif
+
     ExternalQMSettings externalQMSettings;
     externalQMSettings.setQMScriptByUser("pyscf_hf.py");
     externalQMSettings.finalize();

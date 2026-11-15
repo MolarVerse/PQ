@@ -139,8 +139,10 @@ The BUILD jobs
       ``benchmarks/perf`` and Google Benchmark sources, so that they are held to the same warnings.
     - ``benchmark``: runs the Google Benchmark suite as a smoke test.
     - ``build-static-lto``: a static build with link-time optimisation. Its tests only run in the nightly run, which
-      builds ``main``.
-    - ``static-singularity-build``: only in the nightly and manual runs.
+      builds ``main``, and on pull requests into ``main`` (release and hotfix pull requests), so that a release is
+      tested in a static build before it reaches ``main``.
+    - ``static-singularity-build``: a static Singularity build with tests; runs in the nightly and manual runs and on
+      pull requests into ``main``.
     - ``mpi-build``: builds with MPI and runs the tests.
     - ``python-bindings``: builds ``PQ`` with ``BUILD_WITH_PYTHON_BINDINGS=ON`` and runs the ``testPQCli`` test, which
       compares the capabilities that ``PQ`` reports with the configuration.

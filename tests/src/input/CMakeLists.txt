@@ -6,6 +6,7 @@ set(source_files
     testInputValidation.cpp
     testIntraNonBondedReader.cpp
     testMShakeReader.cpp
+    testRingPolymerRestartFileReader.cpp
 )
 
 foreach(source_file ${source_files})
@@ -21,6 +22,7 @@ foreach(source_file ${source_files})
         PRIVATE
         PQ_input
         restartFileReader
+        ringPolymerRestartFileReader
         potential
         engine
         gtest
