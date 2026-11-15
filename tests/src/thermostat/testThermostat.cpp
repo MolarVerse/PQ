@@ -37,14 +37,18 @@
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 #include "velocityRescalingThermostat.hpp"
 
 TEST_F(TestThermostat, calculateTemperature)
 {
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.1 * fs
+    );
 
     const auto mol1                = _simulationBox->getMolecule(0);
     const auto velocity_mol1_atom1 = mol1.getAtomVelocity(AtomIndex{0});
@@ -73,7 +77,6 @@ TEST_F(TestThermostat, calculateTemperature)
 TEST_F(TestThermostat, applyThermostatBerendsen)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     const auto mol1                = _simulationBox->getMolecule(0);
     const auto velocity_mol1_atom1 = mol1.getAtomVelocity(AtomIndex{0});
@@ -98,7 +101,12 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
     const auto berendsenFactor =
         ::sqrt(1.0 + (0.1 / 100.0 * (300.0 / oldTemperature - 1.0)));
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.1 * fs
+    );
 
     EXPECT_EQ(
         _data->getTemperature().quantity_from_zero().numerical_value_in(K),
@@ -130,9 +138,13 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.1 * fs
+    );
 
     EXPECT_FALSE(
         std::isnan(
@@ -157,12 +169,16 @@ TEST_F(TestThermostat, velocityRescalingApplyDoesNotNaN)
 TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(0.0),
+        0.1 * fs
+    );
 
     EXPECT_TRUE(
         std::isfinite(
@@ -177,14 +193,17 @@ TEST_F(TestThermostat, berendsenZeroTemperatureDoesNotNaN)
 TEST_F(TestThermostat, berendsenRejectsPositiveTargetFromZero)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
 
     EXPECT_THROW_MSG(
-        _thermostat
-            ->applyThermostat(*_simulationBox, *_data, toTemperature(300.0)),
+        _thermostat->applyThermostat(
+            *_simulationBox,
+            *_data,
+            toTemperature(300.0),
+            0.1 * fs
+        ),
         exc::UserInputException,
         "Cannot apply Berendsen coupling to a zero-temperature system with a "
         "positive target temperature. Initialize velocities first."
@@ -195,12 +214,16 @@ TEST_F(TestThermostat, velocityRescalingZeroTemperatureDoesNotNaN)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(0.0),
+        0.1 * fs
+    );
 
     EXPECT_TRUE(
         std::isfinite(
@@ -216,14 +239,17 @@ TEST_F(TestThermostat, velocityRescalingRejectsPositiveTargetFromZero)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({0.0, 0.0, 0.0});
 
     EXPECT_THROW_MSG(
-        _thermostat
-            ->applyThermostat(*_simulationBox, *_data, toTemperature(300.0)),
+        _thermostat->applyThermostat(
+            *_simulationBox,
+            *_data,
+            toTemperature(300.0),
+            0.1 * fs
+        ),
         exc::UserInputException,
         "Cannot apply velocity rescaling to a zero-temperature system with a "
         "positive target temperature. Initialize velocities first."
@@ -252,9 +278,9 @@ TEST_F(TestThermostat, berendsenRelaxationTimeEqualToTimestepStaysFinite)
 {
     _data->calculateTemperature(*_simulationBox);
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(0.1 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(0));
+    _thermostat
+        ->applyThermostat(*_simulationBox, *_data, toTemperature(0), 0.1 * fs);
 
     EXPECT_TRUE(
         std::isfinite(
@@ -267,12 +293,16 @@ TEST_F(TestThermostat, berendsenRelaxationTimeEqualToTimestepStaysFinite)
 TEST_F(TestThermostat, berendsenNearZeroTemperatureStaysFinite)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     for (auto &atom : _simulationBox->getAtoms())
         atom->setVelocity({1e-12, 0.0, 0.0});
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.1 * fs
+    );
 
     EXPECT_TRUE(
         std::isfinite(
@@ -286,12 +316,15 @@ TEST_F(TestThermostat, velocityRescalingRejectsZeroDegreesOfFreedom)
 {
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
     _simulationBox->setDegreesOfFreedom(0);
 
     EXPECT_THROW_MSG(
-        _thermostat
-            ->applyThermostat(*_simulationBox, *_data, toTemperature(300.0)),
+        _thermostat->applyThermostat(
+            *_simulationBox,
+            *_data,
+            toTemperature(300.0),
+            0.1 * fs
+        ),
         exc::UserInputException,
         "Cannot apply velocity rescaling to a system with zero degrees of "
         "freedom."
@@ -303,12 +336,12 @@ TEST_F(TestThermostat, velocityRescalingRelaxationTimeShorterThanTimestep)
     _data->calculateTemperature(*_simulationBox);
     _thermostat =
         std::make_unique<thermostat::VelocityRescalingThermostat>(0.01 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     _thermostat->applyThermostat(
         *_simulationBox,
         *_data,
-        Temperature{0.5 * _data->getTemperature().quantity_from_zero()}
+        Temperature{0.5 * _data->getTemperature().quantity_from_zero()},
+        0.1 * fs
     );
 
     EXPECT_TRUE(
@@ -351,10 +384,14 @@ TEST_F(TestThermostat, noseHooverRejectsZeroTargetTemperature)
 {
     const auto nhSettings = noseHooverSettings();
     auto       thermostat = noseHoover(nhSettings);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     EXPECT_THROW_MSG(
-        thermostat.applyThermostat(*_simulationBox, *_data, toTemperature(0.0)),
+        thermostat.applyThermostat(
+            *_simulationBox,
+            *_data,
+            toTemperature(0.0),
+            0.1 * fs
+        ),
         exc::UserInputException,
         NOSE_HOOVER_ZERO_TARGET
     );
@@ -376,12 +413,15 @@ TEST_F(TestThermostat, noseHooverRejectsZeroDegreesOfFreedom)
 {
     const auto nhSettings = noseHooverSettings();
     auto       thermostat = noseHoover(nhSettings);
-    TimingsSettings::setTimeStep(0.1 * fs);
     _simulationBox->setDegreesOfFreedom(0);
 
     EXPECT_THROW_MSG(
-        thermostat
-            .applyThermostat(*_simulationBox, *_data, toTemperature(300.0)),
+        thermostat.applyThermostat(
+            *_simulationBox,
+            *_data,
+            toTemperature(300.0),
+            0.1 * fs
+        ),
         exc::UserInputException,
         "Cannot apply the Nose-Hoover thermostat to a system with zero degrees "
         "of freedom."
@@ -399,9 +439,13 @@ TEST_F(TestThermostat, noseHooverTinyPositiveTargetTemperatureStaysFinite)
 {
     const auto nhSettings = noseHooverSettings();
     auto       thermostat = noseHoover(nhSettings);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
-    thermostat.applyThermostat(*_simulationBox, *_data, toTemperature(1e-6));
+    thermostat.applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(1e-6),
+        0.1 * fs
+    );
 
     EXPECT_TRUE(std::isfinite(_data->getNoseHooverMomentumEnergy()));
     EXPECT_TRUE(std::isfinite(_data->getNoseHooverFrictionEnergy()));
@@ -409,13 +453,11 @@ TEST_F(TestThermostat, noseHooverTinyPositiveTargetTemperatureStaysFinite)
 
 TEST_F(TestThermostat, langevinTinyTimestepSigmaStaysFinite)
 {
-    const auto previousTimeStep = TimingsSettings::getTimeStep();
-    TimingsSettings::setTimeStep(1e-12 * fs);
     const auto sigma = thermostat::LangevinThermostat::calculateSigma(
         0.01,
-        toTemperature(300.0)
+        toTemperature(300.0),
+        0.1 * fs
     );
-    TimingsSettings::setTimeStep(previousTimeStep);
 
     EXPECT_TRUE(std::isfinite(sigma));
     EXPECT_GT(sigma, 0.0);
@@ -426,20 +468,20 @@ TEST_F(TestThermostat, langevinTinyTimestepSigmaStaysFinite)
 TEST_F(TestThermostat, langevinConstructorComputesSigma)
 {
     // sigma > 0 once friction and targetTemp are non-zero.
-    TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigma = thermostat::LangevinThermostat::calculateSigma(
         0.1,
-        toTemperature(300.0)
+        toTemperature(300.0),
+        0.1 * fs
     );
     EXPECT_GT(sigma, 0.0);
 }
 
 TEST_F(TestThermostat, langevinZeroFrictionHasZeroSigma)
 {
-    TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigma = thermostat::LangevinThermostat::calculateSigma(
         0.0,
-        toTemperature(300.0)
+        toTemperature(300.0),
+        0.1 * fs
     );
 
     EXPECT_DOUBLE_EQ(sigma, 0.0);
@@ -447,14 +489,15 @@ TEST_F(TestThermostat, langevinZeroFrictionHasZeroSigma)
 
 TEST_F(TestThermostat, langevinSigmaScalesWithTargetTemperature)
 {
-    TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaAt300 = thermostat::LangevinThermostat::calculateSigma(
         0.1,
-        toTemperature(300.0)
+        toTemperature(300.0),
+        0.1 * fs
     );
     const auto sigmaAt600 = thermostat::LangevinThermostat::calculateSigma(
         0.1,
-        toTemperature(600.0)
+        toTemperature(600.0),
+        0.1 * fs
     );
 
     // a higher target temperature must give a larger sigma (the
@@ -465,14 +508,15 @@ TEST_F(TestThermostat, langevinSigmaScalesWithTargetTemperature)
 
 TEST_F(TestThermostat, langevinSigmaScalesWithFriction)
 {
-    TimingsSettings::setTimeStep(0.1 * fs);
     const auto sigmaLow = thermostat::LangevinThermostat::calculateSigma(
         0.1,
-        toTemperature(300.0)
+        toTemperature(300.0),
+        0.1 * fs
     );
     const auto sigmaHigh = thermostat::LangevinThermostat::calculateSigma(
         0.5,
-        toTemperature(300.0)
+        toTemperature(300.0),
+        0.1 * fs
     );
 
     EXPECT_NE(sigmaLow, sigmaHigh);
@@ -504,7 +548,6 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
     noseHooverSettings.setChiByUser(chis);
     noseHooverSettings.setZetaByUser(zetas);
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     thermostat.applyThermostatOnForces(*_simulationBox, toTemperature(300.0));
     for (const auto &atom : _simulationBox->getAtoms())
@@ -513,7 +556,12 @@ TEST_F(TestThermostat, noseHooverAppliesFiniteForceAndStateUpdates)
 
     const auto chiBefore  = thermostat.getChi();
     const auto zetaBefore = thermostat.getZeta();
-    thermostat.applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    thermostat.applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.1 * fs
+    );
 
     EXPECT_TRUE(
         std::isfinite(
@@ -537,12 +585,16 @@ TEST_F(TestThermostat, temperatureSetterGetter)
 TEST_F(TestThermostat, berendsenStoresMeasuredTemperature)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     _data->calculateTemperature(*_simulationBox);
     const auto oldTemperature = _data->getTemperature();
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.1 * fs
+    );
 
     EXPECT_EQ(_thermostat->getTemperature(), oldTemperature);
 }
@@ -550,13 +602,17 @@ TEST_F(TestThermostat, berendsenStoresMeasuredTemperature)
 TEST_F(TestThermostat, berendsenScalesVelocitiesBySqrtOfTemperatureRatio)
 {
     _thermostat = std::make_unique<thermostat::BerendsenThermostat>(100.0 * fs);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     _data->calculateTemperature(*_simulationBox);
     const auto oldTemperature = _data->getTemperature();
     const auto oldVelocity    = _simulationBox->getAtoms()[1]->getVelocity();
 
-    _thermostat->applyThermostat(*_simulationBox, *_data, toTemperature(300.0));
+    _thermostat->applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(300.0),
+        0.1 * fs
+    );
 
     const auto factor =
         std::sqrt((_data->getTemperature().quantity_from_zero() /
@@ -597,8 +653,6 @@ namespace
  */
 TEST_F(TestThermostat, velocityRescalingLambdaStatistics)
 {
-    TimingsSettings::setTimeStep(0.1 * fs);
-
     _data->calculateTemperature(*_simulationBox);
     const auto temperature = _data->getTemperature();
     const auto initial     = saveVelocities(*_simulationBox);
@@ -621,7 +675,7 @@ TEST_F(TestThermostat, velocityRescalingLambdaStatistics)
     for (size_t i = 0; i < nSamples; ++i)
     {
         restoreVelocities(*_simulationBox, initial);
-        thermostat.applyThermostat(*_simulationBox, *_data, target);
+        thermostat.applyThermostat(*_simulationBox, *_data, target, 0.1 * fs);
 
         const auto lambda = (_data->getTemperature().quantity_from_zero() /
                              temperature.quantity_from_zero())
@@ -651,8 +705,6 @@ TEST_F(TestThermostat, velocityRescalingLambdaStatistics)
 TEST_F(TestThermostat, velocityRescalingNoStochasticTermAtEquilibriumLimit)
 {
     // timestep << tau: lambda -> 1, temperature must stay (nearly) unchanged
-    TimingsSettings::setTimeStep(1e-9 * fs);
-
     _data->calculateTemperature(*_simulationBox);
     const auto temperature = _data->getTemperature();
 
@@ -660,7 +712,8 @@ TEST_F(TestThermostat, velocityRescalingNoStochasticTermAtEquilibriumLimit)
     thermostat.applyThermostat(
         *_simulationBox,
         *_data,
-        Temperature{3.0 * temperature.quantity_from_zero()}
+        Temperature{3.0 * temperature.quantity_from_zero()},
+        1e-9 * fs
     );
 
     EXPECT_NEAR(
@@ -675,8 +728,6 @@ TEST_F(TestThermostat, velocityRescalingNoStochasticTermAtEquilibriumLimit)
  */
 TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
 {
-    TimingsSettings::setTimeStep(0.1 * fs);
-
     const auto targetTemp = 300.0;
     const auto freq       = 1.0;
     auto       chi        = std::vector<double>{0.1, 0.2, 0.3};
@@ -689,8 +740,12 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
     noseHooverSettings.setZetaByUser({{0, 0.0}, {1, 0.0}, {2, 0.0}});
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
-    thermostat
-        .applyThermostat(*_simulationBox, *_data, toTemperature(targetTemp));
+    thermostat.applyThermostat(
+        *_simulationBox,
+        *_data,
+        toTemperature(targetTemp),
+        0.1 * fs
+    );
 
     const auto temperature = _data->getTemperature();
     const auto dof = static_cast<double>(_simulationBox->getDegreesOfFreedom());
@@ -778,11 +833,14 @@ TEST_F(TestThermostat, noseHooverRejectsNegativeTargetTemperature)
 {
     const auto nhSettings = noseHooverSettings();
     auto       thermostat = noseHoover(nhSettings);
-    TimingsSettings::setTimeStep(0.1 * fs);
 
     EXPECT_THROW_MSG(
-        thermostat
-            .applyThermostat(*_simulationBox, *_data, toTemperature(-5.0)),
+        thermostat.applyThermostat(
+            *_simulationBox,
+            *_data,
+            toTemperature(-5.0),
+            0.1 * fs
+        ),
         exc::UserInputException,
         NOSE_HOOVER_ZERO_TARGET
     );
@@ -790,12 +848,11 @@ TEST_F(TestThermostat, noseHooverRejectsNegativeTargetTemperature)
 
 TEST_F(TestThermostat, langevinSigmaMatchesReference)
 {
-    TimingsSettings::setTimeStep(0.1 * fs);
-
     const auto friction = 0.1;
     const auto sigma    = thermostat::LangevinThermostat::calculateSigma(
         friction,
-        toTemperature(300.0)
+        toTemperature(300.0),
+        0.1 * fs
     );
 
     const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
@@ -808,7 +865,8 @@ TEST_F(TestThermostat, langevinSigmaMatchesReference)
     // sigma scales with sqrt(T)
     const auto sigma4 = thermostat::LangevinThermostat::calculateSigma(
         friction,
-        toTemperature(1200.0)
+        toTemperature(1200.0),
+        0.1 * fs
     );
     EXPECT_NEAR(sigma4, 2.0 * sigma, 1e-12 * expected);
 }

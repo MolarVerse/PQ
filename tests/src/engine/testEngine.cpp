@@ -24,6 +24,8 @@
 
 #include <gtest/gtest.h>
 
+#include "units.hpp"
+
 /**
  * @brief tests calculateTotalSimulationTime with a fresh engine (step 1,
  * no restart offset)
@@ -32,11 +34,11 @@
 TEST_F(TestEngine, calculateTotalSimulationTimeFreshRun)
 {
     TimingsSettings::setStepCount(0);
-    TimingsSettings::setTimeStep(0.5 * fs);
+    const auto timeStep = 0.5 * fs;
 
     // a freshly constructed engine starts at step 1
     EXPECT_EQ(_engine->getStep(), 1);
-    EXPECT_EQ(_engine->calculateTotalSimulationTime(), 0.5 * fs);
+    EXPECT_EQ(_engine->calculateTotalSimulationTime(timeStep), timeStep);
 }
 
 /**
@@ -48,10 +50,10 @@ TEST_F(TestEngine, calculateTotalSimulationTimeFreshRun)
 TEST_F(TestEngine, calculateTotalSimulationTimeIncludesRestartOffset)
 {
     TimingsSettings::setStepCount(1000);
-    TimingsSettings::setTimeStep(0.5 * fs);
+    const auto timeStep = 0.5 * fs;
 
     // effStep = engine step (1) + restart offset (1000) = 1001
-    EXPECT_EQ(_engine->calculateTotalSimulationTime(), 1001 * 0.5 * fs);
+    EXPECT_EQ(_engine->calculateTotalSimulationTime(timeStep), 1001 * timeStep);
 }
 
 /**
@@ -62,7 +64,7 @@ TEST_F(TestEngine, calculateTotalSimulationTimeIncludesRestartOffset)
 TEST_F(TestEngine, calculateTotalSimulationTimeScalesWithTimeStep)
 {
     TimingsSettings::setStepCount(0);
-    TimingsSettings::setTimeStep(2.0 * fs);
+    const auto timeStep = 2.0 * fs;
 
-    EXPECT_EQ(_engine->calculateTotalSimulationTime(), 2.0 * fs);
+    EXPECT_EQ(_engine->calculateTotalSimulationTime(timeStep), timeStep);
 }

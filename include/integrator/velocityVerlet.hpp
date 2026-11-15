@@ -38,8 +38,15 @@ namespace integrator
        public:
         ~VelocityVerlet() override = default;
 
-        void firstStep(molsys::SimulationBox &simulationBox) override;
-        void secondStep(molsys::SimulationBox &simulationBox) override;
+        void firstStep(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        ) override;
+
+        void secondStep(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        ) override;
     };
 
 }   // namespace integrator

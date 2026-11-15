@@ -142,6 +142,7 @@ namespace thermostat
      * @param simulationBox simulation box containing all atoms
      * @param physicalData physical data
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void NoseHooverThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,

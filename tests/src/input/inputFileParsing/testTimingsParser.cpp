@@ -38,14 +38,15 @@
  */
 TEST_F(TestInputFileReader, testParseTimestep)
 {
-    input::TimingsInputParser parser;
+    TimingsSettings           settings;
+    input::TimingsInputParser parser{settings};
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("timestep"));
     const auto &timeStepFunc = funcMap.at("timestep");
 
     std::vector<std::string> lineElements = {"timestep", "=", "1"};
     timeStepFunc(lineElements, 0);
-    EXPECT_EQ(TimingsSettings::getTimeStep(), 1.0 * fs);
+    EXPECT_EQ(settings.getTimeStep(), 1.0 * fs);
 
     _clearParser(parser);
 
@@ -82,7 +83,8 @@ TEST_F(TestInputFileReader, testParseTimestep)
  */
 TEST_F(TestInputFileReader, testParseNumberOfSteps)
 {
-    input::TimingsInputParser parser;
+    TimingsSettings           settings;
+    input::TimingsInputParser parser{settings};
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nstep"));
     const auto &nstepsFunc = funcMap.at("nstep");

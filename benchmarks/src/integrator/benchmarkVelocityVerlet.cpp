@@ -26,7 +26,6 @@
 #include <cstdint>
 
 #include "benchmarkSetup.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 #include "velocityVerlet.hpp"
 
@@ -37,12 +36,12 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        TimingsSettings::setTimeStep(0.001 * fs);
+        const auto                 timeStep = 0.001 * fs;
         integrator::VelocityVerlet integrator;
 
         for (auto _ : state)
         {
-            integrator.firstStep(simBox);
+            integrator.firstStep(simBox, timeStep);
             benchmark::DoNotOptimize(simBox.getAtoms().data());
         }
 
@@ -57,12 +56,12 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        TimingsSettings::setTimeStep(0.001 * fs);
+        const auto                 timeStep = 0.001 * fs;
         integrator::VelocityVerlet integrator;
 
         for (auto _ : state)
         {
-            integrator.secondStep(simBox);
+            integrator.secondStep(simBox, timeStep);
             benchmark::DoNotOptimize(simBox.getAtoms().data());
         }
 

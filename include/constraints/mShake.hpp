@@ -61,7 +61,8 @@ namespace constraints
         void applyMShake(
             molsys::SimulationBox &simulationBox,
             size_t                 maxIter,
-            double                 tolerance
+            double                 tolerance,
+            const Time            &timeStep
         );
         void applyMRattle(molsys::SimulationBox &);
 

@@ -46,13 +46,12 @@
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    TimingsSettings::setTimeStep(0.001 * fs);
+    const auto timeStep = 0.001 * fs;
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
@@ -96,7 +95,7 @@ int main()
             pos[0]     += (i % 2 == 0) ? 0.02 : -0.02;
             atom.setPosition(pos);
         }
-        constr.applyShake(box);
+        constr.applyShake(box, timeStep);
         constr.applyRattle(box);
     }
 

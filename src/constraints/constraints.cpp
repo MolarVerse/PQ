@@ -79,29 +79,38 @@ namespace constraints
     /**
      * @brief applies both shake and mShake algorithm to all bond constraints
      *
-     * @param simulationBox
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
+     * @param timeStep the integration time step used for velocity updates
      */
-    void Constraints::applyShake(molsys::SimulationBox &simulationBox)
+    void Constraints::applyShake(
+        molsys::SimulationBox &simulationBox,
+        const Time            &timeStep
+    )
     {
         if (!_constraintSettings->isShakeLikeActive())
             return;
 
         if (_constraintSettings->isShakeActivated())
-            _applyShake(simulationBox);
+            _applyShake(simulationBox, timeStep);
 
         if (_constraintSettings->isMShakeActivated())
-            _applyMShake(simulationBox);
+            _applyMShake(simulationBox, timeStep);
     }
 
     /**
      * @brief applies the shake algorithm to all bond constraints
      *
      * @param simulationBox
+     * @param timeStep the integration time step used for velocity updates
      *
      * @throws exc::ShakeException if shake algorithm does not
      * converge
      */
-    void Constraints::_applyShake(molsys::SimulationBox &simulationBox)
+    void Constraints::_applyShake(
+        molsys::SimulationBox &simulationBox,
+        const Time            &timeStep
+    )
     {
         auto _ = scopedTimer(TimerId::Constraints, "Shake");
 
@@ -114,12 +123,15 @@ namespace constraints
         {
             convergedVector.clear();
 
-            auto applyShakeSingleBond =
-                [&simulationBox, &convergedVector, this](auto &bondConst)
+            auto applyShakeSingleBond = [&simulationBox,
+                                         &convergedVector,
+                                         &timeStep,
+                                         this](auto &bondConst)
             {
                 convergedVector.push_back(bondConst.applyShake(
                     simulationBox,
-                    _constraintSettings->getShakeTolerance()
+                    _constraintSettings->getShakeTolerance(),
+                    timeStep
                 ));
             };
 
@@ -148,15 +160,20 @@ namespace constraints
      * @brief applies the mShake algorithm to all bond constraints
      *
      * @param simulationBox
+     * @param timeStep the integration time step used for velocity updates
      *
      */
-    void Constraints::_applyMShake(molsys::SimulationBox &simulationBox)
+    void Constraints::_applyMShake(
+        molsys::SimulationBox &simulationBox,
+        const Time            &timeStep
+    )
     {
         auto _ = scopedTimer(TimerId::Constraints, "MShake - Shake");
         _mShake->applyMShake(
             simulationBox,
             _constraintSettings->getMShakeMaxIter(),
-            _constraintSettings->getMShakeTolerance()
+            _constraintSettings->getMShakeTolerance(),
+            timeStep
         );
     }
 

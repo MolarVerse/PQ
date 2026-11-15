@@ -46,7 +46,8 @@ namespace
      */
     void validateThermostat(
         const ThermostatSettings& thermostatSettings,
-        const KineticsSettings&   kinetics
+        const KineticsSettings&   kinetics,
+        const Time&               timeStep
     )
     {
         const auto thermostatType = thermostatSettings.getThermostatType();
@@ -56,8 +57,7 @@ namespace
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
-            if (settings::TimingsSettings::getTimeStep() >
-                ThermostatSettings::getRelaxationTime())
+            if (timeStep > ThermostatSettings::getRelaxationTime())
             {
                 throw exc::InputFileException(
                     "The timestep must not exceed the thermostat relaxation "
@@ -82,7 +82,7 @@ namespace
             const auto sigmaSquared =
                 4.0 * ThermostatSettings::getFriction() * conversionFactor *
                 maxTemperature.quantity_from_zero().numerical_value_in(K) /
-                settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
+                timeStep.numerical_value_in(fs);
 
             if (!std::isfinite(sigmaSquared))
             {
@@ -110,7 +110,7 @@ namespace
         if (!hasRamp)
             return;
 
-        const auto totalSteps = settings::TimingsSettings::getNumberOfSteps();
+        const auto totalSteps = TimingsSettings::getNumberOfSteps();
         const auto rampSteps  = kinetics.getRampingSteps();
 
         if (rampSteps > totalSteps)
@@ -185,5 +185,5 @@ void Settings::finalize()
  */
 void Settings::validate() const
 {
-    validateThermostat(thermostatSettings, kinetics);
+    validateThermostat(thermostatSettings, kinetics, timings.getTimeStep());
 }

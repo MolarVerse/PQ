@@ -113,18 +113,20 @@ namespace engine
      */
     void MDEngine::takeStepBeforeForces()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         _thermostat->applyThermostatHalfStep(
             getSimulationBox(),
             getPhysicalData(),
-            _kinetics.getCurrentTargetTemperature()
+            _kinetics.getCurrentTargetTemperature(),
+            timeStep
         );
 
         if (getSettings().constraintSettings.isMShakeActivated())
             getSimulationBox().updateOldPositions();
 
-        getIntegrator().firstStep(getSimulationBox());
+        getIntegrator().firstStep(getSimulationBox(), timeStep);
 
-        getConstraints()->applyShake(getSimulationBox());
+        getConstraints()->applyShake(getSimulationBox(), timeStep);
     }
 
     /**
@@ -135,10 +137,12 @@ namespace engine
     {
         _resetKinetics.resetForces(getStep(), getSimulationBox());
 
+        const auto &timeStep = getSettings().timings.getTimeStep();
+
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
             getPhysicalData(),
-            calculateTotalSimulationTime()
+            calculateTotalSimulationTime(timeStep)
         );
 
         getConstraints()->calculateConstraintBondRefs(getSimulationBox());
@@ -155,14 +159,15 @@ namespace engine
             _kinetics.getCurrentTargetTemperature()
         );
 
-        _integrator->secondStep(getSimulationBox());
+        _integrator->secondStep(getSimulationBox(), timeStep);
 
         getConstraints()->applyRattle(getSimulationBox());
 
         _thermostat->applyThermostat(
             getSimulationBox(),
             getPhysicalData(),
-            _kinetics.getCurrentTargetTemperature()
+            _kinetics.getCurrentTargetTemperature(),
+            timeStep
         );
 
         getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
@@ -173,7 +178,8 @@ namespace engine
         _manostat->applyManostat(
             getSimulationBox(),
             getPhysicalData(),
-            currentTargetTemperature
+            currentTargetTemperature,
+            timeStep
         );
 
         _resetKinetics.reset(
@@ -214,13 +220,25 @@ namespace engine
     }
 
     /**
+     * @brief Writes output files using the default time step.
+     *
+     */
+    void MDEngine::writeOutput(const OutputFileSettings &outputSettings)
+    {
+        writeOutput(outputSettings, getSettings().timings.getTimeStep());
+    }
+
+    /**
      * @brief Writes output files.
      *
      * @details output files are written if the step is a multiple of the output
      * frequency.
      *
      */
-    void MDEngine::writeOutput(const OutputFileSettings &outputSettings)
+    void MDEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        const Time               &timeStep
+    )
     {
         const auto outputFreq = outputSettings.getOutputFrequency();
         const auto step0      = TimingsSettings::getStepCount();
@@ -274,7 +292,6 @@ namespace engine
                 static_cast<double>(outputFreq)
             );
 
-            const auto timeStep      = TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
             const auto simTime       = effStepDouble * timeStep;
 

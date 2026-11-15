@@ -74,11 +74,10 @@ namespace engine
      *
      * @return Time
      */
-    Time Engine::calculateTotalSimulationTime() const
+    Time Engine::calculateTotalSimulationTime(const Time &timeStep) const
     {
-        const auto step0    = TimingsSettings::getStepCount();
-        const auto timeStep = TimingsSettings::getTimeStep();
-        const auto effStep  = _step + step0;
+        const auto step0   = TimingsSettings::getStepCount();
+        const auto effStep = _step + step0;
 
         return static_cast<double>(effStep) * timeStep;
     }

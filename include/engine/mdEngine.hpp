@@ -65,6 +65,10 @@ namespace engine
 
         void run() override;
         void writeOutput(const OutputFileSettings &outputSettings) override;
+        void writeOutput(
+            const OutputFileSettings &outputSettings,
+            const Time               &timeStep
+        );
         virtual void takeStep();
 
         void takeStepBeforeForces();

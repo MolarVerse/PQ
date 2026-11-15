@@ -63,6 +63,7 @@ namespace thermostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void Thermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,

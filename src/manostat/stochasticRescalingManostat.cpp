@@ -45,6 +45,7 @@ namespace manostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void StochasticRescalingManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
@@ -106,6 +107,7 @@ namespace manostat
      *
      * @param volume
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      * @return linalg::Vec3D
      */
     QuantityTensor3D StochasticRescalingManostat::calculateMu(
@@ -214,6 +216,7 @@ namespace manostat
      *
      * @param volume The current volume of the simulation box
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      * @return QuantityTensor3D
      */
     QuantityTensor3D SemiIsotropicStochasticRescalingManostat::calculateMu(
@@ -288,6 +291,7 @@ namespace manostat
      *
      * @param volume
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      *
      * @return QuantityTensor3D
      */
@@ -341,6 +345,8 @@ namespace manostat
      *
      * @param volume
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
+     *
      * @return QuantityTensor3D
      */
     QuantityTensor3D FullAnisotropicStochasticRescalingManostat::calculateMu(

@@ -32,6 +32,7 @@
 
 #include "enums/jobtype.hpp"
 #include "inputFileParser.hpp"
+#include "unit_types.hpp"
 
 namespace engine
 {
@@ -132,9 +133,12 @@ namespace input
             const SimulationBoxSettings &simBoxSettings,
             const ThermostatSettings    &thermostatSettings
         ) const;
-        void _validateManostat(const ManostatSettings &manostatSettings) const;
-        void _validateReactionFieldCoulomb() const;
-        void _validateRingPolymer() const;
+        void _validateManostat(
+            const ManostatSettings &manostatSettings,
+            const Time             &timeStep
+        ) const;
+        void        _validateReactionFieldCoulomb() const;
+        void        _validateRingPolymer() const;
         static void _validateCellList();
     };
 

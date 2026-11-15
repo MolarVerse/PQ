@@ -83,7 +83,8 @@ namespace engine
         virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
         void         deleteTmpFiles() const;
 
-        [[nodiscard]] Time calculateTotalSimulationTime() const;
+        [[nodiscard]]
+        Time calculateTotalSimulationTime(const Time &timeStep) const;
 
         /***************************
          * standard getter methods *

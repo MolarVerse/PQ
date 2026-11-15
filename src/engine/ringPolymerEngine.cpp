@@ -56,11 +56,24 @@ namespace engine
     }
 
     /**
+     * @brief writes the ring polymer output files using the default time step.
+     *
+     * @param outputSettings
+     */
+    void RingPolymerEngine::writeOutput(
+        const OutputFileSettings &outputSettings
+    )
+    {
+        writeOutput(outputSettings, getSettings().timings.getTimeStep());
+    }
+
+    /**
      * @brief writes the ring polymer output files.
      *
      */
     void RingPolymerEngine::writeOutput(
-        const OutputFileSettings &outputSettings
+        const OutputFileSettings &outputSettings,
+        const Time               &timeStep
     )
     {
         auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
@@ -130,9 +143,8 @@ namespace engine
             getPhysicalData().copy(mean(rpmdData));
             getAveragePhysicalData() = mean(averageRPMDData);
 
-            const auto timeStep      = TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
+            const auto simTime       = effStepDouble * timeStep;
 
 #ifdef WITH_MPI
             if (mpi::MPI::isRoot())

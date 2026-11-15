@@ -33,6 +33,7 @@
 #include "ringPolymerqmmdEngine.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 #ifdef WITH_MPI
 #include "mpi.hpp"
@@ -105,6 +106,7 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
         _settings = std::make_unique<Settings>();
         _settings->outputFiles.setFilePrefixByUser(PREFIX);
         _settings->outputFiles.setOutputFrequencyByUser(1);
+        _settings->timings.setTimeStepByUser(0.5 * fs);
         _settings->finalize();
 
         _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);

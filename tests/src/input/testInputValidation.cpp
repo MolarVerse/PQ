@@ -82,7 +82,6 @@ class TestInputValidation : public ::testing::Test
         settings::PotentialSettings::setCoulombRadiusCutOff(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
-        TimingsSettings::setTimeStep(0.5 * fs);
 
         _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
         _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
@@ -91,6 +90,8 @@ class TestInputValidation : public ::testing::Test
         _engine = std::make_unique<engine::OptEngine>(_settings);
         _reader =
             std::make_unique<input::InputFileReader>("input.in", _settings);
+
+        _settings.timings.setTimeStepByUser(0.5 * fs);
     }
 
     void _setKeyword(const std::string &keyword)
@@ -390,6 +391,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
     _settings.kinetics.setRampingStepsByUser(200);
     _settings.kinetics.setStartTemperatureByUser(toTemperature(100.0));
     _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
+
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -411,6 +413,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
     _settings.kinetics.setRampingFrequencyByUser(4);
     _settings.kinetics.setStartTemperatureByUser(toTemperature(100.0));
     _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
+
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -647,6 +650,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
+
     _setKeyword("mace_model_path");
     _setKeyword("pressure");
     _setKeyword("temp");
@@ -695,6 +699,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );
+
     _setKeyword("nstep");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));

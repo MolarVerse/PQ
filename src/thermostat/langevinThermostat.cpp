@@ -30,7 +30,6 @@
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 
 namespace thermostat
@@ -82,6 +81,7 @@ namespace thermostat
      *
      * @param friction
      * @param targetTemperature
+     * @param timeStep the integration time step used for velocity updates
      */
     double LangevinThermostat::calculateSigma(
         double             friction,
@@ -107,6 +107,7 @@ namespace thermostat
      *
      * @param simulationBox
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void LangevinThermostat::applyLangevin(
         molsys::SimulationBox &simulationBox,
@@ -114,7 +115,8 @@ namespace thermostat
         const Time            &timeStep
     )
     {
-        const auto sigma = calculateSigma(_friction, targetTemperature);
+        const auto sigma =
+            calculateSigma(_friction, targetTemperature, timeStep);
 
         auto applyFriction = [this, sigma, &timeStep](auto &atom)
         {
@@ -148,6 +150,7 @@ namespace thermostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void LangevinThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
@@ -170,6 +173,7 @@ namespace thermostat
      *
      * @param simulationBox
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void LangevinThermostat::applyThermostatHalfStep(
         molsys::SimulationBox &simulationBox,

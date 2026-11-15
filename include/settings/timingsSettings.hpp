@@ -37,9 +37,9 @@
 class TimingsSettings
 {
    private:
-    Setting<Time>        _timeStep;
-    static inline size_t _numberOfSteps;
-    static inline size_t _stepCount = 0;
+    Setting<Time, "Time Step"> _timeStep;
+    static inline size_t       _numberOfSteps;
+    static inline size_t       _stepCount = 0;
 
    public:
     /********************

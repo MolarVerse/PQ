@@ -125,7 +125,7 @@ TEST(TestKinetics, onlyEndTemperatureDefinedIsUsedFromStart)
 
 TEST(TestKinetics, finalizeComputesIncreaseAndStepsForFullSimulation)
 {
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
 
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
@@ -141,7 +141,7 @@ TEST(TestKinetics, finalizeComputesIncreaseAndStepsForFullSimulation)
 
 TEST(TestKinetics, finalizeComputesIncreaseForExplicitSteps)
 {
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
 
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
@@ -158,7 +158,7 @@ TEST(TestKinetics, finalizeComputesIncreaseForExplicitSteps)
 
 TEST(TestKinetics, finalizeComputesIncreaseWithRampingFrequency)
 {
-    settings::TimingsSettings::setNumberOfSteps(100);
+    TimingsSettings::setNumberOfSteps(100);
 
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
@@ -176,7 +176,7 @@ TEST(TestKinetics, finalizeComputesIncreaseWithRampingFrequency)
 
 TEST(TestKinetics, rampReachesEndWithPartialFinalInterval)
 {
-    settings::TimingsSettings::setNumberOfSteps(10);
+    TimingsSettings::setNumberOfSteps(10);
     const auto kineticsSettings = rampSettings(200.0, 300.0, 10, 3);
 
     // ceil(10 / 3) = 4 updates
@@ -193,7 +193,7 @@ TEST(TestKinetics, rampReachesEndWithPartialFinalInterval)
 
 TEST(TestKinetics, rejectsEmptyTemperatureRamp)
 {
-    settings::TimingsSettings::setNumberOfSteps(0);
+    TimingsSettings::setNumberOfSteps(0);
 
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
@@ -208,7 +208,7 @@ TEST(TestKinetics, rejectsEmptyTemperatureRamp)
 
 TEST(TestKinetics, rejectsZeroTemperatureRampFrequency)
 {
-    settings::TimingsSettings::setNumberOfSteps(10);
+    TimingsSettings::setNumberOfSteps(10);
 
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));

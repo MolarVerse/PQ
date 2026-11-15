@@ -37,14 +37,13 @@
 
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
-#include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    TimingsSettings::setTimeStep(0.001 * fs);
+    const auto timeStep = 0.001 * fs;
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
@@ -56,8 +55,8 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        integrator.firstStep(box);
-        integrator.secondStep(box);
+        integrator.firstStep(box, timeStep);
+        integrator.secondStep(box, timeStep);
     }
 
     // read state so the loop cannot be optimized away

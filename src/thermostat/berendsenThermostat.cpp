@@ -37,7 +37,7 @@ namespace thermostat
     /**
      * @brief Construct a new Berendsen Thermostat object
      *
-     * @param tau
+     * @param tau the relaxation time of the Berendsen thermostat
      */
     BerendsenThermostat::BerendsenThermostat(const Time &tau) : _tau(tau) {}
 
@@ -47,6 +47,7 @@ namespace thermostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void BerendsenThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,

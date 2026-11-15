@@ -39,7 +39,8 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) timestep "<double>"
      * (required) 2) nstep "<size_t>" (required)
      */
-    TimingsInputParser::TimingsInputParser()
+    TimingsInputParser::TimingsInputParser(TimingsSettings &settings)
+        : _timingsSettings(settings)
     {
         addTimeStep();
         addNumberOfSteps();
@@ -63,8 +64,8 @@ namespace input
 
         const RangeValidator<double, Greater::GT> validator{0.0, std::nullopt};
 
-        const auto setTimeStep = [&](double value)
-        { TimingsSettings::setTimeStep(value * fs); };
+        const auto setTimeStep = [this](double value)
+        { _timingsSettings->setTimeStepByUser(value * fs); };
 
         auto &timeStep = _getRegistry().registerKey(
             KeyRegistry<double>{
