@@ -1,0 +1,1 @@
+- Trajectory (xyz, vel, force, chrg) and restart files are formatted with `std::to_chars` into a reused buffer, so writing them is faster; the files are byte-identical (#1158).
