@@ -610,3 +610,43 @@ TEST_F(TestInputFileReader, parseAsyncOutput)
     parseFunc({"async_output", "=", "true"}, 0);
     EXPECT_TRUE(outputFileSettings.getAsyncOutput());
 }
+
+/**
+ * @brief tests parsing the "reference_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testReferenceFilename)
+{
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("reference_file"));
+    const auto &parseFunc = funcMap.at("reference_file");
+
+    _fileName                                   = "references.txt";
+    const std::vector<std::string> lineElements = {
+        "reference_file",
+        "=",
+        _fileName
+    };
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(outputFileSettings.getRefFileName(), _fileName);
+}
+
+/**
+ * @brief tests parsing the "opt_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testOptFilename)
+{
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("opt_file"));
+    const auto &parseFunc = funcMap.at("opt_file");
+
+    _fileName                                   = "optimization.txt";
+    const std::vector<std::string> lineElements = {"opt_file", "=", _fileName};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(outputFileSettings.getOptFileName(), _fileName);
+}
