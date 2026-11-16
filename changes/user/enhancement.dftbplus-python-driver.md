@@ -1,1 +1,1 @@
-- The DFTB+ script `dftbplus_periodic_stress` now runs on Python instead of Perl. Results are unchanged.
+- Add a Python version of the DFTB+ script, `dftbplus_periodic_stress.py`. It writes the same files as the Perl script `dftbplus_periodic_stress`, which stays available.

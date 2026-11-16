@@ -41,9 +41,11 @@ TEST(ExternalQMScriptsTest, catalogsSupportedPrograms)
 TEST(ExternalQMScriptsTest, describesBundledScripts)
 {
     const auto dftbPlus = cli::externalQMScripts(QMMethod::DFTBPLUS);
-    ASSERT_EQ(dftbPlus.size(), 1);
+    ASSERT_EQ(dftbPlus.size(), 2);
     EXPECT_EQ(dftbPlus.front().name, "dftbplus_periodic_stress");
-    EXPECT_EQ(dftbPlus.front().requiredFileKeyword, "dftb_file");
+    EXPECT_EQ(dftbPlus.back().name, "dftbplus_periodic_stress.py");
+    for (const auto &script : dftbPlus)
+        EXPECT_EQ(script.requiredFileKeyword, "dftb_file");
     EXPECT_EQ(
         cli::recommendedExternalQMScript(QMMethod::DFTBPLUS),
         dftbPlus.front().name
