@@ -28,6 +28,8 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "filesInputParser.hpp"
+#include "generalSettings.hpp"
+#include "stringUtilities.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -414,4 +416,98 @@ TEST_F(TestInputFileReader, testOrcaFileName)
         0
     );
     EXPECT_EQ(settings.getOrcaFileName(), "no-such-orca-template");
+}
+
+/**
+ * @brief without path validation every file keyword takes any name, also one
+ * that does not exist, and stores it unchanged
+ */
+TEST_F(TestInputFileReader, fileKeywordsWithoutPathValidationAcceptAnyName)
+{
+    struct Case
+    {
+        std::string keyword;
+        std::string (*getter)(const FileSettings &);
+    };
+
+    const std::vector<Case> cases = {
+        {"intra-nonBonded_file",
+         [](const FileSettings &s) { return s.getIntraNonBondedFileName(); }},
+        {"topology_file",
+         [](const FileSettings &s) { return s.getTopologyFileName(); }},
+        {"parameter_file",
+         [](const FileSettings &s) { return s.getParameterFileName(); }},
+        {"start_file",
+         [](const FileSettings &s) { return s.getStartFileName(); }},
+        {"rpmd_start_file",
+         [](const FileSettings &s) { return s.getRingPolymerStartFileName(); }},
+        {"moldescriptor_file",
+         [](const FileSettings &s) { return s.getMolDescriptorFileName(); }},
+        {"guff_file",
+         [](const FileSettings &s) { return s.getGuffDatFileName(); }},
+        {"mshake_file",
+         [](const FileSettings &s) { return s.getMShakeFileName(); }},
+        {"dftb_file",
+         [](const FileSettings &s) { return s.getDFTBFileName(); }},
+        {"turbomole_file",
+         [](const FileSettings &s) { return s.getTMFileName(); }},
+        {"orca_file",
+         [](const FileSettings &s) { return s.getOrcaFileName(); }},
+    };
+
+    for (const auto &testCase : cases)
+    {
+        settings::GeneralSettings::deactivateIntraNonBonded();
+
+        FileSettings            settings;
+        input::FilesInputParser parser{false, settings};
+        const auto              funcMap = parser.getKeywordFuncMap();
+        const auto              mapKey =
+            utilities::toLowerAndReplaceDashesCopy(testCase.keyword);
+        ASSERT_TRUE(funcMap.contains(mapKey)) << testCase.keyword;
+
+        const std::string name = "does_not_exist_" + mapKey + ".txt";
+        funcMap.at(mapKey)({testCase.keyword, "=", name}, 0);
+
+        EXPECT_EQ(testCase.getter(settings), name) << testCase.keyword;
+        EXPECT_EQ(
+            settings::GeneralSettings::isIntraNonBondedActivated(),
+            testCase.keyword == "intra-nonBonded_file"
+        ) << testCase.keyword;
+    }
+
+    settings::GeneralSettings::deactivateIntraNonBonded();
+}
+
+/**
+ * @brief the intra non-bonded keyword activates the intra non-bonded
+ * interactions in both modes, with an existing file and with a plain name
+ */
+TEST_F(TestInputFileReader, intraNonBondedKeywordActivatesInteractions)
+{
+    for (const auto validate : {true, false})
+    {
+        settings::GeneralSettings::deactivateIntraNonBonded();
+
+        FileSettings            settings;
+        input::FilesInputParser parser{validate, settings};
+        const auto              funcMap   = parser.getKeywordFuncMap();
+        const auto             &parseFunc = funcMap.at("intra_nonbonded_file");
+
+        parseFunc(
+            {"intra-nonBonded_file",
+             "=",
+             "data/intraNonBondedReader/intraNonBonded.dat"},
+            0
+        );
+
+        EXPECT_TRUE(settings::GeneralSettings::isIntraNonBondedActivated())
+            << validate;
+        EXPECT_EQ(
+            settings.getIntraNonBondedFileName(),
+            "data/intraNonBondedReader/intraNonBonded.dat"
+        ) << validate;
+    }
+
+    settings::GeneralSettings::deactivateIntraNonBonded();
 }
