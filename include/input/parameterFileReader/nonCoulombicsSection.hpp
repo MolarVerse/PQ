@@ -65,23 +65,23 @@ namespace input::parameterFile
             size_t                    lineNumber
         ) override;
 
-        static void processLJ(
+        void processLJ(
             std::vector<std::string> &lineElements,
             engine::Engine           &engine,
             size_t                    lineNumber
-        );
+        ) const;
 
-        static void processBuckingham(
+        void processBuckingham(
             std::vector<std::string> &lineElements,
             engine::Engine           &engine,
             size_t                    lineNumber
-        );
+        ) const;
 
-        static void processMorse(
+        void processMorse(
             std::vector<std::string> &lineElements,
             engine::Engine           &engine,
             size_t                    lineNumber
-        );
+        ) const;
     };
 
 }   // namespace input::parameterFile

@@ -356,7 +356,8 @@ namespace engine
                 getManostat().applyManostat(
                     bead,
                     data,
-                    _getKinetics().getCurrentTargetTemperature()
+                    _getKinetics().getCurrentTargetTemperature(),
+                    getSettings().potentialSettings.getCoulombRadiusCutOff()
                 );
             }
         }
@@ -439,7 +440,8 @@ namespace engine
             getManostat().applyManostat(
                 bead,
                 data,
-                _getKinetics().getCurrentTargetTemperature()
+                _getKinetics().getCurrentTargetTemperature(),
+                getSettings().potentialSettings.getCoulombRadiusCutOff()
             );
         }
     }

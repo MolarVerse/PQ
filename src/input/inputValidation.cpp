@@ -86,7 +86,7 @@ namespace input
             settings.thermostatSettings
         );
         _validateManostat(settings.manostatSettings);
-        _validateCellList();
+        _validateCellList(settings.potentialSettings.getCoulombRadiusCutOff());
         _validateReactionFieldCoulomb(
             settings.potentialSettings.getCoulombLongRangeType()
         );
@@ -336,7 +336,7 @@ namespace input
      * @throws exc::InputFileException if an active cell list is incompatible
      * with the selected potential
      */
-    void InputFileReader::_validateCellList()
+    void InputFileReader::_validateCellList(double coulombRadiusCutOff)
     {
         if (!settings::GeneralSettings::isCellListActivated())
             return;
@@ -346,7 +346,7 @@ namespace input
                 "Cell lists are not available for pure QM simulations"
             );
 
-        if (PotentialSettings::getCoulombRadiusCutOff() <= 0.0)
+        if (coulombRadiusCutOff <= 0.0)
             throw exc::InputFileException(
                 "An active cell list requires rcoulomb to be greater than zero"
             );

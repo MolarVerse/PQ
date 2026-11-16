@@ -148,7 +148,8 @@ namespace waterModel
 
         InterWater(
             InterWaterState                     state,
-            std::unique_ptr<InterWaterStrategy> strategy
+            std::unique_ptr<InterWaterStrategy> strategy,
+            double                              coulombRadiusCutOff
         );
 
         void calculate(
@@ -173,11 +174,11 @@ namespace waterModel
         );
 
        private:
-        void _setNonCoulombCutOffRadii() const;
+        void _setNonCoulombCutOffRadii(double coulombRadiusCutOff) const;
         void _initNonCoulombPairs() const;
-        void _initState()
+        void _initState(double coulombRadiusCutOff)
         {
-            _setNonCoulombCutOffRadii();
+            _setNonCoulombCutOffRadii(coulombRadiusCutOff);
             _initNonCoulombPairs();
         }
     };

@@ -139,7 +139,8 @@ namespace input
         );
         _parsers.push_back(
             std::make_unique<SimulationBoxInputParser>(
-                settings.simulationBoxSettings
+                settings.simulationBoxSettings,
+                settings.potentialSettings
             )
         );
         _parsers.push_back(

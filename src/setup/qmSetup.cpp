@@ -126,8 +126,6 @@ namespace setup
     {
         setupQMMethod();
 
-        setupCoulombRadiusCutOff();
-
         setupWriteInfo();
     }
 
@@ -145,20 +143,6 @@ namespace setup
             _xtbSettings,
             _externalQMSettings
         );
-    }
-
-    /**
-     * @brief set coulomb radius cutoff to 0.0 for QM-MD, QM-RPMD
-     *
-     */
-    void QMSetup::setupCoulombRadiusCutOff()
-    {
-        using enum JobType;
-
-        const auto jobType = settings::GeneralSettings::getJobtype();
-
-        if (jobType == QM_MD || jobType == RING_POLYMER_QM_MD)
-            PotentialSettings::setCoulombRadiusCutOff(0.0);
     }
 
     /**

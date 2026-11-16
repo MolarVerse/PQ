@@ -22,6 +22,20 @@
 
 #include "potentialSettings.hpp"
 
+#include "generalSettings.hpp"
+
+/**
+ * @brief Finalize the potential settings based on the job type
+ *
+ * For QM-only jobs, certain potential settings might need to be adjusted,
+ * such as setting the Coulomb radius cut off to zero.
+ */
+void PotentialSettings::finalize()
+{
+    if (settings::GeneralSettings::isQMOnlyJobtype())
+        _coulombRadiusCutOff.setBySystem(0.0);
+}
+
 /********************
  *                  *
  * standard setters *
@@ -53,9 +67,9 @@ void PotentialSettings::setCoulombLongRangeTypeByUser(CoulombLongRangeType type)
  *
  * @param coulombRadiusCutOff
  */
-void PotentialSettings::setCoulombRadiusCutOff(double coulombRadiusCutOff)
+void PotentialSettings::setCoulombRadiusCutOffByUser(double coulombRadiusCutOff)
 {
-    _coulombRadiusCutOff = coulombRadiusCutOff;
+    _coulombRadiusCutOff.setByUser(coulombRadiusCutOff);
 }
 
 /**
@@ -140,9 +154,9 @@ NonCoulombType PotentialSettings::getNonCoulombType() const
  *
  * @return double
  */
-double PotentialSettings::getCoulombRadiusCutOff()
+double PotentialSettings::getCoulombRadiusCutOff() const
 {
-    return _coulombRadiusCutOff;
+    return _coulombRadiusCutOff.get();
 }
 
 /**

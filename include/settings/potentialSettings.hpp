@@ -46,8 +46,9 @@ class PotentialSettings
         NonCoulombType::GUFF
     };
 
-    static inline double _coulombRadiusCutOff =
-        defaults::COULOMB_CUT_OFF_DEFAULT;
+    Setting<double, "Coulomb radius cut off"> _coulombRadiusCutOff{
+        defaults::COULOMB_CUT_OFF_DEFAULT
+    };
     static inline std::optional<double> _nonCoulombRadiusCutOff;
     static inline double _scale14Coulomb = defaults::SCALE_14_COULOMB_DEFAULT;
     static inline double _scale14VanDerWaals =
@@ -57,8 +58,7 @@ class PotentialSettings
     static inline double _reactionFieldEpsilon = defaults::RF_EPSILON_DEFAULT;
 
    public:
-    PotentialSettings()  = default;
-    ~PotentialSettings() = default;
+    void finalize();
 
     /********************
      * standard setters *
@@ -67,7 +67,7 @@ class PotentialSettings
     void setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
     void setNonCoulombTypeByUser(NonCoulombType type);
 
-    static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
+    void        setCoulombRadiusCutOffByUser(double coulombRadiusCutOff);
     static void setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff);
     static void setScale14Coulomb(double scale14Coulomb);
     static void setScale14VanDerWaals(double scale14VanDerWaals);
@@ -81,7 +81,7 @@ class PotentialSettings
     [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
     [[nodiscard]] NonCoulombType       getNonCoulombType() const;
 
-    [[nodiscard]] static double                getCoulombRadiusCutOff();
+    [[nodiscard]] double                       getCoulombRadiusCutOff() const;
     [[nodiscard]] static std::optional<double> getNonCoulombRadiusCutOff();
     [[nodiscard]] static double                getScale14Coulomb();
     [[nodiscard]] static double                getScale14VDW();

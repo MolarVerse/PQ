@@ -147,6 +147,7 @@ namespace
  */
 void Settings::finalize()
 {
+    potentialSettings.finalize();
     resetKinetics.finalize();
     kinetics.finalize();
     manostatSettings.finalize(referenceSettings);

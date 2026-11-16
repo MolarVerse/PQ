@@ -30,6 +30,7 @@
 #include <memory>
 
 #include "orthorhombicBox.hpp"
+#include "settings.hpp"
 #include "strongTypes.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -61,12 +62,14 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
 int main()
 {
-    PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
-    WaterModelSettings waterModelSettings;
-    waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
+    settings.waterModelSettings.setWaterInterModelByUser(
+        WaterInterModel::SPC_E
+    );
 
     // ~6x6x6 = 216 water molecules (648 atoms) on a 3 Å grid in a 30 Å box.
     constexpr size_t perSide = 6;
@@ -151,7 +154,8 @@ int main()
 
     waterModel::InterWater interWater(
         std::move(state),
-        std::make_unique<waterModel::InterWaterStrategyCellList>()
+        std::make_unique<waterModel::InterWaterStrategyCellList>(),
+        settings.potentialSettings.getCoulombRadiusCutOff()
     );
 
     auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
@@ -161,8 +165,11 @@ int main()
     molsys::CellList cellList;
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
-    cellList.setup(simBox);
-    cellList.updateCellList(simBox);
+    cellList.setup(simBox, settings.potentialSettings.getCoulombRadiusCutOff());
+    cellList.updateCellList(
+        simBox,
+        settings.potentialSettings.getCoulombRadiusCutOff()
+    );
 
     auto physicalData = physicalData::PhysicalData();
 

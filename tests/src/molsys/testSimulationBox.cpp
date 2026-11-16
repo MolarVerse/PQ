@@ -34,7 +34,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
 #include "vectorNear.hpp"
@@ -355,20 +354,26 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
-    PotentialSettings::setCoulombRadiusCutOff(1.0);
+    const auto coulombRadiusCutOff = 1.0;
 
     molsys::OrthorhombicBox orthoBox1{{1.99, 10.0, 10.0}};
     _simulationBox->setBox(orthoBox1, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::ManostatError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::ManostatError,
+            coulombRadiusCutOff
+        ),
         exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -378,7 +383,10 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBox(orthoBox2, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -388,7 +396,10 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBox(orthoBox3, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"

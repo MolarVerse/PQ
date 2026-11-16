@@ -187,7 +187,7 @@ TEST_F(TestGuffDatReader, parseLine)
     EXPECT_EQ(
         pair,
         pot::LennardJonesPair(
-            PotentialSettings::getCoulombRadiusCutOff(),
+            _settings.potentialSettings.getCoulombRadiusCutOff(),
             LJParams{2.0, 3.0}
         )
     );
@@ -801,7 +801,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 
     EXPECT_EQ(
         pair.get_radialCutoff(),
-        PotentialSettings::getCoulombRadiusCutOff()
+        _settings.potentialSettings.getCoulombRadiusCutOff()
     );
 }
 

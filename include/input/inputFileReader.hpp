@@ -138,7 +138,7 @@ namespace input
             CoulombLongRangeType longRangeCorrection
         ) const;
         void        _validateRingPolymer() const;
-        static void _validateCellList();
+        static void _validateCellList(double coulombRadiusCutOff);
     };
 
 }   // namespace input

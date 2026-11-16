@@ -281,7 +281,9 @@ namespace input::guffdat
         double rncCutOff = stod(lineCommands[4]);
 
         if (rncCutOff < 0.0)
-            rncCutOff = PotentialSettings::getCoulombRadiusCutOff();
+            rncCutOff =
+                _engine.getSettings().potentialSettings.getCoulombRadiusCutOff(
+                );
 
         constexpr auto coulombCoeffIndex = 5;
         const double   coulombCoeff = stod(lineCommands[coulombCoeffIndex]);

@@ -50,7 +50,8 @@ namespace manostat
     void StochasticRescalingManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const Temperature          &targetTemperature
+        const Temperature          &targetTemperature,
+        double                      coulombRadiusCutOff
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");
@@ -60,7 +61,7 @@ namespace manostat
         const auto mu =
             calculateMu(simulationBox.getVolume(), targetTemperature);
 
-        _validateScaling(simulationBox, mu);
+        _validateScaling(simulationBox, mu, coulombRadiusCutOff);
 
         // Reconstruction temporarily unwraps atoms. Molecule::scale() below
         // wraps every position into the resized box.
@@ -79,7 +80,10 @@ namespace manostat
         const auto  invMuSim   = inverse(muSimSpace);
 
         simulationBox.scaleBox(mu);
-        simulationBox.checkCoulRadiusCutOff(ExceptionType::ManostatError);
+        simulationBox.checkCoulRadiusCutOff(
+            ExceptionType::ManostatError,
+            coulombRadiusCutOff
+        );
 
         physicalData.setVolume(simulationBox.getVolume());
         physicalData.setDensity(simulationBox.getDensity());

@@ -42,7 +42,7 @@ TEST_F(TestSetup, setupCellList)
 
     test::checkType(_engine->getPotential(), typeid(pot::PotentialBruteForce));
 
-    PotentialSettings::setCoulombRadiusCutOff(4.0);
+    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0);
     settings::GeneralSettings::activateCellList();
 
     molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};

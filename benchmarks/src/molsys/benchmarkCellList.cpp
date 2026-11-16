@@ -28,7 +28,6 @@
 #include "benchmarkSetup.hpp"
 #include "celllist.hpp"
 #include "generalSettings.hpp"
-#include "potentialSettings.hpp"
 
 namespace
 {
@@ -37,17 +36,15 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        PotentialSettings::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
-
         molsys::CellList cellList;
         cellList.setNumberOfCells(cellsPerSide);
         cellList.resizeCells();
-        cellList.setup(simBox);
+        cellList.setup(simBox, benchmarkSetup::cutOff);
         settings::GeneralSettings::activateCellList();
 
         for (auto _ : state)
         {
-            cellList.updateCellList(simBox);
+            cellList.updateCellList(simBox, benchmarkSetup::cutOff);
             benchmark::DoNotOptimize(cellList.getCells().data());
         }
 

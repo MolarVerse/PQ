@@ -107,13 +107,13 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getSimulationBox().addMoleculeType(moleculeType2);
         _engine->getSimulationBox().addMolecule(molecule1);
 
-        PotentialSettings::setCoulombRadiusCutOff(12.5);
+        _settings.potentialSettings.setCoulombRadiusCutOffByUser(12.5);
 
         _engine->makePotential(pot::PotentialBruteForce());
         _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
         _engine->getPotential()->makeCoulombPotential(
             pot::CoulombShiftedPotential(
-                PotentialSettings::getCoulombRadiusCutOff()
+                _settings.potentialSettings.getCoulombRadiusCutOff()
             )
         );
 

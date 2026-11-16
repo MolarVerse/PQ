@@ -37,6 +37,8 @@
 #include <string_view>
 #include <utility>
 
+#include "settings.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -69,13 +71,15 @@ namespace benchWaterScaling
 
     inline int run(const std::size_t perSide, const std::uint64_t iterations)
     {
-        PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
         pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
-        WaterModelSettings waterModelSettings;
-        waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
+        Settings settings;
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
+        settings.waterModelSettings.setWaterInterModelByUser(
+            WaterInterModel::SPC_E
+        );
 
         const double boxLength = (SPACING * static_cast<double>(perSide)) + 3.0;
         const auto   numberOfCells = static_cast<size_t>(boxLength / CUTOFF);
@@ -158,7 +162,8 @@ namespace benchWaterScaling
 
         waterModel::InterWater interWater(
             std::move(state),
-            std::make_unique<waterModel::InterWaterStrategyCellList>()
+            std::make_unique<waterModel::InterWaterStrategyCellList>(),
+            settings.potentialSettings.getCoulombRadiusCutOff()
         );
         auto coulombPot =
             std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
@@ -167,7 +172,10 @@ namespace benchWaterScaling
         molsys::CellList cellList;
         cellList.setNumberOfCells(numberOfCells);
         cellList.resizeCells();
-        cellList.setup(simBox);
+        cellList.setup(
+            simBox,
+            settings.potentialSettings.getCoulombRadiusCutOff()
+        );
 
         auto physicalData = physicalData::PhysicalData();
 
@@ -177,7 +185,10 @@ namespace benchWaterScaling
 
         for (std::uint64_t i = 0; i < iterations; ++i)
         {
-            cellList.updateCellList(simBox);
+            cellList.updateCellList(
+                simBox,
+                settings.potentialSettings.getCoulombRadiusCutOff()
+            );
             interWater.calculate(simBox, physicalData, coulombPot, cellList);
         }
 

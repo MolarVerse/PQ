@@ -446,8 +446,8 @@ namespace
         molsys::CellList cellList;
         cellList.setNumberOfCells(3);
         cellList.resizeCells();
-        cellList.setup(simulationBox);
-        cellList.updateCellList(simulationBox);
+        cellList.setup(simulationBox, kCutOff);
+        cellList.updateCellList(simulationBox, kCutOff);
         cellList.assignMoleculeHybridZoneIndices();
         cellList.assignWaterMoleculeIndices(simulationBox, waterModelSettings);
         return cellList;
@@ -637,7 +637,6 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 
 TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
-    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
@@ -745,7 +744,6 @@ TEST(InterWater, DefaultStrategyIsInert)
 
 TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 {
-    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
 
     auto oxygenOxygen = std::make_unique<pot::LennardJonesPair>(
@@ -772,11 +770,13 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 
     waterModel::InterWater interWater(
         std::move(state),
-        std::make_unique<waterModel::InterWaterStrategyNull>()
+        std::make_unique<waterModel::InterWaterStrategyNull>(),
+        kCutOff
     );
     waterModel::InterWater nullPairs(
         waterModel::InterWaterState{},
-        std::make_unique<waterModel::InterWaterStrategyNull>()
+        std::make_unique<waterModel::InterWaterStrategyNull>(),
+        kCutOff
     );
     molsys::SimulationBox      simBox;
     physicalData::PhysicalData physicalData;
@@ -801,7 +801,6 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
@@ -817,7 +816,8 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     physicalData::PhysicalData bruteForceData;
     waterModel::InterWater     bruteForce(
         waterModel::makeInterWaterState<waterModel::SPCInterParam>(),
-        std::make_unique<waterModel::InterWaterStrategyBruteForce>()
+        std::make_unique<waterModel::InterWaterStrategyBruteForce>(),
+        kCutOff
     );
 
     bruteForce
@@ -842,7 +842,8 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     physicalData::PhysicalData cellListData;
     waterModel::InterWater     cellListWater(
         waterModel::makeInterWaterState<waterModel::SPCEInterParam>(),
-        std::make_unique<waterModel::InterWaterStrategyCellList>()
+        std::make_unique<waterModel::InterWaterStrategyCellList>(),
+        kCutOff
     );
 
     cellListWater.calculate(simBoxCellList, cellListData, coulomb, cellList);
@@ -864,7 +865,6 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 
 TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
-    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
@@ -921,7 +921,6 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);

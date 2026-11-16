@@ -176,7 +176,7 @@ namespace input::parameterFile
         std::vector<std::string> &lineElements,
         engine::Engine           &engine,
         size_t                    lineNumber
-    )
+    ) const
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 4 && lineElements.size() != 5)
@@ -200,7 +200,7 @@ namespace input::parameterFile
         auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
         cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
@@ -243,7 +243,7 @@ namespace input::parameterFile
         std::vector<std::string> &lineElements,
         engine::Engine           &engine,
         size_t                    lineNumber
-    )
+    ) const
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 5 && lineElements.size() != 6)
@@ -267,7 +267,7 @@ namespace input::parameterFile
         auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
         cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 
@@ -310,7 +310,7 @@ namespace input::parameterFile
         std::vector<std::string> &lineElements,
         engine::Engine           &engine,
         size_t                    lineNumber
-    )
+    ) const
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 5 && lineElements.size() != 6)
@@ -334,7 +334,7 @@ namespace input::parameterFile
         auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff = PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
         cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
 

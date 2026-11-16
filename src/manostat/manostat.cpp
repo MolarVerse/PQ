@@ -32,7 +32,6 @@
 #include "globalTimer.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
-#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
@@ -145,7 +144,8 @@ namespace manostat
      */
     void Manostat::_validateScaling(
         const molsys::SimulationBox &simulationBox,
-        const QuantityTensor3D      &mu
+        const QuantityTensor3D      &mu,
+        double                       coulombRadiusCutOff
     )
     {
         const auto determinant = det(mu);
@@ -158,7 +158,7 @@ namespace manostat
         }
 
         auto candidate = simulationBox.getBox().clone();
-        _validateCandidate(*candidate, mu);
+        _validateCandidate(*candidate, mu, coulombRadiusCutOff);
     }
 
     /**
@@ -172,7 +172,8 @@ namespace manostat
      */
     void Manostat::_validateCandidate(
         molsys::Box            &candidate,
-        const QuantityTensor3D &mu
+        const QuantityTensor3D &mu,
+        double                  coulombRadiusCutOff
     )
     {
         candidate.scaleBox(mu);
@@ -197,8 +198,7 @@ namespace manostat
             }
         }
 
-        if (candidate.getMinimalBoxDimension() <
-            2.0 * PotentialSettings::getCoulombRadiusCutOff())
+        if (candidate.getMinimalBoxDimension() < 2.0 * coulombRadiusCutOff)
         {
             throw exc::ManostatException(
                 "Coulomb radius cut off is larger than half of the minimal "
@@ -233,11 +233,13 @@ namespace manostat
      * @param simulationBox The simulation box containing the system
      * @param physicalData The physical data of the system
      * @param targetTemperature The target temperature for the system
+     * @param coulombRadiusCutOff The Coulomb radius cut off for the system
      */
     void Manostat::applyManostat(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const Temperature & /*targetTemperature*/
+        const Temperature & /*targetTemperature*/,
+        double /*coulombRadiusCutOff*/
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");

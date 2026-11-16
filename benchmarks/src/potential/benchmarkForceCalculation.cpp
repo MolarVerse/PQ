@@ -37,7 +37,6 @@
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
-#include "potentialSettings.hpp"
 #include "waterModelSettings.hpp"
 
 namespace
@@ -68,7 +67,6 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        PotentialSettings::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
         pot::CoulombPotential::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
         pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
         pot::CoulombPotential::setCoulombForceCutOff(0.0);
@@ -85,8 +83,8 @@ namespace
             settings::GeneralSettings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
-            cellList.setup(simBox);
-            cellList.updateCellList(simBox);
+            cellList.setup(simBox, benchmarkSetup::cutOff);
+            cellList.updateCellList(simBox, benchmarkSetup::cutOff);
         }
 
         physicalData::PhysicalData physicalData;

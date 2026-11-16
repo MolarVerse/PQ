@@ -120,7 +120,10 @@ namespace engine
         configurator::HybridConfigurator::calculateSmoothingFactors(
             getSimulationBox()
         );
-        getCellList().updateCellList(getSimulationBox());
+        getCellList().updateCellList(
+            getSimulationBox(),
+            getSettings().potentialSettings.getCoulombRadiusCutOff()
+        );
         getPhysicalDataPtr()->setNumberOfSmoothingMolecules(
             static_cast<double>(std::ranges::distance(
                 getSimulationBox().getMoleculesInsideZone(

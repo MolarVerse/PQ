@@ -100,7 +100,10 @@ namespace molsys
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
-        void checkCoulRadiusCutOff(const ExceptionType&) const;
+        void checkCoulRadiusCutOff(
+            const ExceptionType&,
+            double coulombRadiusCutOff
+        ) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
         void calculateDegreesOfFreedom();

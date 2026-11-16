@@ -404,7 +404,7 @@ TEST_F(TestSetup, testCheckRcCutoff)
 {
     molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
     _engine->getSimulationBox().setBox(orthoBox, false);
-    PotentialSettings::setCoulombRadiusCutOff(14.0);
+    _settings->potentialSettings.setCoulombRadiusCutOffByUser(14.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW_MSG(
         simulationBoxSetup.checkRcCutoff(),
@@ -414,7 +414,7 @@ TEST_F(TestSetup, testCheckRcCutoff)
     );
 
     setup::SimulationBoxSetup simulationBox2Setup(*_engine);
-    PotentialSettings::setCoulombRadiusCutOff(4.0);
+    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0);
     EXPECT_NO_THROW(simulationBox2Setup.checkRcCutoff());
 }
 
@@ -524,7 +524,7 @@ TEST_F(TestSetup, testFullSetup)
     molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
     _settings->fileSettings.setStartFileNameByUser("input.rst");
     _engine->getSimulationBox().setBox(orthoBox, true);
-    PotentialSettings::setCoulombRadiusCutOff(4.0);
+    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0);
 
     EXPECT_NO_THROW(setup::setupSimulationBox(*_engine));
 }
@@ -547,7 +547,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setDensity(12341243.1234);
     molsys::OrthorhombicBox orthoBox{{5.73, 9.93, 11.14}};
     simBox.setBox(orthoBox, false);
-    PotentialSettings::setCoulombRadiusCutOff(5.79);
+    _settings->potentialSettings.setCoulombRadiusCutOffByUser(5.79);
     _settings->fileSettings.setStartFileNameByUser("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();

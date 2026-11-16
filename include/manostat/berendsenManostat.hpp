@@ -42,7 +42,8 @@ namespace manostat
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const Temperature          &targetTemperature
+            const Temperature          &targetTemperature,
+            double                      coulombRadiusCutOff
         ) override;
 
         [[nodiscard]] virtual QuantityTensor3D calculateMu() const;

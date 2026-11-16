@@ -173,7 +173,8 @@ namespace engine
         _manostat->applyManostat(
             getSimulationBox(),
             getPhysicalData(),
-            currentTargetTemperature
+            currentTargetTemperature,
+            getSettings().potentialSettings.getCoulombRadiusCutOff()
         );
 
         _resetKinetics.reset(

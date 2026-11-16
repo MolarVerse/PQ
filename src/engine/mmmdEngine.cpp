@@ -34,7 +34,10 @@ namespace engine
      */
     void MMMDEngine::calculateForces()
     {
-        getCellList().updateCellList(getSimulationBox());
+        getCellList().updateCellList(
+            getSimulationBox(),
+            getSettings().potentialSettings.getCoulombRadiusCutOff()
+        );
 
         getPotential()->calculateForces(
             getSimulationBox(),

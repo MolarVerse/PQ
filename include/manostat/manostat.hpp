@@ -67,15 +67,17 @@ namespace manostat
         virtual void applyManostat(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const Temperature &targetTemperature
+            const Temperature &targetTemperature,
+            double             coulombRadiusCutOff
         );
 
         static void rotateMu(QuantityTensor3D &mu);
 
        protected:
         static void _validateScaling(
-            const molsys::SimulationBox &,
-            const QuantityTensor3D &
+            const molsys::SimulationBox &simulationBox,
+            const QuantityTensor3D      &mu,
+            double                       coulombRadiusCutOff
         );
 
         [[nodiscard]]
@@ -97,7 +99,11 @@ namespace manostat
         const ManostatSettings &_getSettings() const;
 
        private:
-        static void _validateCandidate(molsys::Box &, const QuantityTensor3D &);
+        static void _validateCandidate(
+            molsys::Box            &candidate,
+            const QuantityTensor3D &mu,
+            double                  coulombRadiusCutOff
+        );
     };
 
 }   // namespace manostat

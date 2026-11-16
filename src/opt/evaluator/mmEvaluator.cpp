@@ -49,7 +49,10 @@ namespace opt
 
         // _constraints->applyShake(_simulationBox);
 
-        _getCellList().updateCellList(_getSimulationBox());
+        _getCellList().updateCellList(
+            _getSimulationBox(),
+            _getSettings().potentialSettings.getCoulombRadiusCutOff()
+        );
 
         _getPotential().calculateForces(
             _getSimulationBox(),

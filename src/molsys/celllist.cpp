@@ -33,7 +33,6 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "molecule.hpp"
-#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace molsys
@@ -73,18 +72,21 @@ namespace molsys
      *
      * @param simulationBox
      */
-    void CellList::setup(const SimulationBox &simulationBox)
+    void CellList::setup(
+        const SimulationBox &simulationBox,
+        double               coulombRadiusCutOff
+    )
     {
         _oldBoxDimensions = simulationBox.getBoxDimensions();
         _oldBoxAngles     = simulationBox.getBoxAngles();
 
         determineCellSize(simulationBox.getBoxDimensions());
 
-        checkCoulombCutoff(PotentialSettings::getCoulombRadiusCutOff());
+        checkCoulombCutoff(coulombRadiusCutOff);
 
         determineCellBoundaries(simulationBox.getBoxDimensions());
 
-        addNeighbouringCells(PotentialSettings::getCoulombRadiusCutOff());
+        addNeighbouringCells(coulombRadiusCutOff);
     }
 
     /**
@@ -253,7 +255,10 @@ namespace molsys
      *
      * @param simulationBox
      */
-    void CellList::updateCellList(SimulationBox &simulationBox)
+    void CellList::updateCellList(
+        SimulationBox &simulationBox,
+        double         coulombRadiusCutOff
+    )
     {
         if (!settings::GeneralSettings::isCellListActivated())
             return;
@@ -264,7 +269,7 @@ namespace molsys
         {
             _cells.clear();
             resizeCells();
-            setup(simulationBox);
+            setup(simulationBox, coulombRadiusCutOff);
         }
 
         auto clearMoleculesAndAtoms = [](auto &cell)

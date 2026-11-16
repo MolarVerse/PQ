@@ -40,9 +40,9 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
-#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -160,7 +160,6 @@ namespace
 
 TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
-    PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
@@ -199,13 +198,14 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 
     // Brute force ignores its molsys::CellList argument; pass a
     // default-constructed one purely to satisfy the signature.
-    WaterModelSettings waterModelSettings;
-    molsys::CellList   dummyCellList;
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCoulombCutOff);
+    molsys::CellList dummyCellList;
     bruteForce.calculateForces(
         simBoxBF,
         physicalDataBF,
         dummyCellList,
-        waterModelSettings
+        settings.waterModelSettings
     );
 
     settings::GeneralSettings::activateCellList();
@@ -213,13 +213,19 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     molsys::CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
     cellList.resizeCells();
-    cellList.setup(simBoxCL);
-    cellList.updateCellList(simBoxCL);
+    cellList.setup(
+        simBoxCL,
+        settings.potentialSettings.getCoulombRadiusCutOff()
+    );
+    cellList.updateCellList(
+        simBoxCL,
+        settings.potentialSettings.getCoulombRadiusCutOff()
+    );
     cellListPotential.calculateForces(
         simBoxCL,
         physicalDataCL,
         cellList,
-        waterModelSettings
+        settings.waterModelSettings
     );
 
     EXPECT_NEAR(
