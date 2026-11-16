@@ -98,6 +98,7 @@ hybrid_center_file           false      hybrid_center.xyz
 vel_file                     false      vel.dat
 restart_file                 false      restart.rst
 charge_file                  false      charge.dat
+extxyz_file                  false      traj.extxyz
 force_file                   false      force.dat
 virial_file                  false      virial.dat
 stress_file                  false      stress.dat

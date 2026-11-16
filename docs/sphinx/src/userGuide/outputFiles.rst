@@ -31,6 +31,22 @@ every frame in the following format:
 
 The lattice parameters are given in units of Å and the angles are given in units of degrees.
 
+.. _extxyzFile:
+
+*******************
+Extended XYZ File
+*******************
+
+**File Type:** ``.extxyz`` (only written if :ref:`extxyzfilekey` is set)
+
+Stores positions, velocities, forces and charges of every atom for every frame in the extended xyz format:
+
+    | **line 1:** n_atoms
+    | **line 2:** ``Lattice="ax ay az bx by bz cx cy cz" Properties=species:S:1:pos:R:3:vel:R:3:forces:R:3:charge:R:1 pbc="T T T" step=step_number energy=total_energy units=pq``
+    | **line 3 to (n_atoms + 2):** atom_type_name x y z vx vy vz fx fy fz charge
+
+All values are in PQ units, marked by ``units=pq``: Å, Å/s, kcal/(mol Å), *e* and kcal/mol. ASE, MACE, FeNNol and GPUMD NEP expect eV, so convert the file with PQAnalysis before training.
+
 .. _chargeFile:
 
 ************

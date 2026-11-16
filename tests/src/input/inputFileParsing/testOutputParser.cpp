@@ -270,6 +270,26 @@ TEST_F(TestInputFileReader, testChargeFilename)
 }
 
 /**
+ * @brief tests parsing the "extxyz_file" command; no file by default
+ *
+ */
+TEST_F(TestInputFileReader, testExtxyzFilename)
+{
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("extxyz_file"));
+    EXPECT_TRUE(outputFileSettings.getExtxyzFileName().empty());
+
+    const auto &parseFunc = funcMap.at("extxyz_file");
+
+    _fileName                             = "traj.extxyz";
+    std::vector<std::string> lineElements = {"extxyz_file", "=", _fileName};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(outputFileSettings.getExtxyzFileName(), _fileName);
+}
+
+/**
  * @brief tests parsing the "momentum_file" command
  *
  */

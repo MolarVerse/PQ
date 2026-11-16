@@ -1,0 +1,1 @@
+- New `extxyz_file` keyword: MD runs can write positions, velocities, forces and charges of each frame into one extended xyz file, in PQ units (#1201).

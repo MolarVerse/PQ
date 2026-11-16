@@ -61,6 +61,7 @@ namespace input
         void addForceFilenameKeyword();
         void addRestartFilenameKeyword();
         void addChargeFilenameKeyword();
+        void addExtxyzFilenameKeyword();
         void addMomentumFilenameKeyword();
         void addVirialFilenameKeyword();
         void addStressFilenameKeyword();

@@ -82,6 +82,7 @@ namespace input
         addForceFilenameKeyword();
         addRestartFilenameKeyword();
         addChargeFilenameKeyword();
+        addExtxyzFilenameKeyword();
         addMomentumFilenameKeyword();
         addVirialFilenameKeyword();
         addStressFilenameKeyword();
@@ -532,6 +533,35 @@ namespace input
             KeyRegistry<std::string>{
                 .metadata     = metaData,
                 .defaultValue = DefaultFiles::chargeFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add extxyz filename keyword to the input parser
+     *
+     * @details the extxyz file is only written if this keyword is set
+     */
+    void OutputInputParser::addExtxyzFilenameKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "extxyz_file",
+            .title = "Extended xyz filename",
+            .description =
+                "Filename for the extended xyz trajectory in PQ units; "
+                "written only if set"
+        };
+
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setExtxyzFileNameByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = "",
                 .onSet        = setValue,
             }
         );

@@ -1,0 +1,1 @@
+- `out::ExtxyzOutput` writes the extxyz file from the `Frame` on the writer thread, with `TextBuffer`; `Frame` carries the total energy and `EngineOutput::writeFrame` takes it (#1201).

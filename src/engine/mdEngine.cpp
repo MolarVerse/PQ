@@ -254,7 +254,12 @@ namespace engine
         if (0 == getStep() % outputFreq)
         {
             getEngineOutput()
-                .writeFrame(getSimulationBox(), *_thermostat, effStep);
+                .writeFrame(
+                    getSimulationBox(),
+                    *_thermostat,
+                    effStep,
+                    getPhysicalData().getTotalEnergy()
+                );
 
             getEngineOutput().writeVirialFile(
                 effStep,

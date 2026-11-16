@@ -316,6 +316,16 @@ void OutputFileSettings::setChargeFileNameByUser(const std::string& name)
 }
 
 /**
+ * @brief sets the extxyz file name; the file is only written if it is set
+ *
+ * @param name
+ */
+void OutputFileSettings::setExtxyzFileNameByUser(const std::string& name)
+{
+    _extxyzFile.setByUser(name);
+}
+
+/**
  * @brief sets the log file name
  *
  * @param name
@@ -612,6 +622,16 @@ const std::string& OutputFileSettings::getForceFileName() const
 const std::string& OutputFileSettings::getChargeFileName() const
 {
     return _chargeFile.get();
+}
+
+/**
+ * @brief get the extxyz file name, empty if no extxyz file is written
+ *
+ * @return std::string
+ */
+const std::string& OutputFileSettings::getExtxyzFileName() const
+{
+    return _extxyzFile.get();
 }
 
 /**

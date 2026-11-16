@@ -124,6 +124,15 @@ namespace setup
                 chargeFile,
                 overwriteOutputFiles
             );
+
+            if (const auto &extxyzFile = outputFileSettings.getExtxyzFileName();
+                !extxyzFile.empty())
+            {
+                mdEngine.getEngineOutput().openExtxyzOutput(
+                    extxyzFile,
+                    overwriteOutputFiles
+                );
+            }
             mdEngine.getMomentumOutput().setFilename(
                 momFile,
                 overwriteOutputFiles

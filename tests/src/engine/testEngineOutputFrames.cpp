@@ -94,17 +94,24 @@ namespace
             output.getForceOutput().setFilename(prefix + ".force", true);
             output.getChargeOutput().setFilename(prefix + ".chrg", true);
             output.getRstFileOutput().setFilename(prefix + ".rst", true);
+            output.openExtxyzOutput(prefix + ".extxyz", true);
 
             const auto                   simulationBox = makeSimulationBox();
             const thermostat::Thermostat thermostat{};
 
             for (std::size_t step = 1; step <= 3; ++step)
-                output.writeFrame(simulationBox, thermostat, step);
+                output.writeFrame(
+                    simulationBox,
+                    thermostat,
+                    step,
+                    -1.5 * static_cast<double>(step)
+                );
 
             output.waitForFrames();
         }
 
-        for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg", ".rst"})
+        for (const auto *suffix :
+             {".xyz", ".vel", ".force", ".chrg", ".rst", ".extxyz"})
         {
             content += readFile(prefix + suffix);
             std::filesystem::remove(prefix + suffix);

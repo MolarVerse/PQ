@@ -27,10 +27,12 @@
 #include <memory>
 #include <mstd/types.hpp>
 #include <optional>
+#include <string>
 #include <vector>
 
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
+#include "extxyzOutput.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
@@ -87,6 +89,9 @@ namespace engine
         std::unique_ptr<out::TrajectoryOutput> _forceOutput;
         std::unique_ptr<out::TrajectoryOutput> _chargeOutput;
         std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
+
+        // null unless an extxyz file is requested
+        std::unique_ptr<out::ExtxyzOutput> _extxyzOutput;
 
         std::unique_ptr<out::LogOutput>    _logOutput;
         std::unique_ptr<out::StdoutOutput> _stdoutOutput;
@@ -147,8 +152,10 @@ namespace engine
         void writeFrame(
             const molsys::SimulationBox &,
             const thermostat::Thermostat &,
-            size_t
+            size_t step,
+            double totalEnergy
         );
+        void openExtxyzOutput(const std::string &filename, bool overwrite);
         void waitForFrames();
 
         [[nodiscard]] static bool asyncOutputFits(

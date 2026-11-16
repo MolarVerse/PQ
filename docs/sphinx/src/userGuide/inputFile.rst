@@ -354,6 +354,18 @@ The ``charge_file`` keyword sets the name for the :ref:`chargeFile`, which store
 
 .. centered:: *default value* = "default.chrg"
 
+.. _extxyzfilekey:
+
+Extended XYZ File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    extxyz_file = {file}
+
+The ``extxyz_file`` keyword writes an :ref:`extxyzFile` with this name in MD runs. Without the keyword no such file is written.
+
 .. _energyfilekey:
 
 Energy File

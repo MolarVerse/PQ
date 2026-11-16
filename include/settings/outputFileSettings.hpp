@@ -56,6 +56,7 @@ class OutputFileSettings
     Setting<std::string> _velFile{DefaultFiles::velFile};
     Setting<std::string> _forceFile{DefaultFiles::forceFile};
     Setting<std::string> _chargeFile{DefaultFiles::chargeFile};
+    Setting<std::string> _extxyzFile{""};
     Setting<std::string> _logFile{DefaultFiles::logFile};
     Setting<std::string> _refFile{DefaultFiles::refFile};
     Setting<std::string> _infoFile{DefaultFiles::infoFile};
@@ -94,6 +95,7 @@ class OutputFileSettings
     void setVelocityFileNameByUser(const std::string &);
     void setForceFileNameByUser(const std::string &);
     void setChargeFileNameByUser(const std::string &);
+    void setExtxyzFileNameByUser(const std::string &);
     void setLogFileNameByUser(const std::string &);
     void setRefFileNameByUser(const std::string &);
     void setInfoFileNameByUser(const std::string &);
@@ -133,6 +135,7 @@ class OutputFileSettings
     [[nodiscard]] const std::string &getVelocityFileName() const;
     [[nodiscard]] const std::string &getForceFileName() const;
     [[nodiscard]] const std::string &getChargeFileName() const;
+    [[nodiscard]] const std::string &getExtxyzFileName() const;
     [[nodiscard]] const std::string &getLogFileName() const;
     [[nodiscard]] const std::string &getRefFileName() const;
     [[nodiscard]] const std::string &getInfoFileName() const;
