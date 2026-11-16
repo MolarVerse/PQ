@@ -431,28 +431,61 @@ TEST_F(TestInputFileReader, fileKeywordsWithoutPathValidationAcceptAnyName)
     };
 
     const std::vector<Case> cases = {
-        {"intra-nonBonded_file",
-         [](const FileSettings &s) { return s.getIntraNonBondedFileName(); }},
-        {"topology_file",
-         [](const FileSettings &s) { return s.getTopologyFileName(); }},
-        {"parameter_file",
-         [](const FileSettings &s) { return s.getParameterFileName(); }},
-        {"start_file",
-         [](const FileSettings &s) { return s.getStartFileName(); }},
-        {"rpmd_start_file",
-         [](const FileSettings &s) { return s.getRingPolymerStartFileName(); }},
-        {"moldescriptor_file",
-         [](const FileSettings &s) { return s.getMolDescriptorFileName(); }},
-        {"guff_file",
-         [](const FileSettings &s) { return s.getGuffDatFileName(); }},
-        {"mshake_file",
-         [](const FileSettings &s) { return s.getMShakeFileName(); }},
-        {"dftb_file",
-         [](const FileSettings &s) { return s.getDFTBFileName(); }},
-        {"turbomole_file",
-         [](const FileSettings &s) { return s.getTMFileName(); }},
-        {"orca_file",
-         [](const FileSettings &s) { return s.getOrcaFileName(); }},
+        Case{
+            .keyword = "intra-nonBonded_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getIntraNonBondedFileName(); }
+        },
+        Case{
+            .keyword = "topology_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getTopologyFileName(); }
+        },
+        Case{
+            .keyword = "parameter_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getParameterFileName(); }
+        },
+        Case{
+            .keyword = "start_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getStartFileName(); }
+        },
+        Case{
+            .keyword = "rpmd_start_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getRingPolymerStartFileName(); }
+        },
+        Case{
+            .keyword = "moldescriptor_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getMolDescriptorFileName(); }
+        },
+        Case{
+            .keyword = "guff_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getGuffDatFileName(); }
+        },
+        Case{
+            .keyword = "mshake_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getMShakeFileName(); }
+        },
+        Case{
+            .keyword = "dftb_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getDFTBFileName(); }
+        },
+        Case{
+            .keyword = "turbomole_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getTMFileName(); }
+        },
+        Case{
+            .keyword = "orca_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getOrcaFileName(); }
+        },
     };
 
     for (const auto &testCase : cases)
