@@ -24,7 +24,6 @@
 #define SETTINGS__POTENTIAL_SETTINGS_HPP
 
 #include <mstd/enum.hpp>
-#include <optional>
 
 #include "defaults.hpp"
 #include "enums/potential.hpp"
@@ -49,7 +48,8 @@ class PotentialSettings
     Setting<double, "Coulomb radius cut off"> _coulombRadiusCutOff{
         defaults::COULOMB_CUT_OFF_DEFAULT
     };
-    static inline std::optional<double> _nonCoulombRadiusCutOff;
+    Setting<double, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
+
     static inline double _scale14Coulomb = defaults::SCALE_14_COULOMB_DEFAULT;
     static inline double _scale14VanDerWaals =
         defaults::SCALE_14_VAN_DER_WAALS_DEFAULT;
@@ -67,8 +67,9 @@ class PotentialSettings
     void setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
     void setNonCoulombTypeByUser(NonCoulombType type);
 
-    void        setCoulombRadiusCutOffByUser(double coulombRadiusCutOff);
-    static void setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff);
+    void setCoulombRadiusCutOffByUser(double coulombRadiusCutOff);
+    void setNonCoulombRadiusCutOffByUser(double nonCoulombRadiusCutOff);
+
     static void setScale14Coulomb(double scale14Coulomb);
     static void setScale14VanDerWaals(double scale14VanDerWaals);
     static void setReactionFieldEpsilon(double epsilon);
@@ -81,12 +82,13 @@ class PotentialSettings
     [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
     [[nodiscard]] NonCoulombType       getNonCoulombType() const;
 
-    [[nodiscard]] double                       getCoulombRadiusCutOff() const;
-    [[nodiscard]] static std::optional<double> getNonCoulombRadiusCutOff();
-    [[nodiscard]] static double                getScale14Coulomb();
-    [[nodiscard]] static double                getScale14VDW();
-    [[nodiscard]] static double                getReactionFieldEpsilon();
-    [[nodiscard]] static double                getWolfParameter();
+    [[nodiscard]] double        getCoulombRadiusCutOff() const;
+    [[nodiscard]] double        getNonCoulombRadiusCutOff() const;
+    [[nodiscard]] bool          isNonCoulombRadiusCutOffSetByUser() const;
+    [[nodiscard]] static double getScale14Coulomb();
+    [[nodiscard]] static double getScale14VDW();
+    [[nodiscard]] static double getReactionFieldEpsilon();
+    [[nodiscard]] static double getWolfParameter();
 };
 
 #endif   // SETTINGS__POTENTIAL_SETTINGS_HPP

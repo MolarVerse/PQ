@@ -96,8 +96,8 @@ namespace input
                 "Specifies the cutoff radius for Non-Coulomb interactions"
         };
 
-        const auto setValue = [](double value)
-        { PotentialSettings::setNonCoulombRadiusCutOff(value); };
+        const auto setValue = [this](double value)
+        { _potentialSettings->setNonCoulombRadiusCutOffByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

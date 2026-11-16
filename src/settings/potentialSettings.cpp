@@ -77,9 +77,11 @@ void PotentialSettings::setCoulombRadiusCutOffByUser(double coulombRadiusCutOff)
  *
  * @param nonCoulombRadiusCutOff
  */
-void PotentialSettings::setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff)
+void PotentialSettings::setNonCoulombRadiusCutOffByUser(
+    double nonCoulombRadiusCutOff
+)
 {
-    _nonCoulombRadiusCutOff = nonCoulombRadiusCutOff;
+    _nonCoulombRadiusCutOff.setByUser(nonCoulombRadiusCutOff);
 }
 
 /**
@@ -164,9 +166,19 @@ double PotentialSettings::getCoulombRadiusCutOff() const
  *
  * @return std::optional<double>
  */
-std::optional<double> PotentialSettings::getNonCoulombRadiusCutOff()
+double PotentialSettings::getNonCoulombRadiusCutOff() const
 {
-    return _nonCoulombRadiusCutOff;
+    return _nonCoulombRadiusCutOff.get();
+}
+
+/**
+ * @brief check if the non-Coulomb radius cut off was set by the user
+ *
+ * @return true if set by user, false otherwise
+ */
+bool PotentialSettings::isNonCoulombRadiusCutOffSetByUser() const
+{
+    return _nonCoulombRadiusCutOff.isSetByUser();
 }
 
 /**

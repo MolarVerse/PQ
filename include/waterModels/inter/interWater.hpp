@@ -41,6 +41,8 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+class PotentialSettings;
+
 namespace waterModel
 {
     struct InterWaterState
@@ -149,7 +151,7 @@ namespace waterModel
         InterWater(
             InterWaterState                     state,
             std::unique_ptr<InterWaterStrategy> strategy,
-            double                              coulombRadiusCutOff
+            const PotentialSettings            &potentialSettings
         );
 
         void calculate(
@@ -174,11 +176,13 @@ namespace waterModel
         );
 
        private:
-        void _setNonCoulombCutOffRadii(double coulombRadiusCutOff) const;
+        void _setNonCoulombCutOffRadii(
+            const PotentialSettings &potentialSettings
+        ) const;
         void _initNonCoulombPairs() const;
-        void _initState(double coulombRadiusCutOff)
+        void _initState(const PotentialSettings &potentialSettings)
         {
-            _setNonCoulombCutOffRadii(coulombRadiusCutOff);
+            _setNonCoulombCutOffRadii(potentialSettings);
             _initNonCoulombPairs();
         }
     };

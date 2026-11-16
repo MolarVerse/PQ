@@ -155,7 +155,7 @@ int main()
     waterModel::InterWater interWater(
         std::move(state),
         std::make_unique<waterModel::InterWaterStrategyCellList>(),
-        settings.potentialSettings.getCoulombRadiusCutOff()
+        settings.potentialSettings
     );
 
     auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);

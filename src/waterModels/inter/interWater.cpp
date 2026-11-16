@@ -173,11 +173,11 @@ namespace waterModel
     InterWater::InterWater(
         InterWaterState                     state,
         std::unique_ptr<InterWaterStrategy> strategy,
-        double                              coulombRadiusCutOff
+        const PotentialSettings            &potentialSettings
     )
         : _state{std::move(state)}, _strategy{std::move(strategy)}
     {
-        _initState(coulombRadiusCutOff);
+        _initState(potentialSettings);
     }
 
     /**
@@ -188,12 +188,14 @@ namespace waterModel
      * H-H are only updated when oxygen-only non-Coulomb interactions are
      * disabled.
      */
-    void InterWater::_setNonCoulombCutOffRadii(double coulombRadiusCutOff) const
+    void InterWater::_setNonCoulombCutOffRadii(
+        const PotentialSettings &potentialSettings
+    ) const
     {
         const auto radialCutOff =
-            PotentialSettings::getNonCoulombRadiusCutOff().value_or(
-                coulombRadiusCutOff
-            );
+            potentialSettings.isNonCoulombRadiusCutOffSetByUser()
+                ? potentialSettings.getNonCoulombRadiusCutOff()
+                : potentialSettings.getCoulombRadiusCutOff();
 
         const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)
         {
