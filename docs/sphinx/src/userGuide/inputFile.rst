@@ -354,6 +354,33 @@ The ``charge_file`` keyword sets the name for the :ref:`chargeFile`, which store
 
 .. centered:: *default value* = "default.chrg"
 
+.. _trajformatkey:
+
+Trajectory Format
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    traj_format = {string} -> "xyz"
+
+The ``traj_format`` keyword sets how MD runs write positions, velocities, forces and charges:
+
+    - **xyz** (default): the :ref:`trajectoryFile`, :ref:`velocityFile`, :ref:`forceFile` and :ref:`chargeFile`
+    - **extxyz**: one :ref:`extxyzFile` instead of these four files
+
+.. _extxyzfilekey:
+
+Extended XYZ File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    extxyz_file = {file} -> "default.extxyz"
+
+The ``extxyz_file`` keyword sets the name of the :ref:`extxyzFile`, which is written if ``traj_format = extxyz``. Like the other output files, it follows ``file_prefix``.
+
 .. _energyfilekey:
 
 Energy File
