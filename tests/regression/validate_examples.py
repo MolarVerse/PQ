@@ -4,8 +4,9 @@ Each input is checked in the portable scope (input semantics, bundled script
 names, values, keywords; independent of the build) and in the installed scope
 (files the input refers to exist, QM methods are compiled in). Two outcomes of
 the installed scope are not errors: an input that needs ASE in a build without
-ASE, and a start file that another input of the same example writes (the
-second step of a chained run).
+ASE, a start file that another input of the same example writes (the second
+step of a chained run), and a path that is an obvious placeholder
+(``/path/to/...``) which the user has to replace, e.g. the FeNNol model.
 """
 
 import argparse
@@ -16,11 +17,21 @@ from pathlib import Path
 
 NOT_COMPILED = re.compile(r"requires ASE support")
 START_FILE = re.compile(r'Invalid value "([^"]+)" for key "start_file"')
+PLACEHOLDER_PATH = re.compile(r'"/path/to/[^"]*"')
 
 
 def file_prefix(text):
     match = re.search(r"^\s*file_prefix\s*=\s*([^;#\s]+)", text, re.M)
     return match.group(1) if match else None
+
+
+def is_expected(message, written):
+    """Whether an installed-scope failure is not an error of the example."""
+    if NOT_COMPILED.search(message) or PLACEHOLDER_PATH.search(message):
+        return True
+
+    match = START_FILE.search(message)
+    return bool(match and match.group(1) in written)
 
 
 def run_validate(pq, directory, name, scope):
@@ -47,11 +58,7 @@ def check_example(pq, directory, inputs):
             continue
 
         code, message = run_validate(pq, directory, path.name, "installed")
-        if code == 0 or NOT_COMPILED.search(message):
-            continue
-
-        match = START_FILE.search(message)
-        if match and match.group(1) in written:
+        if code == 0 or is_expected(message, written):
             continue
 
         problems.append(f"{directory.name}/{path.name} (installed): {message}")
