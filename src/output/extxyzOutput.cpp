@@ -34,7 +34,7 @@ namespace out
 {
     namespace
     {
-        constexpr std::size_t EXTXYZ_VEL_WIDTH = 20;
+        constexpr std::size_t EXTXYZ_VEL_WIDTH  = 20;
         constexpr int         LATTICE_PRECISION = 8;
         constexpr int         ENERGY_PRECISION  = 10;
 
@@ -79,7 +79,8 @@ namespace out
 
         _buffer.append("\" Properties=").append(PROPERTIES);
         _buffer.append(" pbc=\"T T T\" step=").left(step, 0);
-        _buffer.append(" energy=").fixed(frame.totalEnergy, 0, ENERGY_PRECISION);
+        _buffer.append(" energy=")
+            .fixed(frame.totalEnergy, 0, ENERGY_PRECISION);
         _buffer.append(" units=pq\n");
 
         for (const auto &atom : frame.atoms)
@@ -90,7 +91,7 @@ namespace out
 
             for (const double value : {pos[0], pos[1], pos[2]})
             {
-                    _buffer.put(' ').fixed(value, FIXED_WIDTH, PRECISION);
+                _buffer.put(' ').fixed(value, FIXED_WIDTH, PRECISION);
             }
 
             const auto &vel   = atom.velocity;
@@ -98,12 +99,12 @@ namespace out
 
             for (const double value : {vel[0], vel[1], vel[2]})
             {
-                    _buffer.put(' ').scientific(value, EXTXYZ_VEL_WIDTH, PRECISION);
+                _buffer.put(' ').scientific(value, EXTXYZ_VEL_WIDTH, PRECISION);
             }
 
             for (const double value : {force[0], force[1], force[2]})
             {
-                    _buffer.put(' ').fixed(value, FIXED_WIDTH, PRECISION);
+                _buffer.put(' ').fixed(value, FIXED_WIDTH, PRECISION);
             }
 
             _buffer.put(' ').fixed(atom.charge, FIXED_WIDTH, PRECISION);

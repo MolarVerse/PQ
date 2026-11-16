@@ -100,12 +100,14 @@ namespace
             const thermostat::Thermostat thermostat{};
 
             for (std::size_t step = 1; step <= 3; ++step)
+            {
                 output.writeFrame(
                     simulationBox,
                     thermostat,
                     step,
                     -1.5 * static_cast<double>(step)
                 );
+            }
 
             output.waitForFrames();
         }
