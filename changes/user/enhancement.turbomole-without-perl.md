@@ -1,1 +1,0 @@
-- The Turbomole scripts `turbomole_hf-dft`, `turbomole_ridft` and `turbomole_ricc2` now run the Python drivers, so Perl is no longer needed. Results are unchanged.

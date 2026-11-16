@@ -1,4 +1,8 @@
-"""Run the Turbomole drivers against a fake Turbomole; usage: <scripts dir> <perl_reference.json>."""
+"""Run the Turbomole drivers against a fake Turbomole; usage: <scripts dir> <perl_reference.json>.
+
+The Perl drivers run only where perl is found; the Python drivers are always
+checked against the recorded Perl outputs.
+"""
 import json
 import os
 from pathlib import Path
@@ -9,7 +13,7 @@ import tempfile
 import unittest
 
 SCRIPTS = Path(sys.argv.pop(1)).resolve()
-# outputs of the removed Perl drivers on this fake Turbomole
+# outputs of the Perl drivers on this fake Turbomole
 REFERENCE = json.loads(Path(sys.argv.pop(1)).read_text())
 
 COMMON = r'''#!/usr/bin/env python3
@@ -80,8 +84,9 @@ FAKE["rdgrad"] = FAKE["grad"]
 PAIRS = (("turbomole_hf-dft", "turbomole_hf_dft.py"),
          ("turbomole_ridft", "turbomole_ridft.py"),
          ("turbomole_ricc2", "turbomole_ricc2.py"))
-SCF_SCRIPTS = [s for pair in PAIRS[:2] for s in pair]
-ALL_SCRIPTS = [s for pair in PAIRS for s in pair]
+HAS_PERL = shutil.which("perl") is not None
+SCF_SCRIPTS = [s for pair in PAIRS[:2] for s in pair if HAS_PERL or s.endswith(".py")]
+ALL_SCRIPTS = [s for pair in PAIRS for s in pair if HAS_PERL or s.endswith(".py")]
 
 GRADIENT = [[0.01, 0.0, 0.02], [-0.005, 0.0, -0.01], [-0.005, 0.0, -0.01]]
 
@@ -103,8 +108,9 @@ class TurbomoleScriptTest(unittest.TestCase):
         self.temp.cleanup()
 
     def run_script(self, script, use_pc, define=True, work=None, **env):
+        interpreter = sys.executable if script.endswith(".py") else "perl"
         return subprocess.run(
-            [sys.executable, str(SCRIPTS / script), "0", "1" if define else "0",
+            [interpreter, str(SCRIPTS / script), "0", "1" if define else "0",
              "1" if use_pc else "0", "tm.template", "pc"],
             cwd=work or self.work, env={**self.env, **env}, capture_output=True, text=True,
             check=False)
@@ -136,7 +142,7 @@ class TurbomoleScriptTest(unittest.TestCase):
             self.check(script, True, -76.005, [-0.64, 0.32, 0.32])
 
     def test_ricc2(self):
-        for script in ("turbomole_ricc2", "turbomole_ricc2.py"):
+        for script in [s for s in ALL_SCRIPTS if s.startswith("turbomole_ricc2")]:
             self.check(script, False, -76.21, [-0.60, 0.30, 0.30])
             self.check(script, True, -76.205, [-0.60, 0.30, 0.30])
 
@@ -162,7 +168,7 @@ class TurbomoleScriptTest(unittest.TestCase):
             "point charges": [(True, True), (True, False), (False, False)],
         }
         for perl, python in PAIRS:
-            for script in (perl, python):
+            for script in [s for s in (perl, python) if s in ALL_SCRIPTS]:
                 for name, steps in sequences.items():
                     for broken in ("", "scf", "nopc", "grad"):
                         with self.subTest(script=script, case=name, broken=broken):
