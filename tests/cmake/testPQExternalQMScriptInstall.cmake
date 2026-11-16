@@ -23,6 +23,7 @@ endif()
 
 foreach(script IN ITEMS
         dftbplus_periodic_stress
+        dftbplus_periodic_stress.py
         pyscf_hf.py
         pyscf_mp2.py
         turbomole_hf-dft
