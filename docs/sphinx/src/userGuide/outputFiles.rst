@@ -37,7 +37,7 @@ The lattice parameters are given in units of Å and the angles are given in unit
 Extended XYZ File
 *******************
 
-**File Type:** ``.extxyz`` (only written if :ref:`extxyzfilekey` is set)
+**File Type:** ``.extxyz`` (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``extxyz``)
 
 Stores positions, velocities, forces and charges of every atom for every frame in the extended xyz format:
 

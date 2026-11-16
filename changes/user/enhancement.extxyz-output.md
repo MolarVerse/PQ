@@ -1,1 +1,1 @@
-- New `extxyz_file` keyword: MD runs can write positions, velocities, forces and charges of each frame into one extended xyz file, in PQ units (#1201).
+- New `traj_format = extxyz` option: MD runs write positions, velocities, forces and charges into one extended xyz file (in PQ units) instead of the four .xyz, .vel, .force and .chrg files. The file name follows `file_prefix` or can be set with `extxyz_file` (#1201).

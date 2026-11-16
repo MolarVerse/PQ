@@ -300,7 +300,8 @@ namespace engine
     }
 
     /**
-     * @brief write an extxyz file with every MD frame from now on
+     * @brief write every MD frame to an extxyz file instead of the xyz,
+     * velocity, force and charge files
      *
      * @param filename
      * @param overwrite whether an existing file may be replaced
@@ -415,8 +416,8 @@ namespace engine
     }
 
     /**
-     * @brief write the xyz, velocity, force, charge, restart and, if
-     * requested, extxyz files of one frame
+     * @brief write the trajectory files (xyz, velocity, force and charge,
+     * or one extxyz file) and the restart file of one frame
      *
      * @param frame
      * @param step
@@ -428,14 +429,19 @@ namespace engine
         const bool        metadata
     )
     {
-        _xyzOutput->writeXyz(frame, step, metadata);
-        _velOutput->writeVelocities(frame, step, metadata);
-        _forceOutput->writeForces(frame, step, metadata);
-        _chargeOutput->writeCharges(frame, step, metadata);
-        _rstFileOutput->write(frame, step);
-
         if (_extxyzOutput)
+        {
             _extxyzOutput->write(frame, step);
+        }
+        else
+        {
+            _xyzOutput->writeXyz(frame, step, metadata);
+            _velOutput->writeVelocities(frame, step, metadata);
+            _forceOutput->writeForces(frame, step, metadata);
+            _chargeOutput->writeCharges(frame, step, metadata);
+        }
+
+        _rstFileOutput->write(frame, step);
     }
 
     /**

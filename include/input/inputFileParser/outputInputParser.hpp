@@ -47,6 +47,7 @@ namespace input
         void addOverwriteOutputKeyword();
         void addIncludeOutputMetadataKeyword();
         void addAsyncOutputKeyword();
+        void addTrajectoryFormatKeyword();
         void addOutputFrequencyKeyword();
         void addFilePrefixKeyword();
 

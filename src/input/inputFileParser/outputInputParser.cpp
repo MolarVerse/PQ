@@ -100,6 +100,7 @@ namespace input
         addOverwriteOutputKeyword();
         addIncludeOutputMetadataKeyword();
         addAsyncOutputKeyword();
+        addTrajectoryFormatKeyword();
     }
 
     /**
@@ -541,6 +542,37 @@ namespace input
     }
 
     /**
+     * @brief add trajectory format keyword to the input parser
+     *
+     * @details extxyz writes one extxyz file instead of the xyz, velocity,
+     * force and charge files
+     */
+    void OutputInputParser::addTrajectoryFormatKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "traj_format",
+            .title = "Trajectory format",
+            .description =
+                "File format of the MD trajectory: xyz (separate xyz, vel, "
+                "force and chrg files) or extxyz (one extended xyz file in PQ "
+                "units)"
+        };
+
+        const auto setValue = [this](TrajectoryFormat value)
+        { _outputFileSettings->setTrajectoryFormatByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<TrajectoryFormat>{
+                .metadata     = metaData,
+                .defaultValue = TrajectoryFormat::XYZ,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
      * @brief add extxyz filename keyword to the input parser
      *
      * @details the extxyz file is only written if this keyword is set
@@ -551,8 +583,8 @@ namespace input
             .name  = "extxyz_file",
             .title = "Extended xyz filename",
             .description =
-                "Filename for the extended xyz trajectory in PQ units; "
-                "written only if set"
+                "Filename for the extended xyz trajectory, written if "
+                "traj_format = extxyz"
         };
 
         const auto setValue = [this](const std::string &value)
@@ -561,7 +593,7 @@ namespace input
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
                 .metadata     = metaData,
-                .defaultValue = "",
+                .defaultValue = DefaultFiles::extxyzFile,
                 .onSet        = setValue,
             }
         );

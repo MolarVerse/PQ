@@ -27,6 +27,7 @@
 #include <string>
 
 #include "defaults.hpp"
+#include "enums/output.hpp"
 #include "setting.hpp"
 
 struct TestOutputFileSettings;
@@ -42,10 +43,11 @@ class OutputFileSettings
    private:
     Setting<size_t> _outputFrequency{1};
 
-    Setting<bool>        _overwriteOutputFiles{false};
-    Setting<bool>        _includeOutputMetadata{false};
-    Setting<bool>        _asyncOutput{true};
-    Setting<std::string> _filePrefix;
+    Setting<bool>             _overwriteOutputFiles{false};
+    Setting<bool>             _includeOutputMetadata{false};
+    Setting<bool>             _asyncOutput{true};
+    Setting<TrajectoryFormat> _trajFormat{TrajectoryFormat::XYZ};
+    Setting<std::string>      _filePrefix;
 
     Setting<std::string> _energyFile{DefaultFiles::energyFile};
     Setting<std::string> _instEnFile{DefaultFiles::instEnFile};
@@ -56,7 +58,7 @@ class OutputFileSettings
     Setting<std::string> _velFile{DefaultFiles::velFile};
     Setting<std::string> _forceFile{DefaultFiles::forceFile};
     Setting<std::string> _chargeFile{DefaultFiles::chargeFile};
-    Setting<std::string> _extxyzFile{""};
+    Setting<std::string> _extxyzFile;
     Setting<std::string> _logFile{DefaultFiles::logFile};
     Setting<std::string> _refFile{DefaultFiles::refFile};
     Setting<std::string> _infoFile{DefaultFiles::infoFile};
@@ -118,6 +120,7 @@ class OutputFileSettings
     void setOverwriteOutputFilesByUser(bool);
     void setIncludeOutputMetadataByUser(bool);
     void setAsyncOutputByUser(bool);
+    void setTrajectoryFormatByUser(TrajectoryFormat);
 
     /***************************
      * standard getter methods *
@@ -155,9 +158,10 @@ class OutputFileSettings
 
     [[nodiscard]] const std::string &getTimingsFileName() const;
 
-    [[nodiscard]] bool getOverwriteOutputFiles() const;
-    [[nodiscard]] bool getIncludeOutputMetadata() const;
-    [[nodiscard]] bool getAsyncOutput() const;
+    [[nodiscard]] bool             getOverwriteOutputFiles() const;
+    [[nodiscard]] bool             getIncludeOutputMetadata() const;
+    [[nodiscard]] bool             getAsyncOutput() const;
+    [[nodiscard]] TrajectoryFormat getTrajectoryFormat() const;
 
    private:
     [[nodiscard]] std::string _determineMostCommonPrefix() const;
