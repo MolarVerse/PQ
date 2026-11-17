@@ -189,6 +189,9 @@ Two gating checks fail PRs on style that neither clang-format nor a GCC build ca
 - **Designated initializers for aggregates**: `Case{.model = ..., .dOH = ..., .angle = ...}`, not `Case{x, y, z}` (`modernize-use-designated-initializers`).
 - **Parameters of type `X` are named after the type**: `simulationBox` for `molsys::SimulationBox`, `physicalData` for `physicalData::PhysicalData`, or `other`; not `box` or `data` (`cpp_checks`, `paramNameForType`).
 - **Class members: data first, then functions** (public, protected, private); private member functions start with an underscore (`cpp_checks`).
+- **Aggregates returned with braces also use designated initializers**: `return {.coulombEnergy = a, .forces = b};`, not `return {a, b};`.
+- **Tests use `EXPECT_THROW_MSG` / `ASSERT_THROW_MSG`** (`tests/include/macros/throwWithMessage.hpp`), not `EXPECT_THROW` / `ASSERT_THROW`; they also check the message. For `std::bad_cast` and other standard exceptions take the text from `T().what()`, it differs between standard libraries (`cpp_checks`, `macroReplacement`).
+- **Remove includes that a change leaves unused**, for example `unit_types.hpp` after a signature stops using `Time` (`unused-includes` in `lint.yml`).
 - **No unused lambda captures**: `[]` instead of `[this]` if `this` is not used (`-Wunused-lambda-capture`, an error in the clang build).
 
 `clang-tidy`, `clang-20` and `cpp_checks` need a clang toolchain that is not always available locally; `cpp_checks` takes about 12 s on a branch once set up (see `.github/workflows/devops_cpp_check.yml` for the exact recipe, it needs the `external/devops` commit pinned by the repository and a clang-generated `compile_commands.json`).

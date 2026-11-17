@@ -155,14 +155,15 @@ namespace setup
      */
     void RingPolymerSetup::initializeVelocitiesOfBeads()
     {
-        auto initVelocities = [this](auto &bead)
-        {
-            maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-            maxwellBoltzmann.initializeVelocities(
-                bead,
-                _engine.getSettings().kinetics.getStartTemperature()
-            );
-        };
+        // one generator for all beads: a generator per bead would be seeded
+        // with the same user seed and give every bead the same velocities
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+
+        const auto &startTemperature =
+            _engine.getSettings().kinetics.getStartTemperature();
+
+        auto initVelocities = [&maxwellBoltzmann, &startTemperature](auto &bead)
+        { maxwellBoltzmann.initializeVelocities(bead, startTemperature); };
 
         std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
     }

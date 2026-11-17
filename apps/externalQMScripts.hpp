@@ -40,12 +40,20 @@ namespace cli
         std::string_view requiredWorkingFile;
     };
 
-    inline constexpr auto dftbPlusScripts = std::array{ExternalQMScriptInfo{
-        .name                = "dftbplus_periodic_stress",
-        .label               = "DFTB+ periodic stress",
-        .requiredFileKeyword = "dftb_file",
-        .requiredWorkingFile = ""
-    }};
+    inline constexpr auto dftbPlusScripts = std::array{
+        ExternalQMScriptInfo{
+            .name                = "dftbplus_periodic_stress",
+            .label               = "DFTB+ periodic stress",
+            .requiredFileKeyword = "dftb_file",
+            .requiredWorkingFile = ""
+        },
+        ExternalQMScriptInfo{
+            .name                = "dftbplus_periodic_stress.py",
+            .label               = "DFTB+ periodic stress (Python)",
+            .requiredFileKeyword = "dftb_file",
+            .requiredWorkingFile = ""
+        }
+    };
 
     inline constexpr auto pyScfScripts = std::array{
         ExternalQMScriptInfo{

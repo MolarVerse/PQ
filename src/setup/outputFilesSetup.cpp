@@ -95,12 +95,24 @@ namespace setup
             energyFileName,
             overwriteOutputFiles
         );
-        _engine.getXyzOutput().setFilename(xyzFileName, overwriteOutputFiles);
         _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
-        _engine.getForceOutput().setFilename(
-            forceFileName,
-            overwriteOutputFiles
-        );
+
+        // extxyz replaces the xyz, velocity, force and charge files of MD runs
+        const auto extxyz = settings::GeneralSettings::isMDJobType() &&
+                            outputFileSettings.getTrajectoryFormat() ==
+                                TrajectoryFormat::EXTXYZ;
+
+        if (!extxyz)
+        {
+            _engine.getXyzOutput().setFilename(
+                xyzFileName,
+                overwriteOutputFiles
+            );
+            _engine.getForceOutput().setFilename(
+                forceFileName,
+                overwriteOutputFiles
+            );
+        }
 
         if (settings::GeneralSettings::isMDJobType())
         {
@@ -119,11 +131,25 @@ namespace setup
                 instEnFile,
                 overwriteOutputFiles
             );
-            mdEngine.getVelOutput().setFilename(velFile, overwriteOutputFiles);
-            mdEngine.getChargeOutput().setFilename(
-                chargeFile,
-                overwriteOutputFiles
-            );
+            if (extxyz)
+            {
+                mdEngine.getEngineOutput().openExtxyzOutput(
+                    outputFileSettings.getExtxyzFileName(),
+                    overwriteOutputFiles
+                );
+            }
+            else
+            {
+                mdEngine.getVelOutput().setFilename(
+                    velFile,
+                    overwriteOutputFiles
+                );
+                mdEngine.getChargeOutput().setFilename(
+                    chargeFile,
+                    overwriteOutputFiles
+                );
+            }
+
             mdEngine.getMomentumOutput().setFilename(
                 momFile,
                 overwriteOutputFiles

@@ -300,6 +300,22 @@ namespace engine
     }
 
     /**
+     * @brief write every MD frame to an extxyz file instead of the xyz,
+     * velocity, force and charge files
+     *
+     * @param filename
+     * @param overwrite whether an existing file may be replaced
+     */
+    void EngineOutput::openExtxyzOutput(
+        const std::string &filename,
+        const bool         overwrite
+    )
+    {
+        _extxyzOutput = std::make_unique<out::ExtxyzOutput>(filename);
+        _extxyzOutput->setFilename(filename, overwrite);
+    }
+
+    /**
      * @brief write the xyz, velocity, force, charge and restart files of one
      * MD frame, on the writer thread if async output is on
      *
@@ -311,13 +327,15 @@ namespace engine
      * @param simulationBox
      * @param thermostat
      * @param step
+     * @param totalEnergy written to the extxyz file
      *
      * @throw the first error of an earlier frame write
      */
     void EngineOutput::writeFrame(
         const molsys::SimulationBox  &simulationBox,
         const thermostat::Thermostat &thermostat,
-        size_t                        step
+        const size_t                  step,
+        const double                  totalEnergy
     )
     {
         if (!_frameWriterChecked)
@@ -328,7 +346,9 @@ namespace engine
 
         auto _ = scopedTimer(TimerId::Output, "FrameOutput");
 
-        auto       frame    = out::Frame{simulationBox, thermostat};
+        auto frame        = out::Frame{simulationBox, thermostat};
+        frame.totalEnergy = totalEnergy;
+
         const auto metadata = _outputFileSettings->getIncludeOutputMetadata();
 
         if (!_frameWriter)
@@ -396,8 +416,8 @@ namespace engine
     }
 
     /**
-     * @brief write the xyz, velocity, force, charge and restart files of one
-     * frame
+     * @brief write the trajectory files (xyz, velocity, force and charge,
+     * or one extxyz file) and the restart file of one frame
      *
      * @param frame
      * @param step
@@ -409,10 +429,18 @@ namespace engine
         const bool        metadata
     )
     {
-        _xyzOutput->writeXyz(frame, step, metadata);
-        _velOutput->writeVelocities(frame, step, metadata);
-        _forceOutput->writeForces(frame, step, metadata);
-        _chargeOutput->writeCharges(frame, step, metadata);
+        if (_extxyzOutput)
+        {
+            _extxyzOutput->write(frame, step);
+        }
+        else
+        {
+            _xyzOutput->writeXyz(frame, step, metadata);
+            _velOutput->writeVelocities(frame, step, metadata);
+            _forceOutput->writeForces(frame, step, metadata);
+            _chargeOutput->writeCharges(frame, step, metadata);
+        }
+
         _rstFileOutput->write(frame, step);
     }
 

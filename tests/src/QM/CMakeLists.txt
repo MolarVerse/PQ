@@ -55,3 +55,9 @@ add_test(NAME testTurbomoleScripts
             ${PROJECT_SOURCE_DIR}/src/QM/scripts
             ${PROJECT_SOURCE_DIR}/tests/data/turbomoleScripts/perl_reference.json)
 set_property(TEST testTurbomoleScripts PROPERTY LABELS QM)
+
+add_test(NAME testDftbplusScript
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/testDftbplusScript.py
+            ${PROJECT_SOURCE_DIR}/src/QM/scripts
+            ${PROJECT_SOURCE_DIR}/tests/data/dftbplusScript)
+set_property(TEST testDftbplusScript PROPERTY LABELS QM)

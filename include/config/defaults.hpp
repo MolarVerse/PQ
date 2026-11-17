@@ -46,6 +46,7 @@ struct DefaultFiles
     static constexpr auto velFile          = "default.vel";
     static constexpr auto forceFile        = "default.force";
     static constexpr auto chargeFile       = "default.charge";
+    static constexpr auto extxyzFile       = "default.extxyz";
     static constexpr auto logFile          = "default.log";
     static constexpr auto stdoutFile       = "default.stdout";
     static constexpr auto refFile          = "default.ref";
