@@ -80,8 +80,14 @@ namespace out
 
         buffer << "Step " << step << '\n';
 
-        buffer << "Box   " << frame.box->get_boxDimensions() << "  "
-               << frame.box->getBoxAngles() << '\n';
+        // std::format writes the shortest text that reads back as the same
+        // double; the stream operator of Vector3D keeps 6 digits only, which
+        // changes the box of a restarted run
+        buffer << std::format(
+            "Box   {}  {}\n",
+            frame.box->get_boxDimensions(),
+            frame.box->getBoxAngles()
+        );
 
         writeNHChain(frame, buffer);
 

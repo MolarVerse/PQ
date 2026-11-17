@@ -46,6 +46,7 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `cgo` `test_cgo_NPT` | `run-01_NPT.in` | `mm-md` | same | Berendsen thermostat + Berendsen manostat (isotropic), molecular virial, `output_freq = 2` |
 | `cgo` `test_cgo_atomic_virial` | `run-01_atomic_virial.in` | `mm-md` | same | the NPT run with `virial = atomic` |
 | `cgo` `test_cgo_temperature_ramp` | `run-01_temp_ramp.in` | `mm-md` | same | Berendsen thermostat with `start_temp`, `temp_ramp_steps`, `temp_ramp_frequency`; also checks the ramp lines of the log |
+| `cgo` `test_cgo_restart_round_trip` (2 tests) | `run-01.in` (NVE), `run-01_NPT.in` | `mm-md` | same | a 10-step run against 5 steps plus 5 more from the `.rst` the first part wrote; checks the step counter, the box, and positions, velocities and forces of every frame of the second part (to the precision of the restart file, see the test). Builds its three inputs from the existing ones, no reference data |
 | `chig` `test_chig` | `run-01.in` | `mm-md` | chignolin in water, 7382 atoms, 10 steps of 0.5 fs | `force-field = on` (bonds, angles, dihedrals, impropers, LJ from the parameter file, topology with 191 linker `*` entries), intra-nonbonded file, SHAKE/RATTLE, Wolf |
 | `dftbplus` | `run-01.in` | `qm-md` | 9 atoms, 100 Å box, 2 steps | external DFTB+ runner with the periodic-stress script and a custom `dftb_file` |
 | `ase-dftbplus` | `run-01.in` | `qm-md` | 9 atoms, 2 steps | ASE DFTB+ with the `3ob` Slater-Koster set |
@@ -156,7 +157,7 @@ intermolecular model are the same.
 | Output files compared: `.xyz .vel .force .chrg .en` | yes |
 | Output files written but **not compared**: `.rst .box .stress .vir .mom .instant_en .info` (content), `.log`, `.timings`, `.ref` | see "What the checks cannot see" |
 | `overwrite_output`, `include_output_metadata`, custom file names | partly: `overwrite_output = on` in the QM tests; the rest no |
-| **Restart from a file that PQ wrote** | **no** (the start files are hand-made or from older tools) |
+| Restart from a file that PQ wrote | yes, for the MM state and the box (NVE and Berendsen NPT, `cgo`); **no** for the Nose-Hoover chain state (restart files keep it with 6 digits only) |
 | Triclinic boxes | no (not supported for MM-MD yet, issue #910); all start files are orthorhombic |
 | Input errors and validation messages | one (`oh_mm_hessian`). Elsewhere: unit (`inputFileParser`, `inputValidation`) |
 | Command line (arguments, `--version`, missing file) | no. Elsewhere: unit (`testPQCli`) |
@@ -216,7 +217,7 @@ Hessian are checked, so a wrong Hessian would pass.
   statistics) is not.
 - **Unchecked outputs.** Restart, box, stress, virial, momentum and instant-energy files and the
   log/timings files are written but not compared, so an error only in one of them passes. The
-  `.rst` file is the most important: it is never read back.
+  `.rst` file is only checked indirectly, by the restart round trip.
 - **Tolerance.** `isclose` defaults hide differences below its tolerances, and the last two energy
   columns are skipped on purpose.
 - **Only the final state of a short run.** Intermediate frames are compared only when
@@ -248,9 +249,9 @@ Hessian are checked, so a wrong Hessian would pass.
 In rough order of value for the cost; each is a **new variant** of an existing cheap test (the
 `cgo` pattern below), so existing references stay untouched.
 
-1. **Restart round trip**: run 5 steps, then start from the `.rst` PQ wrote and run 5 more; the
-   result must match a 10-step run. Covers restart writing *and* reading, the step counter and
-   (with Nose-Hoover) the chain state.
+1. **Restart round trip** with Nose-Hoover (the chain state): the round trip exists for
+   Berendsen (`test_cgo_restart_round_trip`); the chain state is written with 6 digits, so the
+   comparison needs its own tolerance.
 2. **Cell list + manostat** (`cgo` NPT with `cell-list = on`): the box changes while the cells are
    in use.
 3. **Nose-Hoover, Langevin and velocity-rescaling** thermostats on `cgo` (one variant each, the
