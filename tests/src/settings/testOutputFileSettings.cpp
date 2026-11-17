@@ -137,9 +137,9 @@ TEST(TestOutputSettings, extxyzFilenameFollowsPrefix)
 
     OutputFileSettings named;
     named.setExtxyzFileNameByUser("water.extxyz");
-    named.setH5mdFileNameByUser("other.h5md");
+    named.setH5mdFileNameByUser("water.h5md");
     named.finalize();
     EXPECT_EQ(named.getExtxyzFileName(), "water.extxyz");
-    EXPECT_EQ(named.getH5mdFileName(), "other.h5md");
+    EXPECT_EQ(named.getH5mdFileName(), "water.h5md");
     EXPECT_EQ(named.getRestartFileName(), "water.rst");
 }

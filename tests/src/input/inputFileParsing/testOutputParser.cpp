@@ -327,9 +327,11 @@ TEST_F(TestInputFileReader, testTrajectoryFormat)
         TrajectoryFormat::EXTXYZ
     );
 
+    OutputFileSettings       h5mdSettings;
+    input::OutputInputParser h5mdParser(h5mdSettings);
     lineElements = {"traj_format", "=", "h5md"};
-    parseFunc(lineElements, 0);
-    EXPECT_EQ(outputFileSettings.getTrajectoryFormat(), TrajectoryFormat::H5MD);
+    h5mdParser.getKeywordFuncMap().at("traj_format")(lineElements, 0);
+    EXPECT_EQ(h5mdSettings.getTrajectoryFormat(), TrajectoryFormat::H5MD);
 }
 
 /**

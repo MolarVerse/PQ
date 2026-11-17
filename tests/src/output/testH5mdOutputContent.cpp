@@ -20,6 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+// only built with BUILD_WITH_HDF5; empty for tools without the HDF5 headers
+#if __has_include(<hdf5.h>)
+
 #include <gtest/gtest.h>
 #include <hdf5.h>
 
@@ -178,3 +181,5 @@ TEST(TestH5mdOutputContent, writesH5mdLayout)
     H5Fclose(file);
     std::filesystem::remove(filename);
 }
+
+#endif   // __has_include(<hdf5.h>)
