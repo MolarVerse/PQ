@@ -1,1 +1,2 @@
 - finish removing static access from `ThermostatSettings`
+- start making `PotentialSettings` non-static - additionally use a single source of truth for coulomb cutoff
