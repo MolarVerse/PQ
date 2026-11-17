@@ -26,6 +26,7 @@
 #include <string>
 
 #include "berendsenThermostat.hpp"
+#include "constants/internalConversionFactors.hpp"
 #include "langevinThermostat.hpp"
 #include "mdEngine.hpp"
 #include "noseHooverThermostat.hpp"
@@ -200,7 +201,7 @@ namespace setup
         const auto  tau =
             _engine.getSettings().thermostatSettings.getRelaxationTime();
 
-        log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+        log.writeSetupInfo(std::format("Target temperature: {}", targetTemp));
         log.writeSetupInfo(std::format("Relaxation time:    {}", tau.in(ps)));
         log.writeEmptyLine();
     }
@@ -218,9 +219,12 @@ namespace setup
         const auto  friction =
             _engine.getSettings().thermostatSettings.getFriction();
 
-        log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+        log.writeSetupInfo(std::format("Target temperature: {}", targetTemp));
         log.writeSetupInfo(
-            std::format("Friction:           {} 1/ps", friction)
+            std::format(
+                "Friction:           {} 1/ps",
+                friction / NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+            )
         );
         log.writeEmptyLine();
     }
@@ -239,7 +243,7 @@ namespace setup
         const auto  nhChainLength    = nhSettings.getNoseHooverChainLength();
         const auto  couplFreq = nhSettings.getNoseHooverCouplingFrequency();
 
-        log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+        log.writeSetupInfo(std::format("Target temperature: {}", targetTemp));
         log.writeSetupInfo(
             std::format("NH chain length:    {}", nhChainLength)
         );
@@ -267,11 +271,9 @@ namespace setup
         const auto frequency  = kineticsSettings.getRampingFrequency();
         const auto tempStep   = kineticsSettings.getTemperatureIncrease();
 
-        log.writeSetupInfo(std::format("Start temp:          {} K", startTemp));
-        log.writeSetupInfo(
-            std::format("Target temp:         {} K", targetTemp)
-        );
-        log.writeSetupInfo(std::format("Temp ramp increase:  {} K", tempStep));
+        log.writeSetupInfo(std::format("Start temp:          {}", startTemp));
+        log.writeSetupInfo(std::format("Target temp:         {}", targetTemp));
+        log.writeSetupInfo(std::format("Temp ramp increase:  {}", tempStep));
         log.writeSetupInfo(std::format("Temp ramp steps:     {}", steps));
         log.writeSetupInfo(std::format("Temp ramp frequency: {}", frequency));
         log.writeEmptyLine();
@@ -290,7 +292,7 @@ namespace setup
         const auto tau =
             _engine.getSettings().thermostatSettings.getRelaxationTime();
 
-        log.writeSetupInfo(std::format("Target temperature: {} K", targetTemp));
+        log.writeSetupInfo(std::format("Target temperature: {}", targetTemp));
         log.writeSetupInfo(std::format("Relaxation time:    {}", tau.in(ps)));
         log.writeEmptyLine();
     }
