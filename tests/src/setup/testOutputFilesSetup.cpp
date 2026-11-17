@@ -33,6 +33,7 @@
 #include "outputFileSettings.hpp"
 #include "outputFilesSetup.hpp"
 #include "testSetup.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 #include "units.hpp"
 
@@ -208,7 +209,11 @@ TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
 
     if (!out::H5mdOutput::available())
     {
-        EXPECT_THROW(setup.setup(), exc::CompileTimeException);
+        EXPECT_THROW_MSG(
+            setup.setup(),
+            exc::CompileTimeException,
+            "traj_format = h5md needs PQ built with -DBUILD_WITH_HDF5=ON"
+        );
         cleanupPrefix();
         return;
     }

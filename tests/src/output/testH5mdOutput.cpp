@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "throwWithMessage.hpp"
 
 namespace
 {
@@ -70,9 +71,10 @@ TEST(TestH5mdOutput, writesOnlyWithHdf5)
 
     if (!out::H5mdOutput::available())
     {
-        EXPECT_THROW(
+        EXPECT_THROW_MSG(
             out::H5mdOutput(filename, true, 0.5),
-            exc::CompileTimeException
+            exc::CompileTimeException,
+            "traj_format = h5md needs PQ built with -DBUILD_WITH_HDF5=ON"
         );
         return;
     }
@@ -84,9 +86,10 @@ TEST(TestH5mdOutput, writesOnlyWithHdf5)
     }
 
     EXPECT_TRUE(std::filesystem::exists(filename));
-    EXPECT_THROW(
+    EXPECT_THROW_MSG(
         out::H5mdOutput(filename, false, 0.5),
-        exc::InputFileException
+        exc::InputFileException,
+        "File already exists - filename = " + filename
     );
 
     std::filesystem::remove(filename);
