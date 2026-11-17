@@ -1,1 +1,0 @@
-- add new exception handling approach via tempalted NTTP for color and type, which makes handling of new exception types much easier

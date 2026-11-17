@@ -1,0 +1,1 @@
+- List all example folders in the examples chapter of the user guide (added h2o_mm-mshake, mof-5_fennol, oh_mm_hessian, orca and potassium_water_qmmm).

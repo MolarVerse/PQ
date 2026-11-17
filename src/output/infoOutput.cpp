@@ -27,18 +27,57 @@
 #include "constraintSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
+#include "globalTimer.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "settings.hpp"
 #include "thermostatSettings.hpp"
+#include "timerId.hpp"
+#include "units.hpp"
 
 namespace out
 {
+    /**
+     * @brief Prepare the info output file for writing
+     *
+     * @details Closes the current file pointer, opens the info output file,
+     * and writes the header.
+     */
+    void InfoOutput::_prepare()
+    {
+        _getFilePointer().close();
+        _openFile();
+        _writeHeader();
+    }
 
     /**
-     * @brief write info file
+     * @brief Write the simulation time to the info output
      *
-     * @details
+     * @param simulationTime the current simulation time of the system
+     */
+    void InfoOutput::_writeSimulationTime(const Time &simulationTime)
+    {
+        _writeLeft(
+            simulationTime.numerical_value_in(ps),
+            "SIMULATION-TIME",
+            "ps"
+        );
+    }
+
+    /**
+     * @brief Write the effective step to the info output
+     *
+     * @param effectiveStep the current effective step of the simulation
+     */
+    void InfoOutput::_writeEffectiveStep(double effectiveStep)
+    {
+        _writeLeft(effectiveStep, "EFFECTIVE STEPS", "-");
+    }
+
+    /**
+     * @brief Finish writing the info output
+     *
+     * @details Writes the final set of physical data to the info output file.
      * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
      * - Bond, Angle, Dihedral and Improper energies are only available if the
      * force field is active.
@@ -48,35 +87,35 @@ namespace out
      * - nose hoover momentum and friction energies are only available if nose
      * hoover thermostat is active.
      *
-     * @param simulationTime
-     * @param physicalData the physical data of the system
-     * @param settings the simulation settings
      */
-    void InfoOutput::write(
-        double                            simulationTime,
+    void InfoOutput::_finish(
         const physicalData::PhysicalData &physicalData,
         const Settings                   &settings
     )
     {
-        _getFilePointer().close();
+        _writeRight(
+            physicalData.getTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K),
+            "TEMPERATURE",
+            "K"
+        );
 
-        _openFile();
-
-        _writeHeader();
-
-        if (settings::GeneralSettings::isMDJobType())
-            _writeLeft(simulationTime, "SIMULATION-TIME", "ps");
-        else
-            _writeLeftInteger(simulationTime, "EFFECTIVE STEPS", "-");
-
-        _writeRight(physicalData.getTemperature(), "TEMPERATURE", "K");
-
-        _writeLeft(physicalData.getPressure(), "PRESSURE", "bar");
+        _writeLeft(
+            physicalData.getPressure().numerical_value_in(bar),
+            "PRESSURE",
+            "bar"
+        );
         _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
         if (settings::GeneralSettings::isQMActivated())
         {
-            _writeLeft(physicalData.getQMEnergy(), "E(QM)", "kcal/mol");
+            _writeLeft(
+                physicalData.getQMEnergy() -
+                    physicalData.getQMReferenceEnergy(),
+                "E(QM)",
+                "kcal/mol"
+            );
             _writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
         }
 
@@ -116,18 +155,22 @@ namespace out
                 "N(SM-MOL)",
                 "-"
             );
-            _writeRight();
+            _writeRight(
+                physicalData.getQMReferenceEnergy(),
+                "E(QM-REF)",
+                "kcal/mol"
+            );
         }
 
-        if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
+        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             _writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
             _writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
 
-            if (settings::ManostatSettings::getFixedAxis() != FixedAxis::NONE)
+            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
             {
                 _writeLeft(
-                    physicalData.getCoupledPressure(),
+                    physicalData.getCoupledPressure().numerical_value_in(bar),
                     "P(COUPLED)",
                     "bar"
                 );
@@ -135,7 +178,7 @@ namespace out
             }
         }
 
-        if (settings::ThermostatSettings::getThermostatType() ==
+        if (settings.thermostatSettings.getThermostatType() ==
             ThermostatType::NOSE_HOOVER)
         {
             _writeLeft(
@@ -174,6 +217,50 @@ namespace out
         _getFilePointer() << std::format("{:-^89}", "") << "\n\n";
 
         _getFilePointer().flush();
+    }
+
+    /**
+     * @brief write info file with the current simulation time
+     *
+     * @param simulationTime
+     * @param physicalData the physical data of the system
+     * @param settings the simulation settings
+     */
+    void InfoOutput::write(
+        const Time                       &simulationTime,
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "InfoOutput");
+
+        _prepare();
+
+        _writeSimulationTime(simulationTime);
+
+        _finish(physicalData, settings);
+    }
+
+    /**
+     * @brief write info file with effective step
+     *
+     * @param effectiveStep
+     * @param physicalData the physical data of the system
+     * @param settings the simulation settings
+     */
+    void InfoOutput::write(
+        double                            effectiveStep,
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
+    )
+    {
+        auto _ = scopedTimer(TimerId::Output, "InfoOutput");
+
+        _prepare();
+
+        _writeEffectiveStep(effectiveStep);
+
+        _finish(physicalData, settings);
     }
 
     /**

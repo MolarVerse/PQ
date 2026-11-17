@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -22,6 +23,32 @@ def contains_all(text, needles):
 
 def contains_any(text, needles):
     return [needle for needle in needles if needle in text]
+
+
+def last_frame(path):
+    lines = path.read_text().splitlines()
+    frame = None
+    i = 0
+    while i < len(lines):
+        n_atoms = int(lines[i].split()[0])
+        atoms = lines[i + 2:i + 2 + n_atoms]
+        if len(atoms) < n_atoms:
+            break
+        frame = [[float(x) for x in atom.split()[1:4]] for atom in atoms]
+        i += 2 + n_atoms
+    return frame
+
+
+def max_frame_diff(path_a, path_b):
+    frame_a = last_frame(path_a)
+    frame_b = last_frame(path_b)
+    if frame_a is None or frame_b is None or len(frame_a) != len(frame_b):
+        return None
+    return max(
+        abs(a - b)
+        for atom_a, atom_b in zip(frame_a, frame_b)
+        for a, b in zip(atom_a, atom_b)
+    )
 
 
 def main():
@@ -50,25 +77,37 @@ def main():
             return fail(f"manifest does not exist in case zip: {args.manifest}")
 
         manifest = json.loads(manifest_path.read_text())
-        input_file = manifest["input"]
+        input_files = manifest["input"]
+        if isinstance(input_files, str):
+            input_files = [input_files]
         timeout = manifest.get("timeout_seconds", 30)
 
-        completed = subprocess.run(
-            [*args.launcher, str(pq), input_file],
-            cwd=case_dir,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            timeout=timeout,
-            check=False,
-        )
+        for name in manifest.get("executables", []):
+            (case_dir / name).chmod(0o755)
+        env = dict(os.environ)
+        for key, value in manifest.get("env", {}).items():
+            local = case_dir / value
+            env[key] = str(local) if local.exists() else value
 
-        stdout = completed.stdout
-        if completed.returncode != 0:
-            return fail(
-                f"PQ exited with status {completed.returncode}",
-                stdout,
+        stdout = ""
+        for input_file in input_files:
+            completed = subprocess.run(
+                [*args.launcher, str(pq), input_file],
+                cwd=case_dir,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=timeout,
+                check=False,
+                env=env,
             )
+
+            stdout += completed.stdout
+            if completed.returncode != 0:
+                return fail(
+                    f"PQ exited with status {completed.returncode} for {input_file}",
+                    stdout,
+                )
 
         missing_stdout = contains_all(
             stdout,
@@ -108,6 +147,32 @@ def main():
             rejected = contains_any(text, [needle.lower() for needle in needles])
             if rejected:
                 return fail(f"{filename} contains rejected text: {rejected}", stdout)
+
+        for compare in manifest.get("compare_last_frame", []):
+            file_a, file_b = compare["files"]
+            diff = max_frame_diff(case_dir / file_a, case_dir / file_b)
+            if diff is None:
+                return fail(f"cannot compare last frames of {file_a} and {file_b}")
+            if diff > compare["atol"]:
+                return fail(
+                    f"last frames of {file_a} and {file_b} differ by {diff:.3e}"
+                    f" (atol {compare['atol']:.3e})"
+                )
+
+        check_command = manifest.get("check_command")
+        if check_command:
+            checked = subprocess.run(
+                [sys.executable, "-I", *check_command],
+                cwd=case_dir,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
+            print(checked.stdout)
+            if checked.returncode != 0:
+                return fail(f"check {check_command} failed", stdout)
 
     return 0
 

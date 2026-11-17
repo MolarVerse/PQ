@@ -105,7 +105,10 @@ namespace input
         );
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
-            std::make_unique<FilesInputParser>(validateFilePaths)
+            std::make_unique<FilesInputParser>(
+                validateFilePaths,
+                settings.fileSettings
+            )
         );
         _parsers.push_back(
             std::make_unique<MMInputParser>(
@@ -117,9 +120,15 @@ namespace input
         _parsers.push_back(
             std::make_unique<HessianInputParser>(settings.hessianSettings)
         );
-        _parsers.push_back(std::make_unique<IntegratorInputParser>());
-        _parsers.push_back(std::make_unique<ManostatInputParser>());
-        _parsers.push_back(std::make_unique<OutputInputParser>());
+        _parsers.push_back(
+            std::make_unique<IntegratorInputParser>(settings.referenceSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<ManostatInputParser>(settings.manostatSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<OutputInputParser>(settings.outputFiles)
+        );
         _parsers.push_back(
             std::make_unique<ResetKineticsInputParser>(settings.resetKinetics)
         );
@@ -128,8 +137,16 @@ namespace input
                 settings.simulationBoxSettings
             )
         );
-        _parsers.push_back(std::make_unique<ThermostatInputParser>());
-        _parsers.push_back(std::make_unique<TimingsInputParser>());
+        _parsers.push_back(
+            std::make_unique<ThermostatInputParser>(
+                settings.thermostatSettings,
+                settings.noseHooverSettings,
+                settings.kinetics
+            )
+        );
+        _parsers.push_back(
+            std::make_unique<TimingsInputParser>(settings.timings)
+        );
         _parsers.push_back(std::make_unique<VirialInputParser>());
         _parsers.push_back(std::make_unique<HybridInputParser>());
         _parsers.push_back(
@@ -144,7 +161,16 @@ namespace input
             std::make_unique<OptInputParser>(settings.optimizerSettings)
         );
         _parsers.push_back(
-            std::make_unique<QMInputParser>(resolveBuiltInSlakosPath)
+            std::make_unique<QMInputParser>(
+                resolveBuiltInSlakosPath,
+                settings.referenceSettings,
+                settings.qmSettings,
+                settings.maceSettings,
+                settings.fennolSettings,
+                settings.dftbSettings,
+                settings.xtbSettings,
+                settings.externalQMSettings
+            )
         );
 
         addKeywords();

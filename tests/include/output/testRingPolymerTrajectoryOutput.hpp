@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
-
-#define _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_RING_POLYMER_TRAJECTORY_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_RING_POLYMER_TRAJECTORY_OUTPUT_HPP
 
 #include <gtest/gtest.h>
 
@@ -143,4 +142,4 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
     }
 };
 
-#endif   // _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_RING_POLYMER_TRAJECTORY_OUTPUT_HPP

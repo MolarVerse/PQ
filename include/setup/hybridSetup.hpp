@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_SETUP_HPP_
+#ifndef SETUP__HYBRID_SETUP_HPP
+#define SETUP__HYBRID_SETUP_HPP
 
-#define _HYBRID_SETUP_HPP_
-
+#include "enums/qm.hpp"
 namespace engine
 {
     class Engine;   // forward declaration
@@ -48,16 +48,17 @@ namespace setup
         explicit HybridSetup(engine::Engine &engine);
 
         void        setup();
-        static void validateQMMethod();
+        static void validateQMMethod(QMMethod qmMethod);
         void        setupInnerRegionCenter();
         void        setupForcedCoreList();
         void        setupForcedLayerList();
         void        setupForcedOuterList();
         void        checkZoneRadii();
         void        validateQMChargeSettings();
+        void        validateQMReferenceEnergies();
         void        setupWriteInfo() const;
     };
 
 }   // namespace setup
 
-#endif   // _HYBRID_SETUP_HPP_
+#endif   // SETUP__HYBRID_SETUP_HPP

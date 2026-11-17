@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_CONVERTER_HPP_
-#define _INPUT_CONVERTER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_HPP
+#define INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_HPP
 
 #include <concepts>
 #include <cstdint>
@@ -255,6 +255,10 @@ namespace input
     struct SelectionTag
     {
         std::vector<int> indices;
+
+        /// set if the selection grammar is used: the expression can only be
+        /// resolved once the start/moldescriptor files are known (finalize)
+        std::optional<std::string> expression = std::nullopt;
     };
 
     enum class SelectionError : std::uint8_t
@@ -299,8 +303,8 @@ namespace input
 
 }   // namespace input
 
-#ifndef _INPUT_CONVERTER_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_TPP
 #include "inputConverter.tpp"
 #endif
 
-#endif   // _INPUT_CONVERTER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_SETUP_HPP_
-
-#define _THERMOSTAT_SETUP_HPP_
+#ifndef SETUP__THERMOSTAT_SETUP_HPP
+#define SETUP__THERMOSTAT_SETUP_HPP
 
 namespace engine
 {
@@ -50,12 +49,10 @@ namespace setup
 
         void setup();
 
-        static void setupTargetTemperature();
-        void        setupTemperatureRamp();
-        void        setupBerendsenThermostat();
-        void        setupLangevinThermostat();
-        void        setupNoseHooverThermostat();
-        void        setupVelocityRescalingThermostat();
+        void setupBerendsenThermostat();
+        void setupLangevinThermostat();
+        void setupNoseHooverThermostat();
+        void setupVelocityRescalingThermostat();
 
         void writeSetupInfo() const;
         void writeBerendsenInfo() const;
@@ -69,4 +66,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _THERMOSTAT_SETUP_HPP_
+#endif   // SETUP__THERMOSTAT_SETUP_HPP

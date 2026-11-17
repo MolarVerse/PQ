@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VELOCITY_RESCALING_THERMOSTAT_HPP_
-
-#define _VELOCITY_RESCALING_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
+#define THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
 
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -46,11 +46,10 @@ namespace thermostat
        private:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
-        double _tau = 0.0;
+        Time _tau;
 
        public:
-        VelocityRescalingThermostat() = default;
-        explicit VelocityRescalingThermostat(double, double);
+        explicit VelocityRescalingThermostat(const Time &);
         ~VelocityRescalingThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -66,16 +65,18 @@ namespace thermostat
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
         ) override;
 
-        void setTau(double tau);
+        void setTau(const Time &tau);
 
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
 
-        [[nodiscard]] double getTau() const;
+        [[nodiscard]] const Time &getTau() const;
     };
 }   // namespace thermostat
 
-#endif   // _VELOCITY_RESCALING_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP

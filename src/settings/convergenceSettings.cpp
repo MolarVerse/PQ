@@ -52,9 +52,9 @@ ConvSettings::ConvSettings()
  *
  * @param energyConv
  */
-void ConvSettings::setEnergyConv(double energyConv)
+void ConvSettings::setEnergyConvByUser(double energyConv)
 {
-    _energyConv.set(energyConv);
+    _energyConv.setByUser(energyConv);
 }
 
 /**
@@ -62,9 +62,9 @@ void ConvSettings::setEnergyConv(double energyConv)
  *
  * @param relEnergyConv
  */
-void ConvSettings::setRelEnergyConv(double relEnergyConv)
+void ConvSettings::setRelEnergyConvByUser(double relEnergyConv)
 {
-    _relEnergyConv.set(relEnergyConv);
+    _relEnergyConv.setByUser(relEnergyConv);
 }
 
 /**
@@ -72,9 +72,9 @@ void ConvSettings::setRelEnergyConv(double relEnergyConv)
  *
  * @param absEnergyConv
  */
-void ConvSettings::setAbsEnergyConv(double absEnergyConv)
+void ConvSettings::setAbsEnergyConvByUser(double absEnergyConv)
 {
-    _absEnergyConv.set(absEnergyConv);
+    _absEnergyConv.setByUser(absEnergyConv);
 }
 
 /**
@@ -86,7 +86,10 @@ void ConvSettings::setAbsEnergyConv(double absEnergyConv)
  *
  * @param forceConv
  */
-void ConvSettings::setForceConv(double forceConv) { _forceConv.set(forceConv); }
+void ConvSettings::setForceConvByUser(double forceConv)
+{
+    _forceConv.setByUser(forceConv);
+}
 
 /**
  * @brief set max force convergence
@@ -96,9 +99,9 @@ void ConvSettings::setForceConv(double forceConv) { _forceConv.set(forceConv); }
  *
  * @param maxForceConv
  */
-void ConvSettings::setMaxForceConv(double maxForceConv)
+void ConvSettings::setMaxForceConvByUser(double maxForceConv)
 {
-    _maxForceConv.set(maxForceConv);
+    _maxForceConv.setByUser(maxForceConv);
 }
 
 /**
@@ -109,9 +112,9 @@ void ConvSettings::setMaxForceConv(double maxForceConv)
  *
  * @param rmsForceConv
  */
-void ConvSettings::setRMSForceConv(double rmsForceConv)
+void ConvSettings::setRMSForceConvByUser(double rmsForceConv)
 {
-    _rmsForceConv.set(rmsForceConv);
+    _rmsForceConv.setByUser(rmsForceConv);
 }
 
 /**
@@ -119,9 +122,9 @@ void ConvSettings::setRMSForceConv(double rmsForceConv)
  *
  * @param useEnergyConvergence
  */
-void ConvSettings::setUseEnergyConv(bool useEnergyConvergence)
+void ConvSettings::setUseEnergyConvByUser(bool useEnergyConvergence)
 {
-    _useEnergyConv.set(useEnergyConvergence);
+    _useEnergyConv.setByUser(useEnergyConvergence);
 }
 
 /**
@@ -129,9 +132,9 @@ void ConvSettings::setUseEnergyConv(bool useEnergyConvergence)
  *
  * @param useForceConvergence
  */
-void ConvSettings::setUseForceConv(bool useForceConvergence)
+void ConvSettings::setUseForceConvByUser(bool useForceConvergence)
 {
-    _useForceConv.set(useForceConvergence);
+    _useForceConv.setByUser(useForceConvergence);
 }
 
 /**
@@ -139,9 +142,9 @@ void ConvSettings::setUseForceConv(bool useForceConvergence)
  *
  * @param useMaxForceConvergence
  */
-void ConvSettings::setUseMaxForceConv(bool useMaxForceConvergence)
+void ConvSettings::setUseMaxForceConvByUser(bool useMaxForceConvergence)
 {
-    _useMaxForceConv.set(useMaxForceConvergence);
+    _useMaxForceConv.setByUser(useMaxForceConvergence);
 }
 
 /**
@@ -149,9 +152,9 @@ void ConvSettings::setUseMaxForceConv(bool useMaxForceConvergence)
  *
  * @param useRMSForceConvergence
  */
-void ConvSettings::setUseRMSForceConv(bool useRMSForceConvergence)
+void ConvSettings::setUseRMSForceConvByUser(bool useRMSForceConvergence)
 {
-    _useRMSForceConv.set(useRMSForceConvergence);
+    _useRMSForceConv.setByUser(useRMSForceConvergence);
 }
 
 /**
@@ -159,9 +162,9 @@ void ConvSettings::setUseRMSForceConv(bool useRMSForceConvergence)
  *
  * @param strategy
  */
-void ConvSettings::setEnergyConvStrategy(ConvStrategy strategy)
+void ConvSettings::setEnergyConvStrategyByUser(ConvStrategy strategy)
 {
-    _energyConvStrategy.set(strategy);
+    _energyConvStrategy.setByUser(strategy);
 }
 
 /***************************
@@ -177,7 +180,7 @@ void ConvSettings::setEnergyConvStrategy(ConvStrategy strategy)
  */
 std::optional<double> ConvSettings::getEnergyConv() const
 {
-    if (!_energyConv.isSet())
+    if (!_energyConv.isSetBySomeone())
         return std::nullopt;
 
     return _energyConv.get();
@@ -190,7 +193,7 @@ std::optional<double> ConvSettings::getEnergyConv() const
  */
 std::optional<double> ConvSettings::getRelEnergyConv() const
 {
-    if (!_relEnergyConv.isSet())
+    if (!_relEnergyConv.isSetBySomeone())
         return std::nullopt;
 
     return _relEnergyConv.get();
@@ -203,7 +206,7 @@ std::optional<double> ConvSettings::getRelEnergyConv() const
  */
 std::optional<double> ConvSettings::getAbsEnergyConv() const
 {
-    if (!_absEnergyConv.isSet())
+    if (!_absEnergyConv.isSetBySomeone())
         return std::nullopt;
 
     return _absEnergyConv.get();
@@ -216,7 +219,7 @@ std::optional<double> ConvSettings::getAbsEnergyConv() const
  */
 std::optional<double> ConvSettings::getForceConv() const
 {
-    if (!_forceConv.isSet())
+    if (!_forceConv.isSetBySomeone())
         return std::nullopt;
 
     return _forceConv.get();
@@ -229,7 +232,7 @@ std::optional<double> ConvSettings::getForceConv() const
  */
 std::optional<double> ConvSettings::getMaxForceConv() const
 {
-    if (!_maxForceConv.isSet())
+    if (!_maxForceConv.isSetBySomeone())
         return std::nullopt;
 
     return _maxForceConv.get();
@@ -242,7 +245,7 @@ std::optional<double> ConvSettings::getMaxForceConv() const
  */
 std::optional<double> ConvSettings::getRMSForceConv() const
 {
-    if (!_rmsForceConv.isSet())
+    if (!_rmsForceConv.isSetBySomeone())
         return std::nullopt;
 
     return _rmsForceConv.get();

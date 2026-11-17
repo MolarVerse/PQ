@@ -367,7 +367,9 @@ TEST_F(TestSetup, noDensity)
 TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000);
-    _settings->simulationBoxSettings.setDensity(AMU_PER_ANGSTROM3_TO_KG_PER_L);
+    _settings->simulationBoxSettings.setDensityByUser(
+        AMU_PER_ANGSTROM3_TO_KG_PER_L
+    );
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -387,7 +389,7 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 
     molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
     _engine->getSimulationBox().setBox(orthoBox, true);
-    _settings->simulationBoxSettings.setDensity(0.0);
+    _settings->simulationBoxSettings.setDensityByUser(0.0);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -451,7 +453,7 @@ TEST_F(TestSetup, testCheckZeroVelocities)
  */
 TEST_F(TestSetup, testFullSetup)
 {
-    _settings->forceFieldSettings.setType(ForceFieldType::ON);
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
 
     ::molsys::Molecule molecule1{MolType{1}};
     const auto         atom1 = std::make_shared<::molsys::Atom>();
@@ -520,6 +522,7 @@ TEST_F(TestSetup, testFullSetup)
     );   // this should be ignored
 
     molsys::OrthorhombicBox orthoBox{{10.0, 20.0, 30.0}};
+    _settings->fileSettings.setStartFileNameByUser("input.rst");
     _engine->getSimulationBox().setBox(orthoBox, true);
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
@@ -528,7 +531,7 @@ TEST_F(TestSetup, testFullSetup)
 
 TEST_F(TestSetup, testWriteSetupInfo)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     auto &simBox = _engine->getSimulationBox();
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
@@ -545,7 +548,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     molsys::OrthorhombicBox orthoBox{{5.73, 9.93, 11.14}};
     simBox.setBox(orthoBox, false);
     settings::PotentialSettings::setCoulombRadiusCutOff(5.79);
-    settings::FileSettings::setStartFileName("input.rst");
+    _settings->fileSettings.setStartFileNameByUser("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
@@ -593,12 +596,12 @@ TEST_F(TestSetup, testWriteSetupInfo)
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    _settings->simulationBoxSettings.setInitializeVelocities(
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
+    _settings->simulationBoxSettings.setInitializeVelocsByUser(
         InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);
-    settings::FileSettings::setStartFileName("input.rst");
+    _settings->fileSettings.setStartFileNameByUser("input.rst");
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
@@ -622,9 +625,9 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueNonZeroVelocities)
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
 
-    _settings->simulationBoxSettings.setInitializeVelocities(
+    _settings->simulationBoxSettings.setInitializeVelocsByUser(
         InitVelocities::TRUE
     );
     setup::SimulationBoxSetup::setZeroVelocities(true);
@@ -648,9 +651,9 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellTrueZeroVelocities)
 
 TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
 {
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
 
-    _settings->simulationBoxSettings.setInitializeVelocities(
+    _settings->simulationBoxSettings.setInitializeVelocsByUser(
         InitVelocities::FORCE
     );
     setup::SimulationBoxSetup::setZeroVelocities(false);

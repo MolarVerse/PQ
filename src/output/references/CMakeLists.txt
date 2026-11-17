@@ -11,6 +11,7 @@ target_link_libraries(references
     PUBLIC
     settings
     config_headers
+    mstd
 )
 
 target_compile_definitions(references

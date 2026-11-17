@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ANGLE_FORCE_FIELD_HPP_
-
-#define _ANGLE_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__ANGLE_FORCE_FIELD_HPP
+#define FORCE_FIELD__ANGLE_FORCE_FIELD_HPP
 
 #include <vector>
 
@@ -96,4 +95,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _ANGLE_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__ANGLE_FORCE_FIELD_HPP

@@ -27,11 +27,16 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
+#include "interrupt.hpp"
+#include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
-#include "referencesOutput.hpp"
 #include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
+
+#ifdef WITH_MPI
+#include "mpi.hpp"
+#endif
 
 namespace engine
 {
@@ -43,10 +48,15 @@ namespace engine
      */
     MDEngine::MDEngine(const Settings &settings)
         : Engine(settings),
-          _resetKinetics(getSettings().resetKinetics),
+          _resetKinetics(settings.resetKinetics),
+          _kinetics(settings.kinetics),
           _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
-          _manostat(std::make_unique<manostat::Manostat>())
+          _manostat(
+              manostat::ManostatFactory::createManostat(
+                  settings.manostatSettings
+              )
+          )
     {
     }
 
@@ -62,26 +72,36 @@ namespace engine
             norm(getPhysicalDataPtr()->getMomentum())
         );
 
-        _setNSteps(settings::TimingsSettings::getNumberOfSteps());
-        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+        const auto  nSteps = getSettings().timings.getNumberOfSteps();
+        progressbar bar(static_cast<int>(nSteps), true, std::cout);
+        const auto &outputFileSettings = getSettings().outputFiles;
 
-        for (; getStep() <= _getNSteps(); _setStep(getStep() + 1))
+        for (; getStep() <= nSteps; _setStep(getStep() + 1))
         {
+            utilities::throwIfInterrupted();
+
             bar.update();
             takeStep();
 
-            writeOutput();
+            writeOutput(outputFileSettings);
             deleteTmpFiles();
         }
+
+        getEngineOutput().waitForFrames();
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
         const auto elapsedTime =
             timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
 
-        references::ReferencesOutput::writeReferencesFile();
+#ifdef WITH_MPI
+        if (mpi::MPI::isRoot())
+#endif
+        {
+            getEngineOutput().writeReferencesFile();
 
-        getEngineOutput().writeTimingsFile();
+            getEngineOutput().writeTimingsFile();
+        }
 
         getEngineOutput().getLogOutput().writeEndedNormally(elapsedTime);
         out::StdoutOutput::writeEndedNormally(elapsedTime);
@@ -93,17 +113,20 @@ namespace engine
      */
     void MDEngine::takeStepBeforeForces()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         _thermostat->applyThermostatHalfStep(
             getSimulationBox(),
-            getPhysicalData()
+            getPhysicalData(),
+            _kinetics.getCurrentTargetTemperature(),
+            timeStep
         );
 
         if (getSettings().constraintSettings.isMShakeActivated())
             getSimulationBox().updateOldPositions();
 
-        getIntegrator().firstStep(getSimulationBox());
+        getIntegrator().firstStep(getSimulationBox(), timeStep);
 
-        getConstraints()->applyShake(getSimulationBox());
+        getConstraints()->applyShake(getSimulationBox(), timeStep);
     }
 
     /**
@@ -114,10 +137,15 @@ namespace engine
     {
         _resetKinetics.resetForces(getStep(), getSimulationBox());
 
+        const auto &timeStep = getSettings().timings.getTimeStep();
+
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
             getPhysicalData(),
-            calculateTotalSimulationTime()
+            calculateTotalSimulationTime(
+                timeStep,
+                getSettings().timings.getStartingStepCount()
+            )
         );
 
         getConstraints()->calculateConstraintBondRefs(getSimulationBox());
@@ -129,21 +157,42 @@ namespace engine
             getPhysicalDataPtr()->addVirial(virial);
         }
 
-        _thermostat->applyThermostatOnForces(getSimulationBox());
+        _thermostat->applyThermostatOnForces(
+            getSimulationBox(),
+            _kinetics.getCurrentTargetTemperature()
+        );
 
-        _integrator->secondStep(getSimulationBox());
+        _integrator->secondStep(getSimulationBox(), timeStep);
 
         getConstraints()->applyRattle(getSimulationBox());
 
-        _thermostat->applyThermostat(getSimulationBox(), getPhysicalData());
+        _thermostat->applyThermostat(
+            getSimulationBox(),
+            getPhysicalData(),
+            _kinetics.getCurrentTargetTemperature(),
+            timeStep
+        );
 
         getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
 
-        _manostat->applyManostat(getSimulationBox(), getPhysicalData());
+        const auto &currentTargetTemperature =
+            _kinetics.getCurrentTargetTemperature();
 
-        _resetKinetics.reset(getStep(), getPhysicalData(), getSimulationBox());
+        _manostat->applyManostat(
+            getSimulationBox(),
+            getPhysicalData(),
+            currentTargetTemperature,
+            timeStep
+        );
 
-        _thermostat->applyTemperatureRamping();
+        _resetKinetics.reset(
+            getStep(),
+            getPhysicalData(),
+            getSimulationBox(),
+            currentTargetTemperature
+        );
+
+        _kinetics.applyTemperatureRamping();
 
         if (settings::GeneralSettings::isQMOnlyJobtype())
         {
@@ -174,27 +223,42 @@ namespace engine
     }
 
     /**
+     * @brief Writes output files using the default time step.
+     *
+     */
+    void MDEngine::writeOutput(const OutputFileSettings &outputSettings)
+    {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getTimeStep(),
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
      * @brief Writes output files.
      *
      * @details output files are written if the step is a multiple of the output
      * frequency.
      *
      */
-    void MDEngine::writeOutput()
+    void MDEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        const Time               &timeStep,
+        size_t                    startingStepCount
+    )
     {
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {
-            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-            getEngineOutput().writeVelFile(getSimulationBox(), effStep);
-            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
-            getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
-            getEngineOutput()
-                .writeRstFile(getSimulationBox(), *_thermostat, effStep);
+            getEngineOutput().writeFrame(
+                getSimulationBox(),
+                *_thermostat,
+                effStep,
+                getPhysicalData().getTotalEnergy()
+            );
 
             getEngineOutput().writeVirialFile(
                 effStep,
@@ -239,9 +303,8 @@ namespace engine
                 static_cast<double>(outputFreq)
             );
 
-            const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
+            const auto simTime       = effStepDouble * timeStep;
 
             getEngineOutput().writeEnergyFile(
                 effStep,
@@ -253,7 +316,7 @@ namespace engine
                 getPhysicalData(),
                 getSettings()
             );
-            getEngineOutput().writeInfoFile(
+            getEngineOutput().getInfoOutput().write(
                 simTime,
                 getAveragePhysicalData(),
                 getSettings()
@@ -272,9 +335,9 @@ namespace engine
     /**
      * @brief get the reference to the reset kinetics
      *
-     * @return resetKinetics::ResetKinetics&
+     * @return kinetics::ResetKinetics&
      */
-    resetKinetics::ResetKinetics &MDEngine::getResetKinetics()
+    kinetics::ResetKinetics &MDEngine::getResetKinetics()
     {
         return _resetKinetics;
     }
@@ -460,4 +523,21 @@ namespace engine
     {
         return _configurator;
     }
+
+    /**
+     * @brief get the reference to the kinetics (const)
+     *
+     * @return const kinetics::Kinetics&
+     */
+    const kinetics::Kinetics &MDEngine::_getKinetics() const
+    {
+        return _kinetics;
+    }
+
+    /**
+     * @brief get the reference to the kinetics
+     *
+     * @return kinetics::Kinetics&
+     */
+    kinetics::Kinetics &MDEngine::_getKinetics() { return _kinetics; }
 }   // namespace engine

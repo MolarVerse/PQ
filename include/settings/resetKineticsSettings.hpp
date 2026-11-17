@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_SETTINGS_HPP_
-
-#define _RESET_KINETICS_SETTINGS_HPP_
+#ifndef SETTINGS__RESET_KINETICS_SETTINGS_HPP
+#define SETTINGS__RESET_KINETICS_SETTINGS_HPP
 
 #include <cstddef>
 
@@ -48,19 +47,19 @@ class ResetKineticsSettings
    public:
     ResetKineticsSettings();
 
-    void finalize();
+    void finalize(size_t numberOfSteps);
 
     /***************************
      * standard setter methods *
      ***************************/
 
-    void setNScale(size_t nScale);
-    void setFScale(size_t fScale);
-    void setNReset(size_t nReset);
-    void setFReset(size_t fReset);
-    void setNResetAngular(size_t nResetAngular);
-    void setFResetAngular(size_t fResetAngular);
-    void setFResetForces(size_t fResetForces);
+    void setNScaleByUser(size_t nScale);
+    void setFScaleByUser(size_t fScale);
+    void setNResetByUser(size_t nReset);
+    void setFResetByUser(size_t fReset);
+    void setNResetAngularByUser(size_t nResetAngular);
+    void setFResetAngularByUser(size_t fResetAngular);
+    void setFResetForcesByUser(size_t fResetForces);
 
     /***************************
      * standard getter methods *
@@ -75,4 +74,4 @@ class ResetKineticsSettings
     [[nodiscard]] size_t getFResetForces() const;
 };
 
-#endif   // _RESET_KINETICS_SETTINGS_HPP_
+#endif   // SETTINGS__RESET_KINETICS_SETTINGS_HPP

@@ -123,11 +123,6 @@ namespace input::parameterFile
      */
     void ParameterFileReader::read()
     {
-        if (!settings::FileSettings::isParameterFileNameSet())
-            throw exc::InputFileException(
-                "Parameter file needed for requested simulation setup"
-            );
-
         std::string line;
         size_t      lineNumber = 1;
 
@@ -158,10 +153,16 @@ namespace input::parameterFile
      */
     void readParameterFile(engine::Engine &engine)
     {
-        if (!engine.getSettings().forceFieldSettings.isActive())
+        const auto &settings = engine.getSettings();
+        if (!settings.forceFieldSettings.isActive())
             return;
 
-        const auto filename = settings::FileSettings::getParameterFilename();
+        if (!settings.fileSettings.isParameterFileNameSetByUser())
+            throw exc::InputFileException(
+                "Parameter file needed for requested simulation setup"
+            );
+
+        const auto filename = settings.fileSettings.getParameterFileName();
 
         out::StdoutOutput::writeRead("Parameter File", filename);
         engine.getLogOutput().writeRead("Parameter File", filename);

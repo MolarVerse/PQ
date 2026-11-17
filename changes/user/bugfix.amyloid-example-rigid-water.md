@@ -1,0 +1,1 @@
+- Fix the `amyloid-classical` example, which blew up after a few steps because its water molecules had no intramolecular terms; they are now kept rigid with M-SHAKE (new `mshake.top`).

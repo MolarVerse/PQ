@@ -127,7 +127,7 @@ namespace molsys
         const WaterModelSettings &waterModelSettings
     )
     {
-        if (!waterModelSettings.isInterWaterModelSet())
+        if (!waterModelSettings.isInterWaterModelSetAndNotNone())
             return;
 
         _waterMoleculeIndices.clear();

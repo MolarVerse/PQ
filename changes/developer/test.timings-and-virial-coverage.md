@@ -1,1 +1,0 @@
-- Add the first tests/src/timings/ unit test suite (TimingsSection/Timer) and add calculateQMVirial coverage to the existing virial test suite.

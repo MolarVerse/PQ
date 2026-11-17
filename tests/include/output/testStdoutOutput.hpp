@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_STDOUTOUTPUT_HPP_
-
-#define _TEST_STDOUTOUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_STDOUT_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_STDOUT_OUTPUT_HPP
 
 #include <gtest/gtest.h>
 
@@ -45,4 +44,4 @@ class TestStdoutOutput : public ::testing::Test
     }
 };
 
-#endif   // _TEST_STDOUTOUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_STDOUT_OUTPUT_HPP

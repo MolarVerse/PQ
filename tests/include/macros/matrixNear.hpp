@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXPECT_MATRIX_NEAR_HPP_
-
-#define _EXPECT_MATRIX_NEAR_HPP_
+#ifndef TESTS__INCLUDE__MACROS__MATRIX_NEAR_HPP
+#define TESTS__INCLUDE__MACROS__MATRIX_NEAR_HPP
 
 #define EXPECT_MATRIX_NEAR(matrix1, matrix2, value)   \
     EXPECT_NEAR(matrix1[0][0], matrix2[0][0], value); \
@@ -38,4 +37,4 @@
 #define ASSERT_MATRIX_NEAR(matrix1, matrix2) \
     EXPECT_MATRIX_NEAR(matrix1, matrix2)
 
-#endif   // _EXPECT_MATRIX_NEAR_HPP_
+#endif   // TESTS__INCLUDE__MACROS__MATRIX_NEAR_HPP

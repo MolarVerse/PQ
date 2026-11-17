@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_EVALUATOR_HPP_
-
-#define _MM_EVALUATOR_HPP_
+#ifndef OPT__EVALUATOR__MM_EVALUATOR_HPP
+#define OPT__EVALUATOR__MM_EVALUATOR_HPP
 
 #include "evaluator.hpp"
 
@@ -45,4 +44,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _MM_EVALUATOR_HPP_
+#endif   // OPT__EVALUATOR__MM_EVALUATOR_HPP

@@ -20,14 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_HPP_
+#ifndef THERMOSTAT__THERMOSTAT_HPP
+#define THERMOSTAT__THERMOSTAT_HPP
 
-#define _THERMOSTAT_HPP_
-
-#include <cstddef>
 #include <string>
 
 #include "enums/thermostat.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -53,35 +52,31 @@ namespace thermostat
     class Thermostat
     {
        private:
-        double _temperature       = 0.0;
-        double _targetTemperature = 0.0;
-
-        double _temperatureIncrease = 0.0;
-        size_t _rampingStepsLeft    = 0;
-        size_t _rampingFrequency    = 0;
+        Temperature _temperature;
 
        public:
-        explicit Thermostat(double targetTemperature);
-
         Thermostat()          = default;
         virtual ~Thermostat() = default;
 
-        void applyTemperatureRamping();
-
         virtual void applyThermostat(
             molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         );
 
         virtual void applyThermostatOnForces(
-            molsys::SimulationBox & /*simBox*/
+            molsys::SimulationBox & /*simBox*/,
+            const Temperature & /*targetTemperature*/
         )
         {
         }
 
         virtual void applyThermostatHalfStep(
             molsys::SimulationBox & /*simBox*/,
-            physicalData::PhysicalData & /*physData*/
+            physicalData::PhysicalData & /*physData*/,
+            const Temperature & /*targetTemperature*/,
+            const Time & /*timeStep*/
         )
         {
         }
@@ -90,22 +85,13 @@ namespace thermostat
          * standard setter methods *
          ***************************/
 
-        virtual void setTargetTemperature(double targetTemperature);
-        void         setTemperature(double temperature);
-        void         setTemperatureIncrease(double temperatureIncrease);
-        void         setTemperatureRampingSteps(size_t steps);
-        void         setTemperatureRampingFrequency(size_t frequency);
+        void setTemperature(const Temperature &temperature);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double getTemperature() const;
-
-        [[nodiscard]] double getTargetTemperature() const;
-        [[nodiscard]] double getTemperatureIncrease() const;
-        [[nodiscard]] size_t getRampingStepsLeft() const;
-        [[nodiscard]] size_t getRampingFrequency() const;
+        [[nodiscard]] const Temperature &getTemperature() const;
 
         [[nodiscard]]
         virtual ThermostatType getThermostatType() const;
@@ -119,4 +105,4 @@ namespace thermostat
 
 }   // namespace thermostat
 
-#endif   // _THERMOSTAT_HPP_
+#endif   // THERMOSTAT__THERMOSTAT_HPP

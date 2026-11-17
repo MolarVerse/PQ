@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ASE_QM_RUNNER_HPP_
-
-#define _ASE_QM_RUNNER_HPP_
+#ifndef QM__ASE__ASE_QM_RUNNER_HPP
+#define QM__ASE__ASE_QM_RUNNER_HPP
 
 #include "qmRunner.hpp"
 
@@ -46,14 +45,15 @@ namespace QM
         std::unique_ptr<AseInterface> _ase;
 
        public:
-        AseQMRunner();
+        explicit AseQMRunner(const QMSettings &settings);
         ~AseQMRunner() override;
 
         void run(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             molsys::Periodicity         per,
-            const HybridSettings       &hybridSettings
+            const FileSettings & /*fileSettings*/,
+            const HybridSettings &hybridSettings
         ) override;
         void buildAseAtoms(const molsys::SimulationBox &);
         void execute();
@@ -75,4 +75,4 @@ namespace QM
 
 }   // namespace QM
 
-#endif   // _ASE_QM_RUNNER_HPP_
+#endif   // QM__ASE__ASE_QM_RUNNER_HPP

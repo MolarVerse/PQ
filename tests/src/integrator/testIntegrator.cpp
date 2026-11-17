@@ -26,6 +26,7 @@
 
 #include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests function integrate velocities of velocity verlet integrator
@@ -33,12 +34,19 @@
  */
 TEST_F(TestIntegrator, integrateVelocities)
 {
-    integrator::Integrator::integrateVelocities(_box->getAtoms()[0].get());
+    const auto timeStep = 0.1 * fs;
+    integrator::Integrator::integrateVelocities(
+        _box->getAtoms()[0].get(),
+        timeStep
+    );
     EXPECT_EQ(
         _molecule1->getAtomVelocity(AtomIndex{0}),
         linalg::Vec3D(0.0, 0.0, 0.0)
     );
-    integrator::Integrator::integrateVelocities(_box->getAtoms()[1].get());
+    integrator::Integrator::integrateVelocities(
+        _box->getAtoms()[1].get(),
+        timeStep
+    );
 
     const auto vel = _molecule1->getAtomVelocity(AtomIndex{1});
     EXPECT_DOUBLE_EQ(vel[0], 1.0 + (0.1 * 0.5 * V_VERLET_VELOCITY_FACTOR));
@@ -52,9 +60,11 @@ TEST_F(TestIntegrator, integrateVelocities)
  */
 TEST_F(TestIntegrator, integratePositions)
 {
+    const auto timeStep = 0.1 * fs;
     integrator::Integrator::integratePositions(
         _box->getAtoms()[0].get(),
-        *_box
+        *_box,
+        timeStep
     );
     EXPECT_EQ(
         _molecule1->getAtomPosition(AtomIndex{0}),
@@ -62,7 +72,8 @@ TEST_F(TestIntegrator, integratePositions)
     );
     integrator::Integrator::integratePositions(
         _box->getAtoms()[1].get(),
-        *_box
+        *_box,
+        timeStep
     );
     const auto pos = _molecule1->getAtomPosition(AtomIndex{1});
     EXPECT_DOUBLE_EQ(pos[0], 1.0 + (0.1 * 1.0 * FS_TO_S));
@@ -76,7 +87,9 @@ TEST_F(TestIntegrator, integratePositions)
  */
 TEST_F(TestIntegrator, firstStep)
 {
-    _integrator->firstStep(*_box);
+    const auto timeStep = 0.1 * fs;
+
+    _integrator->firstStep(*_box, timeStep);
 
     const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
@@ -117,7 +130,8 @@ TEST_F(TestIntegrator, firstStep)
  */
 TEST_F(TestIntegrator, secondStep)
 {
-    _integrator->secondStep(*_box);
+    const auto timeStep = 0.1 * fs;
+    _integrator->secondStep(*_box, timeStep);
 
     const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
@@ -133,8 +147,6 @@ TEST_F(TestIntegrator, secondStep)
 
 TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
 {
-    settings::TimingsSettings::setTimeStep(0.2);
-
     auto *atom = _box->getAtoms()[1].get();
     atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
     atom->setVelocity(linalg::Vec3D(2.0, -3.0, 4.0));
@@ -143,8 +155,9 @@ TEST_F(TestIntegrator, velocityVerletZeroForceKeepsFreeParticleVelocity)
     const auto initialPosition = atom->getPosition();
     const auto initialVelocity = atom->getVelocity();
 
-    _integrator->firstStep(*_box);
-    _integrator->secondStep(*_box);
+    const auto timeStep = 0.2 * fs;
+    _integrator->firstStep(*_box, timeStep);
+    _integrator->secondStep(*_box, timeStep);
 
     const auto expectedPosition =
         initialPosition + 0.2 * initialVelocity * FS_TO_S;

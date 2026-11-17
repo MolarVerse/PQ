@@ -31,6 +31,22 @@ every frame in the following format:
 
 The lattice parameters are given in units of Å and the angles are given in units of degrees.
 
+.. _extxyzFile:
+
+*******************
+Extended XYZ File
+*******************
+
+**File Type:** ``.extxyz`` (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``extxyz``)
+
+Stores positions, velocities, forces and charges of every atom for every frame in the extended xyz format:
+
+    | **line 1:** n_atoms
+    | **line 2:** ``Lattice="ax ay az bx by bz cx cy cz" Properties=species:S:1:pos:R:3:vel:R:3:forces:R:3:charge:R:1 pbc="T T T" step=step_number energy=total_energy units=pq``
+    | **line 3 to (n_atoms + 2):** atom_type_name x y z vx vy vz fx fy fz charge
+
+All values are in PQ units, marked by ``units=pq``: Å, Å/s, kcal/(mol Å), *e* and kcal/mol. ASE, MACE, FeNNol and GPUMD NEP expect eV, so convert the file with PQAnalysis before training.
+
 .. _chargeFile:
 
 ************
@@ -62,7 +78,7 @@ If :ref:`includeoutputmetadatakey` is enabled, the file starts with a
 
 Stores information about the energy and various other quantities of the system for every frame in the following format:
 
-    step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *V* *ρ* *P*:sub:`coupled` *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime
+    step_number *T* *P* *E*:sub:`tot` *E*:sub:`QM` *N*:sub:`QM-atoms` *E*:sub:`kin` *E*:sub:`intra` *E*:sub:`Coulomb` *E*:sub:`non-Coulomb` *E*:sub:`bond` *E*:sub:`angle` *E*:sub:`dihedral` *E*:sub:`improper` *N*:sub:`SM-mol` *E*:sub:`QM-ref` *V* *ρ* *P*:sub:`coupled` *E*:sub:`p-NH` *E*:sub:`χ-NH` *r*:sub:`lower` *r*:sub:`upper` *p* looptime
 
 .. csv-table::
     :file: en_file_entries.csv
@@ -76,6 +92,7 @@ Stores information about the energy and various other quantities of the system f
         | **A**:   Always printed
         | **QM**:  Only printed if QM atoms are present
         | **MM**:  Only printed if MM atoms are present
+        | **QM/MM**: Only printed for QM/MM calculations
         | **MM***: Only printed if MM atoms are present, which are not treated by the :ref:`guffdatFile`
         | **P**:   Only printed if pressure coupling is enabled *via* the :ref:`pressureCouplingKeys` in the ``.in`` file
         | **P***:  Only printed if pressure coupling is enabled and at least one axis is fixed (*via* the :ref:`fixedaxiskey` key in the ``.in`` file)

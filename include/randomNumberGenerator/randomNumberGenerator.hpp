@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RANDOM_NUMBER_GENERATOR_HPP_
-
-#define _RANDOM_NUMBER_GENERATOR_HPP_
+#ifndef RANDOM_NUMBER_GENERATOR__RANDOM_NUMBER_GENERATOR_HPP
+#define RANDOM_NUMBER_GENERATOR__RANDOM_NUMBER_GENERATOR_HPP
 
 #include <random>
 
@@ -49,4 +48,4 @@ namespace rng
 
 }   // namespace rng
 
-#endif   // _RANDOM_NUMBER_GENERATOR_HPP_
+#endif   // RANDOM_NUMBER_GENERATOR__RANDOM_NUMBER_GENERATOR_HPP

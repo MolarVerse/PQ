@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_LIST_SETUP_HPP_
-
-#define _CELL_LIST_SETUP_HPP_
+#ifndef SETUP__CELLLIST_SETUP_HPP
+#define SETUP__CELLLIST_SETUP_HPP
 
 namespace engine
 {
@@ -50,4 +49,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _CELL_LIST_SETUP_HPP_
+#endif   // SETUP__CELLLIST_SETUP_HPP

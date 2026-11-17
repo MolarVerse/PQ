@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPT_ENGINE_HPP_
-
-#define _OPT_ENGINE_HPP_
+#ifndef ENGINE__OPT_ENGINE_HPP
+#define ENGINE__OPT_ENGINE_HPP
 
 #include <cstddef>
 #include <memory>
@@ -60,7 +59,11 @@ namespace engine
 
         void run() override;
         void takeStep();
-        void writeOutput() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
+        void writeOutput(
+            const OutputFileSettings &outputSettings,
+            size_t                    startingStepCount
+        );
 
         static void throwOnFailure(
             bool                            converged,
@@ -104,4 +107,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _OPT_ENGINE_HPP_
+#endif   // ENGINE__OPT_ENGINE_HPP

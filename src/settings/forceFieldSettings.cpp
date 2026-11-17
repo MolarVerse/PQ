@@ -42,7 +42,10 @@ ForceFieldType ForceFieldSettings::getType() const { return _type.get(); }
  *
  * @param value
  */
-void ForceFieldSettings::setType(ForceFieldType value) { _type.set(value); }
+void ForceFieldSettings::setTypeByUser(ForceFieldType value)
+{
+    _type.setByUser(value);
+}
 
 /**
  * @brief Get if the force field is active

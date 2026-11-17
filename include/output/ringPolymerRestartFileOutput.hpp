@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
-
-#define _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
+#ifndef OUTPUT__RING_POLYMER_RESTART_FILE_OUTPUT_HPP
+#define OUTPUT__RING_POLYMER_RESTART_FILE_OUTPUT_HPP
 
 #include <vector>
 
@@ -51,4 +50,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _RING_POLYMER_RESTART_FILE_OUTPUT_HPP_
+#endif   // OUTPUT__RING_POLYMER_RESTART_FILE_OUTPUT_HPP

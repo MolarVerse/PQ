@@ -36,14 +36,15 @@ SimulationBoxSettings::SimulationBoxSettings()
  * standard setters *
  *                  *
  ********************/
+
 /**
  * @brief Set the density
  *
  * @param density
  */
-void SimulationBoxSettings::setDensity(double density)
+void SimulationBoxSettings::setDensityByUser(double density)
 {
-    _density.set(density);
+    _density.setByUser(density);
 }
 
 /**
@@ -51,11 +52,11 @@ void SimulationBoxSettings::setDensity(double density)
  *
  * @param initializeVelocities
  */
-void SimulationBoxSettings::setInitializeVelocities(
+void SimulationBoxSettings::setInitializeVelocsByUser(
     InitVelocities initializeVelocities
 )
 {
-    _initializeVelocities.set(initializeVelocities);
+    _initializeVelocities.setByUser(initializeVelocities);
 }
 
 /********************
@@ -76,7 +77,10 @@ double SimulationBoxSettings::getDensity() const { return _density.get(); }
  * @return true
  * @return false
  */
-bool SimulationBoxSettings::isDensitySet() const { return _density.isSet(); }
+bool SimulationBoxSettings::isDensitySetByUser() const
+{
+    return _density.isSetByUser();
+}
 
 /**
  * @brief get if the velocities are initialized

@@ -32,6 +32,7 @@
 #include "outputFilesSetup.hpp"
 #include "testSetup.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -49,7 +50,7 @@ namespace
             ".instant_en", ".vel",        ".chrg",       ".mom",
             ".vir",        ".stress",     ".box",        ".rpmd.rst",
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
-            ".rpmd.en",    ".opt",        ".ref"
+            ".rpmd.en",    ".opt",        ".ref",        ".extxyz"
         };
 
         for (const auto &suffix : suffixes)
@@ -66,17 +67,20 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
+    _settings->finalize();
 
     EXPECT_NO_THROW(setup::setupOutputFiles(*_engine));
 
     // After setup, the log/timings/info filenames are now prefix-substituted.
     EXPECT_EQ(
-        settings::OutputFileSettings::getLogFileName(),
+        _settings->outputFiles.getLogFileName(),
         std::string(PREFIX) + ".log"
     );
     EXPECT_EQ(
-        settings::OutputFileSettings::getOptFileName(),
+        _settings->outputFiles.getOptFileName(),
         std::string(PREFIX) + ".opt"
     );
 
@@ -88,8 +92,11 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -107,10 +114,11 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
-    settings::TimingsSettings::setTimeStep(0.5);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -132,10 +140,12 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
-    settings::TimingsSettings::setTimeStep(0.5);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.setIncludeOutputMetadataByUser(true);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
@@ -151,7 +161,32 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     std::getline(instantEnergyFile, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
 
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    cleanupPrefix();
+}
+
+TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
+{
+    cleanupPrefix();
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
+    _settings->timings.setNumberOfStepsByUser(100U);
+
+    _settings->finalize();
+    setup::OutputFilesSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
+
+    const std::string prefix = PREFIX;
+
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".extxyz"));
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".rst"));
+
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
     cleanupPrefix();
 }
 
@@ -160,8 +195,10 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
-    settings::OutputFileSettings::setFilePrefix(PREFIX);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
+    _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 

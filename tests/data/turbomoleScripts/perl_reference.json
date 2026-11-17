@@ -1,0 +1,425 @@
+{
+ "turbomole_hf-dft|point charges|": {
+  "failed": [
+   false,
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "dscf_nopc.out": "   1  -76.0050000000  -120.0000  44.1000  0.000D+00  0.100D-01\n  |  total energy      =    -.760050000000D+02  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_hf-dft|point charges|grad": {
+  "failed": [
+   true,
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "dscf_nopc.out": "   1  -76.0050000000  -120.0000  44.1000  0.000D+00  0.100D-01\n  |  total energy      =    -.760050000000D+02  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_hf-dft|point charges|nopc": {
+  "failed": [
+   true,
+   true,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "dscf_nopc.out": "  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_hf-dft|point charges|scf": {
+  "failed": [
+   true,
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$point_charges\n    5.00000000     0.00000000     0.00000000  -0.800000\n$point_charges\n    5.00000000     0.00000000     0.00000000  -0.800000\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": "  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.70000   3.8\n    2h     0.35000   0.7\n    3h     0.35000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_hf-dft|pure|": {
+  "failed": [
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_hf-dft|pure|grad": {
+  "failed": [
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_hf-dft|pure|nopc": {
+  "failed": [
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_hf-dft|pure|scf": {
+  "failed": [
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": "  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|point charges|": {
+  "failed": [
+   false,
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "dscf_nopc.out": "   1  -76.0050000000  -120.0000  44.1000  0.000D+00  0.100D-01\n  |  total energy      =    -.760050000000D+02  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "energy": "$energy\n      1   -76.01   0.0   0.0   -0.2\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.60000\n     0.30000\n     0.30000\n",
+   "qm_forces": "-76.21\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n       R I C C 2\n  atom      charge    n(s)\n    1o     -0.60000   3.8\n    2h     0.30000   0.7\n    3h     0.30000   0.7\n from total density versus population analysis\n\n  ricc2 : all done\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|point charges|grad": {
+  "failed": [
+   true,
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "dscf_nopc.out": "   1  -76.0050000000  -120.0000  44.1000  0.000D+00  0.100D-01\n  |  total energy      =    -.760050000000D+02  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "energy": "$energy\n      1   -76.01   0.0   0.0   -0.2\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n       R I C C 2\n  atom      charge    n(s)\n    1o     -0.60000   3.8\n    2h     0.30000   0.7\n    3h     0.30000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|point charges|nopc": {
+  "failed": [
+   true,
+   true,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "dscf_nopc.out": "  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "energy": "$energy\n      1   -76.01   0.0   0.0   -0.2\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.60000\n     0.30000\n     0.30000\n",
+   "qm_forces": "-76.21\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n       R I C C 2\n  atom      charge    n(s)\n    1o     -0.60000   3.8\n    2h     0.30000   0.7\n    3h     0.30000   0.7\n from total density versus population analysis\n\n  ricc2 : all done\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|point charges|scf": {
+  "failed": [
+   true,
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$point_charges\n    5.00000000     0.00000000     0.00000000  -0.800000\n$point_charges\n    5.00000000     0.00000000     0.00000000  -0.800000\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": "  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.70000   3.8\n    2h     0.35000   0.7\n    3h     0.35000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|pure|": {
+  "failed": [
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "energy": "$energy\n      1   -76.01   0.0   0.0   -0.2\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.60000\n     0.30000\n     0.30000\n",
+   "qm_forces": "-76.21\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n       R I C C 2\n  atom      charge    n(s)\n    1o     -0.60000   3.8\n    2h     0.30000   0.7\n    3h     0.30000   0.7\n from total density versus population analysis\n\n  ricc2 : all done\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|pure|grad": {
+  "failed": [
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "energy": "$energy\n      1   -76.01   0.0   0.0   -0.2\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n       R I C C 2\n  atom      charge    n(s)\n    1o     -0.60000   3.8\n    2h     0.30000   0.7\n    3h     0.30000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|pure|nopc": {
+  "failed": [
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "energy": "$energy\n      1   -76.01   0.0   0.0   -0.2\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.60000\n     0.30000\n     0.30000\n",
+   "qm_forces": "-76.21\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n       R I C C 2\n  atom      charge    n(s)\n    1o     -0.60000   3.8\n    2h     0.30000   0.7\n    3h     0.30000   0.7\n from total density versus population analysis\n\n  ricc2 : all done\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ricc2|pure|scf": {
+  "failed": [
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": "  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|point charges|": {
+  "failed": [
+   false,
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "ridft_nopc.out": "   1  -76.0050000000  -120.0000  44.1000  0.000D+00  0.100D-01\n  |  total energy      =    -.760050000000D+02  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|point charges|grad": {
+  "failed": [
+   true,
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "ridft_nopc.out": "   1  -76.0050000000  -120.0000  44.1000  0.000D+00  0.100D-01\n  |  total energy      =    -.760050000000D+02  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|point charges|nopc": {
+  "failed": [
+   true,
+   true,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "control.bak": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "mos.bak": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "ridft_nopc.out": "  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.64000   3.8\n    2h     0.32000   0.7\n    3h     0.32000   0.7\n from total density versus population analysis\n\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|point charges|scf": {
+  "failed": [
+   true,
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$point_charges\n    5.00000000     0.00000000     0.00000000  -0.800000\n$point_charges\n    5.00000000     0.00000000     0.00000000  -0.800000\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": "  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.70000   3.8\n    2h     0.35000   0.7\n    3h     0.35000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|pure|": {
+  "failed": [
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|pure|grad": {
+  "failed": [
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|pure|nopc": {
+  "failed": [
+   false,
+   false
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "gradient": "$grad          cartesian gradients\n  cycle =      1    SCF energy =   -76.01   |dE/dxyz| =  0.01\n    0.0000000    0.0000000    0.0000000      o\n    1.4300000    0.0000000    0.9500000      h\n   -1.4300000    0.0000000    0.9500000      h\n   0.1000000D-01   0.0000000D+00   0.2000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n  -0.5000000D-02   0.0000000D+00  -0.1000000D-01\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "qm_charges": "    -0.66000\n     0.33000\n     0.33000\n",
+   "qm_forces": "-76.0100000000\n                0.01                     0                  0.02\n              -0.005                     0                 -0.01\n              -0.005                     0                 -0.01\n",
+   "tm.out": " convergence criteria satisfied after  7 iterations\n  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\ngrad ended normally\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ },
+ "turbomole_ridft|pure|scf": {
+  "failed": [
+   true,
+   true
+  ],
+  "files": {
+   "control": "$title\n$scfiterlimit     30\n$end\n",
+   "mos": "$scfmo\n$end\n",
+   "pc": "5.0 0.0 0.0 -0.8\n",
+   "tm.out": "  |  total energy      =    -76.0100000000  |\n  :  kinetic energy    =     75.9000000000  :\n  atom      charge    n(s)\n    1o     -0.66000   3.8\n    2h     0.33000   0.7\n    3h     0.33000   0.7\n from total density versus population analysis\n\n",
+   "tm.template": "charge __CHARGE__\n",
+   "tm_define.in": "charge 0\n"
+  }
+ }
+}

@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BERENDSEN_THERMOSTAT_HPP_
-
-#define _BERENDSEN_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__BERENDSEN_THERMOSTAT_HPP
+#define THERMOSTAT__BERENDSEN_THERMOSTAT_HPP
 
 #include "thermostat.hpp"
+#include "unit_types.hpp"
 
 namespace thermostat
 {
@@ -39,24 +39,26 @@ namespace thermostat
     class BerendsenThermostat : public Thermostat
     {
        private:
-        double _tau;
+        Time _tau;
 
        public:
-        explicit BerendsenThermostat(double targetTemp, double tau);
+        explicit BerendsenThermostat(const Time &tau);
         BerendsenThermostat() = default;
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
         ) override;
 
-        void setTau(double tau);
+        void setTau(const Time &tau);
 
-        [[nodiscard]] double getTau() const;
+        [[nodiscard]] const Time &getTau() const;
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat
 
-#endif   // _BERENDSEN_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__BERENDSEN_THERMOSTAT_HPP

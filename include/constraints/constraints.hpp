@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINTS_HPP_
-
-#define _CONSTRAINTS_HPP_
+#ifndef CONSTRAINTS__CONSTRAINTS_HPP
+#define CONSTRAINTS__CONSTRAINTS_HPP
 
 #include <cstddef>
 #include <mstd/types.hpp>
@@ -31,6 +30,7 @@
 #include "bondConstraint.hpp"
 #include "distanceConstraint.hpp"
 #include "mShakeReference.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -66,7 +66,7 @@ namespace constraints
 
         std::unique_ptr<MShake> _mShake;
 
-        double _startTime = 0.0;
+        Time _startTime;
 
         std::vector<BondConstraint>     _bondConstraints;
         std::vector<DistanceConstraint> _distanceConstraints;
@@ -81,12 +81,19 @@ namespace constraints
 
         void initMShake();
 
-        void applyShake(molsys::SimulationBox &simulationBox);
+        void applyShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
+        void applyMShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
         void applyRattle(molsys::SimulationBox &simulationBox);
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            double
+            const Time &time
         );
 
         /************************
@@ -112,17 +119,26 @@ namespace constraints
         [[nodiscard]] size_t getNumberOfMShakeConstraints(
             molsys::SimulationBox &
         ) const;
+        [[nodiscard]] size_t getNumberOfMShakeMolecules(
+            molsys::SimulationBox &
+        ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setStartTime(const double startTime) { _startTime = startTime; }
+        void setStartTime(const Time &startTime) { _startTime = startTime; }
 
        private:
-        void _applyShake(molsys::SimulationBox &simulationBox);
-        void _applyMShake(molsys::SimulationBox &simulationBox);
+        void _applyShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
+        void _applyMShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
 
         void _applyRattle();
         void _applyMRattle(molsys::SimulationBox &simulationBox);
@@ -130,4 +146,4 @@ namespace constraints
 
 }   // namespace constraints
 
-#endif   // _CONSTRAINTS_HPP_
+#endif   // CONSTRAINTS__CONSTRAINTS_HPP

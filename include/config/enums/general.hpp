@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GENERAL_ENUM_HPP_
-#define _GENERAL_ENUM_HPP_
+#ifndef CONFIG__ENUMS__GENERAL_HPP
+#define CONFIG__ENUMS__GENERAL_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -42,4 +42,4 @@ MSTD_ENUM(FPType, std::uint8_t, FP_TYPE_LIST)
 
 #undef FP_TYPE_LIST
 
-#endif   // _GENERAL_ENUM_HPP_
+#endif   // CONFIG__ENUMS__GENERAL_HPP

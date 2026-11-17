@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __INFO_OUTPUT_HPP__
-
-#define __INFO_OUTPUT_HPP__
+#ifndef OUTPUT__INFO_OUTPUT_HPP
+#define OUTPUT__INFO_OUTPUT_HPP
 
 #include <string_view>
 
 #include "output.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -50,13 +50,25 @@ namespace out
         using Output::Output;
 
         void write(
-            double                            simulationTime,
+            const Time                       &simulationTime,
+            const physicalData::PhysicalData &physicalData,
+            const Settings                   &settings
+        );
+        void write(
+            double                            effectiveStep,
             const physicalData::PhysicalData &physicalData,
             const Settings                   &settings
         );
 
        private:
+        void _prepare();
         void _writeHeader();
+        void _writeSimulationTime(const Time &simulationTime);
+        void _writeEffectiveStep(double effectiveStep);
+        void _finish(
+            const physicalData::PhysicalData &physicalData,
+            const Settings                   &settings
+        );
         void _writeLeft(
             double,
             const std::string_view &,
@@ -82,4 +94,4 @@ namespace out
 
 }   // namespace out
 
-#endif /* __INFO_OUTPUT_HPP__ */
+#endif /* OUTPUT__INFO_OUTPUT_HPP */

@@ -43,11 +43,11 @@ TEST_F(TestTopologyReader, isNeeded)
     Settings settings;
     EXPECT_FALSE(input::topology::isNeeded(settings));
 
-    settings.constraintSettings.activateShake();
+    settings.constraintSettings.activateShakeByUser();
     EXPECT_TRUE(input::topology::isNeeded(settings));
 
-    settings.constraintSettings.deactivateShake();
-    settings.forceFieldSettings.setType(ForceFieldType::ON);
+    settings.constraintSettings.deactivateShakeByUser();
+    settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     EXPECT_TRUE(input::topology::isNeeded(settings));
 }
 
@@ -75,17 +75,16 @@ TEST_F(TestTopologyReader, read)
 {
     EXPECT_NO_THROW(_topologyReader->read());
 
-    _settings.constraintSettings.activateShake();
-    engine::MMMDEngine engine{_settings};
+    _settings.constraintSettings.activateShakeByUser();
     _topologyReader = std::make_unique<input::topology::TopologyReader>(
-        settings::FileSettings::getTopologyFileName(),
-        engine
+        _settings.fileSettings.getTopologyFileName(),
+        *_engine
     );
     EXPECT_NO_THROW(_topologyReader->read());
 
-    settings::FileSettings::unsetIsTopologyFileNameSet();
+    _settings.fileSettings = FileSettings{};
     EXPECT_THROW_MSG(
-        _topologyReader->read(),
+        input::topology::readTopologyFile(*_engine),
         exc::InputFileException,
         "Topology file needed for requested simulation setup"
     );
@@ -98,6 +97,6 @@ TEST_F(TestTopologyReader, read)
  */
 TEST_F(TestTopologyReader, readTopologyFile)
 {
-    settings::FileSettings::setTopologyFileName("topology.top");
+    _settings.fileSettings.setTopologyFileNameByUser("topology.top");
     input::topology::readTopologyFile(*_engine);
 }

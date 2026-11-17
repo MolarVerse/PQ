@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_ENGINE_HPP_
-
-#define _RING_POLYMER_ENGINE_HPP_
+#ifndef ENGINE__RING_POLYMER_ENGINE_HPP
+#define ENGINE__RING_POLYMER_ENGINE_HPP
 
 #include <vector>
 
@@ -48,7 +47,12 @@ namespace engine
             _averageRingPolymerBeadsPhysicalData;
 
        public:
-        void writeOutput() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
+        void writeOutput(
+            const OutputFileSettings &outputSettings,
+            const Time               &timeStep,
+            size_t                    startingStepCount
+        );
 
         void resizeRingPolymerBeadPhysicalData(size_t numberOfBeads);
 
@@ -81,4 +85,4 @@ namespace engine
     };
 }   // namespace engine
 
-#endif   // _RING_POLYMER_ENGINE_HPP_
+#endif   // ENGINE__RING_POLYMER_ENGINE_HPP

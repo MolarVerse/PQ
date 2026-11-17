@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_BUILDER_HPP_
-
-#define _HESSIAN_BUILDER_HPP_
+#ifndef OPT__EVALUATOR__HESSIAN_BUILDER_HPP
+#define OPT__EVALUATOR__HESSIAN_BUILDER_HPP
 
 #include <memory>
 #include <vector>
@@ -131,4 +130,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _HESSIAN_BUILDER_HPP_
+#endif   // OPT__EVALUATOR__HESSIAN_BUILDER_HPP

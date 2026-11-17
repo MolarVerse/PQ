@@ -1,1 +1,0 @@
-- Throw a exc::QMRunnerException when an external QM runner does not finish successfully

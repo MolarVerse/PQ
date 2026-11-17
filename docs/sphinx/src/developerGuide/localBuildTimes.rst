@@ -6,7 +6,7 @@ Local Build Times
 
 ``scripts/pq_build_times`` measures and explains how long **your** machine needs to build PQ, so that a change that is
 meant to speed up the build can be judged by numbers. It uses only the Python standard library, keeps its data outside
-the repository and has no connection to the :doc:`CI metrics <ciMetrics>`. The README next to the scripts
+the repository. The README next to the scripts
 (``scripts/pq_build_times/README.md``) is the complete reference; this page shows the workflow.
 
 ********************
@@ -215,8 +215,8 @@ instantiation) and backend (optimisation, code generation), per module, and the 
       the whole build, and lists a header or template only if it moved by more than 1 s and 15% beyond that drift. These
       thresholds come from three builds of identical code, where nothing was listed.
 
-This is the same view that the Clang Build comment on every pull request shows, see :ref:`the clang build comment
-<ciMetricsClangComment>`, but on your own machine and for the state of your working tree.
+This is the view that used to be posted as a comment on every pull request. It is now only available locally, where the
+build can be pinned to one core and compared on an otherwise idle machine.
 
 ****************
 Habits that work

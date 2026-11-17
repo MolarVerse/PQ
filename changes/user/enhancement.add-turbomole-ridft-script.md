@@ -1,1 +1,0 @@
-- Add script for Turbomole RI-DFT calculations

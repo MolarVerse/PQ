@@ -59,7 +59,7 @@ namespace input
         const RangeValidator<size_t> rangeValidator{2, std::nullopt};
 
         const auto setValue = [this](const size_t &nBeads)
-        { _ringPolymerSettings->setNumberOfBeads(nBeads); };
+        { _ringPolymerSettings->setNumberOfBeadsByUser(nBeads); };
 
         auto &numberOfBeadsKey =
             _getRegistry().registerKey<size_t>(KeyRegistry<size_t>{

@@ -23,10 +23,20 @@ endif()
 
 foreach(script IN ITEMS
         dftbplus_periodic_stress
+        dftbplus_periodic_stress.py
         pyscf_hf.py
         pyscf_mp2.py
         turbomole_hf-dft
-        turbomole_ricc2)
+        turbomole_ricc2
+        turbomole_common.py
+        turbomole_hf_dft.py
+        turbomole_ricc2.py
+        turbomole_ridft.py
+        orca_rimp2.py
+        orca_hf.py
+        orca_dft.py
+        orca_common.py
+        orca_scf.py)
     if(NOT EXISTS "${STAGING_PREFIX}/share/PQ/scripts/${script}")
         message(FATAL_ERROR "QM script ${script} was not installed")
     endif()

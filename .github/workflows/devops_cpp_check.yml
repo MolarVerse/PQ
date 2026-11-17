@@ -36,7 +36,11 @@ jobs:
 
   cpp-check:
     needs: changes
-    if: needs.changes.outputs.relevant == 'true'
+    # Not for a release pull request: it contains every change since the last
+    # release, which these checks already passed on the dev pull requests (#1028).
+    if: >-
+      needs.changes.outputs.relevant == 'true' &&
+      !(github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-24.04
     name: Run DevOps C++ Checks
 

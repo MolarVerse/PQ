@@ -1,1 +1,0 @@
-- Fix QM timeouts of external QM programs aborting PQ; the QM process is now stopped and a regular error is raised.

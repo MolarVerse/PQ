@@ -31,8 +31,6 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
 
 namespace input
 {
@@ -88,22 +86,19 @@ namespace input
                 case ShakeType::ON:
                 case ShakeType::SHAKE:
                 {
-                    _constraintSettings->activateShake();
-                    references::ReferencesOutput::addReferenceFile(
-                        references::RATTLE_FILE
-                    );
+                    _constraintSettings->activateShakeByUser();
                     break;
                 }
                 case ShakeType::OFF:
                 {
-                    _constraintSettings->deactivateShake();
-                    _constraintSettings->deactivateMShake();
+                    _constraintSettings->deactivateShakeByUser();
+                    _constraintSettings->deactivateMShakeByUser();
                     break;
                 }
                 case ShakeType::MSHAKE:
                 {
-                    _constraintSettings->activateMShake();
-                    _constraintSettings->activateShake();
+                    _constraintSettings->activateMShakeByUser();
+                    _constraintSettings->activateShakeByUser();
                     break;
                 }
             }
@@ -141,7 +136,7 @@ namespace input
         };
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setShakeTolerance(value); };
+        { _constraintSettings->setShakeToleranceByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -174,7 +169,7 @@ namespace input
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setShakeMaxIter(value); };
+        { _constraintSettings->setShakeMaxIterByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -209,7 +204,7 @@ namespace input
         };
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setRattleTolerance(value); };
+        { _constraintSettings->setRattleToleranceByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -242,7 +237,7 @@ namespace input
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setRattleMaxIter(value); };
+        { _constraintSettings->setRattleMaxIterByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -277,7 +272,7 @@ namespace input
         };
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setMShakeTolerance(value); };
+        { _constraintSettings->setMShakeToleranceByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -310,7 +305,7 @@ namespace input
         const RangeValidator<size_t> rangeValidator{1, std::nullopt};
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setMShakeMaxIter(value); };
+        { _constraintSettings->setMShakeMaxIterByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -342,9 +337,9 @@ namespace input
         const auto setValue = [this](auto value)
         {
             if (value)
-                _constraintSettings->activateDistanceConstraints();
+                _constraintSettings->activateDistanceConstraintsByUser();
             else
-                _constraintSettings->deactivateDistanceConstraints();
+                _constraintSettings->deactivateDistanceConstraintsByUser();
         };
 
         auto &key = _getRegistry().registerKey(

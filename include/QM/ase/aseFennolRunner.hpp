@@ -20,11 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ASE_FENNOL_RUNNER_HPP_
-
-#define _ASE_FENNOL_RUNNER_HPP_
+#ifndef QM__ASE__ASE_FENNOL_RUNNER_HPP
+#define QM__ASE__ASE_FENNOL_RUNNER_HPP
 
 #include "aseQMRunner.hpp"
+
+class FennolSettings;
 
 namespace QM
 {
@@ -39,11 +40,10 @@ namespace QM
         ~AseFennolRunner() override = default;
 
         explicit AseFennolRunner(
-            const std::string& modelPath,
-            bool               gpuPreprocessing,
-            bool               useFloat64
+            const QMSettings&     qmSettings,
+            const FennolSettings& fennolSettings
         );
     };
 }   // namespace QM
 
-#endif   // _ASE_FENNOL_RUNNER_HPP_
+#endif   // QM__ASE__ASE_FENNOL_RUNNER_HPP

@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_FACTORY_HPP_
-#define _ENGINE_FACTORY_HPP_
+#ifndef ENGINE__ENGINE_FACTORY_HPP
+#define ENGINE__ENGINE_FACTORY_HPP
 
 #include "engine.hpp"
 #include "enums/jobtype.hpp"
@@ -68,4 +68,4 @@ namespace engine
         };
 }   // namespace engine
 
-#endif   // _ENGINE_FACTORY_HPP_
+#endif   // ENGINE__ENGINE_FACTORY_HPP

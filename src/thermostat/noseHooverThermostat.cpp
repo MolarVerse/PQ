@@ -31,7 +31,8 @@
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
+#include "thermostatSettings.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -40,22 +41,29 @@ namespace thermostat
      * @brief Construct a new Nose Hoover Thermostat:: Nose Hoover Thermostat
      * object
      *
-     * @param targetTemp
-     * @param chi
-     * @param zeta
-     * @param couplingFrequency
+     * @param nhSettings Reference to the NoseHooverSettings object containing
+     * the Nose-Hoover chain parameters such as chi, zeta, and coupling
+     * frequency.
      */
     NoseHooverThermostat::NoseHooverThermostat(
-        double                     targetTemp,
-        const std::vector<double> &chi,
-        const std::vector<double> &zeta,
-        double                     couplingFrequency
+        const NoseHooverSettings &nhSettings
     )
-        : Thermostat(targetTemp),
-          _chi(chi),
-          _zeta(zeta),
-          _couplingFrequency(couplingFrequency)
+        : _nhSettings(nhSettings)
     {
+        const auto length = nhSettings.getNoseHooverChainLength() + 1;
+        _chi.reserve(length);
+        _zeta.reserve(length);
+
+        _chi.resize(length);
+        _zeta.resize(length);
+
+        if (nhSettings.isChiAndZetaSet())
+        {
+            for (const auto &[idx, chi] : nhSettings.getChi()) _chi[idx] = chi;
+
+            for (const auto &[idx, zeta] : nhSettings.getZeta())
+                _zeta[idx] = zeta;
+        }
     }
 
     /**
@@ -65,15 +73,17 @@ namespace thermostat
      * and by the degrees of freedom
      *
      * @param simulationBox
+     * @param targetTemperature The target temperature for the system
      *
      * @throw exc::UserInputException for a zero target temperature or zero
      * degrees of freedom
      */
     void NoseHooverThermostat::_requireCoupling(
-        const molsys::SimulationBox &simulationBox
-    ) const
+        const molsys::SimulationBox &simulationBox,
+        const Temperature           &targetTemperature
+    )
     {
-        if (getTargetTemperature() <= 0.0)
+        if (targetTemperature.quantity_from_zero() <= 0.0)
         {
             throw exc::UserInputException(
                 "Cannot apply the Nose-Hoover thermostat with a target "
@@ -90,23 +100,28 @@ namespace thermostat
      * @details the Nose-Hoover thermostat is applied on the forces of the atoms
      * after force calculation
      *
-     * @param simulationBox simulation box
+     * @param simulationBox simulation box containing all atoms
+     * @param targetTemperature The target temperature for the system
      */
     void NoseHooverThermostat::applyThermostatOnForces(
-        molsys::SimulationBox &simulationBox
+        molsys::SimulationBox &simulationBox,
+        const Temperature     &targetTemperature
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Forces");
 
-        _requireCoupling(simulationBox);
+        _requireCoupling(simulationBox, targetTemperature);
 
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
-        const auto kT_target = boltzmannConstant * getTargetTemperature();
+        const auto kT_target =
+            boltzmannConstant *
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
+        const auto couplingFreq = _nhSettings->getNoseHooverCouplingFrequency();
         const auto couplingFreqSquared =
-            _couplingFrequency * _couplingFrequency;
+            (couplingFreq * couplingFreq).numerical_value_in(Hz * Hz);
 
         auto factor  = _chi[0] * couplingFreqSquared;
         factor      /= (kT_target * degreesOfFreedom);
@@ -124,17 +139,21 @@ namespace thermostat
      * @details the Nose-Hoover thermostat is applied on the velocities of the
      * atoms after velocity integration
      *
-     * @param simulationBox simulation box
+     * @param simulationBox simulation box containing all atoms
      * @param physicalData physical data
+     * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void NoseHooverThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature          &targetTemperature,
+        const Time                 &timeStep
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
 
-        _requireCoupling(simulationBox);
+        _requireCoupling(simulationBox, targetTemperature);
 
         physicalData.calculateTemperature(simulationBox);
 
@@ -142,27 +161,29 @@ namespace thermostat
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
-        const auto couplingFreqSquared =
-            _couplingFrequency * _couplingFrequency;
 
-        const auto timeStep          = settings::TimingsSettings::getTimeStep();
+        const auto couplingFreq = _nhSettings->getNoseHooverCouplingFrequency();
+        const auto couplingFreqSquared =
+            (couplingFreq * couplingFreq).numerical_value_in(Hz * Hz);
         const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
 
-        const auto timestep      = timeStep * FS_TO_S;
-        const auto thermalEnergy = boltzmannConstant * getTemperature();
+        const auto thermalEnergy =
+            boltzmannConstant *
+            getTemperature().quantity_from_zero().numerical_value_in(K);
         const auto thermalEnergyTarget =
-            boltzmannConstant * getTargetTemperature();
+            boltzmannConstant *
+            targetTemperature.quantity_from_zero().numerical_value_in(K);
 
         auto chi = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
         chi -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
 
-        _chi[0] += timestep * chi;
+        _chi[0] += timeStep.numerical_value_in(s) * chi;
 
-        auto ratio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
-                     couplingFreqSquared;
+        auto helpRatio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
+                         couplingFreqSquared;
 
-        _zeta[0] += ratio * timestep;
-        ratio    *= _chi[0];
+        _zeta[0]   += helpRatio * timeStep.numerical_value_in(s);
+        auto ratio  = helpRatio * _chi[0];
 
         auto energyMomentum = ratio;
         auto energyFriction = degreesOfFreedom * _zeta[0];
@@ -174,11 +195,11 @@ namespace thermostat
             chi -= _chi[i] * _chi[i + 1] / thermalEnergyTarget *
                    couplingFreqSquared;
 
-            _chi[i] += timestep * chi;
+            _chi[i] += timeStep.numerical_value_in(s) * chi;
 
-            ratio     = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
-            _zeta[i] += ratio * timestep;
-            ratio    *= _chi[i];
+            helpRatio  = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
+            _zeta[i]  += helpRatio * timeStep.numerical_value_in(s);
+            ratio      = helpRatio * _chi[i];
 
             energyMomentum += ratio;
             energyFriction += _zeta[i];
@@ -187,7 +208,6 @@ namespace thermostat
         physicalData.setNoseHooverMomentumEnergy(energyMomentum);
         physicalData.setNoseHooverFrictionEnergy(energyFriction);
     }
-
     /***************************
      *                         *
      * standard getter methods *
@@ -197,83 +217,27 @@ namespace thermostat
     /**
      * @brief get the chi values of the Nose-Hoover thermostat
      *
+     * @details only the real chain links are returned, not the internal zero
+     * boundary term
+     *
      * @return std::vector<double>
      */
-    std::vector<double> NoseHooverThermostat::getChi() const { return _chi; }
+    std::vector<double> NoseHooverThermostat::getChi() const
+    {
+        return {_chi.begin(), _chi.end() - 1};
+    }
 
     /**
      * @brief get the zeta values of the Nose-Hoover thermostat
      *
+     * @details only the real chain links are returned, not the internal
+     * boundary term
+     *
      * @return std::vector<double>
      */
-    std::vector<double> NoseHooverThermostat::getZeta() const { return _zeta; }
-
-    /**
-     * @brief get the coupling frequency of the Nose-Hoover thermostat
-     *
-     * @return double
-     */
-    double NoseHooverThermostat::getCouplingFrequency() const
+    std::vector<double> NoseHooverThermostat::getZeta() const
     {
-        return _couplingFrequency;
-    }
-
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief set the chi value at the given index
-     *
-     * @param index
-     * @param chi
-     */
-    void NoseHooverThermostat::setChi(size_t index, double chi)
-    {
-        _chi[index] = chi;
-    }
-
-    /**
-     * @brief set the chi values of the Nose-Hoover thermostat
-     *
-     * @param chi
-     */
-    void NoseHooverThermostat::setChi(const std::vector<double> &chi)
-    {
-        _chi = chi;
-    }
-
-    /**
-     * @brief set the zeta value at the given index
-     *
-     * @param index
-     * @param zeta
-     */
-    void NoseHooverThermostat::setZeta(size_t index, double zeta)
-    {
-        _zeta[index] = zeta;
-    }
-
-    /**
-     * @brief set the zeta values of the Nose-Hoover thermostat
-     *
-     * @param zeta
-     */
-    void NoseHooverThermostat::setZeta(const std::vector<double> &zeta)
-    {
-        _zeta = zeta;
-    }
-
-    /**
-     * @brief set the coupling frequency of the Nose-Hoover thermostat
-     *
-     * @param couplingFrequency
-     */
-    void NoseHooverThermostat::setCouplingFrequency(double couplingFrequency)
-    {
-        _couplingFrequency = couplingFrequency;
+        return {_zeta.begin(), _zeta.end() - 1};
     }
 
     /**

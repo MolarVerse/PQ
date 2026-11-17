@@ -1,11 +1,2 @@
-- introduce new base type `Setting<T>` for settings
-- rename `Settings` class to `GeneralSettings` 
-- introduce `ResetKineticsSettings` as non-static class and `Settings` POD
-- inject `SimulationBoxSettings` into `SimulationBox`/`SimulationBoxSetup` instead of reading static settings, pass `Settings` by const reference into the engine factory and `MDEngine`
-- Replace static `HessianSettings` with an instance-based `Setting<T>` member injected via `Settings`, removing global/static state.
-- Replace static `RingPolymerSettings`
-- Replace static `OptimizerSettings`
-- Replace static `ConvSettings`
-- Replace static `WaterModelSettings`
-- Replace static `ConstraintSettings`
-- Replace static `ForceFieldSettings`
+- finish removing static access from `ThermostatSettings`
+- remove static access from `TimingsSetting`

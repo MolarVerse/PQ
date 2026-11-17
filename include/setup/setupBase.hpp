@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETUP_BASE_HPP_
-#define _SETUP_BASE_HPP_
+#ifndef SETUP__SETUP_BASE_HPP
+#define SETUP__SETUP_BASE_HPP
 
 #include "logOutput.hpp"
 
@@ -44,4 +44,4 @@ namespace setup
     };
 }   // namespace setup
 
-#endif   // _SETUP_BASE_HPP_
+#endif   // SETUP__SETUP_BASE_HPP

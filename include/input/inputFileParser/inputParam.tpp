@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_PARAM_TPP_
-#define _INPUT_PARAM_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_PARAM_TPP
+#define INPUT__INPUT_FILE_PARSER__INPUT_PARAM_TPP
 
 #include <concepts>
 #include <mstd/type_traits.hpp>
@@ -335,4 +335,4 @@ namespace input
     }
 }   // namespace input
 
-#endif   // _INPUT_PARAM_TPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INPUT_PARAM_TPP

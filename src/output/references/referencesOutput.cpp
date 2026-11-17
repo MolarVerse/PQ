@@ -30,8 +30,9 @@
 #include <string>
 
 #include "executablePath.hpp"
-#include "outputFileSettings.hpp"
-#include "references.hpp"
+#include "referenceSettings.hpp"
+
+#define REFERENCES_PATH_ _REFERENCES_PATH_
 
 namespace references
 {
@@ -95,13 +96,26 @@ namespace references
     }   // namespace
 
     /**
+     * @brief constructs a ReferencesOutput object with the given reference
+     * settings
+     *
+     */
+    ReferencesOutput::ReferencesOutput(
+        const ReferenceSettings &referenceSettings
+    )
+        : _referenceSettings(referenceSettings)
+    {
+    }
+
+    /**
      * @brief writes the references file
      *
      */
-    void ReferencesOutput::writeReferencesFile()
+    void ReferencesOutput::writeReferencesFile(
+        const std::string &referenceFileName
+    ) const
     {
         const auto sourceDirectory = referenceFilesPath();
-        const auto filename = settings::OutputFileSettings::getRefFileName();
 
         std::ostringstream rendered;
 
@@ -114,9 +128,13 @@ namespace references
 )";
         rendered << text << '\n';
 
-        renderReferenceFile(sourceDirectory / PQ_FILE, rendered);
-        for (const auto &referenceFileName : _referenceFileNames)
-            renderReferenceFile(sourceDirectory / referenceFileName, rendered);
+        renderReferenceFile(
+            sourceDirectory / ReferenceFiles::PQ_FILE,
+            rendered
+        );
+        for (const auto &refFileName :
+             _referenceSettings->getReferenceFileNames())
+            renderReferenceFile(sourceDirectory / refFileName, rendered);
 
         text = R"(
 ########################################################################
@@ -128,19 +146,20 @@ namespace references
         rendered << '\n' << text << '\n';
 
         renderReferenceFile(
-            sourceDirectory / (static_cast<std::string>(PQ_FILE) + ".bib"),
+            sourceDirectory /
+                (static_cast<std::string>(ReferenceFiles::PQ_FILE) + ".bib"),
             rendered
         );
-        for (const auto &referenceFileName : _bibtexFileNames)
-            renderReferenceFile(sourceDirectory / referenceFileName, rendered);
+        for (const auto &bibFileName : _referenceSettings->getBibtexFileNames())
+            renderReferenceFile(sourceDirectory / bibFileName, rendered);
 
-        std::ofstream output(filename);
+        std::ofstream output(referenceFileName);
         if (!output.is_open())
         {
             throw std::runtime_error(
                 std::format(
                     "Could not open reference output file \"{}\"",
-                    filename
+                    referenceFileName
                 )
             );
         }
@@ -152,24 +171,10 @@ namespace references
             throw std::runtime_error(
                 std::format(
                     "Could not write reference output file \"{}\"",
-                    filename
+                    referenceFileName
                 )
             );
         }
-    }
-
-    /**
-     * @brief adds a reference file to the list of reference files and bibtex
-     * files
-     *
-     * @param referenceFileName
-     */
-    void ReferencesOutput::addReferenceFile(
-        const std::string &referenceFileName
-    )
-    {
-        _referenceFileNames.insert(referenceFileName);
-        _bibtexFileNames.insert(referenceFileName + ".bib");
     }
 
 }   // namespace references

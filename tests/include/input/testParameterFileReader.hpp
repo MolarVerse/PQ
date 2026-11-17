@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_PARAMETER_FILE_READER_HPP_
-
-#define _TEST_PARAMETER_FILE_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP
 
 #include <gtest/gtest.h>
 
@@ -58,13 +57,15 @@ class TestParameterFileReader : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
+        _settings.fileSettings.setParameterFileNameByUser(
+            "data/parameterFileReader/param.param"
+        );
         _parameterFileReader =
             std::make_unique<input::parameterFile::ParameterFileReader>(
                 "data/parameterFileReader/param.param",
                 *_engine
             );
-        settings::FileSettings::setIsParameterFileNameSet();
     }
 };
 
-#endif   // _TEST_PARAMETER_FILE_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP

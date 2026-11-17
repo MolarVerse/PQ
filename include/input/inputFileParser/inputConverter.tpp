@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_CONVERTER_TPP_
-#define _INPUT_CONVERTER_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_TPP
+#define INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_TPP
 
 #include <charconv>
 #include <mstd/string/join.hpp>
@@ -179,4 +179,4 @@ namespace input
     }
 }   // namespace input
 
-#endif   // _INPUT_CONVERTER_TPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_TPP

@@ -77,7 +77,7 @@ namespace input
         };
 
         const auto setValue = [this](ForceFieldType value)
-        { _forceFieldSettings->setType(value); };
+        { _forceFieldSettings->setTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ForceFieldType>{
@@ -132,7 +132,7 @@ namespace input
         };
 
         const auto setValue = [this](WaterIntraModel value)
-        { _waterModelSettings->setWaterIntraModel(value); };
+        { _waterModelSettings->setWaterIntraModelByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<WaterIntraModel>{
@@ -159,7 +159,7 @@ namespace input
         };
 
         const auto setValue = [this](WaterInterModel value)
-        { _waterModelSettings->setWaterInterModel(value); };
+        { _waterModelSettings->setWaterInterModelByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<WaterInterModel>{

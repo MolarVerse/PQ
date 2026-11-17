@@ -41,44 +41,80 @@
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"
 #include "turbomoleRunner.hpp"
+#include "units.hpp"
 
 namespace
 {
     class DefaultExternalQMRunner : public QM::ExternalQMRunner
     {
        public:
-        void execute(molsys::SimulationBox & /*simBox*/) override {}
-        void writeCoordsFile(molsys::SimulationBox & /*simBox*/) override {}
+        explicit DefaultExternalQMRunner(
+            const QMSettings         &qmSettings,
+            const ExternalQMSettings &externalQMSettings
+        )
+            : QM::ExternalQMRunner(qmSettings, externalQMSettings)
+        {
+        }
+
+        void execute(
+            const molsys::SimulationBox & /*simBox*/,
+            const FileSettings & /*fileSettings*/
+        ) override
+        {
+        }
+
+        // the optional hooks are protected -> expose the base defaults
+        void callWritePointChargeFile(molsys::SimulationBox &simulationBox)
+        {
+            _writePointChargeFile(simulationBox, "point_charges");
+        }
+
+        void callReadStressTensor(
+            molsys::Box                &box,
+            physicalData::PhysicalData &physicalData
+        )
+        {
+            _readStressTensor(box, physicalData, "stress_tensor");
+        }
+
+       protected:
+        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
+        {
+        }
     };
 
-    void setBuildCompatibleQMScript()
+    // the full path variant is valid for all build types (including
+    // singularity and static builds)
+    void setBuildCompatibleQMScript(ExternalQMSettings &externalQMSettings)
     {
-        settings::QMSettings::setQMScript("");
-        settings::QMSettings::setQMScriptFullPath("");
-
-        if (std::string_view(SINGULARITY_) == "ON" ||
-            std::string_view(STATIC_BUILD_) == "ON")
-            settings::QMSettings::setQMScriptFullPath("test");
-        else
-            settings::QMSettings::setQMScript("test");
+        externalQMSettings.setQMScriptFullPathByUser("test");
+        externalQMSettings.finalize();
     }
+
 }   // namespace
 
 TEST(TestQMSetup, defaultExternalRunnerHooksAreOptional)
 {
-    DefaultExternalQMRunner    runner;
+    QMSettings                 qmSettings;
+    ExternalQMSettings         externalQMSettings;
+    DefaultExternalQMRunner    runner{qmSettings, externalQMSettings};
     molsys::SimulationBox      simBox;
     physicalData::PhysicalData physicalData;
-    QM::ExternalQMRunner *volatile baseRunner = &runner;
 
-    EXPECT_NO_THROW(baseRunner->writePointChargeFile(simBox));
-    EXPECT_NO_THROW(baseRunner->readStressTensor(simBox.getBox(), physicalData)
-    );
+    EXPECT_NO_THROW(runner.callWritePointChargeFile(simBox));
+    EXPECT_NO_THROW(runner.callReadStressTensor(simBox.getBox(), physicalData));
 }
 
 TEST(TestQMSetup, resolvesBundledQMScript)
 {
-    const auto script = QM::bundledQMScriptPath("pyscf_hf.py");
+#ifdef PQ_TEST_NO_BUNDLED_SCRIPTS
+    GTEST_SKIP() << "static and Singularity builds need qm_script_full_path";
+#endif
+
+    ExternalQMSettings externalQMSettings;
+    externalQMSettings.setQMScriptByUser("pyscf_hf.py");
+    externalQMSettings.finalize();
+    const auto script = externalQMSettings.getQMScript();
 
     EXPECT_EQ(std::filesystem::path(script).filename(), "pyscf_hf.py");
     EXPECT_TRUE(std::filesystem::is_regular_file(script));
@@ -94,17 +130,26 @@ TEST(TestQMSetup, resolvesBundledQMScript)
 
 TEST(TestQMSetup, setupDftbplus)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
-    auto               setupQM = setup::QMSetup(engine);
+    auto               setupQM = setup::QMSetup(
+        engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    setBuildCompatibleQMScript();
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
     setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::DFTBPlusRunner));
 
-    settings::QMSettings::setQMMethod(QMMethod::NONE);
+    settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -116,17 +161,26 @@ TEST(TestQMSetup, setupDftbplus)
 
 TEST(TestQMSetup, setupPySCF)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
-    auto               setupQM = setup::QMSetup(engine);
+    auto               setupQM = setup::QMSetup(
+        engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    settings::QMSettings::setQMMethod(QMMethod::PYSCF);
-    setBuildCompatibleQMScript();
+    settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
     setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::PySCFRunner));
 
-    settings::QMSettings::setQMMethod(QMMethod::NONE);
+    settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -138,17 +192,26 @@ TEST(TestQMSetup, setupPySCF)
 
 TEST(TestQMSetup, setupTurbomoleRunner)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
-    auto               setupQM = setup::QMSetup(engine);
+    auto               setupQM = setup::QMSetup(
+        engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
-    setBuildCompatibleQMScript();
+    settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
     setupQM.setup();
 
     test::checkType(*engine.getQMRunner(), typeid(QM::TurbomoleRunner));
 
-    settings::QMSettings::setQMMethod(QMMethod::NONE);
+    settings.qmSettings.setQMMethodByUser(QMMethod::NONE);
 
     ASSERT_THROW_MSG(
         setupQM.setup(),
@@ -160,10 +223,10 @@ TEST(TestQMSetup, setupTurbomoleRunner)
 
 TEST(TestQMSetup, setupQMFull)
 {
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("test");
+    Settings settings;
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    setBuildCompatibleQMScript(settings.externalQMSettings);
 
-    Settings           settings;
     engine::QMMDEngine engine(settings);
     EXPECT_NO_THROW(setup::setupQM(engine));
 }
@@ -171,72 +234,74 @@ TEST(TestQMSetup, setupQMFull)
 #ifdef WITH_ASE
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
-    settings::QMSettings::setIsThirdOrderDftbSet(false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    settings.finalize();
 
-    setup::QMSetup::setupQMMethodAseDftbPlus();
-    EXPECT_EQ(settings::QMSettings::useThirdOrderDftb(), true);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), true);
 }
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
-    settings::QMSettings::setIsThirdOrderDftbSet(true);
-    settings::QMSettings::setUseThirdOrderDftb(true);
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(true);
+    settings.finalize();
 
-    setup::QMSetup::setupQMMethodAseDftbPlus();
-    EXPECT_EQ(settings::QMSettings::useThirdOrderDftb(), true);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), true);
 }
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 {
-    Settings           settings;
+    // this test has nothing to do with the current setup approach
+    // it tests now basically the functionality of settings
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::THREEOB);
-    settings::QMSettings::setIsThirdOrderDftbSet(true);
-    settings::QMSettings::setUseThirdOrderDftb(false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    settings.finalize();
 
-    setup::QMSetup::setupQMMethodAseDftbPlus();
-    EXPECT_EQ(settings::QMSettings::useThirdOrderDftb(), false);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), false);
 }
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::MATSCI);
-    settings::QMSettings::setIsThirdOrderDftbSet(false);
-    settings::QMSettings::setUseThirdOrderDftb(false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::MATSCI);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    settings.finalize();
 
-    setup::QMSetup::setupQMMethodAseDftbPlus();
-    EXPECT_EQ(settings::QMSettings::useThirdOrderDftb(), false);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), false);
 }
 #endif
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
-    settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
-    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
-    settings::QMSettings::setIsThirdOrderDftbSet(false);
-    settings::QMSettings::setUseThirdOrderDftb(false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    settings.dftbSettings.setSlakosTypeByUser(SlakosType::CUSTOM);
+    settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    settings.finalize();
 
-    setup::QMSetup::setupQMMethodAseDftbPlus();
-    EXPECT_EQ(settings::QMSettings::useThirdOrderDftb(), false);
+    EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), false);
 }
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
@@ -244,11 +309,20 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(*engine);
+    setup::QMSetup qmSetup(
+        *engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("path/To/myQMScript");
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
 
     qmSetup.setupWriteInfo();
 
@@ -274,12 +348,21 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(*engine);
+    setup::QMSetup qmSetup(
+        *engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("path/To/myQMScript");
-    settings::QMSettings::setQMLoopTimeLimit(-1.2);
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
+    settings.qmSettings.setQMLoopTimeLimitByUser(-1.2 * s);
 
     qmSetup.setupWriteInfo();
 
@@ -305,12 +388,21 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(*engine);
+    setup::QMSetup qmSetup(
+        *engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("path/To/myQMScript");
-    settings::QMSettings::setQMLoopTimeLimit(0);
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
+    settings.qmSettings.setQMLoopTimeLimitByUser(0 * s);
 
     qmSetup.setupWriteInfo();
 
@@ -336,12 +428,21 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(*engine);
+    setup::QMSetup qmSetup(
+        *engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    settings::QMSettings::setQMScript("path/To/myQMScript");
-    settings::QMSettings::setQMLoopTimeLimit(3.14);
+    engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    settings.externalQMSettings.setQMScriptFullPathByUser("path/To/myQMScript");
+    settings.externalQMSettings.finalize();
+    settings.qmSettings.setQMLoopTimeLimitByUser(3.14 * s);
 
     qmSetup.setupWriteInfo();
 
@@ -367,12 +468,22 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> _engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup _qmSetup(*_engine);
+    setup::QMSetup _qmSetup(
+        *_engine,
+        settings.qmSettings,
+        settings.maceSettings,
+        settings.fennolSettings,
+        settings.dftbSettings,
+        settings.xtbSettings,
+        settings.externalQMSettings
+    );
 
-    _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-    settings::QMSettings::setQMMethod(QMMethod::FENNOL);
-    settings::QMSettings::setFennolModelPath("path/To/fennol_model.fnx");
-    settings::QMSettings::setUseGPUPreprocessing(false);
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
+    settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+    settings.fennolSettings.setFennolModelPathByUser(
+        "path/To/fennol_model.fnx"
+    );
+    settings.fennolSettings.setUseGPUPreprocessingByUser(false);
     settings::GeneralSettings::setFloatingPointType(FPType::FLOAT);
 
     _qmSetup.setupWriteInfo();

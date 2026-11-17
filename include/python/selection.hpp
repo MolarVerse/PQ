@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SELECTION_HPP_
-
-#define _SELECTION_HPP_
+#ifndef PYTHON__SELECTION_HPP
+#define PYTHON__SELECTION_HPP
 
 #include <string>
 #include <vector>
@@ -36,4 +35,4 @@ namespace pq_python
     );
 }   // namespace pq_python
 
-#endif   // _SELECTION_HPP_
+#endif   // PYTHON__SELECTION_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_VIRIAL_HPP_
-
-#define _TEST_VIRIAL_HPP_
+#ifndef TESTS__INCLUDE__VIRIAL__TEST_VIRIAL_HPP
+#define TESTS__INCLUDE__VIRIAL__TEST_VIRIAL_HPP
 
 #include <gtest/gtest.h>
 

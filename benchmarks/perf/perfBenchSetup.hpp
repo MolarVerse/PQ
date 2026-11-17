@@ -25,8 +25,8 @@
 // runs before CALLGRIND_ZERO_STATS in every benchmark, so it is excluded from
 // the measured instruction count.
 
-#ifndef PQ_BENCH_SETUP_HPP
-#define PQ_BENCH_SETUP_HPP
+#ifndef BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP
+#define BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP
 
 #include <cmath>
 #include <cstddef>
@@ -185,14 +185,15 @@ namespace benchSetup
     // amount of work.
     inline void scaleVelocitiesToTemperature(
         molsys::SimulationBox& simulationBox,
-        double                 temperature
+        const Temperature&     temperature
     )
     {
-        const auto factor =
-            std::sqrt(temperature / simulationBox.calculateTemperature());
+        const auto factor = mstd::sqrt(
+            tempRatio(temperature, simulationBox.calculateTemperature())
+        );
         for (auto& atom : simulationBox.getAtoms())
             atom->setVelocity(atom->getVelocity() * factor);
     }
 }   // namespace benchSetup
 
-#endif   // PQ_BENCH_SETUP_HPP
+#endif   // BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP

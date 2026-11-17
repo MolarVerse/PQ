@@ -20,9 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTEGRATOR_HPP_
+#ifndef INTEGRATOR__INTEGRATOR_HPP
+#define INTEGRATOR__INTEGRATOR_HPP
 
-#define _INTEGRATOR_HPP_
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -44,16 +45,23 @@ namespace integrator
         Integrator()          = default;
         virtual ~Integrator() = default;
 
-        virtual void firstStep(molsys::SimulationBox &)  = 0;
-        virtual void secondStep(molsys::SimulationBox &) = 0;
+        virtual void firstStep(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        ) = 0;
+        virtual void secondStep(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        ) = 0;
 
-        static void integrateVelocities(molsys::Atom *);
+        static void integrateVelocities(molsys::Atom *, const Time &timeStep);
         static void integratePositions(
             molsys::Atom *,
-            const molsys::SimulationBox &
+            const molsys::SimulationBox &,
+            const Time &timeStep
         );
     };
 
 }   // namespace integrator
 
-#endif   // _INTEGRATOR_HPP_
+#endif   // INTEGRATOR__INTEGRATOR_HPP

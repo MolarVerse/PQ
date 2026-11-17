@@ -50,6 +50,16 @@ namespace physicalData
     void PhysicalData::addQMEnergy(double qmEnergy) { _qmEnergy += qmEnergy; }
 
     /**
+     * @brief add QM reference energy to the current QM reference energy
+     *
+     * @param qmReferenceEnergy
+     */
+    void PhysicalData::addQMReferenceEnergy(double qmReferenceEnergy)
+    {
+        _qmReferenceEnergy += qmReferenceEnergy;
+    }
+
+    /**
      * @brief add coulomb energy to the current coulomb energy stored in
      * physical data
      *
@@ -167,7 +177,7 @@ namespace physicalData
      *
      * @param temperature
      */
-    void PhysicalData::setTemperature(double temperature)
+    void PhysicalData::setTemperature(const Temperature& temperature)
     {
         _temperature = temperature;
     }
@@ -177,14 +187,17 @@ namespace physicalData
      *
      * @param pressure
      */
-    void PhysicalData::setPressure(double pressure) { _pressure = pressure; }
+    void PhysicalData::setPressure(const Pressure& pressure)
+    {
+        _pressure = pressure;
+    }
 
     /**
      * @brief set the coupled pressure
      *
      * @param coupledPressure
      */
-    void PhysicalData::setCoupledPressure(double coupledPressure)
+    void PhysicalData::setCoupledPressure(const Pressure& coupledPressure)
     {
         _coupledPressure = coupledPressure;
     }
@@ -349,6 +362,16 @@ namespace physicalData
     void PhysicalData::setQMEnergy(double qmEnergy) { _qmEnergy = qmEnergy; }
 
     /**
+     * @brief set the qm reference energy
+     *
+     * @param qmReferenceEnergy
+     */
+    void PhysicalData::setQMReferenceEnergy(double qmReferenceEnergy)
+    {
+        _qmReferenceEnergy = qmReferenceEnergy;
+    }
+
+    /**
      * @brief set the number of smoothing molecules
      *
      * @param numberSmMol
@@ -449,23 +472,29 @@ namespace physicalData
     /**
      * @brief get the temperature
      *
-     * @return double
+     * @return const Temperature&
      */
-    double PhysicalData::getTemperature() const { return _temperature; }
+    const Temperature& PhysicalData::getTemperature() const
+    {
+        return _temperature;
+    }
 
     /**
      * @brief get the pressure
      *
-     * @return double
+     * @return const Pressure&
      */
-    double PhysicalData::getPressure() const { return _pressure; }
+    const Pressure& PhysicalData::getPressure() const { return _pressure; }
 
     /**
      * @brief get the coupled pressure
      *
-     * @return double
+     * @return const Pressure&
      */
-    double PhysicalData::getCoupledPressure() const { return _coupledPressure; }
+    const Pressure& PhysicalData::getCoupledPressure() const
+    {
+        return _coupledPressure;
+    }
 
     /**
      * @brief get the kinetic energy
@@ -555,6 +584,16 @@ namespace physicalData
      * @return double
      */
     double PhysicalData::getQMEnergy() const { return _qmEnergy; }
+
+    /**
+     * @brief get the qm reference energy
+     *
+     * @return double
+     */
+    double PhysicalData::getQMReferenceEnergy() const
+    {
+        return _qmReferenceEnergy;
+    }
 
     /**
      * @brief get the number of smoothing molecules

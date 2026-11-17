@@ -20,14 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_RUNNER_HPP_
+#ifndef QM__QM_RUNNER_HPP
+#define QM__QM_RUNNER_HPP
 
-#define _QM_RUNNER_HPP_
-
-#define SCRIPT_PATH_  _SCRIPT_PATH_
-#define SINGULARITY_  _SINGULARITY_
-#define STATIC_BUILD_ _STATIC_BUILD_
-
+#include <mstd/types.hpp>
 #include <stop_token>
 
 #include "box.hpp"
@@ -44,6 +40,9 @@ namespace molsys
 
 class HybridSettings;   // forward declaration
 
+class QMSettings;     // forward declaration
+class FileSettings;   // forward declaration
+
 namespace QM
 {
     /**
@@ -56,21 +55,27 @@ namespace QM
     {
        private:
         molsys::Periodicity _periodicity = molsys::Periodicity::NON_PERIODIC;
+        mstd::ConstRef<QMSettings> _qmSettings;
 
        public:
+        explicit QMRunner(const QMSettings &qmSettings);
         virtual ~QMRunner() = default;
 
-        static void throwAfterTimeout(const std::stop_token &stopToken);
+        static void throwAfterTimeout(
+            const std::stop_token &stopToken,
+            const TimeMs          &qmLoopTimeLimit
+        );
 
         void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const HybridSettings &
+            const FileSettings &
         );
         virtual void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             molsys::Periodicity   per,
+            const FileSettings   &fileSettings,
             const HybridSettings &hybridSettings
         ) = 0;
 
@@ -79,7 +84,10 @@ namespace QM
         molsys::Periodicity _getPeriodicity() const;
 
         void _setPeriodicity(molsys::Periodicity per);
+
+        [[nodiscard]]
+        const QMSettings &_getQMSettings() const;
     };
 }   // namespace QM
 
-#endif   // _QM_RUNNER_HPP_
+#endif   // QM__QM_RUNNER_HPP

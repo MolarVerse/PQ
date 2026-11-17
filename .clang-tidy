@@ -90,6 +90,12 @@ CheckOptions:
     - key:             hicpp-special-member-functions.AllowSoleDefaultDtor
       value:           true
 
+    ### .tpp.hpp headers are included for their template definitions, which
+    ### are only referenced through explicit instantiations in the matching
+    ### .cpp file; include-cleaner cannot see that use, so don't flag them
+    - key:             misc-include-cleaner.IgnoreHeaders
+      value:           '.*[.]tpp[.]hpp'
+
 #   - key:             llvmlibc-restrict-system-libc-headers.Includes
 #     value:           'cstdint'
 

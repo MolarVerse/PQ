@@ -23,66 +23,92 @@
 #include "trajectoryOutput.hpp"
 
 #include <cstddef>
-#include <format>
+#include <ios>
 #include <ostream>
-#include <sstream>
+#include <string_view>
 
+#include "box.hpp"
 #include "defaults.hpp"
+#include "frame.hpp"
 #include "hybridConfigurator.hpp"
-#include "molecule.hpp"
-#include "simulationBox.hpp"
+#include "vector3d.hpp"
 
 namespace out
 {
+    namespace
+    {
+        constexpr std::size_t VEL_FILE_WIDTH = 20;
+
+        /**
+         * @brief append "name\tx\ty\tz\n" in fixed notation
+         */
+        void appendFixedLine(
+            TextBuffer            &buffer,
+            const std::string_view name,
+            const linalg::Vec3D   &vec
+        )
+        {
+            buffer.left(name, textFormat::NAME_WIDTH).put('\t');
+            buffer.fixed(vec[0], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            buffer.fixed(vec[1], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            buffer.fixed(vec[2], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\n');
+        }
+
+    }   // namespace
+
+    /**
+     * @brief write the text buffer to the file and flush
+     */
+    void TrajectoryOutput::_flushBuffer()
+    {
+        const auto text = _buffer.view();
+        _getFilePointer().write(
+            text.data(),
+            static_cast<std::streamsize>(text.size())
+        );
+        _getFilePointer() << std::flush;
+    }
 
     /**
      * @brief Write the header of a trajectory files
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      */
-    void TrajectoryOutput::writeHeader(
-        const molsys::SimulationBox &simulationBox
-    )
+    void TrajectoryOutput::writeHeader(const Frame &frame)
     {
-        const auto  nAtoms    = simulationBox.getNumberOfAtoms();
-        const auto &boxDims   = simulationBox.getBoxDimensions();
-        const auto &boxAngles = simulationBox.getBoxAngles();
-
-        _getFilePointer() << nAtoms << "  " << boxDims << "  " << boxAngles
-                          << '\n';
+        _getFilePointer() << frame.atoms.size() << "  "
+                          << frame.box->get_boxDimensions() << "  "
+                          << frame.box->getBoxAngles() << '\n';
     }
 
     /**
      * @brief Write xyz file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeXyz(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
+        writeHeader(frame);
+        _writeComment(step, includeMetadata);
 
-        writeHeader(simulationBox);
-        _writeComment(step);
+        _buffer.clear();
 
-        for (const auto &atom : simulationBox.getAtoms())
+        for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", atom->getName());
-
-            const auto &pos =
-                simulationBox.getBox().wrapPositionIntoBox(atom->getPosition());
-
-            buffer << std::format("{:15.8f}\t", pos[0]);
-            buffer << std::format("{:15.8f}\t", pos[1]);
-            buffer << std::format("{:15.8f}\n", pos[2]);
+            const auto pos = frame.box->wrapPositionIntoBox(atom.position);
+            appendFixedLine(_buffer, atom.name, pos);
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
@@ -91,10 +117,13 @@ namespace out
      * @param configurator Hybrid configurator containing the inner region
      * center.
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
+     *
      */
     void TrajectoryOutput::writeHybridCenterXyz(
         const configurator::HybridConfigurator &configurator,
-        const size_t                            step
+        const size_t                            step,
+        bool                                    includeMetadata
     )
     {
         // one dummy atom is needed to mark the inner region center
@@ -103,125 +132,107 @@ namespace out
 
         // header line
         _getFilePointer() << numberOfCenterAtoms << '\n';
-        _writeComment(step);
+        _writeComment(step, includeMetadata);
 
-        std::ostringstream buffer;
-        buffer << std::format("{:<5}\t", centerAtomName);
+        _buffer.clear();
+        appendFixedLine(
+            _buffer,
+            std::string_view(&centerAtomName, 1),
+            configurator.getInnerRegionCenter()
+        );
 
-        const auto &pos = configurator.getInnerRegionCenter();
-
-        buffer << std::format("{:15.8f}\t", pos[0]);
-        buffer << std::format("{:15.8f}\t", pos[1]);
-        buffer << std::format("{:15.8f}\n", pos[2]);
-
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
      * @brief Write velocities file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeVelocities(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
+        writeHeader(frame);
+        _writeComment(step, includeMetadata);
 
-        writeHeader(simulationBox);
-        _writeComment(step);
+        _buffer.clear();
 
-        for (const auto &molecule : simulationBox.getMolecules())
+        for (const auto &atom : frame.atoms)
         {
-            const auto nAtoms = molecule.getNumberOfAtoms();
+            const auto &vel = atom.velocity;
 
-            for (AtomIndex i{0}; i.get() < nAtoms; ++i)
-            {
-                buffer << std::format("{:<5}\t", molecule.getAtomName(i));
-
-                const auto &vel = molecule.getAtomVelocity(i);
-
-                buffer << std::format("{:20.8e}\t", vel[0]);
-                buffer << std::format("{:20.8e}\t", vel[1]);
-                buffer << std::format("{:20.8e}\n", vel[2]);
-            }
+            _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
+            _buffer.scientific(vel[0], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer.scientific(vel[1], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer.scientific(vel[2], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\n');
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
      * @brief Write forces file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeForces(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
+        writeHeader(frame);
+        _writeForceComment(step, frame.totalForce(), includeMetadata);
 
-        writeHeader(simulationBox);
-        _writeForceComment(step, simulationBox.calculateTotalForce());
+        _buffer.clear();
 
-        for (const auto &molecule : simulationBox.getMolecules())
-        {
-            const auto nAtoms = molecule.getNumberOfAtoms();
+        for (const auto &atom : frame.atoms)
+            appendFixedLine(_buffer, atom.name, atom.force);
 
-            for (AtomIndex i{0}; i.get() < nAtoms; ++i)
-            {
-                buffer << std::format("{:<5}\t", molecule.getAtomName(i));
-
-                const auto &force = molecule.getAtomForce(i);
-
-                buffer << std::format("{:15.8f}\t", force[0]);
-                buffer << std::format("{:15.8f}\t", force[1]);
-                buffer << std::format("{:15.8f}\n", force[2]);
-            }
-        }
-
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
      * @brief Write charges file
      *
-     * @param simulationBox Simulation box containing molecules and atoms.
+     * @param frame
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void TrajectoryOutput::writeCharges(
-        const molsys::SimulationBox &simulationBox,
-        size_t                       step
+        const Frame &frame,
+        size_t       step,
+        bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
+        writeHeader(frame);
+        _writeComment(step, includeMetadata);
 
-        writeHeader(simulationBox);
-        _writeComment(step);
+        _buffer.clear();
 
-        for (const auto &atom : simulationBox.getAtoms())
+        for (const auto &atom : frame.atoms)
         {
-            const auto charge =
-                atom->getQMCharge().value_or(atom->getPartialCharge());
-
-            buffer << std::format("{:<5}\t", atom->getName());
-            buffer << std::format("{:15.8f}\n", charge);
-            buffer << std::flush;
+            _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
+            _buffer
+                .fixed(
+                    atom.charge,
+                    textFormat::FIXED_WIDTH,
+                    textFormat::PRECISION
+                )
+                .put('\n');
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
 }   // namespace out

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_INTEGRATOR_HPP_
-
-#define _TEST_INTEGRATOR_HPP_
+#ifndef TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP
+#define TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP
 
 #include <gtest/gtest.h>
 
@@ -33,7 +32,6 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 #include "velocityVerlet.hpp"
 
 /**
@@ -52,7 +50,6 @@ class TestIntegrator : public ::testing::Test
     void SetUp() override
     {
         _integrator = std::make_unique<integrator::VelocityVerlet>();
-        settings::TimingsSettings::setTimeStep(0.1);
 
         _molecule1 = std::make_unique<molsys::Molecule>();
 
@@ -85,4 +82,4 @@ class TestIntegrator : public ::testing::Test
     }
 };
 
-#endif   // _TEST_INTEGRATOR_HPP_
+#endif   // TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP

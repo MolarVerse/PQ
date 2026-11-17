@@ -1,1 +1,0 @@
-- Perf gate: add fixed-work benchmarks for the GUFF pair kernel (dense and sparse coefficients), the Coulomb reaction field, the Maxwell-Boltzmann velocity initialisation and ResetKinetics.

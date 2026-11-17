@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_HPP_
-
-#define _ENGINE_HPP_
+#ifndef ENGINE__ENGINE_HPP
+#define ENGINE__ENGINE_HPP
 
 #include <cstddef>
 #include <memory>
@@ -52,8 +51,7 @@ namespace engine
     class Engine
     {
        private:
-        size_t _step   = 1;
-        size_t _nSteps = 0;
+        size_t _step = 1;
 
         EngineOutput _engineOutput;
 
@@ -78,11 +76,15 @@ namespace engine
         explicit Engine(const Settings &settings);
         virtual ~Engine();
 
-        virtual void run()         = 0;
-        virtual void writeOutput() = 0;
-        static void  deleteTmpFiles();
+        virtual void run()                                                 = 0;
+        virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
+        void         deleteTmpFiles() const;
 
-        [[nodiscard]] double calculateTotalSimulationTime() const;
+        [[nodiscard]]
+        Time calculateTotalSimulationTime(
+            const Time &timeStep,
+            size_t      startingStepCount
+        ) const;
 
         /***************************
          * standard getter methods *
@@ -169,14 +171,12 @@ namespace engine
         [[nodiscard]]
         const waterModel::IntraWater &_getIntraWater() const;
 
-        [[nodiscard]] size_t _getNSteps() const;
-        void                 _setNSteps(size_t nSteps);
-        void                 _setStep(size_t step);
+        void _setStep(size_t step);
     };
 }   // namespace engine
 
-#ifndef _ENGINE_TPP_
-#include "engine.tpp.hpp"   // IWYU pragma: export
+#ifndef ENGINE__ENGINE_TPP
+#include "engine.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _ENGINE_HPP_
+#endif   // ENGINE__ENGINE_HPP

@@ -26,12 +26,22 @@
 #include <thread>
 
 #include "box.hpp"
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "qmSettings.hpp"
+#include "units.hpp"
 
 namespace QM
 {
+
+    /**
+     * @brief constructor for the QMRunner class
+     *
+     * @param qmSettings the QMSettings object containing the settings for the
+     * QM runner
+     */
+    QMRunner::QMRunner(const QMSettings &qmSettings) : _qmSettings(qmSettings)
+    {
+    }
 
     /**
      * @brief function to throw an exception after a timeout
@@ -40,25 +50,31 @@ namespace QM
      * timeout is set in the settings file. If the timeout is set to 0, the
      * function will return without throwing an exception.
      *
-     * @param stopToken
+     * @param stopToken The stop token used to check for cancellation of the QM
+     * calculation loop
+     * @param qmLoopTimeLimit The maximum allowed time for the QM calculation
+     * loop. If the loop exceeds this time, an exception will be thrown. A value
+     * of 0 indicates no time limit.
      *
      * @throw QMRunnerException if the timeout is exceeded
      */
-    void QMRunner::throwAfterTimeout(const std::stop_token &stopToken)
+    void QMRunner::throwAfterTimeout(
+        const std::stop_token &stopToken,
+        const TimeMs          &qmLoopTimeLimit
+    )
     {
-        const auto qmLoopTimeLimit = settings::QMSettings::getQMLoopTimeLimit();
-
-        if (qmLoopTimeLimit <= 0)
+        if (qmLoopTimeLimit <= TimeMs::zero())
             return;
 
-        const auto timeout = static_cast<int>(::ceil(qmLoopTimeLimit));
-
-        for (int i = 0; i < timeout * S_TO_MS; ++i)
+        const auto sleepDuration = 1 * ms;
+        for (auto i = TimeMs::zero(); i < qmLoopTimeLimit; i += sleepDuration)
         {
             if (stopToken.stop_requested())
                 return;
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(sleepDuration.numerical_value_in(ms))
+            );
         }
 
         throw exc::QMRunnerException("QM calculation timeout");
@@ -70,16 +86,20 @@ namespace QM
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
      * @param physicalData the physical data associated with the simulation
+     * @param fileSettings the file settings containing input/output file paths
+     * and related configurations for the QM calculation
      */
     void QMRunner::run(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
+        const FileSettings         &fileSettings,
         const HybridSettings       &hybridSettings
     )
     {
         run(simulationBox,
             physicalData,
             molsys::Periodicity::XYZ,
+            fileSettings,
             hybridSettings);
     }
 
@@ -102,4 +122,15 @@ namespace QM
     {
         _periodicity = per;
     }
+
+    /**
+     * @brief returns the QMSettings object associated with the QM runner
+     *
+     * @return const QMSettings&
+     */
+    const QMSettings &QMRunner::_getQMSettings() const
+    {
+        return _qmSettings.get();
+    }
+
 }   // namespace QM

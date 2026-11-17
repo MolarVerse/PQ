@@ -20,190 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_TPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_TPP
+#define WATER_MODELS__INTER__INTER_WATER_TPP
 
-#define _INTER_WATER_TPP_
+#include <cstdlib>
 
 #include "atom.hpp"
-#include "coulombPotential.hpp"
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
 #include "potential.hpp"
-#include "simulationBox.hpp"
 
 namespace waterModel
 {
-    /**
-     * @brief Compute Coulomb and non-Coulomb contributions for one atom pair.
-     *
-     * @tparam ChargeTag1 Charge tag for atom1.
-     * @tparam ChargeTag2 Charge tag for atom2.
-     */
-    template <typename ChargeTag1, typename ChargeTag2>
-    void InterWaterStrategy::calculateSingleInteraction(
-        molsys::Atom                                 &atom1,
-        molsys::Atom                                 &atom2,
-        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        double                                        rCutSquared,
-        const molsys::SimulationBox                  &simulationBox,
-        const pot::NonCoulombPair                    &nonCoulPair,
-        double                                       &coulombEnergy,
-        double                                       &nonCoulombEnergy
-    )
-    {
-        const auto xyz_i = atom1.getPosition();
-        const auto xyz_j = atom2.getPosition();
-
-        auto dxyz = xyz_i - xyz_j;
-
-        const auto txyz = -simulationBox.calcShiftVector(dxyz);
-
-        dxyz += txyz;
-
-        const auto distanceSquared = normSquared(dxyz);
-
-        if (distanceSquared < rCutSquared)
-        {
-            const auto distance = ::sqrt(distanceSquared);
-
-            const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
-            const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
-
-            const auto chargeProduct = charge_i * charge_j;
-
-            auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += e;
-
-            if (distance < nonCoulPair.get_radialCutoff())
-            {
-                const auto [nonCoulE, nonCoulF] =
-                    nonCoulPair.calculate(distance);
-                nonCoulombEnergy += nonCoulE;
-                f                += nonCoulF;
-            }
-
-            f                   /= distance;
-            const auto forcexyz  = f * dxyz;
-
-            const auto shiftForcexyz = forcexyz * txyz;
-
-            atom1.addForce(forcexyz);
-            atom2.addForce(-forcexyz);
-
-            atom1.addShiftForce(shiftForcexyz);
-        }
-    }
-
-    /**
-     * @brief Compute Coulomb contribution for one atom pair.
-     *
-     * @tparam ChargeTag1 Charge tag for atom1.
-     * @tparam ChargeTag2 Charge tag for atom2.
-     */
-    template <typename ChargeTag1, typename ChargeTag2>
-    void InterWaterStrategy::calculateSingleCoulombInteraction(
-        molsys::Atom                                 &atom1,
-        molsys::Atom                                 &atom2,
-        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        double                                        rCutSquared,
-        const molsys::SimulationBox                  &simulationBox,
-        double                                       &coulombEnergy
-    )
-    {
-        const auto xyz_i = atom1.getPosition();
-        const auto xyz_j = atom2.getPosition();
-
-        auto dxyz = xyz_i - xyz_j;
-
-        const auto txyz = -simulationBox.calcShiftVector(dxyz);
-
-        dxyz += txyz;
-
-        const auto distanceSquared = normSquared(dxyz);
-
-        if (distanceSquared < rCutSquared)
-        {
-            const double distance = ::sqrt(distanceSquared);
-
-            const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
-            const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
-
-            const auto chargeProduct = charge_i * charge_j;
-
-            auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += e;
-
-            f                   /= distance;
-            const auto forcexyz  = f * dxyz;
-
-            const auto shiftForcexyz = forcexyz * txyz;
-
-            atom1.addForce(forcexyz);
-            atom2.addForce(-forcexyz);
-
-            atom1.addShiftForce(shiftForcexyz);
-        }
-    }
-
-    /**
-     * @brief Compute one-way Coulomb and non-Coulomb contributions.
-     *
-     * @tparam ChargeTag1 Charge tag for atom1.
-     * @tparam ChargeTag2 Charge tag for atom2.
-     */
-    template <typename ChargeTag1, typename ChargeTag2>
-    void InterWaterStrategy::calculateSingleInteractionOneWay(
-        molsys::Atom                                 &atom1,
-        molsys::Atom                                 &atom2,
-        const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        double                                        rCutSquared,
-        const molsys::SimulationBox                  &simulationBox,
-        const pot::NonCoulombPair                    &nonCoulPair,
-        double                                       &coulombEnergy,
-        double                                       &nonCoulombEnergy
-    )
-    {
-        const auto xyz_i = atom1.getPosition();
-        const auto xyz_j = atom2.getPosition();
-
-        auto dxyz = xyz_i - xyz_j;
-
-        const auto txyz = -simulationBox.calcShiftVector(dxyz);
-
-        dxyz += txyz;
-
-        const auto distanceSquared = normSquared(dxyz);
-
-        if (distanceSquared < rCutSquared)
-        {
-            const auto distance = ::sqrt(distanceSquared);
-
-            const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
-            const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
-
-            const auto chargeProduct = charge_i * charge_j;
-
-            auto [e, f] = coulombPotential->calculate(distance, chargeProduct);
-            coulombEnergy += e;
-
-            if (distance < nonCoulPair.get_radialCutoff())
-            {
-                auto [nonCoulE, nonCoulF]  = nonCoulPair.calculate(distance);
-                nonCoulombEnergy          += nonCoulE;
-                f                         += nonCoulF;
-            }
-
-            f                   /= distance;
-            const auto forcexyz  = f * dxyz;
-
-            const auto shiftForcexyz = forcexyz * txyz;
-
-            atom1.addForce(forcexyz);
-
-            atom1.addShiftForce(shiftForcexyz);
-        }
-    }
-
     /**
      * @brief Return the partial charge for a tagged atom.
      *
@@ -238,4 +66,4 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#endif   //  _INTER_WATER_TPP_
+#endif   //  WATER_MODELS__INTER__INTER_WATER_TPP

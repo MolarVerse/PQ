@@ -16,6 +16,9 @@ set(source_files
     testVirialOutput.cpp
     testRingPolymerEnergyOutput.cpp
     testReferencesOutput.cpp
+    testFrame.cpp
+    testTextBuffer.cpp
+    testExtxyzOutput.cpp
 )
 
 # Per-test extra include dirs and libs (defaults to empty for the legacy tests).
@@ -72,6 +75,15 @@ set(testReferencesOutput_extra_includes
 set(testReferencesOutput_extra_libs
     references
     settings
+)
+
+set(testFrame_extra_includes
+    ${PROJECT_SOURCE_DIR}/include/box
+    ${PROJECT_SOURCE_DIR}/include/thermostat
+)
+set(testFrame_extra_libs
+    box
+    thermostat
 )
 
 foreach(source_file ${source_files})

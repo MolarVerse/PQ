@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef PQ_BENCH_WATER_SCALING_HPP
-#define PQ_BENCH_WATER_SCALING_HPP
+#ifndef BENCHMARKS__PERF__PERF_WATER_SCALING_HPP
+#define BENCHMARKS__PERF__PERF_WATER_SCALING_HPP
 
 // Shared body of the cell list / inter-water scaling benchmarks: a cubic grid
 // of perSide^3 water molecules (4.5 A spacing, so the density is the same for
@@ -52,6 +52,7 @@
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
+#include "perfAlloc.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -74,7 +75,7 @@ namespace benchWaterScaling
         pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
         WaterModelSettings waterModelSettings;
-        waterModelSettings.setWaterInterModel(WaterInterModel::SPC_E);
+        waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
 
         const double boxLength = (SPACING * static_cast<double>(perSide)) + 3.0;
         const auto   numberOfCells = static_cast<size_t>(boxLength / CUTOFF);
@@ -170,6 +171,8 @@ namespace benchWaterScaling
 
         auto physicalData = physicalData::PhysicalData();
 
+        perfAllocBegin();
+
         CALLGRIND_ZERO_STATS;
 
         for (std::uint64_t i = 0; i < iterations; ++i)
@@ -186,4 +189,4 @@ namespace benchWaterScaling
     }
 }   // namespace benchWaterScaling
 
-#endif   // PQ_BENCH_WATER_SCALING_HPP
+#endif   // BENCHMARKS__PERF__PERF_WATER_SCALING_HPP

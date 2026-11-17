@@ -1,1 +1,0 @@
-- Document the nBeads parameter of the ring polymer trajectory header so the Doxygen build passes.

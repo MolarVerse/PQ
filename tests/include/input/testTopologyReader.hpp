@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_TOPOLOGY_READER_HPP_
-
-#define _TEST_TOPOLOGY_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_TOPOLOGY_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_TOPOLOGY_READER_HPP
 
 #include <gtest/gtest.h>
 
@@ -67,12 +66,14 @@ class TestTopologyReader : public ::testing::Test
         _engine->getSimulationBox().addMolecule(molecule1);
         _engine->getSimulationBox().addMolecule(molecule2);
 
+        _settings.fileSettings.setTopologyFileNameByUser(
+            "data/topologyReader/topology.top"
+        );
         _topologyReader = std::make_unique<input::topology::TopologyReader>(
-            "data/topologyReader/topology.top",
+            _settings.fileSettings.getTopologyFileName(),
             *_engine
         );
-        settings::FileSettings::setIsTopologyFileNameSet();
     }
 };
 
-#endif   // _TEST_TOPOLOGY_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_TOPOLOGY_READER_HPP

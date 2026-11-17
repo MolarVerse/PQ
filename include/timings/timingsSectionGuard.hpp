@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_SECTION_GUARD_HPP_
+#ifndef TIMINGS__TIMINGS_SECTION_GUARD_HPP
+#define TIMINGS__TIMINGS_SECTION_GUARD_HPP
 
-#define _TIMINGS_SECTION_GUARD_HPP_
-
+#include <mstd/utils.hpp>
 #include <string>
 #include <string_view>
 
@@ -49,6 +49,8 @@ namespace timings
      */
     class TimingsSectionGuard
     {
+        MSTD_RAII_NO_MOVE(TimingsSectionGuard);
+
        private:
         Timer&      _timer;
         std::string _name;
@@ -56,13 +58,8 @@ namespace timings
        public:
         explicit TimingsSectionGuard(Timer& timer, std::string_view name);
         ~TimingsSectionGuard();
-
-        TimingsSectionGuard(const TimingsSectionGuard&)            = delete;
-        TimingsSectionGuard& operator=(const TimingsSectionGuard&) = delete;
-        TimingsSectionGuard(TimingsSectionGuard&&)                 = delete;
-        TimingsSectionGuard& operator=(TimingsSectionGuard&&)      = delete;
     };
 
 }   // namespace timings
 
-#endif   // _TIMINGS_SECTION_GUARD_HPP_
+#endif   // TIMINGS__TIMINGS_SECTION_GUARD_HPP

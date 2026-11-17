@@ -20,24 +20,29 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_OUTPUT_HPP_
-
-#define _ENGINE_OUTPUT_HPP_
+#ifndef ENGINE__ENGINE_OUTPUT_HPP
+#define ENGINE__ENGINE_OUTPUT_HPP
 
 #include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
+#include <optional>
+#include <string>
 #include <vector>
 
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
+#include "extxyzOutput.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
 #include "optOutput.hpp"
+#include "referencesOutput.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "rstFileOutput.hpp"
+#include "serialWorker.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
 #include "timingsOutput.hpp"
@@ -48,6 +53,18 @@ namespace configurator
 {
     class HybridConfigurator;   // forward declaration
 }   // namespace configurator
+
+namespace out
+{
+    struct Frame;   // forward declaration
+}   // namespace out
+
+namespace thermostat
+{
+    class Thermostat;   // forward declaration
+}   // namespace thermostat
+
+class OutputFileSettings;   // forward declaration
 
 namespace engine
 {
@@ -60,6 +77,8 @@ namespace engine
     class EngineOutput
     {
        private:
+        mstd::ConstRef<OutputFileSettings> _outputFileSettings;
+
         std::unique_ptr<out::EnergyOutput> _energyOutput;
         std::unique_ptr<out::EnergyOutput> _instantEnergyOutput;
         std::unique_ptr<out::InfoOutput>   _infoOutput;
@@ -70,6 +89,9 @@ namespace engine
         std::unique_ptr<out::TrajectoryOutput> _forceOutput;
         std::unique_ptr<out::TrajectoryOutput> _chargeOutput;
         std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
+
+        // null unless an extxyz file is requested
+        std::unique_ptr<out::ExtxyzOutput> _extxyzOutput;
 
         std::unique_ptr<out::LogOutput>    _logOutput;
         std::unique_ptr<out::StdoutOutput> _stdoutOutput;
@@ -90,8 +112,22 @@ namespace engine
 
         std::unique_ptr<out::TimingsOutput> _timingsOutput;
 
+        references::ReferencesOutput _referencesOutput;
+
+        // created on the first frame if async output is on and fits in
+        // memory; null otherwise. Declared last so it is destroyed first: its
+        // destructor waits for queued frames, which still use the writers
+        // above.
+        std::unique_ptr<utilities::SerialWorker> _frameWriter;
+        bool                                     _frameWriterChecked = false;
+
+        static constexpr std::size_t _frameCapacity = 2;
+
        public:
-        EngineOutput();
+        explicit EngineOutput(
+            const OutputFileSettings &outputFileSettings,
+            const ReferenceSettings  &referenceSettings
+        );
 
         void writeEnergyFile(
             size_t step,
@@ -104,23 +140,27 @@ namespace engine
             const Settings &
         );
 
-        void writeXyzFile(molsys::SimulationBox &, size_t);
+        void writeXyzFile(const out::Frame &, size_t);
         void writeHybridCenterXyzFile(
             const configurator::HybridConfigurator &,
             size_t
         );
-        void writeVelFile(molsys::SimulationBox &, size_t);
-        void writeForceFile(molsys::SimulationBox &, size_t);
-        void writeChargeFile(molsys::SimulationBox &, size_t);
-        void writeInfoFile(
-            double simulationTime,
-            const physicalData::PhysicalData &,
-            const Settings &
-        );
-        void writeRstFile(
-            molsys::SimulationBox &,
+        void writeVelFile(const out::Frame &, size_t);
+        void writeForceFile(const out::Frame &, size_t);
+        void writeChargeFile(const out::Frame &, size_t);
+        void writeRstFile(const out::Frame &, size_t);
+        void writeFrame(
+            const molsys::SimulationBox &,
             const thermostat::Thermostat &,
-            size_t
+            size_t step,
+            double totalEnergy
+        );
+        void openExtxyzOutput(const std::string &filename, bool overwrite);
+        void waitForFrames();
+
+        [[nodiscard]] static bool asyncOutputFits(
+            std::size_t                nAtoms,
+            std::optional<std::size_t> availableMemory
         );
         void writeOptRstFile(molsys::SimulationBox &, size_t);
 
@@ -153,6 +193,7 @@ namespace engine
         );
 
         void writeTimingsFile();
+        void writeReferencesFile();
 
         /***************************
          * standard getter methods *
@@ -192,8 +233,12 @@ namespace engine
         out::RingPolymerEnergyOutput &getRingPolymerEnergyOutput();
 
         [[nodiscard]] out::TimingsOutput &getTimingsOutput();
+
+       private:
+        void _startFrameWriter(std::size_t nAtoms);
+        void _writeFrame(const out::Frame &, size_t step, bool metadata);
     };
 
 }   // namespace engine
 
-#endif   // _ENGINE_OUTPUT_HPP_
+#endif   // ENGINE__ENGINE_OUTPUT_HPP

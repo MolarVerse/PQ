@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_MOLECULE_HPP_
-
-#define _TEST_MOLECULE_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_MOLECULE_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_MOLECULE_HPP
 
 #include <gtest/gtest.h>
 
@@ -70,4 +69,4 @@ class TestMolecule : public ::testing::Test
     }
 };
 
-#endif   // _TEST_MOLECULE_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_MOLECULE_HPP

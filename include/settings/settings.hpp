@@ -20,18 +20,25 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTINGS_HPP_
-#define _SETTINGS_HPP_
+#ifndef SETTINGS__SETTINGS_HPP
+#define SETTINGS__SETTINGS_HPP
 
 #include "constraintSettings.hpp"
 #include "convergenceSettings.hpp"
+#include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
 #include "hybridSettings.hpp"
+#include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
+#include "outputFileSettings.hpp"
+#include "qmSettings.hpp"
+#include "referenceSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
+#include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 #include "waterModelSettings.hpp"
 
 /**
@@ -39,7 +46,12 @@
  */
 struct Settings
 {
+    TimingsSettings timings;
+
     ResetKineticsSettings resetKinetics;
+    KineticsSettings      kinetics;
+    ThermostatSettings    thermostatSettings;
+
     SimulationBoxSettings simulationBoxSettings;
     HessianSettings       hessianSettings;
     RingPolymerSettings   ringPolymerSettings;
@@ -48,9 +60,21 @@ struct Settings
     ConvSettings          convSettings;
     WaterModelSettings    waterModelSettings;
     ForceFieldSettings    forceFieldSettings;
+    ManostatSettings      manostatSettings;
+    OutputFileSettings    outputFiles;
+    FileSettings          fileSettings;
+    ReferenceSettings     referenceSettings;
+    QMSettings            qmSettings;
+    MaceSettings          maceSettings;
+    FennolSettings        fennolSettings;
+    DftbSettings          dftbSettings;
+    XtbSettings           xtbSettings;
+    NoseHooverSettings    noseHooverSettings;
+    ExternalQMSettings    externalQMSettings;
     HybridSettings        hybridSettings;
 
     void finalize();
+    void validate() const;
 };
 
-#endif   // _SETTINGS_HPP_
+#endif   // SETTINGS__SETTINGS_HPP

@@ -25,11 +25,14 @@
 #include <gtest/gtest.h>
 
 #include <cstddef>
+#include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "strongTypes.hpp"
@@ -150,6 +153,164 @@ TEST_F(TestSimulationBox, findMoleculeByAtomIndex)
         exc::UserInputException,
         "Atom index 0 out of range - total number of atoms: 3"
     );
+}
+
+/**
+ * @brief the lookup table gives the same molecule and atom as the walk
+ *
+ * @details molecules of 2, 0, 3 and 1 atoms (an empty molecule is the awkward
+ * case: the walk takes the first molecule whose count reaches the index)
+ */
+TEST(TestSimulationBoxAtomIndexLookup, sameResultAsTheWalk)
+{
+    molsys::SimulationBox box;
+
+    for (const size_t nAtoms : {2UL, 0UL, 3UL, 1UL})
+    {
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+    }
+
+    constexpr size_t totalAtoms = 6;
+
+    std::vector<std::pair<const molsys::Molecule *, AtomIndex>> walk;
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        walk.emplace_back(molecule, atom);
+    }
+
+    box.buildAtomIndexLookup();
+
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        EXPECT_EQ(molecule, walk[index - 1].first) << "atom " << index;
+        EXPECT_EQ(atom, walk[index - 1].second) << "atom " << index;
+    }
+
+    EXPECT_EQ(&box.getMolecules()[2], walk[2].first);
+    EXPECT_EQ(AtomIndex{0}, walk[2].second);
+}
+
+/**
+ * @brief the table and the walk agree for every atom of a larger box
+ *
+ * @details 300 molecules with 0 to 5 atoms (sizes from a fixed pattern, so
+ * empty molecules and runs of equal sizes are in there)
+ */
+TEST(TestSimulationBoxAtomIndexLookup, sameResultAsTheWalkForManyMolecules)
+{
+    molsys::SimulationBox box;
+
+    size_t totalAtoms = 0;
+    for (size_t mol = 0; mol < 300; ++mol)
+    {
+        const size_t nAtoms = ((mol * 7) + (mol / 3)) % 6;
+
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+        totalAtoms += nAtoms;
+    }
+
+    std::vector<std::pair<const molsys::Molecule *, AtomIndex>> walk;
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        walk.emplace_back(molecule, atom);
+    }
+
+    box.buildAtomIndexLookup();
+
+    size_t different = 0;
+    for (size_t index = 1; index <= totalAtoms; ++index)
+    {
+        const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(index);
+        if (molecule != walk[index - 1].first || atom != walk[index - 1].second)
+            ++different;
+    }
+
+    EXPECT_GT(totalAtoms, 600U);
+    EXPECT_EQ(0U, different);
+}
+
+/**
+ * @brief with the lookup table the errors are the same
+ */
+TEST(TestSimulationBoxAtomIndexLookup, sameErrors)
+{
+    molsys::SimulationBox box;
+
+    for (const size_t nAtoms : {3UL, 2UL})
+    {
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+    }
+
+    box.buildAtomIndexLookup();
+
+    EXPECT_THROW_MSG(
+        [[maybe_unused]] const auto dummy =
+            box.findMoleculeByGlobalAtomIndex(6),
+        exc::UserInputException,
+        "Atom index 6 out of range - total number of atoms: 5"
+    );
+    EXPECT_THROW_MSG(
+        [[maybe_unused]] const auto dummy =
+            box.findMoleculeByGlobalAtomIndex(0),
+        exc::UserInputException,
+        "Atom index 0 out of range - total number of atoms: 3"
+    );
+}
+
+/**
+ * @brief a table that does not fit the molecules is not used, and the table
+ * is gone after clearAtomIndexLookup
+ */
+TEST(TestSimulationBoxAtomIndexLookup, staleOrClearedTableIsIgnored)
+{
+    molsys::SimulationBox box;
+
+    const auto addMolecule = [&box](const size_t nAtoms)
+    {
+        molsys::Molecule molecule;
+        molecule.setMoltype(MolType{1});
+
+        for (size_t i = 0; i < nAtoms; ++i)
+            molecule.addAtom(std::make_shared<molsys::Atom>());
+
+        box.addMolecule(molecule);
+    };
+
+    addMolecule(2);
+    box.buildAtomIndexLookup();
+    addMolecule(2);   // the table was built for one molecule
+
+    const auto [molecule, atom] = box.findMoleculeByGlobalAtomIndex(4);
+    EXPECT_EQ(&box.getMolecules()[1], molecule);
+    EXPECT_EQ(AtomIndex{1}, atom);
+
+    box.buildAtomIndexLookup();
+    box.clearAtomIndexLookup();
+
+    const auto [molecule2, atom2] = box.findMoleculeByGlobalAtomIndex(3);
+    EXPECT_EQ(&box.getMolecules()[1], molecule2);
+    EXPECT_EQ(AtomIndex{0}, atom2);
 }
 
 /**
@@ -394,6 +555,9 @@ TEST_F(
  */
 TEST_F(TestSimulationBox, removeNetForce)
 {
+    const auto jobtype = settings::GeneralSettings::getJobtype();
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+
     molsys::SimulationBox simBox;
     auto                  atom1 = molsys::Atom();
     auto                  atom2 = molsys::Atom();
@@ -426,6 +590,8 @@ TEST_F(TestSimulationBox, removeNetForce)
         linalg::Vec3D({1.0, -2.0, 0.0}),
         1e-10
     );
+
+    settings::GeneralSettings::setJobtype(jobtype);
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(1).getForce(),
         linalg::Vec3D({0.0, 1.0, -2.0}),
@@ -661,4 +827,43 @@ TEST_F(TestSimulationBox, activeChargeAndEmptyForceRemoval)
 
     molsys::SimulationBox empty;
     EXPECT_NO_THROW(empty.removeNetForce());
+}
+
+TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
+{
+    const auto jobtype = settings::GeneralSettings::getJobtype();
+    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+
+    molsys::SimulationBox simBox;
+    auto                  qmAtom1 = std::make_shared<molsys::Atom>();
+    auto                  qmAtom2 = std::make_shared<molsys::Atom>();
+    auto                  mmAtom  = std::make_shared<molsys::Atom>();
+
+    qmAtom1->setForce({3.0, 0.0, 0.0});
+    qmAtom2->setForce({1.0, 0.0, 0.0});
+    mmAtom->setActive(false);
+
+    simBox.addAtom(qmAtom1);
+    simBox.addAtom(qmAtom2);
+    simBox.addAtom(mmAtom);
+
+    simBox.removeNetForce();
+
+    EXPECT_VECTOR_NEAR(
+        qmAtom1->getForce(),
+        linalg::Vec3D({1.0, 0.0, 0.0}),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        qmAtom2->getForce(),
+        linalg::Vec3D({-1.0, 0.0, 0.0}),
+        1e-10
+    );
+    EXPECT_VECTOR_NEAR(
+        mmAtom->getForce(),
+        linalg::Vec3D({0.0, 0.0, 0.0}),
+        1e-10
+    );
+
+    settings::GeneralSettings::setJobtype(jobtype);
 }

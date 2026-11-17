@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_ENUM_HPP_
-#define _QM_ENUM_HPP_
+#ifndef CONFIG__ENUMS__QM_HPP
+#define CONFIG__ENUMS__QM_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -40,6 +40,7 @@ enum class QMMethod : std::uint8_t;
     X(ASE_XTB)            \
     X(PYSCF)              \
     X(TURBOMOLE)          \
+    X(ORCA)               \
     X(MACE)               \
     X(FENNOL)
 
@@ -228,4 +229,4 @@ MSTD_ENUM(QMCharges, std::uint8_t, QM_CHARGES_LIST)
 
 #undef QM_CHARGES_LIST
 
-#endif   // _QM_ENUM_HPP_
+#endif   // CONFIG__ENUMS__QM_HPP

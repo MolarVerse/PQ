@@ -20,9 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_SETUP_HPP_
+#ifndef SETUP__QM_SETUP_HPP
+#define SETUP__QM_SETUP_HPP
 
-#define _QM_SETUP_HPP_
+#include <mstd/types.hpp>
 
 #include "qmCapableEngine.hpp"
 namespace engine
@@ -30,6 +31,9 @@ namespace engine
     class Engine;       // forward declaration
     class QMMDEngine;   // forward declaration
 }   // namespace engine
+
+class ReferenceSettings;
+struct TestQMSetupUtils;
 
 namespace setup
 {
@@ -44,20 +48,33 @@ namespace setup
     class QMSetup
     {
        private:
-        engine::QMCapableEngine &_qmCapableEngine;
+        engine::QMCapableEngine           &_qmCapableEngine;
+        mstd::ConstRef<QMSettings>         _qmSettings;
+        mstd::ConstRef<MaceSettings>       _maceSettings;
+        mstd::ConstRef<FennolSettings>     _fennolSettings;
+        mstd::ConstRef<DftbSettings>       _dftbSettings;
+        mstd::ConstRef<XtbSettings>        _xtbSettings;
+        mstd::ConstRef<ExternalQMSettings> _externalQMSettings;
 
        public:
-        explicit QMSetup(engine::QMCapableEngine &qmCapableEngine);
+        explicit QMSetup(
+            engine::QMCapableEngine  &qmCapableEngine,
+            const QMSettings         &qmSettings,
+            const MaceSettings       &maceSettings,
+            const FennolSettings     &fennolSettings,
+            const DftbSettings       &dftbSettings,
+            const XtbSettings        &xtbSettings,
+            const ExternalQMSettings &externalQMSettings
+        );
 
         void        setup();
         void        setupQMMethod();
-        static void setupQMMethodAseDftbPlus();
-        static void setupQMMethodAseXtb();
-        void        setupQMScript() const;
         static void setupCoulombRadiusCutOff();
         void        setupWriteInfo() const;
+
+        friend struct ::TestQMSetupUtils;
     };
 
 }   // namespace setup
 
-#endif   // _QM_SETUP_HPP_
+#endif   // SETUP__QM_SETUP_HPP

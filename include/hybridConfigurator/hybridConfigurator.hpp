@@ -20,14 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_CONFIGURATOR_HPP_
-
-#define _HYBRID_CONFIGURATOR_HPP_
+#ifndef HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
+#define HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
 
 #include <mstd/types.hpp>
 #include <unordered_set>
 
 #include "vector3d.hpp"
+
+class ExternalQMRunnerTest;   // forward declaration
 
 namespace molsys
 {
@@ -70,9 +71,12 @@ namespace configurator
         [[nodiscard]] linalg::Vec3D getInnerRegionCenter() const;
         [[nodiscard]] static bool   getMoleculeChangedZone();
 
-        static void setMoleculeChangedZone(bool);
+       private:
+        static void _setMoleculeChangedZone(bool);
+
+        friend class ::ExternalQMRunnerTest;   // for testing private methods
     };
 
 }   // namespace configurator
 
-#endif   // _HYBRID_CONFIGURATOR_HPP_
+#endif   // HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP

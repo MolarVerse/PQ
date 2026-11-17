@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_ENUM_HPP_
-#define _POTENTIAL_ENUM_HPP_
+#ifndef CONFIG__ENUMS__POTENTIAL_HPP
+#define CONFIG__ENUMS__POTENTIAL_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -97,4 +97,4 @@ struct mstd::EnumAliases<CoulombLongRangeType>
 
 #undef COULOMB_LONG_RANGE_TYPE_LIST
 
-#endif   // _POTENTIAL_ENUM_HPP_
+#endif   // CONFIG__ENUMS__POTENTIAL_HPP

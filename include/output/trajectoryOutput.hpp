@@ -20,19 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TRAJECTORY_OUTPUT_HPP_
-
-#define _TRAJECTORY_OUTPUT_HPP_
+#ifndef OUTPUT__TRAJECTORY_OUTPUT_HPP
+#define OUTPUT__TRAJECTORY_OUTPUT_HPP
 
 #include <cstddef>
 
 #include "hybridConfigurator.hpp"
 #include "output.hpp"
-
-namespace molsys
-{
-    class SimulationBox;   // forward declaration
-}   // namespace molsys
+#include "textBuffer.hpp"
 
 namespace configurator
 {
@@ -41,6 +36,8 @@ namespace configurator
 
 namespace out
 {
+    struct Frame;   // forward declaration
+
     /**
      * @brief TrajectoryOutput inherits from Output
      *
@@ -49,29 +46,35 @@ namespace out
      */
     class TrajectoryOutput : public Output
     {
+       private:
+        TextBuffer _buffer;
+
        public:
         using Output::Output;
 
-        void writeHeader(const molsys::SimulationBox &simulationBox);
-        void writeXyz(const molsys::SimulationBox &simulationBox, size_t step);
+        void writeHeader(const Frame &frame);
+        void writeXyz(const Frame &frame, size_t step, bool includeMetadata);
         void writeHybridCenterXyz(
             const configurator::HybridConfigurator &configurator,
-            size_t                                  step
+            size_t                                  step,
+            bool                                    includeMetadata
         );
         void writeVelocities(
-            const molsys::SimulationBox &simulationBox,
-            size_t                       step
+            const Frame &frame,
+            size_t       step,
+            bool         includeMetadata
         );
-        void writeForces(
-            const molsys::SimulationBox &simulationBox,
-            size_t                       step
-        );
+        void writeForces(const Frame &frame, size_t step, bool includeMetadata);
         void writeCharges(
-            const molsys::SimulationBox &simulationBox,
-            size_t                       step
+            const Frame &frame,
+            size_t       step,
+            bool         includeMetadata
         );
+
+       private:
+        void _flushBuffer();
     };
 
 }   // namespace out
 
-#endif   // _TRAJECTORY_OUTPUT_HPP_
+#endif   // OUTPUT__TRAJECTORY_OUTPUT_HPP

@@ -36,6 +36,7 @@ target_link_libraries(PQ
   driver
   exceptions
   commandLineArgs
+  interrupt
 )
 
 if(BUILD_WITH_MPI)
@@ -73,19 +74,23 @@ if(BUILD_WITH_TESTS)
     PROPERTIES LABELS installation RUN_SERIAL TRUE
   )
 
-  add_test(
-    NAME testPQExternalQMScriptInstall
-    COMMAND
-      ${CMAKE_COMMAND}
-      -DBUILD_DIR=${CMAKE_BINARY_DIR}
-      -DSCRIPT_TEST_EXECUTABLE=$<TARGET_FILE:testQMSetup>
-      -DSTAGING_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/pq-qm-script-install
-      -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQExternalQMScriptInstall.cmake
-  )
-  set_tests_properties(
-    testPQExternalQMScriptInstall
-    PROPERTIES LABELS installation RUN_SERIAL TRUE
-  )
+  # Static and Singularity builds reject 'qm_script' (qm_script_full_path is
+  # required), so the lookup of installed bundled scripts does not exist there.
+  if(BUILD_SHARED_LIBS AND NOT BUILD_WITH_SINGULARITY)
+    add_test(
+      NAME testPQExternalQMScriptInstall
+      COMMAND
+        ${CMAKE_COMMAND}
+        -DBUILD_DIR=${CMAKE_BINARY_DIR}
+        -DSCRIPT_TEST_EXECUTABLE=$<TARGET_FILE:testQMSetup>
+        -DSTAGING_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/pq-qm-script-install
+        -P ${PROJECT_SOURCE_DIR}/tests/cmake/testPQExternalQMScriptInstall.cmake
+    )
+    set_tests_properties(
+      testPQExternalQMScriptInstall
+      PROPERTIES LABELS installation RUN_SERIAL TRUE
+    )
+  endif()
 
   if(BUILD_WITH_ASE)
     add_test(

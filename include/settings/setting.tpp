@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTING_TPP_
-#define _SETTING_TPP_
+#ifndef SETTINGS__SETTING_TPP
+#define SETTINGS__SETTING_TPP
 
 #include "exceptions.hpp"
 #include "setting.hpp"
@@ -31,20 +31,44 @@
  *
  * @param defaultValue the default value for the setting.
  */
-template <typename T>
-Setting<T>::Setting(const T& defaultValue) : _default(defaultValue)
+template <typename T, mstd::Tag Name>
+Setting<T, Name>::Setting(const T& defaultValue)
+    : _default(defaultValue), _setter(Setter::Default)
 {
 }
 
 /**
- * Check if the setting has been set.
+ * Check if the setting has been set by the user.
  *
- * @return true if the setting has a value, false otherwise.
+ * @return true if the setting has a value set by the user, false otherwise.
  */
-template <typename T>
-bool Setting<T>::isSet() const
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSetByUser() const
 {
-    return _value.has_value();
+    return _value.has_value() && _setter == Setter::User;
+}
+
+/**
+ * Check if the setting has been set by the system.
+ *
+ * @return true if the setting has a value set by the system, false otherwise.
+ */
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSetBySystem() const
+{
+    return _value.has_value() && _setter == Setter::System;
+}
+
+/**
+ * Check if the setting has been set by anyone (user or system).
+ *
+ * @return true if the setting has a value set by either the user or the system,
+ * false otherwise.
+ */
+template <typename T, mstd::Tag Name>
+bool Setting<T, Name>::isSetBySomeone() const
+{
+    return _value.has_value() && _setter != Setter::None;
 }
 
 /**
@@ -54,13 +78,11 @@ bool Setting<T>::isSet() const
  * @throws exc::SettingsException if the setting is not set and no default
  * is available.
  */
-template <typename T>
-const T& Setting<T>::get() const
+template <typename T, mstd::Tag Name>
+const T& Setting<T, Name>::get() const
 {
     if (!_value.has_value() && !_default.has_value())
-        throw exc::SettingsException(
-            "Setting value is not set and no default is available."
-        );
+        _throwIfNotSet();
 
     if (!_value.has_value())
         return _default.value();
@@ -73,10 +95,42 @@ const T& Setting<T>::get() const
  *
  * @param value the value to set for the setting.
  */
-template <typename T>
-void Setting<T>::set(const T& value)
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::setByUser(const T& value)
 {
-    _value = value;
+    _value  = value;
+    _setter = Setter::User;
 }
 
-#endif   // _SETTING_TPP_
+/**
+ * @brief Set the value of the setting by the system.
+ *
+ * @tparam T
+ * @tparam Name
+ * @param value
+ */
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::setBySystem(const T& value)
+{
+    _value  = value;
+    _setter = Setter::System;
+}
+
+/**
+ * Throw an exception if the setting is not set and no default is available.
+ *
+ * @throws exc::SettingsException if the setting is not set and no default
+ * is available.
+ */
+template <typename T, mstd::Tag Name>
+void Setting<T, Name>::_throwIfNotSet() const
+{
+    std::string errorMessage =
+        "Setting value is not set and no default is available.";
+
+    errorMessage = Name.to_string() + ": " + errorMessage;
+
+    throw exc::SettingsException(errorMessage);
+}
+
+#endif   // SETTINGS__SETTING_TPP

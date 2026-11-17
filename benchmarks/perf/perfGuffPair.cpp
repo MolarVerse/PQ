@@ -40,6 +40,7 @@
 
 #include "defaults.hpp"
 #include "guffPair.hpp"
+#include "perfAlloc.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
@@ -55,6 +56,8 @@ int main()
 
     const auto denseGuff  = pot::GuffPair(9.0, 1.0, 2.0, dense);
     const auto sparseGuff = pot::GuffPair(9.0, 1.0, 2.0, sparse);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

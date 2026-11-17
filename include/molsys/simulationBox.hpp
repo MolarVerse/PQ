@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_HPP_
-
-#define _SIMULATION_BOX_HPP_
+#ifndef MOLSYS__SIMULATION_BOX_HPP
+#define MOLSYS__SIMULATION_BOX_HPP
 
 #include <memory>
 #include <optional>
@@ -32,11 +31,11 @@
 #include <vector>
 
 #include "atom.hpp"
-#include "box.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 
 /**
  * @namespace molsys
@@ -87,6 +86,10 @@ namespace molsys
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
+        // cumulative number of atoms per molecule (0, n0, n0 + n1, ...), only
+        // filled between buildAtomIndexLookup() and clearAtomIndexLookup()
+        std::vector<size_t> _atomIndexOffsets;
+
         std::vector<ExtVdwType> _externalGlobalVdwTypes;
         std::unordered_map<ExtVdwType, VdwType>
             _externalToInternalGlobalVDWTypes;
@@ -120,7 +123,7 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] double        calculateTemperature();
+        [[nodiscard]] Temperature   calculateTemperature();
         [[nodiscard]] double        calculateTotalForce() const;
         [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
         [[nodiscard]] double        calculateRMSForce() const;
@@ -134,10 +137,7 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
         [[nodiscard]] linalg::Vec3D calcShiftVector(
             const linalg::Vec3D& position
-        ) const
-        {
-            return _box->calcShiftVector(position);
-        }
+        ) const;
         [[nodiscard]] int calcActiveMolCharge() const;
 
         [[nodiscard]]
@@ -156,6 +156,8 @@ namespace molsys
         std::pair<Molecule*, AtomIndex> findMoleculeByGlobalAtomIndex(
             size_t atomIndex
         );
+        void buildAtomIndexLookup();
+        void clearAtomIndexLookup();
 
 #ifdef WITH_MPI
         [[nodiscard]] std::vector<double> flattenVelocities();
@@ -255,7 +257,7 @@ namespace molsys
          **********************************************/
 
         void applyPBC(linalg::Vec3D& position) const;
-        void scaleBox(const linalg::tensor3D& scalingTensor);
+        void scaleBox(const QuantityTensor3D& scalingTensor);
 
         [[nodiscard]] double getVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;
@@ -266,8 +268,8 @@ namespace molsys
 
 }   // namespace molsys
 
-#ifndef _SIMULATION_BOX_TPP_
-#include "simulationBox.tpp.hpp"   // IWYU pragma: export
+#ifndef MOLSYS__SIMULATION_BOX_TPP
+#include "simulationBox.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _SIMULATION_BOX_HPP_
+#endif   // MOLSYS__SIMULATION_BOX_HPP

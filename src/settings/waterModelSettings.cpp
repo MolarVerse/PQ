@@ -22,7 +22,19 @@
 
 #include "waterModelSettings.hpp"
 
+#include "referenceSettings.hpp"
 #include "rigidWaterGeometry.hpp"
+
+/**
+ * @brief Finalize the water model settings by adding references
+ *
+ * @param references Reference settings to be updated with water model
+ * references
+ */
+void WaterModelSettings::finalize(ReferenceSettings &references)
+{
+    _addReferences(references);
+}
 
 /**
  * @brief Get the rigid geometry parameters for a water model.
@@ -38,7 +50,7 @@ std::optional<RigidWaterGeometry> WaterModelSettings::getRigidWaterGeometry(
 {
     using enum WaterIntraModel;
 
-    if (!_waterIntraModel.isSet())
+    if (!_waterIntraModel.isSetBySomeone())
         return std::nullopt;
 
     switch (_waterIntraModel.get())
@@ -86,9 +98,16 @@ std::optional<RigidWaterGeometry> WaterModelSettings::getRigidWaterGeometry(
  *
  * @return true if water model is set
  */
-bool WaterModelSettings::isWaterModelSet() const
+bool WaterModelSettings::isWaterModelSetAndNotNone() const
 {
-    return _waterIntraModel.isSet() || _waterInterModel.isSet();
+    if (_waterIntraModel.isSetBySomeone() &&
+        _waterIntraModel.get() != WaterIntraModel::NONE)
+        return true;
+
+    if (isInterWaterModelSetAndNotNone())
+        return true;
+
+    return false;
 }
 
 /**
@@ -96,9 +115,10 @@ bool WaterModelSettings::isWaterModelSet() const
  *
  * @return true if intermolecular water model is set
  */
-bool WaterModelSettings::isInterWaterModelSet() const
+bool WaterModelSettings::isInterWaterModelSetAndNotNone() const
 {
-    return _waterInterModel.isSet();
+    return _waterInterModel.isSetBySomeone() &&
+           _waterInterModel.get() != WaterInterModel::NONE;
 }
 
 /**
@@ -130,9 +150,9 @@ WaterInterModel WaterModelSettings::getWaterInterModel() const
  *
  * @param model
  */
-void WaterModelSettings::setWaterIntraModel(WaterIntraModel model)
+void WaterModelSettings::setWaterIntraModelByUser(WaterIntraModel model)
 {
-    _waterIntraModel.set(model);
+    _waterIntraModel.setByUser(model);
 }
 
 /**
@@ -140,7 +160,94 @@ void WaterModelSettings::setWaterIntraModel(WaterIntraModel model)
  *
  * @param model
  */
-void WaterModelSettings::setWaterInterModel(WaterInterModel model)
+void WaterModelSettings::setWaterInterModelByUser(WaterInterModel model)
 {
-    _waterInterModel.set(model);
+    _waterInterModel.setByUser(model);
+}
+
+/**
+ * @brief Add reference file entries for the configured water models.
+ *
+ * @details Adds bibliography references for both intramolecular and
+ * intermolecular water models to the references output.
+ */
+void WaterModelSettings::_addReferences(ReferenceSettings &references) const
+{
+    if (_waterIntraModel.isSetBySomeone())
+    {
+        switch (_waterIntraModel.get())
+        {
+            using enum WaterIntraModel;
+            case SPC:
+                references.addReferenceFile(ReferenceFiles::SPC_FILE);
+                break;
+            case SPC_E:
+                references.addReferenceFile(ReferenceFiles::SPC_E_FILE);
+                break;
+            case SPC_FW:
+                references.addReferenceFile(ReferenceFiles::SPC_FW_FILE);
+                break;
+            case QSPC_FW:
+                references.addReferenceFile(ReferenceFiles::QSPC_FW_FILE);
+                break;
+            case SPC_DC:
+                references.addReferenceFile(ReferenceFiles::SPC_DC_FILE);
+                break;
+            case H2O_DC:
+                references.addReferenceFile(ReferenceFiles::H2O_DC_FILE);
+                break;
+            case TIP3P:
+                references.addReferenceFile(ReferenceFiles::TIP3P_FILE);
+                break;
+            case OPC3:
+                references.addReferenceFile(ReferenceFiles::OPC3_FILE);
+                break;
+            case SPC_MTR:
+                references.addReferenceFile(ReferenceFiles::SPC_MTR_FILE);
+                break;
+            case TIP3P_MTR:
+                references.addReferenceFile(ReferenceFiles::TIP3P_MTR_FILE);
+                break;
+            case NONE: break;
+        }
+    }
+
+    if (_waterInterModel.isSetBySomeone())
+    {
+        switch (_waterInterModel.get())
+        {
+            using enum WaterInterModel;
+            case SPC:
+                references.addReferenceFile(ReferenceFiles::SPC_FILE);
+                break;
+            case SPC_E:
+                references.addReferenceFile(ReferenceFiles::SPC_E_FILE);
+                break;
+            case SPC_FW:
+                references.addReferenceFile(ReferenceFiles::SPC_FW_FILE);
+                break;
+            case QSPC_FW:
+                references.addReferenceFile(ReferenceFiles::QSPC_FW_FILE);
+                break;
+            case SPC_DC:
+                references.addReferenceFile(ReferenceFiles::SPC_DC_FILE);
+                break;
+            case H2O_DC:
+                references.addReferenceFile(ReferenceFiles::H2O_DC_FILE);
+                break;
+            case TIP3P:
+                references.addReferenceFile(ReferenceFiles::TIP3P_FILE);
+                break;
+            case OPC3:
+                references.addReferenceFile(ReferenceFiles::OPC3_FILE);
+                break;
+            case SPC_MTR:
+                references.addReferenceFile(ReferenceFiles::SPC_MTR_FILE);
+                break;
+            case TIP3P_MTR:
+                references.addReferenceFile(ReferenceFiles::TIP3P_MTR_FILE);
+                break;
+            case NONE: break;
+        }
+    }
 }

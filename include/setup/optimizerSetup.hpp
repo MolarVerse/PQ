@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_SETUP_HPP_
-
-#define _OPTIMIZER_SETUP_HPP_
+#ifndef SETUP__OPTIMIZER_SETUP_HPP
+#define SETUP__OPTIMIZER_SETUP_HPP
 
 #include "learningRateStrategy.hpp"
 #include "optimizer.hpp"
@@ -68,4 +67,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _OPTIMIZER_SETUP_HPP_
+#endif   // SETUP__OPTIMIZER_SETUP_HPP

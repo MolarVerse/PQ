@@ -31,7 +31,6 @@
 #include "potentialBruteForce.hpp"
 #include "settings.hpp"
 #include "stdoutOutput.hpp"
-#include "timingsSettings.hpp"
 
 namespace engine
 {
@@ -53,7 +52,8 @@ namespace engine
      * cell list, intra-non-bonded handler, force field, and constraints.
      */
     Engine::Engine(const Settings &settings)
-        : _potential{std::make_shared<pot::PotentialBruteForce>()},
+        : _engineOutput(settings.outputFiles, settings.referenceSettings),
+          _potential{std::make_shared<pot::PotentialBruteForce>()},
           _physicalData{std::make_shared<physicalData::PhysicalData>()},
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
@@ -77,13 +77,14 @@ namespace engine
     /**
      * @brief Calculate total simulation time.
      *
-     * @return double
+     * @return Time
      */
-    double Engine::calculateTotalSimulationTime() const
+    Time Engine::calculateTotalSimulationTime(
+        const Time &timeStep,
+        size_t      startingStepCount
+    ) const
     {
-        const auto step0    = settings::TimingsSettings::getStepCount();
-        const auto timeStep = settings::TimingsSettings::getTimeStep();
-        const auto effStep  = _step + step0;
+        const auto effStep = _step + startingStepCount;
 
         return static_cast<double>(effStep) * timeStep;
     }
@@ -95,23 +96,16 @@ namespace engine
      * calculations. The files are safely deleted using std::filesystem::remove,
      * which does not throw exceptions if the files do not exist.
      */
-    void Engine::deleteTmpFiles()
+    void Engine::deleteTmpFiles() const
     {
         using std::filesystem::remove;
 
-        const auto qm_forces =
-            settings::FileSettings::getQMForcesTempFileName();
-        const auto qm_charges =
-            settings::FileSettings::getQMChargesTempFileName();
-        const auto stress_tensor =
-            settings::FileSettings::getStressTensorTempFileName();
-        const auto pointcharges =
-            settings::FileSettings::getPointChargeFileName();
+        const auto &fileSettings = getSettings().fileSettings;
 
-        remove(qm_forces);
-        remove(qm_charges);
-        remove(stress_tensor);
-        remove(pointcharges);
+        remove(fileSettings.getQMForcesTempFileName());
+        remove(fileSettings.getQMChargesTempFileName());
+        remove(fileSettings.getStressTensorTempFileName());
+        remove(fileSettings.getPointChargeFileName());
     }
 
     /**
@@ -393,20 +387,6 @@ namespace engine
     {
         return *_intraWater;
     }
-
-    /**
-     * @brief get the number of steps
-     *
-     * @return size_t
-     */
-    size_t Engine::_getNSteps() const { return _nSteps; }
-
-    /**
-     * @brief set the number of steps
-     *
-     * @param nSteps
-     */
-    void Engine::_setNSteps(size_t nSteps) { _nSteps = nSteps; }
 
     /**
      * @brief set the current step

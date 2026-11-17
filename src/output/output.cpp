@@ -22,11 +22,11 @@
 
 #include "output.hpp"
 
+#include <filesystem>
 #include <format>
 #include <fstream>
 
 #include "exceptions.hpp"
-#include "outputFileSettings.hpp"
 
 namespace out
 {
@@ -35,16 +35,18 @@ namespace out
      * @brief Sets the filename of the output file
      *
      * @param filename
+     * @param overwriteOutputFiles
      *
      * @throw InputFileException if filename is empty
      * @throw InputFileException if file already exists
      * and output should not be overwritten
      */
-    void Output::setFilename(const std::string_view &filename)
+    void Output::setFilename(
+        const std::string_view &filename,
+        bool                    overwriteOutputFiles
+    )
     {
         _fileName = filename;
-        const auto overwriteOutputFiles =
-            settings::OutputFileSettings::getOverwriteOutputFiles();
 
         if (_fileName.empty())
             throw exc::InputFileException("Filename cannot be empty");
@@ -75,13 +77,45 @@ namespace out
     }
 
     /**
+     * @brief replace the whole file with content, so that it is either the
+     * old or the new file even if PQ stops while writing
+     *
+     * @details content is written to the file name plus ".tmp", which is
+     * renamed over the file; a rename within one directory is atomic
+     *
+     * @param content
+     *
+     * @throw InputFileException if the temporary file cannot be written
+     */
+    void Output::_replaceFile(const std::string_view content)
+    {
+        const auto tmpName = _fileName + ".tmp";
+
+        _fp.close();
+
+        {
+            std::ofstream tmp(tmpName);
+            tmp << content;
+            tmp.close();
+
+            if (!tmp)
+                throw exc::InputFileException(
+                    "Could not write file - filename = " + tmpName
+                );
+        }
+
+        std::filesystem::rename(tmpName, _fileName);
+    }
+
+    /**
      * @brief Write the shared trajectory frame comment
      *
      * @param step simulation step
+     * @param includeMetadata whether to include metadata in the comment
      */
-    void Output::_writeComment(size_t step)
+    void Output::_writeComment(size_t step, bool includeMetadata)
     {
-        if (settings::OutputFileSettings::getIncludeOutputMetadata())
+        if (includeMetadata)
             _fp << std::format("# step = {}\n", step);
         else
             _fp << '\n';
@@ -92,10 +126,15 @@ namespace out
      *
      * @param step simulation step
      * @param totalForce total force acting on the system
+     * @param includeMetadata whether to include metadata in the comment
      */
-    void Output::_writeForceComment(size_t step, double totalForce)
+    void Output::_writeForceComment(
+        size_t step,
+        double totalForce,
+        bool   includeMetadata
+    )
     {
-        _fp << _formatForceComment(step, totalForce);
+        _fp << _formatForceComment(step, totalForce, includeMetadata);
     }
 
     /**
@@ -103,17 +142,18 @@ namespace out
      *
      * @param step simulation step
      * @param totalForce total force acting on the system
+     * @param includeMetadata whether to include metadata in the formatted
+     * comment
      * @return formatted force comment
      */
     std::string Output::_formatForceComment(
         const size_t step,
-        const double totalForce
+        const double totalForce,
+        bool         includeMetadata
     )
     {
         const auto stepMetadata =
-            settings::OutputFileSettings::getIncludeOutputMetadata()
-                ? std::format("step = {}; ", step)
-                : "";
+            includeMetadata ? std::format("step = {}; ", step) : "";
 
         return format(
             "# {}Total force = {:.5e} kcal/mol/Angstrom\n",

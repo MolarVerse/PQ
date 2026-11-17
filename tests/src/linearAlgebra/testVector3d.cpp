@@ -22,17 +22,82 @@
 
 #include <gtest/gtest.h>
 
+#include <array>
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 #include <limits>
+#include <mstd/units.hpp>
 #include <string>
 
+#include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
 /**
  * @brief tests constructors for linalg::Vector3D
  *
  */
+namespace
+{
+    // builds a T (default initialised, `T value;`) into storage that is filled
+    // with 0xFF, which is a NaN for a double
+    template <typename T>
+    struct PoisonedStorage
+    {
+        alignas(T) std::array<std::byte, sizeof(T)> bytes{};
+        T *object = _construct(bytes);
+
+        ~PoisonedStorage() { object->~T(); }
+
+        PoisonedStorage()                                   = default;
+        PoisonedStorage(const PoisonedStorage &)            = delete;
+        PoisonedStorage &operator=(const PoisonedStorage &) = delete;
+        PoisonedStorage(PoisonedStorage &&)                 = delete;
+        PoisonedStorage &operator=(PoisonedStorage &&)      = delete;
+
+       private:
+        static T *_construct(std::array<std::byte, sizeof(T)> &storage)
+        {
+            storage.fill(std::byte{0xFF});
+            // default initialisation on purpose: `T()` would zero a class
+            // whose constructor is defaulted
+            return new (storage.data()) T;
+        }
+    };
+}   // namespace
+
+/**
+ * @brief a default constructed vector is zero, whatever the memory held
+ *
+ * @details A defaulted constructor left the components uninitialised, which
+ * printed garbage (once inf) into the first energy and momentum line of a run.
+ */
+TEST(TestVector3d, defaultConstructedIsZero)
+{
+    const PoisonedStorage<linalg::Vector3D<double>> vector;
+
+    for (size_t i = 0; i < 3; ++i) EXPECT_EQ((*vector.object)[i], 0.0);
+
+    const PoisonedStorage<linalg::Vector3D<int>> intVector;
+
+    for (size_t i = 0; i < 3; ++i) EXPECT_EQ((*intVector.object)[i], 0);
+}
+
+TEST(TestVector3d, defaultConstructedNestedAndMatrixAreZero)
+{
+    const PoisonedStorage<linalg::Vector3D<linalg::Vector3D<double>>> nested;
+    const PoisonedStorage<linalg::StaticMatrix3x3<double>>            matrix;
+
+    for (size_t i = 0; i < 3; ++i)
+    {
+        for (size_t j = 0; j < 3; ++j)
+        {
+            EXPECT_EQ((*nested.object)[i][j], 0.0);
+            EXPECT_EQ((*matrix.object)[i][j], 0.0);
+        }
+    }
+}
+
 TEST(TestVector3d, constructors)
 {
     auto vec = linalg::Vec3D(0.0, 1.0, 2.0);
@@ -648,17 +713,17 @@ TEST(TestVector3d, end)
 TEST(TestVector3d, equalOperator)
 {
     auto                 vec1 = linalg::Vec3D(1.0, 2.0, 3.0);
-    const linalg::Vec3D& vec2 = vec1;
+    const linalg::Vec3D &vec2 = vec1;
 
     EXPECT_EQ(vec1, vec2);
 
     auto                  vec3 = linalg::Vec3Di(1, 2, 3);
-    const linalg::Vec3Di& vec4 = vec3;
+    const linalg::Vec3Di &vec4 = vec3;
 
     EXPECT_EQ(vec3, vec4);
 
     auto                   vec5 = linalg::Vec3Dul(1, 2, 3);
-    const linalg::Vec3Dul& vec6 = vec5;
+    const linalg::Vec3Dul &vec6 = vec5;
 
     EXPECT_EQ(vec5, vec6);
 }
@@ -836,4 +901,55 @@ TEST(TestVector3d, divisionAssignmentOperator)
             vec / vec / vec
         )
     );
+}
+
+namespace
+{
+    using Angle = mstd::quantity<mstd::units::rad>;
+
+    template <typename U, typename V>
+    concept CanAdd = requires(U lhs, V rhs) { lhs + rhs; };
+
+    template <typename U, typename V>
+    concept CanMultiply = requires(U lhs, V rhs) { lhs * rhs; };
+}   // namespace
+
+/**
+ * @brief tests the binary operators for linalg::Vector3D of quantities
+ */
+TEST(TestVector3d, quantityVectorOperators)
+{
+    using mstd::units::rad;
+
+    const auto vec = linalg::Vector3D<Angle>(
+        Angle{1.0 * rad},
+        Angle{2.0 * rad},
+        Angle{3.0 * rad}
+    );
+    const auto plain = linalg::Vec3D(1.0, 2.0, 3.0);
+
+    const auto sum = vec + vec;
+    EXPECT_DOUBLE_EQ(sum[0].numerical_value_in(rad), 2.0);
+    EXPECT_DOUBLE_EQ(sum[2].numerical_value_in(rad), 6.0);
+
+    const auto &vec2 = vec;
+    const auto  diff = vec - vec2;
+    EXPECT_DOUBLE_EQ(diff[1].numerical_value_in(rad), 0.0);
+
+    const auto scaled = vec * 2.0;
+    EXPECT_DOUBLE_EQ(scaled[1].numerical_value_in(rad), 4.0);
+
+    const auto scaledLeft = 2.0 * vec;
+    EXPECT_DOUBLE_EQ(scaledLeft[2].numerical_value_in(rad), 6.0);
+
+    const auto product = vec * plain;
+    EXPECT_DOUBLE_EQ(product[2].numerical_value_in(rad), 9.0);
+
+    const auto divided = vec / 2.0;
+    EXPECT_DOUBLE_EQ(divided[2].numerical_value_in(rad), 1.5);
+
+    // a quantity cannot be added to a plain number
+    static_assert(!CanAdd<linalg::Vector3D<Angle>, double>);
+    static_assert(!CanAdd<linalg::Vector3D<Angle>, linalg::Vec3D>);
+    static_assert(CanMultiply<linalg::Vector3D<Angle>, linalg::Vec3D>);
 }

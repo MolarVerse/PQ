@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_CONSTRAINT_HPP_
-
-#define _BOND_CONSTRAINT_HPP_
+#ifndef CONSTRAINTS__BOND_CONSTRAINT_HPP
+#define CONSTRAINTS__BOND_CONSTRAINT_HPP
 
 #include "bond.hpp"
 #include "vector3d.hpp"
@@ -66,7 +65,11 @@ namespace constraints
         [[nodiscard]] double calculateVelocityDelta() const;
 
         [[nodiscard]]
-        bool applyShake(const molsys::SimulationBox &, double);
+        bool applyShake(
+            const molsys::SimulationBox &,
+            double,
+            const Time &timeStep
+        );
 
         [[nodiscard]] bool applyRattle(double);
 
@@ -86,4 +89,4 @@ namespace constraints
 
 }   // namespace constraints
 
-#endif   // _BOND_CONSTRAINT_HPP_
+#endif   // CONSTRAINTS__BOND_CONSTRAINT_HPP

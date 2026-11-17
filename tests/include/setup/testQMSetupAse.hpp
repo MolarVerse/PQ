@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_QMSETUP_ASE_HPP_
-
-#define _TEST_QMSETUP_ASE_HPP_
+#ifndef TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP
+#define TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP
 
 #include <gtest/gtest.h>
 
@@ -45,24 +44,32 @@ class TestQMSetupAse : public ::testing::Test
 
     void SetUp() override
     {
+        // Remove any existing default log file to ensure a clean test
+        // environment
+        const auto _ = std::remove("default.log");
+        _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+        _settings.timings.setNumberOfStepsByUser(100U);
         _engine  = std::make_unique<engine::QMMDEngine>(_settings);
-        _qmSetup = std::make_unique<setup::QMSetup>(*_engine);
-        _engine->getEngineOutput().getLogOutput().setFilename("default.log");
-        settings::QMSettings::setQMMethod(QMMethod::ASE_DFTBPLUS);
+        _qmSetup = std::make_unique<setup::QMSetup>(
+            *_engine,
+            _settings.qmSettings,
+            _settings.maceSettings,
+            _settings.fennolSettings,
+            _settings.dftbSettings,
+            _settings.xtbSettings,
+            _settings.externalQMSettings
+        );
+        _engine->getEngineOutput().getLogOutput().setFilename(
+            "default.log",
+            false
+        );
     }
 
     void TearDown() override
     {
         const auto errorCode = std::remove("default.log");
         EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-        settings::QMSettings::setQMMethod(QMMethod::NONE);
-        settings::QMSettings::setSlakosType(SlakosType::NONE);
-        settings::QMSettings::setUseDispersionCorrection(false);
-        settings::QMSettings::setUseThirdOrderDftb(false);
-        settings::QMSettings::setIsThirdOrderDftbSet(false);
-        settings::QMSettings::setHubbardDerivs({});
-        settings::QMSettings::setIsHubbardDerivsSet(false);
     }
 };
 
-#endif   // _TEST_QMSETUP_ASE_HPP_
+#endif   // TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP

@@ -25,6 +25,8 @@
 #include <limits>
 
 #include "mathUtilities.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 /**
@@ -116,4 +118,22 @@ TEST(TestMathUtilities, isZero)
     EXPECT_FALSE(utilities::isZero(1.0));
     EXPECT_FALSE(utilities::isZero(std::numeric_limits<double>::epsilon()));
     EXPECT_FALSE(utilities::isZero(std::numeric_limits<double>::min()));
+}
+
+/**
+ * @brief tests isZero for unit-carrying quantities, which use the
+ * quantity's own zero() instead of T(0)
+ */
+TEST(TestMathUtilities, isZeroQuantity)
+{
+    EXPECT_TRUE(utilities::isZero(mstd::units::delta<K>(0.0)));
+    EXPECT_TRUE(utilities::isZero(mstd::units::delta<K>(-0.0)));
+    EXPECT_FALSE(utilities::isZero(mstd::units::delta<K>(1.0)));
+    EXPECT_FALSE(utilities::isZero(mstd::units::delta<K>(-1e-300)));
+
+    const Temperature absolute = mstd::units::point<K>(0.0);
+    EXPECT_TRUE(utilities::isZero(absolute.quantity_from_zero()));
+    EXPECT_FALSE(
+        utilities::isZero(mstd::units::point<K>(300.0).quantity_from_zero())
+    );
 }

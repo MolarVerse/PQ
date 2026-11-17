@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TRICLINIC_BOX_HPP_
-
-#define _TRICLINIC_BOX_HPP_
+#ifndef BOX__TRICLINIC_BOX_HPP
+#define BOX__TRICLINIC_BOX_HPP
 
 #include <memory>
 #include <mstd/types.hpp>
@@ -69,10 +68,13 @@ namespace molsys
         TensorCache<_boxMatrixPtr>      _inverse{_calculateInverse};
         BoxCache<double, _boxMatrixPtr> _volume{_calculateVolume};
 
+        bool _allowChangeOfAngles;
+
        public:
         TriclinicBox(
             const linalg::Vec3D &boxDimensions,
-            const linalg::Vec3D &boxAngles
+            const linalg::Vec3D &boxAngles,
+            bool                 allowChangeOfAngles
         );
 
         [[nodiscard]]
@@ -81,30 +83,31 @@ namespace molsys
         [[nodiscard]]
         linalg::Vec3D calcShiftVector(const linalg::Vec3D &vec) const override;
 
-        [[nodiscard]]
-        linalg::Vec3D toOrthoSpace(const linalg::Vec3D &vec) const override;
-        [[nodiscard]]
-        linalg::tensor3D toOrthoSpace(
-            const linalg::tensor3D &mat
-        ) const override;
-
-        [[nodiscard]]
-        linalg::Vec3D toSimSpace(const linalg::Vec3D &vec) const override;
-        [[nodiscard]]
-        linalg::tensor3D toSimSpace(const linalg::tensor3D &mat) const override;
-
         void applyPBC(linalg::Vec3D &position) const override;
-        void scaleBox(const linalg::tensor3D &scalingTensor) override;
+        void scaleBox(const QuantityTensor3D &scalingTensor) override;
 
         [[nodiscard]] double getMinimalBoxDimension() const override;
         [[nodiscard]] double getVolume() const override;
 
         [[nodiscard]]
         linalg::tensor3D getBoxMatrix(Periodicity periodicity) const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getBoxMatrix() const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getInverseBoxMatrix() const override;
+
         [[nodiscard]]
         linalg::Vec3D wrapPositionIntoBox(
             const linalg::Vec3D &pos
         ) const override;
+
+        [[nodiscard]]
+        bool allowChangeOfAngles() const override;
+
+        [[nodiscard]]
+        bool isOrthorhombic() const override;
 
        private:
         [[nodiscard]]
@@ -142,4 +145,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _TRICLINIC_BOX_HPP_
+#endif   // BOX__TRICLINIC_BOX_HPP

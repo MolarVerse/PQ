@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTRA_NON_BONDED_READER_HPP_
-
-#define _INTRA_NON_BONDED_READER_HPP_
+#ifndef INPUT__INTRA_NON_BONDED_READER_HPP
+#define INPUT__INTRA_NON_BONDED_READER_HPP
 
 #include <cstddef>
 #include <fstream>
@@ -75,4 +74,4 @@ namespace input::intraNonBondedReader
 
 }   // namespace input::intraNonBondedReader
 
-#endif   // _INTRA_NON_BONDED_READER_HPP_
+#endif   // INPUT__INTRA_NON_BONDED_READER_HPP

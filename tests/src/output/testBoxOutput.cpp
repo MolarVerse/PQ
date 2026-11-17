@@ -35,7 +35,7 @@ TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
     const std::string path = "default.box.test";
 
     out::BoxFileOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     molsys::OrthorhombicBox box({10.0, 20.0, 30.0});
 
@@ -59,7 +59,7 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     const std::string path = "default.box.test";
 
     out::BoxFileOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     molsys::OrthorhombicBox box(linalg::Vec3D(1.0, 2.0, 3.0));
 

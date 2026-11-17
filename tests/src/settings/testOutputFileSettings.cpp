@@ -26,14 +26,33 @@
 
 #include "outputFileSettings.hpp"
 
+struct TestOutputFileSettings
+{
+    static std::string determineMostCommonPrefix(
+        const OutputFileSettings& settings
+    )
+    {
+        return settings._determineMostCommonPrefix();
+    }
+
+    static void replaceDefaultValues(
+        OutputFileSettings& settings,
+        const std::string&  prefix
+    )
+    {
+        settings._replaceDefaultValues(prefix);
+    }
+};
+
 /**
  * @brief tests setting output frequency
  *
  */
 TEST(TestOutputSettings, setSpecialOutputFrequency)
 {
-    settings::OutputFileSettings::setOutputFrequency(0);
-    EXPECT_EQ(settings::OutputFileSettings::getOutputFrequency(), UINT64_MAX);
+    OutputFileSettings settings;
+    settings.setOutputFrequencyByUser(0);
+    EXPECT_EQ(settings.getOutputFrequency(), UINT64_MAX);
 }
 
 /**
@@ -42,52 +61,82 @@ TEST(TestOutputSettings, setSpecialOutputFrequency)
  */
 TEST(TestOutputSettings, includeOutputMetadataDefaultsToFalse)
 {
-    EXPECT_FALSE(settings::OutputFileSettings::getIncludeOutputMetadata());
+    OutputFileSettings settings;
+    EXPECT_FALSE(settings.getIncludeOutputMetadata());
 
-    settings::OutputFileSettings::setIncludeOutputMetadata(true);
-    EXPECT_TRUE(settings::OutputFileSettings::getIncludeOutputMetadata());
+    settings.setIncludeOutputMetadataByUser(true);
+    EXPECT_TRUE(settings.getIncludeOutputMetadata());
 
-    settings::OutputFileSettings::setIncludeOutputMetadata(false);
+    settings.setIncludeOutputMetadataByUser(false);
 }
 
 TEST(TestOutputSettings, determinesMostCommonConfiguredPrefix)
 {
-    using settings::OutputFileSettings;
+    OutputFileSettings settings;
+    settings.setRestartFileNameByUser("production.rst");
+    settings.setEnergyFileNameByUser("production.en");
+    settings.setTrajectoryFileNameByUser("production.xyz");
+    settings.setOptFileNameByUser("optimization.opt");
+    settings.setFilePrefixByUser("production");
+    settings.setOverwriteOutputFilesByUser(true);
+    settings.setOutputFrequencyByUser(5);
 
-    OutputFileSettings::setRestartFileName("production.rst");
-    OutputFileSettings::setEnergyFileName("production.en");
-    OutputFileSettings::setTrajectoryFileName("production.xyz");
-    OutputFileSettings::setOptFileName("optimization.opt");
-    OutputFileSettings::setFilePrefix("production");
-    OutputFileSettings::setOverwriteOutputFiles(true);
-    OutputFileSettings::setOutputFrequency(5);
-
-    EXPECT_EQ(OutputFileSettings::determineMostCommonPrefix(), "production");
-    EXPECT_EQ(OutputFileSettings::getOptFileName(), "optimization.opt");
-    EXPECT_EQ(OutputFileSettings::getFilePrefix(), "production");
-    EXPECT_TRUE(OutputFileSettings::isFilePrefixSet());
-    EXPECT_TRUE(OutputFileSettings::getOverwriteOutputFiles());
-    EXPECT_EQ(OutputFileSettings::getOutputFrequency(), 5);
+    EXPECT_EQ(
+        TestOutputFileSettings::determineMostCommonPrefix(settings),
+        "production"
+    );
+    EXPECT_EQ(settings.getOptFileName(), "optimization.opt");
+    EXPECT_EQ(settings.getFilePrefix(), "production");
+    EXPECT_TRUE(settings.getOverwriteOutputFiles());
+    EXPECT_EQ(settings.getOutputFrequency(), 5);
 }
 
 TEST(TestOutputSettings, setsHybridCenterFilename)
 {
-    settings::OutputFileSettings::setHybridCenterFileName("center.xyz");
-    EXPECT_EQ(
-        settings::OutputFileSettings::getHybridCenterFileName(),
-        "center.xyz"
-    );
+    OutputFileSettings settings;
+    settings.setHybridCenterFileNameByUser("center.xyz");
+    EXPECT_EQ(settings.getHybridCenterFileName(), "center.xyz");
 }
 
 TEST(TestOutputSettings, replacesDefaultHybridCenterFilenameWithPrefix)
 {
-    using settings::OutputFileSettings;
+    OutputFileSettings settings;
+    TestOutputFileSettings::replaceDefaultValues(settings, "centerPrefix");
 
-    OutputFileSettings::setHybridCenterFileName(DefaultFiles::hybridCenterFile);
-    OutputFileSettings::replaceDefaultValues("centerPrefix");
+    EXPECT_EQ(settings.getHybridCenterFileName(), "centerPrefix.center.xyz");
+}
+
+TEST(TestOutputSettings, preservesUserSetHybridCenterFilenameEqualToDefault)
+{
+    OutputFileSettings settings;
+    settings.setHybridCenterFileNameByUser(DefaultFiles::hybridCenterFile);
+    TestOutputFileSettings::replaceDefaultValues(settings, "centerPrefix");
 
     EXPECT_EQ(
-        OutputFileSettings::getHybridCenterFileName(),
-        "centerPrefix.center.xyz"
+        settings.getHybridCenterFileName(),
+        DefaultFiles::hybridCenterFile
     );
+}
+
+TEST(TestOutputSettings, trajectoryFormatDefaultsToXyz)
+{
+    OutputFileSettings settings;
+    EXPECT_EQ(settings.getTrajectoryFormat(), TrajectoryFormat::XYZ);
+
+    settings.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
+    EXPECT_EQ(settings.getTrajectoryFormat(), TrajectoryFormat::EXTXYZ);
+}
+
+TEST(TestOutputSettings, extxyzFilenameFollowsPrefix)
+{
+    OutputFileSettings settings;
+    settings.setFilePrefixByUser("run");
+    settings.finalize();
+    EXPECT_EQ(settings.getExtxyzFileName(), "run.extxyz");
+
+    OutputFileSettings named;
+    named.setExtxyzFileNameByUser("water.extxyz");
+    named.finalize();
+    EXPECT_EQ(named.getExtxyzFileName(), "water.extxyz");
+    EXPECT_EQ(named.getRestartFileName(), "water.rst");
 }

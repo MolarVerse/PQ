@@ -29,6 +29,7 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "integratorInputParser.hpp"
+#include "referenceSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -40,7 +41,8 @@
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    input::IntegratorInputParser parser;
+    ReferenceSettings            referenceSettings;
+    input::IntegratorInputParser parser(referenceSettings);
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("integrator"));
     const auto &parseFunc = funcMap.at("integrator");
@@ -53,6 +55,9 @@ TEST_F(TestInputFileReader, testParseIntegrator)
         settings::GeneralSettings::getIntegratorType(),
         IntegratorType::VELOCITY_VERLET
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::VELOCITY_VERLET_FILE
+    ));
 
     _clearParser(parser);
 

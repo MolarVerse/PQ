@@ -27,15 +27,15 @@
 TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 {
     ConvSettings convSettings;
-    convSettings.setEnergyConv(1.0e-6);
+    convSettings.setEnergyConvByUser(1.0e-6);
     ASSERT_TRUE(convSettings.getEnergyConv().has_value());
     EXPECT_DOUBLE_EQ(convSettings.getEnergyConv().value(), 1.0e-6);
 
-    convSettings.setRelEnergyConv(1.0e-5);
+    convSettings.setRelEnergyConvByUser(1.0e-5);
     ASSERT_TRUE(convSettings.getRelEnergyConv().has_value());
     EXPECT_DOUBLE_EQ(convSettings.getRelEnergyConv().value(), 1.0e-5);
 
-    convSettings.setAbsEnergyConv(1.0e-4);
+    convSettings.setAbsEnergyConvByUser(1.0e-4);
     ASSERT_TRUE(convSettings.getAbsEnergyConv().has_value());
     EXPECT_DOUBLE_EQ(convSettings.getAbsEnergyConv().value(), 1.0e-4);
 }
@@ -43,15 +43,15 @@ TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 TEST(ConvSettingsTest, ForceConvSettersAndOptionalGetters)
 {
     ConvSettings convSettings;
-    convSettings.setForceConv(1.0e-3);
+    convSettings.setForceConvByUser(1.0e-3);
     ASSERT_TRUE(convSettings.getForceConv().has_value());
     EXPECT_DOUBLE_EQ(convSettings.getForceConv().value(), 1.0e-3);
 
-    convSettings.setMaxForceConv(1.0e-2);
+    convSettings.setMaxForceConvByUser(1.0e-2);
     ASSERT_TRUE(convSettings.getMaxForceConv().has_value());
     EXPECT_DOUBLE_EQ(convSettings.getMaxForceConv().value(), 1.0e-2);
 
-    convSettings.setRMSForceConv(1.0e-3);
+    convSettings.setRMSForceConvByUser(1.0e-3);
     ASSERT_TRUE(convSettings.getRMSForceConv().has_value());
     EXPECT_DOUBLE_EQ(convSettings.getRMSForceConv().value(), 1.0e-3);
 }

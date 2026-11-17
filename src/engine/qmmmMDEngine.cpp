@@ -22,6 +22,7 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdlib>
 #include <format>
@@ -188,8 +189,10 @@ namespace engine
             )
         ));
 
+        const auto nConfigurations = _numberOfSmoothingConfigurations(nSmMol);
+
         // Loop over all combinations of smoothing molecules
-        for (size_t i = 0; i < (1U << nSmMol); ++i)
+        for (size_t i = 0; i < nConfigurations; ++i)
         {
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
@@ -218,11 +221,15 @@ namespace engine
 
             // to not carry over qm_charges of atoms which are not qm
             // anymore
-            for (auto &atom : getSimulationBox().getAtoms())
-                atom->getQMCharge().reset();
+            getSimulationBox().resetQMCharges();
 
-            getQMRunner()
-                ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+            getQMRunner()->run(
+                getSimulationBox(),
+                getPhysicalData(),
+                NON_PERIODIC,
+                getSettings().fileSettings
+            );
+            _calculateQMReferenceEnergy();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
             virial +=
@@ -332,13 +339,15 @@ namespace engine
             getSimulationBox()
         );
 
-        getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        getQMRunner()->run(
+            getSimulationBox(),
+            getPhysicalData(),
+            NON_PERIODIC,
+            getSettings().fileSettings
+        );
+        _calculateQMReferenceEnergy();
 
-        if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
-            _scaleSmoothingMoleculeForcesInner();
-        else
-            _distributeSmoothingMolQMForces();
-
+        _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateQMVirial(getSimulationBox());
         virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToInnerAndReset(atoms);
@@ -456,6 +465,43 @@ namespace engine
     }
 
     /**
+     * @brief Store the summed QM reference energies of all QM molecules in
+     * PhysicalData; they are subtracted from the total energy
+     *
+     * @details Must be called directly after the QM calculation, while
+     * exactly the QM molecules are active. Without it, E_tot jumps by a
+     * molecule's QM energy whenever it enters or leaves the QM region.
+     * Molecules without a moltype entry have no reference energy.
+     */
+    void QMMMMDEngine::_calculateQMReferenceEnergy()
+    {
+        auto &simBox          = getSimulationBox();
+        auto &moleculeTypes   = simBox.getMoleculeTypes();
+        auto  referenceEnergy = 0.0;
+
+        for (const auto &mol : simBox.getMolecules())
+        {
+            if (!mol.isActive())
+            {
+                continue;
+            }
+
+            const auto isMoltype = [&mol](const auto &moleculeType)
+            { return moleculeType.getMoltype() == mol.getMoltype(); };
+
+            const auto moleculeType =
+                std::ranges::find_if(moleculeTypes, isMoltype);
+
+            if (moleculeType != moleculeTypes.end())
+            {
+                referenceEnergy += moleculeType->getQMReferenceEnergy();
+            }
+        }
+
+        getPhysicalDataPtr()->setQMReferenceEnergy(referenceEnergy);
+    }
+
+    /**
      * @brief Validates that all non-core molecules have a non-zero moltype
      *
      * @details This function iterates through all molecules and verifies
@@ -499,6 +545,9 @@ namespace engine
         _qmmmPhysicalData.addQMEnergy(
             getPhysicalDataPtr()->getQMEnergy() * globalSmF
         );
+        _qmmmPhysicalData.addQMReferenceEnergy(
+            getPhysicalDataPtr()->getQMReferenceEnergy() * globalSmF
+        );
         _qmmmPhysicalData.addCoulombEnergy(
             getPhysicalDataPtr()->getCoulombEnergy() * globalSmF
         );
@@ -535,6 +584,9 @@ namespace engine
     void QMMMMDEngine::_moveEnergiesToPhysicalData()
     {
         getPhysicalDataPtr()->setQMEnergy(_qmmmPhysicalData.getQMEnergy());
+        getPhysicalDataPtr()->setQMReferenceEnergy(
+            _qmmmPhysicalData.getQMReferenceEnergy()
+        );
         getPhysicalDataPtr()->setCoulombEnergy(
             _qmmmPhysicalData.getCoulombEnergy()
         );
@@ -562,10 +614,11 @@ namespace engine
 
     /**
      * @brief Dispatch QM-force redistribution for smoothing-zone molecules.
+     * Not used in the code yet, as this requires a new smoothing method, see
+     * issue #1012 https://github.com/MolarVerse/PQ/issues/1012
      *
      * @details Selects the redistribution strategy configured via
      * HybridSettings::getQMForceDist().
-     * - NONE: scale smoothing-zone forces by smF only.
      * - EQUAL: redistribute each smoothing-molecule deficit equally to
      *   CORE/LAYER molecules, then split by atomic mass within each
      * molecule.
@@ -625,7 +678,6 @@ namespace engine
             {
                 using enum QMForceDist;
 
-                case NONE: continue;
                 case EQUAL:
                     weights = std::vector<double>(recipientMolecules.size(), 1);
                     break;

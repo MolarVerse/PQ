@@ -20,17 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MD_ENGINE_HPP_
-
-#define _MD_ENGINE_HPP_
+#ifndef ENGINE__MD_ENGINE_HPP
+#define ENGINE__MD_ENGINE_HPP
 
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
 #include "engine.hpp"
 #include "hybridConfigurator.hpp"
 #include "integrator.hpp"
+#include "kinetics.hpp"
 #include "manostat.hpp"
 #include "momentumOutput.hpp"
+#include "outputFileSettings.hpp"
 #include "resetKinetics.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
@@ -50,7 +51,8 @@ namespace engine
     class MDEngine : public Engine
     {
        private:
-        resetKinetics::ResetKinetics     _resetKinetics;
+        kinetics::ResetKinetics          _resetKinetics;
+        kinetics::Kinetics               _kinetics;
         configurator::HybridConfigurator _configurator{};
 
         std::unique_ptr<integrator::Integrator> _integrator;
@@ -61,8 +63,13 @@ namespace engine
         explicit MDEngine(const Settings &settings);
         ~MDEngine() override = default;
 
-        void         run() override;
-        void         writeOutput() override;
+        void run() override;
+        void writeOutput(const OutputFileSettings &outputSettings) override;
+        void writeOutput(
+            const OutputFileSettings &outputSettings,
+            const Time               &timeStep,
+            size_t                    startingStepCount
+        );
         virtual void takeStep();
 
         void takeStepBeforeForces();
@@ -86,18 +93,18 @@ namespace engine
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] resetKinetics::ResetKinetics &getResetKinetics();
-        [[nodiscard]] integrator::Integrator       &getIntegrator();
-        [[nodiscard]] thermostat::Thermostat       &getThermostat();
-        [[nodiscard]] manostat::Manostat           &getManostat();
-        [[nodiscard]] out::EnergyOutput            &getInstantEnergyOutput();
-        [[nodiscard]] out::MomentumOutput          &getMomentumOutput();
-        [[nodiscard]] out::TrajectoryOutput        &getXyzHybridCenterOutput();
-        [[nodiscard]] out::TrajectoryOutput        &getVelOutput();
-        [[nodiscard]] out::TrajectoryOutput        &getChargeOutput();
-        [[nodiscard]] out::VirialOutput            &getVirialOutput();
-        [[nodiscard]] out::StressOutput            &getStressOutput();
-        [[nodiscard]] out::BoxFileOutput           &getBoxFileOutput();
+        [[nodiscard]] kinetics::ResetKinetics &getResetKinetics();
+        [[nodiscard]] integrator::Integrator  &getIntegrator();
+        [[nodiscard]] thermostat::Thermostat  &getThermostat();
+        [[nodiscard]] manostat::Manostat      &getManostat();
+        [[nodiscard]] out::EnergyOutput       &getInstantEnergyOutput();
+        [[nodiscard]] out::MomentumOutput     &getMomentumOutput();
+        [[nodiscard]] out::TrajectoryOutput   &getXyzHybridCenterOutput();
+        [[nodiscard]] out::TrajectoryOutput   &getVelOutput();
+        [[nodiscard]] out::TrajectoryOutput   &getChargeOutput();
+        [[nodiscard]] out::VirialOutput       &getVirialOutput();
+        [[nodiscard]] out::StressOutput       &getStressOutput();
+        [[nodiscard]] out::BoxFileOutput      &getBoxFileOutput();
 
         [[nodiscard]]
         out::RingPolymerRestartFileOutput &getRingPolymerRstFileOutput();
@@ -116,12 +123,16 @@ namespace engine
         [[nodiscard]]
         configurator::HybridConfigurator &_getHybridConfigurator();
         [[nodiscard]]
-        configurator::HybridConfigurator const &_getHybridConfigurator() const;
+        const configurator::HybridConfigurator &_getHybridConfigurator() const;
+        [[nodiscard]]
+        kinetics::Kinetics &_getKinetics();
+        [[nodiscard]]
+        const kinetics::Kinetics &_getKinetics() const;
     };
 }   // namespace engine
 
-#ifndef _MD_ENGINE_TPP_
-#include "mdEngine.tpp.hpp"   // IWYU pragma: export
+#ifndef ENGINE__MD_ENGINE_TPP
+#include "mdEngine.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _MD_ENGINE_HPP_
+#endif   // ENGINE__MD_ENGINE_HPP

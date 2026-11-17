@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_HPP_
-
-#define _OPTIMIZER_HPP_
+#ifndef OPT__OPTIMIZER__OPTIMIZER_HPP
+#define OPT__OPTIMIZER__OPTIMIZER_HPP
 
 #include <cstddef>
 #include <deque>
@@ -52,8 +51,6 @@ namespace opt
     class Optimizer
     {
        private:
-        size_t _nEpochs = 0;
-
         opt::Convergence _convergence;
 
         std::deque<double>                     _energyHistory;
@@ -66,9 +63,7 @@ namespace opt
         std::unique_ptr<Impl> _impl;
 
        public:
-        explicit Optimizer(size_t);
-
-        Optimizer() = default;
+        Optimizer();
         virtual ~Optimizer();
 
         virtual void update(double, size_t) = 0;
@@ -96,7 +91,6 @@ namespace opt
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] size_t getNEpochs() const;
         [[nodiscard]] size_t getHistoryIndex(int offset) const;
 
         [[nodiscard]] double getEnergy() const;
@@ -128,4 +122,4 @@ namespace opt
 
 }   // namespace opt
 
-#endif   // _OPTIMIZER_HPP_
+#endif   // OPT__OPTIMIZER__OPTIMIZER_HPP

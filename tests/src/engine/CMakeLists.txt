@@ -3,6 +3,8 @@ set(source_files
     testOptEngine.cpp
     testQMRunnerManager.cpp
     testQMMMEnergies.cpp
+    testRingPolymerEngineOutputGating.cpp
+    testEngineOutputFrames.cpp
 )
 
 foreach(source_file ${source_files})
@@ -16,6 +18,7 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name}
         PRIVATE
         engine
+        setup
         gtest
         gmock
         pq_test_main

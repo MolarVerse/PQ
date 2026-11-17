@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_SETTINGS_HPP_
-
-#define _OPTIMIZER_SETTINGS_HPP_
+#ifndef SETTINGS__OPTIMIZER_SETTINGS_HPP
+#define SETTINGS__OPTIMIZER_SETTINGS_HPP
 
 #include <cstddef>
+#include <optional>
 
 #include "enums/optimizer.hpp"
 #include "setting.hpp"
@@ -57,17 +57,17 @@ class OptimizerSettings
      * standard setter methods *
      ***************************/
 
-    void setOptimizer(OptimizerType optimizer);
-    void setLearningRateStrategy(LearningRate);
+    void setOptimizerByUser(OptimizerType optimizer);
+    void setLearningRateStrategyByUser(LearningRate);
 
-    void setNumberOfEpochs(size_t);
-    void setLRUpdateFrequency(size_t);
+    void setNumberOfEpochsByUser(size_t);
+    void setLRUpdateFrequencyByUser(size_t);
 
-    void setInitialLearningRate(double);
-    void setLearningRateDecay(double);
+    void setInitialLearningRateByUser(double);
+    void setLearningRateDecayByUser(double);
 
-    void setMaxLearningRate(double);
-    void setMinLearningRate(double);
+    void setMaxLearningRateByUser(double);
+    void setMinLearningRateByUser(double);
 
     /******************************
      * validation helper methods *
@@ -89,11 +89,11 @@ class OptimizerSettings
     [[nodiscard]] double getInitialLearningRate() const;
     [[nodiscard]] double getMinLearningRate() const;
 
-    [[nodiscard]] double getLearningRateDecay() const;
-    [[nodiscard]] double getMaxLearningRate() const;
+    [[nodiscard]] double                getLearningRateDecay() const;
+    [[nodiscard]] std::optional<double> getMaxLearningRate() const;
 
-    [[nodiscard]] bool isLearningRateDecaySet() const;
-    [[nodiscard]] bool isMaxLearningRateSet() const;
+    [[nodiscard]] bool isLearningRateDecaySetByUser() const;
+    [[nodiscard]] bool isMaxLearningRateSetByUser() const;
 };
 
-#endif   // _OPTIMIZER_SETTINGS_HPP_
+#endif   // SETTINGS__OPTIMIZER_SETTINGS_HPP

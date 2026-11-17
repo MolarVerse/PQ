@@ -28,11 +28,16 @@
 #include "atom.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "engineOutput.hpp"
+#include "frame.hpp"
 #include "globalTimer.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
-#include "thermostatSettings.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
+
+#ifdef WITH_MPI
+#include "mpi.hpp"
+#endif
 
 namespace engine
 {
@@ -51,45 +56,69 @@ namespace engine
     }
 
     /**
+     * @brief writes the ring polymer output files using the default time step.
+     *
+     * @param outputSettings
+     */
+    void RingPolymerEngine::writeOutput(
+        const OutputFileSettings &outputSettings
+    )
+    {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getTimeStep(),
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
      * @brief writes the ring polymer output files.
      *
      */
-    void RingPolymerEngine::writeOutput()
+    void RingPolymerEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        const Time               &timeStep,
+        size_t                    startingStepCount
+    )
     {
         auto &averageRPMDData = _averageRingPolymerBeadsPhysicalData;
         auto &rpmdData        = _ringPolymerBeadsPhysicalData;
 
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {
-            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-            getEngineOutput().writeVelFile(getSimulationBox(), effStep);
-            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
-            getEngineOutput().writeChargeFile(getSimulationBox(), effStep);
-            getEngineOutput()
-                .writeRstFile(getSimulationBox(), getThermostat(), effStep);
+#ifdef WITH_MPI
+            if (mpi::MPI::isRoot())
+#endif
+            {
+                const out::Frame frame{getSimulationBox(), getThermostat()};
 
-            getEngineOutput().writeRingPolymerRstFile(_ringPolymerBeads);
-            getEngineOutput().writeRingPolymerXyzFile(
-                _ringPolymerBeads,
-                effStep
-            );
-            getEngineOutput().writeRingPolymerVelFile(
-                _ringPolymerBeads,
-                effStep
-            );
-            getEngineOutput().writeRingPolymerForceFile(
-                _ringPolymerBeads,
-                effStep
-            );
-            getEngineOutput().writeRingPolymerChargeFile(
-                _ringPolymerBeads,
-                effStep
-            );
+                getEngineOutput().writeXyzFile(frame, effStep);
+                getEngineOutput().writeVelFile(frame, effStep);
+                getEngineOutput().writeForceFile(frame, effStep);
+                getEngineOutput().writeChargeFile(frame, effStep);
+                getEngineOutput().writeRstFile(frame, effStep);
+
+                getEngineOutput().writeRingPolymerRstFile(_ringPolymerBeads);
+                getEngineOutput().writeRingPolymerXyzFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+                getEngineOutput().writeRingPolymerVelFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+                getEngineOutput().writeRingPolymerForceFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+                getEngineOutput().writeRingPolymerChargeFile(
+                    _ringPolymerBeads,
+                    effStep
+                );
+            }
         }
 
         // NOTE:
@@ -118,34 +147,38 @@ namespace engine
             getPhysicalData().copy(mean(rpmdData));
             getAveragePhysicalData() = mean(averageRPMDData);
 
-            const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
+            const auto simTime       = effStepDouble * timeStep;
 
-            getEngineOutput().writeEnergyFile(
-                effStep,
-                getAveragePhysicalData(),
-                getSettings()
-            );
-            getEngineOutput().writeInstantEnergyFile(
-                effStep,
-                getPhysicalData(),
-                getSettings()
-            );
-            getEngineOutput().writeMomentumFile(
-                effStep,
-                getAveragePhysicalData()
-            );
-            getEngineOutput().writeInfoFile(
-                simTime,
-                getAveragePhysicalData(),
-                getSettings()
-            );
+#ifdef WITH_MPI
+            if (mpi::MPI::isRoot())
+#endif
+            {
+                getEngineOutput().writeEnergyFile(
+                    effStep,
+                    getAveragePhysicalData(),
+                    getSettings()
+                );
+                getEngineOutput().writeInstantEnergyFile(
+                    effStep,
+                    getPhysicalData(),
+                    getSettings()
+                );
+                getEngineOutput().writeMomentumFile(
+                    effStep,
+                    getAveragePhysicalData()
+                );
+                getEngineOutput().getInfoOutput().write(
+                    simTime,
+                    getAveragePhysicalData(),
+                    getSettings()
+                );
 
-            getEngineOutput().writeRingPolymerEnergyFile(
-                step0 + getStep(),
-                averageRPMDData
-            );
+                getEngineOutput().writeRingPolymerEnergyFile(
+                    startingStepCount + getStep(),
+                    averageRPMDData
+                );
+            }
 
             for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
                 averageRPMDData[i] = physicalData::PhysicalData();
@@ -165,8 +198,10 @@ namespace engine
     {
         const auto nBeads = _ringPolymerBeads.size();
         const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
-        const auto temp =
-            settings::ThermostatSettings::getActualTargetTemperature();
+        const auto temp   = _getKinetics()
+                              .getCurrentTargetTemperature()
+                              .quantity_from_zero()
+                              .numerical_value_in(K);
 
         // to silence narrowing conversion warning -- here not a problem
         const auto nBeads_ = static_cast<double>(nBeads);

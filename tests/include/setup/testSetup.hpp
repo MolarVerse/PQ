@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_SETUP_H_
-
-#define _TEST_SETUP_H_
+#ifndef TESTS__INCLUDE__SETUP__TEST_SETUP_HPP
+#define TESTS__INCLUDE__SETUP__TEST_SETUP_HPP
 
 #include <gtest/gtest.h>
 
@@ -32,7 +31,6 @@
 #include "generalSettings.hpp"
 #include "mmmdEngine.hpp"
 #include "optEngine.hpp"
-#include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
 {
@@ -54,9 +52,6 @@ class TestSetup : public ::testing::Test
 
     void TearDown() override
     {
-        settings::ThermostatSettings::setEndTemperatureSet(false);
-        settings::ThermostatSettings::setStartTemperatureSet(false);
-        settings::ThermostatSettings::setTemperatureSet(false);
         settings::GeneralSettings::deactivateCellList();
     }
 };

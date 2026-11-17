@@ -69,7 +69,7 @@ namespace input
         };
 
         const auto setValue = [this](OptimizerType value)
-        { _optimizerSettings->setOptimizer(value); };
+        { _optimizerSettings->setOptimizerByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<OptimizerType>{.metadata = metaData, .onSet = setValue}
@@ -93,7 +93,7 @@ namespace input
         };
 
         const auto setValue = [this](LearningRate value)
-        { _optimizerSettings->setLearningRateStrategy(value); };
+        { _optimizerSettings->setLearningRateStrategyByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<LearningRate>{.metadata = metaData, .onSet = setValue}
@@ -117,7 +117,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _optimizerSettings->setInitialLearningRate(value); };
+        { _optimizerSettings->setInitialLearningRateByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -145,7 +145,7 @@ namespace input
         };
 
         const auto setValue = [this](size_t value)
-        { _optimizerSettings->setLRUpdateFrequency(value); };
+        { _optimizerSettings->setLRUpdateFrequencyByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -173,7 +173,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _optimizerSettings->setMinLearningRate(value); };
+        { _optimizerSettings->setMinLearningRateByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -201,7 +201,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _optimizerSettings->setMaxLearningRate(value); };
+        { _optimizerSettings->setMaxLearningRateByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -229,7 +229,7 @@ namespace input
         };
 
         const auto setValue = [this](double value)
-        { _optimizerSettings->setLearningRateDecay(value); };
+        { _optimizerSettings->setLearningRateDecayByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

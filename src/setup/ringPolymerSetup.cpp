@@ -130,12 +130,13 @@ namespace setup
      */
     void RingPolymerSetup::initializeBeads()
     {
-        if (settings::FileSettings::isRingPolymerStartFileNameSet())
+        const auto &fileSettings = _engine.getSettings().fileSettings;
+
+        if (fileSettings.isRingPolymerStartFileNameSetByUser())
         {
-            auto             &log = _engine.getLogOutput();
-            const auto *const msg = "Reading ring polymer restart file: ";
-            const auto       &file =
-                settings::FileSettings::getRingPolymerStartFileName();
+            auto             &log  = _engine.getLogOutput();
+            const auto *const msg  = "Reading ring polymer restart file: ";
+            const auto       &file = fileSettings.getRingPolymerStartFileName();
 
             log.writeRead(msg, file);
             out::StdoutOutput::writeRead(msg, file);
@@ -154,11 +155,15 @@ namespace setup
      */
     void RingPolymerSetup::initializeVelocitiesOfBeads()
     {
-        auto initVelocities = [](auto &bead)
-        {
-            maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-            maxwellBoltzmann.initializeVelocities(bead);
-        };
+        // one generator for all beads: a generator per bead would be seeded
+        // with the same user seed and give every bead the same velocities
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+
+        const auto &startTemperature =
+            _engine.getSettings().kinetics.getStartTemperature();
+
+        auto initVelocities = [&maxwellBoltzmann, &startTemperature](auto &bead)
+        { maxwellBoltzmann.initializeVelocities(bead, startTemperature); };
 
         std::ranges::for_each(_engine.getRingPolymerBeads(), initVelocities);
     }

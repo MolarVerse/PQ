@@ -340,7 +340,7 @@ namespace setup
         auto &simBox = _engine.getSimulationBox();
 
         const auto isDensitySet =
-            _engine.getSettings().simulationBoxSettings.isDensitySet();
+            _engine.getSettings().simulationBoxSettings.isDensitySetByUser();
         const auto isBoxSet = simBox.wasBoxSetViaStartFile();
 
         if (!isDensitySet && !isBoxSet)
@@ -451,7 +451,10 @@ namespace setup
             return;
 
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-        maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
+        maxwellBoltzmann.initializeVelocities(
+            _engine.getSimulationBox(),
+            _engine.getSettings().kinetics.getStartTemperature()
+        );
     }
 
     /**
@@ -537,7 +540,7 @@ namespace setup
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
-                    settings::FileSettings::getStartFileName()
+                    _engine.getSettings().fileSettings.getStartFileName()
                 )
             );
         }
@@ -554,7 +557,7 @@ namespace setup
             log.writeSetupInfo(
                 std::format(
                     "velocities taken from start file \"{}\"",
-                    settings::FileSettings::getStartFileName()
+                    _engine.getSettings().fileSettings.getStartFileName()
                 )
             );
         }

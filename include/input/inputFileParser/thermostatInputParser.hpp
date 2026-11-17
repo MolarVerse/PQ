@@ -20,11 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP
 
-#define _THERMOSTAT_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+
+class ThermostatSettings;
+class NoseHooverSettings;
+class KineticsSettings;
 
 namespace input
 {
@@ -36,8 +41,17 @@ namespace input
      */
     class ThermostatInputParser : public InputFileParser
     {
+       private:
+        mstd::Ref<ThermostatSettings> _thermostatSettings;
+        mstd::Ref<NoseHooverSettings> _nhSettings;
+        mstd::Ref<KineticsSettings>   _kineticsSettings;
+
        public:
-        ThermostatInputParser();
+        explicit ThermostatInputParser(
+            ThermostatSettings& thermostatSettings,
+            NoseHooverSettings& nhSettings,
+            KineticsSettings&   kineticsSettings
+        );
 
         void addThermostatKey();
         void addTemperatureKey();
@@ -53,4 +67,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _THERMOSTAT_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__THERMOSTAT_INPUT_PARSER_HPP

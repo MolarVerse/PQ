@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LENNARD_JONES_PAIR_HPP_
-
-#define _LENNARD_JONES_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__LENNARD_JONES_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__LENNARD_JONES_PAIR_HPP
 
 #include <utility>
 
@@ -80,4 +79,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _LENNARD_JONES_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__LENNARD_JONES_PAIR_HPP

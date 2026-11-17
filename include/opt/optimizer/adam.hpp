@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ADAM_HPP_
-
-#define _ADAM_HPP_
+#ifndef OPT__OPTIMIZER__ADAM_HPP
+#define OPT__OPTIMIZER__ADAM_HPP
 
 #include <vector>
 
@@ -48,11 +47,11 @@ namespace opt
         std::vector<linalg::Vec3D> _momentum2;
 
        public:
-        explicit Adam(size_t nEpochs, size_t nAtoms);
-        explicit Adam(size_t, double, double, size_t);
+        explicit Adam(size_t nAtoms);
+        explicit Adam(double beta1, double beta2, size_t nAtoms);
 
-        Adam()           = default;
-        ~Adam() override = default;
+        Adam();
+        ~Adam() override;
 
         [[nodiscard]] size_t maxHistoryLength() const override;
 
@@ -60,4 +59,4 @@ namespace opt
     };
 }   // namespace opt
 
-#endif   // _ADAM_HPP_
+#endif   // OPT__OPTIMIZER__ADAM_HPP

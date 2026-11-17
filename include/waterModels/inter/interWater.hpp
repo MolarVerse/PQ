@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTER_WATER_HPP_
-
-#define _INTER_WATER_HPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_HPP
+#define WATER_MODELS__INTER__INTER_WATER_HPP
 
 #include <memory>
 
@@ -31,6 +30,7 @@
 
 namespace molsys
 {
+    class Box;             // forward declaration
     class SimulationBox;   // forward declaration
     class CellList;        // forward declaration
     class Atom;            // forward declaration
@@ -111,7 +111,7 @@ namespace waterModel
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             double                                        rCutSquared,
-            const molsys::SimulationBox                  &simulationBox,
+            const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
             double                                       &nonCoulombEnergy
@@ -123,7 +123,7 @@ namespace waterModel
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             double                                        rCutSquared,
-            const molsys::SimulationBox                  &simulationBox,
+            const molsys::Box                            &box,
             double                                       &coulombEnergy
         );
 
@@ -133,7 +133,7 @@ namespace waterModel
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
             double                                        rCutSquared,
-            const molsys::SimulationBox                  &simulationBox,
+            const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
             double                                       &coulombEnergy,
             double                                       &nonCoulombEnergy
@@ -278,8 +278,8 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#ifndef _INTER_WATER_TPP_
+#ifndef WATER_MODELS__INTER__INTER_WATER_TPP
 #include "interWater.tpp"
 #endif
 
-#endif   //  _INTER_WATER_HPP_
+#endif   //  WATER_MODELS__INTER__INTER_WATER_HPP

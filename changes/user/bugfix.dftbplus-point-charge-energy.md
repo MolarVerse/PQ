@@ -1,1 +1,0 @@
-- Fix DFTB+ QM/MM energies counting the QM–point-charge Coulomb interaction twice.

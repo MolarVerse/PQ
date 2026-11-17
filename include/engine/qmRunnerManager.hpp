@@ -20,14 +20,19 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_RUNNER_MANAGER_HPP_
-
-#define _QM_RUNNER_MANAGER_HPP_
+#ifndef ENGINE__QM_RUNNER_MANAGER_HPP
+#define ENGINE__QM_RUNNER_MANAGER_HPP
 
 #include <memory>
 
-#include "enums/qm.hpp"
 #include "qmRunner.hpp"
+
+class QMSettings;
+class MaceSettings;
+class FennolSettings;
+class DftbSettings;
+class XtbSettings;
+class ExternalQMSettings;
 
 namespace engine
 {
@@ -44,11 +49,35 @@ namespace engine
     class QMRunnerManager
     {
        public:
-        static std::shared_ptr<QM::QMRunner> createQMRunner(QMMethod method);
-        static std::shared_ptr<QM::QMRunner> createAseDftbRunner();
-        static std::shared_ptr<QM::QMRunner> createAseFennolRunner();
-        static std::shared_ptr<QM::QMRunner> createAseMaceRunner();
-        static std::shared_ptr<QM::QMRunner> createAseXtbRunner();
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createQMRunner(
+            const QMSettings         &qmSettings,
+            const MaceSettings       &maceSettings,
+            const FennolSettings     &fennolSettings,
+            const DftbSettings       &dftbSettings,
+            const XtbSettings        &xtbSettings,
+            const ExternalQMSettings &externalQMSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseDftbRunner(
+            const QMSettings   &qmSettings,
+            const DftbSettings &dftbSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseFennolRunner(
+            const QMSettings     &qmSettings,
+            const FennolSettings &fennolSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseMaceRunner(
+            const QMSettings   &qmSettings,
+            const MaceSettings &maceSettings
+        );
+        [[nodiscard]]
+        static std::shared_ptr<QM::QMRunner> createAseXtbRunner(
+            const QMSettings  &qmSettings,
+            const XtbSettings &xtbSettings
+        );
 
        private:
         QMRunnerManager() = default;
@@ -56,4 +85,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_RUNNER_MANAGER_HPP_
+#endif   // ENGINE__QM_RUNNER_MANAGER_HPP

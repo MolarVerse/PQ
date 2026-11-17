@@ -41,6 +41,7 @@
 #endif
 
 #include "driver.hpp"
+#include "perfAlloc.hpp"
 
 #ifndef PQ_PERF_DATA_DIR
 #error "PQ_PERF_DATA_DIR must point to benchmarks/perf/data/endToEnd"
@@ -59,6 +60,8 @@ int main()
     for (const auto &entry : fs::directory_iterator(dataDir))
         fs::copy_file(entry.path(), workDir / entry.path().filename());
     fs::current_path(workDir);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

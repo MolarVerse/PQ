@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARSER_UTILS_TPP_
-
-#define _PARSER_UTILS_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__PARSER_UTILS_TPP
+#define INPUT__INPUT_FILE_PARSER__PARSER_UTILS_TPP
 
 namespace input
 {
@@ -81,4 +80,4 @@ namespace input
     }
 }   // namespace input
 
-#endif   // _PARSER_UTILS_TPP_
+#endif   // INPUT__INPUT_FILE_PARSER__PARSER_UTILS_TPP

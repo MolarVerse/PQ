@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_SETUP_HPP_
-
-#define _RESET_KINETICS_SETUP_HPP_
+#ifndef SETUP__RESET_KINETICS_SETUP_HPP
+#define SETUP__RESET_KINETICS_SETUP_HPP
 
 namespace engine
 {
@@ -54,4 +53,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _RESET_KINETICS_SETUP_HPP_
+#endif   // SETUP__RESET_KINETICS_SETUP_HPP

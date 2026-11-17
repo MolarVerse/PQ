@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
-
-#define _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP
 
 #include <gtest/gtest.h>
 
@@ -100,4 +99,4 @@ class TestTrajectoryOutput : public ::testing::Test
     }
 };
 
-#endif   // _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP

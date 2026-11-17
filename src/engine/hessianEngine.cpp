@@ -39,10 +39,12 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "expDecay.hpp"
+#include "frame.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
 #include "hessianSettings.hpp"
+#include "interrupt.hpp"
 #include "logOutput.hpp"
 #include "mmEvaluator.hpp"
 #include "optEngine.hpp"
@@ -51,7 +53,6 @@
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
 #include "progressbar.hpp"
-#include "referencesOutput.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
@@ -292,7 +293,7 @@ namespace engine
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
-        references::ReferencesOutput::writeReferencesFile();
+        getEngineOutput().writeReferencesFile();
         getEngineOutput().writeTimingsFile();
 
         const auto elapsedTime =
@@ -302,7 +303,75 @@ namespace engine
         out::StdoutOutput::writeEndedNormally(elapsedTime);
     }
 
-    void HessianEngine::writeOutput() {}
+    /**
+     * @brief Writes output files for the Hessian engine.
+     *
+     * @param outputSettings The settings for output files.
+     */
+    void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
+    {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
+     * @brief Writes output files for the Hessian engine.
+     *
+     * @param outputSettings The settings for output files.
+     * @param startingStepCount The step count from which to start writing
+     * output files.
+     */
+    void HessianEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        size_t                    startingStepCount
+    )
+    {
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto effStep    = getStep() + startingStepCount;
+
+        if (0 == getStep() % outputFreq)
+        {
+            const out::Frame frame{getSimulationBox()};
+
+            getEngineOutput().writeXyzFile(frame, effStep);
+            getEngineOutput().writeForceFile(frame, effStep);
+            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptFile(getStep(), *_optimizer);
+        }
+
+        timings::GlobalTimer::get().stopAndRestartSimulationTimer();
+
+        getPhysicalData().setLoopTime(
+            timings::GlobalTimer::get().calculateLoopTime()
+        );
+        getAveragePhysicalData().updateAverages(getPhysicalData());
+
+        if (0 == getStep() % outputFreq)
+        {
+            getAveragePhysicalData().makeAverages(
+                static_cast<double>(outputFreq)
+            );
+
+            const auto effStepDouble = static_cast<double>(effStep);
+
+            getEngineOutput().writeEnergyFile(
+                effStep,
+                getAveragePhysicalData(),
+                getSettings()
+            );
+            getEngineOutput().getInfoOutput().write(
+                effStepDouble,
+                getAveragePhysicalData(),
+                getSettings()
+            );
+
+            getAveragePhysicalData() = physicalData::PhysicalData();
+        }
+
+        getPhysicalData().reset();
+    }
 
     std::shared_ptr<opt::Evaluator> HessianEngine::_setupEvaluator()
     {
@@ -354,14 +423,16 @@ namespace engine
         _evaluator->evaluate();
         _optimizer->updateHistory();
 
-        _setNSteps(_optimizer->getNEpochs());
+        writeOutput(getSettings().outputFiles);
 
-        _writeOptimizationOutput();
+        const auto nSteps = getSettings().timings.getNumberOfSteps();
 
-        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+        progressbar bar(static_cast<int>(nSteps), true, std::cout);
 
-        for (size_t i = 0; i < _getNSteps(); ++i)
+        for (size_t i = 0; i < nSteps; ++i)
         {
+            utilities::throwIfInterrupted();
+
             bar.update();
 
             _takeOptimizationStep();
@@ -369,7 +440,7 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            _writeOptimizationOutput();
+            writeOutput(getSettings().outputFiles);
             deleteTmpFiles();
         }
 
@@ -377,7 +448,7 @@ namespace engine
             _converged,
             _optStopped,
             getStep(),
-            _optimizer->getNEpochs(),
+            nSteps,
             _learningRateStrategy->getErrorMessages()
         );
 
@@ -400,7 +471,8 @@ namespace engine
 
         if (!_converged)
         {
-            _learningRateStrategy->updateLearningRate(getStep(), _getNSteps());
+            const auto nSteps = getSettings().timings.getNumberOfSteps();
+            _learningRateStrategy->updateLearningRate(getStep(), nSteps);
 
             if (!_learningRateStrategy->getErrorMessages().empty())
                 _optStopped = true;
@@ -413,7 +485,7 @@ namespace engine
                     "Updating learning rate did raise "
                     "the following warnings in epoch {} out of {}:",
                     getStep(),
-                    _optimizer->getNEpochs()
+                    nSteps
                 );
                 getLogOutput().writeOptWarning(headerMessage);
                 out::StdoutOutput::writeOptWarning(headerMessage);
@@ -429,56 +501,8 @@ namespace engine
         _setStep(getStep() + 1);
     }
 
-    void HessianEngine::_writeOptimizationOutput()
-    {
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
-
-        if (0 == getStep() % outputFreq)
-        {
-            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
-            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
-            getEngineOutput().writeOptFile(getStep(), *_optimizer);
-        }
-
-        timings::GlobalTimer::get().stopAndRestartSimulationTimer();
-
-        getPhysicalData().setLoopTime(
-            timings::GlobalTimer::get().calculateLoopTime()
-        );
-        getAveragePhysicalData().updateAverages(getPhysicalData());
-
-        if (0 == getStep() % outputFreq)
-        {
-            getAveragePhysicalData().makeAverages(
-                static_cast<double>(outputFreq)
-            );
-
-            const auto effStepDouble = static_cast<double>(effStep);
-
-            getEngineOutput().writeEnergyFile(
-                effStep,
-                getAveragePhysicalData(),
-                getSettings()
-            );
-            getEngineOutput().writeInfoFile(
-                effStepDouble,
-                getAveragePhysicalData(),
-                getSettings()
-            );
-
-            getAveragePhysicalData() = physicalData::PhysicalData();
-        }
-
-        getPhysicalData().reset();
-    }
-
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
     {
-        const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
         const auto optimizerType =
             getSettings().optimizerSettings.getOptimizer();
 
@@ -490,14 +514,14 @@ namespace engine
 
             case STEEPEST_DESCENT:
             {
-                optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
+                optimizer = std::make_shared<opt::SteepestDescent>();
                 break;
             }
 
             case ADAM:
             {
                 const auto nAtoms = getSimulationBox().getNumberOfAtoms();
-                optimizer = std::make_shared<opt::Adam>(nEpochs, nAtoms);
+                optimizer         = std::make_shared<opt::Adam>(nAtoms);
                 break;
             }
         }

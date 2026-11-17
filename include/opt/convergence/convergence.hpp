@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONVERGENCE_HPP_
-
-#define _CONVERGENCE_HPP_
+#ifndef OPT__CONVERGENCE__CONVERGENCE_HPP
+#define OPT__CONVERGENCE__CONVERGENCE_HPP
 
 #include "enums/convergence.hpp"
 
@@ -101,4 +100,4 @@ namespace opt
     };
 }   // namespace opt
 
-#endif   // _CONVERGENCE_HPP_
+#endif   // OPT__CONVERGENCE__CONVERGENCE_HPP

@@ -28,49 +28,58 @@
 #include <format>
 #include <iostream>
 
+#include "thermostatSettings.hpp"
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include <vector>
-
 #include "noseHooverThermostat.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
-#include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    const auto timeStep = 0.001 * fs;
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto             physicalData      = physicalData::PhysicalData();
-    constexpr double targetTemperature = 300.0;
+    auto       physicalData      = physicalData::PhysicalData();
+    const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat = thermostat::NoseHooverThermostat(
-        targetTemperature,
-        std::vector<double>{0.1, 0.2, 0.3},
-        std::vector<double>{0.0, 0.0, 0.0},
-        1.0
-    );
+    NoseHooverSettings nhSettings;
+    nhSettings.setNoseHooverCouplingFrequencyByUser(1.0 * Hz);
+    const auto chiValues =
+        std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
+    const auto zetaValues =
+        std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+    nhSettings.setChiByUser(chiValues);
+    nhSettings.setZetaByUser(zetaValues);
+    auto thermostat = thermostat::NoseHooverThermostat(nhSettings);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        thermostat.applyThermostat(box, physicalData);
-        thermostat.applyThermostatOnForces(box);
+        thermostat
+            .applyThermostat(box, physicalData, targetTemperature, timeStep);
+        thermostat.applyThermostatOnForces(box, targetTemperature);
     }
 
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
-        physicalData.getTemperature(),
+        physicalData.getTemperature().quantity_from_zero().numerical_value_in(
+            K
+        ),
         box.calculateMomentum()[0]
     );
     return 0;

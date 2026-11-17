@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_HPP_
+#ifndef MANOSTAT__MANOSTAT_HPP
+#define MANOSTAT__MANOSTAT_HPP
 
-#define _MANOSTAT_HPP_
+#include <mstd/types.hpp>
 
-#include "enums/manostat.hpp"
-#include "staticMatrix.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -38,6 +38,8 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+class ManostatSettings;   // forward declaration
+
 namespace manostat
 {
     /**
@@ -49,13 +51,12 @@ namespace manostat
     class Manostat
     {
        private:
-        linalg::tensor3D _pressureTensor = {0.0};
-        double           _pressure;
-        double           _targetPressure;   // no default value, must be set
+        mstd::ConstRef<ManostatSettings> _settings;
+        PressureTensor3D                 _pressureTensor;
+        Pressure                         _pressure;
 
        public:
-        explicit Manostat(double targetPressure);
-        Manostat()          = default;
+        explicit Manostat(const ManostatSettings &settings);
         virtual ~Manostat() = default;
 
         void calculatePressure(
@@ -65,35 +66,41 @@ namespace manostat
 
         virtual void applyManostat(
             molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         );
 
-        static void rotateMu(linalg::tensor3D &mu);
-
-        [[nodiscard]] virtual ManostatType getManostatType() const;
+        static void rotateMu(QuantityTensor3D &mu);
 
        protected:
         static void _validateScaling(
             const molsys::SimulationBox &,
-            const linalg::tensor3D &
+            const QuantityTensor3D &
         );
 
         [[nodiscard]]
-        const linalg::tensor3D &_getPressureTensor() const;
+        static QuantityTensor3D _toSimSpaceScaling(
+            const QuantityTensor3D &,
+            const molsys::Box &
+        );
 
         [[nodiscard]]
-        double _getPressure() const;
+        const PressureTensor3D &_getPressureTensor() const;
 
         [[nodiscard]]
-        double _getTargetPressure() const;
+        const Pressure &_getPressure() const;
 
-        void _setPressureTensor(const linalg::tensor3D &pTensor);
-        void _setPressure(double pressure);
+        void _setPressureTensor(const PressureTensor3D &pTensor);
+        void _setPressure(const Pressure &pressure);
+
+        [[nodiscard]]
+        const ManostatSettings &_getSettings() const;
 
        private:
-        static void _validateCandidate(molsys::Box &, const linalg::tensor3D &);
+        static void _validateCandidate(molsys::Box &, const QuantityTensor3D &);
     };
 
 }   // namespace manostat
 
-#endif   // _MANOSTAT_HPP_
+#endif   // MANOSTAT__MANOSTAT_HPP

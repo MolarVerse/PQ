@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_CELL_LIST_HPP_
-
-#define _POTENTIAL_CELL_LIST_HPP_
+#ifndef POTENTIAL__POTENTIAL_CELL_LIST_HPP
+#define POTENTIAL__POTENTIAL_CELL_LIST_HPP
 
 #include "potential.hpp"
 
@@ -92,4 +91,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _POTENTIAL_CELL_LIST_HPP_
+#endif   // POTENTIAL__POTENTIAL_CELL_LIST_HPP

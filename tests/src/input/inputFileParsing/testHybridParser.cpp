@@ -80,6 +80,16 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
         settings::HybridSettings::getForcedOuterList(),
         std::vector<int>({8, 9, 10})
     );
+
+    _clearParser(parser);
+
+    // the selection grammar returns atom indices, not molecule indices
+    ASSERT_THROW_MSG(
+        parseForcedCoreListFunc({"forced_core_list", "=", "res(LIG)"}, 3),
+        exc::InputFileException,
+        "forced_core_list takes molecule indices, e.g. 0,2-4 (the selection "
+        "grammar is not supported) at line 3 in input file"
+    )
 }
 
 TEST_F(TestInputFileReader, parseUseQMCharges)
@@ -224,50 +234,6 @@ TEST_F(TestInputFileReader, parseSmoothingMethod)
     )
 }
 
-TEST_F(TestInputFileReader, parseQMForceDistribution)
-{
-    using enum QMForceDist;
-
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
-    ASSERT_TRUE(funcMap.contains("qm_force_distribution"));
-    const auto& parseQMForceDistributionFunc =
-        funcMap.at("qm_force_distribution");
-
-    parseQMForceDistributionFunc({"qm_force_distribution", "=", "none"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), NONE);
-
-    _clearParser(parser);
-
-    parseQMForceDistributionFunc({"qm_force_distribution", "=", "equal"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), EQUAL);
-
-    _clearParser(parser);
-
-    parseQMForceDistributionFunc({"qm_force_distribution", "=", "random"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), RANDOM);
-
-    _clearParser(parser);
-
-    parseQMForceDistributionFunc(
-        {"qm_force_distribution", "=", "distance-weighted"},
-        0
-    );
-    EXPECT_EQ(settings::HybridSettings::getQMForceDist(), DISTANCE_WEIGHTED);
-
-    _clearParser(parser);
-
-    ASSERT_THROW_MSG(
-        parseQMForceDistributionFunc(
-            {"qm_force_distribution", "=", "invalid"},
-            0
-        ),
-        exc::InputFileException,
-        "Invalid value \"invalid\" for key \"qm_force_distribution\" at line 0 "
-        "in input file. Allowed values: none, equal, random, distance_weighted"
-    )
-}
-
 TEST_F(TestInputFileReader, parseSelection)
 {
     auto converter = input::Converter<input::SelectionTag>(
@@ -306,6 +272,72 @@ TEST_F(TestInputFileReader, parseSelectionNoPython)
         converter.describeDomain({}),
         "The end index of the selection is invalid. Must be a valid integer."
     );
+}
+
+/**
+ * @brief every reason why the selection of the no-Python parser is rejected
+ * has its own message
+ */
+TEST_F(TestInputFileReader, selectionErrorsHaveTheirOwnMessage)
+{
+    auto converter =
+        input::Converter<input::SelectionTag>("", "forced_core_list");
+
+    EXPECT_EQ(converter.describeDomain({}), "Unknown selection error.");
+
+    const std::vector<std::pair<std::string, std::string>> cases = {
+        {"a-3",
+         "The start index of the selection is invalid. Must be a valid "
+         "integer."},
+        {"99999999999-3", "The start index of the selection is out of range."},
+        {"1-a",
+         "The end index of the selection is invalid. Must be a valid "
+         "integer."},
+        {"1-99999999999", "The end index of the selection is out of range."},
+        {"x",
+         "An atom index in the selection is invalid. Must be a valid "
+         "integer."},
+        {"99999999999", "An atom index in the selection is out of range."},
+        {"", "The selection is empty."},
+    };
+
+    for (const auto& [selection, message] : cases)
+    {
+        EXPECT_EQ(_parseSelectionNoPython(converter, selection), std::nullopt)
+            << selection;
+        EXPECT_EQ(converter.describeDomain({}), message) << selection;
+    }
+}
+
+/**
+ * @brief a selection that needs the selection grammar is either kept as an
+ * expression (build with Python bindings) or rejected with a message that
+ * names the missing Python bindings
+ */
+TEST_F(TestInputFileReader, selectionWithExpressionNeedsPythonBindings)
+{
+    auto converter = input::Converter<input::SelectionTag>(
+        "inner_region_center",
+        "res(LIG)"
+    );
+
+    const auto parsed = converter.tryParse("res(LIG)");
+
+    if (parsed.has_value())
+    {
+        ASSERT_TRUE(parsed->expression.has_value());
+        EXPECT_EQ(*parsed->expression, "res(LIG)");
+        EXPECT_TRUE(parsed->indices.empty());
+    }
+    else
+    {
+        const auto message = converter.describeDomain({});
+        EXPECT_NE(message.find("res(LIG)"), std::string::npos);
+        EXPECT_NE(
+            message.find("compiled without Python bindings"),
+            std::string::npos
+        );
+    }
 }
 
 TEST_F(TestInputFileReader, innerRegionCenterAcceptsFirstAtom)

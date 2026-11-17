@@ -18,14 +18,12 @@ The project uses the **git-flow** branching model: `main` is the stable/release 
 
 1. **Never push directly to `main` or `dev`.** These are protected branches.
 2. **Always create a feature/bugfix branch from `dev`** for any change (git-flow: `git flow feature start <name>`, or plain `git checkout -b feature/<name> dev`).
-3. **Open pull requests targeting `dev`**, not `main`, unless explicitly instructed otherwise. Only release PRs go from `dev` to `main`, and those must contain `Release-x.y.z` in the title or body (enforced by CI).
+3. **Open pull requests targeting `dev`**, not `main`, unless explicitly instructed otherwise. Only release PRs go from `dev` to `main`, and those must contain `Release-x.y.z` in the title or body (enforced by CI). Hotfix PRs go from `hotfix/<name>` (branched from `main`) to `main` with a title starting `Hotfix-x.y.z`, the next patch version.
 4. Branch naming convention: `feature/<short-description>` or `bugfix/<short-description>`.
 5. **Always `git checkout dev` and `git pull` to update local `dev` before creating any new branch.**
 6. **Never amend or force-push** to shared branches.
 7. Use `git push -u origin <branch-name>` when pushing a new branch.
 8. **Install the commit-msg hook once per clone**: `cp .githooks/commit-msg .git/hooks/`. It rejects commits whose subject doesn't start with a recognized conventional-commit-style prefix (see below) — this is enforced locally, not just in CI.
-
-> **One documented exception to rule 1:** the CI metrics collector commits timing data under `.github/ci-metrics/data/` directly to `dev` using `GITHUB_TOKEN` (see `.github/ci-metrics/README.md`). It applies only to that workflow and that path. Contributors and coding assistants must still never push to `dev`.
 
 ```bash
 # Correct workflow
@@ -71,7 +69,6 @@ Example: `docs: add shared contributor guide`
 ```
 PQ/
 ├── .github/workflows/     # CI/CD pipelines (GitHub Actions)
-├── .github/ci-metrics/    # CI timing data + schema (data written by the collector)
 ├── .githooks/             # commit-msg hook (conventional-commit enforcement)
 ├── .cmake/                # CMake helper modules (config, eigen, testing, mpi, ...)
 ├── apps/                  # Main application executable (PQ.cpp)
@@ -99,8 +96,8 @@ PQ/
 ## Build System
 
 **Requirements:**
-- CMake >= 3.20
-- GCC >= 13.0 (C++23), other compilers are untested/unsupported
+- CMake >= 3.25
+- GCC >= 14.0 (C++23); clang 20 is built and tested in the CI (non-gating), other compilers are untested/unsupported
 - Eigen (fetched automatically via CMake `FetchContent`)
 
 **Build commands:**
@@ -182,6 +179,25 @@ clang-format -i <file>
 
 ---
 
+## Static Analysis Rules (CI)
+
+Two gating checks fail PRs on style that neither clang-format nor a GCC build catches: `lint.yml` (clang-tidy via `clangd-tidy`, config in `.clang-tidy`, `tests/.clang-tidy`, `benchmarks/.clang-tidy`) and `devops_cpp_check.yml` (`cpp_checks`, rules in `devops.toml`). The clang 20 build (`clang_build.yml`) is non-gating but builds with `-Werror`, so its warnings show up as red checks too. Write new code, tests included, to these rules from the start:
+
+- **Braces on every `if`/`for`/`while` body**, also single statements and nested loops (`google-readability-braces-around-statements`).
+- **Parentheses around every `*` or `/` that sits next to a `+` or `-`**: `(a * b) + c`, `std::sin((7.0 * i) + phase)` (`readability-math-missing-parentheses`).
+- **Identifiers of at least 3 characters**, so `atomIndex`, not `k` (`readability-identifier-length`).
+- **Designated initializers for aggregates**: `Case{.model = ..., .dOH = ..., .angle = ...}`, not `Case{x, y, z}` (`modernize-use-designated-initializers`).
+- **Parameters of type `X` are named after the type**: `simulationBox` for `molsys::SimulationBox`, `physicalData` for `physicalData::PhysicalData`, or `other`; not `box` or `data` (`cpp_checks`, `paramNameForType`).
+- **Class members: data first, then functions** (public, protected, private); private member functions start with an underscore (`cpp_checks`).
+- **Aggregates returned with braces also use designated initializers**: `return {.coulombEnergy = a, .forces = b};`, not `return {a, b};`.
+- **Tests use `EXPECT_THROW_MSG` / `ASSERT_THROW_MSG`** (`tests/include/macros/throwWithMessage.hpp`), not `EXPECT_THROW` / `ASSERT_THROW`; they also check the message. For `std::bad_cast` and other standard exceptions take the text from `T().what()`, it differs between standard libraries (`cpp_checks`, `macroReplacement`).
+- **Remove includes that a change leaves unused**, for example `unit_types.hpp` after a signature stops using `Time` (`unused-includes` in `lint.yml`).
+- **No unused lambda captures**: `[]` instead of `[this]` if `this` is not used (`-Wunused-lambda-capture`, an error in the clang build).
+
+`clang-tidy`, `clang-20` and `cpp_checks` need a clang toolchain that is not always available locally; `cpp_checks` takes about 12 s on a branch once set up (see `.github/workflows/devops_cpp_check.yml` for the exact recipe, it needs the `external/devops` commit pinned by the repository and a clang-generated `compile_commands.json`).
+
+---
+
 ## License Header (Mandatory)
 
 Every `.cpp`, `.hpp`, `.c`, `.h` file under `src/`, `tests/`, `include/`, `apps/`, `benchmarks/` must start with the **exact** GPL header from `config/licenseHeader.txt`. CI (`license_check.yml`) does a byte-for-byte comparison and fails on any mismatch. To add/fix headers:
@@ -221,17 +237,16 @@ All pipelines are in `.github/workflows/`:
 
 | Workflow | Trigger | Purpose |
 | --- | --- | --- |
-| `ci_build.yml` | PRs (any branch), push to `dev`/`main`/`NEXT`, nightly, manual | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build + Python bindings |
+| `ci_build.yml` | PRs (any branch), push to `dev`/`main`/`NEXT`, nightly, manual | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`, and on PRs into `main`) + static Singularity build (nightly, manual, PRs into `main`) + MPI build + Python bindings |
 | `lint.yml` | PRs, push to `dev`/`main`/`NEXT`, manual | `clangd-tidy` on changed C++ files |
 | `devops_cpp_check.yml` | PRs to `main`/`dev`/`NEXT` | `cpp_checks` from `external/devops` (style and AST rules, `devops.toml`) |
 | `clang_format.yml` | PRs to `main`/`dev`/`NEXT` | clang-format 20.1.3 on every touched C/C++ file, as a whole file |
 | `license_check.yml` | PRs (any branch), push to `main` | Exact GPL header check on all C/C++ files |
-| `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required |
+| `changelog.yml` | PRs to `dev`/`NEXT` | Script tests + valid changelog fragment required (unless the PR has the `skip-changelog` label) |
 | `gh_checks.yml` | PR events | PR must link an issue (`Closes/Fixes/Resolves/Related to #N`) |
 | `perf.yml` | PRs to `main`/`dev`/`NEXT` | Callgrind instruction-count regression gate |
-| `clang_build.yml` | PRs touching C++/build files | Non-gating clang `-ftime-trace` comment |
+| `clang_build.yml` | PRs touching C++/build files | Non-gating clang 20 build and tests |
 | `jekyll-gh-pages.yml` | PRs to `main`/`dev` touching docs/include/src; push to `main` | Sphinx + Doxygen build; deploys the site from `main` |
-| `ci_metrics.yml` | Daily, manual | Collects CI timing data (see `.github/ci-metrics/README.md`) |
 | `sync-dev-into-next.yml, sync-main-into-dev.yml` | Push to `dev` / `main`, manual | Automatic branch syncs |
 | `create-release-pr.yml, release.yml` | Manual; PRs to `main` from `release/*` , `hotfix/*` | Release process: changelogs, tag, GitHub release |
 | `dismiss_stale_approvals.yml` | New commits on PRs | Dismisses approvals unless the new commits only merge `dev` |
@@ -270,6 +285,7 @@ changes/developer/<category>.<title>.md
 - Use `user` when an installed-PQ user would notice the change (behavior, results, inputs/outputs, errors, compatibility, runtime performance); use `developer` for build tooling, CI, tests, refactors, and internal maintenance. A PR may add fragments for either or both audiences.
 - `<category>` is one of the fixed categories in `changes/README.md` (user: `enhancement`, `change`, `bugfix`, `performance`, `compatibility`, `documentation`; developer: `enhancement`, `bugfix`, `performance`, `build`, `ci`, `test`, `internal`, `documentation`). `<title>` is a free-text lowercase-with-hyphens slug and does not appear in the rendered changelog.
 - If an existing unreleased fragment already covers the same change, append a bullet to it instead of creating a new file; a fragment can hold multiple bullets, one per line, each at most 360 characters.
+- A PR that needs no entry carries the explicit `skip-changelog` label instead of a fragment (see `changes/README.md`); coding assistants add a fragment and do not set the label themselves.
 - Do not delete unreleased fragments or the `changes/user/.gitkeep` / `changes/developer/.gitkeep` placeholders.
 - The release workflow consumes every fragment into the matching changelog and removes them; this is the only point at which `CHANGELOG.md`/`DEV-CHANGELOG.md` change.
 

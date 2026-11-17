@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_SETTINGS_HPP_
-
-#define _FORCE_FIELD_SETTINGS_HPP_
+#ifndef SETTINGS__FORCE_FIELD_SETTINGS_HPP
+#define SETTINGS__FORCE_FIELD_SETTINGS_HPP
 
 #include "enums/potential.hpp"
 #include "setting.hpp"
@@ -53,7 +52,7 @@ class ForceFieldSettings
      * standard setters *
      ********************/
 
-    void setType(ForceFieldType value);
+    void setTypeByUser(ForceFieldType value);
 };
 
-#endif   // _FORCE_FIELD_SETTINGS_HPP_
+#endif   // SETTINGS__FORCE_FIELD_SETTINGS_HPP

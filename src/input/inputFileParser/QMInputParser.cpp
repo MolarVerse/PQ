@@ -28,14 +28,13 @@
 
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
-#include "hubbardDerivMap.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "qmSettings.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
+#include "referenceSettings.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -48,21 +47,40 @@ namespace input
      * qm_script
      * "<string>"
      *
-     */
-    QMInputParser::QMInputParser() : QMInputParser(true) {}
-
-    /**
-     * @brief Construct a new QMInputParser:: QMInputParser object
-     *
-     * @details following keywords are added to the _keywordFuncMap,
-     * _keywordRequiredMap and _keywordCountMap: 1) qm_prog "<string>" 2)
-     * qm_script
-     * "<string>"
-     *
      * @param resolveBuiltInSlakosPath
+     * @param referenceSettings Reference settings object used to manage and add
+     * necessary reference files for the specified QM method.
+     * @param qmSettings QM settings object used to configure and manage the
+     * quantum mechanical method and its associated parameters.
+     * @param maceSettings MACE settings object used to configure and manage the
+     * MACE model and its associated parameters.
+     * @param fennolSettings Fennol settings object used to configure and manage
+     * the Fennol model and its associated parameters.
+     * @param dftbSettings DFTB settings object used to configure and manage the
+     * DFTB method and its associated parameters.
+     * @param xtbSettings XTB settings object used to configure and manage the
+     * XTB method and its associated parameters.
+     * @param externalQMSettings External QM settings object used to configure
+     * and manage any external QM scripts or methods.
      */
-    QMInputParser::QMInputParser(const bool resolveBuiltInSlakosPath)
-        : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath)
+    QMInputParser::QMInputParser(
+        const bool          resolveBuiltInSlakosPath,
+        ReferenceSettings  &referenceSettings,
+        QMSettings         &qmSettings,
+        MaceSettings       &maceSettings,
+        FennolSettings     &fennolSettings,
+        DftbSettings       &dftbSettings,
+        XtbSettings        &xtbSettings,
+        ExternalQMSettings &externalQMSettings
+    )
+        : _resolveBuiltInSlakosPath(resolveBuiltInSlakosPath),
+          _referenceSettings(referenceSettings),
+          _qmSettings(qmSettings),
+          _maceSettings(maceSettings),
+          _fennolSettings(fennolSettings),
+          _dftbSettings(dftbSettings),
+          _xtbSettings(xtbSettings),
+          _externalQMSettings(externalQMSettings)
     {
         addQMMethodKey();
         addQMScriptKey();
@@ -91,31 +109,36 @@ namespace input
                 "Specifies the quantum mechanical method to be used.",
         };
 
-        const auto setValue = [](QMMethod value)
+        const auto setValue = [this](QMMethod value)
         {
-            settings::QMSettings::setQMMethod(value);
+            _qmSettings->setQMMethodByUser(value);
 
             switch (value)
             {
                 case QMMethod::ASE_DFTBPLUS:
                 case QMMethod::DFTBPLUS:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::DFTBPLUS_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::DFTBPLUS_FILE
                     );
                     break;
                 case QMMethod::TURBOMOLE:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::TURBOMOLE_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::TURBOMOLE_FILE
+                    );
+                    break;
+                case QMMethod::ORCA:
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::ORCA_FILE
                     );
                     break;
                 case QMMethod::FENNOL:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::FENNOL_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::FENNOL_FILE
                     );
                     break;
                 case QMMethod::PYSCF:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::PYSCF_FILE
+                    _referenceSettings->addReferenceFile(
+                        ReferenceFiles::PYSCF_FILE
                     );
                     break;
                 case QMMethod::MACE:
@@ -124,7 +147,7 @@ namespace input
             }
         };
 
-        const auto finalize = [](const std::string &value, QMMethod method)
+        const auto finalize = [this](const std::string &value, QMMethod method)
         {
             if (method == QMMethod::MACE)
                 parseMaceQMMethod(value);
@@ -150,8 +173,8 @@ namespace input
             .description = "Specifies the external QM script to be used.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setQMScript(value); };
+        const auto setValue = [this](const std::string &value)
+        { _externalQMSettings->setQMScriptByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -171,8 +194,8 @@ namespace input
             .description = "Specifies the full path to the external QM script.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setQMScriptFullPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _externalQMSettings->setQMScriptFullPathByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -190,10 +213,11 @@ namespace input
             .name        = "qm_loop_time_limit",
             .title       = "QM Loop Time Limit",
             .description = "Specifies the time limit for the QM loop.",
+            .unit        = "s",
         };
 
-        const auto setValue = [](double value)
-        { settings::QMSettings::setQMLoopTimeLimit(value); };
+        const auto setValue = [this](double value)
+        { _qmSettings->setQMLoopTimeLimitByUser(value * s); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -213,8 +237,8 @@ namespace input
             .description = "Specifies whether to use dispersion correction.",
         };
 
-        const auto setValue = [](bool value)
-        { settings::QMSettings::setUseDispersionCorrection(value); };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setUseDispersionCorrectionByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -234,8 +258,8 @@ namespace input
             .description = "Specifies whether to remove the net force.",
         };
 
-        const auto setValue = [](bool value)
-        { settings::QMSettings::setRemoveNetForce(value); };
+        const auto setValue = [this](bool value)
+        { _qmSettings->setRemoveNetForceByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -255,8 +279,8 @@ namespace input
             .description = "Specifies the MACE model to use.",
         };
 
-        const auto setValue = [](MaceModel value)
-        { settings::QMSettings::setMaceModel(value); };
+        const auto setValue = [this](MaceModel value)
+        { _maceSettings->setMaceModelByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceModel>{
@@ -276,8 +300,8 @@ namespace input
             .description = "Specifies the MACE evaluation mode.",
         };
 
-        const auto setValue = [](MaceMode value)
-        { settings::QMSettings::setMaceMode(value); };
+        const auto setValue = [this](MaceMode value)
+        { _maceSettings->setMaceModeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<MaceMode>{
@@ -297,8 +321,8 @@ namespace input
             .description = "Specifies the path to the external MACE model.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setMaceModelPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _maceSettings->setMaceModelPathByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -323,26 +347,14 @@ namespace input
             switch (value)
             {
                 case SlakosType::THREEOB:
-                    settings::QMSettings::setSlakosType(
-                        SlakosType::THREEOB,
-                        _resolveBuiltInSlakosPath
-                    );
-                    settings::QMSettings::setHubbardDerivs(hubbardDerivMap3ob);
-                    references::ReferencesOutput::addReferenceFile(
-                        references::THREEOB_FILE
-                    );
-                    break;
                 case SlakosType::MATSCI:
-                    settings::QMSettings::setSlakosType(
-                        SlakosType::MATSCI,
+                    _dftbSettings->setSlakosTypeByUser(
+                        value,
                         _resolveBuiltInSlakosPath
-                    );
-                    references::ReferencesOutput::addReferenceFile(
-                        references::MATSCI_FILE
                     );
                     break;
                 case SlakosType::CUSTOM:
-                    settings::QMSettings::setSlakosType(SlakosType::CUSTOM);
+                    _dftbSettings->setSlakosTypeByUser(value);
                     break;
                 case SlakosType::NONE: break;
             }
@@ -367,8 +379,8 @@ namespace input
             .description = "Specifies the path to the SLAKOS executable.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setSlakosPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _dftbSettings->setSlakosPathByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -388,11 +400,8 @@ namespace input
             .description = "Specifies whether third order DFTB is used.",
         };
 
-        const auto setValue = [](bool value)
-        {
-            settings::QMSettings::setUseThirdOrderDftb(value);
-            settings::QMSettings::setIsThirdOrderDftbSet(true);
-        };
+        const auto setValue = [this](bool value)
+        { _dftbSettings->setUseThirdOrderDftbByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -414,11 +423,8 @@ namespace input
         };
 
         const auto setValue =
-            [](const std::unordered_map<std::string, double> &value)
-        {
-            settings::QMSettings::setHubbardDerivs(value);
-            settings::QMSettings::setIsHubbardDerivsSet(true);
-        };
+            [this](const std::unordered_map<std::string, double> &value)
+        { _dftbSettings->setHubbardDerivsByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::unordered_map<std::string, double>>{
@@ -439,8 +445,8 @@ namespace input
             .description = "Specifies the xTB method to be used.",
         };
 
-        const auto setValue = [](XtbMethod value)
-        { settings::QMSettings::setXtbMethod(value); };
+        const auto setValue = [this](XtbMethod value)
+        { _xtbSettings->setXtbMethodByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<XtbMethod>{
@@ -460,8 +466,8 @@ namespace input
             .description = "Specifies the path to the FeNNol model file.",
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::QMSettings::setFennolModelPath(value); };
+        const auto setValue = [this](const std::string &value)
+        { _fennolSettings->setFennolModelPathByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -482,8 +488,8 @@ namespace input
                 "Specifies whether GPU pre-processing is enabled for FeNNol.",
         };
 
-        const auto setValue = [](bool value)
-        { settings::QMSettings::setUseGPUPreprocessing(value); };
+        const auto setValue = [this](bool value)
+        { _fennolSettings->setUseGPUPreprocessingByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -529,13 +535,13 @@ namespace input
         switch (modelTypeOpt.value())
         {
             case MaceModelType::MACE_MP:
-                references::ReferencesOutput::addReferenceFile(
-                    references::MACEMP_FILE
+                _referenceSettings->addReferenceFile(
+                    ReferenceFiles::MACEMP_FILE
                 );
                 break;
             case MaceModelType::MACE_OFF:
-                references::ReferencesOutput::addReferenceFile(
-                    references::MACEOFF_FILE
+                _referenceSettings->addReferenceFile(
+                    ReferenceFiles::MACEOFF_FILE
                 );
                 break;
             case MaceModelType::MACE_ANICC:
@@ -548,6 +554,6 @@ namespace input
                 break;
         }
 
-        settings::QMSettings::setMaceModelType(modelTypeOpt.value());
+        _maceSettings->setMaceModelTypeByUser(modelTypeOpt.value());
     }
 }   // namespace input

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_CONSTRAINTS_HPP_
-
-#define _TEST_CONSTRAINTS_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
 
 #include <gtest/gtest.h>
 
@@ -94,7 +93,7 @@ class TestConstraints : public ::testing::Test
         _box->setBox(orthoBox, false);
 
         Settings settings;
-        settings.constraintSettings.activateShake();
+        settings.constraintSettings.activateShakeByUser();
         _constraints = std::make_unique<constraints::Constraints>(
             settings.constraintSettings
         );
@@ -135,4 +134,4 @@ class TestConstraints : public ::testing::Test
     }
 };
 
-#endif   // _TEST_CONSTRAINTS_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

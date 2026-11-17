@@ -151,7 +151,7 @@ namespace physicalData
         _dihedralEnergy += other.getDihedralEnergy();
         _improperEnergy += other.getImproperEnergy();
 
-        _temperature     += other.getTemperature();
+        _temperature     += other.getTemperature().quantity_from_zero();
         _kineticEnergy   += other.getKineticEnergy();
         _volume          += other.getVolume();
         _density         += other.getDensity();
@@ -159,7 +159,8 @@ namespace physicalData
         _pressure        += other.getPressure();
         _coupledPressure += other.getCoupledPressure();
 
-        _qmEnergy += other.getQMEnergy();
+        _qmEnergy          += other.getQMEnergy();
+        _qmReferenceEnergy += other.getQMReferenceEnergy();
 
         _numberOfSmoothingMol += other.getNumberOfSmoothingMolecules();
 
@@ -201,14 +202,16 @@ namespace physicalData
         _dihedralEnergy /= outputFrequency;
         _improperEnergy /= outputFrequency;
 
-        _temperature     /= outputFrequency;
+        _temperature =
+            Temperature{_temperature.quantity_from_zero() / outputFrequency};
         _volume          /= outputFrequency;
         _density         /= outputFrequency;
         _virial          /= outputFrequency;
         _pressure        /= outputFrequency;
         _coupledPressure /= outputFrequency;
 
-        _qmEnergy /= outputFrequency;
+        _qmEnergy          /= outputFrequency;
+        _qmReferenceEnergy /= outputFrequency;
 
         _numberOfSmoothingMol /= outputFrequency;
 
@@ -238,9 +241,9 @@ namespace physicalData
 
         _volume          = 0.0;
         _density         = 0.0;
-        _temperature     = 0.0;
-        _pressure        = 0.0;
-        _coupledPressure = 0.0;
+        _temperature     = Temperature::zero();
+        _pressure        = Pressure::zero();
+        _coupledPressure = Pressure::zero();
 
         _kineticEnergy         = 0.0;
         _coulombEnergy         = 0.0;
@@ -253,7 +256,8 @@ namespace physicalData
         _dihedralEnergy = 0.0;
         _improperEnergy = 0.0;
 
-        _qmEnergy = 0.0;
+        _qmEnergy          = 0.0;
+        _qmReferenceEnergy = 0.0;
 
         _numberOfSmoothingMol = 0.0;
 
@@ -297,7 +301,8 @@ namespace physicalData
         _dihedralEnergy = 0.0;
         _improperEnergy = 0.0;
 
-        _qmEnergy = 0.0;
+        _qmEnergy          = 0.0;
+        _qmReferenceEnergy = 0.0;
 
         _kinEnergyVirialTensor.atomic    = {0.0};
         _kinEnergyVirialTensor.molecular = {0.0};
@@ -335,6 +340,7 @@ namespace physicalData
         totalEnergy += _kineticEnergy;
 
         totalEnergy += _qmEnergy;
+        totalEnergy -= _qmReferenceEnergy;
 
         return totalEnergy;
     }

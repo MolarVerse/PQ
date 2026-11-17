@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_RESTART_FILE_READER_HPP_
-
-#define _RING_POLYMER_RESTART_FILE_READER_HPP_
+#ifndef INPUT__RING_POLYMER_RESTART_FILE_READER__RING_POLYMER_RESTART_FILE_READER_HPP
+#define INPUT__RING_POLYMER_RESTART_FILE_READER__RING_POLYMER_RESTART_FILE_READER_HPP
 
 #include <fstream>
 #include <string>
@@ -59,4 +58,4 @@ namespace input::ringPolymer
     };
 }   // namespace input::ringPolymer
 
-#endif   // _RING_POLYMER_RESTART_FILE_READER_HPP_
+#endif   // INPUT__RING_POLYMER_RESTART_FILE_READER__RING_POLYMER_RESTART_FILE_READER_HPP

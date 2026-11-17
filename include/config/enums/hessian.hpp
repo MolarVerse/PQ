@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_ENUM_HPP_
-#define _HESSIAN_ENUM_HPP_
+#ifndef CONFIG__ENUMS__HESSIAN_HPP
+#define CONFIG__ENUMS__HESSIAN_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -40,4 +40,4 @@ enum class HessianBuilderType : std::uint8_t;
 
 MSTD_ENUM(HessianBuilderType, std::uint8_t, HESSIAN_BUILDER_TYPE_LIST)
 
-#endif   // _HESSIAN_ENUM_HPP_
+#endif   // CONFIG__ENUMS__HESSIAN_HPP

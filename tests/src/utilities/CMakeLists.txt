@@ -4,6 +4,9 @@ set(source_files
     testMathUtilities.cpp
     testCollectionUtilities.cpp
     testProgressbar.cpp
+    testInterrupt.cpp
+    testSerialWorker.cpp
+    testSystemMemory.cpp
 )
 
 foreach(source_file ${source_files})
@@ -28,6 +31,10 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name} PRIVATE pq_test_pch)
     set_property(TEST ${test_name} PROPERTY LABELS utilties)
 endforeach()
+
+target_link_libraries(testInterrupt PRIVATE interrupt)
+target_link_libraries(testSerialWorker PRIVATE serialWorker)
+target_link_libraries(testMathUtilities PRIVATE config_headers)
 
 target_include_directories(testProgressbar
     PRIVATE

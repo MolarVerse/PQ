@@ -60,3 +60,9 @@ endif()
 if(BUILD_WITH_PYTHON_BINDINGS)
     add_definitions(-DPYTHON_ENABLED)
 endif()
+
+# Static and Singularity builds reject 'qm_script', so bundled scripts are not
+# looked up there.
+if(NOT BUILD_SHARED_LIBS OR BUILD_WITH_SINGULARITY)
+    target_compile_definitions(testQMSetup PRIVATE PQ_TEST_NO_BUNDLED_SCRIPTS)
+endif()

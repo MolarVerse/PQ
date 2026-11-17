@@ -28,6 +28,8 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "filesInputParser.hpp"
+#include "generalSettings.hpp"
+#include "stringUtilities.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -40,7 +42,8 @@
  */
 TEST_F(TestInputFileReader, testParseTopologyFilename)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("topology_file"));
     const auto &parseFunc = funcMap.at("topology_file");
@@ -62,7 +65,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
     lineElements = {"topology_file", "=", "data/topologyReader/topology.top"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::FileSettings::getTopologyFileName(),
+        settings.getTopologyFileName(),
         "data/topologyReader/topology.top"
     );
 }
@@ -76,7 +79,8 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
  */
 TEST_F(TestInputFileReader, testParseParameterFilename)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("parameter_file"));
     const auto &parseFunc = funcMap.at("parameter_file");
@@ -102,7 +106,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::FileSettings::getParameterFilename(),
+        settings.getParameterFileName(),
         "data/parameterFileReader/param.param"
     );
 }
@@ -113,7 +117,8 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
  */
 TEST_F(TestInputFileReader, parseIntraNonBondedFile)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("intra_nonbonded_file"));
     const auto &parseFunc = funcMap.at("intra_nonbonded_file");
@@ -139,7 +144,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::FileSettings::getIntraNonBondedFileName(),
+        settings.getIntraNonBondedFileName(),
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
 }
@@ -150,7 +155,8 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
  */
 TEST_F(TestInputFileReader, testStartFileName)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("start_file"));
     const auto &parseFunc = funcMap.at("start_file");
@@ -167,10 +173,7 @@ TEST_F(TestInputFileReader, testStartFileName)
 
     lineElements = {"start_file", "=", "data/atomSection/testProcess.rst"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::FileSettings::getStartFileName(),
-        "data/atomSection/testProcess.rst"
-    );
+    EXPECT_EQ(settings.getStartFileName(), "data/atomSection/testProcess.rst");
 }
 
 /**
@@ -179,7 +182,8 @@ TEST_F(TestInputFileReader, testStartFileName)
  */
 TEST_F(TestInputFileReader, testMoldescriptorFileName)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("moldescriptor_file"));
     const auto &parseFunc = funcMap.at("moldescriptor_file");
@@ -206,7 +210,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::FileSettings::getMolDescriptorFileName(),
+        settings.getMolDescriptorFileName(),
         "data/moldescriptorReader/moldescriptor.dat"
     );
 }
@@ -217,7 +221,8 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
  */
 TEST_F(TestInputFileReader, testGuffPath)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("guff_path"));
     const auto                    &parseFunc    = funcMap.at("guff_path");
@@ -236,7 +241,8 @@ TEST_F(TestInputFileReader, testGuffPath)
  */
 TEST_F(TestInputFileReader, guffDatFilename)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("guff_file"));
     const auto &parseFunc = funcMap.at("guff_file");
@@ -253,10 +259,7 @@ TEST_F(TestInputFileReader, guffDatFilename)
 
     lineElements = {"guff_file", "=", "data/guffDatReader/guff.dat"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::FileSettings::getGuffDatFileName(),
-        "data/guffDatReader/guff.dat"
-    );
+    EXPECT_EQ(settings.getGuffDatFileName(), "data/guffDatReader/guff.dat");
 }
 
 /**
@@ -264,7 +267,8 @@ TEST_F(TestInputFileReader, guffDatFilename)
  */
 TEST_F(TestInputFileReader, testRpmdStartFileName)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_start_file"));
     const auto &parseFunc = funcMap.at("rpmd_start_file");
@@ -290,7 +294,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::FileSettings::getRingPolymerStartFileName(),
+        settings.getRingPolymerStartFileName(),
         "data/inputFileReader/inputFile.txt"
     );
 }
@@ -300,7 +304,8 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
  */
 TEST_F(TestInputFileReader, testMShakeFileName)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("mshake_file"));
     const auto &parseFunc = funcMap.at("mshake_file");
@@ -318,10 +323,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
 
     lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::FileSettings::getMShakeFileName(),
-        "data/mshakeReader/mshake.dat"
-    );
+    EXPECT_EQ(settings.getMShakeFileName(), "data/mshakeReader/mshake.dat");
 }
 
 /**
@@ -329,7 +331,8 @@ TEST_F(TestInputFileReader, testMShakeFileName)
  */
 TEST_F(TestInputFileReader, testDFTBFileName)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("dftb_file"));
     const auto &parseFunc = funcMap.at("dftb_file");
@@ -351,10 +354,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
 
     lineElements = {"dftb_file", "=", "data/dftbReader/dftb_in.template"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::FileSettings::getDFTBFileName(),
-        "data/dftbReader/dftb_in.template"
-    );
+    EXPECT_EQ(settings.getDFTBFileName(), "data/dftbReader/dftb_in.template");
 }
 
 /**
@@ -362,7 +362,8 @@ TEST_F(TestInputFileReader, testDFTBFileName)
  */
 TEST_F(TestInputFileReader, testTMFileName)
 {
-    input::FilesInputParser parser;
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
     const auto              funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("turbomole_file"));
     const auto &parseFunc = funcMap.at("turbomole_file");
@@ -389,7 +390,157 @@ TEST_F(TestInputFileReader, testTMFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::FileSettings::getTMFileName(),
+        settings.getTMFileName(),
         "data/turbomoleReader/tm_define.template"
     );
+}
+
+TEST_F(TestInputFileReader, testOrcaFileName)
+{
+    FileSettings            settings;
+    input::FilesInputParser parser{true, settings};
+    const auto              functions = parser.getKeywordFuncMap();
+    const auto             &parse     = functions.at("orca_file");
+    EXPECT_THROW_MSG(
+        parse({"orca_file", "=", "no-such-orca-template"}, 0),
+        exc::InputFileException,
+        "Invalid value \"no-such-orca-template\" for key \"orca_file\" at "
+        "line 0 in input file. Value must be an existing file path."
+    );
+    _clearParser(parser);
+    parse({"orca_file", "=", "data/atomSection/testProcess.rst"}, 0);
+    EXPECT_EQ(settings.getOrcaFileName(), "data/atomSection/testProcess.rst");
+    input::FilesInputParser portable{false, settings};
+    portable.getKeywordFuncMap().at("orca_file")(
+        {"orca_file", "=", "no-such-orca-template"},
+        0
+    );
+    EXPECT_EQ(settings.getOrcaFileName(), "no-such-orca-template");
+}
+
+/**
+ * @brief without path validation every file keyword takes any name, also one
+ * that does not exist, and stores it unchanged
+ */
+TEST_F(TestInputFileReader, fileKeywordsWithoutPathValidationAcceptAnyName)
+{
+    struct Case
+    {
+        std::string keyword;
+        std::string (*getter)(const FileSettings &);
+    };
+
+    const std::vector<Case> cases = {
+        Case{
+            .keyword = "intra-nonBonded_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getIntraNonBondedFileName(); }
+        },
+        Case{
+            .keyword = "topology_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getTopologyFileName(); }
+        },
+        Case{
+            .keyword = "parameter_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getParameterFileName(); }
+        },
+        Case{
+            .keyword = "start_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getStartFileName(); }
+        },
+        Case{
+            .keyword = "rpmd_start_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getRingPolymerStartFileName(); }
+        },
+        Case{
+            .keyword = "moldescriptor_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getMolDescriptorFileName(); }
+        },
+        Case{
+            .keyword = "guff_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getGuffDatFileName(); }
+        },
+        Case{
+            .keyword = "mshake_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getMShakeFileName(); }
+        },
+        Case{
+            .keyword = "dftb_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getDFTBFileName(); }
+        },
+        Case{
+            .keyword = "turbomole_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getTMFileName(); }
+        },
+        Case{
+            .keyword = "orca_file",
+            .getter  = [](const FileSettings &settings)
+            { return settings.getOrcaFileName(); }
+        },
+    };
+
+    for (const auto &testCase : cases)
+    {
+        settings::GeneralSettings::deactivateIntraNonBonded();
+
+        FileSettings            settings;
+        input::FilesInputParser parser{false, settings};
+        const auto              funcMap = parser.getKeywordFuncMap();
+        const auto              mapKey =
+            utilities::toLowerAndReplaceDashesCopy(testCase.keyword);
+        ASSERT_TRUE(funcMap.contains(mapKey)) << testCase.keyword;
+
+        const std::string name = "does_not_exist_" + mapKey + ".txt";
+        funcMap.at(mapKey)({testCase.keyword, "=", name}, 0);
+
+        EXPECT_EQ(testCase.getter(settings), name) << testCase.keyword;
+        EXPECT_EQ(
+            settings::GeneralSettings::isIntraNonBondedActivated(),
+            testCase.keyword == "intra-nonBonded_file"
+        ) << testCase.keyword;
+    }
+
+    settings::GeneralSettings::deactivateIntraNonBonded();
+}
+
+/**
+ * @brief the intra non-bonded keyword activates the intra non-bonded
+ * interactions in both modes, with an existing file and with a plain name
+ */
+TEST_F(TestInputFileReader, intraNonBondedKeywordActivatesInteractions)
+{
+    for (const auto validate : {true, false})
+    {
+        settings::GeneralSettings::deactivateIntraNonBonded();
+
+        FileSettings            settings;
+        input::FilesInputParser parser{validate, settings};
+        const auto              funcMap   = parser.getKeywordFuncMap();
+        const auto             &parseFunc = funcMap.at("intra_nonbonded_file");
+
+        parseFunc(
+            {"intra-nonBonded_file",
+             "=",
+             "data/intraNonBondedReader/intraNonBonded.dat"},
+            0
+        );
+
+        EXPECT_TRUE(settings::GeneralSettings::isIntraNonBondedActivated())
+            << validate;
+        EXPECT_EQ(
+            settings.getIntraNonBondedFileName(),
+            "data/intraNonBondedReader/intraNonBonded.dat"
+        ) << validate;
+    }
+
+    settings::GeneralSettings::deactivateIntraNonBonded();
 }

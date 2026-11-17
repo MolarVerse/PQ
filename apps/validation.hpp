@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CLI_VALIDATION_HPP_
-
-#define _CLI_VALIDATION_HPP_
+#ifndef APPS__VALIDATION_HPP
+#define APPS__VALIDATION_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -77,4 +76,4 @@ namespace cli
     );
 }   // namespace cli
 
-#endif   // _CLI_VALIDATION_HPP_
+#endif   // APPS__VALIDATION_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BUCKINGHAM_PAIR_HPP_
-
-#define _BUCKINGHAM_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__BUCKINGHAM_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__BUCKINGHAM_PAIR_HPP
 
 #include <utility>
 
@@ -81,4 +80,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _BUCKINGHAM_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__BUCKINGHAM_PAIR_HPP

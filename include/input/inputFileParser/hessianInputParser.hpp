@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HESSIAN_INPUT_PARSER_HPP_
-#define _HESSIAN_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__HESSIAN_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__HESSIAN_INPUT_PARSER_HPP
 
 #include <mstd/types.hpp>
 
@@ -54,4 +54,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _HESSIAN_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__HESSIAN_INPUT_PARSER_HPP

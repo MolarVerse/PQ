@@ -37,7 +37,11 @@ namespace
 
     molsys::TriclinicBox makeTriclinicBox()
     {
-        molsys::TriclinicBox box{{20.0, 25.0, 30.0}, {80.0, 90.0, 100.0}};
+        molsys::TriclinicBox box{
+            {20.0, 25.0, 30.0},
+            {80.0, 90.0, 100.0},
+            false
+        };
         return box;
     }
 
@@ -101,7 +105,8 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(vector);
-            auto result = box.toSimSpace(box.toOrthoSpace(vector));
+            auto result =
+                box.getBoxMatrix() * (box.getInverseBoxMatrix() * vector);
             benchmark::DoNotOptimize(result);
         }
     }
@@ -114,7 +119,7 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(vector);
-            auto result = box.toOrthoSpace(vector);
+            auto result = box.getInverseBoxMatrix() * vector;
             benchmark::DoNotOptimize(result);
         }
     }
@@ -127,7 +132,7 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(vector);
-            auto result = box.toSimSpace(vector);
+            auto result = box.getBoxMatrix() * vector;
             benchmark::DoNotOptimize(result);
         }
     }
@@ -144,7 +149,8 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(tensor);
-            auto result = box.toSimSpace(box.toOrthoSpace(tensor));
+            auto result =
+                box.getBoxMatrix() * (box.getInverseBoxMatrix() * tensor);
             benchmark::DoNotOptimize(result);
         }
     }

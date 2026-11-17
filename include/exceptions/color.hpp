@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COLOR_HPP_
-
-#define _COLOR_HPP_
+#ifndef EXCEPTIONS__COLOR_HPP
+#define EXCEPTIONS__COLOR_HPP
 
 #include <cstdint>
 #include <ostream>
@@ -72,4 +71,4 @@ namespace Color
     };
 }   // namespace Color
 
-#endif   // _COLOR_HPP_
+#endif   // EXCEPTIONS__COLOR_HPP

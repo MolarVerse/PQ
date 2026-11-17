@@ -29,6 +29,9 @@
 #include <format>
 #include <iostream>
 
+#include "referenceSettings.hpp"
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -36,29 +39,38 @@
 #endif
 
 #include "berendsenManostat.hpp"
+#include "manostatSettings.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
-#include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    const auto timeStep = 0.001 * fs;
     settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
-    auto physicalData = physicalData::PhysicalData();
-    auto manostat =
-        manostat::BerendsenManostat(1.0, 100.0, 4.6e-5, FixedAxis::NONE);
+    auto             physicalData = physicalData::PhysicalData();
+    ManostatSettings manostatSettings;
+    manostatSettings.setTargetPressureByUser(1.0 * bar);
+    manostatSettings.setTauByUser(100.0 * fs);
+    manostatSettings.setCompressibilityByUser(4.6e-5 * per_bar);
+    ReferenceSettings referenceSettings;
+    manostatSettings.finalize(referenceSettings);
+    auto manostat = manostat::BerendsenManostat(manostatSettings);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        manostat.applyManostat(box, physicalData);
+        manostat
+            .applyManostat(box, physicalData, toTemperature(300.0), timeStep);
     }
 
     // read state so the loop cannot be optimized away

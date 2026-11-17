@@ -22,7 +22,10 @@
 
 #include <gtest/gtest.h>
 
+#include <fstream>
+#include <iterator>
 #include <memory>
+#include <string>
 
 #include "atom.hpp"
 #include "bondConstraint.hpp"
@@ -30,7 +33,7 @@
 #include "constraints.hpp"
 #include "constraintsSetup.hpp"
 #include "engine.hpp"
-#include "fileSettings.hpp"
+#include "engineOutput.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
@@ -129,10 +132,6 @@ namespace
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         simBox.setBox(orthoBox, false);
-
-        settings::FileSettings::setMShakeFileName(
-            "data/constraintsSetup/mshake.dat"
-        );
     }
 }   // namespace
 
@@ -142,7 +141,7 @@ namespace
  */
 TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 {
-    _settings->constraintSettings.activateShake();
+    _settings->constraintSettings.activateShakeByUser();
 
     addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
     addBondConstraintToLastMolecule(*_engine, 1.0);
@@ -169,7 +168,10 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
  */
 TEST_F(TestSetup, constraintsSetupRunsMShakeAndReducesDegreesOfFreedom)
 {
-    _settings->constraintSettings.activateMShake();
+    _settings->constraintSettings.activateMShakeByUser();
+    _settings->fileSettings.setMShakeFileNameByUser(
+        "data/constraintsSetup/mshake.dat"
+    );
 
     setupMShakeMoleculeType(*_engine);
 
@@ -226,7 +228,7 @@ TEST_F(TestSetup, setupConstraintsWrapperSkipsWhenInactive)
  */
 TEST_F(TestSetup, setupConstraintsWrapperRunsWhenShakeActive)
 {
-    _settings->constraintSettings.activateShake();
+    _settings->constraintSettings.activateShakeByUser();
 
     addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
     addBondConstraintToLastMolecule(*_engine, 1.0);
@@ -243,4 +245,39 @@ TEST_F(TestSetup, setupConstraintsWrapperRunsWhenShakeActive)
         linalg::Vec3D(-1.0, 0.0, 0.0)
     );
     EXPECT_EQ(simBox.getDegreesOfFreedom(), 9);
+}
+
+/**
+ * @brief tests that the setup log reports the tolerances and maximum numbers
+ * of iterations of the constraint settings
+ */
+TEST_F(TestSetup, constraintsSetupLogsToleranceAndMaxIterOfSettings)
+{
+    auto &constraintSettings = _settings->constraintSettings;
+    constraintSettings.activateShakeByUser();
+    constraintSettings.setShakeToleranceByUser(1e-5);
+    constraintSettings.setRattleToleranceByUser(1e-4);
+    constraintSettings.setShakeMaxIterByUser(37);
+    constraintSettings.setRattleMaxIterByUser(41);
+
+    _engine->getEngineOutput().getLogOutput().setFilename(
+        "constraintsSetup.log",
+        true
+    );
+
+    setup::ConstraintsSetup constraintsSetup(*_engine);
+    constraintsSetup.writeTolerance();
+    constraintsSetup.writeMaxIter();
+    _engine->getEngineOutput().getLogOutput().close();
+
+    std::ifstream     log("constraintsSetup.log");
+    const std::string content(
+        (std::istreambuf_iterator<char>(log)),
+        std::istreambuf_iterator<char>()
+    );
+
+    EXPECT_NE(content.find("SHAKE Tolerance:  1e-05"), std::string::npos);
+    EXPECT_NE(content.find("RATTLE Tolerance: 1e-04"), std::string::npos);
+    EXPECT_NE(content.find("SHAKE Max Iter:  37"), std::string::npos);
+    EXPECT_NE(content.find("RATTLE Max Iter: 41"), std::string::npos);
 }

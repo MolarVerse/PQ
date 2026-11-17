@@ -68,14 +68,11 @@ namespace input::guffdat
         if (!isNeeded(engine.getSettings()))
             return;
 
-        out::StdoutOutput::writeRead(
-            "Guffdat File",
-            settings::FileSettings::getGuffDatFileName()
-        );
-        engine.getLogOutput().writeRead(
-            "Guffdat File",
-            settings::FileSettings::getGuffDatFileName()
-        );
+        const auto &guffdatFileName =
+            engine.getSettings().fileSettings.getGuffDatFileName();
+
+        out::StdoutOutput::writeRead("Guffdat File", guffdatFileName);
+        engine.getLogOutput().writeRead("Guffdat File", guffdatFileName);
 
         GuffDatReader guffDat(engine);
         guffDat.setupGuffMaps();
@@ -111,7 +108,7 @@ namespace input::guffdat
      */
     GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
     {
-        _fileName = settings::FileSettings::getGuffDatFileName();
+        _fileName = _engine.getSettings().fileSettings.getGuffDatFileName();
     }
 
     /**
@@ -870,7 +867,8 @@ namespace input::guffdat
         const auto waterType = simBox.getWaterType();
 
         const auto isInterWaterModelSet =
-            _engine.getSettings().waterModelSettings.isInterWaterModelSet();
+            _engine.getSettings()
+                .waterModelSettings.isInterWaterModelSetAndNotNone();
 
         return isInterWaterModelSet && waterType.has_value() &&
                molType1 == waterType.value() && molType2 == waterType.value();

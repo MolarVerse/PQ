@@ -22,6 +22,7 @@
 
 #include "hybridSetup.hpp"
 
+#include <algorithm>
 #include <format>
 #include <string>
 #include <vector>
@@ -67,12 +68,13 @@ namespace setup
      */
     void HybridSetup::setup()
     {
-        validateQMMethod();
+        validateQMMethod(_engine.getSettings().qmSettings.getQMMethod());
         setupInnerRegionCenter();
         setupForcedCoreList();
         setupForcedLayerList();
         setupForcedOuterList();
         validateQMChargeSettings();
+        validateQMReferenceEnergies();
         checkZoneRadii();
 
         setupWriteInfo();
@@ -85,15 +87,14 @@ namespace setup
      * @throws exc::InputFileException if the QM method is not supported
      * for hybrid type calculations
      */
-    void HybridSetup::validateQMMethod()
+    void HybridSetup::validateQMMethod(QMMethod qmMethod)
     {
         using enum QMMethod;
 
-        const auto qmMethod = settings::QMSettings::getQMMethod();
         const auto errorMsg = std::format(
             "QM method \"{}\" is not supported for hybrid type "
-            "calculations. Supported QM methods are \"dftbplus\" and "
-            "\"turbomole\".",
+            "calculations. Supported QM methods are \"dftbplus\", "
+            "\"turbomole\" and \"orca\".",
             QMMethodMeta::toString(qmMethod)
 
         );
@@ -101,7 +102,8 @@ namespace setup
         switch (qmMethod)
         {
             case DFTBPLUS:
-            case TURBOMOLE: break;
+            case TURBOMOLE:
+            case ORCA: break;
             case PYSCF:
             case ASE_DFTBPLUS:
             case ASE_XTB:
@@ -276,6 +278,32 @@ namespace setup
                 "system. Either set \"qm_charges = qm\" or ensure all atoms "
                 "have a"
                 "non-zero moltype."
+            );
+        }
+    }
+
+    /**
+     * @brief Validate that no moltype 0 atoms are present when QM reference
+     * energies are used
+     *
+     * @throws exc::InputFileException if a moltype has a QM reference energy
+     * and atoms with moltype 0 are present in the simulation box
+     */
+    void HybridSetup::validateQMReferenceEnergies()
+    {
+        auto &simBox = _engine.getSimulationBox();
+
+        const auto hasReference = [](const auto &moleculeType)
+        { return moleculeType.hasQMReferenceEnergy(); };
+
+        const auto usesReferences =
+            std::ranges::any_of(simBox.getMoleculeTypes(), hasReference);
+
+        if (usesReferences && simBox.moleculeTypeExists(MolType{0}))
+        {
+            throw exc::InputFileException(
+                "Atoms with moltype \"0\" are not allowed when QM reference "
+                "energies are set in the moldescriptor file."
             );
         }
     }

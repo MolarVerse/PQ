@@ -20,15 +20,17 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETUP_HPP_
-
-#define _SETUP_HPP_
+#ifndef SETUP__SETUP_HPP
+#define SETUP__SETUP_HPP
 
 namespace engine
 {
     class Engine;   // forward declaration
 }   // namespace engine
 
+class ReferenceSettings;
+class NoseHooverSettings;
+class TimingsSettings;
 namespace timings
 {
     class Timer;   // forward declaration
@@ -45,13 +47,17 @@ namespace timings
  */
 namespace setup
 {
-    void setupRequestedJob(engine::Engine &engine);
+    void setupRequestedJob(
+        engine::Engine     &engine,
+        NoseHooverSettings &nhSettings,
+        TimingsSettings    &timingsSettings
+    );
 
     void startSetup();
     void endSetup(engine::Engine &);
 
-    void readFiles(engine::Engine &);
+    void readFiles(engine::Engine &, NoseHooverSettings &, TimingsSettings &);
     void setupEngine(engine::Engine &);
 }   // namespace setup
 
-#endif   // _SETUP_HPP_
+#endif   // SETUP__SETUP_HPP

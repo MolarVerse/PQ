@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESET_KINETICS_INPUT_PARSER_HPP_
-
-#define _RESET_KINETICS_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__RESET_KINETICS_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__RESET_KINETICS_INPUT_PARSER_HPP
 
 #include <mstd/types.hpp>
 
@@ -55,4 +54,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _RESET_KINETICS_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__RESET_KINETICS_INPUT_PARSER_HPP

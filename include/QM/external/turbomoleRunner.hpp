@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TURBOMOLE_RUNNER_HPP_
-
-#define _TURBOMOLE_RUNNER_HPP_
+#ifndef QM__EXTERNAL__TURBOMOLE_RUNNER_HPP
+#define QM__EXTERNAL__TURBOMOLE_RUNNER_HPP
 
 #include "externalQMRunner.hpp"
 
@@ -31,7 +30,7 @@ namespace QM
     /**
      * @class TurbomoleRunner
      *
-     * @brief class for running DFTB+ inheriting from ExternalQMRunner
+     * @brief class for running Turbomole inheriting from ExternalQMRunner
      *
      */
     class TurbomoleRunner : public ExternalQMRunner
@@ -41,17 +40,24 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
-
-        void writePointChargeFile(
-            molsys::SimulationBox &simulationBox
-        ) override;
+        using ExternalQMRunner::ExternalQMRunner;
 
         void execute(
-            molsys::SimulationBox &simulationBox,
-            const HybridSettings  &hybridSettings
+            const molsys::SimulationBox &simulationBox,
+            const FileSettings          &fileSettings
+        ) override;
+
+       private:
+        void _writeCoordsFile(
+            const molsys::SimulationBox &simulationBox
+        ) override;
+
+        void _writePointChargeFile(
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &pointChargeFileName,
+            const HybridSettings        &hybridSettings
         ) override;
     };
 }   // namespace QM
 
-#endif   // _TURBOMOLE_RUNNER_HPP_
+#endif   // QM__EXTERNAL__TURBOMOLE_RUNNER_HPP

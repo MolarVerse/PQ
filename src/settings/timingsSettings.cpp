@@ -22,67 +22,71 @@
 
 #include "timingsSettings.hpp"
 
-namespace settings
+/********************
+ *                  *
+ * standard setters *
+ *                  *
+ ********************/
+
+/**
+ * @brief Set the time step
+ *
+ * @param timeStep
+ */
+void TimingsSettings::setTimeStepByUser(const Time& timeStep)
 {
+    _timeStep.setByUser(timeStep);
+}
 
-    /********************
-     *                  *
-     * standard setters *
-     *                  *
-     ********************/
+/**
+ * @brief Set the step count
+ *
+ * @param stepCount
+ */
+void TimingsSettings::setStartingStepCountByUser(size_t stepCount)
+{
+    _startingStepCount.setByUser(stepCount);
+}
 
-    /**
-     * @brief Set the time step
-     *
-     * @param timeStep
-     */
-    void TimingsSettings::setTimeStep(double timeStep) { _timeStep = timeStep; }
+/**
+ * @brief Set the number of steps
+ *
+ * @param numberOfSteps
+ */
+void TimingsSettings::setNumberOfStepsByUser(size_t numberOfSteps)
+{
+    _numberOfSteps.setByUser(numberOfSteps);
+}
 
-    /**
-     * @brief Set the step count
-     *
-     * @param stepCount
-     */
-    void TimingsSettings::setStepCount(size_t stepCount)
-    {
-        _stepCount = stepCount;
-    }
+/********************
+ *                  *
+ * standard getters *
+ *                  *
+ ********************/
 
-    /**
-     * @brief Set the number of steps
-     *
-     * @param numberOfSteps
-     */
-    void TimingsSettings::setNumberOfSteps(size_t numberOfSteps)
-    {
-        _numberOfSteps = numberOfSteps;
-    }
+/**
+ * @brief get the time step
+ *
+ * @return const Time&
+ */
+const Time& TimingsSettings::getTimeStep() const { return _timeStep.get(); }
 
-    /********************
-     *                  *
-     * standard setters *
-     *                  *
-     ********************/
+/**
+ * @brief get the step count
+ *
+ * @return size_t
+ */
+size_t TimingsSettings::getStartingStepCount() const
+{
+    return _startingStepCount.get();
+}
 
-    /**
-     * @brief get the time step
-     *
-     * @return double
-     */
-    double TimingsSettings::getTimeStep() { return _timeStep; }
-
-    /**
-     * @brief get the step count
-     *
-     * @return size_t
-     */
-    size_t TimingsSettings::getStepCount() { return _stepCount; }
-
-    /**
-     * @brief get the number of steps
-     *
-     * @return size_t
-     */
-    size_t TimingsSettings::getNumberOfSteps() { return _numberOfSteps; }
-
-}   // namespace settings
+/**
+ * @brief get the number of steps
+ *
+ * @return size_t
+ */
+size_t TimingsSettings::getNumberOfSteps() const
+{
+    return _numberOfSteps.get();
+}

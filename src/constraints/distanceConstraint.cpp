@@ -27,6 +27,7 @@
 
 #include "exceptions.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace constraints
 {
@@ -74,14 +75,14 @@ namespace constraints
      */
     void DistanceConstraint::applyDistanceConstraint(
         const molsys::SimulationBox &simulationBox,
-        double                       timeInterval
+        const Time                  &timeInterval
     )
     {
         _lowerEnergy = 0.0;
         _upperEnergy = 0.0;
         _force       = {0.0};
 
-        if (timeInterval < 0.0)
+        if (timeInterval < 0.0 * fs)
             return;
 
         const auto &molecules   = get_molecules();
@@ -98,7 +99,8 @@ namespace constraints
 
         const auto distance = norm(dPos);
         const auto force_constant =
-            _springConstant + (_dSpringConstantDt * timeInterval);
+            _springConstant +
+            (_dSpringConstantDt * timeInterval.numerical_value_in(fs));
 
         if ((distance < _lowerDistance || distance > _upperDistance) &&
             (!std::isfinite(distance) || 0.0 == distance))

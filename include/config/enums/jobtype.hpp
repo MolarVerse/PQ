@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _JOBTYPE_ENUM_HPP_
-#define _JOBTYPE_ENUM_HPP_
+#ifndef CONFIG__ENUMS__JOBTYPE_HPP
+#define CONFIG__ENUMS__JOBTYPE_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -48,4 +48,4 @@ MSTD_ENUM(JobType, std::uint8_t, JOB_TYPE_LIST)
 
 #undef JOB_TYPE_LIST
 
-#endif   // _JOBTYPE_ENUM_HPP_
+#endif   // CONFIG__ENUMS__JOBTYPE_HPP

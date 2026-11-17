@@ -40,6 +40,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -70,6 +71,8 @@ int main()
 
     const auto& box     = simulationBox.getBoxDimensions();
     const auto  atomIdx = intraNonBondedType.getAtomIndices()[0][0];
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

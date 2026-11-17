@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SYSTEM_INFO_HPP_
-
-#define _SYSTEM_INFO_HPP_
+#ifndef CONFIG__SYSTEM_INFO_HPP
+#define CONFIG__SYSTEM_INFO_HPP
 
 #define COMPILE_VERSION_ _COMPILE_VERSION_
 
@@ -40,4 +39,4 @@ namespace sysinfo
 
 }   // namespace sysinfo
 
-#endif   // _SYSTEM_INFO_HPP_
+#endif   // CONFIG__SYSTEM_INFO_HPP

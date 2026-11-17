@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __FILTER_ITERATOR_HPP__
-#define __FILTER_ITERATOR_HPP__
+#ifndef VIEWS__FILTER_ITERATOR_HPP
+#define VIEWS__FILTER_ITERATOR_HPP
 
 #include <iterator>
 
@@ -194,4 +194,4 @@ namespace pqviews
 
 }   // namespace pqviews
 
-#endif   // __FILTER_ITERATOR_HPP__
+#endif   // VIEWS__FILTER_ITERATOR_HPP

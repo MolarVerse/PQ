@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MOLECULE_HPP_
-
-#define _MOLECULE_HPP_
+#ifndef MOLSYS__MOLECULE_HPP
+#define MOLSYS__MOLECULE_HPP
 
 #include <cstddef>
 #include <memory>
@@ -32,6 +31,7 @@
 
 #include "atom.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -103,8 +103,8 @@ namespace molsys
 
         void calculateCenterOfMass(const Box &);
         void reconstructAtomsAroundCenterOfMass(const Box &);
-        void scale(const linalg::tensor3D &, const Box &);
-        void scaleVelocity(const linalg::tensor3D &, const Box &);
+        void scale(const QuantityTensor3D &, const Box &);
+        void scaleVelocity(const QuantityTensor3D &);
 
         [[nodiscard]] size_t                  getNumberOfAtomTypes();
         [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
@@ -212,4 +212,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _MOLECULE_HPP_
+#endif   // MOLSYS__MOLECULE_HPP

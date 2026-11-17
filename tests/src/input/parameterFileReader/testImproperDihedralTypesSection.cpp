@@ -25,12 +25,12 @@
 #include <string>
 #include <vector>
 
-#include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "improperDihedralSection.hpp"
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief test bonds section processing one line
@@ -47,11 +47,14 @@ TEST_F(TestParameterFileSection, processSectionImproperDihedral)
 
     EXPECT_EQ(improperDihedralTypes.size(), 1);
     EXPECT_EQ(improperDihedralTypes[0].getId(), DihedralId{0});
-    EXPECT_EQ(improperDihedralTypes[0].getParams().forceConstant, 1.22);
+    EXPECT_EQ(
+        improperDihedralTypes[0].getParams().forceConstant,
+        1.22 * kcal_per_mol
+    );
     EXPECT_EQ(improperDihedralTypes[0].getParams().frequency, 234.3);
     EXPECT_EQ(
         improperDihedralTypes[0].getParams().phaseShift,
-        324.3 * DEG_TO_RAD
+        (324.3 * deg).in(rad)
     );
 
     lineElements = {"1", "2", "1.0", "0", "2"};

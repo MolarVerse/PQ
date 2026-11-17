@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MM_MD_ENGINE_HPP_
-
-#define _QM_MM_MD_ENGINE_HPP_
+#ifndef ENGINE__QMMM_MD_ENGINE_HPP
+#define ENGINE__QMMM_MD_ENGINE_HPP
 
 #include "hybridMDEngine.hpp"
 #include "randomNumberGenerator.hpp"
@@ -58,6 +57,7 @@ namespace engine
 
         void _moltypeCheck();
         void _setNumberOfQMAtoms();
+        void _calculateQMReferenceEnergy();
 
         void _scaleAndAccumulateEnergies(double globalSmF);
         void _moveEnergiesToPhysicalData();
@@ -75,4 +75,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_MM_MD_ENGINE_HPP_
+#endif   // ENGINE__QMMM_MD_ENGINE_HPP

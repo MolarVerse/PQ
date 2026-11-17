@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TOPOLOGY_READER_HPP_
-
-#define _TOPOLOGY_READER_HPP_
+#ifndef INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_READER_HPP
+#define INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_READER_HPP
 
 #include <fstream>
 #include <memory>
@@ -67,4 +66,4 @@ namespace input::topology
 
 }   // namespace input::topology
 
-#endif   // _TOPOLOGY_READER_HPP_
+#endif   // INPUT__TOPOLOGY_FILE_READER__TOPOLOGY_READER_HPP

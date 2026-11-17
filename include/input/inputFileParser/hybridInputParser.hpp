@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_INPUT_PARSER_HPP_
-
-#define _HYBRID_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
 
 #include "inputFileParser.hpp"
 
@@ -50,17 +49,8 @@ namespace input
         void addPointChargeThicknessKey();
         void addSmoothingMethodKey();
         void addQMForceDistributionKey();
-
-        static std::vector<int> parseSelection(
-            const std::string &,
-            const std::string &
-        );
-        static std::vector<int> parseSelectionNoPython(
-            const std::string &,
-            const std::string &
-        );
     };
 
 }   // namespace input
 
-#endif   // _HYBRID_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP

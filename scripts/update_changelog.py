@@ -106,7 +106,33 @@ def append_fragments(sections, fragments, audience):
     """Append fragments for one audience to parsed changelog sections."""
     for fragment in fragments:
         if fragment.audience == audience:
-            sections.setdefault(fragment.section, []).extend(fragment.entries)
+            entries = sections.setdefault(fragment.section, [])
+            for entry in fragment.entries:
+                if entry not in entries:
+                    entries.append(entry)
+
+
+def reject_released_fragments(fragments, user_history, dev_history):
+    """Exit if a fragment repeats a bullet of an earlier release."""
+    released = {
+        "user": {line.strip() for line in user_history if BULLET_RE.match(line)},
+        "developer": {
+            line.strip() for line in dev_history if BULLET_RE.match(line)
+        },
+    }
+    repeated = sorted(
+        f"changes/{fragment.audience}/{fragment.path.name}"
+        for fragment in fragments
+        if any(
+            entry.strip() in released[fragment.audience]
+            for entry in fragment.entries
+        )
+    )
+    if repeated:
+        sys.exit(
+            "these fragments repeat an entry of an earlier release; "
+            "delete them on dev: " + ", ".join(repeated)
+        )
 
 
 def has_release_notes(body_lines):
@@ -127,9 +153,9 @@ def trim_blank_lines(lines):
     return lines[start:end]
 
 
-def stamp_release(head, body, tail, version, repo):
+def stamp_release(head, body, tail, version, repo, release_header=None):
     """Move a Next Release body under a version while keeping Next Release."""
-    release_header = (
+    release_header = release_header or (
         f"## [{version}](https://github.com/{repo}/releases/tag/{version}) "
         f"- {date.today().isoformat()}"
     )
@@ -159,18 +185,37 @@ def load_changelog(path):
     return path.read_text(encoding="utf-8").splitlines()
 
 
+def prepared_release(tail, version):
+    """Take the latest release out of history when refreshing that version."""
+    history = trim_blank_lines([
+        line for line in tail if "<!-- insertion marker -->" not in line
+    ])
+    pattern = re.compile(rf"^## \[{re.escape(version)}\]\(")
+    matches = [i for i, line in enumerate(history) if pattern.match(line)]
+    if not matches:
+        return None, [], tail
+    if matches != [0]:
+        sys.exit(f"cannot refresh {version}: it is not the latest release")
+    end = next(
+        (i for i in range(1, len(history)) if history[i].startswith("## [")),
+        len(history),
+    )
+    return history[0], history[1:end], history[end:]
+
+
 def check_release_changelogs():
     fragments = read_all_fragments()
 
     user_lines = load_changelog(USER_CHANGELOG)
-    _, user_body, _ = split_next_release(
+    _, user_body, user_tail = split_next_release(
         user_lines, USER_CHANGELOG.name
     )
     user_sections = parse_subsections(user_body, USER_ORDER)
     append_fragments(user_sections, fragments, "user")
 
     dev_lines = load_changelog(DEV_CHANGELOG)
-    _, dev_body, _ = split_next_release(dev_lines, DEV_CHANGELOG.name)
+    _, dev_body, dev_tail = split_next_release(dev_lines, DEV_CHANGELOG.name)
+    reject_released_fragments(fragments, user_tail, dev_tail)
     dev_sections = parse_subsections(dev_body, DEVELOPER_ORDER)
     append_fragments(dev_sections, fragments, "developer")
 
@@ -195,9 +240,13 @@ def update_changelogs(version):
         dev_lines, DEV_CHANGELOG.name
     )
 
+    user_header, previous_user_body, user_tail = prepared_release(user_tail, version)
+    dev_header, previous_dev_body, dev_tail = prepared_release(dev_tail, version)
+
     fragments = read_all_fragments()
-    user_sections = parse_subsections(user_body, USER_ORDER)
-    dev_sections = parse_subsections(dev_body, DEVELOPER_ORDER)
+    reject_released_fragments(fragments, user_tail, dev_tail)
+    user_sections = parse_subsections(previous_user_body + user_body, USER_ORDER)
+    dev_sections = parse_subsections(previous_dev_body + dev_body, DEVELOPER_ORDER)
     append_fragments(user_sections, fragments, "user")
     append_fragments(dev_sections, fragments, "developer")
 
@@ -211,7 +260,7 @@ def update_changelogs(version):
     stamped = []
     if has_user_notes:
         user_output = stamp_release(
-            user_head, rendered_user_sections, user_tail, version, repo
+            user_head, rendered_user_sections, user_tail, version, repo, user_header
         )
         USER_CHANGELOG.write_text(
             "\n".join(user_output) + "\n", encoding="utf-8"
@@ -225,6 +274,7 @@ def update_changelogs(version):
             dev_tail,
             version,
             repo,
+            dev_header,
         )
         DEV_CHANGELOG.write_text(
             "\n".join(dev_output) + "\n", encoding="utf-8"

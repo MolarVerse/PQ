@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _WATER_MODELS_ENUM_HPP_
-#define _WATER_MODELS_ENUM_HPP_
+#ifndef CONFIG__ENUMS__WATER_MODELS_HPP
+#define CONFIG__ENUMS__WATER_MODELS_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -70,4 +70,4 @@ MSTD_ENUM(WaterInterModel, std::uint8_t, WATER_INTER_MODEL_LIST)
 
 #undef WATER_INTER_MODEL_LIST
 
-#endif   // _WATER_MODELS_ENUM_HPP_
+#endif   // CONFIG__ENUMS__WATER_MODELS_HPP

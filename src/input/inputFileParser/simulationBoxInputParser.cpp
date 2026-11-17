@@ -121,7 +121,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](double value)
-        { settings->setDensity(value); };
+        { settings->setDensityByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -148,7 +148,7 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](InitVelocities value)
-        { settings->setInitializeVelocities(value); };
+        { settings->setInitializeVelocsByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<InitVelocities>{

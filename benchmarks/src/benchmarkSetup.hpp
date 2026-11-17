@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef PQ_GOOGLE_BENCHMARK_SETUP_HPP
-#define PQ_GOOGLE_BENCHMARK_SETUP_HPP
+#ifndef BENCHMARKS__SRC__BENCHMARK_SETUP_HPP
+#define BENCHMARKS__SRC__BENCHMARK_SETUP_HPP
 
 #include <cstddef>
 
@@ -100,4 +100,4 @@ namespace benchmarkSetup
     }
 }   // namespace benchmarkSetup
 
-#endif   // PQ_GOOGLE_BENCHMARK_SETUP_HPP
+#endif   // BENCHMARKS__SRC__BENCHMARK_SETUP_HPP

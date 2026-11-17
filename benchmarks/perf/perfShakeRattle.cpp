@@ -32,6 +32,7 @@
 
 #include "settings.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -42,26 +43,26 @@
 #include "bondConstraint.hpp"
 #include "constraintSettings.hpp"
 #include "constraints.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001);
+    const auto timeStep = 0.001 * fs;
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto &molecules = box.getMolecules();
 
     Settings settings;
-    settings.constraintSettings.setShakeMaxIter(100);
-    settings.constraintSettings.setRattleMaxIter(100);
-    settings.constraintSettings.setShakeTolerance(1.0e-8);
-    settings.constraintSettings.setRattleTolerance(1.0e-8);
-    settings.constraintSettings.activateShake();
+    settings.constraintSettings.setShakeMaxIterByUser(100);
+    settings.constraintSettings.setRattleMaxIterByUser(100);
+    settings.constraintSettings.setShakeToleranceByUser(1.0e-8);
+    settings.constraintSettings.setRattleToleranceByUser(1.0e-8);
+    settings.constraintSettings.activateShakeByUser();
     auto constr = constraints::Constraints(settings.constraintSettings);
 
     for (auto &molecule : molecules)
@@ -79,6 +80,8 @@ int main()
 
     constr.calculateConstraintBondRefs(box);
 
+    perfAllocBegin();
+
     CALLGRIND_ZERO_STATS;
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
@@ -92,7 +95,7 @@ int main()
             pos[0]     += (i % 2 == 0) ? 0.02 : -0.02;
             atom.setPosition(pos);
         }
-        constr.applyShake(box);
+        constr.applyShake(box, timeStep);
         constr.applyRattle(box);
     }
 

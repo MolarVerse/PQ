@@ -17,9 +17,12 @@ be run from its own directory so relative setup-file paths resolve as intended.
     * - ``examples/h2o_mm``
       - MM-MD water
       - Self-contained classical MD example using ``moldescriptor.dat`` and ``guff.dat``.
+    * - ``examples/h2o_mm-mshake``
+      - MM-MD water with M-SHAKE
+      - Rigid TIP3P water with M-SHAKE (``mshake.top``); see the ``README.md`` in the folder.
     * - ``examples/amyloid-classical``
       - Classical force-field setup
-      - Uses topology, parameter and intramolecular non-bonded setup files.
+      - Uses topology, parameter and intramolecular non-bonded setup files; the solvent water is kept rigid with M-SHAKE (``mshake.top``).
     * - ``examples/umcm-9_dftb+``
       - DFTB+ with SHAKE
       - Uses ``dftb_in.template`` and a topology file with SHAKE constraints.
@@ -50,6 +53,18 @@ be run from its own directory so relative setup-file paths resolve as intended.
     * - ``examples/mof-5_ase-xtb``
       - ASE-xTB
       - Uses the ASE xTB runner with ``xtb-method``.
+    * - ``examples/mof-5_fennol``
+      - FeNNol
+      - Uses the FeNNol model through ASE (``qm_prog = fennol``).
+    * - ``examples/oh_mm_hessian``
+      - MM Hessian
+      - Geometry optimization followed by the Hessian (``run-01.in``) or the Hessian alone (``run-02-no-opt.in``); see the ``README.md`` in the folder.
+    * - ``examples/orca``
+      - ORCA QM-MD
+      - HF, DFT and RI-MP2 with the bundled ORCA drivers; needs ORCA, see the ``README.md`` in the folder.
+    * - ``examples/potassium_water_qmmm``
+      - DFTB+ QM/MM
+      - Hybrid QM/MM simulation of a potassium ion in water; ``run-02.in`` continues from the restart file of ``run-01.in``.
 
 Running an Example
 ******************

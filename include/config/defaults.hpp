@@ -20,13 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DEFAULTS_HPP_
-
-#define _DEFAULTS_HPP_
+#ifndef CONFIG__DEFAULTS_HPP
+#define CONFIG__DEFAULTS_HPP
 
 #include <cstddef>
+#include <mstd/units/wave_number.hpp>
 
 #include "enums/convergence.hpp"
+#include "unit_types.hpp"
 
 /**
  * @brief struct containing all default file names
@@ -45,6 +46,7 @@ struct DefaultFiles
     static constexpr auto velFile          = "default.vel";
     static constexpr auto forceFile        = "default.force";
     static constexpr auto chargeFile       = "default.charge";
+    static constexpr auto extxyzFile       = "default.extxyz";
     static constexpr auto logFile          = "default.log";
     static constexpr auto stdoutFile       = "default.stdout";
     static constexpr auto refFile          = "default.ref";
@@ -76,6 +78,7 @@ namespace defaults
     static constexpr auto*  MOLDESCRIPTOR_FILE_DEFAULT = "moldescriptor.dat";
     static constexpr auto*  GUFF_FILE_DEFAULT          = "guff.dat";
     static constexpr auto*  DFTB_FILE_DEFAULT          = "dftb_in.template";
+    static constexpr auto*  ORCA_FILE_DEFAULT          = "orca.template";
     static constexpr auto*  TM_FILE_DEFAULT            = "tm_define.template";
     static constexpr auto*  POINTCHARGE_FILE_DEFAULT   = "pointcharges";
     static constexpr size_t NUMBER_OF_GUFF_ENTRIES     = 28;
@@ -111,18 +114,21 @@ namespace defaults
 
     static constexpr size_t NH_CHAIN_LENGTH_DEFAULT =
         3;   // default value for nose hoover chain length
-    static constexpr double BERENDSEN_THERMOSTAT_RELAX_TIME = 0.1;   // in ps
+    static constexpr Time BERENDSEN_THERMOSTAT_RELAX_TIME =
+        0.1 * mstd::units::ps;
     static constexpr double LANGEVIN_THERMOSTAT_FRICTION = 1.0e11;   // in s^-1
-    static constexpr double NH_COUPLING_FREQ             = 1.0e3;    // in cm^-1
-    static constexpr double MAX_FRICTION_CONVERSION      = 1.0e12;   // in s^-1
+    static constexpr auto   NH_COUPLING_FREQ =
+        mstd::toFreq(1.0e3 * mstd::units::per_cm);              // in cm^-1
+    static constexpr double MAX_FRICTION_CONVERSION = 1.0e12;   // in s^-1
 
-    static constexpr double BERENDSEN_MANOSTAT_RELAX_TIME = 1.0;   // in ps
-    static constexpr double COMPRESSIBILITY_WATER_DEFAULT =
-        4.591e-5;   // in bar^-1 default value for berendsen manostat
+    static constexpr Time BERENDSEN_MANOSTAT_RELAX_TIME = 1 * mstd::units::ps;
+    static constexpr Compressibility COMPRESSIBILITY_WATER_DEFAULT =
+        4.591e-5 /
+        mstd::units::bar;   // in bar^-1 default value for berendsen manostat
 
     static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
 
-    static constexpr double QM_LOOP_TIME_LIMIT_DEFAULT = 3600;   // in s
+    static constexpr TimeMs QM_LOOP_TIME_LIMIT_DEFAULT = 3600 * mstd::units::s;
     static constexpr double VACUUM_BOX_DIMENSION       = 1000;   // in Å
 
     static constexpr auto*  OPTIMIZER_DEFAULT             = "gradient-descent";
@@ -144,4 +150,4 @@ namespace defaults
 
 }   // namespace defaults
 
-#endif   // _DEFAULTS_HPP_
+#endif   // CONFIG__DEFAULTS_HPP

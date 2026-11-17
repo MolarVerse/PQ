@@ -37,10 +37,55 @@
 #include "improperDihedralSection.hpp"
 #include "jCouplingSection.hpp"
 #include "shakeSection.hpp"
+#include "simulationBox.hpp"
 #include "stringUtilities.hpp"
 
 namespace input::topology
 {
+    namespace
+    {
+        /**
+         * @brief builds the atom index lookup of the simulation box and clears
+         * it again when the topology file is read (or reading throws)
+         */
+        class AtomIndexLookupGuard
+        {
+            MSTD_RAII_NO_MOVE(AtomIndexLookupGuard);
+
+           private:
+            mstd::Ref<molsys::SimulationBox> _simulationBox;
+
+           public:
+            explicit AtomIndexLookupGuard(molsys::SimulationBox &simulationBox);
+
+            ~AtomIndexLookupGuard();
+        };
+
+        /**
+         * @brief constructs the atom index lookup guard
+         *
+         * @param simulationBox the simulation box for which to build the atom
+         * index lookup
+         */
+        AtomIndexLookupGuard::AtomIndexLookupGuard(
+            molsys::SimulationBox &simulationBox
+        )
+            : _simulationBox(simulationBox)
+        {
+            _simulationBox->buildAtomIndexLookup();
+        }
+
+        /**
+         * @brief destructs the atom index lookup guard
+         *
+         * @details clears the atom index lookup of the associated simulation
+         * box
+         */
+        AtomIndexLookupGuard::~AtomIndexLookupGuard()
+        {
+            _simulationBox->clearAtomIndexLookup();
+        }
+    }   // namespace
 
     /**
      * @brief constructor
@@ -76,7 +121,6 @@ namespace input::topology
      * @details reads topology file line by line and determines which section
      * the line belongs to. Then the line is processed by the section.
      *
-     * @throws exc::InputFileException if topology file is not set
      * @throws exc::InputFileException if topology file does not exist
      *
      */
@@ -86,10 +130,9 @@ namespace input::topology
         std::vector<std::string> lineElements;
         size_t                   lineNumber = 1;
 
-        if (!settings::FileSettings::isTopologyFileNameSet())
-            throw exc::InputFileException(
-                "Topology file needed for requested simulation setup"
-            );
+        // the molecules do not change while the topology is read: every atom
+        // index of the file is found by a binary search instead of a walk
+        const AtomIndexLookupGuard lookup(_engine.getSimulationBox());
 
         while (getline(_fp, line))
         {
@@ -147,7 +190,13 @@ namespace input::topology
         if (!isNeeded(engine.getSettings()))
             return;
 
-        const auto filename = settings::FileSettings::getTopologyFileName();
+        const auto &fileSettings = engine.getSettings().fileSettings;
+        if (!fileSettings.isTopologyFileNameSetByUser())
+            throw exc::InputFileException(
+                "Topology file needed for requested simulation setup"
+            );
+
+        const auto filename = fileSettings.getTopologyFileName();
 
         out::StdoutOutput::writeRead("Topology File", filename);
         engine.getLogOutput().writeRead("Topology File", filename);
@@ -166,7 +215,7 @@ namespace input::topology
     bool isNeeded(const Settings &settings)
     {
         if (settings.constraintSettings.isActive() &&
-            !settings.constraintSettings.isShakeOnlyWaterModel())
+            !settings.constraintSettings.isShakeSetBySystem())
             return true;
 
         if (settings.forceFieldSettings.isActive())

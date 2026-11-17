@@ -22,9 +22,8 @@
 
 #ifdef WITH_MPI
 
-#ifndef _PQ_MPI_HPP_
-
-#define _PQ_MPI_HPP_
+#ifndef MPI__MPI_HPP
+#define MPI__MPI_HPP
 
 #include <cstddef>
 #include <fstream>
@@ -84,6 +83,6 @@ namespace mpi
     };
 }   // namespace mpi
 
-#endif   // _PQ_MPI_HPP_
+#endif   // MPI__MPI_HPP
 
 #endif   // WITH_MPI

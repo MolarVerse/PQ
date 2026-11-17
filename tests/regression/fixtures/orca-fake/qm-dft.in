@@ -1,0 +1,13 @@
+# Pure QM water, PQ + orca_dft.py + fake ORCA.
+jobtype = qm-md;
+nstep = 2;
+timestep = 0.1;
+force-field = off;
+qm_prog = orca;
+qm_script = orca_dft.py;
+orca_file = orca_dft.template;
+start_file = water.rst;
+file_prefix = water-dft;
+force_file = water-dft.force;
+charge_file = water-dft.chrg;
+overwrite_output = on;
