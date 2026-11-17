@@ -1,1 +1,1 @@
-- New `PhysicalData::getPotentialEnergy()`; `MDEngine` passes it to `EngineOutput::writeFrame`, and `Frame::totalEnergy` is renamed to `potentialEnergy` (#N).
+- New `PhysicalData::getPotentialEnergy()`; `MDEngine` passes it to `EngineOutput::writeFrame`, and `Frame::totalEnergy` is renamed to `potentialEnergy` (#1215).
