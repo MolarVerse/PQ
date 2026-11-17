@@ -29,6 +29,7 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
 #include "strongTypes.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -50,9 +51,12 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(10.0);
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
-    auto coulombPotential    = pot::CoulombShiftedPotential(10.0);
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(settings.potentialSettings);
 
     PotentialSettings::setScale14Coulomb(0.75);
     PotentialSettings::setScale14VanDerWaals(0.75);
@@ -84,9 +88,9 @@ int main()
                 AtomIndex{0},
                 atomIdx,
                 box,
-                physicalData,
                 &coulombPotential,
-                &nonCoulombPotential
+                &nonCoulombPotential,
+                settings.potentialSettings
             );
 
         sink += coulombEnergy + nonCoulombEnergy;

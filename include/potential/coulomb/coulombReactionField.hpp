@@ -44,12 +44,17 @@ namespace pot
         double _rfPrefactor{};
 
        public:
-        CoulombReactionField(double coulombRadiusCutOff, double epsilon);
+        explicit CoulombReactionField(
+            const PotentialSettings& potentialSettings,
+            double                   epsilon
+        );
 
+       private:
         [[nodiscard]]
-        std::pair<double, double> calculate(
-            double distance,
-            double chargeProduct
+        std::pair<double, double> _calculateInternal(
+            double                        distance,
+            double                        chargeProduct,
+            const CoulombPotentialConfig& config
         ) const override;
     };
 

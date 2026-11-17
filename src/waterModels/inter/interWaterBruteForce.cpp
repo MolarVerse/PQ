@@ -24,6 +24,7 @@
 #include "interWaterKernels.tpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace waterModel
@@ -41,12 +42,13 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulPot,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
+        const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = 0.0;
@@ -125,12 +127,13 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
+        const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy = 0.0;
@@ -204,12 +207,13 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
+        const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = 0.0;
@@ -293,7 +297,8 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         calculate(
@@ -301,7 +306,8 @@ namespace waterModel
             simulationBox,
             physicalData,
             coulombPotential,
-            cellList
+            cellList,
+            potentialSettings
         );
     }
 
@@ -318,12 +324,13 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        const molsys::CellList & /*cellList*/
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
+        const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = 0.0;

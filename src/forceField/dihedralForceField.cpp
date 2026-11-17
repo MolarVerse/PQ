@@ -69,7 +69,8 @@ namespace ff
         physicalData::PhysicalData  &physicalData,
         bool                         isImproperDihedral,
         const pot::CoulombPotential &coulombPot,
-        pot::NonCoulombPotential    &nonCoulombPot
+        pot::NonCoulombPotential    &nonCoulombPot,
+        const PotentialSettings     &potentialSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -168,7 +169,7 @@ namespace ff
 
             const auto distance14 = norm(dPosition14);
 
-            if (distance14 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            if (distance14 < potentialSettings.getCoulombRadiusCutOff())
             {
                 forceMagnitude = correctLinker<DihedralForceField>(
                     coulombPot,

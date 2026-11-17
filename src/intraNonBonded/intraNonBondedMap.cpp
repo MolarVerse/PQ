@@ -60,7 +60,8 @@ namespace intraNonBonded
         const pot::CoulombPotential *coulombPotential,
         pot::NonCoulombPotential    *nonCoulombPotential,
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     ) const
     {
         auto        coulombEnergy    = 0.0;
@@ -82,9 +83,9 @@ namespace intraNonBonded
                         AtomIndex{atomIndex1},
                         atomIndice,
                         box,
-                        physicalData,
                         coulombPotential,
-                        nonCoulombPotential
+                        nonCoulombPotential,
+                        potentialSettings
                     );
 
                 coulombEnergy    += coulombEnergyTemp;
@@ -109,12 +110,12 @@ namespace intraNonBonded
      * for the interaction
      */
     std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-        AtomIndex            atomIdx1,
-        int                  atomIdx2AsInt,
-        const linalg::Vec3D &box,
-        physicalData::PhysicalData & /*physicalData*/,
+        AtomIndex                    atomIdx1,
+        int                          atomIdx2AsInt,
+        const linalg::Vec3D         &box,
         const pot::CoulombPotential *coulPot,
-        pot::NonCoulombPotential    *nonCoulPot
+        pot::NonCoulombPotential    *nonCoulPot,
+        const PotentialSettings     &potentialSettings
     ) const
     {
         if (!_molecule->isActive())
@@ -137,7 +138,7 @@ namespace intraNonBonded
         dPos                += txyz;
         const auto distance  = norm(dPos);
 
-        if (distance < pot::CoulombPotential::getCoulombRadiusCutOff())
+        if (distance < potentialSettings.getCoulombRadiusCutOff())
         {
             const auto charge1 = _molecule->getPartialCharge(atomIdx1);
             const auto charge2 = _molecule->getPartialCharge(atomIdx2);

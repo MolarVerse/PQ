@@ -42,6 +42,7 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
+class PotentialSettings;   // forward declaration
 namespace ff
 {
     /**
@@ -71,7 +72,8 @@ namespace ff
             const molsys::SimulationBox &simulationBox,
             physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
-            pot::NonCoulombPotential    &nonCoulombPot
+            pot::NonCoulombPotential    &nonCoulombPot,
+            const PotentialSettings     &potentialSettings
         );
 
         /***************************

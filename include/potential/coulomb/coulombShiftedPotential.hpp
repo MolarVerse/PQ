@@ -42,10 +42,12 @@ namespace pot
        public:
         using CoulombPotential::CoulombPotential;
 
+       private:
         [[nodiscard]]
-        std::pair<double, double> calculate(
-            double distance,
-            double chargeProduct
+        std::pair<double, double> _calculateInternal(
+            double                        distance,
+            double                        chargeProduct,
+            const CoulombPotentialConfig& config
         ) const override;
     };
 

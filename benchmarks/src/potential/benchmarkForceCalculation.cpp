@@ -37,8 +37,8 @@
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
+#include "settings.hpp"
 #include "waterModelSettings.hpp"
-
 namespace
 {
     std::shared_ptr<pot::GuffNonCoulomb> makeNonCoulombPotential()
@@ -67,13 +67,14 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        pot::CoulombPotential::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
+        Settings settings;
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(
+            benchmarkSetup::cutOff
+        );
 
         PotentialType forceCalculation;
         forceCalculation.makeCoulombPotential(
-            pot::CoulombShiftedPotential(benchmarkSetup::cutOff)
+            pot::CoulombShiftedPotential(settings.potentialSettings)
         );
         forceCalculation.setNonCoulombPotential(makeNonCoulombPotential());
 
@@ -88,7 +89,6 @@ namespace
         }
 
         physicalData::PhysicalData physicalData;
-        WaterModelSettings         waterModelSettings;
 
         for (auto _ : state)
         {
@@ -100,7 +100,8 @@ namespace
                 simBox,
                 physicalData,
                 cellList,
-                waterModelSettings
+                settings.waterModelSettings,
+                settings.potentialSettings
             );
             benchmark::DoNotOptimize(physicalData.getCoulombEnergy());
             benchmark::DoNotOptimize(physicalData.getNonCoulombEnergy());

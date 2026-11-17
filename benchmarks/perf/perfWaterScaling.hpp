@@ -71,10 +71,6 @@ namespace benchWaterScaling
 
     inline int run(const std::size_t perSide, const std::uint64_t iterations)
     {
-        pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
-
         Settings settings;
         settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
         settings.waterModelSettings.setWaterInterModelByUser(
@@ -165,8 +161,9 @@ namespace benchWaterScaling
             std::make_unique<waterModel::InterWaterStrategyCellList>(),
             settings.potentialSettings
         );
-        auto coulombPot =
-            std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
+        auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(
+            settings.potentialSettings
+        );
 
         settings::GeneralSettings::activateCellList();
         molsys::CellList cellList;
@@ -189,7 +186,13 @@ namespace benchWaterScaling
                 simBox,
                 settings.potentialSettings.getCoulombRadiusCutOff()
             );
-            interWater.calculate(simBox, physicalData, coulombPot, cellList);
+            interWater.calculate(
+                simBox,
+                physicalData,
+                coulombPot,
+                cellList,
+                settings.potentialSettings
+            );
         }
 
         // read state so the loop cannot be optimized away

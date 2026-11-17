@@ -31,6 +31,7 @@
 #include "globalTimer.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "waterModelSettings.hpp"
 
@@ -63,7 +64,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList     &cellList,
-        const WaterModelSettings   &waterModelSettings
+        const WaterModelSettings   &waterModelSettings,
+        const PotentialSettings    &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
@@ -116,7 +118,8 @@ namespace pot
                                     *molecule_i,
                                     *molecule_j,
                                     *atom_i,
-                                    *atom_j
+                                    *atom_j,
+                                    potentialSettings.get_coulombConfig()
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -163,7 +166,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -195,7 +199,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList     &cellList,
-        const WaterModelSettings & /*waterModelSettings*/
+        const WaterModelSettings & /*waterModelSettings*/,
+        const PotentialSettings &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
@@ -232,7 +237,12 @@ namespace pot
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     QMChargeTag,
-                                    MMChargeTag>(*box, *atom_i, *atom_j);
+                                    MMChargeTag>(
+                                    *box,
+                                    *atom_i,
+                                    *atom_j,
+                                    potentialSettings.get_coulombConfig()
+                                );
                         }
                     }
                 }
@@ -265,7 +275,12 @@ namespace pot
                                 totalCoulombEnergy +=
                                     calculateSingleCoulombInteraction<
                                         QMChargeTag,
-                                        MMChargeTag>(*box, *atom_i, *atom_j);
+                                        MMChargeTag>(
+                                        *box,
+                                        *atom_i,
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
+                                    );
                             }
                         }
                     }
@@ -299,7 +314,12 @@ namespace pot
                                 totalCoulombEnergy +=
                                     calculateSingleCoulombInteraction<
                                         QMChargeTag,
-                                        MMChargeTag>(*box, *atom_i, *atom_j);
+                                        MMChargeTag>(
+                                        *box,
+                                        *atom_i,
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
+                                    );
                             }
                         }
                     }
@@ -328,7 +348,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList     &cellList,
-        const WaterModelSettings & /*waterModelSettings*/
+        const WaterModelSettings & /*waterModelSettings*/,
+        const PotentialSettings &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
@@ -375,7 +396,8 @@ namespace pot
                                     *molecule_i,
                                     *molecule_j,
                                     *atom_i,
-                                    *atom_j
+                                    *atom_j,
+                                    potentialSettings.get_coulombConfig()
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -422,7 +444,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -470,7 +493,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -497,7 +521,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList     &cellList,
-        const WaterModelSettings & /*waterModelSettings*/
+        const WaterModelSettings & /*waterModelSettings*/,
+        const PotentialSettings &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedOuterToOuter");
@@ -547,7 +572,8 @@ namespace pot
                                     *molecule_i,
                                     *molecule_j,
                                     *atom_i,
-                                    *atom_j
+                                    *atom_j,
+                                    potentialSettings.get_coulombConfig()
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -596,7 +622,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -623,7 +650,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList     &cellList,
-        const WaterModelSettings & /*waterModelSettings*/
+        const WaterModelSettings & /*waterModelSettings*/,
+        const PotentialSettings &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
@@ -670,7 +698,12 @@ namespace pot
                                 totalCoulombEnergy +=
                                     calculateSingleCoulombInteraction<
                                         MMChargeTag,
-                                        QMChargeTag>(*box, *atom_i, *atom_j);
+                                        QMChargeTag>(
+                                        *box,
+                                        *atom_i,
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
+                                    );
                             }
                         }
                     }
@@ -688,7 +721,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -739,7 +773,9 @@ namespace pot
                                             QMChargeTag>(
                                             *box,
                                             *atom_i,
-                                            *atom_j
+                                            *atom_j,
+                                            potentialSettings.get_coulombConfig(
+                                            )
                                         );
                                 }
                             }
@@ -759,7 +795,9 @@ namespace pot
                                                 *molecule_i,
                                                 *molecule_j,
                                                 *atom_i,
-                                                *atom_j
+                                                *atom_j,
+                                                potentialSettings
+                                                    .get_coulombConfig()
                                             );
 
                                     totalCoulombEnergy    += coulombEnergy;
@@ -811,7 +849,9 @@ namespace pot
                                             QMChargeTag>(
                                             *box,
                                             *atom_i,
-                                            *atom_j
+                                            *atom_j,
+                                            potentialSettings.get_coulombConfig(
+                                            )
                                         );
                                 }
                             }
@@ -831,7 +871,9 @@ namespace pot
                                                 *molecule_i,
                                                 *molecule_j,
                                                 *atom_i,
-                                                *atom_j
+                                                *atom_j,
+                                                potentialSettings
+                                                    .get_coulombConfig()
                                             );
 
                                     totalCoulombEnergy    += coulombEnergy;
@@ -877,7 +919,8 @@ namespace pot
                                     *molecule_i,
                                     *molecule_j,
                                     *atom_i,
-                                    *atom_j
+                                    *atom_j,
+                                    potentialSettings.get_coulombConfig()
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -927,7 +970,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;
@@ -978,7 +1022,8 @@ namespace pot
                                         *molecule_i,
                                         *molecule_j,
                                         *atom_i,
-                                        *atom_j
+                                        *atom_j,
+                                        potentialSettings.get_coulombConfig()
                                     );
 
                                 totalCoulombEnergy    += coulombEnergy;

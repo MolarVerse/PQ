@@ -23,6 +23,7 @@
 #include "coulombReactionField.hpp"
 
 #include "constants/internalConversionFactors.hpp"
+#include "potentialSettings.hpp"
 
 namespace pot
 {
@@ -34,10 +35,10 @@ namespace pot
      * @param epsilon
      */
     CoulombReactionField::CoulombReactionField(
-        double coulombRadiusCutOff,
-        double epsilon
+        const PotentialSettings& potentialSettings,
+        double                   epsilon
     )
-        : CoulombPotential{coulombRadiusCutOff},
+        : CoulombPotential{potentialSettings},
           _rfPrefactor{(epsilon - 1) / (2.0 * epsilon + 1)}
     {
     }
@@ -50,17 +51,18 @@ namespace pot
      * @param chargeProduct
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombReactionField::calculate(
-        double dist,
-        double chargeProduct
+    std::pair<double, double> CoulombReactionField::_calculateInternal(
+        double                        dist,
+        double                        chargeProduct,
+        const CoulombPotentialConfig& config
     ) const
     {
         const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
         const auto dInv             = 1.0 / dist;
-        const auto deltaCutOff      = _coulombRadiusCutOff - dist;
-        const auto rCutEnergy       = _coulombEnergyCutOff;
-        const auto rCutForce        = _coulombForceCutOff;
-        const auto rfCutOffCubed    = _rfPrefactor * _coulombCutOffCubedInverse;
+        const auto deltaCutOff      = config.cutoff - dist;
+        const auto rCutEnergy       = config.energyCutoff;
+        const auto rCutForce        = config.forceCutoff;
+        const auto rfCutOffCubed    = _rfPrefactor * config.invCubeCutoff;
 
         auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
         energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;

@@ -217,8 +217,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(20.0);
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(20.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -338,7 +340,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
         std::make_shared<pot::ForceFieldNonCoulomb>(*_nonCoulombPotential)
     );
 
-    forceField.calculateBondedInteractions(box, physicalData);
+    forceField
+        .calculateBondedInteractions(box, physicalData, potentialSettings);
 
     EXPECT_NE(physicalData.getBondEnergy(), 0.0);
     EXPECT_NE(physicalData.getAngleEnergy(), 0.0);
@@ -355,7 +358,9 @@ TEST_F(TestForceField, calculateBondedInteractions)
  */
 TEST_F(TestForceField, correctLinker)
 {
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),

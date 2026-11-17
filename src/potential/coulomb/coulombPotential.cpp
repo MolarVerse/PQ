@@ -22,69 +22,39 @@
 
 #include "coulombPotential.hpp"
 
+#include "potentialSettings.hpp"
+
 namespace pot
 {
-
     /**
-     * @brief Construct a new Coulomb Potential:: Coulomb Potential object
+     * @brief Constructor for CoulombPotential
      *
-     * @details the coulomb energy cutoff is set to 1 / coulombRadiusCutOff and
-     * the coulomb force cutoff is set to 1 / (coulombRadiusCutOff *
-     * coulombRadiusCutOff) the coulomb pre factor is not included here but
-     * later in the calculate function of the derived classes
-     *
-     * @param coulombRadiusCutOff
+     * @param potentialSettings Reference to the potential settings object
      */
-    CoulombPotential::CoulombPotential(double coulombRadiusCutOff)
+    CoulombPotential::CoulombPotential(
+        const PotentialSettings& potentialSettings
+    )
+        : _potentialSettings(potentialSettings)
     {
-        setCoulombRadiusCutOff(coulombRadiusCutOff);
-    }
-
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief sets the coulombRadiusCutOff and calculates the energy and force
-     * cutoff - equivalent to the constructor
-     *
-     * @details coulombPreFactor is not included in the energy and force cutoff
-     *
-     * @param coulombRadiusCutOff
-     */
-    void CoulombPotential::setCoulombRadiusCutOff(double coulombRadiusCutOff)
-    {
-        _coulombRadiusCutOff = coulombRadiusCutOff;
-        _coulombEnergyCutOff = 1 / _coulombRadiusCutOff;
-        _coulombForceCutOff = 1 / (_coulombRadiusCutOff * _coulombRadiusCutOff);
-        _coulombCutOffCubedInverse =
-            1 / (_coulombRadiusCutOff * _coulombRadiusCutOff *
-                 _coulombRadiusCutOff);
     }
 
     /**
-     * @brief set the coulombEnergyCutOff
+     * @brief Calculate the energy and force of the Coulomb potential
      *
-     * @param coulombEnergyCutOff
+     * @param distance
+     * @param chargeProduct
+     * @return std::pair<double, double>
      */
-    void CoulombPotential::setCoulombEnergyCutOff(double coulombEnergyCutOff)
+    std::pair<double, double> CoulombPotential::calculate(
+        double distance,
+        double chargeProduct
+    ) const
     {
-        _coulombEnergyCutOff = coulombEnergyCutOff;
+        return _calculateInternal(
+            distance,
+            chargeProduct,
+            _potentialSettings->get_coulombConfig()
+        );
     }
-
-    /**
-     * @brief set the coulombForceCutOff
-     *
-     * @param coulombForceCutOff
-     */
-    void CoulombPotential::setCoulombForceCutOff(double coulombForceCutOff)
-    {
-        _coulombForceCutOff = coulombForceCutOff;
-    }
-
-    // Coulomb cutoff getters are inline in the header so the per-pair call
-    // in Potential::calculateSingleInteraction can be elided without LTO.
 
 }   // namespace pot

@@ -70,7 +70,8 @@ namespace ff
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
-        pot::NonCoulombPotential    &nonCoulombPot
+        pot::NonCoulombPotential    &nonCoulombPot,
+        const PotentialSettings     &potentialSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -103,8 +104,7 @@ namespace ff
 
         physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
-        if (_isLinker &&
-            distance < pot::CoulombPotential::getCoulombRadiusCutOff())
+        if (_isLinker && distance < potentialSettings.getCoulombRadiusCutOff())
         {
             forceMagnitude += correctLinker<BondForceField>(
                 coulombPot,

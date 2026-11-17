@@ -29,6 +29,7 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -51,13 +52,16 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(20.0);
     auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
-    auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = pot::CoulombShiftedPotential(20.0);
+    auto physicalData = physicalData::PhysicalData();
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(settings.potentialSettings);
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
@@ -115,20 +119,23 @@ int main()
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            settings.potentialSettings
         );
         angle.calculateEnergyAndForces(
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            settings.potentialSettings
         );
         dihedral.calculateEnergyAndForces(
             box,
             physicalData,
             false,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            settings.potentialSettings
         );
     }
 

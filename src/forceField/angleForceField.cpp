@@ -68,7 +68,8 @@ namespace ff
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
-        pot::NonCoulombPotential    &nonCoulombPot
+        pot::NonCoulombPotential    &nonCoulombPot,
+        const PotentialSettings     &potentialSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -146,7 +147,7 @@ namespace ff
 
             const auto distance23 = norm(dPosition23);
 
-            if (distance23 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            if (distance23 < potentialSettings.getCoulombRadiusCutOff())
             {
                 forceMagnitude = correctLinker<AngleForceField>(
                     coulombPot,

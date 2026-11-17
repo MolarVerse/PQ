@@ -22,7 +22,34 @@
 
 #include "potentialSettings.hpp"
 
+#include "enums/potential.hpp"
 #include "generalSettings.hpp"
+
+/**
+ * @brief Construct a new Coulomb Potential Config object
+ *
+ * @param cutoff The cutoff distance for the Coulomb potential
+ */
+CoulombPotentialConfig::CoulombPotentialConfig(double cutoff)
+    : cutoff(cutoff),
+      cutoffSquared(cutoff * cutoff),
+      energyCutoff(1 / cutoff),
+      forceCutoff(1 / (cutoff * cutoff)),
+      invCubeCutoff(1 / (cutoff * cutoff * cutoff))
+{
+}
+
+/**
+ * @brief Construct a new Potential Settings object
+ *
+ * Initializes the potential settings with default values.
+ */
+PotentialSettings::PotentialSettings()
+    : _coulombLRType(CoulombLongRangeType::SHIFTED),
+      _nonCoulombType(NonCoulombType::GUFF),
+      _coulombConfig(defaults::COULOMB_CUT_OFF_DEFAULT)
+{
+}
 
 /**
  * @brief Finalize the potential settings based on the job type
@@ -33,7 +60,7 @@
 void PotentialSettings::finalize()
 {
     if (settings::GeneralSettings::isQMOnlyJobtype())
-        _coulombRadiusCutOff.setBySystem(0.0);
+        _coulombConfig = CoulombPotentialConfig(0.0);
 }
 
 /********************
@@ -69,7 +96,7 @@ void PotentialSettings::setCoulombLongRangeTypeByUser(CoulombLongRangeType type)
  */
 void PotentialSettings::setCoulombRadiusCutOffByUser(double coulombRadiusCutOff)
 {
-    _coulombRadiusCutOff.setByUser(coulombRadiusCutOff);
+    _coulombConfig = CoulombPotentialConfig(coulombRadiusCutOff);
 }
 
 /**
@@ -158,7 +185,7 @@ NonCoulombType PotentialSettings::getNonCoulombType() const
  */
 double PotentialSettings::getCoulombRadiusCutOff() const
 {
-    return _coulombRadiusCutOff.get();
+    return _coulombConfig.cutoff;
 }
 
 /**

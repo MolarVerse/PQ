@@ -28,6 +28,7 @@
 #include "globalTimer.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "waterModelSettings.hpp"
 
@@ -53,7 +54,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList & /*cellList*/,
-        const WaterModelSettings &waterModelSettings
+        const WaterModelSettings &waterModelSettings,
+        const PotentialSettings  &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBonded");
@@ -95,7 +97,14 @@ namespace pot
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
                                 MMChargeTag,
-                                MMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
+                                MMChargeTag>(
+                                *box,
+                                mol1,
+                                mol2,
+                                *atom1,
+                                *atom2,
+                                potentialSettings.get_coulombConfig()
+                            );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
@@ -123,7 +132,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList & /*cellList*/,
-        const WaterModelSettings &waterModelSettings
+        const WaterModelSettings &waterModelSettings,
+        const PotentialSettings  &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedCoreToOuter");
@@ -153,9 +163,16 @@ namespace pot
                 for (auto &atom1 : mol1.getAtoms())
                 {
                     for (auto &atom2 : mol2.getAtoms())
+                    {
                         totalCoulombEnergy += calculateSingleCoulombInteraction<
                             QMChargeTag,
-                            MMChargeTag>(*box, *atom1, *atom2);
+                            MMChargeTag>(
+                            *box,
+                            *atom1,
+                            *atom2,
+                            potentialSettings.get_coulombConfig()
+                        );
+                    }
                 }
             }
         }
@@ -175,7 +192,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList & /*cellList*/,
-        const WaterModelSettings &waterModelSettings
+        const WaterModelSettings &waterModelSettings,
+        const PotentialSettings  &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedLayerToOuter");
@@ -211,7 +229,14 @@ namespace pot
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteraction<
                                 QMChargeTag,
-                                MMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
+                                MMChargeTag>(
+                                *box,
+                                mol1,
+                                mol2,
+                                *atom1,
+                                *atom2,
+                                potentialSettings.get_coulombConfig()
+                            );
 
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
@@ -237,14 +262,16 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList     &cellList,
-        const WaterModelSettings   &waterModelSettings
+        const WaterModelSettings   &waterModelSettings,
+        const PotentialSettings    &potentialSettings
     )
     {
         calculateForces(
             simulationBox,
             physicalData,
             cellList,
-            waterModelSettings
+            waterModelSettings,
+            potentialSettings
         );
     }
 
@@ -260,7 +287,8 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList & /*cellList*/,
-        const WaterModelSettings &waterModelSettings
+        const WaterModelSettings &waterModelSettings,
+        const PotentialSettings  &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Potential, "InterNonBondedSmoothingMM");
@@ -300,7 +328,12 @@ namespace pot
                             totalCoulombEnergy +=
                                 calculateSingleCoulombInteraction<
                                     MMChargeTag,
-                                    QMChargeTag>(*box, *atom1, *atom2);
+                                    QMChargeTag>(
+                                    *box,
+                                    *atom1,
+                                    *atom2,
+                                    potentialSettings.get_coulombConfig()
+                                );
                         }
                     }
                     // SMOOTHING-nonCORE: evaluate full interaction
@@ -319,7 +352,8 @@ namespace pot
                                     mol1,
                                     mol2,
                                     *atom1,
-                                    *atom2
+                                    *atom2,
+                                    potentialSettings.get_coulombConfig()
                                 );
 
                             totalCoulombEnergy    += coulombEnergy;
@@ -360,8 +394,14 @@ namespace pot
                         const auto [coulombEnergy, nonCoulombEnergy] =
                             calculateSingleInteractionOneWay<
                                 MMChargeTag,
-                                QMChargeTag>(*box, mol1, mol2, *atom1, *atom2);
-
+                                QMChargeTag>(
+                                *box,
+                                mol1,
+                                mol2,
+                                *atom1,
+                                *atom2,
+                                potentialSettings.get_coulombConfig()
+                            );
                         totalCoulombEnergy    += coulombEnergy;
                         totalNonCoulombEnergy += nonCoulombEnergy;
                     }

@@ -62,10 +62,8 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
 int main()
 {
-    pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
     Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
     settings.waterModelSettings.setWaterInterModelByUser(
         WaterInterModel::SPC_E
@@ -158,7 +156,9 @@ int main()
         settings.potentialSettings
     );
 
-    auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
+    auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(
+        settings.potentialSettings
+    );
 
     settings::GeneralSettings::activateCellList();
 
@@ -178,7 +178,15 @@ int main()
     CALLGRIND_ZERO_STATS;
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
-        interWater.calculate(simBox, physicalData, coulombPot, cellList);
+    {
+        interWater.calculate(
+            simBox,
+            physicalData,
+            coulombPot,
+            cellList,
+            settings.potentialSettings
+        );
+    }
 
     // read state so the loop cannot be optimized away
     std::cout << std::fixed << std::setprecision(6)

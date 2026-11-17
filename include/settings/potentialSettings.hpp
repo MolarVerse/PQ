@@ -24,10 +24,30 @@
 #define SETTINGS__POTENTIAL_SETTINGS_HPP
 
 #include <mstd/enum.hpp>
+#include <mstd/utils/members.hpp>
 
 #include "defaults.hpp"
 #include "enums/potential.hpp"
 #include "setting.hpp"
+
+/**
+ * @struct CoulombPotentialConfig
+ *
+ * @brief Configuration structure for Coulomb potential parameters
+ *
+ */
+struct CoulombPotentialConfig
+{
+    double cutoff;
+    double cutoffSquared;
+    double energyCutoff;
+    double forceCutoff;
+    double invCubeCutoff;
+
+    explicit CoulombPotentialConfig(double cutoff);
+};
+
+struct PotentialSettingsUtils;
 
 /**
  * @class PotentialSettings
@@ -38,16 +58,9 @@
 class PotentialSettings
 {
    private:
-    Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType{
-        CoulombLongRangeType::SHIFTED
-    };
-    Setting<NonCoulombType, "Non coulomb type"> _nonCoulombType{
-        NonCoulombType::GUFF
-    };
+    Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType;
+    Setting<NonCoulombType, "Non coulomb type">              _nonCoulombType;
 
-    Setting<double, "Coulomb radius cut off"> _coulombRadiusCutOff{
-        defaults::COULOMB_CUT_OFF_DEFAULT
-    };
     Setting<double, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
 
     static inline double _scale14Coulomb = defaults::SCALE_14_COULOMB_DEFAULT;
@@ -57,8 +70,13 @@ class PotentialSettings
     static inline double _wolfParameter        = defaults::WOLF_PARAM_DEFAULT;
     static inline double _reactionFieldEpsilon = defaults::RF_EPSILON_DEFAULT;
 
+    CoulombPotentialConfig _coulombConfig;
+
    public:
+    PotentialSettings();
     void finalize();
+
+    CONST_GETTER(_coulombConfig);
 
     /********************
      * standard setters *
@@ -89,6 +107,8 @@ class PotentialSettings
     [[nodiscard]] static double getScale14VDW();
     [[nodiscard]] static double getReactionFieldEpsilon();
     [[nodiscard]] static double getWolfParameter();
+
+    friend struct ::PotentialSettingsUtils;
 };
 
 #endif   // SETTINGS__POTENTIAL_SETTINGS_HPP

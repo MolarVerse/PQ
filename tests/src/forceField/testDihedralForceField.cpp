@@ -57,8 +57,10 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(20.0);
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(20.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -132,7 +134,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         false,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);
@@ -209,7 +212,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         true,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getImproperEnergy(), 3.9128709291752739, 1e-6);
@@ -286,7 +290,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         false,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);

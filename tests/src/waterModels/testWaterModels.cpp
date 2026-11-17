@@ -52,6 +52,7 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "privateHelper/potentialSettingsUtils.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
@@ -310,7 +311,8 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const PotentialSettings & /*potentialSettings*/
         ) override
         {
         }
@@ -320,7 +322,8 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const PotentialSettings & /*potentialSettings*/
         ) override
         {
         }
@@ -330,7 +333,8 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const PotentialSettings & /*potentialSettings*/
         ) override
         {
         }
@@ -340,7 +344,8 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const PotentialSettings & /*potentialSettings*/
         ) override
         {
         }
@@ -350,7 +355,8 @@ namespace
             molsys::SimulationBox & /*simBox*/,
             physicalData::PhysicalData & /*data*/,
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
-            const molsys::CellList & /*cellList*/
+            const molsys::CellList & /*cellList*/,
+            const PotentialSettings & /*potentialSettings*/
         ) override
         {
         }
@@ -638,9 +644,10 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 
 TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0);
+    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0);
 
     molsys::SimulationBox   simBox;
     molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
@@ -659,7 +666,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     atom2.setForceToZero();
 
     const auto coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+        std::make_shared<pot::CoulombShiftedPotential>(potentialSettings);
     const pot::LennardJonesPair nonCoulomb(
         kCutOff,
         LJParams{.c6 = -1.0, .c12 = 1.0}
@@ -727,17 +734,30 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 
 TEST(InterWater, DefaultStrategyIsInert)
 {
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
     molsys::SimulationBox      simBox;
     physicalData::PhysicalData data;
     molsys::CellList           cellList;
     const auto                 coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+        std::make_shared<pot::CoulombShiftedPotential>(potentialSettings);
 
     waterModel::InterWater interWater;
-    interWater.calculate(simBox, data, coulomb, cellList);
-    interWater.calculateQMMMForces(simBox, data, coulomb, cellList);
-    interWater
-        .calculateHotspotSmoothingMMForces(simBox, data, coulomb, cellList);
+    interWater.calculate(simBox, data, coulomb, cellList, potentialSettings);
+    interWater.calculateQMMMForces(
+        simBox,
+        data,
+        coulomb,
+        cellList,
+        potentialSettings
+    );
+    interWater.calculateHotspotSmoothingMMForces(
+        simBox,
+        data,
+        coulomb,
+        cellList,
+        potentialSettings
+    );
 
     EXPECT_DOUBLE_EQ(data.getCoulombEnergy(), 0.0);
     EXPECT_DOUBLE_EQ(data.getNonCoulombEnergy(), 0.0);
@@ -784,11 +804,24 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     molsys::SimulationBox      simBox;
     physicalData::PhysicalData physicalData;
     molsys::CellList           cellList;
-    const auto                 coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+    const auto coulomb = std::make_shared<pot::CoulombShiftedPotential>(
+        settings.potentialSettings
+    );
 
-    interWater.calculate(simBox, physicalData, coulomb, cellList);
-    nullPairs.calculate(simBox, physicalData, coulomb, cellList);
+    interWater.calculate(
+        simBox,
+        physicalData,
+        coulomb,
+        cellList,
+        settings.potentialSettings
+    );
+    nullPairs.calculate(
+        simBox,
+        physicalData,
+        coulomb,
+        cellList,
+        settings.potentialSettings
+    );
 
     EXPECT_DOUBLE_EQ(oxygenOxygenView->get_radialCutoff(), kCutOff);
     EXPECT_DOUBLE_EQ(oxygenHydrogenView->get_radialCutoff(), kCutOff);
@@ -807,13 +840,14 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
     settings.waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
 
-    const auto coulomb =
-        std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+    const auto coulomb = std::make_shared<pot::CoulombShiftedPotential>(
+        settings.potentialSettings
+    );
 
     auto                       simBoxBruteForce = makeHybridWaterBox();
     molsys::CellList           unusedCellList;
@@ -824,20 +858,27 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
         settings.potentialSettings
     );
 
-    bruteForce
-        .calculate(simBoxBruteForce, bruteForceData, coulomb, unusedCellList);
+    bruteForce.calculate(
+        simBoxBruteForce,
+        bruteForceData,
+        coulomb,
+        unusedCellList,
+        settings.potentialSettings
+    );
     resetForces(simBoxBruteForce);
     bruteForce.calculateQMMMForces(
         simBoxBruteForce,
         bruteForceData,
         coulomb,
-        unusedCellList
+        unusedCellList,
+        settings.potentialSettings
     );
     bruteForce.calculateHotspotSmoothingMMForces(
         simBoxBruteForce,
         bruteForceData,
         coulomb,
-        unusedCellList
+        unusedCellList,
+        settings.potentialSettings
     );
 
     settings.waterModelSettings.setWaterInterModelByUser(
@@ -852,15 +893,27 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
         settings.potentialSettings
     );
 
-    cellListWater.calculate(simBoxCellList, cellListData, coulomb, cellList);
+    cellListWater.calculate(
+        simBoxCellList,
+        cellListData,
+        coulomb,
+        cellList,
+        settings.potentialSettings
+    );
     resetForces(simBoxCellList);
-    cellListWater
-        .calculateQMMMForces(simBoxCellList, cellListData, coulomb, cellList);
+    cellListWater.calculateQMMMForces(
+        simBoxCellList,
+        cellListData,
+        coulomb,
+        cellList,
+        settings.potentialSettings
+    );
     cellListWater.calculateHotspotSmoothingMMForces(
         simBoxCellList,
         cellListData,
         coulomb,
-        cellList
+        cellList,
+        settings.potentialSettings
     );
 
     EXPECT_TRUE(std::isfinite(bruteForceData.getCoulombEnergy()));
@@ -871,12 +924,15 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 
 TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0);
+    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0);
 
     pot::PotentialBruteForce potential;
-    potential.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
+    potential.makeCoulombPotential(
+        pot::CoulombShiftedPotential(potentialSettings)
+    );
     potential.setNonCoulombPotential(makeNonCoulombPotential());
 
     molsys::OrthorhombicBox box({15.0, 15.0, 15.0});
@@ -904,7 +960,12 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     settings::HybridSettings::setUseQMCharges(true);
     const auto coulombEnergy = potential.calculateSingleCoulombInteraction<
         pot::QMChargeTag,
-        pot::MMChargeTag>(box, atom1, atom2);
+        pot::MMChargeTag>(
+        box,
+        atom1,
+        atom2,
+        potentialSettings.get_coulombConfig()
+    );
     EXPECT_NE(coulombEnergy, 0.0);
     EXPECT_EQ(atom1.getForce(), -atom2.getForce());
 
@@ -912,7 +973,14 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     atom2.setForceToZero();
     const auto energies = potential.calculateSingleInteractionOneWay<
         pot::QMChargeTag,
-        pot::MMChargeTag>(box, mol1, mol2, atom1, atom2);
+        pot::MMChargeTag>(
+        box,
+        mol1,
+        mol2,
+        atom1,
+        atom2,
+        potentialSettings.get_coulombConfig()
+    );
     EXPECT_NE(energies.first, 0.0);
     EXPECT_NE(energies.second, 0.0);
     EXPECT_NE(atom1.getForce(), linalg::Vec3D{});
@@ -929,35 +997,40 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::HybridSettings::setUseQMCharges(true);
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
 
     auto                       simBoxBruteForce = makeHybridWaterBox();
     molsys::CellList           unusedCellList;
     physicalData::PhysicalData bruteForceData;
     pot::PotentialBruteForce   bruteForce;
-    bruteForce.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
+    bruteForce.makeCoulombPotential(
+        pot::CoulombShiftedPotential(settings.potentialSettings)
+    );
     bruteForce.setNonCoulombPotential(makeNonCoulombPotential());
 
     bruteForce.calculateForces(
         simBoxBruteForce,
         bruteForceData,
         unusedCellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
     resetForces(simBoxBruteForce);
     bruteForce.calculateQMMMForces(
         simBoxBruteForce,
         bruteForceData,
         unusedCellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
     bruteForce.calculateHotspotSmoothingMMForces(
         simBoxBruteForce,
         bruteForceData,
         unusedCellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
 
     auto simBoxCellList = makeHybridWaterBox();
@@ -965,7 +1038,7 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     physicalData::PhysicalData cellListData;
     pot::PotentialCellList     cellListPotential;
     cellListPotential.makeCoulombPotential(
-        pot::CoulombShiftedPotential(kCutOff)
+        pot::CoulombShiftedPotential(settings.potentialSettings)
     );
     cellListPotential.setNonCoulombPotential(makeNonCoulombPotential());
 
@@ -973,20 +1046,23 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
         simBoxCellList,
         cellListData,
         cellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
     resetForces(simBoxCellList);
     cellListPotential.calculateQMMMForces(
         simBoxCellList,
         cellListData,
         cellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
     cellListPotential.calculateHotspotSmoothingMMForces(
         simBoxCellList,
         cellListData,
         cellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
 
     EXPECT_TRUE(std::isfinite(bruteForceData.getCoulombEnergy()));
@@ -1007,13 +1083,15 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
         filteredBox,
         filteredData,
         filteredCellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
     cellListPotential.calculateHotspotSmoothingMMForces(
         filteredBox,
         filteredData,
         filteredCellList,
-        settings.waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
 
     EXPECT_TRUE(std::isfinite(filteredData.getCoulombEnergy()));

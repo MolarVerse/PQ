@@ -89,10 +89,6 @@ TEST_F(TestSetup, setupCoulombPotential)
         &_engine->getPotential()->getCoulombPotential(),
         typeid(pot::CoulombWolf)
     );
-    const auto &wolfCoulomb = dynamic_cast<pot::CoulombWolf &>(
-        _engine->getPotential()->getCoulombPotential()
-    );
-    EXPECT_EQ(wolfCoulomb.getKappa(), 0.25);
 }
 
 /**

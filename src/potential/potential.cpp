@@ -36,7 +36,8 @@ namespace pot
             molsys::Molecule &,
             molsys::Molecule &,
             molsys::Atom &,
-            molsys::Atom &
+            molsys::Atom &,
+            const CoulombPotentialConfig &config
         ) const;
 
     template std::pair<double, double> pot::Potential::
@@ -45,7 +46,8 @@ namespace pot
             molsys::Molecule &,
             molsys::Molecule &,
             molsys::Atom &,
-            molsys::Atom &
+            molsys::Atom &,
+            const CoulombPotentialConfig &config
         ) const;
 
     template std::pair<double, double> pot::Potential::
@@ -54,21 +56,24 @@ namespace pot
             molsys::Molecule &,
             molsys::Molecule &,
             molsys::Atom &,
-            molsys::Atom &
+            molsys::Atom &,
+            const CoulombPotentialConfig &config
         ) const;
 
     template double pot::Potential::
         calculateSingleCoulombInteraction<pot::QMChargeTag, pot::MMChargeTag>(
             molsys::Box const &,
             molsys::Atom &,
-            molsys::Atom &
+            molsys::Atom &,
+            const CoulombPotentialConfig &config
         ) const;
 
     template double pot::Potential::
         calculateSingleCoulombInteraction<pot::MMChargeTag, pot::QMChargeTag>(
             molsys::Box const &,
             molsys::Atom &,
-            molsys::Atom &
+            molsys::Atom &,
+            const CoulombPotentialConfig &config
         ) const;
 
     template std::pair<double, double> pot::Potential::
@@ -77,7 +82,8 @@ namespace pot
             molsys::Molecule &,
             molsys::Molecule &,
             molsys::Atom &,
-            molsys::Atom &
+            molsys::Atom &,
+            const CoulombPotentialConfig &config
         ) const;
 
     template std::pair<double, double> pot::Potential::
@@ -86,7 +92,8 @@ namespace pot
             molsys::Molecule &,
             molsys::Molecule &,
             molsys::Atom &,
-            molsys::Atom &
+            molsys::Atom &,
+            const CoulombPotentialConfig &config
         ) const;
 
     /**
@@ -102,26 +109,30 @@ namespace pot
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const molsys::CellList     &cellList,
-        const WaterModelSettings   &waterModelSettings
+        const WaterModelSettings   &waterModelSettings,
+        const PotentialSettings    &potentialSettings
     )
     {
         calculateCoreToOuterForces(
             simulationBox,
             physicalData,
             cellList,
-            waterModelSettings
+            waterModelSettings,
+            potentialSettings
         );
         calculateLayerToOuterForces(
             simulationBox,
             physicalData,
             cellList,
-            waterModelSettings
+            waterModelSettings,
+            potentialSettings
         );
         calculateOuterToOuterForces(
             simulationBox,
             physicalData,
             cellList,
-            waterModelSettings
+            waterModelSettings,
+            potentialSettings
         );
     }
 

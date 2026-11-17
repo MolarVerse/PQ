@@ -37,6 +37,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "units.hpp"
@@ -57,8 +58,10 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
+    auto potentialSettings = PotentialSettings();
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(1),
@@ -119,7 +122,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -186,7 +190,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -260,8 +265,10 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
     box.setBox(orthoBox, false);
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    auto              physicalData = physicalData::PhysicalData();
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{0});
@@ -301,7 +308,8 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        potentialSettings
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).

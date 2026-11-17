@@ -118,12 +118,10 @@ namespace setup
      */
     void PotentialSetup::setupCoulomb()
     {
-        const auto coulRCut =
-            _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
-        const auto  wolfParam = PotentialSettings::getWolfParameter();
+        const auto &potentialSettings = _engine.getSettings().potentialSettings;
+        const auto  wolfParam         = PotentialSettings::getWolfParameter();
         const auto  rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
         const auto &potential = _engine.getPotential();
-        const auto &potentialSettings = _engine.getSettings().potentialSettings;
 
         switch (potentialSettings.getCoulombLongRangeType())
         {
@@ -131,20 +129,22 @@ namespace setup
 
             case REACTION_FIELD:
                 potential->makeCoulombPotential(
-                    pot::CoulombReactionField(coulRCut, rfEpsilon)
+                    pot::CoulombReactionField(potentialSettings, rfEpsilon)
                 );
                 return;
 
             case WOLF:
                 potential->makeCoulombPotential(
-                    pot::CoulombWolf(coulRCut, wolfParam)
+                    pot::CoulombWolf(potentialSettings, wolfParam)
                 );
                 return;
 
             case SHIFTED: break;
         }
 
-        potential->makeCoulombPotential(pot::CoulombShiftedPotential(coulRCut));
+        potential->makeCoulombPotential(
+            pot::CoulombShiftedPotential(potentialSettings)
+        );
     }
 
     /**

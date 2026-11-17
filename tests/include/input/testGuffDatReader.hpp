@@ -112,9 +112,7 @@ class TestGuffDatReader : public ::testing::Test
         _engine->makePotential(pot::PotentialBruteForce());
         _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
         _engine->getPotential()->makeCoulombPotential(
-            pot::CoulombShiftedPotential(
-                _settings.potentialSettings.getCoulombRadiusCutOff()
-            )
+            pot::CoulombShiftedPotential(_settings.potentialSettings)
         );
 
         _settings.fileSettings.setGuffDatFileNameByUser(
