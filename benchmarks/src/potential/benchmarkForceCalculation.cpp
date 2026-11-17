@@ -38,7 +38,7 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "settings.hpp"
-#include "waterModelSettings.hpp"
+
 namespace
 {
     std::shared_ptr<pot::GuffNonCoulomb> makeNonCoulombPotential()

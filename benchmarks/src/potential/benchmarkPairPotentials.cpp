@@ -94,7 +94,7 @@ namespace
         runNonCoulombBenchmark(state, potential);
     }
 
-    PotentialSettings makeCoulombSettings(const double cutoff = 9.0)
+    PotentialSettings makeCoulombSettings(const double cutoff)
     {
         PotentialSettings settings;
         settings.setCoulombRadiusCutOffByUser(cutoff);
@@ -103,21 +103,21 @@ namespace
 
     void BM_CoulombShifted(benchmark::State& state)
     {
-        const auto                   settings = makeCoulombSettings();
+        const auto                   settings = makeCoulombSettings(9.0);
         pot::CoulombShiftedPotential potential(settings);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombWolf(benchmark::State& state)
     {
-        const auto       settings = makeCoulombSettings();
+        const auto       settings = makeCoulombSettings(9.0);
         pot::CoulombWolf potential(settings, 0.25);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombReactionField(benchmark::State& state)
     {
-        const auto                settings = makeCoulombSettings();
+        const auto                settings = makeCoulombSettings(9.0);
         pot::CoulombReactionField potential(settings, 78.5);
         runCoulombBenchmark(state, potential);
     }

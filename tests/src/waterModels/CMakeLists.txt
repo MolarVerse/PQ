@@ -9,6 +9,7 @@ target_include_directories(testWaterModels
 
 target_link_libraries(testWaterModels
     PRIVATE
+    privateHelper
     interWater
     intraWater
     potential

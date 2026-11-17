@@ -30,7 +30,6 @@
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"
 #include "generalSettings.hpp"
-#include "potentialSettings.hpp"
 #include "qmCapableEngine.hpp"
 #include "qmSettings.hpp"
 #include "stdoutOutput.hpp"
