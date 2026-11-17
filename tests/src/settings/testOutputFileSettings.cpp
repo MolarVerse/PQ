@@ -133,10 +133,13 @@ TEST(TestOutputSettings, extxyzFilenameFollowsPrefix)
     settings.setFilePrefixByUser("run");
     settings.finalize();
     EXPECT_EQ(settings.getExtxyzFileName(), "run.extxyz");
+    EXPECT_EQ(settings.getH5mdFileName(), "run.h5md");
 
     OutputFileSettings named;
     named.setExtxyzFileNameByUser("water.extxyz");
+    named.setH5mdFileNameByUser("other.h5md");
     named.finalize();
     EXPECT_EQ(named.getExtxyzFileName(), "water.extxyz");
+    EXPECT_EQ(named.getH5mdFileName(), "other.h5md");
     EXPECT_EQ(named.getRestartFileName(), "water.rst");
 }

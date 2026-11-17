@@ -97,6 +97,9 @@ void OutputFileSettings::_replaceDefaultValues(const std::string& prefix)
     if (!_extxyzFile.isSetByUser())
         _extxyzFile.setBySystem(prefix + ".extxyz");
 
+    if (!_h5mdFile.isSetByUser())
+        _h5mdFile.setBySystem(prefix + ".h5md");
+
     if (!_hybridCenterFile.isSetByUser())
         _hybridCenterFile.setBySystem(prefix + ".center.xyz");
 
@@ -187,6 +190,9 @@ std::string OutputFileSettings::_determineMostCommonPrefix() const
 
     if (_extxyzFile.isSetByUser())
         fileNames.push_back(_extxyzFile.get());
+
+    if (_h5mdFile.isSetByUser())
+        fileNames.push_back(_h5mdFile.get());
 
     auto removeEnding = [](std::string& fileName)
     {
@@ -341,6 +347,16 @@ void OutputFileSettings::setTrajectoryFormatByUser(
 void OutputFileSettings::setExtxyzFileNameByUser(const std::string& name)
 {
     _extxyzFile.setByUser(name);
+}
+
+/**
+ * @brief sets the h5md file name
+ *
+ * @param name
+ */
+void OutputFileSettings::setH5mdFileNameByUser(const std::string& name)
+{
+    _h5mdFile.setByUser(name);
 }
 
 /**
@@ -660,6 +676,16 @@ TrajectoryFormat OutputFileSettings::getTrajectoryFormat() const
 const std::string& OutputFileSettings::getExtxyzFileName() const
 {
     return _extxyzFile.get();
+}
+
+/**
+ * @brief get the h5md file name
+ *
+ * @return std::string
+ */
+const std::string& OutputFileSettings::getH5mdFileName() const
+{
+    return _h5mdFile.get();
 }
 
 /**

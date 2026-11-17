@@ -1,0 +1,91 @@
+/*****************************************************************************
+<GPL_HEADER>
+
+    PQ
+    Copyright (C) 2023-now  Jakob Gamper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+<GPL_HEADER>
+******************************************************************************/
+
+#include "h5mdOutput.hpp"
+
+#include <gtest/gtest.h>
+
+#include <filesystem>
+#include <memory>
+
+#include "atom.hpp"
+#include "exceptions.hpp"
+#include "frame.hpp"
+#include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "simulationBox.hpp"
+
+namespace
+{
+    out::Frame makeFrame()
+    {
+        molsys::SimulationBox simulationBox;
+        simulationBox.setBox(molsys::OrthorhombicBox{{10.0, 11.0, 12.0}}, false);
+
+        molsys::Molecule molecule{MolType{1}};
+        for (const auto *name : {"O", "D", "dum"})
+        {
+            auto atom = std::make_shared<molsys::Atom>();
+            atom->setName(name);
+            atom->setPosition({1.0, 2.0, 3.0});
+            molecule.addAtom(atom);
+            simulationBox.addAtom(atom);
+        }
+        simulationBox.addMolecule(molecule);
+
+        return out::Frame{simulationBox};
+    }
+}   // namespace
+
+/**
+ * @brief without HDF5 the H5MD output refuses to start; with it, a file is
+ * written (its content is checked in testH5mdOutputContent)
+ *
+ */
+TEST(TestH5mdOutput, writesOnlyWithHdf5)
+{
+    const std::string filename = "testH5mdOutput.h5md";
+    std::filesystem::remove(filename);
+
+    if (!out::H5mdOutput::available())
+    {
+        EXPECT_THROW(
+            out::H5mdOutput(filename, true, 0.5),
+            exc::CompileTimeException
+        );
+        return;
+    }
+
+    {
+        out::H5mdOutput output{filename, false, 0.5};
+        output.write(makeFrame(), 10);
+        output.close();
+    }
+
+    EXPECT_TRUE(std::filesystem::exists(filename));
+    EXPECT_THROW(
+        out::H5mdOutput(filename, false, 0.5),
+        exc::InputFileException
+    );
+
+    std::filesystem::remove(filename);
+}

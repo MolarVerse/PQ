@@ -33,6 +33,7 @@
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
 #include "extxyzOutput.hpp"
+#include "h5mdOutput.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
@@ -90,8 +91,9 @@ namespace engine
         std::unique_ptr<out::TrajectoryOutput> _chargeOutput;
         std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
 
-        // null unless an extxyz file is requested
+        // null unless traj_format is extxyz or h5md
         std::unique_ptr<out::ExtxyzOutput> _extxyzOutput;
+        std::unique_ptr<out::H5mdOutput>   _h5mdOutput;
 
         std::unique_ptr<out::LogOutput>    _logOutput;
         std::unique_ptr<out::StdoutOutput> _stdoutOutput;
@@ -156,6 +158,11 @@ namespace engine
             double potentialEnergy
         );
         void openExtxyzOutput(const std::string &filename, bool overwrite);
+        void openH5mdOutput(
+            const std::string &filename,
+            bool               overwrite,
+            double             timeStep
+        );
         void waitForFrames();
 
         [[nodiscard]] static bool asyncOutputFits(

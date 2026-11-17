@@ -27,7 +27,9 @@
 #include <string>
 #include <vector>
 
+#include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "h5mdOutput.hpp"
 #include "outputFileSettings.hpp"
 #include "outputFilesSetup.hpp"
 #include "testSetup.hpp"
@@ -50,7 +52,7 @@ namespace
             ".instant_en", ".vel",        ".chrg",       ".mom",
             ".vir",        ".stress",     ".box",        ".rpmd.rst",
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
-            ".rpmd.en",    ".opt",        ".ref",        ".extxyz"
+            ".rpmd.en",    ".opt",        ".ref",        ".extxyz",     ".h5md"
         };
 
         for (const auto &suffix : suffixes)
@@ -181,6 +183,39 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 
     EXPECT_TRUE(std::filesystem::exists(prefix + ".extxyz"));
     EXPECT_TRUE(std::filesystem::exists(prefix + ".rst"));
+
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
+    cleanupPrefix();
+}
+
+TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
+{
+    cleanupPrefix();
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::H5MD);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
+
+    _settings->finalize();
+    setup::OutputFilesSetup setup(*_mdEngine);
+
+    if (!out::H5mdOutput::available())
+    {
+        EXPECT_THROW(setup.setup(), exc::CompileTimeException);
+        cleanupPrefix();
+        return;
+    }
+
+    EXPECT_NO_THROW(setup.setup());
+
+    const std::string prefix = PREFIX;
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".h5md"));
 
     for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
     {

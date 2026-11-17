@@ -19,6 +19,7 @@ set(source_files
     testFrame.cpp
     testTextBuffer.cpp
     testExtxyzOutput.cpp
+    testH5mdOutput.cpp
 )
 
 # Per-test extra include dirs and libs (defaults to empty for the legacy tests).
@@ -110,6 +111,31 @@ foreach(source_file ${source_files})
 
     set_property(TEST ${test_name} PROPERTY LABELS output)
 endforeach()
+
+# reads the H5MD file back with the HDF5 library, so it is built without the
+# shared precompiled header
+if(BUILD_WITH_HDF5)
+    add_executable(testH5mdOutputContent testH5mdOutputContent.cpp)
+    set_source_files_properties(testH5mdOutputContent.cpp PROPERTIES
+        SKIP_PRECOMPILE_HEADERS ON
+    )
+    target_include_directories(testH5mdOutputContent
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/include/box
+    )
+    target_link_libraries(testH5mdOutputContent
+        PRIVATE
+        output
+        molsys
+        box
+        HDF5::HDF5
+        gtest
+        gmock
+        pq_test_main
+    )
+    add_test_with_gcda_cleanup(testH5mdOutputContent testH5mdOutputContent)
+    set_property(TEST testH5mdOutputContent PROPERTY LABELS output)
+endif()
 
 if(${BUILD_WITH_GCOVR})
     include(CodeCoverage)

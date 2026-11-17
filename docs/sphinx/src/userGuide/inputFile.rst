@@ -368,6 +368,7 @@ The ``traj_format`` keyword sets how MD runs write positions, velocities, forces
 
     - **xyz** (default): the :ref:`trajectoryFile`, :ref:`velocityFile`, :ref:`forceFile` and :ref:`chargeFile`
     - **extxyz**: one :ref:`extxyzFile` instead of these four files
+    - **h5md**: one :ref:`h5mdFile` instead of these four files (needs PQ built with ``-DBUILD_WITH_HDF5=ON``)
 
 .. _extxyzfilekey:
 
@@ -380,6 +381,18 @@ Extended XYZ File
     extxyz_file = {file} -> "default.extxyz"
 
 The ``extxyz_file`` keyword sets the name of the :ref:`extxyzFile`, which is written if ``traj_format = extxyz``. Like the other output files, it follows ``file_prefix``.
+
+.. _h5mdfilekey:
+
+H5MD File
+=========
+
+.. admonition:: Key
+    :class: tip
+
+    h5md_file = {file} -> "default.h5md"
+
+The ``h5md_file`` keyword sets the name of the :ref:`h5mdFile`, which is written if ``traj_format = h5md``. Like the other output files, it follows ``file_prefix``.
 
 .. _energyfilekey:
 
