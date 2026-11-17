@@ -1,0 +1,1 @@
+- Add a script test that compares the input keywords registered by the parsers with the keys documented in the user guide, so that a documented keyword PQ rejects or a registered keyword without documentation is found by CI.
