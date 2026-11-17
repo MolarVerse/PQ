@@ -37,7 +37,6 @@
 #include <array>
 #include <cstdint>
 #include <filesystem>
-#include <string_view>
 #include <vector>
 
 #include "atomNumberMap.hpp"
@@ -49,10 +48,13 @@ namespace out
 {
     namespace
     {
-        constexpr std::size_t CHUNK_BYTES   = std::size_t{1} << 20U;
+        constexpr std::size_t CHUNK_BYTES   = std::size_t{1} << 16U;
         constexpr std::size_t MAX_CHUNK     = 128;
         constexpr std::size_t CACHE_SLOTS   = 521;
         constexpr int         DEFLATE_LEVEL = 1;
+
+        // H5MD readers know Angstrom fs-1, not the Angstrom s-1 of PQ
+        constexpr double PER_S_TO_PER_FS = 1.0e-15;
 
         // species of atoms without an element (dummy and virtual atoms)
         constexpr int NO_ELEMENT  = 0;
@@ -109,19 +111,26 @@ namespace out
         }
 
         /**
+         * @brief variable-length UTF-8 string type, read as str by h5py
+         */
+        Handle stringType()
+        {
+            Handle type{H5Tcopy(H5T_C_S1), H5Tclose};
+            check(H5Tset_size(type.get(), H5T_VARIABLE));
+            check(H5Tset_cset(type.get(), H5T_CSET_UTF8));
+            return type;
+        }
+
+        /**
          * @brief write a string attribute
          */
         void attribute(
-            const hid_t      object,
-            const char      *name,
-            std::string_view value
+            const hid_t        object,
+            const char        *name,
+            const std::string &value
         )
         {
-            const Handle type{H5Tcopy(H5T_C_S1), H5Tclose};
-            check(
-                H5Tset_size(type.get(), std::max<std::size_t>(value.size(), 1))
-            );
-
+            const auto   type = stringType();
             const Handle space{H5Screate(H5S_SCALAR), H5Sclose};
             const Handle attr{
                 H5Acreate2(
@@ -135,8 +144,8 @@ namespace out
                 H5Aclose
             };
 
-            const std::string buffer{value};
-            check(H5Awrite(attr.get(), type.get(), buffer.c_str()));
+            const char *data = value.c_str();
+            check(H5Awrite(attr.get(), type.get(), static_cast<void *>(&data)));
         }
 
         /**
@@ -166,7 +175,7 @@ namespace out
         }
 
         /**
-         * @brief write a fixed-length string array, as attribute or dataset
+         * @brief write a string array, as attribute or dataset
          */
         void strings(
             const hid_t                     object,
@@ -175,21 +184,12 @@ namespace out
             const bool                      asAttribute
         )
         {
-            std::size_t width = 1;
+            std::vector<const char *> data;
+            data.reserve(values.size());
             for (const auto &value : values)
-                width = std::max(width, value.size());
+                data.push_back(value.c_str());
 
-            std::vector<char> buffer(values.size() * width, '\0');
-            for (std::size_t i = 0; i < values.size(); ++i)
-                std::ranges::copy(
-                    values[i],
-                    buffer.begin() + static_cast<std::ptrdiff_t>(i * width)
-                );
-
-            const Handle type{H5Tcopy(H5T_C_S1), H5Tclose};
-            check(H5Tset_size(type.get(), width));
-            check(H5Tset_strpad(type.get(), H5T_STR_NULLPAD));
-
+            const auto   type = stringType();
             const auto   size = static_cast<hsize_t>(values.size());
             const Handle space{H5Screate_simple(1, &size, nullptr), H5Sclose};
 
@@ -206,7 +206,7 @@ namespace out
                     ),
                     H5Aclose
                 };
-                check(H5Awrite(attr.get(), type.get(), buffer.data()));
+                check(H5Awrite(attr.get(), type.get(), data.data()));
                 return;
             }
 
@@ -228,7 +228,7 @@ namespace out
                 H5S_ALL,
                 H5S_ALL,
                 H5P_DEFAULT,
-                buffer.data()
+                data.data()
             ));
         }
 
@@ -382,7 +382,7 @@ namespace out
                 const hid_t                 fileType,
                 const hid_t                 memType,
                 const std::vector<hsize_t> &frameShape,
-                const std::string_view      unit
+                const std::string          &unit
             )
                 : _group(group(parent, name)),
                   _step(
@@ -544,7 +544,7 @@ namespace out
                 H5T_IEEE_F32LE,
                 H5T_NATIVE_FLOAT,
                 std::vector<hsize_t>{n, 3},
-                "Angstrom s-1"
+                "Angstrom fs-1"
             );
             force = std::make_unique<Element>(
                 all.get(),
@@ -630,7 +630,8 @@ namespace out
                 *velocity,
                 stepValue,
                 time,
-                [&](const std::size_t i) { return atoms[i].velocity; }
+                [&](const std::size_t i)
+                { return atoms[i].velocity * PER_S_TO_PER_FS; }
             );
             appendVectors(
                 *force,

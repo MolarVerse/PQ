@@ -108,8 +108,13 @@ namespace
         const hid_t attr = H5Aopen(set, "unit", H5P_DEFAULT);
         const hid_t type = H5Aget_type(attr);
 
-        std::string unit(H5Tget_size(type), '\0');
-        H5Aread(attr, type, unit.data());
+        char *data = nullptr;
+        H5Aread(attr, type, static_cast<void *>(&data));
+        std::string unit{data};
+
+        const hid_t space = H5Aget_space(attr);
+        H5Dvlen_reclaim(type, space, H5P_DEFAULT, static_cast<void *>(&data));
+        H5Sclose(space);
         H5Tclose(type);
         H5Aclose(attr);
         H5Dclose(set);
@@ -146,7 +151,7 @@ TEST(TestH5mdOutputContent, writesH5mdLayout)
 
     const auto velocity =
         readDoubles(file, "/particles/all/velocity/value", dims);
-    EXPECT_FLOAT_EQ(static_cast<float>(velocity[7]), 2.0e12F);
+    EXPECT_FLOAT_EQ(static_cast<float>(velocity[7]), 2.0e-3F);   // A/fs
 
     const auto force = readDoubles(file, "/particles/all/force/value", dims);
     EXPECT_EQ(force[8], -2.0);
@@ -173,6 +178,7 @@ TEST(TestH5mdOutputContent, writesH5mdLayout)
     EXPECT_EQ(energy, (std::vector<double>{-1.5, -2.5}));
 
     EXPECT_EQ(readUnit(file, "/particles/all/position/value"), "Angstrom");
+    EXPECT_EQ(readUnit(file, "/particles/all/velocity/value"), "Angstrom fs-1");
     EXPECT_EQ(
         readUnit(file, "/observables/potential_energy/value"),
         "kcal mol-1"

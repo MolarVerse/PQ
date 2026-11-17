@@ -63,7 +63,7 @@ Stores every frame in the `H5MD <https://www.nongnu.org/h5md/>`_ format (HDF5, v
     - ``/observables/potential_energy``: the potential energy of every frame
     - ``/parameters/atom_names``: the PQ atom names
 
-Every ``value`` dataset has a ``unit`` attribute. The values are in PQ units: Å, Å/s, kcal/(mol Å), *e* and kcal/mol; times are in fs.
+Every ``value`` dataset has a ``unit`` attribute. The values are in PQ units (Å, kcal/(mol Å), *e* and kcal/mol), except velocities, which are in Å/fs as H5MD readers like MDAnalysis expect; times are in fs.
 
 .. _chargeFile:
 
