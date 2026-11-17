@@ -240,15 +240,12 @@ namespace input
         const auto metaData = KeyMetadata{
             .name        = "friction",
             .title       = "Friction",
-            .description = "Specifies the friction of the thermostat"
+            .description = "Specifies the friction of the thermostat",
+            .unit        = "ps⁻¹"
         };
 
         const auto setValue = [this](double value)
-        {
-            _thermostatSettings->setFrictionByUser(
-                value * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
-            );
-        };
+        { _thermostatSettings->setFrictionByUser(value / ps); };
 
         const auto validator = RangeValidator<double, Greater::GE, Less::LE>{
             0.0,

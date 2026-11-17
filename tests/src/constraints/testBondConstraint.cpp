@@ -157,7 +157,9 @@ TEST_F(TestBondConstraint, calculateVelocityDelta)
     const auto scalarProduct =
         dot(linalg::Vec3D(-1.0, -1.0, -1.0), linalg::Vec3D(0.0, -1.0, -2.0));
     EXPECT_EQ(
-        _bondConstraint->calculateVelocityDelta().numerical_value_in(amu / s),
+        _bondConstraint->calculateVelocityDelta().numerical_value_in(
+            g_per_mol / s
+        ),
         -scalarProduct / (1.0 + 0.5) / 5.0
     );
 }

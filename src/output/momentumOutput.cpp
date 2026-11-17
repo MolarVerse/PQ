@@ -57,7 +57,7 @@ namespace out
 
         const auto angularMom =
             physicalData.getAngularMomentum().numerical_value_in(
-                amu * angstrom * angstrom / fs
+                g_per_mol * angstrom * angstrom / fs
             );
 
         _getFilePointer() << std::format("{:10d}\t", step);

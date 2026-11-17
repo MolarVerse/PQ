@@ -982,4 +982,27 @@ namespace molsys
         for (auto& atom : getQMAtoms()) atom->addForce(correctionForce);
     }
 
+    /**
+     * @brief flattens forces of each atom into a single vector of doubles
+     *
+     * @return std::vector<Force>
+     */
+    std::vector<Force> SimulationBox::flattenForces() const
+    {
+        std::vector<Force> forces;
+
+        auto addForces = [&forces](auto& atom)
+        {
+            const auto force = atom->getForce();
+
+            forces.push_back(force[0]);
+            forces.push_back(force[1]);
+            forces.push_back(force[2]);
+        };
+
+        std::ranges::for_each(_atoms, addForces);
+
+        return forces;
+    }
+
 }   // namespace molsys

@@ -111,7 +111,7 @@ namespace settings
      *
      * @param wolfParameter
      */
-    void PotentialSettings::setWolfParameter(double wolfParameter)
+    void PotentialSettings::setWolfParameter(const InvDistance& wolfParameter)
     {
         _wolfParameter = wolfParameter;
     }
@@ -189,8 +189,11 @@ namespace settings
     /**
      * @brief get the Wolf parameter
      *
-     * @return double
+     * @return const InvDistance&
      */
-    double PotentialSettings::getWolfParameter() { return _wolfParameter; }
+    const InvDistance& PotentialSettings::getWolfParameter()
+    {
+        return _wolfParameter;
+    }
 
 }   // namespace settings

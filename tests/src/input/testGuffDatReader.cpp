@@ -171,8 +171,14 @@ TEST_F(TestGuffDatReader, parseLine)
     settings::PotentialSettings::setNonCoulombType(NonCoulombType::LJ);
     EXPECT_NO_THROW(_guffDatReader->parseLine(line));
 
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[0][1][1][0], 10.0);
-    EXPECT_EQ(_guffDatReader->getGuffCoulombCoefficients()[1][0][0][1], 10.0);
+    EXPECT_EQ(
+        _guffDatReader->getGuffCoulombCoefficients()[0][1][1][0],
+        10.0 * kcal_per_mol * angstrom
+    );
+    EXPECT_EQ(
+        _guffDatReader->getGuffCoulombCoefficients()[1][0][0][1],
+        10.0 * kcal_per_mol * angstrom
+    );
     EXPECT_TRUE(_guffDatReader->getIsGuffPairSet()[0][1][1][0]);
     EXPECT_TRUE(_guffDatReader->getIsGuffPairSet()[1][0][0][1]);
 
@@ -189,7 +195,10 @@ TEST_F(TestGuffDatReader, parseLine)
         pair,
         pot::LennardJonesPair(
             settings::PotentialSettings::getCoulombRadiusCutOff(),
-            LJParams{2.0, 3.0}
+            LJParams{
+                2.0 * kcal_per_mol * angstrom6,
+                3.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 }
@@ -214,18 +223,24 @@ TEST_F(TestGuffDatReader, addLennardJonesPair)
         ))
     );
 
-    EXPECT_EQ(TestLJPairUtils::params(&pair).c6, 1.0);
-    EXPECT_EQ(TestLJPairUtils::params(&pair).c12, 3.0);
+    EXPECT_EQ(
+        TestLJPairUtils::params(&pair).c6,
+        1.0 * kcal_per_mol * angstrom6
+    );
+    EXPECT_EQ(
+        TestLJPairUtils::params(&pair).c12,
+        3.0 * kcal_per_mol * angstrom12
+    );
     EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
 
     // FIXME: Does not work on macos using EXPECT_EQ
     EXPECT_NEAR(
-        pair.get_energyCutoff(),
+        pair.get_energyCutoff().numerical_value_in(kcal_per_mol),
         (1.0 / ::pow(10.0, 6)) + (3.0 / ::pow(10.0, 12)),
         1e-5
     );
     EXPECT_EQ(
-        pair.get_forceCutoff(),
+        pair.get_forceCutoff().numerical_value_in(kcal_per_mol / angstrom),
         (6.0 / ::pow(10.0, 7)) + (12.0 * 3.0 / ::pow(10.0, 13))
     );
 
@@ -259,16 +274,22 @@ TEST_F(TestGuffDatReader, addBuckinghamPair)
         ))
     );
 
-    EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).scaling, 1.0);
+    EXPECT_EQ(
+        TestBuckinghamPairUtils::params(&pair).scaling,
+        1.0 * kcal_per_mol
+    );
     EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).dRho, 2.0 / angstrom);
-    EXPECT_EQ(TestBuckinghamPairUtils::params(&pair).c6, 3.0);
+    EXPECT_EQ(
+        TestBuckinghamPairUtils::params(&pair).c6,
+        3.0 * kcal_per_mol * angstrom6
+    );
     EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
     EXPECT_EQ(
-        pair.get_energyCutoff(),
+        pair.get_energyCutoff().numerical_value_in(kcal_per_mol),
         (1.0 * ::exp(10.0 * 2.0)) + (3.0 / ::pow(10.0, 6))
     );
     EXPECT_EQ(
-        pair.get_forceCutoff(),
+        pair.get_forceCutoff().numerical_value_in(kcal_per_mol / angstrom),
         (-2.0 * ::exp(10.0 * 2.0)) + (6.0 * 3.0 / ::pow(10.0, 7))
     );
 
@@ -304,16 +325,16 @@ TEST_F(TestGuffDatReader, addMorsePair)
 
     const auto &params = TestMorsePairUtils::params(&pair);
 
-    EXPECT_EQ(params.dissociationEnergy, 1.0);
+    EXPECT_EQ(params.dissociationEnergy, 1.0 * kcal_per_mol);
     EXPECT_EQ(params.wellWidth, 2.0 / angstrom);
     EXPECT_EQ(params.equilibriumDistance, 3.0 * angstrom);
     EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
     EXPECT_EQ(
-        pair.get_energyCutoff(),
+        pair.get_energyCutoff().numerical_value_in(kcal_per_mol),
         1.0 * ::pow((1.0 - ::exp(-2.0 * (10.0 - 3.0))), 2)
     );
     EXPECT_EQ(
-        pair.get_forceCutoff(),
+        pair.get_forceCutoff().numerical_value_in(kcal_per_mol / angstrom),
         -2.0 * (1.0 - ::exp(-2.0 * (10.0 - 3.0))) * ::exp(-2.0 * (10.0 - 3.0)) *
             2.0
     );
@@ -376,8 +397,11 @@ TEST_F(TestGuffDatReader, addGuffPair)
         )
     );
     EXPECT_EQ(pair.get_radialCutoff(), 10.0 * angstrom);
-    EXPECT_EQ(pair.get_energyCutoff(), 3.0121946291700612e+35);
-    EXPECT_EQ(pair.get_forceCutoff(), -5.4219503325061099e+36);
+    EXPECT_EQ(pair.get_energyCutoff(), 3.0121946291700612e+35 * kcal_per_mol);
+    EXPECT_EQ(
+        pair.get_forceCutoff(),
+        -5.4219503325061099e+36 * kcal_per_mol / angstrom
+    );
 
     const auto &pair2 = dynamic_cast<pot::GuffPair &>(
         *(_engine->getPotential()->getNonCoulombPotential().getNonCoulPair(
@@ -414,8 +438,11 @@ TEST_F(TestGuffDatReader, addGuffPair)
         )
     );
     EXPECT_EQ(pair2.get_radialCutoff(), 10.0 * angstrom);
-    EXPECT_EQ(pair2.get_energyCutoff(), 3.0121946291700612e+35);
-    EXPECT_EQ(pair2.get_forceCutoff(), -5.4219503325061099e+36);
+    EXPECT_EQ(pair2.get_energyCutoff(), 3.0121946291700612e+35 * kcal_per_mol);
+    EXPECT_EQ(
+        pair2.get_forceCutoff(),
+        -5.4219503325061099e+36 * kcal_per_mol / angstrom
+    );
 }
 
 TEST_F(TestGuffDatReader, addNonCoulombPair)
@@ -565,7 +592,7 @@ TEST_F(TestGuffDatReader, checkPartialChargesNotMatchingCoefficients)
         MolType{0},
         AtomType{0},
         AtomType{0},
-        1.0
+        1.0 * kcal_per_mol * angstrom
     );
 
     EXPECT_THROW_MSG(
@@ -587,28 +614,28 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
         MolType{0},
         AtomType{0},
         AtomType{0},
-        COULOMB_PREFACTOR * 0.5 * 0.5
+        COULOMB_PREFACTOR * 0.5 * 0.5 * kcal_per_mol * angstrom
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{1},
         AtomType{0},
-        -COULOMB_PREFACTOR * 0.5 * 0.25
+        -COULOMB_PREFACTOR * 0.5 * 0.25 * kcal_per_mol * angstrom
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{0},
         AtomType{1},
-        -COULOMB_PREFACTOR * 0.5 * 0.25
+        -COULOMB_PREFACTOR * 0.5 * 0.25 * kcal_per_mol * angstrom
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{1},
         AtomType{1},
-        COULOMB_PREFACTOR * 0.25 * 0.25
+        COULOMB_PREFACTOR * 0.25 * 0.25 * kcal_per_mol * angstrom
     );
 
     EXPECT_NO_THROW(_guffDatReader->checkPartialCharges());
@@ -755,14 +782,14 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
         MolType{0},
         AtomType{0},
         AtomType{0},
-        COULOMB_PREFACTOR * 0.5 * 0.5
+        COULOMB_PREFACTOR * 0.5 * 0.5 * kcal_per_mol * angstrom
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{1},
         AtomType{1},
-        COULOMB_PREFACTOR * 0.25 * 0.25
+        COULOMB_PREFACTOR * 0.25 * 0.25 * kcal_per_mol * angstrom
     );
 
     _guffDatReader->calculatePartialCharges();

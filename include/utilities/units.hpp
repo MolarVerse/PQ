@@ -33,6 +33,8 @@
 
 #include <mstd/units.hpp>
 
+#include "mp-units/systems/si/constants.h"
+
 // NOLINTBEGIN(readability-identifier-length)
 
 inline constexpr auto one = mstd::units::one;
@@ -78,6 +80,8 @@ inline constexpr auto mol = mstd::units::mol;
 inline constexpr auto kb                = mstd::units::boltzmann_constant;
 inline constexpr auto avogadro_constant = mstd::units::avogadro_constant;
 inline constexpr auto gas_constant      = kb * avogadro_constant;
+inline constexpr auto planck            = mstd::units::planck_constant;
+inline constexpr auto reduced_planck    = mstd::units::reduced_planck_constant;
 
 inline constexpr auto elementary_charge = mstd::units::elementary_charge;
 

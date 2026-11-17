@@ -56,8 +56,18 @@ int main()
     sparse[2] = 3.0;
     sparse[3] = 12.0;
 
-    const auto denseGuff  = pot::GuffPair(9.0 * angstrom, 1.0, 2.0, dense);
-    const auto sparseGuff = pot::GuffPair(9.0 * angstrom, 1.0, 2.0, sparse);
+    const auto denseGuff = pot::GuffPair(
+        9.0 * angstrom,
+        1.0 * kcal_per_mol,
+        2.0 * kcal_per_mol / angstrom,
+        dense
+    );
+    const auto sparseGuff = pot::GuffPair(
+        9.0 * angstrom,
+        1.0 * kcal_per_mol,
+        2.0 * kcal_per_mol / angstrom,
+        sparse
+    );
 
     perfAllocBegin();
 
@@ -71,7 +81,10 @@ int main()
         const auto [eDense, fDense] = denseGuff.calculate(distance * angstrom);
         const auto [eSparse, fSparse] =
             sparseGuff.calculate(distance * angstrom);
-        sink += eDense + fDense + eSparse + fSparse;
+        sink += eDense.numerical_value_in(kcal_per_mol) +
+                fDense.numerical_value_in(kcal_per_mol / angstrom) +
+                eSparse.numerical_value_in(kcal_per_mol) +
+                fSparse.numerical_value_in(kcal_per_mol / angstrom);
     }
 
     std::cout << std::format("{:.6f}\n", sink);

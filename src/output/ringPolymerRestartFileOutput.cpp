@@ -72,9 +72,13 @@ namespace out
                     const auto velY = vel[1];
                     const auto velZ = vel[2];
 
-                    const auto forceX = molecule.getAtomForce(j)[0];
-                    const auto forceY = molecule.getAtomForce(j)[1];
-                    const auto forceZ = molecule.getAtomForce(j)[2];
+                    const auto force =
+                        molecule.getAtomForce(j).numerical_value_in(
+                            kcal_per_mol / angstrom
+                        );
+                    const auto forceX = force[0];
+                    const auto forceY = force[1];
+                    const auto forceZ = force[2];
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
                     buffer << std::format("{:>5}\t", j.get() + 1);

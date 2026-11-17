@@ -44,8 +44,8 @@ TEST(TestGuffPair, calculateEnergyAndForces)
 
     const auto guffNonCoulomb = pot::GuffPair(
         rncCutoff * angstrom,
-        energyCutoff,
-        forceCutoff,
+        energyCutoff * kcal_per_mol,
+        forceCutoff * kcal_per_mol / angstrom,
         coefficients
     );
 
@@ -102,8 +102,11 @@ TEST(TestGuffPair, calculateEnergyAndForces)
                 ::pow(distance - coefficients[20], coefficients[21] - 1);
     forceREF -= forceCutoff;
 
-    EXPECT_DOUBLE_EQ(energy, energyREF);
-    EXPECT_DOUBLE_EQ(force, forceREF);
+    EXPECT_DOUBLE_EQ(energy.numerical_value_in(kcal_per_mol), energyREF);
+    EXPECT_DOUBLE_EQ(
+        force.numerical_value_in(kcal_per_mol / angstrom),
+        forceREF
+    );
 }
 
 /**
@@ -136,8 +139,12 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
     coefficients[20] = distance;   // rExp21
     coefficients[21] = 3.0;        // n22
 
-    const auto pair =
-        pot::GuffPair(rncCutoff, energyCutoff, forceCutoff, coefficients);
+    const auto pair = pot::GuffPair(
+        rncCutoff,
+        energyCutoff * kcal_per_mol,
+        forceCutoff * kcal_per_mol / angstrom,
+        coefficients
+    );
 
     const auto [energy, force] = pair.calculate(distance * angstrom);
 
@@ -155,8 +162,11 @@ TEST(TestGuffPair, calculateWithSparseCoefficients)
          ::exp(coefficients[9] * (distance - coefficients[10])) /
          ::pow(1 + ::exp(coefficients[9] * (distance - coefficients[10])), 2));
 
-    EXPECT_DOUBLE_EQ(energy, expectedEnergy);
-    EXPECT_DOUBLE_EQ(force, expectedForce);
-    EXPECT_FALSE(std::isnan(energy));
-    EXPECT_FALSE(std::isnan(force));
+    EXPECT_DOUBLE_EQ(energy.numerical_value_in(kcal_per_mol), expectedEnergy);
+    EXPECT_DOUBLE_EQ(
+        force.numerical_value_in(kcal_per_mol / angstrom),
+        expectedForce
+    );
+    EXPECT_FALSE(isnan(energy));
+    EXPECT_FALSE(isnan(force));
 }

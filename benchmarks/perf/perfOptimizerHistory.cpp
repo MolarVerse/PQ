@@ -72,6 +72,10 @@ int main()
         converged += optimizer.hasConverged() ? 1U : 0U;
     }
 
-    std::cout << std::format("{:.6f} {}\n", optimizer.getRMSForce(), converged);
+    std::cout << std::format(
+        "{:.6f} {}\n",
+        optimizer.getRMSForce().numerical_value_in(kcal_per_mol / angstrom),
+        converged
+    );
     return 0;
 }

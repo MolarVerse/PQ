@@ -75,7 +75,7 @@ namespace molsys
         size_t _degreesOfFreedom = 0;
 
         Mass   _totalMass   = Mass::zero();
-        double _totalCharge = 0.0;
+        Charge _totalCharge = Charge::zero();
         double _density     = 0.0;
 
         std::shared_ptr<Box> _box;
@@ -157,14 +157,15 @@ namespace molsys
         void buildAtomIndexLookup();
         void clearAtomIndexLookup();
 
-#ifdef WITH_MPI
-        [[nodiscard]] std::vector<double> flattenVelocities() const;
-        [[nodiscard]] std::vector<double> flattenForces() const;
-        [[nodiscard]] std::vector<double> flattenPartialCharges() const;
+        [[nodiscard]] std::vector<Force> flattenForces() const;
 
-        void deFlattenPositions(const std::vector<double>& positions);
-        void deFlattenVelocities(const std::vector<double>& velocities);
-        void deFlattenForces(const std::vector<double>& forces);
+#ifdef WITH_MPI
+        [[nodiscard]] std::vector<Vel>    flattenVelocities() const;
+        [[nodiscard]] std::vector<Charge> flattenPartialCharges() const;
+
+        void deFlattenPositions(const std::vector<Pos>& positions);
+        void deFlattenVelocities(const std::vector<Vel>& velocities);
+        void deFlattenForces(const std::vector<Force>& forces);
 #endif
 
         /************************
@@ -195,7 +196,7 @@ namespace molsys
         [[nodiscard]] size_t                 getNumberOfAtoms() const;
         [[nodiscard]] size_t                 getNumberOfQMAtoms() const;
         [[nodiscard]] const Mass&            getTotalMass() const;
-        [[nodiscard]] double                 getTotalCharge() const;
+        [[nodiscard]] const Charge&          getTotalCharge() const;
         [[nodiscard]] double                 getDensity() const;
         [[nodiscard]] const Pos3D&           getCenterOfMass() const;
         [[nodiscard]] std::vector<size_t>    getInnerRegionCenterAtomIndices();
@@ -244,7 +245,7 @@ namespace molsys
         void setWaterType(MolType waterType);
         void setAmmoniaType(MolType ammoniaType);
         void setTotalMass(const Mass& totalMass);
-        void setTotalCharge(double totalCharge);
+        void setTotalCharge(const Charge& totalCharge);
         void setDensity(double density);
         void setDegreesOfFreedom(size_t degreesOfFreedom);
 

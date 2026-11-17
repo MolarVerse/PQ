@@ -41,16 +41,18 @@ TEST(TestCoulombShiftedPotential, calculate)
 
     auto distance = 2.0;
 
-    const auto [energy, force] =
-        potential.calculate(distance * angstrom, chargeProduct);
+    const auto [energy, force] = potential.calculate(
+        distance * angstrom,
+        chargeProduct * elementary_charge * elementary_charge
+    );
 
     EXPECT_DOUBLE_EQ(
-        energy,
+        energy.numerical_value_in(kcal_per_mol),
         chargeProduct * COULOMB_PREFACTOR *
             (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
-        force,
+        force.numerical_value_in(kcal_per_mol / angstrom),
         chargeProduct * COULOMB_PREFACTOR *
             (1 / (distance * distance) - forceCutoff)
     );

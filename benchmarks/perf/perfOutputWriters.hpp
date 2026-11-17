@@ -113,8 +113,14 @@ namespace benchOutputWriters
                     linalg::Vec3D{0.01 + offset, -0.02, 0.005 * index} *
                     angstrom / s
                 );
-                atom->setForce({1.5 - offset, 0.25 * index, -0.75});
-                atom->setPartialCharge(i == 0 ? -0.82 : 0.41);
+                atom->setForce(
+                    linalg::Vec3D{1.5 - offset, 0.25 * index, -0.75} *
+                    kcal_per_mol / angstrom
+                );
+                atom->setPartialCharge(
+                    i == 0 ? -0.82 * elementary_charge
+                           : 0.41 * elementary_charge
+                );
                 molecule.addAtom(atom);
                 simBox.addAtom(atom);
             }
@@ -147,8 +153,8 @@ namespace benchOutputWriters
         physicalData.setTemperature(toTemperature(300.0));
         physicalData.setPressure(1.0 * bar);
         physicalData.setKineticEnergy(12.5 * kcal_per_mol);
-        physicalData.setCoulombEnergy(-34.5);
-        physicalData.setNonCoulombEnergy(7.25);
+        physicalData.setCoulombEnergy(-34.5 * kcal_per_mol);
+        physicalData.setNonCoulombEnergy(7.25 * kcal_per_mol);
         Settings settings;
 
         perfAllocBegin();

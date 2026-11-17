@@ -41,6 +41,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace pot
@@ -108,12 +109,17 @@ namespace benchSetup
                 linalg::Vec3D{0.01 * (deviation + 1.0), -0.015, 0.02} *
                 angstrom / s
             );
-            atom->setForce({0.1, -0.2, 0.05});
-            atom->setShiftForce({0.0, 0.0, 0.0});
+            atom->setForce(
+                linalg::Vec3D{0.1, -0.2, 0.05} * kcal_per_mol / angstrom
+            );
+            atom->setShiftForce(ShiftForce3D::zero());
             atom->setMass(12.0 * g_per_mol);
             atom->setAtomType(AtomType{i % 2});
             atom->setInternalGlobalVDWType(VdwType{i % 2});
-            atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);
+            atom->setPartialCharge(
+                (i % 2 == 0) ? 0.4 * elementary_charge
+                             : -0.4 * elementary_charge
+            );
 
             molecule.addAtom(atom);
         }
@@ -133,7 +139,10 @@ namespace benchSetup
             ExtVdwType(0),
             ExtVdwType(1),
             12.0 * angstrom,
-            LJParams{.c6 = 2.0, .c12 = 3.0}
+            LJParams{
+                .c6  = 2.0 * kcal_per_mol * angstrom6,
+                .c12 = 3.0 * kcal_per_mol * angstrom12
+            }
         );
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);

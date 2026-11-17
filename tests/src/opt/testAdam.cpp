@@ -36,9 +36,9 @@
 namespace
 {
     std::shared_ptr<molsys::SimulationBox> makeBoxWithOneAtom(
-        const Pos3D         &pos,
-        const linalg::Vec3D &force,
-        const Pos3D         &boxDims
+        const Pos3D   &pos,
+        const Force3D &force,
+        const Pos3D   &boxDims
     )
     {
         auto box = std::make_shared<molsys::SimulationBox>();
@@ -55,8 +55,8 @@ namespace
     }
 
     std::shared_ptr<molsys::SimulationBox> makeBoxWithOneAtom(
-        const Pos3D         &pos,
-        const linalg::Vec3D &force
+        const Pos3D   &pos,
+        const Force3D &force
     )
     {
         return makeBoxWithOneAtom(
@@ -98,7 +98,9 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     // sign(force).
     auto box = makeBoxWithOneAtom(
         linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
-        {2.0, -3.0, 0.5}
+        {2.0 * kcal_per_mol / angstrom,
+         -3.0 * kcal_per_mol / angstrom,
+         0.5 * kcal_per_mol / angstrom}
     );
 
     opt::Adam adam(1U, /*nAtoms=*/1U);
@@ -144,7 +146,9 @@ TEST(TestAdam, updateStoresOldPosition)
 {
     auto box = makeBoxWithOneAtom(
         linalg::Vec3D{3.0, 4.0, 5.0} * angstrom,
-        {1.0, 1.0, 1.0}
+        {1.0 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom}
     );
 
     opt::Adam adam(1U, 1U);
@@ -163,7 +167,9 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
     // and a positive force should wrap.
     auto box = makeBoxWithOneAtom(
         linalg::Vec3D{9.99, 0.0, 0.0} * angstrom,
-        {1.0, 0.0, 0.0},
+        {1.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom},
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     );
 
@@ -180,7 +186,9 @@ TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
 {
     auto box = makeBoxWithOneAtom(
         linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
-        {0.0, 0.0, 0.0}
+        {0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom}
     );
 
     opt::Adam adam(1U, 1U);

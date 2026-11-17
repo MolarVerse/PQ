@@ -106,13 +106,18 @@ namespace out
             "PRESSURE",
             "bar"
         );
-        _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
+        _writeRight(
+            physicalData.getTotalEnergy().numerical_value_in(kcal_per_mol),
+            "E(TOT)",
+            "kcal/mol"
+        );
 
         if (settings::GeneralSettings::isQMActivated())
         {
             _writeLeft(
-                physicalData.getQMEnergy() -
-                    physicalData.getQMReferenceEnergy(),
+                (physicalData.getQMEnergy() -
+                 physicalData.getQMReferenceEnergy())
+                    .numerical_value_in(kcal_per_mol),
                 "E(QM)",
                 "kcal/mol"
             );
@@ -124,13 +129,25 @@ namespace out
             "E(KIN)",
             "kcal/mol"
         );
-        _writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
+        _writeRight(
+            physicalData.getIntraEnergy().numerical_value_in(kcal_per_mol),
+            "E(INTRA)",
+            "kcal/mol"
+        );
 
         if (settings::GeneralSettings::isMMActivated())
         {
-            _writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
+            _writeLeft(
+                physicalData.getCoulombEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
+                "E(COUL)",
+                "kcal/mol"
+            );
             _writeRight(
-                physicalData.getNonCoulombEnergy(),
+                physicalData.getNonCoulombEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
                 "E(NON-COUL)",
                 "kcal/mol"
             );
@@ -138,15 +155,27 @@ namespace out
 
         if (settings.forceFieldSettings.isActive())
         {
-            _writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
-            _writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
             _writeLeft(
-                physicalData.getDihedralEnergy(),
+                physicalData.getBondEnergy().numerical_value_in(kcal_per_mol),
+                "E(BOND)",
+                "kcal/mol"
+            );
+            _writeRight(
+                physicalData.getAngleEnergy().numerical_value_in(kcal_per_mol),
+                "E(ANGLE)",
+                "kcal/mol"
+            );
+            _writeLeft(
+                physicalData.getDihedralEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
                 "E(DIHEDRAL)",
                 "kcal/mol"
             );
             _writeRight(
-                physicalData.getImproperEnergy(),
+                physicalData.getImproperEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
                 "E(IMPROPER)",
                 "kcal/mol"
             );
@@ -160,7 +189,9 @@ namespace out
                 "-"
             );
             _writeRight(
-                physicalData.getQMReferenceEnergy(),
+                physicalData.getQMReferenceEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
                 "E(QM-REF)",
                 "kcal/mol"
             );
@@ -190,12 +221,16 @@ namespace out
             ThermostatType::NOSE_HOOVER)
         {
             _writeLeft(
-                physicalData.getNoseHooverMomentumEnergy(),
+                physicalData.getNoseHooverMomentumEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
                 "E(NH-MOMENTUM)",
                 "kcal/mol"
             );
             _writeRight(
-                physicalData.getNoseHooverFrictionEnergy(),
+                physicalData.getNoseHooverFrictionEnergy().numerical_value_in(
+                    one
+                ),
                 "E(NH-FRICTION)",
                 "kcal/mol"
             );
@@ -204,12 +239,16 @@ namespace out
         if (settings.constraintSettings.isDistanceConstraintsActivated())
         {
             _writeLeft(
-                physicalData.getLowerDistanceConstraints(),
+                physicalData.getLowerDistanceConstraints().numerical_value_in(
+                    kcal_per_mol
+                ),
                 "LOWER-DIST-CONSTR",
                 "kcal/mol"
             );
             _writeRight(
-                physicalData.getUpperDistanceConstraints(),
+                physicalData.getUpperDistanceConstraints().numerical_value_in(
+                    kcal_per_mol
+                ),
                 "UPPER-DIST-CONSTR",
                 "kcal/mol"
             );

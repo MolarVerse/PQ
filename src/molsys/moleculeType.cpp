@@ -168,7 +168,9 @@ namespace molsys
      *
      * @param qmReferenceEnergy in kcal/mol
      */
-    void MoleculeType::setQMReferenceEnergy(double qmReferenceEnergy)
+    void MoleculeType::setQMReferenceEnergy(
+        const EnergyPerMol &qmReferenceEnergy
+    )
     {
         _qmReferenceEnergy = qmReferenceEnergy;
     }
@@ -270,11 +272,12 @@ namespace molsys
     /**
      * @brief get the QM reference energy of the molecule type
      *
-     * @return double in kcal/mol, 0 if not set
+     * @return EnergyPerMol the QM reference energy of the molecule type, 0 if
+     * not set
      */
-    double MoleculeType::getQMReferenceEnergy() const
+    EnergyPerMol MoleculeType::getQMReferenceEnergy() const
     {
-        return _qmReferenceEnergy.value_or(0.0);
+        return _qmReferenceEnergy.value_or(EnergyPerMol::zero());
     }
 
     /**

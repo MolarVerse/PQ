@@ -37,10 +37,19 @@ TEST(TestLennardJonesPair, equalsOperator)
     const ExtVdwType vdwType1{0};
     const ExtVdwType vdwType2{1};
     const ExtVdwType vdwType3{2};
-    const auto       ljParams1 = LJParams{.c6 = 2.0, .c12 = 3.0};
-    const auto       ljParams2 = LJParams{.c6 = 3.0, .c12 = 3.0};
-    const auto       ljParams3 = LJParams{.c6 = 2.0, .c12 = 4.0};
-    const auto       nonCoulombPair1 =
+    const auto       ljParams1 = LJParams{
+              .c6  = 2.0 * kcal_per_mol * angstrom6,
+              .c12 = 3.0 * kcal_per_mol * angstrom12
+    };
+    const auto ljParams2 = LJParams{
+        .c6  = 3.0 * kcal_per_mol * angstrom6,
+        .c12 = 3.0 * kcal_per_mol * angstrom12
+    };
+    const auto ljParams3 = LJParams{
+        .c6  = 2.0 * kcal_per_mol * angstrom6,
+        .c12 = 4.0 * kcal_per_mol * angstrom12
+    };
+    const auto nonCoulombPair1 =
         pot::LennardJonesPair(vdwType1, vdwType2, 1.0 * angstrom, ljParams1);
 
     const auto nonCoulombPair2 =
@@ -81,22 +90,25 @@ TEST(TestLennardJonesPair, calculateEnergyAndForces)
 
     const auto potential = pot::LennardJonesPair(
         rncCutoff * angstrom,
-        energyCutoff,
-        forceCutoff,
-        LJParams{.c6 = coefficients[0], .c12 = coefficients[1]}
+        energyCutoff * kcal_per_mol,
+        forceCutoff * kcal_per_mol / angstrom,
+        LJParams{
+            .c6  = coefficients[0] * kcal_per_mol * angstrom6,
+            .c12 = coefficients[1] * kcal_per_mol * angstrom12
+        }
     );
 
     auto distance        = 2.0;
     auto [energy, force] = potential.calculate(distance * angstrom);
 
     EXPECT_DOUBLE_EQ(
-        energy,
+        energy.numerical_value_in(kcal_per_mol),
         (coefficients[0] / ::pow(distance, 6)) +
             (coefficients[1] / ::pow(distance, 12)) - energyCutoff -
             (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
-        force,
+        force.numerical_value_in(kcal_per_mol / angstrom),
         (6 * coefficients[0] / ::pow(distance, 7)) +
             (12 * coefficients[1] / ::pow(distance, 13)) - forceCutoff
     );

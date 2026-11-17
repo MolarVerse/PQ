@@ -38,8 +38,8 @@
 TEST_F(TestPhysicalData, makeAverages)
 {
     _physicalData->makeAverages(2);
-    EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.5);
-    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
+    EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.5 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(1.5));
     EXPECT_EQ(
         _physicalData->getMomentum(),
@@ -49,8 +49,8 @@ TEST_F(TestPhysicalData, makeAverages)
     EXPECT_EQ(_physicalData->getVolume(), 3.0 * angstrom3);
     EXPECT_EQ(_physicalData->getDensity(), 3.5);
     EXPECT_EQ(_physicalData->getPressure(), 4.0 * bar);
-    EXPECT_EQ(_physicalData->getQMEnergy(), 4.5);
-    EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.5);
+    EXPECT_EQ(_physicalData->getQMEnergy(), 4.5 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.5 * kcal_per_mol);
 }
 
 /**
@@ -61,8 +61,8 @@ TEST_F(TestPhysicalData, copy)
 {
     physicalData::PhysicalData physicalData2;
     physicalData2.copy(*_physicalData);
-    EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0);
-    EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0);
+    EXPECT_EQ(physicalData2.getCoulombEnergy(), 1.0 * kcal_per_mol);
+    EXPECT_EQ(physicalData2.getNonCoulombEnergy(), 2.0 * kcal_per_mol);
     EXPECT_EQ(physicalData2.getTemperature(), toTemperature(3.0));
     EXPECT_EQ(
         physicalData2.getMomentum(),
@@ -73,8 +73,8 @@ TEST_F(TestPhysicalData, copy)
     EXPECT_EQ(physicalData2.getDensity(), 7.0);
     EXPECT_EQ(physicalData2.getPressure(), 8.0 * bar);
     EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5 * bar);
-    EXPECT_EQ(physicalData2.getQMEnergy(), 9.0);
-    EXPECT_EQ(physicalData2.getQMReferenceEnergy(), 1.0);
+    EXPECT_EQ(physicalData2.getQMEnergy(), 9.0 * kcal_per_mol);
+    EXPECT_EQ(physicalData2.getQMReferenceEnergy(), 1.0 * kcal_per_mol);
 }
 
 /**
@@ -86,8 +86,8 @@ TEST_F(TestPhysicalData, updateAverages)
     const physicalData::PhysicalData physicalData2 = *_physicalData;
 
     _physicalData->updateAverages(physicalData2);
-    EXPECT_EQ(_physicalData->getCoulombEnergy(), 2.0);
-    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 4.0);
+    EXPECT_EQ(_physicalData->getCoulombEnergy(), 2.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 4.0 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(6.0));
     EXPECT_EQ(
         _physicalData->getMomentum(),
@@ -98,8 +98,8 @@ TEST_F(TestPhysicalData, updateAverages)
     EXPECT_EQ(_physicalData->getDensity(), 14.0);
     EXPECT_EQ(_physicalData->getPressure(), 16.0 * bar);
     EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0 * bar);
-    EXPECT_EQ(_physicalData->getQMEnergy(), 18.0);
-    EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 2.0);
+    EXPECT_EQ(_physicalData->getQMEnergy(), 18.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 2.0 * kcal_per_mol);
 }
 
 /**
@@ -212,15 +212,15 @@ TEST_F(TestPhysicalData, calculateTemperature)
 TEST_F(TestPhysicalData, reset)
 {
     _physicalData->setKineticEnergy(1.0 * kcal_per_mol);
-    _physicalData->setCoulombEnergy(1.0);
-    _physicalData->setNonCoulombEnergy(1.0);
-    _physicalData->setIntraCoulombEnergy(1.0);
-    _physicalData->setIntraNonCoulombEnergy(1.0);
+    _physicalData->setCoulombEnergy(1.0 * kcal_per_mol);
+    _physicalData->setNonCoulombEnergy(1.0 * kcal_per_mol);
+    _physicalData->setIntraCoulombEnergy(1.0 * kcal_per_mol);
+    _physicalData->setIntraNonCoulombEnergy(1.0 * kcal_per_mol);
 
-    _physicalData->setBondEnergy(1.0);
-    _physicalData->setAngleEnergy(1.0);
-    _physicalData->setDihedralEnergy(1.0);
-    _physicalData->setImproperEnergy(1.0);
+    _physicalData->setBondEnergy(1.0 * kcal_per_mol);
+    _physicalData->setAngleEnergy(1.0 * kcal_per_mol);
+    _physicalData->setDihedralEnergy(1.0 * kcal_per_mol);
+    _physicalData->setImproperEnergy(1.0 * kcal_per_mol);
 
     _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setMomentum(linalg::Vec3D(1.0) * g_per_mol * angstrom / s);
@@ -228,22 +228,24 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setDensity(1.0);
     _physicalData->setPressure(1.0 * bar);
     _physicalData->setCoupledPressure(1.0 * bar);
-    _physicalData->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)));
-    _physicalData->setQMEnergy(1.0);
-    _physicalData->setQMReferenceEnergy(1.0);
+    _physicalData->setVirial(
+        diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)) * kcal_per_mol
+    );
+    _physicalData->setQMEnergy(1.0 * kcal_per_mol);
+    _physicalData->setQMReferenceEnergy(1.0 * kcal_per_mol);
 
     _physicalData->reset();
 
     EXPECT_EQ(_physicalData->getKineticEnergy(), 0.0 * kcal_per_mol);
-    EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getIntraCoulombEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getIntraNonCoulombEnergy(), 0.0);
+    EXPECT_EQ(_physicalData->getCoulombEnergy(), 0.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 0.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getIntraCoulombEnergy(), 0.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getIntraNonCoulombEnergy(), 0.0 * kcal_per_mol);
 
-    EXPECT_EQ(_physicalData->getBondEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getAngleEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getDihedralEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getImproperEnergy(), 0.0);
+    EXPECT_EQ(_physicalData->getBondEnergy(), 0.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getAngleEnergy(), 0.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getDihedralEnergy(), 0.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getImproperEnergy(), 0.0 * kcal_per_mol);
 
     EXPECT_EQ(_physicalData->getTemperature(), toTemperature(0.0));
     EXPECT_EQ(
@@ -254,9 +256,9 @@ TEST_F(TestPhysicalData, reset)
     EXPECT_EQ(_physicalData->getDensity(), 0.0);
     EXPECT_EQ(_physicalData->getPressure(), 0.0 * bar);
     EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0 * bar);
-    EXPECT_EQ(_physicalData->getVirial(), linalg::tensor3D(0.0));
-    EXPECT_EQ(_physicalData->getQMEnergy(), 0.0);
-    EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.0);
+    EXPECT_EQ(_physicalData->getVirial(), linalg::tensor3D(0.0) * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getQMEnergy(), 0.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.0 * kcal_per_mol);
 }
 
 /**
@@ -265,24 +267,26 @@ TEST_F(TestPhysicalData, reset)
  */
 TEST_F(TestPhysicalData, getTotalEnergy)
 {
-    _physicalData->setCoulombEnergy(1.0);
-    _physicalData->setNonCoulombEnergy(2.0);
+    _physicalData->setCoulombEnergy(1.0 * kcal_per_mol);
+    _physicalData->setNonCoulombEnergy(2.0 * kcal_per_mol);
 
-    _physicalData->setIntraCoulombEnergy(3.0);
-    _physicalData->setIntraNonCoulombEnergy(4.0);
+    _physicalData->setIntraCoulombEnergy(3.0 * kcal_per_mol);
+    _physicalData->setIntraNonCoulombEnergy(4.0 * kcal_per_mol);
 
-    _physicalData->setBondEnergy(5.0);
-    _physicalData->setAngleEnergy(6.0);
-    _physicalData->setDihedralEnergy(7.0);
-    _physicalData->setImproperEnergy(8.0);
+    _physicalData->setBondEnergy(5.0 * kcal_per_mol);
+    _physicalData->setAngleEnergy(6.0 * kcal_per_mol);
+    _physicalData->setDihedralEnergy(7.0 * kcal_per_mol);
+    _physicalData->setImproperEnergy(8.0 * kcal_per_mol);
 
     _physicalData->setKineticEnergy(9.0 * kcal_per_mol);
-    _physicalData->setQMEnergy(10.0);
-    _physicalData->setQMReferenceEnergy(11.0);
+    _physicalData->setQMEnergy(10.0 * kcal_per_mol);
+    _physicalData->setQMReferenceEnergy(11.0 * kcal_per_mol);
 
     EXPECT_EQ(
         _physicalData->getTotalEnergy(),
-        1.0 + 2.0 + 5.0 + 6.0 + 7.0 + 8.0 + 9.0 + 10.0 - 11.0
+        1.0 * kcal_per_mol + 2.0 * kcal_per_mol + 5.0 * kcal_per_mol +
+            6.0 * kcal_per_mol + 7.0 * kcal_per_mol + 8.0 * kcal_per_mol +
+            9.0 * kcal_per_mol + 10.0 * kcal_per_mol - 11.0 * kcal_per_mol
     );
 }
 
@@ -291,12 +295,12 @@ TEST_F(TestPhysicalData, getTotalEnergy)
  */
 TEST_F(TestPhysicalData, addIntraCoulombEnergy)
 {
-    _physicalData->setCoulombEnergy(0.0);
-    _physicalData->setIntraCoulombEnergy(0.0);
-    _physicalData->addIntraCoulombEnergy(1.0);
+    _physicalData->setCoulombEnergy(0.0 * kcal_per_mol);
+    _physicalData->setIntraCoulombEnergy(0.0 * kcal_per_mol);
+    _physicalData->addIntraCoulombEnergy(1.0 * kcal_per_mol);
 
-    EXPECT_EQ(_physicalData->getIntraCoulombEnergy(), 1.0);
-    EXPECT_EQ(_physicalData->getCoulombEnergy(), 1.0);
+    EXPECT_EQ(_physicalData->getIntraCoulombEnergy(), 1.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getCoulombEnergy(), 1.0 * kcal_per_mol);
 }
 
 /**
@@ -304,73 +308,75 @@ TEST_F(TestPhysicalData, addIntraCoulombEnergy)
  */
 TEST_F(TestPhysicalData, addIntraNonCoulombEnergy)
 {
-    _physicalData->setNonCoulombEnergy(0.0);
-    _physicalData->setIntraNonCoulombEnergy(0.0);
-    _physicalData->addIntraNonCoulombEnergy(1.0);
+    _physicalData->setNonCoulombEnergy(0.0 * kcal_per_mol);
+    _physicalData->setIntraNonCoulombEnergy(0.0 * kcal_per_mol);
+    _physicalData->addIntraNonCoulombEnergy(1.0 * kcal_per_mol);
 
-    EXPECT_EQ(_physicalData->getIntraNonCoulombEnergy(), 1.0);
-    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0);
+    EXPECT_EQ(_physicalData->getIntraNonCoulombEnergy(), 1.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.0 * kcal_per_mol);
 }
 
 /* ---------- Energy accumulators (add… functions) ---------- */
 
 TEST_F(TestPhysicalData, addCoulombEnergyAccumulates)
 {
-    _physicalData->setCoulombEnergy(2.0);
-    _physicalData->addCoulombEnergy(3.5);
-    EXPECT_DOUBLE_EQ(_physicalData->getCoulombEnergy(), 5.5);
+    _physicalData->setCoulombEnergy(2.0 * kcal_per_mol);
+    _physicalData->addCoulombEnergy(3.5 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getCoulombEnergy(), 5.5 * kcal_per_mol);
 }
 
 TEST_F(TestPhysicalData, addNonCoulombEnergyAccumulates)
 {
-    _physicalData->setNonCoulombEnergy(1.0);
-    _physicalData->addNonCoulombEnergy(0.25);
-    _physicalData->addNonCoulombEnergy(0.25);
-    EXPECT_DOUBLE_EQ(_physicalData->getNonCoulombEnergy(), 1.5);
+    _physicalData->setNonCoulombEnergy(1.0 * kcal_per_mol);
+    _physicalData->addNonCoulombEnergy(0.25 * kcal_per_mol);
+    _physicalData->addNonCoulombEnergy(0.25 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getNonCoulombEnergy(), 1.5 * kcal_per_mol);
 }
 
 TEST_F(TestPhysicalData, addBondEnergyAccumulates)
 {
-    _physicalData->setBondEnergy(0.0);
-    _physicalData->addBondEnergy(1.0);
-    _physicalData->addBondEnergy(2.0);
-    EXPECT_DOUBLE_EQ(_physicalData->getBondEnergy(), 3.0);
+    _physicalData->setBondEnergy(0.0 * kcal_per_mol);
+    _physicalData->addBondEnergy(1.0 * kcal_per_mol);
+    _physicalData->addBondEnergy(2.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getBondEnergy(), 3.0 * kcal_per_mol);
 }
 
 TEST_F(TestPhysicalData, addAngleEnergyAccumulates)
 {
-    _physicalData->setAngleEnergy(0.0);
-    _physicalData->addAngleEnergy(1.0);
-    _physicalData->addAngleEnergy(-0.5);
-    EXPECT_DOUBLE_EQ(_physicalData->getAngleEnergy(), 0.5);
+    _physicalData->setAngleEnergy(0.0 * kcal_per_mol);
+    _physicalData->addAngleEnergy(1.0 * kcal_per_mol);
+    _physicalData->addAngleEnergy(-0.5 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getAngleEnergy(), 0.5 * kcal_per_mol);
 }
 
 TEST_F(TestPhysicalData, addDihedralEnergyAccumulates)
 {
-    _physicalData->setDihedralEnergy(0.0);
-    _physicalData->addDihedralEnergy(1.0);
-    EXPECT_DOUBLE_EQ(_physicalData->getDihedralEnergy(), 1.0);
+    _physicalData->setDihedralEnergy(0.0 * kcal_per_mol);
+    _physicalData->addDihedralEnergy(1.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getDihedralEnergy(), 1.0 * kcal_per_mol);
 }
 
 TEST_F(TestPhysicalData, addImproperEnergyAccumulates)
 {
-    _physicalData->setImproperEnergy(0.0);
-    _physicalData->addImproperEnergy(1.5);
-    EXPECT_DOUBLE_EQ(_physicalData->getImproperEnergy(), 1.5);
+    _physicalData->setImproperEnergy(0.0 * kcal_per_mol);
+    _physicalData->addImproperEnergy(1.5 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getImproperEnergy(), 1.5 * kcal_per_mol);
 }
 
 TEST_F(TestPhysicalData, addRingPolymerEnergyAccumulates)
 {
-    _physicalData->setRingPolymerEnergy(0.0);
-    _physicalData->addRingPolymerEnergy(2.0);
-    _physicalData->addRingPolymerEnergy(3.0);
-    EXPECT_DOUBLE_EQ(_physicalData->getRingPolymerEnergy(), 5.0);
+    _physicalData->setRingPolymerEnergy(0.0 * kcal_per_mol);
+    _physicalData->addRingPolymerEnergy(2.0 * kcal_per_mol);
+    _physicalData->addRingPolymerEnergy(3.0 * kcal_per_mol);
+    EXPECT_EQ(_physicalData->getRingPolymerEnergy(), 5.0 * kcal_per_mol);
 }
 
 TEST_F(TestPhysicalData, addVirialAccumulates)
 {
-    const auto virial0 = diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0));
-    const auto virial1 = diagonalMatrix(linalg::Vec3D(0.5, 0.5, 0.5));
+    const auto virial0 =
+        diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol;
+    const auto virial1 =
+        diagonalMatrix(linalg::Vec3D(0.5, 0.5, 0.5)) * kcal_per_mol;
     _physicalData->setVirial(virial0);
     _physicalData->addVirial(virial1);
     EXPECT_EQ(_physicalData->getVirial(), virial0 + virial1);
@@ -450,8 +456,8 @@ TEST_F(TestPhysicalData, defaultConstructedIsZero)
 
         for (size_t j = 0; j < 3; ++j)
         {
-            EXPECT_EQ(data->getVirial()[i][j], 0.0);
-            EXPECT_EQ(data->getStressTensor()[i][j], 0.0);
+            EXPECT_EQ(data->getVirial()[i][j], VirialPerMol::zero());
+            EXPECT_EQ(data->getStressTensor()[i][j], Stress::zero());
             EXPECT_EQ(
                 data->getKinEnergyAtomTensor()[i][j],
                 EnergyPerMol::zero()

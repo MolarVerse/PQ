@@ -113,7 +113,7 @@ TEST_F(TestSetup, setupThermostatLangevin)
         thermostatSetup.getEngine().getThermostat().getThermostatType(),
         ThermostatType::LANGEVIN
     );
-    EXPECT_EQ(_settings->thermostatSettings.getFriction(), 1.0e11);
+    EXPECT_EQ(_settings->thermostatSettings.getFriction(), 1.0e11 * Hz);
 
     EXPECT_NO_THROW(setup::setupThermostat(*_mdEngine));
 }

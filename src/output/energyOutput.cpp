@@ -82,14 +82,19 @@ namespace out
             "{:20.12f}\t",
             physicalData.getPressure().numerical_value_in(bar)
         );
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getTotalEnergy().numerical_value_in(kcal_per_mol)
+        );
 
         if (settings::GeneralSettings::isQMActivated())
         {
             const auto qmRef    = physicalData.getQMReferenceEnergy();
             const auto qmEnergy = physicalData.getQMEnergy() - qmRef;
-            _getFilePointer() << std::format("{:20.12f}\t", qmEnergy);
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                qmEnergy.numerical_value_in(kcal_per_mol)
+            );
             _getFilePointer(
             ) << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
         }
@@ -98,27 +103,47 @@ namespace out
             "{:20.12f}\t",
             physicalData.getKineticEnergy().numerical_value_in(kcal_per_mol)
         );
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getIntraEnergy());
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getIntraEnergy().numerical_value_in(kcal_per_mol)
+        );
 
         if (settings::GeneralSettings::isMMActivated())
         {
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getCoulombEnergy());
-            _getFilePointer(
-            ) << std::format("{:20.12f}\t", physicalData.getNonCoulombEnergy());
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol)
+            );
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getNonCoulombEnergy().numerical_value_in(
+                    kcal_per_mol
+                )
+            );
         }
 
         if (settings.forceFieldSettings.isActive())
         {
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getBondEnergy());
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getAngleEnergy());
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getDihedralEnergy());
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getImproperEnergy());
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getBondEnergy().numerical_value_in(kcal_per_mol)
+            );
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getAngleEnergy().numerical_value_in(kcal_per_mol)
+            );
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getDihedralEnergy().numerical_value_in(
+                    kcal_per_mol
+                )
+            );
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getImproperEnergy().numerical_value_in(
+                    kcal_per_mol
+                )
+            );
         }
 
         if (settings::GeneralSettings::isHybridJobtype())
@@ -128,7 +153,10 @@ namespace out
                 physicalData.getNumberOfSmoothingMolecules()
             );
             const auto qmRef = physicalData.getQMReferenceEnergy();
-            _getFilePointer() << std::format("{:20.12f}\t", qmRef);
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                qmRef.numerical_value_in(kcal_per_mol)
+            );
         }
 
         if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
@@ -154,11 +182,15 @@ namespace out
         {
             _getFilePointer() << std::format(
                 "{:20.12f}\t",
-                physicalData.getNoseHooverMomentumEnergy()
+                physicalData.getNoseHooverMomentumEnergy().numerical_value_in(
+                    kcal_per_mol
+                )
             );
             _getFilePointer() << std::format(
                 "{:20.12f}\t",
-                physicalData.getNoseHooverFrictionEnergy()
+                physicalData.getNoseHooverFrictionEnergy().numerical_value_in(
+                    one
+                )
             );
         }
 
@@ -166,11 +198,15 @@ namespace out
         {
             _getFilePointer() << std::format(
                 "{:20.12f}\t",
-                physicalData.getLowerDistanceConstraints()
+                physicalData.getLowerDistanceConstraints().numerical_value_in(
+                    kcal_per_mol
+                )
             );
             _getFilePointer() << std::format(
                 "{:20.12f}\t",
-                physicalData.getUpperDistanceConstraints()
+                physicalData.getUpperDistanceConstraints().numerical_value_in(
+                    kcal_per_mol
+                )
             );
         }
 

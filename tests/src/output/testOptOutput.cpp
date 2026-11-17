@@ -29,6 +29,7 @@
 #include "optOutput.hpp"
 #include "steepestDescent.hpp"
 #include "testOutputBase.hpp"
+#include "units.hpp"
 
 TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
 {
@@ -43,13 +44,19 @@ TEST(TestOptOutput, writeProducesStepAndAllConvergenceColumns)
         true,
         true,
         1.0e-4,
-        1.0e-4,
-        1.0e-3,
-        1.0e-3,
+        1.0e-4 * kcal_per_mol,
+        1.0e-3 * kcal_per_mol / angstrom,
+        1.0e-3 * kcal_per_mol / angstrom,
         ConvStrategy::RIGOROUS
     );
-    conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
-    conv.calcForceConvergence(1.0e-5, 2.0e-5);
+    conv.calcEnergyConvergence(
+        1.0 * kcal_per_mol,
+        1.0 * kcal_per_mol + 1.0e-5 * kcal_per_mol
+    );
+    conv.calcForceConvergence(
+        1.0e-5 * kcal_per_mol / angstrom,
+        2.0e-5 * kcal_per_mol / angstrom
+    );
     opt.setConvergence(conv);
 
     out.write(42, opt);
@@ -76,13 +83,19 @@ TEST(TestOptOutput, writeAbsoluteStrategyZeroesOutRelativeFlag)
         true,
         true,
         1.0e-4,
-        1.0e-4,
-        1.0e-3,
-        1.0e-3,
+        1.0e-4 * kcal_per_mol,
+        1.0e-3 * kcal_per_mol / angstrom,
+        1.0e-3 * kcal_per_mol / angstrom,
         ConvStrategy::ABSOLUTE
     );
-    conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
-    conv.calcForceConvergence(1.0e-5, 1.0e-5);
+    conv.calcEnergyConvergence(
+        1.0 * kcal_per_mol,
+        1.0 * kcal_per_mol + 1.0e-5 * kcal_per_mol
+    );
+    conv.calcForceConvergence(
+        1.0e-5 * kcal_per_mol / angstrom,
+        1.0e-5 * kcal_per_mol / angstrom
+    );
     opt.setConvergence(conv);
 
     out.write(1, opt);
@@ -109,13 +122,19 @@ TEST(TestOptOutput, writeRelativeStrategyZeroesOutAbsoluteFlag)
         true,
         true,
         1.0e-4,
-        1.0e-4,
-        1.0e-3,
-        1.0e-3,
+        1.0e-4 * kcal_per_mol,
+        1.0e-3 * kcal_per_mol / angstrom,
+        1.0e-3 * kcal_per_mol / angstrom,
         ConvStrategy::RELATIVE
     );
-    conv.calcEnergyConvergence(1.0, 1.0 + 1.0e-5);
-    conv.calcForceConvergence(1.0e-5, 1.0e-5);
+    conv.calcEnergyConvergence(
+        1.0 * kcal_per_mol,
+        1.0 * kcal_per_mol + 1.0e-5 * kcal_per_mol
+    );
+    conv.calcForceConvergence(
+        1.0e-5 * kcal_per_mol / angstrom,
+        1.0e-5 * kcal_per_mol / angstrom
+    );
     opt.setConvergence(conv);
 
     out.write(1, opt);
@@ -140,12 +159,15 @@ TEST(TestOptOutput, writeRespectsDisabledEnergyConv)
         true,
         true,
         1.0e-4,
-        1.0e-4,
-        1.0e-3,
-        1.0e-3,
+        1.0e-4 * kcal_per_mol,
+        1.0e-3 * kcal_per_mol / angstrom,
+        1.0e-3 * kcal_per_mol / angstrom,
         ConvStrategy::RIGOROUS
     );
-    conv.calcForceConvergence(1.0e-5, 1.0e-5);
+    conv.calcForceConvergence(
+        1.0e-5 * kcal_per_mol / angstrom,
+        1.0e-5 * kcal_per_mol / angstrom
+    );
     opt.setConvergence(conv);
 
     out.write(1, opt);

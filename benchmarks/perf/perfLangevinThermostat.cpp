@@ -56,7 +56,7 @@ int main()
     auto       physicalData      = physicalData::PhysicalData();
     const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat = thermostat::LangevinThermostat(1.0);
+    auto thermostat = thermostat::LangevinThermostat(1.0 * Hz);
 
     perfAllocBegin();
 

@@ -178,14 +178,18 @@ namespace out
 
         writeHeader(beads[0], beads.size());
 
-        auto totalForce = 0.0;
+        Force totalForce = Force::zero();
         std::ranges::for_each(
             beads,
             [&totalForce](auto &bead)
             { totalForce += bead.calculateTotalForce(); }
         );
 
-        _writeForceComment(step, totalForce, includeMetadata);
+        _writeForceComment(
+            step,
+            totalForce.numerical_value_in(kcal_per_mol / angstrom),
+            includeMetadata
+        );
 
         for (size_t i = 0; i < beads.size(); ++i)
         {
@@ -202,9 +206,18 @@ namespace out
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
-                    buffer << std::format("{:15.8f}\t", forceX);
-                    buffer << std::format("{:15.8f}\t", forceY);
-                    buffer << std::format("{:15.8f}\n", forceZ);
+                    buffer << std::format(
+                        "{:15.8f}\t",
+                        forceX.numerical_value_in(kcal_per_mol / angstrom)
+                    );
+                    buffer << std::format(
+                        "{:15.8f}\t",
+                        forceY.numerical_value_in(kcal_per_mol / angstrom)
+                    );
+                    buffer << std::format(
+                        "{:15.8f}\n",
+                        forceZ.numerical_value_in(kcal_per_mol / angstrom)
+                    );
                 }
             }
         }
@@ -242,7 +255,10 @@ namespace out
                         atom->getQMCharge().value_or(atom->getPartialCharge());
 
                     buffer << std::format("{:>5}{}\t", atom->getName(), i + 1);
-                    buffer << std::format("{:15.8f}\n", charge);
+                    buffer << std::format(
+                        "{:15.8f}\n",
+                        charge.numerical_value_in(elementary_charge)
+                    );
                     buffer << std::flush;
                 }
             }

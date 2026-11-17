@@ -300,7 +300,7 @@ TEST_F(TestInputValidation, rejectsNonFiniteLangevinScale)
     );
     _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
     _settings.thermostatSettings.setFrictionByUser(
-        std::numeric_limits<double>::max()
+        std::numeric_limits<Frequency>::max()
     );
     _setKeyword("temp");
 

@@ -28,6 +28,7 @@
 
 #include "defaults.hpp"
 #include "enums/potential.hpp"
+#include "unit_types.hpp"
 
 namespace settings
 {
@@ -52,8 +53,8 @@ namespace settings
         static inline double _scale14VanDerWaals =
             defaults::SCALE_14_VAN_DER_WAALS_DEFAULT;
 
-        static inline double _wolfParameter = defaults::WOLF_PARAM_DEFAULT;
-        static inline double _reactionFieldEpsilon =
+        static inline InvDistance _wolfParameter = defaults::WOLF_PARAM_DEFAULT;
+        static inline double      _reactionFieldEpsilon =
             defaults::RF_EPSILON_DEFAULT;
 
        public:
@@ -74,7 +75,7 @@ namespace settings
         static void setScale14Coulomb(double scale14Coulomb);
         static void setScale14VanDerWaals(double scale14VanDerWaals);
         static void setReactionFieldEpsilon(double epsilon);
-        static void setWolfParameter(double wolfParameter);
+        static void setWolfParameter(const InvDistance& wolfParameter);
 
         /********************
          * standard getters *
@@ -88,7 +89,7 @@ namespace settings
         [[nodiscard]] static double             getScale14Coulomb();
         [[nodiscard]] static double             getScale14VDW();
         [[nodiscard]] static double             getReactionFieldEpsilon();
-        [[nodiscard]] static double             getWolfParameter();
+        [[nodiscard]] static const InvDistance& getWolfParameter();
     };
 
 }   // namespace settings

@@ -256,8 +256,7 @@ namespace
         );
         json.value(
             "default",
-            defaults::LANGEVIN_THERMOSTAT_FRICTION /
-                defaults::MAX_FRICTION_CONVERSION
+            defaults::LANGEVIN_THERMOSTAT_FRICTION.numerical_value_in(one / ps)
         );
         json.endObject();
 

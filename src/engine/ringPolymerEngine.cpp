@@ -26,7 +26,6 @@
 #include <cstddef>
 
 #include "atom.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "engineOutput.hpp"
 #include "frame.hpp"
 #include "globalTimer.hpp"
@@ -132,7 +131,7 @@ namespace engine
 
             const auto timeStep      = settings::TimingsSettings::getTimeStep();
             const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep * FS_TO_PS;
+            const auto simTime       = effStepDouble * timeStep;
 
 #ifdef WITH_MPI
             if (mpi::MPI::isRoot())
@@ -182,16 +181,14 @@ namespace engine
     {
         const auto nBeads = _ringPolymerBeads.size();
         const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
-        const auto temp   = _getKinetics()
-                              .getCurrentTargetTemperature()
-                              .quantity_from_zero()
-                              .numerical_value_in(K);
+        const auto temp =
+            _getKinetics().getCurrentTargetTemperature().quantity_from_zero();
 
         // to silence narrowing conversion warning -- here not a problem
         const auto nBeads_ = static_cast<double>(nBeads);
 
-        const auto rpmd_factor =
-            RPMD_PREFACTOR * nBeads_ * nBeads_ * temp * temp;
+        const auto rpmd_factor = nBeads_ * nBeads_ * kb * kb / reduced_planck /
+                                 reduced_planck * temp * temp;
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -203,13 +200,10 @@ namespace engine
                 auto &atom1 = bead1.getAtom(j);
                 auto &atom2 = bead2.getAtom(j);
 
-                const auto deltaPos =
-                    (atom2.getPosition() - atom1.getPosition())
-                        .numerical_value_in(angstrom);
+                const auto deltaPos = atom2.getPosition() - atom1.getPosition();
 
-                const auto forceConstant =
-                    rpmd_factor * atom1.getMass().numerical_value_in(g_per_mol);
-                const auto force = forceConstant * deltaPos;
+                const auto forceConstant = rpmd_factor * atom1.getMass();
+                const auto force         = forceConstant * deltaPos;
 
                 const auto energy = 0.5 * forceConstant * normSquared(deltaPos);
 
@@ -235,9 +229,9 @@ namespace engine
             getSimulationBox().getAtoms(),
             [](auto &atom)
             {
-                atom->setPosition(Pos::zero());
-                atom->setVelocity(Vel::zero());
-                atom->setForce({0.0, 0.0, 0.0});
+                atom->setPosition(Pos3D::zero());
+                atom->setVelocity(Vel3D::zero());
+                atom->setForce(Force3D::zero());
             }
         );
 

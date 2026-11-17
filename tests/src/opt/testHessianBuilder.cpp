@@ -24,7 +24,6 @@
 
 #include <csignal>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "atom.hpp"
@@ -46,25 +45,25 @@ namespace
     class HarmonicEvaluator : public opt::Evaluator
     {
        private:
-        std::vector<double> _forceConstants;
-        bool                _analyticSupported = false;
+        std::vector<ForceConstant> _forceConstants;
+        bool                       _analyticSupported = false;
 
        public:
         explicit HarmonicEvaluator(
-            const Settings     &settings,
-            std::vector<double> forceConstants,
-            const bool          analyticSupported
+            const Settings                   &settings,
+            const std::vector<ForceConstant> &forceConstants,
+            const bool                        analyticSupported
         )
             : opt::Evaluator(settings),
-              _forceConstants(std::move(forceConstants)),
+              _forceConstants(forceConstants),
               _analyticSupported(analyticSupported)
         {
         }
         explicit HarmonicEvaluator(
-            const Settings     &settings,
-            std::vector<double> forceConstants
+            const Settings                   &settings,
+            const std::vector<ForceConstant> &forceConstants
         )
-            : HarmonicEvaluator(settings, std::move(forceConstants), false)
+            : HarmonicEvaluator(settings, forceConstants, false)
         {
         }
 
@@ -82,10 +81,9 @@ namespace
                  atomIndex < simulationBox.getNumberOfAtoms();
                  ++atomIndex)
             {
-                auto      &atom = simulationBox.getAtom(atomIndex);
-                const auto position =
-                    atom.getPosition().numerical_value_in(angstrom);
-                const auto offset = 3 * atomIndex;
+                auto      &atom     = simulationBox.getAtom(atomIndex);
+                const auto position = atom.getPosition();
+                const auto offset   = 3 * atomIndex;
                 atom.setForce(
                     {-_forceConstants[offset] * position[0],
                      -_forceConstants[offset + 1] * position[1],
@@ -99,9 +97,14 @@ namespace
             return _analyticSupported;
         }
 
-        [[nodiscard]] opt::HessianMatrix calculateAnalyticHessian() override
+        [[nodiscard]] Hessian calculateAnalyticHessian() override
         {
-            return {{2.0, 4.0}, {6.0, 8.0}};
+            return {
+                {2.0 * kcal_per_mol / angstrom / angstrom,
+                 4.0 * kcal_per_mol / angstrom / angstrom},
+                {6.0 * kcal_per_mol / angstrom / angstrom,
+                 8.0 * kcal_per_mol / angstrom / angstrom}
+            };
         }
     };
 
@@ -122,8 +125,8 @@ namespace
     }
 
     void expectDiagonalHessian(
-        const opt::HessianMatrix  &hessian,
-        const std::vector<double> &diagonal
+        const Hessian                    &hessian,
+        const std::vector<ForceConstant> &diagonal
     )
     {
         ASSERT_EQ(hessian.size(), diagonal.size());
@@ -134,8 +137,18 @@ namespace
 
             for (size_t col = 0; col < hessian[row].size(); ++col)
             {
-                const auto expected = row == col ? diagonal[row] : 0.0;
-                EXPECT_NEAR(hessian[row][col], expected, 1.0e-10);
+                const auto expected =
+                    row == col ? diagonal[row]
+                               : 0.0 * kcal_per_mol / angstrom / angstrom;
+                EXPECT_NEAR(
+                    hessian[row][col].numerical_value_in(
+                        kcal_per_mol / angstrom / angstrom
+                    ),
+                    expected.numerical_value_in(
+                        kcal_per_mol / angstrom / angstrom
+                    ),
+                    1.0e-10
+                );
             }
         }
     }
@@ -155,7 +168,14 @@ namespace
 
 TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 {
-    const auto diagonal = std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    const auto diagonal = std::vector<ForceConstant>{
+        1.0 * kcal_per_mol / angstrom / angstrom,
+        2.0 * kcal_per_mol / angstrom / angstrom,
+        3.0 * kcal_per_mol / angstrom / angstrom,
+        4.0 * kcal_per_mol / angstrom / angstrom,
+        5.0 * kcal_per_mol / angstrom / angstrom,
+        6.0 * kcal_per_mol / angstrom / angstrom
+    };
 
     const auto displacement = 1.0e-4 * angstrom;
     for (const auto &builder : {
@@ -185,8 +205,14 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 
         expectDiagonalHessian(hessian, diagonal);
         expectPositionsRestored(*box);
-        EXPECT_EQ(box->getAtom(0).getForce(), linalg::Vec3D(-1.0, 4.0, -9.0));
-        EXPECT_EQ(box->getAtom(1).getForce(), linalg::Vec3D(16.0, -25.0, 36.0));
+        EXPECT_EQ(
+            box->getAtom(0).getForce(),
+            linalg::Vec3D(-1.0, 4.0, -9.0) * kcal_per_mol / angstrom
+        );
+        EXPECT_EQ(
+            box->getAtom(1).getForce(),
+            linalg::Vec3D(16.0, -25.0, 36.0) * kcal_per_mol / angstrom
+        );
     }
 }
 
@@ -197,7 +223,15 @@ TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
 
     auto              box = makeSimulationBox();
     Settings          settings;
-    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    HarmonicEvaluator evaluator(
+        settings,
+        {1.0 * kcal_per_mol / angstrom / angstrom,
+         2.0 * kcal_per_mol / angstrom / angstrom,
+         3.0 * kcal_per_mol / angstrom / angstrom,
+         4.0 * kcal_per_mol / angstrom / angstrom,
+         5.0 * kcal_per_mol / angstrom / angstrom,
+         6.0 * kcal_per_mol / angstrom / angstrom}
+    );
     evaluator.setSimulationBox(box);
 
     const auto builder =
@@ -223,7 +257,15 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 {
     auto              box = makeSimulationBox();
     Settings          settings;
-    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    HarmonicEvaluator evaluator(
+        settings,
+        {1.0 * kcal_per_mol / angstrom / angstrom,
+         2.0 * kcal_per_mol / angstrom / angstrom,
+         3.0 * kcal_per_mol / angstrom / angstrom,
+         4.0 * kcal_per_mol / angstrom / angstrom,
+         5.0 * kcal_per_mol / angstrom / angstrom,
+         6.0 * kcal_per_mol / angstrom / angstrom}
+    );
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
@@ -238,7 +280,16 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 {
     auto              box = makeSimulationBox();
     Settings          settings;
-    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, true);
+    HarmonicEvaluator evaluator(
+        settings,
+        {1.0 * kcal_per_mol / angstrom / angstrom,
+         2.0 * kcal_per_mol / angstrom / angstrom,
+         3.0 * kcal_per_mol / angstrom / angstrom,
+         4.0 * kcal_per_mol / angstrom / angstrom,
+         5.0 * kcal_per_mol / angstrom / angstrom,
+         6.0 * kcal_per_mol / angstrom / angstrom},
+        true
+    );
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
@@ -246,10 +297,22 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 
     ASSERT_EQ(hessian.size(), 2U);
     ASSERT_EQ(hessian[0].size(), 2U);
-    EXPECT_DOUBLE_EQ(hessian[0][0], 2.0);
-    EXPECT_DOUBLE_EQ(hessian[0][1], 5.0);
-    EXPECT_DOUBLE_EQ(hessian[1][0], 5.0);
-    EXPECT_DOUBLE_EQ(hessian[1][1], 8.0);
+    EXPECT_DOUBLE_EQ(
+        hessian[0][0].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        2.0
+    );
+    EXPECT_DOUBLE_EQ(
+        hessian[0][1].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        5.0
+    );
+    EXPECT_DOUBLE_EQ(
+        hessian[1][0].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        5.0
+    );
+    EXPECT_DOUBLE_EQ(
+        hessian[1][1].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        8.0
+    );
 }
 
 TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)

@@ -201,7 +201,10 @@ namespace input::parameterFile
         auto &pot       = engine.getPotential()->getNonCoulombPotential();
         auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
 
-        const auto params = LJParams{.c6 = c6, .c12 = c12};
+        const auto params = LJParams{
+            .c6  = c6 * kcal_per_mol * angstrom6,
+            .c12 = c12 * kcal_per_mol * angstrom12
+        };
 
         potential.addNonCoulombicPair(
             std::make_shared<pot::LennardJonesPair>(
@@ -271,8 +274,11 @@ namespace input::parameterFile
 
         auto      &pot       = engine.getPotential()->getNonCoulombPotential();
         auto      &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
-        const auto params =
-            BuckinghamParams{.scaling = scale, .dRho = dRho, .c6 = c6};
+        const auto params    = BuckinghamParams{
+               .scaling = scale * kcal_per_mol,
+               .dRho    = dRho,
+               .c6      = c6 * kcal_per_mol * angstrom6
+        };
 
         potential.addNonCoulombicPair(
             std::make_shared<pot::BuckinghamPair>(
@@ -344,7 +350,7 @@ namespace input::parameterFile
         auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
 
         const auto params = MorseParams{
-            .dissociationEnergy  = dissociationEnergy,
+            .dissociationEnergy  = dissociationEnergy * kcal_per_mol,
             .wellWidth           = wellWidth,
             .equilibriumDistance = equilibriumDistance
         };

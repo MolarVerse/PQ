@@ -53,9 +53,9 @@ class TestSimulationBox : public ::testing::Test
         atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
         atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
         atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
-        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));
-        atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0));
+        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+        atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0) * kcal_per_mol / angstrom);
         atom1->setMass(1.0 * g_per_mol);
         atom2->setMass(2.0 * g_per_mol);
         atom3->setMass(3.0 * g_per_mol);
@@ -70,8 +70,8 @@ class TestSimulationBox : public ::testing::Test
 
         atom4->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
         atom5->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
-        atom4->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom5->setForce(linalg::Vec3D(0.0, 0.0, 1.0));
+        atom4->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+        atom5->setForce(linalg::Vec3D(0.0, 0.0, 1.0) * kcal_per_mol / angstrom);
         atom4->setMass(1.0 * g_per_mol);
         atom5->setMass(2.0 * g_per_mol);
 

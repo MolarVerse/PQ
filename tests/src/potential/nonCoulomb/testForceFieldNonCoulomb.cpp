@@ -47,7 +47,10 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
         ExtVdwType(1),
         ExtVdwType(1),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(0, 0, pair);
     _nonCoulombPotential->setNonCoulombPairsVector(
@@ -66,7 +69,10 @@ TEST_F(TestNonCoulombPotentialFF, copyConstructorCopiesOwnedMatrix)
         ExtVdwType(1),
         ExtVdwType(1),
         3.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(*_nonCoulombPotential, 0, 0, replacement);
     EXPECT_NE(
@@ -84,7 +90,10 @@ TEST_F(TestNonCoulombPotentialFF, copyAssignmentCopiesOwnedMatrix)
         ExtVdwType(1),
         ExtVdwType(1),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(0, 0, pair);
 
@@ -106,7 +115,10 @@ TEST_F(TestNonCoulombPotentialFF, moveOperationsTransferOwnedMatrix)
         ExtVdwType(1),
         ExtVdwType(1),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(0, 0, pair);
 
@@ -129,7 +141,10 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -137,7 +152,10 @@ TEST_F(TestNonCoulombPotentialFF, determineInternalGlobalVdwTypes)
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -170,7 +188,10 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
         ExtVdwType(1),
         ExtVdwType(1),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     nonCoulombicPair1.setInternalType1(VdwType{0});
     nonCoulombicPair1.setInternalType2(VdwType{0});
@@ -178,7 +199,10 @@ TEST_F(TestNonCoulombPotentialFF, fillDiagOfNonCoulPairsMatrix)
         ExtVdwType(9),
         ExtVdwType(9),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     nonCoulombicPair2.setInternalType1(VdwType{9});
     nonCoulombicPair2.setInternalType2(VdwType{9});
@@ -225,7 +249,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -233,7 +260,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -272,7 +302,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -280,7 +313,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -318,7 +354,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -326,7 +365,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 5.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 5.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -334,7 +376,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -378,7 +423,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -419,7 +467,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -427,7 +478,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -435,7 +489,10 @@ TEST_F(
             ExtVdwType(2),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -487,7 +544,10 @@ TEST_F(
             ExtVdwType(2),
             ExtVdwType(1),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -495,7 +555,10 @@ TEST_F(
             ExtVdwType(5),
             ExtVdwType(1),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -503,7 +566,10 @@ TEST_F(
             ExtVdwType(5),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -555,7 +621,10 @@ TEST_F(
             ExtVdwType(2),
             ExtVdwType(1),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -563,7 +632,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -571,7 +643,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -579,7 +654,10 @@ TEST_F(
             ExtVdwType(2),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -631,7 +709,10 @@ TEST_F(
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -639,7 +720,10 @@ TEST_F(
             ExtVdwType(2),
             ExtVdwType(1),
             5.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -683,7 +767,10 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
             ExtVdwType(1),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -691,7 +778,10 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
             ExtVdwType(1),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -699,7 +789,10 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
             ExtVdwType(2),
             ExtVdwType(2),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
     _nonCoulombPotential->addNonCoulombicPair(
@@ -707,7 +800,10 @@ TEST_F(TestNonCoulombPotentialFF, getSelfInteractionNonCoulPairs)
             ExtVdwType(5),
             ExtVdwType(5),
             2.0 * angstrom,
-            LJParams{.c6 = 1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = 1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         )
     );
 
@@ -740,7 +836,10 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
         ExtVdwType(1),
         ExtVdwType(1),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     pair1->setInternalType1(VdwType{1});
     pair1->setInternalType2(VdwType{5});
@@ -749,7 +848,10 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
         ExtVdwType(2),
         ExtVdwType(2),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     pair2->setInternalType1(VdwType{2});
     pair2->setInternalType2(VdwType{2});
@@ -758,7 +860,10 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
         ExtVdwType(2),
         ExtVdwType(3),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     pair3->setInternalType1(VdwType{2});
     pair3->setInternalType2(VdwType{3});
@@ -767,7 +872,10 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
         ExtVdwType(1),
         ExtVdwType(4),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     pair4->setInternalType1(VdwType{1});
     pair4->setInternalType2(VdwType{4});
@@ -788,7 +896,10 @@ TEST_F(TestNonCoulombPotentialFF, sortNonCoulombicsPairs)
         ExtVdwType(1),
         ExtVdwType(1),
         2.0 * angstrom,
-        LJParams{.c6 = 1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = 1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     pair5->setInternalType1(VdwType{1});
     pair5->setInternalType2(VdwType{5});

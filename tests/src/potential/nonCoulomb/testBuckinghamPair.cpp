@@ -42,14 +42,22 @@ TEST(TestBuckinghamPair, equalsOperator)
         vdwType1,
         vdwType2,
         1.0 * angstrom,
-        BuckinghamParams{.scaling = 2.0, .dRho = 3.0 / angstrom, .c6 = 4.0}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = 3.0 / angstrom,
+            .c6      = 4.0 * kcal_per_mol * angstrom6
+        }
     );
 
     const auto nonCoulombPair2 = pot::BuckinghamPair(
         vdwType1,
         vdwType2,
         1.0 * angstrom,
-        BuckinghamParams{.scaling = 2.0, .dRho = 3.0 / angstrom, .c6 = 4.0}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = 3.0 / angstrom,
+            .c6      = 4.0 * kcal_per_mol * angstrom6
+        }
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
 
@@ -57,7 +65,11 @@ TEST(TestBuckinghamPair, equalsOperator)
         vdwType2,
         vdwType1,
         1.0 * angstrom,
-        BuckinghamParams{.scaling = 2.0, .dRho = 3.0 / angstrom, .c6 = 4.0}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = 3.0 / angstrom,
+            .c6      = 4.0 * kcal_per_mol * angstrom6
+        }
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
 
@@ -65,7 +77,11 @@ TEST(TestBuckinghamPair, equalsOperator)
         vdwType1,
         vdwType3,
         1.0 * angstrom,
-        BuckinghamParams{.scaling = 2.0, .dRho = 3.0 / angstrom, .c6 = 4.0}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = 3.0 / angstrom,
+            .c6      = 4.0 * kcal_per_mol * angstrom6
+        }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
 
@@ -73,7 +89,11 @@ TEST(TestBuckinghamPair, equalsOperator)
         vdwType1,
         vdwType2,
         2.0 * angstrom,
-        BuckinghamParams{.scaling = 2.0, .dRho = 3.0 / angstrom, .c6 = 4.0}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = 3.0 / angstrom,
+            .c6      = 4.0 * kcal_per_mol * angstrom6
+        }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
 
@@ -81,7 +101,11 @@ TEST(TestBuckinghamPair, equalsOperator)
         vdwType1,
         vdwType2,
         1.0 * angstrom,
-        BuckinghamParams{.scaling = 3.0, .dRho = 3.0 / angstrom, .c6 = 4.0}
+        BuckinghamParams{
+            .scaling = 3.0 * kcal_per_mol,
+            .dRho    = 3.0 / angstrom,
+            .c6      = 4.0 * kcal_per_mol * angstrom6
+        }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
 
@@ -89,7 +113,11 @@ TEST(TestBuckinghamPair, equalsOperator)
         vdwType1,
         vdwType2,
         1.0 * angstrom,
-        BuckinghamParams{.scaling = 2.0, .dRho = 4.0 / angstrom, .c6 = 4.0}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = 4.0 / angstrom,
+            .c6      = 4.0 * kcal_per_mol * angstrom6
+        }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
 
@@ -97,7 +125,11 @@ TEST(TestBuckinghamPair, equalsOperator)
         vdwType1,
         vdwType2,
         1.0 * angstrom,
-        BuckinghamParams{.scaling = 2.0, .dRho = 3.0 / angstrom, .c6 = 5.0}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = 3.0 / angstrom,
+            .c6      = 5.0 * kcal_per_mol * angstrom6
+        }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair8);
 }
@@ -115,12 +147,12 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
 
     const auto potential = pot::BuckinghamPair(
         rncCutoff * angstrom,
-        energyCutoff,
-        forceCutoff,
+        energyCutoff * kcal_per_mol,
+        forceCutoff * kcal_per_mol / angstrom,
         BuckinghamParams{
-            .scaling = coefficients[0],
+            .scaling = coefficients[0] * kcal_per_mol,
             .dRho    = coefficients[1] / angstrom,
-            .c6      = coefficients[2]
+            .c6      = coefficients[2] * kcal_per_mol * angstrom6
         }
     );
 
@@ -130,12 +162,12 @@ TEST(TestBuckinghamPair, calculateEnergyAndForces)
     auto helper = coefficients[0] * ::exp(coefficients[1] * distance);
 
     EXPECT_DOUBLE_EQ(
-        energy,
+        energy.numerical_value_in(kcal_per_mol),
         helper + (coefficients[2] / ::pow(distance, 6)) - energyCutoff -
             (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
-        force,
+        force.numerical_value_in(kcal_per_mol / angstrom),
         (-helper * coefficients[1]) +
             (6.0 * coefficients[2] / ::pow(distance, 7)) - forceCutoff
     );

@@ -128,7 +128,7 @@ class ThermostatSettings
     Setting<Time, "Relaxation Time"> _relaxationTime{
         defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
     };
-    Setting<double, "Friction"> _friction{
+    Setting<Frequency, "Friction"> _friction{
         defaults::LANGEVIN_THERMOSTAT_FRICTION
     };
 
@@ -142,7 +142,7 @@ class ThermostatSettings
     void setThermostatTypeByUser(ThermostatType thermostatType);
 
     void setRelaxationTimeByUser(const Time& relaxationTime);
-    void setFrictionByUser(double);
+    void setFrictionByUser(const Frequency& friction);
 
     /***************************
      * standard getter methods *
@@ -150,8 +150,8 @@ class ThermostatSettings
 
     [[nodiscard]] ThermostatType getThermostatType() const;
 
-    [[nodiscard]] const Time& getRelaxationTime() const;
-    [[nodiscard]] double      getFriction() const;
+    [[nodiscard]] const Time&      getRelaxationTime() const;
+    [[nodiscard]] const Frequency& getFriction() const;
 };
 
 #endif   // SETTINGS__THERMOSTAT_SETTINGS_HPP

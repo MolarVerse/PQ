@@ -201,7 +201,7 @@ void ThermostatSettings::setRelaxationTimeByUser(const Time& relaxationTime)
  *
  * @param friction
  */
-void ThermostatSettings::setFrictionByUser(double friction)
+void ThermostatSettings::setFrictionByUser(const Frequency& friction)
 {
     _friction.setByUser(friction);
 }
@@ -306,9 +306,12 @@ const Time& ThermostatSettings::getRelaxationTime() const
 /**
  * @brief get the friction
  *
- * @return double
+ * @return const Frequency&
  */
-double ThermostatSettings::getFriction() const { return _friction.get(); }
+const Frequency& ThermostatSettings::getFriction() const
+{
+    return _friction.get();
+}
 
 /**
  * @brief get the nose hoover coupling frequency

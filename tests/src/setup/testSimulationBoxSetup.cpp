@@ -180,9 +180,9 @@ TEST_F(TestSetup, setPartialCharges)
 
     ::molsys::MoleculeType moleculeType(MolType{1});
     moleculeType.setNumberOfAtoms(3);
-    moleculeType.addPartialCharge(0.0);
-    moleculeType.addPartialCharge(1.0);
-    moleculeType.addPartialCharge(2.0);
+    moleculeType.addPartialCharge(0.0 * elementary_charge);
+    moleculeType.addPartialCharge(1.0 * elementary_charge);
+    moleculeType.addPartialCharge(2.0 * elementary_charge);
 
     _engine->getSimulationBox().addMolecule(molecule);
     _engine->getSimulationBox().addMolecule(qmMolecule);
@@ -197,9 +197,9 @@ TEST_F(TestSetup, setPartialCharges)
 
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
 
-    EXPECT_EQ(moleculeResult.getPartialCharges()[0], 0.0);
-    EXPECT_EQ(moleculeResult.getPartialCharges()[1], 1.0);
-    EXPECT_EQ(moleculeResult.getPartialCharges()[2], 2.0);
+    EXPECT_EQ(moleculeResult.getPartialCharges()[0], 0.0 * elementary_charge);
+    EXPECT_EQ(moleculeResult.getPartialCharges()[1], 1.0 * elementary_charge);
+    EXPECT_EQ(moleculeResult.getPartialCharges()[2], 2.0 * elementary_charge);
 }
 
 TEST_F(TestSetup, testSetAtomMasses)
@@ -276,9 +276,9 @@ TEST_F(TestSetup, testSetAtomicNumbers)
 
     const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
 
-    EXPECT_EQ(moleculeResult.getAtomicNumber(0), AtomNumber{6});
-    EXPECT_EQ(moleculeResult.getAtomicNumber(1), AtomNumber{1});
-    EXPECT_EQ(moleculeResult.getAtomicNumber(2), AtomNumber{8});
+    EXPECT_EQ(moleculeResult.getAtomicNumber(AtomIndex{0}), AtomNumber{6});
+    EXPECT_EQ(moleculeResult.getAtomicNumber(AtomIndex{1}), AtomNumber{1});
+    EXPECT_EQ(moleculeResult.getAtomicNumber(AtomIndex{2}), AtomNumber{8});
 }
 
 TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
@@ -351,13 +351,22 @@ TEST_F(TestSetup, testSetTotalCharge)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    molecule.setPartialCharges({0.1, 0.2, -0.4});
+    molecule.setPartialCharges(
+        {0.1 * elementary_charge,
+         0.2 * elementary_charge,
+         -0.4 * elementary_charge}
+    );
 
     _engine->getSimulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.calculateTotalCharge();
 
-    EXPECT_DOUBLE_EQ(_engine->getSimulationBox().getTotalCharge(), -0.1);
+    EXPECT_DOUBLE_EQ(
+        _engine->getSimulationBox().getTotalCharge().numerical_value_in(
+            elementary_charge
+        ),
+        -0.1
+    );
 }
 
 TEST_F(TestSetup, noDensityNoBox)
@@ -510,7 +519,11 @@ TEST_F(TestSetup, testFullSetup)
     molecule1.addAtom(atom2);
     molecule1.addAtom(atom3);
 
-    molecule1.setPartialCharges({0.1, 0.2, -0.4});
+    molecule1.setPartialCharges(
+        {0.1 * elementary_charge,
+         0.2 * elementary_charge,
+         -0.4 * elementary_charge}
+    );
 
     ::molsys::Molecule molecule2{MolType{2}};
     const auto         atom4 = std::make_shared<::molsys::Atom>();
@@ -520,7 +533,9 @@ TEST_F(TestSetup, testFullSetup)
     molecule2.addAtom(atom4);
     molecule2.addAtom(atom5);
 
-    molecule2.setPartialCharges({0.1, 0.2});
+    molecule2.setPartialCharges(
+        {0.1 * elementary_charge, 0.2 * elementary_charge}
+    );
 
     _engine->getSimulationBox().getMolecules().push_back(molecule1);
     _engine->getSimulationBox().getMolecules().push_back(molecule2);
@@ -532,9 +547,9 @@ TEST_F(TestSetup, testFullSetup)
     moleculeType1.addAtomName("C");
     moleculeType1.addAtomName("H");
     moleculeType1.addAtomName("O");
-    moleculeType1.addPartialCharge(0.1);
-    moleculeType1.addPartialCharge(0.2);
-    moleculeType1.addPartialCharge(-0.4);
+    moleculeType1.addPartialCharge(0.1 * elementary_charge);
+    moleculeType1.addPartialCharge(0.2 * elementary_charge);
+    moleculeType1.addPartialCharge(-0.4 * elementary_charge);
     moleculeType1.addAtomType(AtomType{0});
     moleculeType1.addAtomType(AtomType{0});
     moleculeType1.addAtomType(AtomType{0});
@@ -548,8 +563,8 @@ TEST_F(TestSetup, testFullSetup)
     moleculeType2.setNumberOfAtoms(2);
     moleculeType2.addAtomName("H");
     moleculeType2.addAtomName("H");
-    moleculeType2.addPartialCharge(0.1);
-    moleculeType2.addPartialCharge(0.2);
+    moleculeType2.addPartialCharge(0.1 * elementary_charge);
+    moleculeType2.addPartialCharge(0.2 * elementary_charge);
     moleculeType2.addAtomType(AtomType{0});
     moleculeType2.addAtomType(AtomType{0});
     moleculeType2.addExternalAtomType(ExtAtomType{0});
@@ -588,7 +603,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.copy(simBox2);
 
     simBox.setTotalMass(13.05 * g_per_mol);
-    simBox.setTotalCharge(-7.03);
+    simBox.setTotalCharge(-7.03 * elementary_charge);
     simBox.setDegreesOfFreedom(4);
     simBox.setDensity(12341243.1234);
     molsys::OrthorhombicBox orthoBox{

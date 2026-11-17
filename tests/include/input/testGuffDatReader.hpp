@@ -67,8 +67,8 @@ class TestGuffDatReader : public ::testing::Test
             ExtAtomType{2},
             AtomType{1}
         );
-        moleculeType1.addPartialCharge(0.5);
-        moleculeType1.addPartialCharge(-0.25);
+        moleculeType1.addPartialCharge(0.5 * elementary_charge);
+        moleculeType1.addPartialCharge(-0.25 * elementary_charge);
         moleculeType1.addAtomType(AtomType{0});
         moleculeType1.addAtomType(AtomType{1});
 
@@ -80,7 +80,7 @@ class TestGuffDatReader : public ::testing::Test
             ExtAtomType{3},
             AtomType{0}
         );
-        moleculeType2.addPartialCharge(0.25);
+        moleculeType2.addPartialCharge(0.25 * elementary_charge);
         moleculeType2.addAtomType(AtomType{0});
 
         auto molecule1 = molsys::Molecule();
@@ -91,8 +91,8 @@ class TestGuffDatReader : public ::testing::Test
 
         atom1->setExternalAtomType(ExtAtomType{1});
         atom2->setExternalAtomType(ExtAtomType{2});
-        atom1->setPartialCharge(0.5);
-        atom2->setPartialCharge(-0.25);
+        atom1->setPartialCharge(0.5 * elementary_charge);
+        atom2->setPartialCharge(-0.25 * elementary_charge);
         atom1->setAtomType(AtomType{0});
         atom2->setAtomType(AtomType{1});
 

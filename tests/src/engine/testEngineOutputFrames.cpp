@@ -63,7 +63,9 @@ namespace
                 {x * angstrom, 2.0 * x * angstrom, 3.0 * x * angstrom}
             );
             atom->setVelocity(linalg::Vec3D{0.1 * x, 0.0, 0.0} * angstrom / s);
-            atom->setForce({0.0, -x, 0.0});
+            atom->setForce(
+                linalg::Vec3D{0.0, -x, 0.0} * kcal_per_mol / angstrom
+            );
             molecule.addAtom(atom);
             simulationBox.addAtom(atom);
         }

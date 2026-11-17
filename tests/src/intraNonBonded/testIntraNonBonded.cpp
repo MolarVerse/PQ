@@ -42,6 +42,7 @@
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace pot
@@ -179,14 +180,14 @@ TEST_F(TestIntraNonBonded, calculate)
 
     atom1->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
     atom2->setPosition(linalg::Vec3D{0.0, 0.0, 11.0} * angstrom);
-    atom1->setForce({0.0, 0.0, 0.0});
-    atom2->setForce({0.0, 0.0, 0.0});
+    atom1->setForce(Force3D::zero());
+    atom2->setForce(Force3D::zero());
     atom1->setInternalGlobalVDWType(VdwType{0});
     atom2->setInternalGlobalVDWType(VdwType{1});
     atom1->setAtomType(AtomType{0});
     atom2->setAtomType(AtomType{1});
-    atom1->setPartialCharge(0.5);
-    atom2->setPartialCharge(-0.5);
+    atom1->setPartialCharge(0.5 * elementary_charge);
+    atom2->setPartialCharge(-0.5 * elementary_charge);
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -208,7 +209,10 @@ TEST_F(TestIntraNonBonded, calculate)
         ExtVdwType(0),
         ExtVdwType(1),
         10.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 3.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
     _setNonCoulombPairsMatrix(1, 0, nonCoulombPair);

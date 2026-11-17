@@ -73,8 +73,8 @@ namespace benchWaterScaling
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-        pot::CoulombPotential::set_coulombEnergyCutOff(0.0);
-        pot::CoulombPotential::set_coulombForceCutOff(0.0);
+        pot::CoulombPotential::set_coulombEnergyCutOff(0.0 / angstrom);
+        pot::CoulombPotential::set_coulombForceCutOff(0.0 / angstrom2);
 
         WaterModelSettings waterModelSettings;
         waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
@@ -107,7 +107,7 @@ namespace benchWaterScaling
             atom->setPosition(pos);
             atom->setAtomType(AtomType{0});
             atom->setInternalGlobalVDWType(VdwType{0});
-            atom->setPartialCharge(charge);
+            atom->setPartialCharge(charge * elementary_charge);
             atom->setForceToZero();
             return atom;
         };
@@ -150,19 +150,28 @@ namespace benchWaterScaling
         }
 
         waterModel::InterWaterState state;
-        state.oxygenCharge     = -0.82;
-        state.hydrogenCharge   = 0.41;
+        state.oxygenCharge     = -0.82 * elementary_charge;
+        state.hydrogenCharge   = 0.41 * elementary_charge;
         state.nonCoulombPairOO = std::make_unique<pot::LennardJonesPair>(
             CUTOFF,
-            LJParams{.c6 = 2.0, .c12 = 4.0}
+            LJParams{
+                .c6  = 2.0 * kcal_per_mol * angstrom6,
+                .c12 = 4.0 * kcal_per_mol * angstrom12
+            }
         );
         state.nonCoulombPairOH = std::make_unique<pot::LennardJonesPair>(
             CUTOFF,
-            LJParams{.c6 = 0.5, .c12 = 1.5}
+            LJParams{
+                .c6  = 0.5 * kcal_per_mol * angstrom6,
+                .c12 = 1.5 * kcal_per_mol * angstrom12
+            }
         );
         state.nonCoulombPairHH = std::make_unique<pot::LennardJonesPair>(
             CUTOFF,
-            LJParams{.c6 = 0.2, .c12 = 0.8}
+            LJParams{
+                .c6  = 0.2 * kcal_per_mol * angstrom6,
+                .c12 = 0.8 * kcal_per_mol * angstrom12
+            }
         );
 
         waterModel::InterWater interWater(

@@ -53,8 +53,8 @@ namespace out
                        << std::format(
                               "{:2d}\t{:10.5e}\t{:10.5e}",
                               i + 1,
-                              chi,
-                              zeta
+                              chi.numerical_value_in(kcal_per_mol * s),
+                              zeta.numerical_value_in(one)
                           )
                        << '\n';
             }
@@ -104,9 +104,9 @@ namespace out
             );
             buffer << std::format(
                 "{:15.8f}\t{:15.8f}\t{:15.8f}",
-                force[0],
-                force[1],
-                force[2]
+                force[0].numerical_value_in(kcal_per_mol / angstrom),
+                force[1].numerical_value_in(kcal_per_mol / angstrom),
+                force[2].numerical_value_in(kcal_per_mol / angstrom)
             );
 
             buffer << '\n' << std::flush;

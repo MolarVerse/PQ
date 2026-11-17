@@ -93,7 +93,7 @@ TEST_F(TestSetup, setupCoulombPotential)
     const auto &wolfCoulomb = dynamic_cast<pot::CoulombWolf &>(
         _engine->getPotential()->getCoulombPotential()
     );
-    EXPECT_EQ(wolfCoulomb.getKappa(), 0.25);
+    EXPECT_EQ(wolfCoulomb.get_kappa(), 0.25 / angstrom);
 }
 
 /**
@@ -155,25 +155,37 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
         ExtVdwType{0},
         ExtVdwType{0},
         10.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 3.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
     );
     auto nonCoulombPair2 = pot::LennardJonesPair(
         ExtVdwType{1},
         ExtVdwType{0},
         10.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 3.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
     );
     auto nonCoulombPair3 = pot::LennardJonesPair(
         ExtVdwType{0},
         ExtVdwType{1},
         10.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 3.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
     );
     auto nonCoulombPair4 = pot::LennardJonesPair(
         ExtVdwType{1},
         ExtVdwType{1},
         10.0 * angstrom,
-        LJParams{.c6 = 2.0, .c12 = 3.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
     );
 
     nonCoulombPotential.addNonCoulombicPair(

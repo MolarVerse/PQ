@@ -28,6 +28,7 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -60,10 +61,8 @@ namespace input
         addUseForceConvergenceKey();
         addUseMaxForceConvergenceKey();
         addUseRMSForceConvergenceKey();
-        addEnergyConvergenceKey();
         addRelativeEnergyConvergenceKey();
         addAbsoluteEnergyConvergenceKey();
-        addForceConvergenceKey();
         addMaxForceConvergenceKey();
         addRMSForceConvergenceKey();
     }
@@ -164,30 +163,6 @@ namespace input
         addKeyword(metaData.name, adapt(key), false);
     }
 
-    void ConvInputParser::addEnergyConvergenceKey()
-    {
-        const auto metaData = KeyMetadata{
-            .name  = "energy-conv",
-            .title = "Energy Convergence",
-            .description =
-                "Specifies the energy convergence threshold (must be greater "
-                "than 0.0)"
-        };
-
-        const auto setValue = [this](double energyConv)
-        { _convSettings->setEnergyConvByUser(energyConv); };
-
-        auto &key = _getRegistry().registerKey(
-            KeyRegistry<double>{
-                .metadata   = metaData,
-                .onSet      = setValue,
-                .validators = {makeShared(PositiveGTDoubleValidator)}
-            }
-        );
-
-        addKeyword(metaData.name, adapt(key), false);
-    }
-
     void ConvInputParser::addRelativeEnergyConvergenceKey()
     {
         const auto metaData = KeyMetadata{
@@ -219,35 +194,14 @@ namespace input
             .title = "Absolute Energy Convergence",
             .description =
                 "Specifies the absolute energy convergence threshold (must be "
-                "greater than 0.0)"
+                "greater than 0.0)",
+            .unit = "kcal/mol"
         };
 
         const auto setValue = [this](double absEnergyConv)
-        { _convSettings->setAbsEnergyConvByUser(absEnergyConv); };
-
-        auto &key = _getRegistry().registerKey(
-            KeyRegistry<double>{
-                .metadata   = metaData,
-                .onSet      = setValue,
-                .validators = {makeShared(PositiveGTDoubleValidator)}
-            }
-        );
-
-        addKeyword(metaData.name, adapt(key), false);
-    }
-
-    void ConvInputParser::addForceConvergenceKey()
-    {
-        const auto metaData = KeyMetadata{
-            .name  = "force-conv",
-            .title = "Force Convergence",
-            .description =
-                "Specifies the force convergence threshold (must be "
-                "greater than 0.0)"
+        {
+            _convSettings->setAbsEnergyConvByUser(absEnergyConv * kcal_per_mol);
         };
-
-        const auto setValue = [this](double forceConv)
-        { _convSettings->setForceConvByUser(forceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -267,11 +221,16 @@ namespace input
             .title = "RMS Force Convergence",
             .description =
                 "Specifies the RMS force convergence threshold (must be "
-                "greater than 0.0)"
+                "greater than 0.0)",
+            .unit = "kcal/(mol*angstrom)"
         };
 
         const auto setValue = [this](double rmsForceConv)
-        { _convSettings->setRMSForceConvByUser(rmsForceConv); };
+        {
+            _convSettings->setRMSForceConvByUser(
+                rmsForceConv * kcal_per_mol / angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -291,11 +250,16 @@ namespace input
             .title = "Max Force Convergence",
             .description =
                 "Specifies the max force convergence threshold (must be "
-                "greater than 0.0)"
+                "greater than 0.0)",
+            .unit = "kcal/(mol*angstrom)"
         };
 
         const auto setValue = [this](double maxForceConv)
-        { _convSettings->setMaxForceConvByUser(maxForceConv); };
+        {
+            _convSettings->setMaxForceConvByUser(
+                maxForceConv * kcal_per_mol / angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

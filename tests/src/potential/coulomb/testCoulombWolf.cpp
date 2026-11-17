@@ -38,27 +38,30 @@ TEST(TestCoulombWolf, calculate)
     const auto   rcCutoff      = 3.0;
     const double kappa         = 0.25;
 
-    const auto guffWolfCoulomb = pot::CoulombWolf(rcCutoff * angstrom, kappa);
-    const auto constParam1     = ::erfc(kappa * rcCutoff) / rcCutoff;
-    const auto constParam2     = 2.0 * kappa / ::sqrt(M_PI);
+    const auto guffWolfCoulomb =
+        pot::CoulombWolf(rcCutoff * angstrom, kappa / angstrom);
+    const auto constParam1 = ::erfc(kappa * rcCutoff) / rcCutoff;
+    const auto constParam2 = 2.0 * kappa / ::sqrt(M_PI);
     const auto constParam3 =
         (constParam1 / rcCutoff) +
         (constParam2 * ::exp(-kappa * kappa * rcCutoff * rcCutoff) / rcCutoff);
 
     auto distance = 2.0;
 
-    auto param1 = ::erfc(kappa * distance);
-    const auto [energy, force] =
-        guffWolfCoulomb.calculate(distance * angstrom, chargeProduct);
+    auto param1                = ::erfc(kappa * distance);
+    const auto [energy, force] = guffWolfCoulomb.calculate(
+        distance * angstrom,
+        chargeProduct * elementary_charge * elementary_charge
+    );
 
     EXPECT_DOUBLE_EQ(
-        energy,
+        energy.numerical_value_in(kcal_per_mol),
         chargeProduct * COULOMB_PREFACTOR *
             (param1 / distance - constParam1 +
              constParam3 * (distance - rcCutoff))
     );
     EXPECT_DOUBLE_EQ(
-        force,
+        force.numerical_value_in(kcal_per_mol / angstrom),
         chargeProduct * COULOMB_PREFACTOR *
             (param1 / (distance * distance) +
              constParam2 * ::exp(-kappa * kappa * distance * distance) /

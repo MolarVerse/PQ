@@ -64,7 +64,9 @@ int main()
                        linalg::Vec3D{0.0, 0.0, 0.0} * g_per_mol * angstrom / fs
         )[0]
                     .numerical_value_in(g_per_mol * angstrom * angstrom / fs);
-        sink += box.calculateTotalForce();
+        sink += box.calculateTotalForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        );
     }
 
     std::cout << std::format("{:.6f}\n", sink);

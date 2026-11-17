@@ -68,7 +68,11 @@ TEST_F(TestSimulationBox, calculateTotalForce)
 {
     auto totalForce = _simulationBox->calculateTotalForce();
 
-    EXPECT_NEAR(totalForce, 1.7320508075688772, 1e-8);
+    EXPECT_NEAR(
+        totalForce.numerical_value_in(kcal_per_mol / angstrom),
+        1.7320508075688772,
+        1e-8
+    );
 }
 
 /**
@@ -79,7 +83,10 @@ TEST_F(TestSimulationBox, calculateTotalForceVector)
 {
     auto totalForceVector = _simulationBox->calculateTotalForceVector();
 
-    EXPECT_EQ(totalForceVector, linalg::Vec3D({1.0, 1.0, 1.0}));
+    EXPECT_EQ(
+        totalForceVector,
+        linalg::Vec3D({1.0, 1.0, 1.0}) * (kcal_per_mol / angstrom)
+    );
 }
 
 /**
@@ -494,8 +501,14 @@ TEST_F(TestSimulationBox, setPartialChargesOfMoleculesFromMoleculeTypes)
     molsys::MoleculeType  molecule1(MolType{1});
     molsys::MoleculeType  molecule2(MolType{2});
 
-    molecule1.setPartialCharges({0.1, 0.2, 0.3});
-    molecule2.setPartialCharges({0.4, 0.5});
+    molecule1.setPartialCharges(
+        {0.1 * elementary_charge,
+         0.2 * elementary_charge,
+         0.3 * elementary_charge}
+    );
+    molecule2.setPartialCharges(
+        {0.4 * elementary_charge, 0.5 * elementary_charge}
+    );
 
     const auto atom1 = std::make_shared<molsys::Atom>();
     const auto atom2 = std::make_shared<molsys::Atom>();
@@ -577,16 +590,30 @@ TEST_F(TestSimulationBox, removeNetForce)
     auto                  atom2 = molsys::Atom();
     auto                  atom3 = molsys::Atom();
 
-    atom1.setForce({3.0, 1.0, 0.0});
-    atom2.setForce({2.0, 4.0, -2.0});
-    atom3.setForce({1.0, 4.0, 2.0});
+    atom1.setForce(
+        {3.0 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom}
+    );
+    atom2.setForce(
+        {2.0 * kcal_per_mol / angstrom,
+         4.0 * kcal_per_mol / angstrom,
+         -2.0 * kcal_per_mol / angstrom}
+    );
+    atom3.setForce(
+        {1.0 * kcal_per_mol / angstrom,
+         4.0 * kcal_per_mol / angstrom,
+         2.0 * kcal_per_mol / angstrom}
+    );
 
     simBox.addAtom(std::make_shared<molsys::Atom>(atom1));
     simBox.addAtom(std::make_shared<molsys::Atom>(atom2));
     simBox.addAtom(std::make_shared<molsys::Atom>(atom3));
 
     EXPECT_VECTOR_NEAR(
-        simBox.calculateTotalForceVector(),
+        simBox.calculateTotalForceVector().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         linalg::Vec3D({6.0, 9.0, 0.0}),
         1e-10
     );
@@ -594,25 +621,33 @@ TEST_F(TestSimulationBox, removeNetForce)
     simBox.removeNetForce();
 
     EXPECT_VECTOR_NEAR(
-        simBox.calculateTotalForceVector(),
+        simBox.calculateTotalForceVector().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         linalg::Vec3D({0.0, 0.0, 0.0}),
         1e-10
     );
 
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(0).getForce(),
+        simBox.getAtom(0).getForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         linalg::Vec3D({1.0, -2.0, 0.0}),
         1e-10
     );
 
     settings::GeneralSettings::setJobtype(jobtype);
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(1).getForce(),
+        simBox.getAtom(1).getForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         linalg::Vec3D({0.0, 1.0, -2.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        simBox.getAtom(2).getForce(),
+        simBox.getAtom(2).getForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         linalg::Vec3D({-1.0, 1.0, 2.0}),
         1e-10
     );
@@ -798,41 +833,61 @@ TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)
     {
         const auto value = static_cast<double>(index++);
         atom->setVelocity(linalg::Vec3D{value, 0.0, 0.0} * angstrom / s);
-        atom->setForce({value, -value, 0.0});
-        atom->setForceInner({value, 0.0, 0.0});
-        atom->setForceOuter({0.0, value, 0.0});
-        atom->setQMCharge(value);
+        atom->setForce(
+            {value * kcal_per_mol / angstrom,
+             -value * kcal_per_mol / angstrom,
+             0.0 * kcal_per_mol / angstrom}
+        );
+        atom->setForceInner(
+            {value * kcal_per_mol / angstrom,
+             0.0 * kcal_per_mol / angstrom,
+             0.0 * kcal_per_mol / angstrom}
+        );
+        atom->setForceOuter(
+            {0.0 * kcal_per_mol / angstrom,
+             value * kcal_per_mol / angstrom,
+             0.0 * kcal_per_mol / angstrom}
+        );
+        atom->setQMCharge(value * elementary_charge);
     }
 
     _simulationBox->updateOldVelocities();
     _simulationBox->updateOldForces();
 
-    EXPECT_GT(_simulationBox->calculateRMSForce(), 0.0);
-    EXPECT_GT(_simulationBox->calculateMaxForce(), 0.0);
-    EXPECT_GT(_simulationBox->calculateRMSForceOld(), 0.0);
-    EXPECT_GT(_simulationBox->calculateMaxForceOld(), 0.0);
+    EXPECT_GT(_simulationBox->calculateRMSForce(), Force::zero());
+    EXPECT_GT(_simulationBox->calculateMaxForce(), Force::zero());
+    EXPECT_GT(_simulationBox->calculateRMSForceOld(), Force::zero());
+    EXPECT_GT(_simulationBox->calculateMaxForceOld(), Force::zero());
 
     _simulationBox->resetForcesInner();
     _simulationBox->resetForcesOuter();
     _simulationBox->resetQMCharges();
     for (const auto &atom : _simulationBox->getAtoms())
     {
-        EXPECT_EQ(atom->getForceInner(), Vec3D{});
-        EXPECT_EQ(atom->getForceOuter(), Vec3D{});
+        EXPECT_EQ(atom->getForceInner(), Force3D::zero());
+        EXPECT_EQ(atom->getForceOuter(), Force3D::zero());
         EXPECT_FALSE(atom->getQMCharge().has_value());
     }
 
     for (auto &atom : _simulationBox->getAtoms())
     {
-        atom->setForceInner({1.0, 0.0, 0.0});
-        atom->setForceOuter({0.0, 1.0, 0.0});
+        atom->setForceInner(
+            {1.0 * kcal_per_mol / angstrom,
+             0.0 * kcal_per_mol / angstrom,
+             0.0 * kcal_per_mol / angstrom}
+        );
+        atom->setForceOuter(
+            {0.0 * kcal_per_mol / angstrom,
+             1.0 * kcal_per_mol / angstrom,
+             0.0 * kcal_per_mol / angstrom}
+        );
     }
     _simulationBox->resetAllForces();
     for (const auto &atom : _simulationBox->getAtoms())
     {
-        EXPECT_EQ(atom->getForce(), Vec3D{});
-        EXPECT_EQ(atom->getForceInner(), Vec3D{});
-        EXPECT_EQ(atom->getForceOuter(), Vec3D{});
+        EXPECT_EQ(atom->getForce(), Force3D::zero());
+        EXPECT_EQ(atom->getForceInner(), Force3D::zero());
+        EXPECT_EQ(atom->getForceOuter(), Force3D::zero());
     }
 
     const auto firstPosition = _simulationBox->getAtom(0).getPosition();
@@ -861,8 +916,16 @@ TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
     auto                  qmAtom2 = std::make_shared<molsys::Atom>();
     auto                  mmAtom  = std::make_shared<molsys::Atom>();
 
-    qmAtom1->setForce({3.0, 0.0, 0.0});
-    qmAtom2->setForce({1.0, 0.0, 0.0});
+    qmAtom1->setForce(
+        {3.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom}
+    );
+    qmAtom2->setForce(
+        {1.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom}
+    );
     mmAtom->setActive(false);
 
     simBox.addAtom(qmAtom1);
@@ -872,17 +935,17 @@ TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
     simBox.removeNetForce();
 
     EXPECT_VECTOR_NEAR(
-        qmAtom1->getForce(),
+        qmAtom1->getForce().numerical_value_in(kcal_per_mol / angstrom),
         linalg::Vec3D({1.0, 0.0, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        qmAtom2->getForce(),
+        qmAtom2->getForce().numerical_value_in(kcal_per_mol / angstrom),
         linalg::Vec3D({-1.0, 0.0, 0.0}),
         1e-10
     );
     EXPECT_VECTOR_NEAR(
-        mmAtom->getForce(),
+        mmAtom->getForce().numerical_value_in(kcal_per_mol / angstrom),
         linalg::Vec3D({0.0, 0.0, 0.0}),
         1e-10
     );

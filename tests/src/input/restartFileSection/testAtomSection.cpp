@@ -247,7 +247,8 @@ TEST_F(TestAtomSection, testProcessAtomLine)
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        molecule.getAtomForce(AtomIndex{0}),
+        molecule.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 
@@ -280,7 +281,7 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        first_atom->getForce(),
+        first_atom->getForce().numerical_value_in(kcal_per_mol / angstrom),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 

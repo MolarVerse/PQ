@@ -248,7 +248,7 @@ TEST_F(TestSetup, hybridSetupRejectsMoltypeZeroWithReferenceEnergies)
     EXPECT_NO_THROW(setup.validateQMReferenceEnergies());
 
     auto water = molsys::MoleculeType(MolType{1});
-    water.setQMReferenceEnergy(-10.0);
+    water.setQMReferenceEnergy(-10.0 * kcal_per_mol);
     simBox.addMoleculeType(water);
 
     EXPECT_THROW_MSG(

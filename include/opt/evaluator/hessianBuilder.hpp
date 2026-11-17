@@ -38,8 +38,6 @@ namespace opt
 {
     class Evaluator;   // forward declaration
 
-    using HessianMatrix = std::vector<std::vector<double>>;
-
     class HessianBuilder
     {
        public:
@@ -47,7 +45,7 @@ namespace opt
         virtual ~HessianBuilder() = default;
 
         [[nodiscard]]
-        virtual HessianMatrix build(
+        virtual Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const = 0;
@@ -61,7 +59,7 @@ namespace opt
        public:
         explicit ForceDifferenceHessianBuilder(const Pos &displacement);
 
-        static void symmetrize(HessianMatrix &hessian);
+        static void symmetrize(Hessian &hessian);
 
        protected:
         static void _restorePositions(
@@ -80,7 +78,7 @@ namespace opt
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;
@@ -93,7 +91,7 @@ namespace opt
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;
@@ -106,7 +104,7 @@ namespace opt
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;
@@ -116,7 +114,7 @@ namespace opt
     {
        public:
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;

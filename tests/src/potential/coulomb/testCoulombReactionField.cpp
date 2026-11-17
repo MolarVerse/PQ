@@ -56,13 +56,28 @@ TEST(TestCoulombReactionField, calculate)
         (1.0 / (distance * distance) - cutoffForce +
          2.0 * reactionFieldPrefactor * cutoffCubedInverse * deltaCutoff);
 
-    const auto [energy, force] =
-        potential.calculate(distance * angstrom, chargeProduct);
-    EXPECT_DOUBLE_EQ(energy, expectedEnergy);
-    EXPECT_DOUBLE_EQ(force, expectedForce);
+    const auto [energy, force] = potential.calculate(
+        distance * angstrom,
+        chargeProduct * elementary_charge * elementary_charge
+    );
+    EXPECT_DOUBLE_EQ(energy.numerical_value_in(kcal_per_mol), expectedEnergy);
+    EXPECT_DOUBLE_EQ(
+        force.numerical_value_in(kcal_per_mol / angstrom),
+        expectedForce
+    );
 
-    const auto [cutoffEnergyValue, cutoffForceValue] =
-        potential.calculate(cutoff * angstrom, chargeProduct);
-    EXPECT_NEAR(cutoffEnergyValue, 0.0, 1.0e-12);
-    EXPECT_NEAR(cutoffForceValue, 0.0, 1.0e-12);
+    const auto [cutoffEnergyValue, cutoffForceValue] = potential.calculate(
+        cutoff * angstrom,
+        chargeProduct * elementary_charge * elementary_charge
+    );
+    EXPECT_NEAR(
+        cutoffEnergyValue.numerical_value_in(kcal_per_mol),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(
+        cutoffForceValue.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
 }

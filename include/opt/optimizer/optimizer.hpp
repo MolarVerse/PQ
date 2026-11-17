@@ -29,7 +29,6 @@
 
 #include "convergence.hpp"
 #include "unit_types.hpp"
-#include "vector3d.hpp"
 
 namespace molsys
 {
@@ -56,11 +55,11 @@ namespace opt
 
         opt::Convergence _convergence;
 
-        std::deque<double>                     _energyHistory;
-        std::deque<double>                     _maxForceHistory;
-        std::deque<double>                     _rmsForceHistory;
-        std::deque<std::vector<linalg::Vec3D>> _forceHistory;
-        std::deque<std::vector<Pos3D>>         _positionHistory;
+        std::deque<EnergyPerMol>         _energyHistory;
+        std::deque<Force>                _maxForceHistory;
+        std::deque<Force>                _rmsForceHistory;
+        std::deque<std::vector<Force3D>> _forceHistory;
+        std::deque<std::vector<Pos3D>>   _positionHistory;
 
         struct Impl;
         std::unique_ptr<Impl> _impl;
@@ -71,7 +70,7 @@ namespace opt
         Optimizer() = default;
         virtual ~Optimizer();
 
-        virtual void update(const Pos&, size_t) = 0;
+        virtual void update(double, size_t) = 0;
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 
@@ -99,24 +98,24 @@ namespace opt
         [[nodiscard]] size_t getNEpochs() const;
         [[nodiscard]] size_t getHistoryIndex(int offset) const;
 
-        [[nodiscard]] double getEnergy() const;
-        [[nodiscard]] double getEnergy(int) const;
+        [[nodiscard]] const EnergyPerMol& getEnergy() const;
+        [[nodiscard]] const EnergyPerMol& getEnergy(int) const;
 
-        [[nodiscard]] double getRMSForce() const;
-        [[nodiscard]] double getRMSForce(int) const;
+        [[nodiscard]] const Force& getRMSForce() const;
+        [[nodiscard]] const Force& getRMSForce(int) const;
 
-        [[nodiscard]] double getMaxForce() const;
-        [[nodiscard]] double getMaxForce(int) const;
-
-        [[nodiscard]]
-        std::vector<linalg::Vec3D> getForces() const;
-        [[nodiscard]]
-        std::vector<linalg::Vec3D> getForces(int) const;
+        [[nodiscard]] const Force& getMaxForce() const;
+        [[nodiscard]] const Force& getMaxForce(int) const;
 
         [[nodiscard]]
-        std::vector<Pos3D> getPositions() const;
+        const std::vector<Force3D>& getForces() const;
         [[nodiscard]]
-        std::vector<Pos3D> getPositions(int) const;
+        const std::vector<Force3D>& getForces(int) const;
+
+        [[nodiscard]]
+        const std::vector<Pos3D>& getPositions() const;
+        [[nodiscard]]
+        const std::vector<Pos3D>& getPositions(int) const;
 
         [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;

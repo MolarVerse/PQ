@@ -31,7 +31,6 @@
 #include "exceptions.hpp"
 #include "interrupt.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace opt
 {
@@ -61,36 +60,13 @@ namespace opt
         }
 
         /**
-         * @brief flatten the forces of the simulation box into a 1D vector
-         *
-         * @param simulationBox
-         * @return std::vector<double>
-         */
-        std::vector<double> flattenForces(
-            const molsys::SimulationBox &simulationBox
-        )
-        {
-            std::vector<double> flattenedForces;
-            flattenedForces.reserve(3 * simulationBox.getNumberOfAtoms());
-
-            for (const auto &force : simulationBox.getForces())
-            {
-                flattenedForces.push_back(force[0]);
-                flattenedForces.push_back(force[1]);
-                flattenedForces.push_back(force[2]);
-            }
-
-            return flattenedForces;
-        }
-
-        /**
          * @brief Construct a new Central Force Difference Hessian Builder::
          * Central Force Difference Hessian Builder object
          *
          * @param displacement
          */
         [[nodiscard]]
-        std::vector<double> evaluateForces(
+        std::vector<Force> evaluateForces(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox,
             size_t                 coordinateIndex,
@@ -101,7 +77,7 @@ namespace opt
 
             displaceCoordinate(simulationBox, coordinateIndex, displacement);
             evaluator.evaluate();
-            const auto forces = flattenForces(simulationBox);
+            const auto forces = simulationBox.flattenForces();
             displaceCoordinate(simulationBox, coordinateIndex, -displacement);
 
             return forces;
@@ -141,7 +117,7 @@ namespace opt
      *
      * @param hessian
      */
-    void ForceDifferenceHessianBuilder::symmetrize(HessianMatrix &hessian)
+    void ForceDifferenceHessianBuilder::symmetrize(Hessian &hessian)
     {
         for (size_t row = 0; row < hessian.size(); ++row)
         {
@@ -162,15 +138,18 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      */
-    HessianMatrix CentralForceDifferenceHessianBuilder::build(
+    Hessian CentralForceDifferenceHessianBuilder::build(
         Evaluator             &evaluator,
         molsys::SimulationBox &simulationBox
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-        auto       hessian             = HessianMatrix(
+        auto       hessian             = Hessian(
             numberOfCoordinates,
-            std::vector<double>(numberOfCoordinates, 0.0)
+            std::vector<ForceConstant>(
+                numberOfCoordinates,
+                ForceConstant::zero()
+            )
         );
 
         const auto originalPositions = simulationBox.getPositions();
@@ -185,8 +164,7 @@ namespace opt
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
                 hessian[row][col] =
-                    -(fPlus[row] - fMinus[row]) /
-                    (2.0 * displacement.numerical_value_in(angstrom));
+                    -(fPlus[row] - fMinus[row]) / (2.0 * displacement);
 
             _restorePositions(simulationBox, originalPositions);
         }
@@ -204,20 +182,23 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      */
-    HessianMatrix ForwardForceDifferenceHessianBuilder::build(
+    Hessian ForwardForceDifferenceHessianBuilder::build(
         Evaluator             &evaluator,
         molsys::SimulationBox &simulationBox
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-        auto       hessian             = HessianMatrix(
+        auto       hessian             = Hessian(
             numberOfCoordinates,
-            std::vector<double>(numberOfCoordinates, 0.0)
+            std::vector<ForceConstant>(
+                numberOfCoordinates,
+                ForceConstant::zero()
+            )
         );
 
         const auto originalPositions = simulationBox.getPositions();
         evaluator.evaluate();
-        const auto forces0 = flattenForces(simulationBox);
+        const auto forces0 = simulationBox.flattenForces();
 
         const auto displacement = _getDisplacement();
 
@@ -227,8 +208,7 @@ namespace opt
                 evaluateForces(evaluator, simulationBox, col, displacement);
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
-                hessian[row][col] = -(fPlus[row] - forces0[row]) /
-                                    displacement.numerical_value_in(angstrom);
+                hessian[row][col] = -(fPlus[row] - forces0[row]) / displacement;
 
             _restorePositions(simulationBox, originalPositions);
         }
@@ -246,15 +226,18 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      */
-    HessianMatrix FivePointForceDifferenceHessianBuilder::build(
+    Hessian FivePointForceDifferenceHessianBuilder::build(
         Evaluator             &evaluator,
         molsys::SimulationBox &simulationBox
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
-        auto       hessian             = HessianMatrix(
+        auto       hessian             = Hessian(
             numberOfCoordinates,
-            std::vector<double>(numberOfCoordinates, 0.0)
+            std::vector<ForceConstant>(
+                numberOfCoordinates,
+                ForceConstant::zero()
+            )
         );
 
         const auto originalPositions = simulationBox.getPositions();
@@ -282,10 +265,9 @@ namespace opt
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
             {
-                const auto derivative =
-                    (-fPlus2[row] + 8.0 * fPlus[row] - 8.0 * fMinus[row] +
-                     fMinus2[row]) /
-                    (12.0 * displacement.numerical_value_in(angstrom));
+                const auto derivative = (-fPlus2[row] + 8.0 * fPlus[row] -
+                                         8.0 * fMinus[row] + fMinus2[row]) /
+                                        (12.0 * displacement);
 
                 hessian[row][col] = -derivative;
             }
@@ -303,7 +285,7 @@ namespace opt
      * @brief Construct a new Analytic Hessian Builder:: Analytic Hessian
      * Builder object
      */
-    HessianMatrix AnalyticHessianBuilder::build(
+    Hessian AnalyticHessianBuilder::build(
         Evaluator &evaluator,
         molsys::SimulationBox & /*simulationBox*/
     ) const

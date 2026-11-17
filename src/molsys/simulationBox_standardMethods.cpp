@@ -165,9 +165,9 @@ namespace molsys
     /**
      * @brief get the total charge
      *
-     * @return double
+     * @return const Charge&
      */
-    double SimulationBox::getTotalCharge() const { return _totalCharge; }
+    const Charge &SimulationBox::getTotalCharge() const { return _totalCharge; }
 
     /**
      * @brief get the density
@@ -496,7 +496,7 @@ namespace molsys
      *
      * @param totalCharge
      */
-    void SimulationBox::setTotalCharge(const double totalCharge)
+    void SimulationBox::setTotalCharge(const Charge &totalCharge)
     {
         _totalCharge = totalCharge;
     }

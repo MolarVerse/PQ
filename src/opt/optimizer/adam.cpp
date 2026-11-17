@@ -26,6 +26,7 @@
 
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
+#include "units.hpp"
 
 namespace opt
 {
@@ -70,7 +71,7 @@ namespace opt
      * @param learningRate
      * @param step
      */
-    void Adam::update(const Pos& learningRate, size_t step)
+    void Adam::update(double learningRate, size_t step)
     {
         auto& simulationBox = _getSimulationBox();
 
@@ -96,7 +97,10 @@ namespace opt
                 mstd::sqrt(mom2[2])
             };
 
-            auto pos_new = pos - learningRate * mom1 / mom2sqrt;
+            // learning rate update for the atom's position using the Adam
+            // optimizer formula - for the sake of the overload we unfortunately
+            // need to work unitless
+            auto pos_new = pos - learningRate * angstrom * mom1 / mom2sqrt;
 
             simulationBox.applyPBC(pos_new);
 

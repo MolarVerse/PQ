@@ -60,11 +60,10 @@ inline void waterModel::SPCIntraWater::calculate(
 {
     auto _ = scopedTimer(TimerId::WaterIntraPotential, "Calculate Potential");
 
-    const auto eqOHDistance =
-        getEqOHDistance().numerical_value_in(mstd::units::angstrom);
-    const auto eqHOHAngle = getEqHOHAngle();
-    const auto kOHBond    = getForceConstantOHBond();
-    const auto kHOHAngle  = getForceConstantHOHAngle();
+    const auto eqOHDistance = getEqOHDistance();
+    const auto eqHOHAngle   = getEqHOHAngle();
+    const auto kOHBond      = getForceConstantOHBond();
+    const auto kHOHAngle    = getForceConstantHOHAngle();
 
     for (auto& water : simulationBox.getWaterTypeMolecules())
     {
@@ -76,17 +75,12 @@ inline void waterModel::SPCIntraWater::calculate(
         const auto posH1 = hydrogen1.getPosition();
         const auto posH2 = hydrogen2.getPosition();
 
-        auto dOH1Quantity = (posO - posH1);
+        auto dOH1 = (posO - posH1);
 
-        simulationBox.applyPBC(dOH1Quantity);
+        simulationBox.applyPBC(dOH1);
 
-        const auto distOH1Quantity = norm(dOH1Quantity);
-        waterModel::checkNonDegenerate(distOH1Quantity, "O-H1 distance");
-
-        const auto dOH1 =
-            dOH1Quantity.numerical_value_in(mstd::units::angstrom);
-        const auto distOH1 =
-            distOH1Quantity.numerical_value_in(mstd::units::angstrom);
+        const auto distOH1 = norm(dOH1);
+        waterModel::checkNonDegenerate(distOH1, "O-H1 distance");
 
         const auto deltaDistanceOH1 = distOH1 - eqOHDistance;
 
@@ -94,23 +88,16 @@ inline void waterModel::SPCIntraWater::calculate(
 
         physicalData.addBondEnergy(-forceMagnitudeOH1 * deltaDistanceOH1 / 2.0);
 
-        forceMagnitudeOH1 /= distOH1;
-
-        const auto forceOH1 = forceMagnitudeOH1 * dOH1;
+        const auto forceOH1 = forceMagnitudeOH1 * dOH1 / distOH1;
         oxygen.addForce(forceOH1);
         hydrogen1.addForce(-forceOH1);
 
-        auto dOH2Quantity = (posO - posH2);
+        auto dOH2 = (posO - posH2);
 
-        simulationBox.applyPBC(dOH2Quantity);
+        simulationBox.applyPBC(dOH2);
 
-        const auto distOH2Quantity = norm(dOH2Quantity);
-        waterModel::checkNonDegenerate(distOH2Quantity, "O-H2 distance");
-
-        const auto dOH2 =
-            dOH2Quantity.numerical_value_in(mstd::units::angstrom);
-        const auto distOH2 =
-            distOH2Quantity.numerical_value_in(mstd::units::angstrom);
+        const auto distOH2 = norm(dOH2);
+        waterModel::checkNonDegenerate(distOH2, "O-H2 distance");
 
         const auto deltaDistanceOH2 = distOH2 - eqOHDistance;
 
@@ -118,9 +105,7 @@ inline void waterModel::SPCIntraWater::calculate(
 
         physicalData.addBondEnergy(-forceMagnitudeOH2 * deltaDistanceOH2 / 2.0);
 
-        forceMagnitudeOH2 /= distOH2;
-
-        const auto forceOH2 = forceMagnitudeOH2 * dOH2;
+        const auto forceOH2 = forceMagnitudeOH2 * dOH2 / distOH2;
         oxygen.addForce(forceOH2);
         hydrogen2.addForce(-forceOH2);
 
@@ -143,15 +128,14 @@ inline void waterModel::SPCIntraWater::calculate(
 
         physicalData.addAngleEnergy(-forceMagnitudeAngle * deltaAngle / 2.0);
 
-        const auto normalDistance = distOH1 * distOH2 * ::sin(alpha);
+        const auto normalDistance = distOH1 * distOH2 * mstd::sin(alpha);
         waterModel::checkNonDegenerate(
-            distOH1Quantity * distOH2Quantity * ::sin(alpha),
+            distOH1 * distOH2 * mstd::sin(alpha),
             "sine of the H-O-H angle times both O-H distances (an angle of "
             "0, both hydrogens on the same ray from the oxygen)"
         );
 
-        auto normalPosition  = cross(dOH2, dOH1);
-        normalPosition      /= normalDistance;
+        auto normalPosition = cross(dOH2, dOH1) / normalDistance;
 
         auto forceAngle = forceMagnitudeAngle / (distOH1 * distOH1);
         auto forcexyz   = forceAngle * cross(dOH1, normalPosition);

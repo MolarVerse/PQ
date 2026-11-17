@@ -209,10 +209,12 @@ namespace linalg
     requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto max(const U &vec) -> pq::InnerType_t<U>;
 
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto max(const std::vector<U> &vec) -> decltype(max(vec[0]));
 
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto maxNorm(const std::vector<U> &vec) -> decltype(max(norms(vec)));
 
     /******************
@@ -233,11 +235,13 @@ namespace linalg
     auto normSquared(const U &vec)
         -> std::remove_cvref_t<decltype(vec[0] * vec[0])>;
 
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>;
 
-    template <pq::ArithmeticVector3D U>
-    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]) / vec.size());
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
+    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]));
 
     /****************
      * sum function *

@@ -61,8 +61,8 @@ namespace
         auto atom2 = std::make_shared<molsys::Atom>();
         atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
         atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
-        atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0));
-        atom2->setForce(linalg::Vec3D(0.0, 0.5, 0.0));
+        atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(0.0, 0.5, 0.0) * kcal_per_mol / angstrom);
         atom1->setMass(1.0 * g_per_mol);
         atom2->setMass(1.0 * g_per_mol);
 
@@ -141,7 +141,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
 
     auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
-    atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0));
+    atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0) * kcal_per_mol / angstrom);
     atom->setMass(1.0 * g_per_mol);
     molecule.addAtom(atom);
 
@@ -167,5 +167,5 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
 
     eval2.evaluate();
 
-    EXPECT_EQ(box->getAtoms()[0]->getForce(), linalg::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(box->getAtoms()[0]->getForce(), Force3D::zero());
 }

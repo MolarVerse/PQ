@@ -66,7 +66,10 @@ namespace benchOptimizers
                 } *
                 angstrom
             );
-            atom->setForce({0.5 + phase, -0.25 * phase, 0.1 - phase});
+            atom->setForce(
+                linalg::Vec3D{0.5 + phase, -0.25 * phase, 0.1 - phase} *
+                kcal_per_mol / angstrom
+            );
             box->addAtom(atom);
         }
 

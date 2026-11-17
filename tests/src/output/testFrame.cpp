@@ -51,8 +51,8 @@ namespace
         atom->setName(name);
         atom->setPosition(position * angstrom);
         atom->setVelocity(2.0 * position * angstrom / s);
-        atom->setForce(-position);
-        atom->setPartialCharge(charge);
+        atom->setForce(-position * kcal_per_mol / angstrom);
+        atom->setPartialCharge(charge * elementary_charge);
         return atom;
     }
 
@@ -100,8 +100,11 @@ TEST(TestFrame, copiesAtomsInMoleculeOrder)
     EXPECT_EQ(oxygen.indexInMolecule, 1);
     EXPECT_EQ(oxygen.position, linalg::Vec3D(4.0, 5.0, 6.0) * angstrom);
     EXPECT_EQ(oxygen.velocity, linalg::Vec3D(8.0, 10.0, 12.0) * angstrom / s);
-    EXPECT_EQ(oxygen.force, linalg::Vec3D(-4.0, -5.0, -6.0));
-    EXPECT_DOUBLE_EQ(oxygen.charge, -0.8);
+    EXPECT_EQ(
+        oxygen.force,
+        linalg::Vec3D(-4.0, -5.0, -6.0) * kcal_per_mol / angstrom
+    );
+    EXPECT_DOUBLE_EQ(oxygen.charge.numerical_value_in(elementary_charge), -0.8);
 
     const auto &argon = frame.atoms[2];
     EXPECT_EQ(argon.moltype, MolType{2});
@@ -111,17 +114,25 @@ TEST(TestFrame, copiesAtomsInMoleculeOrder)
         frame.box->get_boxDimensions(),
         linalg::Vec3D(10.0, 10.0, 10.0) * angstrom
     );
-    EXPECT_DOUBLE_EQ(frame.totalForce(), simulationBox.calculateTotalForce());
+    EXPECT_DOUBLE_EQ(
+        frame.totalForce().numerical_value_in(kcal_per_mol / angstrom),
+        simulationBox.calculateTotalForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        )
+    );
 }
 
 TEST(TestFrame, qmChargeReplacesPartialCharge)
 {
     auto simulationBox = makeSimulationBox();
-    simulationBox.getAtoms()[1]->setQMCharge(-0.5);
+    simulationBox.getAtoms()[1]->setQMCharge(-0.5 * elementary_charge);
 
     const out::Frame frame{simulationBox};
 
-    EXPECT_DOUBLE_EQ(frame.atoms[1].charge, -0.5);
+    EXPECT_DOUBLE_EQ(
+        frame.atoms[1].charge.numerical_value_in(elementary_charge),
+        -0.5
+    );
 }
 
 TEST(TestFrame, doesNotFollowLaterChanges)
@@ -146,7 +157,9 @@ TEST(TestFrame, copiesNoseHooverChain)
     const auto simulationBox = makeSimulationBox();
 
     NoseHooverSettings noseHooverSettings;
-    noseHooverSettings.setChiByUser({{0, 1.0}, {1, 2.0}});
+    noseHooverSettings.setChiByUser(
+        {{0, 1.0 * kcal_per_mol * s}, {1, 2.0 * kcal_per_mol * s}}
+    );
     noseHooverSettings.setZetaByUser({{0, 3.0}, {1, 4.0}});
     noseHooverSettings.setNoseHooverChainLengthByUser(2);
 
@@ -155,7 +168,10 @@ TEST(TestFrame, copiesNoseHooverChain)
     const out::Frame withChain{simulationBox, noseHoover};
     const out::Frame withoutChain{simulationBox, thermostat::Thermostat()};
 
-    const std::vector<out::Frame::ChainLink> expected{{1.0, 3.0}, {2.0, 4.0}};
+    const std::vector<out::Frame::ChainLink> expected{
+        {1.0 * kcal_per_mol * s, 3.0},
+        {2.0 * kcal_per_mol * s, 4.0}
+    };
     EXPECT_EQ(withChain.noseHooverChain, expected);
     EXPECT_TRUE(withoutChain.noseHooverChain.empty());
 }

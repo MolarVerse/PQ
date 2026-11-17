@@ -235,7 +235,7 @@ TEST_F(TestInputFileReader, testParseFriction)
 
     std::vector<std::string> lineElements = {"friction", "=", "0.1"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(thermostatSettings.getFriction(), 0.1 * 1.0e12);
+    EXPECT_EQ(thermostatSettings.getFriction(), 0.1 * 1.0e12 * Hz);
 
     _clearParser(parser);
 

@@ -87,11 +87,11 @@ namespace opt
      */
     bool Optimizer::hasConverged()
     {
-        const auto energyOld = getEnergy(-2);
-        const auto energyNew = getEnergy(-1);
+        const auto& energyOld = getEnergy(-2);
+        const auto& energyNew = getEnergy(-1);
 
-        const auto rmsForceNew = getRMSForce(-1);
-        const auto maxForceNew = getMaxForce(-1);
+        const auto& rmsForceNew = getRMSForce(-1);
+        const auto& maxForceNew = getMaxForce(-1);
 
         _convergence.calcEnergyConvergence(energyOld, energyNew);
         _convergence.calcForceConvergence(maxForceNew, rmsForceNew);
@@ -121,7 +121,7 @@ namespace opt
      * @param simulationBox
      */
     void Optimizer::setSimulationBox(
-        const std::shared_ptr<molsys::SimulationBox> &simulationBox
+        const std::shared_ptr<molsys::SimulationBox>& simulationBox
     )
     {
         _impl->simulationBox = simulationBox;
@@ -133,7 +133,7 @@ namespace opt
      * @param physicalData
      */
     void Optimizer::setPhysicalData(
-        const std::shared_ptr<physicalData::PhysicalData> &physicalData
+        const std::shared_ptr<physicalData::PhysicalData>& physicalData
     )
     {
         _impl->physicalData = physicalData;
@@ -145,7 +145,7 @@ namespace opt
      * @param physicalData
      */
     void Optimizer::setPhysicalDataOld(
-        const std::shared_ptr<physicalData::PhysicalData> &physicalData
+        const std::shared_ptr<physicalData::PhysicalData>& physicalData
     )
     {
         _impl->physicalDataOld = physicalData;
@@ -188,9 +188,12 @@ namespace opt
     /**
      * @brief get the last energy in the history
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double Optimizer::getEnergy() const { return _energyHistory.back(); }
+    const EnergyPerMol& Optimizer::getEnergy() const
+    {
+        return _energyHistory.back();
+    }
 
     /**
      * @brief get the energy in history with negative index offset
@@ -198,7 +201,7 @@ namespace opt
      * @param offset
      *
      */
-    double Optimizer::getEnergy(int offset) const
+    const EnergyPerMol& Optimizer::getEnergy(int offset) const
     {
         const auto index = getHistoryIndex(offset);
 
@@ -208,9 +211,12 @@ namespace opt
     /**
      * @brief get the last RMS force in the history
      *
-     * @return double
+     * @return const Force&
      */
-    double Optimizer::getRMSForce() const { return _rmsForceHistory.back(); }
+    const Force& Optimizer::getRMSForce() const
+    {
+        return _rmsForceHistory.back();
+    }
 
     /**
      * @brief get the RMS force in history with negative index offset
@@ -218,7 +224,7 @@ namespace opt
      * @param offset
      *
      */
-    double Optimizer::getRMSForce(int offset) const
+    const Force& Optimizer::getRMSForce(int offset) const
     {
         const auto index = getHistoryIndex(offset);
 
@@ -228,9 +234,12 @@ namespace opt
     /**
      * @brief get the last max force in the history
      *
-     * @return double
+     * @return const Force&
      */
-    double Optimizer::getMaxForce() const { return _maxForceHistory.back(); }
+    const Force& Optimizer::getMaxForce() const
+    {
+        return _maxForceHistory.back();
+    }
 
     /**
      * @brief get the max force in history with negative index offset
@@ -238,7 +247,7 @@ namespace opt
      * @param offset
      *
      */
-    double Optimizer::getMaxForce(int offset) const
+    const Force& Optimizer::getMaxForce(int offset) const
     {
         const auto index = getHistoryIndex(offset);
 
@@ -248,9 +257,9 @@ namespace opt
     /**
      * @brief get the last force in the history
      *
-     * @return std::vector<pq::Vec3D>
+     * @return const std::vector<Force3D>&
      */
-    std::vector<linalg::Vec3D> Optimizer::getForces() const
+    const std::vector<Force3D>& Optimizer::getForces() const
     {
         return _forceHistory.back();
     }
@@ -261,7 +270,7 @@ namespace opt
      * @param offset
      *
      */
-    std::vector<linalg::Vec3D> Optimizer::getForces(int offset) const
+    const std::vector<Force3D>& Optimizer::getForces(int offset) const
     {
         const auto index = getHistoryIndex(offset);
 
@@ -271,9 +280,9 @@ namespace opt
     /**
      * @brief get the last position in the history
      *
-     * @return std::vector<Pos3D>
+     * @return const std::vector<Pos3D>&
      */
-    std::vector<Pos3D> Optimizer::getPositions() const
+    const std::vector<Pos3D>& Optimizer::getPositions() const
     {
         return _positionHistory.back();
     }
@@ -283,10 +292,10 @@ namespace opt
      *
      * @param offset negative index offset to access historical positions
      *
-     * @return std::vector<Pos3D> the positions corresponding to the specified
-     * offset in the history
+     * @return const std::vector<Pos3D>& the positions corresponding to the
+     * specified offset in the history
      */
-    std::vector<Pos3D> Optimizer::getPositions(int offset) const
+    const std::vector<Pos3D>& Optimizer::getPositions(int offset) const
     {
         const auto index = getHistoryIndex(offset);
 
@@ -305,14 +314,14 @@ namespace opt
      *
      * @return opt::Convergence
      */
-    Convergence &Optimizer::getConvergence() { return _convergence; }
+    Convergence& Optimizer::getConvergence() { return _convergence; }
 
     /**
      * @brief get the simulation box member
      *
      * @return SimulationBox&
      */
-    molsys::SimulationBox &Optimizer::_getSimulationBox() const
+    molsys::SimulationBox& Optimizer::_getSimulationBox() const
     {
         return *_impl->simulationBox;
     }

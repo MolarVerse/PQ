@@ -48,26 +48,26 @@ namespace waterModel
         ) override;
 
         [[nodiscard]]
-        virtual const Distance &getEqOHDistance() const = 0;   // Angström
+        virtual const Distance &getEqOHDistance() const = 0;
         [[nodiscard]]
-        virtual double getEqHOHAngle() const = 0;   // radians
+        virtual const Angle &getEqHOHAngle() const = 0;
         [[nodiscard]]
-        virtual double getForceConstantOHBond(
-        ) const = 0;   // kcal mol^-1 Angström^-2
+        virtual const ForceConstant &getForceConstantOHBond() const = 0;
         [[nodiscard]]
-        virtual double getForceConstantHOHAngle(
-        ) const = 0;   // kcal mol^-1 rad^-2
+        virtual const AngleForceConstant &getForceConstantHOHAngle() const = 0;
     };
 
     class SPCFwIntraWater : public SPCIntraWater
     {
        private:
         static constexpr Distance _eqOHDistance = 1.012 * mstd::units::angstrom;
-        static constexpr double   _eqHOHAngle   = 113.24 * DEG_TO_RAD;
-        static constexpr double   _forceConstantOHBond =
-            1059.162;   // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle =
-            75.9;   // kcal mol^-1 rad^-2
+        static constexpr Angle    _eqHOHAngle   = 113.24 * mstd::units::deg;
+        static constexpr ForceConstant _forceConstantOHBond =
+            1059.162 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr AngleForceConstant _forceConstantHOHAngle =
+            75.9 * mstd::units::kcal_per_mol /
+            (mstd::units::rad * mstd::units::rad);
 
        public:
         [[nodiscard]]
@@ -76,17 +76,17 @@ namespace waterModel
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHOHAngle() const override
+        const Angle &getEqHOHAngle() const override
         {
             return _eqHOHAngle;
         }
         [[nodiscard]]
-        double getForceConstantOHBond() const override
+        const ForceConstant &getForceConstantOHBond() const override
         {
             return _forceConstantOHBond;
         }
         [[nodiscard]]
-        double getForceConstantHOHAngle() const override
+        const AngleForceConstant &getForceConstantHOHAngle() const override
         {
             return _forceConstantHOHAngle;
         }
@@ -95,13 +95,14 @@ namespace waterModel
     class qSPCFwIntraWater : public SPCIntraWater
     {
        private:
-        static constexpr Distance _eqOHDistance =
-            1.0 * mstd::units::angstrom;   // Angström
-        static constexpr double _eqHOHAngle = 112.0 * DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond =
-            1059.162;   // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle =
-            75.9;   // kcal mol^-1 rad^-2
+        static constexpr Distance _eqOHDistance = 1.0 * mstd::units::angstrom;
+        static constexpr Angle    _eqHOHAngle   = 112.0 * mstd::units::deg;
+        static constexpr ForceConstant _forceConstantOHBond =
+            1059.162 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr AngleForceConstant _forceConstantHOHAngle =
+            75.9 * mstd::units::kcal_per_mol /
+            (mstd::units::rad * mstd::units::rad);
 
        public:
         [[nodiscard]]
@@ -110,17 +111,17 @@ namespace waterModel
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHOHAngle() const override
+        const Angle &getEqHOHAngle() const override
         {
             return _eqHOHAngle;
         }
         [[nodiscard]]
-        double getForceConstantOHBond() const override
+        const ForceConstant &getForceConstantOHBond() const override
         {
             return _forceConstantOHBond;
         }
         [[nodiscard]]
-        double getForceConstantHOHAngle() const override
+        const AngleForceConstant &getForceConstantHOHAngle() const override
         {
             return _forceConstantHOHAngle;
         }

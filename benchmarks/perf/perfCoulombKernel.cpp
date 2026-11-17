@@ -44,7 +44,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     auto shifted = pot::CoulombShiftedPotential(9.0 * angstrom);
-    auto wolf    = pot::CoulombWolf(9.0 * angstrom, 0.25);
+    auto wolf    = pot::CoulombWolf(9.0 * angstrom, 0.25 / angstrom);
 
     perfAllocBegin();
 
@@ -55,14 +55,16 @@ int main()
     {
         const double distance =
             1.0 + (static_cast<double>(i & 255U) * 0.03);   // within cutoff
-        const double chargeProduct = 0.5 * -0.5;
+        const auto chargeProduct =
+            0.5 * -0.5 * elementary_charge * elementary_charge;
 
         const auto [eShift, fShift] =
             shifted.calculate(distance * angstrom, chargeProduct);
         const auto [eWolf, fWolf] =
             wolf.calculate(distance * angstrom, chargeProduct);
 
-        sink += eShift + fShift + eWolf + fWolf;
+        sink += (eShift + eWolf).numerical_value_in(kcal_per_mol) +
+                (fWolf + fShift).numerical_value_in(kcal_per_mol / angstrom);
     }
 
     std::cout << std::format("{:.6f}\n", sink);

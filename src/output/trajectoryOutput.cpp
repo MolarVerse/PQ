@@ -172,13 +172,18 @@ namespace out
         std::ostringstream buffer;
 
         writeHeader(frame);
-        _writeForceComment(step, frame.totalForce(), includeMetadata);
+        _writeForceComment(
+            step,
+            frame.totalForce().numerical_value_in(kcal_per_mol / angstrom),
+            includeMetadata
+        );
 
         for (const auto &atom : frame.atoms)
         {
             buffer << std::format("{:<5}\t", atom.name);
 
-            const auto &force = atom.force;
+            const auto &force =
+                atom.force.numerical_value_in(kcal_per_mol / angstrom);
 
             buffer << std::format("{:15.8f}\t", force[0]);
             buffer << std::format("{:15.8f}\t", force[1]);
@@ -211,7 +216,10 @@ namespace out
         for (const auto &atom : frame.atoms)
         {
             buffer << std::format("{:<5}\t", atom.name);
-            buffer << std::format("{:15.8f}\n", atom.charge);
+            buffer << std::format(
+                "{:15.8f}\n",
+                atom.charge.numerical_value_in(elementary_charge)
+            );
             buffer << std::flush;
         }
 

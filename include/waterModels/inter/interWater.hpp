@@ -46,8 +46,8 @@ namespace waterModel
 {
     struct InterWaterState
     {
-        double oxygenCharge{0.0};
-        double hydrogenCharge{0.0};
+        Charge oxygenCharge{Charge::zero()};
+        Charge hydrogenCharge{Charge::zero()};
         bool   oxygenOnlyNonCoulomb{false};
 
         std::unique_ptr<pot::NonCoulombPair> nonCoulombPairOO;

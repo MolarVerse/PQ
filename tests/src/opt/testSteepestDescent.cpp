@@ -35,11 +35,11 @@
 namespace
 {
     std::shared_ptr<molsys::SimulationBox> makeBoxWithTwoAtoms(
-        const Pos3D         &pos0,
-        const Pos3D         &pos1,
-        const linalg::Vec3D &force0,
-        const linalg::Vec3D &force1,
-        const Pos3D         &boxDims
+        const Pos3D   &pos0,
+        const Pos3D   &pos1,
+        const Force3D &force0,
+        const Force3D &force1,
+        const Pos3D   &boxDims
     )
     {
         auto box = std::make_shared<molsys::SimulationBox>();
@@ -61,10 +61,10 @@ namespace
     }
 
     std::shared_ptr<molsys::SimulationBox> makeBoxWithTwoAtoms(
-        const Pos3D         &pos0,
-        const Pos3D         &pos1,
-        const linalg::Vec3D &force0,
-        const linalg::Vec3D &force1
+        const Pos3D   &pos0,
+        const Pos3D   &pos1,
+        const Force3D &force0,
+        const Force3D &force1
     )
     {
         return makeBoxWithTwoAtoms(
@@ -84,8 +84,12 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
     auto box = makeBoxWithTwoAtoms(
         linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
         linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
-        {0.5, 1.0, -1.0},
-        {-0.2, 0.3, 0.7}
+        {0.5 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom,
+         -1.0 * kcal_per_mol / angstrom},
+        {-0.2 * kcal_per_mol / angstrom,
+         0.3 * kcal_per_mol / angstrom,
+         0.7 * kcal_per_mol / angstrom}
     );
 
     opt::SteepestDescent opt(1U);
@@ -126,8 +130,12 @@ TEST(TestSteepestDescent, updateStoresOldPosition)
     auto box = makeBoxWithTwoAtoms(
         linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
         linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
-        {0.1, 0.1, 0.1},
-        {0.2, 0.2, 0.2}
+        {0.1 * kcal_per_mol / angstrom,
+         0.1 * kcal_per_mol / angstrom,
+         0.1 * kcal_per_mol / angstrom},
+        {0.2 * kcal_per_mol / angstrom,
+         0.2 * kcal_per_mol / angstrom,
+         0.2 * kcal_per_mol / angstrom}
     );
 
     opt::SteepestDescent opt(1U);
@@ -151,8 +159,12 @@ TEST(TestSteepestDescent, updateAppliesPBCToNewPosition)
     auto box = makeBoxWithTwoAtoms(
         linalg::Vec3D{9.0, 0.0, 0.0} * angstrom,
         linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
-        {2.0, 0.0, 0.0},
-        {0.0, 0.0, 0.0},
+        {2.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom},
+        {0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom,
+         0.0 * kcal_per_mol / angstrom},
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     );
 
@@ -171,8 +183,12 @@ TEST(TestSteepestDescent, updateIsNoOpWithZeroLearningRate)
     auto box = makeBoxWithTwoAtoms(
         linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
         linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
-        {1.0, 1.0, 1.0},
-        {1.0, 1.0, 1.0}
+        {1.0 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom},
+        {1.0 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom,
+         1.0 * kcal_per_mol / angstrom}
     );
 
     opt::SteepestDescent opt(1U);

@@ -24,6 +24,7 @@
 #define CONFIG__DEFAULTS_HPP
 
 #include <cstddef>
+#include <mstd/units/new_units.hpp>
 #include <mstd/units/wave_number.hpp>
 
 #include "enums/convergence.hpp"
@@ -94,10 +95,10 @@ namespace defaults
     static constexpr char INNER_REGION_CENTER_ATOM_NAME = 'X';
 
     static constexpr Pos COULOMB_CUT_OFF_DEFAULT = 12.5 * mstd::units::angstrom;
-    static constexpr double SCALE_14_COULOMB_DEFAULT       = 1.0;
-    static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
-    // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/903 add unit
-    static constexpr double WOLF_PARAM_DEFAULT = 0.25;
+    static constexpr double      SCALE_14_COULOMB_DEFAULT       = 1.0;
+    static constexpr double      SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
+    static constexpr InvDistance WOLF_PARAM_DEFAULT =
+        0.25 / mstd::units::angstrom;
     static constexpr double RF_EPSILON_DEFAULT = 1.0;
 
     static constexpr bool        CONSTRAINTS_ACTIVE_DEFAULT = false;
@@ -117,8 +118,9 @@ namespace defaults
         3;   // default value for nose hoover chain length
     static constexpr Time BERENDSEN_THERMOSTAT_RELAX_TIME =
         0.1 * mstd::units::ps;
-    static constexpr double LANGEVIN_THERMOSTAT_FRICTION = 1.0e11;   // in s^-1
-    static constexpr auto   NH_COUPLING_FREQ =
+    static constexpr Frequency LANGEVIN_THERMOSTAT_FRICTION =
+        1.0e11 * mstd::units::Hz;
+    static constexpr auto NH_COUPLING_FREQ =
         mstd::toFreq(1.0e3 * mstd::units::per_cm);              // in cm^-1
     static constexpr double MAX_FRICTION_CONVERSION = 1.0e12;   // in s^-1
 
@@ -142,10 +144,13 @@ namespace defaults
         ConvStrategy::RIGOROUS;
     static constexpr ConvStrategy FORCE_CONV_STRATEGY_DEFAULT =
         ConvStrategy::RIGOROUS;
-    static constexpr double REL_ENERGY_CONV_DEFAULT = 1.0e-6;
-    static constexpr double ABS_ENERGY_CONV_DEFAULT = 1.0e-6;
-    static constexpr double MAX_FORCE_CONV_DEFAULT  = 1.0e-6;
-    static constexpr double RMS_FORCE_CONV_DEFAULT  = 1.0e-6;
+    static constexpr double       REL_ENERGY_CONV_DEFAULT = 1.0e-6;
+    static constexpr EnergyPerMol ABS_ENERGY_CONV_DEFAULT =
+        1.0e-6 * mstd::units::kcal_per_mol;
+    static constexpr Force MAX_FORCE_CONV_DEFAULT =
+        1.0e-6 * mstd::units::kcal_per_mol / mstd::units::angstrom;
+    static constexpr Force RMS_FORCE_CONV_DEFAULT =
+        1.0e-6 * mstd::units::kcal_per_mol / mstd::units::angstrom;
 
     static constexpr auto NUM_GUFF_COEFFICIENTS = 22;
 

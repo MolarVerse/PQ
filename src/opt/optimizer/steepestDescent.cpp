@@ -54,12 +54,17 @@ namespace opt
     {
         const auto& atoms = _getSimulationBox().getAtoms();
 
+        // we need here this special handling as the learning rate dimension
+        // differs depending on the type of optimizer
+        const auto learningRateQuantity =
+            learningRate / kcal_per_mol * angstrom2;
+
         for (const auto& atom : atoms)
         {
             const auto force = atom->getForce();
             const auto pos   = atom->getPosition();
 
-            auto pos_new = pos + Pos3D{learningRate * force * angstrom};
+            auto pos_new = pos + learningRateQuantity * force;
             _getSimulationBox().applyPBC(pos_new);
 
             atom->setPositionOld(pos);

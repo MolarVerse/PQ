@@ -23,6 +23,7 @@
 #ifndef SETTINGS__CONVERGENCE_SETTINGS_HPP
 #define SETTINGS__CONVERGENCE_SETTINGS_HPP
 
+#include "defaults.hpp"
 #include "enums/convergence.hpp"
 #include "setting.hpp"
 
@@ -35,13 +36,11 @@
 class ConvSettings
 {
    private:
-    Setting<double> _energyConv;
-    Setting<double> _relEnergyConv;
-    Setting<double> _absEnergyConv;
+    Setting<double>       _relEnergyConv{defaults::REL_ENERGY_CONV_DEFAULT};
+    Setting<EnergyPerMol> _absEnergyConv{defaults::ABS_ENERGY_CONV_DEFAULT};
 
-    Setting<double> _forceConv;
-    Setting<double> _maxForceConv;
-    Setting<double> _rmsForceConv;
+    Setting<Force> _maxForceConv{defaults::MAX_FORCE_CONV_DEFAULT};
+    Setting<Force> _rmsForceConv{defaults::RMS_FORCE_CONV_DEFAULT};
 
     Setting<bool> _useEnergyConv;
     Setting<bool> _useForceConv;
@@ -57,13 +56,11 @@ class ConvSettings
      * standard setter methods *
      ***************************/
 
-    void setEnergyConvByUser(double);
     void setRelEnergyConvByUser(double);
-    void setAbsEnergyConvByUser(double);
+    void setAbsEnergyConvByUser(const EnergyPerMol&);
 
-    void setForceConvByUser(double);
-    void setMaxForceConvByUser(double);
-    void setRMSForceConvByUser(double);
+    void setMaxForceConvByUser(const Force&);
+    void setRMSForceConvByUser(const Force&);
 
     void setUseEnergyConvByUser(bool);
     void setUseForceConvByUser(bool);
@@ -76,13 +73,11 @@ class ConvSettings
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] std::optional<double> getEnergyConv() const;
-    [[nodiscard]] std::optional<double> getRelEnergyConv() const;
-    [[nodiscard]] std::optional<double> getAbsEnergyConv() const;
+    [[nodiscard]] double              getRelEnergyConv() const;
+    [[nodiscard]] const EnergyPerMol& getAbsEnergyConv() const;
 
-    [[nodiscard]] std::optional<double> getForceConv() const;
-    [[nodiscard]] std::optional<double> getMaxForceConv() const;
-    [[nodiscard]] std::optional<double> getRMSForceConv() const;
+    [[nodiscard]] const Force& getMaxForceConv() const;
+    [[nodiscard]] const Force& getRMSForceConv() const;
 
     [[nodiscard]] bool getUseEnergyConv() const;
     [[nodiscard]] bool getUseForceConv() const;

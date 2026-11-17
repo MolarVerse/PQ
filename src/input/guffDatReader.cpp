@@ -48,6 +48,7 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 #include "waterModelSettings.hpp"
 
@@ -284,7 +285,8 @@ namespace input::guffdat
             rncCutOff = settings::PotentialSettings::getCoulombRadiusCutOff();
 
         constexpr auto coulombCoeffIndex = 5;
-        const double   coulombCoeff = stod(lineCommands[coulombCoeffIndex]);
+        const auto     coulombCoeff =
+            stod(lineCommands[coulombCoeffIndex]) * kcal_per_mol * angstrom;
         std::vector<double> guffCoefficients;
 
         std::ranges::for_each(
@@ -430,8 +432,10 @@ namespace input::guffdat
             _engine.getPotential()->getNonCoulombPotential()
         );
 
-        const auto params =
-            LJParams{.c6 = coefficients[0], .c12 = coefficients[2]};
+        const auto params = LJParams{
+            .c6  = coefficients[0] * kcal_per_mol * angstrom6,
+            .c12 = coefficients[2] * kcal_per_mol * angstrom12
+        };
         const auto LJPair = pot::LennardJonesPair(rncCutOff, params);
 
         const auto [eCutOff, fCutOff] = LJPair.calculate(rncCutOff);
@@ -483,9 +487,9 @@ namespace input::guffdat
         );
 
         const auto params = BuckinghamParams{
-            .scaling = coefficients[0],
+            .scaling = coefficients[0] * kcal_per_mol,
             .dRho    = coefficients[1] / angstrom,
-            .c6      = coefficients[2]
+            .c6      = coefficients[2] * kcal_per_mol * angstrom6
         };
         const auto buckPair           = pot::BuckinghamPair(rncCutOff, params);
         const auto [eCutOff, fCutOff] = buckPair.calculate(rncCutOff);
@@ -538,7 +542,7 @@ namespace input::guffdat
         );
 
         const auto params = MorseParams{
-            .dissociationEnergy  = coefficients[0],
+            .dissociationEnergy  = coefficients[0] * kcal_per_mol,
             .wellWidth           = coefficients[1] / angstrom,
             .equilibriumDistance = coefficients[2] * angstrom
         };
@@ -674,8 +678,8 @@ namespace input::guffdat
                 const auto coulombCoeff =
                     _guffCoulombCoeffs[i][i][atomType.get()][atomType.get()];
 
-                const auto prefactor     = coulombCoeff / COULOMB_PREFACTOR;
-                const auto prefactorSqrt = ::sqrt(prefactor);
+                const auto prefactor     = coulombCoeff / coulomb_prefactor;
+                const auto prefactorSqrt = mstd::sqrt(prefactor);
                 const auto prefactorSign =
                     utilities::sign(moleculeType->getPartialCharge(j));
                 const auto partialCharge = prefactorSqrt * prefactorSign;
@@ -749,7 +753,7 @@ namespace input::guffdat
                         const auto chargeSquared =
                             partialCharge1 * partialCharge2;
                         const auto prefactor =
-                            chargeSquared * COULOMB_PREFACTOR;
+                            chargeSquared * coulomb_prefactor;
 
                         if (!utilities::compare(
                                 prefactor,
@@ -901,11 +905,11 @@ namespace input::guffdat
      * @param coefficient
      */
     void GuffDatReader::setGuffCoulombCoefficients(
-        MolType      molType1,
-        MolType      molType2,
-        AtomType     atomType1,
-        AtomType     atomType2,
-        const double coefficient
+        MolType                   molType1,
+        MolType                   molType2,
+        AtomType                  atomType1,
+        AtomType                  atomType2,
+        const EnergyLengthPerMol &coefficient
     )
     {
         _guffCoulombCoeffs[molType1.get()][molType2.get()][atomType1.get()]
@@ -942,9 +946,10 @@ namespace input::guffdat
     /**
      * @brief Get the Guff Coulomb Coefficients object
      *
-     * @return std::vector<std::vector<std::vector<std::vector<double>>>>&
+     * @return
+     * std::vector<std::vector<std::vector<std::vector<EnergyLengthPerMol>>>>&
      */
-    std::vector<std::vector<std::vector<std::vector<double>>>> &GuffDatReader::
+    std::vector<std::vector<std::vector<std::vector<EnergyLengthPerMol>>>> &GuffDatReader::
         getGuffCoulombCoefficients()
     {
         return _guffCoulombCoeffs;

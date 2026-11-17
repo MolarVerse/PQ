@@ -728,7 +728,8 @@ namespace linalg
      * @param vec
      * @return decltype(max(vec[0]))
      */
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto max(const std::vector<U> &vec) -> decltype(max(vec[0]))
     {
         std::vector<decltype(max(vec[0]))> maxs;
@@ -746,7 +747,8 @@ namespace linalg
      * @param vec
      * @return decltype(norm(vec[0]))
      */
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto maxNorm(const std::vector<U> &vec) -> decltype(norm(vec[0]))
     {
         std::vector<decltype(norm(vec[0]))> norms;
@@ -836,7 +838,8 @@ namespace linalg
      * @param vec
      * @return std::vector<decltype(norm(vec[0])>
      */
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>
     {
         std::vector<decltype(norm(vec[0]))> norms;
@@ -858,14 +861,17 @@ namespace linalg
      * @param vec
      * @return decltype(norm(vec[0]) / vec.size())
      */
-    template <pq::ArithmeticVector3D U>
-    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]) / vec.size())
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
+    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]))
     {
-        auto rms = 0.0;
+        std::remove_cvref_t<decltype(normSquared(vec[0]))> sumSquared{};
 
-        for (const auto &value : vec) rms += normSquared(value);
+        for (const auto &value : vec) sumSquared += normSquared(value);
 
-        return std::sqrt(rms / static_cast<double>(vec.size()));
+        return static_cast<decltype(norm(vec[0]))>(
+            mstd::sqrt(sumSquared / static_cast<double>(vec.size()))
+        );
     }
 
     /****************

@@ -23,10 +23,12 @@
 #ifndef UTILITIES__MATH_UTILITIES_HPP
 #define UTILITIES__MATH_UTILITIES_HPP
 
+#include <concepts>
 #include <cmath>
 #include <cstdlib>
 #include <limits>
 #include <mstd/math.hpp>
+#include <mstd/type_traits/quantity_traits.hpp>
 
 namespace linalg
 {
@@ -51,7 +53,7 @@ namespace utilities
     [[nodiscard]]
     bool compare(const T &lhs, const T &rhs, const T &tolerance)
     {
-        return std::abs(lhs - rhs) < tolerance;
+        return mstd::fabs(lhs - rhs) < tolerance;
     }
 
     [[nodiscard]] bool compare(
@@ -59,6 +61,42 @@ namespace utilities
         const linalg::Vector3D<double> &rhs,
         const double                   &tol
     );
+
+    /**
+     * @brief compares two quantities of the same dimension but possibly
+     * different unit types, with a tolerance
+     *
+     * @details `lhs` is converted to the type of `rhs`, which defines the
+     * unit of the comparison. The tolerance may be a quantity (converted to
+     * the type of `rhs`) or a plain number, which is then interpreted in the
+     * unit of `rhs`.
+     */
+    template <mstd::QuantityLike L, mstd::QuantityLike R, typename Tol>
+    [[nodiscard]]
+    bool compare(const L &lhs, const R &rhs, const Tol &tolerance)
+    {
+        const R tol = [&]
+        {
+            if constexpr (mstd::QuantityLike<Tol>)
+                return R(tolerance);
+            else
+                return R(tolerance * R::reference);
+        }();
+
+        return mstd::fabs(R(lhs) - rhs) < tol;
+    }
+
+    /**
+     * @brief compares two quantities of the same dimension but different
+     * unit types via machine precision (in the unit of `rhs`)
+     */
+    template <mstd::QuantityLike L, mstd::QuantityLike R>
+    requires(!std::same_as<L, R>)
+    [[nodiscard]]
+    bool compare(const L &lhs, const R &rhs)
+    {
+        return mstd::fabs(R(lhs) - rhs) < std::numeric_limits<R>::epsilon();
+    }
 
     /**
      * @brief compares two numbers via machine precision
@@ -108,7 +146,11 @@ namespace utilities
     }
 
     /**
-     * @brief calculates the sign of a number
+     * @brief calculates the sign of a number or quantity
+     *
+     * @details Works for arithmetic types and for mp-units quantities (zero
+     * is obtained via `T::zero()` where available, as `T(0)` is not valid for
+     * dimensionful quantities).
      *
      * @tparam T
      * @param value
@@ -117,10 +159,17 @@ namespace utilities
     template <typename T>
     [[nodiscard]] int sign(const T &value)
     {
-        if (compare(value, T(0)))
+        const auto zero = [] {
+            if constexpr (requires { T::zero(); })
+                return T::zero();
+            else
+                return T(0);
+        }();
+
+        if (compare(value, zero))
             return 0;
 
-        if (value > T(0))
+        if (value > zero)
             return 1;
 
         return -1;

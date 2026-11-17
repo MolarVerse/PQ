@@ -45,16 +45,25 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto lj =
-        pot::LennardJonesPair(9.0 * angstrom, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto lj = pot::LennardJonesPair(
+        9.0 * angstrom,
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
+    );
     auto buck = pot::BuckinghamPair(
         9.0 * angstrom,
-        BuckinghamParams{.scaling = 1.0, .dRho = 0.3 / angstrom, .c6 = 2.0}
+        BuckinghamParams{
+            .scaling = 1.0 * kcal_per_mol,
+            .dRho    = 0.3 / angstrom,
+            .c6      = 2.0 * kcal_per_mol * angstrom6
+        }
     );
     auto morse = pot::MorsePair(
         9.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 1.0,
+            .dissociationEnergy  = 1.0 * kcal_per_mol,
             .wellWidth           = 2.0 / angstrom,
             .equilibriumDistance = 1.5 * angstrom
         }
@@ -74,7 +83,12 @@ int main()
         const auto [eBuck, fBuck]   = buck.calculate(distance * angstrom);
         const auto [eMorse, fMorse] = morse.calculate(distance * angstrom);
 
-        sink += eLj + fLj + eBuck + fBuck + eMorse + fMorse;
+        sink += eLj.numerical_value_in(kcal_per_mol) +
+                fLj.numerical_value_in(kcal_per_mol / angstrom) +
+                eBuck.numerical_value_in(kcal_per_mol) +
+                fBuck.numerical_value_in(kcal_per_mol / angstrom) +
+                eMorse.numerical_value_in(kcal_per_mol) +
+                fMorse.numerical_value_in(kcal_per_mol / angstrom);
     }
 
     std::cout << std::format("{:.6f}\n", sink);

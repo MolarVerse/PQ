@@ -195,7 +195,7 @@ namespace input
             .name        = "rattle-tolerance",
             .title       = "Rattle tolerance",
             .description = "Keyword to set the rattle tolerance",
-            .unit        = "amu / s"
+            .unit        = "g_per_mol / s"
         };
 
         const auto defaultValue = 1e-8;

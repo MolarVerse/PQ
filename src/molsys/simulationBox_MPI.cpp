@@ -30,13 +30,13 @@
 namespace molsys
 {
     /**
-     * @brief flattens velocities of each atom into a single vector of doubles
+     * @brief flattens velocities of each atom into a single vector of Vels
      *
-     * @return std::vector<double>
+     * @return std::vector<Vel>
      */
-    std::vector<double> SimulationBox::flattenVelocities() const
+    std::vector<Vel> SimulationBox::flattenVelocities() const
     {
-        std::vector<double> velocities;
+        std::vector<Vel> velocities;
 
         auto addVelocities = [&velocities](auto &atom)
         {
@@ -53,37 +53,14 @@ namespace molsys
     }
 
     /**
-     * @brief flattens forces of each atom into a single vector of doubles
-     *
-     * @return std::vector<double>
-     */
-    std::vector<double> SimulationBox::flattenForces() const
-    {
-        std::vector<double> forces;
-
-        auto addForces = [&forces](auto &atom)
-        {
-            const auto force = atom->getForce();
-
-            forces.push_back(force[0]);
-            forces.push_back(force[1]);
-            forces.push_back(force[2]);
-        };
-
-        std::ranges::for_each(_atoms, addForces);
-
-        return forces;
-    }
-
-    /**
      * @brief flattens partial charges of each atom into a single vector of
-     * doubles
+     * Charges
      *
-     * @return std::vector<double>
+     * @return std::vector<Charge>
      */
-    std::vector<double> SimulationBox::flattenPartialCharges() const
+    std::vector<Charge> SimulationBox::flattenPartialCharges() const
     {
-        std::vector<double> partialCharges;
+        std::vector<Charge> partialCharges;
 
         auto addPartialCharges = [&partialCharges](auto &atom)
         { partialCharges.push_back(atom->getPartialCharge()); };
@@ -94,11 +71,11 @@ namespace molsys
     }
 
     /**
-     * @brief de-flattens positions of each atom from a single vector of doubles
+     * @brief de-flattens positions of each atom from a single vector of Pos
      *
      * @param positions
      */
-    void SimulationBox::deFlattenPositions(const std::vector<double> &positions)
+    void SimulationBox::deFlattenPositions(const std::vector<Pos> &positions)
     {
         size_t index = 0;
 
@@ -106,9 +83,9 @@ namespace molsys
         {
             Pos3D position;
 
-            position[0] = positions[index++] * angstrom;
-            position[1] = positions[index++] * angstrom;
-            position[2] = positions[index++] * angstrom;
+            position[0] = positions[index++];
+            position[1] = positions[index++];
+            position[2] = positions[index++];
 
             atom->setPosition(position);
         };
@@ -118,13 +95,11 @@ namespace molsys
 
     /**
      * @brief de-flattens velocities of each atom from a single vector of
-     * doubles
+     * Vel
      *
      * @param velocities
      */
-    void SimulationBox::deFlattenVelocities(
-        const std::vector<double> &velocities
-    )
+    void SimulationBox::deFlattenVelocities(const std::vector<Vel> &velocities)
     {
         size_t index = 0;
 
@@ -143,11 +118,11 @@ namespace molsys
     }
 
     /**
-     * @brief de-flattens forces of each atom from a single vector of doubles
+     * @brief de-flattens forces of each atom from a single vector of Forces
      *
      * @param forces
      */
-    void SimulationBox::deFlattenForces(const std::vector<double> &forces)
+    void SimulationBox::deFlattenForces(const std::vector<Force> &forces)
     {
         size_t index = 0;
 

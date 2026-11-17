@@ -38,11 +38,11 @@ namespace
 {
     struct Sample
     {
-        EnergyPerMol  energy;
-        linalg::Vec3D force0;
-        linalg::Vec3D force1;
-        linalg::Vec3D pos0;
-        linalg::Vec3D pos1;
+        EnergyPerMol energy;
+        Force3D      force0;
+        Force3D      force1;
+        Pos3D        pos0;
+        Pos3D        pos1;
     };
 
     // Build a fresh box+physData pair, set the sample state on them, and call
@@ -55,8 +55,8 @@ namespace
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(sample.pos0 * angstrom);
-        atom2->setPosition(sample.pos1 * angstrom);
+        atom1->setPosition(sample.pos0);
+        atom2->setPosition(sample.pos1);
         atom1->setForce(sample.force0);
         atom2->setForce(sample.force1);
 
@@ -111,24 +111,39 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
     pushSample(
         opt,
         {.energy = 1.0 * kcal_per_mol,
-         .force0 = {1.0, 0.0, 0.0},
-         .force1 = {0.0, 2.0, 0.0},
-         .pos0   = {0.1, 0.2, 0.3},
-         .pos1   = {0.4, 0.5, 0.6}}
+         .force0 = linalg::Vector3D{1.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .force1 = linalg::Vector3D{0.0, 2.0, 0.0} * kcal_per_mol / angstrom,
+         .pos0   = linalg::Vector3D{0.1, 0.2, 0.3} * angstrom,
+         .pos1   = linalg::Vector3D{0.4, 0.5, 0.6} * angstrom}
     );
 
-    EXPECT_DOUBLE_EQ(opt.getEnergy(), 1.0);
-    EXPECT_DOUBLE_EQ(opt.getEnergy(-1), 1.0);
-    EXPECT_DOUBLE_EQ(opt.getMaxForce(), 2.0);
-    EXPECT_DOUBLE_EQ(opt.getMaxForce(-1), 2.0);
-    EXPECT_GT(opt.getRMSForce(), 0.0);
-    EXPECT_DOUBLE_EQ(opt.getRMSForce(), opt.getRMSForce(-1));
+    EXPECT_DOUBLE_EQ(opt.getEnergy().numerical_value_in(kcal_per_mol), 1.0);
+    EXPECT_DOUBLE_EQ(opt.getEnergy(-1).numerical_value_in(kcal_per_mol), 1.0);
+    EXPECT_DOUBLE_EQ(
+        opt.getMaxForce().numerical_value_in(kcal_per_mol / angstrom),
+        2.0
+    );
+    EXPECT_DOUBLE_EQ(
+        opt.getMaxForce(-1).numerical_value_in(kcal_per_mol / angstrom),
+        2.0
+    );
+    EXPECT_GT(
+        opt.getRMSForce().numerical_value_in(kcal_per_mol / angstrom),
+        0.0
+    );
+    EXPECT_DOUBLE_EQ(
+        opt.getRMSForce().numerical_value_in(kcal_per_mol / angstrom),
+        opt.getRMSForce(-1).numerical_value_in(kcal_per_mol / angstrom)
+    );
 
     const auto forces    = opt.getForces();
     const auto positions = opt.getPositions();
     ASSERT_EQ(forces.size(), 2U);
     ASSERT_EQ(positions.size(), 2U);
-    EXPECT_EQ(forces[0], linalg::Vec3D(1.0, 0.0, 0.0));
+    EXPECT_EQ(
+        forces[0],
+        linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom
+    );
     EXPECT_EQ(positions[1], linalg::Vec3D(0.4, 0.5, 0.6) * angstrom);
 
     const auto forcesOff    = opt.getForces(-1);
@@ -147,10 +162,14 @@ TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
         pushSample(
             opt,
             {.energy = static_cast<double>(i) * kcal_per_mol,
-             .force0 = {static_cast<double>(i), 0.0, 0.0},
-             .force1 = {0.0, static_cast<double>(i), 0.0},
-             .pos0   = {static_cast<double>(i), 0.0, 0.0},
-             .pos1   = {0.0, static_cast<double>(i), 0.0}}
+             .force0 = linalg::Vector3D{static_cast<double>(i), 0.0, 0.0} *
+                       kcal_per_mol / angstrom,
+             .force1 = linalg::Vector3D{0.0, static_cast<double>(i), 0.0} *
+                       kcal_per_mol / angstrom,
+             .pos0 =
+                 linalg::Vector3D{static_cast<double>(i), 0.0, 0.0} * angstrom,
+             .pos1 =
+                 linalg::Vector3D{0.0, static_cast<double>(i), 0.0} * angstrom}
         );
     }
 
@@ -159,10 +178,16 @@ TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
     // size_t and reads garbage, so we don't reach for it; instead we verify
     // that the front entries match the most recently pushed window.
     const auto latest = maxLen + 3 - 1;
-    EXPECT_DOUBLE_EQ(opt.getEnergy(), double(latest));
-    EXPECT_DOUBLE_EQ(opt.getEnergy(-1), double(latest));
     EXPECT_DOUBLE_EQ(
-        opt.getEnergy(-int(maxLen)),
+        opt.getEnergy().numerical_value_in(kcal_per_mol),
+        double(latest)
+    );
+    EXPECT_DOUBLE_EQ(
+        opt.getEnergy(-1).numerical_value_in(kcal_per_mol),
+        double(latest)
+    );
+    EXPECT_DOUBLE_EQ(
+        opt.getEnergy(-int(maxLen)).numerical_value_in(kcal_per_mol),
         double(latest - (maxLen - 1))
     );
 }
@@ -177,9 +202,9 @@ TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
         true,
         true,
         1.0e-4,
-        1.0e-4,
-        1.0e-3,
-        1.0e-3,
+        1.0e-4 * kcal_per_mol,
+        1.0e-3 * kcal_per_mol / angstrom,
+        1.0e-3 * kcal_per_mol / angstrom,
         ConvStrategy::RIGOROUS
     );
 
@@ -189,8 +214,16 @@ TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
     // Non-const getConvergence() returns a reference — mutating via it should
     // be observable on subsequent reads.
     auto &ref = opt.getConvergence();
-    ref.calcForceConvergence(1.0, 1.0);
-    EXPECT_DOUBLE_EQ(opt.getConvergence().getAbsMaxForce(), 1.0);
+    ref.calcForceConvergence(
+        1.0 * kcal_per_mol / angstrom,
+        1.0 * kcal_per_mol / angstrom
+    );
+    EXPECT_DOUBLE_EQ(
+        opt.getConvergence().getAbsMaxForce().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
+        1.0
+    );
 }
 
 TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
@@ -201,9 +234,9 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
         true,
         true,
         1.0e-4,
-        1.0e-4,
-        1.0e-3,
-        1.0e-3,
+        1.0e-4 * kcal_per_mol,
+        1.0e-3 * kcal_per_mol / angstrom,
+        1.0e-3 * kcal_per_mol / angstrom,
         ConvStrategy::RIGOROUS
     );
     opt.setConvergence(conv);
@@ -212,18 +245,18 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
     pushSample(
         opt,
         {.energy = 1.0 * kcal_per_mol,
-         .force0 = {0.0, 0.0, 0.0},
-         .force1 = {0.0, 0.0, 0.0},
-         .pos0   = {0.0, 0.0, 0.0},
-         .pos1   = {0.0, 0.0, 0.0}}
+         .force0 = linalg::Vector3D{0.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .force1 = linalg::Vector3D{0.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .pos0   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom,
+         .pos1   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom}
     );
     pushSample(
         opt,
         {.energy = 1.0 * kcal_per_mol,
-         .force0 = {0.0, 0.0, 0.0},
-         .force1 = {0.0, 0.0, 0.0},
-         .pos0   = {0.0, 0.0, 0.0},
-         .pos1   = {0.0, 0.0, 0.0}}
+         .force0 = linalg::Vector3D{0.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .force1 = linalg::Vector3D{0.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .pos0   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom,
+         .pos1   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom}
     );
 
     EXPECT_TRUE(opt.hasConverged());
@@ -237,9 +270,9 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
         true,
         true,
         1.0e-4,
-        1.0e-4,
-        1.0e-3,
-        1.0e-3,
+        1.0e-4 * kcal_per_mol,
+        1.0e-3 * kcal_per_mol / angstrom,
+        1.0e-3 * kcal_per_mol / angstrom,
         ConvStrategy::RIGOROUS
     );
     opt.setConvergence(conv);
@@ -247,18 +280,18 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
     pushSample(
         opt,
         {.energy = 1.0 * kcal_per_mol,
-         .force0 = {0.0, 0.0, 0.0},
-         .force1 = {0.0, 0.0, 0.0},
-         .pos0   = {0.0, 0.0, 0.0},
-         .pos1   = {0.0, 0.0, 0.0}}
+         .force0 = linalg::Vector3D{0.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .force1 = linalg::Vector3D{0.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .pos0   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom,
+         .pos1   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom}
     );
     pushSample(
         opt,
         {.energy = 1.0 * kcal_per_mol,
-         .force0 = {1.0, 0.0, 0.0},
-         .force1 = {0.0, 0.0, 0.0},
-         .pos0   = {0.0, 0.0, 0.0},
-         .pos1   = {0.0, 0.0, 0.0}}
+         .force0 = linalg::Vector3D{1.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .force1 = linalg::Vector3D{0.0, 0.0, 0.0} * kcal_per_mol / angstrom,
+         .pos0   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom,
+         .pos1   = linalg::Vector3D{0.0, 0.0, 0.0} * angstrom}
     );
 
     EXPECT_FALSE(opt.hasConverged());

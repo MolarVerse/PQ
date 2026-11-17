@@ -30,6 +30,7 @@
 #include <iostream>
 
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -78,7 +79,7 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    double sink = 0.0;
+    EnergyPerMol sink = EnergyPerMol::zero();
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const auto [coulombEnergy, nonCoulombEnergy] =
@@ -94,6 +95,6 @@ int main()
         sink += coulombEnergy + nonCoulombEnergy;
     }
 
-    std::cout << std::format("{:.6f}\n", sink);
+    std::cout << std::format("{:.6f}\n", sink.numerical_value_in(kcal_per_mol));
     return 0;
 }

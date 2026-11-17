@@ -89,10 +89,14 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
 {
     NoseHooverSettings noseHooverSettings;
     noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
-    const auto chis =
-        std::map<size_t, double>{{0, 1.0}, {1, 2.0}, {2, 3.0}, {3, 0.0}};
+    const auto chis = std::map<size_t, Action>{
+        {0, 1.0 * kcal_per_mol * s},
+        {1, 2.0 * kcal_per_mol * s},
+        {2, 3.0 * kcal_per_mol * s},
+        {3, 0.0 * kcal_per_mol * s}
+    };
     const auto zetas =
-        std::map<size_t, double>{{0, 3.0}, {1, 2.0}, {2, 1.0}, {3, 0.0}};
+        std::map<size_t, Quantity>{{0, 3.0}, {1, 2.0}, {2, 1.0}, {3, 0.0}};
     noseHooverSettings.setChiByUser(chis);
     noseHooverSettings.setZetaByUser(zetas);
     noseHooverSettings.setNoseHooverChainLengthByUser(3);

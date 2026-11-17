@@ -1578,7 +1578,12 @@ TEST(TestResetKinetics, resetForcesRespectsStepFrequency)
     reset.resetForces(1U, *box);
     reset.resetForces(2U, *box);
     for (const auto &atom : box->getAtoms())
-        EXPECT_EQ(atom->getForce(), linalg::Vec3D(1.0, 2.0, 3.0));
+    {
+        EXPECT_EQ(
+            atom->getForce(),
+            linalg::Vec3D(1.0, 2.0, 3.0) * kcal_per_mol / angstrom
+        );
+    }
 
     reset.resetForces(3U, *box);
     for (const auto &atom : box->getAtoms())

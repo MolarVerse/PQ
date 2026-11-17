@@ -155,6 +155,9 @@ using AngularMomentum3D = linalg::Vector3D<AngularMomentum>;
 
 using ForceConstant = mstd::quantity<
     mstd::units::kcal_per_mol / mstd::units::angstrom / mstd::units::angstrom>;
+
+using Hessian = std::vector<std::vector<ForceConstant>>;
+
 using ForceConstantPerTime =
     mstd::quantity<ForceConstant::unit / mstd::units::fs>;
 
@@ -172,6 +175,9 @@ using Charge = mstd::quantity<
 using ChargeSquared = mstd::quantity<
     (mstd::units::electric_charge[mstd::units::elementary_charge]) *
     (mstd::units::electric_charge[mstd::units::elementary_charge])>;
+
+using EnergyLengthPerMol =
+    mstd::quantity<EnergyPerMol::unit * mstd::units::angstrom>;
 
 using Stress =
     linalg::StaticMatrix3x3<mstd::quantity<EnergyPerMol::unit / Volume::unit>>;

@@ -29,7 +29,6 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace intraNonBonded
 {
@@ -64,8 +63,8 @@ namespace intraNonBonded
         physicalData::PhysicalData  &physicalData
     ) const
     {
-        auto        coulombEnergy    = 0.0;
-        auto        nonCoulombEnergy = 0.0;
+        auto        coulombEnergy    = EnergyPerMol::zero();
+        auto        nonCoulombEnergy = EnergyPerMol::zero();
         const auto &box              = simulationBox.getBoxDimensions();
 
         const auto nAtomIndices =
@@ -106,23 +105,24 @@ namespace intraNonBonded
      * @param box
      * @param coulPot
      * @param nonCoulPot
-     * @return std::pair<double, double> - the coulomb and non-coulomb energy
-     * for the interaction
+     * @return std::pair<EnergyPerMol, EnergyPerMol> - the coulomb and
+     * non-coulomb energy for the interaction
      */
-    std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-        AtomIndex    atomIdx1,
-        int          atomIdx2AsInt,
-        const Pos3D &box,
-        physicalData::PhysicalData & /*physicalData*/,
-        const pot::CoulombPotential *coulPot,
-        pot::NonCoulombPotential    *nonCoulPot
-    ) const
+    std::pair<EnergyPerMol, EnergyPerMol> IntraNonBondedMap::
+        calculateSingleInteraction(
+            AtomIndex    atomIdx1,
+            int          atomIdx2AsInt,
+            const Pos3D &box,
+            physicalData::PhysicalData & /*physicalData*/,
+            const pot::CoulombPotential *coulPot,
+            pot::NonCoulombPotential    *nonCoulPot
+        ) const
     {
         if (!_molecule->isActive())
-            return {0.0, 0.0};
+            return {EnergyPerMol::zero(), EnergyPerMol::zero()};
 
-        auto coulombEnergy    = 0.0;
-        auto nonCoulombEnergy = 0.0;
+        auto coulombEnergy    = EnergyPerMol::zero();
+        auto nonCoulombEnergy = EnergyPerMol::zero();
 
         const auto atomIdx2 =
             AtomIndex{static_cast<size_t>(::abs(atomIdx2AsInt))};
@@ -195,13 +195,9 @@ namespace intraNonBonded
                 force            += nonCoulombForce;
             }
 
-            const auto dPosValue  = dPos.numerical_value_in(angstrom);
-            force                /= distance.numerical_value_in(angstrom);
+            const auto forcexyz = force * dPos / distance;
 
-            const auto forcexyz = force * dPosValue;
-
-            const auto shiftForcexyz =
-                forcexyz * txyz.numerical_value_in(angstrom);
+            const auto shiftForcexyz = forcexyz * txyz;
 
             _molecule->addAtomForce(atomIdx1, forcexyz);
             _molecule->addAtomForce(atomIdx2, -forcexyz);

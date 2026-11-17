@@ -78,9 +78,18 @@ TEST_F(TestMolecule, scaleAtomsWrapsIntoBox)
     molsys::OrthorhombicBox box({2.0 * angstrom, 2.0 * angstrom, 2.0 * angstrom}
     );
 
-    _molecule->setAtomPosition(0, linalg::Vec3D{0.9, 0.0, 0.0} * angstrom);
-    _molecule->setAtomPosition(1, linalg::Vec3D{-0.9, 0.0, 0.0} * angstrom);
-    _molecule->setAtomPosition(2, linalg::Vec3D{0.9, 0.1, 0.0} * angstrom);
+    _molecule->setAtomPosition(
+        AtomIndex{0},
+        linalg::Vec3D{0.9, 0.0, 0.0} * angstrom
+    );
+    _molecule->setAtomPosition(
+        AtomIndex{1},
+        linalg::Vec3D{-0.9, 0.0, 0.0} * angstrom
+    );
+    _molecule->setAtomPosition(
+        AtomIndex{2},
+        linalg::Vec3D{0.9, 0.1, 0.0} * angstrom
+    );
     _molecule->calculateCenterOfMass(box);
 
     const auto centerOfMassBeforeScaling = _molecule->getCenterOfMass();
@@ -158,9 +167,9 @@ TEST_F(TestMolecule, scaleVelocityPreservesInternalVelocities)
 TEST_F(TestMolecule, setAtomForceToZero)
 {
     _molecule->setAtomForcesToZero();
-    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{0}), linalg::Vec3D());
-    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{1}), linalg::Vec3D());
-    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{2}), linalg::Vec3D());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{0}), Force3D::zero());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{1}), Force3D::zero());
+    EXPECT_EQ(_molecule->getAtomForce(AtomIndex{2}), Force3D::zero());
 }
 
 TEST_F(TestMolecule, getNumberOfAtomTypes)

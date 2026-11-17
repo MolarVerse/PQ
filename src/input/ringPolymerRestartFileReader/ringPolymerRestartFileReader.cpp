@@ -106,9 +106,9 @@ namespace input::ringPolymer
                 );
 
                 atom->setForce(
-                    {stod(lineElements[9]),
-                     stod(lineElements[10]),
-                     stod(lineElements[11])}
+                    {stod(lineElements[9]) * kcal_per_mol / angstrom,
+                     stod(lineElements[10]) * kcal_per_mol / angstrom,
+                     stod(lineElements[11]) * kcal_per_mol / angstrom}
                 );
                 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
             }

@@ -44,7 +44,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType2,
         1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
             .wellWidth           = 3.0 / angstrom,
             .equilibriumDistance = 4.0 * angstrom
         }
@@ -55,7 +55,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType2,
         1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
             .wellWidth           = 3.0 / angstrom,
             .equilibriumDistance = 4.0 * angstrom
         }
@@ -67,7 +67,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType1,
         1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
             .wellWidth           = 3.0 / angstrom,
             .equilibriumDistance = 4.0 * angstrom
         }
@@ -79,7 +79,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType3,
         1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
             .wellWidth           = 3.0 / angstrom,
             .equilibriumDistance = 4.0 * angstrom
         }
@@ -91,7 +91,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType2,
         2.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
             .wellWidth           = 3.0 / angstrom,
             .equilibriumDistance = 4.0 * angstrom
         }
@@ -103,7 +103,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType2,
         1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 3.0,
+            .dissociationEnergy  = 3.0 * kcal_per_mol,
             .wellWidth           = 3.0 / angstrom,
             .equilibriumDistance = 4.0 * angstrom
         }
@@ -115,7 +115,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType2,
         1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
             .wellWidth           = 4.0 / angstrom,
             .equilibriumDistance = 4.0 * angstrom
         }
@@ -127,7 +127,7 @@ TEST(TestMorsePair, equalsOperator)
         vdwType2,
         1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
             .wellWidth           = 3.0 / angstrom,
             .equilibriumDistance = 5.0 * angstrom
         }
@@ -148,10 +148,10 @@ TEST(TestMorsePair, calculateEnergyAndForces)
 
     const auto potential = pot::MorsePair(
         rncCutoff * angstrom,
-        energyCutoff,
-        forceCutoff,
+        energyCutoff * kcal_per_mol,
+        forceCutoff * kcal_per_mol / angstrom,
         MorseParams{
-            .dissociationEnergy  = coefficients[0],
+            .dissociationEnergy  = coefficients[0] * kcal_per_mol,
             .wellWidth           = coefficients[1] / angstrom,
             .equilibriumDistance = coefficients[2] * angstrom
         }
@@ -163,12 +163,12 @@ TEST(TestMorsePair, calculateEnergyAndForces)
     const auto expTerm = ::exp(-coefficients[1] * (distance - coefficients[2]));
 
     EXPECT_DOUBLE_EQ(
-        energy,
+        energy.numerical_value_in(kcal_per_mol),
         (coefficients[0] * ::pow(1 - expTerm, 2)) - energyCutoff -
             (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
-        force,
+        force.numerical_value_in(kcal_per_mol / angstrom),
         (-2 * coefficients[0] * coefficients[1] * (1 - expTerm) * expTerm) -
             forceCutoff
     );

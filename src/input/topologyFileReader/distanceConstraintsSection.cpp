@@ -69,20 +69,20 @@ namespace input::topology
                 std::format(
                     "Wrong number of arguments in topology file \"Distance "
                     "Constraints\" section at line {} - number of elements has "
-                    "to "
-                    "be "
-                    "6!",
+                    "to be 6!",
                     lineNumber
                 )
             );
         }
 
-        const auto atom1             = stoul(lineElements[0]);
-        const auto atom2             = stoul(lineElements[1]);
-        const auto lowerDistance     = stod(lineElements[2]) * angstrom;
-        const auto upperDistance     = stod(lineElements[3]) * angstrom;
-        const auto springConstant    = stod(lineElements[4]);
-        const auto dSpringConstantDt = stod(lineElements[5]);
+        const auto atom1         = stoul(lineElements[0]);
+        const auto atom2         = stoul(lineElements[1]);
+        const auto lowerDistance = stod(lineElements[2]) * angstrom;
+        const auto upperDistance = stod(lineElements[3]) * angstrom;
+        const auto springConstant =
+            stod(lineElements[4]) * kcal_per_mol / (angstrom * angstrom);
+        const auto dSpringConstantDt =
+            stod(lineElements[5]) * kcal_per_mol / (angstrom * angstrom * fs);
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         if (atom1 == atom2)

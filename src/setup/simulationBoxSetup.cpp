@@ -310,12 +310,13 @@ namespace setup
      */
     void SimulationBoxSetup::calculateTotalCharge()
     {
-        double totalCharge = 0.0;
+        Charge totalCharge = Charge::zero();
 
         auto calcMolCharge = [&totalCharge](const ::molsys::Molecule &mol)
         {
             const auto &charges = mol.getPartialCharges();
-            totalCharge += std::accumulate(charges.begin(), charges.end(), 0.0);
+            totalCharge +=
+                std::accumulate(charges.begin(), charges.end(), Charge::zero());
         };
 
         auto &molecules = _engine.getSimulationBox().getMolecules();
@@ -483,7 +484,12 @@ namespace setup
                 mass.numerical_value_in(g_per_mol)   // amu matches g/mol
             )
         );
-        log.writeSetupInfo(std::format("total charge:      {:14.5f}", charge));
+        log.writeSetupInfo(
+            std::format(
+                "total charge:      {:14.5f}",
+                charge.numerical_value_in(elementary_charge)
+            )
+        );
         log.writeSetupInfo(std::format("unconstrained DOF: {:8d}", dof));
         log.writeEmptyLine();
 

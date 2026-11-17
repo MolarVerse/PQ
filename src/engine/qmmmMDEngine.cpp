@@ -181,10 +181,10 @@ namespace engine
         using enum molsys::Periodicity;
         using std::ranges::distance;
 
-        linalg::tensor3D virial     = {0.0};
-        auto             numQMAtoms = 0.0;
-        auto            &atoms      = getSimulationBox().getAtoms();
-        const auto       nSmMol     = static_cast<size_t>(distance(
+        VirialPerMol virial     = VirialPerMol::zero();
+        auto         numQMAtoms = 0.0;
+        auto        &atoms      = getSimulationBox().getAtoms();
+        const auto   nSmMol     = static_cast<size_t>(distance(
             getSimulationBox().getMoleculesInsideZone(
                 molsys::HybridZone::SMOOTHING
             )
@@ -279,7 +279,7 @@ namespace engine
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
-            getPhysicalDataPtr()->setVirial({0.0});
+            getPhysicalDataPtr()->setVirial(VirialPerMol::zero());
 
             getForceField()->calculateBondedInteractions(
                 getSimulationBox(),
@@ -327,8 +327,8 @@ namespace engine
     {
         using enum molsys::Periodicity;
 
-        auto            &atoms  = getSimulationBox().getAtoms();
-        linalg::tensor3D virial = {0.0};
+        auto        &atoms  = getSimulationBox().getAtoms();
+        VirialPerMol virial = VirialPerMol::zero();
 
         // Set number of QM atoms in physical data for output purposes
         _setNumberOfQMAtoms();
@@ -428,7 +428,7 @@ namespace engine
         // smoothing molecules with (1 - smF)
 
         // bonded interactions directly add to physical data virial
-        getPhysicalDataPtr()->setVirial({0.0});
+        getPhysicalDataPtr()->setVirial(VirialPerMol::zero());
 
         getForceField()->calculateBondedInteractions(
             getSimulationBox(),
@@ -476,9 +476,9 @@ namespace engine
      */
     void QMMMMDEngine::_calculateQMReferenceEnergy()
     {
-        auto &simBox          = getSimulationBox();
-        auto &moleculeTypes   = simBox.getMoleculeTypes();
-        auto  referenceEnergy = 0.0;
+        auto        &simBox          = getSimulationBox();
+        auto        &moleculeTypes   = simBox.getMoleculeTypes();
+        EnergyPerMol referenceEnergy = EnergyPerMol::zero();
 
         for (const auto &mol : simBox.getMolecules())
         {
@@ -667,7 +667,7 @@ namespace engine
             const auto smF =
                 smoothingMol.getSmoothingFactor().numerical_value_in(one);
 
-            auto deficitForce = linalg::Vec3D{0.0};
+            auto deficitForce = Force3D::zero();
             for (auto &atom : smoothingMol.getAtoms())
             {
                 deficitForce += atom->getForce() * (1 - smF);

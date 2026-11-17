@@ -37,8 +37,8 @@ namespace waterModel
 {
     template <typename T>
     concept InterWaterParameterClass = requires {
-        { T::oxygenCharge } -> std::convertible_to<double>;
-        { T::hydrogenCharge } -> std::convertible_to<double>;
+        { T::oxygenCharge } -> std::convertible_to<Charge>;
+        { T::hydrogenCharge } -> std::convertible_to<Charge>;
         { T::oxygenOnlyNonCoulomb } -> std::convertible_to<bool>;
         { T::nonCoulombPairOO };
         { T::nonCoulombPairOH };
@@ -71,8 +71,8 @@ namespace waterModel
 
     struct SPCInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.82;
-        static constexpr auto    hydrogenCharge       = 0.41;
+        static constexpr auto    oxygenCharge   = -0.82 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.41 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -86,8 +86,8 @@ namespace waterModel
 
     struct SPCEInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.8476;
-        static constexpr auto    hydrogenCharge       = 0.4238;
+        static constexpr auto    oxygenCharge   = -0.8476 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.4238 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -101,8 +101,8 @@ namespace waterModel
 
     struct SPCFwInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.82;
-        static constexpr auto    hydrogenCharge       = 0.41;
+        static constexpr auto    oxygenCharge   = -0.82 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.41 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -116,8 +116,8 @@ namespace waterModel
 
     struct qSPCFwInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.84;
-        static constexpr auto    hydrogenCharge       = 0.42;
+        static constexpr auto    oxygenCharge   = -0.84 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.42 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -131,8 +131,8 @@ namespace waterModel
 
     struct SPCDCInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.87362;
-        static constexpr auto    hydrogenCharge       = 0.43681;
+        static constexpr auto    oxygenCharge   = -0.87362 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.43681 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -146,8 +146,8 @@ namespace waterModel
 
     struct H2ODCInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.9099;
-        static constexpr auto    hydrogenCharge       = 0.45495;
+        static constexpr auto    oxygenCharge   = -0.9099 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.45495 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -161,8 +161,8 @@ namespace waterModel
 
     struct TIP3PInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.834;
-        static constexpr auto    hydrogenCharge       = 0.417;
+        static constexpr auto    oxygenCharge   = -0.834 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.417 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -176,8 +176,8 @@ namespace waterModel
 
     struct OPC3InterParam
     {
-        static constexpr auto    oxygenCharge         = -0.89517;
-        static constexpr auto    hydrogenCharge       = 0.447585;
+        static constexpr auto    oxygenCharge   = -0.89517 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.447585 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -191,8 +191,8 @@ namespace waterModel
 
     struct SPCmTRInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.82;
-        static constexpr auto    hydrogenCharge       = 0.41;
+        static constexpr auto    oxygenCharge   = -0.82 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.41 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,
@@ -206,8 +206,8 @@ namespace waterModel
 
     struct TIP3PmTRInterParam
     {
-        static constexpr auto    oxygenCharge         = -0.834;
-        static constexpr auto    hydrogenCharge       = 0.417;
+        static constexpr auto    oxygenCharge   = -0.834 * elementary_charge;
+        static constexpr auto    hydrogenCharge = 0.417 * elementary_charge;
         static constexpr bool    oxygenOnlyNonCoulomb = true;
         inline static const auto nonCoulombPairOO     = pot::LennardJonesPair(
             defaults::COULOMB_CUT_OFF_DEFAULT,

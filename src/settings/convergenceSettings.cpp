@@ -45,19 +45,6 @@ ConvSettings::ConvSettings()
  ***************************/
 
 /**
- * @brief set energy convergence
- *
- * @details this method is used to set both the energy convergence for the
- * absolute and relative convergence
- *
- * @param energyConv
- */
-void ConvSettings::setEnergyConvByUser(double energyConv)
-{
-    _energyConv.setByUser(energyConv);
-}
-
-/**
  * @brief set relative energy convergence
  *
  * @param relEnergyConv
@@ -72,23 +59,9 @@ void ConvSettings::setRelEnergyConvByUser(double relEnergyConv)
  *
  * @param absEnergyConv
  */
-void ConvSettings::setAbsEnergyConvByUser(double absEnergyConv)
+void ConvSettings::setAbsEnergyConvByUser(const EnergyPerMol& absEnergyConv)
 {
     _absEnergyConv.setByUser(absEnergyConv);
-}
-
-/**
- * @brief set force convergence
- *
- * @details this method is used to set both the force convergence for the
- * absolute and relative convergence as well as to set them both for the
- * max force and the rms force convergence
- *
- * @param forceConv
- */
-void ConvSettings::setForceConvByUser(double forceConv)
-{
-    _forceConv.setByUser(forceConv);
 }
 
 /**
@@ -99,7 +72,7 @@ void ConvSettings::setForceConvByUser(double forceConv)
  *
  * @param maxForceConv
  */
-void ConvSettings::setMaxForceConvByUser(double maxForceConv)
+void ConvSettings::setMaxForceConvByUser(const Force& maxForceConv)
 {
     _maxForceConv.setByUser(maxForceConv);
 }
@@ -112,7 +85,7 @@ void ConvSettings::setMaxForceConvByUser(double maxForceConv)
  *
  * @param rmsForceConv
  */
-void ConvSettings::setRMSForceConvByUser(double rmsForceConv)
+void ConvSettings::setRMSForceConvByUser(const Force& rmsForceConv)
 {
     _rmsForceConv.setByUser(rmsForceConv);
 }
@@ -174,80 +147,39 @@ void ConvSettings::setEnergyConvStrategyByUser(ConvStrategy strategy)
  ***************************/
 
 /**
- * @brief get energy convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getEnergyConv() const
-{
-    if (!_energyConv.isSetBySomeone())
-        return std::nullopt;
-
-    return _energyConv.get();
-}
-
-/**
  * @brief get relative energy convergence
  *
- * @return std::optional<double>
+ * @return double
  */
-std::optional<double> ConvSettings::getRelEnergyConv() const
-{
-    if (!_relEnergyConv.isSetBySomeone())
-        return std::nullopt;
-
-    return _relEnergyConv.get();
-}
+double ConvSettings::getRelEnergyConv() const { return _relEnergyConv.get(); }
 
 /**
  * @brief get absolute energy convergence
  *
- * @return std::optional<double>
+ * @return const EnergyPerMol&
  */
-std::optional<double> ConvSettings::getAbsEnergyConv() const
+const EnergyPerMol& ConvSettings::getAbsEnergyConv() const
 {
-    if (!_absEnergyConv.isSetBySomeone())
-        return std::nullopt;
-
     return _absEnergyConv.get();
-}
-
-/**
- * @brief get force convergence
- *
- * @return std::optional<double>
- */
-std::optional<double> ConvSettings::getForceConv() const
-{
-    if (!_forceConv.isSetBySomeone())
-        return std::nullopt;
-
-    return _forceConv.get();
 }
 
 /**
  * @brief get max force convergence
  *
- * @return std::optional<double>
+ * @return const Force&
  */
-std::optional<double> ConvSettings::getMaxForceConv() const
+const Force& ConvSettings::getMaxForceConv() const
 {
-    if (!_maxForceConv.isSetBySomeone())
-        return std::nullopt;
-
     return _maxForceConv.get();
 }
 
 /**
  * @brief get rms force convergence
  *
- * @return std::optional<double>
+ * @return const Force&
  */
-std::optional<double> ConvSettings::getRMSForceConv() const
+const Force& ConvSettings::getRMSForceConv() const
 {
-    if (!_rmsForceConv.isSetBySomeone())
-        return std::nullopt;
-
     return _rmsForceConv.get();
 }
 
@@ -256,28 +188,54 @@ std::optional<double> ConvSettings::getRMSForceConv() const
  *
  * @return bool
  */
-bool ConvSettings::getUseEnergyConv() const { return _useEnergyConv.get(); }
+bool ConvSettings::getUseEnergyConv() const
+{
+    if (_useEnergyConv.isSetBySomeone())
+        return _useEnergyConv.get();
+
+    return _relEnergyConv.isSetByUser() || _absEnergyConv.isSetByUser();
+}
 
 /**
  * @brief get use force convergence
  *
  * @return bool
  */
-bool ConvSettings::getUseForceConv() const { return _useForceConv.get(); }
+bool ConvSettings::getUseForceConv() const
+{
+    if (_useForceConv.isSetBySomeone())
+        return _useForceConv.get();
+
+    return _maxForceConv.isSetByUser() || _rmsForceConv.isSetByUser();
+}
+
+// TODO: document input change properly
 
 /**
  * @brief get use max force convergence
  *
  * @return bool
  */
-bool ConvSettings::getUseMaxForceConv() const { return _useMaxForceConv.get(); }
+bool ConvSettings::getUseMaxForceConv() const
+{
+    if (_useMaxForceConv.isSetBySomeone())
+        return _useMaxForceConv.get();
+
+    return _maxForceConv.isSetByUser();
+}
 
 /**
  * @brief get use rms force convergence
  *
  * @return bool
  */
-bool ConvSettings::getUseRMSForceConv() const { return _useRMSForceConv.get(); }
+bool ConvSettings::getUseRMSForceConv() const
+{
+    if (_useRMSForceConv.isSetBySomeone())
+        return _useRMSForceConv.get();
+
+    return _rmsForceConv.isSetByUser();
+}
 
 /**
  * @brief get energy convergence strategy

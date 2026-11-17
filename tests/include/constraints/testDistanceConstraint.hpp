@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 /**
@@ -49,10 +50,11 @@ class TestDistanceConstraint : public ::testing::Test
     std::shared_ptr<molsys::Atom> _atom1;
     std::shared_ptr<molsys::Atom> _atom2;
 
-    Distance _lowerDistance     = 1.0 * angstrom;
-    Distance _upperDistance     = 3.0 * angstrom;
-    double   _springConstant    = 10.0;
-    double   _dSpringConstantDt = 0.0;
+    Distance             _lowerDistance  = 1.0 * angstrom;
+    Distance             _upperDistance  = 3.0 * angstrom;
+    ForceConstant        _springConstant = 10.0 * kcal_per_mol / angstrom2;
+    ForceConstantPerTime _dSpringConstantDt =
+        0.0 * kcal_per_mol / angstrom2 / s;
 
     void SetUp() override
     {

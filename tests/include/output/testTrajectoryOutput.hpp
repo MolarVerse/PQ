@@ -64,14 +64,14 @@ class TestTrajectoryOutput : public ::testing::Test
 
         atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
         atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
-        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0) * kcal_per_mol / angstrom);
         atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
         atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0) * angstrom / s);
         atom1->setName("H");
         atom2->setName("O");
-        atom1->setPartialCharge(1.0);
-        atom2->setPartialCharge(-1.0);
+        atom1->setPartialCharge(1.0 * elementary_charge);
+        atom2->setPartialCharge(-1.0 * elementary_charge);
         molecule1.setMoltype(MolType{1});
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
@@ -81,10 +81,10 @@ class TestTrajectoryOutput : public ::testing::Test
         auto atom3 = std::make_shared<molsys::Atom>();
 
         atom3->setPosition(Pos::zero() + 1 * angstrom);
-        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom);
         atom3->setVelocity(Vel::zero() + 1 * angstrom / s);
         atom3->setName("Ar");
-        atom3->setPartialCharge(0.0);
+        atom3->setPartialCharge(0.0 * elementary_charge);
         molecule2.setMoltype(MolType{2});
         molecule2.addAtom(atom3);
 

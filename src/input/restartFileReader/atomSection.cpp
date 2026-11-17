@@ -81,11 +81,14 @@ namespace input::restartFile
                 if (lineElements.size() > 9)
                 {
                     const auto forceX =
-                        utilities::stringToFiniteDouble(lineElements[9]);
+                        utilities::stringToFiniteDouble(lineElements[9]) *
+                        kcal_per_mol / angstrom;
                     const auto forceY =
-                        utilities::stringToFiniteDouble(lineElements[10]);
+                        utilities::stringToFiniteDouble(lineElements[10]) *
+                        kcal_per_mol / angstrom;
                     const auto forceZ =
-                        utilities::stringToFiniteDouble(lineElements[11]);
+                        utilities::stringToFiniteDouble(lineElements[11]) *
+                        kcal_per_mol / angstrom;
 
                     atom->setForce({forceX, forceY, forceZ});
                 }
@@ -121,11 +124,14 @@ namespace input::restartFile
                 if (lineElements.size() > 18)
                 {
                     const auto oldFx =
-                        utilities::stringToFiniteDouble(lineElements[18]);
+                        utilities::stringToFiniteDouble(lineElements[18]) *
+                        kcal_per_mol / angstrom;
                     const auto oldFy =
-                        utilities::stringToFiniteDouble(lineElements[19]);
+                        utilities::stringToFiniteDouble(lineElements[19]) *
+                        kcal_per_mol / angstrom;
                     const auto oldFz =
-                        utilities::stringToFiniteDouble(lineElements[20]);
+                        utilities::stringToFiniteDouble(lineElements[20]) *
+                        kcal_per_mol / angstrom;
 
                     atom->setForceOld({oldFx, oldFy, oldFz});
                 }

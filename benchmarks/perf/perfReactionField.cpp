@@ -53,10 +53,12 @@ int main()
     {
         const double distance =
             1.0 + (static_cast<double>(i & 255U) * 0.03);   // within cutoff
-        const double chargeProduct = 0.5 * -0.5;
+        const auto chargeProduct =
+            0.5 * -0.5 * elementary_charge * elementary_charge;
         const auto [energy, force] =
             reactionField.calculate(distance * angstrom, chargeProduct);
-        sink += energy + force;
+        sink += energy.numerical_value_in(kcal_per_mol) +
+                force.numerical_value_in(kcal_per_mol / angstrom);
     }
 
     std::cout << std::format("{:.6f}\n", sink);

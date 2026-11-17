@@ -63,7 +63,7 @@ TEST_F(TestVirial, calculateVirial)
                         shiftForce_mol2_atom1;
 
     const auto virialCalc = virial::calculateVirial(*_simBox);
-    EXPECT_EQ(diagonal(virialCalc), virial);
+    EXPECT_EQ(diagonal(virialCalc).numerical_value_in(kcal_per_mol), virial);
     EXPECT_EQ(
         _simBox->getMolecule(0)
             .getAtomShiftForce(AtomIndex{0})
@@ -88,7 +88,7 @@ TEST_F(TestVirial, atomicVirialHasNoIntramolecularCorrection)
 {
     EXPECT_EQ(
         virial::intraMolecularVirialCorrection(*_simBox),
-        linalg::tensor3D{0.0}
+        linalg::tensor3D{0.0} * kcal_per_mol
     );
 }
 
@@ -138,7 +138,7 @@ TEST_F(TestVirial, calculateQMVirialWithNoQMAtomsIsZero)
     // isActive() state
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
-    EXPECT_EQ(virial::calculateQMVirial(*_simBox), linalg::tensor3D{0.0});
+    EXPECT_EQ(virial::calculateQMVirial(*_simBox), VirialPerMol::zero());
 }
 
 TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
@@ -199,18 +199,12 @@ TEST_F(TestVirial, calculateMolecularVirial)
     const auto centerOfMass_mol2 = molecule1.getCenterOfMass();
 
     const auto virial =
-        -force_mol1_atom1 * (position_mol1_atom1 - centerOfMass_mol1)
-                                .numerical_value_in(angstrom) -
-        force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1)
-                               .numerical_value_in(angstrom) -
-        force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2)
-                               .numerical_value_in(angstrom);
+        -force_mol1_atom1 * (position_mol1_atom1 - centerOfMass_mol1) -
+        force_mol1_atom2 * (position_mol1_atom2 - centerOfMass_mol1) -
+        force_mol2_atom1 * (position_mol2_atom1 - centerOfMass_mol2);
 
     const auto virialCalculated =
         virial::intraMolecularVirialCorrection(*_simBox);
 
-    EXPECT_EQ(
-        diagonal(virialCalculated).numerical_value_in(kcal_per_mol),
-        virial
-    );
+    EXPECT_EQ(diagonal(virialCalculated), virial);
 }

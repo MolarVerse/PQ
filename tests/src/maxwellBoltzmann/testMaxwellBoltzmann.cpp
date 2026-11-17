@@ -185,7 +185,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesAngularMomentum)
     {
         EXPECT_NEAR(
             angularMomentum[i].numerical_value_in(
-                amu * angstrom * angstrom / s
+                g_per_mol * angstrom * angstrom / s
             ),
             0.0,
             1e-10 *
@@ -251,7 +251,7 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
             );
             EXPECT_NEAR(
                 angularMomentum[i].numerical_value_in(
-                    amu * angstrom * angstrom / s
+                    g_per_mol * angstrom * angstrom / s
                 ),
                 0.0,
                 1e-10 * lScale.numerical_value_in(

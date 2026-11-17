@@ -32,7 +32,6 @@
 #include "resetKineticsSettings.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace
 {
@@ -79,12 +78,12 @@ namespace
             const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
             const auto conversionFactor =
                 UNIVERSAL_GAS_CONSTANT * unitConversion;
-            const auto sigmaSquared =
-                4.0 * thermostatSettings.getFriction() * conversionFactor *
-                maxTemperature.quantity_from_zero().numerical_value_in(K) /
-                settings::TimingsSettings::getTimeStep().numerical_value_in(fs);
+            const auto sigmaSquared = 4.0 * thermostatSettings.getFriction() *
+                                      conversionFactor *
+                                      maxTemperature.quantity_from_zero() /
+                                      settings::TimingsSettings::getTimeStep();
 
-            if (!std::isfinite(sigmaSquared))
+            if (!isfinite(sigmaSquared))
             {
                 throw exc::InputFileException(
                     "Langevin thermostat parameters produce a non-finite "

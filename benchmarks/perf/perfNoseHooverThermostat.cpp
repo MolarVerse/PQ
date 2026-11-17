@@ -29,6 +29,7 @@
 #include <iostream>
 
 #include "thermostatSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -56,10 +57,13 @@ int main()
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
     NoseHooverSettings nhSettings;
     nhSettings.setNoseHooverCouplingFrequencyByUser(1.0 * Hz);
-    const auto chiValues =
-        std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
+    const auto chiValues = std::map<size_t, Action>{
+        {0, 0.1 * kcal_per_mol * s},
+        {1, 0.2 * kcal_per_mol * s},
+        {2, 0.3 * kcal_per_mol * s}
+    };
     const auto zetaValues =
-        std::map<size_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
+        std::map<size_t, Quantity>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
     nhSettings.setChiByUser(chiValues);
     nhSettings.setZetaByUser(zetaValues);
     auto thermostat = thermostat::NoseHooverThermostat(nhSettings);

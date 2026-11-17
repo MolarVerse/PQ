@@ -30,6 +30,7 @@
 #include "atom.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerRestartFileReader.hpp"
@@ -132,12 +133,18 @@ TEST_F(TestRingPolymerRestartFileReader, readsPositionsVelocitiesAndForces)
         beads[0].getAtoms()[1]->getVelocity(),
         linalg::Vec3D(.4, .5, .6) * angstrom / s
     );
-    EXPECT_EQ(beads[0].getAtoms()[1]->getForce(), linalg::Vec3D(40, 50, 60));
+    EXPECT_EQ(
+        beads[0].getAtoms()[1]->getForce(),
+        linalg::Vec3D(40, 50, 60) * kcal_per_mol / angstrom
+    );
     EXPECT_EQ(
         beads[1].getAtoms()[0]->getPosition(),
         linalg::Vec3D(7, 8, 9) * angstrom
     );
-    EXPECT_EQ(beads[1].getAtoms()[1]->getForce(), linalg::Vec3D(11, 12, 13));
+    EXPECT_EQ(
+        beads[1].getAtoms()[1]->getForce(),
+        linalg::Vec3D(11, 12, 13) * kcal_per_mol / angstrom
+    );
 }
 
 /**
@@ -164,7 +171,10 @@ TEST_F(TestRingPolymerRestartFileReader, skipsCommentsAndEmptyLinesAndAccepts21)
 
     EXPECT_NO_THROW(reader.read(2));
     EXPECT_EQ(
-        _engine->getRingPolymerBeads()[0].getAtoms()[1]->getForce(),
+        _engine->getRingPolymerBeads()[0]
+            .getAtoms()[1]
+            ->getForce()
+            .numerical_value_in(kcal_per_mol / angstrom),
         linalg::Vec3D(4, 5, 6)
     );
 }
@@ -253,7 +263,10 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
                 linalg::Vec3D{value * 1e-3, value * 2e-3, value * 3e-3} *
                 angstrom / s
             );
-            atom->setForce({-value, value * 2.0, -value * 3.0});
+            atom->setForce(
+                linalg::Vec3D{-value, value * 2.0, -value * 3.0} *
+                kcal_per_mol / angstrom
+            );
             value += 0.5;
         }
     }
@@ -277,9 +290,9 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
     {
         for (auto &atom : bead.getAtoms())
         {
-            atom->setPosition(linalg::Vec3D{0, 0, 0} * angstrom);
-            atom->setVelocity(linalg::Vec3D{0, 0, 0} * angstrom / s);
-            atom->setForce(linalg::Vec3D{0, 0, 0});
+            atom->setPosition(Pos3D::zero());
+            atom->setVelocity(Vel3D::zero());
+            atom->setForce(Force3D::zero());
         }
     }
 
@@ -303,11 +316,8 @@ TEST_F(TestRingPolymerRestartFileReader, readsBackWhatTheWriterWrote)
                 );
             }
 
-            EXPECT_NE(
-                atom->getVelocity(),
-                linalg::Vec3D(0, 0, 0) * angstrom / s
-            );
-            EXPECT_NE(atom->getForce(), linalg::Vec3D(0, 0, 0));
+            EXPECT_NE(atom->getVelocity(), Vel3D::zero());
+            EXPECT_NE(atom->getForce(), Force3D::zero());
             ++atomIndex;
         }
     }

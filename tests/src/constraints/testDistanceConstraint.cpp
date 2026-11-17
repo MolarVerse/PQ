@@ -38,17 +38,23 @@ TEST_F(TestDistanceConstraint, withinBoundsAppliesNoForce)
     // within [1.0, 3.0]
     _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), 0.0);
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_lowerEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_upperEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
 
     const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
         molecule.getAtomForce(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom
     );
     EXPECT_EQ(
         molecule.getAtomForce(AtomIndex{1}),
-        linalg::Vec3D(0.0, 0.0, 0.0)
+        linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom
     );
 }
 
@@ -64,10 +70,16 @@ TEST_F(TestDistanceConstraint, belowLowerBoundAppliesRestoringForce)
     // dPos = (0, 0.5, 0), distance = 0.5, below lowerDistance = 1.0
     _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
-    const auto delta = _lowerDistance.numerical_value_in(angstrom) - 0.5;
+    const auto delta          = _lowerDistance - 0.5 * angstrom;
     const auto expectedEnergy = 0.5 * _springConstant * delta * delta;
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), expectedEnergy);
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_lowerEnergy().numerical_value_in(kcal_per_mol),
+        expectedEnergy.numerical_value_in(kcal_per_mol)
+    );
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_upperEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
 
     const auto expectedForce =
         -_springConstant * delta * linalg::Vec3D(0.0, 0.5, 0.0) / 0.5;
@@ -89,10 +101,16 @@ TEST_F(TestDistanceConstraint, aboveUpperBoundAppliesRestoringForce)
     // dPos = (0, 4, 0), distance = 4.0, above upperDistance = 3.0
     _distanceConstraint->applyDistanceConstraint(*_box, 1.0 * fs);
 
-    const auto delta = 4.0 - _upperDistance.numerical_value_in(angstrom);
+    const auto delta          = 4.0 * angstrom - _upperDistance;
     const auto expectedEnergy = 0.5 * _springConstant * delta * delta;
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), expectedEnergy);
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_upperEnergy().numerical_value_in(kcal_per_mol),
+        expectedEnergy.numerical_value_in(kcal_per_mol)
+    );
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_lowerEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
 
     const auto expectedForce =
         _springConstant * delta * linalg::Vec3D(0.0, 4.0, 0.0) / 4.0;
@@ -114,8 +132,14 @@ TEST_F(TestDistanceConstraint, negativeTimeIntervalIsNoOp)
         _distanceConstraint->applyDistanceConstraint(*_box, -1.0 * fs)
     );
 
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getLowerEnergy(), 0.0);
-    EXPECT_DOUBLE_EQ(_distanceConstraint->getUpperEnergy(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_lowerEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
+    EXPECT_DOUBLE_EQ(
+        _distanceConstraint->get_upperEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
 }
 
 /**
