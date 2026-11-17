@@ -1,1 +1,1 @@
-- `out::H5mdOutput` writes H5MD 1.1 with the HDF5 C API behind a pimpl; only `h5mdOutput.cpp` includes HDF5 (no PCH, no unity batch). New CMake option `BUILD_WITH_HDF5` (default OFF); without it `traj_format = h5md` throws `CompileTimeException` (#N).
+- `out::H5mdOutput` writes H5MD 1.1 with the HDF5 C API behind a pimpl; only `h5mdOutput.cpp` includes HDF5 (no PCH, no unity batch). New CMake option `BUILD_WITH_HDF5` (default OFF); without it `traj_format = h5md` throws `CompileTimeException` (#1217).
