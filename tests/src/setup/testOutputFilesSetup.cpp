@@ -183,7 +183,9 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
     EXPECT_TRUE(std::filesystem::exists(prefix + ".rst"));
 
     for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
         EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
 
     cleanupPrefix();
 }
