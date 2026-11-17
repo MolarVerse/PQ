@@ -1,0 +1,1 @@
+- Fix the setup log line "Number of M-SHAKE molecules", which printed the number of M-SHAKE bonds (9 for 3 waters). The log now also lists the M-SHAKE bonds.

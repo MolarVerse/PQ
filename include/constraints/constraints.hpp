@@ -119,6 +119,9 @@ namespace constraints
         [[nodiscard]] size_t getNumberOfMShakeConstraints(
             molsys::SimulationBox &
         ) const;
+        [[nodiscard]] size_t getNumberOfMShakeMolecules(
+            molsys::SimulationBox &
+        ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
         /***************************

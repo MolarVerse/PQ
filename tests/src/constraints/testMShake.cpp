@@ -306,3 +306,43 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
         "MolType(1)"
     );
 }
+
+/**
+ * @brief a rigid triatomic has three M-Shake bonds, so molecule and bond
+ * counts must differ; molecules of other types are not counted.
+ */
+TEST(TestMShake, countsMShakeMoleculesSeparatelyFromBonds)
+{
+    auto moltype = molsys::MoleculeType();
+    moltype.setMoltype(MolType{1});
+    moltype.setName("triangle");
+    moltype.setNumberOfAtoms(3);
+
+    auto refAtoms = std::vector<molsys::Atom>(3);
+    refAtoms[0].setName("H");
+    refAtoms[1].setName("H");
+    refAtoms[2].setName("H");
+    refAtoms[0].setPosition({0.0, 0.0, 0.0});
+    refAtoms[1].setPosition({1.0, 0.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
+
+    auto mShakeRef = constraints::MShakeReference();
+    mShakeRef.setMoleculeType(moltype);
+    mShakeRef.setAtoms(refAtoms);
+
+    auto mShake = constraints::MShake();
+    mShake.addMShakeReference(mShakeRef);
+    mShake.initMShake();
+
+    auto simBox = molsys::SimulationBox();
+
+    for (const auto type : {MolType{1}, MolType{1}, MolType{2}})
+    {
+        auto molecule = molsys::Molecule();
+        molecule.setMoltype(type);
+        simBox.addMolecule(molecule);
+    }
+
+    EXPECT_EQ(mShake.calcNumberOfMShakeMolecules(simBox), 2);
+    EXPECT_EQ(mShake.calcNumberOfBondConstraints(simBox), 6);
+}
