@@ -346,7 +346,7 @@ namespace engine
 
         auto _ = scopedTimer(TimerId::Output, "FrameOutput");
 
-        auto frame        = out::Frame{simulationBox, thermostat};
+        auto frame            = out::Frame{simulationBox, thermostat};
         frame.potentialEnergy = potentialEnergy;
 
         const auto metadata = _outputFileSettings->getIncludeOutputMetadata();
