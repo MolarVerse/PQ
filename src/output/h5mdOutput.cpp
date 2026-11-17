@@ -186,8 +186,7 @@ namespace out
         {
             std::vector<const char *> data;
             data.reserve(values.size());
-            for (const auto &value : values)
-                data.push_back(value.c_str());
+            for (const auto &value : values) data.push_back(value.c_str());
 
             const auto   type = stringType();
             const auto   size = static_cast<hsize_t>(values.size());
