@@ -413,6 +413,19 @@ namespace constraints
     }
 
     /**
+     * @brief returns the number of molecules constrained by M-Shake
+     *
+     * @param simulationBox
+     * @return size_t
+     */
+    size_t Constraints::getNumberOfMShakeMolecules(
+        molsys::SimulationBox &simulationBox
+    ) const
+    {
+        return _mShake->calcNumberOfMShakeMolecules(simulationBox);
+    }
+
+    /**
      * @brief returns the number of distance constraints
      *
      * @return the number of distance constraints
