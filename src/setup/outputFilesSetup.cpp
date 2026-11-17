@@ -100,10 +100,9 @@ namespace setup
 
         // extxyz or h5md replace the xyz, velocity, force and charge files of
         // MD runs
-        const auto format = outputFileSettings.getTrajectoryFormat();
-        const auto textTrajectory =
-            !settings::GeneralSettings::isMDJobType() ||
-            format == TrajectoryFormat::XYZ;
+        const auto format         = outputFileSettings.getTrajectoryFormat();
+        const auto textTrajectory = !settings::GeneralSettings::isMDJobType() ||
+                                    format == TrajectoryFormat::XYZ;
 
         if (textTrajectory)
         {

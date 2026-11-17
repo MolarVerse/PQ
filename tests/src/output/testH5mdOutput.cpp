@@ -20,8 +20,6 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include "h5mdOutput.hpp"
-
 #include <gtest/gtest.h>
 
 #include <filesystem>
@@ -30,6 +28,7 @@
 #include "atom.hpp"
 #include "exceptions.hpp"
 #include "frame.hpp"
+#include "h5mdOutput.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
@@ -39,7 +38,10 @@ namespace
     out::Frame makeFrame()
     {
         molsys::SimulationBox simulationBox;
-        simulationBox.setBox(molsys::OrthorhombicBox{{10.0, 11.0, 12.0}}, false);
+        simulationBox.setBox(
+            molsys::OrthorhombicBox{{10.0, 11.0, 12.0}},
+            false
+        );
 
         molsys::Molecule molecule{MolType{1}};
         for (const auto *name : {"O", "D", "dum"})

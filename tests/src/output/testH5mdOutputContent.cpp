@@ -42,9 +42,12 @@ namespace
     out::Frame makeFrame(const double potentialEnergy)
     {
         molsys::SimulationBox simulationBox;
-        simulationBox.setBox(molsys::OrthorhombicBox{{10.0, 11.0, 12.0}}, false);
+        simulationBox.setBox(
+            molsys::OrthorhombicBox{{10.0, 11.0, 12.0}},
+            false
+        );
 
-        molsys::Molecule molecule{MolType{1}};
+        molsys::Molecule                  molecule{MolType{1}};
         const std::array<const char *, 3> names{"O", "D", "dum"};
         for (std::size_t i = 0; i < names.size(); ++i)
         {
@@ -74,14 +77,23 @@ namespace
     {
         const hid_t set   = H5Dopen2(file, path, H5P_DEFAULT);
         const hid_t space = H5Dget_space(set);
-        dims.resize(static_cast<std::size_t>(H5Sget_simple_extent_ndims(space)));
+        dims.resize(
+            static_cast<std::size_t>(H5Sget_simple_extent_ndims(space))
+        );
         H5Sget_simple_extent_dims(space, dims.data(), nullptr);
 
         std::size_t size = 1;
         for (const auto extent : dims) size *= extent;
 
         std::vector<double> values(size);
-        H5Dread(set, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, values.data());
+        H5Dread(
+            set,
+            H5T_NATIVE_DOUBLE,
+            H5S_ALL,
+            H5S_ALL,
+            H5P_DEFAULT,
+            values.data()
+        );
         H5Sclose(space);
         H5Dclose(set);
         return values;
@@ -117,18 +129,20 @@ TEST(TestH5mdOutputContent, writesH5mdLayout)
         output.write(makeFrame(-2.5), 20);
     }
 
-    const hid_t          file = H5Fopen(filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+    const hid_t file = H5Fopen(filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
     std::vector<hsize_t> dims;
 
     const auto species = readDoubles(file, "/particles/all/species", dims);
     EXPECT_EQ(species, (std::vector<double>{8.0, 1.0, 0.0}));
 
-    const auto position = readDoubles(file, "/particles/all/position/value", dims);
+    const auto position =
+        readDoubles(file, "/particles/all/position/value", dims);
     EXPECT_EQ(dims, (std::vector<hsize_t>{2, 3, 3}));
     EXPECT_EQ(position[3], 2.0);
     EXPECT_EQ(position[17], 3.0);
 
-    const auto velocity = readDoubles(file, "/particles/all/velocity/value", dims);
+    const auto velocity =
+        readDoubles(file, "/particles/all/velocity/value", dims);
     EXPECT_FLOAT_EQ(static_cast<float>(velocity[7]), 2.0e12F);
 
     const auto force = readDoubles(file, "/particles/all/force/value", dims);
@@ -144,17 +158,22 @@ TEST(TestH5mdOutputContent, writesH5mdLayout)
     const auto times = readDoubles(file, "/particles/all/position/time", dims);
     EXPECT_EQ(times, (std::vector<double>{5.0, 10.0}));
 
-    const auto edges = readDoubles(file, "/particles/all/box/edges/value", dims);
+    const auto edges =
+        readDoubles(file, "/particles/all/box/edges/value", dims);
     EXPECT_EQ(dims, (std::vector<hsize_t>{2, 3, 3}));
     EXPECT_EQ(edges[0], 10.0);
     EXPECT_EQ(edges[4], 11.0);
     EXPECT_EQ(edges[8], 12.0);
 
-    const auto energy = readDoubles(file, "/observables/potential_energy/value", dims);
+    const auto energy =
+        readDoubles(file, "/observables/potential_energy/value", dims);
     EXPECT_EQ(energy, (std::vector<double>{-1.5, -2.5}));
 
     EXPECT_EQ(readUnit(file, "/particles/all/position/value"), "Angstrom");
-    EXPECT_EQ(readUnit(file, "/observables/potential_energy/value"), "kcal mol-1");
+    EXPECT_EQ(
+        readUnit(file, "/observables/potential_energy/value"),
+        "kcal mol-1"
+    );
 
     H5Fclose(file);
     std::filesystem::remove(filename);

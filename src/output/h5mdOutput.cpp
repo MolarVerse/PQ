@@ -55,7 +55,7 @@ namespace out
         constexpr int         DEFLATE_LEVEL = 1;
 
         // species of atoms without an element (dummy and virtual atoms)
-        constexpr int NO_ELEMENT = 0;
+        constexpr int NO_ELEMENT  = 0;
         constexpr int MAX_ELEMENT = 118;
 
         /**
@@ -111,14 +111,27 @@ namespace out
         /**
          * @brief write a string attribute
          */
-        void attribute(const hid_t object, const char *name, std::string_view value)
+        void attribute(
+            const hid_t      object,
+            const char      *name,
+            std::string_view value
+        )
         {
             const Handle type{H5Tcopy(H5T_C_S1), H5Tclose};
-            check(H5Tset_size(type.get(), std::max<std::size_t>(value.size(), 1)));
+            check(
+                H5Tset_size(type.get(), std::max<std::size_t>(value.size(), 1))
+            );
 
             const Handle space{H5Screate(H5S_SCALAR), H5Sclose};
             const Handle attr{
-                H5Acreate2(object, name, type.get(), space.get(), H5P_DEFAULT, H5P_DEFAULT),
+                H5Acreate2(
+                    object,
+                    name,
+                    type.get(),
+                    space.get(),
+                    H5P_DEFAULT,
+                    H5P_DEFAULT
+                ),
                 H5Aclose
             };
 
@@ -138,7 +151,14 @@ namespace out
             const auto   size = static_cast<hsize_t>(values.size());
             const Handle space{H5Screate_simple(1, &size, nullptr), H5Sclose};
             const Handle attr{
-                H5Acreate2(object, name, H5T_STD_I32LE, space.get(), H5P_DEFAULT, H5P_DEFAULT),
+                H5Acreate2(
+                    object,
+                    name,
+                    H5T_STD_I32LE,
+                    space.get(),
+                    H5P_DEFAULT,
+                    H5P_DEFAULT
+                ),
                 H5Aclose
             };
 
@@ -161,7 +181,10 @@ namespace out
 
             std::vector<char> buffer(values.size() * width, '\0');
             for (std::size_t i = 0; i < values.size(); ++i)
-                std::ranges::copy(values[i], buffer.begin() + static_cast<std::ptrdiff_t>(i * width));
+                std::ranges::copy(
+                    values[i],
+                    buffer.begin() + static_cast<std::ptrdiff_t>(i * width)
+                );
 
             const Handle type{H5Tcopy(H5T_C_S1), H5Tclose};
             check(H5Tset_size(type.get(), width));
@@ -173,7 +196,14 @@ namespace out
             if (asAttribute)
             {
                 const Handle attr{
-                    H5Acreate2(object, name, type.get(), space.get(), H5P_DEFAULT, H5P_DEFAULT),
+                    H5Acreate2(
+                        object,
+                        name,
+                        type.get(),
+                        space.get(),
+                        H5P_DEFAULT,
+                        H5P_DEFAULT
+                    ),
                     H5Aclose
                 };
                 check(H5Awrite(attr.get(), type.get(), buffer.data()));
@@ -181,10 +211,25 @@ namespace out
             }
 
             const Handle set{
-                H5Dcreate2(object, name, type.get(), space.get(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT),
+                H5Dcreate2(
+                    object,
+                    name,
+                    type.get(),
+                    space.get(),
+                    H5P_DEFAULT,
+                    H5P_DEFAULT,
+                    H5P_DEFAULT
+                ),
                 H5Dclose
             };
-            check(H5Dwrite(set.get(), type.get(), H5S_ALL, H5S_ALL, H5P_DEFAULT, buffer.data()));
+            check(H5Dwrite(
+                set.get(),
+                type.get(),
+                H5S_ALL,
+                H5S_ALL,
+                H5P_DEFAULT,
+                buffer.data()
+            ));
         }
 
         /**
@@ -209,11 +254,14 @@ namespace out
                 std::vector<hsize_t> dims{0};
                 std::vector<hsize_t> maxDims{H5S_UNLIMITED};
                 dims.insert(dims.end(), frameShape.begin(), frameShape.end());
-                maxDims.insert(maxDims.end(), frameShape.begin(), frameShape.end());
+                maxDims.insert(
+                    maxDims.end(),
+                    frameShape.begin(),
+                    frameShape.end()
+                );
 
                 std::size_t frameBytes = H5Tget_size(fileType);
-                for (const auto extent : frameShape)
-                    frameBytes *= extent;
+                for (const auto extent : frameShape) frameBytes *= extent;
 
                 const auto framesPerChunk = std::clamp<std::size_t>(
                     CHUNK_BYTES / frameBytes,
@@ -245,7 +293,15 @@ namespace out
                 ));
 
                 return {
-                    H5Dcreate2(parent, name, fileType, space.get(), H5P_DEFAULT, create.get(), access.get()),
+                    H5Dcreate2(
+                        parent,
+                        name,
+                        fileType,
+                        space.get(),
+                        H5P_DEFAULT,
+                        create.get(),
+                        access.get()
+                    ),
                     H5Dclose
                 };
             }
@@ -278,14 +334,32 @@ namespace out
                 count[0]   = 1;
 
                 const Handle fileSpace{H5Dget_space(_set.get()), H5Sclose};
-                check(H5Sselect_hyperslab(fileSpace.get(), H5S_SELECT_SET, start.data(), nullptr, count.data(), nullptr));
+                check(H5Sselect_hyperslab(
+                    fileSpace.get(),
+                    H5S_SELECT_SET,
+                    start.data(),
+                    nullptr,
+                    count.data(),
+                    nullptr
+                ));
 
                 const Handle memSpace{
-                    H5Screate_simple(static_cast<int>(count.size()), count.data(), nullptr),
+                    H5Screate_simple(
+                        static_cast<int>(count.size()),
+                        count.data(),
+                        nullptr
+                    ),
                     H5Sclose
                 };
 
-                check(H5Dwrite(_set.get(), _memType, memSpace.get(), fileSpace.get(), H5P_DEFAULT, data));
+                check(H5Dwrite(
+                    _set.get(),
+                    _memType,
+                    memSpace.get(),
+                    fileSpace.get(),
+                    H5P_DEFAULT,
+                    data
+                ));
                 ++_frames;
             }
         };
@@ -311,15 +385,31 @@ namespace out
                 const std::string_view      unit
             )
                 : _group(group(parent, name)),
-                  _step(_group.get(), "step", H5T_STD_I64LE, H5T_NATIVE_INT64, {}),
-                  _time(_group.get(), "time", H5T_IEEE_F64LE, H5T_NATIVE_DOUBLE, {}),
+                  _step(
+                      _group.get(),
+                      "step",
+                      H5T_STD_I64LE,
+                      H5T_NATIVE_INT64,
+                      {}
+                  ),
+                  _time(
+                      _group.get(),
+                      "time",
+                      H5T_IEEE_F64LE,
+                      H5T_NATIVE_DOUBLE,
+                      {}
+                  ),
                   _value(_group.get(), "value", fileType, memType, frameShape)
             {
                 attribute(_time.get(), "unit", "fs");
                 attribute(_value.get(), "unit", unit);
             }
 
-            void append(const std::int64_t step, const double time, const void *value)
+            void append(
+                const std::int64_t step,
+                const double       time,
+                const void        *value
+            )
             {
                 _step.append(&step);
                 _time.append(&time);
@@ -338,7 +428,8 @@ namespace out
                 return NO_ELEMENT;
 
             const auto number = atomNumberMap.at(key).get();
-            return number <= MAX_ELEMENT ? static_cast<int>(number) : NO_ELEMENT;
+            return number <= MAX_ELEMENT ? static_cast<int>(number)
+                                         : NO_ELEMENT;
         }
 
     }   // namespace
@@ -399,26 +490,88 @@ namespace out
             const auto particles = group(file.get(), "particles");
             const auto all       = group(particles.get(), "all");
 
-            const auto n         = static_cast<hsize_t>(nAtoms);
+            const auto   n = static_cast<hsize_t>(nAtoms);
             const Handle space{H5Screate_simple(1, &n, nullptr), H5Sclose};
             const Handle set{
-                H5Dcreate2(all.get(), "species", H5T_STD_I32LE, space.get(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT),
+                H5Dcreate2(
+                    all.get(),
+                    "species",
+                    H5T_STD_I32LE,
+                    space.get(),
+                    H5P_DEFAULT,
+                    H5P_DEFAULT,
+                    H5P_DEFAULT
+                ),
                 H5Dclose
             };
-            check(H5Dwrite(set.get(), H5T_NATIVE_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, speciesOfAtoms.data()));
+            check(H5Dwrite(
+                set.get(),
+                H5T_NATIVE_INT,
+                H5S_ALL,
+                H5S_ALL,
+                H5P_DEFAULT,
+                speciesOfAtoms.data()
+            ));
 
             const auto boxGroup = group(all.get(), "box");
             attribute(boxGroup.get(), "dimension", std::vector<int>{3});
-            strings(boxGroup.get(), "boundary", {"periodic", "periodic", "periodic"}, true);
+            strings(
+                boxGroup.get(),
+                "boundary",
+                {"periodic", "periodic", "periodic"},
+                true
+            );
 
-            box = std::make_unique<Element>(boxGroup.get(), "edges", H5T_IEEE_F64LE, H5T_NATIVE_DOUBLE, std::vector<hsize_t>{3, 3}, "Angstrom");
-            position = std::make_unique<Element>(all.get(), "position", H5T_IEEE_F32LE, H5T_NATIVE_FLOAT, std::vector<hsize_t>{n, 3}, "Angstrom");
-            velocity = std::make_unique<Element>(all.get(), "velocity", H5T_IEEE_F32LE, H5T_NATIVE_FLOAT, std::vector<hsize_t>{n, 3}, "Angstrom s-1");
-            force = std::make_unique<Element>(all.get(), "force", H5T_IEEE_F32LE, H5T_NATIVE_FLOAT, std::vector<hsize_t>{n, 3}, "kcal mol-1 Angstrom-1");
-            charge = std::make_unique<Element>(all.get(), "charge", H5T_IEEE_F32LE, H5T_NATIVE_FLOAT, std::vector<hsize_t>{n}, "e");
+            box = std::make_unique<Element>(
+                boxGroup.get(),
+                "edges",
+                H5T_IEEE_F64LE,
+                H5T_NATIVE_DOUBLE,
+                std::vector<hsize_t>{3, 3},
+                "Angstrom"
+            );
+            position = std::make_unique<Element>(
+                all.get(),
+                "position",
+                H5T_IEEE_F32LE,
+                H5T_NATIVE_FLOAT,
+                std::vector<hsize_t>{n, 3},
+                "Angstrom"
+            );
+            velocity = std::make_unique<Element>(
+                all.get(),
+                "velocity",
+                H5T_IEEE_F32LE,
+                H5T_NATIVE_FLOAT,
+                std::vector<hsize_t>{n, 3},
+                "Angstrom s-1"
+            );
+            force = std::make_unique<Element>(
+                all.get(),
+                "force",
+                H5T_IEEE_F32LE,
+                H5T_NATIVE_FLOAT,
+                std::vector<hsize_t>{n, 3},
+                "kcal mol-1 Angstrom-1"
+            );
+            charge = std::make_unique<Element>(
+                all.get(),
+                "charge",
+                H5T_IEEE_F32LE,
+                H5T_NATIVE_FLOAT,
+                std::vector<hsize_t>{n},
+                "e"
+            );
 
             const auto observables = group(file.get(), "observables");
-            potentialEnergy = std::make_unique<Element>(observables.get(), "potential_energy", H5T_IEEE_F64LE, H5T_NATIVE_DOUBLE, std::vector<hsize_t>{}, "kcal mol-1");
+            potentialEnergy        = std::make_unique<Element>(
+                observables.get(),
+                "potential_energy",
+                H5T_IEEE_F64LE,
+                H5T_NATIVE_DOUBLE,
+                std::vector<hsize_t>{},
+                "kcal mol-1"
+            );
 
             const auto parameters = group(file.get(), "parameters");
             strings(parameters.get(), "atom_names", names, false);
@@ -427,7 +580,12 @@ namespace out
         }
 
         template <typename Get>
-        void appendVectors(Element &element, const std::int64_t step, const double time, Get get)
+        void appendVectors(
+            Element           &element,
+            const std::int64_t step,
+            const double       time,
+            Get                get
+        )
         {
             for (std::size_t i = 0; i < nAtoms; ++i)
             {
@@ -461,9 +619,25 @@ namespace out
             box->append(stepValue, time, edges.data());
 
             const auto &atoms = frame.atoms;
-            appendVectors(*position, stepValue, time, [&](const std::size_t i) { return frame.box->wrapPositionIntoBox(atoms[i].position); });
-            appendVectors(*velocity, stepValue, time, [&](const std::size_t i) { return atoms[i].velocity; });
-            appendVectors(*force, stepValue, time, [&](const std::size_t i) { return atoms[i].force; });
+            appendVectors(
+                *position,
+                stepValue,
+                time,
+                [&](const std::size_t i)
+                { return frame.box->wrapPositionIntoBox(atoms[i].position); }
+            );
+            appendVectors(
+                *velocity,
+                stepValue,
+                time,
+                [&](const std::size_t i) { return atoms[i].velocity; }
+            );
+            appendVectors(
+                *force,
+                stepValue,
+                time,
+                [&](const std::size_t i) { return atoms[i].force; }
+            );
 
             for (std::size_t i = 0; i < nAtoms; ++i)
                 buffer[i] = static_cast<float>(atoms[i].charge);

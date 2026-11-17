@@ -45,7 +45,11 @@ namespace out
         std::unique_ptr<Impl> _impl;
 
        public:
-        H5mdOutput(const std::string &filename, bool overwrite, double timeStep);
+        H5mdOutput(
+            const std::string &filename,
+            bool               overwrite,
+            double             timeStep
+        );
         ~H5mdOutput();
 
         H5mdOutput(const H5mdOutput &)            = delete;

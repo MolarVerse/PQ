@@ -329,10 +329,7 @@ TEST_F(TestInputFileReader, testTrajectoryFormat)
 
     lineElements = {"traj_format", "=", "h5md"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        outputFileSettings.getTrajectoryFormat(),
-        TrajectoryFormat::H5MD
-    );
+    EXPECT_EQ(outputFileSettings.getTrajectoryFormat(), TrajectoryFormat::H5MD);
 }
 
 /**

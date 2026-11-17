@@ -52,7 +52,8 @@ namespace
             ".instant_en", ".vel",        ".chrg",       ".mom",
             ".vir",        ".stress",     ".box",        ".rpmd.rst",
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
-            ".rpmd.en",    ".opt",        ".ref",        ".extxyz",     ".h5md"
+            ".rpmd.en",    ".opt",        ".ref",        ".extxyz",
+            ".h5md"
         };
 
         for (const auto &suffix : suffixes)
