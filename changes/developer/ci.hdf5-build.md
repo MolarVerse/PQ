@@ -1,0 +1,1 @@
+- New `hdf5-build` CI job: builds with `-DBUILD_WITH_HDF5=ON` and runs the H5MD tests; part of `ci-build-gate` (#N).
