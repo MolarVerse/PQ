@@ -327,7 +327,7 @@ namespace engine
      * @param simulationBox
      * @param thermostat
      * @param step
-     * @param totalEnergy written to the extxyz file
+     * @param potentialEnergy written to the extxyz file
      *
      * @throw the first error of an earlier frame write
      */
@@ -335,7 +335,7 @@ namespace engine
         const molsys::SimulationBox  &simulationBox,
         const thermostat::Thermostat &thermostat,
         const size_t                  step,
-        const double                  totalEnergy
+        const double                  potentialEnergy
     )
     {
         if (!_frameWriterChecked)
@@ -347,7 +347,7 @@ namespace engine
         auto _ = scopedTimer(TimerId::Output, "FrameOutput");
 
         auto frame        = out::Frame{simulationBox, thermostat};
-        frame.totalEnergy = totalEnergy;
+        frame.potentialEnergy = potentialEnergy;
 
         const auto metadata = _outputFileSettings->getIncludeOutputMetadata();
 

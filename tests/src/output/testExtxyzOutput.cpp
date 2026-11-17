@@ -39,7 +39,7 @@ TEST_F(TestTrajectoryOutput, writeExtxyz)
     output.setFilename("default.xyz", false);
 
     auto frame        = out::Frame{*_simulationBox};
-    frame.totalEnergy = -1.5;
+    frame.potentialEnergy = -1.5;
 
     output.write(frame, 7);
     output.close();

@@ -257,7 +257,7 @@ namespace engine
                 getSimulationBox(),
                 *_thermostat,
                 effStep,
-                getPhysicalData().getTotalEnergy()
+                getPhysicalData().getPotentialEnergy()
             );
 
             getEngineOutput().writeVirialFile(

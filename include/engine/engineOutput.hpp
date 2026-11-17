@@ -153,7 +153,7 @@ namespace engine
             const molsys::SimulationBox &,
             const thermostat::Thermostat &,
             size_t step,
-            double totalEnergy
+            double potentialEnergy
         );
         void openExtxyzOutput(const std::string &filename, bool overwrite);
         void waitForFrames();

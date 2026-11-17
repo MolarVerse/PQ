@@ -1,0 +1,1 @@
+- The `energy` of the extxyz trajectory (`traj_format = extxyz`) is now the potential energy, as ASE and NEP expect; it included the kinetic energy before (#N).
