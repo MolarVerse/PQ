@@ -40,7 +40,8 @@ namespace pot
      * @details this constructor calculates automatically the three need wolf
      * parameters from kappa in order to gain speed
      *
-     * @param coulombRadiusCutOff - coulomb radius cut off
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      * @param kappa
      */
     CoulombWolf::CoulombWolf(
@@ -68,6 +69,9 @@ namespace pot
      *
      * @param distance
      * @param chargeProduct
+     * @param config Reference to the CoulombPotentialConfig object containing
+     * the cutoff distances and precomputed values for the Wolf summation
+     * calculation
      * @return std::pair<double, double>
      */
     std::pair<double, double> CoulombWolf::_calculateInternal(

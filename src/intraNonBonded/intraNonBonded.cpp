@@ -100,6 +100,8 @@ namespace intraNonBonded
      *
      * @param simulationBox Simulation box containing molecules.
      * @param physicalData
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void IntraNonBonded::calculate(
         const molsys::SimulationBox &simulationBox,

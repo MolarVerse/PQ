@@ -63,6 +63,7 @@ namespace ff
      * otherwise
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
+     * @param potentialSettings the settings for the potential calculations
      */
     void DihedralForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,

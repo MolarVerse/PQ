@@ -138,6 +138,8 @@ namespace manostat
      *
      * @param simulationBox The current simulation box.
      * @param mu The scaling tensor to validate.
+     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * check for interactions beyond the specified cut-off
      *
      * @throws exc::ManostatException if the scaling tensor is invalid or leads
      * to an invalid candidate cell.
@@ -166,6 +168,8 @@ namespace manostat
      *
      * @param candidate The candidate simulation box to scale and validate.
      * @param mu The scaling tensor to apply to the candidate box.
+     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * check for interactions beyond the specified cut-off
      *
      * @throws exc::ManostatException if the resulting candidate cell geometry
      * is invalid.

@@ -61,6 +61,8 @@ namespace setup
      * @param engine The engine to set up.
      * @param nhSettings Reference to the NoseHooverSettings object used to
      * configure the thermostat if applicable.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void setupRequestedJob(
         engine::Engine&     engine,
@@ -113,6 +115,8 @@ namespace setup
      * @param engine
      * @param nhSettings Nose-Hoover thermostat settings object used to
      * configure the thermostat if applicable.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void readFiles(
         engine::Engine&     engine,

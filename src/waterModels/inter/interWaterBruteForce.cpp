@@ -121,6 +121,8 @@ namespace waterModel
      * @param simulationBox Simulation box containing molecules.
      * @param physicalData Physical data to store energy results.
      * @param coulombPotential Coulomb potential evaluator.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyBruteForce::calculateCoreToOuterForces(
         const InterWaterState & /*state*/,
@@ -201,6 +203,8 @@ namespace waterModel
      * @param simulationBox Simulation box containing molecules.
      * @param physicalData Physical data to store energy results.
      * @param coulombPotential Coulomb potential evaluator.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyBruteForce::calculateLayerToOuterForces(
         const InterWaterState                        &state,
@@ -291,6 +295,8 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param coulombPotential Coulomb potential evaluator.
      * @param cellList Cell list structure (unused).
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyBruteForce::calculateOuterToOuterForces(
         const InterWaterState                        &state,
@@ -318,6 +324,8 @@ namespace waterModel
      * @param simulationBox Simulation box containing molecules.
      * @param physicalData Physical data to store energy results.
      * @param coulombPotential Coulomb potential evaluator.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyBruteForce::calculateHotspotSmoothingMMForces(
         const InterWaterState                        &state,

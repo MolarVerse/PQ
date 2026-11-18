@@ -71,6 +71,8 @@ namespace molsys
      * 4) add neighbouring cells
      *
      * @param simulationBox
+     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * check for interactions beyond the specified cut-off
      */
     void CellList::setup(
         const SimulationBox &simulationBox,
@@ -254,6 +256,8 @@ namespace molsys
      * new positions
      *
      * @param simulationBox
+     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * check for interactions beyond the specified cut-off
      */
     void CellList::updateCellList(
         SimulationBox &simulationBox,

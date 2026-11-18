@@ -45,6 +45,8 @@ namespace input::parameterFile
      *
      * @param filename
      * @param engine
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     ParameterFileReader::ParameterFileReader(
         const std::string &filename,
@@ -151,6 +153,8 @@ namespace input::parameterFile
      * @brief constructs a ParameterFileReader and reads parameter file
      *
      * @param engine
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void readParameterFile(
         engine::Engine    &engine,

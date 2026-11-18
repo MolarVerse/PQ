@@ -46,6 +46,8 @@ namespace manostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * check for interactions beyond the specified cut-off
      */
     void StochasticRescalingManostat::applyManostat(
         molsys::SimulationBox      &simulationBox,

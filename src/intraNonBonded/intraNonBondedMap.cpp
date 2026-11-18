@@ -55,6 +55,8 @@ namespace intraNonBonded
      * @param nonCoulombPotential
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void IntraNonBondedMap::calculate(
         const pot::CoulombPotential *coulombPotential,
@@ -106,6 +108,9 @@ namespace intraNonBonded
      * @param box
      * @param coulPot
      * @param nonCoulPot
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
+     *
      * @return std::pair<double, double> - the coulomb and non-coulomb energy
      * for the interaction
      */

@@ -180,6 +180,7 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateBondedInteractions(
         const molsys::SimulationBox &simulationBox,
@@ -214,6 +215,7 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateBondInteractions(
         const molsys::SimulationBox &simulationBox,
@@ -243,6 +245,7 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateAngleInteractions(
         const molsys::SimulationBox &simulationBox,
@@ -273,6 +276,7 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateDihedralInteractions(
         const molsys::SimulationBox &simulationBox,
@@ -305,6 +309,7 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateImproperDihedralInteractions(
         const molsys::SimulationBox &simulationBox,

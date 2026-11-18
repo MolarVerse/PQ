@@ -103,7 +103,10 @@ namespace pot
      * @param simulationBox
      * @param physicalData
      * @param cellList
-     * @param waterModelSettings
+     * @param waterModelSettings Reference to the WaterModelSettings object used
+     * to configure water model-specific parameters
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void Potential::calculateQMMMForces(
         molsys::SimulationBox      &simulationBox,

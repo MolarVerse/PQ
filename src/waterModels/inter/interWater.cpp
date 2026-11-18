@@ -48,6 +48,8 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWater::calculate(
         molsys::SimulationBox                        &simulationBox,
@@ -79,6 +81,8 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWater::calculateQMMMForces(
         molsys::SimulationBox                        &simulationBox,
@@ -144,6 +148,8 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWater::calculateHotspotSmoothingMMForces(
         molsys::SimulationBox                        &simulationBox,
@@ -177,6 +183,8 @@ namespace waterModel
      *
      * @param state The inter-water parameters.
      * @param strategy The strategy object used to evaluate the interaction.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     InterWater::InterWater(
         InterWaterState                     state,

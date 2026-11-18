@@ -49,6 +49,8 @@ namespace pot
      * @param physicalData physical data to store energy results
      * @param waterModelSettings water model settings used to identify water
      * molecules in the interactions
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialBruteForce::calculateForces(
         molsys::SimulationBox      &simulationBox,
@@ -127,6 +129,8 @@ namespace pot
      * @param physicalData physical data to store energy results
      * @param waterModelSettings water model settings used to identify water
      * molecules in the interactions
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialBruteForce::calculateCoreToOuterForces(
         molsys::SimulationBox      &simulationBox,
@@ -187,6 +191,8 @@ namespace pot
      * @param physicalData physical data to store energy results
      * @param waterModelSettings water model settings used to identify water
      * molecules in the interactions
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialBruteForce::calculateLayerToOuterForces(
         molsys::SimulationBox      &simulationBox,
@@ -257,6 +263,8 @@ namespace pot
      * (unused in brute force approach)
      * @param waterModelSettings water model settings used to identify water
      * molecules in the interactions
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialBruteForce::calculateOuterToOuterForces(
         molsys::SimulationBox      &simulationBox,
@@ -282,6 +290,8 @@ namespace pot
      * @param physicalData physical data to store energy results
      * @param waterModelSettings water model settings used to identify water
      * molecules in the interactions
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialBruteForce::calculateHotspotSmoothingMMForces(
         molsys::SimulationBox      &simulationBox,

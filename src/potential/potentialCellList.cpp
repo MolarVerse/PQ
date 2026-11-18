@@ -58,7 +58,10 @@ namespace pot
      * @param simulationBox
      * @param physicalData
      * @param cellList
-     * @param waterModelSettings
+     * @param waterModelSettings Reference to the WaterModelSettings object used
+     * to configure water model-specific parameters
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialCellList::calculateForces(
         molsys::SimulationBox      &simulationBox,
@@ -194,6 +197,8 @@ namespace pot
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
      * @param cellList cell list structure for efficient neighbor searching
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialCellList::calculateCoreToOuterForces(
         molsys::SimulationBox      &simulationBox,
@@ -343,6 +348,8 @@ namespace pot
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
      * @param cellList cell list structure for efficient neighbor searching
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialCellList::calculateLayerToOuterForces(
         molsys::SimulationBox      &simulationBox,
@@ -516,6 +523,8 @@ namespace pot
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
      * @param cellList cell list containing outer-zone molecules
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialCellList::calculateOuterToOuterForces(
         molsys::SimulationBox      &simulationBox,
@@ -645,6 +654,8 @@ namespace pot
      * @param simulationBox simulation box containing molecules
      * @param physicalData physical data to store energy results
      * @param cellList cell list containing smoothing-zone molecules
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void PotentialCellList::calculateHotspotSmoothingMMForces(
         molsys::SimulationBox      &simulationBox,

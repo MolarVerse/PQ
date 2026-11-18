@@ -44,6 +44,8 @@ namespace input
      * will be used to store and manage water model configurations.
      * @param forceFieldSettings Reference to the ForceFieldSettings object that
      * will be used to store and manage force field configurations.
+     * @param potentialSettings Reference to the PotentialSettings object that
+     * will be used to store and manage potential calculation configurations.
      *
      */
     MMInputParser::MMInputParser(

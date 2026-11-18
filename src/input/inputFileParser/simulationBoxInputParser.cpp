@@ -43,6 +43,8 @@ namespace input
      * "<double>"
      *
      * @param settings Reference to the SimulationBoxSettings object
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      *
      */
     SimulationBoxInputParser::SimulationBoxInputParser(
