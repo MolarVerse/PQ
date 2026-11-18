@@ -30,12 +30,12 @@
  *
  * @param cutoff The cutoff distance for the Coulomb potential
  */
-CoulombPotentialConfig::CoulombPotentialConfig(double cutoff)
-    : cutoff(cutoff),
-      cutoffSquared(cutoff * cutoff),
-      energyCutoff(1 / cutoff),
-      forceCutoff(1 / (cutoff * cutoff)),
-      invCubeCutoff(1 / (cutoff * cutoff * cutoff))
+CoulombPotentialConfig::CoulombPotentialConfig(double cutoff_)
+    : cutoff(cutoff_),
+      cutoffSquared(cutoff_ * cutoff_),
+      energyCutoff(1 / cutoff_),
+      forceCutoff(1 / (cutoff_ * cutoff_)),
+      invCubeCutoff(1 / (cutoff_ * cutoff_ * cutoff_))
 {
 }
 

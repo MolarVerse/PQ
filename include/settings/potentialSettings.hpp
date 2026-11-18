@@ -44,7 +44,7 @@ struct CoulombPotentialConfig
     double forceCutoff;
     double invCubeCutoff;
 
-    explicit CoulombPotentialConfig(double cutoff);
+    explicit CoulombPotentialConfig(double cutoff_);
 };
 
 struct PotentialSettingsUtils;
