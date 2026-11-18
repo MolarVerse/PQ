@@ -23,7 +23,11 @@
 #include <gtest/gtest.h>
 
 #include <array>
+#include <bit>
+#include <charconv>
+#include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <format>
 #include <limits>
 #include <string>
@@ -101,4 +105,106 @@ TEST(TestTextBuffer, clearKeepsNothing)
     buffer.append("x");
 
     EXPECT_EQ(buffer.view(), "x");
+}
+
+namespace
+{
+    // the written text of a finite value reads back as the same double
+    double readBack(const std::string_view text)
+    {
+        const auto first = text.find_first_not_of(' ');
+        double     value = 0.0;
+
+        const auto result = std::from_chars(
+            text.data() + first,
+            text.data() + text.size(),
+            value
+        );
+
+        EXPECT_EQ(result.ec, std::errc()) << text;
+        return value;
+    }
+
+    bool sameBits(const double lhs, const double rhs)
+    {
+        return std::bit_cast<std::uint64_t>(lhs) ==
+               std::bit_cast<std::uint64_t>(rhs);
+    }
+}   // namespace
+
+TEST(TestTextBuffer, exactFixedReadsBackAsTheSameDouble)
+{
+    for (const double value : values)
+    {
+        if (!std::isfinite(value))
+            continue;
+
+        out::TextBuffer buffer;
+        buffer.exactFixed(value, 0);
+
+        EXPECT_TRUE(sameBits(readBack(buffer.view()), value))
+            << std::format("{}", value) << " -> " << buffer.view();
+    }
+}
+
+TEST(TestTextBuffer, exactScientificReadsBackAsTheSameDouble)
+{
+    for (const double value : values)
+    {
+        if (!std::isfinite(value))
+            continue;
+
+        out::TextBuffer buffer;
+        buffer.exactScientific(value, 0);
+
+        EXPECT_TRUE(sameBits(readBack(buffer.view()), value))
+            << std::format("{}", value) << " -> " << buffer.view();
+    }
+}
+
+TEST(TestTextBuffer, exactTextIsTheShortestOne)
+{
+    out::TextBuffer fixed;
+    fixed.exactFixed(0.1, 0).put(' ').exactFixed(1.0 / 3.0, 0).put(' ');
+    fixed.exactFixed(42.0, 0);
+
+    out::TextBuffer scientific;
+    scientific.exactScientific(0.1, 0).put(' ');
+    scientific.exactScientific(1.0 / 3.0, 0).put(' ');
+    scientific.exactScientific(42.0, 0);
+
+    // 0.1 is not written as 0.10000000000000001
+    EXPECT_EQ(fixed.view(), "0.1 0.3333333333333333 42");
+    EXPECT_EQ(scientific.view(), "1e-01 3.333333333333333e-01 4.2e+01");
+}
+
+TEST(TestTextBuffer, exactValuesAreRightAlignedAndNeverCut)
+{
+    out::TextBuffer buffer;
+
+    buffer.exactFixed(1.5, 8).put('|');
+    buffer.exactFixed(-10.987707231352603, 8).put('|');
+    buffer.exactScientific(1.0, 9).put('|');
+    buffer.exactScientific(5.1956552679409985e11, 9);
+
+    // a field is padded up to the width and grows beyond it, no digit is lost
+    EXPECT_EQ(
+        buffer.view(),
+        "     1.5|-10.987707231352603|    1e+00|5.1956552679409985e+11"
+    );
+}
+
+TEST(TestTextBuffer, exactSpecialValuesLikeTheFixedFormat)
+{
+    for (const double value :
+         {inf, -inf, std::numeric_limits<double>::quiet_NaN()})
+    {
+        out::TextBuffer exactBuffer;
+        out::TextBuffer fixedBuffer;
+
+        exactBuffer.exactFixed(value, 15);
+        fixedBuffer.fixed(value, 15, 8);
+
+        EXPECT_EQ(exactBuffer.view(), fixedBuffer.view());
+    }
 }

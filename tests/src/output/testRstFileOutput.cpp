@@ -22,11 +22,18 @@
 
 #include "testRstFileOutput.hpp"
 
+#include <bit>
+#include <cmath>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iosfwd>
+#include <limits>
+#include <memory>
 #include <sstream>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "exceptions.hpp"
 #include "frame.hpp"
@@ -58,27 +65,27 @@ TEST_F(TestRstFileOutput, write)
     getline(file, line);
     EXPECT_EQ(
         line,
-        "H    \t1    \t1    \t     1.00000000\t     1.00000000\t     "
-        "1.00000000\t     1.00000000e+00\t     "
-        "1.00000000e+00\t     1.00000000e+00\t     1.00000000\t     "
-        "1.00000000\t     1.00000000"
+        "H    \t1    \t1    \t              1\t              1\t"
+        "              1\t              1e+00\t              1e+00\t"
+        "              1e+00\t              1\t              1\t"
+        "              1"
     );
     getline(file, line);
     EXPECT_EQ(
         line,
-        "O    \t2    \t1    \t     1.00000000\t     2.00000000\t     "
-        "3.00000000\t     3.00000000e+00\t     "
-        "4.00000000e+00\t     5.00000000e+00\t     2.00000000\t     "
-        "3.00000000\t     4.00000000"
+        "O    \t2    \t1    \t              1\t              2\t"
+        "              3\t              3e+00\t              4e+00\t"
+        "              5e+00\t              2\t              3\t"
+        "              4"
     );
 
     getline(file, line);
     EXPECT_EQ(
         line,
-        "Ar   \t1    \t2    \t     1.00000000\t     1.00000000\t     "
-        "1.00000000\t     1.00000000e+00\t     "
-        "1.00000000e+00\t     1.00000000e+00\t     1.00000000\t     "
-        "1.00000000\t     1.00000000"
+        "Ar   \t1    \t2    \t              1\t              1\t"
+        "              1\t              1e+00\t              1e+00\t"
+        "              1e+00\t              1\t              1\t"
+        "              1"
     );
 }
 
@@ -109,35 +116,35 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     getline(file, line);
     EXPECT_EQ(line, "Box   10 10 10  90 90 90");
     getline(file, line);
-    EXPECT_EQ(line, "chi  1\t1.00000e+00\t3.00000e+00");
+    EXPECT_EQ(line, "chi  1\t1\t3");
     getline(file, line);
-    EXPECT_EQ(line, "chi  2\t2.00000e+00\t2.00000e+00");
+    EXPECT_EQ(line, "chi  2\t2\t2");
     getline(file, line);
-    EXPECT_EQ(line, "chi  3\t3.00000e+00\t1.00000e+00");
+    EXPECT_EQ(line, "chi  3\t3\t1");
     getline(file, line);
     EXPECT_EQ(
         line,
-        "H    \t1    \t1    \t     1.00000000\t     1.00000000\t     "
-        "1.00000000\t     1.00000000e+00\t     "
-        "1.00000000e+00\t     1.00000000e+00\t     1.00000000\t     "
-        "1.00000000\t     1.00000000"
+        "H    \t1    \t1    \t              1\t              1\t"
+        "              1\t              1e+00\t              1e+00\t"
+        "              1e+00\t              1\t              1\t"
+        "              1"
     );
     getline(file, line);
     EXPECT_EQ(
         line,
-        "O    \t2    \t1    \t     1.00000000\t     2.00000000\t     "
-        "3.00000000\t     3.00000000e+00\t     "
-        "4.00000000e+00\t     5.00000000e+00\t     2.00000000\t     "
-        "3.00000000\t     4.00000000"
+        "O    \t2    \t1    \t              1\t              2\t"
+        "              3\t              3e+00\t              4e+00\t"
+        "              5e+00\t              2\t              3\t"
+        "              4"
     );
 
     getline(file, line);
     EXPECT_EQ(
         line,
-        "Ar   \t1    \t2    \t     1.00000000\t     1.00000000\t     "
-        "1.00000000\t     1.00000000e+00\t     "
-        "1.00000000e+00\t     1.00000000e+00\t     1.00000000\t     "
-        "1.00000000\t     1.00000000"
+        "Ar   \t1    \t2    \t              1\t              1\t"
+        "              1\t              1e+00\t              1e+00\t"
+        "              1e+00\t              1\t              1\t"
+        "              1"
     );
 }
 
@@ -216,4 +223,213 @@ TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
     EXPECT_EQ(alpha, 90.0);
     EXPECT_EQ(beta, 90.0);
     EXPECT_EQ(gamma, 90.0);
+}
+
+namespace
+{
+    // values that a fixed number of decimals cannot represent
+    const std::vector<double> awkwardValues = {
+        1.0 / 3.0,
+        -0.1,
+        2.0 / 3.0,
+        1.0e-20,
+        -6.02214076e23,
+        1.0e300,
+        123456789.123456789,
+        std::nextafter(1.0, 2.0),
+        std::numeric_limits<double>::min(),
+        -0.0,
+        -27.44205774028026567635,
+    };
+
+    bool sameBits(const double lhs, const double rhs)
+    {
+        return std::bit_cast<std::uint64_t>(lhs) ==
+               std::bit_cast<std::uint64_t>(rhs);
+    }
+
+    std::vector<std::string> fieldsOf(const std::string &line)
+    {
+        std::istringstream       stream(line);
+        std::vector<std::string> fields;
+        std::string              field;
+
+        while (stream >> field)
+        {
+            fields.push_back(field);
+        }
+
+        return fields;
+    }
+}   // namespace
+
+/**
+ * @brief positions, velocities and forces of the restart file read back as
+ * exactly the same doubles (to the last bit, also -0.0)
+ *
+ * @details a restart is only an exact continuation if no digit is lost: 8
+ * decimals give 1e-8 Angstrom per atom, which the forces of a stiff potential
+ * amplify
+ */
+TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
+{
+    std::vector<std::shared_ptr<molsys::Atom>> atoms;
+    for (auto &molecule : _simulationBox->getMolecules())
+    {
+        for (auto &atom : molecule.getAtoms())
+        {
+            atoms.push_back(atom);
+        }
+    }
+
+    ASSERT_EQ(atoms.size(), 3);
+
+    for (size_t index = 0; index < 3; ++index)
+    {
+        const auto shift = static_cast<size_t>(3 * index);
+        const auto value = [shift](const size_t axis)
+        { return awkwardValues.at((shift + axis) % awkwardValues.size()); };
+
+        atoms.at(index)->setPosition({value(0), value(1), value(2)});
+        atoms.at(index)->setVelocity({value(3), value(4), value(5)});
+        atoms.at(index)->setForce({value(6), value(7), value(8)});
+    }
+
+    _rstFileOutput->setFilename("default.rst", false);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        10
+    );
+    _rstFileOutput->close();
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    getline(file, line);
+    getline(file, line);
+
+    for (size_t index = 0; index < 3; ++index)
+    {
+        getline(file, line);
+        const auto fields = fieldsOf(line);
+        ASSERT_EQ(fields.size(), 12) << line;
+
+        const auto shift = static_cast<size_t>(3 * index);
+
+        for (size_t column = 0; column < 9; ++column)
+        {
+            const auto expected =
+                awkwardValues.at((shift + column) % awkwardValues.size());
+            const auto written = std::stod(fields.at(3 + column));
+
+            EXPECT_TRUE(sameBits(expected, written))
+                << "atom " << index << " column " << column << ": "
+                << fields.at(3 + column);
+        }
+    }
+}
+
+/**
+ * @brief the chi and zeta of a Nose-Hoover chain are written exactly: a chain
+ * state with 6 digits changes the continuation of a restarted run
+ */
+TEST_F(TestRstFileOutput, noseHooverChainIsWrittenExactly)
+{
+    NoseHooverSettings noseHooverSettings;
+    noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
+    noseHooverSettings.setChiByUser(
+        {{0, awkwardValues.at(0)},
+         {1, awkwardValues.at(3)},
+         {2, awkwardValues.at(4)},
+         {3, 0.0}}
+    );
+    noseHooverSettings.setZetaByUser(
+        {{0, awkwardValues.at(1)},
+         {1, awkwardValues.at(6)},
+         {2, awkwardValues.at(7)},
+         {3, 0.0}}
+    );
+    noseHooverSettings.setNoseHooverChainLengthByUser(3);
+    auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
+
+    _rstFileOutput->setFilename("default.rst", false);
+    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
+    _rstFileOutput->close();
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    getline(file, line);
+    getline(file, line);
+
+    const std::vector<std::pair<double, double>> expected = {
+        {awkwardValues.at(0), awkwardValues.at(1)},
+        {awkwardValues.at(3), awkwardValues.at(6)},
+        {awkwardValues.at(4), awkwardValues.at(7)},
+    };
+
+    for (size_t level = 0; level < expected.size(); ++level)
+    {
+        getline(file, line);
+        const auto fields = fieldsOf(line);
+        ASSERT_EQ(fields.size(), 4) << line;
+
+        EXPECT_EQ(fields.at(0), "chi");
+        EXPECT_EQ(std::stoul(fields.at(1)), level + 1);
+        EXPECT_TRUE(sameBits(expected.at(level).first, std::stod(fields.at(2))))
+            << fields.at(2);
+        EXPECT_TRUE(sameBits(expected.at(level).second, std::stod(fields.at(3)))
+        ) << fields.at(3);
+    }
+}
+
+/**
+ * @brief a subnormal value (below 2.2e-308) is written as a zero of the same
+ * sign: the restart reader parses with std::stod, which rejects subnormal
+ * numbers, and a file that cannot be read back is worse than a zero
+ */
+TEST_F(TestRstFileOutput, subnormalValuesAreWrittenAsZero)
+{
+    constexpr auto tiny = std::numeric_limits<double>::denorm_min();
+
+    std::vector<std::shared_ptr<molsys::Atom>> atoms;
+    for (auto &molecule : _simulationBox->getMolecules())
+    {
+        for (auto &atom : molecule.getAtoms())
+        {
+            atoms.push_back(atom);
+        }
+    }
+
+    ASSERT_EQ(atoms.size(), 3);
+
+    atoms.at(0)->setPosition({1.0e-310, -1.0e-310, tiny});
+    atoms.at(0)->setVelocity({-tiny, 2.5e-320, 1.0});
+    atoms.at(0)->setForce({1.0e-309, -2.0e-309, 0.5});
+
+    _rstFileOutput->setFilename("default.rst", false);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        10
+    );
+    _rstFileOutput->close();
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    getline(file, line);
+    getline(file, line);
+    getline(file, line);
+
+    const auto fields = fieldsOf(line);
+    ASSERT_EQ(fields.size(), 12) << line;
+
+    const std::vector<double> expected =
+        {0.0, -0.0, 0.0, -0.0, 0.0, 1.0, 0.0, -0.0, 0.5};
+
+    for (size_t column = 0; column < expected.size(); ++column)
+    {
+        double written = 1.0;
+        EXPECT_NO_THROW(written = std::stod(fields.at(3 + column)))
+            << fields.at(3 + column);
+        EXPECT_TRUE(sameBits(expected.at(column), written))
+            << "column " << column << ": " << fields.at(3 + column);
+    }
 }
