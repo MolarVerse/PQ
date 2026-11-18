@@ -1,0 +1,1 @@
+- Drop the outdated second CI table from `AGENTS.md` and stop saying the release check waits for LINT; it only waits for BUILD.

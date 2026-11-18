@@ -1,0 +1,1 @@
+- Make the restart round trip integration test exact: the final restart file and the last frames of a continued run must be identical to the byte, now also for a Nose-Hoover chain; add unit tests for the exact number formats of the text buffer and the restart writer.

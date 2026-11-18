@@ -63,6 +63,25 @@ namespace out
     }
 
     /**
+     * @brief format a double with the fewest digits that read back as the
+     * same value into the scratch buffer
+     */
+    std::string_view TextBuffer::_toChars(
+        const double            value,
+        const std::chars_format format
+    )
+    {
+        const auto result = std::to_chars(
+            _scratch.data(),
+            _scratch.data() + SCRATCH_SIZE,
+            value,
+            format
+        );
+
+        return {_scratch.data(), result.ptr};
+    }
+
+    /**
      * @brief append spaces so that a field of the given length fills width
      */
     void TextBuffer::_pad(const std::size_t length, const std::size_t width)
@@ -140,6 +159,38 @@ namespace out
     {
         const auto text =
             _toChars(value, std::chars_format::scientific, precision);
+
+        _pad(text.size(), width);
+        _data.append(text);
+        return *this;
+    }
+
+    /**
+     * @brief append a double right aligned in fixed notation with the fewest
+     * digits that read back as exactly the same value
+     */
+    TextBuffer &TextBuffer::exactFixed(
+        const double      value,
+        const std::size_t width
+    )
+    {
+        const auto text = _toChars(value, std::chars_format::fixed);
+
+        _pad(text.size(), width);
+        _data.append(text);
+        return *this;
+    }
+
+    /**
+     * @brief append a double right aligned in scientific notation with the
+     * fewest digits that read back as exactly the same value
+     */
+    TextBuffer &TextBuffer::exactScientific(
+        const double      value,
+        const std::size_t width
+    )
+    {
+        const auto text = _toChars(value, std::chars_format::scientific);
 
         _pad(text.size(), width);
         _data.append(text);
