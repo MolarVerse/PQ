@@ -22,6 +22,7 @@
 
 #include "rstFileOutput.hpp"
 
+#include <cmath>
 #include <cstddef>
 #include <format>
 #include <initializer_list>
@@ -35,6 +36,22 @@ namespace out
 
     namespace
     {
+        /**
+         * @brief a value that the restart reader can read back
+         *
+         * @details the reader parses numbers with std::stod, which rejects
+         * every subnormal number (below 2.2e-308) as out of range. Such a
+         * value is zero for any physical purpose, so it is written as a zero
+         * of the same sign; all other values are written exactly.
+         */
+        double readable(const double value)
+        {
+            if (std::fpclassify(value) == FP_SUBNORMAL)
+                return std::copysign(0.0, value);
+
+            return value;
+        }
+
         /**
          * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
          *
@@ -51,10 +68,10 @@ namespace out
 
                 buffer << "chi "
                        << std::format(
-                              "{:2d}\t{:10.5e}\t{:10.5e}",
+                              "{:2d}\t{}\t{}",
                               i + 1,
-                              chi,
-                              zeta
+                              readable(chi),
+                              readable(zeta)
                           )
                        << '\n';
             }
@@ -74,7 +91,6 @@ namespace out
     {
         using textFormat::FIXED_WIDTH;
         using textFormat::NAME_WIDTH;
-        using textFormat::PRECISION;
 
         std::ostringstream buffer;
 
@@ -106,18 +122,18 @@ namespace out
 
             for (const double value : {pos[0], pos[1], pos[2]})
             {
-                _buffer.fixed(value, FIXED_WIDTH, PRECISION).put('\t');
+                _buffer.exactFixed(readable(value), FIXED_WIDTH).put('\t');
             }
 
             for (const double value : {vel[0], vel[1], vel[2]})
             {
-                _buffer.scientific(value, RST_VELOCITY_WIDTH, PRECISION)
+                _buffer.exactScientific(readable(value), RST_VELOCITY_WIDTH)
                     .put('\t');
             }
 
-            _buffer.fixed(force[0], FIXED_WIDTH, PRECISION).put('\t');
-            _buffer.fixed(force[1], FIXED_WIDTH, PRECISION).put('\t');
-            _buffer.fixed(force[2], FIXED_WIDTH, PRECISION).put('\n');
+            _buffer.exactFixed(readable(force[0]), FIXED_WIDTH).put('\t');
+            _buffer.exactFixed(readable(force[1]), FIXED_WIDTH).put('\t');
+            _buffer.exactFixed(readable(force[2]), FIXED_WIDTH).put('\n');
         }
 
         _replaceFile(_buffer.view());

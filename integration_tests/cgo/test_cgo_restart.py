@@ -25,14 +25,14 @@
 
 """
 Restart round trip: a run that is stopped and continued from the restart file
-PQ wrote must give the same result as one run that is not stopped.
+PQ wrote must give exactly the result of one run that is not stopped.
 
-The restart file holds positions with 8 decimals and velocities with 9
-significant digits, so the two runs agree to that precision, not bit for bit.
-The tolerances are a few times the rounding that the stiff Buckingham forces
-amplify (measured: positions 1e-8, velocities 8e-8 and forces 2e-7 relative to
-their largest value); a restart that changes the box or loses a part of the
-state is off by 1e-4 to 1e-3.
+The restart file holds every value with the digits that read back as the same
+number, so the continued run is not only close to the continuous one: its final
+restart file is identical to the byte, and so are the last frames of the
+trajectory, velocity and force files. The three variants cover the state of
+the integrator (NVE), of the box (Berendsen manostat) and of a thermostat with
+its own state (Nose-Hoover chain).
 """
 
 import pathlib
@@ -47,107 +47,107 @@ START_FILE = "cgo-mm-00.rst"
 N_STEPS_FIRST = 5
 N_STEPS_SECOND = 5
 
-POSITION_TOLERANCE = 1e-7  # Angstrom
-VELOCITY_TOLERANCE = 1e-6  # relative to the largest velocity
-FORCE_TOLERANCE = 1e-5  # relative to the largest force
-BOX_TOLERANCE = 1e-9  # relative
+NOSE_HOOVER = (
+    "thermostat = nh-chain; temp = 998.15; nh-chain_length = 3; "
+    "coupling_frequency = 3000;"
+)
 
 
-def _write_input(source, target, n_steps, prefix, start_file):
+def _write_input(source, target, n_steps, prefix, start_file, extra):
     text = pathlib.Path(source).read_text()
     text = re.sub(r"nstep\s*=\s*\d+", f"nstep = {n_steps}", text)
     text = re.sub(r"output_freq\s*=\s*\d+", "output_freq = 1", text)
     text = re.sub(r"file_prefix\s*=\s*[^;]+", f"file_prefix = {prefix}", text)
     text = re.sub(r"start_file\s*=\s*[^;]+", f"start_file = {start_file}", text)
+    text = text.replace("integrator = v-verlet;",
+                        f"integrator = v-verlet; {extra}", 1)
     pathlib.Path(target).write_text(text)
 
 
-def _run(source, n_steps, prefix, start_file):
+def _run(source, n_steps, prefix, start_file, extra):
     target = f"{prefix}.in"
-    _write_input(source, target, n_steps, prefix, start_file)
+    _write_input(source, target, n_steps, prefix, start_file, extra)
 
     _, stderr = execute_pq(target)
 
     assert stderr == b""
 
 
-def _read_frames(path):
-    """Positions, velocities or forces of every frame of a trajectory file."""
+def _frames(path):
+    """The lines of every frame of a trajectory file."""
     lines = pathlib.Path(path).read_text().splitlines()
     frames = []
     index = 0
 
     while index < len(lines):
         n_atoms = int(lines[index].split()[0])
-        block = lines[index + 2:index + 2 + n_atoms]
-        frames.append(np.array([[float(x) for x in line.split()[1:4]]
-                                for line in block]))
+        frames.append(lines[index:index + n_atoms + 2])
         index += n_atoms + 2
 
     return frames
 
 
 def _read_restart(path):
-    """Step, box lengths and (position, velocity, force) of a restart file."""
+    """Step, box lengths and the number of chain levels of a restart file."""
     lines = pathlib.Path(path).read_text().splitlines()
     step = int(lines[0].split()[1])
     box = np.array([float(x) for x in lines[1].split()[1:4]])
-    atoms = np.array([[float(x) for x in line.split()[3:12]]
-                      for line in lines[2:] if len(line.split()) >= 12])
+    chain_levels = sum(line.startswith("chi") for line in lines)
 
-    return step, box, atoms
+    return step, box, chain_levels
 
 
 @pytest.mark.parametrize("example_dir", ["cgo/"], indirect=False)
-@pytest.mark.parametrize("input_file", ["run-01.in", "run-01_NPT.in"])
-def test_cgo_restart_round_trip(test_with_data_dir, input_file):
+@pytest.mark.parametrize(
+    "input_file, extra",
+    [
+        pytest.param("run-01.in", "", id="NVE"),
+        pytest.param("run-01_NPT.in", "", id="Berendsen_NPT"),
+        pytest.param("run-01.in", NOSE_HOOVER, id="Nose_Hoover_chain"),
+    ],
+)
+def test_cgo_restart_round_trip(test_with_data_dir, input_file, extra):
     n_steps = N_STEPS_FIRST + N_STEPS_SECOND
 
-    _run(input_file, n_steps, "full", START_FILE)
-    _run(input_file, N_STEPS_FIRST, "first", START_FILE)
-    _run(input_file, N_STEPS_SECOND, "second", "first.rst")
+    _run(input_file, n_steps, "full", START_FILE, extra)
+    _run(input_file, N_STEPS_FIRST, "first", START_FILE, extra)
+    _run(input_file, N_STEPS_SECOND, "second", "first.rst", extra)
 
-    # the first half of the stopped run is the same simulation as the start of
-    # the continuous one, bit for bit
+    # the first half of the stopped run is the same simulation as the start
+    # of the continuous one
     for kind in ("xyz", "vel", "force"):
-        full = _read_frames(f"full.{kind}")
-        first = _read_frames(f"first.{kind}")
+        full = _frames(f"full.{kind}")
+        first = _frames(f"first.{kind}")
 
         assert len(first) == N_STEPS_FIRST
-        assert all(np.array_equal(a, b)
-                   for a, b in zip(first, full[:N_STEPS_FIRST]))
+        assert first == full[:N_STEPS_FIRST]
 
     # the step counter continues instead of starting again
     start_step, start_box, _ = _read_restart(START_FILE)
     first_step, first_box, _ = _read_restart("first.rst")
-    full_step, full_box, full_atoms = _read_restart("full.rst")
-    second_step, second_box, second_atoms = _read_restart("second.rst")
+    full_step, full_box, full_levels = _read_restart("full.rst")
+    second_step, second_box, second_levels = _read_restart("second.rst")
 
     assert first_step == start_step + N_STEPS_FIRST
     assert second_step == full_step == start_step + n_steps
 
-    # the box of the restart file is the box of the run, not a shortened
-    # text of it (the NVE box does not change at all)
+    # the box of the restart file is the box of the run, to the last digit:
+    # an NVE box does not change at all
     if input_file == "run-01.in":
         assert np.array_equal(first_box, start_box)
         assert np.array_equal(second_box, start_box)
 
-    assert np.allclose(second_box, full_box, rtol=BOX_TOLERANCE, atol=0)
+    # the Nose-Hoover chain is part of the restart file
+    assert second_levels == full_levels == (3 if extra else 0)
 
-    # the continued run follows the continuous one frame by frame
-    for kind, tolerance in (("xyz", POSITION_TOLERANCE),
-                            ("vel", VELOCITY_TOLERANCE),
-                            ("force", FORCE_TOLERANCE)):
-        full = _read_frames(f"full.{kind}")[N_STEPS_FIRST:]
-        second = _read_frames(f"second.{kind}")
+    # the continued run follows the continuous one, frame by frame ...
+    for kind in ("xyz", "vel", "force"):
+        full = _frames(f"full.{kind}")[N_STEPS_FIRST:]
+        second = _frames(f"second.{kind}")
 
         assert len(second) == N_STEPS_SECOND
+        assert second == full
 
-        scale = 1.0 if kind == "xyz" else max(np.abs(f).max() for f in full)
-
-        for frame_full, frame_second in zip(full, second):
-            assert np.abs(frame_full - frame_second).max() <= tolerance * scale
-
-    # and ends in the same restart file
-    assert np.abs(full_atoms[:, 0:3] - second_atoms[:, 0:3]).max() \
-        <= POSITION_TOLERANCE
+    # ... and ends in the same state, with every digit of the restart file
+    assert pathlib.Path("second.rst").read_bytes() == \
+        pathlib.Path("full.rst").read_bytes()

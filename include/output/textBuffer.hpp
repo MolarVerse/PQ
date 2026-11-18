@@ -67,6 +67,10 @@ namespace out
         TextBuffer &fixed(double value, std::size_t width, int precision);
         TextBuffer &scientific(double value, std::size_t width, int precision);
 
+        // the shortest text that reads back as exactly the same double
+        TextBuffer &exactFixed(double value, std::size_t width);
+        TextBuffer &exactScientific(double value, std::size_t width);
+
        private:
         void             _pad(std::size_t length, std::size_t width);
         std::string_view _toChars(std::size_t value);
@@ -75,6 +79,7 @@ namespace out
             std::chars_format,
             int precision
         );
+        std::string_view _toChars(double value, std::chars_format);
     };
 
 }   // namespace out
