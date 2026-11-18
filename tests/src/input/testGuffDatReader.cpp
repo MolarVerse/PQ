@@ -600,8 +600,7 @@ TEST_F(TestGuffDatReader, checkPartialChargesNotMatchingCoefficients)
         exc::GuffDatException,
         "Invalid coulomb coefficient guff file for molecule "
         "types 1 and 1 and the 1. and the 1. atom type. The coulomb "
-        "coefficient should "
-        "be 83.01592828541929 but is 1"
+        "coefficient should be 83.01592827960259 Å kcal/mol but is 1 Å kcal/mol"
     );
 }
 

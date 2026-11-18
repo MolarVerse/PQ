@@ -40,7 +40,7 @@ namespace integrator
         const auto mass      = atom->getMass();
         const auto timeStamp = settings::TimingsSettings::getTimeStep();
 
-        velocity += timeStamp * force / mass;
+        velocity += 0.5 * timeStamp * force / mass;
 
         atom->setVelocity(velocity);
     }

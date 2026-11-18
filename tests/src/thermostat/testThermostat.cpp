@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "berendsenThermostat.hpp"
+#include "constants/conversionFactors.hpp"
 #include "constants/internalConversionFactors.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -1037,27 +1038,35 @@ TEST_F(TestThermostat, langevinSigmaMatchesReference)
 {
     settings::TimingsSettings::setTimeStep(0.1 * fs);
 
-    const auto friction = 0.1;
+    // friction is given in 1/ps in the input file
+    const auto friction = 0.1 / ps;
     const auto sigma    = thermostat::LangevinThermostat::calculateSigma(
-        friction / s,
+        friction,
         toTemperature(300.0)
     );
 
-    const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
-    const auto expected       = std::sqrt(
-        4.0 * friction * UNIVERSAL_GAS_CONSTANT * unitConversion * 300.0 / 0.1
-    );
+    // independent SI reference: sigma^2 = 4 * gamma * R * T / dt
+    constexpr double gasConstantSI = 8.314462618;   // J / (mol K)
+    const auto       gammaSI = (friction * s).numerical_value_in(mp_units::one);
+    const auto       dtSI    = (0.1 * fs).numerical_value_in(s);
+    const auto       expected =
+        4.0 * gammaSI * gasConstantSI * 300.0 / dtSI / 4184.0;   // kcal/mol/s^2
 
-    EXPECT_DOUBLE_EQ(sigma.numerical_value_in(decltype(sigma)::unit), expected);
+    EXPECT_NEAR(
+        (sigma * sigma).numerical_value_in(kcal_per_mol / s / s),
+        expected,
+        1e-9 * expected
+    );
 
     // sigma scales with sqrt(T)
     const auto sigma4 = thermostat::LangevinThermostat::calculateSigma(
-        friction / s,
+        friction,
         toTemperature(1200.0)
     );
+    const auto sigmaValue = sigma.numerical_value_in(decltype(sigma)::unit);
     EXPECT_NEAR(
         sigma4.numerical_value_in(decltype(sigma4)::unit),
-        2.0 * sigma.numerical_value_in(decltype(sigma)::unit),
-        1e-12 * expected
+        2.0 * sigmaValue,
+        1e-12 * sigmaValue
     );
 }

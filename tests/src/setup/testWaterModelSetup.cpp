@@ -265,8 +265,8 @@ TEST_F(TestSetup, waterModelSetupRejectsMismatchedCharges)
         setup::WaterModelSetup(*_mdEngine).setup(),
 
         exc::UserInputException,
-        "Water molecule partial charge mismatch for atom O: expected -0.82 "
-        "(according to SPC water model), got 0."
+        "Water molecule partial charge mismatch for atom O: expected -0.82 e "
+        "(according to SPC water model), got 0 e."
     );
 }
 

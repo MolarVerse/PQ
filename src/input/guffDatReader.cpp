@@ -764,17 +764,14 @@ namespace input::guffdat
                             throw exc::GuffDatException(
                                 std::format(
                                     "Invalid coulomb coefficient guff file for "
-                                    "molecule "
-                                    "types {} and {} and the {}. and the {}. "
-                                    "atom "
-                                    "type. The coulomb "
-                                    "coefficient should "
-                                    "be {} but is {}",
+                                    "molecule types {} and {} and the {}. and "
+                                    "the {}. atom type. The coulomb "
+                                    "coefficient should be {} but is {}",
                                     i + 1,
                                     j + 1,
                                     k.get() + 1,
                                     l.get() + 1,
-                                    prefactor,
+                                    prefactor.in(kcal_per_mol * angstrom),
                                     coeff
                                 )
                             );

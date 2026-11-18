@@ -148,17 +148,19 @@ TEST_F(TestPhysicalData, calculateKinetics)
         ),
         momentumVector
     );
-    EXPECT_EQ(
-        diagonal(_physicalData->getKinEnergyAtomTensor())
-            .numerical_value_in(kcal_per_mol),
-        kineticEnergyAtomicVector * KINETIC_ENERGY_FACTOR
-    );
-    EXPECT_EQ(
-        diagonal(_physicalData->getKinEnergyMolTensor())
-            .numerical_value_in(kcal_per_mol),
-        kineticEnergyMolecularVector * KINETIC_ENERGY_FACTOR
-    );
-    EXPECT_EQ(
+    const auto atomExpected = kineticEnergyAtomicVector * KINETIC_ENERGY_FACTOR;
+    const auto atomActual   = diagonal(_physicalData->getKinEnergyAtomTensor())
+                                .numerical_value_in(kcal_per_mol);
+    for (size_t i = 0; i < 3; ++i)
+        EXPECT_DOUBLE_EQ(atomActual[i], atomExpected[i]);
+
+    const auto molExpected =
+        kineticEnergyMolecularVector * KINETIC_ENERGY_FACTOR;
+    const auto molActual = diagonal(_physicalData->getKinEnergyMolTensor())
+                               .numerical_value_in(kcal_per_mol);
+    for (size_t i = 0; i < 3; ++i)
+        EXPECT_DOUBLE_EQ(molActual[i], molExpected[i]);
+    EXPECT_DOUBLE_EQ(
         _physicalData->getKineticEnergy().numerical_value_in(kcal_per_mol),
         sum(kineticEnergyAtomicVector) * KINETIC_ENERGY_FACTOR
     );

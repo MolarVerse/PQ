@@ -65,8 +65,8 @@ namespace kinetics
     {
         auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
 
-        auto momentum        = physicalData.getMomentum() * S_TO_FS;
-        auto angularMomentum = physicalData.getAngularMomentum() * S_TO_FS;
+        auto momentum        = physicalData.getMomentum();
+        auto angularMomentum = physicalData.getAngularMomentum();
         auto temperature     = physicalData.getTemperature();
 
         auto resetTemp = (step <= _settings->getNScale());
@@ -106,8 +106,8 @@ namespace kinetics
         }
 
         physicalData.setTemperature(temperature);
-        physicalData.setMomentum(momentum * FS_TO_S);
-        physicalData.setAngularMomentum(angularMomentum * FS_TO_S);
+        physicalData.setMomentum(momentum);
+        physicalData.setAngularMomentum(angularMomentum);
     }
 
     /**

@@ -122,7 +122,7 @@ namespace ff
                 cross(dPosition13, dPosition12) / normalDistance;
 
             auto force = forceMagnitude / distance12Squared;
-            forcexyz   = force * cross(normalPosition, dPosition12);
+            forcexyz   = force * cross(dPosition12, normalPosition);
 
             molecule1->addAtomForce(atomIndices[0], -forcexyz);
             molecule2->addAtomForce(atomIndices[1], forcexyz);

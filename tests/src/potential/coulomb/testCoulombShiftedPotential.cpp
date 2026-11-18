@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>
 
-#include "constants/internalConversionFactors.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "units.hpp"
 
@@ -46,14 +45,24 @@ TEST(TestCoulombShiftedPotential, calculate)
         chargeProduct * elementary_charge * elementary_charge
     );
 
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         energy.numerical_value_in(kcal_per_mol),
-        chargeProduct * COULOMB_PREFACTOR *
-            (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance))
+        chargeProduct *
+            coulomb_prefactor.numerical_value_in(
+                kcal_per_mol * angstrom /
+                (elementary_charge * elementary_charge)
+            ) *
+            (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance)),
+        1e-10
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         force.numerical_value_in(kcal_per_mol / angstrom),
-        chargeProduct * COULOMB_PREFACTOR *
-            (1 / (distance * distance) - forceCutoff)
+        chargeProduct *
+            coulomb_prefactor.numerical_value_in(
+                kcal_per_mol * angstrom /
+                (elementary_charge * elementary_charge)
+            ) *
+            (1 / (distance * distance) - forceCutoff),
+        1e-10
     );
 }

@@ -52,6 +52,10 @@ class ConvSettings
    public:
     ConvSettings();
 
+   private:
+    [[nodiscard]] bool _anyConvergenceSetByUser() const;
+
+   public:
     /***************************
      * standard setter methods *
      ***************************/

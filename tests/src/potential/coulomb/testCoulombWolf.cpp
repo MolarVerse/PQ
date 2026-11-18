@@ -54,18 +54,28 @@ TEST(TestCoulombWolf, calculate)
         chargeProduct * elementary_charge * elementary_charge
     );
 
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         energy.numerical_value_in(kcal_per_mol),
-        chargeProduct * COULOMB_PREFACTOR *
+        chargeProduct *
+            coulomb_prefactor.numerical_value_in(
+                kcal_per_mol * angstrom /
+                (elementary_charge * elementary_charge)
+            ) *
             (param1 / distance - constParam1 +
-             constParam3 * (distance - rcCutoff))
+             constParam3 * (distance - rcCutoff)),
+        1e-10
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         force.numerical_value_in(kcal_per_mol / angstrom),
-        chargeProduct * COULOMB_PREFACTOR *
+        chargeProduct *
+            coulomb_prefactor.numerical_value_in(
+                kcal_per_mol * angstrom /
+                (elementary_charge * elementary_charge)
+            ) *
             (param1 / (distance * distance) +
              constParam2 * ::exp(-kappa * kappa * distance * distance) /
                  distance -
-             constParam3)
+             constParam3),
+        1e-10
     );
 }

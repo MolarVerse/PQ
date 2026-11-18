@@ -44,7 +44,11 @@ TEST(TestCoulombReactionField, calculate)
     const auto cutoffForce            = 1.0 / (cutoff * cutoff);
     const auto cutoffCubedInverse     = 1.0 / (cutoff * cutoff * cutoff);
     const auto deltaCutoff            = cutoff - distance;
-    const auto coulombPrefactor       = chargeProduct * COULOMB_PREFACTOR;
+    const auto coulombPrefactor =
+        chargeProduct *
+        coulomb_prefactor.numerical_value_in(
+            kcal_per_mol * angstrom / (elementary_charge * elementary_charge)
+        );
 
     const auto expectedEnergy =
         coulombPrefactor *

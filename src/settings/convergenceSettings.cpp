@@ -38,6 +38,17 @@ ConvSettings::ConvSettings()
 {
 }
 
+/**
+ * @brief check if any convergence threshold was explicitly set by the user
+ *
+ * @return bool
+ */
+bool ConvSettings::_anyConvergenceSetByUser() const
+{
+    return _relEnergyConv.isSetByUser() || _absEnergyConv.isSetByUser() ||
+           _maxForceConv.isSetByUser() || _rmsForceConv.isSetByUser();
+}
+
 /***************************
  *                         *
  * standard setter methods *
@@ -193,7 +204,14 @@ bool ConvSettings::getUseEnergyConv() const
     if (_useEnergyConv.isSetBySomeone())
         return _useEnergyConv.get();
 
-    return _relEnergyConv.isSetByUser() || _absEnergyConv.isSetByUser();
+    if (_relEnergyConv.isSetByUser() || _absEnergyConv.isSetByUser())
+        return true;
+
+    // some other criterion was requested explicitly -> only use those
+    if (_anyConvergenceSetByUser())
+        return false;
+
+    return _useEnergyConv.get();   // nothing specified -> default
 }
 
 /**
@@ -206,7 +224,14 @@ bool ConvSettings::getUseForceConv() const
     if (_useForceConv.isSetBySomeone())
         return _useForceConv.get();
 
-    return _maxForceConv.isSetByUser() || _rmsForceConv.isSetByUser();
+    if (_maxForceConv.isSetByUser() || _rmsForceConv.isSetByUser())
+        return true;
+
+    // some other criterion was requested explicitly -> only use those
+    if (_anyConvergenceSetByUser())
+        return false;
+
+    return _useForceConv.get();   // nothing specified -> default
 }
 
 // TODO: document input change properly
@@ -221,7 +246,14 @@ bool ConvSettings::getUseMaxForceConv() const
     if (_useMaxForceConv.isSetBySomeone())
         return _useMaxForceConv.get();
 
-    return _maxForceConv.isSetByUser();
+    if (_maxForceConv.isSetByUser())
+        return true;
+
+    // some other criterion was requested explicitly -> only use those
+    if (_anyConvergenceSetByUser())
+        return false;
+
+    return _useMaxForceConv.get();   // nothing specified -> default
 }
 
 /**
@@ -234,7 +266,14 @@ bool ConvSettings::getUseRMSForceConv() const
     if (_useRMSForceConv.isSetBySomeone())
         return _useRMSForceConv.get();
 
-    return _rmsForceConv.isSetByUser();
+    if (_rmsForceConv.isSetByUser())
+        return true;
+
+    // some other criterion was requested explicitly -> only use those
+    if (_anyConvergenceSetByUser())
+        return false;
+
+    return _useRMSForceConv.get();   // nothing specified -> default
 }
 
 /**
