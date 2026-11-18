@@ -286,7 +286,7 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
 
     for (size_t index = 0; index < 3; ++index)
     {
-        const auto shift = static_cast<size_t>(3 * index);
+        const auto shift = 3 * index;
         const auto value = [shift](const size_t axis)
         { return awkwardValues.at((shift + axis) % awkwardValues.size()); };
 
@@ -313,7 +313,7 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
         const auto fields = fieldsOf(line);
         ASSERT_EQ(fields.size(), 12) << line;
 
-        const auto shift = static_cast<size_t>(3 * index);
+        const auto shift = 3 * index;
 
         for (size_t column = 0; column < 9; ++column)
         {
