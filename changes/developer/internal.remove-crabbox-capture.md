@@ -1,0 +1,1 @@
+- Remove a stray build-log archive under `.crabbox/` and ignore that folder.
