@@ -46,6 +46,8 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `cgo` `test_cgo_NPT` | `run-01_NPT.in` | `mm-md` | same | Berendsen thermostat + Berendsen manostat (isotropic), molecular virial, `output_freq = 2` |
 | `cgo` `test_cgo_atomic_virial` | `run-01_atomic_virial.in` | `mm-md` | same | the NPT run with `virial = atomic` |
 | `cgo` `test_cgo_temperature_ramp` | `run-01_temp_ramp.in` | `mm-md` | same | Berendsen thermostat with `start_temp`, `temp_ramp_steps`, `temp_ramp_frequency`; also checks the ramp lines of the log |
+| `cgo` `test_cgo_NPT_cellList` | `run-01_NPT.in` with `cell-list = on` | `mm-md` | same | the NPT run with the cell list against the brute-force NPT reference (`ref_data_NPT`); the box hardly moves (0.01 %) |
+| `cgo` `test_cgo_NPT_cellList_follows_a_moving_box` | `run-01_NPT.in` with `cell-list = on; cell-number = 16` and a manostat relaxation time of 0.1 ps | `mm-md` | same | the box moves between 26.6 and 31.4 Angstrom in 10 steps and the neighbour cell count changes from 6 to 7; every frame (xyz, vel, force), the box and the energies must equal the same run without the cell list (no reference data) |
 | `cgo` `test_cgo_restart_round_trip` (3 tests) | `run-01.in` (NVE), `run-01_NPT.in`, `run-01.in` with a Nose-Hoover chain | `mm-md` | same | a 10-step run against 5 steps plus 5 more from the `.rst` the first part wrote; the final `.rst` and the last frames of `.xyz`, `.vel` and `.force` must be **identical to the byte** (the restart file keeps every digit), and the step counter, the box and the chain levels are checked. Builds its three inputs from the existing ones, no reference data |
 | `chig` `test_chig` | `run-01.in` | `mm-md` | chignolin in water, 7382 atoms, 10 steps of 0.5 fs | `force-field = on` (bonds, angles, dihedrals, impropers, LJ from the parameter file, topology with 191 linker `*` entries), intra-nonbonded file, SHAKE/RATTLE, Wolf |
 | `dftbplus` | `run-01.in` | `qm-md` | 9 atoms, 100 Å box, 2 steps | external DFTB+ runner with the periodic-stress script and a custom `dftb_file` |
@@ -106,7 +108,7 @@ intermolecular model are the same.
 | Linker `*` entries | yes (`chig`, 191 entries; none in `qm-mm`) |
 | J-coupling terms | no, and the term is not part of the force calculation yet (issue #904) |
 | Intra-nonbonded file | yes (`chig`) |
-| Cell list | yes in NVE (`cgo`), with the water models and the hybrid code (`qm-mm`); **not with a manostat** (see coupling) |
+| Cell list | yes in NVE (`cgo`), with a Berendsen manostat that moves the box (`cgo`), with the water models and the hybrid code (`qm-mm`); not with a force field (see coupling) |
 | Brute force neighbours | yes |
 | Water models | partly: `spc_fw`, `spc-mtr`, `tip3p`, `spc_e`, only in QM/MM. No: `spc`, `qspc_fw`, `spc_dc`, `h2o_dc`, `opc3`, `tip3p_mtr`, and no pure-MM water run |
 
@@ -179,9 +181,13 @@ the first value. A ramp test per thermostat is not needed for the ramp itself, b
 need their *own* integration test, with or without a ramp. The readers of the global value are
 exercised by none.
 
-**Neighbour search x manostat (does not carry over).** The cell list is covered in NVE, the
-manostat with brute force. A manostat changes the box every step, so the cells have to be resized
-or rebuilt; no test runs both.
+**Neighbour search x manostat (covered for the Berendsen manostat).** A manostat changes the box
+every step, so the cells have to be rebuilt. `test_cgo_NPT_cellList_follows_a_moving_box` runs a
+box that moves by 15 % and crosses the point where the number of neighbouring cells changes, and
+compares with brute force. With the default 7 cells that number never changes in this run and a
+stale cell layout would still give the right result, so the cell number matters for this test. The
+stochastic rescaling manostat and the anisotropic variants change the box in other ways and are not
+covered.
 
 **Neighbour search x everything that builds pair lists.** The cell list is covered for `cgo`
 (Buckingham/GUFF/Wolf) and for the water models and hybrid code in `qm-mm`, but **not with a force
@@ -249,21 +255,19 @@ Hessian are checked, so a wrong Hessian would pass.
 In rough order of value for the cost; each is a **new variant** of an existing cheap test (the
 `cgo` pattern below), so existing references stay untouched.
 
-1. **Cell list + manostat** (`cgo` NPT with `cell-list = on`): the box changes while the cells are
-   in use.
-2. **Nose-Hoover, Langevin and velocity-rescaling** thermostats on `cgo` (one variant each, the
+1. **Nose-Hoover, Langevin and velocity-rescaling** thermostats on `cgo` (one variant each, the
    Nose-Hoover one with a ramp since it keeps internal state).
-3. **Stochastic rescaling manostat** and one **anisotropic** variant, with the ramp (they read the
+2. **Stochastic rescaling manostat** and one **anisotropic** variant, with the ramp (they read the
    global target).
-4. **QM/MM that moves a molecule across a zone**: a start file with a molecule next to a boundary,
+3. **QM/MM that moves a molecule across a zone**: a start file with a molecule next to a boundary,
    or more steps, plus a non-zero `core_radius` and a `forced_*_list`.
-5. **M-SHAKE** on a rigid-water system, and **cell list with the force field and SHAKE** on `chig`.
-6. **Water models** in a pure MM run, and the remaining models with different intra/inter pairs.
-7. **Comparison of the other outputs** (`.rst`, `.box`, `.stress`, `.vir`, `.mom`) in
+4. **M-SHAKE** on a rigid-water system, and **cell list with the force field and SHAKE** on `chig`.
+5. **Water models** in a pure MM run, and the remaining models with different intra/inter pairs.
+6. **Comparison of the other outputs** (`.rst`, `.box`, `.stress`, `.vir`, `.mom`) in
    `check_pq_output`, which costs nothing but reference size.
-8. **A value check for the Hessian** (analytic result for a harmonic OH bond) instead of shape
+7. **A value check for the Hessian** (analytic result for a harmonic OH bond) instead of shape
    only, and the other Hessian builders.
-9. **`mm-opt` and `Adam`/decaying learning rates** with a real number of optimisation steps.
+8. **`mm-opt` and `Adam`/decaying learning rates** with a real number of optimisation steps.
 
 ## Adding a test
 
