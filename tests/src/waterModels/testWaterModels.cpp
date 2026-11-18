@@ -1020,21 +1020,29 @@ namespace
      * returns the energies and the forces after the given stage
      */
     template <typename Strategy>
-    StrategyResult runInterWater(const int stage, const bool spread)
+    StrategyResult runInterWater(
+        const int  stage,
+        const bool spread,
+        Settings   settings
+    )
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
         settings::HybridSettings::setUseQMCharges(true);
-        settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-        settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
-        pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+        settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
+        PotentialSettingsUtils::setEnergyCutoff(
+            settings.potentialSettings,
+            0.0
+        );
+        PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
 
-        WaterModelSettings waterModelSettings;
-        waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
+        settings.waterModelSettings.setWaterInterModelByUser(
+            WaterInterModel::SPC
+        );
 
-        const auto coulomb =
-            std::make_shared<pot::CoulombShiftedPotential>(kCutOff);
+        const auto coulomb = std::make_shared<pot::CoulombShiftedPotential>(
+            settings.potentialSettings
+        );
 
         auto simulationBox =
             spread ? makeSpreadWaterBox(false) : makeHybridWaterBox();
@@ -1045,15 +1053,22 @@ namespace
                           Strategy,
                           waterModel::InterWaterStrategyCellList>)
         {
-            cellList = makeCellList(simulationBox, waterModelSettings);
+            cellList = makeCellList(simulationBox, settings.waterModelSettings);
         }
 
         waterModel::InterWater water(
             waterModel::makeInterWaterState<waterModel::SPCInterParam>(),
-            std::make_unique<Strategy>()
+            std::make_unique<Strategy>(),
+            settings.potentialSettings
         );
 
-        water.calculate(simulationBox, physicalData, coulomb, cellList);
+        water.calculate(
+            simulationBox,
+            physicalData,
+            coulomb,
+            cellList,
+            settings.potentialSettings
+        );
 
         if (stage >= 1)
         {
@@ -1062,7 +1077,8 @@ namespace
                 simulationBox,
                 physicalData,
                 coulomb,
-                cellList
+                cellList,
+                settings.potentialSettings
             );
         }
 
@@ -1072,7 +1088,8 @@ namespace
                 simulationBox,
                 physicalData,
                 coulomb,
-                cellList
+                cellList,
+                settings.potentialSettings
             );
         }
 
@@ -1127,6 +1144,7 @@ TEST(InterWater, BruteForceAndCellListGiveTheSameEnergiesAndForces)
         std::pair{2, std::string("hotspot smoothing")},
     };
 
+    Settings settings;
     // the small box has all waters in one or two cells; the spread box has
     // pairs in neighbouring cells and across the periodic boundary
     for (const auto spread : {false, true})
@@ -1140,12 +1158,14 @@ TEST(InterWater, BruteForceAndCellListGiveTheSameEnergiesAndForces)
             const auto bruteForce =
                 runInterWater<waterModel::InterWaterStrategyBruteForce>(
                     stage,
-                    spread
+                    spread,
+                    settings
                 );
             const auto cellList =
                 runInterWater<waterModel::InterWaterStrategyCellList>(
                     stage,
-                    spread
+                    spread,
+                    settings
                 );
 
             // the comparison is only meaningful if the waters interact
@@ -1246,18 +1266,18 @@ namespace
      * list indices are assigned again, as in QMMMMDEngine
      */
     template <typename Strategy>
-    StrategyResult runPotential(
-        const int           stage,
-        WaterModelSettings &waterModelSettings
-    )
+    StrategyResult runPotential(const int stage, Settings settings)
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
         settings::HybridSettings::setUseQMCharges(true);
-        settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
-        settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
-        pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+        settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+        PotentialSettingsUtils::setEnergyCutoff(
+            settings.potentialSettings,
+            0.0
+        );
+        PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
 
         auto simulationBox = makeSpreadWaterBox(true);
         configurator::HybridConfigurator::activateMolecules(simulationBox);
@@ -1267,18 +1287,21 @@ namespace
 
         if constexpr (std::is_same_v<Strategy, pot::PotentialCellList>)
         {
-            cellList = makeCellList(simulationBox, waterModelSettings);
+            cellList = makeCellList(simulationBox, settings.waterModelSettings);
         }
 
         Strategy potential;
-        potential.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
+        potential.makeCoulombPotential(
+            pot::CoulombShiftedPotential(settings.potentialSettings)
+        );
         potential.setNonCoulombPotential(makeNonCoulombPotential());
 
         potential.calculateForces(
             simulationBox,
             physicalData,
             cellList,
-            waterModelSettings
+            settings.waterModelSettings,
+            settings.potentialSettings
         );
 
         if (stage >= 1)
@@ -1295,7 +1318,7 @@ namespace
                 cellList.assignMoleculeHybridZoneIndices();
                 cellList.assignWaterMoleculeIndices(
                     simulationBox,
-                    waterModelSettings
+                    settings.waterModelSettings
                 );
             }
 
@@ -1304,7 +1327,8 @@ namespace
                 simulationBox,
                 physicalData,
                 cellList,
-                waterModelSettings
+                settings.waterModelSettings,
+                settings.potentialSettings
             );
         }
 
@@ -1314,7 +1338,8 @@ namespace
                 simulationBox,
                 physicalData,
                 cellList,
-                waterModelSettings
+                settings.waterModelSettings,
+                settings.potentialSettings
             );
         }
 
@@ -1340,12 +1365,14 @@ TEST(PotentialStrategies, BruteForceAndCellListGiveTheSameEnergiesAndForces)
         std::pair{2, std::string("hotspot smoothing")},
     };
 
+    Settings settings;
     for (const auto withWaterModel : {false, true})
     {
-        WaterModelSettings waterModelSettings;
         if (withWaterModel)
         {
-            waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
+            settings.waterModelSettings.setWaterInterModelByUser(
+                WaterInterModel::SPC
+            );
         }
 
         for (const auto &[stage, stageName] : stages)
@@ -1356,12 +1383,10 @@ TEST(PotentialStrategies, BruteForceAndCellListGiveTheSameEnergiesAndForces)
                 ) +
                 stageName;
 
-            const auto bruteForce = runPotential<pot::PotentialBruteForce>(
-                stage,
-                waterModelSettings
-            );
+            const auto bruteForce =
+                runPotential<pot::PotentialBruteForce>(stage, settings);
             const auto cellList =
-                runPotential<pot::PotentialCellList>(stage, waterModelSettings);
+                runPotential<pot::PotentialCellList>(stage, settings);
 
             EXPECT_NE(bruteForce.coulombEnergy, 0.0) << name;
             EXPECT_NE(bruteForce.nonCoulombEnergy, 0.0) << name;
