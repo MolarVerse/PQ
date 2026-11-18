@@ -61,12 +61,15 @@ namespace setup
      * @param engine The engine to set up.
      * @param nhSettings Reference to the NoseHooverSettings object used to
      * configure the thermostat if applicable.
+     * @param timingsSettings Timings settings object used to configure the
+     * simulation timing parameters.
      * @param potentialSettings Reference to the PotentialSettings object used
      * to configure interaction cutoffs and other potential-related parameters
      */
     void setupRequestedJob(
         engine::Engine&     engine,
         NoseHooverSettings& nhSettings,
+        TimingsSettings&    timingsSettings,
         PotentialSettings&  potentialSettings
     )
     {
@@ -82,7 +85,7 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        readFiles(engine, nhSettings, potentialSettings);
+        readFiles(engine, nhSettings, timingsSettings, potentialSettings);
 
         setupEngine(engine);
 
@@ -115,18 +118,25 @@ namespace setup
      * @param engine
      * @param nhSettings Nose-Hoover thermostat settings object used to
      * configure the thermostat if applicable.
+     * @param timingsSettings Timings settings object used to configure the
+     * simulation timing parameters.
      * @param potentialSettings Reference to the PotentialSettings object used
      * to configure interaction cutoffs and other potential-related parameters
      */
     void readFiles(
         engine::Engine&     engine,
         NoseHooverSettings& nhSettings,
+        TimingsSettings&    timingsSettings,
         PotentialSettings&  potentialSettings
     )
     {
         input::molDescriptor::readMolDescriptor(engine);
 
-        input::restartFile::readRestartFile(engine, nhSettings);
+        input::restartFile::readRestartFile(
+            engine,
+            nhSettings,
+            timingsSettings
+        );
 
         input::topology::readTopologyFile(engine);
 

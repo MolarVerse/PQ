@@ -50,7 +50,7 @@ int main()
     const auto box          = benchOptimizers::makeBox(ATOMS, PER_SIDE);
     const auto physicalData = std::make_shared<physicalData::PhysicalData>();
 
-    opt::SteepestDescent optimizer(ITERATIONS);
+    opt::SteepestDescent optimizer;
     optimizer.setSimulationBox(box);
     optimizer.setPhysicalData(physicalData);
 

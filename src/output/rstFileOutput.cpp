@@ -24,6 +24,7 @@
 
 #include <cstddef>
 #include <format>
+#include <initializer_list>
 #include <ostream>
 #include <sstream>
 
@@ -59,6 +60,8 @@ namespace out
             }
         }
 
+        constexpr std::size_t RST_VELOCITY_WIDTH = 19;
+
     }   // namespace
 
     /**
@@ -69,14 +72,27 @@ namespace out
      */
     void RstFileOutput::write(const Frame &frame, size_t step)
     {
+        using textFormat::FIXED_WIDTH;
+        using textFormat::NAME_WIDTH;
+        using textFormat::PRECISION;
+
         std::ostringstream buffer;
 
         buffer << "Step " << step << '\n';
 
-        buffer << "Box   " << frame.box->get_boxDimensions() << "  "
-               << frame.box->getBoxAngles() << '\n';
+        // std::format writes the shortest text that reads back as the same
+        // double; the stream operator of Vector3D keeps 6 digits only, which
+        // changes the box of a restarted run
+        buffer << std::format(
+            "Box   {}  {}\n",
+            frame.box->get_boxDimensions(),
+            frame.box->getBoxAngles()
+        );
 
         writeNHChain(frame, buffer);
+
+        _buffer.clear();
+        _buffer.append(buffer.str());
 
         for (const auto &atom : frame.atoms)
         {
@@ -84,33 +100,27 @@ namespace out
             const auto &vel   = atom.velocity;
             const auto &force = atom.force;
 
-            buffer << std::format("{:<5}\t", atom.name);
-            buffer << std::format("{:<5}\t", atom.indexInMolecule + 1);
-            buffer << std::format("{:<5}\t", atom.moltype.get());
+            _buffer.left(atom.name, NAME_WIDTH).put('\t');
+            _buffer.left(atom.indexInMolecule + 1, NAME_WIDTH).put('\t');
+            _buffer.left(atom.moltype.get(), NAME_WIDTH).put('\t');
 
-            buffer << std::format(
-                "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-                pos[0],
-                pos[1],
-                pos[2]
-            );
-            buffer << std::format(
-                "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
-                vel[0],
-                vel[1],
-                vel[2]
-            );
-            buffer << std::format(
-                "{:15.8f}\t{:15.8f}\t{:15.8f}",
-                force[0],
-                force[1],
-                force[2]
-            );
+            for (const double value : {pos[0], pos[1], pos[2]})
+            {
+                _buffer.fixed(value, FIXED_WIDTH, PRECISION).put('\t');
+            }
 
-            buffer << '\n' << std::flush;
+            for (const double value : {vel[0], vel[1], vel[2]})
+            {
+                _buffer.scientific(value, RST_VELOCITY_WIDTH, PRECISION)
+                    .put('\t');
+            }
+
+            _buffer.fixed(force[0], FIXED_WIDTH, PRECISION).put('\t');
+            _buffer.fixed(force[1], FIXED_WIDTH, PRECISION).put('\t');
+            _buffer.fixed(force[2], FIXED_WIDTH, PRECISION).put('\n');
         }
 
-        _replaceFile(buffer.str());
+        _replaceFile(_buffer.view());
     }
 
 }   // namespace out

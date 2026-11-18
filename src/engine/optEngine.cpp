@@ -44,14 +44,14 @@ namespace engine
         _evaluator->evaluate();
         _optimizer->updateHistory();
 
-        _setNSteps(_optimizer->getNEpochs());
+        const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
         const auto &outputFileSettings = getSettings().outputFiles;
         writeOutput(outputFileSettings);
 
-        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+        progressbar bar(static_cast<int>(nEpochs), true, std::cout);
 
-        for (size_t i = 0; i < _getNSteps(); ++i)
+        for (size_t i = 0; i < nEpochs; ++i)
         {
             utilities::throwIfInterrupted();
 
@@ -70,7 +70,7 @@ namespace engine
             _converged,
             _optStopped,
             getStep(),
-            _optimizer->getNEpochs(),
+            nEpochs,
             _learningRateStrategy->getErrorMessages()
         );
 
@@ -156,7 +156,8 @@ namespace engine
 
         if (!_converged)
         {
-            _learningRateStrategy->updateLearningRate(getStep(), _getNSteps());
+            const auto nEpochs = getSettings().timings.getNumberOfSteps();
+            _learningRateStrategy->updateLearningRate(getStep(), nEpochs);
 
             if (!_learningRateStrategy->getErrorMessages().empty())
                 _optStopped = true;
@@ -169,7 +170,7 @@ namespace engine
                     "Updating learning rate did raise "
                     "the following warnings in epoch {} out of {}:",
                     getStep(),
-                    _optimizer->getNEpochs()
+                    nEpochs
                 );
                 getLogOutput().writeOptWarning(headerMessage);
                 out::StdoutOutput::writeOptWarning(headerMessage);
@@ -194,9 +195,26 @@ namespace engine
      */
     void OptEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
+     * @brief Writes output files.
+     *
+     * @details output files are written if the step is a multiple of the output
+     * frequency.
+     *
+     */
+    void OptEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        size_t                    startingStepCount
+    )
+    {
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = settings::TimingsSettings::getStepCount();
-        const auto effStep    = getStep() + step0;
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {

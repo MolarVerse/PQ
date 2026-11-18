@@ -29,7 +29,6 @@
 #include "exceptions.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 
 namespace constraints
@@ -113,6 +112,8 @@ namespace constraints
      * @param simulationBox the simulation box to apply periodic boundary
      * conditions
      * @param tolerance
+     * @param timeStep the integration time step used for velocity updates
+     *
      * @return true if the bond constraint is satisfied within the tolerance,
      * false otherwise
      *
@@ -122,7 +123,8 @@ namespace constraints
      */
     bool BondConstraint::applyShake(
         const molsys::SimulationBox &simulationBox,
-        double                       tolerance
+        double                       tolerance,
+        const Time                  &timeStep
     )
     {
         const auto delta = calculateDistanceDelta(simulationBox);
@@ -164,9 +166,7 @@ namespace constraints
                 -invMass2 * dPosition
             );
 
-            const auto timeStep =
-                settings::TimingsSettings::getTimeStep().numerical_value_in(s);
-            const auto dVelocity = dPosition / timeStep;
+            const auto dVelocity = dPosition / timeStep.numerical_value_in(s);
 
             molecule1->addAtomVelocity(
                 get_atomIndices()[0],

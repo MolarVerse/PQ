@@ -41,13 +41,12 @@
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
-#include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001 * fs);
+    const auto timeStep = 0.001 * fs;
     settings::GeneralSettings::setRandomSeed(42);
     settings::GeneralSettings::setIsRandomSeedSet(true);
 
@@ -64,9 +63,14 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        thermostat.applyThermostat(box, physicalData, targetTemperature);
         thermostat
-            .applyThermostatHalfStep(box, physicalData, targetTemperature);
+            .applyThermostat(box, physicalData, targetTemperature, timeStep);
+        thermostat.applyThermostatHalfStep(
+            box,
+            physicalData,
+            targetTemperature,
+            timeStep
+        );
     }
 
     // read state so the loop cannot be optimized away

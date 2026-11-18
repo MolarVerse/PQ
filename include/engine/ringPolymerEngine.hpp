@@ -48,6 +48,11 @@ namespace engine
 
        public:
         void writeOutput(const OutputFileSettings &outputSettings) override;
+        void writeOutput(
+            const OutputFileSettings &outputSettings,
+            const Time               &timeStep,
+            size_t                    startingStepCount
+        );
 
         void resizeRingPolymerBeadPhysicalData(size_t numberOfBeads);
 

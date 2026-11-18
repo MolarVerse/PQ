@@ -35,7 +35,6 @@
 #include "settings.hpp"
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
-#include "timingsSettings.hpp"
 
 namespace input
 {
@@ -85,7 +84,7 @@ namespace input
             settings.simulationBoxSettings,
             settings.thermostatSettings
         );
-        _validateManostat(settings.manostatSettings);
+        _validateManostat(settings.manostatSettings, settings.timings);
         _validateCellList(settings.potentialSettings.getCoulombRadiusCutOff());
         _validateReactionFieldCoulomb(
             settings.potentialSettings.getCoulombLongRangeType()
@@ -305,7 +304,8 @@ namespace input
      * `pressure`
      */
     void InputFileReader::_validateManostat(
-        const ManostatSettings& manostatSettings
+        const ManostatSettings& manostatSettings,
+        const TimingsSettings&  timings
     ) const
     {
         const auto manostatType = manostatSettings.getManostatType();
@@ -323,11 +323,14 @@ namespace input
             );
         }
 
-        if (settings::TimingsSettings::getTimeStep() >
-            manostatSettings.getTau())
+        // only an MD job has a time step
+        if (settings::GeneralSettings::isMDJobType() &&
+            timings.getTimeStep() > manostatSettings.getTau())
+        {
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );
+        }
     }
 
     /**

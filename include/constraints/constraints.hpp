@@ -81,7 +81,14 @@ namespace constraints
 
         void initMShake();
 
-        void applyShake(molsys::SimulationBox &simulationBox);
+        void applyShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
+        void applyMShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
         void applyRattle(molsys::SimulationBox &simulationBox);
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
@@ -112,6 +119,9 @@ namespace constraints
         [[nodiscard]] size_t getNumberOfMShakeConstraints(
             molsys::SimulationBox &
         ) const;
+        [[nodiscard]] size_t getNumberOfMShakeMolecules(
+            molsys::SimulationBox &
+        ) const;
         [[nodiscard]] size_t getNumberOfDistanceConstraints() const;
 
         /***************************
@@ -121,8 +131,14 @@ namespace constraints
         void setStartTime(const Time &startTime) { _startTime = startTime; }
 
        private:
-        void _applyShake(molsys::SimulationBox &simulationBox);
-        void _applyMShake(molsys::SimulationBox &simulationBox);
+        void _applyShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
+        void _applyMShake(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        );
 
         void _applyRattle();
         void _applyMRattle(molsys::SimulationBox &simulationBox);

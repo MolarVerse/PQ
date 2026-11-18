@@ -1,0 +1,1 @@
+- Add a regression test that runs `PQ --validate` on every input file of the examples directory (portable and installed scope), so that stale script names, missing setup files and invalid values in examples are found by CI.

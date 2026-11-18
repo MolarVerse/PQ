@@ -88,6 +88,8 @@ class TestRingPolymerRestartFileReader : public ::testing::Test
         _settings = std::make_unique<Settings>();
         _settings->ringPolymerSettings.setNumberOfBeadsByUser(2);
         _settings->fileSettings.setRingPolymerStartFileNameByUser(FILE_NAME);
+        _settings->timings.setNumberOfStepsByUser(1);
+
         _settings->finalize();
 
         _engine = std::make_unique<engine::RingPolymerQMMDEngine>(*_settings);

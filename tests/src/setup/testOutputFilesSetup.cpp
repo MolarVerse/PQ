@@ -50,7 +50,7 @@ namespace
             ".instant_en", ".vel",        ".chrg",       ".mom",
             ".vir",        ".stress",     ".box",        ".rpmd.rst",
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
-            ".rpmd.en",    ".opt",        ".ref"
+            ".rpmd.en",    ".opt",        ".ref",        ".extxyz"
         };
 
         for (const auto &suffix : suffixes)
@@ -68,6 +68,8 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     EXPECT_NO_THROW(setup::setupOutputFiles(*_engine));
@@ -91,6 +93,8 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -111,7 +115,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -137,7 +142,8 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setIncludeOutputMetadataByUser(true);
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);
@@ -158,12 +164,39 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     cleanupPrefix();
 }
 
+TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
+{
+    cleanupPrefix();
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
+    _settings->timings.setNumberOfStepsByUser(100U);
+
+    _settings->finalize();
+    setup::OutputFilesSetup setup(*_mdEngine);
+    EXPECT_NO_THROW(setup.setup());
+
+    const std::string prefix = PREFIX;
+
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".extxyz"));
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".rst"));
+
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
+    cleanupPrefix();
+}
+
 TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     settings::GeneralSettings::setIsRingPolymerMDActivated(true);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->timings.setNumberOfStepsByUser(100U);
 
     _settings->finalize();
     setup::OutputFilesSetup setup(*_mdEngine);

@@ -47,12 +47,15 @@ namespace manostat
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const Temperature          &targetTemperature,
+            const Time                 &timeStep,
             double                      coulombRadiusCutOff
         ) override;
 
         [[nodiscard]] virtual QuantityTensor3D calculateMu(
+
             double             volume,
-            const Temperature &targetTemperature
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         );
 
        protected:
@@ -78,7 +81,8 @@ namespace manostat
         [[nodiscard]]
         QuantityTensor3D calculateMu(
             double             volume,
-            const Temperature &targetTemperature
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) override;
     };
 
@@ -98,7 +102,8 @@ namespace manostat
         [[nodiscard]]
         QuantityTensor3D calculateMu(
             double             volume,
-            const Temperature &targetTemperature
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) override;
     };
 
@@ -118,7 +123,8 @@ namespace manostat
         [[nodiscard]]
         QuantityTensor3D calculateMu(
             double             volume,
-            const Temperature &targetTemperature
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) override;
     };
 

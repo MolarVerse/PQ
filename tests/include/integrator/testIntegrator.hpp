@@ -32,8 +32,6 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
-#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 /**
@@ -52,7 +50,6 @@ class TestIntegrator : public ::testing::Test
     void SetUp() override
     {
         _integrator = std::make_unique<integrator::VelocityVerlet>();
-        settings::TimingsSettings::setTimeStep(0.1 * fs);
 
         _molecule1 = std::make_unique<molsys::Molecule>();
 

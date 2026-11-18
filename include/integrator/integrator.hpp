@@ -23,6 +23,8 @@
 #ifndef INTEGRATOR__INTEGRATOR_HPP
 #define INTEGRATOR__INTEGRATOR_HPP
 
+#include "unit_types.hpp"
+
 namespace molsys
 {
     class Atom;            // forward declaration
@@ -43,13 +45,20 @@ namespace integrator
         Integrator()          = default;
         virtual ~Integrator() = default;
 
-        virtual void firstStep(molsys::SimulationBox &)  = 0;
-        virtual void secondStep(molsys::SimulationBox &) = 0;
+        virtual void firstStep(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        ) = 0;
+        virtual void secondStep(
+            molsys::SimulationBox &simulationBox,
+            const Time            &timeStep
+        ) = 0;
 
-        static void integrateVelocities(molsys::Atom *);
+        static void integrateVelocities(molsys::Atom *, const Time &timeStep);
         static void integratePositions(
             molsys::Atom *,
-            const molsys::SimulationBox &
+            const molsys::SimulationBox &,
+            const Time &timeStep
         );
     };
 

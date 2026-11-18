@@ -310,9 +310,26 @@ namespace engine
      */
     void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
+     * @brief Writes output files for the Hessian engine.
+     *
+     * @param outputSettings The settings for output files.
+     * @param startingStepCount The step count from which to start writing
+     * output files.
+     */
+    void HessianEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        size_t                    startingStepCount
+    )
+    {
         const auto outputFreq = outputSettings.getOutputFrequency();
-        const auto step0      = settings::TimingsSettings::getStepCount();
-        const auto effStep    = getStep() + step0;
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {
@@ -406,13 +423,13 @@ namespace engine
         _evaluator->evaluate();
         _optimizer->updateHistory();
 
-        _setNSteps(_optimizer->getNEpochs());
-
         writeOutput(getSettings().outputFiles);
 
-        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+        const auto nSteps = getSettings().timings.getNumberOfSteps();
 
-        for (size_t i = 0; i < _getNSteps(); ++i)
+        progressbar bar(static_cast<int>(nSteps), true, std::cout);
+
+        for (size_t i = 0; i < nSteps; ++i)
         {
             utilities::throwIfInterrupted();
 
@@ -431,7 +448,7 @@ namespace engine
             _converged,
             _optStopped,
             getStep(),
-            _optimizer->getNEpochs(),
+            nSteps,
             _learningRateStrategy->getErrorMessages()
         );
 
@@ -454,7 +471,8 @@ namespace engine
 
         if (!_converged)
         {
-            _learningRateStrategy->updateLearningRate(getStep(), _getNSteps());
+            const auto nSteps = getSettings().timings.getNumberOfSteps();
+            _learningRateStrategy->updateLearningRate(getStep(), nSteps);
 
             if (!_learningRateStrategy->getErrorMessages().empty())
                 _optStopped = true;
@@ -467,7 +485,7 @@ namespace engine
                     "Updating learning rate did raise "
                     "the following warnings in epoch {} out of {}:",
                     getStep(),
-                    _optimizer->getNEpochs()
+                    nSteps
                 );
                 getLogOutput().writeOptWarning(headerMessage);
                 out::StdoutOutput::writeOptWarning(headerMessage);
@@ -485,7 +503,6 @@ namespace engine
 
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()
     {
-        const auto nEpochs = settings::TimingsSettings::getNumberOfSteps();
         const auto optimizerType =
             getSettings().optimizerSettings.getOptimizer();
 
@@ -497,14 +514,14 @@ namespace engine
 
             case STEEPEST_DESCENT:
             {
-                optimizer = std::make_shared<opt::SteepestDescent>(nEpochs);
+                optimizer = std::make_shared<opt::SteepestDescent>();
                 break;
             }
 
             case ADAM:
             {
                 const auto nAtoms = getSimulationBox().getNumberOfAtoms();
-                optimizer = std::make_shared<opt::Adam>(nEpochs, nAtoms);
+                optimizer         = std::make_shared<opt::Adam>(nAtoms);
                 break;
             }
         }

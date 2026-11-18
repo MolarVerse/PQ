@@ -13,6 +13,7 @@ target_link_libraries(testWaterModels
     interWater
     intraWater
     potential
+    hybridConfigurator
     molsys
     virial
     gtest

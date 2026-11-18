@@ -25,9 +25,11 @@
 #include <cstdint>
 #include <mstd/enum.hpp>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "exceptions.hpp"
+#include "inputConverter.hpp"
 #include "inputParam.hpp"
 #include "inputRegistry.hpp"
 #include "throwWithMessage.hpp"
@@ -431,5 +433,69 @@ TEST(TestInputRegistry, unknownKeyThrows)
         registry.parseLine({"bogus_key", "=", "1"}, 5),
         exc::InputFileException,
         "Unknown key \"bogus_key\" at line 5 in input file"
+    );
+}
+
+/**
+ * @brief tests Converter<std::unordered_map<std::string, double>>::tryParse
+ * with a valid list of key:value pairs
+ */
+TEST(TestInputParam, mapConverterParsesKeyValuePairs)
+{
+    using Map = std::unordered_map<std::string, double>;
+
+    const auto parsed = input::Converter<Map>::tryParse("C:0.5,H:-1.25e-1,O:3");
+
+    ASSERT_TRUE(parsed.has_value());
+    EXPECT_EQ(parsed->size(), 3);
+    EXPECT_DOUBLE_EQ(parsed->at("C"), 0.5);
+    EXPECT_DOUBLE_EQ(parsed->at("H"), -0.125);
+    EXPECT_DOUBLE_EQ(parsed->at("O"), 3.0);
+
+    const auto single = input::Converter<Map>::tryParse("N:2");
+    ASSERT_TRUE(single.has_value());
+    EXPECT_EQ(single->size(), 1);
+
+    // the last value of a repeated key wins
+    const auto repeated = input::Converter<Map>::tryParse("C:1,C:2");
+    ASSERT_TRUE(repeated.has_value());
+    EXPECT_DOUBLE_EQ(repeated->at("C"), 2.0);
+}
+
+/**
+ * @brief every malformed pair is rejected
+ */
+TEST(TestInputParam, mapConverterRejectsMalformedPairs)
+{
+    using Map = std::unordered_map<std::string, double>;
+
+    for (const std::string raw :
+         {"C",              // no separator
+          ":1.0",           // empty key
+          "C:",             // empty value
+          "C:1:2",          // second separator
+          "C:one",          // not a number
+          "C:1.5garbage",   // trailing characters
+          "C:inf",          // not finite
+          "C:nan",          // not finite
+          "C:1e999",        // out of range
+          "C:1,H",          // second pair malformed
+          "C:1,:2"})        // second pair has no key
+    {
+        EXPECT_FALSE(input::Converter<Map>::tryParse(raw).has_value()) << raw;
+    }
+}
+
+/**
+ * @brief the domain of the map converter is described for the error message
+ */
+TEST(TestInputParam, mapConverterDescribesItsDomain)
+{
+    using Map = std::unordered_map<std::string, double>;
+
+    EXPECT_EQ(
+        input::Converter<Map>::describeDomain({}),
+        "Value must be a comma-separated list of key:value pairs, where the "
+        "key is a string and the value is a double."
     );
 }

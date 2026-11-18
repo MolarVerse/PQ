@@ -46,6 +46,7 @@ namespace manostat
             molsys::SimulationBox& /*simBox*/,
             physicalData::PhysicalData& /*physData*/,
             const Temperature& /*targetTemperature*/,
+            const Time& /*timeStep*/,
             double /*coulombRadiusCutOff*/
         ) override
         {

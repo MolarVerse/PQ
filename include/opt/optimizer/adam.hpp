@@ -47,11 +47,11 @@ namespace opt
         std::vector<linalg::Vec3D> _momentum2;
 
        public:
-        explicit Adam(size_t nEpochs, size_t nAtoms);
-        explicit Adam(size_t, double, double, size_t);
+        explicit Adam(size_t nAtoms);
+        explicit Adam(double beta1, double beta2, size_t nAtoms);
 
-        Adam()           = default;
-        ~Adam() override = default;
+        Adam();
+        ~Adam() override;
 
         [[nodiscard]] size_t maxHistoryLength() const override;
 

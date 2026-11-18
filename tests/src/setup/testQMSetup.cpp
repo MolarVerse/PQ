@@ -130,7 +130,8 @@ TEST(TestQMSetup, resolvesBundledQMScript)
 
 TEST(TestQMSetup, setupDftbplus)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
     auto               setupQM = setup::QMSetup(
         engine,
@@ -160,7 +161,8 @@ TEST(TestQMSetup, setupDftbplus)
 
 TEST(TestQMSetup, setupPySCF)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
     auto               setupQM = setup::QMSetup(
         engine,
@@ -190,7 +192,8 @@ TEST(TestQMSetup, setupPySCF)
 
 TEST(TestQMSetup, setupTurbomoleRunner)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
     auto               setupQM = setup::QMSetup(
         engine,
@@ -231,7 +234,8 @@ TEST(TestQMSetup, setupQMFull)
 #ifdef WITH_ASE
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
@@ -243,7 +247,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
@@ -258,7 +263,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 {
     // this test has nothing to do with the current setup approach
     // it tests now basically the functionality of settings
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
@@ -271,7 +277,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
@@ -285,7 +292,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 
 TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
-    Settings           settings;
+    Settings settings;
+    settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);

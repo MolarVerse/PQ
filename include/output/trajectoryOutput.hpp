@@ -27,6 +27,7 @@
 
 #include "hybridConfigurator.hpp"
 #include "output.hpp"
+#include "textBuffer.hpp"
 
 namespace configurator
 {
@@ -45,6 +46,9 @@ namespace out
      */
     class TrajectoryOutput : public Output
     {
+       private:
+        TextBuffer _buffer;
+
        public:
         using Output::Output;
 
@@ -66,6 +70,9 @@ namespace out
             size_t       step,
             bool         includeMetadata
         );
+
+       private:
+        void _flushBuffer();
     };
 
 }   // namespace out

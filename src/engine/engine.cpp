@@ -31,7 +31,6 @@
 #include "potentialBruteForce.hpp"
 #include "settings.hpp"
 #include "stdoutOutput.hpp"
-#include "timingsSettings.hpp"
 
 namespace engine
 {
@@ -74,11 +73,12 @@ namespace engine
      *
      * @return Time
      */
-    Time Engine::calculateTotalSimulationTime() const
+    Time Engine::calculateTotalSimulationTime(
+        const Time &timeStep,
+        size_t      startingStepCount
+    ) const
     {
-        const auto step0    = settings::TimingsSettings::getStepCount();
-        const auto timeStep = settings::TimingsSettings::getTimeStep();
-        const auto effStep  = _step + step0;
+        const auto effStep = _step + startingStepCount;
 
         return static_cast<double>(effStep) * timeStep;
     }
@@ -381,20 +381,6 @@ namespace engine
     {
         return *_intraWater;
     }
-
-    /**
-     * @brief get the number of steps
-     *
-     * @return size_t
-     */
-    size_t Engine::_getNSteps() const { return _nSteps; }
-
-    /**
-     * @brief set the number of steps
-     *
-     * @param nSteps
-     */
-    void Engine::_setNSteps(size_t nSteps) { _nSteps = nSteps; }
 
     /**
      * @brief set the current step

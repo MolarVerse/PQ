@@ -346,6 +346,16 @@ namespace physicalData
     }
 
     /**
+     * @brief total energy without the kinetic energy
+     *
+     * @return double
+     */
+    double PhysicalData::getPotentialEnergy() const
+    {
+        return getTotalEnergy() - _kineticEnergy;
+    }
+
+    /**
      * @brief add intra coulomb energy
      *
      * @details This function is used to add intra coulomb energy to the total

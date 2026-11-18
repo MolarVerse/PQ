@@ -1,0 +1,1 @@
+- Fix the user guide: the restart file keyword is `restart_file` (it was documented as `rst_file`, which PQ rejects), and document `opt_file`, `min-learning-rate`, `max-learning-rate` and `learning-rate-update-freq`.

@@ -41,13 +41,12 @@
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
-#include "timingsSettings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.001 * fs);
+    const auto timeStep = 0.001 * fs;
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
@@ -70,7 +69,8 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        thermostat.applyThermostat(box, physicalData, targetTemperature);
+        thermostat
+            .applyThermostat(box, physicalData, targetTemperature, timeStep);
         thermostat.applyThermostatOnForces(box, targetTemperature);
     }
 

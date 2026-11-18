@@ -84,7 +84,6 @@ class TestInputValidation : public ::testing::Test
         _settings.potentialSettings.setCoulombRadiusCutOffByUser(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
-        settings::TimingsSettings::setTimeStep(0.5 * fs);
 
         _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
         _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
@@ -93,6 +92,9 @@ class TestInputValidation : public ::testing::Test
         _engine = std::make_unique<engine::OptEngine>(_settings);
         _reader =
             std::make_unique<input::InputFileReader>("input.in", _settings);
+
+        _settings.timings.setTimeStepByUser(0.5 * fs);
+        _settings.timings.setNumberOfStepsByUser(100U);
     }
 
     void _setKeyword(const std::string &keyword)
@@ -103,7 +105,7 @@ class TestInputValidation : public ::testing::Test
     void _configureMDJob(const JobType jobType)
     {
         settings::GeneralSettings::setJobtype(jobType);
-        settings::TimingsSettings::setNumberOfSteps(100);
+        _settings.timings.setNumberOfStepsByUser(100U);
         _setKeyword("nstep");
         _setKeyword("timestep");
         if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
@@ -163,6 +165,47 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+}
+
+/**
+ * @brief a Hessian job without optimization sets neither timestep nor nstep:
+ * validation, finalize and validate must not read the unset timings
+ */
+TEST_F(TestInputValidation, hessianWithoutOptimizationRunsWithUnsetTimings)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.timings = TimingsSettings();
+
+    EXPECT_NO_THROW(_finalizeAndValidate());
+    EXPECT_EQ(_settings.timings.getNumberOfSteps(), 0);
+}
+
+/**
+ * @brief an optimization needs nstep but no timestep
+ */
+TEST_F(TestInputValidation, optimizationRunsWithoutTimeStep)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.timings = TimingsSettings();
+    _settings.timings.setNumberOfStepsByUser(100U);
+    _setKeyword("nstep");
+
+    EXPECT_NO_THROW(_finalizeAndValidate());
+}
+
+/**
+ * @brief a manostat is only compared with the time step of a job that has one;
+ * a Hessian job with a manostat setting and no timestep is not rejected for the
+ * missing time step
+ */
+TEST_F(TestInputValidation, manostatDoesNotNeedTimeStepOutsideMD)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.timings = TimingsSettings();
+    _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _setKeyword("pressure");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
@@ -394,6 +437,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampLongerThanSimulation)
     _settings.kinetics.setRampingStepsByUser(200);
     _settings.kinetics.setStartTemperatureByUser(toTemperature(100.0));
     _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
+
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -415,6 +459,7 @@ TEST_F(TestInputValidation, rejectsTemperatureRampFrequencyAboveRampSteps)
     _settings.kinetics.setRampingFrequencyByUser(4);
     _settings.kinetics.setStartTemperatureByUser(toTemperature(100.0));
     _settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
+
     _setKeyword("temp");
     _setKeyword("start_temp");
 
@@ -651,6 +696,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
     _settings.thermostatSettings.setThermostatTypeByUser(
         ThermostatType::BERENDSEN
     );
+
     _setKeyword("mace_model_path");
     _setKeyword("pressure");
     _setKeyword("temp");
@@ -661,7 +707,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT_DECAY
     );
@@ -678,7 +724,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::EXPONENTIAL_DECAY
     );
@@ -695,10 +741,11 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );
+
     _setKeyword("nstep");
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
@@ -707,7 +754,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::LINESEARCH_WOLFE
     );
@@ -723,7 +770,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::TimingsSettings::setNumberOfSteps(100);
+    _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
     );

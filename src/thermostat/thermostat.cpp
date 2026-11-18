@@ -63,11 +63,13 @@ namespace thermostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void Thermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const Temperature & /*targetTemperature*/
+        const Temperature & /*targetTemperature*/,
+        const Time & /*timeStep*/
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Calc Temperature");

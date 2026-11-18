@@ -57,9 +57,12 @@ namespace engine
     {
         applyThermostatHalfStep();
 
+        const auto &timeStep = getSettings().timings.getTimeStep();
+
         std::ranges::for_each(
             getRingPolymerBeads(),
-            [this](auto &bead) { getIntegrator().firstStep(bead); }
+            [this, &timeStep](auto &bead)
+            { getIntegrator().firstStep(bead, timeStep); }
         );
 
         qmCalculation();
@@ -67,21 +70,24 @@ namespace engine
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
             getPhysicalData(),
-            calculateTotalSimulationTime()
+            calculateTotalSimulationTime(
+                timeStep,
+                getSettings().timings.getStartingStepCount()
+            )
         );
 
         coupleRingPolymerBeads();
 
         std::ranges::for_each(
             getRingPolymerBeads(),
-            [this](auto &bead)
+            [this, &timeStep](auto &bead)
             {
                 getThermostat().applyThermostatOnForces(
                     bead,
                     _getKinetics().getCurrentTargetTemperature()
                 );
 
-                getIntegrator().secondStep(bead);
+                getIntegrator().secondStep(bead, timeStep);
             }
         );
 
@@ -198,6 +204,7 @@ namespace engine
 #ifdef WITH_MPI
     void RingPolymerQMMDEngine::applyThermostatHalfStep()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
@@ -208,7 +215,8 @@ namespace engine
                 getThermostat().applyThermostatHalfStep(
                     bead,
                     data,
-                    _getKinetics().getCurrentTargetTemperature()
+                    _getKinetics().getCurrentTargetTemperature(),
+                    timeStep
                 );
             }
         }
@@ -233,6 +241,7 @@ namespace engine
 #else
     void RingPolymerQMMDEngine::applyThermostatHalfStep()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             auto &bead = getRingPolymerBeads()[i];
@@ -241,7 +250,8 @@ namespace engine
             getThermostat().applyThermostatHalfStep(
                 bead,
                 data,
-                _getKinetics().getCurrentTargetTemperature()
+                _getKinetics().getCurrentTargetTemperature(),
+                timeStep
             );
         }
     }
@@ -257,6 +267,7 @@ namespace engine
 #ifdef WITH_MPI
     void RingPolymerQMMDEngine::applyThermostat()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
@@ -267,7 +278,8 @@ namespace engine
                 getThermostat().applyThermostat(
                     bead,
                     data,
-                    _getKinetics().getCurrentTargetTemperature()
+                    _getKinetics().getCurrentTargetTemperature(),
+                    timeStep
                 );
             }
         }
@@ -322,6 +334,7 @@ namespace engine
 #else
     void RingPolymerQMMDEngine::applyThermostat()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             auto &bead = getRingPolymerBeads()[i];
@@ -330,7 +343,8 @@ namespace engine
             getThermostat().applyThermostat(
                 bead,
                 data,
-                _getKinetics().getCurrentTargetTemperature()
+                _getKinetics().getCurrentTargetTemperature(),
+                timeStep
             );
         }
     }
@@ -346,6 +360,7 @@ namespace engine
 #ifdef WITH_MPI
     void RingPolymerQMMDEngine::applyManostat()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             if (i % mpi::MPI::getSize() == mpi::MPI::getRank())
@@ -357,6 +372,7 @@ namespace engine
                     bead,
                     data,
                     _getKinetics().getCurrentTargetTemperature(),
+                    timeStep,
                     getSettings().potentialSettings.getCoulombRadiusCutOff()
                 );
             }
@@ -432,6 +448,7 @@ namespace engine
 #else
     void RingPolymerQMMDEngine::applyManostat()
     {
+        const auto &timeStep = getSettings().timings.getTimeStep();
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             auto &bead = getRingPolymerBeads()[i];
@@ -441,6 +458,7 @@ namespace engine
                 bead,
                 data,
                 _getKinetics().getCurrentTargetTemperature(),
+                timeStep,
                 getSettings().potentialSettings.getCoulombRadiusCutOff()
             );
         }

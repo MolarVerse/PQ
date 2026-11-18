@@ -23,9 +23,12 @@
 #ifndef INPUT__RESTART_FILE_READER__STEP_COUNT_SECTION_HPP
 #define INPUT__RESTART_FILE_READER__STEP_COUNT_SECTION_HPP
 
+#include <mstd/types.hpp>
 #include <string>
 
 #include "restartFileSection.hpp"
+
+class TimingsSettings;
 
 namespace input::restartFile
 {
@@ -37,7 +40,11 @@ namespace input::restartFile
      */
     class StepCountSection : public RestartFileSection
     {
+        mstd::Ref<TimingsSettings> _timingsSettings;
+
        public:
+        explicit StepCountSection(TimingsSettings &timingsSettings);
+
         void process(
             std::vector<std::string> &lineElements,
             engine::Engine           &engine,

@@ -103,7 +103,9 @@ class TestStepCountSection : public ::testing::Test
 
     void SetUp() override
     {
-        _section = std::make_unique<input::restartFile::StepCountSection>();
+        _section = std::make_unique<input::restartFile::StepCountSection>(
+            _settings.timings
+        );
 
         // NOTE: use dummy engine for testing
         //       this is implemented by base class Engine
