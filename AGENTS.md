@@ -254,17 +254,6 @@ All pipelines are in `.github/workflows/`:
 
 See the developer guide page *Continuous Integration* for details.
 
------------------------------------ | ---------------------------- | ----------------------------------------------------- |
-| `ci_build.yml`                      | PRs (any branch), push to `dev`/`main` | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build |
-| `clang_format.yml`                   | PRs to `main`/`dev`          | `git-clang-format` on changed C/C++ lines             |
-| `license_check.yml`                 | PRs (any branch), push to `main`/`master` | Exact GPL header check on all C/C++ files       |
-| `perf.yml`                           | PRs to `main`/`dev`          | Callgrind instruction-count regression gate           |
-| `check-pr-for-release-version.yml`  | PRs to `main`                | Requires `Release-x.y.z` in title/body; validates changelog tooling and curated user release notes |
-| `create-tag.yml`                    | Manual                       | Create a release tag                                  |
-| `daily_ci.yml`                      | Schedule                     | Daily build/test                                       |
-| `jekyll-gh-pages.yml`               | Push                         | Publish documentation site                             |
-| `pr_request.yml`                    | PRs to `main`/`dev`          | Fails if the target branch has moved since the PR was opened (must be rebased/updated) |
-
 ---
 
 ## Changelogs
