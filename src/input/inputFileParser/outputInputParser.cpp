@@ -576,7 +576,7 @@ namespace input
     /**
      * @brief add extxyz filename keyword to the input parser
      *
-     * @details the extxyz file is only written if this keyword is set
+     * @details the H5MD file is only written if traj_format = h5md
      */
     void OutputInputParser::addExtxyzFilenameKeyword()
     {
@@ -605,7 +605,7 @@ namespace input
     /**
      * @brief add h5md filename keyword to the input parser
      *
-     * @details the extxyz file is only written if this keyword is set
+     * @details the H5MD file is only written if traj_format = h5md
      */
     void OutputInputParser::addH5mdFilenameKeyword()
     {

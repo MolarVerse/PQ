@@ -60,7 +60,7 @@ namespace
 }   // namespace
 
 /**
- * @brief without HDF5 the H5MD output refuses to start; with it, a file is
+ * @brief without HDF5 the H5MD output writes nothing; with it, a file is
  * written (its content is checked in testH5mdOutputContent)
  *
  */
@@ -71,11 +71,12 @@ TEST(TestH5mdOutput, writesOnlyWithHdf5)
 
     if (!out::H5mdOutput::available())
     {
-        EXPECT_THROW_MSG(
-            out::H5mdOutput(filename, true, 0.5),
-            exc::CompileTimeException,
-            "traj_format = h5md needs PQ built with -DBUILD_WITH_HDF5=ON"
-        );
+        {
+            out::H5mdOutput output{filename, true, 0.5};
+            output.write(makeFrame(), 10);
+            output.close();
+        }
+        EXPECT_FALSE(std::filesystem::exists(filename));
         return;
     }
 

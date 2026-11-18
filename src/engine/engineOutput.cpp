@@ -29,6 +29,7 @@
 #include "boxOutput.hpp"
 #include "defaults.hpp"
 #include "energyOutput.hpp"
+#include "exceptions.hpp"
 #include "frame.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
@@ -306,6 +307,8 @@ namespace engine
      * @param filename
      * @param overwrite whether an existing file may be replaced
      * @param timeStep in fs
+     *
+     * @throw CompileTimeException if PQ was built without HDF5
      */
     void EngineOutput::openH5mdOutput(
         const std::string &filename,
@@ -313,6 +316,11 @@ namespace engine
         const double       timeStep
     )
     {
+        if (!out::H5mdOutput::available())
+            throw exc::CompileTimeException(
+                "traj_format = h5md needs PQ built with -DBUILD_WITH_HDF5=ON"
+            );
+
         _h5mdOutput =
             std::make_unique<out::H5mdOutput>(filename, overwrite, timeStep);
     }

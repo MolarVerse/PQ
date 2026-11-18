@@ -26,7 +26,6 @@
 #include <memory>
 #include <string>
 
-#include "exceptions.hpp"
 #include "frame.hpp"
 
 #ifdef WITH_HDF5
@@ -41,6 +40,7 @@
 
 #include "atomNumberMap.hpp"
 #include "box.hpp"
+#include "exceptions.hpp"
 #include "stringUtilities.hpp"
 #include "systemInfo.hpp"
 
@@ -694,9 +694,8 @@ namespace out
     };
 
     /**
-     * @brief H5MD output needs HDF5
-     *
-     * @throw CompileTimeException always
+     * @brief without HDF5 nothing is written; EngineOutput::openH5mdOutput
+     * refuses to open it
      */
     H5mdOutput::H5mdOutput(
         [[maybe_unused]] const std::string &filename,
@@ -704,9 +703,6 @@ namespace out
         [[maybe_unused]] const double       timeStep
     )
     {
-        throw exc::CompileTimeException(
-            "traj_format = h5md needs PQ built with -DBUILD_WITH_HDF5=ON"
-        );
     }
 
     void H5mdOutput::write(
