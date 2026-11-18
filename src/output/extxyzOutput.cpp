@@ -46,8 +46,8 @@ namespace out
     /**
      * @brief write one frame
      *
-     * @details the comment line holds the cell vectors, the step, the total
-     * energy and units=pq; atoms are written in molecule order
+     * @details the comment line holds the cell vectors, the step, the
+     * potential energy and units=pq; atoms are written in molecule order
      *
      * @param frame
      * @param step
@@ -80,7 +80,7 @@ namespace out
         _buffer.append("\" Properties=").append(PROPERTIES);
         _buffer.append(" pbc=\"T T T\" step=").left(step, 0);
         _buffer.append(" energy=")
-            .fixed(frame.totalEnergy, 0, ENERGY_PRECISION);
+            .fixed(frame.potentialEnergy, 0, ENERGY_PRECISION);
         _buffer.append(" units=pq\n");
 
         for (const auto &atom : frame.atoms)
