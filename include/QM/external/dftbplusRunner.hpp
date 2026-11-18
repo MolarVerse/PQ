@@ -56,7 +56,8 @@ namespace QM
 
         void execute(
             const molsys::SimulationBox &simulationBox,
-            const FileSettings          &fileSettings
+            const FileSettings          &fileSettings,
+            const HybridSettings        &hybridSettings
         ) override;
 
        private:
@@ -66,8 +67,7 @@ namespace QM
 
         void _writePointChargeFile(
             const molsys::SimulationBox &simulationBox,
-            const std::string           &pointChargeFileName,
-            const HybridSettings        &hybridSettings
+            const std::string           &pointChargeFileName
         ) override;
 
         void _readStressTensor(

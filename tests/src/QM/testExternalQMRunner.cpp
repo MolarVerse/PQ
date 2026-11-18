@@ -588,8 +588,10 @@ TEST_F(ExternalQMRunnerTest, rejectsBiaxialPeriodicity)
 TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
 {
     const auto scriptDirectory = (_workPath / "no-such-directory").string();
-    _dftbRunner.setScriptPath(scriptDirectory + '/');
-    settings::QMSettings::setQMScript("this-script-does-not-exist.sh");
+    _settings.externalQMSettings.setQMScriptFullPathByUser(
+        scriptDirectory + "/this-script-does-not-exist.sh"
+    );
+    _settings.externalQMSettings.finalize();
 
     const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
@@ -960,7 +962,8 @@ namespace
         }
         void execute(
             const molsys::SimulationBox & /*simBox*/,
-            const FileSettings & /*fileSettings*/
+            const FileSettings & /*fileSettings*/,
+            const HybridSettings & /*hybridSettings*/
         ) override
         {
         }
@@ -1094,14 +1097,13 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
         settings.qmSettings,
         settings.externalQMSettings
     );
-    const auto path      = _configureQuotedScript(settings.externalQMSettings);
-    const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+    const auto path = _configureQuotedScript(settings.externalQMSettings);
     const auto changed =
         configurator::HybridConfigurator::getMoleculeChangedZone();
     settings.fileSettings.setOrcaFileNameByUser(
         "template's name; touch qm-injected"
     );
-    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    settings.hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
     _setMoleculeChangedZone(false);
     const auto expected = [&](int reset)
     {
@@ -1114,19 +1116,34 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
             )
         );
     };
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(1), runner.getCommand());
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(0), runner.getCommand());
     _setMoleculeChangedZone(true);
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(1), runner.getCommand());
     _setMoleculeChangedZone(false);
-    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
-    runner.execute(_simulationBox, settings.fileSettings);
+    settings.hybridSettings.setSmoothingMethodByUser(SmoothingMethod::EXACT);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(1), runner.getCommand());
     EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
-    settings::HybridSettings::setSmoothingMethod(smoothing);
     _setMoleculeChangedZone(changed);
 }
 
@@ -1144,7 +1161,11 @@ TEST_F(ExternalQMRunnerTest, orcaRejectsMissingScript)
     settings.externalQMSettings.finalize();
 
     EXPECT_THROW_MSG(
-        runner.execute(_simulationBox, settings.fileSettings),
+        runner.execute(
+            _simulationBox,
+            settings.fileSettings,
+            settings.hybridSettings
+        ),
         exc::InputFileException,
         std::format(
             "ORCA script file \"{}/orca_rimp2.py\" does not exist.",

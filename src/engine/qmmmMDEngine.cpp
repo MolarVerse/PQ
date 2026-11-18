@@ -54,7 +54,7 @@ namespace engine
          * molecule.
          *
          * @details Weights are computed from center-of-mass distance using
-         * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R
+         * weightingRadius = 2 * the layer radius. For x = d/R
          * and x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the
          * weight is 0. The returned values are unnormalized and normalized by
          * the caller.
@@ -62,11 +62,11 @@ namespace engine
         std::vector<double> getDistanceWeights(
             const molsys::Molecule &smoothingMol,
             const std::vector<std::reference_wrapper<molsys::Molecule>>
-                &recipientMolecules
+                        &recipientMolecules,
+            const double layerRadius
         )
         {
-            const auto weightingRadius =
-                2.0 * settings::HybridSettings::getLayerRadius();
+            const auto          weightingRadius = 2.0 * layerRadius;
             std::vector<double> weights;
             weights.reserve(recipientMolecules.size());
 
@@ -115,11 +115,9 @@ namespace engine
         _getHybridConfigurator().shiftAtomsToInnerRegionCenter(
             getSimulationBox()
         );
-        configurator::HybridConfigurator::assignHybridZones(getSimulationBox());
+        _getHybridConfigurator().assignHybridZones(getSimulationBox());
         _moltypeCheck();
-        configurator::HybridConfigurator::calculateSmoothingFactors(
-            getSimulationBox()
-        );
+        _getHybridConfigurator().calculateSmoothingFactors(getSimulationBox());
         getCellList().updateCellList(getSimulationBox());
         getPhysicalDataPtr()->setNumberOfSmoothingMolecules(
             static_cast<double>(std::ranges::distance(
@@ -156,7 +154,7 @@ namespace engine
         using enum SmoothingMethod;
 
         const auto &smoothingMethod =
-            settings::HybridSettings::getSmoothingMethod();
+            getSettings().hybridSettings.getSmoothingMethod();
 
         switch (smoothingMethod)
         {
@@ -227,7 +225,8 @@ namespace engine
                 getSimulationBox(),
                 getPhysicalData(),
                 NON_PERIODIC,
-                getSettings().fileSettings
+                getSettings().fileSettings,
+                getSettings().hybridSettings
             );
             _calculateQMReferenceEnergy();
 
@@ -343,7 +342,8 @@ namespace engine
             getSimulationBox(),
             getPhysicalData(),
             NON_PERIODIC,
-            getSettings().fileSettings
+            getSettings().fileSettings,
+            getSettings().hybridSettings
         );
         _calculateQMReferenceEnergy();
 
@@ -618,7 +618,7 @@ namespace engine
      * issue #1012 https://github.com/MolarVerse/PQ/issues/1012
      *
      * @details Selects the redistribution strategy configured via
-     * HybridSettings::getQMForceDist().
+     * hybridSettings.getQMForceDist().
      * - EQUAL: redistribute each smoothing-molecule deficit equally to
      *   CORE/LAYER molecules, then split by atomic mass within each
      * molecule.
@@ -637,7 +637,7 @@ namespace engine
      */
     void QMMMMDEngine::_distributeSmoothingMolQMForces()
     {
-        const auto type = settings::HybridSettings::getQMForceDist();
+        const auto type = getSettings().hybridSettings.getQMForceDist();
         std::vector<std::reference_wrapper<molsys::Molecule>>
             recipientMolecules;
 
@@ -685,8 +685,11 @@ namespace engine
                     weights = _getRandomWeights(recipientMolecules);
                     break;
                 case DISTANCE_WEIGHTED:
-                    weights =
-                        getDistanceWeights(smoothingMol, recipientMolecules);
+                    weights = getDistanceWeights(
+                        smoothingMol,
+                        recipientMolecules,
+                        getSettings().hybridSettings.getLayerRadius()
+                    );
                     break;
             }
 

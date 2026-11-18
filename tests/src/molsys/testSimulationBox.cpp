@@ -641,17 +641,6 @@ TEST_F(TestSimulationBox, copyOwnsIndependentAtoms)
 
 TEST_F(TestSimulationBox, validatesHybridIndexLists)
 {
-    _simulationBox->addInnerRegionCenterAtoms({0, 4});
-    EXPECT_EQ(
-        _simulationBox->getInnerRegionCenterAtomIndices(),
-        std::vector<size_t>({0, 4})
-    );
-    EXPECT_THROW_MSG(
-        _simulationBox->addInnerRegionCenterAtoms({5}),
-        exc::UserInputException,
-        "Inner region center atom index 5 out of range"
-    );
-
     _simulationBox->setupForcedOuterMolecules({0});
     EXPECT_TRUE(_simulationBox->getMolecule(0).isForcedOuter());
     EXPECT_THROW_MSG(

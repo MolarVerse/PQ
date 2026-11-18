@@ -466,7 +466,7 @@ namespace
 TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
 
     waterModel::SPCFwIntraWater spcFw{hybridSettings};
     expectIntraModelConservesForce(
@@ -488,7 +488,7 @@ TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
 TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
 
     waterModel::SPCMTRIntraWater spcMtr{hybridSettings};
     expectIntraModelConservesForce(
@@ -499,7 +499,7 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
     EXPECT_DOUBLE_EQ(spcMtr.getEqHHDistance(), 1.632993162);
 
     waterModel::TIP3PMTRIntraWater tip3pMtr{hybridSettings};
-    hybridSettings.setSmoothingMethod(SmoothingMethod::EXACT);
+    hybridSettings.setSmoothingMethodByUser(SmoothingMethod::EXACT);
     expectIntraModelConservesForce(
         tip3pMtr,
         {.oh1 = 1.00, .oh2 = 0.93, .angle = 1.82}
@@ -511,7 +511,7 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
 TEST(IntraWater, SpcModelsRejectDegenerateGeometry)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
 
     waterModel::SPCFwIntraWater  spcFw{hybridSettings};
     waterModel::qSPCFwIntraWater qSpcFw{hybridSettings};
@@ -561,7 +561,7 @@ TEST(IntraWater, SpcModelsRejectDegenerateGeometry)
 TEST(IntraWater, SpcModelsStayFiniteNextToTheDegenerateGeometries)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
 
     // a linear molecule is not degenerate: sin(pi) does not vanish in floating
     // point and the cross product is exactly zero
@@ -585,7 +585,7 @@ TEST(IntraWater, SpcModelsStayFiniteNextToTheDegenerateGeometries)
 TEST(IntraWater, MtrModelsRejectDegenerateGeometry)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
 
     waterModel::SPCMTRIntraWater   spcMtr{hybridSettings};
     waterModel::TIP3PMTRIntraWater tip3pMtr{hybridSettings};
@@ -627,7 +627,7 @@ TEST(IntraWater, MtrModelsRejectDegenerateGeometry)
 TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
 
     waterModel::SPCMTRIntraWater spcMtr{hybridSettings};
 
@@ -698,7 +698,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 
     atom1.setForceToZero();
     atom2.setForceToZero();
-    hybridSettings.setUseQMCharges(true);
+    hybridSettings.setUseQMChargesByUser(true);
     coulombEnergy = 0.0;
     strategy
         .calculateSingleCoulombInteraction<pot::QMChargeTag, pot::MMChargeTag>(
@@ -731,7 +731,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     EXPECT_NE(atom1.getForce(), linalg::Vec3D{});
     EXPECT_EQ(atom2.getForce(), linalg::Vec3D{});
 
-    hybridSettings.setUseQMCharges(false);
+    hybridSettings.setUseQMChargesByUser(false);
     EXPECT_DOUBLE_EQ(strategy.getPartialCharge<pot::QMChargeTag>(atom1), -0.8);
     EXPECT_DOUBLE_EQ(strategy.getPartialCharge<pot::MMChargeTag>(atom2), 0.4);
 }
@@ -797,7 +797,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
     HybridSettings hybridSettings;
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-    hybridSettings.setUseQMCharges(true);
+    hybridSettings.setUseQMChargesByUser(true);
     settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
@@ -961,7 +961,7 @@ namespace
     StrategyResult runInterWater(const int stage, const bool spread)
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        settings::HybridSettings::setUseQMCharges(true);
+        const HybridSettings hybridSettings;
         settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
         settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
         pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
@@ -988,7 +988,7 @@ namespace
 
         waterModel::InterWater water(
             waterModel::makeInterWaterState<waterModel::SPCInterParam>(),
-            std::make_unique<Strategy>()
+            std::make_unique<Strategy>(hybridSettings)
         );
 
         water.calculate(simulationBox, physicalData, coulomb, cellList);
@@ -1136,7 +1136,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     atom2.setInternalGlobalVDWType(VdwType{0});
     atom2.setForceToZero();
 
-    hybridSettings.setUseQMCharges(true);
+    hybridSettings.setUseQMChargesByUser(true);
     const auto coulombEnergy = potential.calculateSingleCoulombInteraction<
         pot::QMChargeTag,
         pot::MMChargeTag>(box, atom1, atom2);
@@ -1153,7 +1153,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     EXPECT_NE(atom1.getForce(), linalg::Vec3D{});
     EXPECT_EQ(atom2.getForce(), linalg::Vec3D{});
 
-    hybridSettings.setUseQMCharges(false);
+    hybridSettings.setUseQMChargesByUser(false);
     EXPECT_DOUBLE_EQ(potential.getPartialCharge<pot::QMChargeTag>(atom1), -0.8);
     EXPECT_DOUBLE_EQ(potential.getPartialCharge<pot::MMChargeTag>(atom2), 0.4);
 }
@@ -1177,7 +1177,7 @@ namespace
     )
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        settings::HybridSettings::setUseQMCharges(true);
+        const HybridSettings hybridSettings;
         settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
         settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
         pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
@@ -1195,7 +1195,7 @@ namespace
             cellList = makeCellList(simulationBox, waterModelSettings);
         }
 
-        Strategy potential;
+        Strategy potential(hybridSettings);
         potential.makeCoulombPotential(pot::CoulombShiftedPotential(kCutOff));
         potential.setNonCoulombPotential(makeNonCoulombPotential());
 
@@ -1307,7 +1307,7 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     HybridSettings hybridSettings;
-    hybridSettings.setUseQMCharges(true);
+    hybridSettings.setUseQMChargesByUser(true);
     settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
     settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
     pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);

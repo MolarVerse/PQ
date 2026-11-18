@@ -69,7 +69,8 @@ namespace QM
         void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const FileSettings &
+            const FileSettings &,
+            const HybridSettings &
         );
         virtual void run(
             molsys::SimulationBox &,

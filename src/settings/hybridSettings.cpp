@@ -33,31 +33,6 @@
 #include "selection.hpp"
 #endif
 
-#include "exceptions.hpp"
-#include "fileSettings.hpp"
-
-#ifdef PYTHON_ENABLED
-#include "selection.hpp"
-#endif
-
-/**
- * @brief Construct a new Hybrid Settings:: Hybrid Settings object
- *
- */
-HybridSettings::HybridSettings()
-    : _forcedCoreList({}),
-      _forcedLayerList({}),
-      _forcedOuterList({}),
-      _useQMCharges(true),
-      _coreRadius(0.0),
-      _layerRadius(0.0),
-      _smoothingRegionThickness(0.0),
-      _pointChargeThickness(0.0),
-      _smoothing(SmoothingMethod::HOTSPOT),
-      _qmForceDist(QMForceDist::NONE)
-{
-}
-
 /********************
  *                  *
  * standard setters *
@@ -72,11 +47,11 @@ HybridSettings::HybridSettings()
  *
  * @param innerRegionCenter
  */
-void HybridSettings::setInnerRegionCenter(
+void HybridSettings::setInnerRegionCenterByUser(
     const std::vector<size_t> &innerRegionCenter
 )
 {
-    _innerRegionCenter.set(innerRegionCenter);
+    _innerRegionCenter.setByUser(innerRegionCenter);
 }
 
 /**
@@ -129,8 +104,9 @@ void HybridSettings::finalize(const FileSettings &fileSettings)
             )
         );
 
-    _innerRegionCenter =
-        std::vector<size_t>(selection.begin(), selection.end());
+    _innerRegionCenter.setByUser(
+        std::vector<size_t>(selection.begin(), selection.end())
+    );
 #else
     static_cast<void>(fileSettings);
     throw exc::InputFileException(
@@ -151,9 +127,9 @@ void HybridSettings::finalize(const FileSettings &fileSettings)
  *
  * @param list
  */
-void HybridSettings::setForcedCoreList(const std::vector<int> &list)
+void HybridSettings::setForcedCoreListByUser(const std::vector<int> &list)
 {
-    _forcedCoreList.set(list);
+    _forcedCoreList.setByUser(list);
 }
 
 /**
@@ -164,9 +140,9 @@ void HybridSettings::setForcedCoreList(const std::vector<int> &list)
  *
  * @param list
  */
-void HybridSettings::setForcedLayerList(const std::vector<int> &list)
+void HybridSettings::setForcedLayerListByUser(const std::vector<int> &list)
 {
-    _forcedLayerList.set(list);
+    _forcedLayerList.setByUser(list);
 }
 
 /**
@@ -178,9 +154,9 @@ void HybridSettings::setForcedLayerList(const std::vector<int> &list)
  *
  * @param list
  */
-void HybridSettings::setForcedOuterList(const std::vector<int> &list)
+void HybridSettings::setForcedOuterListByUser(const std::vector<int> &list)
 {
-    _forcedOuterList.set(list);
+    _forcedOuterList.setByUser(list);
 }
 
 /**
@@ -188,9 +164,9 @@ void HybridSettings::setForcedOuterList(const std::vector<int> &list)
  *
  * @param useQMCharges
  */
-void HybridSettings::setUseQMCharges(bool useQMCharges)
+void HybridSettings::setUseQMChargesByUser(bool useQMCharges)
 {
-    _useQMCharges.set(useQMCharges);
+    _useQMCharges.setByUser(useQMCharges);
 }
 
 /**
@@ -200,7 +176,10 @@ void HybridSettings::setUseQMCharges(bool useQMCharges)
  *
  * @param radius
  */
-void HybridSettings::setCoreRadius(double radius) { _coreRadius.set(radius); }
+void HybridSettings::setCoreRadiusByUser(double radius)
+{
+    _coreRadius.setByUser(radius);
+}
 
 /**
  * @brief set the layerRadius in the settings
@@ -209,16 +188,19 @@ void HybridSettings::setCoreRadius(double radius) { _coreRadius.set(radius); }
  *
  * @param radius
  */
-void HybridSettings::setLayerRadius(double radius) { _layerRadius.set(radius); }
+void HybridSettings::setLayerRadiusByUser(double radius)
+{
+    _layerRadius.setByUser(radius);
+}
 
 /**
  * @brief set the smoothingRegionThickness in the settings
  *
  * @param thickness
  */
-void HybridSettings::setSmoothingRegionThickness(double thickness)
+void HybridSettings::setSmoothingRegionThicknessByUser(double thickness)
 {
-    _smoothingRegionThickness.set(thickness);
+    _smoothingRegionThickness.setByUser(thickness);
 }
 
 /**
@@ -229,9 +211,9 @@ void HybridSettings::setSmoothingRegionThickness(double thickness)
  *
  * @param radius
  */
-void HybridSettings::setPointChargeThickness(double radius)
+void HybridSettings::setPointChargeThicknessByUser(double radius)
 {
-    _pointChargeThickness.set(radius);
+    _pointChargeThickness.setByUser(radius);
 }
 
 /**
@@ -239,9 +221,9 @@ void HybridSettings::setPointChargeThickness(double radius)
  *
  * @param method
  */
-void HybridSettings::setSmoothingMethod(SmoothingMethod method)
+void HybridSettings::setSmoothingMethodByUser(SmoothingMethod method)
 {
-    _smoothing.set(method);
+    _smoothing.setByUser(method);
 }
 
 /**
@@ -249,9 +231,9 @@ void HybridSettings::setSmoothingMethod(SmoothingMethod method)
  *
  * @param method
  */
-void HybridSettings::setQMForceDist(QMForceDist method)
+void HybridSettings::setQMForceDistByUser(QMForceDist method)
 {
-    _qmForceDist.set(method);
+    _qmForceDist.setByUser(method);
 }
 
 /********************
@@ -263,20 +245,17 @@ void HybridSettings::setQMForceDist(QMForceDist method)
 /**
  * @brief get the innerRegionCenter as list of int
  *
- * @return std::optional<std::vector<size_t>>
+ * @return const std::vector<size_t> &
  */
-std::optional<std::vector<size_t>> HybridSettings::getInnerRegionCenter() const
+const std::vector<size_t> &HybridSettings::getInnerRegionCenter() const
 {
-    if (_innerRegionCenter.isSet())
-        return _innerRegionCenter.get();
-
-    return std::nullopt;
+    return _innerRegionCenter.get();
 }
 
 /**
  * @brief get the forcedCoreList
  *
- * @return vector<int>
+ * @return const vector<int>&
  */
 const std::vector<int> &HybridSettings::getForcedCoreList() const
 {
@@ -286,7 +265,7 @@ const std::vector<int> &HybridSettings::getForcedCoreList() const
 /**
  * @brief get the forcedLayerList
  *
- * @return vector<int>
+ * @return const vector<int>&
  */
 const std::vector<int> &HybridSettings::getForcedLayerList() const
 {
@@ -296,7 +275,7 @@ const std::vector<int> &HybridSettings::getForcedLayerList() const
 /**
  * @brief get the forcedOuterList
  *
- * @return vector<int>
+ * @return const vector<int>&
  */
 const std::vector<int> &HybridSettings::getForcedOuterList() const
 {

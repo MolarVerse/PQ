@@ -29,6 +29,7 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -51,7 +52,8 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto box = molsys::SimulationBox();
+    Settings settings;
+    auto     box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
@@ -115,20 +117,23 @@ int main()
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            settings.hybridSettings
         );
         angle.calculateEnergyAndForces(
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            settings.hybridSettings
         );
         dihedral.calculateEnergyAndForces(
             box,
             physicalData,
             false,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            settings.hybridSettings
         );
     }
 

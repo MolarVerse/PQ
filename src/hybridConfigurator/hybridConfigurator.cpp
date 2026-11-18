@@ -60,7 +60,7 @@ namespace configurator
         molsys::SimulationBox& simulationBox
     )
     {
-        const auto& indices = simulationBox.getInnerRegionCenterAtomIndices();
+        const auto& indices = _hybridSettings->getInnerRegionCenter();
 
         if (indices.empty())
         {

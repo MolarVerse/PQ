@@ -56,7 +56,7 @@ namespace waterModel
      *
      * @note Inactive molecules are skipped.
      */
-    inline inline void SPCIntraWater::calculate(
+    inline void SPCIntraWater::calculate(
         molsys::SimulationBox&      simulationBox,
         physicalData::PhysicalData& physicalData
     )

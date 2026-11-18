@@ -150,6 +150,8 @@ namespace waterModel
         std::unique_ptr<InterWaterStrategy> _strategy;
 
        public:
+        explicit InterWater(const HybridSettings &hybridSettings);
+
         InterWater(
             InterWaterState                     state,
             std::unique_ptr<InterWaterStrategy> strategy
@@ -183,6 +185,61 @@ namespace waterModel
         {
             _setNonCoulombCutOffRadii();
             _initNonCoulombPairs();
+        }
+    };
+
+    class InterWaterStrategyNull : public InterWaterStrategy
+    {
+       public:
+        using InterWaterStrategy::InterWaterStrategy;
+        void calculate(
+            const InterWaterState & /*state*/,
+            molsys::SimulationBox & /*simulationBox*/,
+            physicalData::PhysicalData & /*physicalData*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            const molsys::CellList & /*cellList*/
+        ) override
+        {
+        }
+
+        void calculateCoreToOuterForces(
+            const InterWaterState & /*state*/,
+            molsys::SimulationBox & /*simulationBox*/,
+            physicalData::PhysicalData & /*physicalData*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            const molsys::CellList & /*cellList*/
+        ) override
+        {
+        }
+
+        void calculateLayerToOuterForces(
+            const InterWaterState & /*state*/,
+            molsys::SimulationBox & /*simulationBox*/,
+            physicalData::PhysicalData & /*physicalData*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            const molsys::CellList & /*cellList*/
+        ) override
+        {
+        }
+
+        void calculateOuterToOuterForces(
+            const InterWaterState & /*state*/,
+            molsys::SimulationBox & /*simulationBox*/,
+            physicalData::PhysicalData & /*physicalData*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            const molsys::CellList & /*cellList*/
+        ) override
+        {
+        }
+
+        void calculateHotspotSmoothingMMForces(
+            const InterWaterState & /*state*/,
+            molsys::SimulationBox & /*simulationBox*/,
+            physicalData::PhysicalData & /*physicalData*/,
+            const std::shared_ptr<pot::CoulombPotential> & /*coulPot*/,
+            const molsys::CellList & /*cellList*/
+        ) override
+        {
         }
     };
 
