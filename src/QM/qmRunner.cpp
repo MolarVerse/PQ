@@ -88,6 +88,9 @@ namespace QM
      * @param physicalData the physical data associated with the simulation
      * @param fileSettings the file settings containing input/output file paths
      * and related configurations for the QM calculation
+     * @param hybridSettings the hybrid settings of the system, which may
+     * influence the execution of the QM engine, particularly in the context of
+     * hybrid QM/MM simulations.
      */
     void QMRunner::run(
         molsys::SimulationBox      &simulationBox,

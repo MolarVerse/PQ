@@ -124,6 +124,9 @@ namespace QM
      * conditions
      * @param fileSettings Object containing file paths and settings required
      * for the execution of the external QM program.
+     * @param hybridSettings The hybrid settings of the system, which may
+     * influence the execution of the QM script, particularly in the context of
+     * hybrid QM/MM simulations.
      *
      * @throws exc::QMRunnerException if the external QM program cannot be
      * executed successfully, or if required input files are missing or

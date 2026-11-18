@@ -189,6 +189,9 @@ namespace QM
      * @param simulationBox Simulation box containing molecules and atoms.
      * @param fileSettings Object containing file paths and settings required
      * for the execution of the external QM program.
+     * @param hybridSettings The hybrid settings of the system, which may
+     * influence the execution of the QM script, particularly in the context of
+     * hybrid QM/MM simulations.
      *
      */
     void DFTBPlusRunner::execute(

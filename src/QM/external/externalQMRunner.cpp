@@ -465,6 +465,9 @@ namespace QM
      * @param per periodicity of the system
      * @param fileSettings Object containing file paths and settings required
      * for the execution of the external QM program.
+     * @param hybridSettings The hybrid settings of the system, which may
+     * influence the execution of the QM engine, particularly in the context of
+     * hybrid QM/MM simulations.
      *
      */
     void ExternalQMRunner::run(

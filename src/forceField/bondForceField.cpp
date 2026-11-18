@@ -65,6 +65,7 @@ namespace ff
      * @param physicalData the physical data of the system
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
+     * @param hybridSettings the hybrid settings of the system
      */
     void BondForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
