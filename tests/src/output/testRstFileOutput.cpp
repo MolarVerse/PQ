@@ -25,6 +25,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iosfwd>
+#include <sstream>
 #include <string>
 
 #include "exceptions.hpp"
@@ -168,4 +169,51 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
     std::string   line;
     getline(file, line);
     EXPECT_EQ(line, "Step 10");
+}
+
+/**
+ * @brief the box of a restart file reads back as the same numbers: a box that
+ * is written with fewer digits changes the box of the restarted simulation
+ *
+ * @details the box of an NPT run, or a box taken from a start file with many
+ * digits, is not a round number; a text with 6 digits (27.4421) differs from
+ * the box of the run by about 4e-5 Angstrom
+ */
+TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
+{
+    const auto length = 27.44205774028026567635;
+
+    molsys::OrthorhombicBox orthoBox{{length, 0.5 * length, 1.0 / 3.0}};
+    _simulationBox->setBox(orthoBox, false);
+
+    _rstFileOutput->setFilename("default.rst", false);
+    _rstFileOutput->write(
+        out::Frame{*_simulationBox, thermostat::Thermostat()},
+        10
+    );
+    _rstFileOutput->close();
+
+    std::ifstream file("default.rst");
+    std::string   line;
+    getline(file, line);
+    getline(file, line);
+
+    std::istringstream boxLine(line);
+    std::string        keyword;
+    double             lengthA = 0.0;
+    double             lengthB = 0.0;
+    double             lengthC = 0.0;
+    double             alpha   = 0.0;
+    double             beta    = 0.0;
+    double             gamma   = 0.0;
+    boxLine >> keyword >> lengthA >> lengthB >> lengthC >> alpha >> beta >>
+        gamma;
+
+    EXPECT_EQ(keyword, "Box");
+    EXPECT_EQ(lengthA, length);
+    EXPECT_EQ(lengthB, 0.5 * length);
+    EXPECT_EQ(lengthC, 1.0 / 3.0);
+    EXPECT_EQ(alpha, 90.0);
+    EXPECT_EQ(beta, 90.0);
+    EXPECT_EQ(gamma, 90.0);
 }

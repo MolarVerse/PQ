@@ -1,0 +1,1 @@
+- Add an integration test that a run stopped after 5 steps and continued from the restart file PQ wrote gives the same positions, velocities, forces, box and step counter as one run of 10 steps (NVE and Berendsen NPT), and a unit test for the box line of the restart file.
