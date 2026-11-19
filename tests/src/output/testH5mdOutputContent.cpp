@@ -27,7 +27,6 @@
 #include <hdf5.h>
 
 #include <array>
-#include <cstdint>
 #include <filesystem>
 #include <memory>
 #include <string>

@@ -27,7 +27,6 @@
 #include <hdf5.h>
 
 #include <array>
-#include <cstdint>
 #include <filesystem>
 #include <span>
 #include <string>
@@ -38,15 +37,11 @@
 #include "hdf5Wrapper.hpp"
 #include "throwWithMessage.hpp"
 
-using out::hdf5::Element;
-using out::hdf5::Handle;
-using out::hdf5::Series;
-
 namespace
 {
     const std::string fileName = "testHdf5Wrapper.h5";
 
-    Handle createFile()
+    out::hdf5::Handle createFile()
     {
         return {
             H5Fcreate(
@@ -61,8 +56,8 @@ namespace
 
     std::vector<double> readDoubles(hid_t dataset)
     {
-        const Handle space{H5Dget_space(dataset), H5Sclose};
-        const auto   size = H5Sget_simple_extent_npoints(space.get());
+        const out::hdf5::Handle space{H5Dget_space(dataset), H5Sclose};
+        const auto size = H5Sget_simple_extent_npoints(space.get());
 
         std::vector<double> values(static_cast<std::size_t>(size));
         out::hdf5::check(H5Dread(
@@ -81,7 +76,7 @@ namespace
 TEST(TestHdf5Wrapper, handleRejectsFailedCall)
 {
     EXPECT_THROW_MSG(
-        Handle(H5I_INVALID_HID, H5Gclose),
+        out::hdf5::Handle(H5I_INVALID_HID, H5Gclose),
         exc::InputFileException,
         "HDF5 call failed"
     );
@@ -99,7 +94,7 @@ TEST(TestHdf5Wrapper, handleMovesOwnership)
         auto       group   = out::hdf5::createGroup(file.get(), "first");
         const auto firstId = group.get();
 
-        Handle moved{std::move(group)};
+        out::hdf5::Handle moved{std::move(group)};
         EXPECT_EQ(moved.get(), firstId);
         EXPECT_EQ(
             group.get(),
@@ -119,7 +114,7 @@ TEST(TestHdf5Wrapper, elementWritesStepTimeAndValue)
     {
         auto file = createFile();
 
-        Element<double> element{
+        out::hdf5::Element<double> element{
             file.get(),
             "energy",
             H5T_IEEE_F64LE,
@@ -131,11 +126,11 @@ TEST(TestHdf5Wrapper, elementWritesStepTimeAndValue)
         element.append(10, 5.0, std::span<const double>{first});
         element.append(20, 10.0, std::span<const double>{second});
 
-        const Handle value{
+        const out::hdf5::Handle value{
             H5Dopen2(file.get(), "energy/value", H5P_DEFAULT),
             H5Dclose
         };
-        const Handle time{
+        const out::hdf5::Handle time{
             H5Dopen2(file.get(), "energy/time", H5P_DEFAULT),
             H5Dclose
         };
@@ -151,7 +146,7 @@ TEST(TestHdf5Wrapper, seriesRejectsWrongFrameSize)
     {
         auto file = createFile();
 
-        Series<float> series{
+        out::hdf5::Series<float> series{
             file.get(),
             "positions",
             H5T_IEEE_F32LE,
@@ -192,10 +187,14 @@ TEST(TestHdf5Wrapper, writesAttributesAndDatasets)
         );
 
         for (const auto *name : {"name", "version", "boundary"})
+        {
             EXPECT_GT(H5Aexists(group.get(), name), 0) << name;
+        }
 
         for (const auto *name : {"species", "names"})
+        {
             EXPECT_GT(H5Lexists(group.get(), name, H5P_DEFAULT), 0) << name;
+        }
     }
     std::filesystem::remove(fileName);
 }

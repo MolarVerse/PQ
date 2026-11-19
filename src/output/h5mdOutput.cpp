@@ -48,11 +48,15 @@ namespace out
         const auto key = utilities::toLowerCopy(name);
 
         if (!atomNumberMap.contains(key) || key == "dum")
+        {
             return NO_ELEMENT;
+        }
 
         const auto number = atomNumberMap.at(key).get();
         if (number > MAX_ELEMENT)
+        {
             return NO_ELEMENT;
+        }
 
         return static_cast<int>(number);
     }
@@ -75,7 +79,6 @@ namespace out
 
 #ifdef WITH_HDF5
 
-#include <array>
 #include <cstdint>
 #include <filesystem>
 #include <span>
@@ -84,6 +87,7 @@ namespace out
 #include "box.hpp"
 #include "exceptions.hpp"
 #include "hdf5Wrapper.hpp"
+#include "staticMatrix.hpp"
 #include "systemInfo.hpp"
 
 namespace out
@@ -91,24 +95,21 @@ namespace out
     // H5MD readers know Angstrom fs-1, not the Angstrom s-1 of PQ
     constexpr double PER_S_TO_PER_FS = 1.0e-15;
 
-    using hdf5::Element;
-    using hdf5::Handle;
-
     /**
      * @brief open HDF5 file and the H5MD elements written each frame
      */
     struct H5mdOutput::Impl
     {
-        Handle      file;
-        double      timeStep;
-        std::size_t nAtoms = 0;
+        hdf5::Handle file;
+        double       timeStep;
+        std::size_t  nAtoms = 0;
 
-        std::unique_ptr<Element<double>> box;
-        std::unique_ptr<Element<float>>  position;
-        std::unique_ptr<Element<float>>  velocity;
-        std::unique_ptr<Element<float>>  force;
-        std::unique_ptr<Element<float>>  charge;
-        std::unique_ptr<Element<double>> potentialEnergy;
+        std::unique_ptr<hdf5::Element<double>> box;
+        std::unique_ptr<hdf5::Element<float>>  position;
+        std::unique_ptr<hdf5::Element<float>>  velocity;
+        std::unique_ptr<hdf5::Element<float>>  force;
+        std::unique_ptr<hdf5::Element<float>>  charge;
+        std::unique_ptr<hdf5::Element<double>> potentialEnergy;
 
         std::vector<float> buffer;
 
@@ -119,10 +120,10 @@ namespace out
 
         template <typename Get>
         void appendVectors(
-            Element<float> &element,
-            std::int64_t    step,
-            double          time,
-            Get             get
+            hdf5::Element<float> &element,
+            std::int64_t          step,
+            double                time,
+            Get                   get
         );
     };
 
@@ -196,35 +197,35 @@ namespace out
 
         const auto nAtomsShape = static_cast<hsize_t>(nAtoms);
 
-        box = std::make_unique<Element<double>>(
+        box = std::make_unique<hdf5::Element<double>>(
             boxGroup.get(),
             "edges",
             H5T_IEEE_F64LE,
             hdf5::Shape{3, 3},
             "Angstrom"
         );
-        position = std::make_unique<Element<float>>(
+        position = std::make_unique<hdf5::Element<float>>(
             all.get(),
             "position",
             H5T_IEEE_F32LE,
             hdf5::Shape{nAtomsShape, 3},
             "Angstrom"
         );
-        velocity = std::make_unique<Element<float>>(
+        velocity = std::make_unique<hdf5::Element<float>>(
             all.get(),
             "velocity",
             H5T_IEEE_F32LE,
             hdf5::Shape{nAtomsShape, 3},
             "Angstrom fs-1"
         );
-        force = std::make_unique<Element<float>>(
+        force = std::make_unique<hdf5::Element<float>>(
             all.get(),
             "force",
             H5T_IEEE_F32LE,
             hdf5::Shape{nAtomsShape, 3},
             "kcal mol-1 Angstrom-1"
         );
-        charge = std::make_unique<Element<float>>(
+        charge = std::make_unique<hdf5::Element<float>>(
             all.get(),
             "charge",
             H5T_IEEE_F32LE,
@@ -233,7 +234,7 @@ namespace out
         );
 
         const auto observables = hdf5::createGroup(file.get(), "observables");
-        potentialEnergy        = std::make_unique<Element<double>>(
+        potentialEnergy        = std::make_unique<hdf5::Element<double>>(
             observables.get(),
             "potential_energy",
             H5T_IEEE_F64LE,
@@ -257,17 +258,19 @@ namespace out
      */
     template <typename Get>
     void H5mdOutput::Impl::appendVectors(
-        Element<float> &element,
-        std::int64_t    step,
-        double          time,
-        Get             get
+        hdf5::Element<float> &element,
+        std::int64_t          step,
+        double                time,
+        Get                   get
     )
     {
         for (std::size_t atomIndex = 0; atomIndex < nAtoms; ++atomIndex)
         {
             const auto value = get(atomIndex);
             for (std::size_t dim = 0; dim < 3; ++dim)
+            {
                 buffer[(3 * atomIndex) + dim] = static_cast<float>(value[dim]);
+            }
         }
 
         element.append(step, time, std::span<const float>{buffer});
@@ -284,21 +287,23 @@ namespace out
     void H5mdOutput::Impl::write(const Frame &frame, std::size_t step)
     {
         if (nAtoms == 0)
+        {
             init(frame);
+        }
 
         if (frame.atoms.size() != nAtoms)
+        {
             throw exc::InputFileException(
                 "H5MD output needs the same number of atoms in every frame"
             );
+        }
 
         const auto stepValue = static_cast<std::int64_t>(step);
         const auto time      = static_cast<double>(step) * timeStep;
 
-        const auto            matrix = frame.box->getBoxMatrix();
-        std::array<double, 9> edges{};
-        for (std::size_t vector = 0; vector < 3; ++vector)
-            for (std::size_t dim = 0; dim < 3; ++dim)
-                edges[(3 * vector) + dim] = matrix[dim][vector];
+        // H5MD edges are the box vectors as rows
+        const auto edges =
+            linalg::transpose(frame.box->getBoxMatrix()).toStdVector();
 
         box->append(stepValue, time, std::span<const double>{edges});
 
@@ -329,7 +334,9 @@ namespace out
         );
 
         for (std::size_t atomIndex = 0; atomIndex < nAtoms; ++atomIndex)
+        {
             buffer[atomIndex] = static_cast<float>(atoms[atomIndex].charge);
+        }
         charge->append(
             stepValue,
             time,
@@ -361,9 +368,11 @@ namespace out
     )
     {
         if (!overwrite && std::filesystem::exists(filename))
+        {
             throw exc::InputFileException(
                 "File already exists - filename = " + filename
             );
+        }
 
         _impl = std::make_unique<Impl>(filename, overwrite, timeStep);
     }

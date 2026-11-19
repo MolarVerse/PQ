@@ -42,7 +42,9 @@ namespace out::hdf5
     Handle::Handle(hid_t id, CloseFunction close) : _id(id), _close(close)
     {
         if (_id < 0)
+        {
             throw exc::InputFileException("HDF5 call failed");
+        }
     }
 
     /**
@@ -54,7 +56,9 @@ namespace out::hdf5
     Handle::~Handle()
     {
         if (_id != H5I_INVALID_HID)
+        {
             static_cast<void>(_close(_id));
+        }
     }
 
     Handle::Handle(Handle &&other) noexcept
@@ -67,7 +71,9 @@ namespace out::hdf5
         if (this != &other)
         {
             if (_id != H5I_INVALID_HID)
+            {
                 static_cast<void>(_close(_id));
+            }
 
             _id    = std::exchange(other._id, H5I_INVALID_HID);
             _close = other._close;
@@ -117,7 +123,9 @@ namespace out::hdf5
     void check(herr_t status)
     {
         if (status < 0)
+        {
             throw exc::InputFileException("HDF5 call failed");
+        }
     }
 
     /**
@@ -205,7 +213,10 @@ namespace out::hdf5
         {
             std::vector<const char *> pointers;
             pointers.reserve(values.size());
-            for (const auto &value : values) pointers.push_back(value.c_str());
+            for (const auto &value : values)
+            {
+                pointers.push_back(value.c_str());
+            }
             return pointers;
         }
 
@@ -278,7 +289,11 @@ namespace out::hdf5
         const auto attribute =
             createAttribute(object, name, type.get(), values.size());
         const auto pointers = cStrings(values);
-        check(H5Awrite(attribute.get(), type.get(), pointers.data()));
+        check(H5Awrite(
+            attribute.get(),
+            type.get(),
+            static_cast<const void *>(pointers.data())
+        ));
     }
 
     /**
@@ -329,7 +344,7 @@ namespace out::hdf5
             H5S_ALL,
             H5S_ALL,
             H5P_DEFAULT,
-            pointers.data()
+            static_cast<const void *>(pointers.data())
         ));
     }
 
@@ -353,7 +368,10 @@ namespace out::hdf5
         maxDims.insert(maxDims.end(), frameShape.begin(), frameShape.end());
 
         std::size_t frameBytes = H5Tget_size(fileType);
-        for (const auto extent : frameShape) frameBytes *= extent;
+        for (const auto extent : frameShape)
+        {
+            frameBytes *= extent;
+        }
 
         const auto framesPerChunk = std::clamp<std::size_t>(
             CHUNK_BYTES / frameBytes,
@@ -436,10 +454,12 @@ namespace out::hdf5
     void Series<T>::append(std::span<const T> frame)
     {
         if (frame.size() != _frameSize)
+        {
             throw exc::InputFileException(
                 "HDF5 frame has " + std::to_string(frame.size()) +
                 " values, expected " + std::to_string(_frameSize)
             );
+        }
 
         Shape dims{_nFrames + 1};
         dims.insert(dims.end(), _frameShape.begin(), _frameShape.end());
