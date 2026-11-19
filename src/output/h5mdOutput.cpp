@@ -32,6 +32,10 @@
 
 namespace out
 {
+    // species of atoms without an element (dummy and virtual atoms)
+    constexpr int NO_ELEMENT  = 0;
+    constexpr int MAX_ELEMENT = 118;
+
     /**
      * @brief H5MD species of an atom: its atomic number, 0 for atoms without
      * an element (dummy and virtual atoms)
@@ -67,13 +71,6 @@ namespace out
 #endif
     }
 
-    H5mdOutput::~H5mdOutput() = default;
-
-    /**
-     * @brief write everything and close the file
-     */
-    void H5mdOutput::close() { _impl.reset(); }
-
 }   // namespace out
 
 #ifdef WITH_HDF5
@@ -91,6 +88,9 @@ namespace out
 
 namespace out
 {
+    // H5MD readers know Angstrom fs-1, not the Angstrom s-1 of PQ
+    constexpr double PER_S_TO_PER_FS = 1.0e-15;
+
     using hdf5::Element;
     using hdf5::Handle;
 
@@ -409,3 +409,15 @@ namespace out
 }   // namespace out
 
 #endif   // WITH_HDF5
+
+namespace out
+{
+    // after Impl is complete in both builds
+    H5mdOutput::~H5mdOutput() = default;
+
+    /**
+     * @brief write everything and close the file
+     */
+    void H5mdOutput::close() { _impl.reset(); }
+
+}   // namespace out

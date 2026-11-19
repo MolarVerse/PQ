@@ -118,13 +118,6 @@ namespace out::hdf5
         std::size_t _frameSize;
         hsize_t     _nFrames = 0;
 
-        [[nodiscard]] static Handle _create(
-            hid_t              parent,
-            const std::string &name,
-            hid_t              fileType,
-            const Shape       &frameShape
-        );
-
        public:
         Series(
             hid_t              parent,
@@ -137,6 +130,14 @@ namespace out::hdf5
 
         [[nodiscard]] hid_t   get() const;
         [[nodiscard]] hsize_t getNumberOfFrames() const;
+
+       private:
+        [[nodiscard]] static Handle _create(
+            hid_t              parent,
+            const std::string &name,
+            hid_t              fileType,
+            const Shape       &frameShape
+        );
     };
 
     /**

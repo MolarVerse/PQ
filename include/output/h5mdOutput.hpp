@@ -45,12 +45,6 @@ namespace out
         struct Impl;
         std::unique_ptr<Impl> _impl;
 
-        // H5MD readers know Angstrom fs-1, not the Angstrom s-1 of PQ
-        static constexpr double PER_S_TO_PER_FS = 1.0e-15;
-
-        static constexpr int NO_ELEMENT  = 0;
-        static constexpr int MAX_ELEMENT = 118;
-
        public:
         H5mdOutput(
             const std::string &filename,
