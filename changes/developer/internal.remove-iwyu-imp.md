@@ -1,0 +1,1 @@
+- Remove the empty, unused `.iwyu.imp` mapping file.
