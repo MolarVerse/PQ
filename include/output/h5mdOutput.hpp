@@ -25,6 +25,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <mstd/utils.hpp>
 #include <string>
 
 namespace out
@@ -35,14 +36,20 @@ namespace out
      * @brief H5MD trajectory (HDF5) with positions, velocities, forces,
      * charges, box and potential energy of each frame in PQ units
      *
-     * @details the HDF5 code lives in the source file only; without
-     * BUILD_WITH_HDF5 the constructor throws
+     * @details only the source file and the hdf5 wrappers see HDF5; without
+     * BUILD_WITH_HDF5 nothing is written
      */
     class H5mdOutput
     {
        private:
         struct Impl;
         std::unique_ptr<Impl> _impl;
+
+        // H5MD readers know Angstrom fs-1, not the Angstrom s-1 of PQ
+        static constexpr double PER_S_TO_PER_FS = 1.0e-15;
+
+        static constexpr int NO_ELEMENT  = 0;
+        static constexpr int MAX_ELEMENT = 118;
 
        public:
         H5mdOutput(
@@ -52,15 +59,14 @@ namespace out
         );
         ~H5mdOutput();
 
-        H5mdOutput(const H5mdOutput &)            = delete;
-        H5mdOutput &operator=(const H5mdOutput &) = delete;
-        H5mdOutput(H5mdOutput &&)                 = delete;
-        H5mdOutput &operator=(H5mdOutput &&)      = delete;
+        MSTD_NO_COPY(H5mdOutput)
+        MSTD_NO_MOVE(H5mdOutput)
 
         void write(const Frame &frame, size_t step);
         void close();
 
         [[nodiscard]] static bool available();
+        [[nodiscard]] static int  species(const std::string &name);
     };
 
 }   // namespace out

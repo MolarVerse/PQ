@@ -135,6 +135,21 @@ if(BUILD_WITH_HDF5)
     )
     add_test_with_gcda_cleanup(testH5mdOutputContent testH5mdOutputContent)
     set_property(TEST testH5mdOutputContent PROPERTY LABELS output)
+
+    add_executable(testHdf5Wrapper testHdf5Wrapper.cpp)
+    set_source_files_properties(testHdf5Wrapper.cpp PROPERTIES
+        SKIP_PRECOMPILE_HEADERS ON
+    )
+    target_link_libraries(testHdf5Wrapper
+        PRIVATE
+        output
+        HDF5::HDF5
+        gtest
+        gmock
+        pq_test_main
+    )
+    add_test_with_gcda_cleanup(testHdf5Wrapper testHdf5Wrapper)
+    set_property(TEST testHdf5Wrapper PROPERTY LABELS output)
 endif()
 
 if(${BUILD_WITH_GCOVR})

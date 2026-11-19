@@ -46,7 +46,7 @@ target_link_libraries(output
 
 target_precompile_headers(output REUSE_FROM pq_pch)
 
-# h5mdOutput.cpp alone sees HDF5: no PCH or unity batch, as its macro and
+# h5mdOutput.cpp and hdf5Wrapper.cpp alone see HDF5: no PCH or unity batch, as its macro and
 # helper names must not leak into the other sources
 set_source_files_properties(h5mdOutput.cpp PROPERTIES
     SKIP_PRECOMPILE_HEADERS ON
@@ -54,9 +54,14 @@ set_source_files_properties(h5mdOutput.cpp PROPERTIES
 )
 
 if(BUILD_WITH_HDF5)
+    target_sources(output PRIVATE hdf5Wrapper.cpp)
     target_link_libraries(output PRIVATE HDF5::HDF5)
     set_source_files_properties(h5mdOutput.cpp PROPERTIES
         COMPILE_DEFINITIONS WITH_HDF5
+    )
+    set_source_files_properties(hdf5Wrapper.cpp PROPERTIES
+        SKIP_PRECOMPILE_HEADERS ON
+        SKIP_UNITY_BUILD_INCLUSION ON
     )
 endif()
 

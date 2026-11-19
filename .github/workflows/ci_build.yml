@@ -439,13 +439,13 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)" --target PQ \
-            testH5mdOutput testH5mdOutputContent testOutputFilesSetup \
+            testH5mdOutput testH5mdOutputContent testHdf5Wrapper testOutputFilesSetup \
             testOutputParser testOutputFileSettings testEngineOutputFrames
 
       - name: Run the H5MD tests
         run: >-
           ctest --test-dir build --output-on-failure
-          -R 'H5md|testOutputFilesSetup|testOutputParser|testOutputFileSettings|testEngineOutputFrames'
+          -R 'H5md|Hdf5Wrapper|testOutputFilesSetup|testOutputParser|testOutputFileSettings|testEngineOutputFrames'
 
   # BUILD_WITH_PYTHON_BINDINGS is off in every other job (#543). It installs
   # PQAnalysis through pip while CMake configures and then has to report the
