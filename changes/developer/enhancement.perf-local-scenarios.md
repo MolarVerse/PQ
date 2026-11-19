@@ -1,0 +1,1 @@
+- Extend `scripts/perf_local.py` with `--suite scenarios|all`: whole `PQ` runs of examples and integration test inputs (`benchmarks/scenarios.json`), compared with a base by callgrind instruction counts and paired CPU time.
