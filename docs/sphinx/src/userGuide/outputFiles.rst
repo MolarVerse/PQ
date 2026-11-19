@@ -267,6 +267,11 @@ The following lines contain the element symbol, a running index just for human r
 :ref:`moldescriptorFile` setup file, the Cartesian coordinates in Å, the velocities in :math:`\frac{\text{Å}}{\text{s}}`, and the forces in 
 :math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system. The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
 
+Every number is written with the fewest digits that read back as exactly the same value (for example ``0.1``, not ``0.10000000000000001``),
+so the coordinates, velocities, forces, box and Nose Hoover chain are restored without any loss when a simulation is continued from
+a restart file. State that the file does not contain (for example the random numbers of the Langevin thermostat) is not restored.
+Values smaller than :math:`2.2 \cdot 10^{-308}` in magnitude (subnormal numbers) are written as 0.
+
 .. note::
 
     If the thermostat is set to the Nose Hoover chain *via* the :ref:`thermostatKey` key in the ``.in`` file, as many additional lines as 

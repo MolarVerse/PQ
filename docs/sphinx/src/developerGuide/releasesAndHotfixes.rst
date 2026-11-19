@@ -31,7 +31,7 @@ Hotfix
 
 Opening the PR starts **Release Lifecycle** automatically. It takes the
 version from the title and rejects any other than the next patch. After merge,
-publication waits for BUILD and LINT.
+publication waits for BUILD.
 
 ************
 Check a run

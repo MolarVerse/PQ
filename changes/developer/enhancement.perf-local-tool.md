@@ -1,0 +1,1 @@
+- Add `scripts/perf_local.py`, which runs the checks of the CI performance gate (instruction counts and paired timing) locally for the working tree against a base commit, with a cached base, `--only` to select benchmarks and a quick `--counts-only` mode.

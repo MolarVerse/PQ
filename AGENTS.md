@@ -227,7 +227,7 @@ Run with `make test` or `ctest --output-on-failure` from the build directory. Wh
 
 **Integration tests run on both x86 and arm Release builds** (decided in #706, kept on purpose): dftbplus, xtb and pyscf come from architecture-specific conda-forge builds, so the arm run exercises different binaries. It costs no wall-clock time (the arm Release job has a median of about 3.6 min against 5.3 min for the slowest x86 job) and the repository is public, so runner minutes are free. Looking back over about 380 runs, no failure was specific to one architecture. Do not edit `.github/workflows/ci_build.yml` just to annotate this: the conda environment cache key hashes that file, so every edit forces a cold conda install.
 
-**Performance regression gate** (`perf.yml`): for PRs touching `src/`, `include/`, `apps/`, `benchmarks/`, or build config, CI builds `benchmarks/perf` (fixed-work benchmarks, `BUILD_WITH_PERF_BENCH=ON`) for both the PR and its base branch, runs them under `callgrind`, and fails if instruction counts regress beyond threshold (`scripts/perf_gate.sh`). Results are posted as a PR comment.
+**Performance regression gate** (`perf.yml`): for PRs touching `src/`, `include/`, `apps/`, `benchmarks/`, or build config, CI builds `benchmarks/perf` (fixed-work benchmarks, `BUILD_WITH_PERF_BENCH=ON`) for both the PR and its base branch, runs them under `callgrind`, and fails if instruction counts regress beyond threshold (`scripts/perf_gate.sh`). Results are posted as a PR comment. Run the same checks locally with `scripts/perf_local.py` (see `benchmarks/README.md`).
 
 ---
 
@@ -253,17 +253,6 @@ All pipelines are in `.github/workflows/`:
 | `pq-bot.yml, pq-bot-review.yml` | Comments | PQ Bot |
 
 See the developer guide page *Continuous Integration* for details.
-
------------------------------------ | ---------------------------- | ----------------------------------------------------- |
-| `ci_build.yml`                      | PRs (any branch), push to `dev`/`main` | Linux (x86_64 + arm) build + `ctest` + coverage + integration tests + benchmark smoke test + static-LTO build (tests only in the nightly run, which builds `main`) + MPI build |
-| `clang_format.yml`                   | PRs to `main`/`dev`          | `git-clang-format` on changed C/C++ lines             |
-| `license_check.yml`                 | PRs (any branch), push to `main`/`master` | Exact GPL header check on all C/C++ files       |
-| `perf.yml`                           | PRs to `main`/`dev`          | Callgrind instruction-count regression gate           |
-| `check-pr-for-release-version.yml`  | PRs to `main`                | Requires `Release-x.y.z` in title/body; validates changelog tooling and curated user release notes |
-| `create-tag.yml`                    | Manual                       | Create a release tag                                  |
-| `daily_ci.yml`                      | Schedule                     | Daily build/test                                       |
-| `jekyll-gh-pages.yml`               | Push                         | Publish documentation site                             |
-| `pr_request.yml`                    | PRs to `main`/`dev`          | Fails if the target branch has moved since the PR was opened (must be rebased/updated) |
 
 ---
 

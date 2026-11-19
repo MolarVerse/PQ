@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Wait for successful post-merge BUILD and LINT runs on a release commit."""
+"""Wait for successful post-merge BUILD run on a release commit."""
 
 import argparse
 import json
@@ -58,7 +58,7 @@ def wait_for_ci(api_url, repository, sha, timeout, interval):
                     f"{run['conclusion']} ({run.get('html_url', '')})"
                 )
         if not pending:
-            print(f"BUILD and LINT succeeded on main at {sha}.", flush=True)
+            print(f"BUILD succeeded on main at {sha}.", flush=True)
             return
         remaining = deadline - time.monotonic()
         if remaining <= 0:

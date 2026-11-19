@@ -6,7 +6,6 @@ set(iwyu_path_and_options
 
     # -Xiwyu
     # --verbose=6
-    # --mapping_file=${PROJECT_SOURCE_DIR}/.iwyu.imp
 )
 
 function(recursiveTargets DIR)
