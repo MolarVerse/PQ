@@ -28,13 +28,12 @@
 
 #include "box.hpp"
 #include "unit_types.hpp"
-#include "vector3d.hpp"
 
 struct TestTriclinicBox;
 
 namespace molsys
 {
-    std::pair<Pos3D, Angles3D> calcBoxDimAndAnglesFromBoxMatrix(
+    std::pair<Pos3D, Angle3D> calcBoxDimAndAnglesFromBoxMatrix(
         const PosTensor3D &
     );
 
@@ -77,9 +76,9 @@ namespace molsys
 
        public:
         TriclinicBox(
-            const Pos3D         &boxDimensions,
-            const linalg::Vec3D &boxAngles,
-            bool                 allowChangeOfAngles
+            const Pos3D   &boxDimensions,
+            const Angle3D &boxAngles,
+            bool           allowChangeOfAngles
         );
 
         [[nodiscard]]
@@ -121,7 +120,7 @@ namespace molsys
 
         [[nodiscard]]
         static QuantityTensor3D _calculateTransformationMatrix(
-            const Angles3D &boxAngles
+            const Angle3D &boxAngles
         );
 
         [[nodiscard]]
@@ -134,17 +133,17 @@ namespace molsys
         static Volume _calculateVolume(const PosTensor3D &boxMatrix);
 
         [[nodiscard]]
-        static double _cosAlpha(const Angles3D &boxAngles);
+        static double _cosAlpha(const Angle3D &boxAngles);
         [[nodiscard]]
-        static double _cosBeta(const Angles3D &boxAngles);
+        static double _cosBeta(const Angle3D &boxAngles);
         [[nodiscard]]
-        static double _cosGamma(const Angles3D &boxAngles);
+        static double _cosGamma(const Angle3D &boxAngles);
         [[nodiscard]]
-        static double _sinAlpha(const Angles3D &boxAngles);
+        static double _sinAlpha(const Angle3D &boxAngles);
         [[nodiscard]]
-        static double _sinBeta(const Angles3D &boxAngles);
+        static double _sinBeta(const Angle3D &boxAngles);
         [[nodiscard]]
-        static double _sinGamma(const Angles3D &boxAngles);
+        static double _sinGamma(const Angle3D &boxAngles);
     };
 
 }   // namespace molsys

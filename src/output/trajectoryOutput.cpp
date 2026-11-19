@@ -46,7 +46,7 @@ namespace out
         _getFilePointer(
         ) << frame.atoms.size()
           << "  " << frame.box->get_boxDimensions().numerical_value_in(angstrom)
-          << "  " << frame.box->getBoxAngles() << '\n';
+          << "  " << frame.box->getBoxAngles().numerical_value_in(deg) << '\n';
     }
 
     /**

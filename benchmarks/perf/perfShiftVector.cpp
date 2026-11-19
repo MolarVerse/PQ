@@ -51,7 +51,7 @@ int main()
 
     auto triclinic = molsys::TriclinicBox(
         {20.0 * angstrom, 20.0 * angstrom, 20.0 * angstrom},
-        {80.0, 90.0, 100.0},
+        {80.0 * deg, 90.0 * deg, 100.0 * deg},
         false
     );
 

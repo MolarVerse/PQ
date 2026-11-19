@@ -65,7 +65,7 @@ namespace out
      * @brief write a message to the log file if the simulation ended normally
      *
      */
-    void LogOutput::writeEndedNormally(double elapsedTime)
+    void LogOutput::writeEndedNormally(const Time &elapsedTime)
     {
         _getFilePointer() << elapsedTimeMessage(elapsedTime) << '\n';
         _getFilePointer() << endedNormally() << '\n' << std::flush;

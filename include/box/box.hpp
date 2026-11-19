@@ -29,9 +29,6 @@
 #include <mstd/utils.hpp>
 
 #include "unit_types.hpp"
-#include "vector3d.hpp"
-#include "vector3d/vector3dClass.hpp"
-
 namespace molsys
 {
     /**
@@ -54,7 +51,7 @@ namespace molsys
     };
     using BoxVec = mstd::CacheProperty<Pos3D, BoxTag>;
 
-    using AngleVec = mstd::CacheProperty<Angles3D, BoxTag>;
+    using AngleVec = mstd::CacheProperty<Angle3D, BoxTag>;
 
     /**
      * @class Box
@@ -109,10 +106,10 @@ namespace molsys
          ********************/
 
         CONST_PROPERTY_GETTER(_boxDimensions);
-        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
+        [[nodiscard]] const Angle3D &getBoxAngles() const;
 
        protected:
-        explicit Box(const Pos3D &boxDimensions, const linalg::Vec3D &angles);
+        explicit Box(const Pos3D &boxDimensions, const Angle3D &angles);
 
         static constexpr auto _dimsPtr() { return &Box::_boxDimensions; }
         static constexpr auto _anglesPtr() { return &Box::_angles; }

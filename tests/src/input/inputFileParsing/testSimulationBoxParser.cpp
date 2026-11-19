@@ -47,7 +47,7 @@ TEST_F(TestInputFileReader, parseDensity)
 
     const std::vector<std::string> lineElements = {"density", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getDensity(), 1.0);
+    EXPECT_EQ(settings.getDensity(), 1.0 * kg_per_litre);
     EXPECT_EQ(settings.isDensitySetByUser(), true);
 
     _clearParser(parser);

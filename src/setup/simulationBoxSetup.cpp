@@ -32,7 +32,6 @@
 
 #include "atom.hpp"
 #include "atomNumberMap.hpp"
-#include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
@@ -49,7 +48,6 @@
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
 #include "units.hpp"
-#include "vector3d.hpp"
 
 namespace setup
 {
@@ -360,9 +358,7 @@ namespace setup
         {
             const auto volume = simBox.getVolume();
             const auto density =
-                simBox.getTotalMass().numerical_value_in(g_per_mol) /
-                volume.numerical_value_in(angstrom * angstrom * angstrom) *
-                AMU_PER_ANGSTROM3_TO_KG_PER_L;
+                simBox.getTotalMass() / volume / avogadro_constant;
 
             simBox.setDensity(density);
         }
@@ -371,12 +367,9 @@ namespace setup
             simBox.setDensity(
                 _engine.getSettings().simulationBoxSettings.getDensity()
             );
-            const auto volume     = simBox.getVolume();
-            const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
+            const auto volume = simBox.getVolume();
             const auto density =
-                simBox.getTotalMass().numerical_value_in(g_per_mol) /
-                volume.numerical_value_in(angstrom * angstrom * angstrom) *
-                convFactor;
+                simBox.getTotalMass() / volume / avogadro_constant;
 
             simBox.setDensity(density);
 
@@ -502,7 +495,10 @@ namespace setup
         );
 
         log.writeSetupInfo(
-            std::format("density:         {:14.5f} kg/L", density)
+            std::format(
+                "density:         {:14.5f} kg/L",
+                density.numerical_value_in(kg_per_litre)
+            )
         );
         log.writeSetupInfo(std::format("volume:          {}", volumeStr));
         log.writeEmptyLine();
@@ -531,9 +527,12 @@ namespace setup
         const auto beta  = simBox.getBoxAngles()[1];
         const auto gamma = simBox.getBoxAngles()[2];
 
-        const auto alphaStr = std::format("{:14.5f}°", alpha);
-        const auto betaStr  = std::format("{:14.5f}°", beta);
-        const auto gammaStr = std::format("{:14.5f}°", gamma);
+        const auto alphaStr =
+            std::format("{:14.5f}°", alpha.numerical_value_in(deg));
+        const auto betaStr =
+            std::format("{:14.5f}°", beta.numerical_value_in(deg));
+        const auto gammaStr =
+            std::format("{:14.5f}°", gamma.numerical_value_in(deg));
 
         log.writeSetupInfo(
             std::format("box dimensions:  {} {} {}", boxAStr, boxBStr, boxCstr)

@@ -29,8 +29,6 @@
 
 #include "atom.hpp"
 #include "berendsenManostat.hpp"
-#include "constants/conversionFactors.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -50,6 +48,14 @@
 #include "unit_types.hpp"
 #include "units.hpp"
 #include "vector3d/vector3dClass.hpp"
+
+namespace
+{
+    // pressure in bar corresponding to 1 kcal/mol/A^3
+    const double PRESSURE_FACTOR =
+        (1.0 * kcal_per_mol / angstrom3 / avogadro_constant)
+            .numerical_value_in(bar);
+}   // namespace
 
 namespace
 {
@@ -123,7 +129,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
     _box.setBox(
         molsys::TriclinicBox(
             {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom},
-            {90.0, 90.0, 60.0},
+            {90.0 * deg, 90.0 * deg, 60.0 * deg},
             true
         ),
         false
@@ -171,7 +177,7 @@ TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
     _box.setBox(
         molsys::TriclinicBox(
             {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom},
-            {90.0, 90.0, 60.0},
+            {90.0 * deg, 90.0 * deg, 60.0 * deg},
             false
         ),
         false
@@ -365,12 +371,18 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
             _box.getVolume().numerical_value_in(angstrom3),
             1000.0
         );
-        EXPECT_DOUBLE_EQ(_box.getDensity(), oldDensity);
+        EXPECT_DOUBLE_EQ(
+            _box.getDensity().numerical_value_in(kg_per_litre),
+            oldDensity.numerical_value_in(kg_per_litre)
+        );
         EXPECT_DOUBLE_EQ(
             _data.getVolume().numerical_value_in(angstrom3),
             1000.0
         );
-        EXPECT_DOUBLE_EQ(_data.getDensity(), oldDensity);
+        EXPECT_DOUBLE_EQ(
+            _data.getDensity().numerical_value_in(kg_per_litre),
+            oldDensity.numerical_value_in(kg_per_litre)
+        );
         EXPECT_EQ(_box.getMolecule(0).getCenterOfMass(), oldCenter);
         EXPECT_DOUBLE_EQ(
             _box.getAtom(0).getPosition()[0].numerical_value_in(angstrom),
@@ -462,10 +474,9 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
         coupling->calculatePressure(_box, _data);
 
     const auto noiseFactor =
-        BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL *
-        temperature.quantity_from_zero().numerical_value_in(K) *
-        compressibility * PRESSURE_FACTOR /
-        (3.0 * tau * _box.getVolume().numerical_value_in(Volume::unit));
+        (temperature.quantity_from_zero() * kb * (compressibility * per_bar) /
+         (3.0 * tau * _box.getVolume()))
+            .numerical_value_in(one);
     const auto      lengthSigma = mstd::sqrt(2.0 * noiseFactor);
     const auto      shearSigma  = mstd::sqrt(4.0 * noiseFactor);
     const auto      volumeSigma = mstd::sqrt(6.0 * noiseFactor);
@@ -479,7 +490,7 @@ TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)
     for (size_t sample = 0; sample < 8192; ++sample)
     {
         // numerical_value_in(one) can be removed as soon as we have mstd::log
-        const auto volume = _box.getVolume().numerical_value_in(Volume::unit);
+        const auto volume = _box.getVolume();
         const auto semiMu =
             semi.calculateMu(volume, temperature).numerical_value_in(one);
         const auto anisoMu =
@@ -556,7 +567,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     );
     EXPECT_NEAR(
         _data.getMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs) /
-            (speed * FS_TO_S),
+            (speed * angstrom / s).numerical_value_in(angstrom / fs),
         2.0 / scale,
         1e-12
     );
@@ -582,7 +593,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     EXPECT_NEAR(
         _box.calculateMomentum()[0].numerical_value_in(
             g_per_mol * angstrom / fs
-        ) / (speed * FS_TO_S),
+        ) / (speed * angstrom / s).numerical_value_in(angstrom / fs),
         0.0,
         1e-12
     );

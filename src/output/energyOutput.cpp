@@ -165,8 +165,10 @@ namespace out
                 "{:20.12f}\t",
                 physicalData.getVolume().numerical_value_in(angstrom3)
             );
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getDensity());
+            _getFilePointer() << std::format(
+                "{:20.12f}\t",
+                physicalData.getDensity().numerical_value_in(kg_per_litre)
+            );
 
             if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
             {
@@ -215,8 +217,10 @@ namespace out
         );
 
         _getFilePointer() << std::format("{:20.5e}\t", norm(mom));
-        _getFilePointer(
-        ) << std::format("{:12.5f}\n", physicalData.getLoopTime());
+        _getFilePointer() << std::format(
+            "{:12.5f}\n",
+            physicalData.getLoopTime().numerical_value_in(s)
+        );
 
         _getFilePointer() << std::flush;
     }

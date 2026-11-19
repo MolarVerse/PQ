@@ -126,11 +126,12 @@ namespace input
         const auto metaData = KeyMetadata{
             .name        = "density",
             .title       = "Density of the simulation box",
-            .description = "Specifies the density of the simulation box"
+            .description = "Specifies the density of the simulation box",
+            .unit        = "kg/litre"
         };
 
         const auto setValue = [settings = _settings](double value)
-        { settings->setDensityByUser(value); };
+        { settings->setDensityByUser(value * kg_per_litre); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

@@ -36,7 +36,6 @@
 #include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
-#include "vector3d.hpp"
 
 /**
  * @namespace molsys
@@ -74,9 +73,9 @@ namespace molsys
 
         size_t _degreesOfFreedom = 0;
 
-        Mass   _totalMass   = Mass::zero();
-        Charge _totalCharge = Charge::zero();
-        double _density     = 0.0;
+        Mass    _totalMass   = Mass::zero();
+        Charge  _totalCharge = Charge::zero();
+        Density _density     = Density::zero();
 
         std::shared_ptr<Box> _box;
         bool                 _boxSetViaStartFile = false;
@@ -197,7 +196,7 @@ namespace molsys
         [[nodiscard]] size_t                 getNumberOfQMAtoms() const;
         [[nodiscard]] const Mass&            getTotalMass() const;
         [[nodiscard]] const Charge&          getTotalCharge() const;
-        [[nodiscard]] double                 getDensity() const;
+        [[nodiscard]] const Density&         getDensity() const;
         [[nodiscard]] const Pos3D&           getCenterOfMass() const;
         [[nodiscard]] std::vector<size_t>    getInnerRegionCenterAtomIndices();
 
@@ -246,7 +245,7 @@ namespace molsys
         void setAmmoniaType(MolType ammoniaType);
         void setTotalMass(const Mass& totalMass);
         void setTotalCharge(const Charge& totalCharge);
-        void setDensity(double density);
+        void setDensity(const Density& density);
         void setDegreesOfFreedom(size_t degreesOfFreedom);
 
         template <typename T>
@@ -262,8 +261,8 @@ namespace molsys
         [[nodiscard]] Volume getVolume() const;
         [[nodiscard]] Pos    getMinimalBoxDimension() const;
 
-        [[nodiscard]] const Pos3D&  getBoxDimensions() const;
-        [[nodiscard]] linalg::Vec3D getBoxAngles() const;
+        [[nodiscard]] const Pos3D&   getBoxDimensions() const;
+        [[nodiscard]] const Angle3D& getBoxAngles() const;
     };
 
 }   // namespace molsys

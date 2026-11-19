@@ -184,11 +184,11 @@ namespace manostat
             throw exc::ManostatException("Invalid manostat cell geometry");
         }
 
-        constexpr double straightAngle = 180.0;
+        constexpr auto straightAngle = 180.0 * deg;
         for (size_t i = 0; i < 3; ++i)
         {
             if (!isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
-                !std::isfinite(angles[i]) || angles[i] <= 0.0 ||
+                !isfinite(angles[i]) || angles[i] <= 0.0 ||
                 angles[i] >= straightAngle)
             {
                 throw exc::ManostatException("Invalid manostat cell geometry");

@@ -89,20 +89,19 @@ namespace input::restartFile
         if (std::ranges::any_of(boxDimensions, checkPositive))
             throw exc::RstFileException("All box dimensions must be positive");
 
-        constexpr auto defaultAngle = 90.0;
-        auto           boxAngles =
-            linalg::Vec3D{defaultAngle, defaultAngle, defaultAngle};
+        constexpr Angle defaultAngle = NINETY_DEG;
+        auto boxAngles = Angle3D{defaultAngle, defaultAngle, defaultAngle};
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (7 == lineElements.size())
         {
-            boxAngles = linalg::Vec3D{
-                stod(lineElements[4]),
-                stod(lineElements[5]),
-                stod(lineElements[6])
+            boxAngles = Angle3D{
+                stod(lineElements[4]) * deg,
+                stod(lineElements[5]) * deg,
+                stod(lineElements[6]) * deg
             };
 
-            auto checkAngles = [](const double angle)
+            auto checkAngles = [defaultAngle](const Angle angle)
             { return angle < 0.0 || angle > 2.0 * defaultAngle; };
 
             if (std::ranges::any_of(boxAngles, checkAngles))
@@ -114,7 +113,7 @@ namespace input::restartFile
 
         if (!utilities::compare(
                 boxAngles,
-                linalg::Vec3D{defaultAngle, defaultAngle, defaultAngle},
+                Angle3D{defaultAngle, defaultAngle, defaultAngle},
                 TRICLINIC_BOX_ANGLE_THRESHOLD
             ))
         {

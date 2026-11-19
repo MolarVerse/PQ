@@ -128,7 +128,7 @@ TEST_F(TestLogOutput, writeHeader)
 TEST_F(TestLogOutput, writeEndedNormally)
 {
     _logOutput->setFilename("default.log", false);
-    _logOutput->writeEndedNormally(0.1);
+    _logOutput->writeEndedNormally(0.1 * s);
     _logOutput->close();
     std::ifstream file("default.log");
     std::string   line;

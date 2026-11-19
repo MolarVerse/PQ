@@ -49,7 +49,7 @@ namespace out
         void writeInfo(const std::string &message);
 
         void writeHeader();
-        void writeEndedNormally(double elapsedTime);
+        void writeEndedNormally(const Time &elapsedTime);
 
         void writeDensityWarning();
         void writeInitialMomentum(const Momentum &momentum);

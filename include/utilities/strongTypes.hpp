@@ -198,7 +198,7 @@ struct JCouplingParams
     double a;
     double b;
     double c;
-    double phaseShift;
+    Angle  phaseShift;
 
     [[nodiscard]]
     bool operator==(const JCouplingParams &other) const;

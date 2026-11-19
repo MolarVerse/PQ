@@ -35,6 +35,7 @@
 #include <cmath>
 #include <mstd/units.hpp>
 
+#include "mp-units/systems/si/units.h"
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
@@ -43,8 +44,8 @@ using Quantity3D = linalg::Vector3D<mstd::quantity<mstd::units::one>>;
 using QuantityTensor3D =
     linalg::StaticMatrix3x3<mstd::quantity<mstd::units::one>>;
 
-using Angle    = mstd::quantity<mstd::units::rad>;
-using Angles3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
+using Angle   = mstd::quantity<mstd::units::rad>;
+using Angle3D = linalg::Vector3D<mstd::quantity<mstd::units::rad>>;
 
 using Time        = mstd::quantity<mstd::units::fs>;
 using TimeSquared = mstd::quantity<mstd::units::fs * mstd::units::fs>;
@@ -181,6 +182,8 @@ using EnergyLengthPerMol =
 
 using Stress =
     linalg::StaticMatrix3x3<mstd::quantity<EnergyPerMol::unit / Volume::unit>>;
+
+using Density = mstd::quantity<mstd::units::kg / mstd::units::litre>;
 
 [[nodiscard]]
 static inline Temperature toTemperature(double temperature)

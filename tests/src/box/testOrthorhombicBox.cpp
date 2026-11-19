@@ -27,7 +27,6 @@
 #include <numbers>
 
 #include "box.hpp"
-#include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
 #include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
@@ -50,7 +49,7 @@ TEST(TestBox, clonedGeometryIsIndependent)
         std::make_unique<molsys::OrthorhombicBox>(boxDimensions),
         std::make_unique<molsys::TriclinicBox>(
             boxDimensions,
-            linalg::Vec3D{90.0, 90.0, 60.0},
+            linalg::Vec3D{90.0, 90.0, 60.0} * deg,
             false
         )
     };
@@ -113,11 +112,13 @@ TEST(TestOrthoRhombicBox, calcBoxDimFromDensity)
         1.0 * angstrom,
         1.0 * angstrom
     };
-    const double density   = 1.0 / KG_PER_L_TO_AMU_PER_ANGSTROM3;
-    const auto   totalMass = 1.0 * g_per_mol;
-    EXPECT_EQ(
-        molsys::OrthorhombicBox::calcBoxDimFromDensity(totalMass, density),
-        boxDimensions
+    const Density density   = 1.0 * g_per_mol / angstrom3 / avogadro_constant;
+    const auto    totalMass = 1.0 * g_per_mol;
+    EXPECT_VECTOR_NEAR(
+        molsys::OrthorhombicBox::calcBoxDimFromDensity(totalMass, density)
+            .numerical_value_in(angstrom),
+        boxDimensions.numerical_value_in(angstrom),
+        1e-12
     );
 }
 

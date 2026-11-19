@@ -163,7 +163,10 @@ namespace physicalData
      *
      * @param loopTime
      */
-    void PhysicalData::setLoopTime(double loopTime) { _loopTime = loopTime; }
+    void PhysicalData::setLoopTime(const Time& loopTime)
+    {
+        _loopTime = loopTime;
+    }
 
     /**
      * @brief set the volume
@@ -177,7 +180,10 @@ namespace physicalData
      *
      * @param density
      */
-    void PhysicalData::setDensity(double density) { _density = density; }
+    void PhysicalData::setDensity(const Density& density)
+    {
+        _density = density;
+    }
 
     /**
      * @brief set the temperature
@@ -473,9 +479,9 @@ namespace physicalData
     /**
      * @brief get the loop time
      *
-     * @return double
+     * @return const Time&
      */
-    double PhysicalData::getLoopTime() const { return _loopTime; }
+    const Time& PhysicalData::getLoopTime() const { return _loopTime; }
 
     /**
      * @brief get the volume
@@ -487,9 +493,9 @@ namespace physicalData
     /**
      * @brief get the density
      *
-     * @return double
+     * @return const Density&
      */
-    double PhysicalData::getDensity() const { return _density; }
+    const Density& PhysicalData::getDensity() const { return _density; }
 
     /**
      * @brief get the temperature

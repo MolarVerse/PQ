@@ -42,7 +42,7 @@ namespace
     {
         molsys::TriclinicBox box{
             {20.0 * angstrom, 25.0 * angstrom, 30.0 * angstrom},
-            {80.0, 90.0, 100.0},
+            linalg::Vec3D{80.0, 90.0, 100.0} * deg,
             false
         };
         return box;

@@ -31,7 +31,6 @@
 #include <vector>
 
 #include "buckinghamPair.hpp"
-#include "constants.hpp"
 #include "defaults.hpp"
 #include "engine.hpp"
 #include "enums/potential.hpp"
@@ -613,28 +612,28 @@ TEST_F(TestGuffDatReader, checkPartialCharges)
         MolType{0},
         AtomType{0},
         AtomType{0},
-        COULOMB_PREFACTOR * 0.5 * 0.5 * kcal_per_mol * angstrom
+        0.5 * 0.5 * coulomb_prefactor * elementary_charge * elementary_charge
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{1},
         AtomType{0},
-        -COULOMB_PREFACTOR * 0.5 * 0.25 * kcal_per_mol * angstrom
+        -0.5 * 0.25 * coulomb_prefactor * elementary_charge * elementary_charge
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{0},
         AtomType{1},
-        -COULOMB_PREFACTOR * 0.5 * 0.25 * kcal_per_mol * angstrom
+        -0.5 * 0.25 * coulomb_prefactor * elementary_charge * elementary_charge
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{1},
         AtomType{1},
-        COULOMB_PREFACTOR * 0.25 * 0.25 * kcal_per_mol * angstrom
+        0.25 * 0.25 * coulomb_prefactor * elementary_charge * elementary_charge
     );
 
     EXPECT_NO_THROW(_guffDatReader->checkPartialCharges());
@@ -781,14 +780,14 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
         MolType{0},
         AtomType{0},
         AtomType{0},
-        COULOMB_PREFACTOR * 0.5 * 0.5 * kcal_per_mol * angstrom
+        0.5 * 0.5 * coulomb_prefactor * elementary_charge * elementary_charge
     );
     _guffDatReader->setGuffCoulombCoefficients(
         MolType{0},
         MolType{0},
         AtomType{1},
         AtomType{1},
-        COULOMB_PREFACTOR * 0.25 * 0.25 * kcal_per_mol * angstrom
+        0.25 * 0.25 * coulomb_prefactor * elementary_charge * elementary_charge
     );
 
     _guffDatReader->calculatePartialCharges();

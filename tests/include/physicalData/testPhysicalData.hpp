@@ -56,7 +56,7 @@ class TestPhysicalData : public ::testing::Test
         );
         _physicalData->setKineticEnergy(5.0 * kcal_per_mol);
         _physicalData->setVolume(6.0 * angstrom3);
-        _physicalData->setDensity(7.0);
+        _physicalData->setDensity(7.0 * kg_per_litre);
         _physicalData->setPressure(8.0 * bar);
         _physicalData->setCoupledPressure(8.5 * bar);
         _physicalData->setQMEnergy(9.0 * kcal_per_mol);

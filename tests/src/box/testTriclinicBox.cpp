@@ -24,7 +24,6 @@
 
 #include <array>
 
-#include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
 #include "matrixNear.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
@@ -39,42 +38,42 @@ struct TestTriclinicBox
     static double cosAlpha(const linalg::Vec3D &boxAngles)
     {
         return molsys::TriclinicBox::_cosAlpha(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
+            (boxAngles * deg).in(mstd::units::rad)
         );
     }
     [[nodiscard]]
     static double cosBeta(const linalg::Vec3D &boxAngles)
     {
         return molsys::TriclinicBox::_cosBeta(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
+            (boxAngles * deg).in(mstd::units::rad)
         );
     }
     [[nodiscard]]
     static double cosGamma(const linalg::Vec3D &boxAngles)
     {
         return molsys::TriclinicBox::_cosGamma(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
+            (boxAngles * deg).in(mstd::units::rad)
         );
     }
     [[nodiscard]]
     static double sinAlpha(const linalg::Vec3D &boxAngles)
     {
         return molsys::TriclinicBox::_sinAlpha(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
+            (boxAngles * deg).in(mstd::units::rad)
         );
     }
     [[nodiscard]]
     static double sinBeta(const linalg::Vec3D &boxAngles)
     {
         return molsys::TriclinicBox::_sinBeta(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
+            (boxAngles * deg).in(mstd::units::rad)
         );
     }
     [[nodiscard]]
     static double sinGamma(const linalg::Vec3D &boxAngles)
     {
         return molsys::TriclinicBox::_sinGamma(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
+            (boxAngles * deg).in(mstd::units::rad)
         );
     }
 
@@ -86,10 +85,10 @@ struct TestTriclinicBox
 
     static void setBoxAngles(
         molsys::TriclinicBox &box,
-        const linalg::Vec3D  &boxAngles
+        const Angle3D        &boxAngles
     )
     {
-        box._set_angles((boxAngles * mstd::units::deg).in(mstd::units::rad));
+        box._set_angles(boxAngles);
     }
 
     static QuantityTensor3D getTransformationMatrix(molsys::TriclinicBox &box)
@@ -101,7 +100,11 @@ struct TestTriclinicBox
 TEST(TestTriclinicBox, setBoxDimensions)
 {
     const auto boxDimensions = linalg::Vec3D{1.0, 2.0, 3.0} * angstrom;
-    auto box = molsys::TriclinicBox(boxDimensions, {90.0, 90.0, 90.0}, false);
+    auto       box           = molsys::TriclinicBox(
+        boxDimensions,
+        {90.0 * deg, 90.0 * deg, 90.0 * deg},
+        false
+    );
 
     EXPECT_MATRIX_NEAR(
         TestTriclinicBox::getBoxMatrix(box).numerical_value_in(angstrom),
@@ -116,9 +119,9 @@ TEST(TestTriclinicBox, setBoxDimensions)
 
 TEST(TestTriclinicBox, setBoxAngles)
 {
-    const auto          boxDimensions = linalg::Vec3D{1.0, 2.0, 3.0} * angstrom;
-    const linalg::Vec3D boxAngles     = {90.0, 90.0, 90.0};
-    auto box = molsys::TriclinicBox(boxDimensions, boxAngles, false);
+    const auto    boxDimensions = linalg::Vec3D{1.0, 2.0, 3.0} * angstrom;
+    const Angle3D boxAngles     = {90.0 * deg, 90.0 * deg, 90.0 * deg};
+    auto          box = molsys::TriclinicBox(boxDimensions, boxAngles, false);
     EXPECT_EQ(box.get_boxDimensions(), boxDimensions);
     EXPECT_EQ(box.getBoxAngles(), boxAngles);
     EXPECT_MATRIX_NEAR(
@@ -140,26 +143,31 @@ TEST(TestTriclinicBox, setBoxAngles)
         1e-15
     );
 
-    TestTriclinicBox::setBoxAngles(box, {30.0, 60.0, 45.0});
+    TestTriclinicBox::setBoxAngles(
+        box,
+        Angle3D{30.0 * deg, 60.0 * deg, 45.0 * deg}
+    );
 
-    const auto alpha = 30.0 * DEG_TO_RAD;
-    const auto beta  = 60.0 * DEG_TO_RAD;
-    const auto gamma = 45.0 * DEG_TO_RAD;
+    const auto alpha = 30.0 * deg;
+    const auto beta  = 60.0 * deg;
+    const auto gamma = 45.0 * deg;
 
     EXPECT_MATRIX_NEAR(
         TestTriclinicBox::getTransformationMatrix(box).numerical_value_in(one),
         linalg::StaticMatrix3x3<double>(
-            {1.0, sqrt(0.5), ::cos(beta)},
+            {1.0, sqrt(0.5), mstd::cos(beta)},
             {0.0,
              sqrt(0.5),
-             (cos(alpha) - cos(beta) * cos(gamma)) / sin(gamma)},
+             (mstd::cos(alpha) - mstd::cos(beta) * mstd::cos(gamma)) /
+                 mstd::sin(gamma)},
             {0.0,
              0.0,
              ::sqrt(
-                 1 - (cos(alpha) * cos(alpha)) - (cos(beta) * cos(beta)) -
-                 (cos(gamma) * cos(gamma)) +
-                 (2 * cos(alpha) * cos(beta) * cos(gamma))
-             ) / sin(gamma)}
+                 1 - (mstd::cos(alpha) * mstd::cos(alpha)) -
+                 (mstd::cos(beta) * mstd::cos(beta)) -
+                 (mstd::cos(gamma) * mstd::cos(gamma)) +
+                 (2 * mstd::cos(alpha) * mstd::cos(beta) * mstd::cos(gamma))
+             ) / mstd::sin(gamma)}
         ),
         1e-15
     );
@@ -181,33 +189,31 @@ TEST(TestTriclinicBox, calculateVolume)
 {
     auto box = molsys::TriclinicBox(
         linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
-        {30.0, 60.0, 45.0},
+        {30.0 * deg, 60.0 * deg, 45.0 * deg},
         false
     );
 
-    const auto alpha = 30.0 * DEG_TO_RAD;
-    const auto beta  = 60.0 * DEG_TO_RAD;
-    const auto gamma = 45.0 * DEG_TO_RAD;
+    const auto alpha = 30.0 * deg;
+    const auto beta  = 60.0 * deg;
+    const auto gamma = 45.0 * deg;
 
     const auto volume =
         1.0 * 2.0 * 3.0 *
         ::sqrt(
-            1 - (::cos(alpha) * ::cos(alpha)) - (::cos(beta) * ::cos(beta)) -
-            (::cos(gamma) * ::cos(gamma)) +
-            (2 * ::cos(alpha) * ::cos(beta) * ::cos(gamma))
+            1 - (mstd::cos(alpha) * mstd::cos(alpha)) -
+            (mstd::cos(beta) * mstd::cos(beta)) -
+            (mstd::cos(gamma) * mstd::cos(gamma)) +
+            (2 * mstd::cos(alpha) * mstd::cos(beta) * mstd::cos(gamma))
         );
 
-    EXPECT_DOUBLE_EQ(
-        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
-        volume
-    );
+    EXPECT_DOUBLE_EQ(box.getVolume().numerical_value_in(angstrom3), volume);
 }
 
 TEST(TestTriclinicBox, applyPBC)
 {
     auto box = molsys::TriclinicBox(
         linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
-        {30.0, 60.0, 45.0},
+        {30.0 * deg, 60.0 * deg, 45.0 * deg},
         false
     );
 
@@ -228,7 +234,7 @@ TEST(TestTriclinicBox, calculateShiftVectors)
 {
     auto box = molsys::TriclinicBox(
         linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
-        {30.0, 60.0, 45.0},
+        {30.0 * deg, 60.0 * deg, 45.0 * deg},
         false
     );
 
@@ -252,7 +258,7 @@ TEST(TestTriclinicBox, wrapPositionIntoBox)
 {
     auto box = molsys::TriclinicBox(
         linalg::Vec3D{60.0, 60.0, 4.542} * angstrom,
-        {90.0, 90.0, 120.0},
+        {90.0 * deg, 90.0 * deg, 120.0 * deg},
         false
     );
 
@@ -277,7 +283,7 @@ TEST(TestTriclinicBox, periodicityMasksBoxMatrix)
 {
     molsys::TriclinicBox box(
         linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
-        {80.0, 75.0, 70.0},
+        {80.0 * deg, 75.0 * deg, 70.0 * deg},
         false
     );
 
@@ -308,7 +314,7 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
 {
     molsys::TriclinicBox box(
         linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
-        {80.0, 75.0, 70.0},
+        {80.0 * deg, 75.0 * deg, 70.0 * deg},
         false
     );
 
@@ -319,14 +325,14 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
         1.0e-12
     );
     EXPECT_NEAR(
-        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
-        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom),
+        box.getVolume().numerical_value_in(angstrom3),
+        box.getVolume().numerical_value_in(angstrom3),
         1.0e-12
     );
 
     molsys::TriclinicBox box2(
         linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
-        {80.0, 75.0, 70.0},
+        {80.0 * deg, 75.0 * deg, 70.0 * deg},
         true
     );
     const auto originalAngles = box2.getBoxAngles();
@@ -336,7 +342,11 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
         linalg::Vec3D(8.0, 10.0, 12.0),
         1.0e-12
     );
-    EXPECT_VECTOR_NEAR(box2.getBoxAngles(), originalAngles, 1.0e-12);
+    EXPECT_VECTOR_NEAR(
+        box2.getBoxAngles().numerical_value_in(deg),
+        originalAngles.numerical_value_in(deg),
+        1.0e-12
+    );
 
     auto [dimensions, angles] = molsys::calcBoxDimAndAnglesFromBoxMatrix(
         TestTriclinicBox::getBoxMatrix(box)
@@ -347,8 +357,8 @@ TEST(TestTriclinicBox, scalingPreservesConsistentDimensionsAndAngles)
         1.0e-12
     );
     EXPECT_VECTOR_NEAR(
-        angles.numerical_value_in(mstd::units::deg),
-        box2.getBoxAngles(),
+        angles.numerical_value_in(deg),
+        box2.getBoxAngles().numerical_value_in(deg),
         1.0e-12
     );
 }

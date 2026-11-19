@@ -24,7 +24,6 @@
 
 #include <cmath>
 
-#include "constants/internalConversionFactors.hpp"
 #include "coulombWolf.hpp"
 #include "units.hpp"
 

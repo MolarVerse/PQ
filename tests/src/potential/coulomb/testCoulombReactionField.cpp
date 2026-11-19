@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>
 
-#include "constants/internalConversionFactors.hpp"
 #include "coulombReactionField.hpp"
 #include "units.hpp"
 

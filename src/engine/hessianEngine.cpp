@@ -31,7 +31,6 @@
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
-#include "constants.hpp"
 #include "convergenceSettings.hpp"
 #include "enums/hessian.hpp"
 #include "enums/optimizer.hpp"
@@ -278,7 +277,7 @@ namespace engine
         getEngineOutput().writeTimingsFile();
 
         const auto elapsedTime =
-            timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
+            timings::GlobalTimer::get().calculateElapsedTime();
 
         getEngineOutput().getLogOutput().writeEndedNormally(elapsedTime);
         out::StdoutOutput::writeEndedNormally(elapsedTime);

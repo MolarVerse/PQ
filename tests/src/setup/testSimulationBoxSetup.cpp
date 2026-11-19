@@ -28,7 +28,6 @@
 #include <vector>
 
 #include "atom.hpp"
-#include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
@@ -397,8 +396,11 @@ TEST_F(TestSetup, noDensity)
         6000.0
     );
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getDensity(),
-        AMU_PER_ANGSTROM3_TO_KG_PER_L
+        _engine->getSimulationBox().getDensity().numerical_value_in(
+            kg_per_litre
+        ),
+        (1.0 * g_per_mol / angstrom3 / avogadro_constant)
+            .numerical_value_in(kg_per_litre)
     );
 }
 
@@ -406,7 +408,7 @@ TEST_F(TestSetup, testNoBox)
 {
     _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
     _settings->simulationBoxSettings.setDensityByUser(
-        AMU_PER_ANGSTROM3_TO_KG_PER_L
+        1.0 * g_per_mol / angstrom3 / avogadro_constant
     );
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
@@ -429,14 +431,14 @@ TEST_F(TestSetup, testBoxAndDensitySet)
 {
     _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
     _engine->getSimulationBox().setDensity(
-        12341243.1234
+        12341243.1234 * kg_per_litre
     );   // this should be ignored
 
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
     };
     _engine->getSimulationBox().setBox(orthoBox, true);
-    _settings->simulationBoxSettings.setDensityByUser(0.0);
+    _settings->simulationBoxSettings.setDensityByUser(0.0 * kg_per_litre);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
@@ -447,8 +449,11 @@ TEST_F(TestSetup, testBoxAndDensitySet)
         6000.0
     );
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getDensity(),
-        AMU_PER_ANGSTROM3_TO_KG_PER_L
+        _engine->getSimulationBox().getDensity().numerical_value_in(
+            kg_per_litre
+        ),
+        (1.0 * g_per_mol / angstrom3 / avogadro_constant)
+            .numerical_value_in(kg_per_litre)
     );
 }
 
@@ -577,7 +582,7 @@ TEST_F(TestSetup, testFullSetup)
 
     _engine->getSimulationBox().setTotalMass(33.0 * g_per_mol);
     _engine->getSimulationBox().setDensity(
-        12341243.1234
+        12341243.1234 * kg_per_litre
     );   // this should be ignored
 
     molsys::OrthorhombicBox orthoBox{
@@ -605,7 +610,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setTotalMass(13.05 * g_per_mol);
     simBox.setTotalCharge(-7.03 * elementary_charge);
     simBox.setDegreesOfFreedom(4);
-    simBox.setDensity(12341243.1234);
+    simBox.setDensity(12341243.1234 * kg_per_litre);
     molsys::OrthorhombicBox orthoBox{
         {5.73 * angstrom, 9.93 * angstrom, 11.14 * angstrom}
     };

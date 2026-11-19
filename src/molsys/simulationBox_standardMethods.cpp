@@ -172,9 +172,9 @@ namespace molsys
     /**
      * @brief get the density
      *
-     * @return double
+     * @return const Density&
      */
-    double SimulationBox::getDensity() const { return _density; }
+    const Density &SimulationBox::getDensity() const { return _density; }
 
     /**
      * @brief get the center of mass
@@ -506,7 +506,10 @@ namespace molsys
      *
      * @param density
      */
-    void SimulationBox::setDensity(const double density) { _density = density; }
+    void SimulationBox::setDensity(const Density &density)
+    {
+        _density = density;
+    }
 
     /**
      * @brief set the degrees of freedom
@@ -575,9 +578,9 @@ namespace molsys
     /**
      * @brief gets the box angles
      *
-     * @return linalg::Vec3D
+     * @return const Angle3D &
      */
-    linalg::Vec3D SimulationBox::getBoxAngles() const
+    const Angle3D &SimulationBox::getBoxAngles() const
     {
         return _box->getBoxAngles();
     }

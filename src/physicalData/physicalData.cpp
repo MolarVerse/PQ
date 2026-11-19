@@ -236,10 +236,10 @@ namespace physicalData
     void PhysicalData::reset()
     {
         _numberOfQMAtoms = 0.0;
-        _loopTime        = 0.0;
+        _loopTime        = Time::zero();
 
         _volume          = Volume::zero();
-        _density         = 0.0;
+        _density         = Density::zero();
         _temperature     = Temperature::zero();
         _pressure        = Pressure::zero();
         _coupledPressure = Pressure::zero();

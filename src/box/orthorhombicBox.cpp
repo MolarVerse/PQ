@@ -24,9 +24,8 @@
 
 #include <memory>
 
-#include "constants.hpp"
-#include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 
@@ -104,14 +103,13 @@ namespace molsys
      * specified density and total mass
      */
     Pos3D OrthorhombicBox::calcBoxDimFromDensity(
-        const Mass &totalMass,
-        double      density
+        const Mass    &totalMass,
+        const Density &density
     )
     {
-        const auto volume = totalMass.numerical_value_in(g_per_mol) /
-                            (density * KG_PER_L_TO_AMU_PER_ANGSTROM3);
+        const auto volume = totalMass / density / avogadro_constant;
 
-        return {::cbrt(volume) * angstrom};
+        return {mstd::cbrt(volume)};
     }
 
     /**

@@ -23,8 +23,8 @@
 #ifndef UTILITIES__MATH_UTILITIES_HPP
 #define UTILITIES__MATH_UTILITIES_HPP
 
-#include <concepts>
 #include <cmath>
+#include <concepts>
 #include <cstdlib>
 #include <limits>
 #include <mstd/math.hpp>
@@ -54,6 +54,29 @@ namespace utilities
     bool compare(const T &lhs, const T &rhs, const T &tolerance)
     {
         return mstd::fabs(lhs - rhs) < tolerance;
+    }
+
+    /**
+     * @brief compares two 3D vectors with a tolerance
+     *
+     * @tparam T
+     * @param lhs
+     * @param rhs
+     * @param tol
+     * @return true
+     * @return false
+     */
+    template <typename T>
+    [[nodiscard]]
+    bool compare(
+        const linalg::Vector3D<T> &lhs,
+        const linalg::Vector3D<T> &rhs,
+        const T                   &tol
+    )
+    {
+        return mstd::fabs(lhs[0] - rhs[0]) < tol &&
+               mstd::fabs(lhs[1] - rhs[1]) < tol &&
+               mstd::fabs(lhs[2] - rhs[2]) < tol;
     }
 
     [[nodiscard]] bool compare(
@@ -159,7 +182,8 @@ namespace utilities
     template <typename T>
     [[nodiscard]] int sign(const T &value)
     {
-        const auto zero = [] {
+        const auto zero = []
+        {
             if constexpr (requires { T::zero(); })
                 return T::zero();
             else

@@ -73,7 +73,7 @@ TEST_F(TestBoxSection, testProcess)
         testing::ElementsAre(1.0, 2.0, 3.0)
     );
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxAngles(),
+        _engine->getSimulationBox().getBoxAngles().numerical_value_in(deg),
         testing::ElementsAre(90.0, 90.0, 90.0)
     );
 
@@ -86,7 +86,7 @@ TEST_F(TestBoxSection, testProcess)
         testing::ElementsAre(1.0, 2.0, 3.0)
     );
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxAngles(),
+        _engine->getSimulationBox().getBoxAngles().numerical_value_in(deg),
         testing::ElementsAre(90.0, 90.0, 70.0)
     );
 

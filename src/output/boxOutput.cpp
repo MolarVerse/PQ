@@ -51,11 +51,13 @@ namespace out
             boxDimensions[2]
         );
 
+        const auto& boxAngles = box.getBoxAngles().numerical_value_in(deg);
+
         _getFilePointer() << std::format(
             "{:15.8f}\t{:15.8f}\t{:15.8f}\n",
-            box.getBoxAngles()[0],
-            box.getBoxAngles()[1],
-            box.getBoxAngles()[2]
+            boxAngles[0],
+            boxAngles[1],
+            boxAngles[2]
         );
 
         _getFilePointer() << std::flush;

@@ -25,7 +25,6 @@
 #include <cmath>
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "hybridSettings.hpp"
@@ -75,11 +74,7 @@ namespace
                     mstd::max(maxTemperature, kinetics.getStartTemperature());
             }
 
-            const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
-            const auto conversionFactor =
-                UNIVERSAL_GAS_CONSTANT * unitConversion;
             const auto sigmaSquared = 4.0 * thermostatSettings.getFriction() *
-                                      conversionFactor *
                                       maxTemperature.quantity_from_zero() /
                                       settings::TimingsSettings::getTimeStep();
 

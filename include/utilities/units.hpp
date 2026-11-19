@@ -39,13 +39,15 @@
 
 inline constexpr auto one = mstd::units::one;
 
-inline constexpr auto rad = mstd::units::rad;
-inline constexpr auto deg = mstd::units::deg;
+inline constexpr auto rad        = mstd::units::rad;
+inline constexpr auto deg        = mstd::units::deg;
+inline constexpr auto NINETY_DEG = 90 * deg;
 
 inline constexpr auto fs = mstd::units::fs;
 inline constexpr auto ps = mstd::units::ps;
-inline constexpr auto s  = mstd::units::s;
+inline constexpr auto ns = mstd::units::ns;
 inline constexpr auto ms = mstd::units::ms;
+inline constexpr auto s  = mstd::units::s;
 
 inline constexpr auto bar     = mstd::units::bar;
 inline constexpr auto Pa      = mstd::units::Pa;
@@ -64,16 +66,21 @@ inline constexpr auto angstrom6  = angstrom3 * angstrom3;
 inline constexpr auto angstrom12 = angstrom6 * angstrom6;
 inline constexpr auto bohr       = mstd::units::bohr;
 inline constexpr auto bohr3      = bohr * bohr * bohr;
+inline constexpr auto litre      = mstd::units::litre;
 
-inline constexpr auto amu       = mstd::units::amu;
-inline constexpr auto g         = mstd::units::g;
-inline constexpr auto g_per_mol = mstd::units::g / mstd::units::mol;
+inline constexpr auto mol = mstd::units::mol;
+
+inline constexpr auto amu = mstd::units::amu;
+inline constexpr auto kg  = mstd::units::kg;
+inline constexpr auto g   = mstd::units::g;
+
+inline constexpr auto g_per_mol = g / mol;
+
+inline constexpr auto kg_per_litre = kg / litre;
 
 inline constexpr auto kcal_per_mol = mstd::units::kcal_per_mol;
 inline constexpr auto hartree      = mstd::units::hartree;
 inline constexpr auto eV           = mstd::units::eV;
-
-inline constexpr auto mol = mstd::units::mol;
 
 // constants
 

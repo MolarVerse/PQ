@@ -45,9 +45,9 @@ namespace molsys
      * angles during simulation.
      */
     TriclinicBox::TriclinicBox(
-        const Pos3D         &boxDimensions,
-        const linalg::Vec3D &boxAngles,
-        bool                 allowChangeOfAngles
+        const Pos3D   &boxDimensions,
+        const Angle3D &boxAngles,
+        bool           allowChangeOfAngles
     )
         : Box(boxDimensions, boxAngles),
           _allowChangeOfAngles(allowChangeOfAngles)
@@ -101,7 +101,7 @@ namespace molsys
      * @param boxAngles
      */
     QuantityTensor3D TriclinicBox::_calculateTransformationMatrix(
-        const Angles3D &boxAngles
+        const Angle3D &boxAngles
     )
     {
         const auto cosGamma = _cosGamma(boxAngles);
@@ -278,7 +278,7 @@ namespace molsys
      * @param boxMatrix
      * @return std::pair<Pos3D, linalg::Vec3D>
      */
-    std::pair<Pos3D, Angles3D> calcBoxDimAndAnglesFromBoxMatrix(
+    std::pair<Pos3D, Angle3D> calcBoxDimAndAnglesFromBoxMatrix(
         const PosTensor3D &boxMatrix
     )
     {
@@ -322,7 +322,7 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_cosAlpha(const Angles3D &boxAngles)
+    double TriclinicBox::_cosAlpha(const Angle3D &boxAngles)
     {
         return mstd::cos(boxAngles[0]);
     }
@@ -332,7 +332,7 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_cosBeta(const Angles3D &boxAngles)
+    double TriclinicBox::_cosBeta(const Angle3D &boxAngles)
     {
         return mstd::cos(boxAngles[1]);
     }
@@ -342,7 +342,7 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_cosGamma(const Angles3D &boxAngles)
+    double TriclinicBox::_cosGamma(const Angle3D &boxAngles)
     {
         return mstd::cos(boxAngles[2]);
     }
@@ -352,7 +352,7 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_sinAlpha(const Angles3D &boxAngles)
+    double TriclinicBox::_sinAlpha(const Angle3D &boxAngles)
     {
         return mstd::sin(boxAngles[0]);
     }
@@ -362,7 +362,7 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_sinBeta(const Angles3D &boxAngles)
+    double TriclinicBox::_sinBeta(const Angle3D &boxAngles)
     {
         return mstd::sin(boxAngles[1]);
     }
@@ -372,7 +372,7 @@ namespace molsys
      *
      * @return double
      */
-    double TriclinicBox::_sinGamma(const Angles3D &boxAngles)
+    double TriclinicBox::_sinGamma(const Angle3D &boxAngles)
     {
         return mstd::sin(boxAngles[2]);
     }

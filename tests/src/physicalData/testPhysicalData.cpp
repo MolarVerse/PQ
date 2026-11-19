@@ -26,7 +26,6 @@
 #include <cstddef>
 #include <new>
 
-#include "constants/internalConversionFactors.hpp"
 #include "physicalData.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
@@ -35,6 +34,14 @@
  * @brief tests makeAverages function
  *
  */
+namespace
+{
+    // kcal/mol of the kinetic energy 0.5 * m * v^2 for m in g/mol, v in A/s
+    const double KINETIC_ENERGY_FACTOR =
+        (0.5 * (1.0 * g_per_mol) * (1.0 * angstrom / s) * (1.0 * angstrom / s))
+            .numerical_value_in(kcal_per_mol);
+}   // namespace
+
 TEST_F(TestPhysicalData, makeAverages)
 {
     _physicalData->makeAverages(2);
@@ -47,7 +54,7 @@ TEST_F(TestPhysicalData, makeAverages)
     );
     EXPECT_EQ(_physicalData->getKineticEnergy(), 2.5 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getVolume(), 3.0 * angstrom3);
-    EXPECT_EQ(_physicalData->getDensity(), 3.5);
+    EXPECT_EQ(_physicalData->getDensity(), 3.5 * kg_per_litre);
     EXPECT_EQ(_physicalData->getPressure(), 4.0 * bar);
     EXPECT_EQ(_physicalData->getQMEnergy(), 4.5 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getQMReferenceEnergy(), 0.5 * kcal_per_mol);
@@ -70,7 +77,7 @@ TEST_F(TestPhysicalData, copy)
     );
     EXPECT_EQ(physicalData2.getKineticEnergy(), 5.0 * kcal_per_mol);
     EXPECT_EQ(physicalData2.getVolume(), 6.0 * angstrom3);
-    EXPECT_EQ(physicalData2.getDensity(), 7.0);
+    EXPECT_EQ(physicalData2.getDensity(), 7.0 * kg_per_litre);
     EXPECT_EQ(physicalData2.getPressure(), 8.0 * bar);
     EXPECT_EQ(physicalData2.getCoupledPressure(), 8.5 * bar);
     EXPECT_EQ(physicalData2.getQMEnergy(), 9.0 * kcal_per_mol);
@@ -95,7 +102,7 @@ TEST_F(TestPhysicalData, updateAverages)
     );
     EXPECT_EQ(_physicalData->getKineticEnergy(), 10.0 * kcal_per_mol);
     EXPECT_EQ(_physicalData->getVolume(), 12.0 * angstrom3);
-    EXPECT_EQ(_physicalData->getDensity(), 14.0);
+    EXPECT_EQ(_physicalData->getDensity(), 14.0 * kg_per_litre);
     EXPECT_EQ(_physicalData->getPressure(), 16.0 * bar);
     EXPECT_EQ(_physicalData->getCoupledPressure(), 17.0 * bar);
     EXPECT_EQ(_physicalData->getQMEnergy(), 18.0 * kcal_per_mol);
@@ -160,6 +167,7 @@ TEST_F(TestPhysicalData, calculateKinetics)
                                .numerical_value_in(kcal_per_mol);
     for (size_t i = 0; i < 3; ++i)
         EXPECT_DOUBLE_EQ(molActual[i], molExpected[i]);
+
     EXPECT_DOUBLE_EQ(
         _physicalData->getKineticEnergy().numerical_value_in(kcal_per_mol),
         sum(kineticEnergyAtomicVector) * KINETIC_ENERGY_FACTOR
@@ -196,12 +204,16 @@ TEST_F(TestPhysicalData, calculateTemperature)
         mass_mol2_atom1 * velocity_mol2_atom1 * velocity_mol2_atom1;
 
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
+    // K per (g/mol * A^2/s^2)
+    const auto temperatureFactor = ((1.0 * g_per_mol) * (1.0 * angstrom / s) *
+                                    (1.0 * angstrom / s) / gas_constant)
+                                       .numerical_value_in(K);
 
     EXPECT_NEAR(
         _physicalData->getTemperature().quantity_from_zero().numerical_value_in(
             K
         ),
-        sum(kineticEnergyAtomicVector) * TEMPERATURE_FACTOR /
+        sum(kineticEnergyAtomicVector) * temperatureFactor /
             static_cast<double>(nDOF),
         1e-15
     );
@@ -227,7 +239,7 @@ TEST_F(TestPhysicalData, reset)
     _physicalData->setTemperature(toTemperature(1.0));
     _physicalData->setMomentum(linalg::Vec3D(1.0) * g_per_mol * angstrom / s);
     _physicalData->setVolume(1.0 * angstrom3);
-    _physicalData->setDensity(1.0);
+    _physicalData->setDensity(1.0 * kg_per_litre);
     _physicalData->setPressure(1.0 * bar);
     _physicalData->setCoupledPressure(1.0 * bar);
     _physicalData->setVirial(
@@ -255,7 +267,7 @@ TEST_F(TestPhysicalData, reset)
         linalg::Vec3D(0.0) * g_per_mol * angstrom / s
     );
     EXPECT_EQ(_physicalData->getVolume(), 0.0 * angstrom3);
-    EXPECT_EQ(_physicalData->getDensity(), 0.0);
+    EXPECT_EQ(_physicalData->getDensity(), 0.0 * kg_per_litre);
     EXPECT_EQ(_physicalData->getPressure(), 0.0 * bar);
     EXPECT_EQ(_physicalData->getCoupledPressure(), 0.0 * bar);
     EXPECT_EQ(_physicalData->getVirial(), linalg::tensor3D(0.0) * kcal_per_mol);

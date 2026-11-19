@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include "unit_types.hpp"
+
 #ifndef OUTPUT__OUTPUT_MESSAGES_HPP
 #define OUTPUT__OUTPUT_MESSAGES_HPP
 
@@ -35,7 +37,7 @@ namespace out
     std::string header();
     std::string endedNormally();
 
-    std::string elapsedTimeMessage(double elapsedTime);
+    std::string elapsedTimeMessage(const Time& elapsedTime);
 
     std::string setupMessage(const std::string& setup);
     std::string setupCompletedMessage();

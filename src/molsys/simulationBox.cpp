@@ -26,7 +26,6 @@
 #include <format>
 #include <numeric>
 
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
@@ -799,9 +798,7 @@ namespace molsys
     void SimulationBox::calculateDensity()
     {
         const auto volume = _box->getVolume();
-        _density          = _totalMass.numerical_value_in(g_per_mol) /
-                   volume.numerical_value_in(angstrom * angstrom * angstrom) *
-                   AMU_PER_ANGSTROM3_TO_KG_PER_L;
+        _density          = _totalMass / volume / avogadro_constant;
     }
 
     /**

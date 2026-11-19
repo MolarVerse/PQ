@@ -54,8 +54,8 @@ namespace molsys
 
         [[nodiscard]]
         static Pos3D calcBoxDimFromDensity(
-            const Mass &totalMass,
-            double      density
+            const Mass    &totalMass,
+            const Density &density
         );
 
         [[nodiscard]]

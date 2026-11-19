@@ -26,7 +26,6 @@
 #include <cmath>
 #include <cstddef>
 
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "mathUtilities.hpp"

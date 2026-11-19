@@ -124,9 +124,9 @@ namespace QM
                 boxDimension[0].numerical_value_in(angstrom),
                 boxDimension[1].numerical_value_in(angstrom),
                 boxDimension[2].numerical_value_in(angstrom),
-                boxAngles[0],
-                boxAngles[1],
-                boxAngles[2]
+                boxAngles[0].numerical_value_in(deg),
+                boxAngles[1].numerical_value_in(deg),
+                boxAngles[2].numerical_value_in(deg)
             };
 
             try

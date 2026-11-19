@@ -23,7 +23,6 @@
 #ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
 #define WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
 
-#include "constants/conversionFactors.hpp"
 #include "intraWater.hpp"
 #include "unit_types.hpp"
 

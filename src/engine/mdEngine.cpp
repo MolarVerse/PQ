@@ -22,7 +22,6 @@
 
 #include "mdEngine.hpp"
 
-#include "constants/conversionFactors.hpp"
 #include "constraintSettings.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
@@ -92,7 +91,7 @@ namespace engine
         timings::GlobalTimer::get().stopSimulationTimer();
 
         const auto elapsedTime =
-            timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
+            timings::GlobalTimer::get().calculateElapsedTime();
 
 #ifdef WITH_MPI
         if (mpi::MPI::isRoot())

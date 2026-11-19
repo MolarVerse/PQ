@@ -204,7 +204,11 @@ namespace out
                 "VOLUME",
                 "A^3"
             );
-            _writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
+            _writeRight(
+                physicalData.getDensity().numerical_value_in(kg_per_litre),
+                "DENSITY",
+                "g/cm^3"
+            );
 
             if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
             {
@@ -259,7 +263,11 @@ namespace out
                 g_per_mol * angstrom / fs
             ));
         _writeLeftScientific(momentumNorm, "MOMENTUM", "amuA/fs");
-        _writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
+        _writeRight(
+            physicalData.getLoopTime().numerical_value_in(s),
+            "LOOPTIME",
+            "s"
+        );
 
         _getFilePointer() << std::format("{:-^89}", "") << "\n\n";
 

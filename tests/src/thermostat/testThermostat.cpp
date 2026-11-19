@@ -29,8 +29,6 @@
 #include <vector>
 
 #include "berendsenThermostat.hpp"
-#include "constants/conversionFactors.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "langevinThermostat.hpp"
@@ -43,6 +41,14 @@
 #include "unit_types.hpp"
 #include "units.hpp"
 #include "velocityRescalingThermostat.hpp"
+
+namespace
+{
+    // K per (g/mol * A^2/s^2)
+    const double temperatureFactor = ((1.0 * g_per_mol) * (1.0 * angstrom / s) *
+                                      (1.0 * angstrom / s) / gas_constant)
+                                         .numerical_value_in(K);
+}   // namespace
 
 TEST_F(TestThermostat, calculateTemperature)
 {
@@ -73,7 +79,7 @@ TEST_F(TestThermostat, calculateTemperature)
 
     EXPECT_EQ(
         _data->getTemperature().quantity_from_zero().numerical_value_in(K),
-        sum(kineticEnergyAtomicVector) * TEMPERATURE_FACTOR /
+        sum(kineticEnergyAtomicVector) * temperatureFactor /
             static_cast<double>(nDOF)
     );
 }
@@ -107,7 +113,7 @@ TEST_F(TestThermostat, applyThermostatBerendsen)
     const auto nDOF = _simulationBox->getDegreesOfFreedom();
 
     const auto oldTemperature = sum(kineticEnergyAtomicVector) *
-                                TEMPERATURE_FACTOR / static_cast<double>(nDOF);
+                                temperatureFactor / static_cast<double>(nDOF);
 
     const auto berendsenFactor =
         ::sqrt(1.0 + (0.1 / 100.0 * (300.0 / oldTemperature - 1.0)));
@@ -916,13 +922,13 @@ TEST_F(TestThermostat, noseHooverMatchesReferenceStep)
 
     const auto temperature = _data->getTemperature();
     const auto dof = static_cast<double>(_simulationBox->getDegreesOfFreedom());
-    const auto timeStep          = 0.1e-15;
-    const auto freq2             = freq * freq;
-    const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+    const auto timeStep = 0.1e-15;
+    const auto freq2    = freq * freq;
     const auto kineticEnergy =
-        boltzmannConstant *
+        (1.0 * gas_constant).numerical_value_in(kcal_per_mol / K) *
         temperature.quantity_from_zero().numerical_value_in(K);
-    const auto eTar = boltzmannConstant * targetTemp;
+    const auto eTar =
+        (1.0 * gas_constant).numerical_value_in(kcal_per_mol / K) * targetTemp;
 
     auto chiTemp =
         ((kineticEnergy - eTar) * dof) - (chi[0] * chi[1] / eTar * freq2);
@@ -999,22 +1005,24 @@ TEST_F(TestThermostat, noseHooverForceMatchesReference)
     );
 
     const auto dof = static_cast<double>(_simulationBox->getDegreesOfFreedom());
+    const auto thermalEnergy =
+        (1.0 * gas_constant).numerical_value_in(kcal_per_mol / K) * targetTemp *
+        kcal_per_mol;
     const auto factor =
-        chi0 * freq * freq /
-        (BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL * targetTemp * dof) *
-        MOMENTUM_TO_FORCE;
+        (chis.at(0) * (freq * Hz) * (freq * Hz)) / (thermalEnergy * dof);
 
     for (const auto &atom : _simulationBox->getAtoms())
     {
         for (size_t axis = 0; axis < 3; ++axis)
         {
+            const auto momentum = atom->getMass() * atom->getVelocity()[axis];
+            const auto expected = -factor * momentum;
+
             EXPECT_DOUBLE_EQ(
                 atom->getForce()[axis].numerical_value_in(
                     kcal_per_mol / angstrom
                 ),
-                -factor *
-                    atom->getVelocity()[axis].numerical_value_in(angstrom / s) *
-                    atom->getMass().numerical_value_in(g_per_mol)
+                expected.numerical_value_in(kcal_per_mol / angstrom)
             );
         }
     }

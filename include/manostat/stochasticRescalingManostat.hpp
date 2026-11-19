@@ -50,7 +50,7 @@ namespace manostat
         ) override;
 
         [[nodiscard]] virtual QuantityTensor3D calculateMu(
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature
         );
 
@@ -76,7 +76,7 @@ namespace manostat
 
         [[nodiscard]]
         QuantityTensor3D calculateMu(
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature
         ) override;
     };
@@ -96,7 +96,7 @@ namespace manostat
 
         [[nodiscard]]
         QuantityTensor3D calculateMu(
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature
         ) override;
     };
@@ -116,7 +116,7 @@ namespace manostat
 
         [[nodiscard]]
         QuantityTensor3D calculateMu(
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature
         ) override;
     };

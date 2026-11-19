@@ -27,7 +27,6 @@
 
 #include "atom.hpp"
 #include "berendsenManostat.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -42,6 +41,14 @@
 #include "unit_types.hpp"
 #include "units.hpp"
 #include "vector3d/vector3dClass.hpp"
+
+namespace
+{
+    // pressure in bar corresponding to 1 kcal/mol/A^3
+    const double PRESSURE_FACTOR =
+        (1.0 * kcal_per_mol / angstrom3 / avogadro_constant)
+            .numerical_value_in(bar);
+}   // namespace
 
 class TestableSimSpaceScalingManostat : public manostat::BerendsenManostat
 {
@@ -549,8 +556,8 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
         TestableStochasticRescalingManostat(_settings->manostatSettings);
     manostat.setPressure(1.0 * bar);
 
-    const auto mu =
-        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
+    const auto mu = manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0))
+                        .numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -775,8 +782,9 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0, toTemperature(0.0))
-                            .numerical_value_in(one);
+        const auto mu =
+            manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0))
+                .numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.5) / 2.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -796,8 +804,9 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0, toTemperature(0.0))
-                            .numerical_value_in(one);
+        const auto mu =
+            manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0))
+                .numerical_value_in(one);
         const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 3.0) / 1.0);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
@@ -817,8 +826,9 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto mu = manostat.calculateMu(10.0, toTemperature(0.0))
-                            .numerical_value_in(one);
+        const auto mu =
+            manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0))
+                .numerical_value_in(one);
 
         EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
         EXPECT_DOUBLE_EQ(mu[1][1], 1.0);
@@ -841,8 +851,8 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
         diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
     );
 
-    const auto mu =
-        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
+    const auto mu = manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0))
+                        .numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -865,8 +875,8 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
         linalg::tensor3D({{1.0, 0.2, 0.3}, {0.2, 2.0, 0.4}, {0.3, 0.4, 3.0}});
     manostat.setPressureTensor(pTensor * bar);
 
-    const auto mu =
-        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
+    const auto mu = manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0))
+                        .numerical_value_in(one);
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
     EXPECT_DOUBLE_EQ(mu[0][1], 0.0);
     EXPECT_DOUBLE_EQ(mu[0][2], 0.0);
@@ -914,8 +924,8 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
         diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)) * bar
     );
 
-    const auto mu =
-        manostat.calculateMu(10.0, toTemperature(0.0)).numerical_value_in(one);
+    const auto mu = manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0))
+                        .numerical_value_in(one);
     // xz avg = 2.0, deltaPxy = 7.0 - 2.0 = 5.0
     const auto expected_xz = ::exp(-(0.12 * 0.5 / 0.25) * 5.0 / 3.0);
 
@@ -953,7 +963,7 @@ TEST_F(TestManostat, toSimSpaceScalingFullAnisotropicIsIdentityTransform)
     );
     const molsys::TriclinicBox box{
         {4.0 * angstrom, 5.0 * angstrom, 6.0 * angstrom},
-        {80.0, 75.0, 70.0},
+        linalg::Vec3D{80.0, 75.0, 70.0} * deg,
         true
     };
 
@@ -972,7 +982,7 @@ TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
     const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
     const molsys::TriclinicBox box{
         {4.0 * angstrom, 5.0 * angstrom, 6.0 * angstrom},
-        {80.0, 75.0, 70.0},
+        linalg::Vec3D{80.0, 75.0, 70.0} * deg,
         false
     };
 

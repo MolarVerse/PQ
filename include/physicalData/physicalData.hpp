@@ -67,10 +67,10 @@ namespace physicalData
     {
        private:
         double _numberOfQMAtoms = 0.0;
-        double _loopTime        = 0.0;
+        Time   _loopTime        = Time::zero();
 
         Volume      _volume  = Volume::zero();
-        double      _density = 0.0;
+        Density     _density = Density::zero();
         Temperature _temperature{Temperature::zero()};
 
         Pressure _pressure{Pressure::zero()};
@@ -159,10 +159,10 @@ namespace physicalData
          ********************/
 
         void setNumberOfQMAtoms(double nQMAtoms);
-        void setLoopTime(double loopTime);
+        void setLoopTime(const Time& loopTime);
 
         void setVolume(const Volume& volume);
-        void setDensity(double density);
+        void setDensity(const Density& density);
         void setTemperature(const Temperature& temperature);
         void setPressure(const Pressure& pressure);
         void setCoupledPressure(const Pressure& coupledPressure);
@@ -210,11 +210,11 @@ namespace physicalData
          * standard getters *
          ********************/
 
-        [[nodiscard]] double getNumberOfQMAtoms() const;
-        [[nodiscard]] double getLoopTime() const;
+        [[nodiscard]] double      getNumberOfQMAtoms() const;
+        [[nodiscard]] const Time& getLoopTime() const;
 
         [[nodiscard]] const Volume&      getVolume() const;
-        [[nodiscard]] double             getDensity() const;
+        [[nodiscard]] const Density&     getDensity() const;
         [[nodiscard]] const Temperature& getTemperature() const;
         [[nodiscard]] const Pressure&    getPressure() const;
         [[nodiscard]] const Pressure&    getCoupledPressure() const;

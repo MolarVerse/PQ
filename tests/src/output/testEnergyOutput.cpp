@@ -66,7 +66,7 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
     _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
     _physicalData->setIntraCoulombEnergy(9.0 * kcal_per_mol);
     _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
-    _physicalData->setLoopTime(0.1);
+    _physicalData->setLoopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
@@ -108,7 +108,7 @@ TEST_F(TestEnergyOutput, forceFieldActive)
     _physicalData->setAngleEnergy(20.0 * kcal_per_mol);
     _physicalData->setDihedralEnergy(21.0 * kcal_per_mol);
     _physicalData->setImproperEnergy(22.0 * kcal_per_mol);
-    _physicalData->setLoopTime(0.1);
+    _physicalData->setLoopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
@@ -149,8 +149,8 @@ TEST_F(TestEnergyOutput, manostatActive)
     _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
 
     _physicalData->setVolume(19.0 * angstrom3);
-    _physicalData->setDensity(20.0);
-    _physicalData->setLoopTime(0.1);
+    _physicalData->setDensity(20.0 * kg_per_litre);
+    _physicalData->setLoopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
@@ -193,8 +193,8 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
     _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
 
     _physicalData->setVolume(19.0 * angstrom3);
-    _physicalData->setDensity(20.0);
-    _physicalData->setLoopTime(0.1);
+    _physicalData->setDensity(20.0 * kg_per_litre);
+    _physicalData->setLoopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
@@ -238,8 +238,8 @@ TEST_F(TestEnergyOutput, qmActive)
     _physicalData->setQMEnergy(5.0 * kcal_per_mol);
 
     _physicalData->setVolume(19.0 * angstrom3);
-    _physicalData->setDensity(20.0);
-    _physicalData->setLoopTime(0.1);
+    _physicalData->setDensity(20.0 * kg_per_litre);
+    _physicalData->setLoopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QM_MD);
@@ -279,7 +279,7 @@ TEST_F(TestEnergyOutput, noseHooverActive)
     _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
     _physicalData->setNoseHooverMomentumEnergy(11.0 * kcal_per_mol);
     _physicalData->setNoseHooverFrictionEnergy(12.0);
-    _physicalData->setLoopTime(0.1);
+    _physicalData->setLoopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
@@ -326,7 +326,7 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
     _physicalData->setQMEnergy(7.0 * kcal_per_mol);
     _physicalData->setQMReferenceEnergy(2.0 * kcal_per_mol);
     _physicalData->setNumberOfSmoothingMolecules(1.0);
-    _physicalData->setLoopTime(0.1);
+    _physicalData->setLoopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
