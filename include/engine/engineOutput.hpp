@@ -91,7 +91,6 @@ namespace engine
         std::unique_ptr<out::TrajectoryOutput> _chargeOutput;
         std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
 
-        // null unless traj_format is extxyz or h5md
         std::unique_ptr<out::ExtxyzOutput> _extxyzOutput;
         std::unique_ptr<out::H5mdOutput>   _h5mdOutput;
 

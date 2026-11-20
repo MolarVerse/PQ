@@ -23,12 +23,24 @@
 #include "h5mdOutput.hpp"
 
 #include <cstddef>
+#include <cstdint>
+#include <filesystem>
 #include <memory>
+#include <span>
 #include <string>
+#include <vector>
 
 #include "atomNumberMap.hpp"
+#include "box.hpp"
+#include "exceptions.hpp"
 #include "frame.hpp"
+#include "staticMatrix.hpp"
 #include "stringUtilities.hpp"
+#include "systemInfo.hpp"
+
+#ifdef WITH_HDF5
+#include "hdf5Wrapper.hpp"
+#endif
 
 namespace out
 {
@@ -78,17 +90,6 @@ namespace out
 }   // namespace out
 
 #ifdef WITH_HDF5
-
-#include <cstdint>
-#include <filesystem>
-#include <span>
-#include <vector>
-
-#include "box.hpp"
-#include "exceptions.hpp"
-#include "hdf5Wrapper.hpp"
-#include "staticMatrix.hpp"
-#include "systemInfo.hpp"
 
 namespace out
 {
