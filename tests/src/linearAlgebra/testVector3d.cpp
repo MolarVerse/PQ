@@ -50,7 +50,7 @@ namespace
 
         ~PoisonedStorage() { object->~T(); }
 
-        PoisonedStorage()                                   = default;
+        PoisonedStorage() = default;
         MSTD_NO_COPY(PoisonedStorage);
         MSTD_NO_MOVE(PoisonedStorage);
 
