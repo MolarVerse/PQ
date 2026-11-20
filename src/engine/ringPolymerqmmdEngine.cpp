@@ -389,7 +389,7 @@ namespace engine
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             const auto bead       = getRingPolymerBeads()[i];
-            auto       positions  = bead.getFlattenedQMPositionsInAngstrom();
+            auto       positions  = bead.flattenPositions();
             auto       velocities = bead.flattenVelocities();
 
             auto &box = bead.getBox();

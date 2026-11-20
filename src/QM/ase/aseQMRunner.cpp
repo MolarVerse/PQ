@@ -38,7 +38,6 @@
 #endif
 
 #include "box.hpp"
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "interrupt.hpp"
@@ -117,7 +116,7 @@ namespace QM
         )
         {
             const auto &boxDimension = simulationBox.getBoxDimensions();
-            const auto  boxAngles    = simulationBox.getBoxAngles();
+            const auto &boxAngles    = simulationBox.getBoxAngles();
 
             constexpr auto                   boxArraySize = 6;
             std::array<double, boxArraySize> box_array    = {
