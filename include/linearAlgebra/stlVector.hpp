@@ -74,11 +74,10 @@ namespace stl
     /**
      * @brief dot product of two vectors
      *
-     * @param lhs std::vector<T>
-     * @param rhs std::vector<U>
+     * @param lhs std::vector
+     * @param rhs std::vector
      *
-     * @return product type of T and U (e.g. Pos^2/Mass * 1/Time^2 for
-     * quantities) holding the dot product of lhs and rhs
+     * @return product type of T and U holding the dot product of lhs and rhs
      */
     template <typename T, typename U>
     auto dot(const std::vector<T> &lhs, const std::vector<U> &rhs)
@@ -97,7 +96,7 @@ namespace stl
     /**
      * @brief root mean square of a vector
      *
-     * @param vec std::vector<T>
+     * @param vec std::vector
      *
      * @return T root mean square of vec
      */
