@@ -1,0 +1,1 @@
+- Fix the `.log` file missing the time step, the starting step count and the number of steps (the maximum number of optimization steps for optimizer jobs); they are now written to the setup section, together with the job type of the engine.

@@ -25,6 +25,7 @@
 
 #include <fstream>
 #include <memory>
+#include <mstd/types.hpp>
 #include <string>
 #include <vector>
 
@@ -61,19 +62,23 @@ namespace input::restartFile
 
         std::unique_ptr<RestartFileSection>              _atomSection;
         std::vector<std::unique_ptr<RestartFileSection>> _sections;
+        mstd::ConstRef<TimingsSettings>                  _timingsSettings;
 
        public:
         RestartFileReader(
             const std::string &,
             engine::Engine &,
             NoseHooverSettings &,
-            TimingsSettings &
+            TimingsSettings &timingsSettings
         );
 
         void                read();
         RestartFileSection *determineSection(
             std::vector<std::string> &lineElements
         );
+
+       private:
+        void _writeStepInfo();
     };
 
 }   // namespace input::restartFile
