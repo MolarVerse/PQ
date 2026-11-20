@@ -139,7 +139,7 @@ int main()
         {
             auto &atom  = molecule.getAtom(AtomIndex{1});
             auto  pos   = atom.getPosition();
-            pos[0]      += (i % 2 == 0) ? 0.02 * angstrom : -0.02 * angstrom;
+            pos[0]     += (i % 2 == 0) ? 0.02 * angstrom : -0.02 * angstrom;
             atom.setPosition(pos);
         }
 

@@ -174,7 +174,7 @@ namespace thermostat
         auto helpRatio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
                          couplingFreqSquared;
 
-        _zeta[0]    += helpRatio * timeStep;
+        _zeta[0]   += helpRatio * timeStep;
         auto ratio  = helpRatio * _chi[0];
 
         auto energyMomentum = ratio;
@@ -190,7 +190,7 @@ namespace thermostat
             _chi[i] += timeStep * chiHelper;
 
             helpRatio  = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
-            _zeta[i]   += helpRatio * timeStep;
+            _zeta[i]  += helpRatio * timeStep;
             ratio      = helpRatio * _chi[i];
 
             energyMomentum += ratio;

@@ -33,8 +33,6 @@
 
 #include <mstd/units.hpp>
 
-#include "mp-units/systems/si/constants.h"
-
 // NOLINTBEGIN(readability-identifier-length)
 
 inline constexpr auto percent = mstd::units::percent;
