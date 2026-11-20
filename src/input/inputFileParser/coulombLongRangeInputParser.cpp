@@ -92,8 +92,12 @@ namespace input
             .unit = "1/angstrom"
         };
 
-        const auto setValue = [](double wolfParameter)
-        { PotentialSettings::setWolfParameter(wolfParameter / angstrom); };
+        const auto setValue = [this](double wolfParameter)
+        {
+            _potentialSettings->setWolfParameterByUser(
+                wolfParameter / angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -120,8 +124,8 @@ namespace input
                 "field correction",
         };
 
-        const auto setValue = [](double epsilon)
-        { PotentialSettings::setReactionFieldEpsilon(epsilon); };
+        const auto setValue = [this](double epsilon)
+        { _potentialSettings->setReactionFieldEpsilonByUser(epsilon); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

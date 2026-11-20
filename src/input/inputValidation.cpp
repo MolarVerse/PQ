@@ -344,7 +344,7 @@ namespace input
         if (!settings::GeneralSettings::isCellListActivated())
             return;
 
-        if (settings::GeneralSettings::isQMOnlyActivated())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
             throw exc::InputFileException(
                 "Cell lists are not available for pure QM simulations"
             );

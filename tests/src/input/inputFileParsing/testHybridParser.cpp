@@ -86,8 +86,9 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
     ASSERT_THROW_MSG(
         parseForcedCoreListFunc({"forced_core_list", "=", "res(LIG)"}, 3),
         exc::InputFileException,
-        "forced_core_list takes molecule indices, e.g. 0,2-4 (the selection "
-        "grammar is not supported) at line 3 in input file"
+        "Invalid value \"res(LIG)\" for key \"forced_core_list\" at line 3 in "
+        "input file: forced_core_list takes molecule indices, e.g. 0,2-4 (the "
+        "selection grammar is not supported)"
     )
 }
 

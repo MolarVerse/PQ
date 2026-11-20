@@ -120,8 +120,8 @@ namespace setup
     void PotentialSetup::setupCoulomb()
     {
         const auto &potentialSettings = _engine.getSettings().potentialSettings;
-        const auto  wolfParam         = PotentialSettings::getWolfParameter();
-        const auto  rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
+        const auto  wolfParam         = potentialSettings.getWolfParameter();
+        const auto  rfEpsilon = potentialSettings.getReactionFieldEpsilon();
         const auto &potential = _engine.getPotential();
 
         switch (potentialSettings.getCoulombLongRangeType())
@@ -271,10 +271,10 @@ namespace setup
         auto        rfEpsilon = 0.0;
 
         if (coulLRType == CoulombLongRangeType::WOLF)
-            wolfParam = PotentialSettings::getWolfParameter();
+            wolfParam = potentialSettings.getWolfParameter();
 
         if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
-            rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
+            rfEpsilon = potentialSettings.getReactionFieldEpsilon();
 
         const auto coulRCutStr =
             std::format("Coulomb radius cut-off: {}", coulRCut);

@@ -283,7 +283,6 @@ TEST_F(TestEnergyOutput, noseHooverActive)
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::deactivateRingPolymerMD();
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER

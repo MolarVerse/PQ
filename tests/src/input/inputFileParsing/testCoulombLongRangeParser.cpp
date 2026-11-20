@@ -89,7 +89,7 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
 
     std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getWolfParameter(), 1.0 / angstrom);
+    EXPECT_EQ(settings.getWolfParameter(), 1.0 / angstrom);
 
     _clearParser(parser);
 
@@ -116,7 +116,7 @@ TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
 
     std::vector<std::string> lineElements = {"rf-epsilon", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 1.0);
+    EXPECT_EQ(settings.getReactionFieldEpsilon(), 1.0);
 
     _clearParser(parser);
 

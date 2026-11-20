@@ -29,6 +29,7 @@
 #include "forceField.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
 
@@ -114,7 +115,9 @@ namespace ff
                 molecule2,
                 atomIndices[0],
                 atomIndices[1],
-                distance
+                distance,
+                potentialSettings.getScale14Coulomb(),
+                potentialSettings.getScale14VDW()
             );
         }
 

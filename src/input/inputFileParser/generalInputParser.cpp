@@ -24,7 +24,7 @@
 
 #include <cstdint>
 #include <format>
-#include <stdexcept>
+#include <optional>
 
 #include "enums/general.hpp"
 #include "exceptions.hpp"
@@ -32,7 +32,9 @@
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
+#include "keyValidatorBase.hpp"
 #include "parserUtils.hpp"
+#include "rangeValidator.hpp"
 #include "stringUtilities.hpp"
 
 namespace input
@@ -55,19 +57,9 @@ namespace input
             true
         );
 
-        addKeyword(
-            std::string("dim"),
-            bindMember(&GeneralInputParser::parseDimensionality, this),
-            false
-        );
-
+        addDimensionalityKey();
         addFloatingPointTypeKey();
-
-        addKeyword(
-            std::string("random_seed"),
-            bindMember(&GeneralInputParser::parseRandomSeed, this),
-            false
-        );
+        addRandomSeedKey();
     }
 
     /**
@@ -99,37 +91,15 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum JobType;
         checkCommand(lineElements, lineNumber);
 
         const auto jobtype =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        if (jobtype == "mm_opt")
-        {
-            settings::GeneralSettings::setJobtype(MM_OPT);
-        }
-        else if (jobtype == "mm_hessian")
-        {
-            settings::GeneralSettings::setJobtype(MM_HESSIAN);
-        }
-        else if (jobtype == "mm_md")
-        {
-            settings::GeneralSettings::setJobtype(MM_MD);
-        }
-        else if (jobtype == "qm_md")
-        {
-            settings::GeneralSettings::setJobtype(QM_MD);
-        }
-        else if (jobtype == "qm_rpmd")
-        {
-            settings::GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-        }
-        else if (jobtype == "qmmm_md")
-        {
-            settings::GeneralSettings::setJobtype(QMMM_MD);
-        }
-        else
+        const auto jobTypeEnum =
+            JobTypeMeta::from_stringCaseInsensitive(jobtype);
+
+        if (!jobTypeEnum.has_value())
         {
             throw exc::InputFileException(format(
                 "Invalid jobtype \"{}\" in input file - possible values are:\n"
@@ -142,48 +112,45 @@ namespace input
                 lineElements[2]
             ));
         }
+
+        settings::GeneralSettings::setJobtype(jobTypeEnum.value());
     }
 
-    /**
-     * @brief parse dimensionality of simulation
-     *
-     * @details Possible options are:
-     * 1) 3
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throw exc::InputFileException if dimensionality is not
-     * recognised
-     */
-    void GeneralInputParser::parseDimensionality(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void GeneralInputParser::addDimensionalityKey()
     {
-        checkCommand(lineElements, lineNumber);
+        const auto metaData = KeyMetadata{
+            .name  = "dim",
+            .title = "Dimensionality",
+            .description =
+                "Specifies the dimensionality of the simulation (3 or 3d)",
+            .errorMessage = "Dimensionality must be 3 or 3d"
+        };
 
-        auto dimensionalityString = utilities::toLowerCopy(lineElements[2]);
-
-        std::erase(dimensionalityString, 'd');
-
-        const auto dimensionality =
-            utilities::stringToInt(dimensionalityString);
-
-        if (dimensionality == 3)
+        auto customParser = [](std::string_view value) -> std::optional<size_t>
         {
-            settings::GeneralSettings::setDimensionality(
-                static_cast<size_t>(dimensionality)
-            );
-        }
-        else
-        {
-            throw exc::InputFileException(format(
-                "Invalid dimensionality \"{}\" in input file\n"
-                "Possible values are: 3, 3d",
-                lineElements[2]
-            ));
-        }
+            auto lowerValue = utilities::toLowerCopy(value);
+            std::erase(lowerValue, 'd');
+            const auto dimensionality = utilities::stringToInt(lowerValue);
+
+            // at the moment only 3-dimensional simulations are supported
+            if (dimensionality == 3)
+                return static_cast<size_t>(dimensionality);
+
+            return std::nullopt;
+        };
+
+        const auto setValue = [](size_t value)
+        { settings::GeneralSettings::setDimensionality(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<size_t>{
+                .metadata     = metaData,
+                .customParser = customParser,
+                .onSet        = setValue
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
     }
 
     void GeneralInputParser::addFloatingPointTypeKey()
@@ -206,63 +173,34 @@ namespace input
         addKeyword(metaData.name, adapt(key), false);
     }
 
-    /**
-     * @brief parse random seed value for PRNG
-     *
-     * @details value not set as default
-     *
-     * @param lineElements
-     * @param lineNumber
-     *
-     * @throws exc::InputFileException if random seed value is invalid,
-     * negative, or exceeds uint_fast32_t range
-     */
-    void GeneralInputParser::parseRandomSeed(
-        const std::vector<std::string> &lineElements,
-        size_t                          lineNumber
-    )
+    void GeneralInputParser::addRandomSeedKey()
     {
-        checkCommand(lineElements, lineNumber);
-
-        constexpr auto maxRandomSeed = static_cast<std::int64_t>(UINT32_MAX);
-
-        auto throwRangeError = [&maxRandomSeed](const auto &value)
-        {
-            throw exc::InputFileException(format(
-                "Random seed value \"{}\" is out of range.\n"
-                "Must be an integer between \"0\" and \"{}\" (inclusive)",
-                value,
-                maxRandomSeed
-            ));
+        const auto metaData = KeyMetadata{
+            .name        = "random_seed",
+            .title       = "Random Seed",
+            .description = "Specifies the random seed for the simulation"
         };
 
-        auto throwValidityError = [&maxRandomSeed](const auto &value)
+        const auto setValue = [](std::uint_fast32_t value)
         {
-            throw exc::InputFileException(format(
-                "Random seed value \"{}\" is invalid.\n"
-                "Must be an integer between \"0\" and \"{}\" (inclusive)",
-                value,
-                maxRandomSeed
-            ));
+            settings::GeneralSettings::setRandomSeed(value);
+            settings::GeneralSettings::setIsRandomSeedSet(true);
         };
 
-        std::uint_fast32_t randomSeed = 0;
+        const auto validator = RangeValidator<std::uint_fast32_t>{
+            0,
+            std::numeric_limits<std::uint32_t>::max()
+        };
 
-        try
-        {
-            randomSeed = utilities::stringToUintFast32t(lineElements[2]);
-        }
-        catch (const std::invalid_argument &)
-        {
-            throwValidityError(lineElements[2]);
-        }
-        catch (const std::out_of_range &)
-        {
-            throwRangeError(lineElements[2]);
-        }
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::uint_fast32_t>{
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(validator)},
+            }
+        );
 
-        settings::GeneralSettings::setIsRandomSeedSet(true);
-        settings::GeneralSettings::setRandomSeed(randomSeed);
+        addKeyword(metaData.name, adapt(key), false);
     }
 
 }   // namespace input

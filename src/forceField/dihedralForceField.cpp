@@ -28,6 +28,7 @@
 #include "forceField.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace ff
@@ -175,7 +176,9 @@ namespace ff
                         molecule4,
                         atomIndices[0],
                         atomIndices[3],
-                        distance14Quantity
+                        distance14Quantity,
+                        potentialSettings.getScale14Coulomb(),
+                        potentialSettings.getScale14VDW()
                     );
 
                 const auto forcexyz =

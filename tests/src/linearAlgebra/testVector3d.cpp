@@ -28,6 +28,7 @@
 #include <iostream>
 #include <limits>
 #include <mstd/units.hpp>
+#include <mstd/utils.hpp>
 #include <string>
 
 #include "staticMatrix.hpp"
@@ -49,11 +50,9 @@ namespace
 
         ~PoisonedStorage() { object->~T(); }
 
-        PoisonedStorage()                                   = default;
-        PoisonedStorage(const PoisonedStorage &)            = delete;
-        PoisonedStorage &operator=(const PoisonedStorage &) = delete;
-        PoisonedStorage(PoisonedStorage &&)                 = delete;
-        PoisonedStorage &operator=(PoisonedStorage &&)      = delete;
+        PoisonedStorage() = default;
+        MSTD_NO_COPY(PoisonedStorage);
+        MSTD_NO_MOVE(PoisonedStorage);
 
        private:
         static T *_construct(std::array<std::byte, sizeof(T)> &storage)

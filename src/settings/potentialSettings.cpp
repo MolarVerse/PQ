@@ -118,9 +118,9 @@ void PotentialSettings::setNonCoulombRadiusCutOffByUser(
  *
  * @param scale14Coulomb
  */
-void PotentialSettings::setScale14Coulomb(double scale14Coulomb)
+void PotentialSettings::setScale14CoulombByUser(double scale14Coulomb)
 {
-    _scale14Coulomb = scale14Coulomb;
+    _scale14Coulomb.setByUser(scale14Coulomb);
 }
 
 /**
@@ -129,9 +129,9 @@ void PotentialSettings::setScale14Coulomb(double scale14Coulomb)
  *
  * @param scale14VanDerWaals
  */
-void PotentialSettings::setScale14VanDerWaals(double scale14VanDerWaals)
+void PotentialSettings::setScale14VanDerWaalsByUser(double scale14VanDerWaals)
 {
-    _scale14VanDerWaals = scale14VanDerWaals;
+    _scale14VanDerWaals.setByUser(scale14VanDerWaals);
 }
 
 /**
@@ -139,9 +139,9 @@ void PotentialSettings::setScale14VanDerWaals(double scale14VanDerWaals)
  *
  * @param epsilon
  */
-void PotentialSettings::setReactionFieldEpsilon(double epsilon)
+void PotentialSettings::setReactionFieldEpsilonByUser(double epsilon)
 {
-    _reactionFieldEpsilon = epsilon;
+    _reactionFieldEpsilon.setByUser(epsilon);
 }
 
 /**
@@ -149,9 +149,9 @@ void PotentialSettings::setReactionFieldEpsilon(double epsilon)
  *
  * @param wolfParameter
  */
-void PotentialSettings::setWolfParameter(const InvDistance& wolfParameter)
+void PotentialSettings::setWolfParameterByUser(const InvDistance& wolfParameter)
 {
-    _wolfParameter = wolfParameter;
+    _wolfParameter.setByUser(wolfParameter);
 }
 
 /********************
@@ -215,23 +215,29 @@ bool PotentialSettings::isNonCoulombRadiusCutOffSetByUser() const
  *
  * @return double
  */
-double PotentialSettings::getScale14Coulomb() { return _scale14Coulomb; }
+double PotentialSettings::getScale14Coulomb() const
+{
+    return _scale14Coulomb.get();
+}
 
 /**
  * @brief get the 1-4 Van der Waals scaling factor
  *
  * @return double
  */
-double PotentialSettings::getScale14VDW() { return _scale14VanDerWaals; }
+double PotentialSettings::getScale14VDW() const
+{
+    return _scale14VanDerWaals.get();
+}
 
 /**
  * @brief get the reaction field epsilon
  *
  * @return double
  */
-double PotentialSettings::getReactionFieldEpsilon()
+double PotentialSettings::getReactionFieldEpsilon() const
 {
-    return _reactionFieldEpsilon;
+    return _reactionFieldEpsilon.get();
 }
 
 /**
@@ -239,4 +245,7 @@ double PotentialSettings::getReactionFieldEpsilon()
  *
  * @return InvDistance
  */
-InvDistance PotentialSettings::getWolfParameter() { return _wolfParameter; }
+InvDistance PotentialSettings::getWolfParameter() const
+{
+    return _wolfParameter.get();
+}

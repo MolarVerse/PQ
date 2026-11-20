@@ -25,6 +25,7 @@
 #include <cmath>
 #include <cstddef>
 #include <memory>
+#include <mstd/utils.hpp>
 #include <string>
 #include <vector>
 
@@ -89,8 +90,7 @@ namespace
     // fixes the random seed for the lifetime of the guard
     struct SeedGuard
     {
-        SeedGuard(SeedGuard &&)            = delete;
-        SeedGuard &operator=(SeedGuard &&) = delete;
+        MSTD_NO_MOVE(SeedGuard);
         explicit SeedGuard(uint_fast32_t seed)
         {
             settings::GeneralSettings::setRandomSeed(seed);
@@ -99,8 +99,7 @@ namespace
 
         ~SeedGuard() { settings::GeneralSettings::setIsRandomSeedSet(false); }
 
-        SeedGuard(const SeedGuard &)            = delete;
-        SeedGuard &operator=(const SeedGuard &) = delete;
+        MSTD_NO_COPY(SeedGuard);
     };
 
     std::vector<Vel3D> velocitiesOf(molsys::SimulationBox &simulationBox)

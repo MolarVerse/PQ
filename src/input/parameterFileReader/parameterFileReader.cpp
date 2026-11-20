@@ -55,7 +55,9 @@ namespace input::parameterFile
     )
         : _fileName(filename), _fp(filename), _engine(engine)
     {
-        _parameterFileSections.push_back(std::make_unique<TypesSection>());
+        _parameterFileSections.push_back(
+            std::make_unique<TypesSection>(potentialSettings)
+        );
         _parameterFileSections.push_back(std::make_unique<BondSection>());
         _parameterFileSections.push_back(std::make_unique<AngleSection>());
         _parameterFileSections.push_back(std::make_unique<DihedralSection>());

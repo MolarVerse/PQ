@@ -66,7 +66,6 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_OPT);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -91,7 +90,6 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -113,7 +111,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -139,7 +136,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setIncludeOutputMetadataByUser(true);
     _settings->timings.setTimeStepByUser(0.5 * fs);
@@ -168,7 +164,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -194,7 +189,6 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(true);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setNumberOfStepsByUser(100U);
 
@@ -202,6 +196,5 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     setup::OutputFilesSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());
 
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     cleanupPrefix();
 }

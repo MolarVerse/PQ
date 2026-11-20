@@ -30,6 +30,7 @@
 #include "forceField.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace ff
@@ -155,7 +156,9 @@ namespace ff
                         molecule3,
                         atomIndices[1],
                         atomIndices[2],
-                        distance23
+                        distance23,
+                        potentialSettings.getScale14Coulomb(),
+                        potentialSettings.getScale14VDW()
                     );
 
                 forcexyz = forceMagnitudeLinker * dPosition23 / distance23;

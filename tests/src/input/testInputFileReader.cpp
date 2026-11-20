@@ -28,6 +28,7 @@
 #include <fstream>
 #include <map>
 #include <memory>
+#include <mstd/utils.hpp>
 #include <sstream>
 #include <vector>
 
@@ -147,6 +148,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(filename, _settings));
 }
 
@@ -163,6 +165,8 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
         inputFile << "rcoulomb = 9.0;\n";
         inputFile << "long_range = reaction-field;\n";
     }
+
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     ASSERT_THROW_MSG(
         input::readInputFile(_fileName, _settings),
@@ -188,12 +192,13 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
         _settings.potentialSettings.getCoulombLongRangeType(),
         CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(_settings.potentialSettings.getReactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
@@ -407,12 +412,8 @@ namespace
 
         ~DestructionTrackingParser() override { *_destroyed = true; }
 
-        DestructionTrackingParser(const DestructionTrackingParser &) = delete;
-        DestructionTrackingParser &operator=(const DestructionTrackingParser &
-        )                                                            = delete;
-        DestructionTrackingParser(DestructionTrackingParser &&)      = delete;
-        DestructionTrackingParser &operator=(DestructionTrackingParser &&
-        )                                                            = delete;
+        MSTD_NO_COPY(DestructionTrackingParser);
+        MSTD_NO_MOVE(DestructionTrackingParser);
     };
 }   // namespace
 

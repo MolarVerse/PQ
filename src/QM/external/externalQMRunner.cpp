@@ -29,6 +29,7 @@
 #include <filesystem>
 #include <format>
 #include <fstream>
+#include <mstd/utils.hpp>
 #include <string>
 #include <thread>
 
@@ -121,10 +122,8 @@ namespace
             }
         }
 
-        ScopedCancelSignals(const ScopedCancelSignals &)            = delete;
-        ScopedCancelSignals &operator=(const ScopedCancelSignals &) = delete;
-        ScopedCancelSignals(ScopedCancelSignals &&)                 = delete;
-        ScopedCancelSignals &operator=(ScopedCancelSignals &&)      = delete;
+        MSTD_NO_COPY(ScopedCancelSignals);
+        MSTD_NO_MOVE(ScopedCancelSignals);
     };
 
     /**
