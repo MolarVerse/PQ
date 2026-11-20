@@ -46,6 +46,7 @@ ast_check_enabled_ids = [
     "noMaybeUnusedParam",
     "noVoidPointerParam",
     "preferMstdCopyMoveMacros",
+    "noInClassMemberDefinition",
 ]
 
 # Per-check configuration — one sub-table per check id.
