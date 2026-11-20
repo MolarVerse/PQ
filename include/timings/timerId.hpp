@@ -40,7 +40,7 @@
     X(Output)              \
     X(Potential)           \
     X(IntraNonBonded)      \
-    X(Virial)              \
+    X(VirialCalc)          \
     X(ResetKinetics)       \
     X(WaterIntraPotential) \
     X(WaterInterPotential) \

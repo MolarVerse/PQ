@@ -48,7 +48,7 @@ namespace virial
      */
     VirialPerMol calculateVirial(molsys::SimulationBox &simulationBox)
     {
-        auto _ = scopedTimer(TimerId::Virial, "calculateVirial");
+        auto _ = scopedTimer(TimerId::VirialCalc, "calculateVirial");
 
         VirialPerMol virial = VirialPerMol::zero();
 
@@ -85,7 +85,7 @@ namespace virial
      */
     VirialPerMol calculateQMVirial(const molsys::SimulationBox &simulationBox)
     {
-        auto _ = scopedTimer(TimerId::Virial, "calculateQMVirial");
+        auto _ = scopedTimer(TimerId::VirialCalc, "calculateQMVirial");
 
         VirialPerMol virial = VirialPerMol::zero();
 
@@ -116,7 +116,8 @@ namespace virial
         const molsys::SimulationBox &simulationBox
     )
     {
-        auto _ = scopedTimer(TimerId::Virial, "intraMolecularVirialCorrection");
+        auto _ =
+            scopedTimer(TimerId::VirialCalc, "intraMolecularVirialCorrection");
 
         VirialPerMol virial = VirialPerMol::zero();
 
