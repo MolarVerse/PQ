@@ -23,6 +23,7 @@
 #include "logOutput.hpp"
 
 #include <format>
+#include <mstd/string.hpp>
 #include <ostream>
 #include <string>
 
@@ -128,7 +129,13 @@ namespace out
      */
     void LogOutput::writeSetupInfo(const std::string &setupInfo)
     {
-        _getFilePointer() << OUTPUT << setupInfo << '\n' << std::flush;
+        std::vector<std::string> lines = mstd::split(setupInfo, "\n");
+        for (const auto &line : lines)
+        {
+            if (line.empty())
+                continue;
+            _getFilePointer() << OUTPUT << line << '\n' << std::flush;
+        }
     }
 
     /**

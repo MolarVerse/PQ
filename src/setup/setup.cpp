@@ -22,6 +22,8 @@
 
 #include "setup.hpp"
 
+#include <format>
+
 #include "celllistSetup.hpp"
 #include "constraintsSetup.hpp"
 #include "engine.hpp"
@@ -34,6 +36,7 @@
 #include "inputFileReader.hpp"
 #include "intraNonBondedReader.hpp"
 #include "intraNonBondedSetup.hpp"
+#include "logOutput.hpp"
 #include "manostatSetup.hpp"
 #include "moldescriptorReader.hpp"
 #include "optimizerSetup.hpp"
@@ -46,6 +49,7 @@
 #include "restartFileReader.hpp"
 #include "ringPolymerSetup.hpp"
 #include "simulationBoxSetup.hpp"
+#include "stdoutOutput.hpp"
 #include "thermostatSetup.hpp"
 #include "topologyReader.hpp"
 #include "velocityVerlet.hpp"
@@ -77,13 +81,15 @@ namespace setup
 
         startSetup();
 
+        setupOutputFiles(engine);
+
+        writeEngineSetupInfo(engine.getLogOutput());
+
         // needs to happen before readFiles(): the parameter file reader
         // dynamic_casts the non-Coulomb potential to its concrete type
         // while parsing the NONCOULOMBICS section
         if (settings::GeneralSettings::isMMActivated())
             setupNonCoulombPotentialType(engine);
-
-        setupOutputFiles(engine);
 
         readFiles(engine, nhSettings, timingsSettings, potentialSettings);
 
@@ -153,6 +159,7 @@ namespace setup
     void setupEngine(engine::Engine& engine)
     {
         const auto& settings = engine.getSettings();
+
         if (settings::GeneralSettings::isQMActivated())
             setupQM(engine);
 
@@ -215,6 +222,24 @@ namespace setup
             setupOptimizer(engine);
 
         engine.getLogOutput().flushQueuedWarnings();
+    }
+
+    /**
+     * @brief Writes the engine setup information to the log output.
+     *
+     * This function logs the general engine setup information, including
+     * the time step, starting step count, and the total number of steps.
+     *
+     * @param settings The settings object containing the engine configuration.
+     */
+    void writeEngineSetupInfo(out::LogOutput& logOutput)
+    {
+        const auto msg = std::format(
+            "Engine for jobtype: {}",
+            JobTypeMeta::toString(settings::GeneralSettings::getJobtype())
+        );
+        logOutput.writeSetup(msg);
+        out::StdoutOutput::writeSetup(msg);
     }
 
 }   // namespace setup

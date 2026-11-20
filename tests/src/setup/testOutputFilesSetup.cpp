@@ -32,6 +32,7 @@
 #include "h5mdOutput.hpp"
 #include "outputFileSettings.hpp"
 #include "outputFilesSetup.hpp"
+#include "setup.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
@@ -195,7 +196,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::H5MD);
     _settings->timings.setTimeStepByUser(0.5 * fs);
@@ -240,4 +240,26 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
     EXPECT_NO_THROW(setup.setup());
 
     cleanupPrefix();
+}
+
+/**
+ * @brief tests that the engine setup info writes the job type to the log file
+ *
+ */
+TEST_F(TestSetup, writeEngineSetupInfo)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    auto &logOutput = _engine->getLogOutput();
+    logOutput.setFilename("default.log", false);
+
+    setup::writeEngineSetupInfo(logOutput);
+    logOutput.close();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);
+    EXPECT_EQ(line, "INFO:    Setup of Engine for jobtype: MM-MD");
+
+    file.close();
+    std::remove("default.log");
 }

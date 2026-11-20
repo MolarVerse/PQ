@@ -56,10 +56,8 @@ using PressureTensor3D = linalg::StaticMatrix3x3<
 using Compressibility = mstd::quantity<
     mstd::units::compressibility[mstd::units::one / mstd::units::Pa]>;
 
-using Temperature = mstd::units::quantity_point<
-    mstd::units::thermodynamic_temperature[mstd::units::K]>;
-using TemperatureDiff =
-    mstd::quantity<mstd::units::thermodynamic_temperature[mstd::units::K]>;
+using Temperature     = mstd::units::quantity_point<mstd::units::K>;
+using TemperatureDiff = mstd::quantity<mstd::units::K>;
 
 using Frequency =
     mstd::units::quantity<mstd::units::frequency[mstd::units::Hz]>;

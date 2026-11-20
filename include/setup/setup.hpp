@@ -32,10 +32,16 @@ class ReferenceSettings;
 class NoseHooverSettings;
 class TimingsSettings;
 class PotentialSettings;
+
 namespace timings
 {
     class Timer;   // forward declaration
 }   // namespace timings
+
+namespace out
+{
+    class LogOutput;   // forward declaration
+}   // namespace out
 
 /**
  * @namespace setup
@@ -65,6 +71,8 @@ namespace setup
         PotentialSettings &
     );
     void setupEngine(engine::Engine &);
+
+    void writeEngineSetupInfo(out::LogOutput &);
 }   // namespace setup
 
 #endif   // SETUP__SETUP_HPP
