@@ -49,6 +49,8 @@
 
 MSTD_ENUM(TimerId, std::uint8_t, TIMER_ID_LIST);
 
+#undef TIMER_ID_LIST
+
 std::string toString(TimerId id);
 
 #endif   // TIMINGS__TIMER_ID_HPP
