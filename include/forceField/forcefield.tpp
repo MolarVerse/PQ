@@ -24,7 +24,6 @@
 #define FORCE_FIELD__FORCEFIELD_TPP
 
 #include "forceField.hpp"
-#include "potentialSettings.hpp"
 
 namespace ff
 {
@@ -57,7 +56,9 @@ namespace ff
         const molsys::Molecule      *molecule_j,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
-        double                       distance
+        double                       distance,
+        double                       scale14Coulomb,
+        double                       scale14VDW
     )
     {
         const auto charge1 = molecule_i->getPartialCharge(atomIndex1);
@@ -70,11 +71,9 @@ namespace ff
 
         if constexpr (std::is_same_v<T, DihedralForceField>)
         {
-            const auto scale = PotentialSettings::getScale14Coulomb();
-
             // NOLINTBEGIN(readability-magic-numbers)
-            coulombEnergy *= (1.0 - scale);
-            coulombForce  *= (1.0 - scale);
+            coulombEnergy *= (1.0 - scale14Coulomb);
+            coulombForce  *= (1.0 - scale14Coulomb);
             // NOLINTEND(readability-magic-numbers)
         }
 
@@ -100,11 +99,9 @@ namespace ff
 
             if constexpr (std::is_same_v<T, DihedralForceField>)
             {
-                const auto scale = PotentialSettings::getScale14VDW();
-
                 // NOLINTBEGIN(readability-magic-numbers)
-                nonCoulombEnergy *= (1.0 - scale);
-                nonCoulombForce  *= (1.0 - scale);
+                nonCoulombEnergy *= (1.0 - scale14VDW);
+                nonCoulombForce  *= (1.0 - scale14VDW);
                 // NOLINTEND(readability-magic-numbers)
             }
 

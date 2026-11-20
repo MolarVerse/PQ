@@ -128,8 +128,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
     bondForceField.setIsLinker(false);
 
-    PotentialSettings::setScale14Coulomb(0.75);
-    PotentialSettings::setScale14VanDerWaals(0.5);
+    potentialSettings.setScale14CoulombByUser(0.75);
+    potentialSettings.setScale14VanDerWaalsByUser(0.5);
 
     bondForceField.calculateEnergyAndForces(
         box,

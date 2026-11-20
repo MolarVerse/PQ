@@ -39,11 +39,12 @@ TEST_F(TestParameterFileSection, processSectionTypes)
 {
     std::vector<std::string> lineElements =
         {"1", "2", "1.0", "0", "s", "f", "0.23", "0.99"};
-    input::parameterFile::TypesSection typesSection;
+    PotentialSettings                  potentialSettings;
+    input::parameterFile::TypesSection typesSection(potentialSettings);
     size_t                             lineNumber = 0;
     typesSection.process(lineElements, *_engine, lineNumber);
-    EXPECT_EQ(PotentialSettings::getScale14Coulomb(), 0.23);
-    EXPECT_EQ(PotentialSettings::getScale14VDW(), 0.99);
+    EXPECT_EQ(potentialSettings.getScale14Coulomb(), 0.23);
+    EXPECT_EQ(potentialSettings.getScale14VDW(), 0.99);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
     EXPECT_THROW_MSG(
@@ -90,7 +91,8 @@ TEST_F(TestParameterFileSection, processSectionTypes)
 
 TEST_F(TestParameterFileSection, endedNormallyTypes)
 {
-    auto typesSection = input::parameterFile::TypesSection();
+    PotentialSettings potentialSettings;
+    auto typesSection = input::parameterFile::TypesSection(potentialSettings);
     ASSERT_NO_THROW(typesSection.endedNormally(true));
 
     ASSERT_THROW_MSG(
@@ -106,7 +108,8 @@ TEST_F(TestParameterFileSection, endedNormallyTypes)
  */
 TEST_F(TestParameterFileSection, dummyHeaderTest)
 {
-    auto typesSection = input::parameterFile::TypesSection();
+    PotentialSettings potentialSettings;
+    auto typesSection = input::parameterFile::TypesSection(potentialSettings);
     auto lineElements = std::vector<std::string>({"dummy"});
     EXPECT_NO_THROW(typesSection.processHeader(lineElements, *_engine, 0));
 }

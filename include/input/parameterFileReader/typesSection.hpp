@@ -23,9 +23,12 @@
 #ifndef INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP
 #define INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP
 
+#include <mstd/types.hpp>
 #include <string>
 
 #include "parameterFileSection.hpp"
+
+class PotentialSettings;
 
 namespace input::parameterFile
 {
@@ -37,7 +40,11 @@ namespace input::parameterFile
      */
     class TypesSection : public ParameterFileSection
     {
+        mstd::Ref<PotentialSettings> _potentialSettings;
+
        public:
+        explicit TypesSection(PotentialSettings &potentialSettings);
+
         [[nodiscard]] std::string keyword() override;
 
         void process(

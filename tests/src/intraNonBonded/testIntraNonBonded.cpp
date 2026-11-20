@@ -190,15 +190,15 @@ TEST_F(TestIntraNonBonded, calculate)
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
 
-    PotentialSettings::setScale14Coulomb(0.75);
-    PotentialSettings::setScale14VanDerWaals(0.75);
+    PotentialSettings potentialSettings;
+    potentialSettings.setScale14CoulombByUser(0.75);
+    potentialSettings.setScale14VanDerWaalsByUser(0.75);
 
     auto intraNonBondedType =
         intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(10.0);
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
     _setNonCoulombPairsMatrix(

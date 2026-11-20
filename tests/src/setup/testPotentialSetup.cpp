@@ -51,7 +51,7 @@ TEST_F(TestSetup, setupReactionFieldPotential)
     );
     setup::PotentialSetup potentialSetup(*_engine);
 
-    PotentialSettings::setReactionFieldEpsilon(80.0);
+    _settings->potentialSettings.setReactionFieldEpsilonByUser(80.0);
     EXPECT_NO_THROW(potentialSetup.setup());
     test::checkType(
         &(_engine->getPotential()->getCoulombPotential()),
