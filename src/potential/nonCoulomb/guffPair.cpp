@@ -84,12 +84,8 @@ namespace pot
         //   E = coeff / r^n          (coeff in kcal/mol * Å^n)
         //   F = -dE/dr = n * E / r
         // Skipped entirely if coeff == 0.
-        auto addPowerTerms = [this](
-                                 const Pos    &distance,
-                                 size_t        index,
-                                 EnergyPerMol &energy,
-                                 Force        &force
-                             )
+        auto addPowerTerms =
+            [this, &distance, &cumulativeEnergy, &cumulativeForce](size_t index)
         {
             const auto coeff = _coefficients.at(index);
             if (coeff == 0.0)
@@ -100,8 +96,9 @@ namespace pot
             const auto distance_power =
                 mstd::pow(distance.numerical_value_in(Pos::unit), power);
 
-            energy += coeff / distance_power * kcal_per_mol;
-            force += power * (coeff / distance_power * kcal_per_mol) / distance;
+            cumulativeEnergy += coeff / distance_power * kcal_per_mol;
+            cumulativeForce +=
+                power * (coeff / distance_power * kcal_per_mol) / distance;
         };
 
         // Fermi-like (logistic) term, coefficients [coeff, cexp, rExp]:
@@ -109,12 +106,8 @@ namespace pot
         //   E = coeff / (1 + h)
         //   F = -dE/dr = E * cexp * h / (1 + h)
         // Skipped entirely if coeff == 0.
-        auto addExpTerm = [this](
-                              const Pos    &distance,
-                              size_t        index,
-                              EnergyPerMol &energy,
-                              Force        &force
-                          )
+        auto addExpTerm =
+            [this, &distance, &cumulativeEnergy, &cumulativeForce](size_t index)
         {
             const auto coeff = _coefficients.at(index);
             if (coeff == 0.0)
@@ -127,8 +120,8 @@ namespace pot
 
             const auto energy_ = coeff * kcal_per_mol / (1 + helper);
 
-            energy += energy_;
-            force  += energy_ * cexp * helper / (1 + helper);
+            cumulativeEnergy += energy_;
+            cumulativeForce  += energy_ * cexp * helper / (1 + helper);
         };
 
         // Stretched-exponential term, coefficients [coeff, cexp, rExp, n]:
@@ -136,12 +129,8 @@ namespace pot
         //   E = coeff * exp(cexp * d)       (cexp in 1/Å^n)
         //   F = -dE/dr = -cexp * n * d / (r - rExp) * E
         // Skipped entirely if coeff == 0.
-        auto addPowExpTerm = [this](
-                                 const Pos    &distance,
-                                 size_t        index,
-                                 EnergyPerMol &energy,
-                                 Force        &force
-                             )
+        auto addPowExpTerm =
+            [this, &distance, &cumulativeEnergy, &cumulativeForce](size_t index)
         {
             const auto coeff = _coefficients.at(index);
             if (coeff == 0.0)
@@ -155,32 +144,33 @@ namespace pot
                 ::pow((distance - rExp).numerical_value_in(Pos::unit), power);
             const auto helper = coeff * ::exp(cexp * distance_n) * kcal_per_mol;
 
-            energy += helper;
-            force  += -cexp * power * distance_n / (distance - rExp) * helper;
+            cumulativeEnergy += helper;
+            cumulativeForce +=
+                -cexp * power * distance_n / (distance - rExp) * helper;
         };
 
         size_t index = 0;
 
         // the first four terms are power terms
-        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
+        addPowerTerms(index);
         index += 2;
-        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
+        addPowerTerms(index);
         index += 2;
-        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
+        addPowerTerms(index);
         index += 2;
-        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
+        addPowerTerms(index);
         index += 2;
 
         // the next two terms are exponential terms
-        addExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
+        addExpTerm(index);
         index += 3;
-        addExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
+        addExpTerm(index);
         index += 3;
 
         // the next two terms are power-exponential terms
-        addPowExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
+        addPowExpTerm(index);
         index += 4;
-        addPowExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
+        addPowExpTerm(index);
 
         cumulativeEnergy += -get_energyCutoff() -
                             get_forceCutoff() * (get_radialCutoff() - distance);
