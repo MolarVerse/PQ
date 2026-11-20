@@ -24,13 +24,17 @@
 
 #include <gtest/gtest.h>
 
+#include <fstream>
 #include <string>
 #include <vector>
 
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "moldescriptorReader.hpp"
 #include "restartFileReader.hpp"
 #include "restartFileSection.hpp"
+#include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests determineSection base on the first element of the line
@@ -81,4 +85,88 @@ TEST_F(TestRstFileReader, rstFileReading)
             _settings.timings
         )
     );
+}
+
+/**
+ * @brief tests that reading an MD restart file writes the time step, the
+ * starting step count and the number of steps to the log file
+ *
+ */
+TEST_F(TestRstFileReader, writeStepInfoMD)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.timings.setTimeStepByUser(0.5 * fs);
+    _settings.timings.setNumberOfStepsByUser(100);
+    _settings.fileSettings.setMolDescriptorFileNameByUser(
+        "examples/setup/moldescriptor.dat"
+    );
+    _settings.fileSettings.setStartFileNameByUser(
+        "examples/setup/h2o-qmcf.rst"
+    );
+    _engine->getLogOutput().setFilename("default.log", false);
+
+    input::molDescriptor::MoldescriptorReader(*_engine).read();
+    input::restartFile::readRestartFile(
+        *_engine,
+        _settings.noseHooverSettings,
+        _settings.timings
+    );
+    _engine->getLogOutput().close();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);   // "Start File" message
+    getline(file, line);   // empty line after it
+    getline(file, line);
+    EXPECT_EQ(line, "         Time Step:           0.5 fs");
+    getline(file, line);
+    EXPECT_EQ(line, "         Starting Step Count: 1232");
+    getline(file, line);
+    EXPECT_EQ(line, "         Number of steps:     100");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+
+    file.close();
+    ASSERT_TRUE(std::remove("default.log") == 0);
+}
+
+/**
+ * @brief tests that reading an optimizer restart file writes the starting
+ * step count and the maximum number of optimization steps to the log file
+ *
+ */
+TEST_F(TestRstFileReader, writeStepInfoOpt)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.timings.setNumberOfStepsByUser(100);
+    _settings.fileSettings.setMolDescriptorFileNameByUser(
+        "examples/setup/moldescriptor.dat"
+    );
+    _settings.fileSettings.setStartFileNameByUser(
+        "examples/setup/h2o-qmcf.rst"
+    );
+    _engine->getLogOutput().setFilename("default.log", false);
+
+    input::molDescriptor::MoldescriptorReader(*_engine).read();
+    input::restartFile::readRestartFile(
+        *_engine,
+        _settings.noseHooverSettings,
+        _settings.timings
+    );
+    _engine->getLogOutput().close();
+
+    std::ifstream file("default.log");
+    std::string   line;
+    getline(file, line);   // "Start File" message
+    getline(file, line);   // empty line after it
+    getline(file, line);
+    EXPECT_EQ(line, "         Starting Step Count:                  1232");
+    getline(file, line);
+    EXPECT_EQ(line, "         Maximum Number of optimization steps: 100");
+    getline(file, line);
+    EXPECT_EQ(line, "");
+
+    file.close();
+    ASSERT_TRUE(std::remove("default.log") == 0);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 }

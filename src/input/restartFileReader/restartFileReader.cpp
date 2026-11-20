@@ -22,6 +22,7 @@
 
 #include "restartFileReader.hpp"
 
+#include <format>
 #include <fstream>
 #include <string>
 
@@ -30,9 +31,11 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
+#include "generalSettings.hpp"
 #include "noseHooverSection.hpp"
 #include "stepCountSection.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input::restartFile
 {
@@ -60,7 +63,8 @@ namespace input::restartFile
         : _fileName(filename),
           _fp(filename),
           _engine(engine),
-          _atomSection(std::make_unique<AtomSection>())
+          _atomSection(std::make_unique<AtomSection>()),
+          _timingsSettings(timingsSettings)
     {
         _sections.push_back(std::make_unique<BoxSection>());
         _sections.push_back(
@@ -116,6 +120,8 @@ namespace input::restartFile
             section->process(lineElements, _engine, lineNumber);
             ++lineNumber;
         }
+
+        _writeStepInfo();
     }
 
     /**
@@ -142,7 +148,8 @@ namespace input::restartFile
         const auto filename = fileSettings.getStartFileName();
 
         out::StdoutOutput::writeRead("Start File", filename);
-        engine.getLogOutput().writeRead("Start File", filename);
+        auto &logOutput = engine.getLogOutput();
+        logOutput.writeRead("Start File", filename);
 
         RestartFileReader rstFileReader(
             filename,
@@ -151,6 +158,46 @@ namespace input::restartFile
             timingsSettings
         );
         rstFileReader.read();
+    }
+
+    /**
+     * @brief writes the step information to the log file
+     *
+     */
+    void RestartFileReader::_writeStepInfo()
+    {
+        auto &logFile = _engine.getLogOutput();
+
+        if (settings::GeneralSettings::isMDJobType())
+        {
+            const auto  timeStep  = _timingsSettings->getTimeStep().in(fs);
+            const auto  startStep = _timingsSettings->getStartingStepCount();
+            const auto  nSteps    = _timingsSettings->getNumberOfSteps();
+            std::string msg;
+            msg += std::format("Time Step:           {}", timeStep) + "\n";
+            msg += std::format("Starting Step Count: {}", startStep) + "\n";
+            msg += std::format("Number of steps:     {}", nSteps) + "\n";
+            logFile.writeSetupInfo(msg);
+        }
+        else if (settings::GeneralSettings::isOptJobType())
+        {
+            const auto  startStep = _timingsSettings->getStartingStepCount();
+            const auto  nSteps    = _timingsSettings->getNumberOfSteps();
+            std::string msg;
+            msg += std::format(
+                       "Starting Step Count:                  {}",
+                       startStep
+                   ) +
+                   "\n";
+            msg += std::format(
+                       "Maximum Number of optimization steps: {}",
+                       nSteps
+                   ) +
+                   "\n";
+            logFile.writeSetupInfo(msg);
+        }
+
+        logFile.writeEmptyLine();
     }
 
 }   // namespace input::restartFile
