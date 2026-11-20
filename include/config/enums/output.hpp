@@ -34,7 +34,8 @@ enum class TrajectoryFormat : std::uint8_t;
 
 #define TRAJECTORY_FORMAT_LIST(X) \
     X(XYZ)                        \
-    X(EXTXYZ)
+    X(EXTXYZ)                     \
+    X(H5MD)
 
 MSTD_ENUM(TrajectoryFormat, std::uint8_t, TRAJECTORY_FORMAT_LIST)
 

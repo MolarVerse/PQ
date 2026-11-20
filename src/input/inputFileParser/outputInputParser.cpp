@@ -83,6 +83,7 @@ namespace input
         addRestartFilenameKeyword();
         addChargeFilenameKeyword();
         addExtxyzFilenameKeyword();
+        addH5mdFilenameKeyword();
         addMomentumFilenameKeyword();
         addVirialFilenameKeyword();
         addStressFilenameKeyword();
@@ -554,8 +555,8 @@ namespace input
             .title = "Trajectory format",
             .description =
                 "File format of the MD trajectory: xyz (separate xyz, vel, "
-                "force and chrg files) or extxyz (one extended xyz file in PQ "
-                "units)"
+                "force and chrg files), extxyz (one extended xyz file in PQ "
+                "units) or h5md (one H5MD/HDF5 file in PQ units)"
         };
 
         const auto setValue = [this](TrajectoryFormat value)
@@ -575,7 +576,7 @@ namespace input
     /**
      * @brief add extxyz filename keyword to the input parser
      *
-     * @details the extxyz file is only written if this keyword is set
+     * @details the H5MD file is only written if traj_format = h5md
      */
     void OutputInputParser::addExtxyzFilenameKeyword()
     {
@@ -594,6 +595,35 @@ namespace input
             KeyRegistry<std::string>{
                 .metadata     = metaData,
                 .defaultValue = DefaultFiles::extxyzFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add h5md filename keyword to the input parser
+     *
+     * @details the H5MD file is only written if traj_format = h5md
+     */
+    void OutputInputParser::addH5mdFilenameKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "h5md_file",
+            .title = "H5MD filename",
+            .description =
+                "Filename for the H5MD trajectory, written if "
+                "traj_format = h5md"
+        };
+
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setH5mdFileNameByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::h5mdFile,
                 .onSet        = setValue,
             }
         );
