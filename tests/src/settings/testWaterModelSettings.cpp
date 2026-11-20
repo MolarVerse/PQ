@@ -276,13 +276,10 @@ namespace
     Angle hohAngle(const RigidWaterGeometry &geometry)
     {
         return 2.0 *
-               Angle(
-                   ::asin(
-                       0.5 *
-                       (geometry.dHH / geometry.dOH).numerical_value_in(one)
-                   ) *
-                   rad
-               );
+               ::asin(
+                   0.5 * (geometry.dHH / geometry.dOH).numerical_value_in(one)
+               ) *
+               rad;
     }
 
     std::optional<RigidWaterGeometry> geometryOf(const WaterIntraModel model)
