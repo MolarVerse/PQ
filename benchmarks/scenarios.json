@@ -1,0 +1,58 @@
+[
+  {
+    "name": "example_h2o_mm",
+    "source": "examples/h2o_mm",
+    "input": "run-01.in",
+    "steps": 12,
+    "count_steps": 1,
+    "description": "6000 atoms of water, GUFF, Berendsen thermostat and manostat, cell list"
+  },
+  {
+    "name": "example_h2o_mm_mshake",
+    "source": "examples/h2o_mm-mshake",
+    "input": "run-01.in",
+    "steps": 6,
+    "count_steps": 1,
+    "description": "2000 rigid TIP3P waters with M-SHAKE"
+  },
+  {
+    "name": "example_amyloid_classical",
+    "source": "examples/amyloid-classical",
+    "input": "run-01.in",
+    "steps": 2,
+    "count_steps": 1,
+    "description": "25808 atoms, force field, M-SHAKE water, Berendsen thermostat and manostat"
+  },
+  {
+    "name": "integration_cgo",
+    "source": "integration_tests/cgo.zip:cgo",
+    "input": "run-01.in",
+    "steps": 40,
+    "count_steps": 2,
+    "description": "1475 atoms, Buckingham and GUFF, Wolf Coulomb, brute-force neighbours, NVE"
+  },
+  {
+    "name": "integration_cgo_cell_list",
+    "source": "integration_tests/cgo.zip:cgo",
+    "input": "run-01_celllist.in",
+    "steps": 40,
+    "count_steps": 2,
+    "description": "the same with the cell list"
+  },
+  {
+    "name": "integration_cgo_npt",
+    "source": "integration_tests/cgo.zip:cgo",
+    "input": "run-01_NPT.in",
+    "steps": 40,
+    "count_steps": 2,
+    "description": "the same with a Berendsen thermostat and manostat and output every second step"
+  },
+  {
+    "name": "integration_chig",
+    "source": "integration_tests/chig.zip:chig",
+    "input": "run-01.in",
+    "steps": 1,
+    "count_steps": 1,
+    "description": "chignolin in water, 7382 atoms, force field with SHAKE/RATTLE, Wolf Coulomb"
+  }
+]

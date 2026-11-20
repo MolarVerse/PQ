@@ -114,25 +114,28 @@ namespace setup
     }
 
     /**
-     * @brief setup inner region center
+     * @brief validate the inner region center
      *
-     * @details This function determines the indices of the atoms that mark the
-     * center of the inner region of hybrid type calculations. If inner region
-     * center atoms are specified in the settings, those atom indices are used.
-     * If no inner region center is specified, atom 0 (e.g. the first atom) is
-     * used as the default center. All determined atom indices are added to the
-     * inner region center list in the simulation box.
-     *
+     * @throw exc::UserInputException if an atom index is out of range
      */
     void HybridSetup::setupInnerRegionCenter()
     {
-        const auto innerRegionCenter =
-            settings::HybridSettings::getInnerRegionCenter();
+        const auto numberOfAtoms =
+            _engine.getSimulationBox().getNumberOfAtoms();
 
-        _engine.getSimulationBox().addInnerRegionCenterAtoms(
-            innerRegionCenter ? innerRegionCenter.value()
-                              : std::vector<size_t>{0}
-        );
+        for (const auto index :
+             _engine.getSettings().hybridSettings.getInnerRegionCenter())
+        {
+            if (index >= numberOfAtoms)
+            {
+                throw exc::UserInputException(
+                    std::format(
+                        "Inner region center atom index {} out of range",
+                        index
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -142,7 +145,7 @@ namespace setup
     void HybridSetup::setupForcedCoreList()
     {
         _engine.getSimulationBox().setupForcedCoreMolecules(
-            settings::HybridSettings::getForcedCoreList()
+            _engine.getSettings().hybridSettings.getForcedCoreList()
         );
     }
 
@@ -153,7 +156,7 @@ namespace setup
     void HybridSetup::setupForcedLayerList()
     {
         _engine.getSimulationBox().setupForcedLayerMolecules(
-            settings::HybridSettings::getForcedLayerList()
+            _engine.getSettings().hybridSettings.getForcedLayerList()
         );
     }
 
@@ -164,7 +167,7 @@ namespace setup
     void HybridSetup::setupForcedOuterList()
     {
         _engine.getSimulationBox().setupForcedOuterMolecules(
-            settings::HybridSettings::getForcedOuterList()
+            _engine.getSettings().hybridSettings.getForcedOuterList()
         );
     }
 
@@ -183,12 +186,14 @@ namespace setup
      */
     void HybridSetup::checkZoneRadii()
     {
-        const auto coreRadius  = settings::HybridSettings::getCoreRadius();
-        const auto layerRadius = settings::HybridSettings::getLayerRadius();
+        const auto coreRadius =
+            _engine.getSettings().hybridSettings.getCoreRadius();
+        const auto layerRadius =
+            _engine.getSettings().hybridSettings.getLayerRadius();
         const auto smoothingRegionThickness =
-            settings::HybridSettings::getSmoothingRegionThickness();
+            _engine.getSettings().hybridSettings.getSmoothingRegionThickness();
         const auto pointChargeThickness =
-            settings::HybridSettings::getPointChargeThickness();
+            _engine.getSettings().hybridSettings.getPointChargeThickness();
         const auto minimalBoxDimension =
             _engine.getSimulationBox().getMinimalBoxDimension();
 
@@ -263,7 +268,7 @@ namespace setup
     void HybridSetup::validateQMChargeSettings()
     {
         const auto mmChargesRequested =
-            !settings::HybridSettings::getUseQMCharges();
+            !_engine.getSettings().hybridSettings.getUseQMCharges();
         const auto qmAtomsPresent =
             _engine.getSimulationBox().moleculeTypeExists(MolType{0});
 
@@ -316,22 +321,23 @@ namespace setup
 
         const auto jobtype = settings::GeneralSettings::getJobtype();
         const auto smoothingMethod =
-            settings::HybridSettings::getSmoothingMethod();
-        const auto innerRegionCenterSettings =
-            settings::HybridSettings::getInnerRegionCenter();
+            _engine.getSettings().hybridSettings.getSmoothingMethod();
         const auto innerRegionCenter =
-            innerRegionCenterSettings.value_or(std::vector<size_t>{0});
+            _engine.getSettings().hybridSettings.getInnerRegionCenter();
         const auto forcedCoreList =
-            settings::HybridSettings::getForcedCoreList();
+            _engine.getSettings().hybridSettings.getForcedCoreList();
         const auto forcedOuterList =
-            settings::HybridSettings::getForcedOuterList();
-        const auto useQMCharges = settings::HybridSettings::getUseQMCharges();
-        const auto coreRadius   = settings::HybridSettings::getCoreRadius();
-        const auto layerRadius  = settings::HybridSettings::getLayerRadius();
+            _engine.getSettings().hybridSettings.getForcedOuterList();
+        const auto useQMCharges =
+            _engine.getSettings().hybridSettings.getUseQMCharges();
+        const auto coreRadius =
+            _engine.getSettings().hybridSettings.getCoreRadius();
+        const auto layerRadius =
+            _engine.getSettings().hybridSettings.getLayerRadius();
         const auto smoothingRegionThickness =
-            settings::HybridSettings::getSmoothingRegionThickness();
+            _engine.getSettings().hybridSettings.getSmoothingRegionThickness();
         const auto pointChargeThickness =
-            settings::HybridSettings::getPointChargeThickness();
+            _engine.getSettings().hybridSettings.getPointChargeThickness();
 
         const auto formatIndexList =
             []<typename T>(const std::vector<T> &indices)

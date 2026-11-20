@@ -82,7 +82,6 @@ namespace molsys
 
         Pos3D                              _centerOfMass = {Pos::zero()};
         std::vector<std::shared_ptr<Atom>> _atoms;
-        std::vector<size_t>                _innerRegionCenterAtomIndices;
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
@@ -171,7 +170,6 @@ namespace molsys
          * QMMM related methods *
          ************************/
 
-        void addInnerRegionCenterAtoms(const std::vector<size_t>& atomIndices);
         void setupForcedCoreMolecules(const std::vector<int>& moleculeIndices);
         void setupForcedLayerMolecules(const std::vector<int>& moleculeIndices);
         void setupForcedOuterMolecules(const std::vector<int>& moleculeIndices);

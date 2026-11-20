@@ -1,0 +1,1 @@
+- Add integration tests for the cell list together with the Berendsen manostat: the NPT run against its reference, and a run with a fast manostat in which the box moves by 15% and the number of neighbouring cells changes, compared frame by frame with the brute-force run.

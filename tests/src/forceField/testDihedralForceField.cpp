@@ -31,6 +31,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -53,7 +54,8 @@ class TestDihedralForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 {
-    auto box = molsys::SimulationBox();
+    const HybridSettings hybridSettings;
+    auto                 box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
@@ -138,7 +140,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         false,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(
@@ -267,7 +270,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         true,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(
@@ -396,7 +400,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         false,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(

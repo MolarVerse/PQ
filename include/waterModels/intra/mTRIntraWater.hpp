@@ -33,6 +33,7 @@ namespace waterModel
     class MTRIntraWater : public IntraWater
     {
        public:
+        using IntraWater::IntraWater;
         void calculate(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
@@ -73,6 +74,8 @@ namespace waterModel
             (mstd::units::angstrom * mstd::units::angstrom);
 
        public:
+        using MTRIntraWater::MTRIntraWater;
+
         [[nodiscard]]
         Distance getEqOHDistance() const override
         {
@@ -117,6 +120,7 @@ namespace waterModel
             (mstd::units::angstrom * mstd::units::angstrom);
 
        public:
+        using MTRIntraWater::MTRIntraWater;
         [[nodiscard]]
         Distance getEqOHDistance() const override
         {

@@ -154,7 +154,8 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
             _simulationBox,
             _physicalData,
             molsys::Periodicity::XYZ,
-            settings.fileSettings
+            settings.fileSettings,
+            settings.hybridSettings
         );
         FAIL() << "Expected the QM timeout to throw";
     }
@@ -176,7 +177,8 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
                 _simulationBox,
                 _physicalData,
                 molsys::Periodicity::XYZ,
-                settings.fileSettings
+                settings.fileSettings,
+                settings.hybridSettings
             )
     );
 }
@@ -192,6 +194,7 @@ TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
         _simulationBox,
         _physicalData,
         molsys::Periodicity::XYZ,
-        settings.fileSettings
+        settings.fileSettings,
+        settings.hybridSettings
     ));
 }

@@ -81,7 +81,8 @@ namespace input
      * qm_script
      * "<string>"
      */
-    HybridInputParser::HybridInputParser()
+    HybridInputParser::HybridInputParser(HybridSettings &hybridSettings)
+        : _hybridSettings(hybridSettings)
     {
         addInnerRegionCenterKey();
         addForcedCoreListKey();
@@ -105,11 +106,11 @@ namespace input
                 "calculations",
         };
 
-        const auto setValue = [](const SelectionTag &selection)
+        const auto setValue = [this](const SelectionTag &selection)
         {
             if (selection.expression.has_value())
             {
-                settings::HybridSettings::setInnerRegionCenterExpression(
+                _hybridSettings->setInnerRegionCenterExpression(
                     *selection.expression
                 );
                 return;
@@ -132,7 +133,7 @@ namespace input
                 convertedIndices.push_back(static_cast<size_t>(index));
             }
 
-            settings::HybridSettings::setInnerRegionCenter(convertedIndices);
+            _hybridSettings->setInnerRegionCenterByUser(convertedIndices);
         };
 
         auto &key = _getRegistry().registerKey(
@@ -156,8 +157,8 @@ namespace input
             .errorMessage = moleculeIndexError("forced_core_list"),
         };
 
-        const auto setValue = [](const SelectionTag &selection)
-        { settings::HybridSettings::setForcedCoreList(selection.indices); };
+        const auto setValue = [this](const SelectionTag &selection)
+        { _hybridSettings->setForcedCoreListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
@@ -181,8 +182,8 @@ namespace input
             .errorMessage = moleculeIndexError("forced_layer_list"),
         };
 
-        const auto setValue = [](const SelectionTag &selection)
-        { settings::HybridSettings::setForcedLayerList(selection.indices); };
+        const auto setValue = [this](const SelectionTag &selection)
+        { _hybridSettings->setForcedLayerListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
@@ -206,8 +207,8 @@ namespace input
             .errorMessage = moleculeIndexError("forced_outer_list"),
         };
 
-        const auto setValue = [](const SelectionTag &selection)
-        { settings::HybridSettings::setForcedOuterList(selection.indices); };
+        const auto setValue = [this](const SelectionTag &selection)
+        { _hybridSettings->setForcedOuterListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
@@ -230,15 +231,15 @@ namespace input
                 "calculations",
         };
 
-        const auto setValue = [](QMCharges value)
+        const auto setValue = [this](QMCharges value)
         {
             switch (value)
             {
                 case QMCharges::QM:
-                    settings::HybridSettings::setUseQMCharges(true);
+                    _hybridSettings->setUseQMChargesByUser(true);
                     break;
                 case QMCharges::MM:
-                    settings::HybridSettings::setUseQMCharges(false);
+                    _hybridSettings->setUseQMChargesByUser(false);
                     break;
             }
         };
@@ -262,8 +263,8 @@ namespace input
             .unit        = "angstrom"
         };
 
-        const auto setValue = [](double value)
-        { settings::HybridSettings::setCoreRadius(value * angstrom); };
+        const auto setValue = [this](double value)
+        { _hybridSettings->setCoreRadiusByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -285,8 +286,8 @@ namespace input
             .unit        = "angstrom"
         };
 
-        const auto setValue = [](double value)
-        { settings::HybridSettings::setLayerRadius(value * angstrom); };
+        const auto setValue = [this](double value)
+        { _hybridSettings->setLayerRadiusByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -310,9 +311,9 @@ namespace input
             .unit = "angstrom"
         };
 
-        const auto setValue = [](double value)
+        const auto setValue = [this](double value)
         {
-            settings::HybridSettings::setSmoothingRegionThickness(
+            _hybridSettings->setSmoothingRegionThicknessByUser(
                 value * angstrom
             );
         };
@@ -338,10 +339,8 @@ namespace input
             .unit = "angstrom"
         };
 
-        const auto setValue = [](double value)
-        {
-            settings::HybridSettings::setPointChargeThickness(value * angstrom);
-        };
+        const auto setValue = [this](double value)
+        { _hybridSettings->setPointChargeThicknessByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -363,8 +362,8 @@ namespace input
                 "Specifies the smoothing method in hybrid calculations",
         };
 
-        const auto setValue = [](SmoothingMethod value)
-        { settings::HybridSettings::setSmoothingMethod(value); };
+        const auto setValue = [this](SmoothingMethod value)
+        { _hybridSettings->setSmoothingMethodByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SmoothingMethod>{
@@ -391,8 +390,8 @@ namespace input
                 "calculations",
         };
 
-        const auto setValue = [](QMForceDist value)
-        { settings::HybridSettings::setQMForceDist(value); };
+        const auto setValue = [this](QMForceDist value)
+        { _hybridSettings->setQMForceDistByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<QMForceDist>{

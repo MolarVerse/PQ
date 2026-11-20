@@ -37,9 +37,8 @@ int main()
     Settings settings;
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
     return benchQMRunner::run<QM::DFTBPlusRunner>(
-        settings.qmSettings,
+        settings,
         molsys::Periodicity::XYZ,
-        ITERATIONS,
-        settings.fileSettings
+        ITERATIONS
     );
 }

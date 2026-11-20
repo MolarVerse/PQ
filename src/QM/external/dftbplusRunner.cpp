@@ -191,11 +191,15 @@ namespace QM
      * @param simulationBox Simulation box containing molecules and atoms.
      * @param fileSettings Object containing file paths and settings required
      * for the execution of the external QM program.
+     * @param hybridSettings The hybrid settings of the system, which may
+     * influence the execution of the QM script, particularly in the context of
+     * hybrid QM/MM simulations.
      *
      */
     void DFTBPlusRunner::execute(
         const molsys::SimulationBox &simulationBox,
-        const FileSettings          &fileSettings
+        const FileSettings          &fileSettings,
+        const HybridSettings        &hybridSettings
     )
     {
         const auto scriptFile = _getExternalQMSettings().getQMScript();
@@ -216,8 +220,7 @@ namespace QM
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
         // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
-        if (settings::HybridSettings::getSmoothingMethod() ==
-            SmoothingMethod::EXACT)
+        if (hybridSettings.getSmoothingMethod() == SmoothingMethod::EXACT)
             molChangedZone = true;
 
         const auto readChargesBin =

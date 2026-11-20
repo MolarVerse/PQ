@@ -123,9 +123,8 @@ namespace waterModel
             using enum molsys::HybridZone;
             using enum SmoothingMethod;
 
-            Quantity   smF = 0.0;
-            const auto smoothing =
-                settings::HybridSettings::getSmoothingMethod();
+            Quantity   smF       = 0.0;
+            const auto smoothing = _getHybridSettings().getSmoothingMethod();
 
             if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
                 smF = water.getSmoothingFactor();

@@ -24,6 +24,7 @@
 #define FORCE_FIELD__BOND_FORCE_FIELD_HPP
 
 #include "bond.hpp"
+#include "enums/hybrid.hpp"
 
 namespace physicalData
 {
@@ -41,6 +42,8 @@ namespace pot
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
+
+class HybridSettings;   // forward declaration
 
 namespace ff
 {
@@ -71,7 +74,8 @@ namespace ff
             const molsys::SimulationBox &simulationBox,
             physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
-            pot::NonCoulombPotential    &nonCoulombPot
+            pot::NonCoulombPotential    &nonCoulombPot,
+            SmoothingMethod              smoothing
         );
 
         /***************************

@@ -96,10 +96,11 @@ namespace
 
 int main()
 {
-    settings::HybridSettings::setCoreRadius(4.0 * angstrom);
-    settings::HybridSettings::setLayerRadius(12.0 * angstrom);
-    settings::HybridSettings::setSmoothingRegionThickness(3.0 * angstrom);
-    settings::HybridSettings::setPointChargeThickness(6.0 * angstrom);
+    HybridSettings hybridSettings;
+    hybridSettings.setCoreRadiusByUser(4.0 * angstrom);
+    hybridSettings.setLayerRadiusByUser(12.0 * angstrom);
+    hybridSettings.setSmoothingRegionThicknessByUser(3.0 * angstrom);
+    hybridSettings.setPointChargeThicknessByUser(6.0 * angstrom);
 
     auto                    box = molsys::SimulationBox();
     molsys::OrthorhombicBox orthoBox{
@@ -111,7 +112,7 @@ int main()
 
     // the QM molecule defines the inner region center
     addWater(box, {half, half, half});
-    box.addInnerRegionCenterAtoms({0, 1, 2});
+    hybridSettings.setInnerRegionCenterByUser({0, 1, 2});
 
     for (std::size_t x = 0; x < PER_SIDE; ++x)
     {
@@ -129,7 +130,7 @@ int main()
         }
     }
 
-    auto configurator = configurator::HybridConfigurator();
+    auto configurator = configurator::HybridConfigurator(hybridSettings);
 
     perfAllocBegin();
     CALLGRIND_ZERO_STATS;
@@ -141,16 +142,16 @@ int main()
         for (auto &atom : box.getAtoms())
         {
             auto pos  = atom->getPosition();
-            pos[0]    += shift * angstrom;
+            pos[0]   += shift * angstrom;
             atom->setPosition(pos);
         }
 
         configurator.calculateInnerRegionCenter(box);
         configurator.shiftAtomsToInnerRegionCenter(box);
-        configurator::HybridConfigurator::assignHybridZones(box);
+        configurator.assignHybridZones(box);
         configurator::HybridConfigurator::activateMolecules(box);
         configurator::HybridConfigurator::deactivateOuterMolecules(box);
-        configurator::HybridConfigurator::calculateSmoothingFactors(box);
+        configurator.calculateSmoothingFactors(box);
         configurator.shiftAtomsBackToInitialPositions(box);
     }
 

@@ -41,6 +41,8 @@ namespace waterModel
     class SPCIntraWater : public IntraWater
     {
        public:
+        using IntraWater::IntraWater;
+
         void calculate(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
@@ -69,6 +71,8 @@ namespace waterModel
             (mstd::units::rad * mstd::units::rad);
 
        public:
+        using SPCIntraWater::SPCIntraWater;
+
         [[nodiscard]]
         const Distance &getEqOHDistance() const override
         {
@@ -104,6 +108,8 @@ namespace waterModel
             (mstd::units::rad * mstd::units::rad);
 
        public:
+        using SPCIntraWater::SPCIntraWater;
+
         [[nodiscard]]
         const Distance &getEqOHDistance() const override
         {

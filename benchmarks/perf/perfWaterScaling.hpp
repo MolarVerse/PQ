@@ -37,6 +37,7 @@
 #include <string_view>
 #include <utility>
 
+#include "settings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -69,15 +70,20 @@ namespace benchWaterScaling
     inline constexpr auto     HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
     inline constexpr auto     OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
-    inline int run(const std::size_t perSide, const std::uint64_t iterations)
+    inline int run(
+        const std::size_t   perSide,
+        const std::uint64_t iterations,
+        Settings            settings
+    )
     {
         settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
         pot::CoulombPotential::set_coulombEnergyCutOff(0.0 / angstrom);
         pot::CoulombPotential::set_coulombForceCutOff(0.0 / angstrom2);
 
-        WaterModelSettings waterModelSettings;
-        waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
+        settings.waterModelSettings.setWaterInterModelByUser(
+            WaterInterModel::SPC_E
+        );
 
         const double boxLength = (SPACING * static_cast<double>(perSide)) + 3.0;
         const auto   numberOfCells = static_cast<size_t>(
@@ -176,7 +182,9 @@ namespace benchWaterScaling
 
         waterModel::InterWater interWater(
             std::move(state),
-            std::make_unique<waterModel::InterWaterStrategyCellList>()
+            std::make_unique<waterModel::InterWaterStrategyCellList>(
+                settings.hybridSettings
+            )
         );
         auto coulombPot =
             std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);

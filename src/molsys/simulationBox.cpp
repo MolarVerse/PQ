@@ -110,33 +110,6 @@ namespace molsys
     }
 
     /**
-     * @brief adds all atomIndices to _innerRegionCenterAtomIndices vector
-     *
-     * @param atomIndices
-     *
-     * @throw exc::UserInputException if atom index out of range
-     */
-    void SimulationBox::addInnerRegionCenterAtoms(
-        const std::vector<size_t>& atomIndices
-    )
-    {
-        for (const auto index : atomIndices)
-        {
-            if (index >= _atoms.size())
-            {
-                throw exc::UserInputException(
-                    std::format(
-                        "Inner region center atom index {} out of range",
-                        index
-                    )
-                );
-            }
-        }
-
-        _innerRegionCenterAtomIndices = atomIndices;
-    }
-
-    /**
      * @brief marks molecules with the given indices as forced-core molecules
      *
      * The forced-core, forced-layer, and forced-outer regions are mutually

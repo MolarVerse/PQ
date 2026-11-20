@@ -43,6 +43,7 @@ namespace molsys
 
 class ExternalQMSettings;   // forward declaration
 class FileSettings;         // forward declaration
+class HybridSettings;       // forward declaration
 
 namespace QM
 {
@@ -66,12 +67,14 @@ namespace QM
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             molsys::Periodicity         per,
-            const FileSettings         &fileSettings
+            const FileSettings         &fileSettings,
+            const HybridSettings       &hybridSettings
         ) override;
 
         virtual void execute(
             const molsys::SimulationBox &,
-            const FileSettings &
+            const FileSettings &,
+            const HybridSettings &
         ) = 0;
 
         /*******************************

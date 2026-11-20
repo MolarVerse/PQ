@@ -37,6 +37,7 @@
 #include "forceField.hpp"
 #include "forceFieldClass.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -64,12 +65,13 @@ class TestForceField : public TestNonCoulombPotentialFF
  */
 TEST_F(TestForceField, findBondTypeById)
 {
-    auto       forceField = ff::ForceField();
-    const auto bondType   = ff::BondType(
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
+    const auto           bondType   = ff::BondType(
         BondId{0},
         BondParams{
-              .equilibrium   = 1.0 * angstrom,
-              .forceConstant = 1.0 * kcal_per_mol / angstrom / angstrom
+                        .equilibrium   = 1.0 * angstrom,
+                        .forceConstant = 1.0 * kcal_per_mol / angstrom / angstrom
         }
     );
 
@@ -84,7 +86,8 @@ TEST_F(TestForceField, findBondTypeById)
  */
 TEST_F(TestForceField, findBondTypeByIdNotFoundError)
 {
-    auto forceField = ff::ForceField();
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findBondTypeById(BondId{0}),
@@ -99,12 +102,13 @@ TEST_F(TestForceField, findBondTypeByIdNotFoundError)
  */
 TEST_F(TestForceField, findAngleTypeById)
 {
-    auto forceField = ff::ForceField();
-    auto angleType  = ff::AngleType(
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
+    auto                 angleType  = ff::AngleType(
         AngleId{0},
         AngleParams{
-             .equilibrium   = 1.0 * rad,
-             .forceConstant = 1.0 * kcal_per_mol / rad / rad
+                             .equilibrium   = 1.0 * rad,
+                             .forceConstant = 1.0 * kcal_per_mol / rad / rad
         }
     );
 
@@ -119,7 +123,8 @@ TEST_F(TestForceField, findAngleTypeById)
  */
 TEST_F(TestForceField, findAngleTypeByIdNotFoundError)
 {
-    auto forceField = ff::ForceField();
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findAngleTypeById(AngleId{0}),
@@ -134,13 +139,14 @@ TEST_F(TestForceField, findAngleTypeByIdNotFoundError)
  */
 TEST_F(TestForceField, findDihedralTypeById)
 {
-    auto forceField   = ff::ForceField();
-    auto dihedralType = ff::DihedralType(
+    const HybridSettings hybridSettings;
+    auto                 forceField   = ff::ForceField(hybridSettings);
+    auto                 dihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0 * kcal_per_mol,
-            .frequency     = 1.0,
-            .phaseShift    = 1.0 * rad
+                            .forceConstant = 1.0 * kcal_per_mol,
+                            .frequency     = 1.0,
+                            .phaseShift    = 1.0 * rad
         }
     );
 
@@ -155,7 +161,8 @@ TEST_F(TestForceField, findDihedralTypeById)
  */
 TEST_F(TestForceField, findDihedralTypeByIdNotFoundError)
 {
-    auto forceField = ff::ForceField();
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findDihedralTypeById(DihedralId{0}),
@@ -170,13 +177,14 @@ TEST_F(TestForceField, findDihedralTypeByIdNotFoundError)
  */
 TEST_F(TestForceField, findImproperTypeById)
 {
-    auto forceField           = ff::ForceField();
-    auto improperDihedralType = ff::DihedralType(
+    const HybridSettings hybridSettings;
+    auto                 forceField           = ff::ForceField(hybridSettings);
+    auto                 improperDihedralType = ff::DihedralType(
         DihedralId{0},
         DihedralParams{
-            .forceConstant = 1.0 * kcal_per_mol,
-            .frequency     = 1.0,
-            .phaseShift    = 1.0 * rad
+                            .forceConstant = 1.0 * kcal_per_mol,
+                            .frequency     = 1.0,
+                            .phaseShift    = 1.0 * rad
         }
     );
 
@@ -194,7 +202,8 @@ TEST_F(TestForceField, findImproperTypeById)
  */
 TEST_F(TestForceField, findImproperDihedralTypeByIdNotFoundError)
 {
-    auto forceField = ff::ForceField();
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
 
     EXPECT_THROW_MSG(
         const auto _ = forceField.findImproperTypeById(DihedralId{0}),
@@ -331,7 +340,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
     settings::PotentialSettings::setScale14Coulomb(0.75);
     settings::PotentialSettings::setScale14VanDerWaals(0.5);
 
-    auto forceField = ff::ForceField();
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
 
     forceField.addBond(bondForceField);
     forceField.addAngle(angleForceField);

@@ -82,3 +82,33 @@ laptop, or in a container or virtual machine, timings are only good for a
 comparison within one run (which is what this tool does), not as absolute
 numbers. Compare `--native` runs with `--native` runs only: the counts of a
 portable and a native build differ.
+
+### End-to-end scenarios
+
+The benchmarks measure parts of the code. `--suite scenarios` (or `--suite all`)
+instead runs the whole `PQ` program, as a user would, on inputs of the examples
+and of the integration tests listed in `benchmarks/scenarios.json`, for your
+tree and for the base:
+
+```sh
+scripts/perf_local.py --suite scenarios --counts-only        # minutes
+scripts/perf_local.py --suite scenarios --only cgo           # scenarios whose name contains it
+scripts/perf_local.py --suite all --base HEAD                # benchmarks and scenarios
+```
+
+- **Counts**: instructions of a short run (`count_steps`) under callgrind. A
+  change that makes any part of a whole run more expensive shows up here. Unlike
+  the benchmarks the counts are only reproducible to about 1e-7, so the
+  threshold is 1 %, not exact.
+- **Timing**: CPU time of a run of about a second (`steps`), paired and
+  interleaved with the base (7 rounds, 2 copies per side by default, see
+  `--scenario-rounds` and `--scenario-copies`). It sees file output and
+  startup, but with so few rounds only effects of a few percent.
+
+Both sides run the same input files from your working tree with only `nstep`
+and a fixed `random_seed` changed; if the base cannot read an input, the
+scenario fails for the base. QM inputs are not scenarios (they need external
+programs), and runs of a few milliseconds are too short to time. To add a
+scenario, add an entry to `benchmarks/scenarios.json`. CI does not run the
+scenarios. A full run (counts and timing, seven scenarios) takes about seven
+minutes; the reports are in `build-perf-local/report-scenarios.md`.

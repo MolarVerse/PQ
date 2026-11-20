@@ -39,7 +39,8 @@ namespace QM
         using ExternalQMRunner::ExternalQMRunner;
         void execute(
             const molsys::SimulationBox &simulationBox,
-            const FileSettings          &fileSettings
+            const FileSettings          &fileSettings,
+            const HybridSettings        &hybridSettings
         ) override;
 
        private:

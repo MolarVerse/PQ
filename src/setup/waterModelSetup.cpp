@@ -374,16 +374,32 @@ namespace setup
         switch (intraModel)
         {
             case SPC_FW:
-                _engine.makeIntraWater(waterModel::SPCFwIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::SPCFwIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case QSPC_FW:
-                _engine.makeIntraWater(waterModel::qSPCFwIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::qSPCFwIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case SPC_MTR:
-                _engine.makeIntraWater(waterModel::SPCMTRIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::SPCMTRIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case TIP3P_MTR:
-                _engine.makeIntraWater(waterModel::TIP3PMTRIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::TIP3PMTRIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case SPC:
             case SPC_E:
@@ -467,11 +483,18 @@ namespace setup
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
         if (settings::GeneralSettings::isCellListActivated())
-            strategy =
-                std::make_unique<waterModel::InterWaterStrategyCellList>();
+        {
+            strategy = std::make_unique<waterModel::InterWaterStrategyCellList>(
+                _engine.getSettings().hybridSettings
+            );
+        }
         else
+        {
             strategy =
-                std::make_unique<waterModel::InterWaterStrategyBruteForce>();
+                std::make_unique<waterModel::InterWaterStrategyBruteForce>(
+                    _engine.getSettings().hybridSettings
+                );
+        }
 
         auto interWater = std::make_unique<waterModel::InterWater>(
             std::move(state),

@@ -29,6 +29,7 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -51,7 +52,8 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto box = molsys::SimulationBox();
+    Settings settings;
+    auto     box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
@@ -111,26 +113,31 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
+    const auto smoothing = settings.hybridSettings.getSmoothingMethod();
+
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         bond.calculateEnergyAndForces(
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            smoothing
         );
         angle.calculateEnergyAndForces(
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            smoothing
         );
         dihedral.calculateEnergyAndForces(
             box,
             physicalData,
             false,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            smoothing
         );
     }
 

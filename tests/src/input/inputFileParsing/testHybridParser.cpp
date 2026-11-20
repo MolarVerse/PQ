@@ -36,23 +36,24 @@
 
 TEST_F(TestInputFileReader, parseInnerRegionCenter)
 {
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
+    HybridSettings hybridSettings;
+    auto           parser  = input::HybridInputParser{hybridSettings};
+    const auto     funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("inner_region_center"));
     const auto& parseFunc = funcMap.at("inner_region_center");
 
     parseFunc({"inner_region_center", "=", "4,2,2"}, 0);
-    ASSERT_TRUE(settings::HybridSettings::getInnerRegionCenter().has_value());
     EXPECT_EQ(
-        settings::HybridSettings::getInnerRegionCenter(),
-        std::optional<std::vector<size_t>>({2, 4})
+        hybridSettings.getInnerRegionCenter(),
+        std::vector<size_t>({2, 4})
     );
 }
 
 TEST_F(TestInputFileReader, parseForcedRegionLists)
 {
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
+    HybridSettings hybridSettings;
+    auto           parser  = input::HybridInputParser{hybridSettings};
+    const auto     funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("forced_core_list"));
     ASSERT_TRUE(funcMap.contains("forced_layer_list"));
     ASSERT_TRUE(funcMap.contains("forced_outer_list"));
@@ -61,16 +62,13 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
     const auto& parseForcedOuterListFunc = funcMap.at("forced_outer_list");
 
     parseForcedCoreListFunc({"forced_core_list", "=", "3,1,3"}, 0);
-    EXPECT_EQ(
-        settings::HybridSettings::getForcedCoreList(),
-        std::vector<int>({1, 3})
-    );
+    EXPECT_EQ(hybridSettings.getForcedCoreList(), std::vector<int>({1, 3}));
 
     _clearParser(parser);
 
     parseForcedLayerListFunc({"forced_layer_list", "=", "5,7-9,8"}, 0);
     EXPECT_EQ(
-        settings::HybridSettings::getForcedLayerList(),
+        hybridSettings.getForcedLayerList(),
         std::vector<int>({5, 7, 8, 9})
     );
 
@@ -78,7 +76,7 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
 
     parseForcedOuterListFunc({"forced_outer_list", "=", "8-10,9"}, 0);
     EXPECT_EQ(
-        settings::HybridSettings::getForcedOuterList(),
+        hybridSettings.getForcedOuterList(),
         std::vector<int>({8, 9, 10})
     );
 
@@ -95,18 +93,19 @@ TEST_F(TestInputFileReader, parseForcedRegionLists)
 
 TEST_F(TestInputFileReader, parseUseQMCharges)
 {
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
+    HybridSettings hybridSettings;
+    auto           parser  = input::HybridInputParser{hybridSettings};
+    const auto     funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("qm_charges"));
     const auto& parseUseQMChargesFunc = funcMap.at("qm_charges");
 
     parseUseQMChargesFunc({"qm_charges", "=", "qm"}, 0);
-    EXPECT_TRUE(settings::HybridSettings::getUseQMCharges());
+    EXPECT_TRUE(hybridSettings.getUseQMCharges());
 
     _clearParser(parser);
 
     parseUseQMChargesFunc({"qm_charges", "=", "mm"}, 0);
-    EXPECT_FALSE(settings::HybridSettings::getUseQMCharges());
+    EXPECT_FALSE(hybridSettings.getUseQMCharges());
 
     _clearParser(parser);
 
@@ -120,8 +119,9 @@ TEST_F(TestInputFileReader, parseUseQMCharges)
 
 TEST_F(TestInputFileReader, parseRegionRadii)
 {
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
+    HybridSettings hybridSettings;
+    auto           parser  = input::HybridInputParser{hybridSettings};
+    const auto     funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("core_radius"));
     ASSERT_TRUE(funcMap.contains("layer_radius"));
     const auto& parseCoreRadiusFunc  = funcMap.at("core_radius");
@@ -129,7 +129,7 @@ TEST_F(TestInputFileReader, parseRegionRadii)
 
     parseCoreRadiusFunc({"core_radius", "=", "3.5"}, 0);
     EXPECT_DOUBLE_EQ(
-        settings::HybridSettings::getCoreRadius().numerical_value_in(angstrom),
+        hybridSettings.getCoreRadius().numerical_value_in(angstrom),
         3.5
     );
 
@@ -137,7 +137,7 @@ TEST_F(TestInputFileReader, parseRegionRadii)
 
     parseLayerRadiusFunc({"layer_radius", "=", "8.25"}, 0);
     EXPECT_DOUBLE_EQ(
-        settings::HybridSettings::getLayerRadius().numerical_value_in(angstrom),
+        hybridSettings.getLayerRadius().numerical_value_in(angstrom),
         8.25
     );
 
@@ -164,8 +164,9 @@ TEST_F(TestInputFileReader, parseRegionRadii)
 
 TEST_F(TestInputFileReader, parseThicknesses)
 {
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
+    HybridSettings hybridSettings;
+    auto           parser  = input::HybridInputParser{hybridSettings};
+    const auto     funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("smoothing_region_thickness"));
     ASSERT_TRUE(funcMap.contains("point_charge_thickness"));
     const auto& parseSmoothingRegionThicknessFunc =
@@ -178,8 +179,9 @@ TEST_F(TestInputFileReader, parseThicknesses)
         0
     );
     EXPECT_DOUBLE_EQ(
-        settings::HybridSettings::getSmoothingRegionThickness()
-            .numerical_value_in(angstrom),
+        hybridSettings.getSmoothingRegionThickness().numerical_value_in(
+            angstrom
+        ),
         1.25
     );
 
@@ -187,9 +189,7 @@ TEST_F(TestInputFileReader, parseThicknesses)
 
     parsePointChargeThicknessFunc({"point_charge_thickness", "=", "4.75"}, 0);
     EXPECT_DOUBLE_EQ(
-        settings::HybridSettings::getPointChargeThickness().numerical_value_in(
-            angstrom
-        ),
+        hybridSettings.getPointChargeThickness().numerical_value_in(angstrom),
         4.75
     );
 
@@ -224,18 +224,19 @@ TEST_F(TestInputFileReader, parseSmoothingMethod)
 {
     using enum SmoothingMethod;
 
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
+    HybridSettings hybridSettings;
+    auto           parser  = input::HybridInputParser{hybridSettings};
+    const auto     funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("smoothing_method"));
     const auto& parseSmoothingMethodFunc = funcMap.at("smoothing_method");
 
     parseSmoothingMethodFunc({"smoothing_method", "=", "hotspot"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getSmoothingMethod(), HOTSPOT);
+    EXPECT_EQ(hybridSettings.getSmoothingMethod(), HOTSPOT);
 
     _clearParser(parser);
 
     parseSmoothingMethodFunc({"smoothing_method", "=", "exact"}, 0);
-    EXPECT_EQ(settings::HybridSettings::getSmoothingMethod(), EXACT);
+    EXPECT_EQ(hybridSettings.getSmoothingMethod(), EXACT);
 
     _clearParser(parser);
 
@@ -355,14 +356,12 @@ TEST_F(TestInputFileReader, selectionWithExpressionNeedsPythonBindings)
 
 TEST_F(TestInputFileReader, innerRegionCenterAcceptsFirstAtom)
 {
-    auto       parser  = input::HybridInputParser{};
-    const auto funcMap = parser.getKeywordFuncMap();
+    HybridSettings hybridSettings;
+    auto           parser  = input::HybridInputParser{hybridSettings};
+    const auto     funcMap = parser.getKeywordFuncMap();
 
     EXPECT_NO_THROW(
         funcMap.at("inner_region_center")({"inner_region_center", "=", "0"}, 0)
     );
-    EXPECT_EQ(
-        settings::HybridSettings::getInnerRegionCenter(),
-        std::optional<std::vector<size_t>>({0})
-    );
+    EXPECT_EQ(hybridSettings.getInnerRegionCenter(), std::vector<size_t>({0}));
 }

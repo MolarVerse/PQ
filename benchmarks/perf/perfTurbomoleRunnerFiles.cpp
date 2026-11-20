@@ -36,9 +36,8 @@ int main()
     Settings settings;
     settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
     return benchQMRunner::run<QM::TurbomoleRunner>(
-        settings.qmSettings,
+        settings,
         molsys::Periodicity::NON_PERIODIC,
-        ITERATIONS,
-        settings.fileSettings
+        ITERATIONS
     );
 }

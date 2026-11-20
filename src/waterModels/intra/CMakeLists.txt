@@ -1,5 +1,6 @@
 add_library(intraWater
     mTRIntraWater.cpp
+    intraWater.cpp
 )
 
 target_include_directories(intraWater

@@ -30,6 +30,7 @@
 #include <memory>
 
 #include "orthorhombicBox.hpp"
+#include "settings.hpp"
 #include "strongTypes.hpp"
 #include "units.hpp"
 
@@ -62,12 +63,14 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
 int main()
 {
+    Settings settings;
     settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::set_coulombEnergyCutOff(0.0 / angstrom);
     pot::CoulombPotential::set_coulombForceCutOff(0.0 / angstrom2);
-    WaterModelSettings waterModelSettings;
-    waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
+    settings.waterModelSettings.setWaterInterModelByUser(
+        WaterInterModel::SPC_E
+    );
 
     // ~6x6x6 = 216 water molecules (648 atoms) on a 3 Å grid in a 30 Å box.
     constexpr size_t perSide = 6;
@@ -166,7 +169,9 @@ int main()
 
     waterModel::InterWater interWater(
         std::move(state),
-        std::make_unique<waterModel::InterWaterStrategyCellList>()
+        std::make_unique<waterModel::InterWaterStrategyCellList>(
+            settings.hybridSettings
+        )
     );
 
     auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);

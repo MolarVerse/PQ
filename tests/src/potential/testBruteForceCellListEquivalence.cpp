@@ -32,6 +32,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
@@ -201,13 +202,14 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     physicalData::PhysicalData physicalDataBF;
     physicalData::PhysicalData physicalDataCL;
 
-    pot::PotentialBruteForce bruteForce;
+    const HybridSettings     hybridSettings;
+    pot::PotentialBruteForce bruteForce(hybridSettings);
     bruteForce.makeCoulombPotential(
         pot::CoulombShiftedPotential(kCoulombCutOff)
     );
     bruteForce.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    pot::PotentialCellList cellListPotential;
+    pot::PotentialCellList cellListPotential(hybridSettings);
     cellListPotential.makeCoulombPotential(
         pot::CoulombShiftedPotential(kCoulombCutOff)
     );

@@ -38,6 +38,7 @@ namespace pot
     class PotentialBruteForce : public Potential
     {
        public:
+        using Potential::Potential;
         ~PotentialBruteForce() override;
 
         void calculateForces(

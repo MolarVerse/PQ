@@ -33,7 +33,8 @@ namespace engine
         getQMRunner()->run(
             getSimulationBox(),
             getPhysicalData(),
-            getSettings().fileSettings
+            getSettings().fileSettings,
+            getSettings().hybridSettings
         );
     }
 }   // namespace engine

@@ -125,10 +125,12 @@ namespace QM
      * conditions
      * @param fileSettings the file settings containing the ORCA and point
      * charge file names
+     * @param hybridSettings the hybrid settings containing the smoothing method
      */
     void OrcaRunner::execute(
         const molsys::SimulationBox &simulationBox,
-        const FileSettings          &fileSettings
+        const FileSettings          &fileSettings,
+        const HybridSettings        &hybridSettings
     )
     {
         using enum SmoothingMethod;
@@ -150,7 +152,7 @@ namespace QM
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
         // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
-        if (settings::HybridSettings::getSmoothingMethod() == EXACT)
+        if (hybridSettings.getSmoothingMethod() == EXACT)
             molChangedZone = true;
 
         const auto reset           = molChangedZone || _isFirstExecution;

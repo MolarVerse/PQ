@@ -48,6 +48,7 @@ namespace pot
     class PotentialCellList : public Potential
     {
        public:
+        using Potential::Potential;
         ~PotentialCellList() override;
 
         void calculateForces(
