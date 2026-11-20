@@ -69,9 +69,6 @@ namespace pot
      *
      * @param distance
      * @param chargeProduct
-     * @param config Reference to the CoulombPotentialConfig object containing
-     * the cutoff distances and precomputed values for the Wolf summation
-     * calculation
      * @return std::pair<double, double>
      */
     std::pair<double, double> CoulombWolf::calculate(

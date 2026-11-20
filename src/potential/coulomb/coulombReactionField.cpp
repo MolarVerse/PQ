@@ -50,9 +50,7 @@ namespace pot
      *
      * @param dist
      * @param chargeProduct
-     * @param config Reference to the CoulombPotentialConfig object containing
-     * the cutoff distances and precomputed values for the reaction field
-     * calculation
+     *
      * @return std::pair<double, double>
      */
     std::pair<double, double> CoulombReactionField::calculate(

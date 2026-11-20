@@ -28,7 +28,7 @@
 /**
  * @brief Construct a new Coulomb Potential Config object
  *
- * @param cutoff The cutoff distance for the Coulomb potential
+ * @param cutoff_ The cutoff distance for the Coulomb potential
  */
 CoulombPotentialConfig::CoulombPotentialConfig(double cutoff_)
     : cutoff(cutoff_),
