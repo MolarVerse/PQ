@@ -27,6 +27,8 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -40,7 +42,10 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    const auto reactionField = pot::CoulombReactionField(9.0, 78.0);
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(9.0);
+    const auto reactionField =
+        pot::CoulombReactionField(settings.potentialSettings, 78.0);
 
     perfAllocBegin();
 

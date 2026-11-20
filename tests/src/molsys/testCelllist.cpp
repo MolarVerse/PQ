@@ -32,7 +32,6 @@
 #include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "vector3d.hpp"
@@ -206,9 +205,7 @@ TEST_F(TestCellList, addNeighbouringCells)
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
-    _cellList->addNeighbouringCells(
-        settings::PotentialSettings::getCoulombRadiusCutOff()
-    );
+    _cellList->addNeighbouringCells(1.5);
 
     for (const auto &cell : _cellList->getCells())
     {
@@ -356,11 +353,13 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(4.0);
+    const double coulombRadiusCutOff = 4.0;
     _cellList->setNumberOfCells(11);
     _cellList->resizeCells();
 
-    EXPECT_NO_THROW(_cellList->updateCellList(*_simulationBox));
+    EXPECT_NO_THROW(
+        _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff)
+    );
     settings::GeneralSettings::activateCellList();
 
     auto molecule = molsys::Molecule();
@@ -376,18 +375,18 @@ TEST_F(TestCellList, updateCellList)
 
     _simulationBox->addMolecule(molecule);
 
-    _cellList->setup(*_simulationBox);
+    _cellList->setup(*_simulationBox, coulombRadiusCutOff);
     auto cellSizeOld = _cellList->getCellSize();
 
     molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
     _simulationBox->setBox(orthoBox, false);
 
-    _cellList->updateCellList(*_simulationBox);
+    _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff);
 
     EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
 
     cellSizeOld = _cellList->getCellSize();
-    _cellList->updateCellList(*_simulationBox);
+    _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff);
 
     EXPECT_EQ(_cellList->getCellSize(), cellSizeOld);
 }

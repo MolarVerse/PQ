@@ -39,29 +39,27 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
 {
     using enum CoulombLongRangeType;
 
-    input::CoulombLongRangeInputParser parser;
+    PotentialSettings                  settings;
+    input::CoulombLongRangeInputParser parser{settings};
     const auto                         funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("long_range"));
     const auto& parseFunc = funcMap.at("long_range");
 
     std::vector<std::string> lineElements = {"long-range", "=", "none"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), SHIFTED);
+    EXPECT_EQ(settings.getCoulombLongRangeType(), SHIFTED);
 
     _clearParser(parser);
 
     lineElements = {"long-range", "=", "reaction-field"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::PotentialSettings::getCoulombLongRangeType(),
-        REACTION_FIELD
-    );
+    EXPECT_EQ(settings.getCoulombLongRangeType(), REACTION_FIELD);
 
     _clearParser(parser);
 
     lineElements = {"long-range", "=", "wolf"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombLongRangeType(), WOLF);
+    EXPECT_EQ(settings.getCoulombLongRangeType(), WOLF);
 
     _clearParser(parser);
 
@@ -82,14 +80,15 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
  */
 TEST_F(TestInputFileReader, testParseWolfParameter)
 {
-    input::CoulombLongRangeInputParser parser;
+    PotentialSettings                  settings;
+    input::CoulombLongRangeInputParser parser{settings};
     const auto                         funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("wolf_param"));
     const auto& parseFunc = funcMap.at("wolf_param");
 
     std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getWolfParameter(), 1.0);
+    EXPECT_EQ(PotentialSettings::getWolfParameter(), 1.0);
 
     _clearParser(parser);
 
@@ -108,14 +107,15 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
  */
 TEST_F(TestInputFileReader, testParseReactionFieldEpsilon)
 {
-    input::CoulombLongRangeInputParser parser;
+    PotentialSettings                  settings;
+    input::CoulombLongRangeInputParser parser{settings};
     const auto                         funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rf_epsilon"));
     const auto& parseFunc = funcMap.at("rf_epsilon");
 
     std::vector<std::string> lineElements = {"rf-epsilon", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getReactionFieldEpsilon(), 1.0);
+    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 1.0);
 
     _clearParser(parser);
 

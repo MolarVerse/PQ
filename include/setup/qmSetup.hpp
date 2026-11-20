@@ -67,10 +67,9 @@ namespace setup
             const ExternalQMSettings &externalQMSettings
         );
 
-        void        setup();
-        void        setupQMMethod();
-        static void setupCoulombRadiusCutOff();
-        void        setupWriteInfo() const;
+        void setup();
+        void setupQMMethod();
+        void setupWriteInfo() const;
 
         friend struct ::TestQMSetupUtils;
     };

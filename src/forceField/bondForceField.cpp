@@ -66,13 +66,15 @@ namespace ff
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
      * @param smoothing the smoothing method to use
+     * @param potentialSettings the settings for the potential calculations
      */
     void BondForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
         pot::NonCoulombPotential    &nonCoulombPot,
-        SmoothingMethod              smoothing
+        SmoothingMethod              smoothing,
+        const PotentialSettings     &potentialSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -105,8 +107,7 @@ namespace ff
 
         physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
-        if (_isLinker &&
-            distance < pot::CoulombPotential::getCoulombRadiusCutOff())
+        if (_isLinker && distance < potentialSettings.getCoulombRadiusCutOff())
         {
             forceMagnitude += correctLinker<BondForceField>(
                 coulombPot,

@@ -43,12 +43,15 @@ namespace input
      * "<double>"
      *
      * @param settings Reference to the SimulationBoxSettings object
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      *
      */
     SimulationBoxInputParser::SimulationBoxInputParser(
-        SimulationBoxSettings &settings
+        SimulationBoxSettings &settings,
+        PotentialSettings     &potentialSettings
     )
-        : _settings(settings)
+        : _settings(settings), _potentialSettings(potentialSettings)
     {
         addCoulombRadiusKey();
         addNonCoulombRadiusKey();
@@ -68,8 +71,8 @@ namespace input
                 "Specifies the cutoff radius for Coulomb interactions"
         };
 
-        const auto setValue = [](double value)
-        { settings::PotentialSettings::setCoulombRadiusCutOff(value); };
+        const auto setValue = [this](double value)
+        { _potentialSettings->setCoulombRadiusCutOffByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -95,8 +98,8 @@ namespace input
                 "Specifies the cutoff radius for Non-Coulomb interactions"
         };
 
-        const auto setValue = [](double value)
-        { settings::PotentialSettings::setNonCoulombRadiusCutOff(value); };
+        const auto setValue = [this](double value)
+        { _potentialSettings->setNonCoulombRadiusCutOffByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

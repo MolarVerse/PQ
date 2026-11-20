@@ -55,12 +55,15 @@ namespace intraNonBonded
      * @param nonCoulombPotential
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void IntraNonBondedMap::calculate(
         const pot::CoulombPotential *coulombPotential,
         pot::NonCoulombPotential    *nonCoulombPotential,
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     ) const
     {
         auto        coulombEnergy    = 0.0;
@@ -82,9 +85,9 @@ namespace intraNonBonded
                         AtomIndex{atomIndex1},
                         atomIndice,
                         box,
-                        physicalData,
                         coulombPotential,
-                        nonCoulombPotential
+                        nonCoulombPotential,
+                        potentialSettings
                     );
 
                 coulombEnergy    += coulombEnergyTemp;
@@ -105,16 +108,19 @@ namespace intraNonBonded
      * @param box
      * @param coulPot
      * @param nonCoulPot
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
+     *
      * @return std::pair<double, double> - the coulomb and non-coulomb energy
      * for the interaction
      */
     std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-        AtomIndex            atomIdx1,
-        int                  atomIdx2AsInt,
-        const linalg::Vec3D &box,
-        physicalData::PhysicalData & /*physicalData*/,
+        AtomIndex                    atomIdx1,
+        int                          atomIdx2AsInt,
+        const linalg::Vec3D         &box,
         const pot::CoulombPotential *coulPot,
-        pot::NonCoulombPotential    *nonCoulPot
+        pot::NonCoulombPotential    *nonCoulPot,
+        const PotentialSettings     &potentialSettings
     ) const
     {
         if (!_molecule->isActive())
@@ -137,7 +143,7 @@ namespace intraNonBonded
         dPos                += txyz;
         const auto distance  = norm(dPos);
 
-        if (distance < pot::CoulombPotential::getCoulombRadiusCutOff())
+        if (distance < potentialSettings.getCoulombRadiusCutOff())
         {
             const auto charge1 = _molecule->getPartialCharge(atomIdx1);
             const auto charge2 = _molecule->getPartialCharge(atomIdx2);
@@ -148,10 +154,9 @@ namespace intraNonBonded
 
             if (scale)
             {
-                const auto scaling =
-                    settings::PotentialSettings::getScale14Coulomb();
-                energy *= scaling;
-                force  *= scaling;
+                const auto scaling  = PotentialSettings::getScale14Coulomb();
+                energy             *= scaling;
+                force              *= scaling;
             }
             coulombEnergy = energy;
 
@@ -184,8 +189,7 @@ namespace intraNonBonded
 
                 if (scale)
                 {
-                    const auto scaling =
-                        settings::PotentialSettings::getScale14VDW();
+                    const auto scaling     = PotentialSettings::getScale14VDW();
                     nonCoulombEnergyLocal *= scaling;
                     nonCoulombForce       *= scaling;
                 }

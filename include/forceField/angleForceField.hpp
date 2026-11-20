@@ -45,14 +45,17 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
-class HybridSettings;   // forward declaration
+class HybridSettings;      // forward declaration
+class PotentialSettings;   // forward declaration
 
 namespace ff
 {
     /**
-     * @brief BondForceField inherits from Bond
+     * @brief AngleForceField inherits from Angle
      *
-     * @details force field object for single angle
+     * @details force field object for a single angle, responsible for
+     * calculating the energy and forces associated with the angle, including
+     * corrections for linker angles if applicable.
      *
      */
     class AngleForceField : public connectivity::Angle
@@ -75,7 +78,8 @@ namespace ff
             physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot,
-            SmoothingMethod              smoothing
+            SmoothingMethod              smoothing,
+            const PotentialSettings     &potentialSettings
         );
 
         /***************************

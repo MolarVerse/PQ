@@ -44,7 +44,10 @@ namespace pot
         double _rfPrefactor{};
 
        public:
-        CoulombReactionField(double coulombRadiusCutOff, double epsilon);
+        explicit CoulombReactionField(
+            const PotentialSettings& potentialSettings,
+            double                   epsilon
+        );
 
         [[nodiscard]]
         std::pair<double, double> calculate(

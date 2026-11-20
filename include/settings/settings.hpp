@@ -32,6 +32,7 @@
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
+#include "potentialSettings.hpp"
 #include "qmSettings.hpp"
 #include "referenceSettings.hpp"
 #include "resetKineticsSettings.hpp"
@@ -72,6 +73,8 @@ struct Settings
     NoseHooverSettings    noseHooverSettings;
     ExternalQMSettings    externalQMSettings;
     HybridSettings        hybridSettings;
+
+    PotentialSettings potentialSettings;
 
     void finalize();
     void validate() const;

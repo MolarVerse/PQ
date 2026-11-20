@@ -40,11 +40,11 @@ namespace pot
     {
         const auto prefactor           = chargeProduct * COULOMB_PREFACTOR;
         const auto dInv                = 1 / distance;
-        const auto deltaCutOff         = _coulombRadiusCutOff - distance;
-        const auto forceCutOffIntegral = _coulombForceCutOff * deltaCutOff;
+        const auto deltaCutOff         = _get_cutoff() - distance;
+        const auto forceCutOffIntegral = _get_forceCutoff() * deltaCutOff;
 
-        auto energy = dInv - _coulombEnergyCutOff - forceCutOffIntegral;
-        auto force  = (dInv * dInv) - _coulombForceCutOff;
+        auto energy = dInv - _get_energyCutoff() - forceCutOffIntegral;
+        auto force  = (dInv * dInv) - _get_forceCutoff();
 
         energy *= prefactor;
         force  *= prefactor;

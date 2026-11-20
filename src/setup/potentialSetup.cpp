@@ -118,33 +118,33 @@ namespace setup
      */
     void PotentialSetup::setupCoulomb()
     {
-        const auto coulRCut =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
-        const auto wolfParam = settings::PotentialSettings::getWolfParameter();
-        const auto rfEpsilon =
-            settings::PotentialSettings::getReactionFieldEpsilon();
+        const auto &potentialSettings = _engine.getSettings().potentialSettings;
+        const auto  wolfParam         = PotentialSettings::getWolfParameter();
+        const auto  rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
         const auto &potential = _engine.getPotential();
 
-        switch (settings::PotentialSettings::getCoulombLongRangeType())
+        switch (potentialSettings.getCoulombLongRangeType())
         {
             using enum CoulombLongRangeType;
 
             case REACTION_FIELD:
                 potential->makeCoulombPotential(
-                    pot::CoulombReactionField(coulRCut, rfEpsilon)
+                    pot::CoulombReactionField(potentialSettings, rfEpsilon)
                 );
                 return;
 
             case WOLF:
                 potential->makeCoulombPotential(
-                    pot::CoulombWolf(coulRCut, wolfParam)
+                    pot::CoulombWolf(potentialSettings, wolfParam)
                 );
                 return;
 
             case SHIFTED: break;
         }
 
-        potential->makeCoulombPotential(pot::CoulombShiftedPotential(coulRCut));
+        potential->makeCoulombPotential(
+            pot::CoulombShiftedPotential(potentialSettings)
+        );
     }
 
     /**
@@ -251,10 +251,10 @@ namespace setup
      */
     void PotentialSetup::writeCoulombInfo() const
     {
-        auto &log = _engine.getLogOutput();
+        auto       &log               = _engine.getLogOutput();
+        const auto &potentialSettings = _engine.getSettings().potentialSettings;
 
-        const auto coulLRType =
-            settings::PotentialSettings::getCoulombLongRangeType();
+        const auto coulLRType = potentialSettings.getCoulombLongRangeType();
 
         log.writeSetupInfo(
             std::format(
@@ -265,15 +265,15 @@ namespace setup
         log.writeEmptyLine();
 
         const auto coulRCut =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+            _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
         auto wolfParam = 0.0;
         auto rfEpsilon = 0.0;
 
         if (coulLRType == CoulombLongRangeType::WOLF)
-            wolfParam = settings::PotentialSettings::getWolfParameter();
+            wolfParam = PotentialSettings::getWolfParameter();
 
         if (coulLRType == CoulombLongRangeType::REACTION_FIELD)
-            rfEpsilon = settings::PotentialSettings::getReactionFieldEpsilon();
+            rfEpsilon = PotentialSettings::getReactionFieldEpsilon();
 
         const auto coulRCutStr =
             std::format("Coulomb radius cut-off: {}", coulRCut);

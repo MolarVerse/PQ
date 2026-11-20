@@ -52,7 +52,8 @@ namespace driver
         setup::setupRequestedJob(
             *engine,
             settings.noseHooverSettings,
-            settings.timings
+            settings.timings,
+            settings.potentialSettings
         );
 
         engine->run();

@@ -36,13 +36,16 @@
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
 #include "perfAlloc.hpp"
+#include "settings.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto shifted = pot::CoulombShiftedPotential(9.0);
-    auto wolf    = pot::CoulombWolf(9.0, 0.25);
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(9.0);
+    auto shifted = pot::CoulombShiftedPotential(settings.potentialSettings);
+    auto wolf    = pot::CoulombWolf(settings.potentialSettings, 0.25);
 
     perfAllocBegin();
 

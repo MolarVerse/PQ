@@ -43,7 +43,8 @@ namespace manostat
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const Temperature          &targetTemperature,
-            const Time                 &timeStep
+            const Time                 &timeStep,
+            double                      coulombRadiusCutOff
         ) override;
 
         [[nodiscard]]
