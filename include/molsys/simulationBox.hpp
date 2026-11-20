@@ -82,7 +82,6 @@ namespace molsys
 
         linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
-        std::vector<size_t>                _innerRegionCenterAtomIndices;
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
 
@@ -173,7 +172,6 @@ namespace molsys
          * QMMM related methods *
          ************************/
 
-        void addInnerRegionCenterAtoms(const std::vector<size_t>& atomIndices);
         void setupForcedCoreMolecules(const std::vector<int>& moleculeIndices);
         void setupForcedLayerMolecules(const std::vector<int>& moleculeIndices);
         void setupForcedOuterMolecules(const std::vector<int>& moleculeIndices);
@@ -200,7 +198,6 @@ namespace molsys
         [[nodiscard]] double                 getTotalCharge() const;
         [[nodiscard]] double                 getDensity() const;
         [[nodiscard]] linalg::Vec3D&         getCenterOfMass();
-        [[nodiscard]] std::vector<size_t>    getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(size_t index);
         [[nodiscard]] Molecule&     getMolecule(size_t index);

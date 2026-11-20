@@ -183,17 +183,6 @@ namespace molsys
     linalg::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
 
     /**
-     * @brief get the indices of the atoms marking the center of the inner
-     * region for hybrid type calculations
-     *
-     * @return vector<size_t>
-     */
-    std::vector<size_t> SimulationBox::getInnerRegionCenterAtomIndices()
-    {
-        return _innerRegionCenterAtomIndices;
-    }
-
-    /**
      * @brief get atom by index
      *
      * @param index

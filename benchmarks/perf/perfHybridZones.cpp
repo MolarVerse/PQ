@@ -94,10 +94,11 @@ namespace
 
 int main()
 {
-    settings::HybridSettings::setCoreRadius(4.0);
-    settings::HybridSettings::setLayerRadius(12.0);
-    settings::HybridSettings::setSmoothingRegionThickness(3.0);
-    settings::HybridSettings::setPointChargeThickness(6.0);
+    HybridSettings hybridSettings;
+    hybridSettings.setCoreRadiusByUser(4.0);
+    hybridSettings.setLayerRadiusByUser(12.0);
+    hybridSettings.setSmoothingRegionThicknessByUser(3.0);
+    hybridSettings.setPointChargeThicknessByUser(6.0);
 
     auto                    box = molsys::SimulationBox();
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
@@ -107,7 +108,7 @@ int main()
 
     // the QM molecule defines the inner region center
     addWater(box, {half, half, half});
-    box.addInnerRegionCenterAtoms({0, 1, 2});
+    hybridSettings.setInnerRegionCenterByUser({0, 1, 2});
 
     for (std::size_t x = 0; x < PER_SIDE; ++x)
     {
@@ -125,7 +126,7 @@ int main()
         }
     }
 
-    auto configurator = configurator::HybridConfigurator();
+    auto configurator = configurator::HybridConfigurator(hybridSettings);
 
     perfAllocBegin();
     CALLGRIND_ZERO_STATS;
@@ -143,10 +144,10 @@ int main()
 
         configurator.calculateInnerRegionCenter(box);
         configurator.shiftAtomsToInnerRegionCenter(box);
-        configurator::HybridConfigurator::assignHybridZones(box);
+        configurator.assignHybridZones(box);
         configurator::HybridConfigurator::activateMolecules(box);
         configurator::HybridConfigurator::deactivateOuterMolecules(box);
-        configurator::HybridConfigurator::calculateSmoothingFactors(box);
+        configurator.calculateSmoothingFactors(box);
         configurator.shiftAtomsBackToInitialPositions(box);
     }
 

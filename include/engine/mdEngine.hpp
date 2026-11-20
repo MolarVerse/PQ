@@ -53,7 +53,7 @@ namespace engine
        private:
         kinetics::ResetKinetics          _resetKinetics;
         kinetics::Kinetics               _kinetics;
-        configurator::HybridConfigurator _configurator{};
+        configurator::HybridConfigurator _configurator;
 
         std::unique_ptr<integrator::Integrator> _integrator;
         std::unique_ptr<thermostat::Thermostat> _thermostat;

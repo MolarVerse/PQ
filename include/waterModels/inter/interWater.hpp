@@ -41,6 +41,8 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+class HybridSettings;   // forward declaration
+
 namespace waterModel
 {
     struct InterWaterState
@@ -56,7 +58,11 @@ namespace waterModel
 
     class InterWaterStrategy
     {
+       private:
+        mstd::ConstRef<HybridSettings> _hybridSettings;
+
        public:
+        explicit InterWaterStrategy(const HybridSettings &hybridSettings);
         virtual ~InterWaterStrategy() = default;
 
         virtual void calculate(
@@ -144,7 +150,7 @@ namespace waterModel
         std::unique_ptr<InterWaterStrategy> _strategy;
 
        public:
-        InterWater();
+        explicit InterWater(const HybridSettings &hybridSettings);
 
         InterWater(
             InterWaterState                     state,
@@ -185,6 +191,7 @@ namespace waterModel
     class InterWaterStrategyNull : public InterWaterStrategy
     {
        public:
+        using InterWaterStrategy::InterWaterStrategy;
         void calculate(
             const InterWaterState & /*state*/,
             molsys::SimulationBox & /*simulationBox*/,
@@ -239,6 +246,7 @@ namespace waterModel
     class InterWaterStrategyBruteForce : public InterWaterStrategy
     {
        public:
+        using InterWaterStrategy::InterWaterStrategy;
         void calculate(
             const InterWaterState                        &state,
             molsys::SimulationBox                        &simulationBox,
@@ -283,6 +291,7 @@ namespace waterModel
     class InterWaterStrategyCellList : public InterWaterStrategy
     {
        public:
+        using InterWaterStrategy::InterWaterStrategy;
         void calculate(
             const InterWaterState                        &state,
             molsys::SimulationBox                        &simulationBox,

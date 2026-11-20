@@ -70,6 +70,8 @@ namespace QM
     void PySCFRunner::execute(
         const molsys::SimulationBox & /*simBox*/,
         const FileSettings & /*fileSettings*/
+        ,
+        const HybridSettings & /*hybridSettings*/
     )
     {
         const auto scriptFileName = _getExternalQMSettings().getQMScript();

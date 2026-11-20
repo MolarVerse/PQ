@@ -154,7 +154,7 @@ void Settings::finalize()
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
     thermostatSettings.finalize(referenceSettings);
-    settings::HybridSettings::finalize(fileSettings);
+    hybridSettings.finalize(fileSettings);
 
     const auto& qmMethod = qmSettings.getQMMethod();
 

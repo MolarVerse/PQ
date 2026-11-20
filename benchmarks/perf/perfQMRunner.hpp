@@ -41,6 +41,7 @@
 #include <string_view>
 #include <vector>
 
+#include "settings.hpp"
 #include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -195,17 +196,16 @@ namespace benchQMRunner
 
     template <typename Runner>
     inline int run(
-        QMSettings               &qmSettings,
+        Settings                  settings,
         const molsys::Periodicity periodicity,
-        const std::uint64_t       iterations,
-        FileSettings             &fileSettings
+        const std::uint64_t       iterations
     )
     {
         const auto directory =
             std::filesystem::temp_directory_path() /
             std::format(
                 "pq_perf_qm_runner_{}",
-                QMMethodMeta::toString(qmSettings.getQMMethod())
+                QMMethodMeta::toString(settings.qmSettings.getQMMethod())
             );
         std::filesystem::remove_all(directory);
         std::filesystem::create_directories(directory);
@@ -216,8 +216,8 @@ namespace benchQMRunner
         std::filesystem::current_path(directory);
 
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        qmSettings.setRemoveNetForceByUser(true);
-        qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
+        settings.qmSettings.setRemoveNetForceByUser(true);
+        settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
 
         ExternalQMSettings externalQMSettings;
         externalQMSettings.setQMScriptFullPathByUser(
@@ -228,8 +228,12 @@ namespace benchQMRunner
         molsys::SimulationBox simulationBox;
         buildBox(simulationBox);
 
-        CannedResultsRunner<Runner>
-             runner(qmSettings, externalQMSettings, fileSettings, directory);
+        CannedResultsRunner<Runner> runner(
+            settings.qmSettings,
+            externalQMSettings,
+            settings.fileSettings,
+            directory
+        );
         auto physicalData = physicalData::PhysicalData();
 
         perfAllocBegin();
@@ -237,7 +241,15 @@ namespace benchQMRunner
         CALLGRIND_ZERO_STATS;
 
         for (std::uint64_t i = 0; i < iterations; ++i)
-            runner.run(simulationBox, physicalData, periodicity, fileSettings);
+        {
+            runner.run(
+                simulationBox,
+                physicalData,
+                periodicity,
+                settings.fileSettings,
+                settings.hybridSettings
+            );
+        }
 
         std::filesystem::current_path(original);
         std::filesystem::remove_all(directory);

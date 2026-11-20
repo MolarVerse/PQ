@@ -465,13 +465,17 @@ namespace QM
      * @param per periodicity of the system
      * @param fileSettings Object containing file paths and settings required
      * for the execution of the external QM program.
+     * @param hybridSettings The hybrid settings of the system, which may
+     * influence the execution of the QM engine, particularly in the context of
+     * hybrid QM/MM simulations.
      *
      */
     void ExternalQMRunner::run(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         molsys::Periodicity         per,
-        const FileSettings         &fileSettings
+        const FileSettings         &fileSettings,
+        const HybridSettings       &hybridSettings
     )
     {
         if (per != molsys::Periodicity::XYZ &&
@@ -509,7 +513,7 @@ namespace QM
         {
             auto _ =
                 scopedTimer(TimerId::QMEngine, "Execute External QM Runner");
-            execute(simulationBox, fileSettings);
+            execute(simulationBox, fileSettings, hybridSettings);
         }
 
         {

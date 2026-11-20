@@ -124,6 +124,9 @@ namespace QM
      * conditions
      * @param fileSettings Object containing file paths and settings required
      * for the execution of the external QM program.
+     * @param hybridSettings The hybrid settings of the system, which may
+     * influence the execution of the QM script, particularly in the context of
+     * hybrid QM/MM simulations.
      *
      * @throws exc::QMRunnerException if the external QM program cannot be
      * executed successfully, or if required input files are missing or
@@ -132,7 +135,8 @@ namespace QM
      */
     void TurbomoleRunner::execute(
         const molsys::SimulationBox &simulationBox,
-        const FileSettings          &fileSettings
+        const FileSettings          &fileSettings,
+        const HybridSettings        &hybridSettings
     )
     {
         using enum SmoothingMethod;
@@ -154,7 +158,7 @@ namespace QM
             configurator::HybridConfigurator::getMoleculeChangedZone();
 
         // TODO(ape): https://github.com/MolarVerse/PQ/issues/200
-        if (settings::HybridSettings::getSmoothingMethod() == EXACT)
+        if (hybridSettings.getSmoothingMethod() == EXACT)
             molChangedZone = true;
 
         const auto runTMDefine = molChangedZone || _isFirstExecution ? 1 : 0;

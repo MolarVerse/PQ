@@ -23,6 +23,7 @@
 #ifndef HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
 #define HYBRID_CONFIGURATOR__HYBRID_CONFIGURATOR_HPP
 
+#include <mstd/types.hpp>
 #include <unordered_set>
 
 #include "vector3d.hpp"
@@ -34,20 +35,25 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+class HybridSettings;
+
 namespace configurator
 {
 
     class HybridConfigurator
     {
        private:
-        linalg::Vec3D      _innerRegionCenter = {0.0};
-        static inline bool _molChangedZone    = false;
+        mstd::ConstRef<HybridSettings> _hybridSettings;
+        linalg::Vec3D                  _innerRegionCenter = {0.0};
+        static inline bool             _molChangedZone    = false;
 
        public:
+        explicit HybridConfigurator(const HybridSettings &hybridSettings);
+
         void        calculateInnerRegionCenter(molsys::SimulationBox &);
         void        shiftAtomsToInnerRegionCenter(molsys::SimulationBox &);
         void        shiftAtomsBackToInitialPositions(molsys::SimulationBox &);
-        static void assignHybridZones(molsys::SimulationBox &);
+        void        assignHybridZones(molsys::SimulationBox &) const;
         static void activateMolecules(molsys::SimulationBox &);
         static void deactivateOuterMolecules(molsys::SimulationBox &);
         static void activateSmoothingMolecules(molsys::SimulationBox &);
@@ -56,7 +62,7 @@ namespace configurator
             molsys::SimulationBox &
         );
         static void toggleMoleculeActivation(molsys::SimulationBox &);
-        static void calculateSmoothingFactors(molsys::SimulationBox &);
+        void        calculateSmoothingFactors(molsys::SimulationBox &) const;
 
         /********************************
          * standard getters and setters *
