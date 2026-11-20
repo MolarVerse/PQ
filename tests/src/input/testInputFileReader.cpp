@@ -28,6 +28,7 @@
 #include <fstream>
 #include <map>
 #include <memory>
+#include <mstd/utils.hpp>
 #include <sstream>
 #include <vector>
 
@@ -407,12 +408,8 @@ namespace
 
         ~DestructionTrackingParser() override { *_destroyed = true; }
 
-        DestructionTrackingParser(const DestructionTrackingParser &) = delete;
-        DestructionTrackingParser &operator=(const DestructionTrackingParser &
-        )                                                            = delete;
-        DestructionTrackingParser(DestructionTrackingParser &&)      = delete;
-        DestructionTrackingParser &operator=(DestructionTrackingParser &&
-        )                                                            = delete;
+        MSTD_NO_COPY(DestructionTrackingParser);
+        MSTD_NO_MOVE(DestructionTrackingParser);
     };
 }   // namespace
 

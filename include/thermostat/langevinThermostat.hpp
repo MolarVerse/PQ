@@ -23,6 +23,8 @@
 #ifndef THERMOSTAT__LANGEVIN_THERMOSTAT_HPP
 #define THERMOSTAT__LANGEVIN_THERMOSTAT_HPP
 
+#include <mstd/utils.hpp>
+
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
 
@@ -49,8 +51,7 @@ namespace thermostat
         // generator
         LangevinThermostat(const LangevinThermostat &);
         LangevinThermostat &operator=(const LangevinThermostat &);
-        LangevinThermostat(LangevinThermostat &&) noexcept            = delete;
-        LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
+        MSTD_NO_MOVE(LangevinThermostat);
 
         [[nodiscard]]
         static double calculateSigma(

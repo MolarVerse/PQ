@@ -28,6 +28,7 @@
 #include <deque>
 #include <exception>
 #include <functional>
+#include <mstd/utils.hpp>
 #include <mutex>
 #include <thread>
 
@@ -62,10 +63,8 @@ namespace utilities
         explicit SerialWorker(std::size_t capacity);
         ~SerialWorker();
 
-        SerialWorker(const SerialWorker &)            = delete;
-        SerialWorker &operator=(const SerialWorker &) = delete;
-        SerialWorker(SerialWorker &&)                 = delete;
-        SerialWorker &operator=(SerialWorker &&)      = delete;
+        MSTD_NO_COPY(SerialWorker);
+        MSTD_NO_MOVE(SerialWorker);
 
         void submit(Task task);
         void wait();

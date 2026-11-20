@@ -27,6 +27,7 @@
 #include <format>
 #include <iostream>
 #include <memory>
+#include <mstd/utils.hpp>
 #include <ostream>
 #include <sstream>
 #include <streambuf>
@@ -63,10 +64,8 @@ namespace
         {
         }
 
-        ScopedStreamRedirect(const ScopedStreamRedirect &)            = delete;
-        ScopedStreamRedirect &operator=(const ScopedStreamRedirect &) = delete;
-        ScopedStreamRedirect(ScopedStreamRedirect &&)                 = delete;
-        ScopedStreamRedirect &operator=(ScopedStreamRedirect &&)      = delete;
+        MSTD_NO_COPY(ScopedStreamRedirect);
+        MSTD_NO_MOVE(ScopedStreamRedirect);
 
         ~ScopedStreamRedirect() { _stream.rdbuf(_original); }
     };

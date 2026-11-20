@@ -1,0 +1,1 @@
+- Update the `external/devops` submodule to devops 1.1.0 and enable its `noMaybeUnusedParam`, `noVoidPointerParam` and `preferMstdCopyMoveMacros` checks; existing code is fixed to pass them.

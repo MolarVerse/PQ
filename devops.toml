@@ -43,6 +43,9 @@ ast_check_enabled_ids = [
     "enforceTypenameOverClass",
     "enforceSystemHeaderLibs",
     "enforceCppOnlyInclude",
+    "noMaybeUnusedParam",
+    "noVoidPointerParam",
+    "preferMstdCopyMoveMacros",
 ]
 
 # Per-check configuration — one sub-table per check id.
@@ -64,6 +67,8 @@ excluded_macros = [
     "TEST",
     "TEST_F",
     "MSTD_RAII_NO_MOVE",
+    "MSTD_NO_COPY",
+    "MSTD_NO_MOVE",
 ]
 
 [cpp.ast_check_config.includeIwyuPragmaOnly]
