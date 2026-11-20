@@ -47,6 +47,24 @@ Stores positions, velocities, forces and charges of every atom for every frame i
 
 ``energy`` is the potential energy of the frame (total energy without kinetic energy), as ASE and NEP expect. All values are in PQ units, marked by ``units=pq``: Å, Å/s, kcal/(mol Å), *e* and kcal/mol. ASE, MACE, FeNNol and GPUMD NEP expect eV, so convert the file with PQAnalysis before training.
 
+.. _h5mdFile:
+
+**********
+H5MD File
+**********
+
+**File Type:** ``.h5md`` (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``h5md``; needs PQ built with ``-DBUILD_WITH_HDF5=ON``)
+
+Stores every frame in the `H5MD <https://www.nongnu.org/h5md/>`_ format (HDF5, version 1.1), compressed with shuffle and deflate, which every HDF5 reader can open:
+
+    - ``/particles/all/position``, ``velocity``, ``force`` and ``charge``: ``step``, ``time`` and ``value`` (single precision)
+    - ``/particles/all/box/edges``: the box vectors of every frame, as rows of a 3x3 matrix
+    - ``/particles/all/species``: atomic numbers, 0 for atoms without element (dummy atoms)
+    - ``/observables/potential_energy``: the potential energy of every frame
+    - ``/parameters/atom_names``: the PQ atom names
+
+Every ``value`` dataset has a ``unit`` attribute. The values are in PQ units (Å, kcal/(mol Å), *e* and kcal/mol), except velocities, which are in Å/fs as H5MD readers like MDAnalysis expect; times are in fs.
+
 .. _chargeFile:
 
 ************
@@ -73,8 +91,19 @@ Energy File
 
 **File Type:** ``.en``
 
-If :ref:`includeoutputmetadatakey` is enabled, the file starts with a
-``# timestep = <value> fs`` comment. By default, the first line remains numeric.
+The file starts with a header that names every column and its unit, in the
+same order as the data. gnuplot, xmgrace and ``numpy.loadtxt`` skip it as a
+comment. Example:
+
+.. code-block:: text
+
+    # PQ energy file v1.1.0
+    #SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...
+             2    259.990188447136   51890.577284595995   -5865.403297836899 ...
+             4    436.120780915806   10090.942289750119   -6539.564395075573 ...
+
+If :ref:`includeoutputmetadatakey` is enabled, a ``# timestep = <value> fs``
+line follows the first line.
 
 Stores information about the energy and various other quantities of the system for every frame in the following format:
 

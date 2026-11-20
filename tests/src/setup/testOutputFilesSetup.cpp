@@ -27,10 +27,13 @@
 #include <string>
 #include <vector>
 
+#include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "h5mdOutput.hpp"
 #include "outputFileSettings.hpp"
 #include "outputFilesSetup.hpp"
 #include "testSetup.hpp"
+#include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
 #include "units.hpp"
 
@@ -50,7 +53,8 @@ namespace
             ".instant_en", ".vel",        ".chrg",       ".mom",
             ".vir",        ".stress",     ".box",        ".rpmd.rst",
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
-            ".rpmd.en",    ".opt",        ".ref",        ".extxyz"
+            ".rpmd.en",    ".opt",        ".ref",        ".extxyz",
+            ".h5md"
         };
 
         for (const auto &suffix : suffixes)
@@ -152,8 +156,10 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     std::ifstream instantEnergyFile(std::string(PREFIX) + ".instant_en");
     std::string   line;
 
+    std::getline(energyFile, line);   // marker
     std::getline(energyFile, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
+    std::getline(instantEnergyFile, line);   // marker
     std::getline(instantEnergyFile, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
 
@@ -176,6 +182,42 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 
     EXPECT_TRUE(std::filesystem::exists(prefix + ".extxyz"));
     EXPECT_TRUE(std::filesystem::exists(prefix + ".rst"));
+
+    for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
+    {
+        EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
+    }
+
+    cleanupPrefix();
+}
+
+TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
+{
+    cleanupPrefix();
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->outputFiles.setFilePrefixByUser(PREFIX);
+    _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::H5MD);
+    _settings->timings.setTimeStepByUser(0.5 * fs);
+    _settings->timings.setNumberOfStepsByUser(100U);
+
+    _settings->finalize();
+    setup::OutputFilesSetup setup(*_mdEngine);
+
+    if (!out::H5mdOutput::available())
+    {
+        EXPECT_THROW_MSG(
+            setup.setup(),
+            exc::CompileTimeException,
+            "traj_format = h5md needs PQ built with -DBUILD_WITH_HDF5=ON"
+        );
+        cleanupPrefix();
+        return;
+    }
+
+    EXPECT_NO_THROW(setup.setup());
+
+    const std::string prefix = PREFIX;
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".h5md"));
 
     for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
     {

@@ -48,6 +48,7 @@ struct DefaultFiles
     static constexpr auto forceFile        = "default.force";
     static constexpr auto chargeFile       = "default.charge";
     static constexpr auto extxyzFile       = "default.extxyz";
+    static constexpr auto h5mdFile         = "default.h5md";
     static constexpr auto logFile          = "default.log";
     static constexpr auto stdoutFile       = "default.stdout";
     static constexpr auto refFile          = "default.ref";
@@ -94,6 +95,10 @@ namespace defaults
     static constexpr auto* HESSIAN_BUILDER_DEFAULT  = "central";
 
     static constexpr char INNER_REGION_CENTER_ATOM_NAME = 'X';
+
+    static constexpr Percent MOMENTUM_WARN_THRESHOLD_DEFAULT{
+        1 * mstd::units::percent
+    };
 
     static constexpr Pos COULOMB_CUT_OFF_DEFAULT = 12.5 * mstd::units::angstrom;
     static constexpr double      SCALE_14_COULOMB_DEFAULT       = 1.0;

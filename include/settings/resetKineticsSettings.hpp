@@ -24,8 +24,10 @@
 #define SETTINGS__RESET_KINETICS_SETTINGS_HPP
 
 #include <cstddef>
+#include <optional>
 
 #include "setting.hpp"
+#include "unit_types.hpp"
 
 /**
  * @class ResetKineticsSettings
@@ -36,13 +38,14 @@
 class ResetKineticsSettings
 {
    private:
-    Setting<size_t> _nScale;
-    Setting<size_t> _fScale;
-    Setting<size_t> _nReset;
-    Setting<size_t> _fReset;
-    Setting<size_t> _nResetAngular;
-    Setting<size_t> _fResetAngular;
-    Setting<size_t> _fResetForces;
+    Setting<size_t>  _nScale;
+    Setting<size_t>  _fScale;
+    Setting<size_t>  _nReset;
+    Setting<size_t>  _fReset;
+    Setting<size_t>  _nResetAngular;
+    Setting<size_t>  _fResetAngular;
+    Setting<size_t>  _fResetForces;
+    Setting<Percent> _momentumWarnThreshold;
 
    public:
     ResetKineticsSettings();
@@ -60,18 +63,23 @@ class ResetKineticsSettings
     void setNResetAngularByUser(size_t nResetAngular);
     void setFResetAngularByUser(size_t fResetAngular);
     void setFResetForcesByUser(size_t fResetForces);
+    void setMomentumWarnThresholdByUser(const Percent& threshold);
 
     /***************************
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] size_t getNScale() const;
-    [[nodiscard]] size_t getFScale() const;
-    [[nodiscard]] size_t getNReset() const;
-    [[nodiscard]] size_t getFReset() const;
-    [[nodiscard]] size_t getNResetAngular() const;
-    [[nodiscard]] size_t getFResetAngular() const;
-    [[nodiscard]] size_t getFResetForces() const;
+    [[nodiscard]] size_t         getNScale() const;
+    [[nodiscard]] size_t         getFScale() const;
+    [[nodiscard]] size_t         getNReset() const;
+    [[nodiscard]] size_t         getFReset() const;
+    [[nodiscard]] size_t         getNResetAngular() const;
+    [[nodiscard]] size_t         getFResetAngular() const;
+    [[nodiscard]] size_t         getFResetForces() const;
+    [[nodiscard]] const Percent& getMomentumWarnThreshold() const;
+
+    [[nodiscard]] size_t                getInitialMomentumResetSteps() const;
+    [[nodiscard]] std::optional<size_t> getMomentumResetInterval() const;
 };
 
 #endif   // SETTINGS__RESET_KINETICS_SETTINGS_HPP

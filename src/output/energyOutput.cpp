@@ -22,16 +22,12 @@
 
 #include "energyOutput.hpp"
 
+#include <cstddef>
 #include <format>
+#include <iterator>
 #include <ostream>
 
-#include "constraintSettings.hpp"
-#include "forceFieldSettings.hpp"
-#include "generalSettings.hpp"
-#include "manostatSettings.hpp"
-#include "physicalData.hpp"
-#include "settings.hpp"
-#include "thermostatSettings.hpp"
+#include "energyColumns.hpp"
 #include "units.hpp"
 
 namespace out
@@ -44,21 +40,15 @@ namespace out
      */
     void EnergyOutput::writeHeader(const Time &timeStep)
     {
+        _writeMarker();
         _getFilePointer() << std::format("# timestep = {}\n", timeStep.in(fs));
     }
 
     /**
      * @brief Write the energy output
      *
-     * @details
-     * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
-     * - Bond, Angle, Dihedral and Improper energies are only available if the
-     * force field is active.
-     * - qm energy is only available if qm is active.
-     * - coulomb and non-coulomb energies are only available if mm is active.
-     * - volume and density are only available if manostat is active.
-     * - nose hoover momentum and friction energies are only available if nose
-     * hoover thermostat is active.
+     * @details the columns come from EnergyColumns, the same list as the info
+     * file; the first call also writes the header lines
      *
      * @param step
      * @param physicalData the physical data of the system
@@ -71,158 +61,66 @@ namespace out
         const Settings                   &settings
     )
     {
-        _getFilePointer() << std::format("{:10d}\t", step);
-        _getFilePointer() << std::format(
-            "{:20.12f}\t",
-            physicalData.getTemperature()
-                .quantity_from_zero()
-                .numerical_value_in(K)
-        );
-        _getFilePointer() << std::format(
-            "{:20.12f}\t",
-            physicalData.getPressure().numerical_value_in(bar)
-        );
-        _getFilePointer() << std::format(
-            "{:20.12f}\t",
-            physicalData.getTotalEnergy().numerical_value_in(kcal_per_mol)
-        );
+        using enum EnergyColumnFormat;
 
-        if (settings::GeneralSettings::isQMActivated())
+        const EnergyColumns columns(physicalData, settings);
+
+        if (!_columnHeaderWritten)
         {
-            const auto qmRef    = physicalData.getQMReferenceEnergy();
-            const auto qmEnergy = physicalData.getQMEnergy() - qmRef;
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                qmEnergy.numerical_value_in(kcal_per_mol)
-            );
-            _getFilePointer(
-            ) << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
+            _writeColumnHeader(columns);
         }
 
-        _getFilePointer() << std::format(
-            "{:20.12f}\t",
-            physicalData.getKineticEnergy().numerical_value_in(kcal_per_mol)
-        );
-        _getFilePointer() << std::format(
-            "{:20.12f}\t",
-            physicalData.getIntraEnergy().numerical_value_in(kcal_per_mol)
-        );
+        auto out = std::ostreambuf_iterator<char>(_getFilePointer());
 
-        if (settings::GeneralSettings::isMMActivated())
+        std::format_to(out, "{:10d}", step);
+
+        for (const auto &column : columns.get())
         {
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol)
-            );
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getNonCoulombEnergy().numerical_value_in(
-                    kcal_per_mol
-                )
-            );
-        }
-
-        if (settings.forceFieldSettings.isActive())
-        {
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getBondEnergy().numerical_value_in(kcal_per_mol)
-            );
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getAngleEnergy().numerical_value_in(kcal_per_mol)
-            );
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getDihedralEnergy().numerical_value_in(
-                    kcal_per_mol
-                )
-            );
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getImproperEnergy().numerical_value_in(
-                    kcal_per_mol
-                )
-            );
-        }
-
-        if (settings::GeneralSettings::isHybridJobtype())
-        {
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getNumberOfSmoothingMolecules()
-            );
-            const auto qmRef = physicalData.getQMReferenceEnergy();
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                qmRef.numerical_value_in(kcal_per_mol)
-            );
-        }
-
-        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
-        {
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getVolume().numerical_value_in(angstrom3)
-            );
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getDensity().numerical_value_in(kg_per_litre)
-            );
-
-            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
+            switch (column.format)
             {
-                _getFilePointer() << std::format(
-                    "{:20.12f}\t",
-                    physicalData.getCoupledPressure().numerical_value_in(bar)
-                );
+                case SCIENTIFIC:
+                    std::format_to(out, "\t{:20.5e}", column.value);
+                    break;
+                case TIME:
+                    std::format_to(out, "\t{:12.5f}", column.value);
+                    break;
+                case FIXED:
+                    std::format_to(out, "\t{:20.12f}", column.value);
+                    break;
             }
         }
 
-        if (settings.thermostatSettings.getThermostatType() ==
-            ThermostatType::NOSE_HOOVER)
+        _getFilePointer() << '\n' << std::flush;
+    }
+
+    /**
+     * @brief Write the PQ energy file marker line once
+     *
+     */
+    void EnergyOutput::_writeMarker()
+    {
+        if (_markerWritten)
         {
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getNoseHooverMomentumEnergy().numerical_value_in(
-                    kcal_per_mol
-                )
-            );
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getNoseHooverFrictionEnergy().numerical_value_in(
-                    one
-                )
-            );
+            return;
         }
 
-        if (settings.constraintSettings.isDistanceConstraintsActivated())
-        {
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getLowerDistanceConstraints().numerical_value_in(
-                    kcal_per_mol
-                )
-            );
-            _getFilePointer() << std::format(
-                "{:20.12f}\t",
-                physicalData.getUpperDistanceConstraints().numerical_value_in(
-                    kcal_per_mol
-                )
-            );
-        }
+        _getFilePointer() << energyFileMarker() << '\n';
 
-        const auto mom = physicalData.getMomentum().numerical_value_in(
-            g_per_mol * angstrom / fs
-        );
+        _markerWritten = true;
+    }
 
-        _getFilePointer() << std::format("{:20.5e}\t", norm(mom));
-        _getFilePointer() << std::format(
-            "{:12.5f}\n",
-            physicalData.getLoopTime().numerical_value_in(s)
-        );
+    /**
+     * @brief Write the marker (if not yet written) and the column names line
+     *
+     * @param columns
+     */
+    void EnergyOutput::_writeColumnHeader(const EnergyColumns &columns)
+    {
+        _writeMarker();
 
-        _getFilePointer() << std::flush;
+        _getFilePointer() << energyFileHeader(columns) << '\n';
+
+        _columnHeaderWritten = true;
     }
 
 }   // namespace out

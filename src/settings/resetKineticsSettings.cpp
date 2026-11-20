@@ -22,6 +22,12 @@
 
 #include "resetKineticsSettings.hpp"
 
+#include <algorithm>
+#include <cstddef>
+#include <optional>
+
+#include "defaults.hpp"
+
 /**
  * @brief Construct a new Reset Kinetics Settings object
  *
@@ -33,7 +39,8 @@ ResetKineticsSettings::ResetKineticsSettings()
       _fReset(0),
       _nResetAngular(0),
       _fResetAngular(0),
-      _fResetForces(0)
+      _fResetForces(0),
+      _momentumWarnThreshold(defaults::MOMENTUM_WARN_THRESHOLD_DEFAULT)
 {
 }
 
@@ -132,6 +139,18 @@ void ResetKineticsSettings::setFResetForcesByUser(size_t fResetForces)
     _fResetForces.setByUser(fResetForces);
 }
 
+/**
+ * @brief set the momentum drift warning threshold
+ *
+ * @param threshold fraction of the thermal velocity, 0 disables the warning
+ */
+void ResetKineticsSettings::setMomentumWarnThresholdByUser(
+    const Percent& threshold
+)
+{
+    _momentumWarnThreshold.setByUser(threshold);
+}
+
 /***************************
  *                         *
  * standard getter methods *
@@ -194,4 +213,45 @@ size_t ResetKineticsSettings::getFResetAngular() const
 size_t ResetKineticsSettings::getFResetForces() const
 {
     return _fResetForces.get();
+}
+
+/**
+ * @brief get the momentum drift warning threshold
+ *
+ * @return const Percent&
+ */
+const Percent& ResetKineticsSettings::getMomentumWarnThreshold() const
+{
+    return _momentumWarnThreshold.get();
+}
+
+/**
+ * @brief number of first steps in which nReset or nScale removes the momentum
+ *
+ * @return size_t
+ */
+size_t ResetKineticsSettings::getInitialMomentumResetSteps() const
+{
+    return std::max(_nReset.get(), _nScale.get());
+}
+
+/**
+ * @brief smallest interval of the periodic momentum reset by fReset or fScale
+ *
+ * @return the interval, std::nullopt if neither is set by the user
+ */
+std::optional<size_t> ResetKineticsSettings::getMomentumResetInterval() const
+{
+    std::optional<size_t> interval;
+
+    for (const auto* setting : {&_fReset, &_fScale})
+    {
+        if (setting->isSetByUser() && setting->get() > 0)
+        {
+            interval =
+                std::min(interval.value_or(setting->get()), setting->get());
+        }
+    }
+
+    return interval;
 }

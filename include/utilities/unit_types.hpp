@@ -35,7 +35,6 @@
 #include <cmath>
 #include <mstd/units.hpp>
 
-#include "mp-units/systems/si/units.h"
 #include "staticMatrix.hpp"
 #include "vector3d.hpp"
 
@@ -145,8 +144,8 @@ using PosVel = mstd::quantity<
     mstd::units::angstrom * mstd::units::angstrom / mstd::units::s>;
 using PosVel3D = linalg::Vector3D<PosVel>;
 
-using Momentum = mstd::quantity<
-    mstd::units::angstrom * mstd::units::g / mstd::units::mol / mstd::units::s>;
+using Momentum =
+    mstd::quantity<mstd::units::angstrom * Mass::unit / mstd::units::s>;
 using Momentum3D = linalg::Vector3D<Momentum>;
 
 using AngularMomentum = mstd::quantity<
@@ -184,6 +183,8 @@ using Stress =
     linalg::StaticMatrix3x3<mstd::quantity<EnergyPerMol::unit / Volume::unit>>;
 
 using Density = mstd::quantity<mstd::units::kg / mstd::units::litre>;
+
+using Percent = mstd::quantity<mstd::units::percent>;
 
 [[nodiscard]]
 static inline Temperature toTemperature(double temperature)

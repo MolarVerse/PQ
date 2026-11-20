@@ -30,6 +30,7 @@
 #include "resetKineticsSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "nscale" command
@@ -196,5 +197,41 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
         exc::InputFileException,
         "Invalid value \"-1\" for key \"freset_angular\" at line 0 in input "
         "file. Value must be a positive integer"
+    );
+}
+
+TEST_F(TestInputFileReader, testParseMomentumWarnThreshold)
+{
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
+    const auto                      funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("momentum_warn_threshold"));
+    const auto &parseFunc = funcMap.at("momentum_warn_threshold");
+
+    EXPECT_EQ(settings.getMomentumWarnThreshold(), 1 * percent);
+
+    std::vector<std::string> lineElements = {
+        "momentum_warn_threshold",
+        "=",
+        "0.05"
+    };
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings.getMomentumWarnThreshold(), 5 * percent);
+
+    _clearParser(parser);
+
+    lineElements = {"momentum_warn_threshold", "=", "0"};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(settings.getMomentumWarnThreshold(), 0.0 * percent);
+
+    _clearParser(parser);
+
+    lineElements = {"momentum_warn_threshold", "=", "-0.1"};
+    EXPECT_THROW_MSG(
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.1\" for key \"momentum_warn_threshold\" at line 0 "
+        "in input file: failed validation with message Value must be greater "
+        "than or equal to 0"
     );
 }

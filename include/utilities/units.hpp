@@ -37,6 +37,8 @@
 
 // NOLINTBEGIN(readability-identifier-length)
 
+inline constexpr auto percent = mstd::units::percent;
+
 inline constexpr auto one = mstd::units::one;
 
 inline constexpr auto rad        = mstd::units::rad;
