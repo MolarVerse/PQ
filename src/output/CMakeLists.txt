@@ -6,6 +6,7 @@ add_library(output
     h5mdOutput.cpp
     outputMessages.cpp
 
+    energyColumns.cpp
     energyOutput.cpp
     infoOutput.cpp
     trajectoryOutput.cpp

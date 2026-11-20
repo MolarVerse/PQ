@@ -25,6 +25,7 @@
 
 #include <string_view>
 
+#include "energyColumns.hpp"
 #include "output.hpp"
 #include "unit_types.hpp"
 
@@ -74,21 +75,12 @@ namespace out
             const std::string_view &,
             const std::string_view &
         );
-        void _writeLeftScientific(
-            double,
-            const std::string_view &,
-            const std::string_view &
-        );
         void _writeLeftInteger(
             double,
             const std::string_view &,
             const std::string_view &
         );
-        void _writeRight(
-            double,
-            const std::string_view &,
-            const std::string_view &
-        );
+        void _writeColumn(const EnergyColumn &column, bool left);
         void _writeRight();
     };
 

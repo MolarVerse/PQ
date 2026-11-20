@@ -156,8 +156,10 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
     std::ifstream instantEnergyFile(std::string(PREFIX) + ".instant_en");
     std::string   line;
 
+    std::getline(energyFile, line);   // marker
     std::getline(energyFile, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
+    std::getline(instantEnergyFile, line);   // marker
     std::getline(instantEnergyFile, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
 

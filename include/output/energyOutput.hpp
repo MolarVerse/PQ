@@ -25,6 +25,7 @@
 
 #include <cstddef>
 
+#include "energyColumns.hpp"
 #include "output.hpp"
 #include "unit_types.hpp"
 
@@ -45,6 +46,10 @@ namespace out
      */
     class EnergyOutput : public Output
     {
+       private:
+        bool _markerWritten       = false;
+        bool _columnHeaderWritten = false;
+
        public:
         using Output::Output;
 
@@ -54,6 +59,10 @@ namespace out
             const physicalData::PhysicalData &physicalData,
             const Settings                   &settings
         );
+
+       private:
+        void _writeMarker();
+        void _writeColumnHeader(const EnergyColumns &columns);
     };
 
 }   // namespace out
