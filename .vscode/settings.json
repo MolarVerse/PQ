@@ -174,6 +174,7 @@
         "inputfile",
         "INPUTFILEEXCEPTION",
         "INSTEN",
+        "Interruptible",
         "INTRANONBONDEDEXCEPTION",
         "ipea",
         "isotropies",
@@ -238,6 +239,7 @@
         "QSPC",
         "rcoulomb",
         "ricc",
+        "rimp",
         "rpmd",
         "RSTFILEEXCEPTION",
         "RSTFILEOUTPUT",
@@ -277,5 +279,16 @@
         "editor.defaultFormatter": "ms-python.autopep8"
     },
     "python.formatting.provider": "none",
-    "esbonio.sphinx.confDir": ""
+    "esbonio.sphinx.confDir": "",
+    "cmake.buildType": "Debug",
+    "cmake.environment": {
+        "CXX": "clang++-20"
+    },
+    "cmake.configureArgs": [
+        "-DBUILD_WITH_TESTS=ON",
+        "-DBUILD_WITH_DOCS=ON",
+        "-DBUILD_WITH_PERF_BENCH=ON",
+        "-DBUILD_WITH_BENCHMARKING=ON"
+    ],
+    "claudeCode.allowDangerouslySkipPermissions": true
 }

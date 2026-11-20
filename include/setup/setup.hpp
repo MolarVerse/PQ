@@ -31,6 +31,7 @@ namespace engine
 class ReferenceSettings;
 class NoseHooverSettings;
 class TimingsSettings;
+class PotentialSettings;
 namespace timings
 {
     class Timer;   // forward declaration
@@ -50,13 +51,19 @@ namespace setup
     void setupRequestedJob(
         engine::Engine     &engine,
         NoseHooverSettings &nhSettings,
-        TimingsSettings    &timingsSettings
+        TimingsSettings    &timingsSettings,
+        PotentialSettings  &potentialSettings
     );
 
     void startSetup();
     void endSetup(engine::Engine &);
 
-    void readFiles(engine::Engine &, NoseHooverSettings &, TimingsSettings &);
+    void readFiles(
+        engine::Engine &,
+        NoseHooverSettings &,
+        TimingsSettings &,
+        PotentialSettings &
+    );
     void setupEngine(engine::Engine &);
 }   // namespace setup
 

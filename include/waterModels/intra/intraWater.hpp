@@ -23,6 +23,7 @@
 #ifndef WATER_MODELS__INTRA__INTRA_WATER_HPP
 #define WATER_MODELS__INTRA__INTRA_WATER_HPP
 
+#include <mstd/types.hpp>
 namespace molsys
 {
     class SimulationBox;   // forward declaration
@@ -33,11 +34,17 @@ namespace physicalData
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
 
+class HybridSettings;   // forward declaration
+
 namespace waterModel
 {
     class IntraWater
     {
+       private:
+        mstd::ConstRef<HybridSettings> _hybridSettings;
+
        public:
+        explicit IntraWater(const HybridSettings& hybridSettings);
         virtual ~IntraWater() = default;
 
         virtual void calculate(
@@ -46,6 +53,10 @@ namespace waterModel
         )
         {
         }
+
+       protected:
+        [[nodiscard]]
+        const HybridSettings& _getHybridSettings() const;
     };
 
 }   // namespace waterModel

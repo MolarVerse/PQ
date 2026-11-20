@@ -38,41 +38,47 @@ namespace pot
     class PotentialBruteForce : public Potential
     {
        public:
+        using Potential::Potential;
         ~PotentialBruteForce() override;
 
         void calculateForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const molsys::CellList & /*cellList*/,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) override;
 
         void calculateCoreToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const molsys::CellList & /*cellList*/,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) override;
 
         void calculateLayerToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const molsys::CellList & /*cellList*/,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) override;
 
         void calculateOuterToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const molsys::CellList     &cellList,
-            const WaterModelSettings   &waterModelSettings
+            const WaterModelSettings   &waterModelSettings,
+            const PotentialSettings    &potentialSettings
         ) override;
 
         void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
             const molsys::CellList & /*cellList*/,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) override;
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;

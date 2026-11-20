@@ -56,6 +56,7 @@ target_link_libraries(engine
     forceField
     intraNonBonded
     interWater
+    intraWater
     references
     hybridConfigurator
 

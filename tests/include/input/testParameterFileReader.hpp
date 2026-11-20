@@ -63,7 +63,8 @@ class TestParameterFileReader : public ::testing::Test
         _parameterFileReader =
             std::make_unique<input::parameterFile::ParameterFileReader>(
                 "data/parameterFileReader/param.param",
-                *_engine
+                *_engine,
+                _settings.potentialSettings
             );
     }
 };

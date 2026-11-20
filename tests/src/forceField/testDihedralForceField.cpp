@@ -31,6 +31,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
 #include "forceFieldNonCoulomb.hpp"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -52,13 +53,16 @@ class TestDihedralForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestDihedralForceField, calculateEnergyAndForces)
 {
-    auto box = molsys::SimulationBox();
+    const HybridSettings hybridSettings;
+    auto                 box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(20.0);
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(20.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -124,15 +128,17 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
     bondForceField.setIsLinker(false);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.5);
 
     bondForceField.calculateEnergyAndForces(
         box,
         physicalData,
         false,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);
@@ -209,7 +215,9 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         true,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getImproperEnergy(), 3.9128709291752739, 1e-6);
@@ -286,7 +294,9 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         physicalData,
         false,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);

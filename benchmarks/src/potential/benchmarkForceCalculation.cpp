@@ -37,8 +37,7 @@
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
-#include "potentialSettings.hpp"
-#include "waterModelSettings.hpp"
+#include "settings.hpp"
 
 namespace
 {
@@ -68,16 +67,14 @@ namespace
         const auto cellsPerSide = static_cast<std::size_t>(state.range(0));
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
-        settings::PotentialSettings::setCoulombRadiusCutOff(
+        Settings settings;
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(
             benchmarkSetup::cutOff
         );
-        pot::CoulombPotential::setCoulombRadiusCutOff(benchmarkSetup::cutOff);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
-        PotentialType forceCalculation;
+        PotentialType forceCalculation{settings.hybridSettings};
         forceCalculation.makeCoulombPotential(
-            pot::CoulombShiftedPotential(benchmarkSetup::cutOff)
+            pot::CoulombShiftedPotential(settings.potentialSettings)
         );
         forceCalculation.setNonCoulombPotential(makeNonCoulombPotential());
 
@@ -87,12 +84,11 @@ namespace
             settings::GeneralSettings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
-            cellList.setup(simBox);
-            cellList.updateCellList(simBox);
+            cellList.setup(simBox, benchmarkSetup::cutOff);
+            cellList.updateCellList(simBox, benchmarkSetup::cutOff);
         }
 
         physicalData::PhysicalData physicalData;
-        WaterModelSettings         waterModelSettings;
 
         for (auto _ : state)
         {
@@ -104,7 +100,8 @@ namespace
                 simBox,
                 physicalData,
                 cellList,
-                waterModelSettings
+                settings.waterModelSettings,
+                settings.potentialSettings
             );
             benchmark::DoNotOptimize(physicalData.getCoulombEnergy());
             benchmark::DoNotOptimize(physicalData.getNonCoulombEnergy());

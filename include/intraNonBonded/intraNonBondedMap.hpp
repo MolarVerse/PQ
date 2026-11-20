@@ -45,13 +45,7 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
-namespace linalg
-{
-    template <typename T>
-    class Vector3D;   // forward declaration
-
-    using Vec3D = Vector3D<double>;
-}   // namespace linalg
+class PotentialSettings;   // forward declaration
 
 namespace intraNonBonded
 {
@@ -77,17 +71,18 @@ namespace intraNonBonded
             const pot::CoulombPotential *coulombPotential,
             pot::NonCoulombPotential    *nonCoulombPotential,
             const molsys::SimulationBox &simulationBox,
-            physicalData::PhysicalData  &physicalData
+            physicalData::PhysicalData  &physicalData,
+            const PotentialSettings     &potentialSettings
         ) const;
 
         [[nodiscard]]
         std::pair<double, double> calculateSingleInteraction(
-            AtomIndex            atomIdx1,
-            int                  atomIdx2,
-            const linalg::Vec3D &box,
-            physicalData::PhysicalData & /*data*/,
+            AtomIndex                    atomIdx1,
+            int                          atomIdx2,
+            const linalg::Vec3D         &box,
             const pot::CoulombPotential *coulPot,
-            pot::NonCoulombPotential    *nonCoulPot
+            pot::NonCoulombPotential    *nonCoulPot,
+            const PotentialSettings     &potentialSettings
         ) const;
 
         /***************************

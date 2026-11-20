@@ -123,8 +123,8 @@ namespace input::parameterFile
             );
         }
 
-        settings::PotentialSettings::setScale14Coulomb(scaleCoulomb);
-        settings::PotentialSettings::setScale14VanDerWaals(scaleVanDerWaals);
+        PotentialSettings::setScale14Coulomb(scaleCoulomb);
+        PotentialSettings::setScale14VanDerWaals(scaleVanDerWaals);
     }
 
 }   // namespace input::parameterFile

@@ -31,11 +31,13 @@
 #include "coulombShiftedPotential.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "gmock/gmock.h"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "units.hpp"
@@ -51,13 +53,16 @@ class TestBondForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestBondForceField, calculateEnergyAndForces)
 {
-    auto box = molsys::SimulationBox();
+    const HybridSettings hybridSettings;
+    auto                 box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -110,7 +115,9 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     auto force =
@@ -150,7 +157,9 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     force = {-0.68765171383567736, -1.3753034276713547, -2.062955141507032};

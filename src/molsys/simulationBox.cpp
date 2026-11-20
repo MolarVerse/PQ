@@ -30,7 +30,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
 
@@ -105,33 +104,6 @@ namespace molsys
             return *molecule;
 
         return std::nullopt;
-    }
-
-    /**
-     * @brief adds all atomIndices to _innerRegionCenterAtomIndices vector
-     *
-     * @param atomIndices
-     *
-     * @throw exc::UserInputException if atom index out of range
-     */
-    void SimulationBox::addInnerRegionCenterAtoms(
-        const std::vector<size_t>& atomIndices
-    )
-    {
-        for (const auto index : atomIndices)
-        {
-            if (index >= _atoms.size())
-            {
-                throw exc::UserInputException(
-                    std::format(
-                        "Inner region center atom index {} out of range",
-                        index
-                    )
-                );
-            }
-        }
-
-        _innerRegionCenterAtomIndices = atomIndices;
     }
 
     /**
@@ -772,13 +744,11 @@ namespace molsys
      * half of the minimal box dimension
      */
     void SimulationBox::checkCoulRadiusCutOff(
-        const ExceptionType& exceptionType
+        const ExceptionType& exceptionType,
+        double               coulombRadiusCutOff
     ) const
     {
-        const auto coulRadiusCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
-
-        if (getMinimalBoxDimension() < 2.0 * coulRadiusCutOff)
+        if (getMinimalBoxDimension() < 2.0 * coulombRadiusCutOff)
         {
             const std::string message =
                 "Coulomb radius cut off is larger than half of the minimal box "

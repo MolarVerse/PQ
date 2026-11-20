@@ -23,7 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class HybridSettings;   // forward declaration
 
 namespace input
 {
@@ -35,8 +39,11 @@ namespace input
      */
     class HybridInputParser : public InputFileParser
     {
+       private:
+        mstd::Ref<HybridSettings> _hybridSettings;
+
        public:
-        HybridInputParser();
+        explicit HybridInputParser(HybridSettings &hybridSettings);
 
         void addInnerRegionCenterKey();
         void addForcedCoreListKey();

@@ -32,6 +32,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
@@ -40,9 +41,10 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "privateHelper/potentialSettingsUtils.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
-#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -160,10 +162,10 @@ namespace
 
 TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(kCoulombCutOff);
-    pot::CoulombPotential::setCoulombRadiusCutOff(kCoulombCutOff);
-    pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-    pot::CoulombPotential::setCoulombForceCutOff(0.0);
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCoulombCutOff);
+    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
 
     // Cell layout: box 15 Å, 3 cells per side, cellSize 5 Å, cutoff 4 Å.
     // Cells per axis: [-7.5,-2.5], [-2.5,+2.5], [+2.5,+7.5]. Placements are
@@ -185,27 +187,28 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     physicalData::PhysicalData physicalDataBF;
     physicalData::PhysicalData physicalDataCL;
 
-    pot::PotentialBruteForce bruteForce;
+    const HybridSettings     hybridSettings;
+    pot::PotentialBruteForce bruteForce(hybridSettings);
     bruteForce.makeCoulombPotential(
-        pot::CoulombShiftedPotential(kCoulombCutOff)
+        pot::CoulombShiftedPotential(settings.potentialSettings)
     );
     bruteForce.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    pot::PotentialCellList cellListPotential;
+    pot::PotentialCellList cellListPotential(hybridSettings);
     cellListPotential.makeCoulombPotential(
-        pot::CoulombShiftedPotential(kCoulombCutOff)
+        pot::CoulombShiftedPotential(settings.potentialSettings)
     );
     cellListPotential.setNonCoulombPotential(buildGuffNonCoulomb());
 
     // Brute force ignores its molsys::CellList argument; pass a
     // default-constructed one purely to satisfy the signature.
-    WaterModelSettings waterModelSettings;
-    molsys::CellList   dummyCellList;
+    molsys::CellList dummyCellList;
     bruteForce.calculateForces(
         simBoxBF,
         physicalDataBF,
         dummyCellList,
-        waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
 
     settings::GeneralSettings::activateCellList();
@@ -213,13 +216,20 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     molsys::CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
     cellList.resizeCells();
-    cellList.setup(simBoxCL);
-    cellList.updateCellList(simBoxCL);
+    cellList.setup(
+        simBoxCL,
+        settings.potentialSettings.getCoulombRadiusCutOff()
+    );
+    cellList.updateCellList(
+        simBoxCL,
+        settings.potentialSettings.getCoulombRadiusCutOff()
+    );
     cellListPotential.calculateForces(
         simBoxCL,
         physicalDataCL,
         cellList,
-        waterModelSettings
+        settings.waterModelSettings,
+        settings.potentialSettings
     );
 
     EXPECT_NEAR(

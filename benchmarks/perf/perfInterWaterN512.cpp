@@ -30,4 +30,8 @@
 static constexpr std::size_t   PER_SIDE   = 8;
 static constexpr std::uint64_t ITERATIONS = 10;
 
-int main() { return benchWaterScaling::run(PER_SIDE, ITERATIONS); }
+int main()
+{
+    Settings settings;
+    return benchWaterScaling::run(PER_SIDE, ITERATIONS, settings);
+}

@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "dihedral.hpp"
+#include "enums/hybrid.hpp"
 #include "strongTypes.hpp"
 
 namespace physicalData
@@ -44,6 +45,9 @@ namespace pot
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
+
+class HybridSettings;      // forward declaration
+class PotentialSettings;   // forward declaration
 
 namespace ff
 {
@@ -73,7 +77,9 @@ namespace ff
             physicalData::PhysicalData  &physicalData,
             bool                         isImproperDihedral,
             const pot::CoulombPotential &coulombPot,
-            pot::NonCoulombPotential    &nonCoulombPot
+            pot::NonCoulombPotential    &nonCoulombPot,
+            SmoothingMethod              smoothing,
+            const PotentialSettings     &potentialSettings
         );
 
         /***************************

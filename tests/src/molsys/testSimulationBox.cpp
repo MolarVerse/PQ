@@ -34,7 +34,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
 #include "vectorNear.hpp"
@@ -355,20 +354,26 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(1.0);
+    const auto coulombRadiusCutOff = 1.0;
 
     molsys::OrthorhombicBox orthoBox1{{1.99, 10.0, 10.0}};
     _simulationBox->setBox(orthoBox1, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::ManostatError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::ManostatError,
+            coulombRadiusCutOff
+        ),
         exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -378,7 +383,10 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBox(orthoBox2, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -388,7 +396,10 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBox(orthoBox3, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -641,17 +652,6 @@ TEST_F(TestSimulationBox, copyOwnsIndependentAtoms)
 
 TEST_F(TestSimulationBox, validatesHybridIndexLists)
 {
-    _simulationBox->addInnerRegionCenterAtoms({0, 4});
-    EXPECT_EQ(
-        _simulationBox->getInnerRegionCenterAtomIndices(),
-        std::vector<size_t>({0, 4})
-    );
-    EXPECT_THROW_MSG(
-        _simulationBox->addInnerRegionCenterAtoms({5}),
-        exc::UserInputException,
-        "Inner region center atom index 5 out of range"
-    );
-
     _simulationBox->setupForcedOuterMolecules({0});
     EXPECT_TRUE(_simulationBox->getMolecule(0).isForcedOuter());
     EXPECT_THROW_MSG(

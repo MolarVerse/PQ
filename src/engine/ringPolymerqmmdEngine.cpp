@@ -136,7 +136,12 @@ namespace engine
                 auto &bead = getRingPolymerBeads()[i];
                 auto &data = getRingPolymerBeadsPhysicalData()[i];
 
-                getQMRunner()->run(bead, data, getSettings().fileSettings);
+                getQMRunner()->run(
+                    bead,
+                    data,
+                    getSettings().fileSettings,
+                    getSettings().hybridSettings
+                );
             }
         }
 
@@ -188,7 +193,8 @@ namespace engine
             getQMRunner()->run(
                 getRingPolymerBeads()[i],
                 getRingPolymerBeadsPhysicalData()[i],
-                getSettings().fileSettings
+                getSettings().fileSettings,
+                getSettings().hybridSettings
             );
         }
     }
@@ -372,7 +378,8 @@ namespace engine
                     bead,
                     data,
                     _getKinetics().getCurrentTargetTemperature(),
-                    timeStep
+                    timeStep,
+                    getSettings().potentialSettings.getCoulombRadiusCutOff()
                 );
             }
         }
@@ -457,7 +464,8 @@ namespace engine
                 bead,
                 data,
                 _getKinetics().getCurrentTargetTemperature(),
-                timeStep
+                timeStep,
+                getSettings().potentialSettings.getCoulombRadiusCutOff()
             );
         }
     }

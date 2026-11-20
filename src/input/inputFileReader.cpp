@@ -103,7 +103,11 @@ namespace input
             std::make_unique<ConstraintsInputParser>(settings.constraintSettings
             )
         );
-        _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
+        _parsers.push_back(
+            std::make_unique<CoulombLongRangeInputParser>(
+                settings.potentialSettings
+            )
+        );
         _parsers.push_back(
             std::make_unique<FilesInputParser>(
                 validateFilePaths,
@@ -113,7 +117,8 @@ namespace input
         _parsers.push_back(
             std::make_unique<MMInputParser>(
                 settings.waterModelSettings,
-                settings.forceFieldSettings
+                settings.forceFieldSettings,
+                settings.potentialSettings
             )
         );
         _parsers.push_back(std::make_unique<GeneralInputParser>());
@@ -134,7 +139,8 @@ namespace input
         );
         _parsers.push_back(
             std::make_unique<SimulationBoxInputParser>(
-                settings.simulationBoxSettings
+                settings.simulationBoxSettings,
+                settings.potentialSettings
             )
         );
         _parsers.push_back(
@@ -148,7 +154,9 @@ namespace input
             std::make_unique<TimingsInputParser>(settings.timings)
         );
         _parsers.push_back(std::make_unique<VirialInputParser>());
-        _parsers.push_back(std::make_unique<HybridInputParser>());
+        _parsers.push_back(
+            std::make_unique<HybridInputParser>(settings.hybridSettings)
+        );
         _parsers.push_back(
             std::make_unique<RingPolymerInputParser>(
                 settings.ringPolymerSettings

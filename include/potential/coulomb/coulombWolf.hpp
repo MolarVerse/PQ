@@ -47,31 +47,16 @@ namespace pot
         static inline double _wolfParam3;
 
        public:
-        explicit CoulombWolf(double coulombRadiusCutOff, double kappa);
+        explicit CoulombWolf(
+            const PotentialSettings& potentialSettings,
+            double                   kappa
+        );
 
         [[nodiscard]]
         std::pair<double, double> calculate(
             double distance,
             double chargeProduct
         ) const override;
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        static void setKappa(double kappa);
-        static void setWolfParameter1(double wolfParameter1);
-        static void setWolfParameter2(double wolfParameter2);
-        static void setWolfParameter3(double wolfParameter3);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static double getKappa();
-        [[nodiscard]] static double getWolfParameter1();
-        [[nodiscard]] static double getWolfParameter2();
-        [[nodiscard]] static double getWolfParameter3();
     };
 
 }   // namespace pot

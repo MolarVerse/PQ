@@ -38,7 +38,6 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
-#include "potentialSettings.hpp"
 #include "resetKinetics.hpp"
 #include "resetKineticsSettings.hpp"
 #include "settings.hpp"
@@ -71,7 +70,6 @@ namespace
             _settings->manostatSettings.setCompressibilityByUser(
                 0.03 * per_bar
             );
-            settings::PotentialSettings::setCoulombRadiusCutOff(0.1);
             _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
             _data.setVirial(linalg::tensor3D{0.0});
             _data.setKineticEnergyMolecularVector(linalg::tensor3D{0.0});
@@ -126,7 +124,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
         const auto oldCell =
             _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ);
         const auto timeStep = 1.0 * fs;
-        coupling->applyManostat(_box, _data, toTemperature(0.0), timeStep);
+        coupling->applyManostat(_box, _data, toTemperature(0.0), timeStep, 0.1);
         EXPECT_NEAR(_data.getPressure().numerical_value_in(bar), 1.0, 1e-12);
         for (size_t i = 0; i < 3; ++i)
         {
@@ -234,10 +232,13 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
              std::vector<manostat::Manostat*>{&berendsen, &stochastic})
         {
             const auto oldVolume = _box.getVolume();
-            EXPECT_NO_THROW(
-                coupling
-                    ->applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs)
-            );
+            EXPECT_NO_THROW(coupling->applyManostat(
+                _box,
+                _data,
+                toTemperature(0.0),
+                1.0 * fs,
+                0.1
+            ));
             EXPECT_LT(_box.getVolume(), oldVolume);
             EXPECT_NEAR(
                 _box.getAtom(1).getPosition()[0] -
@@ -250,7 +251,8 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
     EXPECT_TRUE(testing::internal::GetCapturedStdout().empty());
     manostat::Manostat reportPressure(_settings->manostatSettings);
     EXPECT_NO_THROW(
-        reportPressure.applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs)
+        reportPressure
+            .applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs, 0.1)
     );
 }
 
@@ -313,10 +315,14 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
         proposalSettings.at(i)->setIsotropyByUser(
             i == 0 ? Isotropy::SEMI_ISOTROPIC_XY : Isotropy::ISOTROPIC
         );
-        settings::PotentialSettings::setCoulombRadiusCutOff(i == 4 ? 3.0 : 0.1);
         EXPECT_THROW_MSG(
-            proposals.at(i)
-                ->applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs),
+            proposals.at(i)->applyManostat(
+                _box,
+                _data,
+                toTemperature(0.0),
+                1.0 * fs,
+                i == 4 ? 3.0 : 0.1
+            ),
             exc::ManostatException,
             i == 4
                 ? "Coulomb radius cut off is larger than half of the minimal "
@@ -492,7 +498,7 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
     );
-    stochastic.applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs);
+    stochastic.applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs, 0.1);
 
     EXPECT_NEAR(_data.getKineticEnergy() / expectedEnergy, 1.0, 1e-12);
     EXPECT_NEAR(
@@ -533,10 +539,12 @@ TEST_F(ManostatRegression, atomicVirialSupportsMonatomicPressureCoupling)
     manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
     );
     EXPECT_NO_THROW(
-        berendsen.applyManostat(_box, _data, toTemperature(300.0), 0.5 * fs)
+        berendsen
+            .applyManostat(_box, _data, toTemperature(300.0), 0.5 * fs, 0.1)
     );
     EXPECT_NO_THROW(
-        stochastic.applyManostat(_box, _data, toTemperature(300.0), 0.5 * fs)
+        stochastic
+            .applyManostat(_box, _data, toTemperature(300.0), 0.5 * fs, 0.1)
     );
     EXPECT_TRUE(std::isfinite(_box.getVolume()));
     EXPECT_GT(_box.getVolume(), 0.0);

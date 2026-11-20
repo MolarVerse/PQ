@@ -24,6 +24,7 @@
 #define POTENTIAL__POTENTIAL_HPP
 
 #include <memory>
+#include <mstd/types.hpp>
 #include <utility>
 
 #include "coulombPotential.hpp"
@@ -44,6 +45,7 @@ namespace molsys
 }   // namespace molsys
 
 class WaterModelSettings;   // forward declaration
+class HybridSettings;       // forward declaration
 
 namespace pot
 {
@@ -72,52 +74,60 @@ namespace pot
     class Potential
     {
        private:
+        mstd::ConstRef<HybridSettings>       _hybridSettings;
         std::shared_ptr<CoulombPotential>    _coulombPotential;
         std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
+        explicit Potential(const HybridSettings &hybridSettings);
         virtual ~Potential();
 
         virtual void calculateForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         void calculateQMMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         );
 
         virtual void calculateCoreToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         [[nodiscard]]
@@ -125,27 +135,30 @@ namespace pot
 
         template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteraction(
-            const molsys::Box &box,
-            molsys::Molecule  &mol1,
-            molsys::Molecule  &mol2,
-            molsys::Atom      &atom1,
-            molsys::Atom      &atom2
+            const molsys::Box            &box,
+            molsys::Molecule             &mol1,
+            molsys::Molecule             &mol2,
+            molsys::Atom                 &atom1,
+            molsys::Atom                 &atom2,
+            const CoulombPotentialConfig &config
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         double calculateSingleCoulombInteraction(
-            const molsys::Box &box,
-            molsys::Atom      &atom1,
-            molsys::Atom      &atom2
+            const molsys::Box            &box,
+            molsys::Atom                 &atom1,
+            molsys::Atom                 &atom2,
+            const CoulombPotentialConfig &config
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         std::pair<double, double> calculateSingleInteractionOneWay(
-            const molsys::Box &box,
-            molsys::Molecule  &mol1,
-            molsys::Molecule  &mol2,
-            molsys::Atom      &atom1,
-            molsys::Atom      &atom2
+            const molsys::Box            &box,
+            molsys::Molecule             &mol1,
+            molsys::Molecule             &mol2,
+            molsys::Atom                 &atom1,
+            molsys::Atom                 &atom2,
+            const CoulombPotentialConfig &config
         ) const;
 
         template <typename T>

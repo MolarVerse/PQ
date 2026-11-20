@@ -29,7 +29,6 @@
 
 #include "celllist.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
 class TestCellList : public ::testing::Test
@@ -49,7 +48,6 @@ class TestCellList : public ::testing::Test
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         _simulationBox->setBox(orthoBox, false);
-        settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
 };
 

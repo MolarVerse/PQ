@@ -39,8 +39,10 @@
 
 TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
+    hybridSettings.setInnerRegionCenterByUser({});
 
     EXPECT_THROW_MSG(
         hybridConfigurator.calculateInnerRegionCenter(simBox),
@@ -78,7 +80,7 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     simBox.setBox(orthoBox, false);
-    simBox.addInnerRegionCenterAtoms({0, 1, 2});
+    hybridSettings.setInnerRegionCenterByUser({0, 1, 2});
 
     hybridConfigurator.calculateInnerRegionCenter(simBox);
 
@@ -137,16 +139,16 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 
 TEST(testHybridConfigurator, assignHybridZones)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings hybridSettings;
+    hybridSettings.setCoreRadiusByUser(6.0);
+    hybridSettings.setLayerRadiusByUser(12.0);
+    hybridSettings.setSmoothingRegionThicknessByUser(2.0);
+    hybridSettings.setPointChargeThicknessByUser(7.0);
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
     simBox.setBox(orthoBox, false);
-
-    settings::HybridSettings::setCoreRadius(6.0);
-    settings::HybridSettings::setLayerRadius(12.0);
-    settings::HybridSettings::setSmoothingRegionThickness(2.0);
-    settings::HybridSettings::setPointChargeThickness(7.0);
 
     auto atom1 = std::make_shared<molsys::Atom>();
     atom1->setPosition({3.95, 3.15, 1.95}
@@ -202,7 +204,7 @@ TEST(testHybridConfigurator, assignHybridZones)
     mol5.addAtom(atom6);
     simBox.addMolecule(mol5);
 
-    configurator::HybridConfigurator::assignHybridZones(simBox);
+    hybridConfigurator.assignHybridZones(simBox);
 
     using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
@@ -214,16 +216,17 @@ TEST(testHybridConfigurator, assignHybridZones)
 
 TEST(testHybridConfigurator, assignHybridZonesCoreZero)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
     simBox.setBox(orthoBox, false);
 
-    settings::HybridSettings::setCoreRadius(0.0);
-    settings::HybridSettings::setLayerRadius(7.0);
-    settings::HybridSettings::setSmoothingRegionThickness(0.2);
-    settings::HybridSettings::setPointChargeThickness(7.0);
+    hybridSettings.setCoreRadiusByUser(0.0);
+    hybridSettings.setLayerRadiusByUser(7.0);
+    hybridSettings.setSmoothingRegionThicknessByUser(0.2);
+    hybridSettings.setPointChargeThicknessByUser(7.0);
 
     auto atom = std::make_shared<molsys::Atom>();
     atom->setPosition({0.0, 0.0, 0.0});
@@ -234,29 +237,30 @@ TEST(testHybridConfigurator, assignHybridZonesCoreZero)
     mol.addAtom(atom);
     simBox.addMolecule(mol);
 
-    configurator::HybridConfigurator::assignHybridZones(simBox);
+    hybridConfigurator.assignHybridZones(simBox);
 
     using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), LAYER);
 
-    settings::HybridSettings::setCoreRadius(0.00001);
-    configurator::HybridConfigurator::assignHybridZones(simBox);
+    hybridSettings.setCoreRadiusByUser(0.00001);
+    hybridConfigurator.assignHybridZones(simBox);
 
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
 }
 
 TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
     simBox.setBox(orthoBox, false);
 
-    settings::HybridSettings::setCoreRadius(2.0);
-    settings::HybridSettings::setLayerRadius(4.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
-    settings::HybridSettings::setPointChargeThickness(2.0);
+    hybridSettings.setCoreRadiusByUser(2.0);
+    hybridSettings.setLayerRadiusByUser(4.0);
+    hybridSettings.setSmoothingRegionThicknessByUser(1.0);
+    hybridSettings.setPointChargeThicknessByUser(2.0);
 
     auto makeMolecule = [](const linalg::Vec3D &position)
     {
@@ -277,7 +281,7 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
     forcedLayer.setForcedLayer(true);
     simBox.addMolecule(forcedLayer);
 
-    configurator::HybridConfigurator::assignHybridZones(simBox);
+    hybridConfigurator.assignHybridZones(simBox);
 
     using enum molsys::HybridZone;
     EXPECT_EQ(simBox.getMolecule(0).getHybridZone(), CORE);
@@ -286,7 +290,8 @@ TEST(testHybridConfigurator, forcedZonesOverrideDistanceAssignment)
 
 TEST(testHybridConfigurator, activateDeactivateMolecules)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
 
     using enum molsys::HybridZone;
@@ -374,14 +379,15 @@ TEST(testHybridConfigurator, activateDeactivateMolecules)
 
 TEST(testHybridConfigurator, calculateSmoothingFactors)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
     simBox.setBox(orthoBox, false);
 
-    settings::HybridSettings::setLayerRadius(12.0);
-    settings::HybridSettings::setSmoothingRegionThickness(2.0);
+    hybridSettings.setLayerRadiusByUser(12.0);
+    hybridSettings.setSmoothingRegionThicknessByUser(2.0);
 
     using enum molsys::HybridZone;
 
@@ -425,7 +431,7 @@ TEST(testHybridConfigurator, calculateSmoothingFactors)
     mol4.setHybridZone(SMOOTHING);
     simBox.addMolecule(mol4);
 
-    configurator::HybridConfigurator::calculateSmoothingFactors(simBox);
+    hybridConfigurator.calculateSmoothingFactors(simBox);
 
     EXPECT_NEAR(simBox.getMolecule(0).getSmoothingFactor(), 1.0, 1e-10);
     EXPECT_NEAR(simBox.getMolecule(1).getSmoothingFactor(), 0.5, 1e-10);
@@ -472,11 +478,12 @@ TEST(testHybridConfigurator, restorePositionsRefreshesMoleculeCenters)
         }
         box.addMolecule(molecule);
     }
-    box.addInnerRegionCenterAtoms({0});
-    configurator::HybridConfigurator configurator;
+    HybridSettings hybridSettings;
+    hybridSettings.setInnerRegionCenterByUser({0});
+    configurator::HybridConfigurator configurator{hybridSettings};
     configurator.calculateInnerRegionCenter(box);
     configurator.shiftAtomsToInnerRegionCenter(box);
-    configurator::HybridConfigurator::assignHybridZones(box);
+    configurator.assignHybridZones(box);
     configurator.shiftAtomsBackToInitialPositions(box);
 
     EXPECT_NEAR(box.getMolecule(0).getCenterOfMass()[0], 4.9, 1e-12);

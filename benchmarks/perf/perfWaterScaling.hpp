@@ -37,6 +37,8 @@
 #include <string_view>
 #include <utility>
 
+#include "settings.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -67,15 +69,16 @@ namespace benchWaterScaling
     inline constexpr auto    HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
     inline constexpr auto    OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
-    inline int run(const std::size_t perSide, const std::uint64_t iterations)
+    inline int run(
+        const std::size_t   perSide,
+        const std::uint64_t iterations,
+        Settings            settings
+    )
     {
-        settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
-        pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
-
-        WaterModelSettings waterModelSettings;
-        waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC_E);
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
+        settings.waterModelSettings.setWaterInterModelByUser(
+            WaterInterModel::SPC_E
+        );
 
         const double boxLength = (SPACING * static_cast<double>(perSide)) + 3.0;
         const auto   numberOfCells = static_cast<size_t>(boxLength / CUTOFF);
@@ -158,16 +161,23 @@ namespace benchWaterScaling
 
         waterModel::InterWater interWater(
             std::move(state),
-            std::make_unique<waterModel::InterWaterStrategyCellList>()
+            std::make_unique<waterModel::InterWaterStrategyCellList>(
+                settings.hybridSettings
+            ),
+            settings.potentialSettings
         );
-        auto coulombPot =
-            std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
+        auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(
+            settings.potentialSettings
+        );
 
         settings::GeneralSettings::activateCellList();
         molsys::CellList cellList;
         cellList.setNumberOfCells(numberOfCells);
         cellList.resizeCells();
-        cellList.setup(simBox);
+        cellList.setup(
+            simBox,
+            settings.potentialSettings.getCoulombRadiusCutOff()
+        );
 
         auto physicalData = physicalData::PhysicalData();
 
@@ -177,8 +187,17 @@ namespace benchWaterScaling
 
         for (std::uint64_t i = 0; i < iterations; ++i)
         {
-            cellList.updateCellList(simBox);
-            interWater.calculate(simBox, physicalData, coulombPot, cellList);
+            cellList.updateCellList(
+                simBox,
+                settings.potentialSettings.getCoulombRadiusCutOff()
+            );
+            interWater.calculate(
+                simBox,
+                physicalData,
+                coulombPot,
+                cellList,
+                settings.potentialSettings
+            );
         }
 
         // read state so the loop cannot be optimized away

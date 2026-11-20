@@ -129,6 +129,8 @@ jobs:
       # errors tolerated, and the Release jobs do not use the strict flags.
       # Only the arm Debug job runs this step with Debug, and it is the
       # fastest job. The benchmark smoke tests are left to the benchmark job.
+      # Both Debug jobs (arm via this step, x86 via the coverage step) build
+      # the perf and benchmark sources so -Werror catches issues on both arches.
       - name: Build and Test Project
         id: build
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
@@ -146,6 +148,7 @@ jobs:
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
         run: |
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_BENCHMARKING=On \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
           cmake --build build --target coverage_xml
