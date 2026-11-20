@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 /**

@@ -360,12 +360,10 @@ namespace constraints
                         posUnconstrained[j] += posAdjustment / mass_j;
 
                         atoms[i]->addVelocity(
-                            -posAdjustment /
-                            (mass_i * timeStep.numerical_value_in(s))
+                            -posAdjustment / (mass_i * timeStep)
                         );
                         atoms[j]->addVelocity(
-                            posAdjustment /
-                            (mass_j * timeStep.numerical_value_in(s))
+                            posAdjustment / (mass_j * timeStep)
                         );
 
                         ++index_ij;

@@ -192,9 +192,11 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
  */
 TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
 {
-    const auto length = 27.44205774028026567635;
+    const auto length = 27.44205774028026567635 * angstrom;
 
-    molsys::OrthorhombicBox orthoBox{{length, 0.5 * length, 1.0 / 3.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {length, 0.5 * length, 1.0 / 3.0 * angstrom}
+    };
     _simulationBox->setBox(orthoBox, false);
 
     _rstFileOutput->setFilename("default.rst", false);
@@ -221,8 +223,8 @@ TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
         gamma;
 
     EXPECT_EQ(keyword, "Box");
-    EXPECT_EQ(lengthA, length);
-    EXPECT_EQ(lengthB, 0.5 * length);
+    EXPECT_EQ(lengthA, length.numerical_value_in(angstrom));
+    EXPECT_EQ(lengthB, 0.5 * length.numerical_value_in(angstrom));
     EXPECT_EQ(lengthC, 1.0 / 3.0);
     EXPECT_EQ(alpha, 90.0);
     EXPECT_EQ(beta, 90.0);
@@ -294,9 +296,19 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
         const auto value = [shift](const size_t axis)
         { return awkwardValues.at((shift + axis) % awkwardValues.size()); };
 
-        atoms.at(index)->setPosition({value(0), value(1), value(2)});
-        atoms.at(index)->setVelocity({value(3), value(4), value(5)});
-        atoms.at(index)->setForce({value(6), value(7), value(8)});
+        atoms.at(index)->setPosition(
+            {value(0) * angstrom, value(1) * angstrom, value(2) * angstrom}
+        );
+        atoms.at(index)->setVelocity(
+            {value(3) * angstrom / s,
+             value(4) * angstrom / s,
+             value(5) * angstrom / s}
+        );
+        atoms.at(index)->setForce(
+            {value(6) * kcal_per_mol / angstrom,
+             value(7) * kcal_per_mol / angstrom,
+             value(8) * kcal_per_mol / angstrom}
+        );
     }
 
     _rstFileOutput->setFilename("default.rst", false);
@@ -341,10 +353,10 @@ TEST_F(TestRstFileOutput, noseHooverChainIsWrittenExactly)
     NoseHooverSettings noseHooverSettings;
     noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
     noseHooverSettings.setChiByUser(
-        {{0, awkwardValues.at(0)},
-         {1, awkwardValues.at(3)},
-         {2, awkwardValues.at(4)},
-         {3, 0.0}}
+        {{0, awkwardValues.at(0) * kcal_per_mol * s},
+         {1, awkwardValues.at(3) * kcal_per_mol * s},
+         {2, awkwardValues.at(4) * kcal_per_mol * s},
+         {3, 0.0 * kcal_per_mol * s}}
     );
     noseHooverSettings.setZetaByUser(
         {{0, awkwardValues.at(1)},
@@ -405,9 +417,17 @@ TEST_F(TestRstFileOutput, subnormalValuesAreWrittenAsZero)
 
     ASSERT_EQ(atoms.size(), 3);
 
-    atoms.at(0)->setPosition({1.0e-310, -1.0e-310, tiny});
-    atoms.at(0)->setVelocity({-tiny, 2.5e-320, 1.0});
-    atoms.at(0)->setForce({1.0e-309, -2.0e-309, 0.5});
+    atoms.at(0)->setPosition(
+        {1.0e-310 * angstrom, -1.0e-310 * angstrom, tiny * angstrom}
+    );
+    atoms.at(0)->setVelocity(
+        {-tiny * angstrom / s, 2.5e-320 * angstrom / s, 1.0 * angstrom / s}
+    );
+    atoms.at(0)->setForce(
+        {1.0e-309 * kcal_per_mol / angstrom,
+         -2.0e-309 * kcal_per_mol / angstrom,
+         0.5 * kcal_per_mol / angstrom}
+    );
 
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(

@@ -347,9 +347,11 @@ TEST(TestMShake, countsMShakeMoleculesSeparatelyFromBonds)
     refAtoms[0].setName("H");
     refAtoms[1].setName("H");
     refAtoms[2].setName("H");
-    refAtoms[0].setPosition({0.0, 0.0, 0.0});
-    refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
+    refAtoms[0].setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    refAtoms[1].setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
+    refAtoms[2].setPosition(
+        linalg::Vec3D{0.5, std::numbers::sqrt3 / 2.0, 0.0} * angstrom
+    );
 
     auto mShakeRef = constraints::MShakeReference();
     mShakeRef.setMoleculeType(moltype);

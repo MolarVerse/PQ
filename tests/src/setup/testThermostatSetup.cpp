@@ -192,7 +192,7 @@ TEST_F(TestSetup, thermostatLogPrintsTheTemperatureUnitOnce)
 TEST_F(TestSetup, langevinLogPrintsTheFrictionInPerPicosecond)
 {
     finalizeTargetTemperature(*_settings);
-    _settings->thermostatSettings.setFrictionByUser(2.0e12);
+    _settings->thermostatSettings.setFrictionByUser(2.0e12 * Hz);
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
     const auto text = readLogWrittenBy(

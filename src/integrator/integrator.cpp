@@ -42,7 +42,7 @@ namespace integrator
         const auto force    = atom->getForce();
         const auto mass     = atom->getMass();
 
-        velocity += timeStep * force / mass;
+        velocity += 0.5 * timeStep * force / mass;
 
         atom->setVelocity(velocity);
     }

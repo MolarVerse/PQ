@@ -488,13 +488,16 @@ TEST_F(TestPhysicalData, defaultConstructedIsZero)
 
 TEST_F(TestPhysicalData, potentialEnergyLeavesOutKineticEnergy)
 {
-    _physicalData->setKineticEnergy(10.0);
-    _physicalData->setCoulombEnergy(-3.0);
-    _physicalData->setNonCoulombEnergy(1.5);
+    _physicalData->setKineticEnergy(10.0 * kcal_per_mol);
+    _physicalData->setCoulombEnergy(-3.0 * kcal_per_mol);
+    _physicalData->setNonCoulombEnergy(1.5 * kcal_per_mol);
 
     EXPECT_DOUBLE_EQ(
-        _physicalData->getPotentialEnergy(),
-        _physicalData->getTotalEnergy() - 10.0
+        _physicalData->getPotentialEnergy().numerical_value_in(kcal_per_mol),
+        _physicalData->getTotalEnergy().numerical_value_in(kcal_per_mol) - 10.0
     );
-    EXPECT_DOUBLE_EQ(_physicalData->getPotentialEnergy(), 6.5);   // + QM 9 - 1
+    EXPECT_DOUBLE_EQ(
+        _physicalData->getPotentialEnergy().numerical_value_in(kcal_per_mol),
+        6.5
+    );   // + QM 9 - 1
 }

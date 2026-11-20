@@ -31,6 +31,7 @@
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 #ifdef WITH_MPI
@@ -256,7 +257,9 @@ namespace engine
                 getSimulationBox(),
                 *_thermostat,
                 effStep,
-                getPhysicalData().getPotentialEnergy()
+                getPhysicalData().getPotentialEnergy().numerical_value_in(
+                    kcal_per_mol
+                )
             );
 
             getEngineOutput().writeVirialFile(

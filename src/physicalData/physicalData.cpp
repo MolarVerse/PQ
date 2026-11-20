@@ -344,9 +344,9 @@ namespace physicalData
     /**
      * @brief total energy without the kinetic energy
      *
-     * @return double
+     * @return EnergyPerMol
      */
-    double PhysicalData::getPotentialEnergy() const
+    EnergyPerMol PhysicalData::getPotentialEnergy() const
     {
         return getTotalEnergy() - _kineticEnergy;
     }

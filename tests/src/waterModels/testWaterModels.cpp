@@ -971,14 +971,14 @@ namespace
     molsys::SimulationBox makeSpreadWaterBox(const bool mixMolTypes)
     {
         constexpr WaterGeometry geometry{
-            .oh1   = 0.96,
-            .oh2   = 0.98,
-            .angle = 1.82
+            .oh1   = 0.96 * angstrom,
+            .oh2   = 0.98 * angstrom,
+            .angle = 1.82 * rad
         };
 
-        constexpr int    perAxis = 4;
-        constexpr double length  = 15.0;
-        constexpr double spacing = length / perAxis;
+        constexpr int  perAxis = 4;
+        constexpr auto length  = 15.0 * angstrom;
+        constexpr auto spacing = length / perAxis;
 
         molsys::SimulationBox   simBox;
         molsys::OrthorhombicBox orthoBox{{length, length, length}};
@@ -1002,10 +1002,13 @@ namespace
                     const auto jitter = [index](const double phase)
                     { return 0.4 * std::sin((7.0 * index) + phase); };
 
-                    const linalg::Vec3D origin = {
-                        (-0.5 * length) + (spacing * (ix + 0.5)) + jitter(0.0),
-                        (-0.5 * length) + (spacing * (iy + 0.5)) + jitter(1.0),
-                        (-0.5 * length) + (spacing * (iz + 0.5)) + jitter(2.0)
+                    const Pos3D origin = {
+                        (-0.5 * length) + (spacing * (ix + 0.5)) +
+                            jitter(0.0) * angstrom,
+                        (-0.5 * length) + (spacing * (iy + 0.5)) +
+                            jitter(1.0) * angstrom,
+                        (-0.5 * length) + (spacing * (iz + 0.5)) +
+                            jitter(2.0) * angstrom
                     };
 
                     const auto zone = zones.at(static_cast<size_t>(index) % 4);
@@ -1030,16 +1033,14 @@ namespace
 {
     struct StrategyResult
     {
-        double                     coulombEnergy{};
-        double                     nonCoulombEnergy{};
-        std::vector<linalg::Vec3D> forces;
+        EnergyPerMol         coulombEnergy{};
+        EnergyPerMol         nonCoulombEnergy{};
+        std::vector<Force3D> forces;
     };
 
-    std::vector<linalg::Vec3D> collectForces(
-        molsys::SimulationBox &simulationBox
-    )
+    std::vector<Force3D> collectForces(molsys::SimulationBox &simulationBox)
     {
-        auto forces = std::vector<linalg::Vec3D>();
+        auto forces = std::vector<Force3D>();
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
@@ -1064,8 +1065,8 @@ namespace
         settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
         settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
         pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
+        pot::CoulombPotential::set_coulombEnergyCutOff(0.0 / angstrom);
+        pot::CoulombPotential::set_coulombForceCutOff(0.0 / angstrom2);
 
         WaterModelSettings waterModelSettings;
         waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
@@ -1126,11 +1127,14 @@ namespace
         const std::string    &stage
     )
     {
-        EXPECT_NEAR(bruteForce.coulombEnergy, cellList.coulombEnergy, 1e-9)
-            << stage;
         EXPECT_NEAR(
-            bruteForce.nonCoulombEnergy,
-            cellList.nonCoulombEnergy,
+            bruteForce.coulombEnergy.numerical_value_in(kcal_per_mol),
+            cellList.coulombEnergy.numerical_value_in(kcal_per_mol),
+            1e-9
+        ) << stage;
+        EXPECT_NEAR(
+            bruteForce.nonCoulombEnergy.numerical_value_in(kcal_per_mol),
+            cellList.nonCoulombEnergy.numerical_value_in(kcal_per_mol),
             1e-9
         ) << stage;
 
@@ -1141,8 +1145,12 @@ namespace
             for (size_t axis = 0; axis < 3; ++axis)
             {
                 EXPECT_NEAR(
-                    bruteForce.forces[i][axis],
-                    cellList.forces[i][axis],
+                    bruteForce.forces[i][axis].numerical_value_in(
+                        kcal_per_mol / angstrom
+                    ),
+                    cellList.forces[i][axis].numerical_value_in(
+                        kcal_per_mol / angstrom
+                    ),
                     1e-8
                 ) << stage
                   << ", atom " << i << ", axis " << axis;
@@ -1186,15 +1194,19 @@ TEST(InterWater, BruteForceAndCellListGiveTheSameEnergiesAndForces)
                 );
 
             // the comparison is only meaningful if the waters interact
-            EXPECT_NE(bruteForce.coulombEnergy, 0.0) << name;
-            EXPECT_NE(bruteForce.nonCoulombEnergy, 0.0) << name;
+            EXPECT_NE(bruteForce.coulombEnergy, EnergyPerMol::zero()) << name;
+            EXPECT_NE(bruteForce.nonCoulombEnergy, EnergyPerMol::zero())
+                << name;
 
-            double largestForce = 0.0;
+            Force largestForce = Force::zero();
             for (const auto &force : bruteForce.forces)
             {
-                largestForce = std::max(largestForce, std::abs(force[0]));
+                largestForce = mstd::max(largestForce, mstd::abs(force[0]));
             }
-            EXPECT_GT(largestForce, 1e-3) << name;
+            EXPECT_GT(
+                largestForce.numerical_value_in(kcal_per_mol / angstrom),
+                1e-3
+            ) << name;
 
             expectSameResult(bruteForce, cellList, name);
         }
@@ -1291,8 +1303,8 @@ namespace
         settings::PotentialSettings::setCoulombRadiusCutOff(kCutOff);
         settings::PotentialSettings::setNonCoulombRadiusCutOff(kCutOff);
         pot::CoulombPotential::setCoulombRadiusCutOff(kCutOff);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
+        pot::CoulombPotential::set_coulombEnergyCutOff(0.0 / angstrom);
+        pot::CoulombPotential::set_coulombForceCutOff(0.0 / angstrom2);
 
         auto simulationBox = makeSpreadWaterBox(true);
         configurator::HybridConfigurator::activateMolecules(simulationBox);
@@ -1398,15 +1410,19 @@ TEST(PotentialStrategies, BruteForceAndCellListGiveTheSameEnergiesAndForces)
             const auto cellList =
                 runPotential<pot::PotentialCellList>(stage, waterModelSettings);
 
-            EXPECT_NE(bruteForce.coulombEnergy, 0.0) << name;
-            EXPECT_NE(bruteForce.nonCoulombEnergy, 0.0) << name;
+            EXPECT_NE(bruteForce.coulombEnergy, EnergyPerMol::zero()) << name;
+            EXPECT_NE(bruteForce.nonCoulombEnergy, EnergyPerMol::zero())
+                << name;
 
-            double largestForce = 0.0;
+            Force largestForce = Force::zero();
             for (const auto &force : bruteForce.forces)
             {
-                largestForce = std::max(largestForce, std::abs(force[0]));
+                largestForce = mstd::max(largestForce, mstd::abs(force[0]));
             }
-            EXPECT_GT(largestForce, 1e-3) << name;
+            EXPECT_GT(
+                largestForce.numerical_value_in(kcal_per_mol / angstrom),
+                1e-3
+            ) << name;
 
             expectSameResult(bruteForce, cellList, name);
         }
