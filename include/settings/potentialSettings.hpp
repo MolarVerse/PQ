@@ -24,71 +24,101 @@
 #define SETTINGS__POTENTIAL_SETTINGS_HPP
 
 #include <mstd/enum.hpp>
-#include <optional>
+#include <mstd/utils/members.hpp>
 
 #include "defaults.hpp"
 #include "enums/potential.hpp"
+#include "setting.hpp"
 
-namespace settings
+/**
+ * @struct CoulombPotentialConfig
+ *
+ * @brief Configuration structure for Coulomb potential parameters
+ *
+ */
+struct CoulombPotentialConfig
 {
-    /**
-     * @class PotentialSettings
-     *
-     * @brief static class to store settings of the potential
-     *
-     */
-    class PotentialSettings
-    {
-       private:
-        static inline CoulombLongRangeType _coulombLRType =
-            CoulombLongRangeType::SHIFTED;
-        static inline NonCoulombType _nonCoulombType = NonCoulombType::GUFF;
+    double cutoff;
+    double cutoffSquared;
+    double energyCutoff;
+    double forceCutoff;
+    double invCubeCutoff;
 
-        static inline double _coulombRadiusCutOff =
-            defaults::COULOMB_CUT_OFF_DEFAULT;
-        static inline std::optional<double> _nonCoulombRadiusCutOff;
-        static inline double                _scale14Coulomb =
-            defaults::SCALE_14_COULOMB_DEFAULT;
-        static inline double _scale14VanDerWaals =
-            defaults::SCALE_14_VAN_DER_WAALS_DEFAULT;
+    explicit CoulombPotentialConfig(double cutoff_);
+};
 
-        static inline double _wolfParameter = defaults::WOLF_PARAM_DEFAULT;
-        static inline double _reactionFieldEpsilon =
-            defaults::RF_EPSILON_DEFAULT;
+struct PotentialSettingsUtils;
 
-       public:
-        PotentialSettings()  = default;
-        ~PotentialSettings() = default;
+/**
+ * @class PotentialSettings
+ *
+ * @brief static class to store settings of the potential
+ *
+ */
+class PotentialSettings
+{
+   private:
+    Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType;
+    Setting<NonCoulombType, "Non coulomb type">              _nonCoulombType;
 
-        /********************
-         * standard setters *
-         ********************/
+    Setting<double, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
 
-        static void setNonCoulombType(NonCoulombType type);
-        static void setCoulombLongRangeType(CoulombLongRangeType type);
-
-        static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
-        static void setNonCoulombRadiusCutOff(double nonCoulombRadiusCutOff);
-        static void setScale14Coulomb(double scale14Coulomb);
-        static void setScale14VanDerWaals(double scale14VanDerWaals);
-        static void setReactionFieldEpsilon(double epsilon);
-        static void setWolfParameter(double wolfParameter);
-
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] static CoulombLongRangeType getCoulombLongRangeType();
-        [[nodiscard]] static NonCoulombType       getNonCoulombType();
-
-        [[nodiscard]] static double                getCoulombRadiusCutOff();
-        [[nodiscard]] static std::optional<double> getNonCoulombRadiusCutOff();
-        [[nodiscard]] static double                getScale14Coulomb();
-        [[nodiscard]] static double                getScale14VDW();
-        [[nodiscard]] static double                getReactionFieldEpsilon();
-        [[nodiscard]] static double                getWolfParameter();
+    Setting<double, "Scale 1-4 Coulomb"> _scale14Coulomb{
+        defaults::SCALE_14_COULOMB_DEFAULT
+    };
+    Setting<double, "Scale 1-4 Van der Waals"> _scale14VanDerWaals{
+        defaults::SCALE_14_VAN_DER_WAALS_DEFAULT
     };
 
-}   // namespace settings
+    Setting<double, "Wolf parameter"> _wolfParameter{
+        defaults::WOLF_PARAM_DEFAULT
+    };
+    Setting<double, "Reaction field epsilon"> _reactionFieldEpsilon{
+        defaults::RF_EPSILON_DEFAULT
+    };
+
+    CoulombPotentialConfig _coulombConfig;
+
+   public:
+    PotentialSettings();
+    void finalize();
+
+    CONST_GETTER(_coulombConfig);
+
+    /********************
+     * standard setters *
+     ********************/
+
+    void setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
+    void setNonCoulombTypeByUser(NonCoulombType type);
+
+    void setCoulombRadiusCutOffByUser(double coulombRadiusCutOff);
+    void setNonCoulombRadiusCutOffByUser(double nonCoulombRadiusCutOff);
+
+    void setScale14CoulombByUser(double scale14Coulomb);
+    void setScale14VanDerWaalsByUser(double scale14VanDerWaals);
+
+    void setReactionFieldEpsilonByUser(double epsilon);
+    void setWolfParameterByUser(double wolfParameter);
+
+    /********************
+     * standard getters *
+     ********************/
+
+    [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
+    [[nodiscard]] NonCoulombType       getNonCoulombType() const;
+
+    [[nodiscard]] double getCoulombRadiusCutOff() const;
+    [[nodiscard]] double getNonCoulombRadiusCutOff() const;
+    [[nodiscard]] bool   isNonCoulombRadiusCutOffSetByUser() const;
+
+    [[nodiscard]] double getScale14Coulomb() const;
+    [[nodiscard]] double getScale14VDW() const;
+
+    [[nodiscard]] double getReactionFieldEpsilon() const;
+    [[nodiscard]] double getWolfParameter() const;
+
+    friend struct ::PotentialSettingsUtils;
+};
 
 #endif   // SETTINGS__POTENTIAL_SETTINGS_HPP

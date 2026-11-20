@@ -30,6 +30,7 @@
 #include "forceField.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
 
@@ -63,13 +64,15 @@ namespace ff
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
      * @param smoothing the smoothing method to use
+     * @param potentialSettings the settings for the potential calculations
      */
     void AngleForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
         pot::NonCoulombPotential    &nonCoulombPot,
-        SmoothingMethod              smoothing
+        SmoothingMethod              smoothing,
+        const PotentialSettings     &potentialSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -147,7 +150,7 @@ namespace ff
 
             const auto distance23 = norm(dPosition23);
 
-            if (distance23 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            if (distance23 < potentialSettings.getCoulombRadiusCutOff())
             {
                 forceMagnitude = correctLinker<AngleForceField>(
                     coulombPot,
@@ -157,7 +160,9 @@ namespace ff
                     molecule3,
                     atomIndices[1],
                     atomIndices[2],
-                    distance23
+                    distance23,
+                    potentialSettings.getScale14Coulomb(),
+                    potentialSettings.getScale14VDW()
                 );
 
                 forceMagnitude /= distance23;

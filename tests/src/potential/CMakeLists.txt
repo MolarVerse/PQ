@@ -14,6 +14,7 @@ foreach(source_file ${source_files})
     target_link_libraries(${test_name}
         PRIVATE
         PQ_input
+        privateHelper
         potential
         gtest
         gmock

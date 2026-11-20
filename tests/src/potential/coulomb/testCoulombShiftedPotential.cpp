@@ -24,6 +24,7 @@
 
 #include "constants/internalConversionFactors.hpp"
 #include "coulombShiftedPotential.hpp"
+#include "settings.hpp"
 
 /**
  * @brief tests calculation of shifted Coulomb potential
@@ -36,7 +37,10 @@ TEST(TestCoulombShiftedPotential, calculate)
     const auto energyCutOff  = 1 / rcCutoff;
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
-    const auto potential = pot::CoulombShiftedPotential(rcCutoff);
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
+    const auto potential =
+        pot::CoulombShiftedPotential(settings.potentialSettings);
 
     auto distance = 2.0;
 

@@ -36,9 +36,11 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+class PotentialSettings;   // forward declaration
+
 namespace input::parameterFile
 {
-    void readParameterFile(engine::Engine &);
+    void readParameterFile(engine::Engine &, PotentialSettings &);
 
     /**
      * @class ParameterReader
@@ -59,7 +61,8 @@ namespace input::parameterFile
        public:
         ParameterFileReader(
             const std::string &filename,
-            engine::Engine    &engine
+            engine::Engine    &engine,
+            PotentialSettings &potentialSettings
         );
         ~ParameterFileReader();
 

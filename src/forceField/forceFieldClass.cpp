@@ -190,16 +190,34 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateBondedInteractions(
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     )
     {
-        calculateBondInteractions(simulationBox, physicalData);
-        calculateAngleInteractions(simulationBox, physicalData);
-        calculateDihedralInteractions(simulationBox, physicalData);
-        calculateImproperDihedralInteractions(simulationBox, physicalData);
+        calculateBondInteractions(
+            simulationBox,
+            physicalData,
+            potentialSettings
+        );
+        calculateAngleInteractions(
+            simulationBox,
+            physicalData,
+            potentialSettings
+        );
+        calculateDihedralInteractions(
+            simulationBox,
+            physicalData,
+            potentialSettings
+        );
+        calculateImproperDihedralInteractions(
+            simulationBox,
+            physicalData,
+            potentialSettings
+        );
     }
 
     /**
@@ -207,21 +225,26 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateBondInteractions(
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     )
     {
-        auto calculateBondInteraction =
-            [&simulationBox, &physicalData, this](auto &bond)
+        auto calculateBondInteraction = [&simulationBox,
+                                         &physicalData,
+                                         &potentialSettings,
+                                         this](auto &bond)
         {
             bond.calculateEnergyAndForces(
                 simulationBox,
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod()
+                _hybridSettings->getSmoothingMethod(),
+                potentialSettings
             );
         };
 
@@ -233,24 +256,28 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateAngleInteractions(
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     )
     {
-        auto calculateAngleInteraction =
-            [&simulationBox, &physicalData, this](auto &angle)
+        auto calculateAngleInteraction = [&simulationBox,
+                                          &physicalData,
+                                          &potentialSettings,
+                                          this](auto &angle)
         {
             angle.calculateEnergyAndForces(
                 simulationBox,
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod()
+                _hybridSettings->getSmoothingMethod(),
+                potentialSettings
             );
         };
-
         std::ranges::for_each(_angles, calculateAngleInteraction);
     }
 
@@ -261,14 +288,18 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateDihedralInteractions(
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     )
     {
-        auto calculateDihedralInteraction =
-            [&simulationBox, &physicalData, this](auto &dihedral)
+        auto calculateDihedralInteraction = [&simulationBox,
+                                             &physicalData,
+                                             &potentialSettings,
+                                             this](auto &dihedral)
         {
             dihedral.calculateEnergyAndForces(
                 simulationBox,
@@ -276,7 +307,8 @@ namespace ff
                 false,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod()
+                _hybridSettings->getSmoothingMethod(),
+                potentialSettings
             );
         };
 
@@ -290,14 +322,18 @@ namespace ff
      *
      * @param simulationBox
      * @param physicalData
+     * @param potentialSettings the settings for the potential calculations
      */
     void ForceField::calculateImproperDihedralInteractions(
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     )
     {
-        auto calculateImproperDihedralInteraction =
-            [&simulationBox, &physicalData, this](auto &dihedral)
+        auto calculateImproperDihedralInteraction = [&simulationBox,
+                                                     &physicalData,
+                                                     &potentialSettings,
+                                                     this](auto &dihedral)
         {
             dihedral.calculateEnergyAndForces(
                 simulationBox,
@@ -305,7 +341,8 @@ namespace ff
                 true,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                _hybridSettings->getSmoothingMethod()
+                _hybridSettings->getSmoothingMethod(),
+                potentialSettings
             );
         };
 
@@ -321,7 +358,8 @@ namespace ff
      */
     void ForceField::calculateJCouplingInteractions(
         const molsys::SimulationBox & /*simulationBox*/,
-        physicalData::PhysicalData & /*physicalData*/
+        physicalData::PhysicalData & /*physicalData*/,
+        const PotentialSettings & /*potentialSettings*/
     )
     {
         if (!_jCouplings.empty())

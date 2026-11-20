@@ -29,6 +29,15 @@
 
 namespace input::parameterFile
 {
+    /**
+     * @brief Constructs a TypesSection with a reference to PotentialSettings
+     *
+     * @param potentialSettings Reference to the PotentialSettings object
+     */
+    TypesSection::TypesSection(PotentialSettings &potentialSettings)
+        : _potentialSettings(potentialSettings)
+    {
+    }
 
     /**
      * @brief returns the keyword of the section
@@ -123,8 +132,8 @@ namespace input::parameterFile
             );
         }
 
-        settings::PotentialSettings::setScale14Coulomb(scaleCoulomb);
-        settings::PotentialSettings::setScale14VanDerWaals(scaleVanDerWaals);
+        _potentialSettings->setScale14CoulombByUser(scaleCoulomb);
+        _potentialSettings->setScale14VanDerWaalsByUser(scaleVanDerWaals);
     }
 
 }   // namespace input::parameterFile

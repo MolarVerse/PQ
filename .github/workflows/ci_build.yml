@@ -129,6 +129,8 @@ jobs:
       # errors tolerated, and the Release jobs do not use the strict flags.
       # Only the arm Debug job runs this step with Debug, and it is the
       # fastest job. The benchmark smoke tests are left to the benchmark job.
+      # Both Debug jobs (arm via this step, x86 via the coverage step) build
+      # the perf and benchmark sources so -Werror catches issues on both arches.
       - name: Build and Test Project
         id: build
         if : ${{ matrix.os != 'ubuntu-24.04' || (matrix.os == 'ubuntu-24.04' && matrix.build != 'Debug') }}
@@ -146,6 +148,7 @@ jobs:
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' }}
         run: |
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_WITH_GCOVR=ON -DBUILD_WITH_NATIVE=Off \
+            -DBUILD_WITH_PERF_BENCH=On -DBUILD_WITH_BENCHMARKING=On \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
           cmake --build build --target coverage_xml
@@ -395,6 +398,58 @@ jobs:
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
 
+  # BUILD_WITH_HDF5 is off in every other job: only the H5MD output and the
+  # tests around it are built here, with HDF5 from apt.
+  hdf5-build:
+    if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
+    needs: changes
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build libhdf5-dev
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: hdf5-release
+
+      - name: Cache Eigen source
+        id: cache-eigen
+        uses: actions/cache@v4
+        with:
+          path: ~/eigen-src
+          key: eigen-${{ hashFiles('.cmake/eigen.cmake') }}
+
+      - name: Clone Eigen (cache miss)
+        if: steps.cache-eigen.outputs.cache-hit != 'true'
+        run: |
+          eigen_tag=$(grep -oP 'set\(EIGEN_TAG \K[0-9.]+' .cmake/eigen.cmake)
+          git clone --depth 1 --branch "$eigen_tag" https://gitlab.com/libeigen/eigen.git ~/eigen-src
+        shell: bash
+
+      - name: Build PQ with HDF5
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WITH_HDF5=ON \
+            -DBUILD_WITH_ASE=OFF \
+            -DBUILD_WITH_NATIVE=OFF \
+            -DBUILD_WITH_TESTS=ON \
+            -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
+          cmake --build build --parallel "$(nproc)" --target PQ \
+            testH5mdOutput testH5mdOutputContent testHdf5Wrapper testOutputFilesSetup \
+            testOutputParser testOutputFileSettings testEngineOutputFrames
+
+      - name: Run the H5MD tests
+        run: >-
+          ctest --test-dir build --output-on-failure
+          -R 'H5md|Hdf5Wrapper|testOutputFilesSetup|testOutputParser|testOutputFileSettings|testEngineOutputFrames'
+
   # BUILD_WITH_PYTHON_BINDINGS is off in every other job (#543). It installs
   # PQAnalysis through pip while CMake configures and then has to report the
   # capability, which testPQCli checks. Only PQ and the PQAnalysis selection
@@ -452,7 +507,7 @@ jobs:
 
   ci-build-gate:
     if: always()
-    needs: [changes, build, benchmark, build-static-lto, static-singularity-build, mpi-build, python-bindings]
+    needs: [changes, build, benchmark, build-static-lto, static-singularity-build, mpi-build, hdf5-build, python-bindings]
     runs-on: ubuntu-24.04
     steps:
       - name: Check CI build results
@@ -463,6 +518,7 @@ jobs:
             "${{ needs.build-static-lto.result }}" \
             "${{ needs.static-singularity-build.result }}" \
             "${{ needs.mpi-build.result }}" \
+            "${{ needs.hdf5-build.result }}" \
             "${{ needs.python-bindings.result }}"; do
             if [[ "$result" == "failure" ]]; then
               exit 1

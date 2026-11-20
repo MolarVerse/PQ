@@ -29,9 +29,7 @@
  */
 TEST(TestPotentialSettings, reactionFieldSettings)
 {
-    settings::PotentialSettings::setReactionFieldEpsilon(80.0);
-    EXPECT_DOUBLE_EQ(
-        settings::PotentialSettings::getReactionFieldEpsilon(),
-        80.0
-    );
+    PotentialSettings potentialSettings;
+    potentialSettings.setReactionFieldEpsilonByUser(80.0);
+    EXPECT_DOUBLE_EQ(potentialSettings.getReactionFieldEpsilon(), 80.0);
 }

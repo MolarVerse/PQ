@@ -198,3 +198,39 @@ TEST_F(TestInputFileReader, testParseFResetAngular)
         "file. Value must be a positive integer"
     );
 }
+
+TEST_F(TestInputFileReader, testParseMomentumWarnThreshold)
+{
+    ResetKineticsSettings           settings;
+    input::ResetKineticsInputParser parser(settings);
+    const auto                      funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("momentum_warn_threshold"));
+    const auto &parseFunc = funcMap.at("momentum_warn_threshold");
+
+    EXPECT_DOUBLE_EQ(settings.getMomentumWarnThreshold(), 0.01);
+
+    std::vector<std::string> lineElements = {
+        "momentum_warn_threshold",
+        "=",
+        "0.05"
+    };
+    parseFunc(lineElements, 0);
+    EXPECT_DOUBLE_EQ(settings.getMomentumWarnThreshold(), 0.05);
+
+    _clearParser(parser);
+
+    lineElements = {"momentum_warn_threshold", "=", "0"};
+    parseFunc(lineElements, 0);
+    EXPECT_DOUBLE_EQ(settings.getMomentumWarnThreshold(), 0.0);
+
+    _clearParser(parser);
+
+    lineElements = {"momentum_warn_threshold", "=", "-0.1"};
+    EXPECT_THROW_MSG(
+        parseFunc(lineElements, 0),
+        exc::InputFileException,
+        "Invalid value \"-0.1\" for key \"momentum_warn_threshold\" at line 0 "
+        "in input file: failed validation with message Value must be greater "
+        "than or equal to 0"
+    );
+}

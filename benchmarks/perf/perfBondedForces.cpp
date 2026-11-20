@@ -53,19 +53,21 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    auto     box = molsys::SimulationBox();
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(20.0);
+    auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
-    auto physicalData        = physicalData::PhysicalData();
-    auto coulombPotential    = pot::CoulombShiftedPotential(20.0);
+    auto physicalData = physicalData::PhysicalData();
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(settings.potentialSettings);
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    settings.potentialSettings.setScale14CoulombByUser(0.75);
+    settings.potentialSettings.setScale14VanDerWaalsByUser(0.5);
 
     auto bond = ff::BondForceField(
         &molecule,
@@ -120,14 +122,16 @@ int main()
             physicalData,
             coulombPotential,
             nonCoulombPotential,
-            smoothing
+            smoothing,
+            settings.potentialSettings
         );
         angle.calculateEnergyAndForces(
             box,
             physicalData,
             coulombPotential,
             nonCoulombPotential,
-            smoothing
+            smoothing,
+            settings.potentialSettings
         );
         dihedral.calculateEnergyAndForces(
             box,
@@ -135,7 +139,8 @@ int main()
             false,
             coulombPotential,
             nonCoulombPotential,
-            smoothing
+            smoothing,
+            settings.potentialSettings
         );
     }
 

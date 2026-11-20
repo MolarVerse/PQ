@@ -50,7 +50,7 @@ namespace
  */
 // NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
 // linkage
-extern "C" void pqOnInterrupt([[maybe_unused]] const int signalNumber)
+extern "C" void pqOnInterrupt(const int /*signalNumber*/)
 {
     if (InterruptState::wakeOnly != 0)
     {

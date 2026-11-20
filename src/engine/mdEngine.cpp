@@ -183,8 +183,21 @@ namespace engine
             getSimulationBox(),
             getPhysicalData(),
             currentTargetTemperature,
-            timeStep
+            timeStep,
+            getSettings().potentialSettings.getCoulombRadiusCutOff()
         );
+
+        const auto driftWarning = _resetKinetics.checkMomentumDrift(
+            getStep(),
+            getPhysicalData(),
+            getSimulationBox()
+        );
+
+        if (driftWarning)
+        {
+            getEngineOutput().getLogOutput().writeSetupWarning(*driftWarning);
+            out::StdoutOutput::writeSetupWarning(*driftWarning);
+        }
 
         _resetKinetics.reset(
             getStep(),

@@ -48,7 +48,7 @@ namespace
      * fetched build-tree data is used while running an uninstalled ASE
      * build.
      */
-    std::string builtinSlakosPath([[maybe_unused]] const SlakosType type)
+    std::string builtinSlakosPath(const SlakosType type)
     {
 #ifdef __SLAKOS_DIR__
         const auto installedPath = utilities::installedDataPath(
@@ -63,6 +63,7 @@ namespace
                                SlakosTypeMeta::toString(type) / "skfiles";
         return buildPath.string() + std::filesystem::path::preferred_separator;
 #else
+        static_cast<void>(type);
         throw exc::InputFileException(
             "Built-in SLAKOS sets (3ob/matsci) require building PQ with "
             "-DBUILD_WITH_ASE=On"

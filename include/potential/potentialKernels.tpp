@@ -49,6 +49,7 @@
 #include "coulombPotential.hpp"
 #include "molecule.hpp"
 #include "potential.hpp"
+#include "potentialSettings.hpp"
 
 namespace pot
 {
@@ -76,11 +77,12 @@ namespace pot
      */
     template <typename ChargeTag1, typename ChargeTag2>
     std::pair<double, double> Potential::calculateSingleInteraction(
-        const molsys::Box &box,
-        molsys::Molecule  &mol1,
-        molsys::Molecule  &mol2,
-        molsys::Atom      &atom1,
-        molsys::Atom      &atom2
+        const molsys::Box            &box,
+        molsys::Molecule             &mol1,
+        molsys::Molecule             &mol2,
+        molsys::Atom                 &atom1,
+        molsys::Atom                 &atom2,
+        const CoulombPotentialConfig &config
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -97,8 +99,7 @@ namespace pot
 
         const double distanceSquared = normSquared(dxyz);
 
-        if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
-            distanceSquared < RcCutOff * RcCutOff)
+        if (distanceSquared < config.cutoffSquared)
         {
             const double distance   = ::sqrt(distanceSquared);
             const auto   atomType_i = atom1.getAtomType();
@@ -174,9 +175,10 @@ namespace pot
      */
     template <typename ChargeTag1, typename ChargeTag2>
     double Potential::calculateSingleCoulombInteraction(
-        const molsys::Box &box,
-        molsys::Atom      &atom1,
-        molsys::Atom      &atom2
+        const molsys::Box            &box,
+        molsys::Atom                 &atom1,
+        molsys::Atom                 &atom2,
+        const CoulombPotentialConfig &config
     ) const
     {
         auto coulombEnergy = 0.0;
@@ -192,8 +194,7 @@ namespace pot
 
         const double distanceSquared = normSquared(dxyz);
 
-        if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
-            distanceSquared < RcCutOff * RcCutOff)
+        if (distanceSquared < config.cutoffSquared)
         {
             const double distance = ::sqrt(distanceSquared);
 
@@ -244,11 +245,12 @@ namespace pot
      */
     template <typename ChargeTag1, typename ChargeTag2>
     std::pair<double, double> Potential::calculateSingleInteractionOneWay(
-        const molsys::Box &box,
-        molsys::Molecule  &mol1,
-        molsys::Molecule  &mol2,
-        molsys::Atom      &atom1,
-        molsys::Atom      &atom2
+        const molsys::Box            &box,
+        molsys::Molecule             &mol1,
+        molsys::Molecule             &mol2,
+        molsys::Atom                 &atom1,
+        molsys::Atom                 &atom2,
+        const CoulombPotentialConfig &config
     ) const
     {
         auto coulombEnergy    = 0.0;
@@ -265,8 +267,7 @@ namespace pot
 
         const double distanceSquared = normSquared(dxyz);
 
-        if (const auto RcCutOff = CoulombPotential::getCoulombRadiusCutOff();
-            distanceSquared < RcCutOff * RcCutOff)
+        if (distanceSquared < config.cutoffSquared)
         {
             const double distance   = ::sqrt(distanceSquared);
             const auto   atomType_i = atom1.getAtomType();

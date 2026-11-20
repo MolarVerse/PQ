@@ -100,22 +100,28 @@ namespace intraNonBonded
      *
      * @param simulationBox Simulation box containing molecules.
      * @param physicalData
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void IntraNonBonded::calculate(
         const molsys::SimulationBox &simulationBox,
-        physicalData::PhysicalData  &physicalData
+        physicalData::PhysicalData  &physicalData,
+        const PotentialSettings     &potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::IntraNonBonded, "IntraNonBonded");
 
-        auto calculateSingleContr =
-            [this, &simulationBox, &physicalData](auto &intraMap)
+        auto calculateSingleContr = [this,
+                                     &simulationBox,
+                                     &physicalData,
+                                     &potentialSettings](auto &intraMap)
         {
             intraMap.calculate(
                 _coulombPotential.get(),
                 _nonCoulombPot.get(),
                 simulationBox,
-                physicalData
+                physicalData,
+                potentialSettings
             );
         };
 

@@ -85,8 +85,10 @@ namespace input
             settings.thermostatSettings
         );
         _validateManostat(settings.manostatSettings, settings.timings);
-        _validateCellList();
-        _validateReactionFieldCoulomb();
+        _validateCellList(settings.potentialSettings.getCoulombRadiusCutOff());
+        _validateReactionFieldCoulomb(
+            settings.potentialSettings.getCoulombLongRangeType()
+        );
         _validateRingPolymer();
     }
 
@@ -337,17 +339,17 @@ namespace input
      * @throws exc::InputFileException if an active cell list is incompatible
      * with the selected potential
      */
-    void InputFileReader::_validateCellList()
+    void InputFileReader::_validateCellList(double coulombRadiusCutOff)
     {
         if (!settings::GeneralSettings::isCellListActivated())
             return;
 
-        if (settings::GeneralSettings::isQMOnlyActivated())
+        if (settings::GeneralSettings::isQMOnlyJobtype())
             throw exc::InputFileException(
                 "Cell lists are not available for pure QM simulations"
             );
 
-        if (settings::PotentialSettings::getCoulombRadiusCutOff() <= 0.0)
+        if (coulombRadiusCutOff <= 0.0)
             throw exc::InputFileException(
                 "An active cell list requires rcoulomb to be greater than zero"
             );
@@ -361,12 +363,11 @@ namespace input
      * correction is selected but `rf_epsilon` is missing in the current input
      * file
      */
-    void InputFileReader::_validateReactionFieldCoulomb() const
+    void InputFileReader::_validateReactionFieldCoulomb(
+        CoulombLongRangeType longRangeCorrection
+    ) const
     {
         using enum CoulombLongRangeType;
-
-        const auto longRangeCorrection =
-            settings::PotentialSettings::getCoulombLongRangeType();
 
         if (longRangeCorrection == REACTION_FIELD &&
             !getKeywordSet("rf_epsilon"))

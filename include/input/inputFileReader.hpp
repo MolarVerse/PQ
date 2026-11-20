@@ -31,6 +31,7 @@
 #include <vector>
 
 #include "enums/jobtype.hpp"
+#include "enums/potential.hpp"
 #include "inputFileParser.hpp"
 
 namespace engine
@@ -137,9 +138,11 @@ namespace input
             const ManostatSettings &manostatSettings,
             const TimingsSettings  &timings
         ) const;
-        void        _validateReactionFieldCoulomb() const;
+        void _validateReactionFieldCoulomb(
+            CoulombLongRangeType longRangeCorrection
+        ) const;
         void        _validateRingPolymer() const;
-        static void _validateCellList();
+        static void _validateCellList(double coulombRadiusCutOff);
     };
 
 }   // namespace input

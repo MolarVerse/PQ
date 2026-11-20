@@ -28,6 +28,7 @@
 #include "forceField.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
 
@@ -63,6 +64,7 @@ namespace ff
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
      * @param smoothing the smoothing method to use
+     * @param potentialSettings the settings for the potential calculations
      */
     void DihedralForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
@@ -70,7 +72,8 @@ namespace ff
         bool                         isImproperDihedral,
         const pot::CoulombPotential &coulombPot,
         pot::NonCoulombPotential    &nonCoulombPot,
-        SmoothingMethod              smoothing
+        SmoothingMethod              smoothing,
+        const PotentialSettings     &potentialSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -169,7 +172,7 @@ namespace ff
 
             const auto distance14 = norm(dPosition14);
 
-            if (distance14 < pot::CoulombPotential::getCoulombRadiusCutOff())
+            if (distance14 < potentialSettings.getCoulombRadiusCutOff())
             {
                 forceMagnitude = correctLinker<DihedralForceField>(
                     coulombPot,
@@ -179,7 +182,9 @@ namespace ff
                     molecule4,
                     atomIndices[0],
                     atomIndices[3],
-                    distance14
+                    distance14,
+                    potentialSettings.getScale14Coulomb(),
+                    potentialSettings.getScale14VDW()
                 );
 
                 forceMagnitude /= distance14;

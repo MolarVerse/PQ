@@ -13,6 +13,7 @@ target_include_directories(coulombPotential
 target_link_libraries(coulombPotential
     PRIVATE
     config_headers
+    settings
 )
 
 install(TARGETS coulombPotential

@@ -43,6 +43,9 @@ ast_check_enabled_ids = [
     "enforceTypenameOverClass",
     "enforceSystemHeaderLibs",
     "enforceCppOnlyInclude",
+    "noMaybeUnusedParam",
+    "noVoidPointerParam",
+    "preferMstdCopyMoveMacros",
 ]
 
 # Per-check configuration — one sub-table per check id.
@@ -64,11 +67,16 @@ excluded_macros = [
     "TEST",
     "TEST_F",
     "MSTD_RAII_NO_MOVE",
+    "MSTD_NO_COPY",
+    "MSTD_NO_MOVE",
 ]
 
 [cpp.ast_check_config.includeIwyuPragmaOnly]
 allowed_pragmas = ["export", "keep"]
-pragma_required_reasons = { keep = "-- for template specialization" }
+pragma_required_reasons = { keep = [
+    "-- for template specialization",
+    "-- for dummy file",
+] }
 
 [cpp.ast_check_config.enforceSystemHeaderLibs]
 libs = ["mstd"]

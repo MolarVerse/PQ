@@ -73,15 +73,18 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.75);
+    PotentialSettings potentialSettings;
+    potentialSettings.setScale14CoulombByUser(0.75);
+    potentialSettings.setScale14VanDerWaalsByUser(0.75);
 
     auto intraNonBondedType =
         intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
     _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
     );
@@ -107,9 +110,9 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
             AtomIndex{0},
             intraNonBondedType.getAtomIndices()[0][0],
             simulationBox.getBoxDimensions(),
-            physicalData,
             &coulombPotential,
-            _nonCoulombPotential.get()
+            _nonCoulombPotential.get(),
+            potentialSettings
         );
 
     EXPECT_NEAR(coulombEnergy, -67.242901903583757 * 0.75, 1e-6);
@@ -148,7 +151,8 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
         &coulombPotential,
         _nonCoulombPotential.get(),
         simulationBox,
-        physicalData
+        physicalData,
+        potentialSettings
     );
 
     EXPECT_NEAR(

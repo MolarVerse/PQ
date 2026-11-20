@@ -23,6 +23,8 @@
 #ifndef UTILITIES__SINGLETON_HPP
 #define UTILITIES__SINGLETON_HPP
 
+#include <mstd/utils.hpp>
+
 /**
  * @brief Singleton class template.
  *
@@ -43,10 +45,8 @@ class Singleton
         return instance;
     }
 
-    Singleton(const Singleton&)            = delete;
-    Singleton& operator=(const Singleton&) = delete;
-    Singleton(Singleton&&)                 = delete;
-    Singleton& operator=(Singleton&&)      = delete;
+    MSTD_NO_COPY(Singleton);
+    MSTD_NO_MOVE(Singleton);
 
    protected:
     Singleton()  = default;

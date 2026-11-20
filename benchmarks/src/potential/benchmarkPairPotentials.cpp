@@ -28,6 +28,7 @@
 #include "coulombWolf.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
+#include "potentialSettings.hpp"
 
 namespace
 {
@@ -93,21 +94,31 @@ namespace
         runNonCoulombBenchmark(state, potential);
     }
 
+    PotentialSettings makeCoulombSettings(const double cutoff)
+    {
+        PotentialSettings settings;
+        settings.setCoulombRadiusCutOffByUser(cutoff);
+        return settings;
+    }
+
     void BM_CoulombShifted(benchmark::State& state)
     {
-        pot::CoulombShiftedPotential potential(9.0);
+        const auto                   settings = makeCoulombSettings(9.0);
+        pot::CoulombShiftedPotential potential(settings);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombWolf(benchmark::State& state)
     {
-        pot::CoulombWolf potential(9.0, 0.25);
+        const auto       settings = makeCoulombSettings(9.0);
+        pot::CoulombWolf potential(settings, 0.25);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombReactionField(benchmark::State& state)
     {
-        pot::CoulombReactionField potential(9.0, 78.5);
+        const auto                settings = makeCoulombSettings(9.0);
+        pot::CoulombReactionField potential(settings, 78.5);
         runCoulombBenchmark(state, potential);
     }
 

@@ -497,7 +497,8 @@ namespace setup
 
         auto interWater = std::make_unique<waterModel::InterWater>(
             std::move(state),
-            std::move(strategy)
+            std::move(strategy),
+            _engine.getSettings().potentialSettings
         );
 
         _engine.setInterWater(std::move(interWater));

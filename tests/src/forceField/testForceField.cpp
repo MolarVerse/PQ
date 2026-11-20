@@ -226,8 +226,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
 
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(20.0);
     auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(20.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -331,8 +333,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
     }});
     improperDihedralForceField.setIsLinker(false);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    potentialSettings.setScale14CoulombByUser(0.75);
+    potentialSettings.setScale14VanDerWaalsByUser(0.5);
 
     const HybridSettings hybridSettings;
     auto                 forceField = ff::ForceField(hybridSettings);
@@ -348,7 +350,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
         std::make_shared<pot::ForceFieldNonCoulomb>(*_nonCoulombPotential)
     );
 
-    forceField.calculateBondedInteractions(box, physicalData);
+    forceField
+        .calculateBondedInteractions(box, physicalData, potentialSettings);
 
     EXPECT_NE(physicalData.getBondEnergy(), 0.0);
     EXPECT_NE(physicalData.getAngleEnergy(), 0.0);
@@ -365,7 +368,9 @@ TEST_F(TestForceField, calculateBondedInteractions)
  */
 TEST_F(TestForceField, correctLinker)
 {
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -405,7 +410,9 @@ TEST_F(TestForceField, correctLinker)
         &molecule,
         AtomIndex{0},
         AtomIndex{1},
-        1.0
+        1.0,
+        potentialSettings.getScale14Coulomb(),
+        potentialSettings.getScale14VDW()
     );
 
     EXPECT_NEAR(force, 104.37153798653807, 1e-6);
@@ -414,8 +421,8 @@ TEST_F(TestForceField, correctLinker)
 
     physicalData.reset();
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    potentialSettings.setScale14CoulombByUser(0.75);
+    potentialSettings.setScale14VanDerWaalsByUser(0.5);
 
     const auto forceScaled = ff::correctLinker<ff::DihedralForceField>(
         coulombPotential,
@@ -425,7 +432,9 @@ TEST_F(TestForceField, correctLinker)
         &molecule,
         AtomIndex{0},
         AtomIndex{1},
-        1.0
+        1.0,
+        potentialSettings.getScale14Coulomb(),
+        potentialSettings.getScale14VDW()
     );
 
     EXPECT_NEAR(forceScaled, 11.092884496634518, 1e-6);

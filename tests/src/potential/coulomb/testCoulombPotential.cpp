@@ -21,29 +21,3 @@
 ******************************************************************************/
 
 #include <gtest/gtest.h>
-
-#include "coulombPotential.hpp"
-#include "coulombShiftedPotential.hpp"
-
-/**
- * @brief tests the general constructor of a coulombPotential
- */
-TEST(TestCoulombPotential, constructor)
-{
-    auto potential = pot::CoulombShiftedPotential(2.0);
-    EXPECT_EQ(potential.getCoulombRadiusCutOff(), 2.0);
-    EXPECT_EQ(potential.getCoulombEnergyCutOff(), 0.5);
-    EXPECT_EQ(potential.getCoulombForceCutOff(), 0.25);
-}
-
-/**
- * @brief tests the setCoulombRadiusCutOff function
- */
-TEST(TestCoulombPotential, setCoulombRadiusCutOff)
-{
-    pot::CoulombPotential::setCoulombRadiusCutOff(2.0);
-
-    EXPECT_EQ(pot::CoulombPotential::getCoulombRadiusCutOff(), 2.0);
-    EXPECT_EQ(pot::CoulombPotential::getCoulombEnergyCutOff(), 0.5);
-    EXPECT_EQ(pot::CoulombPotential::getCoulombForceCutOff(), 0.25);
-}

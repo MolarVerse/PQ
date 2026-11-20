@@ -140,7 +140,10 @@ TEST_F(TestParameterFileReader, readFileNameEmpty)
     _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     _settings.fileSettings = FileSettings{};
     EXPECT_THROW_MSG(
-        input::parameterFile::readParameterFile(*_engine),
+        input::parameterFile::readParameterFile(
+            *_engine,
+            _settings.potentialSettings
+        ),
         exc::InputFileException,
         "Parameter file needed for requested simulation setup"
     );
@@ -158,7 +161,8 @@ TEST_F(TestParameterFileReader, readFileDoesNotExist)
     );
     auto reader = input::parameterFile::ParameterFileReader(
         "data/parameterFileReader/doesNotExist.param",
-        *_engine
+        *_engine,
+        _settings.potentialSettings
     );
     EXPECT_NO_THROW(reader.read());
     EXPECT_EQ(reader.getParameterFileSections().size(), 7);
@@ -196,7 +200,8 @@ TEST_F(TestParameterFileReader, readParameterFileDuplicateSection)
     );
     auto reader = input::parameterFile::ParameterFileReader(
         "data/parameterFileReader/paramDuplicateSection.param",
-        *_engine
+        *_engine,
+        _settings.potentialSettings
     );
     EXPECT_THROW_MSG(
         reader.read(),
@@ -216,7 +221,8 @@ TEST_F(TestParameterFileReader, readParameterFileUnknownSection)
     );
     auto reader = input::parameterFile::ParameterFileReader(
         "data/parameterFileReader/paramUnknownSection.param",
-        *_engine
+        *_engine,
+        _settings.potentialSettings
     );
     EXPECT_THROW_MSG(
         reader.read(),
@@ -239,7 +245,8 @@ TEST_F(TestParameterFileReader, readParameterFileWithComments)
     );
     auto reader = input::parameterFile::ParameterFileReader(
         "data/parameterFileReader/paramWithComments.param",
-        *_engine
+        *_engine,
+        _settings.potentialSettings
     );
     EXPECT_NO_THROW(reader.read());
     EXPECT_EQ(reader.getParameterFileSections().size(), 2);
@@ -258,13 +265,23 @@ TEST_F(TestParameterFileReader, readParameterFileFreeFunction)
     _settings.fileSettings.setParameterFileNameByUser(
         "data/parameterFileReader/param.param"
     );
-    EXPECT_NO_THROW(input::parameterFile::readParameterFile(*_engine));
+    EXPECT_NO_THROW(
+        input::parameterFile::readParameterFile(
+            *_engine,
+            _settings.potentialSettings
+        )
+    );
 }
 
 TEST_F(TestParameterFileReader, nameNotSetButNotNeeded)
 {
     _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    EXPECT_NO_THROW(input::parameterFile::readParameterFile(*_engine));
+    EXPECT_NO_THROW(
+        input::parameterFile::readParameterFile(
+            *_engine,
+            _settings.potentialSettings
+        )
+    );
 }
 
 /**

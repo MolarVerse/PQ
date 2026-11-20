@@ -30,6 +30,9 @@ option(BUILD_WITH_TESTS "Build tests" ON)
 # **************
 option(BUILD_WITH_MPI "Build with MPI" OFF)
 
+# H5MD trajectory output (traj_format = h5md) needs the HDF5 C library
+option(BUILD_WITH_HDF5 "Build with HDF5 for H5MD trajectory output" OFF)
+
 # ***********
 # BUILD TOOLS
 # ***********

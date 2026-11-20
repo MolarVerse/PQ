@@ -29,6 +29,7 @@
 #include "boxOutput.hpp"
 #include "defaults.hpp"
 #include "energyOutput.hpp"
+#include "exceptions.hpp"
 #include "frame.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
@@ -300,6 +301,31 @@ namespace engine
     }
 
     /**
+     * @brief write every MD frame to an H5MD file instead of the xyz,
+     * velocity, force and charge files
+     *
+     * @param filename
+     * @param overwrite whether an existing file may be replaced
+     * @param timeStep in fs
+     *
+     * @throw CompileTimeException if PQ was built without HDF5
+     */
+    void EngineOutput::openH5mdOutput(
+        const std::string &filename,
+        const bool         overwrite,
+        const double       timeStep
+    )
+    {
+        if (!out::H5mdOutput::available())
+            throw exc::CompileTimeException(
+                "traj_format = h5md needs PQ built with -DBUILD_WITH_HDF5=ON"
+            );
+
+        _h5mdOutput =
+            std::make_unique<out::H5mdOutput>(filename, overwrite, timeStep);
+    }
+
+    /**
      * @brief write every MD frame to an extxyz file instead of the xyz,
      * velocity, force and charge files
      *
@@ -417,7 +443,7 @@ namespace engine
 
     /**
      * @brief write the trajectory files (xyz, velocity, force and charge,
-     * or one extxyz file) and the restart file of one frame
+     * or one extxyz or H5MD file) and the restart file of one frame
      *
      * @param frame
      * @param step
@@ -432,6 +458,10 @@ namespace engine
         if (_extxyzOutput)
         {
             _extxyzOutput->write(frame, step);
+        }
+        else if (_h5mdOutput)
+        {
+            _h5mdOutput->write(frame, step);
         }
         else
         {

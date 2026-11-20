@@ -25,6 +25,7 @@
 #include <cmath>
 
 #include "constants/internalConversionFactors.hpp"
+#include "potentialSettings.hpp"
 
 #ifndef M_PI
 #define M_PI std::numbers::pi
@@ -39,23 +40,27 @@ namespace pot
      * @details this constructor calculates automatically the three need wolf
      * parameters from kappa in order to gain speed
      *
-     * @param coulombRadiusCutOff - coulomb radius cut off
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      * @param kappa
      */
-    CoulombWolf::CoulombWolf(double coulombRadiusCutOff, double kappa)
-        : CoulombPotential(coulombRadiusCutOff)
+    CoulombWolf::CoulombWolf(
+        const PotentialSettings& potentialSettings,
+        double                   kappa
+    )
+        : CoulombPotential(potentialSettings)
     {
-        _kappa = kappa;
-        _wolfParam1 =
-            ::erfc(_kappa * coulombRadiusCutOff) / coulombRadiusCutOff;
-        _wolfParam2 = 2.0 * _kappa / ::sqrt(M_PI);
+        _kappa             = kappa;
+        const auto& config = potentialSettings.get_coulombConfig();
+        _wolfParam1        = ::erfc(_kappa * config.cutoff) / config.cutoff;
+        _wolfParam2        = 2.0 * _kappa / ::sqrt(M_PI);
 
         const auto kappaSquared  = _kappa * _kappa;
-        const auto coulRCSquared = coulombRadiusCutOff * coulombRadiusCutOff;
+        const auto coulRCSquared = config.cutoff * config.cutoff;
         const auto expFactor     = ::exp(-kappaSquared * coulRCSquared);
 
-        _wolfParam3  = _wolfParam1 / coulombRadiusCutOff;
-        _wolfParam3 += _wolfParam2 * expFactor / coulombRadiusCutOff;
+        _wolfParam3  = _wolfParam1 / config.cutoff;
+        _wolfParam3 += _wolfParam2 * expFactor / config.cutoff;
     }
 
     /**
@@ -78,7 +83,7 @@ namespace pot
         const auto expFactor     = ::exp(-kappaDistance * kappaDistance);
 
         auto energy  = (erfcFactor / distance) - _wolfParam1;
-        energy      += _wolfParam3 * (distance - _coulombRadiusCutOff);
+        energy      += _wolfParam3 * (distance - _get_cutoff());
 
         auto force  = erfcFactor / (distance * distance);
         force      += _wolfParam2 * expFactor / distance;
@@ -89,82 +94,5 @@ namespace pot
 
         return {energy, force};
     }
-
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief set the kappa parameter
-     *
-     * @param kappa
-     */
-    void CoulombWolf::setKappa(double kappa) { _kappa = kappa; }
-
-    /**
-     * @brief set the wolf parameter 1
-     *
-     * @param wolfParameter1
-     */
-    void CoulombWolf::setWolfParameter1(double wolfParameter1)
-    {
-        _wolfParam1 = wolfParameter1;
-    }
-
-    /**
-     * @brief set the wolf parameter 2
-     *
-     * @param wolfParameter2
-     */
-    void CoulombWolf::setWolfParameter2(double wolfParameter2)
-    {
-        _wolfParam2 = wolfParameter2;
-    }
-
-    /**
-     * @brief set the wolf parameter 3
-     *
-     * @param wolfParameter3
-     */
-    void CoulombWolf::setWolfParameter3(double wolfParameter3)
-    {
-        _wolfParam3 = wolfParameter3;
-    }
-
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief get the kappa parameter
-     *
-     * @return double
-     */
-    double CoulombWolf::getKappa() { return _kappa; }
-
-    /**
-     * @brief get the wolf parameter 1
-     *
-     * @return double
-     */
-    double CoulombWolf::getWolfParameter1() { return _wolfParam1; }
-
-    /**
-     * @brief get the wolf parameter 2
-     *
-     * @return double
-     */
-    double CoulombWolf::getWolfParameter2() { return _wolfParam2; }
-
-    /**
-     * @brief get the wolf parameter 3
-     *
-     * @return double
-     */
-    double CoulombWolf::getWolfParameter3() { return _wolfParam3; }
 
 }   // namespace pot

@@ -23,7 +23,12 @@
 #ifndef POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
 #define POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
 
+#include <mstd/types.hpp>
+#include <mstd/utils/members.hpp>
 #include <utility>
+
+class PotentialSettings;
+struct CoulombPotentialConfig;
 
 namespace pot
 {
@@ -42,43 +47,24 @@ namespace pot
      */
     class CoulombPotential
     {
-       protected:
-        inline static double _coulombRadiusCutOff;
-        inline static double _coulombEnergyCutOff;
-        inline static double _coulombForceCutOff;
-        inline static double _coulombCutOffCubedInverse;
+       private:
+        double _cutoff;
+        double _energyCutoff;
+        double _forceCutoff;
+        double _invCubedCutoff;
 
        public:
+        explicit CoulombPotential(const PotentialSettings& potentialSettings);
         virtual ~CoulombPotential() = default;
-        explicit CoulombPotential(double coulombRadiusCutOff);
 
         [[nodiscard]]
         virtual std::pair<double, double> calculate(double, double) const = 0;
 
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        static void setCoulombRadiusCutOff(double coulombRadiusCutOff);
-        static void setCoulombEnergyCutOff(double coulombEnergyCutOff);
-        static void setCoulombForceCutOff(double coulombForceCutOff);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static double getCoulombRadiusCutOff()
-        {
-            return _coulombRadiusCutOff;
-        }
-        [[nodiscard]] static double getCoulombEnergyCutOff()
-        {
-            return _coulombEnergyCutOff;
-        }
-        [[nodiscard]] static double getCoulombForceCutOff()
-        {
-            return _coulombForceCutOff;
-        }
+       protected:
+        INTERNAL_CONST_GETTER(_cutoff);
+        INTERNAL_CONST_GETTER(_energyCutoff);
+        INTERNAL_CONST_GETTER(_forceCutoff);
+        INTERNAL_CONST_GETTER(_invCubedCutoff);
     };
 
 }   // namespace pot

@@ -52,7 +52,8 @@ class TestInputValidation : public ::testing::Test
 
     void SetUp() override
     {
-        settings::GeneralSettings::setJobtype(JobType::NONE);
+        settings::GeneralSettings::setJobtype(static_cast<JobType>(0));
+
         _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
 
         _settings.optimizerSettings.setLearningRateStrategyByUser(
@@ -78,10 +79,10 @@ class TestInputValidation : public ::testing::Test
             InitVelocities::FALSE
         );
 
-        settings::PotentialSettings::setCoulombLongRangeType(
+        _settings.potentialSettings.setCoulombLongRangeTypeByUser(
             CoulombLongRangeType::SHIFTED
         );
-        settings::PotentialSettings::setCoulombRadiusCutOff(
+        _settings.potentialSettings.setCoulombRadiusCutOffByUser(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
 
@@ -380,7 +381,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
     settings::GeneralSettings::activateCellList();
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.0);
+    _settings.potentialSettings.setCoulombRadiusCutOffByUser(0.0);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

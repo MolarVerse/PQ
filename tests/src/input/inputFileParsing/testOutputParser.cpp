@@ -289,6 +289,25 @@ TEST_F(TestInputFileReader, testExtxyzFilename)
 }
 
 /**
+ * @brief tests parsing the "h5md_file" command
+ *
+ */
+TEST_F(TestInputFileReader, testH5mdFilename)
+{
+    OutputFileSettings       outputFileSettings;
+    input::OutputInputParser parser(outputFileSettings);
+    const auto               funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("h5md_file"));
+
+    const auto &parseFunc = funcMap.at("h5md_file");
+
+    _fileName                             = "traj.h5md";
+    std::vector<std::string> lineElements = {"h5md_file", "=", _fileName};
+    parseFunc(lineElements, 0);
+    EXPECT_EQ(outputFileSettings.getH5mdFileName(), _fileName);
+}
+
+/**
  * @brief tests parsing the "traj_format" command
  *
  */
@@ -307,6 +326,12 @@ TEST_F(TestInputFileReader, testTrajectoryFormat)
         outputFileSettings.getTrajectoryFormat(),
         TrajectoryFormat::EXTXYZ
     );
+
+    OutputFileSettings       h5mdSettings;
+    input::OutputInputParser h5mdParser(h5mdSettings);
+    lineElements = {"traj_format", "=", "h5md"};
+    h5mdParser.getKeywordFuncMap().at("traj_format")(lineElements, 0);
+    EXPECT_EQ(h5mdSettings.getTrajectoryFormat(), TrajectoryFormat::H5MD);
 }
 
 /**

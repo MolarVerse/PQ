@@ -39,7 +39,10 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) long_range "<string>" 2)
      * wolf_param "<double>"
      */
-    CoulombLongRangeInputParser::CoulombLongRangeInputParser()
+    CoulombLongRangeInputParser::CoulombLongRangeInputParser(
+        PotentialSettings &potentialSettings
+    )
+        : _potentialSettings(potentialSettings)
     {
         addCoulombLongRangeKey();
         addWolfParameterKey();
@@ -60,8 +63,8 @@ namespace input
                 "the simulation",
         };
 
-        const auto setValue = [](CoulombLongRangeType type)
-        { settings::PotentialSettings::setCoulombLongRangeType(type); };
+        const auto setValue = [this](CoulombLongRangeType type)
+        { _potentialSettings->setCoulombLongRangeTypeByUser(type); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<CoulombLongRangeType>{
@@ -87,8 +90,8 @@ namespace input
                 "Specifies the parameter for the Wolf long-range correction",
         };
 
-        const auto setValue = [](double wolfParameter)
-        { settings::PotentialSettings::setWolfParameter(wolfParameter); };
+        const auto setValue = [this](double wolfParameter)
+        { _potentialSettings->setWolfParameterByUser(wolfParameter); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -116,8 +119,8 @@ namespace input
                 "field correction",
         };
 
-        const auto setValue = [](double epsilon)
-        { settings::PotentialSettings::setReactionFieldEpsilon(epsilon); };
+        const auto setValue = [this](double epsilon)
+        { _potentialSettings->setReactionFieldEpsilonByUser(epsilon); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

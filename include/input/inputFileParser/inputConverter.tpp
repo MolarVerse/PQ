@@ -24,8 +24,7 @@
 #define INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_TPP
 
 #include <charconv>
-#include <mstd/string/join.hpp>
-#include <set>
+#include <mstd/string.hpp>
 
 #include "inputConverter.hpp"
 #include "stringUtilities.hpp"
@@ -43,6 +42,9 @@ namespace input
     requires(!std::same_as<T, bool>)
     static std::optional<T> _tryParse(std::string_view raw)
     {
+        if (!raw.empty() && raw.front() == '+')
+            raw.remove_prefix(1);
+
         T          value{};
         const auto result =
             std::from_chars(raw.data(), raw.data() + raw.size(), value);
