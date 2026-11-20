@@ -27,6 +27,7 @@
 
 #include "output.hpp"
 #include "textBuffer.hpp"
+#include "unit_types.hpp"
 
 namespace out
 {
@@ -46,7 +47,11 @@ namespace out
        public:
         using Output::Output;
 
-        void write(const Frame &, size_t);
+        void write(
+            const Frame&        frame,
+            size_t              step,
+            std::optional<Time> finalTime
+        );
     };
 
 }   // namespace out

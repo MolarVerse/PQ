@@ -22,6 +22,26 @@
 
 #include "timingsSettings.hpp"
 
+/**
+ * @brief Calculate the final simulation time
+ *
+ * @return Time
+ */
+Time TimingsSettings::calculateFinalSimulationTime() const
+{
+    return _startingTime.get() + _timeStep.get() * _numberOfSteps.get();
+}
+
+/**
+ * @brief Calculate the simulation time of the current run
+ *
+ * @return Time
+ */
+Time TimingsSettings::calculateSimulationTimeOfRun() const
+{
+    return _timeStep.get() * _numberOfSteps.get();
+}
+
 /********************
  *                  *
  * standard setters *
@@ -58,6 +78,16 @@ void TimingsSettings::setNumberOfStepsByUser(size_t numberOfSteps)
     _numberOfSteps.setByUser(numberOfSteps);
 }
 
+/**
+ * @brief Set the starting time
+ *
+ * @param startingTime
+ */
+void TimingsSettings::setStartingTimeByUser(const Time& startingTime)
+{
+    _startingTime.setByUser(startingTime);
+}
+
 /********************
  *                  *
  * standard getters *
@@ -89,4 +119,24 @@ size_t TimingsSettings::getStartingStepCount() const
 size_t TimingsSettings::getNumberOfSteps() const
 {
     return _numberOfSteps.get();
+}
+
+/**
+ * @brief get the starting time
+ *
+ * @return const Time&
+ */
+const Time& TimingsSettings::getStartingTime() const
+{
+    return _startingTime.get();
+}
+
+/**
+ * @brief check if the starting time is set
+ *
+ * @return true if set, false otherwise
+ */
+bool TimingsSettings::isStartingTimeSet() const
+{
+    return _startingTime.isSetBySomeone();
 }

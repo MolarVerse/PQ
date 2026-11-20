@@ -72,7 +72,7 @@ namespace engine
             getPhysicalData(),
             calculateTotalSimulationTime(
                 timeStep,
-                getSettings().timings.getStartingStepCount()
+                getSettings().timings.getStartingTime()
             )
         );
 

@@ -145,7 +145,7 @@ namespace engine
             getPhysicalData(),
             calculateTotalSimulationTime(
                 timeStep,
-                getSettings().timings.getStartingStepCount()
+                getSettings().timings.getStartingTime()
             )
         );
 
@@ -271,7 +271,11 @@ namespace engine
                 getSimulationBox(),
                 *_thermostat,
                 effStep,
-                getPhysicalData().getPotentialEnergy()
+                getPhysicalData().getPotentialEnergy(),
+                calculateTotalSimulationTime(
+                    timeStep,
+                    getSettings().timings.getStartingTime()
+                )
             );
 
             getEngineOutput().writeVirialFile(
@@ -317,8 +321,10 @@ namespace engine
                 static_cast<double>(outputFreq)
             );
 
-            const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep;
+            const auto simTime = calculateTotalSimulationTime(
+                timeStep,
+                getSettings().timings.getStartingTime()
+            );
 
             getEngineOutput().writeEnergyFile(
                 effStep,

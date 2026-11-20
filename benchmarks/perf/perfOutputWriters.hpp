@@ -159,7 +159,7 @@ namespace benchOutputWriters
             vel.writeVelocities(frame, i, true);
             force.writeForces(frame, i, true);
             charge.writeCharges(frame, i, true);
-            restart.write(frame, i);
+            restart.write(frame, i, 100 * fs);
             energy.write(i, physicalData, settings);
         }
 

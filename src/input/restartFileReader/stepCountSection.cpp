@@ -30,6 +30,7 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace input::restartFile
 {
@@ -65,17 +66,18 @@ namespace input::restartFile
         size_t &lineNumber
     )
     {
-        if (lineElements.size() != 2)
+        if (lineElements.size() != 2 && lineElements.size() != 4)
         {
             throw exc::RstFileException(
                 std::format(
-                    "Error in line {}: Step count section must have 2 elements",
+                    "Error in line {}: Step count section must have 2 or 4 "
+                    "elements",
                     lineNumber
                 )
             );
         }
 
-        auto stepCount = stoi(lineElements[1]);
+        const auto stepCount = stoi(lineElements[1]);
 
         if (stepCount < 0)
         {
@@ -90,6 +92,12 @@ namespace input::restartFile
         _timingsSettings->setStartingStepCountByUser(
             static_cast<size_t>(stepCount)
         );
+
+        if (lineElements.size() == 4)
+        {
+            const auto startingTime = stod(lineElements[3]) * ps;
+            _timingsSettings->setStartingTimeByUser(Time(startingTime));
+        }
     }
 
     /**

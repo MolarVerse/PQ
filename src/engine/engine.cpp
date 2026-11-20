@@ -84,12 +84,10 @@ namespace engine
      */
     Time Engine::calculateTotalSimulationTime(
         const Time &timeStep,
-        size_t      startingStepCount
+        const Time &startingTime
     ) const
     {
-        const auto effStep = _step + startingStepCount;
-
-        return static_cast<double>(effStep) * timeStep;
+        return _step * timeStep + startingTime;
     }
 
     /**

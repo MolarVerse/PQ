@@ -47,13 +47,13 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
     size_t lineNumber = 0;
     for (size_t i = 0; i < 10; ++i)
     {
-        if (i != 2)
+        if (i != 2 && i != 4)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
                 _section->process(line, *_engine, lineNumber),
                 exc::RstFileException,
-                "Error in line 0: Step count section must have 2 elements"
+                "Error in line 0: Step count section must have 2 or 4 elements"
             );
         }
     }

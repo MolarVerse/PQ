@@ -53,13 +53,14 @@ TEST_F(TestRstFileOutput, write)
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "Step 10");
+    EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
     EXPECT_EQ(line, "Box   10 10 10  90 90 90");
     getline(file, line);
@@ -107,12 +108,13 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
+    _rstFileOutput
+        ->write(out::Frame{*_simulationBox, thermostat}, 10, 100 * fs);
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "Step 10");
+    EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
     EXPECT_EQ(line, "Box   10 10 10  90 90 90");
     getline(file, line);
@@ -158,14 +160,14 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
     const out::Frame frame{*_simulationBox, thermostat::Thermostat()};
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(frame, 10);
+    _rstFileOutput->write(frame, 10, 100 * fs);
     EXPECT_FALSE(std::filesystem::exists("default.rst.tmp"));
 
     // a directory in the way makes writing the temporary file fail
     std::filesystem::create_directory("default.rst.tmp");
 
     EXPECT_THROW_MSG(
-        _rstFileOutput->write(frame, 11),
+        _rstFileOutput->write(frame, 11, 100 * fs),
         exc::InputFileException,
         "Could not write file - filename = default.rst.tmp"
     );
@@ -175,7 +177,7 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "Step 10");
+    EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
 }
 
 /**
@@ -196,7 +198,8 @@ TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
 
@@ -298,7 +301,8 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
 
@@ -352,7 +356,8 @@ TEST_F(TestRstFileOutput, noseHooverChainIsWrittenExactly)
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
+    _rstFileOutput
+        ->write(out::Frame{*_simulationBox, thermostat}, 10, 100 * fs);
     _rstFileOutput->close();
 
     std::ifstream file("default.rst");
@@ -408,7 +413,8 @@ TEST_F(TestRstFileOutput, subnormalValuesAreWrittenAsZero)
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
 

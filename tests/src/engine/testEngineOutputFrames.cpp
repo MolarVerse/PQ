@@ -37,6 +37,7 @@
 #include "referenceSettings.hpp"
 #include "simulationBox.hpp"
 #include "thermostat.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -114,7 +115,8 @@ namespace
                     simulationBox,
                     thermostat,
                     step,
-                    -1.5 * static_cast<double>(step)
+                    -1.5 * static_cast<double>(step),
+                    100 * fs
                 );
             }
 

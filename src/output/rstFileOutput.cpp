@@ -30,6 +30,7 @@
 #include <sstream>
 
 #include "frame.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -86,15 +87,27 @@ namespace out
      *
      * @param frame
      * @param step
+     * @param finalTime the optional final simulation time to be written in the
+     * restart file, optional because optimizer does not necessarily have a
+     * well-defined simulation time
      */
-    void RstFileOutput::write(const Frame &frame, size_t step)
+    void RstFileOutput::write(
+        const Frame              &frame,
+        const size_t              step,
+        const std::optional<Time> finalTime
+    )
     {
         using textFormat::FIXED_WIDTH;
         using textFormat::NAME_WIDTH;
 
         std::ostringstream buffer;
 
-        buffer << "Step " << step << '\n';
+        buffer << "Step " << step;
+        if (finalTime.has_value())
+        {
+            buffer << " Simulation_Time " << finalTime->numerical_value_in(ps);
+        }
+        buffer << "\n";
 
         // std::format writes the shortest text that reads back as the same
         // double; the stream operator of Vector3D keeps 6 digits only, which
