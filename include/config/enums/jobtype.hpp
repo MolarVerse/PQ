@@ -43,6 +43,7 @@ enum class JobType : std::uint8_t;
     X(OPT, 1U << 3U)                                       \
     X(HESSIAN, 1U << 4U)                                   \
     X(RING_POLYMER, 1U << 5U)                              \
+    X(QM_MM, U(QM) | U(MM))                                \
     X(QM_MD, U(QM) | U(MD))                                \
     X(MM_MD, U(MM) | U(MD))                                \
     X(QMMM_MD, U(QM) | U(MM) | U(MD))                      \

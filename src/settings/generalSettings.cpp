@@ -202,8 +202,7 @@ namespace settings
      */
     bool GeneralSettings::isQMOnlyJobtype()
     {
-        return (_jobtype & JobType::QM) == JobType::QM &&
-               (_jobtype & JobType::MM) != JobType::MM;
+        return (_jobtype & JobType::QM_MM) == JobType::QM;
     }
 
     /**
@@ -214,8 +213,7 @@ namespace settings
      */
     bool GeneralSettings::isMMOnlyJobtype()
     {
-        return (_jobtype & JobType::MM) == JobType::MM &&
-               (_jobtype & JobType::QM) != JobType::QM;
+        return (_jobtype & JobType::QM_MM) == JobType::MM;
     }
 
     /**
@@ -226,8 +224,7 @@ namespace settings
      */
     bool GeneralSettings::isHybridJobtype()
     {
-        return (_jobtype & JobType::QM) == JobType::QM &&
-               (_jobtype & JobType::MM) == JobType::MM;
+        return (_jobtype & JobType::QM_MM) == JobType::QM_MM;
     }
 
     /**
