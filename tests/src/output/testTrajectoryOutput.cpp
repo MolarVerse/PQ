@@ -53,6 +53,25 @@ TEST_F(TestTrajectoryOutput, writeXyz)
 }
 
 /**
+ * @brief The box in the header is written exactly, not with 6 digits
+ *
+ */
+TEST_F(TestTrajectoryOutput, writeHeaderBoxIsExact)
+{
+    molsys::OrthorhombicBox orthoBox{{27.44205774, 27.44205774, 27.44205774}};
+    _simulationBox->setBox(orthoBox, false);
+
+    _trajectoryOutput->setFilename("default.xyz", false);
+    _trajectoryOutput->writeXyz(out::Frame{*_simulationBox}, 1, false);
+    _trajectoryOutput->close();
+    std::ifstream file("default.xyz");
+    std::string   line;
+    getline(file, line);
+
+    EXPECT_EQ(line, "3  27.44205774 27.44205774 27.44205774  90 90 90");
+}
+
+/**
  * @brief Test optional step metadata in the xyz comment line
  *
  */

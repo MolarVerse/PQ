@@ -26,6 +26,28 @@
 #include <string>
 
 /**
+ * @brief The box in the header is written exactly, not with 6 digits
+ *
+ */
+TEST_F(TestRingPolymerTrajectoryOutput, writeHeaderBoxIsExact)
+{
+    molsys::OrthorhombicBox orthoBox{{27.44205774, 27.44205774, 27.44205774}};
+    for (auto &bead : _beads)
+    {
+        bead.setBox(orthoBox, false);
+    }
+
+    _trajectoryOutput->setFilename("default.rpmd.xyz", false);
+    _trajectoryOutput->writeXyz(_beads, 1, false);
+    _trajectoryOutput->close();
+    std::ifstream file("default.rpmd.xyz");
+    std::string   line;
+    getline(file, line);
+
+    EXPECT_EQ(line, "6  27.44205774 27.44205774 27.44205774  90 90 90");
+}
+
+/**
  * @brief Test the writeXyz method
  *
  */

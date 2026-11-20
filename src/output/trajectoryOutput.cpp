@@ -23,6 +23,7 @@
 #include "trajectoryOutput.hpp"
 
 #include <cstddef>
+#include <format>
 #include <ios>
 #include <ostream>
 #include <string_view>
@@ -79,9 +80,19 @@ namespace out
      */
     void TrajectoryOutput::writeHeader(const Frame &frame)
     {
-        _getFilePointer() << frame.atoms.size() << "  "
-                          << frame.box->get_boxDimensions() << "  "
-                          << frame.box->getBoxAngles() << '\n';
+        const auto dimensions = frame.box->get_boxDimensions();
+        const auto angles     = frame.box->getBoxAngles();
+
+        _getFilePointer() << std::format(
+            "{}  {} {} {}  {} {} {}\n",
+            frame.atoms.size(),
+            dimensions[0],
+            dimensions[1],
+            dimensions[2],
+            angles[0],
+            angles[1],
+            angles[2]
+        );
     }
 
     /**
