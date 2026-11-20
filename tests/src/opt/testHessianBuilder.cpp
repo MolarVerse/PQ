@@ -88,7 +88,7 @@ namespace
     {
     }
 
-    std::shared_ptr<Evaluator> HarmonicEvaluator::clone() const
+    std::shared_ptr<opt::Evaluator> HarmonicEvaluator::clone() const
     {
         return std::make_shared<HarmonicEvaluator>(*this);
     }
