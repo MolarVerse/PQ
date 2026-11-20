@@ -96,7 +96,7 @@ namespace
 
     void configureNoInterModel(Settings &settings)
     {
-        settings::GeneralSettings::setJobtype(JobType::MM_MD);
+        GeneralSettings::setJobtype(JobType::MM_MD);
         settings.waterModelSettings.setWaterInterModelByUser(
             WaterInterModel::NONE
         );
@@ -158,7 +158,7 @@ TEST_F(TestSetup, waterModelSetupCoversAllIntermolecularModels)
         WaterInterModel::SPC_MTR
     );
 
-    settings::GeneralSettings::activateCellList();
+    GeneralSettings::activateCellList();
     setupInterModel<waterModel::TIP3PmTRInterParam>(
         *_mdEngine,
         *_settings,
@@ -238,7 +238,7 @@ TEST_F(TestSetup, waterModelSetupRejectsQmOnlyJobs)
         WaterIntraModel::NONE
     );
     addWaterSystem(*_mdEngine);
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    GeneralSettings::setJobtype(JobType::QM_MD);
     EXPECT_THROW_MSG(
 
         setup::WaterModelSetup(*_mdEngine).setup(),

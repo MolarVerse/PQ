@@ -148,7 +148,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(filename, _settings));
 }
 
@@ -166,7 +166,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
         inputFile << "long_range = reaction-field;\n";
     }
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     ASSERT_THROW_MSG(
         input::readInputFile(_fileName, _settings),
@@ -192,7 +192,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
         _settings.potentialSettings.getCoulombLongRangeType(),
@@ -324,7 +324,7 @@ TEST_F(TestInputFileReader, testReadJobType)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
     ASSERT_EQ(input::readJobType(filename), JobType::MM_MD);
-    EXPECT_EQ(settings::GeneralSettings::getJobtype(), JobType::MM_MD);
+    EXPECT_EQ(GeneralSettings::getJobtype(), JobType::MM_MD);
 
     filename = "fileNotFound";
     ASSERT_THROW_MSG(
@@ -365,7 +365,7 @@ TEST_F(TestInputFileReader, testAllKeywordsAcceptValidValue)
     // explicitly so this test does not depend on whatever job type a
     // previously run test left behind in the shared, static
     // GeneralSettings state.
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {

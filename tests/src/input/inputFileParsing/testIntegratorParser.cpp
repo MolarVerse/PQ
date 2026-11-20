@@ -44,18 +44,18 @@ TEST_F(TestInputFileReader, testParseIntegrator)
     ReferenceSettings referenceSettings;
     // NOTE: this is only used because of this nonsense requirement in the input
     // file parse after all of the reworks this can be removed (HOPEFULLY)
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
     input::IntegratorInputParser parser(referenceSettings);
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("integrator"));
     const auto &parseFunc = funcMap.at("integrator");
 
-    settings::GeneralSettings::setIntegratorType(IntegratorType::NONE);
+    GeneralSettings::setIntegratorType(IntegratorType::NONE);
 
     std::vector<std::string> lineElements = {"integrator", "=", "v-verlet"};
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings::GeneralSettings::getIntegratorType(),
+        GeneralSettings::getIntegratorType(),
         IntegratorType::VELOCITY_VERLET
     );
     EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(

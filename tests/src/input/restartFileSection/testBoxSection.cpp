@@ -57,7 +57,7 @@ TEST_F(TestBoxSection, testNumberOfArguments)
 
 TEST_F(TestBoxSection, testProcess)
 {
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    GeneralSettings::setJobtype(JobType::QM_MD);
 
     EXPECT_EQ(_wasBoxSetViaStartFile(), false);
 

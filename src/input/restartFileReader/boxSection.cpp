@@ -123,7 +123,7 @@ namespace input::restartFile
             molsys::TriclinicBox box{boxDimensions, boxAngles, isFullIsotropic};
             engine.getSimulationBox().setBox(box, true);
 
-            const auto jobType = settings::GeneralSettings::getJobtype();
+            const auto jobType = GeneralSettings::getJobtype();
 
             // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/910
             if (jobType != JobType::QM_MD &&

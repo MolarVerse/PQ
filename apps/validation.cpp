@@ -181,7 +181,7 @@ namespace
         const ExternalQMSettings &externalQMSettings
     )
     {
-        if (!settings::GeneralSettings::isQMActivated() ||
+        if (!GeneralSettings::isQMActivated() ||
             !qmSettings.isExternalQMRunner())
             return;
 
@@ -222,7 +222,7 @@ namespace
         const ExternalQMSettings &externalQMSettings
     )
     {
-        if (!settings::GeneralSettings::isQMActivated() ||
+        if (!GeneralSettings::isQMActivated() ||
             !qmSettings.isExternalQMRunner())
             return;
 
@@ -327,7 +327,7 @@ namespace
             );
         }
 
-        if (settings::GeneralSettings::isMMActivated() ||
+        if (GeneralSettings::isMMActivated() ||
             settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             requireFile(
@@ -336,7 +336,7 @@ namespace
             );
         }
 
-        if (settings::GeneralSettings::isMMActivated() &&
+        if (GeneralSettings::isMMActivated() &&
             !settings.forceFieldSettings.isNonCoulombicActive())
         {
             requireFile(
@@ -370,7 +370,7 @@ namespace
             );
         }
 
-        if (!settings::GeneralSettings::isQMActivated())
+        if (!GeneralSettings::isQMActivated())
             return;
 
         const auto method = settings.qmSettings.getQMMethod();
@@ -435,7 +435,7 @@ namespace
 
     void validateCompiledCapabilities(const QMSettings &qmSettings)
     {
-        if (PQ_BUILD_WITH_ASE || !settings::GeneralSettings::isQMActivated())
+        if (PQ_BUILD_WITH_ASE || !GeneralSettings::isQMActivated())
             return;
 
         const auto method = qmSettings.getQMMethod();

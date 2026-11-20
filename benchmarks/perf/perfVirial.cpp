@@ -48,7 +48,7 @@ int main()
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
 
     auto physicalData = physicalData::PhysicalData();
-    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 
     perfAllocBegin();
 

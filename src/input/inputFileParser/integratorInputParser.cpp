@@ -68,7 +68,7 @@ namespace input
         const auto setValue = [this](IntegratorType integratorType)
         {
             // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/908
-            if (!settings::GeneralSettings::isMDJobType())
+            if (!GeneralSettings::isMDJobType())
             {
                 throw exc::InputFileException(
                     std::format(
@@ -77,7 +77,7 @@ namespace input
                 );
             }
 
-            settings::GeneralSettings::setIntegratorType(integratorType);
+            GeneralSettings::setIntegratorType(integratorType);
             _referenceSettings->addReferenceFile(
                 ReferenceFiles::VELOCITY_VERLET_FILE
             );

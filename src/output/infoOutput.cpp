@@ -108,7 +108,7 @@ namespace out
         );
         _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
 
-        if (settings::GeneralSettings::isQMActivated())
+        if (GeneralSettings::isQMActivated())
         {
             _writeLeft(
                 physicalData.getQMEnergy() -
@@ -122,7 +122,7 @@ namespace out
         _writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
         _writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
 
-        if (settings::GeneralSettings::isMMActivated())
+        if (GeneralSettings::isMMActivated())
         {
             _writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
             _writeRight(
@@ -148,7 +148,7 @@ namespace out
             );
         }
 
-        if (settings::GeneralSettings::isHybridJobtype())
+        if (GeneralSettings::isHybridJobtype())
         {
             _writeLeft(
                 physicalData.getNumberOfSmoothingMolecules(),

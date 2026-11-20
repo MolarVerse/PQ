@@ -566,8 +566,8 @@ TEST_F(
  */
 TEST_F(TestSimulationBox, removeNetForce)
 {
-    const auto jobtype = settings::GeneralSettings::getJobtype();
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    const auto jobtype = GeneralSettings::getJobtype();
+    GeneralSettings::setJobtype(JobType::QM_MD);
 
     molsys::SimulationBox simBox;
     auto                  atom1 = molsys::Atom();
@@ -602,7 +602,7 @@ TEST_F(TestSimulationBox, removeNetForce)
         1e-10
     );
 
-    settings::GeneralSettings::setJobtype(jobtype);
+    GeneralSettings::setJobtype(jobtype);
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(1).getForce(),
         linalg::Vec3D({0.0, 1.0, -2.0}),
@@ -831,8 +831,8 @@ TEST_F(TestSimulationBox, activeChargeAndEmptyForceRemoval)
 
 TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
 {
-    const auto jobtype = settings::GeneralSettings::getJobtype();
-    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    const auto jobtype = GeneralSettings::getJobtype();
+    GeneralSettings::setJobtype(JobType::QMMM_MD);
 
     molsys::SimulationBox simBox;
     auto                  qmAtom1 = std::make_shared<molsys::Atom>();
@@ -865,5 +865,5 @@ TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
         1e-10
     );
 
-    settings::GeneralSettings::setJobtype(jobtype);
+    GeneralSettings::setJobtype(jobtype);
 }

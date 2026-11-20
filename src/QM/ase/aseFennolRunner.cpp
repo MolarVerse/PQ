@@ -60,8 +60,7 @@ namespace QM
             calculatorArgs["gpu_preprocessing"] =
                 pybind11::bool_(fennolSettings.useGPUPreprocessing());
             calculatorArgs["use_float64"] = pybind11::bool_(
-                settings::GeneralSettings::getFloatingPointType() ==
-                FPType::DOUBLE
+                GeneralSettings::getFloatingPointType() == FPType::DOUBLE
             );
 
             _setAseCalculator(

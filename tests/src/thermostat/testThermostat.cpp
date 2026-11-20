@@ -618,8 +618,8 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
 {
     auto run = []()
     {
-        settings::GeneralSettings::setRandomSeed(42);
-        settings::GeneralSettings::setIsRandomSeedSet(true);
+        GeneralSettings::setRandomSeed(42);
+        GeneralSettings::setIsRandomSeedSet(true);
 
         auto       bath     = makeBath();
         auto       langevin = thermostat::LangevinThermostat(1.0e12);
@@ -630,7 +630,7 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
             langevin.applyLangevin(*bath, target, 0.5 * fs);
         }
 
-        settings::GeneralSettings::setIsRandomSeedSet(false);
+        GeneralSettings::setIsRandomSeedSet(false);
 
         return bath->getAtoms()[0]->getVelocity();
     };
@@ -644,15 +644,15 @@ TEST_F(TestThermostat, langevinSameSeedGivesSameVelocities)
 
 TEST_F(TestThermostat, langevinBathEquilibratesToTargetTemperature)
 {
-    settings::GeneralSettings::setRandomSeed(7);
-    settings::GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(7);
+    GeneralSettings::setIsRandomSeedSet(true);
 
     auto bath     = makeBath();
     auto data     = physicalData::PhysicalData();
     auto langevin = thermostat::LangevinThermostat(1.0e13);
     auto target   = toTemperature(300.0);
 
-    settings::GeneralSettings::setIsRandomSeedSet(false);
+    GeneralSettings::setIsRandomSeedSet(false);
 
     for (size_t step = 0; step < 4000; ++step)
     {
@@ -691,15 +691,15 @@ TEST_F(TestThermostat, langevinFullStepUpdatesTemperatureOfPhysicalData)
 
 TEST_F(TestThermostat, langevinCopyKeepsFriction)
 {
-    settings::GeneralSettings::setRandomSeed(3);
-    settings::GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(3);
+    GeneralSettings::setIsRandomSeedSet(true);
 
     auto original = thermostat::LangevinThermostat(1.0e13);
     auto copied   = thermostat::LangevinThermostat(original);
     auto assigned = thermostat::LangevinThermostat(0.0);
     assigned      = original;
 
-    settings::GeneralSettings::setIsRandomSeedSet(false);
+    GeneralSettings::setIsRandomSeedSet(false);
 
     const auto target = toTemperature(300.0);
     auto       boxA   = makeBath();

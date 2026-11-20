@@ -241,10 +241,10 @@ namespace molsys
      */
     bool Molecule::isMMMolecule() const
     {
-        if (settings::GeneralSettings::isMMOnlyJobtype())
+        if (GeneralSettings::isMMOnlyJobtype())
             return true;
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (GeneralSettings::isQMOnlyJobtype())
             return false;
 
         if (isActive())

@@ -44,8 +44,8 @@ namespace rng
     // NOLINTNEXTLINE(cert-msc51-cpp, cert-msc32-c)
     RandomNumberGenerator::RandomNumberGenerator()
     {
-        if (settings::GeneralSettings::isRandomSeedSet())
-            _generator.seed(settings::GeneralSettings::getRandomSeed());
+        if (GeneralSettings::isRandomSeedSet())
+            _generator.seed(GeneralSettings::getRandomSeed());
         else
             _generator.seed(_randomDevice());
     }

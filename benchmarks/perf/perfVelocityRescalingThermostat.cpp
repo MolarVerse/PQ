@@ -47,8 +47,8 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 int main()
 {
     const auto timeStep = 0.001 * fs;
-    settings::GeneralSettings::setRandomSeed(42);
-    settings::GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(42);
+    GeneralSettings::setIsRandomSeedSet(true);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});

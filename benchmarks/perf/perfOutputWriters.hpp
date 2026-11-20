@@ -68,7 +68,7 @@ namespace benchOutputWriters
 
     inline int run(const std::size_t molecules, const std::uint64_t iterations)
     {
-        settings::GeneralSettings::setJobtype(JobType::MM_MD);
+        GeneralSettings::setJobtype(JobType::MM_MD);
 
         const auto perSide = static_cast<std::size_t>(
             std::ceil(std::cbrt(static_cast<double>(molecules)))

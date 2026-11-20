@@ -170,7 +170,7 @@ namespace benchWaterScaling
             settings.potentialSettings
         );
 
-        settings::GeneralSettings::activateCellList();
+        GeneralSettings::activateCellList();
         molsys::CellList cellList;
         cellList.setNumberOfCells(numberOfCells);
         cellList.resizeCells();

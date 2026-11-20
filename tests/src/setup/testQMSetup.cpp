@@ -485,7 +485,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
         "path/To/fennol_model.fnx"
     );
     settings.fennolSettings.setUseGPUPreprocessingByUser(false);
-    settings::GeneralSettings::setFloatingPointType(FPType::FLOAT);
+    GeneralSettings::setFloatingPointType(FPType::FLOAT);
 
     _qmSetup.setupWriteInfo();
 

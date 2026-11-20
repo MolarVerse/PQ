@@ -50,9 +50,8 @@ namespace input
         void validateOptimizer(const Settings& settings)
         {
             const auto optimizerActive =
-                settings::GeneralSettings::isOptJobType() ||
-                (settings::GeneralSettings::getJobtype() ==
-                     JobType::MM_HESSIAN &&
+                GeneralSettings::isOptJobType() ||
+                (GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
                  settings.hessianSettings.optimizeBeforeHessian());
 
             if (!optimizerActive)
@@ -102,10 +101,9 @@ namespace input
     {
         using enum JobType;
 
-        const auto jobType = settings::GeneralSettings::getJobtype();
+        const auto jobType = GeneralSettings::getJobtype();
         const auto requiresNumberOfSteps =
-            settings::GeneralSettings::isMDJobType() ||
-            settings::GeneralSettings::isOptJobType() ||
+            GeneralSettings::isMDJobType() || GeneralSettings::isOptJobType() ||
             (jobType == MM_HESSIAN &&
              settings.hessianSettings.optimizeBeforeHessian());
 
@@ -119,8 +117,7 @@ namespace input
             );
         }
 
-        if (settings::GeneralSettings::isMDJobType() &&
-            !getKeywordSet("timestep"))
+        if (GeneralSettings::isMDJobType() && !getKeywordSet("timestep"))
         {
             throw exc::UserInputException(
                 std::format(
@@ -144,7 +141,7 @@ namespace input
         const DftbSettings& dftbSettings
     ) const
     {
-        if (!settings::GeneralSettings::isQMActivated())
+        if (!GeneralSettings::isQMActivated())
             return;
 
         if (!settings.isQMMethodSetByUser())
@@ -324,7 +321,7 @@ namespace input
         }
 
         // only an MD job has a time step
-        if (settings::GeneralSettings::isMDJobType() &&
+        if (GeneralSettings::isMDJobType() &&
             timings.getTimeStep() > manostatSettings.getTau())
         {
             throw exc::InputFileException(
@@ -341,10 +338,10 @@ namespace input
      */
     void InputFileReader::_validateCellList(double coulombRadiusCutOff)
     {
-        if (!settings::GeneralSettings::isCellListActivated())
+        if (!GeneralSettings::isCellListActivated())
             return;
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (GeneralSettings::isQMOnlyJobtype())
             throw exc::InputFileException(
                 "Cell lists are not available for pure QM simulations"
             );
@@ -389,7 +386,7 @@ namespace input
      */
     void InputFileReader::_validateRingPolymer() const
     {
-        if (settings::GeneralSettings::isRingPolymerMDActivated() &&
+        if (GeneralSettings::isRingPolymerMDActivated() &&
             !getKeywordSet("rpmd_n_replica"))
             throw exc::InputFileException(
                 "Number of beads not set for ring polymer simulation"

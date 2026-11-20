@@ -215,7 +215,7 @@ namespace benchQMRunner
         const auto original = std::filesystem::current_path();
         std::filesystem::current_path(directory);
 
-        settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+        GeneralSettings::setJobtype(JobType::QMMM_MD);
         settings.qmSettings.setRemoveNetForceByUser(true);
         settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
 

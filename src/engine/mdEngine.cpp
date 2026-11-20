@@ -151,7 +151,7 @@ namespace engine
 
         getConstraints()->calculateConstraintBondRefs(getSimulationBox());
 
-        if (!settings::GeneralSettings::isHybridJobtype())
+        if (!GeneralSettings::isHybridJobtype())
         {
             const auto virial =
                 virial::intraMolecularVirialCorrection(getSimulationBox());
@@ -196,7 +196,7 @@ namespace engine
 
         _kinetics.applyTemperatureRamping();
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (GeneralSettings::isQMOnlyJobtype())
         {
             const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
             getPhysicalDataPtr()->setNumberOfQMAtoms(
@@ -277,7 +277,7 @@ namespace engine
                 getSimulationBox().getBox()
             );
 
-            if (settings::GeneralSettings::isHybridJobtype())
+            if (GeneralSettings::isHybridJobtype())
             {
                 getEngineOutput().writeHybridCenterXyzFile(
                     _configurator,

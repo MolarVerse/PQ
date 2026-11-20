@@ -92,7 +92,7 @@ namespace
             )
         );
 
-        settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+        GeneralSettings::setVirialType(VirialType::MOLECULAR);
     }
 }   // namespace
 
@@ -166,7 +166,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
         std::make_shared<constraints::Constraints>(constraintSettings)
     );
 
-    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 
     eval2.evaluate();
 

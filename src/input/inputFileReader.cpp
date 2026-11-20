@@ -416,7 +416,7 @@ namespace input
                 "Missing keyword \"jobtype\" in input file"
             );
 
-        return settings::GeneralSettings::getJobtype();
+        return GeneralSettings::getJobtype();
     }
 
     /**

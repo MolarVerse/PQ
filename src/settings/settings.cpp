@@ -53,7 +53,7 @@ namespace
         const auto thermostatType = thermostatSettings.getThermostatType();
         const auto hasRamp        = kinetics.isStartTemperatureSet();
 
-        if (settings::GeneralSettings::isMDJobType() &&
+        if (GeneralSettings::isMDJobType() &&
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {

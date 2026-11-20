@@ -80,7 +80,7 @@ namespace setup
         // needs to happen before readFiles(): the parameter file reader
         // dynamic_casts the non-Coulomb potential to its concrete type
         // while parsing the NONCOULOMBICS section
-        if (settings::GeneralSettings::isMMActivated())
+        if (GeneralSettings::isMMActivated())
             setupNonCoulombPotentialType(engine);
 
         setupOutputFiles(engine);
@@ -153,12 +153,12 @@ namespace setup
     void setupEngine(engine::Engine& engine)
     {
         const auto& settings = engine.getSettings();
-        if (settings::GeneralSettings::isQMActivated())
+        if (GeneralSettings::isQMActivated())
             setupQM(engine);
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (GeneralSettings::isMDJobType())
         {
-            switch (settings::GeneralSettings::getIntegratorType())
+            switch (GeneralSettings::getIntegratorType())
             {
                 case IntegratorType::VELOCITY_VERLET:
                 {
@@ -183,14 +183,14 @@ namespace setup
 
         setupCellList(engine);
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (GeneralSettings::isMDJobType())
         {
             setupThermostat(engine);
 
             setupManostat(engine);
         }
 
-        if (settings::GeneralSettings::isMMActivated())
+        if (GeneralSettings::isMMActivated())
         {
             setupPotential(engine);
 
@@ -205,13 +205,13 @@ namespace setup
 
         setupConstraints(engine);
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (GeneralSettings::isMDJobType())
             setupRingPolymer(engine);
 
-        if (settings::GeneralSettings::isHybridJobtype())
+        if (GeneralSettings::isHybridJobtype())
             setupHybrid(engine);
 
-        if (settings::GeneralSettings::isOptJobType())
+        if (GeneralSettings::isOptJobType())
             setupOptimizer(engine);
 
         engine.getLogOutput().flushQueuedWarnings();

@@ -100,7 +100,7 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
     {
         cleanupPrefix();
 
-        settings::GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
+        GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
 
         _settings = std::make_unique<Settings>();
         _settings->outputFiles.setFilePrefixByUser(PREFIX);

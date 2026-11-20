@@ -306,7 +306,7 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
  */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
-    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
+    GeneralSettings::setVirialType(VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(
@@ -315,7 +315,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
     );
 
     // set virial type back to molecular for other tests
-    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }
 
 /**

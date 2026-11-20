@@ -59,7 +59,7 @@ PotentialSettings::PotentialSettings()
  */
 void PotentialSettings::finalize()
 {
-    if (settings::GeneralSettings::isQMOnlyJobtype())
+    if (GeneralSettings::isQMOnlyJobtype())
         _coulombConfig = CoulombPotentialConfig(0.0);
 }
 

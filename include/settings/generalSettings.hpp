@@ -32,99 +32,93 @@
 #include "enums/jobtype.hpp"
 #include "enums/virial.hpp"
 
-namespace settings
+/**
+ * @class Settings
+ *
+ * @brief Stores the general settings of the simulation
+ *
+ */
+class GeneralSettings
 {
+   private:
+    static inline JobType       _jobtype;
+    static inline FPType        _floatingPointType = FPType::DOUBLE;
+    static inline uint_fast32_t _randomSeed;
+    static inline bool          _isRandomSeedset = false;
 
-    /**
-     * @class Settings
-     *
-     * @brief Stores the general settings of the simulation
-     *
-     */
-    class GeneralSettings
-    {
-       private:
-        static inline JobType       _jobtype;
-        static inline FPType        _floatingPointType = FPType::DOUBLE;
-        static inline uint_fast32_t _randomSeed;
-        static inline bool          _isRandomSeedset = false;
+    static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
 
-        static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
+    static inline VirialType _virial = VirialType::MOLECULAR;
 
-        static inline VirialType _virial = VirialType::MOLECULAR;
+    // setting velocity verlet as default integrator type for backward
+    // compatibility until 0.7.0 it was not necessary to specify the
+    // integrator type in the input file, so we set it to velocity verlet by
+    // default
+    static inline IntegratorType _integrator = IntegratorType::VELOCITY_VERLET;
 
-        // setting velocity verlet as default integrator type for backward
-        // compatibility until 0.7.0 it was not necessary to specify the
-        // integrator type in the input file, so we set it to velocity verlet by
-        // default
-        static inline IntegratorType _integrator =
-            IntegratorType::VELOCITY_VERLET;
+    static inline bool _isCellListActivated =
+        defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
 
-        static inline bool _isCellListActivated =
-            defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
+    static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
 
-        static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
+    static inline bool _isIntraNonBondedActivated = false;
 
-        static inline bool _isIntraNonBondedActivated = false;
+   public:
+    /***************************
+     * standard setter methods *
+     ***************************/
 
-       public:
-        /***************************
-         * standard setter methods *
-         ***************************/
+    static void setJobtype(JobType jobtype);
 
-        static void setJobtype(JobType jobtype);
+    static void setFloatingPointType(FPType);
 
-        static void setFloatingPointType(FPType);
+    static void setRandomSeed(uint_fast32_t randomSeed);
+    static void setIsRandomSeedSet(bool isRandomSeedSet);
 
-        static void setRandomSeed(uint_fast32_t randomSeed);
-        static void setIsRandomSeedSet(bool isRandomSeedSet);
+    static void setDimensionality(size_t dimensionality);
 
-        static void setDimensionality(size_t dimensionality);
+    static void setVirialType(VirialType virialType);
+    static void setIntegratorType(IntegratorType integratorType);
 
-        static void setVirialType(VirialType virialType);
-        static void setIntegratorType(IntegratorType integratorType);
+    static void setNumberOfCells(size_t numberOfCells);
 
-        static void setNumberOfCells(size_t numberOfCells);
+    /***************************
+     * standard getter methods *
+     ***************************/
 
-        /***************************
-         * standard getter methods *
-         ***************************/
+    [[nodiscard]] static JobType getJobtype();
 
-        [[nodiscard]] static JobType getJobtype();
+    [[nodiscard]] static FPType      getFloatingPointType();
+    [[nodiscard]] static std::string getFloatingPointPybindString();
 
-        [[nodiscard]] static FPType      getFloatingPointType();
-        [[nodiscard]] static std::string getFloatingPointPybindString();
+    [[nodiscard]] static uint_fast32_t getRandomSeed();
+    [[nodiscard]] static bool          isRandomSeedSet();
 
-        [[nodiscard]] static uint_fast32_t getRandomSeed();
-        [[nodiscard]] static bool          isRandomSeedSet();
+    [[nodiscard]] static size_t getDimensionality();
 
-        [[nodiscard]] static size_t getDimensionality();
+    [[nodiscard]] static VirialType     getVirialType();
+    [[nodiscard]] static IntegratorType getIntegratorType();
+    [[nodiscard]] static size_t         getNumberOfCells();
 
-        [[nodiscard]] static VirialType     getVirialType();
-        [[nodiscard]] static IntegratorType getIntegratorType();
-        [[nodiscard]] static size_t         getNumberOfCells();
+    /******************************
+     * standard is-active methods *
+     ******************************/
 
-        /******************************
-         * standard is-active methods *
-         ******************************/
+    static void activateCellList();
+    static void deactivateCellList();
+    static void activateIntraNonBonded();
+    static void deactivateIntraNonBonded();
 
-        static void activateCellList();
-        static void deactivateCellList();
-        static void activateIntraNonBonded();
-        static void deactivateIntraNonBonded();
-
-        [[nodiscard]] static bool isQMOnlyJobtype();
-        [[nodiscard]] static bool isMMOnlyJobtype();
-        [[nodiscard]] static bool isHybridJobtype();
-        [[nodiscard]] static bool isMMActivated();
-        [[nodiscard]] static bool isQMActivated();
-        [[nodiscard]] static bool isRingPolymerMDActivated();
-        [[nodiscard]] static bool isMDJobType();
-        [[nodiscard]] static bool isOptJobType();
-        [[nodiscard]] static bool isCellListActivated();
-        [[nodiscard]] static bool isIntraNonBondedActivated();
-    };
-
-}   // namespace settings
+    [[nodiscard]] static bool isQMOnlyJobtype();
+    [[nodiscard]] static bool isMMOnlyJobtype();
+    [[nodiscard]] static bool isHybridJobtype();
+    [[nodiscard]] static bool isMMActivated();
+    [[nodiscard]] static bool isQMActivated();
+    [[nodiscard]] static bool isRingPolymerMDActivated();
+    [[nodiscard]] static bool isMDJobType();
+    [[nodiscard]] static bool isOptJobType();
+    [[nodiscard]] static bool isCellListActivated();
+    [[nodiscard]] static bool isIntraNonBondedActivated();
+};
 
 #endif   // SETTINGS__GENERAL_SETTINGS_HPP

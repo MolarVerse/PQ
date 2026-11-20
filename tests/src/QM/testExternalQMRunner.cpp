@@ -251,7 +251,7 @@ class ExternalQMRunnerTest : public testing::Test
             _settings.qmSettings,
             _settings.externalQMSettings
         );
-        _jobType        = settings::GeneralSettings::getJobtype();
+        _jobType        = GeneralSettings::getJobtype();
         _removeNetForce = _settings.qmSettings.getRemoveNetForce();
         _originalPath   = std::filesystem::current_path();
 
@@ -264,7 +264,7 @@ class ExternalQMRunnerTest : public testing::Test
 
         _settings.qmSettings.setRemoveNetForceByUser(false);
         _settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
-        settings::GeneralSettings::setJobtype(JobType::QM_MD);
+        GeneralSettings::setJobtype(JobType::QM_MD);
 
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName("H");
@@ -276,7 +276,7 @@ class ExternalQMRunnerTest : public testing::Test
 
     void TearDown() override
     {
-        settings::GeneralSettings::setJobtype(_jobType);
+        GeneralSettings::setJobtype(_jobType);
 
         std::filesystem::current_path(_originalPath);
         std::error_code error;

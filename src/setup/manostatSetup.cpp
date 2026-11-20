@@ -46,7 +46,7 @@ namespace setup
      */
     void setupManostat(engine::Engine &engine)
     {
-        if (!settings::GeneralSettings::isMDJobType())
+        if (!GeneralSettings::isMDJobType())
             return;
 
         out::StdoutOutput::writeSetup("Manostat");
@@ -76,7 +76,7 @@ namespace setup
         const auto &manostatSettings = _engine.getSettings().manostatSettings;
 
         if (manostatSettings.isBerendsenBased() &&
-            settings::GeneralSettings::getVirialType() == VirialType::ATOMIC &&
+            GeneralSettings::getVirialType() == VirialType::ATOMIC &&
             std::ranges::any_of(
                 _engine.getSimulationBox().getMolecules(),
                 [](const auto &molecule)

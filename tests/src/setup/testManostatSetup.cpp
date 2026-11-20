@@ -113,12 +113,12 @@ namespace
 
 TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 {
-    const auto jobType = settings::GeneralSettings::getJobtype();
-    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    const auto jobType = GeneralSettings::getJobtype();
+    GeneralSettings::setJobtype(JobType::MM_OPT);
 
     EXPECT_NO_THROW(setup::setupManostat(*_engine));
 
-    settings::GeneralSettings::setJobtype(jobType);
+    GeneralSettings::setJobtype(jobType);
 }
 
 TEST_F(TestSetup, setupManostatNone)
@@ -399,7 +399,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
         molecule.addAtom(atom);
     }
     _mdEngine->getSimulationBox().addMolecule(molecule);
-    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
+    GeneralSettings::setVirialType(VirialType::ATOMIC);
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
@@ -449,7 +449,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
         }
         EXPECT_EQ(std::remove("atomic-virial-warning.log"), 0);
     }
-    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }
 
 /* ---------- what the setup writes into the log ---------- */

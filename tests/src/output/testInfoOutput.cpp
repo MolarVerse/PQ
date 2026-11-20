@@ -58,7 +58,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     _physicalData->setLoopTime(0.1);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
@@ -146,7 +146,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     _physicalData->setLoopTime(0.1);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
@@ -246,7 +246,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
@@ -341,7 +341,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
     _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
@@ -441,7 +441,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _physicalData->setLoopTime(0.1);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    GeneralSettings::setJobtype(JobType::QM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
@@ -527,7 +527,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     _physicalData->setLoopTime(0.1);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     _settings->thermostatSettings.setThermostatTypeByUser(
         ThermostatType::NOSE_HOOVER
@@ -617,7 +617,7 @@ TEST_F(TestEnergyOutput, writeInfoQmmmSubtractsQMReferenceEnergy)
     _physicalData->setNumberOfSmoothingMolecules(1.0);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    GeneralSettings::setJobtype(JobType::QMMM_MD);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     _settings->thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);
 
@@ -631,7 +631,7 @@ TEST_F(TestEnergyOutput, writeInfoQmmmSubtractsQMReferenceEnergy)
         std::istreambuf_iterator<char>()
     );
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     EXPECT_NE(
         content.find(

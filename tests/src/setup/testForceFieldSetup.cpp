@@ -381,7 +381,7 @@ TEST_F(TestSetup, forceFieldSetupSetupImproperDihedrals)
 TEST_F(TestSetup, forceFieldSetupSetupForceField)
 {
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     auto molecule1 = molsys::Molecule();
     _engine->getSimulationBox().addMolecule(molecule1);

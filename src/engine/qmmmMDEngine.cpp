@@ -245,7 +245,7 @@ namespace engine
                 getSimulationBox()
             );
 
-            if (settings::GeneralSettings::isCellListActivated())
+            if (GeneralSettings::isCellListActivated())
             {
                 getCellList().assignMoleculeHybridZoneIndices();
                 getCellList().assignWaterMoleculeIndices(
@@ -366,7 +366,7 @@ namespace engine
             getSimulationBox()
         );
 
-        if (settings::GeneralSettings::isCellListActivated())
+        if (GeneralSettings::isCellListActivated())
         {
             getCellList().assignMoleculeHybridZoneIndices();
             getCellList().assignWaterMoleculeIndices(

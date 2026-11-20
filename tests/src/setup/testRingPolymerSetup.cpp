@@ -166,8 +166,8 @@ TEST_F(TestSetup, ringPolymerSetupBeadsAreIndependentCopiesOfTheBox)
  */
 TEST_F(TestSetup, ringPolymerSetupInitializesVelocitiesAtStartTemperature)
 {
-    settings::GeneralSettings::setRandomSeed(11);
-    settings::GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(11);
+    GeneralSettings::setIsRandomSeedSet(true);
 
     Settings settings;
     settings.ringPolymerSettings.setNumberOfBeadsByUser(3);
@@ -179,7 +179,7 @@ TEST_F(TestSetup, ringPolymerSetupInitializesVelocitiesAtStartTemperature)
     setup.setupSimulationBox();
     setup.initializeBeads();
 
-    settings::GeneralSettings::setIsRandomSeedSet(false);
+    GeneralSettings::setIsRandomSeedSet(false);
 
     auto &beads = rpEngine.getRingPolymerBeads();
 
@@ -218,8 +218,8 @@ TEST_F(TestSetup, ringPolymerSetupVelocitiesAreReproducibleWithRandomSeed)
 {
     const auto velocitiesWithSeed = [](const uint_fast32_t seed)
     {
-        settings::GeneralSettings::setRandomSeed(seed);
-        settings::GeneralSettings::setIsRandomSeedSet(true);
+        GeneralSettings::setRandomSeed(seed);
+        GeneralSettings::setIsRandomSeedSet(true);
 
         Settings settings;
         settings.ringPolymerSettings.setNumberOfBeadsByUser(2);
@@ -231,7 +231,7 @@ TEST_F(TestSetup, ringPolymerSetupVelocitiesAreReproducibleWithRandomSeed)
         setup.setupSimulationBox();
         setup.initializeBeads();
 
-        settings::GeneralSettings::setIsRandomSeedSet(false);
+        GeneralSettings::setIsRandomSeedSet(false);
 
         auto velocities = std::vector<linalg::Vec3D>();
         for (const auto &bead : rpEngine.getRingPolymerBeads())
@@ -309,7 +309,7 @@ TEST_F(
 )
 {
     Settings settings;
-    settings::GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
+    GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
     settings.ringPolymerSettings.setNumberOfBeadsByUser(2);
     settings.kinetics.setStartTemperatureByUser(toTemperature(300.0));
     engine::RingPolymerQMMDEngine rpEngine{settings};

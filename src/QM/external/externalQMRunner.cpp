@@ -493,7 +493,7 @@ namespace QM
             _writeCoordsFile(simulationBox);
         }
 
-        if (settings::GeneralSettings::isHybridJobtype())
+        if (GeneralSettings::isHybridJobtype())
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
             _writePointChargeFile(

@@ -255,7 +255,7 @@ class FENNIXCalculator:
     _settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
     _settings.fennolSettings.setFennolModelPathByUser("model.fnx");
     _settings.fennolSettings.setUseGPUPreprocessingByUser(false);
-    settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+    GeneralSettings::setFloatingPointType(FPType::DOUBLE);
 
     ASSERT_NO_THROW({
         QM::AseFennolRunner runner(
@@ -323,7 +323,7 @@ class MACECalculator:
     modules["mace"]             = maceModule;
     modules["mace.calculators"] = calculatorsModule;
 
-    settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+    GeneralSettings::setFloatingPointType(FPType::DOUBLE);
     _settings.qmSettings.setUseDispersionCorrectionByUser(true);
     _settings.maceSettings.setMaceModeByUser(MaceMode::ACCURATE);
     _settings.maceSettings.setMaceModelPathByUser("model.model");

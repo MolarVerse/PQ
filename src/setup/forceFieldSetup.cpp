@@ -79,7 +79,7 @@ namespace setup
         const auto &nonCoulombPot = potential->getNonCoulombPotSharedPtr();
         const auto &coulombPot    = potential->getCoulombPotSharedPtr();
 
-        if (settings::GeneralSettings::isMMActivated())
+        if (GeneralSettings::isMMActivated())
         {
             forceField->setNonCoulombPotential(nonCoulombPot);
             forceField->setCoulombPotential(coulombPot);

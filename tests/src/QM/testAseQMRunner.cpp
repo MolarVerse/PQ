@@ -133,7 +133,7 @@ class AseQMRunnerTest : public ::testing::Test
         FennolSettings fennolSettings;
         fennolSettings.setFennolModelPathByUser("model.fnx");
         fennolSettings.setUseGPUPreprocessingByUser(false);
-        settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+        GeneralSettings::setFloatingPointType(FPType::DOUBLE);
 
         return QM::AseFennolRunner{settings, fennolSettings};
     }

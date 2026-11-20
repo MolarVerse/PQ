@@ -87,11 +87,11 @@ namespace
         MSTD_NO_MOVE(SeedGuard);
         explicit SeedGuard(uint_fast32_t seed)
         {
-            settings::GeneralSettings::setRandomSeed(seed);
-            settings::GeneralSettings::setIsRandomSeedSet(true);
+            GeneralSettings::setRandomSeed(seed);
+            GeneralSettings::setIsRandomSeedSet(true);
         }
 
-        ~SeedGuard() { settings::GeneralSettings::setIsRandomSeedSet(false); }
+        ~SeedGuard() { GeneralSettings::setIsRandomSeedSet(false); }
 
         MSTD_NO_COPY(SeedGuard);
     };

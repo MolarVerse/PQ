@@ -189,10 +189,10 @@ namespace molsys
      */
     bool Atom::isQMAtom() const
     {
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (GeneralSettings::isQMOnlyJobtype())
             return true;
 
-        if (settings::GeneralSettings::isMMOnlyJobtype())
+        if (GeneralSettings::isMMOnlyJobtype())
             return false;
 
         if (isActive())
@@ -213,10 +213,10 @@ namespace molsys
      */
     bool Atom::isMMAtom() const
     {
-        if (settings::GeneralSettings::isMMOnlyJobtype())
+        if (GeneralSettings::isMMOnlyJobtype())
             return true;
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (GeneralSettings::isQMOnlyJobtype())
             return false;
 
         if (isActive())

@@ -61,7 +61,7 @@ namespace manostat
     )
     {
         const auto ekinVirial = physicalData.getKinEnergyVirialTensor(
-            settings::GeneralSettings::getVirialType()
+            GeneralSettings::getVirialType()
         );
         const auto forceVirial = physicalData.getVirial();
         const auto volume      = simulationBox.getVolume();

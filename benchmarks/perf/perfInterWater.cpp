@@ -162,7 +162,7 @@ int main()
         settings.potentialSettings
     );
 
-    settings::GeneralSettings::activateCellList();
+    GeneralSettings::activateCellList();
 
     molsys::CellList cellList;
     cellList.setNumberOfCells(3);

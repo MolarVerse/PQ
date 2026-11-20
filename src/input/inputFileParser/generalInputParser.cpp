@@ -113,7 +113,7 @@ namespace input
             ));
         }
 
-        settings::GeneralSettings::setJobtype(jobTypeEnum.value());
+        GeneralSettings::setJobtype(jobTypeEnum.value());
     }
 
     void GeneralInputParser::addDimensionalityKey()
@@ -140,7 +140,7 @@ namespace input
         };
 
         const auto setValue = [](size_t value)
-        { settings::GeneralSettings::setDimensionality(value); };
+        { GeneralSettings::setDimensionality(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -164,7 +164,7 @@ namespace input
         };
 
         const auto setValue = [](FPType value)
-        { settings::GeneralSettings::setFloatingPointType(value); };
+        { GeneralSettings::setFloatingPointType(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<FPType>{.metadata = metaData, .onSet = setValue}
@@ -183,8 +183,8 @@ namespace input
 
         const auto setValue = [](std::uint_fast32_t value)
         {
-            settings::GeneralSettings::setRandomSeed(value);
-            settings::GeneralSettings::setIsRandomSeedSet(true);
+            GeneralSettings::setRandomSeed(value);
+            GeneralSettings::setIsRandomSeedSet(true);
         };
 
         const auto validator = RangeValidator<std::uint_fast32_t>{

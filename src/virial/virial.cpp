@@ -121,7 +121,7 @@ namespace virial
 
         linalg::tensor3D virial{0.0};
 
-        if (settings::GeneralSettings::getVirialType() == VirialType::ATOMIC)
+        if (GeneralSettings::getVirialType() == VirialType::ATOMIC)
             return virial;
 
         for (const auto &molecule : simulationBox.getMolecules())

@@ -93,7 +93,7 @@ namespace input::guffdat
      */
     bool isNeeded(const Settings &settings)
     {
-        if (!settings::GeneralSettings::isMMActivated())
+        if (!GeneralSettings::isMMActivated())
             return false;
 
         if (settings.forceFieldSettings.isNonCoulombicActive())

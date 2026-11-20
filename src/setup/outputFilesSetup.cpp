@@ -98,7 +98,7 @@ namespace setup
         _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
 
         // extxyz replaces the xyz, velocity, force and charge files of MD runs
-        const auto extxyz = settings::GeneralSettings::isMDJobType() &&
+        const auto extxyz = GeneralSettings::isMDJobType() &&
                             outputFileSettings.getTrajectoryFormat() ==
                                 TrajectoryFormat::EXTXYZ;
 
@@ -114,7 +114,7 @@ namespace setup
             );
         }
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (GeneralSettings::isMDJobType())
         {
             auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
 
@@ -167,7 +167,7 @@ namespace setup
                 overwriteOutputFiles
             );
 
-            if (settings::GeneralSettings::isHybridJobtype())
+            if (GeneralSettings::isHybridJobtype())
             {
                 const auto hybridCenterFile =
                     outputFileSettings.getHybridCenterFileName();
@@ -185,7 +185,7 @@ namespace setup
                 mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
             }
 
-            if (settings::GeneralSettings::isRingPolymerMDActivated())
+            if (GeneralSettings::isRingPolymerMDActivated())
             {
                 const auto rstFile_ =
                     outputFileSettings.getRPMDRestartFileName();
@@ -226,7 +226,7 @@ namespace setup
             }
         }
 
-        if (settings::GeneralSettings::isOptJobType())
+        if (GeneralSettings::isOptJobType())
         {
             auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
 
@@ -238,7 +238,7 @@ namespace setup
             );
         }
 
-        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
+        if (GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
             _engine.getSettings().hessianSettings.optimizeBeforeHessian())
         {
             auto &hessianEngine =

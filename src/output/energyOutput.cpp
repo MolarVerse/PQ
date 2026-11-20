@@ -85,7 +85,7 @@ namespace out
         _getFilePointer(
         ) << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
 
-        if (settings::GeneralSettings::isQMActivated())
+        if (GeneralSettings::isQMActivated())
         {
             const auto qmRef    = physicalData.getQMReferenceEnergy();
             const auto qmEnergy = physicalData.getQMEnergy() - qmRef;
@@ -99,7 +99,7 @@ namespace out
         _getFilePointer(
         ) << std::format("{:20.12f}\t", physicalData.getIntraEnergy());
 
-        if (settings::GeneralSettings::isMMActivated())
+        if (GeneralSettings::isMMActivated())
         {
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getCoulombEnergy());
@@ -119,7 +119,7 @@ namespace out
                 << std::format("{:20.12f}\t", physicalData.getImproperEnergy());
         }
 
-        if (settings::GeneralSettings::isHybridJobtype())
+        if (GeneralSettings::isHybridJobtype())
         {
             _getFilePointer() << std::format(
                 "{:20.12f}\t",
