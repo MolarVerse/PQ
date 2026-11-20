@@ -81,9 +81,9 @@ namespace
 
     template <typename Parameter>
     void setupInterModel(
-        engine::MDEngine     &engine,
-        Settings             &settings,
-        const WaterInterModel model
+        engine::MDEngine &engine,
+        Settings         &settings,
+        WaterInterModel   model
     )
     {
         const auto state = waterModel::makeInterWaterState<Parameter>();

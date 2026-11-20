@@ -231,7 +231,7 @@ namespace engine
      * into size_t
      */
     size_t HybridMDEngine::_numberOfSmoothingConfigurations(
-        const size_t nSmoothingMolecules
+        size_t nSmoothingMolecules
     )
     {
         constexpr auto maxMolecules =

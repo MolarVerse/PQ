@@ -34,7 +34,7 @@ namespace timings
      *
      * @param id
      */
-    Timer::Timer(const TimerId id) : _id(id) {}
+    Timer::Timer(TimerId id) : _id(id) {}
 
     /**
      * @brief get the sorted timings details
@@ -180,7 +180,7 @@ namespace timings
      *
      * @param id
      */
-    void Timer::setTimerId(const TimerId id) { _id = id; }
+    void Timer::setTimerId(TimerId id) { _id = id; }
 
     /********************
      * standard getters *

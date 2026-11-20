@@ -242,7 +242,7 @@ namespace
         -27.44205774028026567635,
     };
 
-    bool sameBits(const double lhs, const double rhs)
+    bool sameBits(double lhs, double rhs)
     {
         return std::bit_cast<std::uint64_t>(lhs) ==
                std::bit_cast<std::uint64_t>(rhs);
@@ -287,7 +287,7 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
     for (size_t index = 0; index < 3; ++index)
     {
         const auto shift = 3 * index;
-        const auto value = [shift](const size_t axis)
+        const auto value = [shift](size_t axis)
         { return awkwardValues.at((shift + axis) % awkwardValues.size()); };
 
         atoms.at(index)->setPosition({value(0), value(1), value(2)});

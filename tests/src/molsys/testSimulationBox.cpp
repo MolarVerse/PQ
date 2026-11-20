@@ -285,7 +285,7 @@ TEST(TestSimulationBoxAtomIndexLookup, staleOrClearedTableIsIgnored)
 {
     molsys::SimulationBox box;
 
-    const auto addMolecule = [&box](const size_t nAtoms)
+    const auto addMolecule = [&box](size_t nAtoms)
     {
         molsys::Molecule molecule;
         molecule.setMoltype(MolType{1});

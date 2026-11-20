@@ -59,9 +59,9 @@ namespace
     };
 
     void writeStringArray(
-        cli::JsonWriter                              &json,
-        const std::string_view                        key,
-        const std::initializer_list<std::string_view> values
+        cli::JsonWriter                        &json,
+        std::string_view                        key,
+        std::initializer_list<std::string_view> values
     )
     {
         json.beginArray(key);
@@ -70,9 +70,9 @@ namespace
     }
 
     void beginParameter(
-        cli::JsonWriter       &json,
-        const JsonParam       &param,
-        const std::string_view unit
+        cli::JsonWriter &json,
+        const JsonParam &param,
+        std::string_view unit
     )
     {
         json.beginObject(param.name);

@@ -103,7 +103,7 @@ class TestInputValidation : public ::testing::Test
         _reader->setKeywordCount(keyword, 1);
     }
 
-    void _configureMDJob(const JobType jobType)
+    void _configureMDJob(JobType jobType)
     {
         settings::GeneralSettings::setJobtype(jobType);
         _settings.timings.setNumberOfStepsByUser(100U);

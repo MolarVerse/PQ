@@ -532,7 +532,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        const double               rncCutOff
+        double                     rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -903,11 +903,11 @@ namespace input::guffdat
      * @param coefficient
      */
     void GuffDatReader::setGuffCoulombCoefficients(
-        MolType      molType1,
-        MolType      molType2,
-        AtomType     atomType1,
-        AtomType     atomType2,
-        const double coefficient
+        MolType  molType1,
+        MolType  molType2,
+        AtomType atomType1,
+        AtomType atomType2,
+        double   coefficient
     )
     {
         _guffCoulombCoeffs[molType1.get()][molType2.get()][atomType1.get()]
@@ -924,11 +924,11 @@ namespace input::guffdat
      * @param isSet
      */
     void GuffDatReader::setIsGuffPairSet(
-        MolType    molType1,
-        MolType    molType2,
-        AtomType   atomType1,
-        AtomType   atomType2,
-        const bool isSet
+        MolType  molType1,
+        MolType  molType2,
+        AtomType atomType1,
+        AtomType atomType2,
+        bool     isSet
     )
     {
         _isGuffPairSet[molType1.get()][molType2.get()][atomType1.get()]

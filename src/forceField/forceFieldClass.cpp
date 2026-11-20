@@ -59,7 +59,7 @@ namespace ff
      *
      * @throws exc::TopologyException if bond type with id not found
      */
-    const BondType &ForceField::findBondTypeById(const BondId id) const
+    const BondType &ForceField::findBondTypeById(BondId id) const
     {
         auto isBondId = [id](const BondType &bondType)
         { return bondType.getId() == id; };
@@ -82,7 +82,7 @@ namespace ff
      *
      * @throws exc::TopologyException if angle type with id not found
      */
-    const AngleType &ForceField::findAngleTypeById(const AngleId id) const
+    const AngleType &ForceField::findAngleTypeById(AngleId id) const
     {
         auto isAngleId = [id](const AngleType &angleType)
         { return angleType.getId() == id; };
@@ -105,9 +105,7 @@ namespace ff
      *
      * @throws exc::TopologyException if dihedral type with id not found
      */
-    const DihedralType &ForceField::findDihedralTypeById(
-        const DihedralId id
-    ) const
+    const DihedralType &ForceField::findDihedralTypeById(DihedralId id) const
     {
         auto isDihedralId = [id](const DihedralType &dihedralType)
         { return dihedralType.getId() == id; };
@@ -132,9 +130,7 @@ namespace ff
      * @throws exc::TopologyException if improper dihedral type with id
      * not found
      */
-    const DihedralType &ForceField::findImproperTypeById(
-        const DihedralId id
-    ) const
+    const DihedralType &ForceField::findImproperTypeById(DihedralId id) const
     {
         auto isImproperId = [id](const DihedralType &dihedralType)
         { return dihedralType.getId() == id; };
@@ -162,9 +158,7 @@ namespace ff
      * @throws exc::TopologyException if j-coupling type with id not
      * found
      */
-    const JCouplingType &ForceField::findJCouplingTypeById(
-        const size_t id
-    ) const
+    const JCouplingType &ForceField::findJCouplingTypeById(size_t id) const
     {
         auto isJCouplingId = [id](const JCouplingType &jCouplingType)
         { return jCouplingType.getId() == id; };

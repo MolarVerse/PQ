@@ -270,7 +270,7 @@ namespace setup
         const auto checkCharge = [&modelName](
                                      const molsys::Molecule &water,
                                      AtomIndex               atomIndex,
-                                     const double            expected,
+                                     double                  expected,
                                      const std::string      &atomName
                                  )
         {

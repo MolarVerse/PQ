@@ -34,10 +34,7 @@
 namespace
 {
     template <typename EnergyFunction>
-    double centralDifference(
-        const EnergyFunction &energyAt,
-        const double          distance
-    )
+    double centralDifference(const EnergyFunction &energyAt, double distance)
     {
         constexpr auto step = 1.0e-5;
         return (energyAt(distance + step) - energyAt(distance - step)) /
@@ -47,16 +44,15 @@ namespace
     template <typename Calculate>
     void expectForceIsNegativeEnergyDerivative(
         const Calculate &calculate,
-        const double     distance,
-        const double     tolerance
+        double           distance,
+        double           tolerance
     )
     {
         const auto [energy, force] = calculate(distance);
         (void) energy;
 
         const auto energyDerivative = centralDifference(
-            [&calculate](const double radius)
-            { return calculate(radius).first; },
+            [&calculate](double radius) { return calculate(radius).first; },
             distance
         );
 
@@ -81,8 +77,7 @@ TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
     );
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double radius)
-        { return potential.calculate(radius); },
+        [&potential](double radius) { return potential.calculate(radius); },
         1.7,
         1.0e-7
     );
@@ -98,8 +93,7 @@ TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
     );
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double radius)
-        { return potential.calculate(radius); },
+        [&potential](double radius) { return potential.calculate(radius); },
         1.6,
         1.0e-7
     );
@@ -119,8 +113,7 @@ TEST(TestPairPotentialDerivatives, MorseForceIsNegativeEnergyDerivative)
     );
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double radius)
-        { return potential.calculate(radius); },
+        [&potential](double radius) { return potential.calculate(radius); },
         1.7,
         1.0e-7
     );
@@ -132,8 +125,7 @@ TEST(TestPairPotentialDerivatives, GuffForceIsNegativeEnergyDerivative)
         pot::GuffPair(4.0, 0.4, -0.2, buildGuffCoefficients());
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](const double radius)
-        { return potential.calculate(radius); },
+        [&potential](double radius) { return potential.calculate(radius); },
         1.8,
         1.0e-6
     );
@@ -150,7 +142,7 @@ TEST(
     const auto chargeProduct = 0.75;
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential, chargeProduct](const double radius)
+        [&potential, chargeProduct](double radius)
         { return potential.calculate(radius, chargeProduct); },
         1.7,
         1.0e-7
@@ -165,7 +157,7 @@ TEST(TestPairPotentialDerivatives, WolfCoulombForceIsNegativeEnergyDerivative)
     const auto chargeProduct = -0.75;
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential, chargeProduct](const double radius)
+        [&potential, chargeProduct](double radius)
         { return potential.calculate(radius, chargeProduct); },
         1.7,
         1.0e-5

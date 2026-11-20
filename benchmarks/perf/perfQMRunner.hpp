@@ -196,9 +196,9 @@ namespace benchQMRunner
 
     template <typename Runner>
     inline int run(
-        Settings                  settings,
-        const molsys::Periodicity periodicity,
-        const std::uint64_t       iterations
+        Settings            settings,
+        molsys::Periodicity periodicity,
+        std::uint64_t       iterations
     )
     {
         const auto directory =

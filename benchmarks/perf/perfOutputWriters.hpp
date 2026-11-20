@@ -66,7 +66,7 @@ namespace benchOutputWriters
 {
     inline constexpr double SPACING = 3.1;
 
-    inline int run(const std::size_t molecules, const std::uint64_t iterations)
+    inline int run(std::size_t molecules, std::uint64_t iterations)
     {
         settings::GeneralSettings::setJobtype(JobType::MM_MD);
 

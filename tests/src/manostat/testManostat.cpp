@@ -60,7 +60,7 @@ class TestableStochasticRescalingManostat
    public:
     using StochasticRescalingManostat::StochasticRescalingManostat;
 
-    void setPressure(const Pressure pressure) { _setPressure(pressure); }
+    void setPressure(Pressure pressure) { _setPressure(pressure); }
     void setPressureTensor(const PressureTensor3D& pTensor)
     {
         _setPressureTensor(pTensor);
@@ -238,7 +238,7 @@ namespace
 
     double getMinimumImageDistance(
         molsys::SimulationBox& simulationBox,
-        const size_t           moleculeIndex
+        size_t                 moleculeIndex
     )
     {
         const auto mol = simulationBox.getMolecule(moleculeIndex);

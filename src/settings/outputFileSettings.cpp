@@ -332,9 +332,7 @@ void OutputFileSettings::setChargeFileNameByUser(const std::string& name)
  *
  * @param format
  */
-void OutputFileSettings::setTrajectoryFormatByUser(
-    const TrajectoryFormat format
-)
+void OutputFileSettings::setTrajectoryFormatByUser(TrajectoryFormat format)
 {
     _trajFormat.setByUser(format);
 }

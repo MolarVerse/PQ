@@ -67,7 +67,7 @@ namespace timings
      * @param id
      * @return Timer&
      */
-    Timer& GlobalTimer::_getTimer(const TimerId id)
+    Timer& GlobalTimer::_getTimer(TimerId id)
     {
         return _timers.at(static_cast<size_t>(id));
     }
@@ -78,7 +78,7 @@ namespace timings
      * @param id
      * @return const Timer&
      */
-    const Timer& GlobalTimer::_getTimer(const TimerId id) const
+    const Timer& GlobalTimer::_getTimer(TimerId id) const
     {
         return _timers.at(static_cast<size_t>(id));
     }

@@ -37,7 +37,7 @@ namespace benchmarkSetup
     inline constexpr double cellEdge = 3.0;
     inline constexpr double cutOff   = 4.0;
 
-    inline molsys::SimulationBox makeLattice(const std::size_t cellsPerSide)
+    inline molsys::SimulationBox makeLattice(std::size_t cellsPerSide)
     {
         const double boxEdge = cellEdge * static_cast<double>(cellsPerSide);
 

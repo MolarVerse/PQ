@@ -216,7 +216,7 @@ TEST_F(TestSetup, ringPolymerSetupInitializesVelocitiesAtStartTemperature)
  */
 TEST_F(TestSetup, ringPolymerSetupVelocitiesAreReproducibleWithRandomSeed)
 {
-    const auto velocitiesWithSeed = [](const uint_fast32_t seed)
+    const auto velocitiesWithSeed = [](uint_fast32_t seed)
     {
         settings::GeneralSettings::setRandomSeed(seed);
         settings::GeneralSettings::setIsRandomSeedSet(true);

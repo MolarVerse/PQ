@@ -62,8 +62,8 @@ namespace engine
         std::vector<double> getDistanceWeights(
             const molsys::Molecule &smoothingMol,
             const std::vector<std::reference_wrapper<molsys::Molecule>>
-                        &recipientMolecules,
-            const double layerRadius
+                  &recipientMolecules,
+            double layerRadius
         )
         {
             const auto          weightingRadius = 2.0 * layerRadius;

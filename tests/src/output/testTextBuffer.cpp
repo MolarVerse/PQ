@@ -110,7 +110,7 @@ TEST(TestTextBuffer, clearKeepsNothing)
 namespace
 {
     // the written text of a finite value reads back as the same double
-    double readBack(const std::string_view text)
+    double readBack(std::string_view text)
     {
         const auto first = text.find_first_not_of(' ');
         double     value = 0.0;
@@ -125,7 +125,7 @@ namespace
         return value;
     }
 
-    bool sameBits(const double lhs, const double rhs)
+    bool sameBits(double lhs, double rhs)
     {
         return std::bit_cast<std::uint64_t>(lhs) ==
                std::bit_cast<std::uint64_t>(rhs);
