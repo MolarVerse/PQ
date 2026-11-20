@@ -23,7 +23,10 @@
 #include <gtest/gtest.h>
 
 #include <cmath>
+#include <cstdio>
+#include <fstream>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -33,6 +36,7 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "orthorhombicBox.hpp"
@@ -549,6 +553,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
     simBox.setBox(orthoBox, false);
     _settings->potentialSettings.setCoulombRadiusCutOffByUser(5.79);
     _settings->fileSettings.setStartFileNameByUser("input.rst");
+    setup::SimulationBoxSetup::setZeroVelocities(false);
 
     setup::SimulationBoxSetup(*_engine).writeSetupInfo();
     std::ifstream file("default.log");
@@ -673,4 +678,95 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
 
     const auto errorCode = std::remove("default.log");
     EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
+}
+
+class TestZeroVelocityWarning : public TestSetup
+{
+   protected:
+    std::string _writeSetupInfoAndReadLog();
+};
+
+std::string TestZeroVelocityWarning::_writeSetupInfoAndReadLog()
+{
+    _engine->getEngineOutput().getLogOutput().setFilename("zeroVel.log", false);
+    _settings->fileSettings.setStartFileNameByUser("input.rst");
+
+    setup::SimulationBoxSetup(*_engine).writeSetupInfo();
+
+    std::ifstream     file("zeroVel.log");
+    std::stringstream content;
+    content << file.rdbuf();
+    file.close();
+
+    const auto errorCode = std::remove("zeroVel.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: zeroVel.log";
+
+    return content.str();
+}
+
+static constexpr auto ZERO_VELOCITY_WARNING =
+    "WARNING: All velocities in \"input.rst\" are zero: the MD starts at 0 K. "
+    "Set 'init_velocities = true' to draw them from a Maxwell-Boltzmann "
+    "distribution; 'start_temp' only starts the temperature ramp";
+
+TEST_F(TestZeroVelocityWarning, AllZeroInitOff)
+{
+    setup::SimulationBoxSetup::setZeroVelocities(true);
+
+    testing::internal::CaptureStdout();
+    const auto logContent = _writeSetupInfoAndReadLog();
+    const auto stdOut     = testing::internal::GetCapturedStdout();
+
+    EXPECT_NE(logContent.find(ZERO_VELOCITY_WARNING), std::string::npos);
+    EXPECT_NE(stdOut.find(ZERO_VELOCITY_WARNING), std::string::npos);
+}
+
+TEST_F(TestZeroVelocityWarning, SilentWithInitOn)
+{
+    _settings->simulationBoxSettings.setInitializeVelocsByUser(
+        InitVelocities::TRUE
+    );
+    setup::SimulationBoxSetup::setZeroVelocities(true);
+
+    const auto logContent = _writeSetupInfoAndReadLog();
+
+    EXPECT_EQ(logContent.find(ZERO_VELOCITY_WARNING), std::string::npos);
+}
+
+TEST_F(TestZeroVelocityWarning, SilentWithNonZeroVelocity)
+{
+    auto &simBox = _engine->getSimulationBox();
+
+    const auto atom1 = std::make_shared<::molsys::Atom>();
+    const auto atom2 = std::make_shared<::molsys::Atom>();
+    atom2->setVelocity({0.0, 0.0, 1.0});
+    simBox.getAtoms().push_back(atom1);
+    simBox.getAtoms().push_back(atom2);
+
+    setup::SimulationBoxSetup simBoxSetup(*_engine);
+    simBoxSetup.checkZeroVelocities();
+
+    const auto logContent = _writeSetupInfoAndReadLog();
+
+    EXPECT_EQ(logContent.find(ZERO_VELOCITY_WARNING), std::string::npos);
+}
+
+TEST_F(TestZeroVelocityWarning, SilentForNonMDJob)
+{
+    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    setup::SimulationBoxSetup::setZeroVelocities(true);
+
+    const auto logContent = _writeSetupInfoAndReadLog();
+
+    EXPECT_EQ(logContent.find(ZERO_VELOCITY_WARNING), std::string::npos);
+}
+
+TEST_F(TestZeroVelocityWarning, SilentForRingPolymerMD)
+{
+    settings::GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
+    setup::SimulationBoxSetup::setZeroVelocities(true);
+
+    const auto logContent = _writeSetupInfoAndReadLog();
+
+    EXPECT_EQ(logContent.find(ZERO_VELOCITY_WARNING), std::string::npos);
 }

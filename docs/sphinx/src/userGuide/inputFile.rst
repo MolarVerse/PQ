@@ -854,7 +854,7 @@ To initialize the velocities of the system according to the target temperature w
 
 Possible options are:
 
-   1. **false** (default) - velocities are taken from start file
+   1. **false** (default) - velocities are taken from start file; if they are all zero, the MD starts at 0 K and PQ writes a warning
 
    2. **true** - velocities are initialized according to a Boltzmann distribution at the target temperature, if all velocities in the start file are zero or not given
 
@@ -895,6 +895,9 @@ Starting Temperature
     start_temp = {double} K
 
 With the ``start_temp`` keyword the initial temperature in ``K`` of the system can be set. If a value is given the PQ application will perform a temperature ramping from the ``start_temp`` to the ``temp`` value.
+
+.. Note::
+    ``start_temp`` only sets the start of the temperature ramp, it does not set the velocities. If all velocities in the start file are zero, set ``init_velocities = true``; otherwise the MD starts at 0 K and PQ writes a warning.
 
 .. _endTemperatureKey:
 

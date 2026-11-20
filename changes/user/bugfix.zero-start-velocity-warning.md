@@ -1,0 +1,1 @@
+- MD now warns at setup when all start velocities are zero and `init_velocities` is off, since `start_temp` only starts the temperature ramp (#1261).

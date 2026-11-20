@@ -1,0 +1,1 @@
+- `SimulationBoxSetup::writeSetupInfo` writes a setup warning for all-zero start velocities with `init_velocities = false` in non-ring-polymer MD jobs (#1261).
