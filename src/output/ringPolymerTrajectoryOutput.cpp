@@ -48,8 +48,8 @@ namespace out
         size_t                       nBeads
     )
     {
-        const auto dimensions = simulationBox.getBoxDimensions();
-        const auto angles     = simulationBox.getBoxAngles();
+        const auto &dimensions = simulationBox.getBoxDimensions();
+        const auto  angles     = simulationBox.getBoxAngles();
 
         _getFilePointer() << std::format(
             "{}  {} {} {}  {} {} {}\n",
