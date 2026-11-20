@@ -73,16 +73,19 @@ Energy File
 
 **File Type:** ``.en``
 
-The file starts with two comment lines: ``# PQ energy file <version>``, and
-directly before the first data line the column names, one ``NAME[unit]`` token
-per column with the ``#`` glued to the first one, for example
-``#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...``.
-Token *i* names column *i*, also in a spreadsheet opened with spaces as
-separator. Apart from the step column, the names, units and order are the
-same as in the ``.info`` file, so programs can read the columns from this line
-instead of the ``.info`` file. gnuplot, xmgrace and ``numpy.loadtxt`` skip both
-lines as comments. If :ref:`includeoutputmetadatakey` is enabled, a
-``# timestep = <value> fs`` line follows the first line.
+The file starts with a header that names every column and its unit, in the
+same order as the data. gnuplot, xmgrace and ``numpy.loadtxt`` skip it as a
+comment. Example:
+
+.. code-block:: text
+
+    # PQ energy file v1.1.0
+    #SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...
+             2    259.990188447136   51890.577284595995   -5865.403297836899 ...
+             4    436.120780915806   10090.942289750119   -6539.564395075573 ...
+
+If :ref:`includeoutputmetadatakey` is enabled, a ``# timestep = <value> fs``
+line follows the first line.
 
 Stores information about the energy and various other quantities of the system for every frame in the following format:
 

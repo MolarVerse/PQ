@@ -1,1 +1,1 @@
-- The `.en` and `.instant_en` energy files now start with `# PQ energy file <version>` and a line with the name and unit of every column, `#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...`, the same names as in the `.info` file. The files still open in gnuplot, xmgrace, PQAnalysis and PQEnalyzer, which skip `#` lines (#1250).
+- `.en` and `.instant_en` files now start with a header that names every column and its unit (#1250).
