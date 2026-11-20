@@ -250,16 +250,16 @@ TEST_F(TestSetup, writeEngineSetupInfo)
 {
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
     auto &logOutput = _engine->getLogOutput();
-    logOutput.setFilename("default.log", false);
+    logOutput.setFilename("engineSetupInfo.log", false);
 
     setup::writeEngineSetupInfo(logOutput);
     logOutput.close();
 
-    std::ifstream file("default.log");
+    std::ifstream file("engineSetupInfo.log");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "INFO:    Setup of Engine for jobtype: MM-MD");
+    EXPECT_EQ(line, "INFO:    Setup of Engine for jobtype: MM_MD");
 
     file.close();
-    std::remove("default.log");
+    std::remove("engineSetupInfo.log");
 }

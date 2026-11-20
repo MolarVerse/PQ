@@ -230,7 +230,8 @@ namespace setup
      * This function logs the general engine setup information, including
      * the time step, starting step count, and the total number of steps.
      *
-     * @param settings The settings object containing the engine configuration.
+     * @param logOutput The log output object to which the engine setup
+     * information will be written.
      */
     void writeEngineSetupInfo(out::LogOutput& logOutput)
     {

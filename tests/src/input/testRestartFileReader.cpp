@@ -116,6 +116,7 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);   // "Start File" message
+    getline(file, line);   // empty line after it
     getline(file, line);
     EXPECT_EQ(line, "         Time Step:           0.5 fs");
     getline(file, line);
@@ -126,7 +127,7 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
     EXPECT_EQ(line, "");
 
     file.close();
-    std::remove("default.log");
+    ASSERT_TRUE(std::remove("default.log") == 0);
 }
 
 /**
@@ -157,6 +158,7 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
     std::ifstream file("default.log");
     std::string   line;
     getline(file, line);   // "Start File" message
+    getline(file, line);   // empty line after it
     getline(file, line);
     EXPECT_EQ(line, "         Starting Step Count:                  1232");
     getline(file, line);
@@ -165,6 +167,6 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
     EXPECT_EQ(line, "");
 
     file.close();
-    std::remove("default.log");
+    ASSERT_TRUE(std::remove("default.log") == 0);
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 }
