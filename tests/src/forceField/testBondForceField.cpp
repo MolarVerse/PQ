@@ -113,7 +113,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     auto force =
@@ -154,7 +154,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     force = {-0.68765171383567736, -1.3753034276713547, -2.062955141507032};

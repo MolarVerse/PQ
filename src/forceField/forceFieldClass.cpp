@@ -27,6 +27,7 @@
 
 #include "dihedralType.hpp"
 #include "exceptions.hpp"
+#include "hybridSettings.hpp"
 
 namespace ff
 {
@@ -220,7 +221,7 @@ namespace ff
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                *_hybridSettings
+                _hybridSettings->getSmoothingMethod()
             );
         };
 
@@ -246,7 +247,7 @@ namespace ff
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                *_hybridSettings
+                _hybridSettings->getSmoothingMethod()
             );
         };
 
@@ -275,7 +276,7 @@ namespace ff
                 false,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                *_hybridSettings
+                _hybridSettings->getSmoothingMethod()
             );
         };
 
@@ -304,7 +305,7 @@ namespace ff
                 true,
                 *_coulombPotential,
                 *_nonCoulombPot,
-                *_hybridSettings
+                _hybridSettings->getSmoothingMethod()
             );
         };
 

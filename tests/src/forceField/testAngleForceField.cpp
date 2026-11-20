@@ -122,7 +122,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -190,7 +190,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -307,7 +307,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).

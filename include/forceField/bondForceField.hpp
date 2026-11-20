@@ -24,6 +24,7 @@
 #define FORCE_FIELD__BOND_FORCE_FIELD_HPP
 
 #include "bond.hpp"
+#include "enums/hybrid.hpp"
 
 namespace physicalData
 {
@@ -74,7 +75,7 @@ namespace ff
             physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot,
-            const HybridSettings        &hybridSettings
+            SmoothingMethod              smoothing
         );
 
         /***************************

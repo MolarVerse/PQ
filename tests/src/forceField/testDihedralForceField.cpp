@@ -135,7 +135,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);
@@ -213,7 +213,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         true,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(physicalData.getImproperEnergy(), 3.9128709291752739, 1e-6);
@@ -291,7 +291,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(physicalData.getDihedralEnergy(), 3.9128709291752739, 1e-6);

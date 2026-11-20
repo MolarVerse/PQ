@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "angle.hpp"
+#include "enums/hybrid.hpp"
 
 namespace physicalData
 {
@@ -74,7 +75,7 @@ namespace ff
             physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot,
-            const HybridSettings        &hybridSettings
+            SmoothingMethod              smoothing
         );
 
         /***************************

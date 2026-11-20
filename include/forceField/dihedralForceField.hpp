@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "dihedral.hpp"
+#include "enums/hybrid.hpp"
 #include "strongTypes.hpp"
 
 namespace physicalData
@@ -76,7 +77,7 @@ namespace ff
             bool                         isImproperDihedral,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot,
-            const HybridSettings        &hybridSettings
+            SmoothingMethod              smoothing
         );
 
         /***************************
