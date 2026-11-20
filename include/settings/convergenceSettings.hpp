@@ -52,9 +52,6 @@ class ConvSettings
    public:
     ConvSettings();
 
-   private:
-    [[nodiscard]] bool _anyConvergenceSetByUser() const;
-
    public:
     /***************************
      * standard setter methods *
@@ -89,6 +86,9 @@ class ConvSettings
     [[nodiscard]] bool getUseRMSForceConv() const;
 
     [[nodiscard]] ConvStrategy getEnConvStrategy() const;
+
+   private:
+    [[nodiscard]] bool _anyConvergenceSetByUser() const;
 };
 
 #endif   // SETTINGS__CONVERGENCE_SETTINGS_HPP

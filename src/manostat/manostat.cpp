@@ -66,9 +66,9 @@ namespace manostat
         const auto forceVirial = physicalData.getVirial();
         const auto volume      = simulationBox.getVolume();
 
-        auto pressureTensor = (2.0 * ekinVirial + forceVirial) / volume;
-        _pressureTensor     = pressureTensor / avogadro_constant;
-        _pressure           = trace(_pressureTensor) / linalg::tensor3D::size;
+        _pressureTensor =
+            (2.0 * ekinVirial + forceVirial) / volume / avogadro_constant;
+        _pressure = trace(_pressureTensor) / linalg::tensor3D::size;
 
         physicalData.setPressure(_pressure);
 

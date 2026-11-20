@@ -132,10 +132,7 @@ namespace molsys
      */
     void OrthorhombicBox::scaleBox(const QuantityTensor3D &scalingTensor)
     {
-        _set_boxDimensions(
-            get_boxDimensions() *
-            diagonal(scalingTensor).numerical_value_in(one)
-        );
+        _set_boxDimensions(get_boxDimensions() * diagonal(scalingTensor));
     }
 
     /**

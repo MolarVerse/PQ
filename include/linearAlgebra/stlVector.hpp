@@ -25,11 +25,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <mstd/math.hpp>
 #include <numeric>
 #include <type_traits>
 #include <vector>
-
-#include "mstd/math.hpp"
 
 namespace stl
 {

@@ -37,7 +37,7 @@
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "interWater.hpp"
-#include "interWaterParamters.hpp"
+#include "interWaterParameters.hpp"
 #include "mTRIntraWater.hpp"
 #include "mdEngine.hpp"
 #include "units.hpp"

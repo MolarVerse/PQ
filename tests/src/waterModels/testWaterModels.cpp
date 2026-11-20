@@ -42,7 +42,7 @@
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
 #include "interWaterKernels.tpp"   // IWYU pragma: keep -- for template specialization
-#include "interWaterParamters.hpp"
+#include "interWaterParameters.hpp"
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
 #include "molecule.hpp"
