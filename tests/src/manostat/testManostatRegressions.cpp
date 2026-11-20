@@ -59,10 +59,7 @@ namespace
 
         void SetUp() override;
 
-        void _addMolecule(
-            const std::vector<double>& positions,
-            double               speed
-        );
+        void _addMolecule(const std::vector<double>& positions, double speed);
     };
 
     void ManostatRegression::SetUp()
@@ -84,7 +81,7 @@ namespace
 
     void ManostatRegression::_addMolecule(
         const std::vector<double>& positions,
-        double               speed
+        double                     speed
     )
     {
         molsys::Molecule molecule;

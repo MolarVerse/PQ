@@ -95,7 +95,7 @@ class AseQMRunnerTest : public ::testing::Test
 
     static QM::AseFennolRunner _runner(
         const QMSettings &settings,
-        double      delay
+        double            delay
     );
 };
 
@@ -134,7 +134,7 @@ void AseQMRunnerTest::SetUp()
 
 QM::AseFennolRunner AseQMRunnerTest::_runner(
     const QMSettings &settings,
-    double      delay
+    double            delay
 )
 {
     pybind11::module_::import("sys")

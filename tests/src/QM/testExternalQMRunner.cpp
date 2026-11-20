@@ -242,7 +242,7 @@ class ExternalQMRunnerTest : public testing::Test
         const std::string          &stressFileName
     );
 
-    static void _setMoleculeChangedZone(const bool changed);
+    static void _setMoleculeChangedZone(bool changed);
 
     void SetUp() override;
 
@@ -776,10 +776,10 @@ class QMWriterTest : public ExternalQMRunnerTest
     void _addAtom(const std::string &name, const linalg::Vec3D &position);
 
     void _addMolecule(
-        molsys::HybridZone zone,
-        bool               active,
-        const linalg::Vec3D     &position,
-        double             charge
+        molsys::HybridZone   zone,
+        bool                 active,
+        const linalg::Vec3D &position,
+        double               charge
     );
 
     void _addPointChargeMolecules();
@@ -809,10 +809,10 @@ void QMWriterTest::_addAtom(
 }
 
 void QMWriterTest::_addMolecule(
-    molsys::HybridZone zone,
-    bool               active,
-    const linalg::Vec3D     &position,
-    double             charge
+    molsys::HybridZone   zone,
+    bool                 active,
+    const linalg::Vec3D &position,
+    double               charge
 )
 {
     auto atom = std::make_shared<molsys::Atom>();
