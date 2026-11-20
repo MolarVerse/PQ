@@ -435,11 +435,8 @@ namespace engine
                 MPI_COMM_WORLD
             );
 
-            const auto boxDimensionsVec = linalg::Vec3D(
-                boxDimensions[0],
-                boxDimensions[1],
-                boxDimensions[2]
-            );
+            const auto boxDimensionsVec =
+                Pos3D(boxDimensions[0], boxDimensions[1], boxDimensions[2]);
 
             getRingPolymerBeads()[i].deFlattenVelocities(velocities);
             getRingPolymerBeads()[i].deFlattenPositions(positions);
