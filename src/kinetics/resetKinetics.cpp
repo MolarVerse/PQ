@@ -43,6 +43,7 @@
 
 namespace kinetics
 {
+    static constexpr double FRACTION_TO_PERCENT = 100.0;
 
     /**
      * @brief Construct a new Reset Kinetics:: Reset Kinetics object
@@ -300,7 +301,7 @@ namespace kinetics
             "steps.",
             norm(momentum),
             step,
-            MOMENTUM_DRIFT_THRESHOLD * 100.0
+            MOMENTUM_DRIFT_THRESHOLD * FRACTION_TO_PERCENT
         );
     }
 
