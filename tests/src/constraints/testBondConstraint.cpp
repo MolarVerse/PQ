@@ -182,9 +182,8 @@ TEST_F(TestBondConstraint, applyRattle)
     const auto mass1 = molecule.getAtomMass(AtomIndex{1});
 
     const Vel3D initialVel1  = linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s;
-    const Vel3D expectedVel0 = (deltaMomentum / mass0).in(angstrom / s);
-    const Vel3D expectedVel1 =
-        initialVel1 - Vel3D((deltaMomentum / mass1).in(angstrom / s));
+    const Vel3D expectedVel0 = deltaMomentum / mass0;
+    const Vel3D expectedVel1 = initialVel1 - (deltaMomentum / mass1);
 
     const auto vel0 = molecule.getAtomVelocity(AtomIndex{0});
     const auto vel1 = molecule.getAtomVelocity(AtomIndex{1});
