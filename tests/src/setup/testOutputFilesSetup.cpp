@@ -261,5 +261,5 @@ TEST_F(TestSetup, writeEngineSetupInfo)
     EXPECT_EQ(line, "INFO:    Setup of Engine for jobtype: MM_MD");
 
     file.close();
-    std::remove("engineSetupInfo.log");
+    ASSERT_TRUE(std::remove("engineSetupInfo.log") == 0);
 }
