@@ -65,7 +65,7 @@ TEST_F(TestEnergyOutput, writeHeader)
 TEST_F(TestEnergyOutput, columnHeader)
 {
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
     _energyOutput->write(1, *_physicalData, *_settings);
@@ -92,7 +92,7 @@ TEST_F(TestEnergyOutput, columnHeader)
 TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
 {
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     _energyOutput->setFilename("default.en", false);
     _energyOutput->writeHeader(0.5 * fs);
@@ -130,7 +130,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
         ThermostatType::NOSE_HOOVER
     );
     _settings->constraintSettings.activateDistanceConstraintsByUser();
-    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    GeneralSettings::setJobtype(JobType::QMMM_MD);
 
     _energyOutput->setFilename("default.en", false);
     _energyOutput->write(1, *_physicalData, *_settings);
@@ -140,7 +140,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
     _infoOutput->write(1.0 * ps, *_physicalData, *_settings);
     _infoOutput->close();
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    GeneralSettings::setJobtype(JobType::MM_MD);
 
     const auto splitWords = [](const std::string &line)
     {

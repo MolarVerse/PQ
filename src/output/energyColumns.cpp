@@ -79,7 +79,7 @@ namespace out
             .value = physicalData.getTotalEnergy(),
         });
 
-        if (settings::GeneralSettings::isQMActivated())
+        if (GeneralSettings::isQMActivated())
         {
             _add({
                 .name  = "E(QM)",
@@ -105,7 +105,7 @@ namespace out
             .value = physicalData.getIntraEnergy(),
         });
 
-        if (settings::GeneralSettings::isMMActivated())
+        if (GeneralSettings::isMMActivated())
         {
             _add({
                 .name  = "E(COUL)",
@@ -143,7 +143,7 @@ namespace out
             });
         }
 
-        if (settings::GeneralSettings::isHybridJobtype())
+        if (GeneralSettings::isHybridJobtype())
         {
             _add({
                 .name  = "N(SM-MOL)",

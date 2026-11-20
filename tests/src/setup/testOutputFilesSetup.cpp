@@ -194,8 +194,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
 {
     cleanupPrefix();
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
+    GeneralSettings::setJobtype(JobType::MM_MD);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::H5MD);
     _settings->timings.setTimeStepByUser(0.5 * fs);
