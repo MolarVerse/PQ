@@ -58,11 +58,20 @@ class TestIntraNonBonded : public TestNonCoulombPotentialFF
 TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 {
     const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(
+            MolType{0},
+            {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+        );
     const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(
+            MolType{1},
+            {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+        );
     const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(MolType{2}, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(
+            MolType{2},
+            {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+        );
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
@@ -77,8 +86,8 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
         intraNonBondedContainer2.getMolType()
     );
     EXPECT_EQ(
-        intraNonBondedContainerPtr->getAtomIndices(),
-        intraNonBondedContainer2.getAtomIndices()
+        intraNonBondedContainerPtr->getPartners(),
+        intraNonBondedContainer2.getPartners()
     );
 
     EXPECT_THROW_MSG(
@@ -95,11 +104,20 @@ TEST_F(TestIntraNonBonded, findIntraNonBondedContainerByMolType)
 TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
 {
     const auto intraNonBondedContainer1 =
-        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(
+            MolType{0},
+            {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+        );
     const auto intraNonBondedContainer2 =
-        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(
+            MolType{1},
+            {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+        );
     const auto intraNonBondedContainer3 =
-        intraNonBonded::IntraNonBondedContainer(MolType{2}, {{-1}});
+        intraNonBonded::IntraNonBondedContainer(
+            MolType{2},
+            {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+        );
 
     auto intraNonBonded = intraNonBonded::IntraNonBonded();
     intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer1);
@@ -127,40 +145,40 @@ TEST_F(TestIntraNonBonded, fillIntraNonBondedMaps)
         &simulationBox.getMolecule(0)
     );
     EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[0].getAtomIndices(),
-        intraNonBondedContainer1.getAtomIndices()
+        intraNonBonded.getIntraNonBondedMaps()[0].getPartners(),
+        intraNonBondedContainer1.getPartners()
     );
     EXPECT_EQ(
         intraNonBonded.getIntraNonBondedMaps()[1].getMolecule(),
         &simulationBox.getMolecule(1)
     );
     EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[1].getAtomIndices(),
-        intraNonBondedContainer2.getAtomIndices()
+        intraNonBonded.getIntraNonBondedMaps()[1].getPartners(),
+        intraNonBondedContainer2.getPartners()
     );
     EXPECT_EQ(
         intraNonBonded.getIntraNonBondedMaps()[2].getMolecule(),
         &simulationBox.getMolecule(2)
     );
     EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[2].getAtomIndices(),
-        intraNonBondedContainer3.getAtomIndices()
+        intraNonBonded.getIntraNonBondedMaps()[2].getPartners(),
+        intraNonBondedContainer3.getPartners()
     );
     EXPECT_EQ(
         intraNonBonded.getIntraNonBondedMaps()[3].getMolecule(),
         &simulationBox.getMolecule(3)
     );
     EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[3].getAtomIndices(),
-        intraNonBondedContainer2.getAtomIndices()
+        intraNonBonded.getIntraNonBondedMaps()[3].getPartners(),
+        intraNonBondedContainer2.getPartners()
     );
     EXPECT_EQ(
         intraNonBonded.getIntraNonBondedMaps()[4].getMolecule(),
         &simulationBox.getMolecule(4)
     );
     EXPECT_EQ(
-        intraNonBonded.getIntraNonBondedMaps()[4].getAtomIndices(),
-        intraNonBondedContainer3.getAtomIndices()
+        intraNonBonded.getIntraNonBondedMaps()[4].getPartners(),
+        intraNonBondedContainer3.getPartners()
     );
 }
 
@@ -194,8 +212,10 @@ TEST_F(TestIntraNonBonded, calculate)
     potentialSettings.setScale14CoulombByUser(0.75);
     potentialSettings.setScale14VanDerWaalsByUser(0.75);
 
-    auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
+    auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(
+        MolType{0},
+        {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+    );
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 

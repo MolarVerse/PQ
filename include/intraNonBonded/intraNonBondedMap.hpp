@@ -78,7 +78,7 @@ namespace intraNonBonded
         [[nodiscard]]
         std::pair<double, double> calculateSingleInteraction(
             AtomIndex                    atomIdx1,
-            int                          atomIdx2,
+            IntraNonBondedPartner        partner,
             const linalg::Vec3D         &box,
             const pot::CoulombPotential *coulPot,
             pot::NonCoulombPotential    *nonCoulPot,
@@ -91,7 +91,8 @@ namespace intraNonBonded
 
         [[nodiscard]] IntraNonBondedContainer *getIntraNonBondedType() const;
         [[nodiscard]] molsys::Molecule        *getMolecule() const;
-        [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const;
+        [[nodiscard]] const std::vector<IntraNonBondedPartners> &getPartners(
+        ) const;
     };
 
 }   // namespace intraNonBonded

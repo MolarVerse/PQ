@@ -35,7 +35,6 @@
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "intraNonBondedContainer.hpp"
-#include "mathUtilities.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
 
@@ -187,11 +186,9 @@ namespace input::intraNonBondedReader
      * @brief processes the intra nonBonded interactions for a given molecule
      * type
      *
-     * @details the atomIndices vector is a vector of vectors. The first index
-     * is the reference atom index. The second index is the atom index that
-     * interacts with the reference atom. The sign of the atom index indicates
-     * the type of interaction. If the sign is negative then the interaction is
-     * a 1-4 interaction and has to be scaled accordingly.
+     * @details for each reference atom the partner atoms are stored with
+     * their 0-based index and a separate 1-4 flag. A negative atom index in
+     * the file marks a 1-4 interaction that has to be scaled accordingly.
      *
      * Each line should have the following format:
      * `<reference atom index> <atom index 1> <atom index 2> ...`
@@ -217,7 +214,7 @@ namespace input::intraNonBondedReader
 
         const auto nAtoms = molType.getNumberOfAtoms();
 
-        std::vector<std::vector<int>> atomIndices(nAtoms, std::vector<int>(0));
+        std::vector<intraNonBonded::IntraNonBondedPartners> partners(nAtoms);
 
         ++_lineNumber;
 
@@ -253,14 +250,14 @@ namespace input::intraNonBondedReader
                 ));
             }
 
-            auto addAtomIdxToRefAtom = [&atomIndices, refAtomIdx, nAtoms, this](
-                                           const auto &lineElement
-                                       )
+            auto addPartnerToRefAtom =
+                [&partners, refAtomIdx, nAtoms, this](const auto &lineElement)
             {
-                auto atomIndex  = ::abs(stoi(lineElement)) - 1;
-                atomIndex      *= utilities::sign(stoi(lineElement));
+                const auto atomNumber    = stoi(lineElement);
+                const auto absAtomNumber = std::abs(atomNumber);
 
-                if (::abs(atomIndex) >= static_cast<int>(nAtoms))
+                if (absAtomNumber == 0 ||
+                    absAtomNumber > static_cast<int>(nAtoms))
                 {
                     throw exc::IntraNonBondedException(format(
                         "ERROR: atom index '{}' in line {} in file '{}' is out "
@@ -272,12 +269,16 @@ namespace input::intraNonBondedReader
                     ));
                 }
 
-                atomIndices[refAtomIdx].push_back(atomIndex);
+                partners[refAtomIdx].push_back({
+                    .atomIndex =
+                        AtomIndex{static_cast<size_t>(absAtomNumber - 1)},
+                    .isScaled14 = atomNumber < 0,
+                });
             };
 
             std::ranges::for_each(
                 lineElements | std::views::drop(1),
-                addAtomIdxToRefAtom
+                addPartnerToRefAtom
             );
 
             ++_lineNumber;
@@ -293,7 +294,7 @@ namespace input::intraNonBondedReader
         }
 
         const auto container =
-            intraNonBonded::IntraNonBondedContainer(moleculeType, atomIndices);
+            intraNonBonded::IntraNonBondedContainer(moleculeType, partners);
 
         _engine.getIntraNonBonded()->addIntraNonBondedContainer(container);
     }
