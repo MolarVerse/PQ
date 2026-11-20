@@ -1,0 +1,2 @@
+- New `out::EnergyColumns` (energyColumns.hpp) lists the active energy columns with name, unit, value and format; `EnergyOutput` and `InfoOutput` both write from it, so the `.en` header, the `.en` data and the `.info` file cannot disagree (#1250).
+- The `.en` column line (`#STEP[-]`, then one `NAME[unit]` token per column, space separated, `#` glued to the first token so spreadsheets keep token i on column i) is meant to replace the `.info` file for readers such as the PQAnalysis `EnergyFileReader`; the `# PQ energy file <version>` first line marks the format (#1250).

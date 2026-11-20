@@ -22,14 +22,20 @@
 
 #include "testEnergyOutput.hpp"
 
+#include <cstddef>
+#include <format>
+#include <fstream>
 #include <iosfwd>
 #include <sstream>
 #include <string>
 #include <vector>
 
+#include "constraintSettings.hpp"
+#include "energyColumns.hpp"
 #include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
+#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
@@ -47,7 +53,150 @@ TEST_F(TestEnergyOutput, writeHeader)
     std::ifstream file("default.en");
     std::string   line;
     std::getline(file, line);
+    EXPECT_EQ(line, out::energyFileMarker());
+    std::getline(file, line);
     EXPECT_EQ(line, "# timestep = 0.5 fs");
+}
+
+/**
+ * @brief tests the marker and column names lines before the first data line
+ *
+ */
+TEST_F(TestEnergyOutput, columnHeader)
+{
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+
+    _energyOutput->setFilename("default.en", false);
+    _energyOutput->write(1, *_physicalData, *_settings);
+    _energyOutput->close();
+
+    std::ifstream file("default.en");
+    std::string   line;
+    std::getline(file, line);
+    EXPECT_EQ(line, std::format("# PQ energy file {}", sysinfo::VERSION));
+    std::getline(file, line);
+    EXPECT_EQ(
+        line,
+        "#STEP[-] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] "
+        "E(KIN)[kcal/mol] E(INTRA)[kcal/mol] E(COUL)[kcal/mol] "
+        "E(NON-COUL)[kcal/mol] MOMENTUM[amuA/fs] LOOPTIME[s]"
+    );
+}
+
+/**
+ * @brief tests the line order with timestep metadata and that the header
+ * lines are written only once
+ *
+ */
+TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
+{
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+
+    _energyOutput->setFilename("default.en", false);
+    _energyOutput->writeHeader(0.5 * fs);
+    _energyOutput->write(1, *_physicalData, *_settings);
+    _energyOutput->write(2, *_physicalData, *_settings);
+    _energyOutput->close();
+
+    std::ifstream            file("default.en");
+    std::vector<std::string> lines;
+    for (std::string line; std::getline(file, line);)
+    {
+        lines.push_back(line);
+    }
+
+    ASSERT_EQ(lines.size(), 5);
+    EXPECT_EQ(lines[0], out::energyFileMarker());
+    EXPECT_EQ(lines[1], "# timestep = 0.5 fs");
+    EXPECT_TRUE(lines[2].starts_with("#STEP[-] TEMPERATURE[K] "));
+    EXPECT_TRUE(lines[3].starts_with("         1\t"));
+    EXPECT_TRUE(lines[4].starts_with("         2\t"));
+}
+
+/**
+ * @brief tests that the header has one token per data column, in the order
+ * in which PQAnalysis numbers the info file cells, with every optional column
+ * active
+ *
+ */
+TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
+{
+    _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
+    _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::Z);
+    _settings->thermostatSettings.setThermostatTypeByUser(
+        ThermostatType::NOSE_HOOVER
+    );
+    _settings->constraintSettings.activateDistanceConstraintsByUser();
+    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+
+    _energyOutput->setFilename("default.en", false);
+    _energyOutput->write(1, *_physicalData, *_settings);
+    _energyOutput->close();
+
+    _infoOutput->setFilename("default.info", false);
+    _infoOutput->write(1.0 * ps, *_physicalData, *_settings);
+    _infoOutput->close();
+
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+
+    const auto splitWords = [](const std::string &line)
+    {
+        std::vector<std::string> words;
+        std::stringstream        stream(line);
+        for (std::string word; stream >> word;)
+        {
+            words.push_back(word);
+        }
+        return words;
+    };
+
+    std::ifstream enFile("default.en");
+    std::string   header;
+    std::string   data;
+    std::getline(enFile, header);   // marker
+    std::getline(enFile, header);
+    std::getline(enFile, data);
+
+    ASSERT_TRUE(header.starts_with("#STEP[-] "));
+    const auto tokens = splitWords(header.substr(1));
+
+    EXPECT_EQ(tokens.size(), splitWords(data).size());
+    EXPECT_EQ(tokens.size(), out::EnergyColumns::maxColumns + 1);
+
+    // info cells as PQAnalysis InfoFileReader reads them
+    std::ifstream            infoFile("default.info");
+    std::vector<std::string> infoLabels;
+    std::string              line;
+    for (auto lineIndex = 0; std::getline(infoFile, line); ++lineIndex)
+    {
+        if (lineIndex < 3 || line.empty())
+        {
+            continue;
+        }
+        if (line.starts_with("-"))
+        {
+            break;
+        }
+
+        const auto words = splitWords(line);
+        infoLabels.push_back(std::format("{}[{}]", words[1], words[3]));
+        if (words.size() == 8)
+        {
+            infoLabels.push_back(std::format("{}[{}]", words[4], words[6]));
+        }
+    }
+
+    ASSERT_EQ(tokens.size(), infoLabels.size());
+    EXPECT_EQ(tokens[0], "STEP[-]");
+    EXPECT_EQ(infoLabels[0], "SIMULATION-TIME[ps]");
+
+    for (std::size_t index = 1; index < tokens.size(); ++index)
+    {
+        EXPECT_EQ(tokens[index], infoLabels[index]);
+    }
 }
 
 /**
@@ -77,6 +226,8 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
 
     std::ifstream file("default.en");
     std::string   line;
+    std::getline(file, line);   // marker
+    std::getline(file, line);   // column names
     std::getline(file, line);
     EXPECT_EQ(
         line,
@@ -119,6 +270,8 @@ TEST_F(TestEnergyOutput, forceFieldActive)
 
     std::ifstream file("default.en");
     std::string   line;
+    std::getline(file, line);   // marker
+    std::getline(file, line);   // column names
     std::getline(file, line);
     EXPECT_EQ(
         line,
@@ -163,6 +316,8 @@ TEST_F(TestEnergyOutput, manostatActive)
 
     std::ifstream file("default.en");
     std::string   line;
+    std::getline(file, line);   // marker
+    std::getline(file, line);   // column names
     std::getline(file, line);
     EXPECT_EQ(
         line,
@@ -207,6 +362,8 @@ TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
 
     std::ifstream file("default.en");
     std::string   line;
+    std::getline(file, line);   // marker
+    std::getline(file, line);   // column names
     std::getline(file, line);
     EXPECT_EQ(
         line,
@@ -251,6 +408,8 @@ TEST_F(TestEnergyOutput, qmActive)
 
     std::ifstream file("default.en");
     std::string   line;
+    std::getline(file, line);   // marker
+    std::getline(file, line);   // column names
     std::getline(file, line);
     EXPECT_EQ(
         line,
@@ -295,6 +454,8 @@ TEST_F(TestEnergyOutput, noseHooverActive)
 
     std::ifstream file("default.en");
     std::string   line;
+    std::getline(file, line);   // marker
+    std::getline(file, line);   // column names
     std::getline(file, line);
     EXPECT_EQ(
         line,
@@ -339,6 +500,8 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
 
     std::ifstream file("default.en");
     std::string   line;
+    std::getline(file, line);   // marker
+    std::getline(file, line);   // column names
     std::getline(file, line);
 
     std::vector<double> fields;

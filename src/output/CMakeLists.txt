@@ -5,6 +5,7 @@ add_library(output
     extxyzOutput.cpp
     outputMessages.cpp
 
+    energyColumns.cpp
     energyOutput.cpp
     infoOutput.cpp
     trajectoryOutput.cpp

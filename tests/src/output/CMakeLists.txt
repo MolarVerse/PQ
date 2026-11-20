@@ -5,6 +5,7 @@ set(source_files
     testTrajectoryOutput.cpp
     testInfoOutput.cpp
     testEnergyOutput.cpp
+    testEnergyColumns.cpp
     testOutput.cpp
     testMomentumOutput.cpp
     testRingPolymerRestartFileOutput.cpp
