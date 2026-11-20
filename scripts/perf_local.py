@@ -16,7 +16,14 @@ Usage (from anywhere in the repository):
     scripts/perf_local.py --only interWater     # only benchmarks whose name contains it
     scripts/perf_local.py --counts-only         # no timing: the fast check
     scripts/perf_local.py --base HEAD           # what did my uncommitted change do?
-    scripts/perf_local.py --list                # the benchmarks
+    scripts/perf_local.py --list                # the benchmarks and scenarios
+    scripts/perf_local.py --suite scenarios     # whole PQ runs of examples and integration inputs
+    scripts/perf_local.py --suite all           # benchmarks and scenarios
+
+Two suites: the fixed-work benchmarks of benchmarks/perf (one part of the code
+each, seconds) and the end-to-end scenarios of benchmarks/scenarios.json (the
+real PQ on inputs of the examples and the integration tests, about a minute
+each for the timing; see scripts/perf_scenarios.py).
 
 Everything lives in build-perf-local/ (ignored by git). The base is exported
 from git (never your working tree) and built once per commit; its instruction
@@ -34,6 +41,7 @@ that make timings noisy.
 
 import argparse
 import hashlib
+import json
 import os
 import re
 import shutil
@@ -41,6 +49,9 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import perf_scenarios  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "build-perf-local"
@@ -338,10 +349,15 @@ def parse_arguments(argv):
     parser.add_argument("--base", metavar="REF",
                         help="commit to compare with (default: merge-base "
                         "with origin/dev)")
+    parser.add_argument("--suite", choices=["benchmarks", "scenarios", "all"],
+                        default="benchmarks",
+                        help="fixed-work benchmarks (default), end-to-end "
+                        "scenarios of examples and integration inputs, or both")
     parser.add_argument("--only", nargs="+", metavar="NAME", default=[],
-                        help="only benchmarks whose name contains one of these")
+                        help="only benchmarks and scenarios whose name "
+                        "contains one of these")
     parser.add_argument("--list", action="store_true",
-                        help="list the benchmarks and exit")
+                        help="list the benchmarks and scenarios and exit")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--counts-only", action="store_true",
                       help="instruction counts only (fast)")
@@ -358,13 +374,21 @@ def parse_arguments(argv):
                         help="timing threshold in percent (default 10, as CI)")
     parser.add_argument("--rounds", type=int, default=15,
                         help="timing rounds per benchmark (default 15)")
+    parser.add_argument("--scenario-rounds", type=int, default=7,
+                        help="timing rounds per scenario (default 7)")
+    parser.add_argument("--scenario-copies", type=int, default=2,
+                        help="copies of the PQ binary per round and side "
+                        "(default 2, at least 2)")
     parser.add_argument("--jobs", default=str(os.cpu_count() or 4),
                         help="parallel build jobs")
     parser.add_argument("--rebuild-base", action="store_true",
                         help="rebuild the base and forget its cached counts")
     parser.add_argument("--report-only", action="store_true",
                         help="exit 0 even if the counts show a regression")
-    return parser.parse_args(argv)
+    options = parser.parse_args(argv)
+    if options.scenario_copies < 2:
+        parser.error("--scenario-copies must be at least 2")
+    return options
 
 
 def check_platform(options):
@@ -382,18 +406,136 @@ def check_platform(options):
             raise Failure(f"{tool} is not installed")
 
 
-def cache_file(commit, options, selected):
-    """Cached base counts: valid for one commit, flags, selection, compiler."""
-    compiler = subprocess.run(
+def compiler_version():
+    return subprocess.run(
         [os.environ.get("CXX", "c++"), "--version"],
         capture_output=True, text=True, check=False,
     ).stdout  # fmt: skip
+
+
+def cache_file(commit, options, selected):
+    """Cached base counts: valid for one commit, flags, selection, compiler."""
     key = "|".join([
         commit, str(options.native), str(options.sim),
-        ",".join(sorted(selected)), compiler,
+        ",".join(sorted(selected)), compiler_version(),
     ])  # fmt: skip
     digest = hashlib.sha256(key.encode()).hexdigest()[:16]
     return WORK / f"base-counts-{commit[:12]}-{digest}.tsv"
+
+
+def scenario_cache_file(commit, options, scenarios):
+    """Cached base counts of scenarios; changes with their definition."""
+    key = "|".join([
+        commit, str(options.native), compiler_version(),
+        json.dumps([vars(s) for s in scenarios], sort_keys=True),
+    ])  # fmt: skip
+    digest = hashlib.sha256(key.encode()).hexdigest()[:16]
+    return WORK / f"scenario-counts-{commit[:12]}-{digest}.json"
+
+
+def pin_to_quiet_cpu():
+    """The CPU to pin the timing to; prints what makes timings noisy."""
+    cpu, cpu_busy, sibling_busy, others_busy = sample_cpu()
+    governor_file = Path(f"/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor")
+    governor = governor_file.read_text().strip() if governor_file.exists() else None
+    for warning in environment_warnings(
+        others_busy, governor, cpu_busy, sibling_busy
+    ):
+        print(f"warning: {warning}")
+    print(f"pinned to CPU {cpu}\n", flush=True)
+
+    return cpu
+
+
+def run_benchmarks(options, selected, commit, pr_build, base_build, base_selected):
+    """The gate and the timing of the fixed-work benchmarks; 1 on a regression."""
+    pr_stage = stage(WORK / "stage-pr", pr_build, selected)
+    stage(WORK / "stage-base", base_build, base_selected)
+    if not pr_stage:
+        raise Failure("no benchmark binary was built")
+
+    status = 0
+
+    if not options.timing_only:
+        print("\n=== instruction counts " + "=" * 50, flush=True)
+        environment = dict(
+            os.environ,
+            PERF_CACHE_SIM="1" if options.sim else "0",
+            PERF_REPORT_FILE=str(WORK / "report-counts.md"),
+            PERF_BASE_IR_FILE=str(cache_file(commit, options, selected)),
+        )
+        environment.pop("GITHUB_STEP_SUMMARY", None)
+        code = run(
+            ["bash", ROOT / "scripts" / "perf_gate.sh", WORK / "stage-pr",
+             WORK / "stage-base", options.threshold],
+            env=environment,
+        )  # fmt: skip
+        if code != 0:
+            status = 1
+
+    if not options.counts_only:
+        print("\n=== timing " + "=" * 62, flush=True)
+        cpu = pin_to_quiet_cpu()
+        run(
+            [sys.executable, ROOT / "scripts" / "perf_timing.py", WORK / "stage-pr",
+             WORK / "stage-base", "--cpu", cpu, "--rounds", options.rounds,
+             "--threshold", options.timing_threshold, "--report-only",
+             "--append", WORK / "report-timing.md"],
+            env=dict(os.environ, GITHUB_STEP_SUMMARY=""),
+        )  # fmt: skip
+
+    return status
+
+
+def run_scenarios(options, chosen, commit, pr_build, base_build):
+    """Counts and timing of whole PQ runs; 1 on a count regression."""
+    pr_binary = pr_build / "apps" / "PQ"
+    base_binary = base_build / "apps" / "PQ"
+    for binary in (pr_binary, base_binary):
+        if not binary.exists():
+            raise Failure(f"{binary} was not built")
+
+    count_verdicts, time_verdicts, notes = [], [], []
+    status = 0
+
+    if not options.timing_only:
+        print("\n=== scenarios: instruction counts " + "=" * 39, flush=True)
+        templates = {
+            s.name: perf_scenarios.prepare(
+                s, ROOT, WORK / "scenarios" / f"{s.name}-count", s.count_steps)
+            for s in chosen
+        }  # fmt: skip
+        cache_path = scenario_cache_file(commit, options, chosen)
+        cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
+        count_verdicts = perf_scenarios.count_scenarios(
+            chosen, templates, pr_binary, base_binary,
+            shutil.which("valgrind"), options.threshold, cache,
+        )
+        cache_path.write_text(json.dumps(cache, indent=1))
+        if any(v.status == "regression" for v in count_verdicts):
+            status = 1
+
+    if not options.counts_only:
+        print("\n=== scenarios: timing " + "=" * 51, flush=True)
+        cpu = pin_to_quiet_cpu()
+        templates = {
+            s.name: perf_scenarios.prepare(
+                s, ROOT, WORK / "scenarios" / f"{s.name}-time", s.steps)
+            for s in chosen
+        }  # fmt: skip
+        time_verdicts, notes = perf_scenarios.time_scenarios(
+            chosen, templates, pr_binary, base_binary, cpu,
+            options.scenario_rounds, options.scenario_copies,
+            options.timing_threshold / 100.0,
+        )
+        for note in notes:
+            print(f"note: {note}")
+
+    (WORK / "report-scenarios.md").write_text(
+        perf_scenarios.render_report(count_verdicts, time_verdicts, notes)
+    )
+
+    return status
 
 
 def main(argv=None):
@@ -401,28 +543,53 @@ def main(argv=None):
     check_platform(options)
 
     names = benchmark_names((ROOT / PERF_CMAKE).read_text())
+    scenarios = perf_scenarios.load_scenarios(
+        (ROOT / perf_scenarios.SCENARIOS_FILE).read_text()
+    )
+    scenario_names = [s.name for s in scenarios]
+
     if options.list:
-        print("\n".join(names))
+        print("benchmarks (--suite benchmarks):")
+        print("\n".join(f"  {n}" for n in names))
+        print("scenarios (--suite scenarios):")
+        print("\n".join(f"  {s.name}  {s.description}" for s in scenarios))
         return 0
 
-    selected = select(names, options.only)
-    if not selected:
+    selected = (select(names, options.only)
+                if options.suite in ("benchmarks", "all") else [])
+    chosen_names = (select(scenario_names, options.only)
+                    if options.suite in ("scenarios", "all") else [])
+    chosen = [s for s in scenarios if s.name in chosen_names]
+
+    if not selected and not chosen:
+        hint = ""
+        if options.suite == "benchmarks" and select(scenario_names, options.only):
+            hint = " (it matches scenarios: add --suite scenarios)"
+        elif options.suite == "scenarios" and select(names, options.only):
+            hint = " (it matches benchmarks: use --suite benchmarks)"
         raise Failure(
-            f"no benchmark contains {options.only}; see --list for the names"
+            f"nothing contains {options.only}{hint}; see --list for the names"
         )
 
     commit = resolve_base(ROOT, options.base)
     short = commit[:12]
     flavour = "native" if options.native else "portable"
     print(f"base {short} ({git(ROOT, 'log', '-1', '--format=%s', commit)})")
-    print(f"{len(selected)} benchmark(s), {flavour} build\n")
+    print(f"{len(selected)} benchmark(s), {len(chosen)} scenario(s), "
+          f"{flavour} build\n")
 
     WORK.mkdir(exist_ok=True)
+    for old in WORK.glob("report-*.md"):
+        old.unlink()
 
     # your working tree, incrementally
     pr_build = WORK / f"pr-{flavour}"
-    pr_targets = (["perf_benchmarks"] if selected == names
-                  else [f"perf_{n}" for n in selected] + HELPER_TARGETS)
+    pr_targets = []
+    if selected:
+        pr_targets += (["perf_benchmarks"] if selected == names
+                       else [f"perf_{n}" for n in selected] + HELPER_TARGETS)
+    if chosen:
+        pr_targets.append("PQ")
     configure_and_build(ROOT, pr_build, pr_targets, options.native,
                         options.jobs, os.environ.get("PQ_EIGEN_SRC"))
 
@@ -432,8 +599,9 @@ def main(argv=None):
     if options.rebuild_base:
         shutil.rmtree(base_source, ignore_errors=True)
         shutil.rmtree(base_build, ignore_errors=True)
-        for old in WORK.glob(f"base-counts-{short}-*.tsv"):
-            old.unlink()
+        for pattern in (f"base-counts-{short}-*.tsv", f"scenario-counts-{short}-*.json"):
+            for old in WORK.glob(pattern):
+                old.unlink()
     if not base_source.exists():
         print(f"exporting {short} to {base_source}")
         try:
@@ -448,64 +616,28 @@ def main(argv=None):
     if new_only:
         print(f"not in the base (new, nothing to compare): {', '.join(new_only)}")
 
+    base_targets = []
     if base_selected:
-        base_targets = (["perf_benchmarks"] if base_selected == base_names
-                        else [f"perf_{n}" for n in base_selected])
+        base_targets += (["perf_benchmarks"] if base_selected == base_names
+                         else [f"perf_{n}" for n in base_selected])
+    if chosen:
+        base_targets.append("PQ")
+    if base_targets:
         eigen = os.environ.get("PQ_EIGEN_SRC") or reusable_eigen(
             ROOT, pr_build, base_source
         )
         configure_and_build(base_source, base_build, base_targets,
                             options.native, options.jobs, eigen)
 
-    pr_stage = stage(WORK / "stage-pr", pr_build, selected)
-    base_stage = stage(WORK / "stage-base", base_build, base_selected)
-    if not pr_stage:
-        raise Failure("no benchmark binary was built")
-
     status = 0
+    if selected:
+        status |= run_benchmarks(options, selected, commit, pr_build,
+                                 base_build, base_selected)
+    if chosen:
+        status |= run_scenarios(options, chosen, commit, pr_build, base_build)
 
-    if not options.timing_only:
-        print("\n=== instruction counts " + "=" * 50, flush=True)
-        report = WORK / "report-counts.md"
-        environment = dict(
-            os.environ,
-            PERF_CACHE_SIM="1" if options.sim else "0",
-            PERF_REPORT_FILE=str(report),
-            PERF_BASE_IR_FILE=str(cache_file(commit, options, selected)),
-        )
-        environment.pop("GITHUB_STEP_SUMMARY", None)
-        code = run(
-            ["bash", ROOT / "scripts" / "perf_gate.sh", WORK / "stage-pr",
-             WORK / "stage-base", options.threshold],
-            env=environment,
-        )  # fmt: skip
-        if code != 0:
-            status = 1
-
-    if not options.counts_only:
-        print("\n=== timing " + "=" * 62, flush=True)
-        cpu, cpu_busy, sibling_busy, others_busy = sample_cpu()
-        governor_file = Path(f"/sys/devices/system/cpu/cpu{cpu}/cpufreq/scaling_governor")
-        governor = governor_file.read_text().strip() if governor_file.exists() else None
-        for warning in environment_warnings(
-            others_busy, governor, cpu_busy, sibling_busy
-        ):
-            print(f"warning: {warning}")
-        print(f"pinned to CPU {cpu}\n", flush=True)
-
-        report = WORK / "report-timing.md"
-        report.unlink(missing_ok=True)
-        run(
-            [sys.executable, ROOT / "scripts" / "perf_timing.py", WORK / "stage-pr",
-             WORK / "stage-base", "--cpu", cpu, "--rounds", options.rounds,
-             "--threshold", options.timing_threshold, "--report-only",
-             "--append", report],
-            env=dict(os.environ, GITHUB_STEP_SUMMARY=""),
-        )  # fmt: skip
-
-    written = [r for r in ("report-counts.md", "report-timing.md")
-               if (WORK / r).exists()]
-    print(f"\nreports: {', '.join(str(WORK / r) for r in written)}")
+    written = sorted(p for p in WORK.glob("report-*.md"))
+    print(f"\nreports: {', '.join(str(p) for p in written)}")
     return 0 if options.report_only else status
 
 

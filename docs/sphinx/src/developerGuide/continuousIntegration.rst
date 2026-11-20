@@ -248,6 +248,9 @@ tools above on them, so a regression is seen before the pull request, not in it:
 The base is built from git, once per commit, and its counts are cached in ``build-perf-local/``. The tool pins the timing to the
 least busy CPU core and warns about conditions that make timings noisy. See ``benchmarks/README.md`` for the options.
 
+``--suite scenarios`` (or ``all``) also runs whole ``PQ`` programs on the examples and integration test inputs listed in
+``benchmarks/scenarios.json``, compared with the base by instruction counts (1 % threshold) and paired CPU time. CI does not run these.
+
 ****************
 Caches and speed
 ****************
