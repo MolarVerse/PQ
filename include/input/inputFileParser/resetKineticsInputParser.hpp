@@ -50,6 +50,7 @@ namespace input
         void addNResetAngularKeyword();
         void addFResetAngularKeyword();
         void addFResetForcesKeyword();
+        void addMomentumWarnThresholdKeyword();
     };
 
 }   // namespace input

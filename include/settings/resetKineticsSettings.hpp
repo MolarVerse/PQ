@@ -24,6 +24,7 @@
 #define SETTINGS__RESET_KINETICS_SETTINGS_HPP
 
 #include <cstddef>
+#include <optional>
 
 #include "setting.hpp"
 
@@ -43,6 +44,7 @@ class ResetKineticsSettings
     Setting<size_t> _nResetAngular;
     Setting<size_t> _fResetAngular;
     Setting<size_t> _fResetForces;
+    Setting<double> _momentumWarnThreshold;
 
    public:
     ResetKineticsSettings();
@@ -60,6 +62,7 @@ class ResetKineticsSettings
     void setNResetAngularByUser(size_t nResetAngular);
     void setFResetAngularByUser(size_t fResetAngular);
     void setFResetForcesByUser(size_t fResetForces);
+    void setMomentumWarnThresholdByUser(double threshold);
 
     /***************************
      * standard getter methods *
@@ -72,8 +75,10 @@ class ResetKineticsSettings
     [[nodiscard]] size_t getNResetAngular() const;
     [[nodiscard]] size_t getFResetAngular() const;
     [[nodiscard]] size_t getFResetForces() const;
+    [[nodiscard]] double getMomentumWarnThreshold() const;
 
-    [[nodiscard]] bool isMomentumResetActive() const;
+    [[nodiscard]] size_t                getInitialMomentumResetSteps() const;
+    [[nodiscard]] std::optional<size_t> getMomentumResetInterval() const;
 };
 
 #endif   // SETTINGS__RESET_KINETICS_SETTINGS_HPP

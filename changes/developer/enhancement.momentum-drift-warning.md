@@ -1,1 +1,1 @@
-- `ResetKinetics::checkMomentumDrift` compares P^2 with 0.01^2 * N * M * kT (centre-of-mass velocity vs. sqrt(kT/m) of the mean atomic mass) from the momentum and temperature already in `PhysicalData`; `MDEngine` writes the message once via `writeSetupWarning`. `ResetKineticsSettings::isMomentumResetActive` decides if a reset is configured (#1251).
+- `ResetKinetics::checkMomentumDrift` runs before the kinetics reset and picks the message from `getInitialMomentumResetSteps`/`getMomentumResetInterval` (#1251).

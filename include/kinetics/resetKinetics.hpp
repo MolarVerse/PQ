@@ -44,9 +44,6 @@ namespace molsys
 
 namespace kinetics
 {
-    /// centre-of-mass velocity relative to the thermal velocity sqrt(kT/m)
-    static constexpr double MOMENTUM_DRIFT_THRESHOLD = 0.01;
-
     /**
      * @class ResetKinetics
      *
@@ -90,6 +87,11 @@ namespace kinetics
             molsys::SimulationBox &,
             const linalg::Vec3D &angularMomentum
         );
+
+       private:
+        [[nodiscard]] std::optional<std::string> _momentumDriftAdvice(
+            size_t step
+        ) const;
     };
 
 }   // namespace kinetics

@@ -1500,31 +1500,93 @@ TEST(TestResetKinetics, momentumDriftWarnsOnceWithoutReset)
 
     ASSERT_TRUE(warning.has_value());
     EXPECT_THAT(*warning, ::testing::HasSubstr("at step 5"));
-    EXPECT_THAT(*warning, ::testing::HasSubstr("freset"));
-    EXPECT_THAT(*warning, ::testing::HasSubstr("nreset"));
+    EXPECT_THAT(*warning, ::testing::HasSubstr("no momentum reset is set"));
+    EXPECT_THAT(*warning, ::testing::HasSubstr("Set freset"));
     EXPECT_FALSE(reset.checkMomentumDrift(6U, data, *box).has_value());
 
     delete box;
 }
 
-TEST(TestResetKinetics, momentumDriftSilentWithReset)
+TEST(TestResetKinetics, momentumDriftWarnsAfterInitialReset)
 {
     auto *box  = makeBox();
     auto  data = makeData(*box);
 
-    const std::vector<ResetKineticsSettings> configured = {
-        makeSettings(0U, 0U, 5U, 0U, 0U, 0U, 0U, 100U),
-        makeSettings(0U, 0U, 0U, 10U, 0U, 0U, 0U, 100U),
-        makeSettings(5U, 0U, 0U, 0U, 0U, 0U, 0U, 100U),
-        makeSettings(0U, 10U, 0U, 0U, 0U, 0U, 0U, 100U),
+    const std::vector<ResetKineticsSettings> initialOnly = {
+        makeSettings(0U, 0U, 10U, 0U, 0U, 0U, 0U, 100U),
+        makeSettings(10U, 0U, 0U, 0U, 0U, 0U, 0U, 100U),
     };
 
-    for (const auto &settings : configured)
+    for (const auto &settings : initialOnly)
     {
-        EXPECT_TRUE(settings.isMomentumResetActive());
+        kinetics::ResetKinetics reset{settings};
+        EXPECT_FALSE(reset.checkMomentumDrift(10U, data, *box).has_value());
+
+        const auto warning = reset.checkMomentumDrift(11U, data, *box);
+
+        ASSERT_TRUE(warning.has_value());
+        EXPECT_THAT(
+            *warning,
+            ::testing::HasSubstr("only removed in the first 10 steps")
+        );
+        EXPECT_THAT(*warning, ::testing::HasSubstr("Set freset"));
+    }
+
+    delete box;
+}
+
+TEST(TestResetKinetics, momentumDriftWarnsBetweenPeriodicResets)
+{
+    auto *box  = makeBox();
+    auto  data = makeData(*box);
+
+    const std::vector<ResetKineticsSettings> periodic = {
+        makeSettings(0U, 0U, 5U, 10U, 0U, 0U, 0U, 100U),
+        makeSettings(0U, 20U, 0U, 10U, 0U, 0U, 0U, 100U),
+    };
+
+    for (const auto &settings : periodic)
+    {
+        kinetics::ResetKinetics reset{settings};
+        const auto warning = reset.checkMomentumDrift(6U, data, *box);
+
+        ASSERT_TRUE(warning.has_value());
+        EXPECT_THAT(*warning, ::testing::HasSubstr("every 10 steps"));
+        EXPECT_THAT(*warning, ::testing::HasSubstr("smaller freset"));
+    }
+
+    delete box;
+}
+
+TEST(TestResetKinetics, momentumDriftSilentWhenResetEveryStep)
+{
+    auto *box  = makeBox();
+    auto  data = makeData(*box);
+
+    const std::vector<ResetKineticsSettings> everyStep = {
+        makeSettings(0U, 0U, 0U, 1U, 0U, 0U, 0U, 100U),
+        makeSettings(0U, 1U, 0U, 0U, 0U, 0U, 0U, 100U),
+    };
+
+    for (const auto &settings : everyStep)
+    {
         kinetics::ResetKinetics reset{settings};
         EXPECT_FALSE(reset.checkMomentumDrift(5U, data, *box).has_value());
     }
+
+    delete box;
+}
+
+TEST(TestResetKinetics, momentumDriftSilentWithZeroThreshold)
+{
+    auto *box  = makeBox();
+    auto  data = makeData(*box);
+
+    auto settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 0U, 100U);
+    settings.setMomentumWarnThresholdByUser(0.0);
+    kinetics::ResetKinetics reset{settings};
+
+    EXPECT_FALSE(reset.checkMomentumDrift(5U, data, *box).has_value());
 
     delete box;
 }
@@ -1537,10 +1599,23 @@ TEST(TestResetKinetics, momentumDriftSilentBelowThreshold)
     auto data = makeData(*box);
 
     const auto settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 0U, 100U);
-    EXPECT_FALSE(settings.isMomentumResetActive());
     kinetics::ResetKinetics reset{settings};
 
     EXPECT_FALSE(reset.checkMomentumDrift(5U, data, *box).has_value());
 
     delete box;
+}
+
+TEST(TestResetKinetics, momentumResetStepsAndInterval)
+{
+    const auto none = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 0U, 100U);
+    EXPECT_EQ(none.getInitialMomentumResetSteps(), 0U);
+    EXPECT_FALSE(none.getMomentumResetInterval().has_value());
+
+    const auto both = makeSettings(7U, 20U, 3U, 10U, 0U, 0U, 0U, 100U);
+    EXPECT_EQ(both.getInitialMomentumResetSteps(), 7U);
+    EXPECT_EQ(both.getMomentumResetInterval(), 10U);
+
+    const auto scaleOnly = makeSettings(0U, 4U, 0U, 0U, 0U, 0U, 0U, 100U);
+    EXPECT_EQ(scaleOnly.getMomentumResetInterval(), 4U);
 }

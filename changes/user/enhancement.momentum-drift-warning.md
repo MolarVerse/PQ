@@ -1,1 +1,1 @@
-- MD runs without `nreset`, `freset`, `nscale` or `fscale` now print one warning in the `.log` file and on stdout when the total momentum drifts (centre-of-mass velocity above 1 % of the thermal velocity), naming `freset`/`nreset` as the fix (#1251).
+- MD runs warn once when the total momentum drifts above `momentum_warn_threshold` (default 0.01 of the thermal velocity, 0 disables it) and say which `freset` setting fixes it (#1251).

@@ -24,7 +24,11 @@
 
 #include <cstddef>
 
+#include "defaults.hpp"
 #include "inputKeyAdapter.hpp"
+#include "keyMetaData.hpp"
+#include "keyRegistry.hpp"
+#include "rangeValidator.hpp"
 #include "resetKineticsSettings.hpp"
 
 namespace input
@@ -50,6 +54,7 @@ namespace input
         addNResetAngularKeyword();
         addFResetAngularKeyword();
         addFResetForcesKeyword();
+        addMomentumWarnThresholdKeyword();
     }
 
     /**
@@ -246,6 +251,37 @@ namespace input
             KeyRegistry<size_t>{
                 .metadata = metaData,
                 .onSet    = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(keyword), false);
+    }
+
+    /**
+     * @brief add momentum_warn_threshold keyword to the registry
+     *
+     * @details default value is 0.01, 0 disables the warning
+     */
+    void ResetKineticsInputParser::addMomentumWarnThresholdKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "momentum_warn_threshold",
+            .title = "Momentum drift warning threshold",
+            .description =
+                "Centre-of-mass velocity, as fraction of the thermal velocity, "
+                "above which a momentum drift warning is printed (0 disables "
+                "it)"
+        };
+
+        const auto setValue = [settings = _settings](double value)
+        { settings.get().setMomentumWarnThresholdByUser(value); };
+
+        auto &keyword = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaults::MOMENTUM_WARN_THRESHOLD_DEFAULT,
+                .onSet        = setValue,
+                .validators   = {makeShared(PositiveGTEZeroDoubleValidator)}
             }
         );
 

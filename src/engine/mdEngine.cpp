@@ -185,13 +185,6 @@ namespace engine
             timeStep
         );
 
-        _resetKinetics.reset(
-            getStep(),
-            getPhysicalData(),
-            getSimulationBox(),
-            currentTargetTemperature
-        );
-
         const auto driftWarning = _resetKinetics.checkMomentumDrift(
             getStep(),
             getPhysicalData(),
@@ -203,6 +196,13 @@ namespace engine
             getEngineOutput().getLogOutput().writeSetupWarning(*driftWarning);
             out::StdoutOutput::writeSetupWarning(*driftWarning);
         }
+
+        _resetKinetics.reset(
+            getStep(),
+            getPhysicalData(),
+            getSimulationBox(),
+            currentTargetTemperature
+        );
 
         _kinetics.applyTemperatureRamping();
 
