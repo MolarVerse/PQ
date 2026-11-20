@@ -63,8 +63,8 @@ namespace engine
         std::vector<double> getDistanceWeights(
             const molsys::Molecule &smoothingMol,
             const std::vector<std::reference_wrapper<molsys::Molecule>>
-                        &recipientMolecules,
-            const double layerRadius
+                           &recipientMolecules,
+            const Distance &layerRadius
         )
         {
             const auto          weightingRadius = 2.0 * layerRadius;
@@ -88,7 +88,7 @@ namespace engine
                 {
                     const auto x = distance / weightingRadius;
 
-                    if (x < 1)
+                    if (x < 1.0)
                     {
                         const auto x_3 = x * x * x;
                         const auto x_4 = x_3 * x;
@@ -535,7 +535,7 @@ namespace engine
 
     /**
      * @brief Scale current PhysicalData energies and add them to the
-     * internal QM/MM PhyscialData object. Used for the exact smoothing
+     * internal QM/MM PhysicalData object. Used for the exact smoothing
      * method.
      *
      * @param globalSmF Global smoothing factor for the current

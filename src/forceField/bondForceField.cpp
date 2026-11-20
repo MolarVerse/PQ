@@ -126,8 +126,7 @@ namespace ff
 
         using enum SmoothingMethod;
 
-        Quantity   smF       = 0.0;
-        const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+        Quantity smF = 0.0;
 
         if (smoothing == HOTSPOT &&
             molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

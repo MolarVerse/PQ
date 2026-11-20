@@ -143,10 +143,10 @@ TEST(testHybridConfigurator, calculateInnerRegionCenterAndShiftAtoms)
 TEST(testHybridConfigurator, assignHybridZones)
 {
     HybridSettings hybridSettings;
-    hybridSettings.setCoreRadiusByUser(6.0);
-    hybridSettings.setLayerRadiusByUser(12.0);
-    hybridSettings.setSmoothingRegionThicknessByUser(2.0);
-    hybridSettings.setPointChargeThicknessByUser(7.0);
+    hybridSettings.setCoreRadiusByUser(6.0 * angstrom);
+    hybridSettings.setLayerRadiusByUser(12.0 * angstrom);
+    hybridSettings.setSmoothingRegionThicknessByUser(2.0 * angstrom);
+    hybridSettings.setPointChargeThicknessByUser(7.0 * angstrom);
     configurator::HybridConfigurator hybridConfigurator{hybridSettings};
     molsys::SimulationBox            simBox;
 
