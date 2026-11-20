@@ -233,6 +233,24 @@ Comparing a build with a copy of itself is the way to see the noise of a machine
 benchmark the script cannot judge shows up as noisy. If the check ever fails without a change of yours, run the
 benchmark again in the job log; to only report, add ``--report-only`` to the step in ``perf.yml``.
 
+Running the gate locally
+========================
+
+``scripts/perf_local.py`` builds your working tree and a base commit (by default the merge base with ``origin/dev``) and runs both
+tools above on them, so a regression is seen before the pull request, not in it:
+
+.. code:: bash
+
+    $ scripts/perf_local.py --only interWater --counts-only    # the quick loop while you work
+    $ scripts/perf_local.py                                    # counts and timing of everything
+    $ scripts/perf_local.py --base HEAD                        # what did my uncommitted change do?
+
+The base is built from git, once per commit, and its counts are cached in ``build-perf-local/``. The tool pins the timing to the
+least busy CPU core and warns about conditions that make timings noisy. See ``benchmarks/README.md`` for the options.
+
+``--suite scenarios`` (or ``all``) also runs whole ``PQ`` programs on the examples and integration test inputs listed in
+``benchmarks/scenarios.json``, compared with the base by instruction counts (1 % threshold) and paired CPU time. CI does not run these.
+
 ****************
 Caches and speed
 ****************

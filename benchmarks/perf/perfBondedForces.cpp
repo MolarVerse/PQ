@@ -113,6 +113,8 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
+    const auto smoothing = settings.hybridSettings.getSmoothingMethod();
+
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         bond.calculateEnergyAndForces(
@@ -120,6 +122,7 @@ int main()
             physicalData,
             coulombPotential,
             nonCoulombPotential,
+            smoothing,
             settings.potentialSettings
         );
         angle.calculateEnergyAndForces(
@@ -127,6 +130,7 @@ int main()
             physicalData,
             coulombPotential,
             nonCoulombPotential,
+            smoothing,
             settings.potentialSettings
         );
         dihedral.calculateEnergyAndForces(
@@ -135,6 +139,7 @@ int main()
             false,
             coulombPotential,
             nonCoulombPotential,
+            smoothing,
             settings.potentialSettings
         );
     }

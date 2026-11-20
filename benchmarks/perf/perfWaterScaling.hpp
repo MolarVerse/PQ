@@ -69,7 +69,11 @@ namespace benchWaterScaling
     inline constexpr auto    HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
     inline constexpr auto    OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
-    inline int run(const std::size_t perSide, const std::uint64_t iterations)
+    inline int run(
+        const std::size_t   perSide,
+        const std::uint64_t iterations,
+        Settings            settings
+    )
     {
         Settings settings;
         settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
@@ -158,7 +162,9 @@ namespace benchWaterScaling
 
         waterModel::InterWater interWater(
             std::move(state),
-            std::make_unique<waterModel::InterWaterStrategyCellList>(),
+            std::make_unique<waterModel::InterWaterStrategyCellList>(
+                settings.hybridSettings
+            ),
             settings.potentialSettings
         );
         auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(

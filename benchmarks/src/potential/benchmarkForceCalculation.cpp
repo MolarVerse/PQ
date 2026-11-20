@@ -38,6 +38,7 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "settings.hpp"
+#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -72,7 +73,8 @@ namespace
             benchmarkSetup::cutOff
         );
 
-        PotentialType forceCalculation;
+        Settings      settings;
+        PotentialType forceCalculation{settings.hybridSettings};
         forceCalculation.makeCoulombPotential(
             pot::CoulombShiftedPotential(settings.potentialSettings)
         );

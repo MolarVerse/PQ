@@ -152,7 +152,9 @@ int main()
 
     waterModel::InterWater interWater(
         std::move(state),
-        std::make_unique<waterModel::InterWaterStrategyCellList>(),
+        std::make_unique<waterModel::InterWaterStrategyCellList>(
+            settings.hybridSettings
+        ),
         settings.potentialSettings
     );
 

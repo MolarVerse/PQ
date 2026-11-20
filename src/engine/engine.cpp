@@ -53,14 +53,23 @@ namespace engine
      */
     Engine::Engine(const Settings &settings)
         : _engineOutput(settings.outputFiles, settings.referenceSettings),
-          _potential{std::make_shared<pot::PotentialBruteForce>()},
+          _potential{std::make_shared<pot::PotentialBruteForce>(
+              settings.hybridSettings
+          )},
           _physicalData{std::make_shared<physicalData::PhysicalData>()},
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
-          _forceField{std::make_shared<ff::ForceField>()},
+          _forceField{std::make_shared<ff::ForceField>(settings.hybridSettings
+          )},
           _constraints{std::make_shared<constraints::Constraints>(
               settings.constraintSettings
           )},
+          _intraWater{
+              std::make_unique<waterModel::IntraWater>(settings.hybridSettings)
+          },
+          _interWater{
+              std::make_unique<waterModel::InterWater>(settings.hybridSettings)
+          },
           _settings{settings},
           _impl{std::make_unique<Impl>()}
     {

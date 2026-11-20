@@ -58,7 +58,8 @@ namespace
 
         void execute(
             const molsys::SimulationBox & /*simBox*/,
-            const FileSettings & /*fileSettings*/
+            const FileSettings & /*fileSettings*/,
+            const HybridSettings & /*hybridSettings*/
         ) override
         {
         }

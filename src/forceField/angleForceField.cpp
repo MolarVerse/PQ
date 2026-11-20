@@ -28,7 +28,6 @@
 #include "constants.hpp"
 #include "coulombPotential.hpp"
 #include "forceField.hpp"
-#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -63,6 +62,7 @@ namespace ff
      * @param physicalData the physical data of the system
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
+     * @param smoothing the smoothing method to use
      * @param potentialSettings the settings for the potential calculations
      */
     void AngleForceField::calculateEnergyAndForces(
@@ -70,6 +70,7 @@ namespace ff
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
         pot::NonCoulombPotential    &nonCoulombPot,
+        SmoothingMethod              smoothing,
         const PotentialSettings     &potentialSettings
     )
     {
@@ -167,9 +168,7 @@ namespace ff
 
                 using enum SmoothingMethod;
 
-                auto       smF = 0.0;
-                const auto smoothing =
-                    settings::HybridSettings::getSmoothingMethod();
+                auto smF = 0.0;
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

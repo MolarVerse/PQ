@@ -50,6 +50,7 @@ namespace engine
         : Engine(settings),
           _resetKinetics(settings.resetKinetics),
           _kinetics(settings.kinetics),
+          _configurator(settings.hybridSettings),
           _integrator(std::make_unique<integrator::VelocityVerlet>()),
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(

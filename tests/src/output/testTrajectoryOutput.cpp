@@ -27,6 +27,7 @@
 
 #include "frame.hpp"
 #include "hybridConfigurator.hpp"
+#include "hybridSettings.hpp"
 
 /**
  * @brief Test the writeXyz method
@@ -74,10 +75,11 @@ TEST_F(TestTrajectoryOutput, writeXyzMetadata)
  */
 TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
     _simulationBox->getAtom(1).setMass(1.0);
-    _simulationBox->addInnerRegionCenterAtoms({1});
+    hybridSettings.setInnerRegionCenterByUser({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 
     _trajectoryOutput->setFilename("default.xyz", false);
@@ -100,10 +102,11 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
  */
 TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
 {
-    configurator::HybridConfigurator hybridConfigurator;
+    HybridSettings                   hybridSettings;
+    configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
     _simulationBox->getAtom(1).setMass(1.0);
-    _simulationBox->addInnerRegionCenterAtoms({1});
+    hybridSettings.setInnerRegionCenterByUser({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 
     _trajectoryOutput->setFilename("default.xyz", false);

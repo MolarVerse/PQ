@@ -80,11 +80,15 @@ namespace setup
                 _engine.getSimulationBox(),
                 _engine.getSettings().potentialSettings.getCoulombRadiusCutOff()
             );
-            _engine.makePotential(pot::PotentialCellList());
+            _engine.makePotential(
+                pot::PotentialCellList(_engine.getSettings().hybridSettings)
+            );
         }
         else
         {
-            _engine.makePotential(pot::PotentialBruteForce());
+            _engine.makePotential(
+                pot::PotentialBruteForce(_engine.getSettings().hybridSettings)
+            );
         }
 
         _engine.getPotential()->setNonCoulombPotential(nonCoulombPot);

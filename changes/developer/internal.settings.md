@@ -1,3 +1,4 @@
 - finish removing static access from `ThermostatSettings`
 - remove static access from `TimingsSetting`
+- inject `HybridSettings` into the input parser, setup, engines, QM runners and potentials instead of using static access; the inner region center now lives in `HybridSettings` (default atom 0)
 - start making `PotentialSettings` non-static - additionally use a single source of truth for coulomb cutoff

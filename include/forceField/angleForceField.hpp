@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "angle.hpp"
+#include "enums/hybrid.hpp"
 
 namespace physicalData
 {
@@ -44,7 +45,9 @@ namespace pot
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
 
+class HybridSettings;      // forward declaration
 class PotentialSettings;   // forward declaration
+
 namespace ff
 {
     /**
@@ -75,6 +78,7 @@ namespace ff
             physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
             pot::NonCoulombPotential    &nonCoulombPot,
+            SmoothingMethod              smoothing,
             const PotentialSettings     &potentialSettings
         );
 

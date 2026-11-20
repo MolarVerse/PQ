@@ -154,7 +154,9 @@ namespace input
             std::make_unique<TimingsInputParser>(settings.timings)
         );
         _parsers.push_back(std::make_unique<VirialInputParser>());
-        _parsers.push_back(std::make_unique<HybridInputParser>());
+        _parsers.push_back(
+            std::make_unique<HybridInputParser>(settings.hybridSettings)
+        );
         _parsers.push_back(
             std::make_unique<RingPolymerInputParser>(
                 settings.ringPolymerSettings

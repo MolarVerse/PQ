@@ -32,6 +32,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "gmock/gmock.h"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -118,11 +119,13 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     );
     angleFF.setIsLinker(false);
 
+    const HybridSettings hybridSettings;
     angleFF.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
         potentialSettings
     );
 
@@ -191,6 +194,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
         potentialSettings
     );
 
@@ -304,11 +308,13 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     );
     angleForceField.setIsLinker(false);
 
+    const HybridSettings hybridSettings;
     angleForceField.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
         potentialSettings
     );
 

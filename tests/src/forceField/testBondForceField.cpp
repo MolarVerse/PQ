@@ -31,6 +31,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "gmock/gmock.h"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -52,7 +53,8 @@ class TestBondForceField : public TestNonCoulombPotentialFF
 
 TEST_F(TestBondForceField, calculateEnergyAndForces)
 {
-    auto box = molsys::SimulationBox();
+    const HybridSettings hybridSettings;
+    auto                 box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
     box.setBox(orthoBox, false);
@@ -114,6 +116,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
         potentialSettings
     );
 
@@ -155,6 +158,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod(),
         potentialSettings
     );
 

@@ -28,6 +28,7 @@
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
 #include "hessianSettings.hpp"
+#include "hybridSettings.hpp"
 #include "manostatSettings.hpp"
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
@@ -71,6 +72,7 @@ struct Settings
     XtbSettings           xtbSettings;
     NoseHooverSettings    noseHooverSettings;
     ExternalQMSettings    externalQMSettings;
+    HybridSettings        hybridSettings;
 
     PotentialSettings potentialSettings;
 

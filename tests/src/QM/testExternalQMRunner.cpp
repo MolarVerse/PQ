@@ -34,6 +34,7 @@
 #include <thread>
 
 #include "enums/qm.hpp"
+#include "hybridSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "settings.hpp"
 #include "units.hpp"
@@ -55,7 +56,6 @@
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "hybridConfigurator.hpp"
-#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "orcaRunner.hpp"
 #include "physicalData.hpp"
@@ -108,7 +108,8 @@ namespace
 
         void execute(
             const molsys::SimulationBox & /*simBox*/,
-            const FileSettings &fileSettings
+            const FileSettings &fileSettings,
+            const HybridSettings & /*hybridSettings*/
         ) override
         {
             _sawStaleResults =
@@ -345,7 +346,8 @@ TEST_F(ExternalQMRunnerTest, quotesDftbCommandArguments)
     const auto inputFile = std::string("input file; touch qm-injected");
     settings.fileSettings.setDFTBFileNameByUser(inputFile);
 
-    runner.execute(_simulationBox, settings.fileSettings);
+    const HybridSettings hybridSettings;
+    runner.execute(_simulationBox, settings.fileSettings, hybridSettings);
 
     EXPECT_EQ(
         std::format(
@@ -370,7 +372,8 @@ TEST_F(ExternalQMRunnerTest, quotesPyscfCommandArguments)
     );
     const auto path = _configureQuotedScript(settings.externalQMSettings);
 
-    runner.execute(_simulationBox, settings.fileSettings);
+    const HybridSettings hybridSettings;
+    runner.execute(_simulationBox, settings.fileSettings, hybridSettings);
 
     EXPECT_EQ(
         std::format(
@@ -393,7 +396,8 @@ TEST_F(ExternalQMRunnerTest, quotesTurbomoleCommandArguments)
     );
     const auto path = _configureQuotedScript(settings.externalQMSettings);
 
-    runner.execute(_simulationBox, settings.fileSettings);
+    const HybridSettings hybridSettings;
+    runner.execute(_simulationBox, settings.fileSettings, hybridSettings);
 
     EXPECT_EQ(
         std::format(
@@ -414,11 +418,13 @@ TEST_F(ExternalQMRunnerTest, removesStaleResultsBeforeExecution)
     writeFile(_settings.fileSettings.getQMChargesTempFileName(), "stale");
     writeFile(_settings.fileSettings.getStressTensorTempFileName(), "stale");
 
+    const HybridSettings hybridSettings;
     EXPECT_NO_THROW(_runner->run(
         _simulationBox,
         _physicalData,
         molsys::Periodicity::NON_PERIODIC,
-        _settings.fileSettings
+        _settings.fileSettings,
+        hybridSettings
     ));
     EXPECT_FALSE(_runner->sawStaleResults());
     EXPECT_FALSE(
@@ -540,12 +546,17 @@ TEST_F(ExternalQMRunnerTest, rejectsNonFiniteStressTensor)
 
 TEST_F(ExternalQMRunnerTest, rejectsUniaxialPeriodicity)
 {
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
         _runner->run(
+
             _simulationBox,
+
             _physicalData,
+
             molsys::Periodicity::X,
-            _settings.fileSettings
+            _settings.fileSettings,
+            hybridSettings
         ),
         exc::QMRunnerException,
         "External QM runners only available for non- and 3D-periodic "
@@ -555,12 +566,17 @@ TEST_F(ExternalQMRunnerTest, rejectsUniaxialPeriodicity)
 
 TEST_F(ExternalQMRunnerTest, rejectsBiaxialPeriodicity)
 {
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
         _runner->run(
+
             _simulationBox,
+
             _physicalData,
+
             molsys::Periodicity::XY,
-            _settings.fileSettings
+            _settings.fileSettings,
+            hybridSettings
         ),
         exc::QMRunnerException,
         "External QM runners only available for non- and 3D-periodic "
@@ -576,8 +592,10 @@ TEST_F(ExternalQMRunnerTest, dftbExecuteRejectsMissingScript)
     );
     _settings.externalQMSettings.finalize();
 
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        _dftbRunner->execute(_simulationBox, _settings.fileSettings),
+        _dftbRunner
+            ->execute(_simulationBox, _settings.fileSettings, hybridSettings),
         exc::InputFileException,
         std::format(
             "DFTB+ script file \"{}/this-script-does-not-exist.sh\" does "
@@ -600,8 +618,9 @@ TEST_F(ExternalQMRunnerTest, pyscfExecuteRejectsMissingScript)
     );
     settings.externalQMSettings.finalize();
 
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        runner.execute(_simulationBox, settings.fileSettings),
+        runner.execute(_simulationBox, settings.fileSettings, hybridSettings),
         exc::InputFileException,
         std::format(
             "PySCF script file \"{}/this-script-does-not-exist.py\" does "
@@ -624,8 +643,9 @@ TEST_F(ExternalQMRunnerTest, turbomoleExecuteRejectsMissingScript)
     );
     settings.externalQMSettings.finalize();
 
+    const HybridSettings hybridSettings;
     EXPECT_THROW_MSG(
-        runner.execute(_simulationBox, settings.fileSettings),
+        runner.execute(_simulationBox, settings.fileSettings, hybridSettings),
         exc::InputFileException,
         std::format(
             "Turbomole script file \"{}/this-script-does-not-exist.sh\" "
@@ -805,16 +825,18 @@ TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
     };
 
     _addPointChargeMolecules();
+
+    const HybridSettings hybridSettings;
     _writePointChargeFile(
         runner,
         _simulationBox,
         settings.fileSettings.getPointChargeFileName()
     );
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(_simulationBox, settings.fileSettings, hybridSettings);
     EXPECT_TRUE(runner.getCommand().ends_with(suffix(1)))
         << runner.getCommand();
 
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(_simulationBox, settings.fileSettings, hybridSettings);
     EXPECT_TRUE(runner.getCommand().ends_with(suffix(0)))
         << runner.getCommand();
     EXPECT_TRUE(
@@ -922,6 +944,8 @@ namespace
         void execute(
             const molsys::SimulationBox & /*simBox*/,
             const FileSettings & /*fileSettings*/
+            ,
+            const HybridSettings & /*hybridSettings*/
         ) override
         {
             _executeCommand("sleep 3 && touch qm-finished", "External QM");
@@ -937,7 +961,8 @@ namespace
         }
         void execute(
             const molsys::SimulationBox & /*simBox*/,
-            const FileSettings & /*fileSettings*/
+            const FileSettings & /*fileSettings*/,
+            const HybridSettings & /*hybridSettings*/
         ) override
         {
         }
@@ -959,11 +984,13 @@ TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)
 
     try
     {
+        const HybridSettings hybridSettings;
         runner.run(
             _simulationBox,
             _physicalData,
             molsys::Periodicity::NON_PERIODIC,
-            settings.fileSettings
+            settings.fileSettings,
+            hybridSettings
         );
         FAIL() << "Expected the QM timeout to throw";
     }
@@ -1069,14 +1096,13 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
         settings.qmSettings,
         settings.externalQMSettings
     );
-    const auto path      = _configureQuotedScript(settings.externalQMSettings);
-    const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+    const auto path = _configureQuotedScript(settings.externalQMSettings);
     const auto changed =
         configurator::HybridConfigurator::getMoleculeChangedZone();
     settings.fileSettings.setOrcaFileNameByUser(
         "template's name; touch qm-injected"
     );
-    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::HOTSPOT);
+    settings.hybridSettings.setSmoothingMethodByUser(SmoothingMethod::HOTSPOT);
     _setMoleculeChangedZone(false);
     const auto expected = [&](int reset)
     {
@@ -1089,19 +1115,34 @@ TEST_F(ExternalQMRunnerTest, orcaQuotesArgumentsAndResetsOnlyWhenRequired)
             )
         );
     };
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(1), runner.getCommand());
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(0), runner.getCommand());
     _setMoleculeChangedZone(true);
-    runner.execute(_simulationBox, settings.fileSettings);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(1), runner.getCommand());
     _setMoleculeChangedZone(false);
-    settings::HybridSettings::setSmoothingMethod(SmoothingMethod::EXACT);
-    runner.execute(_simulationBox, settings.fileSettings);
+    settings.hybridSettings.setSmoothingMethodByUser(SmoothingMethod::EXACT);
+    runner.execute(
+        _simulationBox,
+        settings.fileSettings,
+        settings.hybridSettings
+    );
     EXPECT_EQ(expected(1), runner.getCommand());
     EXPECT_FALSE(std::filesystem::exists(_workPath / "qm-injected"));
-    settings::HybridSettings::setSmoothingMethod(smoothing);
     _setMoleculeChangedZone(changed);
 }
 
@@ -1119,7 +1160,11 @@ TEST_F(ExternalQMRunnerTest, orcaRejectsMissingScript)
     settings.externalQMSettings.finalize();
 
     EXPECT_THROW_MSG(
-        runner.execute(_simulationBox, settings.fileSettings),
+        runner.execute(
+            _simulationBox,
+            settings.fileSettings,
+            settings.hybridSettings
+        ),
         exc::InputFileException,
         std::format(
             "ORCA script file \"{}/orca_rimp2.py\" does not exist.",

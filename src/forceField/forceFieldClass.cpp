@@ -27,9 +27,19 @@
 
 #include "dihedralType.hpp"
 #include "exceptions.hpp"
+#include "hybridSettings.hpp"
 
 namespace ff
 {
+    /**
+     * @brief Construct a new Force Field object with the given hybrid settings.
+     *
+     * @param hybridSettings Hybrid settings to be used by the force field.
+     */
+    ForceField::ForceField(const HybridSettings &hybridSettings)
+        : _hybridSettings(hybridSettings)
+    {
+    }
 
     /**
      * @brief clones the force field
@@ -233,6 +243,7 @@ namespace ff
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
+                _hybridSettings->getSmoothingMethod(),
                 potentialSettings
             );
         };
@@ -263,6 +274,7 @@ namespace ff
                 physicalData,
                 *_coulombPotential,
                 *_nonCoulombPot,
+                _hybridSettings->getSmoothingMethod(),
                 potentialSettings
             );
         };
@@ -295,6 +307,7 @@ namespace ff
                 false,
                 *_coulombPotential,
                 *_nonCoulombPot,
+                _hybridSettings->getSmoothingMethod(),
                 potentialSettings
             );
         };
@@ -328,6 +341,7 @@ namespace ff
                 true,
                 *_coulombPotential,
                 *_nonCoulombPot,
+                _hybridSettings->getSmoothingMethod(),
                 potentialSettings
             );
         };

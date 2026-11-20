@@ -38,6 +38,8 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+class HybridSettings;   // forward declaration
+
 class QMSettings;     // forward declaration
 class FileSettings;   // forward declaration
 
@@ -67,13 +69,15 @@ namespace QM
         void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const FileSettings &
+            const FileSettings &,
+            const HybridSettings &
         );
         virtual void run(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            molsys::Periodicity per,
-            const FileSettings &fileSettings
+            molsys::Periodicity   per,
+            const FileSettings   &fileSettings,
+            const HybridSettings &hybridSettings
         ) = 0;
 
        protected:

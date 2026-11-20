@@ -36,9 +36,8 @@ int main()
     Settings settings;
     settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
     return benchQMRunner::run<QM::PySCFRunner>(
-        settings.qmSettings,
+        settings,
         molsys::Periodicity::NON_PERIODIC,
-        ITERATIONS,
-        settings.fileSettings
+        ITERATIONS
     );
 }
