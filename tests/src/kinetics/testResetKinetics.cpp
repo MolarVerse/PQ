@@ -20,6 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <algorithm>
@@ -1483,6 +1484,63 @@ TEST(TestResetKinetics, resetAngularBranchUsesFreshCentreOfMass)
         linalg::Vec3D(0.0, 0.0, 0.0),
         1e-12
     );
+
+    delete box;
+}
+
+TEST(TestResetKinetics, momentumDriftWarnsOnceWithoutReset)
+{
+    auto *box  = makeBox();
+    auto  data = makeData(*box);
+
+    const auto settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 0U, 100U);
+    kinetics::ResetKinetics reset{settings};
+
+    const auto warning = reset.checkMomentumDrift(5U, data, *box);
+
+    ASSERT_TRUE(warning.has_value());
+    EXPECT_THAT(*warning, ::testing::HasSubstr("at step 5"));
+    EXPECT_THAT(*warning, ::testing::HasSubstr("freset"));
+    EXPECT_THAT(*warning, ::testing::HasSubstr("nreset"));
+    EXPECT_FALSE(reset.checkMomentumDrift(6U, data, *box).has_value());
+
+    delete box;
+}
+
+TEST(TestResetKinetics, momentumDriftSilentWithReset)
+{
+    auto *box  = makeBox();
+    auto  data = makeData(*box);
+
+    const std::vector<ResetKineticsSettings> configured = {
+        makeSettings(0U, 0U, 5U, 0U, 0U, 0U, 0U, 100U),
+        makeSettings(0U, 0U, 0U, 10U, 0U, 0U, 0U, 100U),
+        makeSettings(5U, 0U, 0U, 0U, 0U, 0U, 0U, 100U),
+        makeSettings(0U, 10U, 0U, 0U, 0U, 0U, 0U, 100U),
+    };
+
+    for (const auto &settings : configured)
+    {
+        EXPECT_TRUE(settings.isMomentumResetActive());
+        kinetics::ResetKinetics reset{settings};
+        EXPECT_FALSE(reset.checkMomentumDrift(5U, data, *box).has_value());
+    }
+
+    delete box;
+}
+
+TEST(TestResetKinetics, momentumDriftSilentBelowThreshold)
+{
+    auto *box = makeBox();
+    kinetics::ResetKinetics::resetMomentum(*box, box->calculateMomentum());
+    box->getAtoms()[0]->addVelocity(linalg::Vec3D(1.0e-4, 0.0, 0.0));
+    auto data = makeData(*box);
+
+    const auto settings = makeSettings(0U, 0U, 0U, 0U, 0U, 0U, 0U, 100U);
+    EXPECT_FALSE(settings.isMomentumResetActive());
+    kinetics::ResetKinetics reset{settings};
+
+    EXPECT_FALSE(reset.checkMomentumDrift(5U, data, *box).has_value());
 
     delete box;
 }

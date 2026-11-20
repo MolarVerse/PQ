@@ -72,6 +72,8 @@ class ResetKineticsSettings
     [[nodiscard]] size_t getNResetAngular() const;
     [[nodiscard]] size_t getFResetAngular() const;
     [[nodiscard]] size_t getFResetForces() const;
+
+    [[nodiscard]] bool isMomentumResetActive() const;
 };
 
 #endif   // SETTINGS__RESET_KINETICS_SETTINGS_HPP

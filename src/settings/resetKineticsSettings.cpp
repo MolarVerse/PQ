@@ -195,3 +195,16 @@ size_t ResetKineticsSettings::getFResetForces() const
 {
     return _fResetForces.get();
 }
+
+/**
+ * @brief check if nReset, nScale, fReset or fScale removes the momentum
+ *
+ * @return true if any of them is configured
+ */
+bool ResetKineticsSettings::isMomentumResetActive() const
+{
+    const auto initialReset  = (_nReset.get() > 0) || (_nScale.get() > 0);
+    const auto periodicReset = _fReset.isSetByUser() || _fScale.isSetByUser();
+
+    return initialReset || periodicReset;
+}

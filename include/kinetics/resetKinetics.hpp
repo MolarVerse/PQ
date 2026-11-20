@@ -25,6 +25,8 @@
 
 #include <cstddef>
 #include <mstd/types.hpp>
+#include <optional>
+#include <string>
 
 #include "resetKineticsSettings.hpp"
 #include "unit_types.hpp"
@@ -42,6 +44,9 @@ namespace molsys
 
 namespace kinetics
 {
+    /// centre-of-mass velocity relative to the thermal velocity sqrt(kT/m)
+    static constexpr double MOMENTUM_DRIFT_THRESHOLD = 0.01;
+
     /**
      * @class ResetKinetics
      *
@@ -53,6 +58,7 @@ namespace kinetics
     {
        private:
         mstd::ConstRef<ResetKineticsSettings> _settings;
+        bool                                  _momentumDriftWarned = false;
 
        public:
         explicit ResetKinetics(const ResetKineticsSettings &settings);
@@ -64,6 +70,12 @@ namespace kinetics
             const Temperature &targetTemperature
         ) const;
         void resetForces(size_t step, molsys::SimulationBox &) const;
+
+        [[nodiscard]] std::optional<std::string> checkMomentumDrift(
+            size_t                            step,
+            const physicalData::PhysicalData &physicalData,
+            const molsys::SimulationBox      &simulationBox
+        );
 
         static void resetTemperature(
             molsys::SimulationBox &,

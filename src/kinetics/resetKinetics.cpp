@@ -25,8 +25,12 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <format>
+#include <optional>
+#include <string>
 
 #include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "mathUtilities.hpp"
@@ -34,6 +38,7 @@
 #include "simulationBox.hpp"
 #include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace kinetics
@@ -238,6 +243,64 @@ namespace kinetics
         std::ranges::for_each(
             simulationBox.getAtoms(),
             [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
+        );
+    }
+
+    /**
+     * @brief warn once if the total momentum drifts and nothing removes it
+     *
+     * @details warns if the centre-of-mass velocity P/M exceeds
+     * MOMENTUM_DRIFT_THRESHOLD times the thermal velocity sqrt(kT/m) of the
+     * mean atomic mass m = M/N, i.e. if P^2 > threshold^2 * N * M * kT
+     *
+     * @param step The current simulation step
+     * @param physicalData The physical data after the kinetics reset
+     * @param simulationBox The simulation box containing the system
+     * @return the warning message, only for the first drift of a run
+     */
+    std::optional<std::string> ResetKinetics::checkMomentumDrift(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData,
+        const molsys::SimulationBox      &simulationBox
+    )
+    {
+        if (_momentumDriftWarned || _settings->isMomentumResetActive())
+        {
+            return std::nullopt;
+        }
+
+        const auto momentum    = physicalData.getMomentum();
+        const auto temperature = physicalData.getTemperature()
+                                     .quantity_from_zero()
+                                     .numerical_value_in(K);
+        const auto nAtoms =
+            static_cast<double>(simulationBox.getNumberOfAtoms());
+
+        // momentum in amu*Angstrom/s, the velocity unit of TEMPERATURE_FACTOR
+        const auto momentumSquared        = normSquared(momentum * S_TO_FS);
+        const auto thermalMomentumSquared = temperature * nAtoms *
+                                            simulationBox.getTotalMass() /
+                                            TEMPERATURE_FACTOR;
+
+        const auto threshold2 =
+            MOMENTUM_DRIFT_THRESHOLD * MOMENTUM_DRIFT_THRESHOLD;
+
+        if (momentumSquared <= threshold2 * thermalMomentumSquared)
+        {
+            return std::nullopt;
+        }
+
+        _momentumDriftWarned = true;
+
+        return std::format(
+            "Total momentum reached {:.3e} amu*Angstrom/fs at step {}: the "
+            "centre of mass moves faster than {:g} % of the thermal velocity "
+            "and no momentum reset is set. Set freset (e.g. freset = 100) to "
+            "remove it periodically, or nreset to remove it in the first "
+            "steps.",
+            norm(momentum),
+            step,
+            MOMENTUM_DRIFT_THRESHOLD * 100.0
         );
     }
 
