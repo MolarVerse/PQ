@@ -56,7 +56,6 @@
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "hybridConfigurator.hpp"
-#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "orcaRunner.hpp"
 #include "physicalData.hpp"
