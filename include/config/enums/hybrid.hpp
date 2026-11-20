@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_ENUM_HPP_
-#define _HYBRID_ENUM_HPP_
+#ifndef CONFIG__ENUMS__HYBRID_HPP
+#define CONFIG__ENUMS__HYBRID_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -52,7 +52,6 @@ MSTD_ENUM(SmoothingMethod, std::uint8_t, SMOOTHING_METHOD_LIST)
 enum class QMForceDist : std::uint8_t;
 
 #define QM_FORCE_DIST_LIST(X) \
-    X(NONE)                   \
     X(EQUAL)                  \
     X(RANDOM)                 \
     X(DISTANCE_WEIGHTED)
@@ -61,4 +60,4 @@ MSTD_ENUM(QMForceDist, std::uint8_t, QM_FORCE_DIST_LIST)
 
 #undef QM_FORCE_DIST_LIST
 
-#endif   // _HYBRID_ENUM_HPP_
+#endif   // CONFIG__ENUMS__HYBRID_HPP

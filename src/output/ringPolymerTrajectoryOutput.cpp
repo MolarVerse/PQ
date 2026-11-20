@@ -29,7 +29,6 @@
 #include <sstream>
 
 #include "molecule.hpp"
-#include "ringPolymerSettings.hpp"
 #include "simulationBox.hpp"
 
 namespace out
@@ -42,13 +41,13 @@ namespace out
      * dimensions and angles are the same for all beads
      *
      * @param simulationBox the simulation box to write the header for
+     * @param nBeads number of ring polymer beads
      */
     void RingPolymerTrajectoryOutput::writeHeader(
-        const molsys::SimulationBox &simulationBox
+        const molsys::SimulationBox &simulationBox,
+        size_t                       nBeads
     )
     {
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
-
         _getFilePointer() << simulationBox.getNumberOfAtoms() * nBeads << "  ";
         _getFilePointer() << simulationBox.getBoxDimensions() << "  "
                           << simulationBox.getBoxAngles() << '\n';
@@ -59,18 +58,20 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void RingPolymerTrajectoryOutput::writeXyz(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
-        _writeComment(step);
+        const auto nBeads = beads.size();
 
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+        writeHeader(beads[0], nBeads);
+        _writeComment(step, includeMetadata);
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -103,18 +104,20 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata
      */
     void RingPolymerTrajectoryOutput::writeVelocities(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
-        _writeComment(step);
+        const auto nBeads = beads.size();
 
-        const auto nBeads = settings::RingPolymerSettings::getNumberOfBeads();
+        writeHeader(beads[0], nBeads);
+        _writeComment(step, includeMetadata);
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -148,15 +151,17 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void RingPolymerTrajectoryOutput::writeForces(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
+        writeHeader(beads[0], beads.size());
 
         auto totalForce = 0.0;
         std::ranges::for_each(
@@ -165,11 +170,9 @@ namespace out
             { totalForce += bead.calculateTotalForce(); }
         );
 
-        _writeForceComment(step, totalForce);
+        _writeForceComment(step, totalForce, includeMetadata);
 
-        for (size_t i = 0;
-             i < settings::RingPolymerSettings::getNumberOfBeads();
-             ++i)
+        for (size_t i = 0; i < beads.size(); ++i)
         {
             for (const auto &molecule : beads[i].getMolecules())
             {
@@ -201,20 +204,20 @@ namespace out
      *
      * @param beads
      * @param step
+     * @param includeMetadata whether to include metadata in the comment
      */
     void RingPolymerTrajectoryOutput::writeCharges(
         const std::vector<molsys::SimulationBox> &beads,
-        size_t                                    step
+        size_t                                    step,
+        bool                                      includeMetadata
     )
     {
         std::ostringstream buffer;
 
-        writeHeader(beads[0]);
-        _writeComment(step);
+        writeHeader(beads[0], beads.size());
+        _writeComment(step, includeMetadata);
 
-        for (size_t i = 0;
-             i < settings::RingPolymerSettings::getNumberOfBeads();
-             ++i)
+        for (size_t i = 0; i < beads.size(); ++i)
         {
             for (const auto &molecule : beads[i].getMolecules())
             {

@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_RESET_KINETICS_HPP_
-#define _TEST_RESET_KINETICS_HPP_
+#ifndef TESTS__INCLUDE__RESET_KINETICS__TEST_RESET_KINETICS_HPP
+#define TESTS__INCLUDE__RESET_KINETICS__TEST_RESET_KINETICS_HPP
 
 // #include "atom.hpp"                 // for Atom
 // #include "molecule.hpp"             // for Molecule
@@ -46,8 +46,8 @@
 //   protected:
 //     void SetUp() override
 //     {
-//         settings::ThermostatSettings::setTargetTemperature(300.0);
-//         _resetKinetics = new resetKinetics::ResetKinetics(1, 2, 3, 4, 50,
+//         ThermostatSettings::setTargetTemperature(300.0);
+//         _resetKinetics = new kinetics::ResetKinetics(1, 2, 3, 4, 50,
 //         11); _data          = new physicalData::PhysicalData();
 
 //         _simulationBox = new molsys::SimulationBox();
@@ -92,7 +92,7 @@
 
 //     physicalData::PhysicalData   *_data;
 //     molsys::SimulationBox *_simulationBox;
-//     resetKinetics::ResetKinetics *_resetKinetics;
+//     kinetics::ResetKinetics *_resetKinetics;
 // };
 
-#endif   // _TEST_RESET_KINETICS_HPP_
+#endif   // TESTS__INCLUDE__RESET_KINETICS__TEST_RESET_KINETICS_HPP

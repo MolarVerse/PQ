@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONVERGENCE_ENUM_HPP_
-#define _CONVERGENCE_ENUM_HPP_
+#ifndef CONFIG__ENUMS__CONVERGENCE_HPP
+#define CONFIG__ENUMS__CONVERGENCE_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -41,4 +41,4 @@ enum class ConvStrategy : std::uint8_t;
 
 MSTD_ENUM(ConvStrategy, std::uint8_t, CONVERGENCE_TYPE_LIST)
 
-#endif   // _CONVERGENCE_ENUM_HPP_
+#endif   // CONFIG__ENUMS__CONVERGENCE_HPP

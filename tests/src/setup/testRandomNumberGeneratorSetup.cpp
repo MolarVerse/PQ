@@ -33,7 +33,7 @@ TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
     Settings           settings;
     engine::QMMDEngine engine{settings};
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
-    engine.getEngineOutput().getLogOutput().setFilename("default.log");
+    engine.getEngineOutput().getLogOutput().setFilename("default.log", false);
 
     settings::GeneralSettings::setIsRandomSeedSet(false);
     settings::GeneralSettings::setRandomSeed(1);
@@ -54,7 +54,7 @@ TEST(TestRandomNumberGeneratorSetup, setupWithRandomSeed)
     Settings           settings;
     engine::QMMDEngine engine{settings};
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
-    engine.getEngineOutput().getLogOutput().setFilename("default.log");
+    engine.getEngineOutput().getLogOutput().setFilename("default.log", false);
 
     settings::GeneralSettings::setIsRandomSeedSet(true);
     settings::GeneralSettings::setRandomSeed(73);

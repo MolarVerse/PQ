@@ -3,7 +3,7 @@ step_number,overall number of simulation steps so far,\-,A
 *T*,temperature,K,A
 *P*,pressure,bar,A
 *E*:sub:`tot`,total energy,kcal/mol,A
-*E*:sub:`QM`, quantum mechanical energy,kcal/mol,QM
+*E*:sub:`QM`, quantum mechanical energy minus *E*:sub:`QM-ref`,kcal/mol,QM
 *N*:sub:`QM-atoms`,number of atoms treated quantum mechanically,\-,QM
 *E*:sub:`kin`,kinetic energy,kcal/mol,A
 *E*:sub:`intra`,MM intra-molecular energy,kcal/mol,A
@@ -13,6 +13,8 @@ step_number,overall number of simulation steps so far,\-,A
 *E*:sub:`angle`,total energy of the MM angles,kcal/mol,MM*
 *E*:sub:`dihedral`,total energy of the MM dihedrals,kcal/mol,MM*
 *E*:sub:`improper`,total energy of the MM improper dihedrals,kcal/mol,MM*
+*N*:sub:`SM-mol`,number of molecules in the smoothing region,\-,QM/MM
+*E*:sub:`QM-ref`,sum of the subtracted QM reference energies (see :ref:`moldescriptorFile`),kcal/mol,QM/MM
 *V*,volume,Å³,P
 *ρ*,density,g/cm³,P
 *P*:sub:`coupled`,pressure of the non-fixed (coupled) axes,bar,P*

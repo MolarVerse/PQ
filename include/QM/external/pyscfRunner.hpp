@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PYSCF_RUNNER_HPP_
-
-#define _PYSCF_RUNNER_HPP_
+#ifndef QM__EXTERNAL__PYSCF_RUNNER_HPP
+#define QM__EXTERNAL__PYSCF_RUNNER_HPP
 
 #include "externalQMRunner.hpp"
 
@@ -37,10 +36,19 @@ namespace QM
     class PySCFRunner : public ExternalQMRunner
     {
        public:
-        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
-        void execute(molsys::SimulationBox &simulationBox) override;
+        using ExternalQMRunner::ExternalQMRunner;
+        void execute(
+            const molsys::SimulationBox &simulationBox,
+            const FileSettings          &fileSettings,
+            const HybridSettings        &hybridSettings
+        ) override;
+
+       private:
+        void _writeCoordsFile(
+            const molsys::SimulationBox &simulationBox
+        ) override;
     };
 
 }   // namespace QM
 
-#endif   // _PYSCF_RUNNER_HPP_
+#endif   // QM__EXTERNAL__PYSCF_RUNNER_HPP

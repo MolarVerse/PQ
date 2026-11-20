@@ -35,6 +35,7 @@
 #endif
 
 #include "orthorhombicBox.hpp"
+#include "perfAlloc.hpp"
 #include "triclinicBox.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
@@ -46,7 +47,9 @@ int main()
     auto ortho = molsys::OrthorhombicBox({20.0, 20.0, 20.0});
 
     auto triclinic =
-        molsys::TriclinicBox({20.0, 20.0, 20.0}, {80.0, 90.0, 100.0});
+        molsys::TriclinicBox({20.0, 20.0, 20.0}, {80.0, 90.0, 100.0}, false);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
@@ -58,8 +61,8 @@ int main()
 
         sink += norm(ortho.wrapPositionIntoBox(pos));
         sink += norm(triclinic.wrapPositionIntoBox(pos));
-        sink += norm(triclinic.toOrthoSpace(pos));
-        sink += norm(triclinic.toSimSpace(pos));
+        sink += norm(triclinic.getInverseBoxMatrix() * pos);
+        sink += norm(triclinic.getBoxMatrix() * pos);
     }
 
     std::cout << std::format("{:.6f}\n", sink);

@@ -24,18 +24,19 @@
 
 #include <cmath>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "atom.hpp"
-#include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "mShake.hpp"
 #include "mShakeReference.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief regression test for the M-SHAKE inner-loop bound (3-atom molecule).
@@ -84,7 +85,7 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     auto simBox = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
@@ -123,10 +124,10 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5);
-    settings::ConstraintSettings::setMShakeMaxIter(100);
+    const auto maxIter   = 100;
+    const auto tolerance = 1.0e-5;
 
-    EXPECT_NO_THROW(mShake.applyMShake(simBox));
+    EXPECT_NO_THROW(mShake.applyMShake(simBox, maxIter, tolerance, 0.5 * fs));
 
     // After convergence the perturbed bond 0-1 must be back to the
     // reference length 1.0 within the requested tolerance.
@@ -134,6 +135,104 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     const auto pos1   = molecule.getAtomPosition(AtomIndex{1});
     const auto bond01 = norm(pos1 - pos0);
     EXPECT_NEAR(bond01, 1.0, 1.0e-5);
+}
+
+/**
+ * @brief M-RATTLE must remove the relative velocity along every bond of a
+ * rigid water molecule (r_ij . (v_i - v_j) = 0), without changing the
+ * total momentum.
+ */
+TEST(TestMShake, applyMRattleRemovesBondVelocities)
+{
+    auto moltype = molsys::MoleculeType();
+    moltype.setMoltype(MolType{1});
+    moltype.setName("water");
+    moltype.setNumberOfAtoms(3);
+
+    const auto names  = std::vector<std::string>{"O", "H", "H"};
+    const auto refPos = std::vector<linalg::Vec3D>{
+        {0.0, 0.0, 0.0},
+        {0.585882, 0.756950, 0.0},
+        {0.585882, -0.756950, 0.0}
+    };
+
+    auto refAtoms = std::vector<molsys::Atom>(3);
+    for (size_t i = 0; i < 3; ++i)
+    {
+        refAtoms[i].setName(names[i]);
+        refAtoms[i].setPosition(refPos[i]);
+    }
+
+    auto mShakeRef = constraints::MShakeReference();
+    mShakeRef.setMoleculeType(moltype);
+    mShakeRef.setAtoms(refAtoms);
+
+    auto mShake = constraints::MShake();
+    mShake.addMShakeReference(mShakeRef);
+    mShake.initMShake();
+
+    auto simBox = molsys::SimulationBox();
+
+    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    simBox.setBox(orthoBox, false);
+
+    auto molecule = molsys::Molecule();
+    molecule.setMoltype(MolType{1});
+
+    // same geometry as the reference, rotated and shifted
+    const auto pos = std::vector<linalg::Vec3D>{
+        {10.0, 10.0, 10.0},
+        {10.0, 10.585882, 10.756950},
+        {10.0, 10.585882, 9.243050}
+    };
+    const auto vel = std::vector<linalg::Vec3D>{
+        {0.3, -0.2, 0.1},
+        {-1.1, 2.0, 0.7},
+        {0.9, -1.4, -2.3}
+    };
+
+    auto atoms = std::vector<std::shared_ptr<molsys::Atom>>();
+    for (size_t i = 0; i < 3; ++i)
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setName(names[i]);
+        atom->initMass();
+        atom->setPosition(pos[i]);
+        atom->setVelocity(vel[i]);
+        molecule.addAtom(atom);
+        atoms.push_back(atom);
+    }
+
+    simBox.addMolecule(molecule);
+
+    auto momentumBefore = linalg::Vec3D(0.0, 0.0, 0.0);
+    for (const auto &atom : atoms)
+    {
+        momentumBefore += atom->getMass() * atom->getVelocity();
+    }
+
+    mShake.applyMRattle(simBox);
+
+    for (size_t i = 0; i < 2; ++i)
+    {
+        for (size_t j = i + 1; j < 3; ++j)
+        {
+            const auto bond = atoms[i]->getPosition() - atoms[j]->getPosition();
+            const auto dVel = atoms[i]->getVelocity() - atoms[j]->getVelocity();
+            EXPECT_NEAR(dot(bond, dVel), 0.0, 1.0e-10);
+        }
+    }
+
+    auto momentumAfter = linalg::Vec3D(0.0, 0.0, 0.0);
+    for (const auto &atom : atoms)
+    {
+        momentumAfter += atom->getMass() * atom->getVelocity();
+    }
+
+    for (size_t k = 0; k < 3; ++k)
+    {
+        EXPECT_NEAR(momentumAfter[k], momentumBefore[k], 1.0e-10);
+    }
 }
 
 /**
@@ -167,7 +266,7 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     auto simBox = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
@@ -197,14 +296,53 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     molecule.addAtom(atom3);
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5);
-    settings::ConstraintSettings::setMShakeMaxIter(1);
-    settings::ConstraintSettings::setMShakeTolerance(-1.0);
+    const auto maxIter   = 1;
+    const auto tolerance = -1.0;
 
     EXPECT_THROW_MSG(
-        mShake.applyMShake(simBox),
+        mShake.applyMShake(simBox, maxIter, tolerance, 0.5 * fs),
         exc::MShakeException,
         "M-Shake did not converge within 1 iterations for molecule type "
         "MolType(1)"
     );
+}
+
+/**
+ * @brief a rigid triatomic has three M-Shake bonds, so molecule and bond
+ * counts must differ; molecules of other types are not counted.
+ */
+TEST(TestMShake, countsMShakeMoleculesSeparatelyFromBonds)
+{
+    auto moltype = molsys::MoleculeType();
+    moltype.setMoltype(MolType{1});
+    moltype.setName("triangle");
+    moltype.setNumberOfAtoms(3);
+
+    auto refAtoms = std::vector<molsys::Atom>(3);
+    refAtoms[0].setName("H");
+    refAtoms[1].setName("H");
+    refAtoms[2].setName("H");
+    refAtoms[0].setPosition({0.0, 0.0, 0.0});
+    refAtoms[1].setPosition({1.0, 0.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
+
+    auto mShakeRef = constraints::MShakeReference();
+    mShakeRef.setMoleculeType(moltype);
+    mShakeRef.setAtoms(refAtoms);
+
+    auto mShake = constraints::MShake();
+    mShake.addMShakeReference(mShakeRef);
+    mShake.initMShake();
+
+    auto simBox = molsys::SimulationBox();
+
+    for (const auto type : {MolType{1}, MolType{1}, MolType{2}})
+    {
+        auto molecule = molsys::Molecule();
+        molecule.setMoltype(type);
+        simBox.addMolecule(molecule);
+    }
+
+    EXPECT_EQ(mShake.calcNumberOfMShakeMolecules(simBox), 2);
+    EXPECT_EQ(mShake.calcNumberOfBondConstraints(simBox), 6);
 }

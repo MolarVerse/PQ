@@ -1,0 +1,1 @@
+- Fix the setup section of the `.log` file, which always showed `0` for the SHAKE and RATTLE tolerances and maximum numbers of iterations instead of the values in use.

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LOG_OUTPUT_HPP_
-
-#define _LOG_OUTPUT_HPP_
+#ifndef OUTPUT__LOG_OUTPUT_HPP
+#define OUTPUT__LOG_OUTPUT_HPP
 
 #include <string>
 #include <vector>
@@ -68,4 +67,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _LOG_OUTPUT_HPP_
+#endif   // OUTPUT__LOG_OUTPUT_HPP

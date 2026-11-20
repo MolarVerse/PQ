@@ -39,7 +39,8 @@ namespace engine
         getPotential()->calculateForces(
             getSimulationBox(),
             getPhysicalData(),
-            getCellList()
+            getCellList(),
+            getSettings().waterModelSettings
         );
 
         _getInterWater().calculate(

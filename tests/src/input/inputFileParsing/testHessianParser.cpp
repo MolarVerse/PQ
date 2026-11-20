@@ -32,7 +32,8 @@
 
 TEST_F(TestInputFileReader, parseHessianFile)
 {
-    input::HessianInputParser parser;
+    HessianSettings           hessianSettings;
+    input::HessianInputParser parser(hessianSettings);
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hessian_file"));
     const auto& parseFunc = funcMap.at("hessian_file");
@@ -43,12 +44,13 @@ TEST_F(TestInputFileReader, parseHessianFile)
         "water.hessian"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::HessianSettings::getHessianFile(), "water.hessian");
+    EXPECT_EQ(hessianSettings.getHessianFile(), "water.hessian");
 }
 
 TEST_F(TestInputFileReader, parseHessianInfoFile)
 {
-    input::HessianInputParser parser;
+    HessianSettings           hessianSettings;
+    input::HessianInputParser parser(hessianSettings);
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hessian_info_file"));
     const auto& parseFunc = funcMap.at("hessian_info_file");
@@ -59,15 +61,13 @@ TEST_F(TestInputFileReader, parseHessianInfoFile)
         "water.hessian.info"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::HessianSettings::getHessianInfoFile(),
-        "water.hessian.info"
-    );
+    EXPECT_EQ(hessianSettings.getHessianInfoFile(), "water.hessian.info");
 }
 
 TEST_F(TestInputFileReader, parseHessianDisplacement)
 {
-    input::HessianInputParser parser;
+    HessianSettings           hessianSettings;
+    input::HessianInputParser parser(hessianSettings);
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hessian_displacement"));
     const auto& parseFunc = funcMap.at("hessian_displacement");
@@ -78,7 +78,7 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
         "0.001"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::HessianSettings::getDisplacement(), 0.001);
+    EXPECT_EQ(hessianSettings.getDisplacement(), 0.001);
 
     _clearParser(parser);
 
@@ -94,7 +94,8 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
 
 TEST_F(TestInputFileReader, parseHessianBuilder)
 {
-    input::HessianInputParser parser;
+    HessianSettings           hessianSettings;
+    input::HessianInputParser parser(hessianSettings);
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("hessian_builder"));
     const auto& parseFunc = funcMap.at("hessian_builder");
@@ -105,10 +106,7 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
         "five-point"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings::HessianSettings::getBuilder(),
-        HessianBuilderType::FIVE_POINT
-    );
+    EXPECT_EQ(hessianSettings.getBuilder(), HessianBuilderType::FIVE_POINT);
 
     _clearParser(parser);
 
@@ -123,7 +121,8 @@ TEST_F(TestInputFileReader, parseHessianBuilder)
 
 TEST_F(TestInputFileReader, parseOptimizeBeforeHessian)
 {
-    input::HessianInputParser parser;
+    HessianSettings           hessianSettings;
+    input::HessianInputParser parser(hessianSettings);
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("optimize_before_hessian"));
     const auto& parseFunc = funcMap.at("optimize_before_hessian");
@@ -134,11 +133,11 @@ TEST_F(TestInputFileReader, parseOptimizeBeforeHessian)
         "off"
     };
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::HessianSettings::optimizeBeforeHessian());
+    EXPECT_FALSE(hessianSettings.optimizeBeforeHessian());
 
     _clearParser(parser);
 
     lineElements = {"optimize_before_hessian", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::HessianSettings::optimizeBeforeHessian());
+    EXPECT_TRUE(hessianSettings.optimizeBeforeHessian());
 }

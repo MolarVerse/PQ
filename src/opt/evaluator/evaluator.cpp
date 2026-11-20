@@ -34,9 +34,31 @@
 
 namespace opt
 {
+    /**
+     * @brief Construct a new Evaluator object with the given settings
+     *
+     * @param settings - Reference to the Settings object
+     */
+    Evaluator::Evaluator(const Settings& settings) : _settings(settings) {}
 
+    Evaluator::~Evaluator() = default;
+
+    /**
+     * @brief Check if the evaluator supports analytic Hessian calculation
+     *
+     * @return true
+     * @return false
+     */
     bool Evaluator::supportsAnalyticHessian() const { return false; }
 
+    /**
+     * @brief Calculate the analytic Hessian matrix
+     *
+     * @throws exc::UserInputException if the evaluator does not support
+     * analytic Hessian calculation
+     *
+     * @return HessianMatrix
+     */
     HessianMatrix Evaluator::calculateAnalyticHessian()
     {
         throw exc::UserInputException(
@@ -274,4 +296,11 @@ namespace opt
         return *_cellList;
     }
 
+    /**
+     * @brief Get the settings associated with this evaluator as a const
+     * reference
+     *
+     * @return const Settings&
+     */
+    const Settings& Evaluator::_getSettings() const { return _settings.get(); }
 }   // namespace opt

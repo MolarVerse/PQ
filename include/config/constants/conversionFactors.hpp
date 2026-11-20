@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONVERSION_FACTORS_HPP_
-
-#define _CONVERSION_FACTORS_HPP_
+#ifndef CONFIG__CONSTANTS__CONVERSION_FACTORS_HPP
+#define CONFIG__CONSTANTS__CONVERSION_FACTORS_HPP
 
 #include <cmath>
 
@@ -150,4 +149,4 @@ static constexpr double SPEED_OF_LIGHT_IN_CM_PER_S =
  */
 static constexpr double PER_CM_TO_HZ = SPEED_OF_LIGHT_IN_CM_PER_S;
 
-#endif   // _CONVERSION_FACTORS_HPP_
+#endif   // CONFIG__CONSTANTS__CONVERSION_FACTORS_HPP

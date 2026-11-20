@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_GUFFDAT_READER_HPP_
-
-#define _TEST_GUFFDAT_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_GUFF_DAT_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_GUFF_DAT_READER_HPP
 
 #include <gtest/gtest.h>
 
@@ -110,7 +109,9 @@ class TestGuffDatReader : public ::testing::Test
 
         settings::PotentialSettings::setCoulombRadiusCutOff(12.5);
 
-        _engine->makePotential(pot::PotentialBruteForce());
+        _engine->makePotential(
+            pot::PotentialBruteForce(_settings.hybridSettings)
+        );
         _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
         _engine->getPotential()->makeCoulombPotential(
             pot::CoulombShiftedPotential(
@@ -118,7 +119,7 @@ class TestGuffDatReader : public ::testing::Test
             )
         );
 
-        settings::FileSettings::setGuffDatFileName(
+        _settings.fileSettings.setGuffDatFileNameByUser(
             "data/guffDatReader/guff.dat"
         );
         settings::PotentialSettings::setNonCoulombType(NonCoulombType::GUFF);
@@ -128,4 +129,4 @@ class TestGuffDatReader : public ::testing::Test
     }
 };
 
-#endif   // _TEST_GUFFDAT_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_GUFF_DAT_READER_HPP

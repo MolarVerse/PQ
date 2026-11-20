@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_VIEW_HPP_
-
-#define _SIMULATION_BOX_VIEW_HPP_
+#ifndef MOLSYS__SIMULATION_BOX_VIEW_HPP
+#define MOLSYS__SIMULATION_BOX_VIEW_HPP
 
 #include "molecule.hpp"
 #include "views.hpp"
@@ -394,4 +393,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _SIMULATION_BOX_VIEW_HPP_
+#endif   // MOLSYS__SIMULATION_BOX_VIEW_HPP

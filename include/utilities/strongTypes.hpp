@@ -20,12 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STRONG_TYPES_HPP_
-#define _STRONG_TYPES_HPP_
+#ifndef UTILITIES__STRONG_TYPES_HPP
+#define UTILITIES__STRONG_TYPES_HPP
 
 #include <cstddef>
 #include <format>
 #include <mstd/types.hpp>
+
+#include "unit_types.hpp"
 
 template <typename Tag>
 using StrongSizeT = mstd::StrongType<
@@ -162,8 +164,8 @@ struct BuckinghamParams
 
 struct AngleParams
 {
-    double equilibrium;
-    double forceConstant;
+    Angle              equilibrium;
+    AngleForceConstant forceConstant;
 
     [[nodiscard]]
     bool operator==(const AngleParams &other) const;
@@ -171,8 +173,8 @@ struct AngleParams
 
 struct BondParams
 {
-    double equilibrium;
-    double forceConstant;
+    Distance      equilibrium;
+    ForceConstant forceConstant;
 
     [[nodiscard]]
     bool operator==(const BondParams &other) const;
@@ -180,9 +182,9 @@ struct BondParams
 
 struct DihedralParams
 {
-    double forceConstant;
+    Energy forceConstant;   // Energy unit for dihedral force constant
     double frequency;
-    double phaseShift;
+    Angle  phaseShift;
 
     [[nodiscard]]
     bool operator==(const DihedralParams &other) const;
@@ -201,4 +203,4 @@ struct JCouplingParams
     bool operator==(const JCouplingParams &other) const;
 };
 
-#endif   // _STRONG_TYPES_HPP_
+#endif   // UTILITIES__STRONG_TYPES_HPP

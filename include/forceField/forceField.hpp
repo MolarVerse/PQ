@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _FORCE_FIELD_HPP_
-
-#define _FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__FORCE_FIELD_HPP
+#define FORCE_FIELD__FORCE_FIELD_HPP
 
 #include "coulombPotential.hpp"
 #include "molecule.hpp"
@@ -44,8 +43,8 @@ namespace ff
     );
 }   // namespace ff
 
-#ifndef _FORCE_FIELD_TPP_
-#include "forcefield.tpp.hpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#ifndef FORCE_FIELD__FORCEFIELD_TPP
+#include "forcefield.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__FORCE_FIELD_HPP

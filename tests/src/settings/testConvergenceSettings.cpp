@@ -26,36 +26,32 @@
 
 TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 {
-    settings::ConvSettings::setEnergyConv(1.0e-6);
-    ASSERT_TRUE(settings::ConvSettings::getEnergyConv().has_value());
-    EXPECT_DOUBLE_EQ(settings::ConvSettings::getEnergyConv().value(), 1.0e-6);
+    ConvSettings convSettings;
+    convSettings.setEnergyConvByUser(1.0e-6);
+    ASSERT_TRUE(convSettings.getEnergyConv().has_value());
+    EXPECT_DOUBLE_EQ(convSettings.getEnergyConv().value(), 1.0e-6);
 
-    settings::ConvSettings::setRelEnergyConv(1.0e-5);
-    ASSERT_TRUE(settings::ConvSettings::getRelEnergyConv().has_value());
-    EXPECT_DOUBLE_EQ(
-        settings::ConvSettings::getRelEnergyConv().value(),
-        1.0e-5
-    );
+    convSettings.setRelEnergyConvByUser(1.0e-5);
+    ASSERT_TRUE(convSettings.getRelEnergyConv().has_value());
+    EXPECT_DOUBLE_EQ(convSettings.getRelEnergyConv().value(), 1.0e-5);
 
-    settings::ConvSettings::setAbsEnergyConv(1.0e-4);
-    ASSERT_TRUE(settings::ConvSettings::getAbsEnergyConv().has_value());
-    EXPECT_DOUBLE_EQ(
-        settings::ConvSettings::getAbsEnergyConv().value(),
-        1.0e-4
-    );
+    convSettings.setAbsEnergyConvByUser(1.0e-4);
+    ASSERT_TRUE(convSettings.getAbsEnergyConv().has_value());
+    EXPECT_DOUBLE_EQ(convSettings.getAbsEnergyConv().value(), 1.0e-4);
 }
 
 TEST(ConvSettingsTest, ForceConvSettersAndOptionalGetters)
 {
-    settings::ConvSettings::setForceConv(1.0e-3);
-    ASSERT_TRUE(settings::ConvSettings::getForceConv().has_value());
-    EXPECT_DOUBLE_EQ(settings::ConvSettings::getForceConv().value(), 1.0e-3);
+    ConvSettings convSettings;
+    convSettings.setForceConvByUser(1.0e-3);
+    ASSERT_TRUE(convSettings.getForceConv().has_value());
+    EXPECT_DOUBLE_EQ(convSettings.getForceConv().value(), 1.0e-3);
 
-    settings::ConvSettings::setMaxForceConv(1.0e-2);
-    ASSERT_TRUE(settings::ConvSettings::getMaxForceConv().has_value());
-    EXPECT_DOUBLE_EQ(settings::ConvSettings::getMaxForceConv().value(), 1.0e-2);
+    convSettings.setMaxForceConvByUser(1.0e-2);
+    ASSERT_TRUE(convSettings.getMaxForceConv().has_value());
+    EXPECT_DOUBLE_EQ(convSettings.getMaxForceConv().value(), 1.0e-2);
 
-    settings::ConvSettings::setRMSForceConv(1.0e-3);
-    ASSERT_TRUE(settings::ConvSettings::getRMSForceConv().has_value());
-    EXPECT_DOUBLE_EQ(settings::ConvSettings::getRMSForceConv().value(), 1.0e-3);
+    convSettings.setRMSForceConvByUser(1.0e-3);
+    ASSERT_TRUE(convSettings.getRMSForceConv().has_value());
+    EXPECT_DOUBLE_EQ(convSettings.getRMSForceConv().value(), 1.0e-3);
 }

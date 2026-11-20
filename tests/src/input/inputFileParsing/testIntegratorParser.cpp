@@ -29,6 +29,7 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "integratorInputParser.hpp"
+#include "referenceSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
 
@@ -40,10 +41,11 @@
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
+    ReferenceSettings referenceSettings;
     // NOTE: this is only used because of this nonsense requirement in the input
     // file parse after all of the reworks this can be removed (HOPEFULLY)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    input::IntegratorInputParser parser;
+    input::IntegratorInputParser parser(referenceSettings);
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("integrator"));
     const auto &parseFunc = funcMap.at("integrator");
@@ -56,6 +58,9 @@ TEST_F(TestInputFileReader, testParseIntegrator)
         settings::GeneralSettings::getIntegratorType(),
         IntegratorType::VELOCITY_VERLET
     );
+    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+        ReferenceFiles::VELOCITY_VERLET_FILE
+    ));
 
     _clearParser(parser);
 

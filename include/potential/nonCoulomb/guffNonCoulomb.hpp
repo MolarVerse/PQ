@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GUFF_NON_COULOMB_HPP_
-
-#define _GUFF_NON_COULOMB_HPP_
+#ifndef POTENTIAL__NON_COULOMB__GUFF_NON_COULOMB_HPP
+#define POTENTIAL__NON_COULOMB__GUFF_NON_COULOMB_HPP
 
 #include <cstddef>
 #include <vector>
@@ -81,4 +80,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _GUFF_NON_COULOMB_HPP_
+#endif   // POTENTIAL__NON_COULOMB__GUFF_NON_COULOMB_HPP

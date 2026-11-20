@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MAXWELL_BOLTZMANN_HPP_
-
-#define _MAXWELL_BOLTZMANN_HPP_
+#ifndef MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP
+#define MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP
 
 #include "randomNumberGenerator.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -49,8 +49,11 @@ namespace maxwellBoltzmann
         rng::RandomNumberGenerator _randomNumberGenerator;
 
        public:
-        void initializeVelocities(molsys::SimulationBox &);
+        void initializeVelocities(
+            molsys::SimulationBox &simulationBox,
+            const Temperature     &targetTemperature
+        );
     };
 }   // namespace maxwellBoltzmann
 
-#endif   // _MAXWELL_BOLTZMANN_HPP_
+#endif   // MAXWELL_BOLTZMANN__MAXWELL_BOLTZMANN_HPP

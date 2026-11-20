@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MTR_INTRA_WATER_HPP_
-
-#define _MTR_INTRA_WATER_HPP_
+#ifndef WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
+#define WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
 
 #include "intraWater.hpp"
 
@@ -31,6 +30,7 @@ namespace waterModel
     class MTRIntraWater : public IntraWater
     {
        public:
+        using IntraWater::IntraWater;
         void calculate(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
@@ -65,6 +65,8 @@ namespace waterModel
             155.7839388145315;   // kcal mol^-1 Angström^-2
 
        public:
+        using MTRIntraWater::MTRIntraWater;
+
         [[nodiscard]]
         double getEqOHDistance() const override
         {
@@ -99,6 +101,7 @@ namespace waterModel
             127.1534416826004;   // kcal mol^-1 Angström^-2
 
        public:
+        using MTRIntraWater::MTRIntraWater;
         [[nodiscard]]
         double getEqOHDistance() const override
         {
@@ -119,4 +122,4 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#endif   //  _MTR_INTRA_WATER_HPP_
+#endif   //  WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP

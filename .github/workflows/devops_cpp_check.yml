@@ -32,10 +32,15 @@ jobs:
               - '**/*.h'
               - 'devops.toml'
               - '.github/workflows/devops_cpp_check.yml'
+              - '.github/actions/setup-gcc/**'
 
   cpp-check:
     needs: changes
-    if: needs.changes.outputs.relevant == 'true'
+    # Not for a release pull request: it contains every change since the last
+    # release, which these checks already passed on the dev pull requests (#1028).
+    if: >-
+      needs.changes.outputs.relevant == 'true' &&
+      !(github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/'))
     runs-on: ubuntu-24.04
     name: Run DevOps C++ Checks
 
@@ -47,11 +52,21 @@ jobs:
           # full history so the merge-base with the PR base commit resolves
           fetch-depth: 0
 
-      - name: Install GCC 14
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-14 g++-14
-        shell: bash
+      # Clang, not GCC: devops' AST checks parse this project's files with
+      # libclang, which can't handle GCC-specific SIMD-intrinsic builtins
+      # (e.g. the __builtin_ia32_* used by <xmmintrin.h>, pulled in
+      # transitively by Eigen) found via a GCC-generated compile_commands.json
+      # — that surfaced as spurious "too many errors emitted" / "file not
+      # found" AST-check failures unrelated to the actual change being
+      # checked. Clang generates commands libclang (itself a Clang frontend)
+      # parses natively. g++-14 is still installed for its libstdc++ (clang
+      # auto-detects the newest one on PATH for C++23 <format>/<ranges>), as
+      # in clang_build.yml.
+      - name: Install clang
+        uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: clang-20 libclang-rt-20-dev g++-14
+          version: 1.0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -93,8 +108,8 @@ jobs:
             -DBUILD_WITH_BENCHMARKING=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
         env:
-          CC: gcc-14
-          CXX: g++-14
+          CC: clang-20
+          CXX: clang++-20
         shell: bash
 
       - name: Run cpp_checks

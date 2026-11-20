@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GUFF_DAT_READER_HPP_
-
-#define _GUFF_DAT_READER_HPP_
+#ifndef INPUT__GUFF_DAT_READER_HPP
+#define INPUT__GUFF_DAT_READER_HPP
 
 #include <cstddef>
 #include <string>
@@ -37,10 +36,12 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+struct Settings;
+
 namespace input::guffdat
 {
     void               readGuffDat(engine::Engine &);
-    [[nodiscard]] bool isNeeded();
+    [[nodiscard]] bool isNeeded(const Settings &settings);
 
     /**
      * @class GuffDatReader
@@ -147,4 +148,4 @@ namespace input::guffdat
 
 }   // namespace input::guffdat
 
-#endif   // _GUFF_DAT_READER_HPP_
+#endif   // INPUT__GUFF_DAT_READER_HPP

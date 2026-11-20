@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BASE_EXCEPTION_TPP_
-#define _BASE_EXCEPTION_TPP_
+#ifndef EXCEPTIONS__BASE_EXCEPTION_TPP
+#define EXCEPTIONS__BASE_EXCEPTION_TPP
 
 #include <iostream>
 
@@ -94,4 +94,4 @@ namespace exc
     }
 }   // namespace exc
 
-#endif   // _BASE_EXCEPTION_TPP_
+#endif   // EXCEPTIONS__BASE_EXCEPTION_TPP

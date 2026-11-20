@@ -1,1 +1,0 @@
-- Post an informational clang build time comment on pull requests, comparing the clang trace summary with the latest dev run (headers that got heavier, speed-adjusted), through a separate job that runs no pull request code.

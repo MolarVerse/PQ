@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RESTART_FILE_READER_HPP_
-
-#define _RESTART_FILE_READER_HPP_
+#ifndef INPUT__RESTART_FILE_READER__RESTART_FILE_READER_HPP
+#define INPUT__RESTART_FILE_READER__RESTART_FILE_READER_HPP
 
 #include <fstream>
 #include <memory>
@@ -34,11 +33,18 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+class NoseHooverSettings;   // forward declaration
+class TimingsSettings;      // forward declaration
+
 namespace input::restartFile
 {
     class RestartFileSection;   // forward declaration
 
-    void readRestartFile(engine::Engine &);
+    void readRestartFile(
+        engine::Engine &,
+        NoseHooverSettings &,
+        TimingsSettings &
+    );
 
     /**
      * @class RestartFileReader
@@ -57,7 +63,12 @@ namespace input::restartFile
         std::vector<std::unique_ptr<RestartFileSection>> _sections;
 
        public:
-        RestartFileReader(const std::string &, engine::Engine &);
+        RestartFileReader(
+            const std::string &,
+            engine::Engine &,
+            NoseHooverSettings &,
+            TimingsSettings &
+        );
 
         void                read();
         RestartFileSection *determineSection(
@@ -67,4 +78,4 @@ namespace input::restartFile
 
 }   // namespace input::restartFile
 
-#endif   // _RESTART_FILE_READER_HPP_
+#endif   // INPUT__RESTART_FILE_READER__RESTART_FILE_READER_HPP

@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_CELL_LIST_HPP_
-
-#define _TEST_CELL_LIST_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP
 
 #include <gtest/gtest.h>
 
 #include <memory>
 
 #include "celllist.hpp"
+#include "orthorhombicBox.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
@@ -48,9 +48,9 @@ class TestCellList : public ::testing::Test
         _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox->setBox(orthoBox);
+        _simulationBox->setBox(orthoBox, false);
         settings::PotentialSettings::setCoulombRadiusCutOff(1.5);
     }
 };
 
-#endif   // _TEST_CELL_LIST_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP

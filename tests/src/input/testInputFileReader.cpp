@@ -24,6 +24,7 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <fstream>
 #include <map>
 #include <memory>
@@ -32,7 +33,9 @@
 
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
+#include "inputFileParser.hpp"
 #include "potentialSettings.hpp"
+#include "stringUtilities.hpp"
 #include "throwWithMessage.hpp"
 
 namespace
@@ -40,7 +43,8 @@ namespace
     void readKeywordList(
         const std::string        &filename,
         std::vector<std::string> &keywords,
-        std::vector<bool>        &required
+        std::vector<bool>        &required,
+        std::vector<std::string> &values
     )
     {
         std::string   line;
@@ -50,29 +54,33 @@ namespace
         {
             std::string keyword;
             std::string requiredString;
+            std::string value;
             bool        requiredBool = false;
 
             if (std::istringstream(line).str().empty())
                 continue;
-            std::istringstream(line) >> keyword >> requiredString;
+            std::istringstream(line) >> keyword >> requiredString >> value;
             std::istringstream(requiredString) >> std::boolalpha >>
                 requiredBool;
 
             keywords.push_back(keyword);
             required.push_back(requiredBool);
+            values.push_back(value);
         }
     }
 }   // namespace
 
 TEST_F(TestInputFileReader, testAddKeyword)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     EXPECT_EQ(
@@ -194,13 +202,15 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     std::vector<size_t> requiredIndex(0);
@@ -232,13 +242,15 @@ TEST_F(TestInputFileReader, testPostProcessRequiredFail)
 
 TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     std::vector<size_t> requiredIndex(0);
@@ -279,13 +291,15 @@ TEST_F(TestInputFileReader, testPostProcessCountToOftenFail)
 
 TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 {
-    std::vector<std::string> keywordsRef(0);
-    std::vector<bool>        requiredRef(0);
+    std::vector<std::string>                  keywordsRef(0);
+    std::vector<bool>                         requiredRef(0);
+    [[maybe_unused]] std::vector<std::string> valuesRef(0);
 
     ::readKeywordList(
         "data/inputFileReader/keywordList.txt",
         keywordsRef,
-        requiredRef
+        requiredRef,
+        valuesRef
     );
 
     std::vector<size_t> requiredIndex(0);
@@ -324,4 +338,103 @@ TEST_F(TestInputFileReader, testReadJobType)
         exc::InputFileException,
         "Missing keyword \"jobtype\" in input file"
     );
+}
+
+TEST_F(TestInputFileReader, testAllKeywordsAcceptValidValue)
+{
+    std::vector<std::string> keywordsRef(0);
+    std::vector<bool>        requiredRef(0);
+    std::vector<std::string> valuesRef(0);
+
+    ::readKeywordList(
+        "data/inputFileReader/keywordList.txt",
+        keywordsRef,
+        requiredRef,
+        valuesRef
+    );
+
+    // "guff_path" is deprecated: its parse function always throws
+    // regardless of the value given (see FilesInputParser::addGuffPathKey),
+    // so it cannot be exercised by this "does a valid value get accepted"
+    // check and is skipped here.
+    const std::vector<std::string> keywordsToSkip = {"guff_path"};
+
+    // the "integrator" key refuses to parse unless the current job type is
+    // an MD job type (IntegratorInputParser::addIntegratorKey). Pin it
+    // explicitly so this test does not depend on whatever job type a
+    // previously run test left behind in the shared, static
+    // GeneralSettings state.
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+
+    for (size_t i = 0; i < keywordsRef.size(); ++i)
+    {
+        const std::string &keyword = keywordsRef[i];
+        const std::string &value   = valuesRef[i];
+
+        if (std::ranges::find(keywordsToSkip, keyword) != keywordsToSkip.end())
+            continue;
+
+        SCOPED_TRACE(
+            std::format("keyword \"{}\" with value \"{}\"", keyword, value)
+        );
+
+        // keys are looked up/counted internally under their lower-cased,
+        // dash-free spelling (see InputFileReader::process and
+        // InputFileParser::addKeyword), so keyword counts have to be reset
+        // and queried via that same normalized spelling
+        const auto normalizedKeyword =
+            utilities::toLowerAndReplaceDashesCopy(keyword);
+
+        _inputFileReader->setKeywordCount(normalizedKeyword, 0);
+
+        EXPECT_NO_THROW(_inputFileReader->process(
+            std::vector<std::string>{keyword, "=", value}
+        ));
+
+        EXPECT_TRUE(_inputFileReader->getKeywordSet(normalizedKeyword));
+        EXPECT_EQ(_inputFileReader->getKeywordCount(normalizedKeyword), 1);
+    }
+}
+
+namespace
+{
+    class DestructionTrackingParser : public input::InputFileParser
+    {
+       private:
+        bool *_destroyed;
+
+       public:
+        explicit DestructionTrackingParser(bool *destroyed)
+            : _destroyed(destroyed)
+        {
+        }
+
+        ~DestructionTrackingParser() override { *_destroyed = true; }
+
+        DestructionTrackingParser(const DestructionTrackingParser &) = delete;
+        DestructionTrackingParser &operator=(const DestructionTrackingParser &
+        )                                                            = delete;
+        DestructionTrackingParser(DestructionTrackingParser &&)      = delete;
+        DestructionTrackingParser &operator=(DestructionTrackingParser &&
+        )                                                            = delete;
+    };
+}   // namespace
+
+/**
+ * @brief parsers are owned through a pointer to the base class
+ * (InputFileReader::_parsers), so deleting one has to destroy the derived
+ * parser, otherwise it is undefined behaviour
+ */
+TEST(TestInputFileParserOwnership, derivedParserIsDestroyedThroughBasePointer)
+{
+    auto destroyed = false;
+
+    std::unique_ptr<input::InputFileParser> parser =
+        std::make_unique<DestructionTrackingParser>(&destroyed);
+
+    EXPECT_FALSE(destroyed);
+
+    parser.reset();
+
+    EXPECT_TRUE(destroyed);
 }

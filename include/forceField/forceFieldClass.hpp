@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _Force_FIELD_CLASS_HPP_
-
-#define _Force_FIELD_CLASS_HPP_
+#ifndef FORCE_FIELD__FORCE_FIELD_CLASS_HPP
+#define FORCE_FIELD__FORCE_FIELD_CLASS_HPP
 
 #include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
 #include <vector>
 
 #include "angleForceField.hpp"
@@ -40,6 +40,8 @@
 #include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
 
+class HybridSettings;
+
 namespace ff
 {
     /**
@@ -51,6 +53,8 @@ namespace ff
     class ForceField
     {
        private:
+        mstd::ConstRef<HybridSettings> _hybridSettings;
+
         std::vector<BondForceField>      _bonds;
         std::vector<AngleForceField>     _angles;
         std::vector<DihedralForceField>  _dihedrals;
@@ -67,6 +71,8 @@ namespace ff
         std::shared_ptr<pot::CoulombPotential>    _coulombPotential;
 
        public:
+        explicit ForceField(const HybridSettings &hybridSettings);
+
         [[nodiscard]] std::shared_ptr<ForceField> clone() const;
 
         void calculateBondedInteractions(
@@ -170,4 +176,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _Force_FIELD_CLASS_HPP_
+#endif   // FORCE_FIELD__FORCE_FIELD_CLASS_HPP

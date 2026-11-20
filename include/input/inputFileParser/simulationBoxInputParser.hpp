@@ -20,11 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__SIMULATION_BOX_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__SIMULATION_BOX_INPUT_PARSER_HPP
 
-#define _SIMULATION_BOX_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+#include "simulationBoxSettings.hpp"
 
 namespace molsys
 {
@@ -41,8 +43,10 @@ namespace input
      */
     class SimulationBoxInputParser : public InputFileParser
     {
+        mstd::Ref<SimulationBoxSettings> _settings;
+
        public:
-        explicit SimulationBoxInputParser();
+        explicit SimulationBoxInputParser(SimulationBoxSettings& settings);
 
         void addCoulombRadiusKey();
         void addNonCoulombRadiusKey();
@@ -52,4 +56,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _SIMULATION_BOX_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__SIMULATION_BOX_INPUT_PARSER_HPP

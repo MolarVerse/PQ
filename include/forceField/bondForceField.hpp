@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BOND_FORCE_FIELD_HPP_
-
-#define _BOND_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__BOND_FORCE_FIELD_HPP
+#define FORCE_FIELD__BOND_FORCE_FIELD_HPP
 
 #include "bond.hpp"
+#include "enums/hybrid.hpp"
 
 namespace physicalData
 {
@@ -42,6 +42,8 @@ namespace pot
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
+
+class HybridSettings;   // forward declaration
 
 namespace ff
 {
@@ -72,7 +74,8 @@ namespace ff
             const molsys::SimulationBox &simulationBox,
             physicalData::PhysicalData  &physicalData,
             const pot::CoulombPotential &coulombPot,
-            pot::NonCoulombPotential    &nonCoulombPot
+            pot::NonCoulombPotential    &nonCoulombPot,
+            SmoothingMethod              smoothing
         );
 
         /***************************
@@ -93,4 +96,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _BOND_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__BOND_FORCE_FIELD_HPP

@@ -20,12 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TIMINGS_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP
 
-#define _TIMINGS_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
 
+class TimingsSettings;
 namespace input
 {
     /**
@@ -36,8 +38,10 @@ namespace input
      */
     class TimingsInputParser : public InputFileParser
     {
+        mstd::Ref<TimingsSettings> _timingsSettings;
+
        public:
-        TimingsInputParser();
+        explicit TimingsInputParser(TimingsSettings& settings);
 
         void addTimeStep();
         void addNumberOfSteps();
@@ -45,4 +49,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _TIMINGS_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__TIMINGS_INPUT_PARSER_HPP

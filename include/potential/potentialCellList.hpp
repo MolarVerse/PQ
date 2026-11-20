@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_CELL_LIST_HPP_
-
-#define _POTENTIAL_CELL_LIST_HPP_
+#ifndef POTENTIAL__POTENTIAL_CELL_LIST_HPP
+#define POTENTIAL__POTENTIAL_CELL_LIST_HPP
 
 #include "potential.hpp"
 
@@ -36,6 +35,8 @@ namespace molsys
     class CellList;   // forward declaration
 }   // namespace molsys
 
+class WaterModelSettings;   // forward declaration
+
 namespace pot
 {
     /**
@@ -47,36 +48,42 @@ namespace pot
     class PotentialCellList : public Potential
     {
        public:
+        using Potential::Potential;
         ~PotentialCellList() override;
 
         void calculateForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList     &cellList
+            const molsys::CellList     &cellList,
+            const WaterModelSettings   &waterModelSettings
         ) override;
 
         void calculateCoreToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList     &cellList
+            const molsys::CellList     &cellList,
+            const WaterModelSettings & /*waterModelSettings*/
         ) override;
 
         void calculateLayerToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList     &cellList
+            const molsys::CellList     &cellList,
+            const WaterModelSettings & /*waterModelSettings*/
         ) override;
 
         void calculateOuterToOuterForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList     &cellList
+            const molsys::CellList     &cellList,
+            const WaterModelSettings & /*waterModelSettings*/
         ) override;
 
         void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const molsys::CellList     &cellList
+            const molsys::CellList     &cellList,
+            const WaterModelSettings & /*waterModelSettings*/
         ) override;
 
         [[nodiscard]] std::shared_ptr<Potential> clone() const override;
@@ -84,4 +91,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _POTENTIAL_CELL_LIST_HPP_
+#endif   // POTENTIAL__POTENTIAL_CELL_LIST_HPP

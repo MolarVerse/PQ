@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTRA_NON_BONDED_SETUP_HPP_
-
-#define _INTRA_NON_BONDED_SETUP_HPP_
+#ifndef SETUP__INTRA_NON_BONDED_SETUP_HPP
+#define SETUP__INTRA_NON_BONDED_SETUP_HPP
 
 namespace engine
 {
@@ -52,4 +51,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _INTRA_NON_BONDED_SETUP_HPP_
+#endif   // SETUP__INTRA_NON_BONDED_SETUP_HPP

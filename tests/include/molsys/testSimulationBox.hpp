@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_SIMULATION_BOX_HPP_
-
-#define _TEST_SIMULATION_BOX_HPP_
+#ifndef TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP
+#define TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP
 
 #include <gtest/gtest.h>
 
@@ -31,6 +30,7 @@
 #include "atom.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 class TestSimulationBox : public ::testing::Test
@@ -93,8 +93,8 @@ class TestSimulationBox : public ::testing::Test
         _simulationBox->addAtom(atom5);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox->setBox(orthoBox);
+        _simulationBox->setBox(orthoBox, false);
     }
 };
 
-#endif   // _TEST_SIMULATION_BOX_HPP_
+#endif   // TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP

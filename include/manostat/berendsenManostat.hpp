@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _BERENDSEN_MANOSTAT_HPP_
-
-#define _BERENDSEN_MANOSTAT_HPP_
+#ifndef MANOSTAT__BERENDSEN_MANOSTAT_HPP
+#define MANOSTAT__BERENDSEN_MANOSTAT_HPP
 
 #include "manostat.hpp"
+#include "unit_types.hpp"
 
 namespace manostat
 {
@@ -36,35 +36,25 @@ namespace manostat
      */
     class BerendsenManostat : public Manostat
     {
-       private:
-        double    _tau;
-        double    _compressibility;
-        FixedAxis _fixedAxis;
-
        public:
-        explicit BerendsenManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            FixedAxis fixedAxis
-        );
+        using Manostat::Manostat;
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
         ) override;
 
-        [[nodiscard]] virtual linalg::tensor3D calculateMu() const;
+        [[nodiscard]]
+        virtual QuantityTensor3D calculateMu(const Time &timeStep) const;
 
-        /********************
-         * standard getters *
-         ********************/
-
-        [[nodiscard]] double getTau() const;
-        [[nodiscard]] double getCompressibility() const;
-
-        [[nodiscard]] ManostatType getManostatType() const override;
-        [[nodiscard]] FixedAxis    getFixedAxis() const;
+       protected:
+        [[nodiscard]]
+        static Compressibility _calcPreFactor(
+            const ManostatSettings &settings,
+            const Time             &timeStep
+        );
     };
 
     /**
@@ -75,19 +65,11 @@ namespace manostat
      */
     class SemiIsotropicBerendsenManostat : public BerendsenManostat
     {
-       private:
-        Isotropy _isotropy;
-
        public:
-        SemiIsotropicBerendsenManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            Isotropy  isotropy,
-            FixedAxis fixedAxis
-        );
+        using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linalg::tensor3D calculateMu() const override;
+        [[nodiscard]]
+        QuantityTensor3D calculateMu(const Time &timeStep) const override;
     };
 
     /**
@@ -101,7 +83,8 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linalg::tensor3D calculateMu() const override;
+        [[nodiscard]]
+        QuantityTensor3D calculateMu(const Time &timeStep) const override;
     };
 
     /**
@@ -118,9 +101,10 @@ namespace manostat
        public:
         using BerendsenManostat::BerendsenManostat;
 
-        [[nodiscard]] linalg::tensor3D calculateMu() const override;
+        [[nodiscard]]
+        QuantityTensor3D calculateMu(const Time &timeStep) const override;
     };
 
 }   // namespace manostat
 
-#endif   // _BERENDSEN_MANOSTAT_HPP_
+#endif   // MANOSTAT__BERENDSEN_MANOSTAT_HPP

@@ -33,7 +33,7 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "mathUtilities.hpp"
-#include "simulationBoxSettings.hpp"
+#include "orthorhombicBox.hpp"
 #include "triclinicBox.hpp"
 
 namespace input::restartFile
@@ -117,12 +117,15 @@ namespace input::restartFile
                 TRICLINIC_BOX_ANGLE_THRESHOLD
             ))
         {
-            molsys::TriclinicBox box{boxDimensions, boxAngles};
-            engine.getSimulationBox().setBox(box);
+            bool isFullIsotropic =
+                engine.getSettings().manostatSettings.getIsotropy() ==
+                Isotropy::FULL_ANISOTROPIC;
+            molsys::TriclinicBox box{boxDimensions, boxAngles, isFullIsotropic};
+            engine.getSimulationBox().setBox(box, true);
 
             const auto jobType = settings::GeneralSettings::getJobtype();
 
-            // TODO: implement triclinic box for MM-MD
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/910
             if (jobType != JobType::QM_MD &&
                 jobType != JobType::RING_POLYMER_QM_MD)
                 throw exc::InputFileException(
@@ -132,10 +135,8 @@ namespace input::restartFile
         else
         {
             molsys::OrthorhombicBox box(boxDimensions);
-            engine.getSimulationBox().setBox(box);
+            engine.getSimulationBox().setBox(box, true);
         }
-
-        settings::SimulationBoxSettings::setBoxSet(true);
     }
 
     /**

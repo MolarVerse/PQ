@@ -47,8 +47,7 @@ jobs:
           filters: |
             relevant:
               - '.github/workflows/ci_build.yml'
-              - '.github/actions/upload-build-timings/**'
-              - '.github/ci-metrics/summarise_build.py'
+              - '.github/actions/setup-gcc/**'
               - '.cmake/**'
               - 'apps/**'
               - 'include/**'
@@ -71,11 +70,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc14
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold ninja-build cmake
-        shell: bash
+      - name: Setup GCC
+        id: setup-gcc
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build cmake
 
       # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects).
       # A Debug build (with coverage on x86) does not fit into the default
@@ -140,8 +139,6 @@ jobs:
           cmake --build build --parallel "$(nproc)"
           ctest --test-dir build --output-on-failure -LE benchmark
         env:
-          CC: gcc-14
-          CXX: g++-14
           BENCH_SOURCES: ${{ matrix.build == 'Debug' && 'On' || 'Off' }}
 
       - name: Build and Test Project with coverage
@@ -152,17 +149,6 @@ jobs:
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
           cmake --build build --target coverage_xml
-        env:
-          CC: gcc-14
-          CXX: g++-14
-
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: build-${{ matrix.os }}-${{ matrix.build }}
-          job-id: ${{ job.check_run_id }}
-          build-status: ${{ steps.build.outcome != 'skipped' && steps.build.outcome || steps.build-coverage.outcome }}
 
       - name: Upload coverage to Codecov
         if : ${{ matrix.os == 'ubuntu-24.04' && matrix.build == 'Debug' && (github.event_name != 'pull_request' || !startsWith(github.head_ref, 'pq-bot/')) }}
@@ -170,7 +156,7 @@ jobs:
         with:
           fail_ci_if_error: true # optional (default = false)
           gcov: true
-          gcov_executable: gcov-14
+          gcov_executable: ${{ steps.setup-gcc.outputs.gcov }}
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -196,7 +182,7 @@ jobs:
         if: ${{matrix.build == 'Release' && steps.cache-conda-env.outputs.cache-hit != 'true'}}
         run: |
           conda install -n test-env -y pip conda-forge::dftbplus conda-forge::xtb
-          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0
+          conda run -n test-env python -m pip install pytest pytest-cov pqanalysis ase pyscf==2.9.0 fennol jax
 
       - name: Integration Tests
         if: ${{matrix.build == 'Release' }}
@@ -211,11 +197,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: install gcc14
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14
-        shell: bash
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
 
       - name: Cache Eigen source
         id: cache-eigen
@@ -242,9 +225,6 @@ jobs:
             -DBUILD_WITH_NATIVE=Off \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build-benchmark --target google_benchmarks -j$(nproc)
-        env:
-          CC: gcc-14
-          CXX: g++-14
 
       - name: Run benchmark smoke tests
         run: |
@@ -253,13 +233,16 @@ jobs:
   # Pull requests and pushes only build the static LTO application: linking
   # the 165 test executables, each with its own whole-program LTO link, took
   # 78% of this job's CPU time (#746) and the regular build matrix already
-  # runs every test. The nightly run builds and runs the tests too. Scheduled
-  # workflows run on the default branch (main), so the nightly part checks
-  # main and only starts working once a release brings this file to main.
+  # runs every test. The nightly run builds and runs the tests too, and so does
+  # every pull request into main (release and hotfix pull requests), so that a
+  # release cannot bring a test that only fails in a static build to main.
+  # Scheduled workflows run on the default branch (main), so the nightly part
+  # checks main and only starts working once a release brings this file to main.
   build-static-lto:
     if: >-
       !cancelled() && (
         github.event_name == 'schedule' ||
+        (github.event_name == 'pull_request' && github.base_ref == 'main') ||
         (needs.changes.result == 'success' && needs.changes.outputs.relevant == 'true')
       )
     needs: changes
@@ -268,10 +251,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install GCC 14
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold ninja-build
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build
 
       # safe because CI builds with -DBUILD_WITH_NATIVE=Off (portable objects);
       # LTO's whole-program link pass itself isn't cached by ccache, but the
@@ -312,31 +295,25 @@ jobs:
             ctest --test-dir build --output-on-failure -j1
           fi
         env:
-          CC: gcc-14
-          CXX: g++-14
-          WITH_TESTS: ${{ github.event_name == 'schedule' && 'ON' || 'OFF' }}
-
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: static-lto
-          job-id: ${{ job.check_run_id }}
-          build-status: ${{ steps.build.outcome }}
+          WITH_TESTS: >-
+            ${{ (github.event_name == 'schedule' ||
+                 (github.event_name == 'pull_request' && github.base_ref == 'main'))
+                && 'ON' || 'OFF' }}
 
   static-singularity-build:
     if: >-
       github.event_name == 'schedule' ||
-      github.event_name == 'workflow_dispatch'
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.base_ref == 'main')
     runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -368,9 +345,6 @@ jobs:
             -DBUILD_WITH_NATIVE=OFF \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
-        env:
-          CC: gcc-14
-          CXX: g++-14
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
@@ -383,16 +357,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install \
-            gcc-14 \
-            g++-14 \
-            mold \
-            openmpi-bin \
-            libopenmpi-dev \
-            python-is-python3
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold openmpi-bin libopenmpi-dev python-is-python3
 
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -423,24 +391,14 @@ jobs:
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
           cmake --build build --parallel "$(nproc)"
-        env:
-          CC: gcc-14
-          CXX: g++-14
-
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: mpi-release
-          job-id: ${{ job.check_run_id }}
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure -j1
 
   # BUILD_WITH_PYTHON_BINDINGS is off in every other job (#543). It installs
   # PQAnalysis through pip while CMake configures and then has to report the
-  # capability, which testPQCli checks. Only the PQ executable is built, which
-  # is all that check needs.
+  # capability, which testPQCli checks. Only PQ and the PQAnalysis selection
+  # test are built.
   python-bindings:
     if: needs.changes.outputs.relevant == 'true' && github.event_name != 'schedule'
     needs: changes
@@ -449,10 +407,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt update
-          sudo apt install gcc-14 g++-14 mold ninja-build
+      - name: Setup GCC
+        uses: ./.github/actions/setup-gcc
+        with:
+          packages: mold ninja-build
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -487,24 +445,14 @@ jobs:
             -DBUILD_WITH_NATIVE=OFF \
             -DBUILD_WITH_TESTS=ON \
             -DFETCHCONTENT_SOURCE_DIR_EIGEN="$HOME/eigen-src"
-          cmake --build build --parallel "$(nproc)" --target PQ
-        env:
-          CC: gcc-14
-          CXX: g++-14
+          cmake --build build --parallel "$(nproc)" --target PQ testSelection
 
-      - name: Collect build timings
-        if: always()
-        uses: ./.github/actions/upload-build-timings
-        with:
-          name: python-bindings
-          job-id: ${{ job.check_run_id }}
-
-      - name: Check the reported capabilities
-        run: ctest --test-dir build --output-on-failure -R testPQCli
+      - name: Run the Python-binding tests
+        run: ctest --test-dir build --output-on-failure -R 'testPQCli|testSelection'
 
   ci-build-gate:
     if: always()
-    needs: [changes, build, benchmark, build-static-lto, mpi-build, python-bindings]
+    needs: [changes, build, benchmark, build-static-lto, static-singularity-build, mpi-build, python-bindings]
     runs-on: ubuntu-24.04
     steps:
       - name: Check CI build results
@@ -513,6 +461,7 @@ jobs:
             "${{ needs.build.result }}" \
             "${{ needs.benchmark.result }}" \
             "${{ needs.build-static-lto.result }}" \
+            "${{ needs.static-singularity-build.result }}" \
             "${{ needs.mpi-build.result }}" \
             "${{ needs.python-bindings.result }}"; do
             if [[ "$result" == "failure" ]]; then

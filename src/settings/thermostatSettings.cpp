@@ -22,364 +22,401 @@
 
 #include "thermostatSettings.hpp"
 
-#include "stringUtilities.hpp"
+#include "referenceSettings.hpp"
 
-namespace settings
+/**
+ * @brief finalize the thermostat settings by checking if all required
+ * temperatures are set
+ *
+ * @param referenceSettings
+ */
+void ThermostatSettings::finalize(ReferenceSettings& referenceSettings)
 {
-
-    /**
-     * @brief add chi to the index map
-     *
-     * @param index
-     * @param chi
-     * @return auto
-     */
-    auto ThermostatSettings::addChi(size_t index, double chi)
-        -> decltype(_chi.try_emplace(index, chi))
+    switch (_thermostatType.get())
     {
-        return _chi.try_emplace(index, chi);
+        case ThermostatType::BERENDSEN:
+            referenceSettings.addReferenceFile(ReferenceFiles::BERENDSEN_FILE);
+            break;
+        case ThermostatType::VELOCITY_RESCALING:
+            referenceSettings.addReferenceFile(
+                ReferenceFiles::VELOCITY_RESCALING_FILE
+            );
+            break;
+        case ThermostatType::LANGEVIN:
+            referenceSettings.addReferenceFile(ReferenceFiles::LANGEVIN_FILE);
+            break;
+        case ThermostatType::NOSE_HOOVER:
+            referenceSettings.addReferenceFile(
+                ReferenceFiles::NOSE_HOOVER_CHAIN_FILE
+            );
+            break;
+        case ThermostatType::NONE: break;
+    }
+}
+
+/**
+ * @brief Finalize the kinetics settings by resolving dependent values
+ *
+ * @param numberOfSteps The total number of simulation steps
+ */
+void KineticsSettings::finalize(size_t numberOfSteps)
+{
+    if (_endTemperature.isSetByUser() && _targetTemperature.isSetByUser())
+    {
+        throw exc::InputFileException(
+            "Both end temperature and target temperature are set by the user. "
+            "Only one should be defined."
+        );
     }
 
-    /**
-     * @brief add zeta to the index map
-     *
-     * @param index
-     * @param zeta
-     * @return auto
-     */
-    auto ThermostatSettings::addZeta(size_t index, double zeta)
-        -> decltype(_zeta.try_emplace(index, zeta))
+    // jobs without a thermostat need no temperature. Whether one is required
+    // is checked by the input file reader, which knows the thermostat type.
+
+    if (_endTemperature.isSetByUser() && !_targetTemperature.isSetByUser())
     {
-        return _zeta.try_emplace(index, zeta);
+        _targetTemperature.setBySystem(_endTemperature.get());
     }
 
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief sets the thermostatType to enum in settings
-     *
-     * @param thermostatType
-     */
-    void ThermostatSettings::setThermostatType(
-        const std::string_view &thermostatType
-    )
+    if (!_endTemperature.isSetByUser() && _targetTemperature.isSetByUser())
     {
-        using enum ThermostatType;
-        const auto thermostatTypeToLower =
-            utilities::toLowerAndReplaceDashesCopy(thermostatType);
-
-        if (thermostatTypeToLower == "berendsen")
-            _thermostatType = BERENDSEN;
-
-        else if (thermostatTypeToLower == "velocity_rescaling")
-            _thermostatType = VELOCITY_RESCALING;
-
-        else if (thermostatTypeToLower == "langevin")
-            _thermostatType = LANGEVIN;
-
-        else if (thermostatTypeToLower == "nh_chain")
-            _thermostatType = NOSE_HOOVER;
-
-        else
-            _thermostatType = NONE;
+        _endTemperature.setBySystem(_targetTemperature.get());
     }
 
-    /**
-     * @brief sets the thermostatType to enum in settings
-     *
-     * @param thermostatType
-     */
-    void ThermostatSettings::setThermostatType(ThermostatType thermostatType)
+    /*************************************************************************
+     * If the start temperature is defined, the temperature ramp is enabled.
+     **
+     *************************************************************************/
+
+    if (!_startTemperature.isSetByUser())
     {
-        _thermostatType = thermostatType;
+        // no ramp: the target temperature is the end temperature from the start
+        if (_endTemperature.isSetBySomeone())
+            _startTemperature.setBySystem(_endTemperature.get());
+
+        return;
     }
 
-    /**
-     * @brief set the nose hoover chain length
-     *
-     * @param length
-     */
-    void ThermostatSettings::setNoseHooverChainLength(size_t length)
+    if (!_endTemperature.isSetBySomeone())
     {
-        _nhChainLength = length;
+        throw exc::InputFileException(
+            "A start temperature requires an end temperature or a target "
+            "temperature to be defined"
+        );
     }
 
-    /**
-     * @brief set the temperature ramp steps
-     *
-     * @param steps
-     */
-    void ThermostatSettings::setTemperatureRampSteps(size_t steps)
-    {
-        _temperatureRampSteps = steps;
-    }
+    /*************************************************************
+     * If steps is 0, set the steps to the total number of steps *
+     *************************************************************/
 
-    /**
-     * @brief set the temperature ramp frequency
-     *
-     * @param frequency
-     */
-    void ThermostatSettings::setTemperatureRampFrequency(size_t frequency)
-    {
-        _temperatureRampFrequency = frequency;
-    }
+    auto       steps             = _temperatureRampSteps.get();
+    const auto useFullSimulation = steps == 0;
 
-    /**
-     * @brief set the temperature set
-     *
-     * @param temperatureSet
-     */
-    void ThermostatSettings::setTemperatureSet(bool temperatureSet)
-    {
-        _isTemperatureSet = temperatureSet;
-    }
+    if (useFullSimulation)
+        steps = numberOfSteps;
 
-    /**
-     * @brief set the start temperature set
-     *
-     * @param startTemperatureSet
-     */
-    void ThermostatSettings::setStartTemperatureSet(bool startTemperatureSet)
-    {
-        _isStartTemperatureSet = startTemperatureSet;
-    }
+    if (steps == 0)
+        throw exc::InputFileException(
+            "Temperature ramp requires at least one simulation step"
+        );
 
-    /**
-     * @brief set the end temperature set
-     *
-     * @param endTemperatureSet
-     */
-    void ThermostatSettings::setEndTemperatureSet(bool endTemperatureSet)
-    {
-        _isEndTemperatureSet = endTemperatureSet;
-    }
+    const auto frequency = _temperatureRampFrequency.get();
 
-    /**
-     * @brief set the target temperature
-     *
-     * @param targetTemperature
-     */
-    void ThermostatSettings::setTargetTemperature(double targetTemperature)
-    {
-        _targetTemperature = targetTemperature;
-        setTemperatureSet(true);
-        setActualTargetTemperature(targetTemperature);
-    }
+    if (frequency == 0)
+        throw exc::InputFileException(
+            "Temperature ramp frequency must be greater than zero"
+        );
 
-    /**
-     * @brief set the actual target temperature
-     *
-     * @param actualTargetTemperature
-     */
-    void ThermostatSettings::setActualTargetTemperature(
-        double actualTargetTemperature
-    )
-    {
-        _actualTargetTemperature = actualTargetTemperature;
-    }
+    if (useFullSimulation)
+        _temperatureRampSteps.setBySystem(steps);
 
-    /**
-     * @brief set the start temperature
-     *
-     * @param startTemperature
-     */
-    void ThermostatSettings::setStartTemperature(double startTemperature)
-    {
-        _startTemperature = startTemperature;
-        setStartTemperatureSet(true);
-    }
+    /*************************************************************
+     * resetting the target temperature to the start temperature *
+     *************************************************************/
 
-    /**
-     * @brief set the end temperature
-     *
-     * @param endTemperature
-     */
-    void ThermostatSettings::setEndTemperature(double endTemperature)
-    {
-        _endTemperature = endTemperature;
-        setEndTemperatureSet(true);
-    }
+    const auto startTemp = _startTemperature.get();
 
-    /**
-     * @brief set the relaxation time
-     *
-     * @param relaxationTime
-     */
-    void ThermostatSettings::setRelaxationTime(double relaxationTime)
-    {
-        _relaxationTime = relaxationTime;
-    }
+    const auto targetTemp   = _targetTemperature.get();
+    const auto tempDelta    = targetTemp - startTemp;
+    const auto remainder    = steps % frequency == 0 ? 0U : 1U;
+    const auto updates      = (steps / frequency) + remainder;
+    const auto tempIncrease = tempDelta / static_cast<double>(updates);
 
-    /**
-     * @brief set the friction
-     *
-     * @param friction
-     */
-    void ThermostatSettings::setFriction(double friction)
-    {
-        _friction = friction;
-    }
+    _temperatureIncrease.setBySystem(tempIncrease);
+}
 
-    /**
-     * @brief set the nose hoover coupling frequency
-     *
-     * @param frequency
-     */
-    void ThermostatSettings::setNoseHooverCouplingFrequency(double frequency)
-    {
-        _nhCouplingFreq = frequency;
-    }
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
 
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
+/**
+ * @brief sets the thermostatType to enum in settings
+ *
+ * @param thermostatType
+ */
+void ThermostatSettings::setThermostatTypeByUser(ThermostatType thermostatType)
+{
+    _thermostatType.setByUser(thermostatType);
+}
 
-    /**
-     * @brief get the nose hoover chain length
-     *
-     * @return size_t
-     */
-    size_t ThermostatSettings::getNoseHooverChainLength()
-    {
-        return _nhChainLength;
-    }
+/**
+ * @brief set the nose hoover chain length
+ *
+ * @param length
+ */
+void NoseHooverSettings::setNoseHooverChainLengthByUser(size_t length)
+{
+    _nhChainLength.setByUser(length);
+}
 
-    /**
-     * @brief get the temperature ramp steps
-     *
-     * @return size_t
-     */
-    size_t ThermostatSettings::getTemperatureRampSteps()
-    {
-        return _temperatureRampSteps;
-    }
+/**
+ * @brief set the temperature ramp frequency
+ *
+ * @param frequency
+ */
+void KineticsSettings::setRampingFrequencyByUser(size_t frequency)
+{
+    _temperatureRampFrequency.setByUser(frequency);
+}
 
-    /**
-     * @brief get the temperature ramp frequency
-     *
-     * @return size_t
-     */
-    size_t ThermostatSettings::getTemperatureRampFrequency()
-    {
-        return _temperatureRampFrequency;
-    }
+/**
+ * @brief set the temperature ramp steps
+ *
+ * @param steps
+ */
+void KineticsSettings::setRampingStepsByUser(size_t steps)
+{
+    _temperatureRampSteps.setByUser(steps);
+}
 
-    /**
-     * @brief get the thermostat type
-     *
-     * @return ThermostatType
-     */
-    ThermostatType ThermostatSettings::getThermostatType()
-    {
-        return _thermostatType;
-    }
+/**
+ * @brief set the relaxation time
+ *
+ * @param relaxationTime
+ */
+void ThermostatSettings::setRelaxationTimeByUser(const Time& relaxationTime)
+{
+    _relaxationTime.setByUser(relaxationTime);
+}
 
-    /**
-     * @brief is the temperature set
-     *
-     * @return bool
-     */
-    bool ThermostatSettings::isTemperatureSet() { return _isTemperatureSet; }
+/**
+ * @brief set the friction
+ *
+ * @param friction
+ */
+void ThermostatSettings::setFrictionByUser(double friction)
+{
+    _friction.setByUser(friction);
+}
 
-    /**
-     * @brief is the start temperature set
-     *
-     * @return bool
-     */
-    bool ThermostatSettings::isStartTemperatureSet()
-    {
-        return _isStartTemperatureSet;
-    }
+/**
+ * @brief set the nose hoover coupling frequency
+ *
+ * @param frequency
+ */
+void NoseHooverSettings::setNoseHooverCouplingFrequencyByUser(
+    const Frequency& frequency
+)
+{
+    _nhCouplingFreq.setByUser(frequency);
+}
 
-    /**
-     * @brief is the end temperature set
-     *
-     * @return bool
-     */
-    bool ThermostatSettings::isEndTemperatureSet()
-    {
-        return _isEndTemperatureSet;
-    }
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
 
-    /**
-     * @brief get the target temperature
-     *
-     * @return double
-     */
-    double ThermostatSettings::getTargetTemperature()
-    {
-        return _targetTemperature;
-    }
+/**
+ * @brief get the nose hoover chain length
+ *
+ * @return size_t
+ */
+size_t NoseHooverSettings::getNoseHooverChainLength() const
+{
+    return _nhChainLength.get();
+}
 
-    /**
-     * @brief get the actual target temperature
-     *
-     * @return double
-     */
-    double ThermostatSettings::getActualTargetTemperature()
-    {
-        return _actualTargetTemperature;
-    }
+/**
+ * @brief get the temperature ramping steps
+ *
+ */
+size_t KineticsSettings::getRampingSteps() const
+{
+    return _temperatureRampSteps.get();
+}
 
-    /**
-     * @brief get the start temperature
-     *
-     * @return double
-     */
-    double ThermostatSettings::getStartTemperature()
-    {
-        return _startTemperature;
-    }
+/**
+ * @brief get the temperature ramping frequency
+ *
+ * @return size_t
+ */
+size_t KineticsSettings::getRampingFrequency() const
+{
+    return _temperatureRampFrequency.get();
+}
 
-    /**
-     * @brief get the end temperature
-     *
-     * @return double
-     */
-    double ThermostatSettings::getEndTemperature() { return _endTemperature; }
+/**
+ * @brief get the temperature increase
+ *
+ * @return const TemperatureDiff&
+ */
+const TemperatureDiff& KineticsSettings::getTemperatureIncrease() const
+{
+    return _temperatureIncrease.get();
+}
 
-    /**
-     * @brief get the relaxation time
-     *
-     * @return double
-     */
-    double ThermostatSettings::getRelaxationTime() { return _relaxationTime; }
+/**
+ * @brief get the start temperature
+ *
+ * @return const Temperature&
+ */
+const Temperature& KineticsSettings::getStartTemperature() const
+{
+    return _startTemperature.get();
+}
 
-    /**
-     * @brief get the friction
-     *
-     * @return double
-     */
-    double ThermostatSettings::getFriction() { return _friction; }
+/**
+ * @brief get the end temperature
+ *
+ * @return const Temperature&
+ */
+const Temperature& KineticsSettings::getEndTemperature() const
+{
+    return _endTemperature.get();
+}
 
-    /**
-     * @brief get the nose hoover coupling frequency
-     *
-     * @return double
-     */
-    double ThermostatSettings::getNoseHooverCouplingFrequency()
-    {
-        return _nhCouplingFreq;
-    }
+/**
+ * @brief get the thermostat type
+ *
+ * @return ThermostatType
+ */
+ThermostatType ThermostatSettings::getThermostatType() const
+{
+    return _thermostatType.get();
+}
 
-    /**
-     * @brief get chi
-     *
-     * @return std::map<size_t, double>
-     */
-    std::map<size_t, double> ThermostatSettings::getChi() { return _chi; }
+/**
+ * @brief get the relaxation time
+ *
+ * @return const Time&
+ */
+const Time& ThermostatSettings::getRelaxationTime() const
+{
+    return _relaxationTime.get();
+}
 
-    /**
-     * @brief get zeta
-     *
-     * @return std::map<size_t, double>
-     */
-    std::map<size_t, double> ThermostatSettings::getZeta() { return _zeta; }
+/**
+ * @brief get the friction
+ *
+ * @return double
+ */
+double ThermostatSettings::getFriction() const { return _friction.get(); }
 
-}   // namespace settings
+/**
+ * @brief get the nose hoover coupling frequency
+ *
+ * @return const Frequency&
+ */
+const Frequency& NoseHooverSettings::getNoseHooverCouplingFrequency() const
+{
+    return _nhCouplingFreq.get();
+}
+
+/**
+ * @brief get chi
+ *
+ * @return std::map<size_t, double>
+ */
+const std::map<size_t, double>& NoseHooverSettings::getChi() const
+{
+    return _chi.get();
+}
+
+/**
+ * @brief get zeta
+ *
+ * @return std::map<size_t, double>
+ */
+const std::map<size_t, double>& NoseHooverSettings::getZeta() const
+{
+    return _zeta.get();
+}
+
+/**
+ * @brief check if both chi and zeta are set
+ *
+ * @return bool
+ */
+bool NoseHooverSettings::isChiAndZetaSet() const
+{
+    return _chi.isSetBySomeone() && _zeta.isSetBySomeone();
+}
+
+/**
+ * @brief set chi by user
+ *
+ * @param chi the chi values to set
+ */
+void NoseHooverSettings::setChiByUser(const std::map<size_t, double>& chi)
+{
+    _chi.setByUser(chi);
+}
+
+/**
+ * @brief set zeta by user
+ *
+ * @param zeta the zeta values to set
+ */
+void NoseHooverSettings::setZetaByUser(const std::map<size_t, double>& zeta)
+{
+    _zeta.setByUser(zeta);
+}
+
+/**
+ * @brief check if the start temperature was set by the user, i.e. if a
+ * temperature ramp is requested
+ *
+ * @return true if a start temperature was given
+ */
+bool KineticsSettings::isStartTemperatureSet() const
+{
+    return _startTemperature.isSetByUser();
+}
+
+/**
+ * @brief set the start temperature by user
+ *
+ * @param startTemperature the start temperature to set
+ */
+void KineticsSettings::setStartTemperatureByUser(
+    const Temperature& startTemperature
+)
+{
+    _startTemperature.setByUser(startTemperature);
+}
+
+/**
+ * @brief set the end temperature by user
+ *
+ * @param endTemperature the end temperature to set
+ */
+void KineticsSettings::setEndTemperatureByUser(
+    const Temperature& endTemperature
+)
+{
+    _endTemperature.setByUser(endTemperature);
+}
+
+/**
+ * @brief set the target temperature by user
+ *
+ * @param targetTemperature the target temperature to set
+ */
+void KineticsSettings::setTargetTemperatureByUser(
+    const Temperature& targetTemperature
+)
+{
+    _targetTemperature.setByUser(targetTemperature);
+}

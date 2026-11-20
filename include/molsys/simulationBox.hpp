@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_HPP_
-
-#define _SIMULATION_BOX_HPP_
+#ifndef MOLSYS__SIMULATION_BOX_HPP
+#define MOLSYS__SIMULATION_BOX_HPP
 
 #include <memory>
 #include <optional>
@@ -32,12 +31,11 @@
 #include <vector>
 
 #include "atom.hpp"
-#include "box.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
-#include "orthorhombicBox.hpp"
 #include "simulationBoxView.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 
 /**
  * @namespace molsys
@@ -79,21 +77,25 @@ namespace molsys
         double _totalCharge = 0.0;
         double _density     = 0.0;
 
-        // TODO: add this to the constructor!!!
-        std::shared_ptr<Box> _box =
-            std::make_shared<OrthorhombicBox>(OrthorhombicBox::makeVacuumBox());
+        std::shared_ptr<Box> _box;
+        bool                 _boxSetViaStartFile = false;
 
         linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
         std::vector<std::shared_ptr<Atom>> _atoms;
-        std::vector<size_t>                _innerRegionCenterAtomIndices;
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
+
+        // cumulative number of atoms per molecule (0, n0, n0 + n1, ...), only
+        // filled between buildAtomIndexLookup() and clearAtomIndexLookup()
+        std::vector<size_t> _atomIndexOffsets;
 
         std::vector<ExtVdwType> _externalGlobalVdwTypes;
         std::unordered_map<ExtVdwType, VdwType>
             _externalToInternalGlobalVDWTypes;
 
        public:
+        SimulationBox();
+
         void                                         copy(const SimulationBox&);
         [[nodiscard]] std::shared_ptr<SimulationBox> clone() const;
 
@@ -120,7 +122,7 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] double        calculateTemperature();
+        [[nodiscard]] Temperature   calculateTemperature();
         [[nodiscard]] double        calculateTotalForce() const;
         [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
         [[nodiscard]] double        calculateRMSForce() const;
@@ -134,10 +136,7 @@ namespace molsys
         [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
         [[nodiscard]] linalg::Vec3D calcShiftVector(
             const linalg::Vec3D& position
-        ) const
-        {
-            return _box->calcShiftVector(position);
-        }
+        ) const;
         [[nodiscard]] int calcActiveMolCharge() const;
 
         [[nodiscard]]
@@ -156,6 +155,8 @@ namespace molsys
         std::pair<Molecule*, AtomIndex> findMoleculeByGlobalAtomIndex(
             size_t atomIndex
         );
+        void buildAtomIndexLookup();
+        void clearAtomIndexLookup();
 
 #ifdef WITH_MPI
         [[nodiscard]] std::vector<double> flattenVelocities();
@@ -171,7 +172,6 @@ namespace molsys
          * QMMM related methods *
          ************************/
 
-        void addInnerRegionCenterAtoms(const std::vector<size_t>& atomIndices);
         void setupForcedCoreMolecules(const std::vector<int>& moleculeIndices);
         void setupForcedLayerMolecules(const std::vector<int>& moleculeIndices);
         void setupForcedOuterMolecules(const std::vector<int>& moleculeIndices);
@@ -198,7 +198,6 @@ namespace molsys
         [[nodiscard]] double                 getTotalCharge() const;
         [[nodiscard]] double                 getDensity() const;
         [[nodiscard]] linalg::Vec3D&         getCenterOfMass();
-        [[nodiscard]] std::vector<size_t>    getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(size_t index);
         [[nodiscard]] Molecule&     getMolecule(size_t index);
@@ -234,6 +233,8 @@ namespace molsys
         [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
         [[nodiscard]] std::vector<double> getFlattenedQMPositions() const;
 
+        [[nodiscard]] bool wasBoxSetViaStartFile() const;
+
         /***************************
          * standard setter methods *
          ***************************/
@@ -246,14 +247,14 @@ namespace molsys
         void setDegreesOfFreedom(size_t degreesOfFreedom);
 
         template <typename T>
-        void setBox(const T& box);
+        void setBox(const T& box, bool boxSetViaStartFile);
 
         /**********************************************
          * Forwards the box methods to the box object *
          **********************************************/
 
         void applyPBC(linalg::Vec3D& position) const;
-        void scaleBox(const linalg::tensor3D& scalingTensor);
+        void scaleBox(const QuantityTensor3D& scalingTensor);
 
         [[nodiscard]] double getVolume() const;
         [[nodiscard]] double getMinimalBoxDimension() const;
@@ -264,8 +265,8 @@ namespace molsys
 
 }   // namespace molsys
 
-#ifndef _SIMULATION_BOX_TPP_
-#include "simulationBox.tpp.hpp"   // IWYU pragma: export
+#ifndef MOLSYS__SIMULATION_BOX_TPP
+#include "simulationBox.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _SIMULATION_BOX_HPP_
+#endif   // MOLSYS__SIMULATION_BOX_HPP

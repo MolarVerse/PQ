@@ -20,64 +20,64 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _WATER_MODEL_SETTINGS_HPP_
-
-#define _WATER_MODEL_SETTINGS_HPP_
+#ifndef SETTINGS__WATER_MODEL_SETTINGS_HPP
+#define SETTINGS__WATER_MODEL_SETTINGS_HPP
 
 #include <mstd/enum.hpp>
-#include <string_view>
 
 #include "enums/waterModels.hpp"
+#include "setting.hpp"
 
-namespace settings
+class ReferenceSettings;
+
+/**
+ * @struct RigidWaterGeometry
+ *
+ * @brief stores the geometry of a rigid water molecule
+ *
+ */
+struct RigidWaterGeometry
 {
+    double dOH{0.0};
+    double dHH{0.0};
+};
 
-    /**
-     * @class WaterModelSettings
-     *
-     * @brief static class to store settings of the water model
-     *
-     */
-    class WaterModelSettings
-    {
-       private:
-        static inline bool            _isWaterModelSet      = false;
-        static inline bool            _isInterWaterModelSet = false;
-        static inline WaterIntraModel _waterIntraModel = WaterIntraModel::NONE;
-        static inline WaterInterModel _waterInterModel = WaterInterModel::NONE;
+/**
+ * @class WaterModelSettings
+ *
+ * @brief static class to store settings of the water model
+ *
+ */
+class WaterModelSettings
+{
+   private:
+    Setting<WaterIntraModel, "Water Intra Model"> _waterIntraModel;
+    Setting<WaterInterModel, "Water Inter Model"> _waterInterModel;
 
-       public:
-        WaterModelSettings()  = delete;
-        ~WaterModelSettings() = delete;
+   public:
+    void finalize(ReferenceSettings &references);
 
-        WaterModelSettings(const WaterModelSettings &)            = delete;
-        WaterModelSettings(WaterModelSettings &&)                 = delete;
-        WaterModelSettings &operator=(const WaterModelSettings &) = delete;
-        WaterModelSettings &operator=(WaterModelSettings &&)      = delete;
+    [[nodiscard]]
+    std::optional<RigidWaterGeometry> getRigidWaterGeometry() const;
 
-        /********************
-         * standard getters *
-         ********************/
+    /********************
+     * standard getters *
+     ********************/
 
-        [[nodiscard]] static bool            isWaterModelSet();
-        [[nodiscard]] static bool            isInterWaterModelSet();
-        [[nodiscard]] static WaterIntraModel getWaterIntraModel();
-        [[nodiscard]] static WaterInterModel getWaterInterModel();
+    [[nodiscard]] bool            isWaterModelSetAndNotNone() const;
+    [[nodiscard]] bool            isInterWaterModelSetAndNotNone() const;
+    [[nodiscard]] WaterIntraModel getWaterIntraModel() const;
+    [[nodiscard]] WaterInterModel getWaterInterModel() const;
 
-        /********************
-         * standard setters *
-         ********************/
+    /********************
+     * standard setters *
+     ********************/
 
-        static void setIsWaterModelSet(bool isSet);
-        static void setIsInterWaterModelSet(bool isSet);
+    void setWaterIntraModelByUser(WaterIntraModel model);
+    void setWaterInterModelByUser(WaterInterModel model);
 
-        static void setWaterIntraModel(const std::string_view &model);
-        static void setWaterIntraModel(WaterIntraModel model);
+   private:
+    void _addReferences(ReferenceSettings &references) const;
+};
 
-        static void setWaterInterModel(const std::string_view &model);
-        static void setWaterInterModel(WaterInterModel model);
-    };
-
-}   // namespace settings
-
-#endif   // _WATER_MODEL_SETTINGS_HPP_
+#endif   // SETTINGS__WATER_MODEL_SETTINGS_HPP

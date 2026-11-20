@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_LIST_HPP_
-
-#define _CELL_LIST_HPP_
+#ifndef MOLSYS__CELLLIST_HPP
+#define MOLSYS__CELLLIST_HPP
 
 #include <cstddef>
 #include <vector>
@@ -67,7 +66,10 @@ namespace molsys
         void addNeighbouringCellPointers(Cell &);
         void addMoleculesToCells(SimulationBox &simulationBox);
         void assignMoleculeHybridZoneIndices();
-        void assignWaterMoleculeIndices(SimulationBox &);
+        void assignWaterMoleculeIndices(
+            const SimulationBox &,
+            const WaterModelSettings &
+        );
 
         [[nodiscard]] size_t getCellIndex(
             const linalg::Vec3Dul &cellIndices
@@ -106,4 +108,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _CELL_LIST_HPP_
+#endif   // MOLSYS__CELLLIST_HPP

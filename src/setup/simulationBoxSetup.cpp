@@ -40,6 +40,7 @@
 #include "logOutput.hpp"
 #include "maxwellBoltzmann.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "outputMessages.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -47,6 +48,7 @@
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
+#include "vector3d.hpp"
 
 namespace setup
 {
@@ -83,7 +85,7 @@ namespace setup
     {
         setAtomNames();
         setAtomTypes();
-        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        if (_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
             setExternalVDWTypes();
         setPartialCharges();
 
@@ -338,19 +340,19 @@ namespace setup
         auto &simBox = _engine.getSimulationBox();
 
         const auto isDensitySet =
-            settings::SimulationBoxSettings::getDensitySet();
-        const auto isBoxSet = settings::SimulationBoxSettings::getBoxSet();
+            _engine.getSettings().simulationBoxSettings.isDensitySetByUser();
+        const auto isBoxSet = simBox.wasBoxSetViaStartFile();
 
         if (!isDensitySet && !isBoxSet)
             throw exc::UserInputException("Box dimensions and density not set");
 
         if (!isBoxSet)
         {
-            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
-            const auto boxDimensions = simBox.calcBoxDimFromDensity();
-
-            molsys::OrthorhombicBox orthoBox{boxDimensions};
-            simBox.setBox(orthoBox);
+            simBox.setDensity(
+                _engine.getSettings().simulationBoxSettings.getDensity()
+            );
+            const auto boxDim = simBox.calcBoxDimFromDensity();
+            simBox.setBox(molsys::OrthorhombicBox(boxDim), isBoxSet);
         }
         else if (!isDensitySet)
         {
@@ -362,7 +364,9 @@ namespace setup
         }
         else
         {
-            simBox.setDensity(settings::SimulationBoxSettings::getDensity());
+            simBox.setDensity(
+                _engine.getSettings().simulationBoxSettings.getDensity()
+            );
             const auto volume     = simBox.getVolume();
             const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
             const auto density    = simBox.getTotalMass() / volume * convFactor;
@@ -438,15 +442,19 @@ namespace setup
      */
     void SimulationBoxSetup::initVelocities()
     {
-        if (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::FALSE ||
-            (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                 InitVelocities::TRUE &&
+        const auto initializeVelocities =
+            _engine.getSettings().simulationBoxSettings.getInitializeVelocities(
+            );
+        if (initializeVelocities == InitVelocities::FALSE ||
+            (initializeVelocities == InitVelocities::TRUE &&
              !getZeroVelocities()))
             return;
 
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
-        maxwellBoltzmann.initializeVelocities(_engine.getSimulationBox());
+        maxwellBoltzmann.initializeVelocities(
+            _engine.getSimulationBox(),
+            _engine.getSettings().kinetics.getStartTemperature()
+        );
     }
 
     /**
@@ -521,31 +529,24 @@ namespace setup
         );
         log.writeEmptyLine();
 
-        if (settings::SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::TRUE &&
-            !getZeroVelocities())
-        {
-            log.writeSetupWarning(
-                std::format(
-                    "Ignoring 'init_velocities' because non-zero velocities in "
-                    "\"{}\"",
-                    settings::FileSettings::getStartFileName()
-                )
+        const auto initVelocities =
+            _engine.getSettings().simulationBoxSettings.getInitializeVelocities(
             );
-            out::StdoutOutput::writeSetupWarning(
+
+        if (initVelocities == InitVelocities::TRUE && !getZeroVelocities())
+        {
+            _writeSetupWarning(
+                log,
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
-                    settings::FileSettings::getStartFileName()
+                    _engine.getSettings().fileSettings.getStartFileName()
                 )
             );
         }
 
-        if ((settings::SimulationBoxSettings::getInitializeVelocities() ==
-                 InitVelocities::TRUE &&
-             getZeroVelocities()) ||
-            settings::SimulationBoxSettings::getInitializeVelocities() ==
-                InitVelocities::FORCE)
+        if ((initVelocities == InitVelocities::TRUE && getZeroVelocities()) ||
+            initVelocities == InitVelocities::FORCE)
         {
             log.writeSetupInfo(
                 "velocities initialized with Maxwell-Boltzmann distribution"
@@ -556,7 +557,7 @@ namespace setup
             log.writeSetupInfo(
                 std::format(
                     "velocities taken from start file \"{}\"",
-                    settings::FileSettings::getStartFileName()
+                    _engine.getSettings().fileSettings.getStartFileName()
                 )
             );
         }

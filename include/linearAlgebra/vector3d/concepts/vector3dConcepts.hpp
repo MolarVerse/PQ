@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3D_CONCEPTS_HPP_
-
-#define _VECTOR3D_CONCEPTS_HPP_
+#ifndef LINEAR_ALGEBRA__VECTOR3D__CONCEPTS__VECTOR3D_CONCEPTS_HPP
+#define LINEAR_ALGEBRA__VECTOR3D__CONCEPTS__VECTOR3D_CONCEPTS_HPP
 
 #include "concepts.hpp"
 #include "vector3dDepth.hpp"
@@ -78,4 +77,4 @@ namespace pq
 
 }   // namespace pq
 
-#endif   // _VECTOR3D_CONCEPTS_HPP_
+#endif   // LINEAR_ALGEBRA__VECTOR3D__CONCEPTS__VECTOR3D_CONCEPTS_HPP

@@ -21,8 +21,10 @@
 ******************************************************************************/
 
 #include "interWater.hpp"
+#include "interWaterKernels.tpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "simulationBox.hpp"
 
 namespace waterModel
 {
@@ -42,6 +44,8 @@ namespace waterModel
         const molsys::CellList & /*cellList*/
     )
     {
+        const auto &box = simulationBox.getBox();
+
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
@@ -77,7 +81,7 @@ namespace waterModel
                             atomB,
                             coulPot,
                             rCutSquared,
-                            simulationBox,
+                            box,
                             *nonCoulPairPtr,
                             totalCoulombEnergy,
                             totalNonCoulombEnergy
@@ -124,6 +128,8 @@ namespace waterModel
         const molsys::CellList & /*cellList*/
     )
     {
+        const auto &box = simulationBox.getBox();
+
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
@@ -160,7 +166,7 @@ namespace waterModel
                         atomB,
                         coulombPotential,
                         rCutSquared,
-                        simulationBox,
+                        box,
                         totalCoulombEnergy
                     );
                 };
@@ -201,6 +207,8 @@ namespace waterModel
         const molsys::CellList & /*cellList*/
     )
     {
+        const auto &box = simulationBox.getBox();
+
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
@@ -235,7 +243,7 @@ namespace waterModel
                             atomB,
                             coulombPotential,
                             rCutSquared,
-                            simulationBox,
+                            box,
                             *nonCoulPairPtr,
                             totalCoulombEnergy,
                             totalNonCoulombEnergy
@@ -313,6 +321,8 @@ namespace waterModel
         const molsys::CellList & /*cellList*/
     )
     {
+        const auto &box = simulationBox.getBox();
+
         const auto rCut = pot::CoulombPotential::getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
@@ -355,7 +365,7 @@ namespace waterModel
                             atomB,
                             coulombPotential,
                             rCutSquared,
-                            simulationBox,
+                            box,
                             *nonCoulPairPtr,
                             totalCoulombEnergy,
                             totalNonCoulombEnergy
@@ -420,7 +430,7 @@ namespace waterModel
                             atomB,
                             coulombPotential,
                             rCutSquared,
-                            simulationBox,
+                            box,
                             *nonCoulPairPtr,
                             totalCoulombEnergy,
                             totalNonCoulombEnergy

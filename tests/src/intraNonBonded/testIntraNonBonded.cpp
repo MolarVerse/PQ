@@ -36,6 +36,7 @@
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -214,7 +215,7 @@ TEST_F(TestIntraNonBonded, calculate)
     auto simulationBox = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    simulationBox.setBox(orthoBox);
+    simulationBox.setBox(orthoBox, false);
 
     auto physicalData = physicalData::PhysicalData();
 

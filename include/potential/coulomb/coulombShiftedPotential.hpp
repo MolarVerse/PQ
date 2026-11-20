@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COULOMB_SHIFTED_POTENTIAL_HPP_
-
-#define _COULOMB_SHIFTED_POTENTIAL_HPP_
+#ifndef POTENTIAL__COULOMB__COULOMB_SHIFTED_POTENTIAL_HPP
+#define POTENTIAL__COULOMB__COULOMB_SHIFTED_POTENTIAL_HPP
 
 #include <utility>
 
@@ -52,4 +51,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _COULOMB_SHIFTED_POTENTIAL_HPP_
+#endif   // POTENTIAL__COULOMB__COULOMB_SHIFTED_POTENTIAL_HPP

@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ASE_DFTB_RUNNER_HPP_
-
-#define _ASE_DFTB_RUNNER_HPP_
-
-#include <unordered_map>
+#ifndef QM__ASE__ASE_DFTB_RUNNER_HPP
+#define QM__ASE__ASE_DFTB_RUNNER_HPP
 
 #include "aseQMRunner.hpp"
+
+class DftbSettings;
 
 namespace QM
 {
@@ -37,32 +36,14 @@ namespace QM
     class __attribute__((visibility("default"))) AseDftbRunner
         : public AseQMRunner
     {
-       private:
-        std::unordered_map<std::string, double> _hubbardDerivDict;
-
        public:
         ~AseDftbRunner() override = default;
 
         explicit AseDftbRunner(
-            const std::string                             &slakosPath,
-            bool                                           thirdOrder,
-            const std::unordered_map<std::string, double> &hubbardDerivs,
-            bool                                           dispersion
-        );
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-        [[nodiscard]]
-        const std::unordered_map<std::string, double> &getHubbDerivDict() const;
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-        void setHubbDerivDict(
-            const std::unordered_map<std::string, double> &slakosDict
+            const QMSettings   &qmSettings,
+            const DftbSettings &dftbSettings
         );
     };
 }   // namespace QM
 
-#endif   // _ASE_DFTB_RUNNER_HPP_
+#endif   // QM__ASE__ASE_DFTB_RUNNER_HPP

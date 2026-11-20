@@ -45,7 +45,7 @@ target_link_libraries(engine
     integrator
     manostat
     potential
-    resetKinetics
+    kinetics
     settings
     thermostat
     output
@@ -56,11 +56,14 @@ target_link_libraries(engine
     forceField
     intraNonBonded
     interWater
+    intraWater
     references
     hybridConfigurator
 
     optimization
     QM
+    interrupt
+    serialWorker
     externalQM
 )
 

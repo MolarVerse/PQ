@@ -26,10 +26,10 @@
 
 #include "coulombPotential.hpp"
 #include "forceField.hpp"
-#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace ff
 {
@@ -62,13 +62,15 @@ namespace ff
      * otherwise
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
+     * @param smoothing the smoothing method to use
      */
     void DihedralForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         bool                         isImproperDihedral,
         const pot::CoulombPotential &coulombPot,
-        pot::NonCoulombPotential    &nonCoulombPot
+        pot::NonCoulombPotential    &nonCoulombPot,
+        SmoothingMethod              smoothing
     )
     {
         const auto &molecules = get_molecules();
@@ -111,9 +113,13 @@ namespace ff
         auto phi = angle(crossPosition123, crossPosition432);
         phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
 
-        const auto cosine =
-            ::cos((_params.frequency * phi) + _params.phaseShift);
-        const auto energy = _params.forceConstant * (1.0 + cosine);
+        const auto cosine = ::cos(
+            (_params.frequency * phi) +
+            _params.phaseShift.numerical_value_in(rad)
+        );
+        const auto energy =
+            _params.forceConstant.numerical_value_in(kcal_per_mol / rad / rad) *
+            (1.0 + cosine);
 
         if (isImproperDihedral)
             physicalData.addImproperEnergy(energy);
@@ -134,8 +140,13 @@ namespace ff
         forceMagnitude            /= (distance432Squared * distance23);
         const auto forceVector432  = forceMagnitude * crossPosition432;
 
-        const auto sine = ::sin((_params.frequency * phi) + _params.phaseShift);
-        forceMagnitude  = _params.forceConstant * _params.frequency * sine;
+        const auto sine = ::sin(
+            (_params.frequency * phi) +
+            _params.phaseShift.numerical_value_in(rad)
+        );
+        forceMagnitude =
+            _params.forceConstant.numerical_value_in(kcal_per_mol / rad / rad) *
+            _params.frequency * sine;
 
         const auto diffForce123_432 = forceVector123 - forceVector432;
 
@@ -177,9 +188,7 @@ namespace ff
 
                 using enum SmoothingMethod;
 
-                auto       smF = 0.0;
-                const auto smoothing =
-                    settings::HybridSettings::getSmoothingMethod();
+                auto smF = 0.0;
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

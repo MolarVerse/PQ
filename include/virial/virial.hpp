@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VIRIAL_HPP_
-
-#define _VIRIAL_HPP_
+#ifndef VIRIAL__VIRIAL_HPP
+#define VIRIAL__VIRIAL_HPP
 
 #include "staticMatrix.hpp"
 
@@ -45,4 +44,4 @@ namespace virial
     );
 }   // namespace virial
 
-#endif   // _VIRIAL_HPP_
+#endif   // VIRIAL__VIRIAL_HPP

@@ -29,7 +29,7 @@
 #include "mathUtilities.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace thermostat
 {
@@ -37,44 +37,34 @@ namespace thermostat
     /**
      * @brief Construct a new Berendsen Thermostat object
      *
-     * @param targetTemp
-     * @param tau
+     * @param tau the relaxation time of the Berendsen thermostat
      */
-    BerendsenThermostat::BerendsenThermostat(double targetTemp, double tau)
-        : Thermostat(targetTemp), _tau(tau)
-    {
-    }
+    BerendsenThermostat::BerendsenThermostat(const Time &tau) : _tau(tau) {}
 
     /**
      * @brief apply thermostat - [Berendsen](https://doi.org/10.1063/1.448118)
      *
      * @param simulationBox
      * @param physicalData
+     * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void BerendsenThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        physicalData::PhysicalData &physicalData,
+        const Temperature          &targetTemperature,
+        const Time                 &timeStep
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Berendsen");
-
-        // the radicand 1 + dt / tau * (target / T - 1) is negative for a hot
-        // system if tau < dt, which would turn all velocities into NaN
-        if (_tau < settings::TimingsSettings::getTimeStep())
-        {
-            throw exc::UserInputException(
-                "The relaxation time of the Berendsen thermostat must not be "
-                "shorter than the time step."
-            );
-        }
 
         physicalData.calculateTemperature(simulationBox);
 
         setTemperature(physicalData.getTemperature());
 
-        if (utilities::isZero(getTemperature()))
+        if (utilities::isZero(getTemperature().quantity_from_zero()))
         {
-            if (utilities::isZero(getTargetTemperature()))
+            if (utilities::isZero(targetTemperature.quantity_from_zero()))
                 return;
 
             throw exc::UserInputException(
@@ -84,33 +74,38 @@ namespace thermostat
             );
         }
 
-        const auto timeStep  = settings::TimingsSettings::getTimeStep();
-        const auto tempRatio = getTargetTemperature() / getTemperature();
+        const auto timeRatio = static_cast<double>(timeStep / _tau);
+        const auto tempRatio = targetTemperature.quantity_from_zero() /
+                               getTemperature().quantity_from_zero();
 
-        const auto berendsenFactor =
-            ::sqrt(1.0 + (timeStep / _tau * (tempRatio - 1.0)));
+        const auto berendsenFactor = ::sqrt(
+            1.0 + (timeRatio * (tempRatio - 1.0)).numerical_value_in(one)
+        );
 
         for (const auto &atom : simulationBox.getAtoms())
             atom->scaleVelocity(berendsenFactor);
 
         physicalData.setTemperature(
-            getTemperature() * berendsenFactor * berendsenFactor
+            Temperature{
+                getTemperature().quantity_from_zero() * berendsenFactor *
+                berendsenFactor
+            }
         );
     }
 
     /**
      * @brief Get the tau (relaxation time) of the Berendsen thermostat
      *
-     * @return double
+     * @return const Time &
      */
-    double BerendsenThermostat::getTau() const { return _tau; }
+    const Time &BerendsenThermostat::getTau() const { return _tau; }
 
     /**
      * @brief Set the tau (relaxation time) of the Berendsen thermostat
      *
      * @param tau
      */
-    void BerendsenThermostat::setTau(double tau) { _tau = tau; }
+    void BerendsenThermostat::setTau(const Time &tau) { _tau = tau; }
 
     /**
      * @brief Get thermostat type

@@ -20,11 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CONSTRAINTS_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__CONSTRAINTS_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__CONSTRAINTS_INPUT_PARSER_HPP
 
-#define _CONSTRAINTS_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+
+class ConstraintSettings;
 
 namespace input
 {
@@ -36,8 +39,10 @@ namespace input
      */
     class ConstraintsInputParser : public InputFileParser
     {
+        mstd::Ref<ConstraintSettings> _constraintSettings;
+
        public:
-        explicit ConstraintsInputParser();
+        explicit ConstraintsInputParser(ConstraintSettings &constraintSettings);
 
         void addShakeActivatedKeyword();
         void addShakeToleranceKeyword();
@@ -51,4 +56,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _CONSTRAINTS_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__CONSTRAINTS_INPUT_PARSER_HPP

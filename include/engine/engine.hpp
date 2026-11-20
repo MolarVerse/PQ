@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_HPP_
-
-#define _ENGINE_HPP_
+#ifndef ENGINE__ENGINE_HPP
+#define ENGINE__ENGINE_HPP
 
 #include <cstddef>
 #include <memory>
+#include <mstd/types.hpp>
 
 #include "constraints.hpp"
 #include "engineOutput.hpp"
@@ -51,8 +51,7 @@ namespace engine
     class Engine
     {
        private:
-        size_t _step   = 1;
-        size_t _nSteps = 0;
+        size_t _step = 1;
 
         EngineOutput _engineOutput;
 
@@ -65,25 +64,27 @@ namespace engine
         std::shared_ptr<ff::ForceField>                 _forceField;
         std::shared_ptr<constraints::Constraints>       _constraints;
 
-        std::unique_ptr<waterModel::IntraWater> _intraWater =
-            std::make_unique<waterModel::IntraWater>();
-        std::unique_ptr<waterModel::InterWater> _interWater =
-            std::make_unique<waterModel::InterWater>();
+        std::unique_ptr<waterModel::IntraWater> _intraWater;
+        std::unique_ptr<waterModel::InterWater> _interWater;
 
-        Settings _settings;
+        mstd::ConstRef<Settings> _settings;
 
         struct Impl;
         std::unique_ptr<Impl> _impl;
 
        public:
-        explicit Engine(Settings settings);
+        explicit Engine(const Settings &settings);
         virtual ~Engine();
 
-        virtual void run()         = 0;
-        virtual void writeOutput() = 0;
-        static void  deleteTmpFiles();
+        virtual void run()                                                 = 0;
+        virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
+        void         deleteTmpFiles() const;
 
-        [[nodiscard]] double calculateTotalSimulationTime() const;
+        [[nodiscard]]
+        Time calculateTotalSimulationTime(
+            const Time &timeStep,
+            size_t      startingStepCount
+        ) const;
 
         /***************************
          * standard getter methods *
@@ -170,14 +171,12 @@ namespace engine
         [[nodiscard]]
         const waterModel::IntraWater &_getIntraWater() const;
 
-        [[nodiscard]] size_t _getNSteps() const;
-        void                 _setNSteps(size_t nSteps);
-        void                 _setStep(size_t step);
+        void _setStep(size_t step);
     };
 }   // namespace engine
 
-#ifndef _ENGINE_TPP_
-#include "engine.tpp.hpp"   // IWYU pragma: export
+#ifndef ENGINE__ENGINE_TPP
+#include "engine.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _ENGINE_HPP_
+#endif   // ENGINE__ENGINE_HPP

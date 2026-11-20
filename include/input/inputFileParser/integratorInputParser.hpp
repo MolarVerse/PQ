@@ -20,11 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTEGRATOR_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP
 
-#define _INTEGRATOR_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+
+class ReferenceSettings;
 
 namespace input
 {
@@ -36,12 +39,14 @@ namespace input
      */
     class IntegratorInputParser : public InputFileParser
     {
+        mstd::Ref<ReferenceSettings> _referenceSettings;
+
        public:
-        IntegratorInputParser();
+        explicit IntegratorInputParser(ReferenceSettings& referenceSettings);
 
         void addIntegratorKey();
     };
 
 }   // namespace input
 
-#endif   // _INTEGRATOR_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INTEGRATOR_INPUT_PARSER_HPP

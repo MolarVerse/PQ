@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SPC_INTRA_WATER_HPP_
-
-#define _SPC_INTRA_WATER_HPP_
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
+#define WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
 
 #include "constants/conversionFactors.hpp"
 #include "intraWater.hpp"
@@ -42,6 +41,8 @@ namespace waterModel
     class SPCIntraWater : public IntraWater
     {
        public:
+        using IntraWater::IntraWater;
+
         void calculate(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData
@@ -70,6 +71,8 @@ namespace waterModel
             75.9;   // kcal mol^-1 rad^-2
 
        public:
+        using SPCIntraWater::SPCIntraWater;
+
         [[nodiscard]]
         double getEqOHDistance() const override
         {
@@ -103,6 +106,8 @@ namespace waterModel
             75.9;   // kcal mol^-1 rad^-2
 
        public:
+        using SPCIntraWater::SPCIntraWater;
+
         [[nodiscard]]
         double getEqOHDistance() const override
         {
@@ -127,8 +132,8 @@ namespace waterModel
 
 }   // namespace waterModel
 
-#ifndef _SPC_INTRA_WATER_TPP_
-#include "SPCIntraWater.tpp"   // IWYU pragma: export - DO NOT MOVE THIS LINE
+#ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_TPP
+#include "SPCIntraWater.tpp"   // IWYU pragma: export
 #endif
 
-#endif   //  _SPC_INTRA_WATER_HPP_
+#endif   //  WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP

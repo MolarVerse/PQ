@@ -28,7 +28,6 @@
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
-#include "forceFieldSettings.hpp"
 #include "improperDihedralSection.hpp"
 #include "jCouplingSection.hpp"
 #include "nonCoulombicsSection.hpp"
@@ -124,11 +123,6 @@ namespace input::parameterFile
      */
     void ParameterFileReader::read()
     {
-        if (!settings::FileSettings::isParameterFileNameSet())
-            throw exc::InputFileException(
-                "Parameter file needed for requested simulation setup"
-            );
-
         std::string line;
         size_t      lineNumber = 1;
 
@@ -159,10 +153,16 @@ namespace input::parameterFile
      */
     void readParameterFile(engine::Engine &engine)
     {
-        if (!isNeeded())
+        const auto &settings = engine.getSettings();
+        if (!settings.forceFieldSettings.isActive())
             return;
 
-        const auto filename = settings::FileSettings::getParameterFilename();
+        if (!settings.fileSettings.isParameterFileNameSetByUser())
+            throw exc::InputFileException(
+                "Parameter file needed for requested simulation setup"
+            );
+
+        const auto filename = settings.fileSettings.getParameterFileName();
 
         out::StdoutOutput::writeRead("Parameter File", filename);
         engine.getLogOutput().writeRead("Parameter File", filename);
@@ -170,14 +170,6 @@ namespace input::parameterFile
         ParameterFileReader parameterFileReader(filename, engine);
         parameterFileReader.read();
     }
-
-    /**
-     * @brief checks if reading topology file is needed
-     *
-     * @return true if force field is activated
-     * @return false
-     */
-    bool isNeeded() { return settings::ForceFieldSettings::isActive(); }
 
     /**************************************
      *                                    *

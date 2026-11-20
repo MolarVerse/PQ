@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_ENUM_HPP_
-#define _SIMULATION_BOX_ENUM_HPP_
+#ifndef CONFIG__ENUMS__SIMULATION_BOX_HPP
+#define CONFIG__ENUMS__SIMULATION_BOX_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -40,4 +40,4 @@ MSTD_ENUM(InitVelocities, std::uint8_t, INIT_VELOCITIES_LIST)
 
 #undef INIT_VELOCITIES_LIST
 
-#endif   // _SIMULATION_BOX_ENUM_HPP_
+#endif   // CONFIG__ENUMS__SIMULATION_BOX_HPP

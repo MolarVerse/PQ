@@ -32,15 +32,18 @@
 #include "coulombShiftedPotential.hpp"
 #include "generalSettings.hpp"
 #include "guffNonCoulomb.hpp"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -79,7 +82,7 @@ namespace
         molsys::SimulationBox simBox;
 
         molsys::OrthorhombicBox orthoBox{{kBoxEdge, kBoxEdge, kBoxEdge}};
-        simBox.setBox(orthoBox);
+        simBox.setBox(orthoBox, false);
 
         auto buildMoleculeType = [](MolType molType, double charge)
         {
@@ -183,13 +186,14 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     physicalData::PhysicalData physicalDataBF;
     physicalData::PhysicalData physicalDataCL;
 
-    pot::PotentialBruteForce bruteForce;
+    const HybridSettings     hybridSettings;
+    pot::PotentialBruteForce bruteForce(hybridSettings);
     bruteForce.makeCoulombPotential(
         pot::CoulombShiftedPotential(kCoulombCutOff)
     );
     bruteForce.setNonCoulombPotential(buildGuffNonCoulomb());
 
-    pot::PotentialCellList cellListPotential;
+    pot::PotentialCellList cellListPotential(hybridSettings);
     cellListPotential.makeCoulombPotential(
         pot::CoulombShiftedPotential(kCoulombCutOff)
     );
@@ -197,8 +201,14 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 
     // Brute force ignores its molsys::CellList argument; pass a
     // default-constructed one purely to satisfy the signature.
-    molsys::CellList dummyCellList;
-    bruteForce.calculateForces(simBoxBF, physicalDataBF, dummyCellList);
+    WaterModelSettings waterModelSettings;
+    molsys::CellList   dummyCellList;
+    bruteForce.calculateForces(
+        simBoxBF,
+        physicalDataBF,
+        dummyCellList,
+        waterModelSettings
+    );
 
     settings::GeneralSettings::activateCellList();
 
@@ -207,7 +217,12 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     cellList.resizeCells();
     cellList.setup(simBoxCL);
     cellList.updateCellList(simBoxCL);
-    cellListPotential.calculateForces(simBoxCL, physicalDataCL, cellList);
+    cellListPotential.calculateForces(
+        simBoxCL,
+        physicalDataCL,
+        cellList,
+        waterModelSettings
+    );
 
     EXPECT_NEAR(
         physicalDataBF.getCoulombEnergy(),

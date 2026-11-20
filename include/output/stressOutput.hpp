@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STRESS_OUTPUT_HPP_
-
-#define _STRESS_OUTPUT_HPP_
+#ifndef OUTPUT__STRESS_OUTPUT_HPP
+#define OUTPUT__STRESS_OUTPUT_HPP
 
 #include <cstddef>
 
@@ -51,4 +50,4 @@ namespace out
 
 }   // namespace out
 
-#endif   // _STRESS_OUTPUT_HPP_
+#endif   // OUTPUT__STRESS_OUTPUT_HPP

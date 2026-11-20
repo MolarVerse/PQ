@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _LANGEVIN_THERMOSTAT_HPP_
-
-#define _LANGEVIN_THERMOSTAT_HPP_
+#ifndef THERMOSTAT__LANGEVIN_THERMOSTAT_HPP
+#define THERMOSTAT__LANGEVIN_THERMOSTAT_HPP
 
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
@@ -41,11 +40,9 @@ namespace thermostat
         rng::RandomNumberGenerator _randomNumberGenerator;
 
         double _friction = 0.0;
-        double _sigma    = 0.0;
 
        public:
-        explicit LangevinThermostat(double, double);
-        LangevinThermostat()           = default;
+        explicit LangevinThermostat(double);
         ~LangevinThermostat() override = default;
 
         // copy constructor and copy assignment needed for random number
@@ -55,39 +52,41 @@ namespace thermostat
         LangevinThermostat(LangevinThermostat &&) noexcept            = delete;
         LangevinThermostat &operator=(LangevinThermostat &&) noexcept = delete;
 
-        void calculateSigma(double, double);
+        [[nodiscard]]
+        static double calculateSigma(
+            double friction,
+            const Temperature &,
+            const Time &
+        );
 
-        void applyLangevin(molsys::SimulationBox &);
+        void applyLangevin(
+            molsys::SimulationBox &,
+            const Temperature &,
+            const Time &timeStep
+        );
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
         ) override;
 
         void applyThermostatHalfStep(
             molsys::SimulationBox &simulationBox,
-            physicalData::PhysicalData & /*physicalData*/
+            physicalData::PhysicalData & /*physicalData*/,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) override;
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        void setTargetTemperature(double targetTemperature) override;
-
-        void setFriction(double friction);
-        void setSigma(double sigma);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double getFriction() const;
-        [[nodiscard]] double getSigma() const;
         [[nodiscard]]
         ThermostatType getThermostatType() const override;
     };
 
 }   // namespace thermostat
 
-#endif   // _LANGEVIN_THERMOSTAT_HPP_
+#endif   // THERMOSTAT__LANGEVIN_THERMOSTAT_HPP

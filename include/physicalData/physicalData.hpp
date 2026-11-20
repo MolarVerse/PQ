@@ -20,15 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PHYSICAL_DATA_HPP_
-
-#define _PHYSICAL_DATA_HPP_
+#ifndef PHYSICAL_DATA__PHYSICAL_DATA_HPP
+#define PHYSICAL_DATA__PHYSICAL_DATA_HPP
 
 #include <memory>
 #include <vector>
 
 #include "enums/virial.hpp"
 #include "staticMatrix.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -51,8 +51,8 @@ namespace physicalData
      */
     struct KineticEnergyVirialTensor
     {
-        linalg::tensor3D atomic;
-        linalg::tensor3D molecular;
+        linalg::tensor3D atomic    = linalg::tensor3D(0.0);
+        linalg::tensor3D molecular = linalg::tensor3D(0.0);
 
         [[nodiscard]]
         const linalg::tensor3D& getVirialTensor(VirialType virialType) const;
@@ -70,11 +70,12 @@ namespace physicalData
         double _numberOfQMAtoms = 0.0;
         double _loopTime        = 0.0;
 
-        double _volume          = 0.0;
-        double _density         = 0.0;
-        double _temperature     = 0.0;
-        double _pressure        = 0.0;
-        double _coupledPressure = 0.0;
+        double      _volume  = 0.0;
+        double      _density = 0.0;
+        Temperature _temperature{Temperature::zero()};
+
+        Pressure _pressure{Pressure::zero()};
+        Pressure _coupledPressure{Pressure::zero()};
 
         double _kineticEnergy         = 0.0;
         double _coulombEnergy         = 0.0;
@@ -87,7 +88,8 @@ namespace physicalData
         double _dihedralEnergy = 0.0;
         double _improperEnergy = 0.0;
 
-        double _qmEnergy = 0.0;
+        double _qmEnergy          = 0.0;
+        double _qmReferenceEnergy = 0.0;
 
         double _numberOfSmoothingMol = 0.0;
 
@@ -97,13 +99,17 @@ namespace physicalData
         double _lowerDistanceConstraints = 0.0;
         double _upperDistanceConstraints = 0.0;
 
-        linalg::Vec3D _momentum;
-        linalg::Vec3D _angularMomentum;
+        // Vec3D and tensor3D do not initialise their components, a default
+        // constructed PhysicalData (also the one that resets the averages after
+        // every output) would otherwise write garbage, sometimes inf, into the
+        // first energy and momentum line
+        linalg::Vec3D _momentum        = linalg::Vec3D(0.0);
+        linalg::Vec3D _angularMomentum = linalg::Vec3D(0.0);
 
         KineticEnergyVirialTensor _kinEnergyVirialTensor;
 
-        linalg::tensor3D _virial;
-        linalg::tensor3D _stressTensor;
+        linalg::tensor3D _virial       = linalg::tensor3D(0.0);
+        linalg::tensor3D _stressTensor = linalg::tensor3D(0.0);
 
         double _ringPolymerEnergy = 0.0;
 
@@ -123,6 +129,7 @@ namespace physicalData
         void addIntraNonCoulombEnergy(double intraNonCoulombEnergy);
 
         [[nodiscard]] double getTotalEnergy() const;
+        [[nodiscard]] double getPotentialEnergy() const;
 
         /*************************
          * standard add methods  *
@@ -130,6 +137,7 @@ namespace physicalData
 
         void addVirial(const linalg::tensor3D& virial);
         void addQMEnergy(double qmEnergy);
+        void addQMReferenceEnergy(double qmReferenceEnergy);
         void addCoulombEnergy(double coulombEnergy);
         void addNonCoulombEnergy(double nonCoulombEnergy);
 
@@ -149,9 +157,9 @@ namespace physicalData
 
         void setVolume(double volume);
         void setDensity(double density);
-        void setTemperature(double temperature);
-        void setPressure(double pressure);
-        void setCoupledPressure(double coupledPressure);
+        void setTemperature(const Temperature& temperature);
+        void setPressure(const Pressure& pressure);
+        void setCoupledPressure(const Pressure& coupledPressure);
 
         void setVirial(const linalg::tensor3D& virial);
         void setStressTensor(const linalg::tensor3D& stressTensor);
@@ -174,6 +182,7 @@ namespace physicalData
         void setImproperEnergy(double improperEnergy);
 
         void setQMEnergy(double qmEnergy);
+        void setQMReferenceEnergy(double qmReferenceEnergy);
 
         void setNumberOfSmoothingMolecules(double numberSmMol);
 
@@ -192,11 +201,11 @@ namespace physicalData
         [[nodiscard]] double getNumberOfQMAtoms() const;
         [[nodiscard]] double getLoopTime() const;
 
-        [[nodiscard]] double getVolume() const;
-        [[nodiscard]] double getDensity() const;
-        [[nodiscard]] double getTemperature() const;
-        [[nodiscard]] double getPressure() const;
-        [[nodiscard]] double getCoupledPressure() const;
+        [[nodiscard]] double             getVolume() const;
+        [[nodiscard]] double             getDensity() const;
+        [[nodiscard]] const Temperature& getTemperature() const;
+        [[nodiscard]] const Pressure&    getPressure() const;
+        [[nodiscard]] const Pressure&    getCoupledPressure() const;
 
         [[nodiscard]] double getKineticEnergy() const;
         [[nodiscard]] double getNonCoulombEnergy() const;
@@ -211,6 +220,7 @@ namespace physicalData
         [[nodiscard]] double getImproperEnergy() const;
 
         [[nodiscard]] double getQMEnergy() const;
+        [[nodiscard]] double getQMReferenceEnergy() const;
 
         [[nodiscard]] double getNumberOfSmoothingMolecules() const;
 
@@ -239,4 +249,4 @@ namespace physicalData
 
 }   // namespace physicalData
 
-#endif   // _PHYSICAL_DATA_HPP_
+#endif   // PHYSICAL_DATA__PHYSICAL_DATA_HPP

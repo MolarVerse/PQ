@@ -20,12 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_MM_MD_ENGINE_HPP_
-
-#define _QM_MM_MD_ENGINE_HPP_
+#ifndef ENGINE__QMMM_MD_ENGINE_HPP
+#define ENGINE__QMMM_MD_ENGINE_HPP
 
 #include "hybridMDEngine.hpp"
 #include "randomNumberGenerator.hpp"
+
+class QMMMEnergiesTest;   // forward declaration for friend
 
 namespace engine
 {
@@ -56,9 +57,12 @@ namespace engine
 
         void _moltypeCheck();
         void _setNumberOfQMAtoms();
+        void _calculateQMReferenceEnergy();
 
         void _scaleAndAccumulateEnergies(double globalSmF);
         void _moveEnergiesToPhysicalData();
+
+        friend class ::QMMMEnergiesTest;   // for testing private methods
 
         void _distributeSmoothingMolQMForces();
 
@@ -71,4 +75,4 @@ namespace engine
 
 }   // namespace engine
 
-#endif   // _QM_MM_MD_ENGINE_HPP_
+#endif   // ENGINE__QMMM_MD_ENGINE_HPP

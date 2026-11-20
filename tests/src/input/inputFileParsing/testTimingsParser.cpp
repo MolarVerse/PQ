@@ -30,6 +30,7 @@
 #include "throwWithMessage.hpp"
 #include "timingsInputParser.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "timestep" command
@@ -37,14 +38,15 @@
  */
 TEST_F(TestInputFileReader, testParseTimestep)
 {
-    input::TimingsInputParser parser;
+    TimingsSettings           settings;
+    input::TimingsInputParser parser{settings};
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("timestep"));
     const auto &timeStepFunc = funcMap.at("timestep");
 
     std::vector<std::string> lineElements = {"timestep", "=", "1"};
     timeStepFunc(lineElements, 0);
-    EXPECT_EQ(settings::TimingsSettings::getTimeStep(), 1.0);
+    EXPECT_EQ(settings.getTimeStep(), 1.0 * fs);
 
     _clearParser(parser);
 
@@ -81,14 +83,15 @@ TEST_F(TestInputFileReader, testParseTimestep)
  */
 TEST_F(TestInputFileReader, testParseNumberOfSteps)
 {
-    input::TimingsInputParser parser;
+    TimingsSettings           settings;
+    input::TimingsInputParser parser{settings};
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("nstep"));
     const auto &nstepsFunc = funcMap.at("nstep");
 
     std::vector<std::string> lineElements = {"nstep", "=", "1000"};
     nstepsFunc(lineElements, 0);
-    EXPECT_EQ(settings::TimingsSettings::getNumberOfSteps(), 1000);
+    EXPECT_EQ(settings.getNumberOfSteps(), 1000);
 
     _clearParser(parser);
 

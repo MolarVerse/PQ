@@ -1,1 +1,0 @@
-- Fix the flexible SPC and MTR water models silently producing NaN forces for degenerate geometries (a hydrogen on the oxygen, or both hydrogens on the same ray from it); they now stop with a descriptive error.

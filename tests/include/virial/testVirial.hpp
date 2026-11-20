@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_VIRIAL_HPP_
-
-#define _TEST_VIRIAL_HPP_
+#ifndef TESTS__INCLUDE__VIRIAL__TEST_VIRIAL_HPP
+#define TESTS__INCLUDE__VIRIAL__TEST_VIRIAL_HPP
 
 #include <gtest/gtest.h>
 
@@ -32,6 +31,7 @@
 #include "enums/jobtype.hpp"
 #include "generalSettings.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "virial.hpp"
@@ -82,7 +82,7 @@ class TestVirial : public ::testing::Test
         _simBox->addAtom(atom3);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simBox->setBox(orthoBox);
+        _simBox->setBox(orthoBox, false);
     }
 
     void TearDown() override

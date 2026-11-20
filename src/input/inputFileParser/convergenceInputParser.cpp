@@ -52,7 +52,8 @@ namespace input
      * - rms-force-conv "<double>"
      *
      */
-    ConvInputParser::ConvInputParser()
+    ConvInputParser::ConvInputParser(ConvSettings &convSettings)
+        : _convSettings(convSettings)
     {
         addEnergyConvergenceStrategyKey();
         addUseEnergyConvergenceKey();
@@ -77,8 +78,8 @@ namespace input
                 "loose, absolute, relative)"
         };
 
-        const auto setValue = [](ConvStrategy strategy)
-        { settings::ConvSettings::setEnergyConvStrategy(strategy); };
+        const auto setValue = [this](ConvStrategy strategy)
+        { _convSettings->setEnergyConvStrategyByUser(strategy); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ConvStrategy>{.metadata = metaData, .onSet = setValue}
@@ -96,8 +97,8 @@ namespace input
                 "Specifies whether to use energy convergence (true or false)"
         };
 
-        const auto setValue = [](bool useEnergyConv)
-        { settings::ConvSettings::setUseEnergyConv(useEnergyConv); };
+        const auto setValue = [this](bool useEnergyConv)
+        { _convSettings->setUseEnergyConvByUser(useEnergyConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -115,8 +116,8 @@ namespace input
                 "Specifies whether to use force convergence (true or false)"
         };
 
-        const auto setValue = [](bool useForceConv)
-        { settings::ConvSettings::setUseForceConv(useForceConv); };
+        const auto setValue = [this](bool useForceConv)
+        { _convSettings->setUseForceConvByUser(useForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -134,8 +135,8 @@ namespace input
                 "Specifies whether to use max force convergence (true or false)"
         };
 
-        const auto setValue = [](bool useMaxForceConv)
-        { settings::ConvSettings::setUseMaxForceConv(useMaxForceConv); };
+        const auto setValue = [this](bool useMaxForceConv)
+        { _convSettings->setUseMaxForceConvByUser(useMaxForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -153,8 +154,8 @@ namespace input
                 "Specifies whether to use RMS force convergence (true or false)"
         };
 
-        const auto setValue = [](bool useRMSForceConv)
-        { settings::ConvSettings::setUseRMSForceConv(useRMSForceConv); };
+        const auto setValue = [this](bool useRMSForceConv)
+        { _convSettings->setUseRMSForceConvByUser(useRMSForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{.metadata = metaData, .onSet = setValue}
@@ -173,8 +174,8 @@ namespace input
                 "than 0.0)"
         };
 
-        const auto setValue = [](double energyConv)
-        { settings::ConvSettings::setEnergyConv(energyConv); };
+        const auto setValue = [this](double energyConv)
+        { _convSettings->setEnergyConvByUser(energyConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -197,8 +198,8 @@ namespace input
                 "greater than 0.0)"
         };
 
-        const auto setValue = [](double relEnergyConv)
-        { settings::ConvSettings::setRelEnergyConv(relEnergyConv); };
+        const auto setValue = [this](double relEnergyConv)
+        { _convSettings->setRelEnergyConvByUser(relEnergyConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -221,8 +222,8 @@ namespace input
                 "greater than 0.0)"
         };
 
-        const auto setValue = [](double absEnergyConv)
-        { settings::ConvSettings::setAbsEnergyConv(absEnergyConv); };
+        const auto setValue = [this](double absEnergyConv)
+        { _convSettings->setAbsEnergyConvByUser(absEnergyConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -245,8 +246,8 @@ namespace input
                 "greater than 0.0)"
         };
 
-        const auto setValue = [](double forceConv)
-        { settings::ConvSettings::setForceConv(forceConv); };
+        const auto setValue = [this](double forceConv)
+        { _convSettings->setForceConvByUser(forceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -269,8 +270,8 @@ namespace input
                 "greater than 0.0)"
         };
 
-        const auto setValue = [](double rmsForceConv)
-        { settings::ConvSettings::setRMSForceConv(rmsForceConv); };
+        const auto setValue = [this](double rmsForceConv)
+        { _convSettings->setRMSForceConvByUser(rmsForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -293,8 +294,8 @@ namespace input
                 "greater than 0.0)"
         };
 
-        const auto setValue = [](double maxForceConv)
-        { settings::ConvSettings::setMaxForceConv(maxForceConv); };
+        const auto setValue = [this](double maxForceConv)
+        { _convSettings->setMaxForceConvByUser(maxForceConv); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

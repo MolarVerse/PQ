@@ -20,11 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _QM_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP
 
-#define _QM_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+
+class ReferenceSettings;
+class QMSettings;
+class MaceSettings;
+class FennolSettings;
+class DftbSettings;
+class XtbSettings;
+class ExternalQMSettings;
 
 namespace input
 {
@@ -37,31 +46,46 @@ namespace input
     class QMInputParser : public InputFileParser
     {
        private:
-        bool _resolveBuiltInSlakosPath;
+        bool                          _resolveBuiltInSlakosPath;
+        mstd::Ref<ReferenceSettings>  _referenceSettings;
+        mstd::Ref<QMSettings>         _qmSettings;
+        mstd::Ref<MaceSettings>       _maceSettings;
+        mstd::Ref<FennolSettings>     _fennolSettings;
+        mstd::Ref<DftbSettings>       _dftbSettings;
+        mstd::Ref<XtbSettings>        _xtbSettings;
+        mstd::Ref<ExternalQMSettings> _externalQMSettings;
 
        public:
-        explicit QMInputParser(bool resolveBuiltInSlakosPath);
-        explicit QMInputParser();
+        explicit QMInputParser(
+            bool                resolveBuiltInSlakosPath,
+            ReferenceSettings  &referenceSettings,
+            QMSettings         &qmSettings,
+            MaceSettings       &maceSettings,
+            FennolSettings     &fennolSettings,
+            DftbSettings       &dftbSettings,
+            XtbSettings        &xtbSettings,
+            ExternalQMSettings &externalQMSettings
+        );
 
-        static void parseMaceQMMethod(const std::string &);
-        void        addQMMethodKey();
-        void        addQMScriptKey();
-        void        addQMScriptFullPathKey();
-        void        addQMLoopTimeLimitKey();
-        void        addDispersionKey();
-        void        addRemoveNetForceKey();
-        void        addMaceModelKey();
-        void        addMaceModeKey();
-        void        addMaceModelPathKey();
-        void        addSlakosTypeKey();
-        void        addSlakosPathKey();
-        void        addThirdOrderKey();
-        void        addHubbardDerivsKey();
-        void        addXtbMethodKey();
-        void        addFennolModelPathKey();
-        void        addGPUPreprocessingKey();
+        void parseMaceQMMethod(const std::string &);
+        void addQMMethodKey();
+        void addQMScriptKey();
+        void addQMScriptFullPathKey();
+        void addQMLoopTimeLimitKey();
+        void addDispersionKey();
+        void addRemoveNetForceKey();
+        void addMaceModelKey();
+        void addMaceModeKey();
+        void addMaceModelPathKey();
+        void addSlakosTypeKey();
+        void addSlakosPathKey();
+        void addThirdOrderKey();
+        void addHubbardDerivsKey();
+        void addXtbMethodKey();
+        void addFennolModelPathKey();
+        void addGPUPreprocessingKey();
     };
 
 }   // namespace input
 
-#endif   // _QM_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__QM_INPUT_PARSER_HPP

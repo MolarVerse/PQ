@@ -24,10 +24,84 @@
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
+#include "potentialKernels.tpp"   // IWYU pragma: keep -- for template specialization
 
 namespace pot
 {
+    /**
+     * @brief Construct a new Potential object with the given hybrid settings.
+     *
+     * @param hybridSettings Hybrid settings to be used by the potential.
+     */
+    Potential::Potential(const HybridSettings &hybridSettings)
+        : _hybridSettings(hybridSettings)
+    {
+    }
+
+    /**
+     * @brief Destroy the Potential object
+     *
+     */
     Potential::~Potential() = default;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteraction<pot::MMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template double pot::Potential::
+        calculateSingleCoulombInteraction<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template double pot::Potential::
+        calculateSingleCoulombInteraction<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteractionOneWay<pot::MMChargeTag, pot::QMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
+
+    template std::pair<double, double> pot::Potential::
+        calculateSingleInteractionOneWay<pot::QMChargeTag, pot::MMChargeTag>(
+            molsys::Box const &,
+            molsys::Molecule &,
+            molsys::Molecule &,
+            molsys::Atom &,
+            molsys::Atom &
+        ) const;
 
     /**
      * @brief calculates QMMM forces by invoking core-to-outer, layer-to-outer,
@@ -36,16 +110,33 @@ namespace pot
      * @param simulationBox
      * @param physicalData
      * @param cellList
+     * @param waterModelSettings
      */
     void Potential::calculateQMMMForces(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const molsys::CellList     &cellList
+        const molsys::CellList     &cellList,
+        const WaterModelSettings   &waterModelSettings
     )
     {
-        calculateCoreToOuterForces(simulationBox, physicalData, cellList);
-        calculateLayerToOuterForces(simulationBox, physicalData, cellList);
-        calculateOuterToOuterForces(simulationBox, physicalData, cellList);
+        calculateCoreToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
+        calculateLayerToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
+        calculateOuterToOuterForces(
+            simulationBox,
+            physicalData,
+            cellList,
+            waterModelSettings
+        );
     }
 
     /***************************

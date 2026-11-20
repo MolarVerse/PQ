@@ -132,7 +132,7 @@ namespace intraNonBonded
 
         auto       dPos = pos1 - pos2;
         const auto txyz = -box * round(dPos / box);
-        // TODO: implement it more general via Box::calcShiftVector
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/911
 
         dPos                += txyz;
         const auto distance  = norm(dPos);

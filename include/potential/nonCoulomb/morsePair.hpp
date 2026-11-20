@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MORSE_PAIR_HPP_
-
-#define _MORSE_PAIR_HPP_
+#ifndef POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP
+#define POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP
 
 #include <utility>
 
@@ -61,8 +60,9 @@ namespace pot
             const MorseParams &params
         );
 
-        // TODO: we need to explicitly delete it to not implicitly create it
-        // with the wrong types!!! Needs cleanup
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
+        // explicitly deleted to not implicitly create it with the wrong
+        // types!!! Needs cleanup
         explicit MorsePair(size_t, size_t, double, const MorseParams &) =
             delete;
 
@@ -76,4 +76,4 @@ namespace pot
 
 }   // namespace pot
 
-#endif   // _MORSE_PAIR_HPP_
+#endif   // POTENTIAL__NON_COULOMB__MORSE_PAIR_HPP

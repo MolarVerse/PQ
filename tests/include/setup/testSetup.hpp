@@ -20,42 +20,40 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_SETUP_H_
-
-#define _TEST_SETUP_H_
+#ifndef TESTS__INCLUDE__SETUP__TEST_SETUP_HPP
+#define TESTS__INCLUDE__SETUP__TEST_SETUP_HPP
 
 #include <gtest/gtest.h>
+
+#include <memory>
 
 #include "engine.hpp"
 #include "generalSettings.hpp"
 #include "mmmdEngine.hpp"
 #include "optEngine.hpp"
-#include "thermostatSettings.hpp"
 
 class TestSetup : public ::testing::Test
 {
    protected:
-    Settings                          _settings;
+    std::unique_ptr<Settings>         _settings;
     std::unique_ptr<engine::Engine>   _engine;
     std::unique_ptr<engine::MDEngine> _mdEngine;
 
     void SetUp() override
     {
+        _settings = std::make_unique<Settings>();
         // NOTE: here the MMOPTEngine is used as dummy engine
         //       for testing the InputFileReader class
         //       The mdEngine is used only for special cases
         //       where optEngine is not supported
-        _engine   = std::make_unique<engine::OptEngine>(_settings);
-        _mdEngine = std::make_unique<engine::MMMDEngine>(_settings);
+        _engine   = std::make_unique<engine::OptEngine>(*_settings);
+        _mdEngine = std::make_unique<engine::MMMDEngine>(*_settings);
 
         settings::GeneralSettings::setJobtype(JobType::MM_MD);
     }
 
     void TearDown() override
     {
-        settings::ThermostatSettings::setEndTemperatureSet(false);
-        settings::ThermostatSettings::setStartTemperatureSet(false);
-        settings::ThermostatSettings::setTemperatureSet(false);
         settings::GeneralSettings::deactivateCellList();
     }
 };

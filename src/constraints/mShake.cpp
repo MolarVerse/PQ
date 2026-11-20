@@ -24,15 +24,13 @@
 
 #include <format>
 
-#include "constants.hpp"
-#include "constraintSettings.hpp"
 #include "distanceKernels.hpp"
 #include "mShakeReference.hpp"
 #include "mathUtilities.hpp"
 #include "matrix.hpp"
 #include "simulationBox.hpp"
 #include "stlVector.hpp"
-#include "timingsSettings.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace constraints
@@ -189,21 +187,24 @@ namespace constraints
     /**
      * @brief applies the mShake algorithm to all bond constraints
      *
-     * @param simulationBox
+     * @param simulationBox the simulation box containing the molecules
+     * @param maxIter the maximum number of iterations for the mShake algorithm
+     * @param tolerance the convergence tolerance for the mShake algorithm
+     * @param timeStep the integration time step used for velocity updates
      *
      */
-    void MShake::applyMShake(molsys::SimulationBox &simulationBox)
+    void MShake::applyMShake(
+        molsys::SimulationBox &simulationBox,
+        size_t                 maxIter,
+        double                 tolerance,
+        const Time            &timeStep
+    )
     {
-        const auto mShakeMaxIter =
-            settings::ConstraintSettings::getMShakeMaxIter();
-        const auto mShakeTolerance =
-            settings::ConstraintSettings::getMShakeTolerance();
         auto &molecules = simulationBox.getMolecules();
 
-        const auto timeStep =
-            settings::TimingsSettings::getTimeStep() * FS_TO_S;
-        const auto timeFactor  = 4.0 * timeStep * timeStep;
-        const auto shakeFactor = 2.0 * timeStep * timeStep;
+        const auto timeStepValue = timeStep.numerical_value_in(s);
+        const auto timeFactor    = 4.0 * timeStepValue * timeStepValue;
+        const auto shakeFactor   = 2.0 * timeStepValue * timeStepValue;
 
         for (auto &molecule : molecules)
         {
@@ -362,10 +363,12 @@ namespace constraints
                         posUnconstrained[j] += posAdjustment / mass_j;
 
                         atoms[i]->addVelocity(
-                            -posAdjustment / (mass_i * timeStep)
+                            -posAdjustment /
+                            (mass_i * timeStep.numerical_value_in(s))
                         );
                         atoms[j]->addVelocity(
-                            posAdjustment / (mass_j * timeStep)
+                            posAdjustment /
+                            (mass_j * timeStep.numerical_value_in(s))
                         );
 
                         ++index_ij;
@@ -406,8 +409,7 @@ namespace constraints
                          * reference value is larger than the tolerance value *
                          ******************************************************/
 
-                        if (::fabs(r2Deviation) / (2.0 * r2Ref) >
-                            mShakeTolerance)
+                        if (::fabs(r2Deviation) / (2.0 * r2Ref) > tolerance)
                             converged = false;
 
                         ++index_ij;
@@ -417,13 +419,13 @@ namespace constraints
                 if (converged)
                     break;
 
-                if (iteration >= mShakeMaxIter)
+                if (iteration >= maxIter)
                 {
                     throw exc::MShakeException(
                         std::format(
                             "M-Shake did not converge within {} iterations for "
                             "molecule type {}",
-                            mShakeMaxIter,
+                            maxIter,
                             moltype.toString()
                         )
                     );
@@ -497,7 +499,7 @@ namespace constraints
                     const auto mass_j = atoms[j]->getMass();
 
                     auto velConstraint =
-                        stl::dot(mShakeMatrix(index_ij), rattleVector);
+                        -stl::dot(mShakeMatrix(index_ij), rattleVector);
 
                     const auto velAdjustment = velConstraint * bonds[index_ij];
 

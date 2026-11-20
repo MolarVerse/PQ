@@ -1,0 +1,1 @@
+- Run the static LTO build with its tests, and the static Singularity build, on every pull request into main (release and hotfix pull requests), so that static-only test failures are found before a release is merged.

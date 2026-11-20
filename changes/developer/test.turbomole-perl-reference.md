@@ -1,0 +1,1 @@
+- `testTurbomoleScripts` checks the Python Turbomole drivers against recorded Perl outputs, so it also runs where Perl is not installed.

@@ -20,22 +20,37 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SETTING_HPP_
-#define _SETTING_HPP_
+#ifndef SETTINGS__SETTING_HPP
+#define SETTINGS__SETTING_HPP
 
+#include <mstd/types.hpp>
 #include <optional>
 
 /**
  * @brief A template class representing a configurable setting.
  *
  * @tparam T The type of the setting value.
+ * @tparam Tag The tag type providing a name for the setting. This should be an
+ * instance of `mstd::Tag` with a unique string identifier. The tag is used to
+ * generate meaningful error messages when the setting is not set and no default
+ * is available.
  */
-template <typename T>
+template <typename T, mstd::Tag Name = mstd::Tag("Settings")>
 class Setting
 {
+   public:
+    enum class Setter : std::uint8_t
+    {
+        None,
+        Default,
+        User,
+        System
+    };
+
    private:
     std::optional<T> _default = std::nullopt;
     std::optional<T> _value   = std::nullopt;
+    Setter           _setter  = Setter::None;
 
    public:
     explicit Setting() = default;
@@ -44,14 +59,22 @@ class Setting
     [[nodiscard]]
     const T& get() const;
 
-    void set(const T& value);
+    void setByUser(const T& value);
+    void setBySystem(const T& value);
 
     [[nodiscard]]
-    bool isSet() const;
+    bool isSetByUser() const;
+    [[nodiscard]]
+    bool isSetBySystem() const;
+    [[nodiscard]]
+    bool isSetBySomeone() const;
+
+   private:
+    void _throwIfNotSet() const;
 };
 
-#ifndef _SETTING_TPP_
+#ifndef SETTINGS__SETTING_TPP
 #include "setting.tpp"
 #endif
 
-#endif   // _SETTING_HPP_
+#endif   // SETTINGS__SETTING_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3D_DEPTH_HPP_
-
-#define _VECTOR3D_DEPTH_HPP_
+#ifndef LINEAR_ALGEBRA__VECTOR3D__CONCEPTS__VECTOR3D_DEPTH_HPP
+#define LINEAR_ALGEBRA__VECTOR3D__CONCEPTS__VECTOR3D_DEPTH_HPP
 
 namespace linalg
 {
@@ -76,4 +75,4 @@ namespace pq
 
 }   // namespace pq
 
-#endif   // _VECTOR3D_DEPTH_HPP_
+#endif   // LINEAR_ALGEBRA__VECTOR3D__CONCEPTS__VECTOR3D_DEPTH_HPP

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_BOND_CONSTRAINT_HPP_
-
-#define _TEST_BOND_CONSTRAINT_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP
 
 #include <gtest/gtest.h>
 
@@ -31,6 +30,7 @@
 #include "atom.hpp"
 #include "bondConstraint.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 /**
@@ -69,7 +69,7 @@ class TestBondConstraint : public ::testing::Test
         _box->addMolecule(molecule1);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _box->setBox(orthoBox);
+        _box->setBox(orthoBox, false);
 
         _bondConstraint = std::make_unique<constraints::BondConstraint>(
             _box->getMolecules().data(),
@@ -81,4 +81,4 @@ class TestBondConstraint : public ::testing::Test
     }
 };
 
-#endif   // _TEST_BOND_CONSTRAINT_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP

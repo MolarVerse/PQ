@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
-
-#define _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
+#ifndef OUTPUT__RING_POLYMER_TRAJECTORY_OUTPUT_HPP
+#define OUTPUT__RING_POLYMER_TRAJECTORY_OUTPUT_HPP
 
 #include <cstddef>
 #include <vector>
@@ -48,15 +47,28 @@ namespace out
        public:
         using Output::Output;
 
-        void writeHeader(const molsys::SimulationBox &);
-        void writeXyz(const std::vector<molsys::SimulationBox> &, size_t);
+        void writeHeader(const molsys::SimulationBox &, size_t);
+        void writeXyz(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
         void writeVelocities(
             const std::vector<molsys::SimulationBox> &,
-            size_t
+            size_t,
+            bool includeMetadata
         );
-        void writeForces(const std::vector<molsys::SimulationBox> &, size_t);
-        void writeCharges(const std::vector<molsys::SimulationBox> &, size_t);
+        void writeForces(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
+        void writeCharges(
+            const std::vector<molsys::SimulationBox> &,
+            size_t,
+            bool includeMetadata
+        );
     };
 }   // namespace out
 
-#endif   // _RING_POLYMER_TRAJECTORY_OUTPUT_HPP_
+#endif   // OUTPUT__RING_POLYMER_TRAJECTORY_OUTPUT_HPP

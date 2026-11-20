@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTEGRATOR_ENUM_HPP_
-#define _INTEGRATOR_ENUM_HPP_
+#ifndef CONFIG__ENUMS__INTEGRATOR_HPP
+#define CONFIG__ENUMS__INTEGRATOR_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -54,4 +54,4 @@ namespace mstd
 
 #undef INTEGRATOR_TYPE_LIST
 
-#endif   // _INTEGRATOR_ENUM_HPP_
+#endif   // CONFIG__ENUMS__INTEGRATOR_HPP

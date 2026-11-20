@@ -65,17 +65,14 @@ namespace input::guffdat
      */
     void readGuffDat(engine::Engine &engine)
     {
-        if (!isNeeded())
+        if (!isNeeded(engine.getSettings()))
             return;
 
-        out::StdoutOutput::writeRead(
-            "Guffdat File",
-            settings::FileSettings::getGuffDatFileName()
-        );
-        engine.getLogOutput().writeRead(
-            "Guffdat File",
-            settings::FileSettings::getGuffDatFileName()
-        );
+        const auto &guffdatFileName =
+            engine.getSettings().fileSettings.getGuffDatFileName();
+
+        out::StdoutOutput::writeRead("Guffdat File", guffdatFileName);
+        engine.getLogOutput().writeRead("Guffdat File", guffdatFileName);
 
         GuffDatReader guffDat(engine);
         guffDat.setupGuffMaps();
@@ -93,12 +90,12 @@ namespace input::guffdat
      * @return true
      * @return false
      */
-    bool isNeeded()
+    bool isNeeded(const Settings &settings)
     {
         if (!settings::GeneralSettings::isMMActivated())
             return false;
 
-        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        if (settings.forceFieldSettings.isNonCoulombicActive())
             return false;
 
         return true;
@@ -111,7 +108,7 @@ namespace input::guffdat
      */
     GuffDatReader::GuffDatReader(engine::Engine &engine) : _engine(engine)
     {
-        _fileName = settings::FileSettings::getGuffDatFileName();
+        _fileName = _engine.getSettings().fileSettings.getGuffDatFileName();
     }
 
     /**
@@ -869,9 +866,12 @@ namespace input::guffdat
         auto      &simBox    = _engine.getSimulationBox();
         const auto waterType = simBox.getWaterType();
 
-        return settings::WaterModelSettings::isInterWaterModelSet() &&
-               waterType.has_value() && molType1 == waterType.value() &&
-               molType2 == waterType.value();
+        const auto isInterWaterModelSet =
+            _engine.getSettings()
+                .waterModelSettings.isInterWaterModelSetAndNotNone();
+
+        return isInterWaterModelSet && waterType.has_value() &&
+               molType1 == waterType.value() && molType2 == waterType.value();
     }
 
     /********************

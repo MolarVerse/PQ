@@ -25,11 +25,12 @@
 #include <vector>
 
 #include "coulombPotential.hpp"
+#include "enums/hybrid.hpp"
 #include "forceField.hpp"
-#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace ff
 {
@@ -64,12 +65,14 @@ namespace ff
      * @param physicalData the physical data of the system
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
+     * @param smoothing the smoothing method to use
      */
     void BondForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
-        pot::NonCoulombPotential    &nonCoulombPot
+        pot::NonCoulombPotential    &nonCoulombPot,
+        SmoothingMethod              smoothing
     )
     {
         const auto &molecules = get_molecules();
@@ -91,10 +94,14 @@ namespace ff
 
         simulationBox.applyPBC(dPosition);
 
-        const auto distance      = norm(dPosition);
-        const auto deltaDistance = distance - _params.equilibrium;
+        const auto distance = norm(dPosition);
+        const auto deltaDistance =
+            distance - _params.equilibrium.numerical_value_in(angstrom);
 
-        auto forceMagnitude = -_params.forceConstant * deltaDistance;
+        auto forceMagnitude = -_params.forceConstant.numerical_value_in(
+                                  kcal_per_mol / angstrom / angstrom
+                              ) *
+                              deltaDistance;
 
         physicalData.addBondEnergy(-forceMagnitude * deltaDistance / 2.0);
 
@@ -122,8 +129,7 @@ namespace ff
 
         using enum SmoothingMethod;
 
-        auto       smF       = 0.0;
-        const auto smoothing = settings::HybridSettings::getSmoothingMethod();
+        auto smF = 0.0;
 
         if (smoothing == HOTSPOT &&
             molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

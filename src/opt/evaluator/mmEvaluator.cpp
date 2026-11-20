@@ -22,6 +22,8 @@
 
 #include "mmEvaluator.hpp"
 
+#include "settings.hpp"
+
 namespace opt
 {
 
@@ -52,7 +54,8 @@ namespace opt
         _getPotential().calculateForces(
             _getSimulationBox(),
             _getPhysicalData(),
-            _getCellList()
+            _getCellList(),
+            _getSettings().waterModelSettings
         );
 
         _getIntraNonBonded().calculate(_getSimulationBox(), _getPhysicalData());

@@ -1,0 +1,1 @@
+- Add a unit test that the inter-water cell list strategy gives the same energies and forces as the brute force strategy (water-water, QM/MM and hotspot smoothing forces) on a box that fills the periodic cell.

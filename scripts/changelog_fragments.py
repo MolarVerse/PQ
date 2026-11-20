@@ -41,7 +41,7 @@ DEVELOPER_ORDER = [
 FRAGMENT_RE = re.compile(
     r"^(?P<category>[a-z]+)\.(?P<slug>[a-z0-9][a-z0-9-]*)\.md$"
 )
-MAX_ENTRY_LENGTH = 240
+MAX_ENTRY_LENGTH = 360
 
 
 class FragmentError(ValueError):

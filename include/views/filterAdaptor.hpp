@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef __FILTER_ADAPTOR_HPP__
-#define __FILTER_ADAPTOR_HPP__
+#ifndef VIEWS__FILTER_ADAPTOR_HPP
+#define VIEWS__FILTER_ADAPTOR_HPP
 
 #include <type_traits>
 
@@ -76,4 +76,4 @@ namespace pqviews
 
 }   // namespace pqviews
 
-#endif   // __FILTER_ADAPTOR_HPP__
+#endif   // VIEWS__FILTER_ADAPTOR_HPP

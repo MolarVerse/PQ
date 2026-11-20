@@ -1,0 +1,1 @@
+- Fix the restart file: the box was written with 6 digits (e.g. `27.4421` for `27.44205774`), so a restarted simulation started in a slightly different box than the one it was stopped in; it is now written without losing digits.

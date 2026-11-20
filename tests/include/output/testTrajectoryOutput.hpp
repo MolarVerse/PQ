@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
-
-#define _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP
 
 #include <gtest/gtest.h>
 
@@ -30,6 +29,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "trajectoryOutput.hpp"
 
@@ -52,7 +52,7 @@ class TestTrajectoryOutput : public ::testing::Test
         _simulationBox = std::make_unique<molsys::SimulationBox>();
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox->setBox(orthoBox);
+        _simulationBox->setBox(orthoBox, false);
 
         auto molecule1 = molsys::Molecule();
 
@@ -99,4 +99,4 @@ class TestTrajectoryOutput : public ::testing::Test
     }
 };
 
-#endif   // _TEST_TRAJECTORY_FILE_OUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP

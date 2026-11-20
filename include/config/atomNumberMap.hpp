@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ATOM_NUMBER_MAP_HPP_
-
-#define _ATOM_NUMBER_MAP_HPP_
+#ifndef CONFIG__ATOM_NUMBER_MAP_HPP
+#define CONFIG__ATOM_NUMBER_MAP_HPP
 
 #include <map>
 #include <string>
@@ -101,4 +100,4 @@ const std::map<std::string, AtomNumber> atomNumberMap = {
     {"sup", AtomNumber{1000000}}, {"dum", AtomNumber{1}}
 };
 
-#endif   // _ATOM_NUMBER_MAP_HPP_
+#endif   // CONFIG__ATOM_NUMBER_MAP_HPP

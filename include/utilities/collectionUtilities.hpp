@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _COLLECTION_UTILITIES_HPP_
-
-#define _COLLECTION_UTILITIES_HPP_
+#ifndef UTILITIES__COLLECTION_UTILITIES_HPP
+#define UTILITIES__COLLECTION_UTILITIES_HPP
 
 #include <algorithm>
 #include <vector>
@@ -49,4 +48,4 @@ namespace utilities
 
 }   // namespace utilities
 
-#endif   // _COLLECTION_UTILITIES_HPP_
+#endif   // UTILITIES__COLLECTION_UTILITIES_HPP

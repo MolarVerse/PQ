@@ -1,0 +1,1 @@
+- Writing trajectory (xyz, vel, force, chrg) and restart files is about 60 % faster; the files are unchanged (#1158).

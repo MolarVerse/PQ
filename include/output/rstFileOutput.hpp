@@ -20,26 +20,18 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RST_FILE_OUTPUT_HPP_
-
-#define _RST_FILE_OUTPUT_HPP_
+#ifndef OUTPUT__RST_FILE_OUTPUT_HPP
+#define OUTPUT__RST_FILE_OUTPUT_HPP
 
 #include <cstddef>
 
 #include "output.hpp"
-
-namespace thermostat
-{
-    class Thermostat;   // forward declaration
-}   // namespace thermostat
-
-namespace molsys
-{
-    class SimulationBox;   // forward declaration
-}   // namespace molsys
+#include "textBuffer.hpp"
 
 namespace out
 {
+    struct Frame;   // forward declaration
+
     /**
      * @brief RstFileOutput inherits from Output
      *
@@ -48,16 +40,15 @@ namespace out
      */
     class RstFileOutput : public Output
     {
+       private:
+        TextBuffer _buffer;
+
        public:
         using Output::Output;
 
-        void write(
-            const molsys::SimulationBox &,
-            const thermostat::Thermostat &,
-            size_t
-        );
+        void write(const Frame &, size_t);
     };
 
 }   // namespace out
 
-#endif   // _RST_FILE_OUTPUT_HPP_
+#endif   // OUTPUT__RST_FILE_OUTPUT_HPP

@@ -1,0 +1,93 @@
+name: Setup GCC
+description: >-
+  Installs a pinned GCC/G++ version plus any extra apt packages the caller
+  needs alongside it, and (by default) exports CC/CXX to GITHUB_ENV so every
+  later step in the job picks up the compiler without its own env: block.
+  Centralizes the GCC version pin so it is written once (the default below)
+  instead of once per step across every workflow file.
+
+inputs:
+  version:
+    description: GCC major version to install.
+    default: '14'
+  packages:
+    description: Extra space-separated apt packages to install alongside gcc/g++.
+    default: ''
+  set-env:
+    description: Export CC/CXX (gcc-<version>/g++-<version>) to GITHUB_ENV for later steps.
+    default: 'true'
+
+outputs:
+  cc:
+    description: The installed C compiler binary name (gcc-<version>).
+    value: ${{ steps.vars.outputs.cc }}
+  cxx:
+    description: The installed C++ compiler binary name (g++-<version>).
+    value: ${{ steps.vars.outputs.cxx }}
+  gcov:
+    description: The matching gcov binary name (gcov-<version>).
+    value: ${{ steps.vars.outputs.gcov }}
+
+runs:
+  using: composite
+  steps:
+    - name: Compute compiler binary names
+      id: vars
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+      run: |
+        echo "cc=gcc-$VERSION" >> "$GITHUB_OUTPUT"
+        echo "cxx=g++-$VERSION" >> "$GITHUB_OUTPUT"
+        echo "gcov=gcov-$VERSION" >> "$GITHUB_OUTPUT"
+
+    # The packages are cached (awalsh128/cache-apt-pkgs-action, as in
+    # devops_cpp_check.yml): on a hit nothing is downloaded. The Azure mirror
+    # sometimes stalls or crawls, which held this step for 13 to 34+ minutes
+    # (#1069). The post install scripts are run on a restore (openmpi, for
+    # example, sets up its mpicc alternatives there).
+    - name: Install GCC ${{ inputs.version }}
+      uses: awalsh128/cache-apt-pkgs-action@v1
+      with:
+        packages: gcc-${{ inputs.version }} g++-${{ inputs.version }} ${{ inputs.packages }}
+        version: 1.0
+        execute_install_scripts: true
+
+    # The cache action reports success even when its apt install failed (a
+    # mirror 404 on libc6-dbg once made it save an empty cache entry, after
+    # which every run restored zero packages and the perf gate found no
+    # valgrind). Check what was asked for, and install what is missing.
+    - name: Verify packages
+      shell: bash
+      env:
+        PACKAGES: gcc-${{ inputs.version }} g++-${{ inputs.version }} ${{ inputs.packages }}
+      run: |
+        missing() {
+          for package in $PACKAGES; do
+            dpkg -s "$package" > /dev/null 2>&1 || echo "$package"
+          done
+        }
+        missing_now="$(missing)"
+        [ -z "$missing_now" ] && exit 0
+        echo "::warning::not installed after the cached restore: $(echo $missing_now). Installing with apt."
+        for attempt in 1 2 3; do
+          sudo apt-get update || true
+          # shellcheck disable=SC2086
+          sudo apt-get install -y --fix-missing $missing_now && break
+          sleep $((attempt * 10))
+        done
+        missing_now="$(missing)"
+        if [ -n "$missing_now" ]; then
+          echo "::error::could not install: $(echo $missing_now)"
+          exit 1
+        fi
+
+    - name: Export CC/CXX
+      if: inputs.set-env == 'true'
+      shell: bash
+      env:
+        CC_VALUE: ${{ steps.vars.outputs.cc }}
+        CXX_VALUE: ${{ steps.vars.outputs.cxx }}
+      run: |
+        echo "CC=$CC_VALUE" >> "$GITHUB_ENV"
+        echo "CXX=$CXX_VALUE" >> "$GITHUB_ENV"

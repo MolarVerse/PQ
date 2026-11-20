@@ -16,6 +16,10 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   create-release-pr:
     runs-on: ubuntu-latest
@@ -58,17 +62,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
-          if git ls-remote --exit-code --tags origin \
-            "refs/tags/$VERSION" >/dev/null 2>&1; then
-            echo "Tag $VERSION already exists."
-            exit 1
-          fi
-
-          if git ls-remote --exit-code --heads origin \
-            "refs/heads/$BRANCH" >/dev/null 2>&1; then
-            echo "Branch $BRANCH already exists."
-            exit 1
-          fi
+          python3 scripts/check_release_refs.py "$VERSION"
 
           existing="$(gh pr list --state open --base main --head "$BRANCH" \
             --json url --jq '.[0].url // empty')"

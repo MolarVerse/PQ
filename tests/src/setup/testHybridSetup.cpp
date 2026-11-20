@@ -24,7 +24,6 @@
 
 #include <array>
 #include <memory>
-#include <string>
 #include <vector>
 
 #include "atom.hpp"
@@ -32,9 +31,9 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "hybridSetup.hpp"
-#include "inputFileParser/hybridInputParser.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "orthorhombicBox.hpp"
 #include "qmSettings.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
@@ -54,21 +53,24 @@ namespace
         engine.getSimulationBox().addMolecule(molecule);
     }
 
-    void configureValidHybridSettings(engine::Engine &engine)
+    void configureValidHybridSettings(
+        Settings       &settings,
+        engine::Engine &engine
+    )
     {
         settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-        settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-        settings::HybridSettings::setForcedCoreList({});
-        settings::HybridSettings::setForcedLayerList({});
-        settings::HybridSettings::setForcedOuterList({});
-        settings::HybridSettings::setUseQMCharges(true);
-        settings::HybridSettings::setCoreRadius(2.0);
-        settings::HybridSettings::setLayerRadius(4.0);
-        settings::HybridSettings::setSmoothingRegionThickness(1.0);
-        settings::HybridSettings::setPointChargeThickness(2.0);
+        settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+        settings.hybridSettings.setForcedCoreListByUser({});
+        settings.hybridSettings.setForcedLayerListByUser({});
+        settings.hybridSettings.setForcedOuterListByUser({});
+        settings.hybridSettings.setUseQMChargesByUser(true);
+        settings.hybridSettings.setCoreRadiusByUser(2.0);
+        settings.hybridSettings.setLayerRadiusByUser(4.0);
+        settings.hybridSettings.setSmoothingRegionThicknessByUser(1.0);
+        settings.hybridSettings.setPointChargeThicknessByUser(2.0);
 
         molsys::OrthorhombicBox orthoBox{{40.0, 40.0, 40.0}};
-        engine.getSimulationBox().setBox(orthoBox);
+        engine.getSimulationBox().setBox(orthoBox, false);
     }
 
 }   // namespace
@@ -81,105 +83,6 @@ TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
 }
 
-/* ---------- parseSelectionNoPython ---------- */
-
-TEST_F(TestSetup, parseSelectionNoPythonSingleIndex)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelectionNoPython("3", "qm_center");
-    ASSERT_EQ(value.size(), 1U);
-    EXPECT_EQ(value[0], 3);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonCommaList)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelectionNoPython("1,3,5", "qm_center");
-    ASSERT_EQ(value.size(), 3U);
-    EXPECT_EQ(value[0], 1);
-    EXPECT_EQ(value[1], 3);
-    EXPECT_EQ(value[2], 5);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonRange)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelectionNoPython("2-5", "qm_center");
-    ASSERT_EQ(value.size(), 4U);
-    EXPECT_EQ(value[0], 2);
-    EXPECT_EQ(value[3], 5);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonMixedRangeAndList)
-{
-    input::HybridInputParser parser;
-    const auto value = input::HybridInputParser::parseSelectionNoPython(
-        "1,3-4,7",
-        "qm_center"
-    );
-    ASSERT_EQ(value.size(), 4U);
-    EXPECT_EQ(value[0], 1);
-    EXPECT_EQ(value[1], 3);
-    EXPECT_EQ(value[2], 4);
-    EXPECT_EQ(value[3], 7);
-}
-
-TEST_F(TestSetup, parseSelectionNoPythonEmptyThrows)
-{
-    input::HybridInputParser parser;
-    EXPECT_THROW_MSG(
-        parser.parseSelectionNoPython("", "qm_center"),
-        exc::InputFileException,
-        "The value of key qm_center -  is an empty list. The qm_center string "
-        "must be a comma-separated list of integers or ranges, representing "
-        "the atom indices in the restart file that should be treated as the "
-        "qm_center."
-    );
-}
-
-/* ---------- parseSelection ---------- */
-
-TEST_F(TestSetup, parseSelectionEmptyReturnsZeroOnly)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelection("", "qm_center");
-    ASSERT_EQ(value.size(), 1U);
-    EXPECT_EQ(value[0], 0);
-}
-
-TEST_F(TestSetup, parseSelectionSortsAndDeduplicates)
-{
-    input::HybridInputParser parser;
-    const auto               value =
-        input::HybridInputParser::parseSelection("5,1,3,1", "qm_center");
-    ASSERT_EQ(value.size(), 3U);
-    EXPECT_EQ(value[0], 1);
-    EXPECT_EQ(value[1], 3);
-    EXPECT_EQ(value[2], 5);
-}
-
-#ifndef PYTHON_ENABLED
-TEST_F(TestSetup, parseSelectionWithLettersThrowsWithoutPython)
-{
-    input::HybridInputParser parser;
-    EXPECT_THROW_MSG(
-        parser.parseSelection("not_a_number", "qm_center"),
-        exc::InputFileException,
-        "The value of key qm_center - not_a_number contains characters that "
-        "are not digits, \"-\" or commas. The current build of PQ was compiled "
-        "without Python bindings, so the qm_center string must be a "
-        "comma-separated list of integers, representing the atom indices in "
-        "the restart file that should be treated as the qm_center. In order to "
-        "use the full selection parser power of the PQAnalysis Python package, "
-        "the PQ build must be compiled with Python bindings."
-    );
-}
-#endif
-
 /* ---------- setup throws ---------- */
 
 TEST_F(TestSetup, setupThrowsNotImplemented)
@@ -189,31 +92,31 @@ TEST_F(TestSetup, setupThrowsNotImplemented)
         hybridSetup.setup(),
         exc::InputFileException,
         "QM method \"NONE\" is not supported for hybrid type calculations. "
-        "Supported QM methods are \"dftbplus\" and \"turbomole\"."
+        "Supported QM methods are \"dftbplus\", \"turbomole\" and \"orca\"."
     );
 }
 
 TEST_F(TestSetup, setupHybridConfiguresDefaultCenter)
 {
-    configureValidHybridSettings(*_engine);
+    configureValidHybridSettings(*_settings, *_engine);
     addSingleAtomMolecule(*_engine, MolType{1});
 
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
     EXPECT_EQ(
-        _engine->getSimulationBox().getInnerRegionCenterAtomIndices(),
+        _settings->hybridSettings.getInnerRegionCenter(),
         std::vector<size_t>{0}
     );
 }
 
 TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
 {
-    configureValidHybridSettings(*_engine);
-    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
-    settings::HybridSettings::setInnerRegionCenter({0, 1});
-    settings::HybridSettings::setForcedCoreList({0});
-    settings::HybridSettings::setForcedLayerList({1});
-    settings::HybridSettings::setForcedOuterList({2});
-    settings::HybridSettings::setUseQMCharges(false);
+    configureValidHybridSettings(*_settings, *_engine);
+    _settings->qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
+    _settings->hybridSettings.setInnerRegionCenterByUser({0, 1});
+    _settings->hybridSettings.setForcedCoreListByUser({0});
+    _settings->hybridSettings.setForcedLayerListByUser({1});
+    _settings->hybridSettings.setForcedOuterListByUser({2});
+    _settings->hybridSettings.setUseQMChargesByUser(false);
     addSingleAtomMolecule(*_engine, MolType{1});
     addSingleAtomMolecule(*_engine, MolType{2});
     addSingleAtomMolecule(*_engine, MolType{3});
@@ -238,42 +141,40 @@ TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
 
     for (const auto method : unsupported)
     {
-        settings::QMSettings::setQMMethod(method);
         EXPECT_THROW_MSG(
-            setup.validateQMMethod(),
+            setup.validateQMMethod(method),
             exc::InputFileException,
             "QM method \"" + QMMethodMeta::toString(method) +
                 "\" is not supported for hybrid type "
-                "calculations. Supported QM methods are \"dftbplus\" and "
-                "\"turbomole\"."
+                "calculations. Supported QM methods are \"dftbplus\", "
+                "\"turbomole\" and \"orca\"."
         );
     }
 
-    settings::QMSettings::setQMMethod(QMMethod::DFTBPLUS);
-    EXPECT_NO_THROW(setup.validateQMMethod());
-    settings::QMSettings::setQMMethod(QMMethod::TURBOMOLE);
-    EXPECT_NO_THROW(setup.validateQMMethod());
+    EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::DFTBPLUS));
+    EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::TURBOMOLE));
+    EXPECT_NO_THROW(setup.validateQMMethod(QMMethod::ORCA));
 }
 
 TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
 {
     molsys::OrthorhombicBox orthoBox{{40.0, 40.0, 40.0}};
-    _engine->getSimulationBox().setBox(orthoBox);
+    _engine->getSimulationBox().setBox(orthoBox, false);
     setup::HybridSetup setup{*_engine};
 
-    settings::HybridSettings::setCoreRadius(5.0);
-    settings::HybridSettings::setLayerRadius(4.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
-    settings::HybridSettings::setPointChargeThickness(0.0);
+    _settings->hybridSettings.setCoreRadiusByUser(5.0);
+    _settings->hybridSettings.setLayerRadiusByUser(4.0);
+    _settings->hybridSettings.setSmoothingRegionThicknessByUser(1.0);
+    _settings->hybridSettings.setPointChargeThicknessByUser(0.0);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
         "Core radius (5 Å) cannot be larger than layer radius (4 Å)"
     );
 
-    settings::HybridSettings::setCoreRadius(3.5);
-    settings::HybridSettings::setLayerRadius(4.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
+    _settings->hybridSettings.setCoreRadiusByUser(3.5);
+    _settings->hybridSettings.setLayerRadiusByUser(4.0);
+    _settings->hybridSettings.setSmoothingRegionThicknessByUser(1.0);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -281,9 +182,9 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "core (3.5 Å) and layer radius (4 Å)"
     );
 
-    settings::HybridSettings::setCoreRadius(2.0);
-    settings::HybridSettings::setLayerRadius(11.0);
-    settings::HybridSettings::setSmoothingRegionThickness(1.0);
+    _settings->hybridSettings.setCoreRadiusByUser(2.0);
+    _settings->hybridSettings.setLayerRadiusByUser(11.0);
+    _settings->hybridSettings.setSmoothingRegionThicknessByUser(1.0);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -292,10 +193,10 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "the minimum image convention."
     );
 
-    settings::HybridSettings::setCoreRadius(1.0);
-    settings::HybridSettings::setLayerRadius(2.0);
-    settings::HybridSettings::setSmoothingRegionThickness(0.5);
-    settings::HybridSettings::setPointChargeThickness(59.0);
+    _settings->hybridSettings.setCoreRadiusByUser(1.0);
+    _settings->hybridSettings.setLayerRadiusByUser(2.0);
+    _settings->hybridSettings.setSmoothingRegionThicknessByUser(0.5);
+    _settings->hybridSettings.setPointChargeThicknessByUser(59.0);
     EXPECT_THROW_MSG(
         setup.checkZoneRadii(),
         exc::InputFileException,
@@ -305,7 +206,7 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
         "immediate neighboring cells."
     );
 
-    settings::HybridSettings::setPointChargeThickness(2.0);
+    _settings->hybridSettings.setPointChargeThicknessByUser(2.0);
     EXPECT_NO_THROW(setup.checkZoneRadii());
 }
 
@@ -314,7 +215,7 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
     _engine->getSimulationBox().addMoleculeType(
         molsys::MoleculeType(MolType{0})
     );
-    settings::HybridSettings::setUseQMCharges(false);
+    _settings->hybridSettings.setUseQMChargesByUser(false);
     setup::HybridSetup setup{*_engine};
 
     EXPECT_THROW_MSG(
@@ -326,6 +227,26 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
         "moltype."
     );
 
-    settings::HybridSettings::setUseQMCharges(true);
+    _settings->hybridSettings.setUseQMChargesByUser(true);
     EXPECT_NO_THROW(setup.validateQMChargeSettings());
+}
+
+TEST_F(TestSetup, hybridSetupRejectsMoltypeZeroWithReferenceEnergies)
+{
+    auto &simBox = _engine->getSimulationBox();
+    simBox.addMoleculeType(molsys::MoleculeType(MolType{0}));
+    setup::HybridSetup setup{*_engine};
+
+    EXPECT_NO_THROW(setup.validateQMReferenceEnergies());
+
+    auto water = molsys::MoleculeType(MolType{1});
+    water.setQMReferenceEnergy(-10.0);
+    simBox.addMoleculeType(water);
+
+    EXPECT_THROW_MSG(
+        setup.validateQMReferenceEnergies(),
+        exc::InputFileException,
+        "Atoms with moltype \"0\" are not allowed when QM reference "
+        "energies are set in the moldescriptor file."
+    );
 }

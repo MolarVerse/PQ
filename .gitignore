@@ -5,6 +5,8 @@
 **/gmon.out
 
 build*
+# changelog fragments of the category build (changes/*/build.<title>.md)
+!changes/*/build.*
 _build*
 .build*
 benchmark-results/
@@ -87,3 +89,6 @@ clangd-tidy-report.log*
 compile_commands.json
 
 CMakePresets.json
+
+# local remote-run captures
+.crabbox/

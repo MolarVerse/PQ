@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENGINE_FACTORY_HPP_
-#define _ENGINE_FACTORY_HPP_
+#ifndef ENGINE__ENGINE_FACTORY_HPP
+#define ENGINE__ENGINE_FACTORY_HPP
 
 #include "engine.hpp"
 #include "enums/jobtype.hpp"
@@ -45,27 +45,27 @@ namespace engine
      */
     static const std::unordered_map<
         JobType,
-        std::function<std::unique_ptr<Engine>(Settings settings)>>
+        std::function<std::unique_ptr<Engine>(const Settings &settings)>>
         engineFactory{
             {JobType::MM_OPT,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<OptEngine>(settings); }},
             {JobType::MM_HESSIAN,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<HessianEngine>(settings); }},
             {JobType::MM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<MMMDEngine>(settings); }},
             {JobType::QM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<QMMDEngine>(settings); }},
             {JobType::RING_POLYMER_QM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<RingPolymerQMMDEngine>(settings); }},
             {JobType::QMMM_MD,
-             [](Settings settings)
+             [](const Settings &settings)
              { return std::make_unique<QMMMMDEngine>(settings); }},
         };
 }   // namespace engine
 
-#endif   // _ENGINE_FACTORY_HPP_
+#endif   // ENGINE__ENGINE_FACTORY_HPP

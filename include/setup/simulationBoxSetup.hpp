@@ -20,10 +20,10 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _SIMULATION_BOX_SETUP_HPP_
+#ifndef SETUP__SIMULATION_BOX_SETUP_HPP
+#define SETUP__SIMULATION_BOX_SETUP_HPP
 
-#define _SIMULATION_BOX_SETUP_HPP_
-
+#include "setupBase.hpp"
 namespace engine
 {
     class Engine;   // forward declaration
@@ -39,7 +39,7 @@ namespace setup
      * @brief Setup simulation box
      *
      */
-    class SimulationBoxSetup
+    class SimulationBoxSetup : public SetupBase
     {
        private:
         engine::Engine    &_engine;
@@ -83,4 +83,4 @@ namespace setup
 
 }   // namespace setup
 
-#endif   // _SIMULATION_BOX_SETUP_HPP_
+#endif   // SETUP__SIMULATION_BOX_SETUP_HPP

@@ -31,8 +31,7 @@
 #include "keyMetaData.hpp"
 #include "manostatSettings.hpp"
 #include "rangeValidator.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -47,7 +46,8 @@ namespace input
      * "<double>" (only required if manostat is not none) 3) p_relaxation
      * "<double>" 4) compressibility "<double>"
      */
-    ManostatInputParser::ManostatInputParser()
+    ManostatInputParser::ManostatInputParser(ManostatSettings &manostatSettings)
+        : _manostatSettings(manostatSettings)
     {
         addManostatKey();
         addPressureKey();
@@ -72,24 +72,8 @@ namespace input
                 "Specifies the type of manostat to be used in the simulation",
         };
 
-        const auto setValue = [](ManostatType manostatType)
-        {
-            switch (manostatType)
-            {
-                case ManostatType::BERENDSEN:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::BERENDSEN_FILE
-                    );
-                    break;
-                case ManostatType::STOCHASTIC_RESCALING:
-                    references::ReferencesOutput::addReferenceFile(
-                        references::STOCHASTIC_RESCALING_FILE
-                    );
-                    break;
-                case ManostatType::NONE: break;
-            }
-            settings::ManostatSettings::setManostatType(manostatType);
-        };
+        const auto setValue = [this](ManostatType manostatType)
+        { _manostatSettings->setManostatTypeByUser(manostatType); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<ManostatType>{
@@ -114,10 +98,11 @@ namespace input
             .name        = "pressure",
             .title       = "Pressure",
             .description = "Specifies the pressure used in the simulation",
+            .unit        = "bar",
         };
 
-        const auto setValue = [](double pressure)
-        { settings::ManostatSettings::setTargetPressure(pressure); };
+        const auto setValue = [this](double pressure)
+        { _manostatSettings->setTargetPressureByUser(pressure * bar); };
 
         const RangeValidator<double> validator{std::nullopt, std::nullopt};
 
@@ -145,20 +130,23 @@ namespace input
             .name        = "p_relaxation",
             .title       = "Manostat Relaxation Time",
             .description = "Specifies the relaxation time of the manostat",
+            .unit        = "ps",
         };
 
-        const auto setValue = [](double relaxationTime)
-        { settings::ManostatSettings::setTauManostat(relaxationTime); };
+        const auto setValue = [this](double relaxationTime)
+        { _manostatSettings->setTauByUser(relaxationTime * ps); };
 
         const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
             0.0,
             std::numeric_limits<double>::max() / PS_TO_FS
         };
 
+        const auto defaultValue = 1.0;
+
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
                 .metadata     = metaData,
-                .defaultValue = 1.0,
+                .defaultValue = defaultValue,
                 .onSet        = setValue,
                 .validators   = {makeShared(validator)}
             }
@@ -184,13 +172,20 @@ namespace input
                 "simulation",
         };
 
-        const auto setValue = [](double compressibility)
-        { settings::ManostatSettings::setCompressibility(compressibility); };
+        const auto setValue = [this](double compressibility)
+        {
+            _manostatSettings->setCompressibilityByUser(
+                compressibility * per_bar
+            );
+        };
+
+        const auto defaultValue =
+            defaults::COMPRESSIBILITY_WATER_DEFAULT.numerical_value_in(per_bar);
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
                 .metadata     = metaData,
-                .defaultValue = defaults::COMPRESSIBILITY_WATER_DEFAULT,
+                .defaultValue = defaultValue,
                 .onSet        = setValue,
                 .validators   = {makeShared(PositiveGTDoubleValidator)}
             }
@@ -216,8 +211,8 @@ namespace input
                 "semi-isotropic, anisotropic, full_anisotropic)",
         };
 
-        const auto setValue = [](Isotropy isotropy)
-        { settings::ManostatSettings::setIsotropy(isotropy); };
+        const auto setValue = [this](Isotropy isotropy)
+        { _manostatSettings->setIsotropyByUser(isotropy); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<Isotropy>{
@@ -244,8 +239,8 @@ namespace input
             .description = "Specifies the fixed axis in the simulation",
         };
 
-        const auto setValue = [](FixedAxis fixedAxis)
-        { settings::ManostatSettings::setFixedAxis(fixedAxis); };
+        const auto setValue = [this](FixedAxis fixedAxis)
+        { _manostatSettings->setFixedAxisByUser(fixedAxis); };
 
         auto &fixedAxisKey = _getRegistry().registerKey(
             KeyRegistry<FixedAxis>{

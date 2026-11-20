@@ -40,6 +40,7 @@
 #include "coulombShiftedPotential.hpp"
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedMap.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -64,12 +65,14 @@ int main()
     auto simulationBox = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    simulationBox.setBox(orthoBox);
+    simulationBox.setBox(orthoBox, false);
 
     auto physicalData = physicalData::PhysicalData();
 
     const auto& box     = simulationBox.getBoxDimensions();
     const auto  atomIdx = intraNonBondedType.getAtomIndices()[0][0];
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

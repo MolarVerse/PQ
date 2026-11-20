@@ -27,6 +27,7 @@
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -38,7 +39,8 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) timestep "<double>"
      * (required) 2) nstep "<size_t>" (required)
      */
-    TimingsInputParser::TimingsInputParser()
+    TimingsInputParser::TimingsInputParser(TimingsSettings &settings)
+        : _timingsSettings(settings)
     {
         addTimeStep();
         addNumberOfSteps();
@@ -62,8 +64,8 @@ namespace input
 
         const RangeValidator<double, Greater::GT> validator{0.0, std::nullopt};
 
-        const auto setTimeStep = [&](double value)
-        { settings::TimingsSettings::setTimeStep(value); };
+        const auto setTimeStep = [this](double value)
+        { _timingsSettings->setTimeStepByUser(value * fs); };
 
         auto &timeStep = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -93,9 +95,9 @@ namespace input
 
         const RangeValidator<int> validator{1, std::nullopt};
 
-        const auto setNumberOfSteps = [&](int value)
+        const auto setNumberOfSteps = [this](int value)
         {
-            settings::TimingsSettings::setNumberOfSteps(
+            _timingsSettings->setNumberOfStepsByUser(
                 static_cast<size_t>(value)
             );
         };

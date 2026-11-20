@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OUTPUT_HPP_
-
-#define _OUTPUT_HPP_
+#ifndef OUTPUT__OUTPUT_HPP
+#define OUTPUT__OUTPUT_HPP
 
 #include <cstddef>
 #include <fstream>
@@ -30,7 +29,7 @@
 #include <string_view>
 #include <utility>
 
-class TestOutput_testSpecialSetFilename_Test;   // Friend test class
+struct TestOutputUtils;   // Friend test class
 
 namespace out
 {
@@ -57,12 +56,9 @@ namespace out
         Output &operator=(Output &&) noexcept = default;
 
         void close();
-        void setFilename(const std::string_view &);
+        void setFilename(const std::string_view &, bool overwriteOutputFiles);
 
-// TODO: remove the TESTS dependency
-#ifdef WITH_TESTS
-        friend class ::TestOutput_testSpecialSetFilename_Test;
-#endif
+        friend struct ::TestOutputUtils;
 
         /***************************
          * standard getter methods *
@@ -71,14 +67,25 @@ namespace out
         std::string getFilename() const;
 
        protected:
-        void               _openFile();
-        void               _writeComment(size_t);
-        void               _writeForceComment(size_t, double);
-        static std::string _formatForceComment(size_t step, double totalForce);
+        void _openFile();
+        void _replaceFile(std::string_view content);
+        void _writeComment(size_t, bool includeMetadata);
+        void _writeForceComment(size_t, double, bool includeMetadata);
 
-        std::ofstream &_getFilePointer() { return _fp; }
+        [[nodiscard]]
+        static std::string _formatForceComment(
+            size_t step,
+            double totalForce,
+            bool   includeMetadata
+        );
+
+        [[nodiscard]]
+        std::ofstream &_getFilePointer()
+        {
+            return _fp;
+        }
     };
 
 }   // namespace out
 
-#endif   // _OUTPUT_HPP_
+#endif   // OUTPUT__OUTPUT_HPP

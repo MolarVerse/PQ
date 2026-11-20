@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _OPTIMIZER_SETUP_HPP_
-
-#define _OPTIMIZER_SETUP_HPP_
+#ifndef SETUP__OPTIMIZER_SETUP_HPP
+#define SETUP__OPTIMIZER_SETUP_HPP
 
 #include "learningRateStrategy.hpp"
 #include "optimizer.hpp"
@@ -54,18 +53,18 @@ namespace setup
         void setup();
         void writeSetupInfo() const;
 
-        static void setupConvergence(std::shared_ptr<opt::Optimizer> &);
-        static void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &);
+        void setupConvergence(std::shared_ptr<opt::Optimizer> &) const;
+        void setupMinMaxLR(std::shared_ptr<opt::LearningRateStrategy> &) const;
 
         [[nodiscard]]
         std::shared_ptr<opt::Optimizer> setupEmptyOptimizer();
         [[nodiscard]]
-        static std::shared_ptr<
-            opt::LearningRateStrategy> setupLearningRateStrategy();
+        std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy(
+        ) const;
         [[nodiscard]]
         std::shared_ptr<opt::Evaluator> setupEvaluator();
     };
 
 }   // namespace setup
 
-#endif   // _OPTIMIZER_SETUP_HPP_
+#endif   // SETUP__OPTIMIZER_SETUP_HPP

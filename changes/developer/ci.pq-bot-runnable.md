@@ -1,1 +1,0 @@
-- Fix the PQ coworker bot agent so it runs headless (selectable mode, no prompts, review tier restored).

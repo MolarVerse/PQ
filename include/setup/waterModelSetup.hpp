@@ -20,23 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _WATER_MODEL_SETUP_HPP_
+#ifndef SETUP__WATER_MODEL_SETUP_HPP
+#define SETUP__WATER_MODEL_SETUP_HPP
 
-#define _WATER_MODEL_SETUP_HPP_
-
-#include <optional>
-
-#include "enums/waterModels.hpp"
 #include "interWater.hpp"
 #include "mdEngine.hpp"
 
 namespace setup
 {
-    struct RigidWaterGeometry
-    {
-        double dOH{0.0};
-        double dHH{0.0};
-    };
 
     void setupWaterModel(engine::Engine &);
 
@@ -64,14 +55,8 @@ namespace setup
             const waterModel::InterWaterState &
         );
         void _shakeSetupForRigidWater(const RigidWaterGeometry &geometry);
-
-        [[nodiscard]]
-        static std::optional<RigidWaterGeometry> _getRigidWaterGeometry(
-            WaterIntraModel intraModel
-        );
-        static void _addReferences();
     };
 
 }   // namespace setup
 
-#endif   // _WATER_MODEL_SETUP_HPP_
+#endif   // SETUP__WATER_MODEL_SETUP_HPP

@@ -28,13 +28,6 @@ namespace opt
 {
 
     /**
-     * @brief Constructor
-     *
-     * @param nEpochs
-     */
-    SteepestDescent::SteepestDescent(size_t nEpochs) : Optimizer(nEpochs) {}
-
-    /**
      * @brief get the maximum history length
      *
      * @return size_t

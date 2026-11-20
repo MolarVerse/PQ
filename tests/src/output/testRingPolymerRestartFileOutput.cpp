@@ -27,17 +27,13 @@
 #include <iosfwd>
 #include <string>
 
-#include "ringPolymerSettings.hpp"
-
 /**
  * @brief tests writing restart file for ring polymer
  *
  */
 TEST_F(TestRingPolymerRestartFileOutput, write)
 {
-    settings::RingPolymerSettings::setNumberOfBeads(_beads.size());
-
-    _rstFileOutput->setFilename("default.rpmd.rst");
+    _rstFileOutput->setFilename("default.rpmd.rst", false);
     _rstFileOutput->write(_beads);
     _rstFileOutput->close();
     std::ifstream file("default.rpmd.rst");

@@ -32,12 +32,15 @@
 #include "coulombShiftedPotential.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "gmock/gmock.h"
+#include "hybridSettings.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -53,7 +56,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    box.setBox(orthoBox);
+    box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
@@ -106,18 +109,20 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         {AtomIndex{0}, AtomIndex{1}, AtomIndex{2}},
         AngleId{0}
     );
-    const auto equilibrium   = 90 * M_PI / 180.0;
-    const auto forceConstant = 3.0;
+    const auto equilibrium   = 90 * M_PI / 180.0 * rad;
+    const auto forceConstant = 3.0 * kcal_per_mol / rad / rad;
     angleFF.setParams(
         AngleParams{.equilibrium = equilibrium, .forceConstant = forceConstant}
     );
     angleFF.setIsLinker(false);
 
+    const HybridSettings hybridSettings;
     angleFF.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -184,7 +189,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod()
     );
 
     EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
@@ -256,7 +262,7 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
-    box.setBox(orthoBox);
+    box.setBox(orthoBox, false);
 
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(10.0);
@@ -288,15 +294,20 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         AngleId{0}
     );
     angleForceField.setParams(
-        AngleParams{.equilibrium = M_PI, .forceConstant = 3.0}
+        AngleParams{
+            .equilibrium   = M_PI * rad,
+            .forceConstant = 3.0 * kcal_per_mol / rad / rad
+        }
     );
     angleForceField.setIsLinker(false);
 
+    const HybridSettings hybridSettings;
     angleForceField.calculateEnergyAndForces(
         box,
         physicalData,
         coulombPotential,
-        *_nonCoulombPotential
+        *_nonCoulombPotential,
+        hybridSettings.getSmoothingMethod()
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).

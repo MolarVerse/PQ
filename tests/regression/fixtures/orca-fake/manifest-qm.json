@@ -1,0 +1,10 @@
+{
+  "input": ["qm-hf.in", "qm-dft.in", "qm-rimp2.in"],
+  "timeout_seconds": 60,
+  "env": {"ORCA_EXE": "fake_orca.py"},
+  "executables": ["fake_orca.py"],
+  "stdout_contains": ["PQ ended normally"],
+  "stdout_rejects": ["Exception:"],
+  "expected_files": ["water-hf.info", "water-dft.info", "water-rimp2.info"],
+  "check_command": ["check_orca.py", "qm"]
+}

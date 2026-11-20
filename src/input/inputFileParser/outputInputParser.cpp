@@ -65,7 +65,8 @@ namespace input
      * 24) rpmd_energy_file "<string>"
      * 25) include_output_metadata "<bool>"
      */
-    OutputInputParser::OutputInputParser()
+    OutputInputParser::OutputInputParser(OutputFileSettings &outputFileSettings)
+        : _outputFileSettings(outputFileSettings)
     {
         addOutputFrequencyKeyword();
         addFilePrefixKeyword();
@@ -81,6 +82,7 @@ namespace input
         addForceFilenameKeyword();
         addRestartFilenameKeyword();
         addChargeFilenameKeyword();
+        addExtxyzFilenameKeyword();
         addMomentumFilenameKeyword();
         addVirialFilenameKeyword();
         addStressFilenameKeyword();
@@ -97,6 +99,8 @@ namespace input
 
         addOverwriteOutputKeyword();
         addIncludeOutputMetadataKeyword();
+        addAsyncOutputKeyword();
+        addTrajectoryFormatKeyword();
     }
 
     /**
@@ -113,8 +117,8 @@ namespace input
             .description = "Whether to overwrite existing output files"
         };
 
-        const auto setValue = [](bool value)
-        { settings::OutputFileSettings::setOverwriteOutputFiles(value); };
+        const auto setValue = [this](bool value)
+        { _outputFileSettings->setOverwriteOutputFilesByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
@@ -141,13 +145,43 @@ namespace input
             .description = "Whether to include metadata in output files"
         };
 
-        const auto setValue = [](bool value)
-        { settings::OutputFileSettings::setIncludeOutputMetadata(value); };
+        const auto setValue = [this](bool value)
+        { _outputFileSettings->setIncludeOutputMetadataByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<bool>{
                 .metadata     = metaData,
                 .defaultValue = false,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add async output keyword to the input parser
+     *
+     * @details this keyword controls whether MD trajectory and restart files
+     * are written on a separate thread
+     */
+    void OutputInputParser::addAsyncOutputKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "async_output",
+            .title = "Asynchronous output",
+            .description =
+                "Whether MD trajectory and restart files are "
+                "written on a separate thread"
+        };
+
+        const auto setValue = [this](bool value)
+        { _outputFileSettings->setAsyncOutputByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<bool>{
+                .metadata     = metaData,
+                .defaultValue = true,
                 .onSet        = setValue,
             }
         );
@@ -169,8 +203,8 @@ namespace input
             .description = "Frequency at which output files are generated"
         };
 
-        const auto setValue = [](size_t value)
-        { settings::OutputFileSettings::setOutputFrequency(value); };
+        const auto setValue = [this](size_t value)
+        { _outputFileSettings->setOutputFrequencyByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -196,8 +230,8 @@ namespace input
             .description = "Prefix for output files"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setFilePrefix(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setFilePrefixByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -223,8 +257,8 @@ namespace input
             .description = "Filename for the log output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setLogFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setLogFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -250,8 +284,8 @@ namespace input
             .description = "Filename for the reference output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRefFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRefFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -277,8 +311,8 @@ namespace input
             .description = "Filename for the info output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setInfoFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setInfoFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -304,8 +338,8 @@ namespace input
             .description = "Filename for the energy output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setEnergyFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setEnergyFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -331,8 +365,8 @@ namespace input
             .description = "Filename for the instant energy output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setInstantEnergyFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setInstantEnergyFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -358,8 +392,8 @@ namespace input
             .description = "Filename for the trajectory output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setTrajectoryFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setTrajectoryFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -385,8 +419,8 @@ namespace input
             .description = "Filename for the hybrid center output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setHybridCenterFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setHybridCenterFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -412,8 +446,8 @@ namespace input
             .description = "Filename for the velocity output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setVelocityFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setVelocityFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -439,8 +473,8 @@ namespace input
             .description = "Filename for the force output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setForceFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setForceFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -466,8 +500,8 @@ namespace input
             .description = "Filename for the restart output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRestartFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRestartFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -493,13 +527,73 @@ namespace input
             .description = "Filename for the charge output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setChargeFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setChargeFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
                 .metadata     = metaData,
                 .defaultValue = DefaultFiles::chargeFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add trajectory format keyword to the input parser
+     *
+     * @details extxyz writes one extxyz file instead of the xyz, velocity,
+     * force and charge files
+     */
+    void OutputInputParser::addTrajectoryFormatKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "traj_format",
+            .title = "Trajectory format",
+            .description =
+                "File format of the MD trajectory: xyz (separate xyz, vel, "
+                "force and chrg files) or extxyz (one extended xyz file in PQ "
+                "units)"
+        };
+
+        const auto setValue = [this](TrajectoryFormat value)
+        { _outputFileSettings->setTrajectoryFormatByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<TrajectoryFormat>{
+                .metadata     = metaData,
+                .defaultValue = TrajectoryFormat::XYZ,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add extxyz filename keyword to the input parser
+     *
+     * @details the extxyz file is only written if this keyword is set
+     */
+    void OutputInputParser::addExtxyzFilenameKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "extxyz_file",
+            .title = "Extended xyz filename",
+            .description =
+                "Filename for the extended xyz trajectory, written if "
+                "traj_format = extxyz"
+        };
+
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setExtxyzFileNameByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::extxyzFile,
                 .onSet        = setValue,
             }
         );
@@ -520,8 +614,8 @@ namespace input
             .description = "Filename for the momentum output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setMomentumFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setMomentumFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -547,8 +641,8 @@ namespace input
             .description = "Filename for the stress output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setStressFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setStressFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -574,8 +668,8 @@ namespace input
             .description = "Filename for the virial output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setVirialFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setVirialFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -601,8 +695,8 @@ namespace input
             .description = "Filename for the box output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setBoxFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setBoxFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -628,8 +722,8 @@ namespace input
             .description = "Filename for the timings output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setTimingsFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setTimingsFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -655,8 +749,8 @@ namespace input
             .description = "Filename for the optimization output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setOptFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setOptFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -682,8 +776,8 @@ namespace input
             .description = "Filename for the RPMD restart output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerRestartFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRingPolymerRestartFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -710,12 +804,8 @@ namespace input
             .description = "Filename for the RPMD trajectory output"
         };
 
-        const auto setValue = [](const std::string &value)
-        {
-            settings::OutputFileSettings::setRingPolymerTrajectoryFileName(
-                value
-            );
-        };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRingPolymerTrajectoryFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -741,10 +831,8 @@ namespace input
             .description = "Filename for the RPMD velocity output"
         };
 
-        const auto setValue = [](const std::string &value)
-        {
-            settings::OutputFileSettings::setRingPolymerVelocityFileName(value);
-        };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRingPolymerVelocityFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -770,8 +858,8 @@ namespace input
             .description = "Filename for the RPMD force output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerForceFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRingPolymerForceFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -797,8 +885,8 @@ namespace input
             .description = "Filename for the RPMD charge output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerChargeFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRingPolymerChargeFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{
@@ -824,8 +912,8 @@ namespace input
             .description = "Filename for the RPMD energy output"
         };
 
-        const auto setValue = [](const std::string &value)
-        { settings::OutputFileSettings::setRingPolymerEnergyFileName(value); };
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setRingPolymerEnergyFileNameByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<std::string>{

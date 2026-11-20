@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
-
-#define _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_RING_POLYMER_TRAJECTORY_OUTPUT_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_RING_POLYMER_TRAJECTORY_OUTPUT_HPP
 
 #include <gtest/gtest.h>
 
@@ -31,7 +30,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
-#include "ringPolymerSettings.hpp"
+#include "orthorhombicBox.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "simulationBox.hpp"
 
@@ -51,8 +50,6 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
 
     void SetUp() override
     {
-        settings::RingPolymerSettings::setNumberOfBeads(2);
-
         _trajectoryOutput = std::make_unique<out::RingPolymerTrajectoryOutput>(
             "default.rpmd.xyz"
         );
@@ -60,9 +57,9 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         _simulationBox2 = std::make_unique<molsys::SimulationBox>();
 
         molsys::OrthorhombicBox orthoBox1{{10.0, 10.0, 10.0}};
-        _simulationBox1->setBox(orthoBox1);
+        _simulationBox1->setBox(orthoBox1, false);
         molsys::OrthorhombicBox orthoBox2{{10.0, 10.0, 10.0}};
-        _simulationBox2->setBox(orthoBox2);
+        _simulationBox2->setBox(orthoBox2, false);
 
         auto molecule1_1 = molsys::Molecule();
         auto molecule1_2 = molsys::Molecule();
@@ -145,4 +142,4 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
     }
 };
 
-#endif   // _TEST_RING_POLYMER_TRAJECTORY_FILE_OUTPUT_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_RING_POLYMER_TRAJECTORY_OUTPUT_HPP

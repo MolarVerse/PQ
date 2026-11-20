@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MANOSTAT_ENUM_HPP_
-#define _MANOSTAT_ENUM_HPP_
+#ifndef CONFIG__ENUMS__MANOSTAT_HPP
+#define CONFIG__ENUMS__MANOSTAT_HPP
 
 #include <cstdint>
 #include <mstd/enum.hpp>
@@ -121,6 +121,9 @@ MSTD_ENUM_BITFLAG(FixedAxis, std::uint8_t, FIXED_AXIS_LIST);
 [[nodiscard]]
 bool isAxisFixed(FixedAxis fixedAxis, size_t axisIndex);
 
+[[nodiscard]]
+int toDim(FixedAxis fixedAxis);
+
 /**
  * @brief Input aliases for the FixedAxis enum
  *
@@ -142,4 +145,4 @@ struct mstd::EnumAliases<FixedAxis>
 #undef FIXED_AXIS_LIST
 #undef U
 
-#endif   // _MANOSTAT_ENUM_HPP_
+#endif   // CONFIG__ENUMS__MANOSTAT_HPP

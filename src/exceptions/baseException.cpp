@@ -59,9 +59,9 @@ namespace exc
      */
     void PQException::setLineNumber(size_t lineNumber) noexcept
     {
-        // TODO: Consider whether to allow overwriting the line number or not.
-        // Currently, it only sets the line number if it hasn't been set before.
-        // This is a very bad code smell here
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/907
+        // decide whether to allow overwriting the line number; currently it
+        // only sets it if it hasn't been set before
         if (!_lineNumber.has_value())
             _lineNumber = lineNumber;
     }

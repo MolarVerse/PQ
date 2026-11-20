@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MATH_UTILITIES_HPP_
-
-#define _MATH_UTILITIES_HPP_
+#ifndef UTILITIES__MATH_UTILITIES_HPP
+#define UTILITIES__MATH_UTILITIES_HPP
 
 #include <cmath>
 #include <cstdlib>
 #include <limits>
+#include <mstd/math.hpp>
 
 namespace linalg
 {
@@ -73,7 +73,7 @@ namespace utilities
     [[nodiscard]]
     bool compare(const T &lhs, const T &rhs)
     {
-        return std::fabs(lhs - rhs) < std::numeric_limits<T>::epsilon();
+        return mstd::fabs(lhs - rhs) < std::numeric_limits<T>::epsilon();
     }
 
     [[nodiscard]]
@@ -97,7 +97,14 @@ namespace utilities
     template <typename T>
     [[nodiscard]] bool isZero(const T &value)
     {
-        return value == T(0);
+        if constexpr (requires { value.zero(); })
+        {
+            return value == value.zero();
+        }
+        else
+        {
+            return value == T(0);
+        }
     }
 
     /**
@@ -123,4 +130,4 @@ namespace utilities
 
 }   // namespace utilities
 
-#endif   // _MATH_UTILITIES_HPP_
+#endif   // UTILITIES__MATH_UTILITIES_HPP

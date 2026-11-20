@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _PARAMETER_FILE_SECTION_HPP_
-
-#define _PARAMETER_FILE_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_SECTION_HPP
 
 #include <iosfwd>
 #include <string>
@@ -76,4 +75,4 @@ namespace input::parameterFile
 
 }   // namespace input::parameterFile
 
-#endif   // _PARAMETER_FILE_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__PARAMETER_FILE_SECTION_HPP

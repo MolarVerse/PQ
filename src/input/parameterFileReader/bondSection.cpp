@@ -27,6 +27,7 @@
 #include "bondType.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "units.hpp"
 
 namespace input::parameterFile
 {
@@ -67,8 +68,7 @@ namespace input::parameterFile
 
                 std::format(
                     "Wrong number of arguments in parameter file bond section "
-                    "at "
-                    "line {} - number of elements has to be 3!",
+                    "at line {} - number of elements has to be 3!",
                     lineNumber
                 )
 
@@ -76,16 +76,16 @@ namespace input::parameterFile
         }
 
         auto id                  = BondId{stoul(lineElements[0])};
-        auto equilibriumDistance = stod(lineElements[1]);
-        auto forceConstant       = stod(lineElements[2]);
+        auto equilibriumDistance = stod(lineElements[1]) * angstrom;
+        auto forceConstant =
+            stod(lineElements[2]) * kcal_per_mol / angstrom / angstrom;
 
         if (equilibriumDistance < 0.0)
         {
             throw exc::ParameterFileException(
                 std::format(
                     "Parameter file bond section at line {} - equilibrium "
-                    "distance "
-                    "has to be positive!",
+                    "distance has to be positive!",
                     lineNumber
                 )
             );

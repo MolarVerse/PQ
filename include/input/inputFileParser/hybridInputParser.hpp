@@ -20,11 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _HYBRID_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP
 
-#define _HYBRID_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+
+class HybridSettings;   // forward declaration
 
 namespace input
 {
@@ -36,8 +39,11 @@ namespace input
      */
     class HybridInputParser : public InputFileParser
     {
+       private:
+        mstd::Ref<HybridSettings> _hybridSettings;
+
        public:
-        HybridInputParser();
+        explicit HybridInputParser(HybridSettings &hybridSettings);
 
         void addInnerRegionCenterKey();
         void addForcedCoreListKey();
@@ -50,17 +56,8 @@ namespace input
         void addPointChargeThicknessKey();
         void addSmoothingMethodKey();
         void addQMForceDistributionKey();
-
-        static std::vector<int> parseSelection(
-            const std::string &,
-            const std::string &
-        );
-        static std::vector<int> parseSelectionNoPython(
-            const std::string &,
-            const std::string &
-        );
     };
 
 }   // namespace input
 
-#endif   // _HYBRID_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__HYBRID_INPUT_PARSER_HPP

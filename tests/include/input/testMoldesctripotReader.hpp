@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_MOLDESCRIPTOR_READER_H_
-
-#define _TEST_MOLDESCRIPTOR_READER_H_
+#ifndef TESTS__INCLUDE__INPUT__TEST_MOLDESCTRIPOT_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_MOLDESCTRIPOT_READER_HPP
 
 #include <gtest/gtest.h>
 
@@ -39,16 +38,15 @@
 class TestMoldescriptorReader : public ::testing::Test
 {
    protected:
-    Settings                        _settings;
-    std::unique_ptr<engine::Engine> _engine;
+    std::unique_ptr<Settings> _settings;
 
-    void SetUp() override
+    [[nodiscard]]
+    static std::unique_ptr<engine::Engine> _makeEngine(const Settings &settings)
     {
-        // NOTE: use dummy engine for testing
-        //       this is implemented by base class Engine
-        //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
+        return std::make_unique<engine::MMMDEngine>(settings);
     }
+
+    void SetUp() override { _settings = std::make_unique<Settings>(); }
 };
 
 #endif

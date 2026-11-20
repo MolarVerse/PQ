@@ -26,6 +26,14 @@ Example: `changes/user/bugfix.kinetic-virial.md` containing:
 `changes/user/.gitkeep` and `changes/developer/.gitkeep` are placeholders, not fragments: a release consumes every fragment,
 and git does not track empty folders, so without them the two folders would disappear from the tree. Do not delete them.
 
+## Pull requests without a fragment
+
+A pull request that needs no entry (a typo in a comment, a change nobody
+notices) carries the explicit label `skip-changelog`. The Changelog Fragment
+Check then skips the fragment requirement; the tests of the scripts still run.
+Adding or removing the label re-runs the check. Use it sparingly: the label is
+the reviewer's decision, not a way around the check.
+
 ## Multiple points in one fragment
 
 A fragment can contain more than one Markdown bullet, one per line, with no
@@ -37,7 +45,7 @@ changelog, under the fragment's category:
 - Second, related point about the same change.
 ```
 
-Every bullet is at most 240 characters.
+Every bullet is at most 360 characters.
 
 ## Adding to an existing fragment
 

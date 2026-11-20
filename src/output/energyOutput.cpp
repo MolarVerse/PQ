@@ -30,7 +30,9 @@
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
+#include "settings.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -40,9 +42,9 @@ namespace out
      *
      * @param timeStep simulation timestep in fs
      */
-    void EnergyOutput::writeHeader(double timeStep)
+    void EnergyOutput::writeHeader(const Time &timeStep)
     {
-        _getFilePointer() << std::format("# timestep = {} fs\n", timeStep);
+        _getFilePointer() << std::format("# timestep = {}\n", timeStep.in(fs));
     }
 
     /**
@@ -60,24 +62,34 @@ namespace out
      *
      * @param step
      * @param physicalData the physical data of the system
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EnergyOutput::write(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         _getFilePointer() << std::format("{:10d}\t", step);
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getTemperature());
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", physicalData.getPressure());
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getTemperature()
+                .quantity_from_zero()
+                .numerical_value_in(K)
+        );
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            physicalData.getPressure().numerical_value_in(bar)
+        );
         _getFilePointer(
         ) << std::format("{:20.12f}\t", physicalData.getTotalEnergy());
 
         if (settings::GeneralSettings::isQMActivated())
         {
-            _getFilePointer()
-                << std::format("{:20.12f}\t", physicalData.getQMEnergy());
+            const auto qmRef    = physicalData.getQMReferenceEnergy();
+            const auto qmEnergy = physicalData.getQMEnergy() - qmRef;
+            _getFilePointer() << std::format("{:20.12f}\t", qmEnergy);
             _getFilePointer(
             ) << std::format("{:20.12f}\t", physicalData.getNumberOfQMAtoms());
         }
@@ -95,7 +107,7 @@ namespace out
             ) << std::format("{:20.12f}\t", physicalData.getNonCoulombEnergy());
         }
 
-        if (settings::ForceFieldSettings::isActive())
+        if (settings.forceFieldSettings.isActive())
         {
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getBondEnergy());
@@ -113,25 +125,27 @@ namespace out
                 "{:20.12f}\t",
                 physicalData.getNumberOfSmoothingMolecules()
             );
+            const auto qmRef = physicalData.getQMReferenceEnergy();
+            _getFilePointer() << std::format("{:20.12f}\t", qmRef);
         }
 
-        if (settings::ManostatSettings::getManostatType() != ManostatType::NONE)
+        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getVolume());
             _getFilePointer()
                 << std::format("{:20.12f}\t", physicalData.getDensity());
 
-            if (settings::ManostatSettings::getFixedAxis() != FixedAxis::NONE)
+            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
             {
                 _getFilePointer() << std::format(
                     "{:20.12f}\t",
-                    physicalData.getCoupledPressure()
+                    physicalData.getCoupledPressure().numerical_value_in(bar)
                 );
             }
         }
 
-        if (settings::ThermostatSettings::getThermostatType() ==
+        if (settings.thermostatSettings.getThermostatType() ==
             ThermostatType::NOSE_HOOVER)
         {
             _getFilePointer() << std::format(
@@ -144,7 +158,7 @@ namespace out
             );
         }
 
-        if (settings::ConstraintSettings::isDistanceConstraintsActivated())
+        if (settings.constraintSettings.isDistanceConstraintsActivated())
         {
             _getFilePointer() << std::format(
                 "{:20.12f}\t",

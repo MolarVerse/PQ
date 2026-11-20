@@ -23,23 +23,28 @@
 #include "engineOutput.hpp"
 
 #include <memory>
+#include <optional>
+#include <utility>
 
 #include "boxOutput.hpp"
 #include "defaults.hpp"
 #include "energyOutput.hpp"
+#include "frame.hpp"
 #include "globalTimer.hpp"
 #include "hybridConfigurator.hpp"
 #include "infoOutput.hpp"
 #include "logOutput.hpp"
 #include "momentumOutput.hpp"
 #include "optOutput.hpp"
+#include "outputFileSettings.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "ringPolymerRestartFileOutput.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "rstFileOutput.hpp"
+#include "simulationBox.hpp"
 #include "stdoutOutput.hpp"
 #include "stressOutput.hpp"
-#include "thermostat.hpp"
+#include "systemMemory.hpp"
 #include "timingsOutput.hpp"
 #include "trajectoryOutput.hpp"
 #include "virialOutput.hpp"
@@ -60,8 +65,12 @@ namespace engine
     /**
      * @brief constructor
      */
-    EngineOutput::EngineOutput()
-        : _energyOutput(
+    EngineOutput::EngineOutput(
+        const OutputFileSettings &outputFileSettings,
+        const ReferenceSettings  &referenceSettings
+    )
+        : _outputFileSettings(outputFileSettings),
+          _energyOutput(
               std::make_unique<out::EnergyOutput>(DefaultFiles::energyFile)
           ),
           _instantEnergyOutput(
@@ -139,8 +148,8 @@ namespace engine
           ),
           _timingsOutput(
               std::make_unique<out::TimingsOutput>(DefaultFiles::timingsFile)
-          )
-
+          ),
+          _referencesOutput(referenceSettings)
     {
     }
 
@@ -149,29 +158,35 @@ namespace engine
      *
      * @param step
      * @param physicalData
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EngineOutput::writeEnergyFile(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "EnergyOutput");
-        _energyOutput->write(step, physicalData);
+        _energyOutput->write(step, physicalData, settings);
     }
 
     /**
      * @brief wrapper for instant energy file output function
      *
-     * @param step
-     * @param physicalData
+     * @param step The current simulation step.
+     * @param physicalData The physical data of the system at the current step.
+     * @param settings The simulation settings containing relevant configuration
+     * for output.
      */
     void EngineOutput::writeInstantEnergyFile(
         size_t                            step,
-        const physicalData::PhysicalData &physicalData
+        const physicalData::PhysicalData &physicalData,
+        const Settings                   &settings
     )
     {
         auto _ = scopedTimer(TimerId::Output, "InstantEnergyOutput");
-        _instantEnergyOutput->write(step, physicalData);
+        _instantEnergyOutput->write(step, physicalData, settings);
     }
 
     /**
@@ -192,16 +207,17 @@ namespace engine
     /**
      * @brief wrapper for xyz file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeXyzFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeXyzFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _xyzOutput->writeXyz(simulationBox, step);
+        _xyzOutput->writeXyz(
+            frame,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -216,84 +232,230 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _xyzHybridCenterOutput->writeHybridCenterXyz(configurator, step);
+        _xyzHybridCenterOutput->writeHybridCenterXyz(
+            configurator,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
      * @brief wrapper for velocity file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeVelFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeVelFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _velOutput->writeVelocities(simulationBox, step);
+        _velOutput->writeVelocities(
+            frame,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
      * @brief wrapper for force file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeForceFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeForceFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _forceOutput->writeForces(simulationBox, step);
+        _forceOutput->writeForces(
+            frame,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
      * @brief wrapper for charge file output function
      *
-     * @param simulationBox
+     * @param frame
      * @param step
      */
-    void EngineOutput::writeChargeFile(
-        molsys::SimulationBox &simulationBox,
-        size_t                 step
-    )
+    void EngineOutput::writeChargeFile(const out::Frame &frame, size_t step)
     {
         auto _ = scopedTimer(TimerId::Output, "TrajectoryOutput");
-        _chargeOutput->writeCharges(simulationBox, step);
-    }
-
-    /**
-     * @brief wrapper for info file output function
-     *
-     * @param time
-     * @param physicalData
-     */
-    void EngineOutput::writeInfoFile(
-        double                            time,
-        const physicalData::PhysicalData &physicalData
-    )
-    {
-        auto _ = scopedTimer(TimerId::Output, "InfoOutput");
-        _infoOutput->write(time, physicalData);
+        _chargeOutput->writeCharges(
+            frame,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
      * @brief wrapper for restart file output function
      *
+     * @param frame
+     * @param step
+     */
+    void EngineOutput::writeRstFile(const out::Frame &frame, size_t step)
+    {
+        auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
+        _rstFileOutput->write(frame, step);
+    }
+
+    /**
+     * @brief write every MD frame to an extxyz file instead of the xyz,
+     * velocity, force and charge files
+     *
+     * @param filename
+     * @param overwrite whether an existing file may be replaced
+     */
+    void EngineOutput::openExtxyzOutput(
+        const std::string &filename,
+        const bool         overwrite
+    )
+    {
+        _extxyzOutput = std::make_unique<out::ExtxyzOutput>(filename);
+        _extxyzOutput->setFilename(filename, overwrite);
+    }
+
+    /**
+     * @brief write the xyz, velocity, force, charge and restart files of one
+     * MD frame, on the writer thread if async output is on
+     *
+     * @details the writer thread is created on the first frame, unless async
+     * output is off or the queued frames would not fit in memory. It does not
+     * use the global timer, which is not thread-safe; FrameOutput measures
+     * what output costs the MD thread.
+     *
      * @param simulationBox
      * @param thermostat
      * @param step
+     * @param potentialEnergy written to the extxyz file
+     *
+     * @throw the first error of an earlier frame write
      */
-    void EngineOutput::writeRstFile(
-        molsys::SimulationBox        &simulationBox,
+    void EngineOutput::writeFrame(
+        const molsys::SimulationBox  &simulationBox,
         const thermostat::Thermostat &thermostat,
-        size_t                        step
+        const size_t                  step,
+        const double                  potentialEnergy
     )
     {
-        auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-        _rstFileOutput->write(simulationBox, thermostat, step);
+        if (!_frameWriterChecked)
+        {
+            _frameWriterChecked = true;
+            _startFrameWriter(simulationBox.getNumberOfAtoms());
+        }
+
+        auto _ = scopedTimer(TimerId::Output, "FrameOutput");
+
+        auto frame            = out::Frame{simulationBox, thermostat};
+        frame.potentialEnergy = potentialEnergy;
+
+        const auto metadata = _outputFileSettings->getIncludeOutputMetadata();
+
+        if (!_frameWriter)
+        {
+            _writeFrame(frame, step, metadata);
+            return;
+        }
+
+        _frameWriter->submit([this, frame = std::move(frame), step, metadata]
+                             { _writeFrame(frame, step, metadata); });
+    }
+
+    /**
+     * @brief whether the queued frames and the text being formatted fit in
+     * half of the available memory
+     *
+     * @param nAtoms
+     * @param availableMemory in bytes, nothing if unknown
+     *
+     * @return true if unknown, as most systems have enough
+     */
+    bool EngineOutput::asyncOutputFits(
+        const std::size_t                nAtoms,
+        const std::optional<std::size_t> availableMemory
+    )
+    {
+        if (!availableMemory)
+            return true;
+
+        // queued frames plus the one being built, and the text of one file
+        // (about 160 bytes per atom), held twice while it is copied out of
+        // the string stream
+        constexpr std::size_t framesInMemory   = _frameCapacity + 1;
+        constexpr std::size_t textBytesPerAtom = 320;
+
+        const auto needed =
+            nAtoms *
+            (framesInMemory * sizeof(out::Frame::Atom) + textBytesPerAtom);
+
+        return needed <= *availableMemory / 2;
+    }
+
+    /**
+     * @brief create the writer thread if async output is on and fits in
+     * memory
+     *
+     * @param nAtoms
+     */
+    void EngineOutput::_startFrameWriter(const std::size_t nAtoms)
+    {
+        if (!_outputFileSettings->getAsyncOutput())
+            return;
+
+        if (!asyncOutputFits(nAtoms, utilities::availableMemory()))
+        {
+            _logOutput->writeInfo(
+                "Not enough free memory for async output: trajectory and "
+                "restart files are written before the next step."
+            );
+            return;
+        }
+
+        _frameWriter =
+            std::make_unique<utilities::SerialWorker>(_frameCapacity);
+    }
+
+    /**
+     * @brief write the trajectory files (xyz, velocity, force and charge,
+     * or one extxyz file) and the restart file of one frame
+     *
+     * @param frame
+     * @param step
+     * @param metadata whether to include step metadata
+     */
+    void EngineOutput::_writeFrame(
+        const out::Frame &frame,
+        const size_t      step,
+        const bool        metadata
+    )
+    {
+        if (_extxyzOutput)
+        {
+            _extxyzOutput->write(frame, step);
+        }
+        else
+        {
+            _xyzOutput->writeXyz(frame, step, metadata);
+            _velOutput->writeVelocities(frame, step, metadata);
+            _forceOutput->writeForces(frame, step, metadata);
+            _chargeOutput->writeCharges(frame, step, metadata);
+        }
+
+        _rstFileOutput->write(frame, step);
+    }
+
+    /**
+     * @brief block until all queued frames are written
+     *
+     * @throw the first error of a frame write
+     */
+    void EngineOutput::waitForFrames()
+    {
+        if (!_frameWriter)
+            return;
+
+        auto _ = scopedTimer(TimerId::Output, "FrameOutput");
+        _frameWriter->wait();
     }
 
     /**
@@ -308,7 +470,7 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-        _rstFileOutput->write(simulationBox, thermostat::Thermostat(), step);
+        _rstFileOutput->write(out::Frame{simulationBox}, step);
     }
 
     /**
@@ -396,7 +558,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdXyzOutput->writeXyz(beads, step);
+        _rpmdXyzOutput->writeXyz(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -411,7 +577,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdVelOutput->writeVelocities(beads, step);
+        _rpmdVelOutput->writeVelocities(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -426,7 +596,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdForceOutput->writeForces(beads, step);
+        _rpmdForceOutput->writeForces(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -441,7 +615,11 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RingPolymerTrajectoryOutput");
-        _rpmdChargeOutput->writeCharges(beads, step);
+        _rpmdChargeOutput->writeCharges(
+            beads,
+            step,
+            _outputFileSettings->getIncludeOutputMetadata()
+        );
     }
 
     /**
@@ -469,6 +647,18 @@ namespace engine
         // here is no timer applied, since the timings file is written at the
         // end of the simulation
         _timingsOutput->write();
+    }
+
+    /**
+     * @brief wrapper for references file output function
+     *
+     */
+    void EngineOutput::writeReferencesFile()
+    {
+        auto _ = scopedTimer(TimerId::Output, "ReferencesOutput");
+        _referencesOutput.writeReferencesFile(
+            _outputFileSettings->getRefFileName()
+        );
     }
 
     /***************************

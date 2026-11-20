@@ -22,167 +22,232 @@
 
 #include "waterModelSettings.hpp"
 
-#include <format>
+#include "referenceSettings.hpp"
+#include "rigidWaterGeometry.hpp"
 
-#include "exceptions.hpp"
-#include "stringUtilities.hpp"
-
-namespace settings
+/**
+ * @brief Finalize the water model settings by adding references
+ *
+ * @param references Reference settings to be updated with water model
+ * references
+ */
+void WaterModelSettings::finalize(ReferenceSettings &references)
 {
+    _addReferences(references);
+}
 
-    /********************
-     * standard getters *
-     ********************/
+/**
+ * @brief Get the rigid geometry parameters for a water model.
+ *
+ * @details Only rigid water variants return geometry data. Flexible water
+ * models return @c std::nullopt and are handled without constraints.
+ *
+ * @return The O-H and H-H distances for rigid models, or @c std::nullopt if
+ * the model is not rigid.
+ */
+std::optional<RigidWaterGeometry> WaterModelSettings::getRigidWaterGeometry(
+) const
+{
+    using enum WaterIntraModel;
 
-    /**
-     * @brief returns whether a water model is set
-     *
-     * @return true if water model is set
-     */
-    bool WaterModelSettings::isWaterModelSet() { return _isWaterModelSet; }
+    if (!_waterIntraModel.isSetBySomeone())
+        return std::nullopt;
 
-    /**
-     * @brief returns whether a intermolecular water model is set
-     *
-     * @return true if intermolecular water model is set
-     */
-    bool WaterModelSettings::isInterWaterModelSet()
+    switch (_waterIntraModel.get())
     {
-        return _isInterWaterModelSet;
+        case SPC:
+            return RigidWaterGeometry{.dOH = SPC_OH_DIST, .dHH = SPC_HH_DIST};
+        case SPC_E:
+            return RigidWaterGeometry{
+                .dOH = SPC_E_OH_DIST,
+                .dHH = SPC_E_HH_DIST
+            };
+        case SPC_DC:
+            return RigidWaterGeometry{
+                .dOH = SPC_DC_OH_DIST,
+                .dHH = SPC_DC_HH_DIST
+            };
+        case H2O_DC:
+            return RigidWaterGeometry{
+                .dOH = H2O_DC_OH_DIST,
+                .dHH = H2O_DC_HH_DIST
+            };
+        case TIP3P:
+            return RigidWaterGeometry{
+                .dOH = TIP3P_OH_DIST,
+                .dHH = TIP3P_HH_DIST
+            };
+        case OPC3:
+            return RigidWaterGeometry{.dOH = OPC3_OH_DIST, .dHH = OPC3_HH_DIST};
+        case SPC_FW:
+        case QSPC_FW:
+        case SPC_MTR:
+        case TIP3P_MTR:
+        case NONE: return std::nullopt;
     }
 
-    /**
-     * @brief returns the waterIntraModel
-     *
-     * @return waterIntraModel
-     */
-    WaterIntraModel WaterModelSettings::getWaterIntraModel()
+    std::unreachable();
+}
+
+/********************
+ * standard getters *
+ ********************/
+
+/**
+ * @brief returns whether a water model is set
+ *
+ * @return true if water model is set
+ */
+bool WaterModelSettings::isWaterModelSetAndNotNone() const
+{
+    if (_waterIntraModel.isSetBySomeone() &&
+        _waterIntraModel.get() != WaterIntraModel::NONE)
+        return true;
+
+    if (isInterWaterModelSetAndNotNone())
+        return true;
+
+    return false;
+}
+
+/**
+ * @brief returns whether a intermolecular water model is set
+ *
+ * @return true if intermolecular water model is set
+ */
+bool WaterModelSettings::isInterWaterModelSetAndNotNone() const
+{
+    return _waterInterModel.isSetBySomeone() &&
+           _waterInterModel.get() != WaterInterModel::NONE;
+}
+
+/**
+ * @brief returns the waterIntraModel
+ *
+ * @return waterIntraModel
+ */
+WaterIntraModel WaterModelSettings::getWaterIntraModel() const
+{
+    return _waterIntraModel.get();
+}
+
+/**
+ * @brief returns the waterInterModel
+ *
+ * @return waterInterModel
+ */
+WaterInterModel WaterModelSettings::getWaterInterModel() const
+{
+    return _waterInterModel.get();
+}
+
+/********************
+ * standard setters *
+ ********************/
+
+/**
+ * @brief sets the waterIntraModel to enum in settings
+ *
+ * @param model
+ */
+void WaterModelSettings::setWaterIntraModelByUser(WaterIntraModel model)
+{
+    _waterIntraModel.setByUser(model);
+}
+
+/**
+ * @brief sets the waterInterModel to enum in settings
+ *
+ * @param model
+ */
+void WaterModelSettings::setWaterInterModelByUser(WaterInterModel model)
+{
+    _waterInterModel.setByUser(model);
+}
+
+/**
+ * @brief Add reference file entries for the configured water models.
+ *
+ * @details Adds bibliography references for both intramolecular and
+ * intermolecular water models to the references output.
+ */
+void WaterModelSettings::_addReferences(ReferenceSettings &references) const
+{
+    if (_waterIntraModel.isSetBySomeone())
     {
-        return _waterIntraModel;
+        switch (_waterIntraModel.get())
+        {
+            using enum WaterIntraModel;
+            case SPC:
+                references.addReferenceFile(ReferenceFiles::SPC_FILE);
+                break;
+            case SPC_E:
+                references.addReferenceFile(ReferenceFiles::SPC_E_FILE);
+                break;
+            case SPC_FW:
+                references.addReferenceFile(ReferenceFiles::SPC_FW_FILE);
+                break;
+            case QSPC_FW:
+                references.addReferenceFile(ReferenceFiles::QSPC_FW_FILE);
+                break;
+            case SPC_DC:
+                references.addReferenceFile(ReferenceFiles::SPC_DC_FILE);
+                break;
+            case H2O_DC:
+                references.addReferenceFile(ReferenceFiles::H2O_DC_FILE);
+                break;
+            case TIP3P:
+                references.addReferenceFile(ReferenceFiles::TIP3P_FILE);
+                break;
+            case OPC3:
+                references.addReferenceFile(ReferenceFiles::OPC3_FILE);
+                break;
+            case SPC_MTR:
+                references.addReferenceFile(ReferenceFiles::SPC_MTR_FILE);
+                break;
+            case TIP3P_MTR:
+                references.addReferenceFile(ReferenceFiles::TIP3P_MTR_FILE);
+                break;
+            case NONE: break;
+        }
     }
 
-    /**
-     * @brief returns the waterInterModel
-     *
-     * @return waterInterModel
-     */
-    WaterInterModel WaterModelSettings::getWaterInterModel()
+    if (_waterInterModel.isSetBySomeone())
     {
-        return _waterInterModel;
+        switch (_waterInterModel.get())
+        {
+            using enum WaterInterModel;
+            case SPC:
+                references.addReferenceFile(ReferenceFiles::SPC_FILE);
+                break;
+            case SPC_E:
+                references.addReferenceFile(ReferenceFiles::SPC_E_FILE);
+                break;
+            case SPC_FW:
+                references.addReferenceFile(ReferenceFiles::SPC_FW_FILE);
+                break;
+            case QSPC_FW:
+                references.addReferenceFile(ReferenceFiles::QSPC_FW_FILE);
+                break;
+            case SPC_DC:
+                references.addReferenceFile(ReferenceFiles::SPC_DC_FILE);
+                break;
+            case H2O_DC:
+                references.addReferenceFile(ReferenceFiles::H2O_DC_FILE);
+                break;
+            case TIP3P:
+                references.addReferenceFile(ReferenceFiles::TIP3P_FILE);
+                break;
+            case OPC3:
+                references.addReferenceFile(ReferenceFiles::OPC3_FILE);
+                break;
+            case SPC_MTR:
+                references.addReferenceFile(ReferenceFiles::SPC_MTR_FILE);
+                break;
+            case TIP3P_MTR:
+                references.addReferenceFile(ReferenceFiles::TIP3P_MTR_FILE);
+                break;
+            case NONE: break;
+        }
     }
-
-    /********************
-     * standard setters *
-     ********************/
-
-    /**
-     * @brief sets whether a water model is set
-     *
-     * @param isSet
-     */
-    void WaterModelSettings::setIsWaterModelSet(bool isSet)
-    {
-        _isWaterModelSet = isSet;
-    }
-
-    /**
-     * @brief sets whether a intermolecular water model is set
-     *
-     * @param isSet
-     */
-    void WaterModelSettings::setIsInterWaterModelSet(bool isSet)
-    {
-        _isInterWaterModelSet = isSet;
-    }
-
-    /**
-     * @brief sets the waterIntraModel to enum in settings
-     *
-     * @param model
-     */
-    void WaterModelSettings::setWaterIntraModel(const std::string_view &model)
-    {
-        using enum WaterIntraModel;
-        const auto waterModel = utilities::toLowerAndReplaceDashesCopy(model);
-
-        if ("spc_e" == waterModel)
-            _waterIntraModel = SPC_E;
-        else if ("spc_fw" == waterModel)
-            _waterIntraModel = SPC_FW;
-        else if ("qspc_fw" == waterModel)
-            _waterIntraModel = QSPC_FW;
-        else if ("spc_dc" == waterModel)
-            _waterIntraModel = SPC_DC;
-        else if ("h2o_dc" == waterModel)
-            _waterIntraModel = H2O_DC;
-        else if ("tip3p" == waterModel)
-            _waterIntraModel = TIP3P;
-        else if ("opc3" == waterModel)
-            _waterIntraModel = OPC3;
-        else if ("spc_mtr" == waterModel)
-            _waterIntraModel = SPC_MTR;
-        else if ("tip3p_mtr" == waterModel)
-            _waterIntraModel = TIP3P_MTR;
-        else
-            throw exc::UserInputException(
-                std::format("Water intra model \"{}\" not recognized", model)
-            );
-    }
-
-    /**
-     * @brief sets the waterIntraModel to enum in settings
-     *
-     * @param model
-     */
-    void WaterModelSettings::setWaterIntraModel(WaterIntraModel model)
-    {
-        _waterIntraModel = model;
-    }
-
-    /**
-     * @brief sets the waterInterModel to enum in settings
-     *
-     * @param model
-     */
-    void WaterModelSettings::setWaterInterModel(const std::string_view &model)
-    {
-        using enum WaterInterModel;
-        const auto waterModel = utilities::toLowerAndReplaceDashesCopy(model);
-
-        if ("spc" == waterModel)
-            _waterInterModel = SPC;
-        else if ("spc_e" == waterModel)
-            _waterInterModel = SPC_E;
-        else if ("spc_fw" == waterModel)
-            _waterInterModel = SPC_FW;
-        else if ("qspc_fw" == waterModel)
-            _waterInterModel = QSPC_FW;
-        else if ("spc_dc" == waterModel)
-            _waterInterModel = SPC_DC;
-        else if ("h2o_dc" == waterModel)
-            _waterInterModel = H2O_DC;
-        else if ("tip3p" == waterModel)
-            _waterInterModel = TIP3P;
-        else if ("opc3" == waterModel)
-            _waterInterModel = OPC3;
-        else if ("spc_mtr" == waterModel)
-            _waterInterModel = SPC_MTR;
-        else if ("tip3p_mtr" == waterModel)
-            _waterInterModel = TIP3P_MTR;
-        else
-            throw exc::UserInputException(
-                std::format("Water inter model \"{}\" not recognized", model)
-            );
-    }
-
-    /**
-     * @brief sets the waterInterModel to enum in settings
-     *
-     * @param model
-     */
-    void WaterModelSettings::setWaterInterModel(WaterInterModel model)
-    {
-        _waterInterModel = model;
-    }
-
-}   // namespace settings
+}

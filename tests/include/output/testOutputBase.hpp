@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_OUTPUT_BASE_HPP_
-#define _TEST_OUTPUT_BASE_HPP_
+#ifndef TESTS__INCLUDE__OUTPUT__TEST_OUTPUT_BASE_HPP
+#define TESTS__INCLUDE__OUTPUT__TEST_OUTPUT_BASE_HPP
 
 #include <fstream>
 #include <sstream>
@@ -40,4 +40,4 @@ inline std::string slurp(const std::string &path)
     return stringStream.str();
 }
 
-#endif   // _TEST_OUTPUT_BASE_HPP_
+#endif   // TESTS__INCLUDE__OUTPUT__TEST_OUTPUT_BASE_HPP

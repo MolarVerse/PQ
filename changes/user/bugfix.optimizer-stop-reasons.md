@@ -1,1 +1,0 @@
-- Optimizer and Hessian runs that are stopped by the learning rate strategy now report its error messages instead of the generic "Optimizer did not converge" message, which hid them.

@@ -35,6 +35,7 @@
 
 #include "coulombShiftedPotential.hpp"
 #include "coulombWolf.hpp"
+#include "perfAlloc.hpp"
 
 static constexpr std::uint64_t ITERATIONS = 20000;
 
@@ -42,6 +43,8 @@ int main()
 {
     auto shifted = pot::CoulombShiftedPotential(9.0);
     auto wolf    = pot::CoulombWolf(9.0, 0.25);
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

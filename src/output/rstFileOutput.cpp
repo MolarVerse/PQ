@@ -22,14 +22,14 @@
 
 #include "rstFileOutput.hpp"
 
+#include <cmath>
+#include <cstddef>
 #include <format>
+#include <initializer_list>
 #include <ostream>
 #include <sstream>
-#include <vector>
 
-#include "molecule.hpp"
-#include "noseHooverThermostat.hpp"
-#include "simulationBox.hpp"
+#include "frame.hpp"
 
 namespace out
 {
@@ -37,112 +37,106 @@ namespace out
     namespace
     {
         /**
+         * @brief a value that the restart reader can read back
+         *
+         * @details the reader parses numbers with std::stod, which rejects
+         * every subnormal number (below 2.2e-308) as out of range. Such a
+         * value is zero for any physical purpose, so it is written as a zero
+         * of the same sign; all other values are written exactly.
+         */
+        double readable(const double value)
+        {
+            if (std::fpclassify(value) == FP_SUBNORMAL)
+                return std::copysign(0.0, value);
+
+            return value;
+        }
+
+        /**
          * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
          *
-         * @param thermostat
+         * @param frame
          * @param buffer
          */
-        void writeNHChain(
-            const thermostat::Thermostat &thermostat,
-            std::ostringstream           &buffer
-        )
+        void writeNHChain(const Frame &frame, std::ostringstream &buffer)
         {
-            const auto &nhChain =
-                dynamic_cast<const thermostat::NoseHooverThermostat &>(
-                    thermostat
-                );
+            const auto &chain = frame.noseHooverChain;
 
-            const auto &chi  = nhChain.getChi();
-            const auto &zeta = nhChain.getZeta();
-
-            for (size_t i = 0; i < chi.size() - 1; ++i)
+            for (std::size_t i = 0; i < chain.size(); ++i)
             {
+                const auto &[chi, zeta] = chain[i];
+
                 buffer << "chi "
                        << std::format(
-                              "{:2d}\t{:10.5e}\t{:10.5e}",
+                              "{:2d}\t{}\t{}",
                               i + 1,
-                              chi[i],
-                              zeta[i]
+                              readable(chi),
+                              readable(zeta)
                           )
                        << '\n';
             }
         }
+
+        constexpr std::size_t RST_VELOCITY_WIDTH = 19;
 
     }   // namespace
 
     /**
      * @brief Write the restart file
      *
-     * @param simulationBox
-     * @param thermostat
+     * @param frame
      * @param step
      */
-    void RstFileOutput::write(
-        const molsys::SimulationBox  &simulationBox,
-        const thermostat::Thermostat &thermostat,
-        size_t                        step
-    )
+    void RstFileOutput::write(const Frame &frame, size_t step)
     {
+        using textFormat::FIXED_WIDTH;
+        using textFormat::NAME_WIDTH;
+
         std::ostringstream buffer;
-
-        _getFilePointer().close();
-
-        _openFile();
 
         buffer << "Step " << step << '\n';
 
-        const auto &boxDim = simulationBox.getBoxDimensions();
-        const auto &boxAng = simulationBox.getBoxAngles();
+        // std::format writes the shortest text that reads back as the same
+        // double; the stream operator of Vector3D keeps 6 digits only, which
+        // changes the box of a restarted run
+        buffer << std::format(
+            "Box   {}  {}\n",
+            frame.box->get_boxDimensions(),
+            frame.box->getBoxAngles()
+        );
 
-        buffer << "Box   " << boxDim << "  " << boxAng << '\n';
+        writeNHChain(frame, buffer);
 
-        if (thermostat.getThermostatType() == ThermostatType::NOSE_HOOVER)
-            writeNHChain(thermostat, buffer);
+        _buffer.clear();
+        _buffer.append(buffer.str());
 
-        for (const auto &molecule : simulationBox.getMolecules())
+        for (const auto &atom : frame.atoms)
         {
-            const auto nAtoms = molecule.getNumberOfAtoms();
+            const auto &pos   = atom.position;
+            const auto &vel   = atom.velocity;
+            const auto &force = atom.force;
 
-            for (AtomIndex i{0}; i.get() < nAtoms; ++i)
+            _buffer.left(atom.name, NAME_WIDTH).put('\t');
+            _buffer.left(atom.indexInMolecule + 1, NAME_WIDTH).put('\t');
+            _buffer.left(atom.moltype.get(), NAME_WIDTH).put('\t');
+
+            for (const double value : {pos[0], pos[1], pos[2]})
             {
-                const auto atomName = molecule.getAtomName(i);
-                const auto molType  = molecule.getMoltype();
-                const auto x        = molecule.getAtomPosition(i)[0];
-                const auto y        = molecule.getAtomPosition(i)[1];
-                const auto z        = molecule.getAtomPosition(i)[2];
-                const auto velX     = molecule.getAtomVelocity(i)[0];
-                const auto velY     = molecule.getAtomVelocity(i)[1];
-                const auto velZ     = molecule.getAtomVelocity(i)[2];
-                const auto forceX   = molecule.getAtomForce(i)[0];
-                const auto forceY   = molecule.getAtomForce(i)[1];
-                const auto forceZ   = molecule.getAtomForce(i)[2];
-
-                buffer << std::format("{:<5}\t", atomName);
-                buffer << std::format("{:<5}\t", i.get() + 1);
-                buffer << std::format("{:<5}\t", molType.get());
-
-                buffer
-                    << std::format("{:15.8f}\t{:15.8f}\t{:15.8f}\t", x, y, z);
-                buffer << std::format(
-                    "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
-                    velX,
-                    velY,
-                    velZ
-                );
-                buffer << std::format(
-                    "{:15.8f}\t{:15.8f}\t{:15.8f}",
-                    forceX,
-                    forceY,
-                    forceZ
-                );
-
-                buffer << '\n' << std::flush;
+                _buffer.exactFixed(readable(value), FIXED_WIDTH).put('\t');
             }
+
+            for (const double value : {vel[0], vel[1], vel[2]})
+            {
+                _buffer.exactScientific(readable(value), RST_VELOCITY_WIDTH)
+                    .put('\t');
+            }
+
+            _buffer.exactFixed(readable(force[0]), FIXED_WIDTH).put('\t');
+            _buffer.exactFixed(readable(force[1]), FIXED_WIDTH).put('\t');
+            _buffer.exactFixed(readable(force[2]), FIXED_WIDTH).put('\n');
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _replaceFile(_buffer.view());
     }
 
 }   // namespace out

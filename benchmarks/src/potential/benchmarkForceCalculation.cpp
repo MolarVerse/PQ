@@ -38,6 +38,8 @@
 #include "potentialBruteForce.hpp"
 #include "potentialCellList.hpp"
 #include "potentialSettings.hpp"
+#include "settings.hpp"
+#include "waterModelSettings.hpp"
 
 namespace
 {
@@ -74,7 +76,8 @@ namespace
         pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
         pot::CoulombPotential::setCoulombForceCutOff(0.0);
 
-        PotentialType forceCalculation;
+        Settings      settings;
+        PotentialType forceCalculation{settings.hybridSettings};
         forceCalculation.makeCoulombPotential(
             pot::CoulombShiftedPotential(benchmarkSetup::cutOff)
         );
@@ -91,6 +94,7 @@ namespace
         }
 
         physicalData::PhysicalData physicalData;
+        WaterModelSettings         waterModelSettings;
 
         for (auto _ : state)
         {
@@ -98,7 +102,12 @@ namespace
             benchmarkSetup::resetForces(simBox);
             state.ResumeTiming();
 
-            forceCalculation.calculateForces(simBox, physicalData, cellList);
+            forceCalculation.calculateForces(
+                simBox,
+                physicalData,
+                cellList,
+                waterModelSettings
+            );
             benchmark::DoNotOptimize(physicalData.getCoulombEnergy());
             benchmark::DoNotOptimize(physicalData.getNonCoulombEnergy());
         }

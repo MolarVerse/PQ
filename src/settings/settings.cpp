@@ -22,9 +22,168 @@
 
 #include "settings.hpp"
 
+#include <cmath>
+#include <format>
+
+#include "constants/conversionFactors.hpp"
+#include "exceptions.hpp"
+#include "generalSettings.hpp"
+#include "hybridSettings.hpp"
 #include "resetKineticsSettings.hpp"
+#include "timingsSettings.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
+
+namespace
+{
+    /**
+     * @brief validates the resolved thermostat and temperature ramp values
+     *
+     * @details requires Settings::finalize() to have been called, as the end
+     * temperature and ramp parameters are resolved there.
+     *
+     * @throws exc::InputFileException if the values are inconsistent
+     */
+    void validateThermostat(
+        const ThermostatSettings& thermostatSettings,
+        const KineticsSettings&   kinetics,
+        const TimingsSettings&    timings
+    )
+    {
+        const auto thermostatType = thermostatSettings.getThermostatType();
+        const auto hasRamp        = kinetics.isStartTemperatureSet();
+
+        if (settings::GeneralSettings::isMDJobType() &&
+            (thermostatType == ThermostatType::BERENDSEN ||
+             thermostatType == ThermostatType::VELOCITY_RESCALING))
+        {
+            if (timings.getTimeStep() > thermostatSettings.getRelaxationTime())
+            {
+                throw exc::InputFileException(
+                    "The timestep must not exceed the thermostat relaxation "
+                    "time"
+                );
+            }
+        }
+
+        if (thermostatType == ThermostatType::LANGEVIN)
+        {
+            auto maxTemperature = kinetics.getEndTemperature();
+
+            if (hasRamp)
+            {
+                maxTemperature =
+                    mstd::max(maxTemperature, kinetics.getStartTemperature());
+            }
+
+            const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
+            const auto conversionFactor =
+                UNIVERSAL_GAS_CONSTANT * unitConversion;
+            const auto sigmaSquared =
+                4.0 * thermostatSettings.getFriction() * conversionFactor *
+                maxTemperature.quantity_from_zero().numerical_value_in(K) /
+                timings.getTimeStep().numerical_value_in(fs);
+
+            if (!std::isfinite(sigmaSquared))
+            {
+                throw exc::InputFileException(
+                    "Langevin thermostat parameters produce a non-finite "
+                    "random-force scale"
+                );
+            }
+        }
+
+        if (thermostatType == ThermostatType::NOSE_HOOVER)
+        {
+            if (kinetics.getEndTemperature() <= Temperature::zero())
+                throw exc::InputFileException(
+                    "Nose-Hoover target temperature must be greater than zero"
+                );
+
+            if (hasRamp &&
+                kinetics.getStartTemperature() <= Temperature::zero())
+                throw exc::InputFileException(
+                    "Nose-Hoover start temperature must be greater than zero"
+                );
+        }
+
+        if (!hasRamp)
+            return;
+
+        const auto totalSteps = timings.getNumberOfSteps();
+        const auto rampSteps  = kinetics.getRampingSteps();
+
+        if (rampSteps > totalSteps)
+        {
+            throw exc::InputFileException(
+                std::format(
+                    "Number of total simulation steps {} is smaller than the "
+                    "number of temperature ramping steps {}",
+                    totalSteps,
+                    rampSteps
+                )
+            );
+        }
+
+        const auto effectiveRampSteps = rampSteps == 0 ? totalSteps : rampSteps;
+        const auto frequency          = kinetics.getRampingFrequency();
+
+        if (frequency > effectiveRampSteps)
+        {
+            throw exc::InputFileException(
+                std::format(
+                    "Temperature ramp frequency {} is larger than the number "
+                    "of ramping steps {}",
+                    frequency,
+                    effectiveRampSteps
+                )
+            );
+        }
+    }
+}   // namespace
 
 /**
  * @brief Finalize the settings by finalizing each individual setting component
  */
-void Settings::finalize() { resetKinetics.finalize(); }
+void Settings::finalize()
+{
+    kinetics.finalize(timings.getNumberOfSteps());
+    resetKinetics.finalize(timings.getNumberOfSteps());
+    manostatSettings.finalize(referenceSettings);
+    outputFiles.finalize();
+    waterModelSettings.finalize(referenceSettings);
+    constraintSettings.finalize(referenceSettings, waterModelSettings);
+    thermostatSettings.finalize(referenceSettings);
+    hybridSettings.finalize(fileSettings);
+
+    const auto& qmMethod = qmSettings.getQMMethod();
+
+    switch (qmMethod)
+    {
+        case QMMethod::ASE_DFTBPLUS:
+            dftbSettings.finalize(referenceSettings);
+            break;
+        case QMMethod::ASE_XTB: xtbSettings.finalize(referenceSettings); break;
+        case QMMethod::MACE:
+        case QMMethod::DFTBPLUS:
+        case QMMethod::FENNOL:
+        case QMMethod::PYSCF:
+        case QMMethod::TURBOMOLE:
+        case QMMethod::ORCA:
+        case QMMethod::NONE: break;
+    }
+
+    if (qmSettings.isExternalQMRunner())
+        externalQMSettings.finalize();
+}
+
+/**
+ * @brief Validate the finalized settings
+ *
+ * @details checks that depend on values resolved in finalize(), so this must
+ * be called after finalize()
+ */
+void Settings::validate() const
+{
+    validateThermostat(thermostatSettings, kinetics, timings);
+}

@@ -29,6 +29,8 @@
 #include <iostream>
 #include <memory>
 
+#include "orthorhombicBox.hpp"
+#include "settings.hpp"
 #include "strongTypes.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -45,6 +47,7 @@
 #include "lennardJonesPair.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
+#include "perfAlloc.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
@@ -59,11 +62,14 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
 int main()
 {
+    Settings settings;
     settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
     pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
     pot::CoulombPotential::setCoulombForceCutOff(0.0);
-    settings::WaterModelSettings::setIsInterWaterModelSet(true);
+    settings.waterModelSettings.setWaterInterModelByUser(
+        WaterInterModel::SPC_E
+    );
 
     // ~6x6x6 = 216 water molecules (648 atoms) on a 3 Å grid in a 30 Å box.
     constexpr size_t perSide = 6;
@@ -72,7 +78,7 @@ int main()
     molsys::SimulationBox simBox;
 
     molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
-    simBox.setBox(orthoBox);
+    simBox.setBox(orthoBox, false);
     simBox.setWaterType(WATER_TYPE);
 
     molsys::MoleculeType waterType;
@@ -148,7 +154,9 @@ int main()
 
     waterModel::InterWater interWater(
         std::move(state),
-        std::make_unique<waterModel::InterWaterStrategyCellList>()
+        std::make_unique<waterModel::InterWaterStrategyCellList>(
+            settings.hybridSettings
+        )
     );
 
     auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
@@ -162,6 +170,8 @@ int main()
     cellList.updateCellList(simBox);
 
     auto physicalData = physicalData::PhysicalData();
+
+    perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 

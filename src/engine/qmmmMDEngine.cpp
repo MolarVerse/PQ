@@ -22,6 +22,7 @@
 
 #include "qmmmMDEngine.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdlib>
 #include <format>
@@ -53,7 +54,7 @@ namespace engine
          * molecule.
          *
          * @details Weights are computed from center-of-mass distance using
-         * weightingRadius = 2 * HybridSettings::getLayerRadius(). For x = d/R
+         * weightingRadius = 2 * the layer radius. For x = d/R
          * and x < 1, the switch is S(x)=1-10x^3+15x^4-6x^5; otherwise the
          * weight is 0. The returned values are unnormalized and normalized by
          * the caller.
@@ -61,11 +62,11 @@ namespace engine
         std::vector<double> getDistanceWeights(
             const molsys::Molecule &smoothingMol,
             const std::vector<std::reference_wrapper<molsys::Molecule>>
-                &recipientMolecules
+                        &recipientMolecules,
+            const double layerRadius
         )
         {
-            const auto weightingRadius =
-                2.0 * settings::HybridSettings::getLayerRadius();
+            const auto          weightingRadius = 2.0 * layerRadius;
             std::vector<double> weights;
             weights.reserve(recipientMolecules.size());
 
@@ -114,11 +115,9 @@ namespace engine
         _getHybridConfigurator().shiftAtomsToInnerRegionCenter(
             getSimulationBox()
         );
-        configurator::HybridConfigurator::assignHybridZones(getSimulationBox());
+        _getHybridConfigurator().assignHybridZones(getSimulationBox());
         _moltypeCheck();
-        configurator::HybridConfigurator::calculateSmoothingFactors(
-            getSimulationBox()
-        );
+        _getHybridConfigurator().calculateSmoothingFactors(getSimulationBox());
         getCellList().updateCellList(getSimulationBox());
         getPhysicalDataPtr()->setNumberOfSmoothingMolecules(
             static_cast<double>(std::ranges::distance(
@@ -155,7 +154,7 @@ namespace engine
         using enum SmoothingMethod;
 
         const auto &smoothingMethod =
-            settings::HybridSettings::getSmoothingMethod();
+            getSettings().hybridSettings.getSmoothingMethod();
 
         switch (smoothingMethod)
         {
@@ -188,8 +187,10 @@ namespace engine
             )
         ));
 
+        const auto nConfigurations = _numberOfSmoothingConfigurations(nSmMol);
+
         // Loop over all combinations of smoothing molecules
-        for (size_t i = 0; i < (1U << nSmMol); ++i)
+        for (size_t i = 0; i < nConfigurations; ++i)
         {
             // STEP 1: Generate set of inactive molecules and calculate
             // associated global smoothing factor for this configuration
@@ -218,11 +219,16 @@ namespace engine
 
             // to not carry over qm_charges of atoms which are not qm
             // anymore
-            for (auto &atom : getSimulationBox().getAtoms())
-                atom->getQMCharge().reset();
+            getSimulationBox().resetQMCharges();
 
-            getQMRunner()
-                ->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+            getQMRunner()->run(
+                getSimulationBox(),
+                getPhysicalData(),
+                NON_PERIODIC,
+                getSettings().fileSettings,
+                getSettings().hybridSettings
+            );
+            _calculateQMReferenceEnergy();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
             virial +=
@@ -239,13 +245,17 @@ namespace engine
             if (settings::GeneralSettings::isCellListActivated())
             {
                 getCellList().assignMoleculeHybridZoneIndices();
-                getCellList().assignWaterMoleculeIndices(getSimulationBox());
+                getCellList().assignWaterMoleculeIndices(
+                    getSimulationBox(),
+                    getSettings().waterModelSettings
+                );
             }
 
             getPotential()->calculateQMMMForces(
                 getSimulationBox(),
                 getPhysicalData(),
-                getCellList()
+                getCellList(),
+                getSettings().waterModelSettings
             );
 
             _getInterWater().calculateQMMMForces(
@@ -328,13 +338,16 @@ namespace engine
             getSimulationBox()
         );
 
-        getQMRunner()->run(getSimulationBox(), getPhysicalData(), NON_PERIODIC);
+        getQMRunner()->run(
+            getSimulationBox(),
+            getPhysicalData(),
+            NON_PERIODIC,
+            getSettings().fileSettings,
+            getSettings().hybridSettings
+        );
+        _calculateQMReferenceEnergy();
 
-        if (settings::HybridSettings::getQMForceDist() == QMForceDist::NONE)
-            _scaleSmoothingMoleculeForcesInner();
-        else
-            _distributeSmoothingMolQMForces();
-
+        _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateQMVirial(getSimulationBox());
         virial += virial::intraMolecularVirialCorrection(getSimulationBox());
         _addCurrentForcesToInnerAndReset(atoms);
@@ -349,13 +362,17 @@ namespace engine
         if (settings::GeneralSettings::isCellListActivated())
         {
             getCellList().assignMoleculeHybridZoneIndices();
-            getCellList().assignWaterMoleculeIndices(getSimulationBox());
+            getCellList().assignWaterMoleculeIndices(
+                getSimulationBox(),
+                getSettings().waterModelSettings
+            );
         }
 
         getPotential()->calculateQMMMForces(
             getSimulationBox(),
             getPhysicalData(),
-            getCellList()
+            getCellList(),
+            getSettings().waterModelSettings
         );
 
         _getInterWater().calculateQMMMForces(
@@ -376,7 +393,8 @@ namespace engine
         getPotential()->calculateHotspotSmoothingMMForces(
             getSimulationBox(),
             getPhysicalData(),
-            getCellList()
+            getCellList(),
+            getSettings().waterModelSettings
         );
 
         _getInterWater().calculateHotspotSmoothingMMForces(
@@ -447,6 +465,43 @@ namespace engine
     }
 
     /**
+     * @brief Store the summed QM reference energies of all QM molecules in
+     * PhysicalData; they are subtracted from the total energy
+     *
+     * @details Must be called directly after the QM calculation, while
+     * exactly the QM molecules are active. Without it, E_tot jumps by a
+     * molecule's QM energy whenever it enters or leaves the QM region.
+     * Molecules without a moltype entry have no reference energy.
+     */
+    void QMMMMDEngine::_calculateQMReferenceEnergy()
+    {
+        auto &simBox          = getSimulationBox();
+        auto &moleculeTypes   = simBox.getMoleculeTypes();
+        auto  referenceEnergy = 0.0;
+
+        for (const auto &mol : simBox.getMolecules())
+        {
+            if (!mol.isActive())
+            {
+                continue;
+            }
+
+            const auto isMoltype = [&mol](const auto &moleculeType)
+            { return moleculeType.getMoltype() == mol.getMoltype(); };
+
+            const auto moleculeType =
+                std::ranges::find_if(moleculeTypes, isMoltype);
+
+            if (moleculeType != moleculeTypes.end())
+            {
+                referenceEnergy += moleculeType->getQMReferenceEnergy();
+            }
+        }
+
+        getPhysicalDataPtr()->setQMReferenceEnergy(referenceEnergy);
+    }
+
+    /**
      * @brief Validates that all non-core molecules have a non-zero moltype
      *
      * @details This function iterates through all molecules and verifies
@@ -490,6 +545,9 @@ namespace engine
         _qmmmPhysicalData.addQMEnergy(
             getPhysicalDataPtr()->getQMEnergy() * globalSmF
         );
+        _qmmmPhysicalData.addQMReferenceEnergy(
+            getPhysicalDataPtr()->getQMReferenceEnergy() * globalSmF
+        );
         _qmmmPhysicalData.addCoulombEnergy(
             getPhysicalDataPtr()->getCoulombEnergy() * globalSmF
         );
@@ -508,11 +566,13 @@ namespace engine
         _qmmmPhysicalData.addImproperEnergy(
             getPhysicalDataPtr()->getImproperEnergy() * globalSmF
         );
-        _qmmmPhysicalData.addIntraCoulombEnergy(
-            getPhysicalDataPtr()->getIntraCoulombEnergy() * globalSmF
+        _qmmmPhysicalData.setIntraCoulombEnergy(
+            _qmmmPhysicalData.getIntraCoulombEnergy() +
+            (getPhysicalDataPtr()->getIntraCoulombEnergy() * globalSmF)
         );
-        _qmmmPhysicalData.addIntraNonCoulombEnergy(
-            getPhysicalDataPtr()->getIntraNonCoulombEnergy() * globalSmF
+        _qmmmPhysicalData.setIntraNonCoulombEnergy(
+            _qmmmPhysicalData.getIntraNonCoulombEnergy() +
+            (getPhysicalDataPtr()->getIntraNonCoulombEnergy() * globalSmF)
         );
     }
 
@@ -524,6 +584,9 @@ namespace engine
     void QMMMMDEngine::_moveEnergiesToPhysicalData()
     {
         getPhysicalDataPtr()->setQMEnergy(_qmmmPhysicalData.getQMEnergy());
+        getPhysicalDataPtr()->setQMReferenceEnergy(
+            _qmmmPhysicalData.getQMReferenceEnergy()
+        );
         getPhysicalDataPtr()->setCoulombEnergy(
             _qmmmPhysicalData.getCoulombEnergy()
         );
@@ -551,10 +614,11 @@ namespace engine
 
     /**
      * @brief Dispatch QM-force redistribution for smoothing-zone molecules.
+     * Not used in the code yet, as this requires a new smoothing method, see
+     * issue #1012 https://github.com/MolarVerse/PQ/issues/1012
      *
      * @details Selects the redistribution strategy configured via
-     * HybridSettings::getQMForceDist().
-     * - NONE: scale smoothing-zone forces by smF only.
+     * hybridSettings.getQMForceDist().
      * - EQUAL: redistribute each smoothing-molecule deficit equally to
      *   CORE/LAYER molecules, then split by atomic mass within each
      * molecule.
@@ -573,7 +637,7 @@ namespace engine
      */
     void QMMMMDEngine::_distributeSmoothingMolQMForces()
     {
-        const auto type = settings::HybridSettings::getQMForceDist();
+        const auto type = getSettings().hybridSettings.getQMForceDist();
         std::vector<std::reference_wrapper<molsys::Molecule>>
             recipientMolecules;
 
@@ -614,7 +678,6 @@ namespace engine
             {
                 using enum QMForceDist;
 
-                case NONE: continue;
                 case EQUAL:
                     weights = std::vector<double>(recipientMolecules.size(), 1);
                     break;
@@ -622,8 +685,11 @@ namespace engine
                     weights = _getRandomWeights(recipientMolecules);
                     break;
                 case DISTANCE_WEIGHTED:
-                    weights =
-                        getDistanceWeights(smoothingMol, recipientMolecules);
+                    weights = getDistanceWeights(
+                        smoothingMol,
+                        recipientMolecules,
+                        getSettings().hybridSettings.getLayerRadius()
+                    );
                     break;
             }
 

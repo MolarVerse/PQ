@@ -28,10 +28,10 @@
 #include "constants.hpp"
 #include "coulombPotential.hpp"
 #include "forceField.hpp"
-#include "hybridSettings.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace ff
 {
@@ -62,12 +62,14 @@ namespace ff
      * @param physicalData the physical data of the system
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
+     * @param smoothing the smoothing method to use
      */
     void AngleForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
-        pot::NonCoulombPotential    &nonCoulombPot
+        pot::NonCoulombPotential    &nonCoulombPot,
+        SmoothingMethod              smoothing
     )
     {
         const auto &molecules = get_molecules();
@@ -101,10 +103,15 @@ namespace ff
         const auto distance12 = ::sqrt(distance12Squared);
         const auto distance13 = ::sqrt(distance13Squared);
 
-        const auto alpha      = angle(dPosition12, dPosition13);
-        const auto deltaAngle = alpha - _params.equilibrium;
+        const auto alpha = angle(dPosition12, dPosition13);
+        const auto equilibriumAngle =
+            _params.equilibrium.numerical_value_in(rad);
+        const auto deltaAngle = alpha - equilibriumAngle;
 
-        auto forceMagnitude = -_params.forceConstant * deltaAngle;
+        auto forceMagnitude = -_params.forceConstant.numerical_value_in(
+                                  kcal_per_mol / rad / rad
+                              ) *
+                              deltaAngle;
 
         physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
@@ -159,9 +166,7 @@ namespace ff
 
                 using enum SmoothingMethod;
 
-                auto       smF = 0.0;
-                const auto smoothing =
-                    settings::HybridSettings::getSmoothingMethod();
+                auto smF = 0.0;
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

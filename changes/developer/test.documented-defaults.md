@@ -1,0 +1,1 @@
+- Add a regression test that compares the defaults documented in the user guide (relaxation times, friction, Nose-Hoover chain, compressibility, isotropy, Coulomb cut-off, reset kinetics frequencies and the default output file names) with what PQ reports in the log of a run, parsing the numbers from inputFile.rst.

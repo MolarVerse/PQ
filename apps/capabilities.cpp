@@ -28,6 +28,7 @@
 #include <initializer_list>
 #include <iomanip>
 #include <limits>
+#include <mstd/units/wave_number.hpp>
 #include <ostream>
 #include <string_view>
 
@@ -36,6 +37,7 @@
 #include "externalQMScripts.hpp"
 #include "jsonOutput.hpp"
 #include "systemInfo.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -235,7 +237,10 @@ namespace
         json.value("parameter", "timestep");
         json.value("factor", FS_TO_PS);
         json.endObject();
-        json.value("default", defaults::BERENDSEN_THERMOSTAT_RELAX_TIME);
+        json.value(
+            "default",
+            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME.numerical_value_in(ps)
+        );
         json.endObject();
 
         beginParameter(
@@ -275,7 +280,11 @@ namespace
             "maximum",
             std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ
         );
-        json.value("default", defaults::NH_COUPLING_FREQ);
+        json.value(
+            "default",
+            mstd::toWavenumber(defaults::NH_COUPLING_FREQ)
+                .numerical_value_in(per_cm)
+        );
         json.endObject();
 
         beginParameter(
@@ -296,7 +305,10 @@ namespace
         json.value("parameter", "timestep");
         json.value("factor", FS_TO_PS);
         json.endObject();
-        json.value("default", defaults::BERENDSEN_MANOSTAT_RELAX_TIME);
+        json.value(
+            "default",
+            defaults::BERENDSEN_MANOSTAT_RELAX_TIME.numerical_value_in(ps)
+        );
         json.endObject();
 
         beginParameter(
@@ -305,7 +317,10 @@ namespace
             "bar^-1"
         );
         json.value("minimum", 0);
-        json.value("default", defaults::COMPRESSIBILITY_WATER_DEFAULT);
+        json.value(
+            "default",
+            defaults::COMPRESSIBILITY_WATER_DEFAULT.numerical_value_in(per_bar)
+        );
         json.endObject();
 
         beginParameter(
@@ -339,7 +354,8 @@ namespace
 
         json.beginArray("qm_programs");
 
-        for (const auto *const program : {"dftbplus", "pyscf", "turbomole"})
+        for (const auto *const program :
+             {"dftbplus", "pyscf", "turbomole", "orca"})
             json.value(program);
 
         if (withAse)

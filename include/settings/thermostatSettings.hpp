@@ -20,111 +20,138 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _THERMOSTAT_SETTINGS_HPP_
-
-#define _THERMOSTAT_SETTINGS_HPP_
+#ifndef SETTINGS__THERMOSTAT_SETTINGS_HPP
+#define SETTINGS__THERMOSTAT_SETTINGS_HPP
 
 #include <cstddef>
 #include <map>
 #include <mstd/enum.hpp>
-#include <mstd/enum/enum_string.hpp>
-#include <string_view>
 
 #include "defaults.hpp"
 #include "enums/thermostat.hpp"
+#include "setting.hpp"
+#include "unit_types.hpp"
 
-namespace settings
+class ReferenceSettings;
+
+/**
+ * @class NoseHooverSettings
+ *
+ * @brief Stores settings specific to the Nose-Hoover thermostat
+ *
+ */
+class NoseHooverSettings
 {
-
-    /**
-     * @class ThermostatSettings
-     *
-     * @brief static class to store settings of the thermostat
-     *
-     */
-    class ThermostatSettings
-    {
-       private:
-        static inline ThermostatType _thermostatType = ThermostatType::NONE;
-
-        static inline bool _isTemperatureSet      = false;
-        static inline bool _isStartTemperatureSet = false;
-        static inline bool _isEndTemperatureSet   = false;
-
-        static inline size_t _nhChainLength = defaults::NH_CHAIN_LENGTH_DEFAULT;
-        static inline size_t _temperatureRampSteps     = 0;
-        static inline size_t _temperatureRampFrequency = 1;
-
-        static inline double _targetTemperature;
-        static inline double _actualTargetTemperature;   // for reset kinetics
-        static inline double _startTemperature;
-        static inline double _endTemperature;
-
-        static inline double _relaxationTime =
-            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME;
-        static inline double _friction = defaults::LANGEVIN_THERMOSTAT_FRICTION;
-        static inline double _nhCouplingFreq = defaults::NH_COUPLING_FREQ;
-
-        static inline std::map<size_t, double> _chi;
-        static inline std::map<size_t, double> _zeta;
-
-       public:
-        ThermostatSettings()  = default;
-        ~ThermostatSettings() = default;
-
-        static auto addChi(size_t index, double chi)
-            -> decltype(_chi.try_emplace(index, chi));
-        static auto addZeta(size_t index, double zeta)
-            -> decltype(_zeta.try_emplace(index, zeta));
-
-        /***************************
-         * standard setter methods *
-         ***************************/
-
-        static void setThermostatType(const std::string_view& thermostatType);
-        static void setThermostatType(ThermostatType thermostatType);
-
-        static void setTemperatureSet(bool);
-        static void setStartTemperatureSet(bool);
-        static void setEndTemperatureSet(bool);
-        static void setTargetTemperature(double);
-        static void setActualTargetTemperature(double);
-        static void setStartTemperature(double);
-        static void setEndTemperature(double);
-
-        static void setTemperatureRampSteps(size_t);
-        static void setTemperatureRampFrequency(size_t);
-
-        static void setRelaxationTime(double);
-        static void setFriction(double);
-        static void setNoseHooverChainLength(size_t);
-        static void setNoseHooverCouplingFrequency(double);
-
-        /***************************
-         * standard getter methods *
-         ***************************/
-
-        [[nodiscard]] static ThermostatType getThermostatType();
-
-        [[nodiscard]] static size_t getNoseHooverChainLength();
-        [[nodiscard]] static size_t getTemperatureRampSteps();
-        [[nodiscard]] static size_t getTemperatureRampFrequency();
-
-        [[nodiscard]] static bool isTemperatureSet();
-        [[nodiscard]] static bool isStartTemperatureSet();
-        [[nodiscard]] static bool isEndTemperatureSet();
-
-        [[nodiscard]] static double getTargetTemperature();
-        [[nodiscard]] static double getActualTargetTemperature();
-        [[nodiscard]] static double getStartTemperature();
-        [[nodiscard]] static double getEndTemperature();
-        [[nodiscard]] static double getRelaxationTime();
-        [[nodiscard]] static double getFriction();
-        [[nodiscard]] static double getNoseHooverCouplingFrequency();
-
-        [[nodiscard]] static std::map<size_t, double> getChi();
-        [[nodiscard]] static std::map<size_t, double> getZeta();
+   private:
+    Setting<size_t, "Nose-Hoover Chain Length"> _nhChainLength{
+        defaults::NH_CHAIN_LENGTH_DEFAULT
     };
-}   // namespace settings
+    Setting<Frequency, "Nose-Hoover Coupling Frequency"> _nhCouplingFreq{
+        defaults::NH_COUPLING_FREQ
+    };
 
-#endif   // _THERMOSTAT_SETTINGS_HPP_
+    Setting<std::map<size_t, double>, "Nose-Hoover Chi Values">  _chi;
+    Setting<std::map<size_t, double>, "Nose-Hoover Zeta Values"> _zeta;
+
+   public:
+    void setNoseHooverChainLengthByUser(size_t chainLength);
+    void setNoseHooverCouplingFrequencyByUser(const Frequency& frequency);
+
+    [[nodiscard]] size_t           getNoseHooverChainLength() const;
+    [[nodiscard]] const Frequency& getNoseHooverCouplingFrequency() const;
+
+    void setChiByUser(const std::map<size_t, double>& chi);
+    void setZetaByUser(const std::map<size_t, double>& zeta);
+
+    [[nodiscard]] const std::map<size_t, double>& getChi() const;
+    [[nodiscard]] const std::map<size_t, double>& getZeta() const;
+
+    [[nodiscard]] bool isChiAndZetaSet() const;
+};
+
+/**
+ * @class KineticsSettings
+ *
+ * @brief Stores settings specific to the kinetics
+ *
+ */
+class KineticsSettings
+{
+   private:
+    Setting<size_t, "Temperature Ramp Frequency"> _temperatureRampFrequency{1};
+    Setting<size_t, "Temperature Ramp Steps">     _temperatureRampSteps{0};
+    Setting<Temperature, "Start Temperature">     _startTemperature{
+        Temperature::zero()
+    };
+    Setting<Temperature, "End Temperature">          _endTemperature;
+    Setting<Temperature, "Target Temperature">       _targetTemperature;
+    Setting<TemperatureDiff, "Temperature Increase"> _temperatureIncrease{
+        TemperatureDiff::zero()
+    };
+
+   public:
+    void finalize(size_t numberOfSteps);
+
+    [[nodiscard]]
+    size_t getRampingSteps() const;
+    [[nodiscard]]
+    size_t getRampingFrequency() const;
+    [[nodiscard]]
+    const TemperatureDiff& getTemperatureIncrease() const;
+    [[nodiscard]]
+    const Temperature& getStartTemperature() const;
+    [[nodiscard]]
+    const Temperature& getEndTemperature() const;
+    [[nodiscard]]
+    bool isStartTemperatureSet() const;
+
+    void setRampingFrequencyByUser(size_t frequency);
+    void setRampingStepsByUser(size_t steps);
+    void setStartTemperatureByUser(const Temperature& startTemperature);
+    void setEndTemperatureByUser(const Temperature& endTemperature);
+    void setTargetTemperatureByUser(const Temperature& targetTemperature);
+};
+
+/**
+ * @class ThermostatSettings
+ *
+ * @brief static class to store settings of the thermostat
+ *
+ */
+class ThermostatSettings
+{
+   private:
+    Setting<ThermostatType, "Thermostat Type"> _thermostatType{
+        ThermostatType::NONE
+    };
+
+    Setting<Time, "Relaxation Time"> _relaxationTime{
+        defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
+    };
+    Setting<double, "Friction"> _friction{
+        defaults::LANGEVIN_THERMOSTAT_FRICTION
+    };
+
+   public:
+    void finalize(ReferenceSettings& referenceSettings);
+
+    /***************************
+     * standard setter methods *
+     ***************************/
+
+    void setThermostatTypeByUser(ThermostatType thermostatType);
+
+    void setRelaxationTimeByUser(const Time& relaxationTime);
+    void setFrictionByUser(double);
+
+    /***************************
+     * standard getter methods *
+     ***************************/
+
+    [[nodiscard]] ThermostatType getThermostatType() const;
+
+    [[nodiscard]] const Time& getRelaxationTime() const;
+    [[nodiscard]] double      getFriction() const;
+};
+
+#endif   // SETTINGS__THERMOSTAT_SETTINGS_HPP

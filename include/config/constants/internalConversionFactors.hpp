@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INTERNAL_CONVERSION_FACTORS_HPP_
-
-#define _INTERNAL_CONVERSION_FACTORS_HPP_
+#ifndef CONFIG__CONSTANTS__INTERNAL_CONVERSION_FACTORS_HPP
+#define CONFIG__CONSTANTS__INTERNAL_CONVERSION_FACTORS_HPP
 
 #include "conversionFactors.hpp"
 #include "natureConstants.hpp"
@@ -109,6 +108,18 @@ static constexpr double PRESSURE_FACTOR =
     ENERGY_UNIT_TO_SI / VOLUME_UNIT_TO_SI * SI_TO_PRESSURE_UNIT;
 
 /**
+ * @brief Conversion factors for pressure calculation in Pascals
+ *
+ * @details P = E / V
+ *
+ * [P] = Pa
+ * [E] = kcal mol⁻¹
+ * [V] = A³
+ */
+static constexpr double PRESSURE_FACTOR_PA =
+    ENERGY_UNIT_TO_SI / VOLUME_UNIT_TO_SI;
+
+/**
  * @brief Conversion factors for coulomb preFactor
  *
  * @details factor = 1 / (4 * pi * eps0)
@@ -144,4 +155,4 @@ static constexpr double MOMENTUM_TO_FORCE =
 
 static constexpr auto NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL = 1.0e12;
 
-#endif   // _INTERNAL_CONVERSION_FACTORS_HPP_
+#endif   // CONFIG__CONSTANTS__INTERNAL_CONVERSION_FACTORS_HPP

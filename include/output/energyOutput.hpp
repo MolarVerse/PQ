@@ -20,18 +20,20 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ENERGY_OUTPUT_HPP_
-
-#define _ENERGY_OUTPUT_HPP_
+#ifndef OUTPUT__ENERGY_OUTPUT_HPP
+#define OUTPUT__ENERGY_OUTPUT_HPP
 
 #include <cstddef>
 
 #include "output.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
     class PhysicalData;   // forward declaration
 }   // namespace physicalData
+
+struct Settings;   // forward declaration
 
 namespace out
 {
@@ -46,10 +48,14 @@ namespace out
        public:
         using Output::Output;
 
-        void writeHeader(double timeStep);
-        void write(size_t step, const physicalData::PhysicalData &);
+        void writeHeader(const Time &timeStep);
+        void write(
+            size_t                            step,
+            const physicalData::PhysicalData &physicalData,
+            const Settings                   &settings
+        );
     };
 
 }   // namespace out
 
-#endif   // _ENERGY_OUTPUT_HPP_
+#endif   // OUTPUT__ENERGY_OUTPUT_HPP

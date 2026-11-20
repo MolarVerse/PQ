@@ -1,0 +1,1 @@
+- Do not run the bundled QM script lookup tests and the fake-ORCA regression tests in static and Singularity builds, which require `qm_script_full_path`; this fixes the nightly static builds.

@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DFTBPLUS_RUNNER_HPP_
-
-#define _DFTBPLUS_RUNNER_HPP_
+#ifndef QM__EXTERNAL__DFTBPLUS_RUNNER_HPP
+#define QM__EXTERNAL__DFTBPLUS_RUNNER_HPP
 
 #include "externalQMRunner.hpp"
 
@@ -35,6 +34,8 @@ namespace molsys
 {
     class Box;   // forward declaration
 }   // namespace molsys
+
+class FileSettings;   // forward declaration
 
 namespace QM
 {
@@ -51,19 +52,30 @@ namespace QM
         bool _usePointCharges  = false;
 
        public:
-        void writeCoordsFile(molsys::SimulationBox &simulationBox) override;
+        using ExternalQMRunner::ExternalQMRunner;
 
-        void writePointChargeFile(
-            molsys::SimulationBox &simulationBox
+        void execute(
+            const molsys::SimulationBox &simulationBox,
+            const FileSettings          &fileSettings,
+            const HybridSettings        &hybridSettings
         ) override;
 
-        void execute(molsys::SimulationBox &simulationBox) override;
+       private:
+        void _writeCoordsFile(
+            const molsys::SimulationBox &simulationBox
+        ) override;
 
-        void readStressTensor(
-            molsys::Box                &box,
-            physicalData::PhysicalData &physicalData
+        void _writePointChargeFile(
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &pointChargeFileName
+        ) override;
+
+        void _readStressTensor(
+            const molsys::Box          &box,
+            physicalData::PhysicalData &physicalData,
+            const std::string          &stressFileName
         ) override;
     };
 }   // namespace QM
 
-#endif   // _DFTBPLUS_RUNNER_HPP_
+#endif   // QM__EXTERNAL__DFTBPLUS_RUNNER_HPP

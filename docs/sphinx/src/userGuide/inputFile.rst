@@ -274,6 +274,24 @@ by default to preserve the existing file formats.
 
 .. centered:: *default value* = false
 
+.. _asyncoutputkey:
+
+Asynchronous Output
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    async_output = {bool} -> true
+
+MD runs write the trajectory, velocity, force, charge and restart files on a
+separate thread, so the simulation does not wait for them. If PQ crashes, the
+last one or two frames may be missing from these files. Set ``async_output``
+to false to write them before the next step instead. PQ also writes them
+directly if there is not enough free memory to hold the queued frames.
+
+.. centered:: *default value* = true
+
 .. _fileprefixkey:
 
 File Prefix
@@ -335,6 +353,33 @@ Charge File
 The ``charge_file`` keyword sets the name for the :ref:`chargeFile`, which stores the atomic partial charges throughout the MD simulation.
 
 .. centered:: *default value* = "default.chrg"
+
+.. _trajformatkey:
+
+Trajectory Format
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    traj_format = {string} -> "xyz"
+
+The ``traj_format`` keyword sets how MD runs write positions, velocities, forces and charges:
+
+    - **xyz** (default): the :ref:`trajectoryFile`, :ref:`velocityFile`, :ref:`forceFile` and :ref:`chargeFile`
+    - **extxyz**: one :ref:`extxyzFile` instead of these four files
+
+.. _extxyzfilekey:
+
+Extended XYZ File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    extxyz_file = {file} -> "default.extxyz"
+
+The ``extxyz_file`` keyword sets the name of the :ref:`extxyzFile`, which is written if ``traj_format = extxyz``. Like the other output files, it follows ``file_prefix``.
 
 .. _energyfilekey:
 
@@ -420,6 +465,20 @@ The ``reference_file`` keyword sets the name for the :ref:`refFile`, which lists
 
 .. centered:: *default value* = "default.ref"
 
+.. _optfilekey:
+
+Optimization File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    opt_file = {file} -> "default.opt"
+
+The ``opt_file`` keyword sets the name of the file in which geometry optimization jobs record the convergence of every step. Each line holds the step, the absolute and relative energy difference, the maximum and the RMS force, one flag per criterion (1: converged, -1: not converged, 0: criterion not used) and the four thresholds in the same order.
+
+.. centered:: *default value* = "default.opt"
+
 .. _rstfilekey:
 
 Restart File
@@ -428,9 +487,9 @@ Restart File
 .. admonition:: Key
     :class: tip
 
-    rst_file = {file} -> "default.rst"
+    restart_file = {file} -> "default.rst"
 
-The ``rst_file`` keyword sets the name for the :ref:`restartFile`, which contains all necessary information to restart (*i.e.* continue) the calculation from its current timestamp.
+The ``restart_file`` keyword sets the name for the :ref:`restartFile`, which contains all necessary information to restart (*i.e.* continue) the calculation from its current timestamp.
 
 .. centered:: *default value* = "default.rst"
 
@@ -678,6 +737,21 @@ TURBOMOLE Setup File
     turbomole_file = {file} -> "tm_define.template"
 
 .. centered:: *default value* = "tm_define.template"
+
+.. _orcafileKey:
+
+ORCA Setup File
+===============
+
+.. admonition:: Key
+    :class: tip
+
+    orca_file = {file} -> "orca.template"
+
+The external ``orca_rimp2.py``, ``orca_hf.py`` and ``orca_dft.py`` runners read
+this shared template. An example
+and the stage-placeholder contract are provided in ``examples/orca/``.
+Load ORCA before running PQ, or set ``ORCA_EXE`` to its full executable path.
 
 .. _topologyFileKey:
 
@@ -1586,15 +1660,17 @@ Possible options are:
 
    3. **turbomole** - `Turbomole <https://www.turbomole.org/>`__
 
-   4. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`__ same as using **mace_mp**
+   4. **orca** - `ORCA <https://www.faccts.de/orca/>`__
 
-   5. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`__
+   5. **mace**  - `MACE-MP <https://arxiv.org/abs/2401.00096>`__ same as using **mace_mp**
 
-   6. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
+   6. **mace_off** - `MACE-OFF23 <https://arxiv.org/abs/2312.15211>`__
+
+   7. **ase-dftbplus** - `DFTB+ <https://wiki.fysik.dtu.dk/ase/ase/calculators/dftb.html#module-ase.calculators.dftb>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
    
-   7. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
+   8. **ase-xtb** - `xTB <https://xtb-docs.readthedocs.io/en/latest/>`__ called by `ASE <https://wiki.fysik.dtu.dk/ase/>`__ 
 
-   8. **fennol**  - `FeNNol <https://doi.org/10.1063/5.0217688>`__
+   9. **fennol**  - `FeNNol <https://doi.org/10.1063/5.0217688>`__
 
 .. _qmscriptKey:
 
@@ -1662,7 +1738,8 @@ Remove Net Force
     remove_net_force = {bool} -> false
 
 With the ``remove_net_force`` keyword the user can request the removal of the net force after reading in forces from the QM program.
-Removal is achieved by distributing the total net force evenly across all atoms in the system.
+Removal is achieved by distributing the net force of the QM atoms evenly across the QM atoms. In QM/MM runs these are the atoms of the
+active QM region; MM atoms are not touched.
 This can increase momentum conservation when using a QM program with limited numerical precision.
 
 .. centered:: *default value* = false
@@ -1914,10 +1991,10 @@ Forced Core List
 .. admonition:: Key
     :class: tip
 
-    forced_core_list = {selection}
+    forced_core_list = {molecule indices}
 
 With the ``forced_core_list`` keyword the user can specify a list of molecules which will always be part of the ``CORE`` region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _forcedLayerListKey:
@@ -1928,10 +2005,10 @@ Forced Layer List
 .. admonition:: Key
     :class: tip
 
-    forced_layer_list = {selection}
+    forced_layer_list = {molecule indices}
 
 With the ``forced_layer_list`` keyword the user can specify a list of molecules which will always be part of the ``LAYER`` region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _forcedOuterListKey:
@@ -1942,10 +2019,10 @@ Forced Outer List
 .. admonition:: Key
     :class: tip
 
-    forced_outer_list = {selection}
+    forced_outer_list = {molecule indices}
 
 With the ``forced_outer_list`` keyword the user can specify a list of molecules which will always be treated with the method chosen for the outer region of the hybrid system.
-For more information about the selection grammar see the `selectionType`_ section.
+The molecules are given by their indices starting from 0, as a list and/or ranges, e.g. ``0, 2-4``. The selection grammar is not supported, because it selects atoms.
 By default, no molecules are selected.
 
 .. _qmChargesKey:
@@ -2042,32 +2119,6 @@ With the ``point_charge_thickness`` keyword the user can specify the distance fr
 The default value is 0.0 Å, which means that no point charges are included.
 
 .. centered:: *default value* = 0.0 Å
-
-.. _qmForceDistributionKey:
-
-QM Force Distribution
-=====================
-
-.. admonition:: Key
-    :class: tip
-
-    qm_force_distribution = {string} -> "none"
-
-With the ``qm_force_distribution`` keyword the user can specify how the missing QM forces from smoothing molecules are distributed among non-smoothing QM molecules.
-Each recipient QM molecule then distributes its received share to its atoms proportional to atom masses.
-
-.. Note::
-    This keyword is only relevant if the :ref:`smoothing_method <smoothingMethodKey>` keyword is set to ``hotspot``.
-
-Possible options are:
-
-   1. **none** (default) - No distribution of deficient smoothing molecules forces.
-
-   2. **equal** - Deficient smoothing molecule forces are distributed equally among all non-smoothing QM molecules.
-
-   3. **random** - Deficient smoothing molecule forces are distributed randomly among all non-smoothing QM molecules.
-
-   4. **distance-weighted** - Deficient smoothing molecule forces are distributed distance-weighted among all non-smoothing QM molecules.
 
 
 .. image:: hybrid_zones.png
@@ -2185,6 +2236,46 @@ Learning Rate Decay
     learning-rate-decay = {double}
 
 With the ``learning-rate-decay`` keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.
+
+.. _learningrateupdatefreqKey:
+
+Learning Rate Update Frequency
+==============================
+
+.. admonition:: Key
+    :class: tip
+
+    learning-rate-update-freq = {uint+} -> 1
+
+With the ``learning-rate-update-freq`` keyword the user can specify after how many optimization steps the learning rate is updated. It is used by the **constant-decay** strategy; the **exponential-decay** strategy recalculates the learning rate in every step and the **constant** strategy never changes it.
+
+.. centered:: *default value* = 1
+
+.. _minlearningrateKey:
+
+Minimum Learning Rate
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    min-learning-rate = {double} -> 1e-15
+
+With the ``min-learning-rate`` keyword the user can specify the lowest value the learning rate may take. If a strategy would go below it, the learning rate is set to this value and a warning is written. The value has to be greater than zero and smaller than :ref:`max-learning-rate <maxlearningrateKey>`, if that is set.
+
+.. centered:: *default value* = 1e-15
+
+.. _maxlearningrateKey:
+
+Maximum Learning Rate
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    max-learning-rate = {double}
+
+With the ``max-learning-rate`` keyword the user can specify the highest value the learning rate may take. If a strategy would go above it, the learning rate is set to this value and a warning is written. The value has to be greater than zero and greater than :ref:`min-learning-rate <minlearningrateKey>`. If the keyword is not set, the learning rate has no upper limit.
 
 .. _convergenceKeys:
 

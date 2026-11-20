@@ -1,0 +1,1 @@
+- Add the rules for returned aggregates, EXPECT_THROW_MSG and unused includes to the static analysis rules in AGENTS.md.

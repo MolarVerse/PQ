@@ -42,7 +42,7 @@ namespace setup
      */
     void setupForceField(engine::Engine &engine)
     {
-        if (!settings::ForceFieldSettings::isActive())
+        if (!engine.getSettings().forceFieldSettings.isActive())
             return;
 
         out::StdoutOutput::writeSetup("Force Field");

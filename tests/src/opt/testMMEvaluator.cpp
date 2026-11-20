@@ -33,8 +33,10 @@
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "potentialBruteForce.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 
 namespace
@@ -46,7 +48,7 @@ namespace
         auto box = std::make_shared<molsys::SimulationBox>();
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        box->setBox(orthoBox);
+        box->setBox(orthoBox, false);
 
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
@@ -70,16 +72,25 @@ namespace
 
         eval.setSimulationBox(box);
         eval.setCellList(cellList);
-        eval.setPotential(std::make_shared<pot::PotentialBruteForce>());
+        Settings settings;
+        eval.setPotential(
+            std::make_shared<pot::PotentialBruteForce>(settings.hybridSettings)
+        );
         eval.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
         eval.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
-        eval.setForceField(std::make_shared<ff::ForceField>());
+        eval.setForceField(
+            std::make_shared<ff::ForceField>(settings.hybridSettings)
+        );
         eval.setIntraNonBonded(
 
             std::make_shared<intraNonBonded::IntraNonBonded>()
 
         );
-        eval.setConstraints(std::make_shared<constraints::Constraints>());
+        eval.setConstraints(
+            std::make_shared<constraints::Constraints>(
+                settings.constraintSettings
+            )
+        );
 
         settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
     }
@@ -87,7 +98,8 @@ namespace
 
 TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 {
-    const opt::MMEvaluator src{};
+    Settings               settings;
+    const opt::MMEvaluator src{settings};
     const auto             cloned = src.clone();
     ASSERT_NE(cloned, nullptr);
     EXPECT_NE(std::dynamic_pointer_cast<opt::MMEvaluator>(cloned), nullptr);
@@ -95,7 +107,8 @@ TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 
 TEST(TestMMEvaluator, evaluateRunsWithMinimalDependencies)
 {
-    opt::MMEvaluator eval;
+    Settings         settings;
+    opt::MMEvaluator eval{settings};
     molsys::CellList cellList;
     wireUp(eval, cellList);
     EXPECT_NO_THROW(eval.evaluate());
@@ -106,7 +119,8 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     // After evaluate(), the brute-force loop on a single molecule produces no
     // inter-molecular force contribution, and the cleared force buffer should
     // be (0, 0, 0) per atom.
-    opt::MMEvaluator eval;
+    Settings         settings;
+    opt::MMEvaluator eval{settings};
     molsys::CellList cellList;
     wireUp(eval, cellList);
 
@@ -120,7 +134,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     auto box = std::make_shared<molsys::SimulationBox>();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    box->setBox(orthoBox);
+    box->setBox(orthoBox, false);
 
     auto mol = molsys::Molecule();
 
@@ -133,16 +147,24 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     box->addMolecule(mol);
     box->addAtom(atom);
 
-    opt::MMEvaluator eval2;
+    Settings         settings2;
+    opt::MMEvaluator eval2{settings2};
     molsys::CellList cellList2;
     eval2.setSimulationBox(box);
     eval2.setCellList(cellList2);
-    eval2.setPotential(std::make_shared<pot::PotentialBruteForce>());
+    eval2.setPotential(
+        std::make_shared<pot::PotentialBruteForce>(settings.hybridSettings)
+    );
     eval2.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
     eval2.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
-    eval2.setForceField(std::make_shared<ff::ForceField>());
+    eval2.setForceField(
+        std::make_shared<ff::ForceField>(settings.hybridSettings)
+    );
     eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
-    eval2.setConstraints(std::make_shared<constraints::Constraints>());
+    ConstraintSettings constraintSettings;
+    eval2.setConstraints(
+        std::make_shared<constraints::Constraints>(constraintSettings)
+    );
 
     settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 

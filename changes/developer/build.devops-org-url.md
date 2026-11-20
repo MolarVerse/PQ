@@ -1,0 +1,1 @@
+- Point the `external/devops` submodule at its new home, `MolarVerse/devops`.

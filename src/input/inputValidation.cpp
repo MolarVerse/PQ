@@ -20,11 +20,9 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <algorithm>
 #include <cmath>
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -34,9 +32,9 @@
 #include "optimizerSettings.hpp"
 #include "potentialSettings.hpp"
 #include "qmSettings.hpp"
+#include "settings.hpp"
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
-#include "timingsSettings.hpp"
 
 namespace input
 {
@@ -49,19 +47,19 @@ namespace input
          * @throws exc::UserInputException if the learning-rate strategy or
          * bounds are invalid
          */
-        void validateOptimizer()
+        void validateOptimizer(const Settings& settings)
         {
             const auto optimizerActive =
                 settings::GeneralSettings::isOptJobType() ||
                 (settings::GeneralSettings::getJobtype() ==
                      JobType::MM_HESSIAN &&
-                 settings::HessianSettings::optimizeBeforeHessian());
+                 settings.hessianSettings.optimizeBeforeHessian());
 
             if (!optimizerActive)
                 return;
 
-            settings::OptimizerSettings::validateLearningRateStrategy();
-            settings::OptimizerSettings::validateLearningRateBounds();
+            settings.optimizerSettings.validateLearningRateStrategy();
+            settings.optimizerSettings.validateLearningRateBounds();
         }
     }   // namespace
 
@@ -71,13 +69,22 @@ namespace input
      * @details this is intended for cross-keyword checks that cannot be
      * verified within a single keyword parser.
      */
-    void InputFileReader::validateInputConfiguration() const
+    void InputFileReader::validateInputConfiguration(
+        const Settings& settings
+    ) const
     {
-        _validateTimings();
-        validateOptimizer();
-        _validateQM();
-        _validateThermostat();
-        _validateManostat();
+        _validateTimings(settings);
+        validateOptimizer(settings);
+        _validateQM(
+            settings.qmSettings,
+            settings.maceSettings,
+            settings.dftbSettings
+        );
+        _validateThermostat(
+            settings.simulationBoxSettings,
+            settings.thermostatSettings
+        );
+        _validateManostat(settings.manostatSettings, settings.timings);
         _validateCellList();
         _validateReactionFieldCoulomb();
         _validateRingPolymer();
@@ -89,7 +96,7 @@ namespace input
      * @throws exc::UserInputException if `nstep` or `timestep` is missing for a
      * job type that requires it
      */
-    void InputFileReader::_validateTimings() const
+    void InputFileReader::_validateTimings(const Settings& settings) const
     {
         using enum JobType;
 
@@ -98,7 +105,7 @@ namespace input
             settings::GeneralSettings::isMDJobType() ||
             settings::GeneralSettings::isOptJobType() ||
             (jobType == MM_HESSIAN &&
-             settings::HessianSettings::optimizeBeforeHessian());
+             settings.hessianSettings.optimizeBeforeHessian());
 
         if (requiresNumberOfSteps && !getKeywordSet("nstep"))
         {
@@ -129,26 +136,30 @@ namespace input
      * @throws exc::InputFileException if selected QM settings require missing
      * or incompatible keywords
      */
-    void InputFileReader::_validateQM() const
+    void InputFileReader::_validateQM(
+        const QMSettings&   settings,
+        const MaceSettings& maceSettings,
+        const DftbSettings& dftbSettings
+    ) const
     {
         if (!settings::GeneralSettings::isQMActivated())
             return;
 
-        if (!getKeywordSet("qm_prog"))
+        if (!settings.isQMMethodSetByUser())
             throw exc::InputFileException(
                 "QM job selected but the \"qm_prog\" keyword has not been set"
             );
 
-        const auto qmMethod = settings::QMSettings::getQMMethod();
+        const auto qmMethod = settings.getQMMethod();
 
         if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {
-            if (settings::QMSettings::getSlakosType() == SlakosType::NONE)
+            if (dftbSettings.getSlakosType() == SlakosType::NONE)
                 throw exc::InputFileException(
                     "ASE-DFTB+ requires slakos to be 3ob, matsci, or custom"
                 );
 
-            if (settings::QMSettings::getSlakosType() == SlakosType::CUSTOM &&
+            if (dftbSettings.getSlakosType() == SlakosType::CUSTOM &&
                 !getKeywordSet("slakos_path"))
             {
                 throw exc::InputFileException(
@@ -157,9 +168,9 @@ namespace input
                 );
             }
 
-            auto useThirdOrder = settings::QMSettings::useThirdOrderDftb();
+            auto useThirdOrder = dftbSettings.useThirdOrderDftb();
 
-            if (settings::QMSettings::getSlakosType() == SlakosType::THREEOB &&
+            if (dftbSettings.getSlakosType() == SlakosType::THREEOB &&
                 !getKeywordSet("third_order"))
                 useThirdOrder = true;
 
@@ -168,6 +179,16 @@ namespace input
                 throw exc::InputFileException(
                     "You have set custom Hubbard derivatives but disabled 3rd "
                     "order DFTB. This setup is invalid."
+                );
+            }
+
+            if (useThirdOrder &&
+                dftbSettings.getSlakosType() != SlakosType::THREEOB &&
+                !getKeywordSet("hubbard_derivs"))
+            {
+                throw exc::InputFileException(
+                    "Third order DFTB requires the \"hubbard_derivs\" keyword "
+                    "unless the 3ob slakos are used. This setup is invalid."
                 );
             }
         }
@@ -184,8 +205,8 @@ namespace input
         if (qmMethod != QMMethod::MACE)
             return;
 
-        const auto modelType    = settings::QMSettings::getMaceModelType();
-        const auto model        = settings::QMSettings::getMaceModel();
+        const auto modelType    = maceSettings.getMaceModelType();
+        const auto model        = maceSettings.getMaceModel();
         const auto modelPathSet = getKeywordSet("mace_model_path");
 
         if (modelType != MaceModelType::MACE_MP && model != MaceModel::SMALL &&
@@ -225,13 +246,18 @@ namespace input
     /**
      * @brief validates thermostat keyword dependencies
      *
-     * @throws exc::InputFileException if temperature keywords are missing,
-     * contradictory, or define an invalid ramp
+     * @details only checks which keywords were given. Checks on the resolved
+     * values are done in Settings::validate() after Settings::finalize().
+     *
+     * @throws exc::InputFileException if temperature keywords are missing or
+     * contradictory
      */
-    void InputFileReader::_validateThermostat() const
+    void InputFileReader::_validateThermostat(
+        const SimulationBoxSettings& simBoxSettings,
+        const ThermostatSettings&    thermostatSettings
+    ) const
     {
-        const auto thermostatType =
-            settings::ThermostatSettings::getThermostatType();
+        const auto thermostatType    = thermostatSettings.getThermostatType();
         const auto targetTempDefined = getKeywordSet("temp");
         const auto startTempDefined  = getKeywordSet("start_temp");
         const auto endTempDefined    = getKeywordSet("end_temp");
@@ -262,128 +288,11 @@ namespace input
             }
         }
 
-        if (settings::SimulationBoxSettings::getInitializeVelocities() !=
-                InitVelocities::FALSE &&
+        if (simBoxSettings.getInitializeVelocities() != InitVelocities::FALSE &&
             !targetTempDefined && !startTempDefined && !endTempDefined)
             throw exc::InputFileException(
                 "Initializing velocities requires temp, start_temp, or end_temp"
             );
-
-        if (settings::GeneralSettings::isMDJobType() &&
-            (thermostatType == ThermostatType::BERENDSEN ||
-             thermostatType == ThermostatType::VELOCITY_RESCALING))
-        {
-            const auto relaxationTime =
-                settings::ThermostatSettings::getRelaxationTime() * PS_TO_FS;
-
-            if (settings::TimingsSettings::getTimeStep() > relaxationTime)
-            {
-                throw exc::InputFileException(
-                    "The timestep must not exceed the thermostat relaxation "
-                    "time"
-                );
-            }
-        }
-
-        if (thermostatType == ThermostatType::LANGEVIN)
-        {
-            auto maxTemperature = 0.0;
-
-            if (targetTempDefined)
-            {
-                maxTemperature = std::max(
-                    maxTemperature,
-                    settings::ThermostatSettings::getTargetTemperature()
-                );
-            }
-            if (startTempDefined)
-            {
-                maxTemperature = std::max(
-                    maxTemperature,
-                    settings::ThermostatSettings::getStartTemperature()
-                );
-            }
-            if (endTempDefined)
-            {
-                maxTemperature = std::max(
-                    maxTemperature,
-                    settings::ThermostatSettings::getEndTemperature()
-                );
-            }
-
-            const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
-            const auto conversionFactor =
-                UNIVERSAL_GAS_CONSTANT * unitConversion;
-            const auto sigmaSquared =
-                4.0 * settings::ThermostatSettings::getFriction() *
-                conversionFactor * maxTemperature /
-                settings::TimingsSettings::getTimeStep();
-
-            if (!std::isfinite(sigmaSquared))
-            {
-                throw exc::InputFileException(
-                    "Langevin thermostat parameters produce a non-finite "
-                    "random-force scale"
-                );
-            }
-        }
-
-        if (thermostatType == ThermostatType::NOSE_HOOVER)
-        {
-            if (targetTempDefined &&
-                settings::ThermostatSettings::getTargetTemperature() <= 0.0)
-                throw exc::InputFileException(
-                    "Nose-Hoover target temperature must be greater than zero"
-                );
-
-            if (endTempDefined &&
-                settings::ThermostatSettings::getEndTemperature() <= 0.0)
-                throw exc::InputFileException(
-                    "Nose-Hoover end temperature must be greater than zero"
-                );
-
-            if (startTempDefined &&
-                settings::ThermostatSettings::getStartTemperature() <= 0.0)
-                throw exc::InputFileException(
-                    "Nose-Hoover start temperature must be greater than zero"
-                );
-        }
-
-        if (!startTempDefined)
-            return;
-
-        const auto totalSteps = settings::TimingsSettings::getNumberOfSteps();
-        const auto rampSteps =
-            settings::ThermostatSettings::getTemperatureRampSteps();
-
-        if (rampSteps > totalSteps)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Number of total simulation steps {} is smaller than the "
-                    "number of temperature ramping steps {}",
-                    totalSteps,
-                    rampSteps
-                )
-            );
-        }
-
-        const auto effectiveRampSteps = rampSteps == 0 ? totalSteps : rampSteps;
-        const auto frequency =
-            settings::ThermostatSettings::getTemperatureRampFrequency();
-
-        if (frequency > effectiveRampSteps)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "Temperature ramp frequency {} is larger than the number "
-                    "of "
-                    "ramping steps {}",
-                    frequency,
-                    effectiveRampSteps
-                )
-            );
-        }
     }
 
     /**
@@ -392,9 +301,12 @@ namespace input
      * @throws exc::InputFileException if a manostat is selected without
      * `pressure`
      */
-    void InputFileReader::_validateManostat() const
+    void InputFileReader::_validateManostat(
+        const ManostatSettings& manostatSettings,
+        const TimingsSettings&  timings
+    ) const
     {
-        const auto manostatType = settings::ManostatSettings::getManostatType();
+        const auto manostatType = manostatSettings.getManostatType();
 
         if (manostatType == ManostatType::NONE)
             return;
@@ -409,13 +321,14 @@ namespace input
             );
         }
 
-        const auto relaxationTime =
-            settings::ManostatSettings::getTauManostat() * PS_TO_FS;
-
-        if (settings::TimingsSettings::getTimeStep() > relaxationTime)
+        // only an MD job has a time step
+        if (settings::GeneralSettings::isMDJobType() &&
+            timings.getTimeStep() > manostatSettings.getTau())
+        {
             throw exc::InputFileException(
                 "The timestep must not exceed the manostat relaxation time"
             );
+        }
     }
 
     /**

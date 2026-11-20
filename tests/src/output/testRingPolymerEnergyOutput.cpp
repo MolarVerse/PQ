@@ -75,7 +75,7 @@ TEST_F(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
     const std::string path = "default.rpe.test";
 
     out::RingPolymerEnergyOutput out(path);
-    out.setFilename(path);
+    out.setFilename(path, false);
 
     std::vector<physicalData::PhysicalData> vec(2);
     vec[0].setRingPolymerEnergy(1.0);

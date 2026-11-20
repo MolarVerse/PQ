@@ -20,13 +20,13 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DIHEDRAL_FORCE_FIELD_HPP_
-
-#define _DIHEDRAL_FORCE_FIELD_HPP_
+#ifndef FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP
+#define FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP
 
 #include <vector>
 
 #include "dihedral.hpp"
+#include "enums/hybrid.hpp"
 #include "strongTypes.hpp"
 
 namespace physicalData
@@ -45,6 +45,8 @@ namespace pot
     class CoulombPotential;      // forward declaration
     class NonCoulombPotential;   // forward declaration
 }   // namespace pot
+
+class HybridSettings;   // forward declaration
 
 namespace ff
 {
@@ -74,7 +76,8 @@ namespace ff
             physicalData::PhysicalData  &physicalData,
             bool                         isImproperDihedral,
             const pot::CoulombPotential &coulombPot,
-            pot::NonCoulombPotential    &nonCoulombPot
+            pot::NonCoulombPotential    &nonCoulombPot,
+            SmoothingMethod              smoothing
         );
 
         /***************************
@@ -96,4 +99,4 @@ namespace ff
 
 }   // namespace ff
 
-#endif   // _DIHEDRAL_FORCE_FIELD_HPP_
+#endif   // FORCE_FIELD__DIHEDRAL_FORCE_FIELD_HPP

@@ -25,9 +25,10 @@
 // runs before CALLGRIND_ZERO_STATS in every benchmark, so it is excluded from
 // the measured instruction count.
 
-#ifndef PQ_BENCH_SETUP_HPP
-#define PQ_BENCH_SETUP_HPP
+#ifndef BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP
+#define BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP
 
+#include <cmath>
 #include <cstddef>
 #include <memory>
 
@@ -37,6 +38,7 @@
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 
@@ -154,7 +156,7 @@ namespace benchSetup
         auto box = molsys::SimulationBox();
 
         molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
-        box.setBox(orthoBox);
+        box.setBox(orthoBox, false);
 
         for (std::size_t mol = 0; mol < params.nMolecules; ++mol)
         {
@@ -176,6 +178,22 @@ namespace benchSetup
 
         return box;
     }
+
+    // Scale all velocities so the box has the given temperature. The velocities
+    // of makeMolecule() are tiny (about 1e-6 K); a thermostat with a realistic
+    // target would heat such a system explosively instead of doing a steady
+    // amount of work.
+    inline void scaleVelocitiesToTemperature(
+        molsys::SimulationBox& simulationBox,
+        const Temperature&     temperature
+    )
+    {
+        const auto factor = mstd::sqrt(
+            tempRatio(temperature, simulationBox.calculateTemperature())
+        );
+        for (auto& atom : simulationBox.getAtoms())
+            atom->setVelocity(atom->getVelocity() * factor);
+    }
 }   // namespace benchSetup
 
-#endif   // PQ_BENCH_SETUP_HPP
+#endif   // BENCHMARKS__PERF__PERF_BENCH_SETUP_HPP

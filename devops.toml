@@ -6,16 +6,23 @@
 [git]
 #main_branch = "main"
 
+[logging]
+cpp_level = "INFO"
+
+[file]
+#encoding = "utf-8"
+
 [cpp]
 check_dirs = ["src", "include", "tests", "benchmarks", "apps"]
 ast_check_compile_commands_db = ".build"
 incremental_state_file = ".build/.cpp_check_state.json"
 fail_fast = true
+header_guards_according_to_filepath = true
+header_guard_pattern = "{path}_{ext}"
+
 #style_checks = true
 #license_header_check = true
 #license_header = <some file path>
-#check_only_staged_files = false
-#header_guards_according_to_filepath = false
 #ast_checks = true
 ast_check_compile_args = ["-std=c++23", "-Iinclude/concepts"]
 ast_check_enabled_ids = [
@@ -34,6 +41,8 @@ ast_check_enabled_ids = [
     "noClangFormatToggle",
     "noFinalKeyword",
     "enforceTypenameOverClass",
+    "enforceSystemHeaderLibs",
+    "enforceCppOnlyInclude",
 ]
 
 # Per-check configuration — one sub-table per check id.
@@ -49,13 +58,21 @@ type_to_name = { "molsys::SimulationBox" = [
 ] }
 
 [cpp.ast_check_config.classMemberOrder]
-excluded_macros = ["MSTD_ENUM", "MSTD_ENUM_BITFLAG", "TEST", "TEST_F"]
+excluded_macros = [
+    "MSTD_ENUM",
+    "MSTD_ENUM_BITFLAG",
+    "TEST",
+    "TEST_F",
+    "MSTD_RAII_NO_MOVE",
+]
 
 [cpp.ast_check_config.includeIwyuPragmaOnly]
-allowed_pragmas = ["export"]
+allowed_pragmas = ["export", "keep"]
+pragma_required_reasons = { keep = "-- for template specialization" }
 
-[logging]
-cpp_level = "INFO"
+[cpp.ast_check_config.enforceSystemHeaderLibs]
+libs = ["mstd"]
 
-[file]
-#encoding = "utf-8"
+[cpp.ast_check_config.enforceCppOnlyInclude]
+libs = ["units.hpp"]
+exclude_paths = ["tests/", "benchmarks/"]

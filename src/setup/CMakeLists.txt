@@ -1,4 +1,5 @@
 set(setup_source_files
+    setupBase.cpp
     setup.cpp
     simulationBoxSetup.cpp
     celllistSetup.cpp

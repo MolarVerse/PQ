@@ -20,11 +20,15 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MM_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__MM_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__MM_INPUT_PARSER_HPP
 
-#define _MM_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
+
+class WaterModelSettings;   // Forward declaration
+class ForceFieldSettings;   // Forward declaration
 
 namespace input
 {
@@ -36,8 +40,14 @@ namespace input
      */
     class MMInputParser : public InputFileParser
     {
+        mstd::Ref<WaterModelSettings> _waterModelSettings;
+        mstd::Ref<ForceFieldSettings> _forceFieldSettings;
+
        public:
-        explicit MMInputParser();
+        explicit MMInputParser(
+            WaterModelSettings &waterModelSettings,
+            ForceFieldSettings &forceFieldSettings
+        );
 
         void addForceFieldTypeKey();
         void addNonCoulombTypeKey();
@@ -47,4 +57,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _MM_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__MM_INPUT_PARSER_HPP

@@ -20,12 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _RING_POLYMER_INPUT_PARSER_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__RING_POLYMER_INPUT_PARSER_HPP
+#define INPUT__INPUT_FILE_PARSER__RING_POLYMER_INPUT_PARSER_HPP
 
-#define _RING_POLYMER_INPUT_PARSER_HPP_
+#include <mstd/types.hpp>
 
 #include "inputFileParser.hpp"
 
+class RingPolymerSettings;
 namespace input
 {
     /**
@@ -36,12 +38,16 @@ namespace input
      */
     class RingPolymerInputParser : public InputFileParser
     {
+        mstd::Ref<RingPolymerSettings> _ringPolymerSettings;
+
        public:
-        RingPolymerInputParser();
+        explicit RingPolymerInputParser(
+            RingPolymerSettings &ringPolymerSettings
+        );
 
         void addNumberOfBeadsKeyword();
     };
 
 }   // namespace input
 
-#endif   // _RING_POLYMER_INPUT_PARSER_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__RING_POLYMER_INPUT_PARSER_HPP

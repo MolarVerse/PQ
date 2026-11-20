@@ -1,1 +1,0 @@
-- Add VS Code tasks "devops cpp_checks (changed)" and "devops cpp_checks (all)" that run the CI C++ style checks locally and show the findings in the Problems panel.

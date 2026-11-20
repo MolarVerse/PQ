@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _ORTHORHOMBIC_BOX_HPP_
-
-#define _ORTHORHOMBIC_BOX_HPP_
+#ifndef BOX__ORTHORHOMBIC_BOX_HPP
+#define BOX__ORTHORHOMBIC_BOX_HPP
 
 #include <memory>
 
@@ -48,7 +47,7 @@ namespace molsys
         static OrthorhombicBox makeVacuumBox();
 
         void applyPBC(linalg::Vec3D &position) const override;
-        void scaleBox(const linalg::tensor3D &scalingTensor) override;
+        void scaleBox(const QuantityTensor3D &scalingTensor) override;
 
         [[nodiscard]] linalg::Vec3D calcShiftVector(
             const linalg::Vec3D &shiftVector
@@ -75,22 +74,18 @@ namespace molsys
         linalg::tensor3D getBoxMatrix(Periodicity per) const override;
 
         [[nodiscard]]
-        linalg::Vec3D toOrthoSpace(
-            const linalg::Vec3D &position
-        ) const override;
-        [[nodiscard]]
-        linalg::tensor3D toOrthoSpace(
-            const linalg::tensor3D &position
-        ) const override;
+        bool allowChangeOfAngles() const override;
 
         [[nodiscard]]
-        linalg::Vec3D toSimSpace(const linalg::Vec3D &position) const override;
+        bool isOrthorhombic() const override;
+
         [[nodiscard]]
-        linalg::tensor3D toSimSpace(
-            const linalg::tensor3D &position
-        ) const override;
+        linalg::tensor3D getBoxMatrix() const override;
+
+        [[nodiscard]]
+        linalg::tensor3D getInverseBoxMatrix() const override;
     };
 
 }   // namespace molsys
 
-#endif   // _ORTHORHOMBIC_BOX_HPP_
+#endif   // BOX__ORTHORHOMBIC_BOX_HPP

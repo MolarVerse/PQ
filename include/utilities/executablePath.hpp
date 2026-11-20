@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _EXECUTABLE_PATH_HPP_
-
-#define _EXECUTABLE_PATH_HPP_
+#ifndef UTILITIES__EXECUTABLE_PATH_HPP
+#define UTILITIES__EXECUTABLE_PATH_HPP
 
 #include <filesystem>
 
@@ -34,4 +33,4 @@ namespace utilities
     );
 }   // namespace utilities
 
-#endif   // _EXECUTABLE_PATH_HPP_
+#endif   // UTILITIES__EXECUTABLE_PATH_HPP

@@ -40,7 +40,9 @@ namespace setup
      */
     void setupConstraints(engine::Engine &engine)
     {
-        if (!settings::ConstraintSettings::isActive())
+        const auto &settings = engine.getSettings().constraintSettings;
+
+        if (!settings.isActive())
             return;
 
         out::StdoutOutput::writeSetup("Constraints");
@@ -67,8 +69,6 @@ namespace setup
      */
     void ConstraintsSetup::setup()
     {
-        setupTolerances();
-        setupMaxIterations();
         setupRefBondLengths();
         setupMShake();
         setupDegreesOfFreedom();
@@ -84,42 +84,12 @@ namespace setup
     {
         const auto &constraints = _engine.getConstraints();
 
-        if (!settings::ConstraintSettings::isMShakeActivated())
+        if (!_engine.getSettings().constraintSettings.isMShakeActivated())
             return;
 
         input::mShake::readMShake(_engine);
 
         constraints->initMShake();
-    }
-
-    /**
-     * @brief sets constraints tolerances
-     *
-     */
-    void ConstraintsSetup::setupTolerances()
-    {
-        _shakeTolerance  = settings::ConstraintSettings::getShakeTolerance();
-        _rattleTolerance = settings::ConstraintSettings::getRattleTolerance();
-
-        const auto &constraints = _engine.getConstraints();
-
-        constraints->setShakeTolerance(_shakeTolerance);
-        constraints->setRattleTolerance(_rattleTolerance);
-    }
-
-    /**
-     * @brief sets constraints max iterations
-     *
-     */
-    void ConstraintsSetup::setupMaxIterations()
-    {
-        _shakeMaxIter  = settings::ConstraintSettings::getShakeMaxIter();
-        _rattleMaxIter = settings::ConstraintSettings::getRattleMaxIter();
-
-        const auto &constraints = _engine.getConstraints();
-
-        constraints->setShakeMaxIter(_shakeMaxIter);
-        constraints->setRattleMaxIter(_rattleMaxIter);
     }
 
     /**
@@ -161,13 +131,15 @@ namespace setup
     {
         writeEnabled();
 
-        if (settings::ConstraintSettings::isShakeLikeActive())
+        const auto settings = _engine.getSettings().constraintSettings;
+
+        if (settings.isShakeLikeActive())
         {
             writeNConstraintBonds();
             writeTolerance();
         }
 
-        if (settings::ConstraintSettings::isShakeActivated())
+        if (settings.isShakeActivated())
             writeMaxIter();
 
         writeDof();
@@ -179,12 +151,12 @@ namespace setup
      */
     void ConstraintsSetup::writeEnabled()
     {
-        std::string shakeMsg = settings::ConstraintSettings::isShakeActivated()
-                                   ? "enabled"
-                                   : "disabled";
+        const auto &settings = _engine.getSettings().constraintSettings;
+
+        std::string shakeMsg =
+            settings.isShakeActivated() ? "enabled" : "disabled";
         std::string mShakeMsg =
-            settings::ConstraintSettings::isMShakeActivated() ? "enabled"
-                                                              : "disabled";
+            settings.isMShakeActivated() ? "enabled" : "disabled";
 
         shakeMsg  = std::format("SHAKE:   {}", shakeMsg);
         mShakeMsg = std::format("M-SHAKE: {}", mShakeMsg);
@@ -226,10 +198,12 @@ namespace setup
      */
     void ConstraintsSetup::writeTolerance()
     {
+        const auto &settings = _engine.getSettings().constraintSettings;
+
         const auto shakeTolMsg =
-            std::format("SHAKE Tolerance:  {}", _shakeTolerance);
+            std::format("SHAKE Tolerance:  {}", settings.getShakeTolerance());
         const auto rattleTolMsg =
-            std::format("RATTLE Tolerance: {}", _rattleTolerance);
+            std::format("RATTLE Tolerance: {}", settings.getRattleTolerance());
 
         auto &logOutput = _engine.getLogOutput();
 
@@ -244,10 +218,12 @@ namespace setup
      */
     void ConstraintsSetup::writeMaxIter()
     {
+        const auto &settings = _engine.getSettings().constraintSettings;
+
         const auto shakeMaxIterMsg =
-            std::format("SHAKE Max Iter:  {}", _shakeMaxIter);
+            std::format("SHAKE Max Iter:  {}", settings.getShakeMaxIter());
         const auto rattleMaxIterMsg =
-            std::format("RATTLE Max Iter: {}", _rattleMaxIter);
+            std::format("RATTLE Max Iter: {}", settings.getRattleMaxIter());
 
         auto &logOutput = _engine.getLogOutput();
 
@@ -268,6 +244,8 @@ namespace setup
         const auto nShakeBonds  = constraints->getNumberOfBondConstraints();
         const auto nMShakeTypes = constraints->getMShakeReferences().size();
         const auto nMShakeMols =
+            constraints->getNumberOfMShakeMolecules(simBox);
+        const auto nMShakeBonds =
             constraints->getNumberOfMShakeConstraints(simBox);
 
         const auto nShakeBondsMsg =
@@ -276,12 +254,15 @@ namespace setup
             std::format("Number of M-SHAKE types:     {}", nMShakeTypes);
         const auto nMShakeMolsMsg =
             std::format("Number of M-SHAKE molecules: {}", nMShakeMols);
+        const auto nMShakeBondsMsg =
+            std::format("Number of M-SHAKE bonds:     {}", nMShakeBonds);
 
         auto &logOutput = _engine.getLogOutput();
 
         logOutput.writeSetupInfo(nShakeBondsMsg);
         logOutput.writeSetupInfo(nMShakeTypesMsg);
         logOutput.writeSetupInfo(nMShakeMolsMsg);
+        logOutput.writeSetupInfo(nMShakeBondsMsg);
         logOutput.writeEmptyLine();
     }
 

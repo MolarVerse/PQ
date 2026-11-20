@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_FILE_READER_HPP_
-
-#define _INPUT_FILE_READER_HPP_
+#ifndef INPUT__INPUT_FILE_READER_HPP
+#define INPUT__INPUT_FILE_READER_HPP
 
 #include <cstddef>
 #include <map>
@@ -39,7 +38,15 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-struct Settings;   // forward declaration
+struct Settings;               // forward declaration
+class SimulationBoxSettings;   // forward declaration
+class ManostatSettings;        // forward declaration
+class TimingsSettings;         // forward declaration
+class QMSettings;              // forward declaration
+class MaceSettings;            // forward declaration
+class DftbSettings;            // forward declaration
+class ThermostatSettings;      // forward declaration
+class KineticsSettings;        // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -88,7 +95,7 @@ namespace input
         void addKeywords();
         void process(const std::vector<std::string> &lineElements);
         void postProcess();
-        void validateInputConfiguration() const;
+        void validateInputConfiguration(const Settings &settings) const;
 
         /***************************
          * standard setter methods *
@@ -116,10 +123,20 @@ namespace input
          * input validation functions *
          ******************************/
 
-        void        _validateTimings() const;
-        void        _validateQM() const;
-        void        _validateThermostat() const;
-        void        _validateManostat() const;
+        void _validateTimings(const Settings &settings) const;
+        void _validateQM(
+            const QMSettings   &qmSettings,
+            const MaceSettings &maceSettings,
+            const DftbSettings &dftbSettings
+        ) const;
+        void _validateThermostat(
+            const SimulationBoxSettings &simBoxSettings,
+            const ThermostatSettings    &thermostatSettings
+        ) const;
+        void _validateManostat(
+            const ManostatSettings &manostatSettings,
+            const TimingsSettings  &timings
+        ) const;
         void        _validateReactionFieldCoulomb() const;
         void        _validateRingPolymer() const;
         static void _validateCellList();
@@ -127,4 +144,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_FILE_READER_HPP_
+#endif   // INPUT__INPUT_FILE_READER_HPP

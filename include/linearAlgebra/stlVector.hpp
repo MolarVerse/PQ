@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STL_VECTOR_HPP_
-
-#define _STL_VECTOR_HPP_
+#ifndef LINEAR_ALGEBRA__STL_VECTOR_HPP
+#define LINEAR_ALGEBRA__STL_VECTOR_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -99,4 +98,4 @@ namespace stl
 
 }   // namespace stl
 
-#endif   // _STL_VECTOR_HPP_
+#endif   // LINEAR_ALGEBRA__STL_VECTOR_HPP

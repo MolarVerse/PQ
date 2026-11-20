@@ -84,7 +84,7 @@ namespace setup
         setupCoulomb();
         setupNonCoulomb();
 
-        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        if (_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
             setupNonCoulombicPairs();
 
         writeSetupInfo();
@@ -162,7 +162,7 @@ namespace setup
         const auto &potential   = _engine.getPotential();
         const auto  existingPot = potential->getNonCoulombPotSharedPtr();
 
-        if (!settings::ForceFieldSettings::isNonCoulombicActive())
+        if (!_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
         {
             if (dynamic_cast<pot::GuffNonCoulomb *>(existingPot.get()) ==
                 nullptr)
@@ -305,7 +305,7 @@ namespace setup
     {
         auto &log = _engine.getLogOutput();
 
-        if (settings::ForceFieldSettings::isNonCoulombicActive())
+        if (_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
         {
             auto      &simBox = _engine.getSimulationBox();
             const auto nGlobalVdwTypes =

@@ -23,10 +23,24 @@
 #include <algorithm>
 #include <optional>
 
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 namespace molsys
 {
+
+    /**
+     * @brief Construct a new Simulation Box object
+     *
+     * Initializes the simulation box with a default orthorhombic vacuum box.
+     */
+    SimulationBox::SimulationBox()
+        : _box(
+              std::make_shared<OrthorhombicBox>(OrthorhombicBox::makeVacuumBox()
+              )
+          )
+    {
+    }
 
     /************************
      *                      *
@@ -167,17 +181,6 @@ namespace molsys
      * @return linalg::Vec3D&
      */
     linalg::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
-
-    /**
-     * @brief get the indices of the atoms marking the center of the inner
-     * region for hybrid type calculations
-     *
-     * @return vector<size_t>
-     */
-    std::vector<size_t> SimulationBox::getInnerRegionCenterAtomIndices()
-    {
-        return _innerRegionCenterAtomIndices;
-    }
 
     /**
      * @brief get atom by index
@@ -426,6 +429,16 @@ namespace molsys
         return positions;
     }
 
+    /**
+     * @brief check if the box was set via a start file
+     *
+     * @return true if the box was set via a start file, false otherwise
+     */
+    bool SimulationBox::wasBoxSetViaStartFile() const
+    {
+        return _boxSetViaStartFile;
+    }
+
     /***************************
      *                         *
      * standard setter methods *
@@ -510,7 +523,7 @@ namespace molsys
      *
      * @param scalingTensor
      */
-    void SimulationBox::scaleBox(const linalg::tensor3D &scalingTensor)
+    void SimulationBox::scaleBox(const QuantityTensor3D &scalingTensor)
     {
         _box->scaleBox(scalingTensor);
         calculateDensity();

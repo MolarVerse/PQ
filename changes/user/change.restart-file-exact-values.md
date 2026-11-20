@@ -1,0 +1,1 @@
+- Write the restart file with every digit (positions, velocities, forces and the Nose-Hoover chain state with the fewest digits that read back as the same number), so a run continued from a restart file is no longer perturbed by rounding; the file is about 15% larger.

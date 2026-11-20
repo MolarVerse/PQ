@@ -32,7 +32,6 @@
 
 #include "SPCIntraWater.hpp"
 #include "bondConstraint.hpp"
-#include "constraintSettings.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
@@ -41,9 +40,6 @@
 #include "interWaterParamters.hpp"
 #include "mTRIntraWater.hpp"
 #include "mdEngine.hpp"
-#include "references.hpp"
-#include "referencesOutput.hpp"
-#include "rigidWaterGeometry.hpp"
 #include "waterModelSettings.hpp"
 
 namespace setup
@@ -124,25 +120,23 @@ namespace setup
 
         _makeIntraWater();
 
-        if (settings::WaterModelSettings::getWaterIntraModel() !=
-            WaterIntraModel::NONE)
+        const auto waterModelSettings =
+            _engine.getSettings().waterModelSettings;
+        if (waterModelSettings.getWaterIntraModel() != WaterIntraModel::NONE)
             _checkTopologyFile();
 
-        if (const auto geometry = _getRigidWaterGeometry(
-                settings::WaterModelSettings::getWaterIntraModel()
-            );
-            geometry.has_value())
+        const auto geometry = waterModelSettings.getRigidWaterGeometry();
+        if (geometry.has_value())
             _shakeSetupForRigidWater(geometry.value());
 
-        if (settings::WaterModelSettings::getWaterInterModel() !=
-            WaterInterModel::NONE)
+        if (waterModelSettings.getWaterInterModel() != WaterInterModel::NONE)
             _makeInterWater();
 
         _engine.getLogOutput().writeSetupInfo(
             std::format(
                 "Intramolecular water model: {}",
                 WaterIntraModelMeta::toString(
-                    settings::WaterModelSettings::getWaterIntraModel()
+                    waterModelSettings.getWaterIntraModel()
                 )
             )
         );
@@ -151,14 +145,12 @@ namespace setup
             std::format(
                 "Intermolecular water model: {}",
                 WaterInterModelMeta::toString(
-                    settings::WaterModelSettings::getWaterInterModel()
+                    waterModelSettings.getWaterInterModel()
                 )
             )
         );
 
         _engine.getLogOutput().writeEmptyLine();
-
-        _addReferences();
     }
 
     /**
@@ -182,6 +174,9 @@ namespace setup
 
         size_t bondIndex = 1;
 
+        const auto &waterModelSettings =
+            _engine.getSettings().waterModelSettings;
+
         for (const auto &bond : _engine.getForceField()->getBonds())
         {
             const auto *mol1 = bond.get_molecules()[0];
@@ -196,17 +191,15 @@ namespace setup
                 throw exc::UserInputException(
                     std::format(
                         "A water type molecule is included in the bond list of "
-                        "the "
-                        "topology file \"{}\" at entry number {}. Requesting "
-                        "the "
-                        "use of the \"{}\" intramolecular water type model "
-                        "expects "
-                        "the molecules of this moltype not to appear in the "
-                        "topology file.",
-                        settings::FileSettings::getTopologyFileName(),
+                        "the topology file \"{}\" at entry number {}. "
+                        "Requesting the use of the \"{}\" intramolecular water "
+                        "type model expects the molecules of this moltype not "
+                        "to appear in the topology file.",
+                        _engine.getSettings().fileSettings.getTopologyFileName(
+                        ),
                         bondIndex,
                         WaterIntraModelMeta::toString(
-                            settings::WaterModelSettings::getWaterIntraModel()
+                            waterModelSettings.getWaterIntraModel()
                         )
                     )
                 );
@@ -241,10 +234,11 @@ namespace setup
                         "expects the molecules of this moltype not to appear "
                         "in "
                         "the topology file.",
-                        settings::FileSettings::getTopologyFileName(),
+                        _engine.getSettings().fileSettings.getTopologyFileName(
+                        ),
                         angleIndex,
                         WaterIntraModelMeta::toString(
-                            settings::WaterModelSettings::getWaterIntraModel()
+                            waterModelSettings.getWaterIntraModel()
                         )
                     )
                 );
@@ -268,8 +262,10 @@ namespace setup
         const waterModel::InterWaterState &state
     )
     {
+        const auto &waterModelSettings =
+            _engine.getSettings().waterModelSettings;
         const auto modelName = WaterInterModelMeta::toString(
-            settings::WaterModelSettings::getWaterInterModel()
+            waterModelSettings.getWaterInterModel()
         );
         const auto checkCharge = [&modelName](
                                      const molsys::Molecule &water,
@@ -304,64 +300,6 @@ namespace setup
             checkCharge(water, AtomIndex{1}, state.hydrogenCharge, "H1");
             checkCharge(water, AtomIndex{2}, state.hydrogenCharge, "H2");
         };
-    }
-
-    /**
-     * @brief Get the rigid geometry parameters for a water model.
-     *
-     * @details Only rigid water variants return geometry data. Flexible water
-     * models return @c std::nullopt and are handled without constraints.
-     *
-     * @param intraModel The configured intramolecular water model.
-     * @return The O-H and H-H distances for rigid models, or @c std::nullopt if
-     * the model is not rigid.
-     */
-    std::optional<RigidWaterGeometry> WaterModelSetup::_getRigidWaterGeometry(
-        WaterIntraModel intraModel
-    )
-    {
-        using enum WaterIntraModel;
-
-        switch (intraModel)
-        {
-            case SPC:
-                return RigidWaterGeometry{
-                    .dOH = SPC_OH_DIST,
-                    .dHH = SPC_HH_DIST
-                };
-            case SPC_E:
-                return RigidWaterGeometry{
-                    .dOH = SPC_E_OH_DIST,
-                    .dHH = SPC_E_HH_DIST
-                };
-            case SPC_DC:
-                return RigidWaterGeometry{
-                    .dOH = SPC_DC_OH_DIST,
-                    .dHH = SPC_DC_HH_DIST
-                };
-            case H2O_DC:
-                return RigidWaterGeometry{
-                    .dOH = H2O_DC_OH_DIST,
-                    .dHH = H2O_DC_HH_DIST
-                };
-            case TIP3P:
-                return RigidWaterGeometry{
-                    .dOH = TIP3P_OH_DIST,
-                    .dHH = TIP3P_HH_DIST
-                };
-            case OPC3:
-                return RigidWaterGeometry{
-                    .dOH = OPC3_OH_DIST,
-                    .dHH = OPC3_HH_DIST
-                };
-            case SPC_FW:
-            case QSPC_FW:
-            case SPC_MTR:
-            case TIP3P_MTR:
-            case NONE: return std::nullopt;
-        }
-
-        std::unreachable();
     }
 
     /**
@@ -414,8 +352,6 @@ namespace setup
             constraints->addBondConstraint(bondConstraintOH2);
             constraints->addBondConstraint(bondConstraintHH);
         }
-
-        settings::ConstraintSettings::activateShake();
     }
 
     /**
@@ -430,22 +366,39 @@ namespace setup
     {
         using enum WaterIntraModel;
 
-        const auto intraModel =
-            settings::WaterModelSettings::getWaterIntraModel();
+        const auto &waterModelSettings =
+            _engine.getSettings().waterModelSettings;
+        const auto intraModel = waterModelSettings.getWaterIntraModel();
 
         switch (intraModel)
         {
             case SPC_FW:
-                _engine.makeIntraWater(waterModel::SPCFwIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::SPCFwIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case QSPC_FW:
-                _engine.makeIntraWater(waterModel::qSPCFwIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::qSPCFwIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case SPC_MTR:
-                _engine.makeIntraWater(waterModel::SPCMTRIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::SPCMTRIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case TIP3P_MTR:
-                _engine.makeIntraWater(waterModel::TIP3PMTRIntraWater{});
+                _engine.makeIntraWater(
+                    waterModel::TIP3PMTRIntraWater{
+                        _engine.getSettings().hybridSettings
+                    }
+                );
                 break;
             case SPC:
             case SPC_E:
@@ -473,7 +426,8 @@ namespace setup
         using enum WaterInterModel;
         auto state = waterModel::InterWaterState();
 
-        const auto model = settings::WaterModelSettings::getWaterInterModel();
+        const auto model =
+            _engine.getSettings().waterModelSettings.getWaterInterModel();
 
         switch (model)
         {
@@ -528,11 +482,18 @@ namespace setup
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
         if (settings::GeneralSettings::isCellListActivated())
-            strategy =
-                std::make_unique<waterModel::InterWaterStrategyCellList>();
+        {
+            strategy = std::make_unique<waterModel::InterWaterStrategyCellList>(
+                _engine.getSettings().hybridSettings
+            );
+        }
         else
+        {
             strategy =
-                std::make_unique<waterModel::InterWaterStrategyBruteForce>();
+                std::make_unique<waterModel::InterWaterStrategyBruteForce>(
+                    _engine.getSettings().hybridSettings
+                );
+        }
 
         auto interWater = std::make_unique<waterModel::InterWater>(
             std::move(state),
@@ -540,132 +501,6 @@ namespace setup
         );
 
         _engine.setInterWater(std::move(interWater));
-    }
-
-    /**
-     * @brief Add reference file entries for the configured water models.
-     *
-     * @details Adds bibliography references for both intramolecular and
-     * intermolecular water models to the references output.
-     */
-    void WaterModelSetup::_addReferences()
-    {
-        const auto intraModel =
-            settings::WaterModelSettings::getWaterIntraModel();
-        const auto interModel =
-            settings::WaterModelSettings::getWaterInterModel();
-
-        switch (intraModel)
-        {
-            using enum WaterIntraModel;
-            case SPC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FILE
-                );
-                break;
-            case SPC_E:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_E_FILE
-                );
-                break;
-            case SPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FW_FILE
-                );
-                break;
-            case QSPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::QSPC_FW_FILE
-                );
-                break;
-            case SPC_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_DC_FILE
-                );
-                break;
-            case H2O_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::H2O_DC_FILE
-                );
-                break;
-            case TIP3P:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_FILE
-                );
-                break;
-            case OPC3:
-                references::ReferencesOutput::addReferenceFile(
-                    references::OPC3_FILE
-                );
-                break;
-            case SPC_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_MTR_FILE
-                );
-                break;
-            case TIP3P_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_MTR_FILE
-                );
-                break;
-            case NONE: break;
-        }
-
-        switch (interModel)
-        {
-            using enum WaterInterModel;
-            case SPC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FILE
-                );
-                break;
-            case SPC_E:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_E_FILE
-                );
-                break;
-            case SPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_FW_FILE
-                );
-                break;
-            case QSPC_FW:
-                references::ReferencesOutput::addReferenceFile(
-                    references::QSPC_FW_FILE
-                );
-                break;
-            case SPC_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_DC_FILE
-                );
-                break;
-            case H2O_DC:
-                references::ReferencesOutput::addReferenceFile(
-                    references::H2O_DC_FILE
-                );
-                break;
-            case TIP3P:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_FILE
-                );
-                break;
-            case OPC3:
-                references::ReferencesOutput::addReferenceFile(
-                    references::OPC3_FILE
-                );
-                break;
-            case SPC_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::SPC_MTR_FILE
-                );
-                break;
-            case TIP3P_MTR:
-                references::ReferencesOutput::addReferenceFile(
-                    references::TIP3P_MTR_FILE
-                );
-                break;
-            case NONE: break;
-        }
     }
 
 }   // namespace setup

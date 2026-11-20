@@ -1,0 +1,1 @@
+- Document in AGENTS.md the clang-tidy, cpp_checks and clang -Werror rules that CI enforces (braces, parentheses, identifier length, designated initializers, parameter names, unused lambda captures).

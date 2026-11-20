@@ -20,13 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _STOCHASTIC_RESCALING_MANOSTAT_HPP_
+#ifndef MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
+#define MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP
 
-#define _STOCHASTIC_RESCALING_MANOSTAT_HPP_
-
-#include "enums/manostat.hpp"
 #include "manostat.hpp"
 #include "randomNumberGenerator.hpp"
+#include "unit_types.hpp"
 
 namespace manostat
 {
@@ -41,42 +40,22 @@ namespace manostat
        private:
         rng::RandomNumberGenerator _randomNumberGenerator;
 
-        double    _tau;
-        double    _compressibility;
-        FixedAxis _fixedAxis;
-
        public:
-        StochasticRescalingManostat() = default;
-        explicit StochasticRescalingManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            FixedAxis fixedAxis
-        );
-        ~StochasticRescalingManostat() override = default;
-
-        // copy constructor and copy assignment needed for random number
-        // generator
-        StochasticRescalingManostat(const StochasticRescalingManostat &other);
-        StochasticRescalingManostat &operator=(
-            const StochasticRescalingManostat &other
-        );
-        StochasticRescalingManostat(StochasticRescalingManostat &&) noexcept =
-            delete;
-        StochasticRescalingManostat &operator=(StochasticRescalingManostat &&
-        ) noexcept = delete;
+        using Manostat::Manostat;
 
         void applyManostat(
             molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
         ) override;
 
-        [[nodiscard]] virtual linalg::tensor3D calculateMu(double);
+        [[nodiscard]] virtual QuantityTensor3D calculateMu(
 
-        [[nodiscard]] ManostatType getManostatType() const override;
-
-        [[nodiscard]] double getTau() const;
-        [[nodiscard]] double getCompressibility() const;
+            double             volume,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
+        );
 
        protected:
         [[nodiscard]]
@@ -95,24 +74,20 @@ namespace manostat
     class SemiIsotropicStochasticRescalingManostat
         : public StochasticRescalingManostat
     {
-       private:
-        Isotropy _isotropy;
-
        public:
-        explicit SemiIsotropicStochasticRescalingManostat(
-            double    targetPressure,
-            double    tau,
-            double    compressibility,
-            Isotropy  isotropy,
-            FixedAxis fixedAxis
-        );
+        using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linalg::tensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(
+            double             volume,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
+        ) override;
     };
 
     /**
-     * @brief AnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief AnisotropicStochasticRescalingManostat inherits from
+     * StochasticRescalingManostat
      *
      * _(https://doi.org/10.1063/5.0020514)
      *
@@ -124,11 +99,16 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linalg::tensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(
+            double             volume,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
+        ) override;
     };
 
     /**
-     * @brief FullAnisotropicStochasticRescalingManostat inherits from Manostat
+     * @brief FullAnisotropicStochasticRescalingManostat inherits from
+     * StochasticRescalingManostat
      *
      * _(https://doi.org/10.1063/5.0020514)
      *
@@ -140,9 +120,13 @@ namespace manostat
         using StochasticRescalingManostat::StochasticRescalingManostat;
 
         [[nodiscard]]
-        linalg::tensor3D calculateMu(double volume) override;
+        QuantityTensor3D calculateMu(
+            double             volume,
+            const Temperature &targetTemperature,
+            const Time        &timeStep
+        ) override;
     };
 
 }   // namespace manostat
 
-#endif   // _STOCHASTIC_RESCALING_MANOSTAT_HPP_
+#endif   // MANOSTAT__STOCHASTIC_RESCALING_MANOSTAT_HPP

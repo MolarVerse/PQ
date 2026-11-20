@@ -20,15 +20,16 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _CELL_HPP_
-
-#define _CELL_HPP_
+#ifndef MOLSYS__CELL_HPP
+#define MOLSYS__CELL_HPP
 
 #include <cstddef>
 #include <vector>
 
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+
+class WaterModelSettings;   // Forward declaration
 
 namespace molsys
 {
@@ -64,7 +65,10 @@ namespace molsys
         void addNeighbourCell(Cell *cell);
         void addAtoms(const std::vector<Atom *> &atomPointers);
         void assignMoleculeHybridZoneIndices();
-        void assignWaterMoleculeIndices(const SimulationBox &);
+        void assignWaterMoleculeIndices(
+            const SimulationBox &,
+            const WaterModelSettings &
+        );
 
         /***************************
          * standard getter methods *
@@ -115,4 +119,4 @@ namespace molsys
 
 }   // namespace molsys
 
-#endif   // _CELL_HPP_
+#endif   // MOLSYS__CELL_HPP

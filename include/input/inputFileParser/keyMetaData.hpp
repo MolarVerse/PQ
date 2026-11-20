@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _KEY_METADATA_HPP_
-#define _KEY_METADATA_HPP_
+#ifndef INPUT__INPUT_FILE_PARSER__KEY_META_DATA_HPP
+#define INPUT__INPUT_FILE_PARSER__KEY_META_DATA_HPP
 
 #include <optional>
 #include <string>
@@ -55,4 +55,4 @@ namespace input
     };
 
 }   // namespace input
-#endif   // _KEY_METADATA_HPP_
+#endif   // INPUT__INPUT_FILE_PARSER__KEY_META_DATA_HPP

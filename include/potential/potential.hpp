@@ -20,11 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _POTENTIAL_HPP_
-
-#define _POTENTIAL_HPP_
+#ifndef POTENTIAL__POTENTIAL_HPP
+#define POTENTIAL__POTENTIAL_HPP
 
 #include <memory>
+#include <mstd/types.hpp>
 #include <utility>
 
 #include "coulombPotential.hpp"
@@ -43,6 +43,9 @@ namespace molsys
     class CellList;        // forward declaration
     class SimulationBox;   // forward declaration
 }   // namespace molsys
+
+class WaterModelSettings;   // forward declaration
+class HybridSettings;       // forward declaration
 
 namespace pot
 {
@@ -71,46 +74,54 @@ namespace pot
     class Potential
     {
        private:
+        mstd::ConstRef<HybridSettings>       _hybridSettings;
         std::shared_ptr<CoulombPotential>    _coulombPotential;
         std::shared_ptr<NonCoulombPotential> _nonCoulombPot;
 
        public:
+        explicit Potential(const HybridSettings &hybridSettings);
         virtual ~Potential();
 
         virtual void calculateForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         void calculateQMMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         );
 
         virtual void calculateCoreToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
-            const molsys::CellList &
+            const molsys::CellList &,
+            const WaterModelSettings &waterModelSettings
         ) = 0;
 
         [[nodiscard]]
@@ -172,8 +183,8 @@ namespace pot
 
 }   // namespace pot
 
-#ifndef _POTENTIAL_TPP_
-#include "potential.tpp.hpp"   // IWYU pragma: export
+#ifndef POTENTIAL__POTENTIAL_TPP
+#include "potential.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _POTENTIAL_HPP_
+#endif   // POTENTIAL__POTENTIAL_HPP

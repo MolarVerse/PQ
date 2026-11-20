@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TYPES_SECTION_HPP_
-
-#define _TYPES_SECTION_HPP_
+#ifndef INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP
+#define INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP
 
 #include <string>
 
@@ -59,10 +58,11 @@ namespace input::parameterFile
             size_t /*lineNumber*/
         ) override
         {
+            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/905
+            // implement processHeader
         }
-        // TODO: implement processHeader
     };
 
 }   // namespace input::parameterFile
 
-#endif   // _TYPES_SECTION_HPP_
+#endif   // INPUT__PARAMETER_FILE_READER__TYPES_SECTION_HPP

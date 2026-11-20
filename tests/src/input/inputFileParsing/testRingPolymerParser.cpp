@@ -43,7 +43,8 @@
  */
 TEST_F(TestInputFileReader, testParseNumberOfReplicas)
 {
-    input::RingPolymerInputParser parser;
+    RingPolymerSettings           ringPolymerSettings;
+    input::RingPolymerInputParser parser(ringPolymerSettings);
     const auto                    funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rpmd_n_replica"));
     const auto &parseFunc = funcMap.at("rpmd_n_replica");
@@ -51,7 +52,7 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicas)
     std::vector<std::string> lineElements = {"rpmd_n_replica", "=", "10"};
     parseFunc(lineElements, 0);
 
-    EXPECT_EQ(settings::RingPolymerSettings::getNumberOfBeads(), 10);
+    EXPECT_EQ(ringPolymerSettings.getNumberOfBeads(), 10);
 
     _clearParser(parser);
 
@@ -80,9 +81,11 @@ TEST_F(TestInputFileReader, testParseNumberOfReplicas)
  */
 TEST_F(TestInputFileReader, testParseNumberOfReplicasInvalidSyntax)
 {
-    input::RingPolymerInputParser parser;
-    const auto                    funcMap   = parser.getKeywordFuncMap();
-    const auto                   &parseFunc = funcMap.at("rpmd_n_replica");
+    RingPolymerSettings           ringPolymerSettings;
+    input::RingPolymerInputParser parser(ringPolymerSettings);
+    const auto                    funcMap = parser.getKeywordFuncMap();
+    ASSERT_TRUE(funcMap.contains("rpmd_n_replica"));
+    const auto &parseFunc = funcMap.at("rpmd_n_replica");
 
     const std::vector<std::string> lineElements = {
         "rpmd_n_replica",

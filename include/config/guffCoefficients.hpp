@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _GUFF_COEFFICIENTS_HPP_
-
-#define _GUFF_COEFFICIENTS_HPP_
+#ifndef CONFIG__GUFF_COEFFICIENTS_HPP
+#define CONFIG__GUFF_COEFFICIENTS_HPP
 
 #include "strongTypes.hpp"
 
@@ -111,4 +110,4 @@ static constexpr LJParams TIP3P_MTR_LJ_PARAMS_OO{
     .c12 = TIP3P_MTR_LJ_C12_OO
 };
 
-#endif   // _GUFF_COEFFICIENTS_HPP_
+#endif   // CONFIG__GUFF_COEFFICIENTS_HPP

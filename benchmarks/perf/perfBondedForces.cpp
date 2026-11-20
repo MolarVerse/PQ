@@ -29,6 +29,9 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -39,6 +42,7 @@
 #include "bondForceField.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "dihedralForceField.hpp"
+#include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
@@ -48,10 +52,11 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
-    auto box = molsys::SimulationBox();
+    Settings settings;
+    auto     box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-    box.setBox(orthoBox);
+    box.setBox(orthoBox, false);
 
     auto physicalData        = physicalData::PhysicalData();
     auto coulombPotential    = pot::CoulombShiftedPotential(20.0);
@@ -69,7 +74,12 @@ int main()
         AtomIndex{1},
         BondId{0}
     );
-    bond.setParams(BondParams{.equilibrium = 1.2, .forceConstant = 3.0});
+    bond.setParams(
+        BondParams{
+            .equilibrium   = 1.2 * angstrom,
+            .forceConstant = 3.0 * kcal_per_mol / angstrom / angstrom
+        }
+    );
 
     auto angle = ff::AngleForceField(
         {&molecule, &molecule, &molecule},
@@ -77,7 +87,10 @@ int main()
         AngleId{0}
     );
     angle.setParams(
-        AngleParams{.equilibrium = M_PI / 2.0, .forceConstant = 3.0}
+        AngleParams{
+            .equilibrium   = M_PI / 2.0 * rad,
+            .forceConstant = 3.0 * kcal_per_mol / rad / rad
+        }
     );
 
     auto dihedral = ff::DihedralForceField(
@@ -86,11 +99,19 @@ int main()
         DihedralId{0}
     );
     dihedral.setParams(
-        DihedralParams{.forceConstant = 3.0, .frequency = 3, .phaseShift = M_PI}
+        DihedralParams{
+            .forceConstant = 3.0 * kcal_per_mol,
+            .frequency     = 3,
+            .phaseShift    = M_PI * rad
+        }
     );
     dihedral.setIsLinker(false);
 
+    perfAllocBegin();
+
     CALLGRIND_ZERO_STATS;
+
+    const auto smoothing = settings.hybridSettings.getSmoothingMethod();
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
@@ -98,20 +119,23 @@ int main()
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            smoothing
         );
         angle.calculateEnergyAndForces(
             box,
             physicalData,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            smoothing
         );
         dihedral.calculateEnergyAndForces(
             box,
             physicalData,
             false,
             coulombPotential,
-            nonCoulombPotential
+            nonCoulombPotential,
+            smoothing
         );
     }
 

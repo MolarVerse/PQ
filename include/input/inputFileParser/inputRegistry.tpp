@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _INPUT_REGISTRY_TPP_
-#define _INPUT_REGISTRY_TPP_
+#ifndef INPUT__INPUT_FILE_PARSER__INPUT_REGISTRY_TPP
+#define INPUT__INPUT_FILE_PARSER__INPUT_REGISTRY_TPP
 
 #include <memory>
 
@@ -84,4 +84,4 @@ namespace input
 
 }   // namespace input
 
-#endif   // _INPUT_REGISTRY_TPP_
+#endif   // INPUT__INPUT_FILE_PARSER__INPUT_REGISTRY_TPP

@@ -1,1 +1,0 @@
-- Add thermostat regression tests for extreme parameters (relaxation time below the time step, zero target temperature, zero degrees of freedom, near-zero temperature, tiny Langevin time step).

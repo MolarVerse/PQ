@@ -27,6 +27,7 @@
 
 #include "adam.hpp"
 #include "atom.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "vector3d.hpp"
 
@@ -41,7 +42,7 @@ namespace
         auto box = std::make_shared<molsys::SimulationBox>();
 
         molsys::OrthorhombicBox orthoBox{boxDims};
-        box->setBox(orthoBox);
+        box->setBox(orthoBox, false);
 
         auto atom = std::make_shared<molsys::Atom>();
         atom->setPosition(pos);
@@ -64,19 +65,17 @@ namespace
 
 TEST(TestAdam, defaultBetasConstructorAcceptsNAtoms)
 {
-    EXPECT_NO_THROW(opt::Adam(10U, /*nAtoms=*/4U));
+    EXPECT_NO_THROW(opt::Adam(/*nAtoms=*/4U));
 }
 
 TEST(TestAdam, customBetasConstructorAcceptsBeta1AndBeta2)
 {
-    EXPECT_NO_THROW(
-        opt::Adam(10U, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U)
-    );
+    EXPECT_NO_THROW(opt::Adam(/*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U));
 }
 
 TEST(TestAdam, maxHistoryLengthIsTwo)
 {
-    const opt::Adam adam(10U, 4U);
+    const opt::Adam adam(4U);
     EXPECT_EQ(adam.maxHistoryLength(), 2U);
 }
 
@@ -91,7 +90,7 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     // sign(force).
     auto box = makeBoxWithOneAtom({0.0, 0.0, 0.0}, {2.0, -3.0, 0.5});
 
-    opt::Adam adam(1U, /*nAtoms=*/1U);
+    opt::Adam adam(/*nAtoms=*/1U);
     adam.setSimulationBox(box);
 
     const auto learningRate = 0.01;
@@ -113,7 +112,7 @@ TEST(TestAdam, updateStoresOldPosition)
 {
     auto box = makeBoxWithOneAtom({3.0, 4.0, 5.0}, {1.0, 1.0, 1.0});
 
-    opt::Adam adam(1U, 1U);
+    opt::Adam adam(/*nAtoms=*/1U);
     adam.setSimulationBox(box);
     adam.update(0.01, 1U);
 
@@ -133,7 +132,7 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
         {10.0, 10.0, 10.0}
     );
 
-    opt::Adam adam(1U, 1U);
+    opt::Adam adam(/*nAtoms=*/1U);
     adam.setSimulationBox(box);
     adam.update(/*learningRate=*/0.5, /*step=*/1U);
 
@@ -146,7 +145,7 @@ TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
 {
     auto box = makeBoxWithOneAtom({1.0, 2.0, 3.0}, {0.0, 0.0, 0.0});
 
-    opt::Adam adam(1U, 1U);
+    opt::Adam adam(1U);
     adam.setSimulationBox(box);
     adam.update(0.1, 1U);
 

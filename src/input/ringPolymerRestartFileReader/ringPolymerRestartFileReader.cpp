@@ -55,14 +55,11 @@ namespace input::ringPolymer
      * @brief Reads a .rpmd.rst file sets the ring polymer beads in the engine
      *
      */
-    void RingPolymerRestartFileReader::read()
+    void RingPolymerRestartFileReader::read(size_t numberOfBeads)
     {
         std::string              line;
         std::vector<std::string> lineElements;
         int                      lineNumber = 0;
-
-        const auto numberOfBeads =
-            settings::RingPolymerSettings::getNumberOfBeads();
 
         for (size_t i = 0; i < numberOfBeads; ++i)
         {
@@ -125,12 +122,14 @@ namespace input::ringPolymer
      */
     void readRingPolymerRestartFile(engine::RingPolymerEngine &engine)
     {
-        const auto filename =
-            settings::FileSettings::getRingPolymerStartFileName();
+        const auto &fileSettings = engine.getSettings().fileSettings;
+
+        const auto filename = fileSettings.getRingPolymerStartFileName();
 
         RingPolymerRestartFileReader reader(filename, engine);
 
-        reader.read();
+        reader.read(engine.getSettings().ringPolymerSettings.getNumberOfBeads()
+        );
     }
 
 }   // namespace input::ringPolymer

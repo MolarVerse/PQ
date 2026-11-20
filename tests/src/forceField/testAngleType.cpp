@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include "angleType.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests operator== for AngleType
@@ -32,23 +33,38 @@ TEST(TestAngleType, operatorEqual)
 {
     ff::AngleType angleType1(
         AngleId{0},
-        AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
+        AngleParams{
+            .equilibrium   = 1.0 * rad,
+            .forceConstant = 2.0 * kcal_per_mol / rad / rad
+        }
     );
     ff::AngleType angleType2(
         AngleId{0},
-        AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
+        AngleParams{
+            .equilibrium   = 1.0 * rad,
+            .forceConstant = 2.0 * kcal_per_mol / rad / rad
+        }
     );
     ff::AngleType angleType3(
         AngleId{1},
-        AngleParams{.equilibrium = 1.0, .forceConstant = 2.0}
+        AngleParams{
+            .equilibrium   = 1.0 * rad,
+            .forceConstant = 2.0 * kcal_per_mol / rad / rad
+        }
     );
     ff::AngleType angleType4(
         AngleId{0},
-        AngleParams{.equilibrium = 2.0, .forceConstant = 2.0}
+        AngleParams{
+            .equilibrium   = 2.0 * rad,
+            .forceConstant = 2.0 * kcal_per_mol / rad / rad
+        }
     );
     ff::AngleType angleType5(
         AngleId{0},
-        AngleParams{.equilibrium = 1.0, .forceConstant = 3.0}
+        AngleParams{
+            .equilibrium   = 1.0 * rad,
+            .forceConstant = 3.0 * kcal_per_mol / rad / rad
+        }
     );
 
     EXPECT_TRUE(angleType1 == angleType2);

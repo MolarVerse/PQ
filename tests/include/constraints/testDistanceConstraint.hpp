@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_DISTANCE_CONSTRAINT_HPP_
-
-#define _TEST_DISTANCE_CONSTRAINT_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_DISTANCE_CONSTRAINT_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_DISTANCE_CONSTRAINT_HPP
 
 #include <gtest/gtest.h>
 
@@ -31,6 +30,7 @@
 #include "atom.hpp"
 #include "distanceConstraint.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 
 /**
@@ -73,7 +73,7 @@ class TestDistanceConstraint : public ::testing::Test
         _box->addMolecule(molecule1);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _box->setBox(orthoBox);
+        _box->setBox(orthoBox, false);
 
         _distanceConstraint = std::make_unique<constraints::DistanceConstraint>(
             _box->getMolecules().data(),
@@ -88,4 +88,4 @@ class TestDistanceConstraint : public ::testing::Test
     }
 };
 
-#endif   // _TEST_DISTANCE_CONSTRAINT_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_DISTANCE_CONSTRAINT_HPP

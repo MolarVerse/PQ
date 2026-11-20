@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_CONSTRAINTS_HPP_
-
-#define _TEST_CONSTRAINTS_HPP_
+#ifndef TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
+#define TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP
 
 #include <gtest/gtest.h>
 
@@ -33,6 +32,8 @@
 #include "constraintSettings.hpp"
 #include "constraints.hpp"
 #include "molecule.hpp"
+#include "orthorhombicBox.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 
 /**
@@ -89,10 +90,30 @@ class TestConstraints : public ::testing::Test
         _box->addMolecule(molecule2);
 
         molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _box->setBox(orthoBox);
+        _box->setBox(orthoBox, false);
 
-        _constraints = std::make_unique<constraints::Constraints>();
+        Settings settings;
+        settings.constraintSettings.activateShakeByUser();
+        _constraints = std::make_unique<constraints::Constraints>(
+            settings.constraintSettings
+        );
 
+        _addDefaultBondConstraints(*_constraints);
+    }
+
+    /**
+     * @brief adds the two bond constraints used by the fixture's molecules
+     * to the given Constraints object
+     *
+     * @details Constraints owns its own bond constraint list, so a
+     * freshly-constructed Constraints (e.g. with a different
+     * ConstraintSettings instance) does not share the fixture's bond
+     * constraints and needs them added explicitly via this helper.
+     *
+     * @param constraints
+     */
+    void _addDefaultBondConstraints(constraints::Constraints &constraints) const
+    {
         auto bondConstraint1 = constraints::BondConstraint(
             _box->getMolecules().data(),
             _box->getMolecules().data(),
@@ -108,11 +129,9 @@ class TestConstraints : public ::testing::Test
             1.3
         );
 
-        _constraints->addBondConstraint(bondConstraint1);
-        _constraints->addBondConstraint(bondConstraint2);
-
-        settings::ConstraintSettings::activateShake();
+        constraints.addBondConstraint(bondConstraint1);
+        constraints.addBondConstraint(bondConstraint2);
     }
 };
 
-#endif   // _TEST_CONSTRAINTS_HPP_
+#endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

@@ -20,11 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _MACE_RUNNER_HPP_
+#ifndef QM__ASE__ASE_MACE_RUNNER_HPP
+#define QM__ASE__ASE_MACE_RUNNER_HPP
 
-#define _MACE_RUNNER_HPP_
+#include <mstd/types.hpp>
 
 #include "aseQMRunner.hpp"
+
+class MaceSettings;
 
 namespace QM
 {
@@ -39,13 +42,10 @@ namespace QM
         ~AseMaceRunner() override = default;
 
         explicit AseMaceRunner(
-            const std::string& modelType,
-            const std::string& model,
-            const std::string& fpType,
-            bool               dispersion,
-            bool               enableCueq
+            const QMSettings&   qmSettings,
+            const MaceSettings& maceSettings
         );
     };
 }   // namespace QM
 
-#endif   // _MACE_RUNNER_HPP_
+#endif   // QM__ASE__ASE_MACE_RUNNER_HPP

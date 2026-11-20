@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_PHYSICAL_DATA_HPP_
-
-#define _TEST_PHYSICAL_DATA_HPP_
+#ifndef TESTS__INCLUDE__PHYSICAL_DATA__TEST_PHYSICAL_DATA_HPP
+#define TESTS__INCLUDE__PHYSICAL_DATA__TEST_PHYSICAL_DATA_HPP
 
 #include <gtest/gtest.h>
 
@@ -32,6 +31,7 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestPhysicalData
@@ -50,14 +50,15 @@ class TestPhysicalData : public ::testing::Test
         _physicalData = std::make_unique<physicalData::PhysicalData>();
         _physicalData->setCoulombEnergy(1.0);
         _physicalData->setNonCoulombEnergy(2.0);
-        _physicalData->setTemperature(3.0);
+        _physicalData->setTemperature(mstd::units::point<K>(3.0));
         _physicalData->setMomentum(linalg::Vec3D(4.0));
         _physicalData->setKineticEnergy(5.0);
         _physicalData->setVolume(6.0);
         _physicalData->setDensity(7.0);
-        _physicalData->setPressure(8.0);
-        _physicalData->setCoupledPressure(8.5);
+        _physicalData->setPressure(8.0 * bar);
+        _physicalData->setCoupledPressure(8.5 * bar);
         _physicalData->setQMEnergy(9.0);
+        _physicalData->setQMReferenceEnergy(1.0);
 
         _simulationBox = std::make_unique<molsys::SimulationBox>();
 

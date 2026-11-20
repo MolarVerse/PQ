@@ -20,16 +20,14 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_INPUT_FILE_READER_H_
-
-#define _TEST_INPUT_FILE_READER_H_
+#ifndef TESTS__INCLUDE__INPUT__TEST_INPUT_FILE_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_INPUT_FILE_READER_HPP
 
 #include <gtest/gtest.h>
 
 #include <cstdio>
 #include <string>
 
-#include "constraintSettings.hpp"
 #include "inputConverter.hpp"
 #include "inputFileParser.hpp"
 #include "inputFileReader.hpp"
@@ -64,9 +62,6 @@ class TestInputFileReader : public ::testing::Test
     static void _clearParser(input::InputFileParser &parser)
     {
         parser._clear();
-        settings::ConstraintSettings::deactivateShake();
-        settings::ConstraintSettings::deactivateMShake();
-        settings::ConstraintSettings::deactivateDistanceConstraints();
     }
 
     void _removeFile() const

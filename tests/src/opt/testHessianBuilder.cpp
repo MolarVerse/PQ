@@ -22,6 +22,7 @@
 
 #include <gtest/gtest.h>
 
+#include <csignal>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -31,8 +32,13 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "hessianBuilder.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+
+#ifdef WITH_PYBIND11
+#include <pybind11/embed.h>
+#endif
 
 namespace
 {
@@ -44,15 +50,20 @@ namespace
 
        public:
         explicit HarmonicEvaluator(
+            const Settings     &settings,
             std::vector<double> forceConstants,
             const bool          analyticSupported
         )
-            : _forceConstants(std::move(forceConstants)),
+            : opt::Evaluator(settings),
+              _forceConstants(std::move(forceConstants)),
               _analyticSupported(analyticSupported)
         {
         }
-        explicit HarmonicEvaluator(std::vector<double> forceConstants)
-            : HarmonicEvaluator(std::move(forceConstants), false)
+        explicit HarmonicEvaluator(
+            const Settings     &settings,
+            std::vector<double> forceConstants
+        )
+            : HarmonicEvaluator(settings, std::move(forceConstants), false)
         {
         }
 
@@ -163,7 +174,8 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
          })
     {
         auto              box = makeSimulationBox();
-        HarmonicEvaluator evaluator(diagonal);
+        Settings          settings;
+        HarmonicEvaluator evaluator(settings, diagonal);
         evaluator.setSimulationBox(box);
 
         const auto hessian = builder->build(evaluator, *box);
@@ -175,10 +187,39 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
     }
 }
 
+#ifdef WITH_PYBIND11
+TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
+{
+    const pybind11::scoped_interpreter guard{};
+
+    auto              box = makeSimulationBox();
+    Settings          settings;
+    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    evaluator.setSimulationBox(box);
+
+    const auto builder = opt::CentralForceDifferenceHessianBuilder(1.0e-4);
+
+    ASSERT_EQ(std::raise(SIGINT), 0);
+
+    try
+    {
+        static_cast<void>(builder.build(evaluator, *box));
+        FAIL() << "pending SIGINT was not reported";
+    }
+    catch (const pybind11::error_already_set &error)
+    {
+        EXPECT_TRUE(error.matches(PyExc_KeyboardInterrupt));
+    }
+
+    expectPositionsRestored(*box);
+}
+#endif
+
 TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 {
     auto              box = makeSimulationBox();
-    HarmonicEvaluator evaluator({1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    Settings          settings;
+    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
@@ -192,7 +233,8 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 {
     auto              box = makeSimulationBox();
-    HarmonicEvaluator evaluator({1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, true);
+    Settings          settings;
+    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, true);
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 

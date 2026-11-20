@@ -20,13 +20,11 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _TEST_INTRA_NON_BONDED_READER_HPP_
-
-#define _TEST_INTRA_NON_BONDED_READER_HPP_
+#ifndef TESTS__INCLUDE__INPUT__TEST_INTRA_NON_BONDED_READER_HPP
+#define TESTS__INCLUDE__INPUT__TEST_INTRA_NON_BONDED_READER_HPP
 
 #include <gtest/gtest.h>
 
-#include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "intraNonBondedReader.hpp"
 #include "mmmdEngine.hpp"
@@ -67,8 +65,7 @@ class TestIntraNonBondedReader : public ::testing::Test
                 "data/intraNonBondedReader/intraNonBonded.dat",
                 *_engine
             );
-        settings::FileSettings::setIsIntraNonBondedFileNameSet();
     }
 };
 
-#endif   // _TEST_INTRA_NON_BONDED_READER_HPP_
+#endif   // TESTS__INCLUDE__INPUT__TEST_INTRA_NON_BONDED_READER_HPP

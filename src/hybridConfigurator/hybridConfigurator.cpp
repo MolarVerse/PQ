@@ -35,6 +35,16 @@ namespace configurator
 {
 
     /**
+     * @brief Construct a new Hybrid Configurator object
+     *
+     * @param hybridSettings The settings for the hybrid configurator
+     */
+    HybridConfigurator::HybridConfigurator(const HybridSettings& hybridSettings)
+        : _hybridSettings(hybridSettings)
+    {
+    }
+
+    /**
      * @brief Calculate the center of mass of the inner region center atoms
      *
      * @param simulationBox The simulation box containing all atoms
@@ -50,7 +60,7 @@ namespace configurator
         molsys::SimulationBox& simulationBox
     )
     {
-        const auto& indices = simulationBox.getInnerRegionCenterAtomIndices();
+        const auto& indices = _hybridSettings->getInnerRegionCenter();
 
         if (indices.empty())
         {
@@ -79,7 +89,7 @@ namespace configurator
 
         center             /= total_mass;
         _innerRegionCenter  = center - simulationBox.calcShiftVector(center);
-    }   // TODO: https://github.com/MolarVerse/PQ/issues/196
+    }   // TODO(ape): https://github.com/MolarVerse/PQ/issues/196
 
     /**
      * @brief Shift all atoms so that the inner region center is at the origin
@@ -169,14 +179,14 @@ namespace configurator
      */
     void HybridConfigurator::assignHybridZones(
         molsys::SimulationBox& simulationBox
-    )
+    ) const
     {
-        const auto coreRadius  = settings::HybridSettings::getCoreRadius();
-        const auto layerRadius = settings::HybridSettings::getLayerRadius();
+        const auto coreRadius  = _hybridSettings->getCoreRadius();
+        const auto layerRadius = _hybridSettings->getLayerRadius();
         const auto smoothingRegionThickness =
-            settings::HybridSettings::getSmoothingRegionThickness();
+            _hybridSettings->getSmoothingRegionThickness();
         const auto pointChargeThickness =
-            settings::HybridSettings::getPointChargeThickness();
+            _hybridSettings->getPointChargeThickness();
         const auto coreEpsilon = std::numeric_limits<double>::epsilon();
         const bool coreEnabled = coreRadius > coreEpsilon;
 
@@ -360,11 +370,10 @@ namespace configurator
      */
     void HybridConfigurator::calculateSmoothingFactors(
         molsys::SimulationBox& simulationBox
-    )
+    ) const
     {
-        const auto layer = settings::HybridSettings::getLayerRadius();
-        const auto thickness =
-            settings::HybridSettings::getSmoothingRegionThickness();
+        const auto layer     = _hybridSettings->getLayerRadius();
+        const auto thickness = _hybridSettings->getSmoothingRegionThickness();
 
         for (auto& mol : simulationBox.getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
@@ -416,6 +425,12 @@ namespace configurator
     bool HybridConfigurator::getMoleculeChangedZone()
     {
         return _molChangedZone;
+    }
+
+    /** @brief Set the hybrid-zone change flag used to reset QM references. */
+    void HybridConfigurator::_setMoleculeChangedZone(const bool changed)
+    {
+        _molChangedZone = changed;
     }
 
 }   // namespace configurator

@@ -22,10 +22,9 @@
 
 #include "hybridInputParser.hpp"
 
-#include <algorithm>
 #include <cstddef>
 #include <format>
-#include <ranges>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -39,13 +38,39 @@
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
 
-#ifdef PYTHON_ENABLED
-#include "fileSettings.hpp"
-#include "selection.hpp"
-#endif
-
 namespace input
 {
+    namespace
+    {
+        /**
+         * @brief parses a forced-list value: molecule indices and ranges only
+         *
+         * @details the selection grammar is rejected, because it returns atom
+         * indices
+         */
+        std::optional<SelectionTag> parseMoleculeIndices(std::string_view raw)
+        {
+            if (raw.find_first_not_of("0123456789,-") != std::string_view::npos)
+            {
+                return std::nullopt;
+            }
+
+            auto converter = Converter<SelectionTag>("", std::string(raw));
+            return converter.tryParse(raw);
+        }
+
+        /**
+         * @brief error message for an invalid forced-list value
+         */
+        std::string moleculeIndexError(const std::string_view key)
+        {
+            return std::format(
+                "{} takes molecule indices, e.g. 0,2-4 (the selection grammar "
+                "is not supported)",
+                key
+            );
+        }
+    }   // namespace
 
     /**
      * @brief Construct a new HybridInputParser:: HybridInputParser object
@@ -55,7 +80,8 @@ namespace input
      * qm_script
      * "<string>"
      */
-    HybridInputParser::HybridInputParser()
+    HybridInputParser::HybridInputParser(HybridSettings &hybridSettings)
+        : _hybridSettings(hybridSettings)
     {
         addInnerRegionCenterKey();
         addForcedCoreListKey();
@@ -67,7 +93,6 @@ namespace input
         addSmoothingRegionThicknessKey();
         addPointChargeThicknessKey();
         addSmoothingMethodKey();
-        addQMForceDistributionKey();
     }
 
     void HybridInputParser::addInnerRegionCenterKey()
@@ -80,19 +105,26 @@ namespace input
                 "calculations",
         };
 
-        const auto setValue = [](const SelectionTag &selection)
+        const auto setValue = [this](const SelectionTag &selection)
         {
+            if (selection.expression.has_value())
+            {
+                _hybridSettings->setInnerRegionCenterExpression(
+                    *selection.expression
+                );
+                return;
+            }
+
             std::vector<size_t> convertedIndices;
 
             for (const auto &index : selection.indices)
             {
-                // check if indices are positive
-                if (index <= 0)
+                if (index < 0)
                 {
                     throw exc::InputFileException(
                         std::format(
                             "Invalid atom index \"{}\" in input file\n"
-                            "Atom indices must be positive",
+                            "Atom indices must be non-negative",
                             index
                         )
                     );
@@ -100,7 +132,7 @@ namespace input
                 convertedIndices.push_back(static_cast<size_t>(index));
             }
 
-            settings::HybridSettings::setInnerRegionCenter(convertedIndices);
+            _hybridSettings->setInnerRegionCenterByUser(convertedIndices);
         };
 
         auto &key = _getRegistry().registerKey(
@@ -121,15 +153,17 @@ namespace input
             .description =
                 "Specifies the list of molecules which are forced to the CORE "
                 "region in hybrid calculations",
+            .errorMessage = moleculeIndexError("forced_core_list"),
         };
 
-        const auto setValue = [](const SelectionTag &selection)
-        { settings::HybridSettings::setForcedCoreList(selection.indices); };
+        const auto setValue = [this](const SelectionTag &selection)
+        { _hybridSettings->setForcedCoreListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
-                .metadata = metaData,
-                .onSet    = setValue,
+                .metadata     = metaData,
+                .customParser = parseMoleculeIndices,
+                .onSet        = setValue,
             }
         );
 
@@ -144,15 +178,17 @@ namespace input
             .description =
                 "Specifies the list of molecules which are forced to the LAYER "
                 "region in hybrid calculations",
+            .errorMessage = moleculeIndexError("forced_layer_list"),
         };
 
-        const auto setValue = [](const SelectionTag &selection)
-        { settings::HybridSettings::setForcedLayerList(selection.indices); };
+        const auto setValue = [this](const SelectionTag &selection)
+        { _hybridSettings->setForcedLayerListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
-                .metadata = metaData,
-                .onSet    = setValue,
+                .metadata     = metaData,
+                .customParser = parseMoleculeIndices,
+                .onSet        = setValue,
             }
         );
 
@@ -167,15 +203,17 @@ namespace input
             .description =
                 "Specifies the list of molecules which are forced to the OUTER "
                 "region in hybrid calculations",
+            .errorMessage = moleculeIndexError("forced_outer_list"),
         };
 
-        const auto setValue = [](const SelectionTag &selection)
-        { settings::HybridSettings::setForcedOuterList(selection.indices); };
+        const auto setValue = [this](const SelectionTag &selection)
+        { _hybridSettings->setForcedOuterListByUser(selection.indices); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SelectionTag>{
-                .metadata = metaData,
-                .onSet    = setValue,
+                .metadata     = metaData,
+                .customParser = parseMoleculeIndices,
+                .onSet        = setValue,
             }
         );
 
@@ -185,22 +223,22 @@ namespace input
     void HybridInputParser::addUseQMChargesKey()
     {
         const auto metaData = input::KeyMetadata{
-            .name  = "use_qm_charges",
+            .name  = "qm_charges",
             .title = "Use QM Charges",
             .description =
                 "Specifies whether QM charges should be used in the hybrid "
                 "calculations",
         };
 
-        const auto setValue = [](QMCharges value)
+        const auto setValue = [this](QMCharges value)
         {
             switch (value)
             {
                 case QMCharges::QM:
-                    settings::HybridSettings::setUseQMCharges(true);
+                    _hybridSettings->setUseQMChargesByUser(true);
                     break;
                 case QMCharges::MM:
-                    settings::HybridSettings::setUseQMCharges(false);
+                    _hybridSettings->setUseQMChargesByUser(false);
                     break;
             }
         };
@@ -223,8 +261,8 @@ namespace input
             .description = "Specifies the core radius in hybrid calculations",
         };
 
-        const auto setValue = [](double value)
-        { settings::HybridSettings::setCoreRadius(value); };
+        const auto setValue = [this](double value)
+        { _hybridSettings->setCoreRadiusByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -245,8 +283,8 @@ namespace input
             .description = "Specifies the layer radius in hybrid calculations",
         };
 
-        const auto setValue = [](double value)
-        { settings::HybridSettings::setLayerRadius(value); };
+        const auto setValue = [this](double value)
+        { _hybridSettings->setLayerRadiusByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -269,8 +307,8 @@ namespace input
                 "calculations",
         };
 
-        const auto setValue = [](double value)
-        { settings::HybridSettings::setSmoothingRegionThickness(value); };
+        const auto setValue = [this](double value)
+        { _hybridSettings->setSmoothingRegionThicknessByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -292,8 +330,8 @@ namespace input
                 "Specifies the point charge thickness in hybrid calculations",
         };
 
-        const auto setValue = [](double value)
-        { settings::HybridSettings::setPointChargeThickness(value); };
+        const auto setValue = [this](double value)
+        { _hybridSettings->setPointChargeThicknessByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -315,8 +353,8 @@ namespace input
                 "Specifies the smoothing method in hybrid calculations",
         };
 
-        const auto setValue = [](SmoothingMethod value)
-        { settings::HybridSettings::setSmoothingMethod(value); };
+        const auto setValue = [this](SmoothingMethod value)
+        { _hybridSettings->setSmoothingMethodByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<SmoothingMethod>{
@@ -328,6 +366,11 @@ namespace input
         addKeyword(metaData.name, adapt(key), false);
     }
 
+    /**
+     * @brief not yet read from the input file as this requires a new smoothing
+     * method, see issue #1012 https://github.com/MolarVerse/PQ/issues/1012
+     *
+     */
     void HybridInputParser::addQMForceDistributionKey()
     {
         const auto metaData = input::KeyMetadata{
@@ -338,8 +381,8 @@ namespace input
                 "calculations",
         };
 
-        const auto setValue = [](QMForceDist value)
-        { settings::HybridSettings::setQMForceDist(value); };
+        const auto setValue = [this](QMForceDist value)
+        { _hybridSettings->setQMForceDistByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<QMForceDist>{
@@ -349,255 +392,6 @@ namespace input
         );
 
         addKeyword(metaData.name, adapt(key), false);
-    }
-
-    /**
-     * @brief parse selection string
-     *
-     * @details This function parses a string that contains a selection of
-     * atoms. The selection can be a list of atom indices or a selection string
-     * that is understood by the PQAnalysis Python package. In order to use the
-     * full selection parser power of the PQAnalysis Python package, the PQ
-     * build must be compiled with Python bindings. If the PQ build is compiled
-     * without Python bindings, the selection string must be a comma-separated
-     * list of integers or a - separated range of indices, representing the atom
-     * indices in the restart file that should be treated as the selection. If
-     * the selection is empty, the function returns a vector with a single
-     * element, 0.
-     *
-     * @param selection The selection string
-     * @param key The key of the selection string
-     *
-     * @return std::vector<int> The selection vector
-     *
-     * @throws exc::InputFileException if the selection string contains
-     * characters that are not digits, "-" or commas and the PQ build is
-     * compiled without Python bindings.
-     */
-    std::vector<int> HybridInputParser::parseSelection(
-        const std::string &selection,
-        const std::string &key
-    )
-    {
-        std::vector<int> selectionVec;
-
-        if (selection.empty())
-            return {0};
-
-        auto needsPython = false;
-        if (selection.find_first_not_of("0123456789,-") != std::string::npos)
-            needsPython = true;
-
-#ifdef PYTHON_ENABLED
-        std::string restartFile = settings::FileSettings::getStartFileName();
-        std::string moldescFile =
-            settings::FileSettings::getMolDescriptorFileName();
-
-        if (needsPython)
-            selectionVec =
-                pq_python::select(selection, restartFile, moldescFile);
-#else
-
-        // check if string contains any characters that are not digits or commas
-        if (needsPython)
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "The value of key {} - {} contains characters that are not "
-                    "digits, \"-\" or commas. The current build of PQ was "
-                    "compiled "
-                    "without Python bindings, so the {} string must be a "
-                    "comma-separated list of integers, representing the atom "
-                    "indices in the restart file that should be treated as the "
-                    "{}. "
-                    "In order to use the full selection parser power of the "
-                    "PQAnalysis Python package, the PQ build must be compiled "
-                    "with "
-                    "Python bindings.",
-                    key,
-                    selection,
-                    key,
-                    key
-                )
-            );
-        }
-#endif
-
-        if (!needsPython)
-            selectionVec = parseSelectionNoPython(selection, key);
-
-        std::ranges::sort(selectionVec);
-        auto ret = std::ranges::unique(selectionVec);
-        selectionVec.erase(ret.begin(), ret.end());
-
-        return selectionVec;
-    }
-
-    /**
-     * @brief parse selection string without Python
-     *
-     * @param selection The selection string
-     * @param key The key of the selection string
-     *
-     * @return std::vector<int> The selection vector
-     *
-     * @throws exc::InputFileException if the selection string is an
-     * empty list
-     */
-    std::vector<int> HybridInputParser::parseSelectionNoPython(
-        const std::string &selection,
-        const std::string &key
-    )
-    {
-        std::vector<int> selectionVec;
-
-        size_t pos = 0;
-        while (pos < selection.size())
-        {
-            size_t nextPos = selection.find(',', pos);
-            if (nextPos == std::string::npos)
-                nextPos = selection.size();
-
-            auto atomIndexStr =
-                std::string_view(selection).substr(pos, nextPos - pos);
-
-            // remove all whitespaces from the atom index string
-            atomIndexStr.remove_prefix(
-                std::min(
-                    atomIndexStr.find_first_not_of(' '),
-                    atomIndexStr.size()
-                )
-            );
-            const auto min = std::min(
-                atomIndexStr.find_last_not_of(' ') + 1,
-                atomIndexStr.size()
-            );
-            atomIndexStr.remove_suffix(atomIndexStr.size() - min);
-
-            // check if the atom index string is a range of indices
-            size_t rangePos = atomIndexStr.find('-');
-            if (rangePos != std::string::npos)
-            {
-                const auto startString = atomIndexStr.substr(0, rangePos);
-                const auto endString   = atomIndexStr.substr(rangePos + 1);
-
-                int start = -1;
-                int end   = -1;
-
-                try
-                {
-                    start = std::stoi(std::string(startString));
-                }
-                catch (const std::invalid_argument &)
-                {
-                    throw exc::InputFileException(
-                        std::format(
-                            "Invalid start index \"{}\" in range \"{}\" for "
-                            "key "
-                            "{}. Must be a valid integer.",
-                            startString,
-                            atomIndexStr,
-                            key
-                        )
-                    );
-                }
-                catch (const std::out_of_range &)
-                {
-                    throw exc::InputFileException(
-                        std::format(
-                            "Start index \"{}\" in range \"{}\" for key {} is "
-                            "out "
-                            "of range.",
-                            startString,
-                            atomIndexStr,
-                            key
-                        )
-                    );
-                }
-
-                try
-                {
-                    end = std::stoi(std::string(endString));
-                }
-                catch (const std::invalid_argument &)
-                {
-                    throw exc::InputFileException(
-                        std::format(
-                            "Invalid end index \"{}\" in range \"{}\" for key "
-                            "{}. "
-                            "Must be a valid integer.",
-                            endString,
-                            atomIndexStr,
-                            key
-                        )
-                    );
-                }
-                catch (const std::out_of_range &)
-                {
-                    throw exc::InputFileException(
-                        std::format(
-                            "End index \"{}\" in range \"{}\" for key {} is "
-                            "out of "
-                            "range.",
-                            endString,
-                            atomIndexStr,
-                            key
-                        )
-                    );
-                }
-
-                for (int i = start; i <= end; ++i) selectionVec.push_back(i);
-
-                pos = nextPos + 1;
-                continue;
-            }
-
-            try
-            {
-                selectionVec.push_back(std::stoi(std::string(atomIndexStr)));
-            }
-            catch (const std::invalid_argument &)
-            {
-                throw exc::InputFileException(
-                    std::format(
-                        "Invalid atom index \"{}\" for key {}. Must be a valid "
-                        "integer.",
-                        atomIndexStr,
-                        key
-                    )
-                );
-            }
-            catch (const std::out_of_range &)
-            {
-                throw exc::InputFileException(
-                    std::format(
-                        "Atom index \"{}\" for key {} is out of range.",
-                        atomIndexStr,
-                        key
-                    )
-                );
-            }
-            pos = nextPos + 1;
-        }
-
-        // check if the selection vector is empty
-        if (selectionVec.empty())
-        {
-            throw exc::InputFileException(
-                std::format(
-                    "The value of key {} - {} is an empty list. The {} string "
-                    "must be a comma-separated list of integers or ranges, "
-                    "representing the atom indices in the restart file that "
-                    "should be treated as the {}.",
-                    key,
-                    selection,
-                    key,
-                    key
-                )
-            );
-        }
-
-        return selectionVec;
     }
 
 }   // namespace input

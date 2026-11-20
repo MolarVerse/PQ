@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _VECTOR3D_CLASS_HPP_
-
-#define _VECTOR3D_CLASS_HPP_
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_HPP
+#define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_HPP
 
 #include <array>
 #include <cstddef>
@@ -77,7 +76,7 @@ namespace linalg
        public:
         ~Vector3D() = default;
 
-        Vector3D() = default;
+        constexpr Vector3D();
         Vector3D(const T xValue, const T yValue, const T zValue)
             : x(xValue), y(yValue), z(zValue)
         {
@@ -100,17 +99,19 @@ namespace linalg
 
         // += operators
         void operator+=(const Vector3D<T> &vec)
-        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+                 mstd::is_quantity_like_v<T>;
 
         Vector3D &operator+=(const T &vec)
-        requires pq::Arithmetic<T>;
+        requires pq::Arithmetic<T> || mstd::is_quantity_like_v<T>;
 
         // -= operators
         Vector3D &operator-=(const Vector3D<T> &vec)
-        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+                 mstd::is_quantity_like_v<T>;
 
         Vector3D &operator-=(const T &vec)
-        requires pq::Arithmetic<T>;
+        requires pq::Arithmetic<T> || mstd::is_quantity_like_v<T>;
 
         // *= operators
         Vector3D &operator*=(const Vector3D<T> &vec)
@@ -169,8 +170,8 @@ namespace linalg
 
 }   // namespace linalg
 
-#ifndef _VECTOR3D_CLASS_TPP_
-#include "vector3dClass.tpp.hpp"   // IWYU pragma: export
+#ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_TPP
+#include "vector3dClass.tpp"   // IWYU pragma: export
 #endif
 
-#endif   // _VECTOR3D_CLASS_HPP_
+#endif   // LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_HPP

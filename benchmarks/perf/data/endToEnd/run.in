@@ -1,0 +1,13 @@
+# Fixed-work end-to-end benchmark input (see benchmarks/perf/perfEndToEnd.cpp)
+jobtype = mm-md;
+nstep = 100; timestep = 2.0;
+output_freq = 10;
+thermostat = berendsen; temp = 298.15; t_relaxation = 0.1;
+force-field = off;
+rcoulomb = 6.0;
+cell-list = on; cell-number = 3;
+shake = mshake;
+start_file = input.rst;
+topology_file = shake.top;
+mshake_file = mshake.top;
+file_prefix = e2e;

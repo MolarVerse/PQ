@@ -97,32 +97,82 @@ namespace input
     )
         : _fileName(fileName)
     {
-        // TODO: remove engine after rework
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/909
         _parsers.push_back(std::make_unique<CellListInputParser>());
-        _parsers.push_back(std::make_unique<ConstraintsInputParser>());
+        _parsers.push_back(
+            std::make_unique<ConstraintsInputParser>(settings.constraintSettings
+            )
+        );
         _parsers.push_back(std::make_unique<CoulombLongRangeInputParser>());
         _parsers.push_back(
-            std::make_unique<FilesInputParser>(validateFilePaths)
+            std::make_unique<FilesInputParser>(
+                validateFilePaths,
+                settings.fileSettings
+            )
         );
-        _parsers.push_back(std::make_unique<MMInputParser>());
+        _parsers.push_back(
+            std::make_unique<MMInputParser>(
+                settings.waterModelSettings,
+                settings.forceFieldSettings
+            )
+        );
         _parsers.push_back(std::make_unique<GeneralInputParser>());
-        _parsers.push_back(std::make_unique<HessianInputParser>());
-        _parsers.push_back(std::make_unique<IntegratorInputParser>());
-        _parsers.push_back(std::make_unique<ManostatInputParser>());
-        _parsers.push_back(std::make_unique<OutputInputParser>());
+        _parsers.push_back(
+            std::make_unique<HessianInputParser>(settings.hessianSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<IntegratorInputParser>(settings.referenceSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<ManostatInputParser>(settings.manostatSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<OutputInputParser>(settings.outputFiles)
+        );
         _parsers.push_back(
             std::make_unique<ResetKineticsInputParser>(settings.resetKinetics)
         );
-        _parsers.push_back(std::make_unique<SimulationBoxInputParser>());
-        _parsers.push_back(std::make_unique<ThermostatInputParser>());
-        _parsers.push_back(std::make_unique<TimingsInputParser>());
-        _parsers.push_back(std::make_unique<VirialInputParser>());
-        _parsers.push_back(std::make_unique<HybridInputParser>());
-        _parsers.push_back(std::make_unique<RingPolymerInputParser>());
-        _parsers.push_back(std::make_unique<ConvInputParser>());
-        _parsers.push_back(std::make_unique<OptInputParser>());
         _parsers.push_back(
-            std::make_unique<QMInputParser>(resolveBuiltInSlakosPath)
+            std::make_unique<SimulationBoxInputParser>(
+                settings.simulationBoxSettings
+            )
+        );
+        _parsers.push_back(
+            std::make_unique<ThermostatInputParser>(
+                settings.thermostatSettings,
+                settings.noseHooverSettings,
+                settings.kinetics
+            )
+        );
+        _parsers.push_back(
+            std::make_unique<TimingsInputParser>(settings.timings)
+        );
+        _parsers.push_back(std::make_unique<VirialInputParser>());
+        _parsers.push_back(
+            std::make_unique<HybridInputParser>(settings.hybridSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<RingPolymerInputParser>(
+                settings.ringPolymerSettings
+            )
+        );
+        _parsers.push_back(
+            std::make_unique<ConvInputParser>(settings.convSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<OptInputParser>(settings.optimizerSettings)
+        );
+        _parsers.push_back(
+            std::make_unique<QMInputParser>(
+                resolveBuiltInSlakosPath,
+                settings.referenceSettings,
+                settings.qmSettings,
+                settings.maceSettings,
+                settings.fennolSettings,
+                settings.dftbSettings,
+                settings.xtbSettings,
+                settings.externalQMSettings
+            )
         );
 
         addKeywords();
@@ -378,7 +428,7 @@ namespace input
         InputFileReader inputFileReader(fileName, settings);
         inputFileReader.read();
         inputFileReader.postProcess();
-        inputFileReader.validateInputConfiguration();
+        inputFileReader.validateInputConfiguration(settings);
     }
 
     /**

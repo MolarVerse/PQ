@@ -20,12 +20,12 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef _DISTANCE_CONSTRAINT_HPP_
-
-#define _DISTANCE_CONSTRAINT_HPP_
+#ifndef CONSTRAINTS__DISTANCE_CONSTRAINT_HPP
+#define CONSTRAINTS__DISTANCE_CONSTRAINT_HPP
 
 #include "bond.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace molsys
@@ -67,7 +67,10 @@ namespace constraints
             double            dSpringConstantDt
         );
 
-        void applyDistanceConstraint(const molsys::SimulationBox &, double);
+        void applyDistanceConstraint(
+            const molsys::SimulationBox &,
+            const Time &
+        );
 
         [[nodiscard]] double getLowerDistance() const;
         [[nodiscard]] double getUpperDistance() const;
@@ -79,4 +82,4 @@ namespace constraints
 
 }   // namespace constraints
 
-#endif   // _DISTANCE_CONSTRAINT_HPP_
+#endif   // CONSTRAINTS__DISTANCE_CONSTRAINT_HPP

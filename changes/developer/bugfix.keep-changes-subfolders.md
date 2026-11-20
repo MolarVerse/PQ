@@ -1,1 +1,0 @@
-- Keep the changes/user and changes/developer folders across releases: a release consumed every fragment and git does not track empty folders, so both disappeared from main. A .gitkeep file in each now keeps them.

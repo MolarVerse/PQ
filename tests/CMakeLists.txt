@@ -61,6 +61,7 @@ function(add_test_with_gcda_cleanup test_name test_executable)
     target_include_directories(${test_name}
         PRIVATE
         ${PROJECT_SOURCE_DIR}/tests/include/macros
+        ${PROJECT_SOURCE_DIR}/tests/include/testUtils
     )
 
     set(_test_run_dir ${CMAKE_BINARY_DIR}/tests/run/${test_name})

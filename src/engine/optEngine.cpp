@@ -26,7 +26,9 @@
 
 #include "constants.hpp"
 #include "exceptions.hpp"
+#include "frame.hpp"
 #include "globalTimer.hpp"
+#include "interrupt.hpp"
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "timingsSettings.hpp"
@@ -42,14 +44,17 @@ namespace engine
         _evaluator->evaluate();
         _optimizer->updateHistory();
 
-        _setNSteps(_optimizer->getNEpochs());
+        const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
-        writeOutput();
+        const auto &outputFileSettings = getSettings().outputFiles;
+        writeOutput(outputFileSettings);
 
-        progressbar bar(static_cast<int>(_getNSteps()), true, std::cout);
+        progressbar bar(static_cast<int>(nEpochs), true, std::cout);
 
-        for (size_t i = 0; i < _getNSteps(); ++i)
+        for (size_t i = 0; i < nEpochs; ++i)
         {
+            utilities::throwIfInterrupted();
+
             bar.update();
 
             takeStep();
@@ -57,7 +62,7 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            writeOutput();
+            writeOutput(outputFileSettings);
             deleteTmpFiles();
         }
 
@@ -65,7 +70,7 @@ namespace engine
             _converged,
             _optStopped,
             getStep(),
-            _optimizer->getNEpochs(),
+            nEpochs,
             _learningRateStrategy->getErrorMessages()
         );
 
@@ -151,7 +156,8 @@ namespace engine
 
         if (!_converged)
         {
-            _learningRateStrategy->updateLearningRate(getStep(), _getNSteps());
+            const auto nEpochs = getSettings().timings.getNumberOfSteps();
+            _learningRateStrategy->updateLearningRate(getStep(), nEpochs);
 
             if (!_learningRateStrategy->getErrorMessages().empty())
                 _optStopped = true;
@@ -164,7 +170,7 @@ namespace engine
                     "Updating learning rate did raise "
                     "the following warnings in epoch {} out of {}:",
                     getStep(),
-                    _optimizer->getNEpochs()
+                    nEpochs
                 );
                 getLogOutput().writeOptWarning(headerMessage);
                 out::StdoutOutput::writeOptWarning(headerMessage);
@@ -187,17 +193,35 @@ namespace engine
      * frequency.
      *
      */
-    void OptEngine::writeOutput()
+    void OptEngine::writeOutput(const OutputFileSettings &outputSettings)
     {
-        const auto outputFreq =
-            settings::OutputFileSettings::getOutputFrequency();
-        const auto step0   = settings::TimingsSettings::getStepCount();
-        const auto effStep = getStep() + step0;
+        writeOutput(
+            outputSettings,
+            getSettings().timings.getStartingStepCount()
+        );
+    }
+
+    /**
+     * @brief Writes output files.
+     *
+     * @details output files are written if the step is a multiple of the output
+     * frequency.
+     *
+     */
+    void OptEngine::writeOutput(
+        const OutputFileSettings &outputSettings,
+        size_t                    startingStepCount
+    )
+    {
+        const auto outputFreq = outputSettings.getOutputFrequency();
+        const auto effStep    = getStep() + startingStepCount;
 
         if (0 == getStep() % outputFreq)
         {
-            getEngineOutput().writeXyzFile(getSimulationBox(), effStep);
-            getEngineOutput().writeForceFile(getSimulationBox(), effStep);
+            const out::Frame frame{getSimulationBox()};
+
+            getEngineOutput().writeXyzFile(frame, effStep);
+            getEngineOutput().writeForceFile(frame, effStep);
             getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
             getEngineOutput().writeOptFile(getStep(), *_optimizer);
 
@@ -238,11 +262,13 @@ namespace engine
 
             getEngineOutput().writeEnergyFile(
                 effStep,
-                getAveragePhysicalData()
+                getAveragePhysicalData(),
+                getSettings()
             );
-            getEngineOutput().writeInfoFile(
+            getEngineOutput().getInfoOutput().write(
                 effStepDouble,
-                getAveragePhysicalData()
+                getAveragePhysicalData(),
+                getSettings()
             );
 
             getAveragePhysicalData() = physicalData::PhysicalData();

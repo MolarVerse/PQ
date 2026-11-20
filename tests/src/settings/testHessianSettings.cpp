@@ -26,23 +26,22 @@
 
 TEST(TestHessianSettings, setFilesAndDisplacement)
 {
-    settings::HessianSettings::setHessianFile("water.hessian");
-    settings::HessianSettings::setHessianInfoFile("water.hessian.info");
-    settings::HessianSettings::setDisplacement(0.002);
+    HessianSettings hessianSettings;
+    hessianSettings.setHessianFileByUser("water.hessian");
+    hessianSettings.setHessianInfoFileByUser("water.hessian.info");
+    hessianSettings.setDisplacementByUser(0.002);
 
-    EXPECT_EQ(settings::HessianSettings::getHessianFile(), "water.hessian");
-    EXPECT_EQ(
-        settings::HessianSettings::getHessianInfoFile(),
-        "water.hessian.info"
-    );
-    EXPECT_EQ(settings::HessianSettings::getDisplacement(), 0.002);
+    EXPECT_EQ(hessianSettings.getHessianFile(), "water.hessian");
+    EXPECT_EQ(hessianSettings.getHessianInfoFile(), "water.hessian.info");
+    EXPECT_EQ(hessianSettings.getDisplacement(), 0.002);
 }
 
 TEST(TestHessianSettings, setOptimizeBeforeHessian)
 {
-    settings::HessianSettings::setOptimizeBeforeHessian(false);
-    EXPECT_FALSE(settings::HessianSettings::optimizeBeforeHessian());
+    HessianSettings hessianSettings;
+    hessianSettings.setOptimizeBeforeHessianByUser(false);
+    EXPECT_FALSE(hessianSettings.optimizeBeforeHessian());
 
-    settings::HessianSettings::setOptimizeBeforeHessian(true);
-    EXPECT_TRUE(settings::HessianSettings::optimizeBeforeHessian());
+    hessianSettings.setOptimizeBeforeHessianByUser(true);
+    EXPECT_TRUE(hessianSettings.optimizeBeforeHessian());
 }

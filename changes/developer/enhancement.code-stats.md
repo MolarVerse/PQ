@@ -1,1 +1,0 @@
-- Add scripts/pq_code_stats: lines and files per merged PR of dev, split by area, group and kind (header-like vs source, tests, perf), the state over time, optional CI runs, tidy CSV output and an HTML report.
