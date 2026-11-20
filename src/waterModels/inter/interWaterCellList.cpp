@@ -30,6 +30,7 @@
 #include "interWaterKernels.tpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "unit_types.hpp"
 
@@ -50,12 +51,13 @@ namespace waterModel
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulPot,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();
@@ -219,18 +221,21 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param coulombPotential Coulomb potential evaluator.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyCellList::calculateCoreToOuterForces(
         const InterWaterState & /*state*/,
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy = EnergyPerMol::zero();
@@ -348,18 +353,21 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param coulombPotential Coulomb potential evaluator.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyCellList::calculateLayerToOuterForces(
         const InterWaterState                        &state,
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();
@@ -586,18 +594,21 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param coulPot Coulomb potential evaluator.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyCellList::calculateOuterToOuterForces(
         const InterWaterState                        &state,
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulPot,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();
@@ -769,18 +780,21 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param coulPot Coulomb potential evaluator.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWaterStrategyCellList::calculateHotspotSmoothingMMForces(
         const InterWaterState                        &state,
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &coulPot,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         const auto &box = simulationBox.getBox();
 
-        const auto rCut = pot::CoulombPotential::get_coulombRadiusCutOff();
+        const auto rCut        = potentialSettings.get_coulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
         auto totalCoulombEnergy    = EnergyPerMol::zero();

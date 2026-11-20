@@ -44,9 +44,9 @@ namespace pot
         double _rfPrefactor{};
 
        public:
-        CoulombReactionField(
-            const Distance& coulombRadiusCutOff,
-            double          epsilon
+        explicit CoulombReactionField(
+            const PotentialSettings& potentialSettings,
+            double                   epsilon
         );
 
         [[nodiscard]]

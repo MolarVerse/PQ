@@ -47,19 +47,19 @@
  */
 TEST_F(TestSetup, setupReactionFieldPotential)
 {
-    settings::PotentialSettings::setCoulombLongRangeType(
+    _settings->potentialSettings.setCoulombLongRangeTypeByUser(
         CoulombLongRangeType::REACTION_FIELD
     );
     setup::PotentialSetup potentialSetup(*_engine);
 
-    settings::PotentialSettings::setReactionFieldEpsilon(80.0);
+    PotentialSettings::setReactionFieldEpsilon(80.0);
     EXPECT_NO_THROW(potentialSetup.setup());
     test::checkType(
         &(_engine->getPotential()->getCoulombPotential()),
         typeid(pot::CoulombReactionField)
     );
 
-    settings::PotentialSettings::setCoulombLongRangeType(
+    _settings->potentialSettings.setCoulombLongRangeTypeByUser(
         CoulombLongRangeType::SHIFTED
     );
 }
@@ -69,7 +69,7 @@ TEST_F(TestSetup, setupReactionFieldPotential)
  */
 TEST_F(TestSetup, setupCoulombPotential)
 {
-    settings::PotentialSettings::setCoulombLongRangeType(
+    _settings->potentialSettings.setCoulombLongRangeTypeByUser(
         CoulombLongRangeType::SHIFTED
     );
     setup::PotentialSetup potentialSetup(*_engine);
@@ -80,7 +80,7 @@ TEST_F(TestSetup, setupCoulombPotential)
         typeid(pot::CoulombShiftedPotential)
     );
 
-    settings::PotentialSettings::setCoulombLongRangeType(
+    _settings->potentialSettings.setCoulombLongRangeTypeByUser(
         CoulombLongRangeType::WOLF
     );
     setup::PotentialSetup potentialSetup2(*_engine);
@@ -90,10 +90,6 @@ TEST_F(TestSetup, setupCoulombPotential)
         &_engine->getPotential()->getCoulombPotential(),
         typeid(pot::CoulombWolf)
     );
-    const auto &wolfCoulomb = dynamic_cast<pot::CoulombWolf &>(
-        _engine->getPotential()->getCoulombPotential()
-    );
-    EXPECT_EQ(wolfCoulomb.get_kappa(), 0.25 / angstrom);
 }
 
 /**

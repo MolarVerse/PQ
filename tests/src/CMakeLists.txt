@@ -29,6 +29,7 @@ add_subdirectory(randomNumberGenerator)
 add_subdirectory(hybridConfigurator)
 add_subdirectory(waterModels)
 add_subdirectory(testUtils)
+add_subdirectory(privateHelper)
 
 if(BUILD_WITH_PYTHON_BINDINGS)
     add_subdirectory(python)

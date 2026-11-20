@@ -142,6 +142,7 @@ namespace
 void Settings::finalize()
 {
     kinetics.finalize(timings.getNumberOfSteps());
+    potentialSettings.finalize();
     resetKinetics.finalize(timings.getNumberOfSteps());
     manostatSettings.finalize(referenceSettings);
     outputFiles.finalize();

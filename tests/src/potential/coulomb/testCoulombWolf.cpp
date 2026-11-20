@@ -25,6 +25,7 @@
 #include <cmath>
 
 #include "coulombWolf.hpp"
+#include "settings.hpp"
 #include "units.hpp"
 
 /**
@@ -37,8 +38,10 @@ TEST(TestCoulombWolf, calculate)
     const auto   rcCutoff      = 3.0;
     const double kappa         = 0.25;
 
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
     const auto guffWolfCoulomb =
-        pot::CoulombWolf(rcCutoff * angstrom, kappa / angstrom);
+        pot::CoulombWolf(settings.potentialSettings, kappa);
     const auto constParam1 = ::erfc(kappa * rcCutoff) / rcCutoff;
     const auto constParam2 = 2.0 * kappa / ::sqrt(M_PI);
     const auto constParam3 =

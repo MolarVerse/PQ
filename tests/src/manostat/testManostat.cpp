@@ -33,7 +33,6 @@
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "molecule.hpp"
-#include "potentialSettings.hpp"
 #include "stochasticRescalingManostat.hpp"
 #include "throwWithMessage.hpp"
 #include "triclinicBox.hpp"
@@ -170,11 +169,7 @@ namespace
         physicalData::PhysicalData& physicalData
     )
     {
-        settings::PotentialSettings::setCoulombRadiusCutOff(4.0 * angstrom);
-
-        molsys::OrthorhombicBox orthoBox{
-            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-        };
+        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
         simulationBox.setBox(orthoBox, false);
         simulationBox.setTotalMass(2.0 * g_per_mol);
 
@@ -349,10 +344,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
  */
 TEST_F(TestManostat, testApplyBerendsenManostat)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.99 * angstrom);
-    molsys::OrthorhombicBox orthoBox{
-        {2.0 * angstrom, 2.0 * angstrom, 2.0 * angstrom}
-    };
+    molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
     _box->setBox(orthoBox, false);
     const auto boxOld = _box->getBoxDimensions();
 
@@ -377,7 +369,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
         )
     );
     const auto timeStep = 0.5 * fs;
-    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep);
+    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 0.99);
     auto boxNew = _box->getBoxDimensions();
 
     EXPECT_DOUBLE_EQ(
@@ -423,7 +415,7 @@ TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
         _settings->manostatSettings
     );
     const auto timeStep = 1.0 * fs;
-    manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep);
+    manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 4.0);
 
     expectCutMoleculeScaled(*_box);
 }
@@ -447,7 +439,7 @@ TEST_F(
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
 
     const auto timeStep = 1.0 * fs;
-    manostat.applyManostat(*_box, *_data, toTemperature(0.0), timeStep);
+    manostat.applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 4.0);
 
     expectCutMoleculeScaled(*_box);
 }
@@ -484,7 +476,7 @@ TEST_F(
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
     const auto timeStep = 1.0 * fs;
-    manostat.applyManostat(*_box, *_data, toTemperature(0.0), timeStep);
+    manostat.applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 4.0);
 
     const auto cutDistance    = getMinimumImageDistance(*_box, 0);
     const auto insideDistance = getMinimumImageDistance(*_box, 1);
@@ -508,10 +500,7 @@ TEST_F(
     testApplyBerendsenManostatCutoffLargerThanHalfOfMinimumBoxDimension
 )
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(10.0 * angstrom);
-    molsys::OrthorhombicBox orthoBox{
-        {2.0 * angstrom, 2.0 * angstrom, 2.0 * angstrom}
-    };
+    molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
     _box->setBox(orthoBox, false);
 
     _manostat->calculatePressure(*_box, *_data);
@@ -524,7 +513,8 @@ TEST_F(
     );
 
     EXPECT_THROW_MSG(
-        _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep),
+        _manostat
+            ->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 10.0),
         exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -538,7 +528,7 @@ TEST_F(
 TEST_F(TestManostat, applyNoneManostat)
 {
     const auto timeStep = 1.0 * fs;
-    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep);
+    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 12.5);
 
     EXPECT_DOUBLE_EQ(
         _data->getPressure().numerical_value_in(bar),
@@ -571,7 +561,6 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
 TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
 {
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-    settings::PotentialSettings::setCoulombRadiusCutOff(0.49 * angstrom);
     const auto timeStep = 0.5 * fs;
 
     molsys::OrthorhombicBox orthoBox{
@@ -619,7 +608,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     const auto expectedCenterOfMassVelocity = linalg::Vec3D(3.0 / mu, 0.0, 0.0);
     const auto expectedRelativeVelocity     = linalg::Vec3D(2.0, 0.0, 0.0);
 
-    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep);
+    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 0.49);
 
     const auto molecule2            = _box->getMolecule(0);
     const auto velocity0            = molecule2.getAtomVelocity(AtomIndex{0});

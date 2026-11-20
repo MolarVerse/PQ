@@ -29,6 +29,7 @@
 #include <format>
 #include <iostream>
 
+#include "settings.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
 
@@ -43,7 +44,6 @@
 #include "intraNonBondedMap.hpp"
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
-#include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 
@@ -51,12 +51,15 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 
 int main()
 {
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(10.0);
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
-    auto coulombPotential    = pot::CoulombShiftedPotential(10.0 * angstrom);
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(settings.potentialSettings * angstrom);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.75);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.75);
 
     auto intraNonBondedType =
         intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
@@ -69,8 +72,6 @@ int main()
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     };
     simulationBox.setBox(orthoBox, false);
-
-    auto physicalData = physicalData::PhysicalData();
 
     const auto& box     = simulationBox.getBoxDimensions();
     const auto  atomIdx = intraNonBondedType.getAtomIndices()[0][0];
@@ -87,9 +88,9 @@ int main()
                 AtomIndex{0},
                 atomIdx,
                 box,
-                physicalData,
                 &coulombPotential,
-                &nonCoulombPotential
+                &nonCoulombPotential,
+                settings.potentialSettings
             );
 
         sink += coulombEnergy + nonCoulombEnergy;

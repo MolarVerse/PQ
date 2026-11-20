@@ -49,16 +49,24 @@ namespace opt
 
         // _constraints->applyShake(_simulationBox);
 
-        _getCellList().updateCellList(_getSimulationBox());
+        _getCellList().updateCellList(
+            _getSimulationBox(),
+            _getSettings().potentialSettings.getCoulombRadiusCutOff()
+        );
 
         _getPotential().calculateForces(
             _getSimulationBox(),
             _getPhysicalData(),
             _getCellList(),
-            _getSettings().waterModelSettings
+            _getSettings().waterModelSettings,
+            _getSettings().potentialSettings
         );
 
-        _getIntraNonBonded().calculate(_getSimulationBox(), _getPhysicalData());
+        _getIntraNonBonded().calculate(
+            _getSimulationBox(),
+            _getPhysicalData(),
+            _getSettings().potentialSettings
+        );
 
         // const auto virial =
         // virial::Virial::calculateVirial(_getSimulationBox());
@@ -66,7 +74,8 @@ namespace opt
 
         _getForceField().calculateBondedInteractions(
             _getSimulationBox(),
-            _getPhysicalData()
+            _getPhysicalData(),
+            _getSettings().potentialSettings
         );
 
         // _constraints->applyDistanceConstraints(

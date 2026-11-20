@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include "coulombReactionField.hpp"
+#include "potentialSettings.hpp"
 #include "units.hpp"
 
 /**
@@ -35,8 +36,12 @@ TEST(TestCoulombReactionField, calculate)
     constexpr auto epsilon       = 80.0;
     constexpr auto distance      = 2.0;
 
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(cutoff);
+
     const auto potential =
-        pot::CoulombReactionField(cutoff * angstrom, epsilon);
+
+        pot::CoulombReactionField(potentialSettings * angstrom, epsilon);
 
     const auto reactionFieldPrefactor = (epsilon - 1.0) / (2.0 * epsilon + 1.0);
     const auto cutoffEnergy           = 1.0 / cutoff;

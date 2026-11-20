@@ -87,42 +87,48 @@ namespace pot
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         void calculateQMMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         );
 
         virtual void calculateCoreToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         virtual void calculateLayerToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         virtual void calculateOuterToOuterForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         virtual void calculateHotspotSmoothingMMForces(
             molsys::SimulationBox &,
             physicalData::PhysicalData &,
             const molsys::CellList &,
-            const WaterModelSettings &waterModelSettings
+            const WaterModelSettings &waterModelSettings,
+            const PotentialSettings  &potentialSettings
         ) = 0;
 
         [[nodiscard]]
@@ -131,29 +137,32 @@ namespace pot
         template <typename ChargeTag1, typename ChargeTag2>
         [[nodiscard]]
         std::pair<EnergyPerMol, EnergyPerMol> calculateSingleInteraction(
-            const molsys::Box &box,
-            molsys::Molecule  &mol1,
-            molsys::Molecule  &mol2,
-            molsys::Atom      &atom1,
-            molsys::Atom      &atom2
+            const molsys::Box            &box,
+            molsys::Molecule             &mol1,
+            molsys::Molecule             &mol2,
+            molsys::Atom                 &atom1,
+            molsys::Atom                 &atom2,
+            const CoulombPotentialConfig &config
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         [[nodiscard]]
         EnergyPerMol calculateSingleCoulombInteraction(
-            const molsys::Box &box,
-            molsys::Atom      &atom1,
-            molsys::Atom      &atom2
+            const molsys::Box            &box,
+            molsys::Atom                 &atom1,
+            molsys::Atom                 &atom2,
+            const CoulombPotentialConfig &config
         ) const;
 
         template <typename ChargeTag1, typename ChargeTag2>
         [[nodiscard]]
         std::pair<EnergyPerMol, EnergyPerMol> calculateSingleInteractionOneWay(
-            const molsys::Box &box,
-            molsys::Molecule  &mol1,
-            molsys::Molecule  &mol2,
-            molsys::Atom      &atom1,
-            molsys::Atom      &atom2
+            const molsys::Box            &box,
+            molsys::Molecule             &mol1,
+            molsys::Molecule             &mol2,
+            molsys::Atom                 &atom1,
+            molsys::Atom                 &atom2,
+            const CoulombPotentialConfig &config
         ) const;
 
         template <typename T>

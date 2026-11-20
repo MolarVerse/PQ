@@ -34,7 +34,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
 #include "units.hpp"
@@ -370,7 +369,7 @@ TEST_F(TestSimulationBox, findNecessaryMoleculeTypes)
  */
 TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
 {
-    settings::PotentialSettings::setCoulombRadiusCutOff(1.0 * angstrom);
+    const auto coulombRadiusCutOff = 1.0 * angstrom;
 
     molsys::OrthorhombicBox orthoBox1{
         {1.99 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
@@ -378,14 +377,20 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBox(orthoBox1, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
     );
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::ManostatError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::ManostatError,
+            coulombRadiusCutOff
+        ),
         exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -397,7 +402,10 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBox(orthoBox2, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -409,7 +417,10 @@ TEST_F(TestSimulationBox, checkCoulombRadiusCutoff)
     _simulationBox->setBox(orthoBox3, false);
 
     EXPECT_THROW_MSG(
-        _simulationBox->checkCoulRadiusCutOff(ExceptionType::UserInputError),
+        _simulationBox->checkCoulRadiusCutOff(
+            ExceptionType::UserInputError,
+            coulombRadiusCutOff
+        ),
         exc::UserInputException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"

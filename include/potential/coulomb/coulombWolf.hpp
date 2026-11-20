@@ -50,8 +50,8 @@ namespace pot
 
        public:
         explicit CoulombWolf(
-            const Distance&    coulombRadiusCutOff,
-            const InvDistance& kappa
+            const PotentialSettings& potentialSettings,
+            double                   kappa
         );
 
         [[nodiscard]]
@@ -59,11 +59,6 @@ namespace pot
             const Distance&      distance,
             const ChargeSquared& chargeProduct
         ) const override;
-
-        CONST_GETTER_SETTER(_kappa);
-        CONST_GETTER_SETTER(_wolfParam1);
-        CONST_GETTER_SETTER(_wolfParam2);
-        CONST_GETTER_SETTER(_wolfParam3);
     };
 
 }   // namespace pot

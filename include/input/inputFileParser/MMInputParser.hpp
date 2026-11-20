@@ -29,6 +29,7 @@
 
 class WaterModelSettings;   // Forward declaration
 class ForceFieldSettings;   // Forward declaration
+class PotentialSettings;    // Forward declaration
 
 namespace input
 {
@@ -42,11 +43,13 @@ namespace input
     {
         mstd::Ref<WaterModelSettings> _waterModelSettings;
         mstd::Ref<ForceFieldSettings> _forceFieldSettings;
+        mstd::Ref<PotentialSettings>  _potentialSettings;
 
        public:
         explicit MMInputParser(
             WaterModelSettings &waterModelSettings,
-            ForceFieldSettings &forceFieldSettings
+            ForceFieldSettings &forceFieldSettings,
+            PotentialSettings  &potentialSettings
         );
 
         void addForceFieldTypeKey();

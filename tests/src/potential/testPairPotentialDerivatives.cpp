@@ -28,6 +28,7 @@
 #include "guffPair.hpp"
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
+#include "potentialSettings.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
@@ -160,7 +161,10 @@ TEST(
     ShiftedCoulombForceIsNegativeEnergyDerivative
 )
 {
-    const auto potential     = pot::CoulombShiftedPotential(4.0 * angstrom);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(4.0);
+    const auto potential =
+        pot::CoulombShiftedPotential(potentialSettings * angstrom);
     const auto chargeProduct = 0.75 * elementary_charge * elementary_charge;
 
     expectForceIsNegativeEnergyDerivative(
@@ -173,7 +177,10 @@ TEST(
 
 TEST(TestPairPotentialDerivatives, WolfCoulombForceIsNegativeEnergyDerivative)
 {
-    const auto potential = pot::CoulombWolf(4.0 * angstrom, 0.25 / angstrom);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(4.0);
+    const auto potential =
+        pot::CoulombWolf(potentialSettings * angstrom, 0.25 / angstrom);
     const auto chargeProduct = -0.75 * elementary_charge * elementary_charge;
 
     expectForceIsNegativeEnergyDerivative(
@@ -189,8 +196,12 @@ TEST(TestPairPotentialDerivatives, ShiftedPotentialsAreZeroAtCutoff)
     constexpr auto cutoff        = 4.0 * angstrom;
     constexpr auto chargeProduct = 0.75 * elementary_charge * elementary_charge;
 
-    const auto shiftedCoulomb = pot::CoulombShiftedPotential(cutoff);
-    const auto wolfCoulomb    = pot::CoulombWolf(cutoff, 0.25 / angstrom);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(cutoff);
+
+    const auto shiftedCoulomb = pot::CoulombShiftedPotential(potentialSettings);
+    const auto wolfCoulomb =
+        pot::CoulombWolf(potentialSettings, 0.25 / angstrom);
 
     const auto [shiftedCoulombEnergy, shiftedCoulombForce] =
         shiftedCoulomb.calculate(cutoff, chargeProduct);

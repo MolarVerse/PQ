@@ -37,6 +37,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "units.hpp"
@@ -60,8 +61,11 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     };
     box.setBox(orthoBox, false);
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0 * angstrom);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    auto physicalData = physicalData::PhysicalData();
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(potentialSettings * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -118,7 +122,8 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     auto force =
@@ -203,7 +208,8 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     force = {-0.68765171383567736, -1.3753034276713547, -2.062955141507032};

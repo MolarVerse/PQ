@@ -183,7 +183,8 @@ namespace engine
             getSimulationBox(),
             getPhysicalData(),
             currentTargetTemperature,
-            timeStep
+            timeStep,
+            getSettings().potentialSettings.getCoulombRadiusCutOff()
         );
 
         _resetKinetics.reset(

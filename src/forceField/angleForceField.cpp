@@ -62,13 +62,15 @@ namespace ff
      * @param coulombPot the coulomb potential of the system
      * @param nonCoulombPot the non-coulomb potential of the system
      * @param smoothing the smoothing method to use
+     * @param potentialSettings the settings for the potential calculations
      */
     void AngleForceField::calculateEnergyAndForces(
         const molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData  &physicalData,
         const pot::CoulombPotential &coulombPot,
         pot::NonCoulombPotential    &nonCoulombPot,
-        SmoothingMethod              smoothing
+        SmoothingMethod              smoothing,
+        const PotentialSettings     &potentialSettings
     )
     {
         const auto &molecules = get_molecules();
@@ -142,7 +144,7 @@ namespace ff
 
             const auto distance23 = norm(dPosition23);
 
-            if (distance23 < pot::CoulombPotential::get_coulombRadiusCutOff())
+            if (distance23 < potentialSettings.get_coulombRadiusCutOff())
             {
                 const auto forceMagnitudeLinker =
                     correctLinker<AngleForceField>(

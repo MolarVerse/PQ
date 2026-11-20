@@ -24,6 +24,7 @@
 
 #include <cmath>
 
+#include "potentialSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -40,26 +41,27 @@ namespace pot
      * @details this constructor calculates automatically the three need wolf
      * parameters from kappa in order to gain speed
      *
-     * @param coulombRadiusCutOff - coulomb radius cut off
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      * @param kappa
      */
     CoulombWolf::CoulombWolf(
-        const Distance&    coulombRadiusCutOff,
-        const InvDistance& kappa
+        const PotentialSettings& potentialSettings,
+        double                   kappa
     )
-        : CoulombPotential(coulombRadiusCutOff)
+        : CoulombPotential(potentialSettings)
     {
-        _kappa = kappa;
-        _wolfParam1 =
-            mstd::erfc(_kappa * coulombRadiusCutOff) / coulombRadiusCutOff;
-        _wolfParam2 = 2.0 * _kappa / ::sqrt(M_PI);
+        _kappa             = kappa;
+        const auto& config = potentialSettings.get_coulombConfig();
+        _wolfParam1        = mstd::erfc(_kappa * config.cutoff) / config.cutoff;
+        _wolfParam2        = 2.0 * _kappa / ::sqrt(M_PI);
 
         const auto kappaSquared  = _kappa * _kappa;
-        const auto coulRCSquared = coulombRadiusCutOff * coulombRadiusCutOff;
+        const auto coulRCSquared = config.cutoff * config.cutoff;
         const auto expFactor     = mstd::exp(-kappaSquared * coulRCSquared);
 
-        _wolfParam3  = _wolfParam1 / coulombRadiusCutOff;
-        _wolfParam3 += _wolfParam2 * expFactor / coulombRadiusCutOff;
+        _wolfParam3  = _wolfParam1 / config.cutoff;
+        _wolfParam3 += _wolfParam2 * expFactor / config.cutoff;
     }
 
     /**
@@ -80,15 +82,16 @@ namespace pot
         const auto expFactor     = mstd::exp(-kappaDistance * kappaDistance);
 
         auto energy  = (erfcFactor / distance) - _wolfParam1;
-        energy      += _wolfParam3 * (distance - _coulombRadiusCutOff);
+        energy      += _wolfParam3 * (distance - _get_cutoff());
 
         auto force  = erfcFactor / (distance * distance);
         force      += _wolfParam2 * expFactor / distance;
         force      -= _wolfParam3;
 
-        const auto coulHelper = chargeProduct * coulomb_prefactor;
+        energy *= coulombPrefactor;
+        force  *= coulombPrefactor;
 
-        return {energy * coulHelper, force * coulHelper};
+        return {energy, force};
     }
 
 }   // namespace pot

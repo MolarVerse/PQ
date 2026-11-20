@@ -62,12 +62,15 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWater::calculate(
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         if (_strategy == nullptr)
@@ -79,7 +82,8 @@ namespace waterModel
             simulationBox,
             physicalData,
             sharedCoulombPot,
-            cellList
+            cellList,
+            potentialSettings
         );
     }
 
@@ -91,12 +95,15 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWater::calculateQMMMForces(
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         if (_strategy == nullptr)
@@ -112,7 +119,8 @@ namespace waterModel
                 simulationBox,
                 physicalData,
                 sharedCoulombPot,
-                cellList
+                cellList,
+                potentialSettings
             );
         }
 
@@ -126,7 +134,8 @@ namespace waterModel
                 simulationBox,
                 physicalData,
                 sharedCoulombPot,
-                cellList
+                cellList,
+                potentialSettings
             );
         }
 
@@ -140,7 +149,8 @@ namespace waterModel
                 simulationBox,
                 physicalData,
                 sharedCoulombPot,
-                cellList
+                cellList,
+                potentialSettings
             );
         }
     }
@@ -152,12 +162,15 @@ namespace waterModel
      * @param physicalData Physical data to store energy results.
      * @param sharedCoulombPot Shared Coulomb potential used by the strategy.
      * @param cellList Cell list structure used for neighbor searching.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void InterWater::calculateHotspotSmoothingMMForces(
         molsys::SimulationBox                        &simulationBox,
         physicalData::PhysicalData                   &physicalData,
         const std::shared_ptr<pot::CoulombPotential> &sharedCoulombPot,
-        const molsys::CellList                       &cellList
+        const molsys::CellList                       &cellList,
+        const PotentialSettings                      &potentialSettings
     )
     {
         if (_strategy == nullptr)
@@ -170,7 +183,8 @@ namespace waterModel
             simulationBox,
             physicalData,
             sharedCoulombPot,
-            cellList
+            cellList,
+            potentialSettings
         );
     }
 
@@ -183,14 +197,17 @@ namespace waterModel
      *
      * @param state The inter-water parameters.
      * @param strategy The strategy object used to evaluate the interaction.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     InterWater::InterWater(
         InterWaterState                     state,
-        std::unique_ptr<InterWaterStrategy> strategy
+        std::unique_ptr<InterWaterStrategy> strategy,
+        const PotentialSettings            &potentialSettings
     )
         : _state{std::move(state)}, _strategy{std::move(strategy)}
     {
-        _initState();
+        _initState(potentialSettings);
     }
 
     /**
@@ -201,12 +218,14 @@ namespace waterModel
      * H-H are only updated when oxygen-only non-Coulomb interactions are
      * disabled.
      */
-    void InterWater::_setNonCoulombCutOffRadii() const
+    void InterWater::_setNonCoulombCutOffRadii(
+        const PotentialSettings &potentialSettings
+    ) const
     {
         const auto radialCutOff =
-            settings::PotentialSettings::getNonCoulombRadiusCutOff().value_or(
-                settings::PotentialSettings::getCoulombRadiusCutOff()
-            );
+            potentialSettings.isNonCoulombRadiusCutOffSetByUser()
+                ? potentialSettings.getNonCoulombRadiusCutOff()
+                : potentialSettings.getCoulombRadiusCutOff();
 
         const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)
         {

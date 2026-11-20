@@ -378,7 +378,8 @@ namespace engine
                     bead,
                     data,
                     _getKinetics().getCurrentTargetTemperature(),
-                    timeStep
+                    timeStep,
+                    getSettings().potentialSettings.getCoulombRadiusCutOff()
                 );
             }
         }
@@ -464,7 +465,8 @@ namespace engine
                 bead,
                 data,
                 _getKinetics().getCurrentTargetTemperature(),
-                timeStep
+                timeStep,
+                getSettings().potentialSettings.getCoulombRadiusCutOff()
             );
         }
     }

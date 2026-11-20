@@ -392,7 +392,7 @@ namespace setup
     {
         const auto &simBox = _engine.getSimulationBox();
         const auto  coulombCutoff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+            _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
         const auto minDim = simBox.getMinimalBoxDimension();
 
         if (coulombCutoff > minDim / 2.0)
@@ -548,7 +548,7 @@ namespace setup
         log.writeEmptyLine();
 
         const auto coulombCutoff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+            _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
         const auto coulombCutoffStr = std::format(
             "{:14.5f} {}",
             coulombCutoff.numerical_value_in(angstrom),

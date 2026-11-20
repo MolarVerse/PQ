@@ -229,8 +229,11 @@ TEST_F(TestForceField, calculateBondedInteractions)
     };
     box.setBox(orthoBox, false);
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(20.0 * angstrom);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(20.0);
+    auto physicalData = physicalData::PhysicalData();
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(potentialSettings * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -337,8 +340,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
     }});
     improperDihedralForceField.setIsLinker(false);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.5);
 
     const HybridSettings hybridSettings;
     auto                 forceField = ff::ForceField(hybridSettings);
@@ -354,7 +357,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
         std::make_shared<pot::ForceFieldNonCoulomb>(*_nonCoulombPotential)
     );
 
-    forceField.calculateBondedInteractions(box, physicalData);
+    forceField
+        .calculateBondedInteractions(box, physicalData, potentialSettings);
 
     EXPECT_NE(physicalData.getBondEnergy(), EnergyPerMol::zero());
     EXPECT_NE(physicalData.getAngleEnergy(), EnergyPerMol::zero());
@@ -371,7 +375,10 @@ TEST_F(TestForceField, calculateBondedInteractions)
  */
 TEST_F(TestForceField, correctLinker)
 {
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0 * angstrom);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(potentialSettings * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -435,8 +442,8 @@ TEST_F(TestForceField, correctLinker)
 
     physicalData.reset();
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.5);
 
     const auto forceScaled = ff::correctLinker<ff::DihedralForceField>(
         coulombPotential,

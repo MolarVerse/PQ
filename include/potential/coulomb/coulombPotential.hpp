@@ -23,10 +23,14 @@
 #ifndef POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
 #define POTENTIAL__COULOMB__COULOMB_POTENTIAL_HPP
 
+#include <mstd/types.hpp>
 #include <mstd/utils/members.hpp>
 #include <utility>
 
 #include "unit_types.hpp"
+
+class PotentialSettings;
+struct CoulombPotentialConfig;
 
 namespace pot
 {
@@ -45,28 +49,24 @@ namespace pot
      */
     class CoulombPotential
     {
-       protected:
-        inline static Distance           _coulombRadiusCutOff;
-        inline static InvDistance        _coulombEnergyCutOff;
-        inline static InvDistanceSquared _coulombForceCutOff;
-        inline static InvDistanceCubed   _coulombCutOffCubedInverse;
+       private:
+        Distance           _cutoff;
+        InvDistance        _energyCutoff;
+        InvDistanceSquared _forceCutoff;
+        InvDistanceCubed   _invCubedCutoff;
 
        public:
+        explicit CoulombPotential(const PotentialSettings& potentialSettings);
         virtual ~CoulombPotential() = default;
-        explicit CoulombPotential(const Distance& coulombRadiusCutOff);
 
         [[nodiscard]]
-        virtual std::pair<EnergyPerMol, Force> calculate(
-            const Distance&      distance,
-            const ChargeSquared& chargeProduct
-        ) const = 0;
+        virtual std::pair<double, double> calculate(double, double) const = 0;
 
-        STATIC_GETTER(_coulombRadiusCutOff)
-        STATIC_GETTER_SETTER(_coulombEnergyCutOff)
-        STATIC_GETTER_SETTER(_coulombForceCutOff)
-        STATIC_GETTER(_coulombCutOffCubedInverse)
-
-        static void setCoulombRadiusCutOff(const Distance& coulombRadiusCutOff);
+       protected:
+        INTERNAL_CONST_GETTER(_cutoff);
+        INTERNAL_CONST_GETTER(_energyCutoff);
+        INTERNAL_CONST_GETTER(_forceCutoff);
+        INTERNAL_CONST_GETTER(_invCubedCutoff);
     };
 
 }   // namespace pot

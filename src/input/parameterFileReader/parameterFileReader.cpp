@@ -45,10 +45,13 @@ namespace input::parameterFile
      *
      * @param filename
      * @param engine
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     ParameterFileReader::ParameterFileReader(
         const std::string &filename,
-        engine::Engine    &engine
+        engine::Engine    &engine,
+        PotentialSettings &potentialSettings
     )
         : _fileName(filename), _fp(filename), _engine(engine)
     {
@@ -61,7 +64,7 @@ namespace input::parameterFile
         );
         _parameterFileSections.push_back(std::make_unique<JCouplingSection>());
         _parameterFileSections.push_back(
-            std::make_unique<NonCoulombicsSection>()
+            std::make_unique<NonCoulombicsSection>(potentialSettings)
         );
     }
 
@@ -150,8 +153,13 @@ namespace input::parameterFile
      * @brief constructs a ParameterFileReader and reads parameter file
      *
      * @param engine
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
-    void readParameterFile(engine::Engine &engine)
+    void readParameterFile(
+        engine::Engine    &engine,
+        PotentialSettings &potentialSettings
+    )
     {
         const auto &settings = engine.getSettings();
         if (!settings.forceFieldSettings.isActive())
@@ -167,7 +175,11 @@ namespace input::parameterFile
         out::StdoutOutput::writeRead("Parameter File", filename);
         engine.getLogOutput().writeRead("Parameter File", filename);
 
-        ParameterFileReader parameterFileReader(filename, engine);
+        ParameterFileReader parameterFileReader(
+            filename,
+            engine,
+            potentialSettings
+        );
         parameterFileReader.read();
     }
 

@@ -62,8 +62,11 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     };
     box.setBox(orthoBox, false);
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(20.0 * angstrom);
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(20.0);
+    auto physicalData = physicalData::PhysicalData();
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(potentialSettings * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -132,8 +135,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
     bondForceField.setIsLinker(false);
 
-    settings::PotentialSettings::setScale14Coulomb(0.75);
-    settings::PotentialSettings::setScale14VanDerWaals(0.5);
+    PotentialSettings::setScale14Coulomb(0.75);
+    PotentialSettings::setScale14VanDerWaals(0.5);
 
     bondForceField.calculateEnergyAndForces(
         box,
@@ -141,7 +144,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(
@@ -271,7 +275,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         true,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(
@@ -401,7 +406,8 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         false,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(

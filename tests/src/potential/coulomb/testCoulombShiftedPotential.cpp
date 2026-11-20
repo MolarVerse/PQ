@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 #include "coulombShiftedPotential.hpp"
+#include "settings.hpp"
 #include "units.hpp"
 
 /**
@@ -36,7 +37,10 @@ TEST(TestCoulombShiftedPotential, calculate)
     const auto energyCutOff  = 1 / rcCutoff;
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
-    const auto potential = pot::CoulombShiftedPotential(rcCutoff * angstrom);
+    Settings settings;
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
+    const auto potential =
+        pot::CoulombShiftedPotential(settings.potentialSettings * angstrom);
 
     auto distance = 2.0;
 

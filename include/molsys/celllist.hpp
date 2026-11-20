@@ -56,8 +56,14 @@ namespace molsys
        public:
         [[nodiscard]] std::shared_ptr<CellList> clone() const;
 
-        void setup(const SimulationBox &);
-        void updateCellList(SimulationBox &);
+        void setup(
+            const SimulationBox &simulationBox,
+            double               coulombRadiusCutOff
+        );
+        void updateCellList(
+            SimulationBox &simulationBox,
+            double         coulombRadiusCutOff
+        );
 
         void determineCellSize(const Pos3D &box);
         void determineCellBoundaries(const Pos3D &box);

@@ -119,7 +119,10 @@ namespace engine
         _getHybridConfigurator().assignHybridZones(getSimulationBox());
         _moltypeCheck();
         _getHybridConfigurator().calculateSmoothingFactors(getSimulationBox());
-        getCellList().updateCellList(getSimulationBox());
+        getCellList().updateCellList(
+            getSimulationBox(),
+            getSettings().potentialSettings.getCoulombRadiusCutOff()
+        );
         getPhysicalDataPtr()->setNumberOfSmoothingMolecules(
             static_cast<double>(std::ranges::distance(
                 getSimulationBox().getMoleculesInsideZone(
@@ -256,19 +259,22 @@ namespace engine
                 getSimulationBox(),
                 getPhysicalData(),
                 getCellList(),
-                getSettings().waterModelSettings
+                getSettings().waterModelSettings,
+                getSettings().potentialSettings
             );
 
             _getInterWater().calculateQMMMForces(
                 getSimulationBox(),
                 getPhysicalData(),
                 getPotential()->getCoulombPotSharedPtr(),
-                getCellList()
+                getCellList(),
+                getSettings().potentialSettings
             );
 
             getIntraNonBonded()->calculate(
                 getSimulationBox(),
-                getPhysicalData()
+                getPhysicalData(),
+                getSettings().potentialSettings
             );
 
             virial += virial::calculateVirial(getSimulationBox()) * globalSmF;
@@ -282,7 +288,8 @@ namespace engine
 
             getForceField()->calculateBondedInteractions(
                 getSimulationBox(),
-                getPhysicalData()
+                getPhysicalData(),
+                getSettings().potentialSettings
             );
 
             _getIntraWater().calculate(getSimulationBox(), getPhysicalData());
@@ -373,14 +380,16 @@ namespace engine
             getSimulationBox(),
             getPhysicalData(),
             getCellList(),
-            getSettings().waterModelSettings
+            getSettings().waterModelSettings,
+            getSettings().potentialSettings
         );
 
         _getInterWater().calculateQMMMForces(
             getSimulationBox(),
             getPhysicalData(),
             getPotential()->getCoulombPotSharedPtr(),
-            getCellList()
+            getCellList(),
+            getSettings().potentialSettings
         );
 
         _scaleSmoothingMoleculeForcesInner();
@@ -395,14 +404,16 @@ namespace engine
             getSimulationBox(),
             getPhysicalData(),
             getCellList(),
-            getSettings().waterModelSettings
+            getSettings().waterModelSettings,
+            getSettings().potentialSettings
         );
 
         _getInterWater().calculateHotspotSmoothingMMForces(
             getSimulationBox(),
             getPhysicalData(),
             getPotential()->getCoulombPotSharedPtr(),
-            getCellList()
+            getCellList(),
+            getSettings().potentialSettings
         );
 
         _scaleSmoothingMoleculeForcesOuter();
@@ -417,7 +428,11 @@ namespace engine
             getSimulationBox()
         );
 
-        getIntraNonBonded()->calculate(getSimulationBox(), getPhysicalData());
+        getIntraNonBonded()->calculate(
+            getSimulationBox(),
+            getPhysicalData(),
+            getSettings().potentialSettings
+        );
 
         _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(getSimulationBox());
@@ -432,7 +447,8 @@ namespace engine
 
         getForceField()->calculateBondedInteractions(
             getSimulationBox(),
-            getPhysicalData()
+            getPhysicalData(),
+            getSettings().potentialSettings
         );
 
         _getIntraWater().calculate(getSimulationBox(), getPhysicalData());

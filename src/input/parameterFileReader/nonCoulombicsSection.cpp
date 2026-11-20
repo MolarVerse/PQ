@@ -41,6 +41,18 @@ namespace input::parameterFile
 {
 
     /**
+     * @brief Construct a new NonCoulombicsSection object
+     *
+     * @param potentialSettings Reference to the PotentialSettings object
+     */
+    NonCoulombicsSection::NonCoulombicsSection(
+        PotentialSettings &potentialSettings
+    )
+        : _potentialSettings(potentialSettings)
+    {
+    }
+
+    /**
      * @brief keyword for nonCoulombics section
      *
      * @return "noncoulombics"
@@ -73,13 +85,13 @@ namespace input::parameterFile
             const auto type = utilities::toLowerCopy(lineElements[1]);
 
             if (type == "lj")
-                settings::PotentialSettings::setNonCoulombType(LJ);
+                _potentialSettings->setNonCoulombTypeByUser(LJ);
 
             else if (type == "buckingham")
-                settings::PotentialSettings::setNonCoulombType(BUCKINGHAM);
+                _potentialSettings->setNonCoulombTypeByUser(BUCKINGHAM);
 
             else if (type == "morse")
-                settings::PotentialSettings::setNonCoulombType(MORSE);
+                _potentialSettings->setNonCoulombTypeByUser(MORSE);
 
             else
             {
@@ -97,7 +109,7 @@ namespace input::parameterFile
         else
         {
             // default of guff gets overriden
-            settings::PotentialSettings::setNonCoulombType(LJ);
+            _potentialSettings->setNonCoulombTypeByUser(LJ);
         }
     }
 
@@ -119,7 +131,7 @@ namespace input::parameterFile
     {
         using enum NonCoulombType;
 
-        switch (settings::PotentialSettings::getNonCoulombType())
+        switch (_potentialSettings->getNonCoulombType())
         {
             case LJ: processLJ(lineElements, engine, lineNumber); break;
             case BUCKINGHAM:
@@ -165,7 +177,7 @@ namespace input::parameterFile
         std::vector<std::string> &lineElements,
         engine::Engine           &engine,
         size_t                    lineNumber
-    )
+    ) const
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 4 && lineElements.size() != 5)
@@ -192,8 +204,7 @@ namespace input::parameterFile
             cutOff = stod(lineElements[4]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
         if (cutOff < 0.0)
             cutOff = coulombCutOff;
@@ -240,7 +251,7 @@ namespace input::parameterFile
         std::vector<std::string> &lineElements,
         engine::Engine           &engine,
         size_t                    lineNumber
-    )
+    ) const
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 5 && lineElements.size() != 6)
@@ -266,8 +277,7 @@ namespace input::parameterFile
             cutOff = stod(lineElements[5]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
         if (cutOff < 0.0)
             cutOff = coulombCutOff;
@@ -314,7 +324,7 @@ namespace input::parameterFile
         std::vector<std::string> &lineElements,
         engine::Engine           &engine,
         size_t                    lineNumber
-    )
+    ) const
     {
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         if (lineElements.size() != 5 && lineElements.size() != 6)
@@ -340,8 +350,7 @@ namespace input::parameterFile
             cutOff = stod(lineElements[5]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
+        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
         if (cutOff < 0.0)
             cutOff = coulombCutOff;

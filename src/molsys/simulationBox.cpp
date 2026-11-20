@@ -29,7 +29,6 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
 #include "unit_types.hpp"
@@ -745,13 +744,11 @@ namespace molsys
      * half of the minimal box dimension
      */
     void SimulationBox::checkCoulRadiusCutOff(
-        const ExceptionType& exceptionType
+        const ExceptionType& exceptionType,
+        double               coulombRadiusCutOff
     ) const
     {
-        const auto coulRadiusCutOff =
-            settings::PotentialSettings::getCoulombRadiusCutOff();
-
-        if (getMinimalBoxDimension() < 2.0 * coulRadiusCutOff)
+        if (getMinimalBoxDimension() < 2.0 * coulombRadiusCutOff)
         {
             const std::string message =
                 "Coulomb radius cut off is larger than half of the minimal box "

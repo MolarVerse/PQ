@@ -29,7 +29,6 @@
 
 #include "celllist.hpp"
 #include "orthorhombicBox.hpp"
-#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
 
@@ -52,7 +51,6 @@ class TestCellList : public ::testing::Test
             {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
         };
         _simulationBox->setBox(orthoBox, false);
-        settings::PotentialSettings::setCoulombRadiusCutOff(1.5 * angstrom);
     }
 };
 

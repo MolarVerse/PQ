@@ -38,6 +38,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
@@ -62,8 +63,11 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     };
     box.setBox(orthoBox, false);
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0 * angstrom);
+    auto potentialSettings = PotentialSettings();
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    auto physicalData = physicalData::PhysicalData();
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(potentialSettings * angstrom);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(1),
@@ -129,7 +133,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(
@@ -231,7 +236,8 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     EXPECT_NEAR(
@@ -345,8 +351,11 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     };
     box.setBox(orthoBox, false);
 
-    auto physicalData     = physicalData::PhysicalData();
-    auto coulombPotential = pot::CoulombShiftedPotential(10.0 * angstrom);
+    auto              physicalData = physicalData::PhysicalData();
+    PotentialSettings potentialSettings;
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    auto coulombPotential =
+        pot::CoulombShiftedPotential(potentialSettings * angstrom);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{0});
@@ -388,7 +397,8 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
         physicalData,
         coulombPotential,
         *_nonCoulombPotential,
-        hybridSettings.getSmoothingMethod()
+        hybridSettings.getSmoothingMethod(),
+        potentialSettings
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).
