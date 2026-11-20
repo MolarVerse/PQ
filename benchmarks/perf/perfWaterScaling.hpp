@@ -75,7 +75,6 @@ namespace benchWaterScaling
         Settings            settings
     )
     {
-        Settings settings;
         settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
         settings.waterModelSettings.setWaterInterModelByUser(
             WaterInterModel::SPC_E

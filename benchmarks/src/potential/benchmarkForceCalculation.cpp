@@ -73,7 +73,6 @@ namespace
             benchmarkSetup::cutOff
         );
 
-        Settings      settings;
         PotentialType forceCalculation{settings.hybridSettings};
         forceCalculation.makeCoulombPotential(
             pot::CoulombShiftedPotential(settings.potentialSettings)

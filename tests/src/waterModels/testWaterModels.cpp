@@ -823,7 +823,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-    hybridSettings.setUseQMChargesByUser(true);
+    settings.hybridSettings.setUseQMChargesByUser(true);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
     PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
     PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
@@ -839,7 +839,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     waterModel::InterWater     bruteForce(
         waterModel::makeInterWaterState<waterModel::SPCInterParam>(),
         std::make_unique<waterModel::InterWaterStrategyBruteForce>(
-            hybridSettings
+            settings.hybridSettings
         ),
         settings.potentialSettings
     );
@@ -875,7 +875,8 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     physicalData::PhysicalData cellListData;
     waterModel::InterWater     cellListWater(
         waterModel::makeInterWaterState<waterModel::SPCEInterParam>(),
-        std::make_unique<waterModel::InterWaterStrategyCellList>(hybridSettings
+        std::make_unique<waterModel::InterWaterStrategyCellList>(
+            settings.hybridSettings
         ),
         settings.potentialSettings
     );
