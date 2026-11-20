@@ -142,7 +142,7 @@ TEST_F(TestEnergyOutput, energyColumnLabelAndHeader)
 
     EXPECT_EQ(
         out::energyFileHeader(columns),
-        "#STEP[-] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] "
+        "#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] "
         "E(QM)[kcal/mol] N(QM-ATOMS)[-] E(KIN)[kcal/mol] E(INTRA)[kcal/mol] "
         "MOMENTUM[amuA/fs] LOOPTIME[s]"
     );

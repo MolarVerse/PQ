@@ -272,7 +272,7 @@ namespace out
     /**
      * @brief column names line of the .en file, one token per data column
      *
-     * @details "#STEP[-] TEMPERATURE[K] ...": the '#' is glued to the first
+     * @details "#SIMULATION-TIME[step] TEMPERATURE[K] ...": the '#' is glued to the first
      * token, so token i is column i also in a spreadsheet; names and units
      * are those of the info file, so readers can use it instead
      *

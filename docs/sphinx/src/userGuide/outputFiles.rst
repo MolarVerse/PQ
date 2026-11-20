@@ -76,7 +76,7 @@ Energy File
 The file starts with two comment lines: ``# PQ energy file <version>``, and
 directly before the first data line the column names, one ``NAME[unit]`` token
 per column with the ``#`` glued to the first one, for example
-``#STEP[-] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...``.
+``#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] ...``.
 Token *i* names column *i*, also in a spreadsheet opened with spaces as
 separator. Apart from the step column, the names, units and order are the
 same as in the ``.info`` file, so programs can read the columns from this line
