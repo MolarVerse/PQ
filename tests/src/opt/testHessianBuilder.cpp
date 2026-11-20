@@ -52,56 +52,74 @@ namespace
         explicit HarmonicEvaluator(
             const Settings     &settings,
             std::vector<double> forceConstants,
-            const bool          analyticSupported
-        )
-            : opt::Evaluator(settings),
-              _forceConstants(std::move(forceConstants)),
-              _analyticSupported(analyticSupported)
-        {
-        }
+            bool                analyticSupported
+        );
         explicit HarmonicEvaluator(
             const Settings     &settings,
             std::vector<double> forceConstants
-        )
-            : HarmonicEvaluator(settings, std::move(forceConstants), false)
-        {
-        }
+        );
 
         [[nodiscard]]
-        std::shared_ptr<Evaluator> clone() const override
-        {
-            return std::make_shared<HarmonicEvaluator>(*this);
-        }
+        std::shared_ptr<Evaluator> clone() const override;
 
-        void evaluate() override
-        {
-            auto &simulationBox = _getSimulationBox();
+        void evaluate() override;
 
-            for (size_t atomIndex = 0;
-                 atomIndex < simulationBox.getNumberOfAtoms();
-                 ++atomIndex)
-            {
-                auto      &atom     = simulationBox.getAtom(atomIndex);
-                const auto position = atom.getPosition();
-                const auto offset   = 3 * atomIndex;
-                atom.setForce(
-                    {-_forceConstants[offset] * position[0],
-                     -_forceConstants[offset + 1] * position[1],
-                     -_forceConstants[offset + 2] * position[2]}
-                );
-            }
-        }
+        [[nodiscard]] bool supportsAnalyticHessian() const override;
 
-        [[nodiscard]] bool supportsAnalyticHessian() const override
-        {
-            return _analyticSupported;
-        }
-
-        [[nodiscard]] opt::HessianMatrix calculateAnalyticHessian() override
-        {
-            return {{2.0, 4.0}, {6.0, 8.0}};
-        }
+        [[nodiscard]] opt::HessianMatrix calculateAnalyticHessian() override;
     };
+
+    HarmonicEvaluator::HarmonicEvaluator(
+        const Settings     &settings,
+        std::vector<double> forceConstants,
+        bool                analyticSupported
+    )
+        : opt::Evaluator(settings),
+          _forceConstants(std::move(forceConstants)),
+          _analyticSupported(analyticSupported)
+    {
+    }
+
+    HarmonicEvaluator::HarmonicEvaluator(
+        const Settings     &settings,
+        std::vector<double> forceConstants
+    )
+        : HarmonicEvaluator(settings, std::move(forceConstants), false)
+    {
+    }
+
+    std::shared_ptr<opt::Evaluator> HarmonicEvaluator::clone() const
+    {
+        return std::make_shared<HarmonicEvaluator>(*this);
+    }
+
+    void HarmonicEvaluator::evaluate()
+    {
+        auto &simulationBox = _getSimulationBox();
+
+        for (size_t atomIndex = 0; atomIndex < simulationBox.getNumberOfAtoms();
+             ++atomIndex)
+        {
+            auto      &atom     = simulationBox.getAtom(atomIndex);
+            const auto position = atom.getPosition();
+            const auto offset   = 3 * atomIndex;
+            atom.setForce(
+                {-_forceConstants[offset] * position[0],
+                 -_forceConstants[offset + 1] * position[1],
+                 -_forceConstants[offset + 2] * position[2]}
+            );
+        }
+    }
+
+    bool HarmonicEvaluator::supportsAnalyticHessian() const
+    {
+        return _analyticSupported;
+    }
+
+    opt::HessianMatrix HarmonicEvaluator::calculateAnalyticHessian()
+    {
+        return {{2.0, 4.0}, {6.0, 8.0}};
+    }
 
     std::shared_ptr<molsys::SimulationBox> makeSimulationBox()
     {

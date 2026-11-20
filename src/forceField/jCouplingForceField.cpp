@@ -41,6 +41,18 @@ namespace ff
     {
     }
 
+    /**
+     * @brief calculate energy and forces, not implemented yet
+     */
+    void JCouplingForceField::calculateEnergyAndForces(
+        const molsys::SimulationBox & /*simulationBox*/,
+        physicalData::PhysicalData & /*physicalData*/
+    )
+    {
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/904
+        // implement
+    }
+
     /***************************
      *                         *
      * standard setter methods *

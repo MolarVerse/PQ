@@ -47,39 +47,41 @@ class TestIntegrator : public ::testing::Test
     std::unique_ptr<molsys::Molecule>       _molecule1;
     std::unique_ptr<molsys::SimulationBox>  _box;
 
-    void SetUp() override
-    {
-        _integrator = std::make_unique<integrator::VelocityVerlet>();
-
-        _molecule1 = std::make_unique<molsys::Molecule>();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
-
-        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0));
-
-        atom1->setMass(1.0);
-        atom2->setMass(2.0);
-
-        _molecule1->addAtom(atom1);
-        _molecule1->addAtom(atom2);
-
-        _box = std::make_unique<molsys::SimulationBox>();
-
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _box->setBox(orthoBox, false);
-
-        _box->addMolecule(*_molecule1);
-        _box->addAtom(atom1);
-        _box->addAtom(atom2);
-    }
+    void SetUp() override;
 };
+
+inline void TestIntegrator::SetUp()
+{
+    _integrator = std::make_unique<integrator::VelocityVerlet>();
+
+    _molecule1 = std::make_unique<molsys::Molecule>();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+
+    atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
+
+    atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0));
+
+    atom1->setMass(1.0);
+    atom2->setMass(2.0);
+
+    _molecule1->addAtom(atom1);
+    _molecule1->addAtom(atom2);
+
+    _box = std::make_unique<molsys::SimulationBox>();
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _box->setBox(orthoBox, false);
+
+    _box->addMolecule(*_molecule1);
+    _box->addAtom(atom1);
+    _box->addAtom(atom2);
+}
 
 #endif   // TESTS__INCLUDE__INTEGRATOR__TEST_INTEGRATOR_HPP

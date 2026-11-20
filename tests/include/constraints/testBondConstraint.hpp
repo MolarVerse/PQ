@@ -46,39 +46,41 @@ class TestBondConstraint : public ::testing::Test
     std::unique_ptr<constraints::BondConstraint> _bondConstraint;
     double                                       _targetBondLength = 1.2;
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-
-        atom1->setMass(1.0);
-        atom2->setMass(2.0);
-
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-
-        _box = std::make_unique<molsys::SimulationBox>();
-        _box->addMolecule(molecule1);
-
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _box->setBox(orthoBox, false);
-
-        _bondConstraint = std::make_unique<constraints::BondConstraint>(
-            _box->getMolecules().data(),
-            _box->getMolecules().data(),
-            AtomIndex{0},
-            AtomIndex{1},
-            _targetBondLength
-        );
-    }
+    void SetUp() override;
 };
+
+inline void TestBondConstraint::SetUp()
+{
+    auto molecule1 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+
+    atom1->setMass(1.0);
+    atom2->setMass(2.0);
+
+    atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+
+    _box = std::make_unique<molsys::SimulationBox>();
+    _box->addMolecule(molecule1);
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _box->setBox(orthoBox, false);
+
+    _bondConstraint = std::make_unique<constraints::BondConstraint>(
+        _box->getMolecules().data(),
+        _box->getMolecules().data(),
+        AtomIndex{0},
+        AtomIndex{1},
+        _targetBondLength
+    );
+}
 
 #endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP

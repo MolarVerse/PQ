@@ -23,6 +23,8 @@
 #ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_TPP
 #define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_TPP
 
+#include <utility>
+
 #include "concepts/vector3dConcepts.hpp"
 #include "vector3dClass.hpp"
 
@@ -39,6 +41,54 @@ namespace linalg
      */
     template <typename T>
     constexpr Vector3D<T>::Vector3D() : x(), y(), z()
+    {
+    }
+
+    /**
+     * @brief constructor from the three components
+     *
+     * @tparam T
+     * @param xValue
+     * @param yValue
+     * @param zValue
+     */
+    template <typename T>
+    Vector3D<T>::Vector3D(T xValue, T yValue, T zValue)
+        : x(xValue), y(yValue), z(zValue)
+    {
+    }
+
+    /**
+     * @brief copy constructor
+     *
+     * @tparam T
+     * @param xyz_
+     */
+    template <typename T>
+    Vector3D<T>::Vector3D(const Vector3D<T> &xyz_) : xyz(xyz_.xyz)
+    {
+    }
+
+    /**
+     * @brief move constructor
+     *
+     * @tparam T
+     * @param xyz_
+     */
+    template <typename T>
+    Vector3D<T>::Vector3D(Vector3D<T> &&xyz_) noexcept
+        : xyz(std::move(xyz_.xyz))
+    {
+    }
+
+    /**
+     * @brief constructor setting all three components to the same value
+     *
+     * @tparam T
+     * @param xyz_
+     */
+    template <typename T>
+    Vector3D<T>::Vector3D(T xyz_) : x(xyz_), y(xyz_), z(xyz_)
     {
     }
 

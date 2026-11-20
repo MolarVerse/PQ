@@ -405,16 +405,23 @@ namespace
         bool *_destroyed;
 
        public:
-        explicit DestructionTrackingParser(bool *destroyed)
-            : _destroyed(destroyed)
-        {
-        }
+        explicit DestructionTrackingParser(bool *destroyed);
 
-        ~DestructionTrackingParser() override { *_destroyed = true; }
+        ~DestructionTrackingParser() override;
 
         MSTD_NO_COPY(DestructionTrackingParser);
         MSTD_NO_MOVE(DestructionTrackingParser);
     };
+
+    DestructionTrackingParser::DestructionTrackingParser(bool *destroyed)
+        : _destroyed(destroyed)
+    {
+    }
+
+    DestructionTrackingParser::~DestructionTrackingParser()
+    {
+        *_destroyed = true;
+    }
 }   // namespace
 
 /**

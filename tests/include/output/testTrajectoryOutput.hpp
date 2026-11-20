@@ -45,58 +45,61 @@ class TestTrajectoryOutput : public ::testing::Test
     std::unique_ptr<out::TrajectoryOutput> _trajectoryOutput;
     std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
-    void SetUp() override
-    {
-        _trajectoryOutput =
-            std::make_unique<out::TrajectoryOutput>("default.xyz");
-        _simulationBox = std::make_unique<molsys::SimulationBox>();
+    void SetUp() override;
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox->setBox(orthoBox, false);
-
-        auto molecule1 = molsys::Molecule();
-
-        const auto atom1 = std::make_shared<molsys::Atom>();
-        const auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
-        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
-        atom1->setName("H");
-        atom2->setName("O");
-        atom1->setPartialCharge(1.0);
-        atom2->setPartialCharge(-1.0);
-        molecule1.setMoltype(MolType{1});
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-
-        auto molecule2 = molsys::Molecule();
-
-        auto atom3 = std::make_shared<molsys::Atom>();
-
-        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setName("Ar");
-        atom3->setPartialCharge(0.0);
-        molecule2.setMoltype(MolType{2});
-        molecule2.addAtom(atom3);
-
-        _simulationBox->addMolecule(molecule1);
-        _simulationBox->addMolecule(molecule2);
-        _simulationBox->addAtom(atom1);
-        _simulationBox->addAtom(atom2);
-        _simulationBox->addAtom(atom3);
-    }
-
-    void TearDown() override
-    {
-        const auto errorCode = std::remove("default.xyz");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.xyz";
-    }
+    void TearDown() override;
 };
+
+inline void TestTrajectoryOutput::SetUp()
+{
+    _trajectoryOutput = std::make_unique<out::TrajectoryOutput>("default.xyz");
+    _simulationBox    = std::make_unique<molsys::SimulationBox>();
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _simulationBox->setBox(orthoBox, false);
+
+    auto molecule1 = molsys::Molecule();
+
+    const auto atom1 = std::make_shared<molsys::Atom>();
+    const auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
+    atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
+    atom1->setName("H");
+    atom2->setName("O");
+    atom1->setPartialCharge(1.0);
+    atom2->setPartialCharge(-1.0);
+    molecule1.setMoltype(MolType{1});
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+
+    auto molecule2 = molsys::Molecule();
+
+    auto atom3 = std::make_shared<molsys::Atom>();
+
+    atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setName("Ar");
+    atom3->setPartialCharge(0.0);
+    molecule2.setMoltype(MolType{2});
+    molecule2.addAtom(atom3);
+
+    _simulationBox->addMolecule(molecule1);
+    _simulationBox->addMolecule(molecule2);
+    _simulationBox->addAtom(atom1);
+    _simulationBox->addAtom(atom2);
+    _simulationBox->addAtom(atom3);
+}
+
+inline void TestTrajectoryOutput::TearDown()
+{
+    const auto errorCode = std::remove("default.xyz");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.xyz";
+}
 
 #endif   // TESTS__INCLUDE__OUTPUT__TEST_TRAJECTORY_OUTPUT_HPP

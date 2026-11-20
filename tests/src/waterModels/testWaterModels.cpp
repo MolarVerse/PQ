@@ -315,9 +315,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateCoreToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -326,9 +324,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateLayerToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -337,9 +333,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateOuterToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -348,9 +342,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateHotspotSmoothingMMForces(
             const waterModel::InterWaterState & /*state*/,
@@ -359,10 +351,63 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
     };
+
+    void ExposedInterWaterStrategy::calculate(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateCoreToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateLayerToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateOuterToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateHotspotSmoothingMMForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
 
     molsys::SimulationBox makeHybridWaterBox()
     {

@@ -51,82 +51,79 @@ class TestGuffDatReader : public ::testing::Test
     std::unique_ptr<input::guffdat::GuffDatReader> _guffDatReader;
     std::unique_ptr<engine::Engine>                _engine;
 
-    void SetUp() override
-    {
-        auto moleculeType1 = molsys::MoleculeType();
-        moleculeType1.setNumberOfAtoms(2);
-        moleculeType1.setMoltype(MolType{1});
-        moleculeType1.addExternalAtomType(ExtAtomType{1});
-        moleculeType1.addExternalAtomType(ExtAtomType{2});
-        moleculeType1.addExternalToInternalAtomTypeElement(
-            ExtAtomType{1},
-            AtomType{0}
-        );
-        moleculeType1.addExternalToInternalAtomTypeElement(
-            ExtAtomType{2},
-            AtomType{1}
-        );
-        moleculeType1.addPartialCharge(0.5);
-        moleculeType1.addPartialCharge(-0.25);
-        moleculeType1.addAtomType(AtomType{0});
-        moleculeType1.addAtomType(AtomType{1});
-
-        auto moleculeType2 = molsys::MoleculeType();
-        moleculeType2.setNumberOfAtoms(1);
-        moleculeType2.setMoltype(MolType{2});
-        moleculeType2.addExternalAtomType(ExtAtomType{3});
-        moleculeType2.addExternalToInternalAtomTypeElement(
-            ExtAtomType{3},
-            AtomType{0}
-        );
-        moleculeType2.addPartialCharge(0.25);
-        moleculeType2.addAtomType(AtomType{0});
-
-        auto molecule1 = molsys::Molecule();
-        molecule1.setMoltype(MolType{1});
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setExternalAtomType(ExtAtomType{1});
-        atom2->setExternalAtomType(ExtAtomType{2});
-        atom1->setPartialCharge(0.5);
-        atom2->setPartialCharge(-0.25);
-        atom1->setAtomType(AtomType{0});
-        atom2->setAtomType(AtomType{1});
-
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-
-        // NOTE: use dummy engine for testing
-        //       this is implemented by base class Engine
-        //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-
-        _engine->getSimulationBox().addMoleculeType(moleculeType1);
-        _engine->getSimulationBox().addMoleculeType(moleculeType2);
-        _engine->getSimulationBox().addMolecule(molecule1);
-
-        _settings.potentialSettings.setCoulombRadiusCutOffByUser(12.5);
-
-        _engine->makePotential(
-            pot::PotentialBruteForce(_settings.hybridSettings)
-        );
-        _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
-        _engine->getPotential()->makeCoulombPotential(
-            pot::CoulombShiftedPotential(_settings.potentialSettings)
-        );
-
-        _settings.fileSettings.setGuffDatFileNameByUser(
-            "data/guffDatReader/guff.dat"
-        );
-        _settings.potentialSettings.setNonCoulombTypeByUser(
-            NonCoulombType::GUFF
-        );
-
-        _guffDatReader =
-            std::make_unique<input::guffdat::GuffDatReader>(*_engine);
-    }
+    void SetUp() override;
 };
+
+inline void TestGuffDatReader::SetUp()
+{
+    auto moleculeType1 = molsys::MoleculeType();
+    moleculeType1.setNumberOfAtoms(2);
+    moleculeType1.setMoltype(MolType{1});
+    moleculeType1.addExternalAtomType(ExtAtomType{1});
+    moleculeType1.addExternalAtomType(ExtAtomType{2});
+    moleculeType1.addExternalToInternalAtomTypeElement(
+        ExtAtomType{1},
+        AtomType{0}
+    );
+    moleculeType1.addExternalToInternalAtomTypeElement(
+        ExtAtomType{2},
+        AtomType{1}
+    );
+    moleculeType1.addPartialCharge(0.5);
+    moleculeType1.addPartialCharge(-0.25);
+    moleculeType1.addAtomType(AtomType{0});
+    moleculeType1.addAtomType(AtomType{1});
+
+    auto moleculeType2 = molsys::MoleculeType();
+    moleculeType2.setNumberOfAtoms(1);
+    moleculeType2.setMoltype(MolType{2});
+    moleculeType2.addExternalAtomType(ExtAtomType{3});
+    moleculeType2.addExternalToInternalAtomTypeElement(
+        ExtAtomType{3},
+        AtomType{0}
+    );
+    moleculeType2.addPartialCharge(0.25);
+    moleculeType2.addAtomType(AtomType{0});
+
+    auto molecule1 = molsys::Molecule();
+    molecule1.setMoltype(MolType{1});
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setExternalAtomType(ExtAtomType{1});
+    atom2->setExternalAtomType(ExtAtomType{2});
+    atom1->setPartialCharge(0.5);
+    atom2->setPartialCharge(-0.25);
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
+
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+
+    // NOTE: use dummy engine for testing
+    //       this is implemented by base class Engine
+    //       and works therefore for all derived classes
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+
+    _engine->getSimulationBox().addMoleculeType(moleculeType1);
+    _engine->getSimulationBox().addMoleculeType(moleculeType2);
+    _engine->getSimulationBox().addMolecule(molecule1);
+
+    _settings.potentialSettings.setCoulombRadiusCutOffByUser(12.5);
+
+    _engine->makePotential(pot::PotentialBruteForce(_settings.hybridSettings));
+    _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());
+    _engine->getPotential()->makeCoulombPotential(
+        pot::CoulombShiftedPotential(_settings.potentialSettings)
+    );
+
+    _settings.fileSettings.setGuffDatFileNameByUser(
+        "data/guffDatReader/guff.dat"
+    );
+    _settings.potentialSettings.setNonCoulombTypeByUser(NonCoulombType::GUFF);
+
+    _guffDatReader = std::make_unique<input::guffdat::GuffDatReader>(*_engine);
+}
 
 #endif   // TESTS__INCLUDE__INPUT__TEST_GUFF_DAT_READER_HPP

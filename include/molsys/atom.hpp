@@ -95,14 +95,11 @@ namespace molsys
 
         void addPosition(const linalg::Vec3D &position);
         void addVelocity(const linalg::Vec3D &velocity);
-        void addForce(const linalg::Vec3D &force) { _force += force; }
+        void addForce(const linalg::Vec3D &force);
         void addForce(double, double, double);
         void addForceInner(const linalg::Vec3D &force);
         void addForceOuter(const linalg::Vec3D &force);
-        void addShiftForce(const linalg::Vec3D &shiftForce)
-        {
-            _shiftForce += shiftForce;
-        }
+        void addShiftForce(const linalg::Vec3D &shiftForce);
 
         /***************************
          * standard getter methods *
@@ -112,7 +109,7 @@ namespace molsys
         [[nodiscard]] bool isQMAtom() const;
         [[nodiscard]] bool isMMAtom() const;
 
-        [[nodiscard]] const std::string &getName() const { return _name; }
+        [[nodiscard]] const std::string &getName() const;
         [[nodiscard]] std::string        getAtomTypeName() const;
 
         [[nodiscard]] ExtAtomType getExternalAtomType() const;
@@ -121,27 +118,20 @@ namespace molsys
         [[nodiscard]] ExtVdwType getExternalGlobalVDWType() const;
         [[nodiscard]] VdwType    getInternalGlobalVDWType() const;
 
-        [[nodiscard]]
-        AtomNumber getAtomicNumber() const
-        {
-            return _atomicNumber;
-        }
+        [[nodiscard]] AtomNumber getAtomicNumber() const;
 
-        [[nodiscard]] double getMass() const;
-        [[nodiscard]] double getPartialCharge() const { return _partialCharge; }
+        [[nodiscard]] double                getMass() const;
+        [[nodiscard]] double                getPartialCharge() const;
         [[nodiscard]] std::optional<double> getQMCharge() const;
 
-        [[nodiscard]] const linalg::Vec3D &getPosition() const
-        {
-            return _position;
-        }
-        [[nodiscard]] linalg::Vec3D getPositionOld() const;
-        [[nodiscard]] linalg::Vec3D getVelocity() const;
-        [[nodiscard]] linalg::Vec3D getForce() const;
-        [[nodiscard]] linalg::Vec3D getForceOld() const;
-        [[nodiscard]] linalg::Vec3D getForceInner() const;
-        [[nodiscard]] linalg::Vec3D getForceOuter() const;
-        [[nodiscard]] linalg::Vec3D getShiftForce() const;
+        [[nodiscard]] const linalg::Vec3D &getPosition() const;
+        [[nodiscard]] linalg::Vec3D        getPositionOld() const;
+        [[nodiscard]] linalg::Vec3D        getVelocity() const;
+        [[nodiscard]] linalg::Vec3D        getForce() const;
+        [[nodiscard]] linalg::Vec3D        getForceOld() const;
+        [[nodiscard]] linalg::Vec3D        getForceInner() const;
+        [[nodiscard]] linalg::Vec3D        getForceOuter() const;
+        [[nodiscard]] linalg::Vec3D        getShiftForce() const;
 
         /***************************
          * standard setter methods *
@@ -179,6 +169,21 @@ namespace molsys
 
         void resetQMCharge();
     };
+
+    inline void Atom::addForce(const linalg::Vec3D &force) { _force += force; }
+
+    inline void Atom::addShiftForce(const linalg::Vec3D &shiftForce)
+    {
+        _shiftForce += shiftForce;
+    }
+
+    inline const std::string &Atom::getName() const { return _name; }
+
+    inline AtomNumber Atom::getAtomicNumber() const { return _atomicNumber; }
+
+    inline double Atom::getPartialCharge() const { return _partialCharge; }
+
+    inline const linalg::Vec3D &Atom::getPosition() const { return _position; }
 }   // namespace molsys
 
 #endif   // MOLSYS__ATOM_HPP

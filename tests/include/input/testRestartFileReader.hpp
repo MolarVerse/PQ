@@ -37,13 +37,15 @@ class TestRstFileReader : public ::testing::Test
     Settings                        _settings;
     std::unique_ptr<engine::Engine> _engine;
 
-    void SetUp() override
-    {
-        // NOTE: use dummy engine for testing
-        //       this is implemented by base class Engine
-        //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-    }
+    void SetUp() override;
 };
+
+inline void TestRstFileReader::SetUp()
+{
+    // NOTE: use dummy engine for testing
+    //       this is implemented by base class Engine
+    //       and works therefore for all derived classes
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+}
 
 #endif

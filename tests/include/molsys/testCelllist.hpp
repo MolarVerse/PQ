@@ -37,18 +37,20 @@ class TestCellList : public ::testing::Test
     std::unique_ptr<molsys::CellList>      _cellList;
     std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
-    void SetUp() override
-    {
-        _cellList = std::make_unique<molsys::CellList>();
-        _cellList->setNumberOfCells(2);
-        _cellList->setNumberOfNeighbourCells(1);
-        _cellList->resizeCells();
-
-        _simulationBox = std::make_unique<molsys::SimulationBox>();
-
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox->setBox(orthoBox, false);
-    }
+    void SetUp() override;
 };
+
+inline void TestCellList::SetUp()
+{
+    _cellList = std::make_unique<molsys::CellList>();
+    _cellList->setNumberOfCells(2);
+    _cellList->setNumberOfNeighbourCells(1);
+    _cellList->resizeCells();
+
+    _simulationBox = std::make_unique<molsys::SimulationBox>();
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _simulationBox->setBox(orthoBox, false);
+}
 
 #endif   // TESTS__INCLUDE__MOLSYS__TEST_CELLLIST_HPP

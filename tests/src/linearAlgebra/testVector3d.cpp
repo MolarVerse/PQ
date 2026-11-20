@@ -48,21 +48,30 @@ namespace
         alignas(T) std::array<std::byte, sizeof(T)> bytes{};
         T *object = _construct(bytes);
 
-        ~PoisonedStorage() { object->~T(); }
+        ~PoisonedStorage();
 
         PoisonedStorage() = default;
         MSTD_NO_COPY(PoisonedStorage);
         MSTD_NO_MOVE(PoisonedStorage);
 
        private:
-        static T *_construct(std::array<std::byte, sizeof(T)> &storage)
-        {
-            storage.fill(std::byte{0xFF});
-            // default initialisation on purpose: `T()` would zero a class
-            // whose constructor is defaulted
-            return new (storage.data()) T;
-        }
+        static T *_construct(std::array<std::byte, sizeof(T)> &storage);
     };
+
+    template <typename T>
+    PoisonedStorage<T>::~PoisonedStorage()
+    {
+        object->~T();
+    }
+
+    template <typename T>
+    T *PoisonedStorage<T>::_construct(std::array<std::byte, sizeof(T)> &storage)
+    {
+        storage.fill(std::byte{0xFF});
+        // default initialisation on purpose: `T()` would zero a class
+        // whose constructor is defaulted
+        return new (storage.data()) T;
+    }
 }   // namespace
 
 /**

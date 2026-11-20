@@ -49,92 +49,95 @@ class TestRingPolymerRestartFileOutput : public ::testing::Test
     std::unique_ptr<molsys::SimulationBox>             _simulationBox2;
     std::vector<molsys::SimulationBox>                 _beads;
 
-    void SetUp() override
-    {
-        _rstFileOutput = std::make_unique<out::RingPolymerRestartFileOutput>(
-            "default.rpmd.rst"
-        );
-        _simulationBox1 = std::make_unique<molsys::SimulationBox>();
-        _simulationBox2 = std::make_unique<molsys::SimulationBox>();
+    void SetUp() override;
 
-        molsys::OrthorhombicBox orthoBox1{{10.0, 10.0, 10.0}};
-        _simulationBox1->setBox(orthoBox1, false);
-        molsys::OrthorhombicBox orthoBox2{{10.0, 10.0, 10.0}};
-        _simulationBox2->setBox(orthoBox2, false);
-
-        auto molecule1_1 = molsys::Molecule();
-        auto molecule1_2 = molsys::Molecule();
-
-        const auto atom1_1 = std::make_shared<molsys::Atom>();
-        const auto atom2_1 = std::make_shared<molsys::Atom>();
-        const auto atom1_2 = std::make_shared<molsys::Atom>();
-        const auto atom2_2 = std::make_shared<molsys::Atom>();
-
-        atom1_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2_1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom1_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2_1->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
-        atom1_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2_1->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
-        atom1_1->setName("H");
-        atom2_1->setName("O");
-        atom1_1->setPartialCharge(1.0);
-        atom2_1->setPartialCharge(-1.0);
-        molecule1_1.setMoltype(MolType{1});
-        molecule1_1.addAtom(atom1_1);
-        molecule1_1.addAtom(atom2_1);
-
-        atom1_2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom2_2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) + 1.0);
-        atom1_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom2_2->setForce(linalg::Vec3D(2.0, 3.0, 4.0) + 1.0);
-        atom1_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom2_2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0) + 1.0);
-        atom1_2->setName("H");
-        atom2_2->setName("O");
-        atom1_2->setPartialCharge(1.0);
-        atom2_2->setPartialCharge(-1.0);
-        molecule1_2.setMoltype(MolType{1});
-        molecule1_2.addAtom(atom1_2);
-        molecule1_2.addAtom(atom2_2);
-
-        auto molecule2_1 = molsys::Molecule();
-        auto molecule2_2 = molsys::Molecule();
-
-        const auto atom3_1 = std::make_shared<molsys::Atom>();
-        const auto atom3_2 = std::make_shared<molsys::Atom>();
-
-        atom3_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3_1->setName("Ar");
-        atom3_1->setPartialCharge(0.0);
-        molecule2_1.setMoltype(MolType{2});
-        molecule2_1.addAtom(atom3_1);
-
-        atom3_2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom3_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom3_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom3_2->setName("Ar");
-        atom3_2->setPartialCharge(0.0);
-        molecule2_2.setMoltype(MolType{2});
-        molecule2_2.addAtom(atom3_2);
-
-        _simulationBox1->addMolecule(molecule1_1);
-        _simulationBox1->addMolecule(molecule2_1);
-
-        _simulationBox2->addMolecule(molecule1_2);
-        _simulationBox2->addMolecule(molecule2_2);
-
-        _beads.push_back(*_simulationBox1);
-        _beads.push_back(*_simulationBox2);
-    }
-
-    void TearDown() override
-    {
-        const auto errorCode = std::remove("default.rpmd.rst");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.rst";
-    }
+    void TearDown() override;
 };
+
+inline void TestRingPolymerRestartFileOutput::SetUp()
+{
+    _rstFileOutput =
+        std::make_unique<out::RingPolymerRestartFileOutput>("default.rpmd.rst");
+    _simulationBox1 = std::make_unique<molsys::SimulationBox>();
+    _simulationBox2 = std::make_unique<molsys::SimulationBox>();
+
+    molsys::OrthorhombicBox orthoBox1{{10.0, 10.0, 10.0}};
+    _simulationBox1->setBox(orthoBox1, false);
+    molsys::OrthorhombicBox orthoBox2{{10.0, 10.0, 10.0}};
+    _simulationBox2->setBox(orthoBox2, false);
+
+    auto molecule1_1 = molsys::Molecule();
+    auto molecule1_2 = molsys::Molecule();
+
+    const auto atom1_1 = std::make_shared<molsys::Atom>();
+    const auto atom2_1 = std::make_shared<molsys::Atom>();
+    const auto atom1_2 = std::make_shared<molsys::Atom>();
+    const auto atom2_2 = std::make_shared<molsys::Atom>();
+
+    atom1_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2_1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom1_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2_1->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
+    atom1_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2_1->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
+    atom1_1->setName("H");
+    atom2_1->setName("O");
+    atom1_1->setPartialCharge(1.0);
+    atom2_1->setPartialCharge(-1.0);
+    molecule1_1.setMoltype(MolType{1});
+    molecule1_1.addAtom(atom1_1);
+    molecule1_1.addAtom(atom2_1);
+
+    atom1_2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+    atom2_2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) + 1.0);
+    atom1_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+    atom2_2->setForce(linalg::Vec3D(2.0, 3.0, 4.0) + 1.0);
+    atom1_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+    atom2_2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0) + 1.0);
+    atom1_2->setName("H");
+    atom2_2->setName("O");
+    atom1_2->setPartialCharge(1.0);
+    atom2_2->setPartialCharge(-1.0);
+    molecule1_2.setMoltype(MolType{1});
+    molecule1_2.addAtom(atom1_2);
+    molecule1_2.addAtom(atom2_2);
+
+    auto molecule2_1 = molsys::Molecule();
+    auto molecule2_2 = molsys::Molecule();
+
+    const auto atom3_1 = std::make_shared<molsys::Atom>();
+    const auto atom3_2 = std::make_shared<molsys::Atom>();
+
+    atom3_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3_1->setName("Ar");
+    atom3_1->setPartialCharge(0.0);
+    molecule2_1.setMoltype(MolType{2});
+    molecule2_1.addAtom(atom3_1);
+
+    atom3_2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+    atom3_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+    atom3_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+    atom3_2->setName("Ar");
+    atom3_2->setPartialCharge(0.0);
+    molecule2_2.setMoltype(MolType{2});
+    molecule2_2.addAtom(atom3_2);
+
+    _simulationBox1->addMolecule(molecule1_1);
+    _simulationBox1->addMolecule(molecule2_1);
+
+    _simulationBox2->addMolecule(molecule1_2);
+    _simulationBox2->addMolecule(molecule2_2);
+
+    _beads.push_back(*_simulationBox1);
+    _beads.push_back(*_simulationBox2);
+}
+
+inline void TestRingPolymerRestartFileOutput::TearDown()
+{
+    const auto errorCode = std::remove("default.rpmd.rst");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rpmd.rst";
+}
 
 #endif   // TESTS__INCLUDE__OUTPUT__TEST_RING_POLYMER_RESTART_FILE_OUTPUT_HPP

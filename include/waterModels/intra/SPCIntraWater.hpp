@@ -74,26 +74,31 @@ namespace waterModel
         using SPCIntraWater::SPCIntraWater;
 
         [[nodiscard]]
-        double getEqOHDistance() const override
-        {
-            return _eqOHDistance;
-        }
+        double getEqOHDistance() const override;
         [[nodiscard]]
-        double getEqHOHAngle() const override
-        {
-            return _eqHOHAngle;
-        }
+        double getEqHOHAngle() const override;
         [[nodiscard]]
-        double getForceConstantOHBond() const override
-        {
-            return _forceConstantOHBond;
-        }
+        double getForceConstantOHBond() const override;
         [[nodiscard]]
-        double getForceConstantHOHAngle() const override
-        {
-            return _forceConstantHOHAngle;
-        }
+        double getForceConstantHOHAngle() const override;
     };
+
+    inline double SPCFwIntraWater::getEqOHDistance() const
+    {
+        return _eqOHDistance;
+    }
+
+    inline double SPCFwIntraWater::getEqHOHAngle() const { return _eqHOHAngle; }
+
+    inline double SPCFwIntraWater::getForceConstantOHBond() const
+    {
+        return _forceConstantOHBond;
+    }
+
+    inline double SPCFwIntraWater::getForceConstantHOHAngle() const
+    {
+        return _forceConstantHOHAngle;
+    }
 
     class qSPCFwIntraWater : public SPCIntraWater
     {
@@ -109,26 +114,34 @@ namespace waterModel
         using SPCIntraWater::SPCIntraWater;
 
         [[nodiscard]]
-        double getEqOHDistance() const override
-        {
-            return _eqOHDistance;
-        }
+        double getEqOHDistance() const override;
         [[nodiscard]]
-        double getEqHOHAngle() const override
-        {
-            return _eqHOHAngle;
-        }
+        double getEqHOHAngle() const override;
         [[nodiscard]]
-        double getForceConstantOHBond() const override
-        {
-            return _forceConstantOHBond;
-        }
+        double getForceConstantOHBond() const override;
         [[nodiscard]]
-        double getForceConstantHOHAngle() const override
-        {
-            return _forceConstantHOHAngle;
-        }
+        double getForceConstantHOHAngle() const override;
     };
+
+    inline double qSPCFwIntraWater::getEqOHDistance() const
+    {
+        return _eqOHDistance;
+    }
+
+    inline double qSPCFwIntraWater::getEqHOHAngle() const
+    {
+        return _eqHOHAngle;
+    }
+
+    inline double qSPCFwIntraWater::getForceConstantOHBond() const
+    {
+        return _forceConstantOHBond;
+    }
+
+    inline double qSPCFwIntraWater::getForceConstantHOHAngle() const
+    {
+        return _forceConstantHOHAngle;
+    }
 
 }   // namespace waterModel
 

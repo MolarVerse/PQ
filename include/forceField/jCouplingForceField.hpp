@@ -69,13 +69,9 @@ namespace ff
         );
 
         void calculateEnergyAndForces(
-            const molsys::SimulationBox & /*simulationBox*/,
-            physicalData::PhysicalData & /*physData*/
-        )
-        {
-            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/904
-            // implement
-        }
+            const molsys::SimulationBox &simulationBox,
+            physicalData::PhysicalData  &physicalData
+        );
 
         /***************************
          * standard setter methods *

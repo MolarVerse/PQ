@@ -45,54 +45,58 @@ class TestRstFileOutput : public ::testing::Test
     std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
     std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
-    void SetUp() override
-    {
-        _rstFileOutput = std::make_unique<out::RstFileOutput>("default.rst");
-        _simulationBox = std::make_unique<molsys::SimulationBox>();
+    void SetUp() override;
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox->setBox(orthoBox, false);
-
-        auto molecule1 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
-        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
-        atom1->setName("H");
-        atom2->setName("O");
-        atom1->setPartialCharge(1.0);
-        atom2->setPartialCharge(-1.0);
-        molecule1.setMoltype(MolType{1});
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-
-        auto molecule2 = molsys::Molecule();
-
-        auto atom3 = std::make_shared<molsys::Atom>();
-
-        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setName("Ar");
-        atom3->setPartialCharge(0.0);
-        molecule2.setMoltype(MolType{2});
-        molecule2.addAtom(atom3);
-
-        _simulationBox->addMolecule(molecule1);
-        _simulationBox->addMolecule(molecule2);
-    }
-
-    void TearDown() override
-    {
-        const auto errorCode = std::remove("default.rst");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rst";
-    }
+    void TearDown() override;
 };
+
+inline void TestRstFileOutput::SetUp()
+{
+    _rstFileOutput = std::make_unique<out::RstFileOutput>("default.rst");
+    _simulationBox = std::make_unique<molsys::SimulationBox>();
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _simulationBox->setBox(orthoBox, false);
+
+    auto molecule1 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
+    atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
+    atom1->setName("H");
+    atom2->setName("O");
+    atom1->setPartialCharge(1.0);
+    atom2->setPartialCharge(-1.0);
+    molecule1.setMoltype(MolType{1});
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+
+    auto molecule2 = molsys::Molecule();
+
+    auto atom3 = std::make_shared<molsys::Atom>();
+
+    atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setName("Ar");
+    atom3->setPartialCharge(0.0);
+    molecule2.setMoltype(MolType{2});
+    molecule2.addAtom(atom3);
+
+    _simulationBox->addMolecule(molecule1);
+    _simulationBox->addMolecule(molecule2);
+}
+
+inline void TestRstFileOutput::TearDown()
+{
+    const auto errorCode = std::remove("default.rst");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.rst";
+}
 
 #endif   // TESTS__INCLUDE__OUTPUT__TEST_RST_FILE_OUTPUT_HPP

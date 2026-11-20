@@ -47,10 +47,8 @@ namespace out
         std::ofstream _fp;
 
        public:
-        explicit Output(std::string filename) : _fileName(std::move(filename))
-        {
-        }
-        ~Output() { close(); }
+        explicit Output(std::string filename);
+        ~Output();
         MSTD_NO_COPY(Output);
         Output(Output &&) noexcept            = default;
         Output &operator=(Output &&) noexcept = default;
@@ -80,11 +78,16 @@ namespace out
         );
 
         [[nodiscard]]
-        std::ofstream &_getFilePointer()
-        {
-            return _fp;
-        }
+        std::ofstream &_getFilePointer();
     };
+
+    inline Output::Output(std::string filename) : _fileName(std::move(filename))
+    {
+    }
+
+    inline Output::~Output() { close(); }
+
+    inline std::ofstream &Output::_getFilePointer() { return _fp; }
 
 }   // namespace out
 
