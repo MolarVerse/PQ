@@ -55,18 +55,17 @@ namespace pot
      * calculation
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombReactionField::_calculateInternal(
-        double                        dist,
-        double                        chargeProduct,
-        const CoulombPotentialConfig& config
+    std::pair<double, double> CoulombReactionField::calculate(
+        double dist,
+        double chargeProduct
     ) const
     {
         const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
         const auto dInv             = 1.0 / dist;
-        const auto deltaCutOff      = config.cutoff - dist;
-        const auto rCutEnergy       = config.energyCutoff;
-        const auto rCutForce        = config.forceCutoff;
-        const auto rfCutOffCubed    = _rfPrefactor * config.invCubeCutoff;
+        const auto deltaCutOff      = _get_cutoff() - dist;
+        const auto rCutEnergy       = _get_energyCutoff();
+        const auto rCutForce        = _get_forceCutoff();
+        const auto rfCutOffCubed    = _rfPrefactor * _get_invCubedCutoff();
 
         auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
         energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;

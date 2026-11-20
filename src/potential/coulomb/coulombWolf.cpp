@@ -74,10 +74,9 @@ namespace pot
      * calculation
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombWolf::_calculateInternal(
-        double                        distance,
-        double                        chargeProduct,
-        const CoulombPotentialConfig& config
+    std::pair<double, double> CoulombWolf::calculate(
+        double distance,
+        double chargeProduct
     ) const
     {
         const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
@@ -87,7 +86,7 @@ namespace pot
         const auto expFactor     = ::exp(-kappaDistance * kappaDistance);
 
         auto energy  = (erfcFactor / distance) - _wolfParam1;
-        energy      += _wolfParam3 * (distance - config.cutoff);
+        energy      += _wolfParam3 * (distance - _get_cutoff());
 
         auto force  = erfcFactor / (distance * distance);
         force      += _wolfParam2 * expFactor / distance;

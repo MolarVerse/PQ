@@ -48,22 +48,23 @@ namespace pot
     class CoulombPotential
     {
        private:
-        mstd::ConstRef<PotentialSettings> _potentialSettings;
+        double _cutoff;
+        double _energyCutoff;
+        double _forceCutoff;
+        double _invCubedCutoff;
 
        public:
         explicit CoulombPotential(const PotentialSettings& potentialSettings);
         virtual ~CoulombPotential() = default;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(double, double) const;
+        virtual std::pair<double, double> calculate(double, double) const = 0;
 
        protected:
-        [[nodiscard]]
-        virtual std::pair<double, double> _calculateInternal(
-            double                        distance,
-            double                        chargeProduct,
-            const CoulombPotentialConfig& config
-        ) const = 0;
+        INTERNAL_CONST_GETTER(_cutoff);
+        INTERNAL_CONST_GETTER(_energyCutoff);
+        INTERNAL_CONST_GETTER(_forceCutoff);
+        INTERNAL_CONST_GETTER(_invCubedCutoff);
     };
 
 }   // namespace pot

@@ -49,12 +49,10 @@ namespace pot
             double                   epsilon
         );
 
-       private:
         [[nodiscard]]
-        std::pair<double, double> _calculateInternal(
-            double                        distance,
-            double                        chargeProduct,
-            const CoulombPotentialConfig& config
+        std::pair<double, double> calculate(
+            double distance,
+            double chargeProduct
         ) const override;
     };
 

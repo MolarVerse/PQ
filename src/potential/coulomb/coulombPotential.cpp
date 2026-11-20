@@ -34,27 +34,11 @@ namespace pot
     CoulombPotential::CoulombPotential(
         const PotentialSettings& potentialSettings
     )
-        : _potentialSettings(potentialSettings)
+        : _cutoff(potentialSettings.get_coulombConfig().cutoff),
+          _energyCutoff(potentialSettings.get_coulombConfig().energyCutoff),
+          _forceCutoff(potentialSettings.get_coulombConfig().forceCutoff),
+          _invCubedCutoff(potentialSettings.get_coulombConfig().invCubeCutoff)
     {
-    }
-
-    /**
-     * @brief Calculate the energy and force of the Coulomb potential
-     *
-     * @param distance
-     * @param chargeProduct
-     * @return std::pair<double, double>
-     */
-    std::pair<double, double> CoulombPotential::calculate(
-        double distance,
-        double chargeProduct
-    ) const
-    {
-        return _calculateInternal(
-            distance,
-            chargeProduct,
-            _potentialSettings->get_coulombConfig()
-        );
     }
 
 }   // namespace pot
