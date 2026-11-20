@@ -105,7 +105,7 @@ namespace molsys
 
         auto setVelocities = [&velocities, &index](auto &atom)
         {
-            linalg::Vec3D velocity;
+            Vel3D velocity;
 
             velocity[0] = velocities[index++];
             velocity[1] = velocities[index++];
@@ -128,7 +128,7 @@ namespace molsys
 
         auto setForces = [&forces, &index](auto &atom)
         {
-            linalg::Vec3D force;
+            Force3D force;
 
             force[0] = forces[index++];
             force[1] = forces[index++];
