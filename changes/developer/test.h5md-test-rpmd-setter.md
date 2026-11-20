@@ -1,0 +1,1 @@
+- Fix the build of `testOutputFilesSetup`: the H5MD test no longer calls the removed `GeneralSettings::setIsRingPolymerMDActivated`; the `MM_MD` job type already turns ring polymer MD off.
