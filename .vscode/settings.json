@@ -276,6 +276,7 @@
         "traj",
         "TRAJECTORYOUTPUT",
         "txyz",
+        "unitful",
         "unnormalized",
         "Unshifted",
         "USERINPUTEXCEPTION",
