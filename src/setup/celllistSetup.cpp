@@ -76,7 +76,10 @@ namespace setup
                 settings::GeneralSettings::getNumberOfCells()
             );
             cellList.resizeCells();
-            cellList.setup(_engine.getSimulationBox());
+            cellList.setup(
+                _engine.getSimulationBox(),
+                _engine.getSettings().potentialSettings.getCoulombRadiusCutOff()
+            );
             _engine.makePotential(
                 pot::PotentialCellList(_engine.getSettings().hybridSettings)
             );

@@ -37,17 +37,20 @@
  */
 TEST_F(TestInputFileReader, parseDensity)
 {
-    SimulationBoxSettings settings;
-    EXPECT_EQ(settings.isDensitySetByUser(), false);
-    input::SimulationBoxInputParser parser{settings};
-    const auto                      funcMap = parser.getKeywordFuncMap();
+    Settings settings;
+    EXPECT_EQ(settings.simulationBoxSettings.isDensitySetByUser(), false);
+    input::SimulationBoxInputParser parser{
+        settings.simulationBoxSettings,
+        settings.potentialSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("density"));
     const auto& parseFunc = funcMap.at("density");
 
     const std::vector<std::string> lineElements = {"density", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getDensity(), 1.0);
-    EXPECT_EQ(settings.isDensitySetByUser(), true);
+    EXPECT_EQ(settings.simulationBoxSettings.getDensity(), 1.0);
+    EXPECT_EQ(settings.simulationBoxSettings.isDensitySetByUser(), true);
 
     _clearParser(parser);
 
@@ -78,15 +81,18 @@ TEST_F(TestInputFileReader, parseDensity)
  */
 TEST_F(TestInputFileReader, parseCoulombRadius)
 {
-    SimulationBoxSettings           settings;
-    input::SimulationBoxInputParser parser{settings};
-    const auto                      funcMap = parser.getKeywordFuncMap();
+    Settings                        settings;
+    input::SimulationBoxInputParser parser{
+        settings.simulationBoxSettings,
+        settings.potentialSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("rcoulomb"));
     const auto& parseFunc = funcMap.at("rcoulomb");
 
     const std::vector<std::string> lineElements = {"rcoulomb", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::PotentialSettings::getCoulombRadiusCutOff(), 1.0);
+    EXPECT_EQ(settings.potentialSettings.getCoulombRadiusCutOff(), 1.0);
 
     _clearParser(parser);
 
@@ -101,9 +107,12 @@ TEST_F(TestInputFileReader, parseCoulombRadius)
 
 TEST_F(TestInputFileReader, parseInitVelocities)
 {
-    SimulationBoxSettings           settings;
-    input::SimulationBoxInputParser parser{settings};
-    const auto                      funcMap = parser.getKeywordFuncMap();
+    Settings                        settings;
+    input::SimulationBoxInputParser parser{
+        settings.simulationBoxSettings,
+        settings.potentialSettings
+    };
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("init_velocities"));
     const auto& parseFunc = funcMap.at("init_velocities");
 
@@ -113,7 +122,10 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "true"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getInitializeVelocities(), InitVelocities::TRUE);
+    EXPECT_EQ(
+        settings.simulationBoxSettings.getInitializeVelocities(),
+        InitVelocities::TRUE
+    );
 
     _clearParser(parser);
 
@@ -123,7 +135,10 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "false"
     };
     parseFunc(lineElements2, 0);
-    EXPECT_EQ(settings.getInitializeVelocities(), InitVelocities::FALSE);
+    EXPECT_EQ(
+        settings.simulationBoxSettings.getInitializeVelocities(),
+        InitVelocities::FALSE
+    );
 
     _clearParser(parser);
 
@@ -133,7 +148,10 @@ TEST_F(TestInputFileReader, parseInitVelocities)
         "force"
     };
     parseFunc(lineElements3, 0);
-    EXPECT_EQ(settings.getInitializeVelocities(), InitVelocities::FORCE);
+    EXPECT_EQ(
+        settings.simulationBoxSettings.getInitializeVelocities(),
+        InitVelocities::FORCE
+    );
 
     _clearParser(parser);
 

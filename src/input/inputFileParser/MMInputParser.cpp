@@ -44,14 +44,18 @@ namespace input
      * will be used to store and manage water model configurations.
      * @param forceFieldSettings Reference to the ForceFieldSettings object that
      * will be used to store and manage force field configurations.
+     * @param potentialSettings Reference to the PotentialSettings object that
+     * will be used to store and manage potential calculation configurations.
      *
      */
     MMInputParser::MMInputParser(
         WaterModelSettings &waterModelSettings,
-        ForceFieldSettings &forceFieldSettings
+        ForceFieldSettings &forceFieldSettings,
+        PotentialSettings  &potentialSettings
     )
         : _waterModelSettings(waterModelSettings),
-          _forceFieldSettings(forceFieldSettings)
+          _forceFieldSettings(forceFieldSettings),
+          _potentialSettings(potentialSettings)
     {
         addForceFieldTypeKey();
         addNonCoulombTypeKey();
@@ -103,8 +107,8 @@ namespace input
                 "(guff, lj, buck, morse)",
         };
 
-        const auto setValue = [](NonCoulombType value)
-        { settings::PotentialSettings::setNonCoulombType(value); };
+        const auto setValue = [this](NonCoulombType value)
+        { _potentialSettings->setNonCoulombTypeByUser(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<NonCoulombType>{

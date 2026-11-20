@@ -77,32 +77,38 @@ namespace ff
 
         void calculateBondedInteractions(
             const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const PotentialSettings &
         );
 
         void calculateBondInteractions(
             const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const PotentialSettings &
         );
 
         void calculateAngleInteractions(
             const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const PotentialSettings &
         );
 
         void calculateDihedralInteractions(
             const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const PotentialSettings &
         );
 
         void calculateImproperDihedralInteractions(
             const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const PotentialSettings &
         );
 
         void calculateJCouplingInteractions(
             const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const PotentialSettings &
         );
 
         [[nodiscard]] const BondType     &findBondTypeById(BondId id) const;

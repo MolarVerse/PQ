@@ -63,11 +63,14 @@ namespace setup
      * configure the thermostat if applicable.
      * @param timingsSettings Timings settings object used to configure the
      * simulation timing parameters.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void setupRequestedJob(
         engine::Engine&     engine,
         NoseHooverSettings& nhSettings,
-        TimingsSettings&    timingsSettings
+        TimingsSettings&    timingsSettings,
+        PotentialSettings&  potentialSettings
     )
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
@@ -82,7 +85,7 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        readFiles(engine, nhSettings, timingsSettings);
+        readFiles(engine, nhSettings, timingsSettings, potentialSettings);
 
         setupEngine(engine);
 
@@ -117,11 +120,14 @@ namespace setup
      * configure the thermostat if applicable.
      * @param timingsSettings Timings settings object used to configure the
      * simulation timing parameters.
+     * @param potentialSettings Reference to the PotentialSettings object used
+     * to configure interaction cutoffs and other potential-related parameters
      */
     void readFiles(
         engine::Engine&     engine,
         NoseHooverSettings& nhSettings,
-        TimingsSettings&    timingsSettings
+        TimingsSettings&    timingsSettings,
+        PotentialSettings&  potentialSettings
     )
     {
         input::molDescriptor::readMolDescriptor(engine);
@@ -134,7 +140,7 @@ namespace setup
 
         input::topology::readTopologyFile(engine);
 
-        input::parameterFile::readParameterFile(engine);
+        input::parameterFile::readParameterFile(engine, potentialSettings);
 
         input::intraNonBondedReader::readIntraNonBondedFile(engine);
     }

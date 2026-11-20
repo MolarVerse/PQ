@@ -65,7 +65,8 @@ namespace intraNonBonded
 
         void calculate(
             const molsys::SimulationBox &,
-            physicalData::PhysicalData &
+            physicalData::PhysicalData &,
+            const PotentialSettings &
         );
         void fillIntraNonBondedMaps(molsys::SimulationBox &);
 

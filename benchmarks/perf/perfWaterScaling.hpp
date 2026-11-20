@@ -75,11 +75,7 @@ namespace benchWaterScaling
         Settings            settings
     )
     {
-        settings::PotentialSettings::setCoulombRadiusCutOff(CUTOFF);
-        pot::CoulombPotential::setCoulombRadiusCutOff(CUTOFF);
-        pot::CoulombPotential::setCoulombEnergyCutOff(0.0);
-        pot::CoulombPotential::setCoulombForceCutOff(0.0);
-
+        settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
         settings.waterModelSettings.setWaterInterModelByUser(
             WaterInterModel::SPC_E
         );
@@ -167,16 +163,21 @@ namespace benchWaterScaling
             std::move(state),
             std::make_unique<waterModel::InterWaterStrategyCellList>(
                 settings.hybridSettings
-            )
+            ),
+            settings.potentialSettings
         );
-        auto coulombPot =
-            std::make_shared<pot::CoulombShiftedPotential>(CUTOFF);
+        auto coulombPot = std::make_shared<pot::CoulombShiftedPotential>(
+            settings.potentialSettings
+        );
 
         settings::GeneralSettings::activateCellList();
         molsys::CellList cellList;
         cellList.setNumberOfCells(numberOfCells);
         cellList.resizeCells();
-        cellList.setup(simBox);
+        cellList.setup(
+            simBox,
+            settings.potentialSettings.getCoulombRadiusCutOff()
+        );
 
         auto physicalData = physicalData::PhysicalData();
 
@@ -186,8 +187,17 @@ namespace benchWaterScaling
 
         for (std::uint64_t i = 0; i < iterations; ++i)
         {
-            cellList.updateCellList(simBox);
-            interWater.calculate(simBox, physicalData, coulombPot, cellList);
+            cellList.updateCellList(
+                simBox,
+                settings.potentialSettings.getCoulombRadiusCutOff()
+            );
+            interWater.calculate(
+                simBox,
+                physicalData,
+                coulombPot,
+                cellList,
+                settings.potentialSettings
+            );
         }
 
         // read state so the loop cannot be optimized away

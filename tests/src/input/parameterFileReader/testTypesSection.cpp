@@ -42,8 +42,8 @@ TEST_F(TestParameterFileSection, processSectionTypes)
     input::parameterFile::TypesSection typesSection;
     size_t                             lineNumber = 0;
     typesSection.process(lineElements, *_engine, lineNumber);
-    EXPECT_EQ(settings::PotentialSettings::getScale14Coulomb(), 0.23);
-    EXPECT_EQ(settings::PotentialSettings::getScale14VDW(), 0.99);
+    EXPECT_EQ(PotentialSettings::getScale14Coulomb(), 0.23);
+    EXPECT_EQ(PotentialSettings::getScale14VDW(), 0.99);
 
     lineElements = {"1", "2", "1.0", "0", "s", "f", "0.23"};
     EXPECT_THROW_MSG(
