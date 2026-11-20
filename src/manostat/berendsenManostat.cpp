@@ -66,8 +66,8 @@ namespace manostat
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
         const Temperature & /*targetTemperature*/,
-        const Time &timeStep,
-        double      coulombRadiusCutOff
+        const Time     &timeStep,
+        const Distance &coulombRadiusCutOff
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Berendsen");

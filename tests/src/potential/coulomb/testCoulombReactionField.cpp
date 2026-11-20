@@ -31,28 +31,23 @@
  */
 TEST(TestCoulombReactionField, calculate)
 {
-    constexpr auto chargeProduct = 2.0;
-    constexpr auto cutoff        = 3.0;
+    constexpr auto chargeProduct = 2.0 * elementary_charge * elementary_charge;
+    constexpr auto cutoff        = 3.0 * angstrom;
     constexpr auto epsilon       = 80.0;
-    constexpr auto distance      = 2.0;
+    constexpr auto distance      = 2.0 * angstrom;
 
     PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(cutoff);
 
     const auto potential =
-
-        pot::CoulombReactionField(potentialSettings * angstrom, epsilon);
+        pot::CoulombReactionField(potentialSettings, epsilon);
 
     const auto reactionFieldPrefactor = (epsilon - 1.0) / (2.0 * epsilon + 1.0);
     const auto cutoffEnergy           = 1.0 / cutoff;
     const auto cutoffForce            = 1.0 / (cutoff * cutoff);
     const auto cutoffCubedInverse     = 1.0 / (cutoff * cutoff * cutoff);
     const auto deltaCutoff            = cutoff - distance;
-    const auto coulombPrefactor =
-        chargeProduct *
-        coulomb_prefactor.numerical_value_in(
-            kcal_per_mol * angstrom / (elementary_charge * elementary_charge)
-        );
+    const auto coulombPrefactor       = chargeProduct * coulomb_prefactor;
 
     const auto expectedEnergy =
         coulombPrefactor *
@@ -64,20 +59,18 @@ TEST(TestCoulombReactionField, calculate)
         (1.0 / (distance * distance) - cutoffForce +
          2.0 * reactionFieldPrefactor * cutoffCubedInverse * deltaCutoff);
 
-    const auto [energy, force] = potential.calculate(
-        distance * angstrom,
-        chargeProduct * elementary_charge * elementary_charge
+    const auto [energy, force] = potential.calculate(distance, chargeProduct);
+    EXPECT_DOUBLE_EQ(
+        energy.numerical_value_in(kcal_per_mol),
+        expectedEnergy.numerical_value_in(kcal_per_mol)
     );
-    EXPECT_DOUBLE_EQ(energy.numerical_value_in(kcal_per_mol), expectedEnergy);
     EXPECT_DOUBLE_EQ(
         force.numerical_value_in(kcal_per_mol / angstrom),
-        expectedForce
+        expectedForce.numerical_value_in(kcal_per_mol / angstrom)
     );
 
-    const auto [cutoffEnergyValue, cutoffForceValue] = potential.calculate(
-        cutoff * angstrom,
-        chargeProduct * elementary_charge * elementary_charge
-    );
+    const auto [cutoffEnergyValue, cutoffForceValue] =
+        potential.calculate(cutoff, chargeProduct);
     EXPECT_NEAR(
         cutoffEnergyValue.numerical_value_in(kcal_per_mol),
         0.0,

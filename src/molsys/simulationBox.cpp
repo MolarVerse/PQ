@@ -552,7 +552,7 @@ namespace molsys
         const auto nAtoms = getNumberOfAtoms();
 
         _degreesOfFreedom =
-            3 * nAtoms - settings::GeneralSettings::getDimensionality();
+            (3 * nAtoms) - settings::GeneralSettings::getDimensionality();
     }
 
     /**
@@ -745,7 +745,7 @@ namespace molsys
      */
     void SimulationBox::checkCoulRadiusCutOff(
         const ExceptionType& exceptionType,
-        double               coulombRadiusCutOff
+        const Distance&      coulombRadiusCutOff
     ) const
     {
         if (getMinimalBoxDimension() < 2.0 * coulombRadiusCutOff)

@@ -58,11 +58,11 @@ namespace molsys
 
         void setup(
             const SimulationBox &simulationBox,
-            double               coulombRadiusCutOff
+            const Distance      &coulombRadiusCutOff
         );
         void updateCellList(
-            SimulationBox &simulationBox,
-            double         coulombRadiusCutOff
+            SimulationBox  &simulationBox,
+            const Distance &coulombRadiusCutOff
         );
 
         void determineCellSize(const Pos3D &box);
@@ -95,7 +95,7 @@ namespace molsys
 
         [[nodiscard]] linalg::Vec3Dul getNumberOfCells() const;
         [[nodiscard]] linalg::Vec3Dul getNumberOfNeighbourCells() const;
-        [[nodiscard]] const Pos3D             &getCellSize() const;
+        [[nodiscard]] const Pos3D    &getCellSize() const;
         [[nodiscard]] const std::vector<Cell> &getCells() const;
         [[nodiscard]] Cell                    &getCell(size_t index);
 

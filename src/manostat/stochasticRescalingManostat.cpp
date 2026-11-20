@@ -52,7 +52,7 @@ namespace manostat
         physicalData::PhysicalData &physicalData,
         const Temperature          &targetTemperature,
         const Time                 &timeStep,
-        double                      coulombRadiusCutOff
+        const Distance             &coulombRadiusCutOff
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Stochastic Rescaling");

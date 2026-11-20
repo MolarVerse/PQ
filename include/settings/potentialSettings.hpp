@@ -39,13 +39,13 @@
  */
 struct CoulombPotentialConfig
 {
-    double cutoff;
-    double cutoffSquared;
-    double energyCutoff;
-    double forceCutoff;
-    double invCubeCutoff;
+    Distance           cutoff;
+    DistanceSquared    cutoffSquared;
+    InvDistance        energyCutoff;
+    InvDistanceSquared forceCutoff;
+    InvDistanceCubed   invCubeCutoff;
 
-    explicit CoulombPotentialConfig(double cutoff_);
+    explicit CoulombPotentialConfig(const Distance& cutoff_);
 };
 
 struct PotentialSettingsUtils;
@@ -62,7 +62,7 @@ class PotentialSettings
     Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType;
     Setting<NonCoulombType, "Non coulomb type">              _nonCoulombType;
 
-    Setting<double, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
+    Setting<Distance, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
 
     static inline double _scale14Coulomb = defaults::SCALE_14_COULOMB_DEFAULT;
     static inline double _scale14VanDerWaals =
@@ -101,13 +101,13 @@ class PotentialSettings
     [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
     [[nodiscard]] NonCoulombType       getNonCoulombType() const;
 
-    [[nodiscard]] double        getCoulombRadiusCutOff() const;
-    [[nodiscard]] double        getNonCoulombRadiusCutOff() const;
-    [[nodiscard]] bool          isNonCoulombRadiusCutOffSetByUser() const;
-    [[nodiscard]] static double getScale14Coulomb();
-    [[nodiscard]] static double getScale14VDW();
-    [[nodiscard]] static double getReactionFieldEpsilon();
-    [[nodiscard]] static double getWolfParameter();
+    [[nodiscard]] const Distance&    getCoulombRadiusCutOff() const;
+    [[nodiscard]] const Distance&    getNonCoulombRadiusCutOff() const;
+    [[nodiscard]] bool               isNonCoulombRadiusCutOffSetByUser() const;
+    [[nodiscard]] static double      getScale14Coulomb();
+    [[nodiscard]] static double      getScale14VDW();
+    [[nodiscard]] static double      getReactionFieldEpsilon();
+    [[nodiscard]] static InvDistance getWolfParameter();
 
     friend struct ::PotentialSettingsUtils;
 };

@@ -213,7 +213,7 @@ TEST_F(TestCellList, addNeighbouringCells)
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
-    _cellList->addNeighbouringCells(1.5);
+    _cellList->addNeighbouringCells(1.5 * angstrom);
 
     for (const auto &cell : _cellList->getCells())
     {
@@ -363,7 +363,7 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    const double coulombRadiusCutOff = 4.0 * angstrom;
+    const auto coulombRadiusCutOff = 4.0 * angstrom;
     _cellList->setNumberOfCells(11);
     _cellList->resizeCells();
 

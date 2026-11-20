@@ -78,12 +78,12 @@ namespace intraNonBonded
             const auto atomIndices =
                 _intraNonBondedContainer->getAtomIndices()[atomIndex1];
 
-            for (const auto atomIndice : atomIndices)
+            for (const auto atomIndex : atomIndices)
             {
                 const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
                     calculateSingleInteraction(
                         AtomIndex{atomIndex1},
-                        atomIndice,
+                        atomIndex,
                         box,
                         coulombPotential,
                         nonCoulombPotential,
@@ -144,7 +144,7 @@ namespace intraNonBonded
         dPos                += txyz;
         const auto distance  = norm(dPos);
 
-        if (distance < potentialSettings.get_coulombRadiusCutOff())
+        if (distance < potentialSettings.getCoulombRadiusCutOff())
         {
             const auto charge1 = _molecule->getPartialCharge(atomIdx1);
             const auto charge2 = _molecule->getPartialCharge(atomIdx2);

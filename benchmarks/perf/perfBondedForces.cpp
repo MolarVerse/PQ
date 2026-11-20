@@ -53,7 +53,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(20.0);
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(20.0 * angstrom);
     auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{
@@ -63,7 +63,7 @@ int main()
 
     auto physicalData = physicalData::PhysicalData();
     auto coulombPotential =
-        pot::CoulombShiftedPotential(settings.potentialSettings * angstrom);
+        pot::CoulombShiftedPotential(settings.potentialSettings);
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
 
     auto molecule = benchSetup::makeMolecule({.nAtoms = 4});

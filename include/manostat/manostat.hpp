@@ -69,7 +69,7 @@ namespace manostat
             physicalData::PhysicalData &,
             const Temperature &targetTemperature,
             const Time        &timeStep,
-            double             coulombRadiusCutOff
+            const Distance    &coulombRadiusCutOff
         );
 
         static void rotateMu(QuantityTensor3D &mu);
@@ -78,7 +78,7 @@ namespace manostat
         static void _validateScaling(
             const molsys::SimulationBox &simulationBox,
             const QuantityTensor3D      &mu,
-            double                       coulombRadiusCutOff
+            const Distance              &coulombRadiusCutOff
         );
 
         [[nodiscard]]
@@ -103,7 +103,7 @@ namespace manostat
         static void _validateCandidate(
             molsys::Box            &candidate,
             const QuantityTensor3D &mu,
-            double                  coulombRadiusCutOff
+            const Distance         &coulombRadiusCutOff
         );
     };
 

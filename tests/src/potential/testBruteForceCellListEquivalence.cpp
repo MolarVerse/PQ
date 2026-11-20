@@ -174,8 +174,14 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
     Settings settings;
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCoulombCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom
+    );
+    PotentialSettingsUtils::setForceCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom2
+    );
 
     // Cell layout: box 15 Å, 3 cells per side, cellSize 5 Å, cutoff 4 Å.
     // Cells per axis: [-7.5,-2.5], [-2.5,+2.5], [+2.5,+7.5]. Placements are

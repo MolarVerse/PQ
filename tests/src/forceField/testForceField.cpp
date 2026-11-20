@@ -230,10 +230,9 @@ TEST_F(TestForceField, calculateBondedInteractions)
     box.setBox(orthoBox, false);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(20.0);
-    auto physicalData = physicalData::PhysicalData();
-    auto coulombPotential =
-        pot::CoulombShiftedPotential(potentialSettings * angstrom);
+    potentialSettings.setCoulombRadiusCutOffByUser(20.0 * angstrom);
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),
@@ -376,9 +375,8 @@ TEST_F(TestForceField, calculateBondedInteractions)
 TEST_F(TestForceField, correctLinker)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
-    auto coulombPotential =
-        pot::CoulombShiftedPotential(potentialSettings * angstrom);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),

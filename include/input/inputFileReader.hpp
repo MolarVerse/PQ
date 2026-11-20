@@ -33,6 +33,7 @@
 #include "enums/jobtype.hpp"
 #include "enums/potential.hpp"
 #include "inputFileParser.hpp"
+#include "unit_types.hpp"
 
 namespace engine
 {
@@ -142,7 +143,7 @@ namespace input
             CoulombLongRangeType longRangeCorrection
         ) const;
         void        _validateRingPolymer() const;
-        static void _validateCellList(double coulombRadiusCutOff);
+        static void _validateCellList(const Distance &coulombRadiusCutOff);
     };
 
 }   // namespace input

@@ -51,7 +51,7 @@ namespace pot
        public:
         explicit CoulombWolf(
             const PotentialSettings& potentialSettings,
-            double                   kappa
+            const InvDistance&       kappa
         );
 
         [[nodiscard]]

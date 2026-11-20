@@ -45,13 +45,9 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(9.0);
-    auto shifted =
-        pot::CoulombShiftedPotential(settings.potentialSettings * angstrom);
-    auto wolf = pot::CoulombWolf(
-        settings.potentialSettings * angstrom,
-        0.25 / angstrom
-    );
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(9.0 * angstrom);
+    auto shifted = pot::CoulombShiftedPotential(settings.potentialSettings);
+    auto wolf = pot::CoulombWolf(settings.potentialSettings, 0.25 / angstrom);
 
     perfAllocBegin();
 

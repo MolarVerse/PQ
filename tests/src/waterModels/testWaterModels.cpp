@@ -699,8 +699,8 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
     PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
+    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
     molsys::SimulationBox   simBox;
     molsys::OrthorhombicBox orthoBox{
@@ -916,8 +916,14 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings.hybridSettings.setUseQMChargesByUser(true);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom
+    );
+    PotentialSettingsUtils::setForceCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom2
+    );
     settings.waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
 
     const auto coulomb = std::make_shared<pot::CoulombShiftedPotential>(
@@ -1111,9 +1117,12 @@ namespace
         settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
-            0.0
+            0.0 / angstrom
         );
-        PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+        PotentialSettingsUtils::setForceCutoff(
+            settings.potentialSettings,
+            0.0 / angstrom2
+        );
 
         settings.waterModelSettings.setWaterInterModelByUser(
             WaterInterModel::SPC
@@ -1278,8 +1287,8 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
     PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
+    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
     HybridSettings           hybridSettings;
     pot::PotentialBruteForce potential{hybridSettings};
@@ -1378,9 +1387,12 @@ namespace
         settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
-            0.0
+            0.0 / angstrom
         );
-        PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+        PotentialSettingsUtils::setForceCutoff(
+            settings.potentialSettings,
+            0.0 / angstrom2
+        );
 
         auto simulationBox = makeSpreadWaterBox(true);
         configurator::HybridConfigurator::activateMolecules(simulationBox);
@@ -1518,8 +1530,14 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     HybridSettings hybridSettings;
     hybridSettings.setUseQMChargesByUser(true);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom
+    );
+    PotentialSettingsUtils::setForceCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom2
+    );
 
     auto                       simBoxBruteForce = makeHybridWaterBox();
     molsys::CellList           unusedCellList;

@@ -162,9 +162,8 @@ TEST(
 )
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(4.0);
-    const auto potential =
-        pot::CoulombShiftedPotential(potentialSettings * angstrom);
+    potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    const auto potential     = pot::CoulombShiftedPotential(potentialSettings);
     const auto chargeProduct = 0.75 * elementary_charge * elementary_charge;
 
     expectForceIsNegativeEnergyDerivative(
@@ -178,9 +177,8 @@ TEST(
 TEST(TestPairPotentialDerivatives, WolfCoulombForceIsNegativeEnergyDerivative)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(4.0);
-    const auto potential =
-        pot::CoulombWolf(potentialSettings * angstrom, 0.25 / angstrom);
+    potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    const auto potential = pot::CoulombWolf(potentialSettings, 0.25 / angstrom);
     const auto chargeProduct = -0.75 * elementary_charge * elementary_charge;
 
     expectForceIsNegativeEnergyDerivative(

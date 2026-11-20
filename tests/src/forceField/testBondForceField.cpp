@@ -62,10 +62,9 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     box.setBox(orthoBox, false);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
-    auto physicalData = physicalData::PhysicalData();
-    auto coulombPotential =
-        pot::CoulombShiftedPotential(potentialSettings * angstrom);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(0),

@@ -145,7 +145,7 @@ namespace manostat
     void Manostat::_validateScaling(
         const molsys::SimulationBox &simulationBox,
         const QuantityTensor3D      &mu,
-        double                       coulombRadiusCutOff
+        const Distance              &coulombRadiusCutOff
     )
     {
         const auto determinant = det(mu);
@@ -175,7 +175,7 @@ namespace manostat
     void Manostat::_validateCandidate(
         molsys::Box            &candidate,
         const QuantityTensor3D &mu,
-        double                  coulombRadiusCutOff
+        const Distance         &coulombRadiusCutOff
     )
     {
         candidate.scaleBox(mu);
@@ -243,7 +243,7 @@ namespace manostat
         physicalData::PhysicalData &physicalData,
         const Temperature & /*targetTemperature*/,
         const Time & /*timeStep*/,
-        double /*coulombRadiusCutOff*/
+        const Distance & /*coulombRadiusCutOff*/
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");

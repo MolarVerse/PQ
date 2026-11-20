@@ -32,41 +32,32 @@
  */
 TEST(TestCoulombShiftedPotential, calculate)
 {
-    const auto chargeProduct = 2.0;
-    const auto rcCutoff      = 3.0;
+    const auto chargeProduct = 2.0 * elementary_charge * elementary_charge;
+    const auto rcCutoff      = 3.0 * angstrom;
     const auto energyCutOff  = 1 / rcCutoff;
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
     Settings settings;
     settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
     const auto potential =
-        pot::CoulombShiftedPotential(settings.potentialSettings * angstrom);
+        pot::CoulombShiftedPotential(settings.potentialSettings);
 
-    auto distance = 2.0;
+    auto distance = 2.0 * angstrom;
 
-    const auto [energy, force] = potential.calculate(
-        distance * angstrom,
-        chargeProduct * elementary_charge * elementary_charge
-    );
+    const auto [energy, force] = potential.calculate(distance, chargeProduct);
 
     EXPECT_NEAR(
         energy.numerical_value_in(kcal_per_mol),
-        chargeProduct *
-            coulomb_prefactor.numerical_value_in(
-                kcal_per_mol * angstrom /
-                (elementary_charge * elementary_charge)
-            ) *
-            (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance)),
+        (chargeProduct * coulomb_prefactor *
+         (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance)))
+            .numerical_value_in(kcal_per_mol),
         1e-10
     );
     EXPECT_NEAR(
         force.numerical_value_in(kcal_per_mol / angstrom),
-        chargeProduct *
-            coulomb_prefactor.numerical_value_in(
-                kcal_per_mol * angstrom /
-                (elementary_charge * elementary_charge)
-            ) *
-            (1 / (distance * distance) - forceCutoff),
+        (chargeProduct * coulomb_prefactor *
+         (1 / (distance * distance) - forceCutoff))
+            .numerical_value_in(kcal_per_mol / angstrom),
         1e-10
     );
 }

@@ -47,21 +47,21 @@ namespace pot
      */
     CoulombWolf::CoulombWolf(
         const PotentialSettings& potentialSettings,
-        double                   kappa
+        const InvDistance&       kappa
     )
         : CoulombPotential(potentialSettings)
     {
-        _kappa             = kappa;
-        const auto& config = potentialSettings.get_coulombConfig();
-        _wolfParam1        = mstd::erfc(_kappa * config.cutoff) / config.cutoff;
-        _wolfParam2        = 2.0 * _kappa / ::sqrt(M_PI);
+        _kappa            = kappa;
+        const auto cutoff = _get_cutoff();
+        _wolfParam1       = mstd::erfc(_kappa * cutoff) / cutoff;
+        _wolfParam2       = 2.0 * _kappa / ::sqrt(M_PI);
 
         const auto kappaSquared  = _kappa * _kappa;
-        const auto coulRCSquared = config.cutoff * config.cutoff;
+        const auto coulRCSquared = cutoff * cutoff;
         const auto expFactor     = mstd::exp(-kappaSquared * coulRCSquared);
 
-        _wolfParam3  = _wolfParam1 / config.cutoff;
-        _wolfParam3 += _wolfParam2 * expFactor / config.cutoff;
+        _wolfParam3  = _wolfParam1 / cutoff;
+        _wolfParam3 += _wolfParam2 * expFactor / cutoff;
     }
 
     /**
@@ -88,10 +88,8 @@ namespace pot
         force      += _wolfParam2 * expFactor / distance;
         force      -= _wolfParam3;
 
-        energy *= coulombPrefactor;
-        force  *= coulombPrefactor;
-
-        return {energy, force};
+        const auto chargeFactor = chargeProduct * coulomb_prefactor;
+        return {energy * chargeFactor, force * chargeFactor};
     }
 
 }   // namespace pot

@@ -39,9 +39,11 @@ TEST(TestCoulombWolf, calculate)
     const double kappa         = 0.25;
 
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(
+        rcCutoff * angstrom
+    );
     const auto guffWolfCoulomb =
-        pot::CoulombWolf(settings.potentialSettings, kappa);
+        pot::CoulombWolf(settings.potentialSettings, kappa / angstrom);
     const auto constParam1 = ::erfc(kappa * rcCutoff) / rcCutoff;
     const auto constParam2 = 2.0 * kappa / ::sqrt(M_PI);
     const auto constParam3 =

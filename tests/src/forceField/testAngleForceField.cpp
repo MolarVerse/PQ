@@ -64,10 +64,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     box.setBox(orthoBox, false);
 
     auto potentialSettings = PotentialSettings();
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
-    auto physicalData = physicalData::PhysicalData();
-    auto coulombPotential =
-        pot::CoulombShiftedPotential(potentialSettings * angstrom);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    auto physicalData     = physicalData::PhysicalData();
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(1),
@@ -353,9 +352,8 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     auto              physicalData = physicalData::PhysicalData();
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
-    auto coulombPotential =
-        pot::CoulombShiftedPotential(potentialSettings * angstrom);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{0});

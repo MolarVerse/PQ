@@ -30,7 +30,7 @@
  *
  * @param cutoff_ The cutoff distance for the Coulomb potential
  */
-CoulombPotentialConfig::CoulombPotentialConfig(double cutoff_)
+CoulombPotentialConfig::CoulombPotentialConfig(const Distance& cutoff_)
     : cutoff(cutoff_),
       cutoffSquared(cutoff_ * cutoff_),
       energyCutoff(1 / cutoff_),
@@ -60,7 +60,7 @@ PotentialSettings::PotentialSettings()
 void PotentialSettings::finalize()
 {
     if (settings::GeneralSettings::isQMOnlyJobtype())
-        _coulombConfig = CoulombPotentialConfig(0.0);
+        _coulombConfig = CoulombPotentialConfig(Distance::zero());
 }
 
 /********************
@@ -185,7 +185,7 @@ NonCoulombType PotentialSettings::getNonCoulombType() const
  *
  * @return Pos
  */
-Pos PotentialSettings::getCoulombRadiusCutOff() const
+const Distance& PotentialSettings::getCoulombRadiusCutOff() const
 {
     return _coulombConfig.cutoff;
 }
@@ -195,7 +195,7 @@ Pos PotentialSettings::getCoulombRadiusCutOff() const
  *
  * @return std::optional<Pos>
  */
-Pos PotentialSettings::getNonCoulombRadiusCutOff() const
+const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
 {
     return _nonCoulombRadiusCutOff.get();
 }
@@ -237,9 +237,6 @@ double PotentialSettings::getReactionFieldEpsilon()
 /**
  * @brief get the Wolf parameter
  *
- * @return const InvDistance&
+ * @return InvDistance
  */
-const InvDistance& PotentialSettings::getWolfParameter()
-{
-    return _wolfParameter;
-}
+InvDistance PotentialSettings::getWolfParameter() { return _wolfParameter; }

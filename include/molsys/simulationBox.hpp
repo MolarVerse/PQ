@@ -101,7 +101,7 @@ namespace molsys
 
         void checkCoulRadiusCutOff(
             const ExceptionType&,
-            double coulombRadiusCutOff
+            const Distance& coulombRadiusCutOff
         ) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 

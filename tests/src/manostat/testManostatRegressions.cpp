@@ -77,10 +77,15 @@ namespace
             _settings->manostatSettings.setCompressibilityByUser(
                 0.03 * per_bar
             );
-            _box.setBox(molsys::OrthorhombicBox({10.0, 10.0, 10.0}), false);
-            _data.setVirial(linalg::tensor3D{0.0});
-            _data.setKineticEnergyMolecularVector(linalg::tensor3D{0.0});
-            _data.setKineticEnergyAtomicVector(linalg::tensor3D{0.0});
+            _box.setBox(
+                molsys::OrthorhombicBox(
+                    {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+                ),
+                false
+            );
+            _data.setVirial(VirialPerMol::zero());
+            _data.setKineticEnergyMolecularVector(VirialPerMol::zero());
+            _data.setKineticEnergyAtomicVector(VirialPerMol::zero());
         }
 
         void _addMolecule(
@@ -142,7 +147,13 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
         const auto oldCell =
             _box.getBox().getBoxMatrix(molsys::Periodicity::XYZ);
         const auto timeStep = 1.0 * fs;
-        coupling->applyManostat(_box, _data, toTemperature(0.0), timeStep, 0.1);
+        coupling->applyManostat(
+            _box,
+            _data,
+            toTemperature(0.0),
+            timeStep,
+            0.1 * angstrom
+        );
         EXPECT_NEAR(_data.getPressure().numerical_value_in(bar), 1.0, 1e-12);
         for (size_t i = 0; i < 3; ++i)
         {
@@ -264,7 +275,7 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
                 _data,
                 toTemperature(0.0),
                 1.0 * fs,
-                0.1
+                0.1 * angstrom
             ));
             EXPECT_LT(_box.getVolume(), oldVolume);
             EXPECT_NEAR(
@@ -279,10 +290,13 @@ TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
     }
     EXPECT_TRUE(testing::internal::GetCapturedStdout().empty());
     manostat::Manostat reportPressure(_settings->manostatSettings);
-    EXPECT_NO_THROW(
-        reportPressure
-            .applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs, 0.1)
-    );
+    EXPECT_NO_THROW(reportPressure.applyManostat(
+        _box,
+        _data,
+        toTemperature(0.0),
+        1.0 * fs,
+        0.1 * angstrom
+    ));
 }
 
 TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
@@ -355,7 +369,7 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
                 _data,
                 toTemperature(0.0),
                 1.0 * fs,
-                i == 4 ? 3.0 : 0.1
+                (i == 4 ? 3.0 : 0.1) * angstrom
             ),
             exc::ManostatException,
             i == 4
@@ -553,7 +567,13 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
     manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
     );
-    stochastic.applyManostat(_box, _data, toTemperature(0.0), 1.0 * fs, 0.1);
+    stochastic.applyManostat(
+        _box,
+        _data,
+        toTemperature(0.0),
+        1.0 * fs,
+        0.1 * angstrom
+    );
 
     EXPECT_NEAR(
         (_data.getKineticEnergy() / expectedEnergy).numerical_value_in(one),
@@ -610,14 +630,20 @@ TEST_F(ManostatRegression, atomicVirialSupportsMonatomicPressureCoupling)
     manostat::BerendsenManostat berendsen(_settings->manostatSettings);
     manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
     );
-    EXPECT_NO_THROW(
-        berendsen
-            .applyManostat(_box, _data, toTemperature(300.0), 0.5 * fs, 0.1)
-    );
-    EXPECT_NO_THROW(
-        stochastic
-            .applyManostat(_box, _data, toTemperature(300.0), 0.5 * fs, 0.1)
-    );
+    EXPECT_NO_THROW(berendsen.applyManostat(
+        _box,
+        _data,
+        toTemperature(300.0),
+        0.5 * fs,
+        0.1 * angstrom
+    ));
+    EXPECT_NO_THROW(stochastic.applyManostat(
+        _box,
+        _data,
+        toTemperature(300.0),
+        0.5 * fs,
+        0.1 * angstrom
+    ));
     EXPECT_TRUE(isfinite(_box.getVolume()));
     EXPECT_GT(_box.getVolume().numerical_value_in(Volume::unit), 0.0);
 }

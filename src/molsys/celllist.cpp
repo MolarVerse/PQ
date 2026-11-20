@@ -76,7 +76,7 @@ namespace molsys
      */
     void CellList::setup(
         const SimulationBox &simulationBox,
-        double               coulombRadiusCutOff
+        const Distance      &coulombRadiusCutOff
     )
     {
         _oldBoxDimensions = simulationBox.getBoxDimensions();
@@ -261,8 +261,8 @@ namespace molsys
      * check for interactions beyond the specified cut-off
      */
     void CellList::updateCellList(
-        SimulationBox &simulationBox,
-        double         coulombRadiusCutOff
+        SimulationBox  &simulationBox,
+        const Distance &coulombRadiusCutOff
     )
     {
         if (!settings::GeneralSettings::isCellListActivated())

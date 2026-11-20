@@ -144,7 +144,7 @@ namespace ff
 
             const auto distance23 = norm(dPosition23);
 
-            if (distance23 < potentialSettings.get_coulombRadiusCutOff())
+            if (distance23 < potentialSettings.getCoulombRadiusCutOff())
             {
                 const auto forceMagnitudeLinker =
                     correctLinker<AngleForceField>(

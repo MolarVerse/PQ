@@ -164,8 +164,7 @@ namespace ff
 
             const auto distance14Quantity = norm(dPosition14);
 
-            if (distance14Quantity <
-                potentialSettings.get_coulombRadiusCutOff())
+            if (distance14Quantity < potentialSettings.getCoulombRadiusCutOff())
             {
                 const auto forceMagnitudeLinker =
                     correctLinker<DihedralForceField>(

@@ -60,7 +60,10 @@ namespace pot
         virtual ~CoulombPotential() = default;
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(double, double) const = 0;
+        virtual std::pair<EnergyPerMol, Force> calculate(
+            const Distance&      distance,
+            const ChargeSquared& chargeProduct
+        ) const = 0;
 
        protected:
         INTERNAL_CONST_GETTER(_cutoff);
