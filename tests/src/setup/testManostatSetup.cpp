@@ -56,27 +56,42 @@ namespace
         static void writeManostatSelection(
             out::LogOutput         &logOutput,
             const ManostatSettings &settings
-        )
-        {
-            _writeManostatSelection(logOutput, settings);
-        }
+        );
 
         static void writeBerendsenSetup(
             out::LogOutput         &logOutput,
             const ManostatSettings &settings
-        )
-        {
-            _writeBerendsenSetup(logOutput, settings);
-        }
+        );
 
         static void writeIsotropy(
             out::LogOutput         &logOutput,
             const ManostatSettings &settings
-        )
-        {
-            _writeIsotropy(logOutput, settings);
-        }
+        );
     };
+
+    void TestableManostatSetup::writeManostatSelection(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
+    {
+        _writeManostatSelection(logOutput, settings);
+    }
+
+    void TestableManostatSetup::writeBerendsenSetup(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
+    {
+        _writeBerendsenSetup(logOutput, settings);
+    }
+
+    void TestableManostatSetup::writeIsotropy(
+        out::LogOutput         &logOutput,
+        const ManostatSettings &settings
+    )
+    {
+        _writeIsotropy(logOutput, settings);
+    }
 
     /**
      * @brief what a write function puts into a real log file, line by line

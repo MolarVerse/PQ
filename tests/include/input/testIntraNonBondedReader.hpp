@@ -45,27 +45,29 @@ class TestIntraNonBondedReader : public ::testing::Test
     std::unique_ptr<input::intraNonBondedReader::IntraNonBondedReader>
         _intraNonBondedReader;
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::MoleculeType();
-        molecule1.setNumberOfAtoms(3);
-        molecule1.setMoltype(MolType{0});
-        molecule1.setName("molecule1");
-
-        // NOTE: use dummy engine for testing
-        //       this is implemented by base class Engine
-        //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-
-        _engine->getSimulationBox().addMoleculeType(molecule1);
-        settings::GeneralSettings::activateIntraNonBonded();
-
-        _intraNonBondedReader =
-            std::make_unique<input::intraNonBondedReader::IntraNonBondedReader>(
-                "data/intraNonBondedReader/intraNonBonded.dat",
-                *_engine
-            );
-    }
+    void SetUp() override;
 };
+
+inline void TestIntraNonBondedReader::SetUp()
+{
+    auto molecule1 = molsys::MoleculeType();
+    molecule1.setNumberOfAtoms(3);
+    molecule1.setMoltype(MolType{0});
+    molecule1.setName("molecule1");
+
+    // NOTE: use dummy engine for testing
+    //       this is implemented by base class Engine
+    //       and works therefore for all derived classes
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+
+    _engine->getSimulationBox().addMoleculeType(molecule1);
+    settings::GeneralSettings::activateIntraNonBonded();
+
+    _intraNonBondedReader =
+        std::make_unique<input::intraNonBondedReader::IntraNonBondedReader>(
+            "data/intraNonBondedReader/intraNonBonded.dat",
+            *_engine
+        );
+}
 
 #endif   // TESTS__INCLUDE__INPUT__TEST_INTRA_NON_BONDED_READER_HPP

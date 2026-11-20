@@ -45,47 +45,49 @@ class TestPhysicalData : public ::testing::Test
     std::unique_ptr<physicalData::PhysicalData> _physicalData;
     std::unique_ptr<molsys::SimulationBox>      _simulationBox;
 
-    void SetUp() override
-    {
-        _physicalData = std::make_unique<physicalData::PhysicalData>();
-        _physicalData->setCoulombEnergy(1.0);
-        _physicalData->setNonCoulombEnergy(2.0);
-        _physicalData->setTemperature(mstd::units::point<K>(3.0));
-        _physicalData->setMomentum(linalg::Vec3D(4.0));
-        _physicalData->setKineticEnergy(5.0);
-        _physicalData->setVolume(6.0);
-        _physicalData->setDensity(7.0);
-        _physicalData->setPressure(8.0 * bar);
-        _physicalData->setCoupledPressure(8.5 * bar);
-        _physicalData->setQMEnergy(9.0);
-        _physicalData->setQMReferenceEnergy(1.0);
-
-        _simulationBox = std::make_unique<molsys::SimulationBox>();
-
-        auto molecule1 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setMass(1.0);
-        atom2->setMass(1.0);
-        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-
-        auto molecule2 = molsys::Molecule();
-
-        auto atom3 = std::make_shared<molsys::Atom>();
-        atom3->setMass(1.0);
-        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        molecule2.addAtom(atom3);
-
-        _simulationBox->addMolecule(molecule1);
-        _simulationBox->addMolecule(molecule2);
-
-        _simulationBox->calculateDegreesOfFreedom();
-    }
+    void SetUp() override;
 };
+
+inline void TestPhysicalData::SetUp()
+{
+    _physicalData = std::make_unique<physicalData::PhysicalData>();
+    _physicalData->setCoulombEnergy(1.0);
+    _physicalData->setNonCoulombEnergy(2.0);
+    _physicalData->setTemperature(mstd::units::point<K>(3.0));
+    _physicalData->setMomentum(linalg::Vec3D(4.0));
+    _physicalData->setKineticEnergy(5.0);
+    _physicalData->setVolume(6.0);
+    _physicalData->setDensity(7.0);
+    _physicalData->setPressure(8.0 * bar);
+    _physicalData->setCoupledPressure(8.5 * bar);
+    _physicalData->setQMEnergy(9.0);
+    _physicalData->setQMReferenceEnergy(1.0);
+
+    _simulationBox = std::make_unique<molsys::SimulationBox>();
+
+    auto molecule1 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setMass(1.0);
+    atom2->setMass(1.0);
+    atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+
+    auto molecule2 = molsys::Molecule();
+
+    auto atom3 = std::make_shared<molsys::Atom>();
+    atom3->setMass(1.0);
+    atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    molecule2.addAtom(atom3);
+
+    _simulationBox->addMolecule(molecule1);
+    _simulationBox->addMolecule(molecule2);
+
+    _simulationBox->calculateDegreesOfFreedom();
+}
 
 #endif

@@ -34,67 +34,90 @@
 struct TestTriclinicBox
 {
     [[nodiscard]]
-    static double cosAlpha(const linalg::Vec3D &boxAngles)
-    {
-        return molsys::TriclinicBox::_cosAlpha(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
-    }
+    static double cosAlpha(const linalg::Vec3D &boxAngles);
     [[nodiscard]]
-    static double cosBeta(const linalg::Vec3D &boxAngles)
-    {
-        return molsys::TriclinicBox::_cosBeta(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
-    }
+    static double cosBeta(const linalg::Vec3D &boxAngles);
     [[nodiscard]]
-    static double cosGamma(const linalg::Vec3D &boxAngles)
-    {
-        return molsys::TriclinicBox::_cosGamma(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
-    }
+    static double cosGamma(const linalg::Vec3D &boxAngles);
     [[nodiscard]]
-    static double sinAlpha(const linalg::Vec3D &boxAngles)
-    {
-        return molsys::TriclinicBox::_sinAlpha(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
-    }
+    static double sinAlpha(const linalg::Vec3D &boxAngles);
     [[nodiscard]]
-    static double sinBeta(const linalg::Vec3D &boxAngles)
-    {
-        return molsys::TriclinicBox::_sinBeta(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
-    }
+    static double sinBeta(const linalg::Vec3D &boxAngles);
     [[nodiscard]]
-    static double sinGamma(const linalg::Vec3D &boxAngles)
-    {
-        return molsys::TriclinicBox::_sinGamma(
-            (boxAngles * mstd::units::deg).in(mstd::units::rad)
-        );
-    }
+    static double sinGamma(const linalg::Vec3D &boxAngles);
 
     [[nodiscard]]
-    static linalg::tensor3D getBoxMatrix(molsys::TriclinicBox &box)
-    {
-        return box._boxMatrix.get(box);
-    }
+    static linalg::tensor3D getBoxMatrix(molsys::TriclinicBox &box);
 
     static void setBoxAngles(
         molsys::TriclinicBox &box,
         const linalg::Vec3D  &boxAngles
-    )
-    {
-        box._set_angles((boxAngles * mstd::units::deg).in(mstd::units::rad));
-    }
+    );
 
-    static linalg::tensor3D getTransformationMatrix(molsys::TriclinicBox &box)
-    {
-        return box._trafoMatrix.get(box);
-    }
+    static linalg::tensor3D getTransformationMatrix(molsys::TriclinicBox &box);
 };
+
+double TestTriclinicBox::cosAlpha(const linalg::Vec3D &boxAngles)
+{
+    return molsys::TriclinicBox::_cosAlpha(
+        (boxAngles * mstd::units::deg).in(mstd::units::rad)
+    );
+}
+
+double TestTriclinicBox::cosBeta(const linalg::Vec3D &boxAngles)
+{
+    return molsys::TriclinicBox::_cosBeta(
+        (boxAngles * mstd::units::deg).in(mstd::units::rad)
+    );
+}
+
+double TestTriclinicBox::cosGamma(const linalg::Vec3D &boxAngles)
+{
+    return molsys::TriclinicBox::_cosGamma(
+        (boxAngles * mstd::units::deg).in(mstd::units::rad)
+    );
+}
+
+double TestTriclinicBox::sinAlpha(const linalg::Vec3D &boxAngles)
+{
+    return molsys::TriclinicBox::_sinAlpha(
+        (boxAngles * mstd::units::deg).in(mstd::units::rad)
+    );
+}
+
+double TestTriclinicBox::sinBeta(const linalg::Vec3D &boxAngles)
+{
+    return molsys::TriclinicBox::_sinBeta(
+        (boxAngles * mstd::units::deg).in(mstd::units::rad)
+    );
+}
+
+double TestTriclinicBox::sinGamma(const linalg::Vec3D &boxAngles)
+{
+    return molsys::TriclinicBox::_sinGamma(
+        (boxAngles * mstd::units::deg).in(mstd::units::rad)
+    );
+}
+
+linalg::tensor3D TestTriclinicBox::getBoxMatrix(molsys::TriclinicBox &box)
+{
+    return box._boxMatrix.get(box);
+}
+
+void TestTriclinicBox::setBoxAngles(
+    molsys::TriclinicBox &box,
+    const linalg::Vec3D  &boxAngles
+)
+{
+    box._set_angles((boxAngles * mstd::units::deg).in(mstd::units::rad));
+}
+
+linalg::tensor3D TestTriclinicBox::getTransformationMatrix(
+    molsys::TriclinicBox &box
+)
+{
+    return box._trafoMatrix.get(box);
+}
 
 TEST(TestTriclinicBox, setBoxDimensions)
 {

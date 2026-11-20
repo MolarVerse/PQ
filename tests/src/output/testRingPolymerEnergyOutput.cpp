@@ -35,20 +35,26 @@ class TestRingPolymerEnergyOutput : public testing::Test
    protected:
     static double _sumOfRingPolymerEnergies(
         const std::vector<physicalData::PhysicalData> &dataVector
-    )
-    {
-        return out::RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
-            dataVector
-        );
-    }
+    );
 
     static double _maxRingPolymerEnergy(
         const std::vector<physicalData::PhysicalData> &dataVector
-    )
-    {
-        return out::RingPolymerEnergyOutput::_maxRingPolymerEnergy(dataVector);
-    }
+    );
 };
+
+double TestRingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
+    const std::vector<physicalData::PhysicalData> &dataVector
+)
+{
+    return out::RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(dataVector);
+}
+
+double TestRingPolymerEnergyOutput::_maxRingPolymerEnergy(
+    const std::vector<physicalData::PhysicalData> &dataVector
+)
+{
+    return out::RingPolymerEnergyOutput::_maxRingPolymerEnergy(dataVector);
+}
 
 TEST_F(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
 {

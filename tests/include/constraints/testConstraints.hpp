@@ -48,58 +48,7 @@ class TestConstraints : public ::testing::Test
     std::unique_ptr<molsys::SimulationBox>    _box;
     std::unique_ptr<constraints::Constraints> _constraints;
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-        auto atom3 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0));
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0));
-        atom1->setMass(1.0);
-        atom2->setMass(1.0);
-        atom3->setMass(1.0);
-
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-        molecule1.addAtom(atom3);
-
-        auto molecule2 = molsys::Molecule();
-
-        auto atom4 = std::make_shared<molsys::Atom>();
-        auto atom5 = std::make_shared<molsys::Atom>();
-
-        atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom4->setMass(1.0);
-        atom5->setMass(1.0);
-
-        molecule2.addAtom(atom4);
-        molecule2.addAtom(atom5);
-
-        _box = std::make_unique<molsys::SimulationBox>();
-        _box->addMolecule(molecule1);
-        _box->addMolecule(molecule2);
-
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _box->setBox(orthoBox, false);
-
-        Settings settings;
-        settings.constraintSettings.activateShakeByUser();
-        _constraints = std::make_unique<constraints::Constraints>(
-            settings.constraintSettings
-        );
-
-        _addDefaultBondConstraints(*_constraints);
-    }
+    void SetUp() override;
 
     /**
      * @brief adds the two bond constraints used by the fixture's molecules
@@ -112,26 +61,84 @@ class TestConstraints : public ::testing::Test
      *
      * @param constraints
      */
-    void _addDefaultBondConstraints(constraints::Constraints &constraints) const
-    {
-        auto bondConstraint1 = constraints::BondConstraint(
-            _box->getMolecules().data(),
-            _box->getMolecules().data(),
-            AtomIndex{0},
-            AtomIndex{1},
-            1.2
-        );
-        auto bondConstraint2 = constraints::BondConstraint(
-            _box->getMolecules().data(),
-            &(_box->getMolecules()[1]),
-            AtomIndex{2},
-            AtomIndex{1},
-            1.3
-        );
-
-        constraints.addBondConstraint(bondConstraint1);
-        constraints.addBondConstraint(bondConstraint2);
-    }
+    void _addDefaultBondConstraints(
+        constraints::Constraints &constraints
+    ) const;
 };
+
+inline void TestConstraints::SetUp()
+{
+    auto molecule1 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0));
+    atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0));
+    atom1->setMass(1.0);
+    atom2->setMass(1.0);
+    atom3->setMass(1.0);
+
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+    molecule1.addAtom(atom3);
+
+    auto molecule2 = molsys::Molecule();
+
+    auto atom4 = std::make_shared<molsys::Atom>();
+    auto atom5 = std::make_shared<molsys::Atom>();
+
+    atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+    atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom4->setMass(1.0);
+    atom5->setMass(1.0);
+
+    molecule2.addAtom(atom4);
+    molecule2.addAtom(atom5);
+
+    _box = std::make_unique<molsys::SimulationBox>();
+    _box->addMolecule(molecule1);
+    _box->addMolecule(molecule2);
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _box->setBox(orthoBox, false);
+
+    Settings settings;
+    settings.constraintSettings.activateShakeByUser();
+    _constraints =
+        std::make_unique<constraints::Constraints>(settings.constraintSettings);
+
+    _addDefaultBondConstraints(*_constraints);
+}
+
+inline void TestConstraints::_addDefaultBondConstraints(
+    constraints::Constraints &constraints
+) const
+{
+    auto bondConstraint1 = constraints::BondConstraint(
+        _box->getMolecules().data(),
+        _box->getMolecules().data(),
+        AtomIndex{0},
+        AtomIndex{1},
+        1.2
+    );
+    auto bondConstraint2 = constraints::BondConstraint(
+        _box->getMolecules().data(),
+        &(_box->getMolecules()[1]),
+        AtomIndex{2},
+        AtomIndex{1},
+        1.3
+    );
+
+    constraints.addBondConstraint(bondConstraint1);
+    constraints.addBondConstraint(bondConstraint2);
+}
 
 #endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

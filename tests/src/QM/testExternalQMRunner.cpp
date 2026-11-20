@@ -88,12 +88,17 @@ namespace
         explicit PeriodicDftbRunner(
             const QMSettings         &settings,
             const ExternalQMSettings &externalQMSettings
-        )
-            : QM::DFTBPlusRunner(settings, externalQMSettings)
-        {
-            _setPeriodicity(molsys::Periodicity::XYZ);
-        }
+        );
     };
+
+    PeriodicDftbRunner::PeriodicDftbRunner(
+        const QMSettings         &settings,
+        const ExternalQMSettings &externalQMSettings
+    )
+        : QM::DFTBPlusRunner(settings, externalQMSettings)
+    {
+        _setPeriodicity(molsys::Periodicity::XYZ);
+    }
 
     class ExternalQMRunnerHarness : public QM::ExternalQMRunner
     {
@@ -102,39 +107,56 @@ namespace
 
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
-        {
-        }
+        void _writeCoordsFile(
+            const molsys::SimulationBox & /*simBox*/
+        ) override;
 
         void execute(
             const molsys::SimulationBox & /*simBox*/,
             const FileSettings &fileSettings,
             const HybridSettings & /*hybridSettings*/
-        ) override
-        {
-            _sawStaleResults =
-                std::filesystem::exists(fileSettings.getQMForcesTempFileName()
-                ) ||
-                std::filesystem::exists(fileSettings.getQMChargesTempFileName()
-                ) ||
-                std::filesystem::exists(
-                    fileSettings.getStressTensorTempFileName()
-                );
-
-            writeFile(fileSettings.getQMForcesTempFileName(), "0\n0 0 0\n");
-            writeFile(fileSettings.getQMChargesTempFileName(), "0\n");
-        }
+        ) override;
 
         void runCommand(
-            const std::string_view command,
-            const std::string_view program
-        ) const
-        {
-            _executeCommand(command, program);
-        }
+            std::string_view command,
+            std::string_view program
+        ) const;
 
-        [[nodiscard]] bool sawStaleResults() const { return _sawStaleResults; }
+        [[nodiscard]] bool sawStaleResults() const;
     };
+
+    void ExternalQMRunnerHarness::
+        _writeCoordsFile(const molsys::SimulationBox & /*simBox*/)
+    {
+    }
+
+    void ExternalQMRunnerHarness::execute(
+        const molsys::SimulationBox & /*simBox*/,
+        const FileSettings &fileSettings,
+        const HybridSettings & /*hybridSettings*/
+    )
+    {
+        _sawStaleResults =
+            std::filesystem::exists(fileSettings.getQMForcesTempFileName()) ||
+            std::filesystem::exists(fileSettings.getQMChargesTempFileName()) ||
+            std::filesystem::exists(fileSettings.getStressTensorTempFileName());
+
+        writeFile(fileSettings.getQMForcesTempFileName(), "0\n0 0 0\n");
+        writeFile(fileSettings.getQMChargesTempFileName(), "0\n");
+    }
+
+    void ExternalQMRunnerHarness::runCommand(
+        std::string_view command,
+        std::string_view program
+    ) const
+    {
+        _executeCommand(command, program);
+    }
+
+    bool ExternalQMRunnerHarness::sawStaleResults() const
+    {
+        return _sawStaleResults;
+    }
 
     template <typename Runner>
     class CommandCaptureRunner : public Runner
@@ -145,20 +167,29 @@ namespace
        public:
         using Runner::Runner;
         [[nodiscard]]
-        const std::string &getCommand() const
-        {
-            return _command;
-        }
+        const std::string &getCommand() const;
 
        protected:
         void _executeCommand(
-            const std::string_view command,
-            const std::string_view /*program*/
-        ) const override
-        {
-            _command = command;
-        }
+            std::string_view command,
+            std::string_view program
+        ) const override;
     };
+
+    template <typename Runner>
+    const std::string &CommandCaptureRunner<Runner>::getCommand() const
+    {
+        return _command;
+    }
+
+    template <typename Runner>
+    void CommandCaptureRunner<Runner>::_executeCommand(
+        std::string_view command,
+        std::string_view /*program*/
+    ) const
+    {
+        _command = command;
+    }
 
 }   // namespace
 
@@ -183,126 +214,167 @@ class ExternalQMRunnerTest : public testing::Test
         physicalData::PhysicalData &physicalData,
         const QMSettings           &settings,
         const std::string          &forceFileName
-    )
-    {
-        QM::ExternalQMRunner::_readForceFile(
-            simulationBox,
-            physicalData,
-            settings,
-            forceFileName
-        );
-    }
+    );
 
     static void _readChargeFile(
         molsys::SimulationBox &simulationBox,
         const QMSettings      &settings,
         const std::string     &chargeFileName
-    )
-    {
-        QM::ExternalQMRunner::_readChargeFile(
-            simulationBox,
-            settings,
-            chargeFileName
-        );
-    }
+    );
 
     // the virtual hooks are private in the concrete runners, but protected in
     // the base class this fixture is a friend of -> call them through the base
     static void _writeCoordsFile(
         QM::ExternalQMRunner  &runner,
         molsys::SimulationBox &simulationBox
-    )
-    {
-        runner._writeCoordsFile(simulationBox);
-    }
+    );
 
     static void _writePointChargeFile(
         QM::ExternalQMRunner  &runner,
         molsys::SimulationBox &simulationBox,
         const std::string     &pointChargeFileName
-    )
-    {
-        runner._writePointChargeFile(simulationBox, pointChargeFileName);
-    }
+    );
 
     static void _readStressTensor(
         QM::ExternalQMRunner       &runner,
         molsys::Box                &box,
         physicalData::PhysicalData &physicalData,
         const std::string          &stressFileName
-    )
-    {
-        runner._readStressTensor(box, physicalData, stressFileName);
-    }
+    );
 
-    static void _setMoleculeChangedZone(const bool changed)
-    {
-        configurator::HybridConfigurator::_setMoleculeChangedZone(changed);
-    }
+    static void _setMoleculeChangedZone(const bool changed);
 
-    void SetUp() override
-    {
-        _settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
-        _runner = std::make_unique<ExternalQMRunnerHarness>(
-            _settings.qmSettings,
-            _settings.externalQMSettings
-        );
-        _dftbRunner = std::make_unique<QM::DFTBPlusRunner>(
-            _settings.qmSettings,
-            _settings.externalQMSettings
-        );
-        _jobType        = settings::GeneralSettings::getJobtype();
-        _removeNetForce = _settings.qmSettings.getRemoveNetForce();
-        _originalPath   = std::filesystem::current_path();
+    void SetUp() override;
 
-        const auto stamp =
-            std::chrono::steady_clock::now().time_since_epoch().count();
-        _workPath = std::filesystem::temp_directory_path() /
-                    ("pq external qm; " + std::to_string(stamp));
-        ASSERT_TRUE(std::filesystem::create_directory(_workPath));
-        std::filesystem::current_path(_workPath);
-
-        _settings.qmSettings.setRemoveNetForceByUser(false);
-        _settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
-        settings::GeneralSettings::setJobtype(JobType::QM_MD);
-
-        auto atom = std::make_shared<molsys::Atom>();
-        atom->setName("H");
-        _simulationBox.addAtom(atom);
-
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
-        _simulationBox.setBox(orthoBox, false);
-    }
-
-    void TearDown() override
-    {
-        settings::GeneralSettings::setJobtype(_jobType);
-
-        std::filesystem::current_path(_originalPath);
-        std::error_code error;
-        std::filesystem::remove_all(_workPath, error);
-        EXPECT_FALSE(error);
-    }
+    void TearDown() override;
 
     std::filesystem::path _configureQuotedScript(
         ExternalQMSettings &externalQMSettings
-    ) const
-    {
-        const auto scriptDirectory =
-            _workPath / "working path; $(touch qm-injected)";
-        std::filesystem::create_directory(scriptDirectory);
-
-        const auto *const scriptName = "runner's script; touch qm-injected; #";
-
-        const auto scriptFile = scriptDirectory / scriptName;
-        writeFile(scriptFile.string(), "");
-
-        externalQMSettings.setQMScriptFullPathByUser(scriptFile.string());
-        externalQMSettings.finalize();
-
-        return scriptFile;
-    }
+    ) const;
 };
+
+void ExternalQMRunnerTest::_readForceFile(
+    molsys::SimulationBox      &simulationBox,
+    physicalData::PhysicalData &physicalData,
+    const QMSettings           &settings,
+    const std::string          &forceFileName
+)
+{
+    QM::ExternalQMRunner::_readForceFile(
+        simulationBox,
+        physicalData,
+        settings,
+        forceFileName
+    );
+}
+
+void ExternalQMRunnerTest::_readChargeFile(
+    molsys::SimulationBox &simulationBox,
+    const QMSettings      &settings,
+    const std::string     &chargeFileName
+)
+{
+    QM::ExternalQMRunner::_readChargeFile(
+        simulationBox,
+        settings,
+        chargeFileName
+    );
+}
+
+void ExternalQMRunnerTest::_writeCoordsFile(
+    QM::ExternalQMRunner  &runner,
+    molsys::SimulationBox &simulationBox
+)
+{
+    runner._writeCoordsFile(simulationBox);
+}
+
+void ExternalQMRunnerTest::_writePointChargeFile(
+    QM::ExternalQMRunner  &runner,
+    molsys::SimulationBox &simulationBox,
+    const std::string     &pointChargeFileName
+)
+{
+    runner._writePointChargeFile(simulationBox, pointChargeFileName);
+}
+
+void ExternalQMRunnerTest::_readStressTensor(
+    QM::ExternalQMRunner       &runner,
+    molsys::Box                &box,
+    physicalData::PhysicalData &physicalData,
+    const std::string          &stressFileName
+)
+{
+    runner._readStressTensor(box, physicalData, stressFileName);
+}
+
+void ExternalQMRunnerTest::_setMoleculeChangedZone(const bool changed)
+{
+    configurator::HybridConfigurator::_setMoleculeChangedZone(changed);
+}
+
+void ExternalQMRunnerTest::SetUp()
+{
+    _settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
+    _runner = std::make_unique<ExternalQMRunnerHarness>(
+        _settings.qmSettings,
+        _settings.externalQMSettings
+    );
+    _dftbRunner = std::make_unique<QM::DFTBPlusRunner>(
+        _settings.qmSettings,
+        _settings.externalQMSettings
+    );
+    _jobType        = settings::GeneralSettings::getJobtype();
+    _removeNetForce = _settings.qmSettings.getRemoveNetForce();
+    _originalPath   = std::filesystem::current_path();
+
+    const auto stamp =
+        std::chrono::steady_clock::now().time_since_epoch().count();
+    _workPath = std::filesystem::temp_directory_path() /
+                ("pq external qm; " + std::to_string(stamp));
+    ASSERT_TRUE(std::filesystem::create_directory(_workPath));
+    std::filesystem::current_path(_workPath);
+
+    _settings.qmSettings.setRemoveNetForceByUser(false);
+    _settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
+    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+
+    auto atom = std::make_shared<molsys::Atom>();
+    atom->setName("H");
+    _simulationBox.addAtom(atom);
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    _simulationBox.setBox(orthoBox, false);
+}
+
+void ExternalQMRunnerTest::TearDown()
+{
+    settings::GeneralSettings::setJobtype(_jobType);
+
+    std::filesystem::current_path(_originalPath);
+    std::error_code error;
+    std::filesystem::remove_all(_workPath, error);
+    EXPECT_FALSE(error);
+}
+
+std::filesystem::path ExternalQMRunnerTest::_configureQuotedScript(
+    ExternalQMSettings &externalQMSettings
+) const
+{
+    const auto scriptDirectory =
+        _workPath / "working path; $(touch qm-injected)";
+    std::filesystem::create_directory(scriptDirectory);
+
+    const auto *const scriptName = "runner's script; touch qm-injected; #";
+
+    const auto scriptFile = scriptDirectory / scriptName;
+    writeFile(scriptFile.string(), "");
+
+    externalQMSettings.setQMScriptFullPathByUser(scriptFile.string());
+    externalQMSettings.finalize();
+
+    return scriptFile;
+}
 
 TEST_F(ExternalQMRunnerTest, propagatesCommandFailure)
 {
@@ -699,58 +771,74 @@ namespace
 class QMWriterTest : public ExternalQMRunnerTest
 {
    protected:
-    void SetUp() override
-    {
-        ExternalQMRunnerTest::SetUp();
+    void SetUp() override;
 
-        // the fixture's atom "H" sits at the origin; add an O and a second H
-        _addAtom("O", {1.5, 2.25, -3.0});
-        _addAtom("H", {0.5, 0.5, 0.5});
-
-        molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
-        _simulationBox.setBox(orthoBox, false);
-    }
-
-    void _addAtom(const std::string &name, const linalg::Vec3D &position)
-    {
-        auto atom = std::make_shared<molsys::Atom>();
-        atom->setName(name);
-        atom->setPosition(position);
-        _simulationBox.addAtom(atom);
-    }
+    void _addAtom(const std::string &name, const linalg::Vec3D &position);
 
     void _addMolecule(
-        const molsys::HybridZone zone,
-        const bool               active,
+        molsys::HybridZone zone,
+        bool               active,
         const linalg::Vec3D     &position,
-        const double             charge
-    )
-    {
-        auto atom = std::make_shared<molsys::Atom>();
-        atom->setName("X");
-        atom->setPosition(position);
-        atom->setPartialCharge(charge);
+        double             charge
+    );
 
-        auto molecule = molsys::Molecule();
-        molecule.addAtom(atom);
-        molecule.setHybridZone(zone);
-
-        if (!active)
-            molecule.deactivateMolecule();
-
-        _simulationBox.addMolecule(molecule);
-    }
-
-    void _addPointChargeMolecules()
-    {
-        using enum molsys::HybridZone;
-
-        _addMolecule(SMOOTHING, false, {1.0, 2.0, 3.0}, 0.5);
-        _addMolecule(POINT_CHARGE, false, {4.0, 5.0, 6.0}, -0.8);
-        _addMolecule(OUTER, false, {7.0, 8.0, 9.0}, 0.1);
-        _addMolecule(POINT_CHARGE, true, {1.0, 1.0, 1.0}, 0.3);
-    }
+    void _addPointChargeMolecules();
 };
+
+void QMWriterTest::SetUp()
+{
+    ExternalQMRunnerTest::SetUp();
+
+    // the fixture's atom "H" sits at the origin; add an O and a second H
+    _addAtom("O", {1.5, 2.25, -3.0});
+    _addAtom("H", {0.5, 0.5, 0.5});
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
+    _simulationBox.setBox(orthoBox, false);
+}
+
+void QMWriterTest::_addAtom(
+    const std::string   &name,
+    const linalg::Vec3D &position
+)
+{
+    auto atom = std::make_shared<molsys::Atom>();
+    atom->setName(name);
+    atom->setPosition(position);
+    _simulationBox.addAtom(atom);
+}
+
+void QMWriterTest::_addMolecule(
+    molsys::HybridZone zone,
+    bool               active,
+    const linalg::Vec3D     &position,
+    double             charge
+)
+{
+    auto atom = std::make_shared<molsys::Atom>();
+    atom->setName("X");
+    atom->setPosition(position);
+    atom->setPartialCharge(charge);
+
+    auto molecule = molsys::Molecule();
+    molecule.addAtom(atom);
+    molecule.setHybridZone(zone);
+
+    if (!active)
+        molecule.deactivateMolecule();
+
+    _simulationBox.addMolecule(molecule);
+}
+
+void QMWriterTest::_addPointChargeMolecules()
+{
+    using enum molsys::HybridZone;
+
+    _addMolecule(SMOOTHING, false, {1.0, 2.0, 3.0}, 0.5);
+    _addMolecule(POINT_CHARGE, false, {4.0, 5.0, 6.0}, -0.8);
+    _addMolecule(OUTER, false, {7.0, 8.0, 9.0}, 0.1);
+    _addMolecule(POINT_CHARGE, true, {1.0, 1.0, 1.0}, 0.3);
+}
 
 TEST_F(QMWriterTest, dftbCoordsOfAnIsolatedSystemUseTheClusterFlag)
 {
@@ -937,41 +1025,66 @@ namespace
     {
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
-        {
-        }
+        void _writeCoordsFile(
+            const molsys::SimulationBox & /*simBox*/
+        ) override;
 
         void execute(
             const molsys::SimulationBox & /*simBox*/,
             const FileSettings & /*fileSettings*/
             ,
             const HybridSettings & /*hybridSettings*/
-        ) override
-        {
-            _executeCommand("sleep 3 && touch qm-finished", "External QM");
-        }
+        ) override;
     };
+
+    void SlowExternalQMRunner::
+        _writeCoordsFile(const molsys::SimulationBox & /*simBox*/)
+    {
+    }
+
+    void SlowExternalQMRunner::execute(
+        const molsys::SimulationBox & /*simBox*/,
+        const FileSettings & /*fileSettings*/
+        ,
+        const HybridSettings & /*hybridSettings*/
+    )
+    {
+        _executeCommand("sleep 3 && touch qm-finished", "External QM");
+    }
 
     class InterruptibleQMRunner : public QM::ExternalQMRunner
     {
        public:
         using QM::ExternalQMRunner::ExternalQMRunner;
-        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
-        {
-        }
+        void _writeCoordsFile(
+            const molsys::SimulationBox & /*simBox*/
+        ) override;
         void execute(
             const molsys::SimulationBox & /*simBox*/,
             const FileSettings & /*fileSettings*/,
             const HybridSettings & /*hybridSettings*/
-        ) override
-        {
-        }
+        ) override;
 
-        void runCommand(const std::string_view command) const
-        {
-            _executeCommand(command, "External QM");
-        }
+        void runCommand(std::string_view command) const;
     };
+
+    void InterruptibleQMRunner::
+        _writeCoordsFile(const molsys::SimulationBox & /*simBox*/)
+    {
+    }
+
+    void InterruptibleQMRunner::execute(
+        const molsys::SimulationBox & /*simBox*/,
+        const FileSettings & /*fileSettings*/,
+        const HybridSettings & /*hybridSettings*/
+    )
+    {
+    }
+
+    void InterruptibleQMRunner::runCommand(std::string_view command) const
+    {
+        _executeCommand(command, "External QM");
+    }
 }   // namespace
 
 TEST_F(ExternalQMRunnerTest, timeoutThrowsAndStopsTheQMProcess)

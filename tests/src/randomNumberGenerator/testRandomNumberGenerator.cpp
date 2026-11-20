@@ -32,17 +32,21 @@
 class TestRandomNumberGenerator : public ::testing::Test
 {
    protected:
-    void SetUp() override
-    {
-        settings::GeneralSettings::setIsRandomSeedSet(true);
-        settings::GeneralSettings::setRandomSeed(42);
-    }
+    void SetUp() override;
 
-    void TearDown() override
-    {
-        settings::GeneralSettings::setIsRandomSeedSet(false);
-    }
+    void TearDown() override;
 };
+
+void TestRandomNumberGenerator::SetUp()
+{
+    settings::GeneralSettings::setIsRandomSeedSet(true);
+    settings::GeneralSettings::setRandomSeed(42);
+}
+
+void TestRandomNumberGenerator::TearDown()
+{
+    settings::GeneralSettings::setIsRandomSeedSet(false);
+}
 
 /**
  * @brief test randomNumberGenerator uniform real distribution range
