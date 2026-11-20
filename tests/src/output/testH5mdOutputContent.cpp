@@ -41,7 +41,7 @@
 
 namespace
 {
-    out::Frame makeFrame(const double potentialEnergy)
+    out::Frame makeFrame(double potentialEnergy)
     {
         molsys::SimulationBox simulationBox;
         simulationBox.setBox(
@@ -72,7 +72,7 @@ namespace
 
     // reads a whole dataset as double; returns its dimensions in dims
     std::vector<double> readDoubles(
-        const hid_t           file,
+        hid_t                 file,
         const char           *path,
         std::vector<hsize_t> &dims
     )
@@ -101,7 +101,7 @@ namespace
         return values;
     }
 
-    std::string readUnit(const hid_t file, const char *path)
+    std::string readUnit(hid_t file, const char *path)
     {
         const hid_t set  = H5Dopen2(file, path, H5P_DEFAULT);
         const hid_t attr = H5Aopen(set, "unit", H5P_DEFAULT);

@@ -84,8 +84,8 @@ class TestNonCoulombPotentialFF : public ::testing::Test
 
     static void _setNonCoulombPairsMatrix(
         pot::ForceFieldNonCoulomb   &potential,
-        const size_t                 row,
-        const size_t                 col,
+        size_t                       row,
+        size_t                       col,
         const pot::LennardJonesPair &pair
     )
     {

@@ -357,7 +357,7 @@ namespace molsys
      * @return pair<Molecule *, AtomIndex>
      */
     std::pair<Molecule*, AtomIndex> SimulationBox::
-        findMoleculeByGlobalAtomIndex(const size_t atomIndex)
+        findMoleculeByGlobalAtomIndex(size_t atomIndex)
     {
         if (_atomIndexOffsets.size() == _molecules.size() + 1 &&
             atomIndex > 0 && atomIndex <= _atomIndexOffsets.back())
@@ -804,7 +804,7 @@ namespace molsys
      * @brief initialize positions of all atoms
      *
      */
-    void SimulationBox::initPositions(const double displacement)
+    void SimulationBox::initPositions(double displacement)
     {
         rng::RandomNumberGenerator randomNumberGenerator{};
 

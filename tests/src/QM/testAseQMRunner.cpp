@@ -120,10 +120,7 @@ class AseQMRunnerTest : public ::testing::Test
         _simulationBox.setBox(box, false);
     }
 
-    static QM::AseFennolRunner _runner(
-        const QMSettings &settings,
-        const double      delay
-    )
+    static QM::AseFennolRunner _runner(const QMSettings &settings, double delay)
     {
         pybind11::module_::import("sys")
             .attr("modules")["ase.atoms"]

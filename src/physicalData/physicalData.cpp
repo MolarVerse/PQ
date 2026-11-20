@@ -186,7 +186,7 @@ namespace physicalData
      *
      * @param outputFrequency
      */
-    void PhysicalData::makeAverages(const double outputFrequency)
+    void PhysicalData::makeAverages(double outputFrequency)
     {
         _numberOfQMAtoms /= outputFrequency;
         _loopTime        /= outputFrequency;
@@ -363,7 +363,7 @@ namespace physicalData
      *
      * @param intraCoulombEnergy
      */
-    void PhysicalData::addIntraCoulombEnergy(const double intraCoulombEnergy)
+    void PhysicalData::addIntraCoulombEnergy(double intraCoulombEnergy)
     {
         _intraCoulombEnergy += intraCoulombEnergy;
         _coulombEnergy      += intraCoulombEnergy;
@@ -377,9 +377,7 @@ namespace physicalData
      *
      * @param intraNonCoulombEnergy
      */
-    void PhysicalData::addIntraNonCoulombEnergy(
-        const double intraNonCoulombEnergy
-    )
+    void PhysicalData::addIntraNonCoulombEnergy(double intraNonCoulombEnergy)
     {
         _intraNonCoulombEnergy += intraNonCoulombEnergy;
         _nonCoulombEnergy      += intraNonCoulombEnergy;

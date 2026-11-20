@@ -66,7 +66,7 @@ namespace cli
 
         template <std::integral T>
         requires(!std::same_as<std::remove_cv_t<T>, bool>)
-        void value(const T value)
+        void value(T value)
         {
             _beforeValue();
             _output << value;
@@ -74,7 +74,7 @@ namespace cli
 
         template <std::integral T>
         requires(!std::same_as<std::remove_cv_t<T>, bool>)
-        void value(const std::string_view key, const T value)
+        void value(std::string_view key, T value)
         {
             _beforeMember(key);
             _output << value;

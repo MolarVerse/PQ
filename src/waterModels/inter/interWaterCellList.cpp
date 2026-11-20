@@ -255,7 +255,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();
@@ -392,7 +392,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();
@@ -633,7 +633,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();
@@ -839,7 +839,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();

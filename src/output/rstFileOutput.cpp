@@ -44,7 +44,7 @@ namespace out
          * value is zero for any physical purpose, so it is written as a zero
          * of the same sign; all other values are written exactly.
          */
-        double readable(const double value)
+        double readable(double value)
         {
             if (std::fpclassify(value) == FP_SUBNORMAL)
                 return std::copysign(0.0, value);

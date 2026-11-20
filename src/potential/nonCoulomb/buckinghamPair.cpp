@@ -52,7 +52,7 @@ namespace pot
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
-        const double            cutOff,
+        double                  cutOff,
         const BuckinghamParams& params
     )
         : NonCoulombPair(cutOff), _params(params)

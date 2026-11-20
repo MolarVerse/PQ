@@ -94,7 +94,7 @@ namespace
         runNonCoulombBenchmark(state, potential);
     }
 
-    PotentialSettings makeCoulombSettings(const double cutoff)
+    PotentialSettings makeCoulombSettings(double cutoff)
     {
         PotentialSettings settings;
         settings.setCoulombRadiusCutOffByUser(cutoff);

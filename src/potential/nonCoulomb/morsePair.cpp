@@ -52,7 +52,7 @@ namespace pot
      * @param cutOff
      * @param params
      */
-    MorsePair::MorsePair(const double cutOff, const MorseParams &params)
+    MorsePair::MorsePair(double cutOff, const MorseParams &params)
         : NonCoulombPair(cutOff), _params(params)
     {
     }

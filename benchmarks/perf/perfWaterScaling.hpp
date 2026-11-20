@@ -70,9 +70,9 @@ namespace benchWaterScaling
     inline constexpr auto    OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
     inline int run(
-        const std::size_t   perSide,
-        const std::uint64_t iterations,
-        Settings            settings
+        std::size_t   perSide,
+        std::uint64_t iterations,
+        Settings      settings
     )
     {
         settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
@@ -93,10 +93,10 @@ namespace benchWaterScaling
         waterType.setNumberOfAtoms(3);
         simBox.addMoleculeType(waterType);
 
-        const auto makeAtom = [](const std::string_view name,
-                                 const linalg::Vec3D   &pos,
-                                 const double           charge,
-                                 const AtomNumber       atomicNumber)
+        const auto makeAtom = [](std::string_view     name,
+                                 const linalg::Vec3D &pos,
+                                 double               charge,
+                                 AtomNumber           atomicNumber)
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setName(name);

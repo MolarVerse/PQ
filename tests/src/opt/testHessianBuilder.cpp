@@ -52,7 +52,7 @@ namespace
         explicit HarmonicEvaluator(
             const Settings     &settings,
             std::vector<double> forceConstants,
-            const bool          analyticSupported
+            bool                analyticSupported
         )
             : opt::Evaluator(settings),
               _forceConstants(std::move(forceConstants)),

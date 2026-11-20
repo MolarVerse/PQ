@@ -278,7 +278,7 @@ namespace
         return 2.0 * std::asin(0.5 * geometry.dHH / geometry.dOH) * RAD_TO_DEG;
     }
 
-    std::optional<RigidWaterGeometry> geometryOf(const WaterIntraModel model)
+    std::optional<RigidWaterGeometry> geometryOf(WaterIntraModel model)
     {
         WaterModelSettings settings;
         settings.setWaterIntraModelByUser(model);

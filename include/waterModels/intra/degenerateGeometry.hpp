@@ -48,10 +48,7 @@ namespace waterModel
      * @throws exc::WaterModelException if value is zero, negative, NaN or
      * infinite
      */
-    inline void checkNonDegenerate(
-        const double           value,
-        const std::string_view what
-    )
+    inline void checkNonDegenerate(double value, std::string_view what)
     {
         if (!(value > 0.0) || !std::isfinite(value))
         {

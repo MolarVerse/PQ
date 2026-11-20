@@ -69,10 +69,7 @@ namespace linalg
          * @return `vec[i]` if `isIndexed_v<T, Other>`, otherwise `vec`
          */
         template <typename Other, typename T>
-        constexpr decltype(auto) component(
-            const T          &vec,
-            const std::size_t index
-        )
+        constexpr decltype(auto) component(const T &vec, std::size_t index)
         {
             if constexpr (isIndexed_v<T, Other>)
                 return (vec[index]);

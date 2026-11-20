@@ -188,10 +188,7 @@ namespace molsys
      * @param index
      * @return Atom&
      */
-    Atom &SimulationBox::getAtom(const size_t index)
-    {
-        return *(_atoms[index]);
-    }
+    Atom &SimulationBox::getAtom(size_t index) { return *(_atoms[index]); }
 
     /**
      * @brief get molecule by index
@@ -199,7 +196,7 @@ namespace molsys
      * @param index
      * @return Molecule&
      */
-    Molecule &SimulationBox::getMolecule(const size_t index)
+    Molecule &SimulationBox::getMolecule(size_t index)
     {
         return _molecules[index];
     }
@@ -210,7 +207,7 @@ namespace molsys
      * @param index
      * @return MoleculeType&
      */
-    MoleculeType &SimulationBox::getMoleculeType(const size_t index)
+    MoleculeType &SimulationBox::getMoleculeType(size_t index)
     {
         return _moleculeTypes[index];
     }
@@ -470,7 +467,7 @@ namespace molsys
      *
      * @param totalMass
      */
-    void SimulationBox::setTotalMass(const double totalMass)
+    void SimulationBox::setTotalMass(double totalMass)
     {
         _totalMass = totalMass;
     }
@@ -480,7 +477,7 @@ namespace molsys
      *
      * @param totalCharge
      */
-    void SimulationBox::setTotalCharge(const double totalCharge)
+    void SimulationBox::setTotalCharge(double totalCharge)
     {
         _totalCharge = totalCharge;
     }
@@ -490,14 +487,14 @@ namespace molsys
      *
      * @param density
      */
-    void SimulationBox::setDensity(const double density) { _density = density; }
+    void SimulationBox::setDensity(double density) { _density = density; }
 
     /**
      * @brief set the degrees of freedom
      *
      * @param degreesOfFreedom
      */
-    void SimulationBox::setDegreesOfFreedom(const size_t degreesOfFreedom)
+    void SimulationBox::setDegreesOfFreedom(size_t degreesOfFreedom)
     {
         _degreesOfFreedom = degreesOfFreedom;
     }

@@ -120,7 +120,7 @@ TEST(TestInputKeyAdapter, wiresIntoRealInputFileParserAddKeyword)
         "timestep",
         [&registry](
             const std::vector<std::string> &lineElements,
-            const size_t                    lineNumber
+            size_t                          lineNumber
         ) { registry.parseLine(lineElements, lineNumber); },
         /*required=*/false
     );
