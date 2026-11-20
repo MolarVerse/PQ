@@ -1,0 +1,1 @@
+- Store intra non-bonded partners as a typed atom index plus 1-4 flag instead of signed 0-based ints (#1255).

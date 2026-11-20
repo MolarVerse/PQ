@@ -47,7 +47,74 @@ namespace pot
 
 class TestIntraNonBondedMap : public TestNonCoulombPotentialFF
 {
+   protected:
+    physicalData::PhysicalData _calculatePair(
+        molsys::Molecule                        &molecule,
+        intraNonBonded::IntraNonBondedContainer &container
+    );
 };
+
+physicalData::PhysicalData TestIntraNonBondedMap::_calculatePair(
+    molsys::Molecule                        &molecule,
+    intraNonBonded::IntraNonBondedContainer &container
+)
+{
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition({0.0, 0.0, 0.0});
+    atom2->setPosition({0.0, 0.0, 11.0});
+    atom1->setForce({0.0, 0.0, 0.0});
+    atom2->setForce({0.0, 0.0, 0.0});
+    atom1->setInternalGlobalVDWType(VdwType{0});
+    atom2->setInternalGlobalVDWType(VdwType{1});
+    atom1->setAtomType(AtomType{0});
+    atom2->setAtomType(AtomType{1});
+    atom1->setPartialCharge(0.5);
+    atom2->setPartialCharge(-0.5);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+
+    PotentialSettings potentialSettings;
+    potentialSettings.setScale14CoulombByUser(0.75);
+    potentialSettings.setScale14VanDerWaalsByUser(0.75);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+
+    auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
+    _setNonCoulombPairsMatrix(
+        linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
+    );
+
+    auto nonCoulombPair = pot::LennardJonesPair(
+        ExtVdwType(0),
+        ExtVdwType(1),
+        10.0,
+        LJParams{.c6 = 2.0, .c12 = 3.0}
+    );
+    _setNonCoulombPairsMatrix(0, 1, nonCoulombPair);
+    _setNonCoulombPairsMatrix(1, 0, nonCoulombPair);
+
+    auto simulationBox = molsys::SimulationBox();
+
+    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    simulationBox.setBox(orthoBox, false);
+
+    auto physicalData = physicalData::PhysicalData();
+
+    const auto intraNonBondedMap =
+        intraNonBonded::IntraNonBondedMap(&molecule, &container);
+
+    intraNonBondedMap.calculate(
+        &coulombPotential,
+        _nonCoulombPotential.get(),
+        simulationBox,
+        physicalData,
+        potentialSettings
+    );
+
+    return physicalData;
+}
 
 /**
  * @brief Test fixture class for the IntraNonBondedMap class
@@ -77,8 +144,10 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     potentialSettings.setScale14CoulombByUser(0.75);
     potentialSettings.setScale14VanDerWaalsByUser(0.75);
 
-    auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
+    auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(
+        MolType{0},
+        {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+    );
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
@@ -108,7 +177,7 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     const auto [coulombEnergy, nonCoulombEnergy] =
         intraNonBondedMap.calculateSingleInteraction(
             AtomIndex{0},
-            intraNonBondedType.getAtomIndices()[0][0],
+            intraNonBondedType.getPartners()[0][0],
             simulationBox.getBoxDimensions(),
             &coulombPotential,
             _nonCoulombPotential.get(),
@@ -191,4 +260,60 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[0], 0.0, 1e-6);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[1], 0.0, 1e-6);
     EXPECT_NEAR(molecule.getAtomShiftForce(1)[2], 0.0, 1e-6);
+}
+
+TEST_F(TestIntraNonBondedMap, scaledPartnerAtomOne)
+{
+    auto molecule  = molsys::Molecule{MolType{0}};
+    auto container = intraNonBonded::IntraNonBondedContainer(
+        MolType{0},
+        {{}, {{.atomIndex = AtomIndex{0}, .isScaled14 = true}}}
+    );
+
+    const auto physicalData = _calculatePair(molecule, container);
+
+    EXPECT_NEAR(
+        physicalData.getIntraCoulombEnergy(),
+        -67.242901903583757 * 0.75,
+        1e-6
+    );
+    EXPECT_NEAR(physicalData.getIntraNonCoulombEnergy(), 5.0 * 0.75, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[2],
+        34.185768993269036 * 0.75,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2],
+        -34.185768993269036 * 0.75,
+        1e-6
+    );
+}
+
+TEST_F(TestIntraNonBondedMap, unscaledPartner)
+{
+    auto molecule  = molsys::Molecule{MolType{0}};
+    auto container = intraNonBonded::IntraNonBondedContainer(
+        MolType{0},
+        {{}, {{.atomIndex = AtomIndex{0}, .isScaled14 = false}}}
+    );
+
+    const auto physicalData = _calculatePair(molecule, container);
+
+    EXPECT_NEAR(
+        physicalData.getIntraCoulombEnergy(),
+        -67.242901903583757,
+        1e-6
+    );
+    EXPECT_NEAR(physicalData.getIntraNonCoulombEnergy(), 5.0, 1e-6);
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[2],
+        34.185768993269036,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2],
+        -34.185768993269036,
+        1e-6
+    );
 }

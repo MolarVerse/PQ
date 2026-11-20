@@ -30,6 +30,23 @@
 namespace intraNonBonded
 {
     /**
+     * @struct IntraNonBondedPartner
+     *
+     * @brief partner atom of a reference atom and whether the pair is a
+     * scaled 1-4 interaction
+     */
+    struct IntraNonBondedPartner
+    {
+        AtomIndex atomIndex{0};
+        bool      isScaled14{false};
+
+        [[nodiscard]]
+        bool operator==(const IntraNonBondedPartner &other) const;
+    };
+
+    using IntraNonBondedPartners = std::vector<IntraNonBondedPartner>;
+
+    /**
      * @class IntraNonBondedContainer
      *
      * @brief represents a container for a single intra non bonded type
@@ -37,21 +54,22 @@ namespace intraNonBonded
     class IntraNonBondedContainer
     {
        private:
-        MolType                       _molType;
-        std::vector<std::vector<int>> _atomIndices;
+        MolType                             _molType;
+        std::vector<IntraNonBondedPartners> _partners;
 
        public:
         IntraNonBondedContainer(
-            MolType                              molType,
-            const std::vector<std::vector<int>> &atomIndices
+            MolType                                    molType,
+            const std::vector<IntraNonBondedPartners> &partners
         );
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] MolType                       getMolType() const;
-        [[nodiscard]] std::vector<std::vector<int>> getAtomIndices() const;
+        [[nodiscard]] MolType getMolType() const;
+        [[nodiscard]] const std::vector<IntraNonBondedPartners> &getPartners(
+        ) const;
     };
 
 }   // namespace intraNonBonded
