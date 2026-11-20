@@ -164,7 +164,6 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 {
     cleanupPrefix();
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
     _settings->timings.setNumberOfStepsByUser(100U);

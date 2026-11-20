@@ -55,4 +55,19 @@ MSTD_ENUM_BITFLAG(JobType, std::uint8_t, JOB_TYPE_LIST)
 #undef JOB_TYPE_LIST
 #undef U
 
+namespace mstd
+{
+    /**
+     * @brief Input aliases for JobType enum
+     *
+     * @tparam JobType The enum type for which input aliases are defined.
+     */
+    template <>
+    struct EnumAliases<JobType>
+    {
+        static constexpr auto value =
+            makeAliases<JobType>({{"qm_rpmd", JobType::RING_POLYMER_QM_MD}});
+    };
+}   // namespace mstd
+
 #endif   // CONFIG__ENUMS__JOBTYPE_HPP

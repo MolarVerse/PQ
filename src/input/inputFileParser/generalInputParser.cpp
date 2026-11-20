@@ -25,7 +25,6 @@
 #include <cstdint>
 #include <format>
 #include <optional>
-#include <stdexcept>
 
 #include "enums/general.hpp"
 #include "exceptions.hpp"
@@ -92,37 +91,15 @@ namespace input
         size_t                          lineNumber
     )
     {
-        using enum JobType;
         checkCommand(lineElements, lineNumber);
 
         const auto jobtype =
             utilities::toLowerAndReplaceDashesCopy(lineElements[2]);
 
-        if (jobtype == "mm_opt")
-        {
-            settings::GeneralSettings::setJobtype(MM_OPT);
-        }
-        else if (jobtype == "mm_hessian")
-        {
-            settings::GeneralSettings::setJobtype(MM_HESSIAN);
-        }
-        else if (jobtype == "mm_md")
-        {
-            settings::GeneralSettings::setJobtype(MM_MD);
-        }
-        else if (jobtype == "qm_md")
-        {
-            settings::GeneralSettings::setJobtype(QM_MD);
-        }
-        else if (jobtype == "qm_rpmd")
-        {
-            settings::GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-        }
-        else if (jobtype == "qmmm_md")
-        {
-            settings::GeneralSettings::setJobtype(QMMM_MD);
-        }
-        else
+        const auto jobTypeEnum =
+            JobTypeMeta::from_stringCaseInsensitive(jobtype);
+
+        if (!jobTypeEnum.has_value())
         {
             throw exc::InputFileException(format(
                 "Invalid jobtype \"{}\" in input file - possible values are:\n"
@@ -135,6 +112,8 @@ namespace input
                 lineElements[2]
             ));
         }
+
+        settings::GeneralSettings::setJobtype(jobTypeEnum.value());
     }
 
     void GeneralInputParser::addDimensionalityKey()
