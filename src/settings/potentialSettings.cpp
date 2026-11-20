@@ -243,9 +243,9 @@ double PotentialSettings::getReactionFieldEpsilon() const
 /**
  * @brief get the Wolf parameter
  *
- * @return InvDistance
+ * @return const InvDistance&
  */
-InvDistance PotentialSettings::getWolfParameter() const
+const InvDistance& PotentialSettings::getWolfParameter() const
 {
     return _wolfParameter.get();
 }
