@@ -141,7 +141,7 @@ int main()
         for (auto &atom : box.getAtoms())
         {
             auto pos  = atom->getPosition();
-            pos[0]   += shift * angstrom;
+            pos[0]    += shift * angstrom;
             atom->setPosition(pos);
         }
 

@@ -93,7 +93,7 @@ int main()
         for (auto &molecule : molecules)
         {
             auto &atom  = molecule.getAtom(AtomIndex{1});
-            auto  pos   = atom.getPosition().numerical_value_in(angstrom);
+            auto  pos    = atom.getPosition().numerical_value_in(angstrom);
             pos[0]     += (i % 2 == 0) ? 0.02 : -0.02;
             atom.setPosition(pos * angstrom);
         }

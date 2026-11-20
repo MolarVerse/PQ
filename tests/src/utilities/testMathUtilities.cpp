@@ -87,13 +87,15 @@ TEST(TestMathUtilities, quantities)
     EXPECT_FALSE(utilities::compare(a, a + 1e-7 * angstrom, 1e-8 * angstrom));
 
     // different unit types, plain-number tolerance in the unit of rhs
-    const auto lhs = (1.0 * elementary_charge * elementary_charge) *
-                     coulomb_prefactor;
+    const auto lhs =
+        (1.0 * elementary_charge * elementary_charge) * coulomb_prefactor;
     const auto rhs = 332.063714 * kcal_per_mol * angstrom;
     EXPECT_TRUE(utilities::compare(lhs, rhs, 1.0e-3));
     EXPECT_FALSE(utilities::compare(lhs, rhs, 1.0e-9));
     EXPECT_TRUE(utilities::compare(lhs, rhs, 1.0e-3 * kcal_per_mol * angstrom));
-    EXPECT_TRUE(utilities::compare(1.0 * mstd::units::nm, 10.0 * angstrom, 1e-9));
+    EXPECT_TRUE(
+        utilities::compare(1.0 * mstd::units::nm, 10.0 * angstrom, 1e-9)
+    );
 }
 
 /**
