@@ -67,23 +67,37 @@ namespace waterModel
        public:
         using MTRIntraWater::MTRIntraWater;
 
-        [[nodiscard]]
-        double getEqOHDistance() const override
-        {
-            return _eqOHDistance;
-        }
-        [[nodiscard]]
-        double getEqHHDistance() const override
-        {
-            return _eqHHDistance;
-        }
-        [[nodiscard]] double getDOH() const override { return _dOH; }
-        [[nodiscard]] double getAlpha() const override { return _alpha; }
-        [[nodiscard]] double getBeta() const override { return _beta; }
-        [[nodiscard]] double getLtt() const override { return _ltt; }
-        [[nodiscard]] double getLrt() const override { return _lrt; }
-        [[nodiscard]] double getLrr() const override { return _lrr; }
+        [[nodiscard]] double getEqOHDistance() const override;
+        [[nodiscard]] double getEqHHDistance() const override;
+        [[nodiscard]] double getDOH() const override;
+        [[nodiscard]] double getAlpha() const override;
+        [[nodiscard]] double getBeta() const override;
+        [[nodiscard]] double getLtt() const override;
+        [[nodiscard]] double getLrt() const override;
+        [[nodiscard]] double getLrr() const override;
     };
+
+    inline double SPCMTRIntraWater::getEqOHDistance() const
+    {
+        return _eqOHDistance;
+    }
+
+    inline double SPCMTRIntraWater::getEqHHDistance() const
+    {
+        return _eqHHDistance;
+    }
+
+    inline double SPCMTRIntraWater::getDOH() const { return _dOH; }
+
+    inline double SPCMTRIntraWater::getAlpha() const { return _alpha; }
+
+    inline double SPCMTRIntraWater::getBeta() const { return _beta; }
+
+    inline double SPCMTRIntraWater::getLtt() const { return _ltt; }
+
+    inline double SPCMTRIntraWater::getLrt() const { return _lrt; }
+
+    inline double SPCMTRIntraWater::getLrr() const { return _lrr; }
 
     class TIP3PMTRIntraWater : public MTRIntraWater
     {
@@ -102,23 +116,37 @@ namespace waterModel
 
        public:
         using MTRIntraWater::MTRIntraWater;
-        [[nodiscard]]
-        double getEqOHDistance() const override
-        {
-            return _eqOHDistance;
-        }
-        [[nodiscard]]
-        double getEqHHDistance() const override
-        {
-            return _eqHHDistance;
-        }
-        [[nodiscard]] double getDOH() const override { return _dOH; }
-        [[nodiscard]] double getAlpha() const override { return _alpha; }
-        [[nodiscard]] double getBeta() const override { return _beta; }
-        [[nodiscard]] double getLtt() const override { return _ltt; }
-        [[nodiscard]] double getLrt() const override { return _lrt; }
-        [[nodiscard]] double getLrr() const override { return _lrr; }
+        [[nodiscard]] double getEqOHDistance() const override;
+        [[nodiscard]] double getEqHHDistance() const override;
+        [[nodiscard]] double getDOH() const override;
+        [[nodiscard]] double getAlpha() const override;
+        [[nodiscard]] double getBeta() const override;
+        [[nodiscard]] double getLtt() const override;
+        [[nodiscard]] double getLrt() const override;
+        [[nodiscard]] double getLrr() const override;
     };
+
+    inline double TIP3PMTRIntraWater::getEqOHDistance() const
+    {
+        return _eqOHDistance;
+    }
+
+    inline double TIP3PMTRIntraWater::getEqHHDistance() const
+    {
+        return _eqHHDistance;
+    }
+
+    inline double TIP3PMTRIntraWater::getDOH() const { return _dOH; }
+
+    inline double TIP3PMTRIntraWater::getAlpha() const { return _alpha; }
+
+    inline double TIP3PMTRIntraWater::getBeta() const { return _beta; }
+
+    inline double TIP3PMTRIntraWater::getLtt() const { return _ltt; }
+
+    inline double TIP3PMTRIntraWater::getLrt() const { return _lrt; }
+
+    inline double TIP3PMTRIntraWater::getLrr() const { return _lrr; }
 
 }   // namespace waterModel
 

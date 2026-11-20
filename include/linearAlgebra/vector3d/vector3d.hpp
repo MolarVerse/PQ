@@ -286,14 +286,20 @@ namespace linalg
 template <typename T>
 struct std::formatter<linalg::Vector3D<T>> : std::formatter<std::string>
 {
-    auto format(const linalg::Vector3D<T> &vec, std::format_context &ctx) const
-    {
-        return std::formatter<std::string>::format(
-            std::format("{} {} {}", vec[0], vec[1], vec[2]),
-            ctx
-        );
-    }
+    auto format(const linalg::Vector3D<T> &vec, std::format_context &ctx) const;
 };
+
+template <typename T>
+auto std::formatter<linalg::Vector3D<T>>::format(
+    const linalg::Vector3D<T> &vec,
+    std::format_context       &ctx
+) const
+{
+    return std::formatter<std::string>::format(
+        std::format("{} {} {}", vec[0], vec[1], vec[2]),
+        ctx
+    );
+}
 // NOLINTEND(cert-dcl58-cpp)
 
 #ifndef LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_TPP

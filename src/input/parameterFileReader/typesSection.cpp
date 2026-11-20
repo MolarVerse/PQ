@@ -136,4 +136,17 @@ namespace input::parameterFile
         _potentialSettings->setScale14VanDerWaalsByUser(scaleVanDerWaals);
     }
 
+    /**
+     * @brief processes the header of the section, not implemented yet
+     */
+    void TypesSection::processHeader(
+        std::vector<std::string> & /*lineElements*/,
+        engine::Engine & /*engine*/,
+        size_t /*lineNumber*/
+    )
+    {
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/905
+        // implement processHeader
+    }
+
 }   // namespace input::parameterFile

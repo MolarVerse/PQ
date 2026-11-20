@@ -156,7 +156,7 @@ namespace engine
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] size_t getStep() const { return _step; }
+        [[nodiscard]] size_t getStep() const;
 
         void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
 
@@ -173,6 +173,8 @@ namespace engine
 
         void _setStep(size_t step);
     };
+
+    inline size_t Engine::getStep() const { return _step; }
 }   // namespace engine
 
 #ifndef ENGINE__ENGINE_TPP

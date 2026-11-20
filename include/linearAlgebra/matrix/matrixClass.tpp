@@ -129,6 +129,39 @@ namespace linalg
     }
 
     /**
+     * @brief returns the number of rows
+     *
+     * @return size_t
+     */
+    template <typename T>
+    size_t Matrix<T>::rows() const
+    {
+        return _rows;
+    }
+
+    /**
+     * @brief returns the number of columns
+     *
+     * @return size_t
+     */
+    template <typename T>
+    size_t Matrix<T>::cols() const
+    {
+        return _cols;
+    }
+
+    /**
+     * @brief returns the number of elements
+     *
+     * @return size_t
+     */
+    template <typename T>
+    size_t Matrix<T>::size() const
+    {
+        return _rows * _cols;
+    }
+
+    /**
      * @brief Inverts the matrix using Eigen library
      *
      * @tparam T

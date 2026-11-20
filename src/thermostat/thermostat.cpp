@@ -78,6 +78,28 @@ namespace thermostat
     }
 
     /**
+     * @brief apply thermostat on forces - base class does nothing
+     */
+    void Thermostat::applyThermostatOnForces(
+        molsys::SimulationBox & /*simulationBox*/,
+        const Temperature & /*targetTemperature*/
+    )
+    {
+    }
+
+    /**
+     * @brief apply thermostat half step - base class does nothing
+     */
+    void Thermostat::applyThermostatHalfStep(
+        molsys::SimulationBox & /*simulationBox*/,
+        physicalData::PhysicalData & /*physicalData*/,
+        const Temperature & /*targetTemperature*/,
+        const Time & /*timeStep*/
+    )
+    {
+    }
+
+    /**
      * @brief set temperature
      *
      * @param temperature in Kelvin

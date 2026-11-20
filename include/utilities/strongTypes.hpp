@@ -53,65 +53,86 @@ using AtomType = StrongSizeT<struct AtomTypeTag>;
 
 struct ExtAtomTypeTag
 {
-    static std::string toString(const size_t &value)
-    {
-        return std::format("ExtAtomType({})", value);
-    }
+    static std::string toString(const size_t &value);
 };
+
+inline std::string ExtAtomTypeTag::toString(const size_t &value)
+{
+    return std::format("ExtAtomType({})", value);
+}
+
 using ExtAtomType = StrongSizeT<struct ExtAtomTypeTag>;
 
 struct MolTypeTag
 {
-    static std::string toString(const size_t &value)
-    {
-        return std::format("MolType({})", value);
-    }
+    static std::string toString(const size_t &value);
 };
+
+inline std::string MolTypeTag::toString(const size_t &value)
+{
+    return std::format("MolType({})", value);
+}
+
 using MolType = StrongSizeT<struct MolTypeTag>;
 
 struct BondIdTag
 {
-    static std::string toString(const size_t &value)
-    {
-        return std::format("BondId({})", value);
-    }
+    static std::string toString(const size_t &value);
 };
+
+inline std::string BondIdTag::toString(const size_t &value)
+{
+    return std::format("BondId({})", value);
+}
+
 using BondId = StrongSizeT<struct BondIdTag>;
 
 struct AngleIdTag
 {
-    static std::string toString(const size_t &value)
-    {
-        return std::format("AngleId({})", value);
-    }
+    static std::string toString(const size_t &value);
 };
+
+inline std::string AngleIdTag::toString(const size_t &value)
+{
+    return std::format("AngleId({})", value);
+}
+
 using AngleId = StrongSizeT<struct AngleIdTag>;
 
 struct DihedralIdTag
 {
-    static std::string toString(const size_t &value)
-    {
-        return std::format("DihedralId({})", value);
-    }
+    static std::string toString(const size_t &value);
 };
+
+inline std::string DihedralIdTag::toString(const size_t &value)
+{
+    return std::format("DihedralId({})", value);
+}
+
 using DihedralId = StrongSizeT<struct DihedralIdTag>;
 
 struct ExtVdwTypeTag
 {
-    static std::string toString(const size_t &value)
-    {
-        return std::format("ExtVdwType({})", value);
-    }
+    static std::string toString(const size_t &value);
 };
+
+inline std::string ExtVdwTypeTag::toString(const size_t &value)
+{
+    return std::format("ExtVdwType({})", value);
+}
+
 using ExtVdwType = StrongSizeT<struct ExtVdwTypeTag>;
 
 struct VdwTypeTag
 {
-    static std::string toString(const size_t &value)
-    {
-        return std::format("VdwType({})", value);
-    }
+    static std::string toString(const size_t &value);
 };
+
+inline std::string VdwTypeTag::toString(const size_t &value)
+{
+    return std::format("VdwType({})", value);
+}
+
 using VdwType = StrongSizeT<struct VdwTypeTag>;
 
 /**
