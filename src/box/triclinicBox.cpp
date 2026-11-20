@@ -296,11 +296,9 @@ namespace molsys
         const auto cos_beta  = boxMatrix[0][2] / box_z;
         const auto cos_gamma = boxMatrix[0][1] / box_y;
 
-        const auto alpha =
-            Angle(::acos(cos_alpha.numerical_value_in(one)) * rad);
-        const auto beta = Angle(::acos(cos_beta.numerical_value_in(one)) * rad);
-        const auto gamma =
-            Angle(::acos(cos_gamma.numerical_value_in(one)) * rad);
+        const auto alpha = ::acos(cos_alpha.numerical_value_in(one)) * rad;
+        const auto beta  = ::acos(cos_beta.numerical_value_in(one)) * rad;
+        const auto gamma = ::acos(cos_gamma.numerical_value_in(one)) * rad;
 
         return {Pos3D{box_x, box_y, box_z}, {alpha, beta, gamma}};
     }

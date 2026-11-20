@@ -158,6 +158,7 @@ namespace molsys
         void buildAtomIndexLookup();
         void clearAtomIndexLookup();
 
+        [[nodiscard]] std::vector<Pos3D> flattenPositions() const;
         [[nodiscard]] std::vector<Force> flattenForces() const;
 
 #ifdef WITH_MPI
@@ -231,7 +232,6 @@ namespace molsys
         [[nodiscard]] std::vector<Vel3D>      getVelocities() const;
         [[nodiscard]] std::vector<Force3D>    getForces() const;
         [[nodiscard]] std::vector<AtomNumber> getAtomicNumbers() const;
-        [[nodiscard]] std::vector<Pos>        flattenPositions() const;
         [[nodiscard]] std::set<std::string>   getUniqueQMAtomNames() const;
         [[nodiscard]]
         std::vector<double> getFlattenedQMPositionsInAngstrom() const;

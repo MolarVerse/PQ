@@ -950,6 +950,27 @@ namespace molsys
     }
 
     /**
+     * @brief flattens positions of each atom into a single vector of Pos3D
+     *
+     * @return std::vector<Pos3D>
+     */
+    std::vector<Pos3D> SimulationBox::flattenPositions() const
+    {
+        std::vector<Pos3D> positions;
+
+        auto addPositions = [&positions](auto& atom)
+        {
+            const auto pos = atom->getPosition();
+
+            positions.push_back(pos);
+        };
+
+        std::ranges::for_each(_atoms, addPositions);
+
+        return positions;
+    }
+
+    /**
      * @brief flattens forces of each atom into a single vector of doubles
      *
      * @return std::vector<Force>
