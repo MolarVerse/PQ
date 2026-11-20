@@ -28,10 +28,10 @@
 #include <fstream>
 #include <memory>
 #include <string>
-#include <typeinfo>
 #include <vector>
 
 #include "atom.hpp"
+#include "enums/jobtype.hpp"
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "molecule.hpp"
@@ -40,15 +40,8 @@
 #include "ringPolymerqmmdEngine.hpp"
 #include "simulationBox.hpp"
 #include "testSetup.hpp"
-#include "throwWithMessage.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
-
-TEST_F(TestSetup, setupRingPolymerIsNoOpWhenNotActivated)
-{
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
-    EXPECT_NO_THROW(setup::setupRingPolymer(*_engine));
-}
 
 TEST_F(TestSetup, ringPolymerSetupPhysicalDataResizesBeads)
 {
@@ -315,16 +308,14 @@ TEST_F(
     ringPolymerSetupRunsAllStepsAndTheWrapperUsesRingPolymerEngine
 )
 {
-    settings::GeneralSettings::setIsRingPolymerMDActivated(true);
-
     Settings settings;
+    settings::GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
     settings.ringPolymerSettings.setNumberOfBeadsByUser(2);
     settings.kinetics.setStartTemperatureByUser(toTemperature(300.0));
     engine::RingPolymerQMMDEngine rpEngine{settings};
     fillEngineBox(rpEngine);
 
     EXPECT_NO_THROW(setup::setupRingPolymer(rpEngine));
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
 
     EXPECT_EQ(rpEngine.getRingPolymerBeads().size(), 2);
     EXPECT_EQ(rpEngine.getRingPolymerBeadsPhysicalData().size(), 2);
@@ -332,20 +323,4 @@ TEST_F(
         rpEngine.getRingPolymerBeads()[0].getAtoms()[0]->getVelocity(),
         linalg::Vec3D(0.0, 0.0, 0.0)
     );
-}
-
-/**
- * @brief the wrapper only works with a ring polymer engine
- */
-TEST_F(TestSetup, setupRingPolymerWithPlainEngineThrows)
-{
-    settings::GeneralSettings::setIsRingPolymerMDActivated(true);
-
-    EXPECT_THROW_MSG(
-        setup::setupRingPolymer(*_engine),
-        std::bad_cast,
-        std::string(std::bad_cast().what())
-    );
-
-    settings::GeneralSettings::setIsRingPolymerMDActivated(false);
 }

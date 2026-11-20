@@ -157,6 +157,7 @@
         "dxyz",
         "ekin",
         "equil",
+        "EXTXYZ",
         "Fennol",
         "filterwarnings",
         "FORCEFIELD",

@@ -101,7 +101,6 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
         cleanupPrefix();
 
         settings::GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
-        settings::GeneralSettings::setIsRingPolymerMDActivated(true);
 
         _settings = std::make_unique<Settings>();
         _settings->outputFiles.setFilePrefixByUser(PREFIX);
@@ -141,8 +140,6 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
         _engine->getTimingsOutput().close();
         _engine->getLogOutput().close();
         _engine->getInfoOutput().close();
-
-        settings::GeneralSettings::setIsRingPolymerMDActivated(false);
 
         cleanupPrefix();
     }

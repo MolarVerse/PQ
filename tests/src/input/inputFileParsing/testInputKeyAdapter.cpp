@@ -87,7 +87,8 @@ TEST(TestInputKeyAdapter, exceptionsPropagateThroughAdapter)
     EXPECT_THROW_MSG(
         parseFunc({"timestep", "=", "not_a_number"}, 3),
         exc::InputFileException,
-        "Invalid timestep value at line 3 in input file"
+        "Invalid value \"not_a_number\" for key \"timestep\" at line 3 in "
+        "input file: Invalid timestep value"
     );
 }
 

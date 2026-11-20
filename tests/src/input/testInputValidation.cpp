@@ -52,7 +52,8 @@ class TestInputValidation : public ::testing::Test
 
     void SetUp() override
     {
-        settings::GeneralSettings::setJobtype(JobType::NONE);
+        settings::GeneralSettings::setJobtype(static_cast<JobType>(0));
+
         _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
 
         _settings.optimizerSettings.setLearningRateStrategyByUser(

@@ -831,7 +831,7 @@ TEST_F(TestGuffDatReader, isNeeded)
 {
     Settings settings;
 
-    settings::GeneralSettings::setJobtype(JobType::NONE);
+    settings::GeneralSettings::setJobtype(JobType::QM);
     EXPECT_FALSE(input::guffdat::isNeeded(settings));
 
     settings::GeneralSettings::setJobtype(JobType::MM_MD);

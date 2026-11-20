@@ -41,7 +41,10 @@
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    ReferenceSettings            referenceSettings;
+    ReferenceSettings referenceSettings;
+    // NOTE: this is only used because of this nonsense requirement in the input
+    // file parse after all of the reworks this can be removed (HOPEFULLY)
+    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     input::IntegratorInputParser parser(referenceSettings);
     const auto                   funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("integrator"));

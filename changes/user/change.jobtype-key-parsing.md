@@ -1,0 +1,1 @@
+- The `jobtype` input key is now parsed generically from the `JobType` enum; `qm_rpmd` remains accepted as an alias for `ring_polymer_qm_md`.
