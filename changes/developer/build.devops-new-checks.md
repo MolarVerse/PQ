@@ -1,0 +1,1 @@
+- Enable the devops `noMaybeUnusedParam`, `noVoidPointerParam` and `preferMstdCopyMoveMacros` checks and fix the existing code to pass them.

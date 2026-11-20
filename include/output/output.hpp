@@ -25,6 +25,7 @@
 
 #include <cstddef>
 #include <fstream>
+#include <mstd/utils.hpp>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -50,8 +51,7 @@ namespace out
         {
         }
         ~Output() { close(); }
-        Output(const Output &)                = delete;
-        Output &operator=(const Output &)     = delete;
+        MSTD_NO_COPY(Output);
         Output(Output &&) noexcept            = default;
         Output &operator=(Output &&) noexcept = default;
 

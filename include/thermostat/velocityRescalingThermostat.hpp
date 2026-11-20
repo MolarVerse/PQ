@@ -23,6 +23,8 @@
 #ifndef THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
 #define THERMOSTAT__VELOCITY_RESCALING_THERMOSTAT_HPP
 
+#include <mstd/utils.hpp>
+
 #include "randomNumberGenerator.hpp"
 #include "thermostat.hpp"
 #include "unit_types.hpp"
@@ -58,10 +60,7 @@ namespace thermostat
         VelocityRescalingThermostat &operator=(
             const VelocityRescalingThermostat &
         );
-        VelocityRescalingThermostat(VelocityRescalingThermostat &&) noexcept =
-            delete;
-        VelocityRescalingThermostat &operator=(VelocityRescalingThermostat &&
-        ) noexcept = delete;
+        MSTD_NO_MOVE(VelocityRescalingThermostat);
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,

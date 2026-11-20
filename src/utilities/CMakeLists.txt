@@ -37,6 +37,7 @@ target_include_directories(serialWorker
 target_link_libraries(serialWorker
     PUBLIC
     Threads::Threads
+    mstd
 )
 
 install(TARGETS serialWorker
