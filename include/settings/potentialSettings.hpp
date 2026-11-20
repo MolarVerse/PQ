@@ -121,4 +121,34 @@ class PotentialSettings
     friend struct ::PotentialSettingsUtils;
 };
 
+/**
+ * @brief get the Coulomb radius cut off
+ *
+ * @return double
+ */
+inline double PotentialSettings::getCoulombRadiusCutOff() const
+{
+    return _coulombConfig.cutoff;
+}
+
+/**
+ * @brief get the 1-4 Coulomb scaling factor
+ *
+ * @return double
+ */
+inline double PotentialSettings::getScale14Coulomb() const
+{
+    return _scale14Coulomb.get();
+}
+
+/**
+ * @brief get the 1-4 Van der Waals scaling factor
+ *
+ * @return double
+ */
+inline double PotentialSettings::getScale14VDW() const
+{
+    return _scale14VanDerWaals.get();
+}
+
 #endif   // SETTINGS__POTENTIAL_SETTINGS_HPP
