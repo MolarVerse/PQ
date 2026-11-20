@@ -368,6 +368,7 @@ The ``traj_format`` keyword sets how MD runs write positions, velocities, forces
 
     - **xyz** (default): the :ref:`trajectoryFile`, :ref:`velocityFile`, :ref:`forceFile` and :ref:`chargeFile`
     - **extxyz**: one :ref:`extxyzFile` instead of these four files
+    - **h5md**: one :ref:`h5mdFile` instead of these four files (needs PQ built with ``-DBUILD_WITH_HDF5=ON``)
 
 .. _extxyzfilekey:
 
@@ -380,6 +381,18 @@ Extended XYZ File
     extxyz_file = {file} -> "default.extxyz"
 
 The ``extxyz_file`` keyword sets the name of the :ref:`extxyzFile`, which is written if ``traj_format = extxyz``. Like the other output files, it follows ``file_prefix``.
+
+.. _h5mdfilekey:
+
+H5MD File
+=========
+
+.. admonition:: Key
+    :class: tip
+
+    h5md_file = {file} -> "default.h5md"
+
+The ``h5md_file`` keyword sets the name of the :ref:`h5mdFile`, which is written if ``traj_format = h5md``. Like the other output files, it follows ``file_prefix``.
 
 .. _energyfilekey:
 
@@ -1297,6 +1310,20 @@ With the ``freset_forces`` keyword the user can specify the frequency ``f`` at w
 .. centered:: *default value* = nstep + 1 (*i.e.* never)
 
 .. centered:: *special case* = 0 -> nstep + 1
+
+.. _momentumwarnthresholdKey:
+
+Momentum Warn Threshold
+=======================
+
+.. admonition:: Key
+    :class: tip
+
+    momentum_warn_threshold = {double} -> 0.01
+
+With the ``momentum_warn_threshold`` keyword the user can set when PQ warns about a drifting total momentum: once per run, if the centre-of-mass velocity exceeds this fraction of the thermal velocity :math:`\sqrt{k_B T / m}` (mean atomic mass :math:`m`). The warning names the reset setting to change: ``freset`` if there is no periodic momentum reset (also after ``nreset``/``nscale`` have ended), or a smaller ``freset`` if the drift builds up between periodic resets. A value of 0 disables the warning.
+
+.. centered:: *default value* = 0.01
 
 .. _constraintsKeys:
 

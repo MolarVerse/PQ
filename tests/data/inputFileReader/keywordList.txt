@@ -99,6 +99,7 @@ vel_file                     false      vel.dat
 restart_file                 false      restart.rst
 charge_file                  false      charge.dat
 extxyz_file                  false      traj.extxyz
+h5md_file                    false      traj.h5md
 traj_format                  false      extxyz
 force_file                   false      force.dat
 virial_file                  false      virial.dat
@@ -122,6 +123,7 @@ freset                       false      10
 nreset_angular               false      10
 freset_angular               false      10
 freset_forces                false      10
+momentum_warn_threshold      false      0.01
 
 rcoulomb                     false      12.0
 rnoncoulomb                  false      12.0

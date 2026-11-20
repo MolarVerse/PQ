@@ -24,14 +24,8 @@
 
 #include <format>
 
-#include "constraintSettings.hpp"
-#include "forceFieldSettings.hpp"
-#include "generalSettings.hpp"
+#include "energyColumns.hpp"
 #include "globalTimer.hpp"
-#include "manostatSettings.hpp"
-#include "physicalData.hpp"
-#include "settings.hpp"
-#include "thermostatSettings.hpp"
 #include "timerId.hpp"
 #include "units.hpp"
 
@@ -77,15 +71,8 @@ namespace out
     /**
      * @brief Finish writing the info output
      *
-     * @details Writes the final set of physical data to the info output file.
-     * - Coulomb and Non-Coulomb energies contain the intra and inter energies.
-     * - Bond, Angle, Dihedral and Improper energies are only available if the
-     * force field is active.
-     * - qm energy is only available if qm is active.
-     * - coulomb and non-coulomb energies are only available if mm is active.
-     * - volume and density are only available if manostat is active.
-     * - nose hoover momentum and friction energies are only available if nose
-     * hoover thermostat is active.
+     * @details writes the columns of EnergyColumns, the same list as the
+     * energy file, two per row after the time cell
      *
      */
     void InfoOutput::_finish(
@@ -93,126 +80,23 @@ namespace out
         const Settings                   &settings
     )
     {
-        _writeRight(
-            physicalData.getTemperature()
-                .quantity_from_zero()
-                .numerical_value_in(K),
-            "TEMPERATURE",
-            "K"
-        );
+        const EnergyColumns columns(physicalData, settings);
 
-        _writeLeft(
-            physicalData.getPressure().numerical_value_in(bar),
-            "PRESSURE",
-            "bar"
-        );
-        _writeRight(physicalData.getTotalEnergy(), "E(TOT)", "kcal/mol");
+        auto left = false;
 
-        if (GeneralSettings::isQMActivated())
+        for (const auto &column : columns.get())
         {
-            _writeLeft(
-                physicalData.getQMEnergy() -
-                    physicalData.getQMReferenceEnergy(),
-                "E(QM)",
-                "kcal/mol"
-            );
-            _writeRight(physicalData.getNumberOfQMAtoms(), "N(QM-ATOMS)", "-");
-        }
+            _writeColumn(column, left);
 
-        _writeLeft(physicalData.getKineticEnergy(), "E(KIN)", "kcal/mol");
-        _writeRight(physicalData.getIntraEnergy(), "E(INTRA)", "kcal/mol");
-
-        if (GeneralSettings::isMMActivated())
-        {
-            _writeLeft(physicalData.getCoulombEnergy(), "E(COUL)", "kcal/mol");
-            _writeRight(
-                physicalData.getNonCoulombEnergy(),
-                "E(NON-COUL)",
-                "kcal/mol"
-            );
-        }
-
-        if (settings.forceFieldSettings.isActive())
-        {
-            _writeLeft(physicalData.getBondEnergy(), "E(BOND)", "kcal/mol");
-            _writeRight(physicalData.getAngleEnergy(), "E(ANGLE)", "kcal/mol");
-            _writeLeft(
-                physicalData.getDihedralEnergy(),
-                "E(DIHEDRAL)",
-                "kcal/mol"
-            );
-            _writeRight(
-                physicalData.getImproperEnergy(),
-                "E(IMPROPER)",
-                "kcal/mol"
-            );
-        }
-
-        if (GeneralSettings::isHybridJobtype())
-        {
-            _writeLeft(
-                physicalData.getNumberOfSmoothingMolecules(),
-                "N(SM-MOL)",
-                "-"
-            );
-            _writeRight(
-                physicalData.getQMReferenceEnergy(),
-                "E(QM-REF)",
-                "kcal/mol"
-            );
-        }
-
-        if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
-        {
-            _writeLeft(physicalData.getVolume(), "VOLUME", "A^3");
-            _writeRight(physicalData.getDensity(), "DENSITY", "g/cm^3");
-
-            if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
+            if (left && column.aloneInInfoRow)
             {
-                _writeLeft(
-                    physicalData.getCoupledPressure().numerical_value_in(bar),
-                    "P(COUPLED)",
-                    "bar"
-                );
                 _writeRight();
             }
+            else
+            {
+                left = !left;
+            }
         }
-
-        if (settings.thermostatSettings.getThermostatType() ==
-            ThermostatType::NOSE_HOOVER)
-        {
-            _writeLeft(
-                physicalData.getNoseHooverMomentumEnergy(),
-                "E(NH-MOMENTUM)",
-                "kcal/mol"
-            );
-            _writeRight(
-                physicalData.getNoseHooverFrictionEnergy(),
-                "E(NH-FRICTION)",
-                "kcal/mol"
-            );
-        }
-
-        if (settings.constraintSettings.isDistanceConstraintsActivated())
-        {
-            _writeLeft(
-                physicalData.getLowerDistanceConstraints(),
-                "LOWER-DIST-CONSTR",
-                "kcal/mol"
-            );
-            _writeRight(
-                physicalData.getUpperDistanceConstraints(),
-                "UPPER-DIST-CONSTR",
-                "kcal/mol"
-            );
-        }
-
-        _writeLeftScientific(
-            norm(physicalData.getMomentum()),
-            "MOMENTUM",
-            "amuA/fs"
-        );
-        _writeRight(physicalData.getLoopTime(), "LOOPTIME", "s");
 
         _getFilePointer() << std::format("{:-^89}", "") << "\n\n";
 
@@ -316,37 +200,35 @@ namespace out
     }
 
     /**
-     * @brief write left column of info file
+     * @brief write one energy column into the left or right half of a row
      *
-     * @param value
-     * @param name
-     * @param unit
+     * @param column
+     * @param left
      */
-    void InfoOutput::_writeLeftScientific(
-        double                  value,
-        const std::string_view &name,
-        const std::string_view &unit
-    )
+    void InfoOutput::_writeColumn(const EnergyColumn &column, bool left)
     {
-        _getFilePointer(
-        ) << std::format("|   {:<15} {:15.1e} {:<8} ", name, value, unit);
-    }
+        const auto value = column.format == EnergyColumnFormat::SCIENTIFIC
+                               ? std::format("{:15.1e}", column.value)
+                               : std::format("{:15.5f}", column.value);
 
-    /**
-     * @brief write std::right column of info file
-     *
-     * @param value
-     * @param name
-     * @param unit
-     */
-    void InfoOutput::_writeRight(
-        double                  value,
-        const std::string_view &name,
-        const std::string_view &unit
-    )
-    {
-        _getFilePointer(
-        ) << std::format("{:<15} {:15.5f} {:<8}   |\n", name, value, unit);
+        if (left)
+        {
+            _getFilePointer() << std::format(
+                "|   {:<15} {} {:<8} ",
+                column.name,
+                value,
+                column.unit
+            );
+        }
+        else
+        {
+            _getFilePointer() << std::format(
+                "{:<15} {} {:<8}   |\n",
+                column.name,
+                value,
+                column.unit
+            );
+        }
     }
 
     /**

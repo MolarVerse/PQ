@@ -36,6 +36,7 @@
 #include "stdoutOutput.hpp"
 #include "timingsSettings.hpp"
 #include "trajectoryOutput.hpp"
+#include "units.hpp"
 
 namespace setup
 {
@@ -97,12 +98,13 @@ namespace setup
         );
         _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
 
-        // extxyz replaces the xyz, velocity, force and charge files of MD runs
-        const auto extxyz = GeneralSettings::isMDJobType() &&
-                            outputFileSettings.getTrajectoryFormat() ==
-                                TrajectoryFormat::EXTXYZ;
+        // extxyz or h5md replace the xyz, velocity, force and charge files of
+        // MD runs
+        const auto format         = outputFileSettings.getTrajectoryFormat();
+        const auto textTrajectory = !settings::GeneralSettings::isMDJobType() ||
+                                    format == TrajectoryFormat::XYZ;
 
-        if (!extxyz)
+        if (textTrajectory)
         {
             _engine.getXyzOutput().setFilename(
                 xyzFileName,
@@ -131,11 +133,22 @@ namespace setup
                 instEnFile,
                 overwriteOutputFiles
             );
-            if (extxyz)
+            if (format == TrajectoryFormat::EXTXYZ)
             {
                 mdEngine.getEngineOutput().openExtxyzOutput(
                     outputFileSettings.getExtxyzFileName(),
                     overwriteOutputFiles
+                );
+            }
+            else if (format == TrajectoryFormat::H5MD)
+            {
+                const auto &timeStep =
+                    _engine.getSettings().timings.getTimeStep();
+
+                mdEngine.getEngineOutput().openH5mdOutput(
+                    outputFileSettings.getH5mdFileName(),
+                    overwriteOutputFiles,
+                    timeStep.numerical_value_in(fs)
                 );
             }
             else

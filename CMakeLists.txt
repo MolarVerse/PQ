@@ -233,6 +233,10 @@ if(BUILD_WITH_MPI)
     include(mpi)
 endif()
 
+if(BUILD_WITH_HDF5)
+    include(hdf5)
+endif()
+
 if(BUILD_WITH_PYTHON_BINDINGS)
     include(python_bindings)
 endif()

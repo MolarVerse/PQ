@@ -1,0 +1,1 @@
+- New `traj_format = h5md`: MD runs write positions, velocities, forces, charges, box and potential energy into one compressed H5MD (HDF5) file, about 6 times smaller than the text files. Needs PQ built with `-DBUILD_WITH_HDF5=ON` (#1217).

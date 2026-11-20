@@ -1,0 +1,1 @@
+- `ResetKinetics::checkMomentumDrift` runs before the kinetics reset and picks the message from `getInitialMomentumResetSteps`/`getMomentumResetInterval` (#1251).
