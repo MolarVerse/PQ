@@ -950,19 +950,21 @@ namespace molsys
     }
 
     /**
-     * @brief flattens positions of each atom into a single vector of Pos3D
+     * @brief flattens positions of each atom into a single vector of Pos
      *
-     * @return std::vector<Pos3D>
+     * @return std::vector<Pos>
      */
-    std::vector<Pos3D> SimulationBox::flattenPositions() const
+    std::vector<Pos> SimulationBox::flattenPositions() const
     {
-        std::vector<Pos3D> positions;
+        std::vector<Pos> positions;
 
         auto addPositions = [&positions](auto& atom)
         {
             const auto pos = atom->getPosition();
 
-            positions.push_back(pos);
+            positions.push_back(pos[0]);
+            positions.push_back(pos[1]);
+            positions.push_back(pos[2]);
         };
 
         std::ranges::for_each(_atoms, addPositions);
