@@ -94,6 +94,8 @@ namespace defaults
 
     static constexpr char INNER_REGION_CENTER_ATOM_NAME = 'X';
 
+    static constexpr double MOMENTUM_WARN_THRESHOLD_DEFAULT = 0.01;
+
     static constexpr double COULOMB_CUT_OFF_DEFAULT  = 12.5;   // in Angstrom
     static constexpr double SCALE_14_COULOMB_DEFAULT = 1.0;
     static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;

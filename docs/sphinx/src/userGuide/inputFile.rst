@@ -1311,6 +1311,20 @@ With the ``freset_forces`` keyword the user can specify the frequency ``f`` at w
 
 .. centered:: *special case* = 0 -> nstep + 1
 
+.. _momentumwarnthresholdKey:
+
+Momentum Warn Threshold
+=======================
+
+.. admonition:: Key
+    :class: tip
+
+    momentum_warn_threshold = {double} -> 0.01
+
+With the ``momentum_warn_threshold`` keyword the user can set when PQ warns about a drifting total momentum: once per run, if the centre-of-mass velocity exceeds this fraction of the thermal velocity :math:`\sqrt{k_B T / m}` (mean atomic mass :math:`m`). The warning names the reset setting to change: ``freset`` if there is no periodic momentum reset (also after ``nreset``/``nscale`` have ended), or a smaller ``freset`` if the drift builds up between periodic resets. A value of 0 disables the warning.
+
+.. centered:: *default value* = 0.01
+
 .. _constraintsKeys:
 
 ****************

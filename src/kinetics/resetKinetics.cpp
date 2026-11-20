@@ -25,8 +25,12 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <format>
+#include <optional>
+#include <string>
 
 #include "constants/conversionFactors.hpp"
+#include "constants/internalConversionFactors.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "mathUtilities.hpp"
@@ -34,10 +38,12 @@
 #include "simulationBox.hpp"
 #include "staticMatrix.hpp"
 #include "staticMatrix/staticMatrix3x3Class.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace kinetics
 {
+    static constexpr double FRACTION_TO_PERCENT = 100.0;
 
     /**
      * @brief Construct a new Reset Kinetics:: Reset Kinetics object
@@ -239,6 +245,115 @@ namespace kinetics
             simulationBox.getAtoms(),
             [forceCorrection](auto &atom) { atom->addForce(-forceCorrection); }
         );
+    }
+
+    /**
+     * @brief warn once if the total momentum drifts above the threshold
+     *
+     * @details warns if the centre-of-mass velocity P/M exceeds
+     * momentum_warn_threshold times the thermal velocity sqrt(kT/m) of the
+     * mean atomic mass m = M/N, i.e. if P^2 > threshold^2 * N * M * kT
+     *
+     * @param step The current simulation step
+     * @param physicalData The physical data before the kinetics reset
+     * @param simulationBox The simulation box containing the system
+     * @return the warning message, only for the first drift of a run
+     */
+    std::optional<std::string> ResetKinetics::checkMomentumDrift(
+        size_t                            step,
+        const physicalData::PhysicalData &physicalData,
+        const molsys::SimulationBox      &simulationBox
+    )
+    {
+        const auto threshold = _settings->getMomentumWarnThreshold();
+
+        if (_momentumDriftWarned || threshold <= 0.0)
+        {
+            return std::nullopt;
+        }
+
+        const auto advice = _momentumDriftAdvice(step);
+
+        if (!advice)
+        {
+            return std::nullopt;
+        }
+
+        const auto momentum    = physicalData.getMomentum();
+        const auto temperature = physicalData.getTemperature()
+                                     .quantity_from_zero()
+                                     .numerical_value_in(K);
+        const auto nAtoms =
+            static_cast<double>(simulationBox.getNumberOfAtoms());
+
+        // momentum in amu*Angstrom/s, the velocity unit of TEMPERATURE_FACTOR
+        const auto momentumSquared        = normSquared(momentum * S_TO_FS);
+        const auto thermalMomentumSquared = temperature * nAtoms *
+                                            simulationBox.getTotalMass() /
+                                            TEMPERATURE_FACTOR;
+
+        if (momentumSquared <= threshold * threshold * thermalMomentumSquared)
+        {
+            return std::nullopt;
+        }
+
+        _momentumDriftWarned = true;
+
+        return std::format(
+            "Total momentum reached {:.3e} amu*Angstrom/fs at step {}: the "
+            "centre of mass moves faster than {:g} % of the thermal velocity "
+            "{}. Set momentum_warn_threshold = 0 to disable this warning.",
+            norm(momentum),
+            step,
+            threshold * FRACTION_TO_PERCENT,
+            *advice
+        );
+    }
+
+    /**
+     * @brief explain why the momentum can drift with the current reset settings
+     *
+     * @param step The current simulation step
+     * @return the advice, std::nullopt if the momentum is reset in this step
+     */
+    std::optional<std::string> ResetKinetics::_momentumDriftAdvice(
+        size_t step
+    ) const
+    {
+        const auto initialSteps = _settings->getInitialMomentumResetSteps();
+        const auto interval     = _settings->getMomentumResetInterval();
+
+        if (step <= initialSteps)
+        {
+            return std::nullopt;
+        }
+
+        if (interval)
+        {
+            if (*interval <= 1)
+            {
+                return std::nullopt;
+            }
+
+            return std::format(
+                "between the momentum resets every {} steps (freset/fscale). "
+                "Set a smaller freset to remove it more often",
+                *interval
+            );
+        }
+
+        if (initialSteps > 0)
+        {
+            return std::format(
+                "and the momentum is only removed in the first {} steps "
+                "(nreset/nscale). Set freset (e.g. freset = 100) to remove it "
+                "periodically",
+                initialSteps
+            );
+        }
+
+        return "and no momentum reset is set. Set freset (e.g. freset = 100) "
+               "to remove it periodically";
     }
 
 }   // namespace kinetics

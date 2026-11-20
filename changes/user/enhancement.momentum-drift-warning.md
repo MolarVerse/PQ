@@ -1,0 +1,1 @@
+- MD runs warn once when the total momentum drifts above `momentum_warn_threshold` (default 0.01 of the thermal velocity, 0 disables it) and say which `freset` setting fixes it (#1251).
