@@ -77,8 +77,8 @@ namespace pot
         const Pos &distance
     ) const
     {
-        EnergyPerMol energy = EnergyPerMol::zero();
-        Force        force  = Force::zero();
+        EnergyPerMol cumulativeEnergy = EnergyPerMol::zero();
+        Force        cumulativeForce  = Force::zero();
 
         // Power-law term, coefficients [coeff, n] starting at `index`:
         //   E = coeff / r^n          (coeff in kcal/mol * Å^n)
@@ -162,31 +162,31 @@ namespace pot
         size_t index = 0;
 
         // the first four terms are power terms
-        addPowerTerms(distance, index, energy, force);
+        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
         index += 2;
-        addPowerTerms(distance, index, energy, force);
+        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
         index += 2;
-        addPowerTerms(distance, index, energy, force);
+        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
         index += 2;
-        addPowerTerms(distance, index, energy, force);
+        addPowerTerms(distance, index, cumulativeEnergy, cumulativeForce);
         index += 2;
 
         // the next two terms are exponential terms
-        addExpTerm(distance, index, energy, force);
+        addExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
         index += 3;
-        addExpTerm(distance, index, energy, force);
+        addExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
         index += 3;
 
         // the next two terms are power-exponential terms
-        addPowExpTerm(distance, index, energy, force);
+        addPowExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
         index += 4;
-        addPowExpTerm(distance, index, energy, force);
+        addPowExpTerm(distance, index, cumulativeEnergy, cumulativeForce);
 
-        energy += -get_energyCutoff() -
-                  get_forceCutoff() * (get_radialCutoff() - distance);
-        force += -get_forceCutoff();
+        cumulativeEnergy += -get_energyCutoff() -
+                            get_forceCutoff() * (get_radialCutoff() - distance);
+        cumulativeForce += -get_forceCutoff();
 
-        return {energy, force};
+        return {cumulativeEnergy, cumulativeForce};
     }
 
 }   // namespace pot
