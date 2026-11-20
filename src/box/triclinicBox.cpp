@@ -67,7 +67,7 @@ namespace molsys
      */
     Volume TriclinicBox::_calculateVolume(const PosTensor3D &boxMatrix)
     {
-        return static_cast<Volume>(det(boxMatrix));
+        return det(boxMatrix);
     }
 
     /**
