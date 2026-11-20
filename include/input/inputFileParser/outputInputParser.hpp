@@ -47,6 +47,7 @@ namespace input
         void addOverwriteOutputKeyword();
         void addIncludeOutputMetadataKeyword();
         void addAsyncOutputKeyword();
+        void addTrajectoryFormatKeyword();
         void addOutputFrequencyKeyword();
         void addFilePrefixKeyword();
 
@@ -61,6 +62,7 @@ namespace input
         void addForceFilenameKeyword();
         void addRestartFilenameKeyword();
         void addChargeFilenameKeyword();
+        void addExtxyzFilenameKeyword();
         void addMomentumFilenameKeyword();
         void addVirialFilenameKeyword();
         void addStressFilenameKeyword();

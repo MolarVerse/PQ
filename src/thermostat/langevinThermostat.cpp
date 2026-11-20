@@ -28,7 +28,6 @@
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -81,14 +80,15 @@ namespace thermostat
      *
      * @param friction
      * @param targetTemperature
+     * @param timeStep the integration time step used for velocity updates
      */
     auto LangevinThermostat::calculateSigma(
         const Frequency   &friction,
-        const Temperature &targetTemperature
+        const Temperature &targetTemperature,
+        const Time        &timeStep
     ) -> decltype(mstd::sqrt(EnergyPerMol{} / TimeSquared{}))
     {
-        const auto timeStep = settings::TimingsSettings::getTimeStep();
-        const auto force    = 4.0 * friction *
+        const auto force = 4.0 * friction *
                            targetTemperature.quantity_from_zero() *
                            gas_constant;
 
@@ -103,18 +103,20 @@ namespace thermostat
      *
      * @param simulationBox
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void LangevinThermostat::applyLangevin(
         molsys::SimulationBox &simulationBox,
-        const Temperature     &targetTemperature
+        const Temperature     &targetTemperature,
+        const Time            &timeStep
     )
     {
-        const auto sigma = calculateSigma(_friction, targetTemperature);
+        const auto sigma =
+            calculateSigma(_friction, targetTemperature, timeStep);
 
-        auto applyFriction = [this, sigma](auto &atom)
+        auto applyFriction = [this, sigma, &timeStep](auto &atom)
         {
-            const auto mass     = atom->getMass();
-            const auto timeStep = settings::TimingsSettings::getTimeStep();
+            const auto mass = atom->getMass();
 
             const auto propagationFactor = 0.5 * timeStep / mass;
 
@@ -143,17 +145,19 @@ namespace thermostat
      * @param simulationBox
      * @param physicalData
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void LangevinThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const Temperature          &targetTemperature
+        const Temperature          &targetTemperature,
+        const Time                 &timeStep
     )
     {
         auto _ =
             scopedTimer(TimerId::Thermostat, "LangevinThermostat - Full Step");
 
-        applyLangevin(simulationBox, targetTemperature);
+        applyLangevin(simulationBox, targetTemperature, timeStep);
         physicalData.calculateTemperature(simulationBox);
     }
 
@@ -164,17 +168,19 @@ namespace thermostat
      *
      * @param simulationBox
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void LangevinThermostat::applyThermostatHalfStep(
         molsys::SimulationBox &simulationBox,
         physicalData::PhysicalData & /*physicalData*/,
-        const Temperature &targetTemperature
+        const Temperature &targetTemperature,
+        const Time        &timeStep
     )
     {
         auto _ =
             scopedTimer(TimerId::Thermostat, "LangevinThermostat - Half Step");
 
-        applyLangevin(simulationBox, targetTemperature);
+        applyLangevin(simulationBox, targetTemperature, timeStep);
     }
 
     /***************************

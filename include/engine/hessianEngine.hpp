@@ -49,6 +49,10 @@ namespace engine
 
         void run() override;
         void writeOutput(const OutputFileSettings &outputSettings) override;
+        void writeOutput(
+            const OutputFileSettings &outputSettings,
+            size_t                    startingStepCount
+        );
 
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();

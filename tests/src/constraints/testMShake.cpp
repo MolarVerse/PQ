@@ -36,7 +36,6 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -131,11 +130,10 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
     const auto maxIter   = 100;
     const auto tolerance = 1.0e-5;
 
-    EXPECT_NO_THROW(mShake.applyMShake(simBox, maxIter, tolerance));
+    EXPECT_NO_THROW(mShake.applyMShake(simBox, maxIter, tolerance, 0.5 * fs));
 
     // After convergence the perturbed bond 0-1 must be back to the
     // reference length 1.0 within the requested tolerance.
@@ -323,14 +321,53 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     molecule.addAtom(atom3);
     simBox.addMolecule(molecule);
 
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
     const auto maxIter   = 1;
     const auto tolerance = -1.0;
 
     EXPECT_THROW_MSG(
-        mShake.applyMShake(simBox, maxIter, tolerance),
+        mShake.applyMShake(simBox, maxIter, tolerance, 0.5 * fs),
         exc::MShakeException,
         "M-Shake did not converge within 1 iterations for molecule type "
         "MolType(1)"
     );
+}
+
+/**
+ * @brief a rigid triatomic has three M-Shake bonds, so molecule and bond
+ * counts must differ; molecules of other types are not counted.
+ */
+TEST(TestMShake, countsMShakeMoleculesSeparatelyFromBonds)
+{
+    auto moltype = molsys::MoleculeType();
+    moltype.setMoltype(MolType{1});
+    moltype.setName("triangle");
+    moltype.setNumberOfAtoms(3);
+
+    auto refAtoms = std::vector<molsys::Atom>(3);
+    refAtoms[0].setName("H");
+    refAtoms[1].setName("H");
+    refAtoms[2].setName("H");
+    refAtoms[0].setPosition({0.0, 0.0, 0.0});
+    refAtoms[1].setPosition({1.0, 0.0, 0.0});
+    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
+
+    auto mShakeRef = constraints::MShakeReference();
+    mShakeRef.setMoleculeType(moltype);
+    mShakeRef.setAtoms(refAtoms);
+
+    auto mShake = constraints::MShake();
+    mShake.addMShakeReference(mShakeRef);
+    mShake.initMShake();
+
+    auto simBox = molsys::SimulationBox();
+
+    for (const auto type : {MolType{1}, MolType{1}, MolType{2}})
+    {
+        auto molecule = molsys::Molecule();
+        molecule.setMoltype(type);
+        simBox.addMolecule(molecule);
+    }
+
+    EXPECT_EQ(mShake.calcNumberOfMShakeMolecules(simBox), 2);
+    EXPECT_EQ(mShake.calcNumberOfBondConstraints(simBox), 6);
 }

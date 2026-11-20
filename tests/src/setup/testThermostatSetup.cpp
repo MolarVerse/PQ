@@ -22,7 +22,13 @@
 
 #include <gtest/gtest.h>
 
+#include <fstream>
+#include <iterator>
+#include <string>
+
 #include "berendsenThermostat.hpp"
+#include "engineOutput.hpp"
+#include "logOutput.hpp"
 #include "noseHooverThermostat.hpp"
 #include "testSetup.hpp"
 #include "thermostatSettings.hpp"
@@ -38,7 +44,8 @@ namespace
     void finalizeTargetTemperature(Settings &settings)
     {
         settings.kinetics.setTargetTemperatureByUser(toTemperature(300.0));
-        settings.kinetics.finalize();
+        settings.timings.setNumberOfStepsByUser(100U);
+        settings.kinetics.finalize(settings.timings.getNumberOfSteps());
     }
 }   // namespace
 
@@ -46,7 +53,7 @@ TEST_F(TestSetup, setupThermostatNoThermostat)
 {
     setup::ThermostatSetup thermostatSetup(*_mdEngine);
 
-    settings::TimingsSettings::setTimeStep(0.1 * fs);
+    _settings->timings.setTimeStepByUser(0.1 * fs);
     EXPECT_NO_THROW(thermostatSetup.setup());
     EXPECT_EQ(
         thermostatSetup.getEngine().getThermostat().getThermostatType(),
@@ -135,4 +142,86 @@ TEST_F(TestSetup, setupThermostatNhChain)
         );
     EXPECT_EQ(noseHooverThermostat.getChi().size(), 5);
     EXPECT_EQ(noseHooverThermostat.getZeta().size(), 5);
+}
+
+namespace
+{
+    /**
+     * @brief runs a function that writes to the log of the engine and returns
+     * what it wrote
+     */
+    template <typename Writer>
+    std::string readLogWrittenBy(engine::MDEngine &engine, Writer write)
+    {
+        const std::string fileName = "thermostatSetup.log";
+
+        engine.getEngineOutput().getLogOutput().setFilename(fileName, true);
+        write();
+        engine.getEngineOutput().getLogOutput().close();
+
+        std::ifstream log(fileName);
+        return {
+            std::istreambuf_iterator<char>(log),
+            std::istreambuf_iterator<char>()
+        };
+    }
+}   // namespace
+
+/**
+ * @brief the temperature is printed once with its unit, not as "300 K K"
+ */
+TEST_F(TestSetup, thermostatLogPrintsTheTemperatureUnitOnce)
+{
+    finalizeTargetTemperature(*_settings);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
+
+    const auto text = readLogWrittenBy(
+        *_mdEngine,
+        [&] { thermostatSetup.writeBerendsenInfo(); }
+    );
+
+    EXPECT_NE(text.find("Target temperature: 300 K\n"), std::string::npos)
+        << text;
+    EXPECT_EQ(text.find("K K"), std::string::npos) << text;
+}
+
+/**
+ * @brief the Langevin log prints the friction in the unit of the input
+ * (1/ps), not the internal value in 1/s
+ */
+TEST_F(TestSetup, langevinLogPrintsTheFrictionInPerPicosecond)
+{
+    finalizeTargetTemperature(*_settings);
+    _settings->thermostatSettings.setFrictionByUser(2.0e12);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
+
+    const auto text = readLogWrittenBy(
+        *_mdEngine,
+        [&] { thermostatSetup.writeLangevinInfo(); }
+    );
+
+    EXPECT_NE(text.find("Friction:           2 1/ps"), std::string::npos)
+        << text;
+    EXPECT_EQ(text.find("K K"), std::string::npos) << text;
+}
+
+/**
+ * @brief the temperature ramp log prints every temperature with its unit once
+ */
+TEST_F(TestSetup, temperatureRampLogPrintsTheUnitOnce)
+{
+    _settings->kinetics.setStartTemperatureByUser(toTemperature(100.0));
+    finalizeTargetTemperature(*_settings);
+    setup::ThermostatSetup thermostatSetup(*_mdEngine);
+
+    const auto text = readLogWrittenBy(
+        *_mdEngine,
+        [&] { thermostatSetup.writeTemperatureRampInfo(); }
+    );
+
+    EXPECT_NE(text.find("Start temp:          100 K\n"), std::string::npos)
+        << text;
+    EXPECT_NE(text.find("Target temp:         300 K\n"), std::string::npos)
+        << text;
+    EXPECT_EQ(text.find("K K"), std::string::npos) << text;
 }

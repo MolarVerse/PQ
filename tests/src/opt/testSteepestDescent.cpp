@@ -92,7 +92,7 @@ TEST(TestSteepestDescent, updateMovesAtomsByLearningRateTimesForce)
          0.7 * kcal_per_mol / angstrom}
     );
 
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     opt.setSimulationBox(box);
 
     const auto learningRate = 0.1;
@@ -138,7 +138,7 @@ TEST(TestSteepestDescent, updateStoresOldPosition)
          0.2 * kcal_per_mol / angstrom}
     );
 
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     opt.setSimulationBox(box);
     opt.update(0.05, 1U);
 
@@ -168,7 +168,7 @@ TEST(TestSteepestDescent, updateAppliesPBCToNewPosition)
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     );
 
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     opt.setSimulationBox(box);
     opt.update(1.0, 1U);
 
@@ -191,7 +191,7 @@ TEST(TestSteepestDescent, updateIsNoOpWithZeroLearningRate)
          1.0 * kcal_per_mol / angstrom}
     );
 
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     opt.setSimulationBox(box);
     opt.update(0.0, 1U);
 

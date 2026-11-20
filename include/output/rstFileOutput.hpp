@@ -26,6 +26,7 @@
 #include <cstddef>
 
 #include "output.hpp"
+#include "textBuffer.hpp"
 
 namespace out
 {
@@ -39,6 +40,9 @@ namespace out
      */
     class RstFileOutput : public Output
     {
+       private:
+        TextBuffer _buffer;
+
        public:
         using Output::Output;
 

@@ -1,0 +1,1 @@
+- Fix the setup section of the `.log` file: temperatures were printed with a doubled unit (`300 K K`), and the Langevin friction was printed in the wrong unit (internal 1/s labelled as 1/ps).

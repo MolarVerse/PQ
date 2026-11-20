@@ -71,19 +71,17 @@ namespace
 
 TEST(TestAdam, defaultBetasConstructorAcceptsNAtoms)
 {
-    EXPECT_NO_THROW(opt::Adam(10U, /*nAtoms=*/4U));
+    EXPECT_NO_THROW(opt::Adam(/*nAtoms=*/4U));
 }
 
 TEST(TestAdam, customBetasConstructorAcceptsBeta1AndBeta2)
 {
-    EXPECT_NO_THROW(
-        opt::Adam(10U, /*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U)
-    );
+    EXPECT_NO_THROW(opt::Adam(/*beta1=*/0.5, /*beta2=*/0.5, /*nAtoms=*/4U));
 }
 
 TEST(TestAdam, maxHistoryLengthIsTwo)
 {
-    const opt::Adam adam(10U, 4U);
+    const opt::Adam adam(4U);
     EXPECT_EQ(adam.maxHistoryLength(), 2U);
 }
 
@@ -103,7 +101,7 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
          0.5 * kcal_per_mol / angstrom}
     );
 
-    opt::Adam adam(1U, /*nAtoms=*/1U);
+    opt::Adam adam(/*nAtoms=*/1U);
     adam.setSimulationBox(box);
 
     const auto learningRate = 0.01;
@@ -151,7 +149,7 @@ TEST(TestAdam, updateStoresOldPosition)
          1.0 * kcal_per_mol / angstrom}
     );
 
-    opt::Adam adam(1U, 1U);
+    opt::Adam adam(/*nAtoms=*/1U);
     adam.setSimulationBox(box);
     adam.update(0.01, 1U);
 
@@ -173,7 +171,7 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     );
 
-    opt::Adam adam(1U, 1U);
+    opt::Adam adam(/*nAtoms=*/1U);
     adam.setSimulationBox(box);
     adam.update(/*learningRate=*/0.5, /*step=*/1U);
 
@@ -191,7 +189,7 @@ TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
          0.0 * kcal_per_mol / angstrom}
     );
 
-    opt::Adam adam(1U, 1U);
+    opt::Adam adam(1U);
     adam.setSimulationBox(box);
     adam.update(0.1, 1U);
 

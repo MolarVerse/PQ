@@ -1,1 +1,2 @@
 - finish removing static access from `ThermostatSettings`
+- remove static access from `TimingsSetting`

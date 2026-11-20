@@ -24,23 +24,25 @@
 
 #include "atom.hpp"
 #include "simulationBox.hpp"
-#include "timingsSettings.hpp"
 
 namespace integrator
 {
     /**
      * @brief integrates the velocities of a single atom
      *
-     * @param atom
+     * @param atom the atom whose velocities are to be integrated
+     * @param timeStep the integration time step used for velocity updates
      */
-    void Integrator::integrateVelocities(molsys::Atom *atom)
+    void Integrator::integrateVelocities(
+        molsys::Atom *atom,
+        const Time   &timeStep
+    )
     {
-        auto       velocity  = atom->getVelocity();
-        const auto force     = atom->getForce();
-        const auto mass      = atom->getMass();
-        const auto timeStamp = settings::TimingsSettings::getTimeStep();
+        auto       velocity = atom->getVelocity();
+        const auto force    = atom->getForce();
+        const auto mass     = atom->getMass();
 
-        velocity += 0.5 * timeStamp * force / mass;
+        velocity += timeStep * force / mass;
 
         atom->setVelocity(velocity);
     }
@@ -49,19 +51,20 @@ namespace integrator
      * @brief integrates the positions of a single atom
      *
      * @param atom
-     * @param simulationBox
+     * @param simulationBox the simulation box to apply periodic boundary
+     * conditions
+     * @param timeStep the integration time step used for velocity updates
      */
     void Integrator::integratePositions(
-        molsys::Atom *atom,
-
-        const molsys::SimulationBox &simulationBox
-
+        molsys::Atom                *atom,
+        const molsys::SimulationBox &simulationBox,
+        const Time                  &timeStep
     )
     {
         auto       position = atom->getPosition();
         const auto velocity = atom->getVelocity();
 
-        position += settings::TimingsSettings::getTimeStep() * velocity;
+        position += timeStep * velocity;
 
         simulationBox.applyPBC(position);
 

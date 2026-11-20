@@ -57,7 +57,7 @@ TEST_F(TestInputFileReader, testParseTemperature)
     parseFunc(lineElements, 0);
 
     // the target temperature is resolved to the end temperature on finalize
-    kineticsSettings.finalize();
+    kineticsSettings.finalize(100U);
     EXPECT_EQ(kineticsSettings.getEndTemperature(), toTemperature(300.0));
 
     _clearParser(parser);

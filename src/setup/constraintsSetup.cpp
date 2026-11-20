@@ -244,6 +244,8 @@ namespace setup
         const auto nShakeBonds  = constraints->getNumberOfBondConstraints();
         const auto nMShakeTypes = constraints->getMShakeReferences().size();
         const auto nMShakeMols =
+            constraints->getNumberOfMShakeMolecules(simBox);
+        const auto nMShakeBonds =
             constraints->getNumberOfMShakeConstraints(simBox);
 
         const auto nShakeBondsMsg =
@@ -252,12 +254,15 @@ namespace setup
             std::format("Number of M-SHAKE types:     {}", nMShakeTypes);
         const auto nMShakeMolsMsg =
             std::format("Number of M-SHAKE molecules: {}", nMShakeMols);
+        const auto nMShakeBondsMsg =
+            std::format("Number of M-SHAKE bonds:     {}", nMShakeBonds);
 
         auto &logOutput = _engine.getLogOutput();
 
         logOutput.writeSetupInfo(nShakeBondsMsg);
         logOutput.writeSetupInfo(nMShakeTypesMsg);
         logOutput.writeSetupInfo(nMShakeMolsMsg);
+        logOutput.writeSetupInfo(nMShakeBondsMsg);
         logOutput.writeEmptyLine();
     }
 

@@ -30,7 +30,6 @@
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "thermostatSettings.hpp"
-#include "timingsSettings.hpp"
 #include "units.hpp"
 
 namespace thermostat
@@ -137,11 +136,13 @@ namespace thermostat
      * @param simulationBox simulation box containing all atoms
      * @param physicalData physical data
      * @param targetTemperature The target temperature for the system
+     * @param timeStep the integration time step used for velocity updates
      */
     void NoseHooverThermostat::applyThermostat(
         molsys::SimulationBox      &simulationBox,
         physicalData::PhysicalData &physicalData,
-        const Temperature          &targetTemperature
+        const Temperature          &targetTemperature,
+        const Time                 &timeStep
     )
     {
         auto _ = scopedTimer(TimerId::Thermostat, "Nose-Hoover - Velocities");
@@ -156,8 +157,7 @@ namespace thermostat
             static_cast<double>(simulationBox.getDegreesOfFreedom());
 
         const auto couplingFreq = _nhSettings->getNoseHooverCouplingFrequency();
-        const auto couplingFreqSquared = (couplingFreq * couplingFreq);
-        const auto timestep = settings::TimingsSettings::getTimeStep();
+        const auto couplingFreqSquared = couplingFreq * couplingFreq;
 
         const auto thermalEnergy =
             getTemperature().quantity_from_zero() * gas_constant;
@@ -169,12 +169,12 @@ namespace thermostat
         chiHelper -=
             _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
 
-        _chi[0] += timestep * chiHelper;
+        _chi[0] += timeStep * chiHelper;
 
         auto helpRatio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
                          couplingFreqSquared;
 
-        _zeta[0]   += helpRatio * timestep;
+        _zeta[0]   += helpRatio * timeStep;
         auto ratio  = helpRatio * _chi[0];
 
         auto energyMomentum = ratio;
@@ -187,10 +187,10 @@ namespace thermostat
             chiHelper -= _chi[i] * _chi[i + 1] / thermalEnergyTarget *
                          couplingFreqSquared;
 
-            _chi[i] += timestep * chiHelper;
+            _chi[i] += timeStep * chiHelper;
 
             helpRatio  = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
-            _zeta[i]  += helpRatio * timestep;
+            _zeta[i]  += helpRatio * timeStep;
             ratio      = helpRatio * _chi[i];
 
             energyMomentum += ratio;

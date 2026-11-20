@@ -73,15 +73,9 @@ namespace
 
 /* ---------- constructor ---------- */
 
-TEST(TestOptimizer, constructorStoresEpochs)
-{
-    const opt::SteepestDescent opt(42U);
-    EXPECT_EQ(opt.getNEpochs(), 42U);
-}
-
 TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
 {
-    const opt::SteepestDescent opt(1U);
+    const opt::SteepestDescent opt;
     EXPECT_EQ(opt.maxHistoryLength(), 2U);
 }
 
@@ -89,7 +83,7 @@ TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
 
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 {
-    const opt::SteepestDescent opt(1U);
+    const opt::SteepestDescent opt;
     EXPECT_THROW_MSG(
         (void) opt.getHistoryIndex(0),
         exc::OptException,
@@ -106,7 +100,7 @@ TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 
 TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 {
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
 
     pushSample(
         opt,
@@ -154,7 +148,7 @@ TEST(TestOptimizer, updateHistoryAppendsAndGettersReturnLast)
 
 TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
 {
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     const auto           maxLen = opt.maxHistoryLength();
 
     for (size_t i = 0; i < maxLen + 3; ++i)
@@ -196,7 +190,7 @@ TEST(TestOptimizer, updateHistoryTrimsToMaxHistoryLength)
 
 TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
 {
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     opt::Convergence     conv(
         true,
         true,
@@ -228,7 +222,7 @@ TEST(TestOptimizer, setAndGetConvergenceRoundTrips)
 
 TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
 {
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     opt::Convergence     conv(
         true,
         true,
@@ -264,7 +258,7 @@ TEST(TestOptimizer, hasConvergedReturnsTrueForFlatEnergyAndZeroForces)
 
 TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 {
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     opt::Convergence     conv(
         true,
         true,
@@ -301,7 +295,7 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
 
 TEST(TestOptimizer, setPhysicalDataOldStoresPointer)
 {
-    opt::SteepestDescent opt(1U);
+    opt::SteepestDescent opt;
     auto                 phys = std::make_shared<physicalData::PhysicalData>();
     phys->setKineticEnergy(0.42 * kcal_per_mol);
     EXPECT_NO_THROW(opt.setPhysicalDataOld(phys));

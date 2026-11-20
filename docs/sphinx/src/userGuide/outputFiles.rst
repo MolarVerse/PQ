@@ -31,6 +31,22 @@ every frame in the following format:
 
 The lattice parameters are given in units of Å and the angles are given in units of degrees.
 
+.. _extxyzFile:
+
+*******************
+Extended XYZ File
+*******************
+
+**File Type:** ``.extxyz`` (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``extxyz``)
+
+Stores positions, velocities, forces and charges of every atom for every frame in the extended xyz format:
+
+    | **line 1:** n_atoms
+    | **line 2:** ``Lattice="ax ay az bx by bz cx cy cz" Properties=species:S:1:pos:R:3:vel:R:3:forces:R:3:charge:R:1 pbc="T T T" step=step_number energy=potential_energy units=pq``
+    | **line 3 to (n_atoms + 2):** atom_type_name x y z vx vy vz fx fy fz charge
+
+``energy`` is the potential energy of the frame (total energy without kinetic energy), as ASE and NEP expect. All values are in PQ units, marked by ``units=pq``: Å, Å/s, kcal/(mol Å), *e* and kcal/mol. ASE, MACE, FeNNol and GPUMD NEP expect eV, so convert the file with PQAnalysis before training.
+
 .. _chargeFile:
 
 ************
@@ -232,6 +248,11 @@ The first line contains the string "Step" followed by the total number of perfor
 The following lines contain the element symbol, a running index just for human readability, the moltype the atom belongs to according to the 
 :ref:`moldescriptorFile` setup file, the Cartesian coordinates in Å, the velocities in :math:`\frac{\text{Å}}{\text{s}}`, and the forces in 
 :math:`\frac{\text{kcal}}{\text{mol Å}}` for each atom in the system. The moltype value is set to 0 if no :ref:`moldescriptorFile` file is used.
+
+Every number is written with the fewest digits that read back as exactly the same value (for example ``0.1``, not ``0.10000000000000001``),
+so the coordinates, velocities, forces, box and Nose Hoover chain are restored without any loss when a simulation is continued from
+a restart file. State that the file does not contain (for example the random numbers of the Langevin thermostat) is not restored.
+Values smaller than :math:`2.2 \cdot 10^{-308}` in magnitude (subnormal numbers) are written as 0.
 
 .. note::
 

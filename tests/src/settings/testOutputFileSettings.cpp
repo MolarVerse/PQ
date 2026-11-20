@@ -117,3 +117,26 @@ TEST(TestOutputSettings, preservesUserSetHybridCenterFilenameEqualToDefault)
         DefaultFiles::hybridCenterFile
     );
 }
+
+TEST(TestOutputSettings, trajectoryFormatDefaultsToXyz)
+{
+    OutputFileSettings settings;
+    EXPECT_EQ(settings.getTrajectoryFormat(), TrajectoryFormat::XYZ);
+
+    settings.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
+    EXPECT_EQ(settings.getTrajectoryFormat(), TrajectoryFormat::EXTXYZ);
+}
+
+TEST(TestOutputSettings, extxyzFilenameFollowsPrefix)
+{
+    OutputFileSettings settings;
+    settings.setFilePrefixByUser("run");
+    settings.finalize();
+    EXPECT_EQ(settings.getExtxyzFileName(), "run.extxyz");
+
+    OutputFileSettings named;
+    named.setExtxyzFileNameByUser("water.extxyz");
+    named.finalize();
+    EXPECT_EQ(named.getExtxyzFileName(), "water.extxyz");
+    EXPECT_EQ(named.getRestartFileName(), "water.rst");
+}

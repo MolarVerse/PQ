@@ -22,8 +22,10 @@
 
 #include "rstFileOutput.hpp"
 
+#include <cmath>
 #include <cstddef>
 #include <format>
+#include <initializer_list>
 #include <ostream>
 #include <sstream>
 
@@ -35,6 +37,22 @@ namespace out
 
     namespace
     {
+        /**
+         * @brief a value that the restart reader can read back
+         *
+         * @details the reader parses numbers with std::stod, which rejects
+         * every subnormal number (below 2.2e-308) as out of range. Such a
+         * value is zero for any physical purpose, so it is written as a zero
+         * of the same sign; all other values are written exactly.
+         */
+        double readable(const double value)
+        {
+            if (std::fpclassify(value) == FP_SUBNORMAL)
+                return std::copysign(0.0, value);
+
+            return value;
+        }
+
         /**
          * @brief write Nose-Hoover thermostat chi/zeta info to the restart file
          *
@@ -51,14 +69,17 @@ namespace out
 
                 buffer << "chi "
                        << std::format(
-                              "{:2d}\t{:10.5e}\t{:10.5e}",
+                              "{:2d}\t{}\t{}",
                               i + 1,
-                              chi.numerical_value_in(kcal_per_mol * s),
-                              zeta.numerical_value_in(one)
+                              readable(chi.numerical_value_in(kcal_per_mol * s)
+                              ),
+                              readable(zeta.numerical_value_in(one))
                           )
                        << '\n';
             }
         }
+
+        constexpr std::size_t RST_VELOCITY_WIDTH = 19;
 
     }   // namespace
 
@@ -70,50 +91,55 @@ namespace out
      */
     void RstFileOutput::write(const Frame &frame, size_t step)
     {
+        using textFormat::FIXED_WIDTH;
+        using textFormat::NAME_WIDTH;
+
         std::ostringstream buffer;
 
         buffer << "Step " << step << '\n';
 
-        buffer << "Box   "
-               << frame.box->get_boxDimensions().numerical_value_in(angstrom)
-               << "  " << frame.box->getBoxAngles().numerical_value_in(deg)
-               << '\n';
+        // std::format writes the shortest text that reads back as the same
+        // double; the stream operator of Vector3D keeps 6 digits only, which
+        // changes the box of a restarted run
+        buffer << std::format(
+            "Box   {}  {}\n",
+            frame.box->get_boxDimensions().numerical_value_in(angstrom),
+            frame.box->getBoxAngles().numerical_value_in(deg)
+        );
 
         writeNHChain(frame, buffer);
 
+        _buffer.clear();
+        _buffer.append(buffer.str());
+
         for (const auto &atom : frame.atoms)
         {
-            const auto &pos   = atom.position.numerical_value_in(angstrom);
-            const auto &vel   = atom.velocity.numerical_value_in(angstrom / s);
-            const auto &force = atom.force;
+            const auto &pos = atom.position.numerical_value_in(angstrom);
+            const auto &vel = atom.velocity.numerical_value_in(angstrom / s);
+            const auto &force =
+                atom.force.numerical_value_in(kcal_per_mol / angstrom);
 
-            buffer << std::format("{:<5}\t", atom.name);
-            buffer << std::format("{:<5}\t", atom.indexInMolecule + 1);
-            buffer << std::format("{:<5}\t", atom.moltype.get());
+            _buffer.left(atom.name, NAME_WIDTH).put('\t');
+            _buffer.left(atom.indexInMolecule + 1, NAME_WIDTH).put('\t');
+            _buffer.left(atom.moltype.get(), NAME_WIDTH).put('\t');
 
-            buffer << std::format(
-                "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-                pos[0],
-                pos[1],
-                pos[2]
-            );
-            buffer << std::format(
-                "{:19.8e}\t{:19.8e}\t{:19.8e}\t",
-                vel[0],
-                vel[1],
-                vel[2]
-            );
-            buffer << std::format(
-                "{:15.8f}\t{:15.8f}\t{:15.8f}",
-                force[0].numerical_value_in(kcal_per_mol / angstrom),
-                force[1].numerical_value_in(kcal_per_mol / angstrom),
-                force[2].numerical_value_in(kcal_per_mol / angstrom)
-            );
+            for (const double value : {pos[0], pos[1], pos[2]})
+            {
+                _buffer.exactFixed(readable(value), FIXED_WIDTH).put('\t');
+            }
 
-            buffer << '\n' << std::flush;
+            for (const double value : {vel[0], vel[1], vel[2]})
+            {
+                _buffer.exactScientific(readable(value), RST_VELOCITY_WIDTH)
+                    .put('\t');
+            }
+
+            _buffer.exactFixed(readable(force[0]), FIXED_WIDTH).put('\t');
+            _buffer.exactFixed(readable(force[1]), FIXED_WIDTH).put('\t');
+            _buffer.exactFixed(readable(force[2]), FIXED_WIDTH).put('\n');
         }
 
-        _replaceFile(buffer.str());
+        _replaceFile(_buffer.view());
     }
 
 }   // namespace out

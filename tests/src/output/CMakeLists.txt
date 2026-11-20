@@ -17,6 +17,8 @@ set(source_files
     testRingPolymerEnergyOutput.cpp
     testReferencesOutput.cpp
     testFrame.cpp
+    testTextBuffer.cpp
+    testExtxyzOutput.cpp
 )
 
 # Per-test extra include dirs and libs (defaults to empty for the legacy tests).

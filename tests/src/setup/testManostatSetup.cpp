@@ -123,6 +123,7 @@ TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 
 TEST_F(TestSetup, setupManostatNone)
 {
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     setup::ManostatSetup manostatSetup(*_mdEngine);
@@ -141,6 +142,7 @@ TEST_F(TestSetup, setupManostatBerendsen)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     // The manostat's concrete type is picked by the factory when the engine
@@ -160,6 +162,7 @@ TEST_F(TestSetup, setupManostatNoneIsotropyDefaultsToIsotropic)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine   mdEngine(*_settings);
@@ -178,6 +181,7 @@ TEST_F(TestSetup, setupManostatSemiIsotropicBerendsen)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);
@@ -195,6 +199,7 @@ TEST_F(TestSetup, setupManostatAnisotropicBerendsen)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);
@@ -212,6 +217,7 @@ TEST_F(TestSetup, setupManostatFullAnisotropicBerendsen)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);
@@ -231,6 +237,7 @@ TEST_F(TestSetup, setupManostatSStochasticRescaling)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);
@@ -250,6 +257,7 @@ TEST_F(TestSetup, setupManostatSemiIsotropicSStochasticRescaling)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);
@@ -269,6 +277,7 @@ TEST_F(TestSetup, setupManostatAnisotropicSStochasticRescaling)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);
@@ -288,6 +297,7 @@ TEST_F(TestSetup, setupManostatFullAnisotropicSStochasticRescaling)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);
@@ -366,6 +376,7 @@ TEST_F(TestSetup, setupManostatWithFixedAxis)
     _settings->manostatSettings.setTargetPressureByUser(300.0 * bar);
     _settings->manostatSettings.setTauByUser(0.2 * ps);
     _settings->manostatSettings.setCompressibilityByUser(4.0 * per_bar);
+    _settings->timings.setNumberOfStepsByUser(100U);
     _settings->finalize();
 
     engine::MMMDEngine mdEngine(*_settings);

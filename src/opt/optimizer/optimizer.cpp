@@ -42,16 +42,7 @@ namespace opt
         std::shared_ptr<physicalData::PhysicalData> physicalDataOld;
     };
 
-    /**
-     * @brief Construct a new Optimizer object
-     *
-     * @param nEpochs
-     */
-    Optimizer::Optimizer(size_t nEpochs)
-        : _nEpochs(nEpochs), _impl(std::make_unique<Impl>())
-    {
-    }
-
+    Optimizer::Optimizer() : _impl(std::make_unique<Impl>()) {}
     Optimizer::~Optimizer() = default;
 
     /**
@@ -156,13 +147,6 @@ namespace opt
      * standard getter methods *
      *                         *
      ***************************/
-
-    /**
-     * @brief get the number of epochs
-     *
-     * @return size_t
-     */
-    size_t Optimizer::getNEpochs() const { return _nEpochs; }
 
     /**
      * @brief get history index

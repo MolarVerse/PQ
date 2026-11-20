@@ -94,6 +94,9 @@ void OutputFileSettings::_replaceDefaultValues(const std::string& prefix)
     if (!_trajFile.isSetByUser())
         _trajFile.setBySystem(prefix + ".xyz");
 
+    if (!_extxyzFile.isSetByUser())
+        _extxyzFile.setBySystem(prefix + ".extxyz");
+
     if (!_hybridCenterFile.isSetByUser())
         _hybridCenterFile.setBySystem(prefix + ".center.xyz");
 
@@ -181,6 +184,9 @@ std::string OutputFileSettings::_determineMostCommonPrefix() const
 
         _timeFile.get()
     };
+
+    if (_extxyzFile.isSetByUser())
+        fileNames.push_back(_extxyzFile.get());
 
     auto removeEnding = [](std::string& fileName)
     {
@@ -313,6 +319,28 @@ void OutputFileSettings::setForceFileNameByUser(const std::string& name)
 void OutputFileSettings::setChargeFileNameByUser(const std::string& name)
 {
     _chargeFile.setByUser(name);
+}
+
+/**
+ * @brief sets the trajectory file format
+ *
+ * @param format
+ */
+void OutputFileSettings::setTrajectoryFormatByUser(
+    const TrajectoryFormat format
+)
+{
+    _trajFormat.setByUser(format);
+}
+
+/**
+ * @brief sets the extxyz file name
+ *
+ * @param name
+ */
+void OutputFileSettings::setExtxyzFileNameByUser(const std::string& name)
+{
+    _extxyzFile.setByUser(name);
 }
 
 /**
@@ -612,6 +640,26 @@ const std::string& OutputFileSettings::getForceFileName() const
 const std::string& OutputFileSettings::getChargeFileName() const
 {
     return _chargeFile.get();
+}
+
+/**
+ * @brief get the trajectory file format
+ *
+ * @return TrajectoryFormat
+ */
+TrajectoryFormat OutputFileSettings::getTrajectoryFormat() const
+{
+    return _trajFormat.get();
+}
+
+/**
+ * @brief get the extxyz file name
+ *
+ * @return std::string
+ */
+const std::string& OutputFileSettings::getExtxyzFileName() const
+{
+    return _extxyzFile.get();
 }
 
 /**

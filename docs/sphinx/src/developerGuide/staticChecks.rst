@@ -204,7 +204,7 @@ Conventions for tests
     - ``tests/src`` mirrors the layout of ``src`` and ``include``; a new class gets its tests in the matching module.
     - Check exceptions with ``EXPECT_THROW_MSG(statement, ExceptionType, "message")``.
     - Helpers of a test fixture follow the same naming rule as production code: a protected helper starts with ``_``.
-    - The settings classes hold global state (``settings::TimingsSettings::setTimeStep`` and similar). A test that
+    - The settings classes hold global state (``TimingsSettings::setTimeStep`` and similar). A test that
       changes a setting must restore it, otherwise it changes the result of a test that runs later in the same
       executable. Do it in ``TearDown`` or at the end of the test.
     - **Settings are built directly in tests**, with no input file and no static reset. Every settings struct is

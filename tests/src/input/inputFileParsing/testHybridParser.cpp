@@ -287,6 +287,72 @@ TEST_F(TestInputFileReader, parseSelectionNoPython)
     );
 }
 
+/**
+ * @brief every reason why the selection of the no-Python parser is rejected
+ * has its own message
+ */
+TEST_F(TestInputFileReader, selectionErrorsHaveTheirOwnMessage)
+{
+    auto converter =
+        input::Converter<input::SelectionTag>("", "forced_core_list");
+
+    EXPECT_EQ(converter.describeDomain({}), "Unknown selection error.");
+
+    const std::vector<std::pair<std::string, std::string>> cases = {
+        {"a-3",
+         "The start index of the selection is invalid. Must be a valid "
+         "integer."},
+        {"99999999999-3", "The start index of the selection is out of range."},
+        {"1-a",
+         "The end index of the selection is invalid. Must be a valid "
+         "integer."},
+        {"1-99999999999", "The end index of the selection is out of range."},
+        {"x",
+         "An atom index in the selection is invalid. Must be a valid "
+         "integer."},
+        {"99999999999", "An atom index in the selection is out of range."},
+        {"", "The selection is empty."},
+    };
+
+    for (const auto& [selection, message] : cases)
+    {
+        EXPECT_EQ(_parseSelectionNoPython(converter, selection), std::nullopt)
+            << selection;
+        EXPECT_EQ(converter.describeDomain({}), message) << selection;
+    }
+}
+
+/**
+ * @brief a selection that needs the selection grammar is either kept as an
+ * expression (build with Python bindings) or rejected with a message that
+ * names the missing Python bindings
+ */
+TEST_F(TestInputFileReader, selectionWithExpressionNeedsPythonBindings)
+{
+    auto converter = input::Converter<input::SelectionTag>(
+        "inner_region_center",
+        "res(LIG)"
+    );
+
+    const auto parsed = converter.tryParse("res(LIG)");
+
+    if (parsed.has_value())
+    {
+        ASSERT_TRUE(parsed->expression.has_value());
+        EXPECT_EQ(*parsed->expression, "res(LIG)");
+        EXPECT_TRUE(parsed->indices.empty());
+    }
+    else
+    {
+        const auto message = converter.describeDomain({});
+        EXPECT_NE(message.find("res(LIG)"), std::string::npos);
+        EXPECT_NE(
+            message.find("compiled without Python bindings"),
+            std::string::npos
+        );
+    }
+}
+
 TEST_F(TestInputFileReader, innerRegionCenterAcceptsFirstAtom)
 {
     auto       parser  = input::HybridInputParser{};

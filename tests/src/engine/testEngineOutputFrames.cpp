@@ -83,11 +83,13 @@ namespace
         return content.str();
     }
 
-    // writes 3 frames with async output on or off; returns the files' content
-    std::string writeFrames(const bool async)
+    // writes 3 frames with async output on or off, as xyz files or one
+    // extxyz file; returns the files' content
+    std::string writeFrames(const bool async, const bool extxyz)
     {
         const std::string prefix =
-            async ? "engineOutputAsync" : "engineOutputSync";
+            std::string(async ? "engineOutputAsync" : "engineOutputSync") +
+            (extxyz ? "Ext" : "");
 
         OutputFileSettings outputFileSettings;
         outputFileSettings.setAsyncOutputByUser(async);
@@ -97,25 +99,42 @@ namespace
 
         {
             engine::EngineOutput output{outputFileSettings, referenceSettings};
-            output.getXyzOutput().setFilename(prefix + ".xyz", true);
-            output.getVelOutput().setFilename(prefix + ".vel", true);
-            output.getForceOutput().setFilename(prefix + ".force", true);
-            output.getChargeOutput().setFilename(prefix + ".chrg", true);
             output.getRstFileOutput().setFilename(prefix + ".rst", true);
+
+            if (extxyz)
+            {
+                output.openExtxyzOutput(prefix + ".extxyz", true);
+            }
+            else
+            {
+                output.getXyzOutput().setFilename(prefix + ".xyz", true);
+                output.getVelOutput().setFilename(prefix + ".vel", true);
+                output.getForceOutput().setFilename(prefix + ".force", true);
+                output.getChargeOutput().setFilename(prefix + ".chrg", true);
+            }
 
             const auto                   simulationBox = makeSimulationBox();
             const thermostat::Thermostat thermostat{};
 
             for (std::size_t step = 1; step <= 3; ++step)
-                output.writeFrame(simulationBox, thermostat, step);
+            {
+                output.writeFrame(
+                    simulationBox,
+                    thermostat,
+                    step,
+                    -1.5 * static_cast<double>(step)
+                );
+            }
 
             output.waitForFrames();
         }
 
-        for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg", ".rst"})
+        for (const auto *suffix :
+             {".xyz", ".vel", ".force", ".chrg", ".rst", ".extxyz"})
         {
-            content += readFile(prefix + suffix);
-            std::filesystem::remove(prefix + suffix);
+            const auto name  = prefix + suffix;
+            content         += std::string(suffix) + ":" + readFile(name);
+            std::filesystem::remove(name);
         }
 
         return content;
@@ -124,10 +143,24 @@ namespace
 
 TEST(TestEngineOutputFrames, asyncAndSyncWriteTheSameFiles)
 {
-    const auto sync = writeFrames(false);
+    for (const bool extxyz : {false, true})
+    {
+        const auto sync = writeFrames(false, extxyz);
 
-    EXPECT_FALSE(sync.empty());
-    EXPECT_EQ(writeFrames(true), sync);
+        EXPECT_FALSE(sync.empty());
+        EXPECT_EQ(writeFrames(true, extxyz), sync);
+    }
+}
+
+TEST(TestEngineOutputFrames, extxyzReplacesTheXyzFiles)
+{
+    const auto content = writeFrames(false, true);
+
+    EXPECT_NE(
+        content.find(".xyz:.vel:.force:.chrg:.rst:Step"),
+        std::string::npos
+    );
+    EXPECT_NE(content.find("units=pq"), std::string::npos);
 }
 
 TEST(TestEngineOutputFrames, asyncOutputFitsInHalfOfTheMemory)

@@ -55,22 +55,29 @@ namespace thermostat
 
         [[nodiscard]]
         static auto calculateSigma(
-            const Frequency   &friction,
-            const Temperature &targetTemperature
+            const Frequency &friction,
+            const Temperature &,
+            const Time &targetTemperature
         ) -> decltype(mstd::sqrt(EnergyPerMol{} / TimeSquared{}));
 
-        void applyLangevin(molsys::SimulationBox &, const Temperature &);
+        void applyLangevin(
+            molsys::SimulationBox &,
+            const Temperature &,
+            const Time &timeStep
+        );
 
         void applyThermostat(
             molsys::SimulationBox      &simulationBox,
             physicalData::PhysicalData &physicalData,
-            const Temperature          &targetTemperature
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
         ) override;
 
         void applyThermostatHalfStep(
             molsys::SimulationBox &simulationBox,
             physicalData::PhysicalData & /*physicalData*/,
-            const Temperature &targetTemperature
+            const Temperature &targetTemperature,
+            const Time        &timeStep
         ) override;
 
         /***************************

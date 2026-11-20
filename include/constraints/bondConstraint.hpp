@@ -65,7 +65,11 @@ namespace constraints
         [[nodiscard]] MassPerTime calculateVelocityDelta() const;
 
         [[nodiscard]]
-        bool applyShake(const molsys::SimulationBox &, double);
+        bool applyShake(
+            const molsys::SimulationBox &,
+            double,
+            const Time &timeStep
+        );
 
         [[nodiscard]] bool applyRattle(const MassPerTime &tolerance);
 

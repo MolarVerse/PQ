@@ -26,7 +26,6 @@
 #include "kinetics.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
-#include "timingsSettings.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
 
@@ -44,7 +43,7 @@ namespace
         settings.setEndTemperatureByUser(toTemperature(end));
         settings.setRampingStepsByUser(steps);
         settings.setRampingFrequencyByUser(frequency);
-        settings.finalize();
+        settings.finalize(1000);
         return settings;
     }
 
@@ -63,7 +62,7 @@ TEST(TestKinetics, noRampKeepsTargetTemperature)
 {
     KineticsSettings settings;
     settings.setTargetTemperatureByUser(toTemperature(300.0));
-    settings.finalize();
+    settings.finalize(1000);
 
     kinetics::Kinetics kin{settings};
     expectTemperature(kin, 300.0);
@@ -117,7 +116,7 @@ TEST(TestKinetics, onlyEndTemperatureDefinedIsUsedFromStart)
 {
     KineticsSettings kineticsSettings;
     kineticsSettings.setEndTemperatureByUser(toTemperature(300.0));
-    kineticsSettings.finalize();
+    kineticsSettings.finalize(1000);
 
     kinetics::Kinetics kin{kineticsSettings};
     expectTemperature(kin, 300.0);
@@ -125,12 +124,10 @@ TEST(TestKinetics, onlyEndTemperatureDefinedIsUsedFromStart)
 
 TEST(TestKinetics, finalizeComputesIncreaseAndStepsForFullSimulation)
 {
-    settings::TimingsSettings::setNumberOfSteps(100);
-
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
     kineticsSettings.setStartTemperatureByUser(toTemperature(200.0));
-    kineticsSettings.finalize();
+    kineticsSettings.finalize(100);
 
     EXPECT_EQ(
         kineticsSettings.getTemperatureIncrease(),
@@ -141,13 +138,11 @@ TEST(TestKinetics, finalizeComputesIncreaseAndStepsForFullSimulation)
 
 TEST(TestKinetics, finalizeComputesIncreaseForExplicitSteps)
 {
-    settings::TimingsSettings::setNumberOfSteps(100);
-
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
     kineticsSettings.setStartTemperatureByUser(toTemperature(200.0));
     kineticsSettings.setRampingStepsByUser(50);
-    kineticsSettings.finalize();
+    kineticsSettings.finalize(100);
 
     EXPECT_EQ(
         kineticsSettings.getTemperatureIncrease(),
@@ -158,13 +153,11 @@ TEST(TestKinetics, finalizeComputesIncreaseForExplicitSteps)
 
 TEST(TestKinetics, finalizeComputesIncreaseWithRampingFrequency)
 {
-    settings::TimingsSettings::setNumberOfSteps(100);
-
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
     kineticsSettings.setStartTemperatureByUser(toTemperature(200.0));
     kineticsSettings.setRampingFrequencyByUser(2);
-    kineticsSettings.finalize();
+    kineticsSettings.finalize(100);
 
     EXPECT_EQ(
         kineticsSettings.getTemperatureIncrease(),
@@ -176,7 +169,6 @@ TEST(TestKinetics, finalizeComputesIncreaseWithRampingFrequency)
 
 TEST(TestKinetics, rampReachesEndWithPartialFinalInterval)
 {
-    settings::TimingsSettings::setNumberOfSteps(10);
     const auto kineticsSettings = rampSettings(200.0, 300.0, 10, 3);
 
     // ceil(10 / 3) = 4 updates
@@ -193,14 +185,12 @@ TEST(TestKinetics, rampReachesEndWithPartialFinalInterval)
 
 TEST(TestKinetics, rejectsEmptyTemperatureRamp)
 {
-    settings::TimingsSettings::setNumberOfSteps(0);
-
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
     kineticsSettings.setStartTemperatureByUser(toTemperature(200.0));
 
     EXPECT_THROW_MSG(
-        kineticsSettings.finalize(),
+        kineticsSettings.finalize(0),
         exc::InputFileException,
         "Temperature ramp requires at least one simulation step"
     );
@@ -208,8 +198,6 @@ TEST(TestKinetics, rejectsEmptyTemperatureRamp)
 
 TEST(TestKinetics, rejectsZeroTemperatureRampFrequency)
 {
-    settings::TimingsSettings::setNumberOfSteps(10);
-
     KineticsSettings kineticsSettings;
     kineticsSettings.setTargetTemperatureByUser(toTemperature(300.0));
     kineticsSettings.setStartTemperatureByUser(toTemperature(200.0));
@@ -217,7 +205,7 @@ TEST(TestKinetics, rejectsZeroTemperatureRampFrequency)
     kineticsSettings.setRampingFrequencyByUser(0);
 
     EXPECT_THROW_MSG(
-        kineticsSettings.finalize(),
+        kineticsSettings.finalize(10),
         exc::InputFileException,
         "Temperature ramp frequency must be greater than zero"
     );
@@ -229,7 +217,7 @@ TEST(TestKinetics, rejectsStartTemperatureWithoutEndTemperature)
     kineticsSettings.setStartTemperatureByUser(toTemperature(200.0));
 
     EXPECT_THROW_MSG(
-        kineticsSettings.finalize(),
+        kineticsSettings.finalize(1000),
         exc::InputFileException,
         "A start temperature requires an end temperature or a target "
         "temperature to be defined"

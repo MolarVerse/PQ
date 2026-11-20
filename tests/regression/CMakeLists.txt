@@ -240,6 +240,37 @@ if(BUILD_SHARED_LIBS AND NOT BUILD_WITH_SINGULARITY)
     )
 endif()
 
+# Every example input must pass `PQ --validate` (script names, values, keywords
+# and referenced files). Static and Singularity builds reject `qm_script`
+# (qm_script_full_path is required there), so the check runs in the others.
+if(BUILD_SHARED_LIBS AND NOT BUILD_WITH_SINGULARITY)
+    add_test(
+        NAME regression_examples_validate
+        COMMAND
+            ${Python3_EXECUTABLE}
+            ${CMAKE_CURRENT_SOURCE_DIR}/validate_examples.py
+            --pq $<TARGET_FILE:PQ>
+            --examples ${PROJECT_SOURCE_DIR}/examples
+    )
+    set_property(TEST regression_examples_validate PROPERTY LABELS "regression;examples")
+    set_property(TEST regression_examples_validate PROPERTY TIMEOUT 300)
+endif()
+
+# The defaults of docs/sphinx/src/userGuide/inputFile.rst are compared with the
+# values PQ reports in the log of an h2o_mm run (and with the files it writes
+# without a file_prefix). No QM script is involved, so it runs in every build.
+add_test(
+    NAME regression_documented_defaults
+    COMMAND
+        ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/check_documented_defaults.py
+        --pq $<TARGET_FILE:PQ>
+        --example ${PROJECT_SOURCE_DIR}/examples/h2o_mm
+        --guide ${PROJECT_SOURCE_DIR}/docs/sphinx/src/userGuide/inputFile.rst
+)
+set_property(TEST regression_documented_defaults PROPERTY LABELS "regression;examples")
+set_property(TEST regression_documented_defaults PROPERTY TIMEOUT 300)
+
 # Real ORCA, only where it is installed: -DORCA_EXECUTABLE=/path/to/orca.
 # Only the quantum chemistry ORCA banner counts (not the GNOME screen reader).
 find_program(ORCA_EXECUTABLE orca)

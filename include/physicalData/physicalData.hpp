@@ -130,6 +130,7 @@ namespace physicalData
         );
 
         [[nodiscard]] EnergyPerMol getTotalEnergy() const;
+        [[nodiscard]] double       getPotentialEnergy() const;
 
         /*************************
          * standard add methods  *

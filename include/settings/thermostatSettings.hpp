@@ -90,7 +90,7 @@ class KineticsSettings
     };
 
    public:
-    void finalize();
+    void finalize(size_t numberOfSteps);
 
     [[nodiscard]]
     size_t getRampingSteps() const;

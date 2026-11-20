@@ -1,0 +1,1 @@
+- Test that `traj_format = extxyz` opens only the extxyz file and none of the xyz, vel, force or chrg files (#1201).

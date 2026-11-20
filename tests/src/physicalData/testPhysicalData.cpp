@@ -485,3 +485,16 @@ TEST_F(TestPhysicalData, defaultConstructedIsZero)
 
     data->~PhysicalData();
 }
+
+TEST_F(TestPhysicalData, potentialEnergyLeavesOutKineticEnergy)
+{
+    _physicalData->setKineticEnergy(10.0);
+    _physicalData->setCoulombEnergy(-3.0);
+    _physicalData->setNonCoulombEnergy(1.5);
+
+    EXPECT_DOUBLE_EQ(
+        _physicalData->getPotentialEnergy(),
+        _physicalData->getTotalEnergy() - 10.0
+    );
+    EXPECT_DOUBLE_EQ(_physicalData->getPotentialEnergy(), 6.5);   // + QM 9 - 1
+}

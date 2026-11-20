@@ -1,0 +1,1 @@
+- `ConstraintsSetup` logs `MShake::calcNumberOfMShakeMolecules` via the new `Constraints::getNumberOfMShakeMolecules`; the bond count moves to its own log line.

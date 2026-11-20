@@ -37,6 +37,7 @@
 #include "ringPolymerSettings.hpp"
 #include "simulationBoxSettings.hpp"
 #include "thermostatSettings.hpp"
+#include "timingsSettings.hpp"
 #include "waterModelSettings.hpp"
 
 /**
@@ -44,6 +45,8 @@
  */
 struct Settings
 {
+    TimingsSettings timings;
+
     ResetKineticsSettings resetKinetics;
     KineticsSettings      kinetics;
     ThermostatSettings    thermostatSettings;

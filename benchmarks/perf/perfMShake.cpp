@@ -50,7 +50,6 @@
 #include "perfAlloc.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
-#include "timingsSettings.hpp"
 #include "vector3d.hpp"
 
 static constexpr std::uint64_t ITERATIONS     = 1000;
@@ -62,7 +61,7 @@ static constexpr double        TOLERANCE      = 1.0e-8;
 
 int main()
 {
-    settings::TimingsSettings::setTimeStep(0.5 * fs);
+    const auto timeStep = 0.5 * fs;
 
     // rigid water: oxygen and two hydrogens
     const auto names  = std::vector<std::string>{"O", "H", "H"};
@@ -144,7 +143,7 @@ int main()
             atom.setPosition(pos);
         }
 
-        mShake.applyMShake(box, MAX_ITERATIONS, TOLERANCE);
+        mShake.applyMShake(box, MAX_ITERATIONS, TOLERANCE, timeStep);
         mShake.applyMRattle(box);
     }
 

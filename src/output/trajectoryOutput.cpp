@@ -23,18 +23,55 @@
 #include "trajectoryOutput.hpp"
 
 #include <cstddef>
-#include <format>
+#include <ios>
 #include <ostream>
-#include <sstream>
+#include <string_view>
 
 #include "box.hpp"
 #include "defaults.hpp"
 #include "frame.hpp"
 #include "hybridConfigurator.hpp"
 #include "units.hpp"
+#include "vector3d.hpp"
 
 namespace out
 {
+    namespace
+    {
+        constexpr std::size_t VEL_FILE_WIDTH = 20;
+
+        /**
+         * @brief append "name\tx\ty\tz\n" in fixed notation
+         */
+        void appendFixedLine(
+            TextBuffer            &buffer,
+            const std::string_view name,
+            const linalg::Vec3D   &vec
+        )
+        {
+            buffer.left(name, textFormat::NAME_WIDTH).put('\t');
+            buffer.fixed(vec[0], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            buffer.fixed(vec[1], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            buffer.fixed(vec[2], textFormat::FIXED_WIDTH, textFormat::PRECISION)
+                .put('\n');
+        }
+
+    }   // namespace
+
+    /**
+     * @brief write the text buffer to the file and flush
+     */
+    void TrajectoryOutput::_flushBuffer()
+    {
+        const auto text = _buffer.view();
+        _getFilePointer().write(
+            text.data(),
+            static_cast<std::streamsize>(text.size())
+        );
+        _getFilePointer() << std::flush;
+    }
 
     /**
      * @brief Write the header of a trajectory files
@@ -62,26 +99,19 @@ namespace out
         bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
-
         writeHeader(frame);
         _writeComment(step, includeMetadata);
 
+        _buffer.clear();
+
         for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", atom.name);
-
-            const auto &pos = frame.box->wrapPositionIntoBox(atom.position)
-                                  .numerical_value_in(angstrom);
-
-            buffer << std::format("{:15.8f}\t", pos[0]);
-            buffer << std::format("{:15.8f}\t", pos[1]);
-            buffer << std::format("{:15.8f}\n", pos[2]);
+            const auto pos = frame.box->wrapPositionIntoBox(atom.position)
+                                 .numerical_value_in(angstrom);
+            appendFixedLine(_buffer, atom.name, pos);
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
@@ -107,19 +137,14 @@ namespace out
         _getFilePointer() << numberOfCenterAtoms << '\n';
         _writeComment(step, includeMetadata);
 
-        std::ostringstream buffer;
-        buffer << std::format("{:<5}\t", centerAtomName);
+        _buffer.clear();
+        appendFixedLine(
+            _buffer,
+            std::string_view(&centerAtomName, 1),
+            configurator.getInnerRegionCenter().numerical_value_in(angstrom)
+        );
 
-        const auto &pos =
-            configurator.getInnerRegionCenter().numerical_value_in(angstrom);
-
-        buffer << std::format("{:15.8f}\t", pos[0]);
-        buffer << std::format("{:15.8f}\t", pos[1]);
-        buffer << std::format("{:15.8f}\n", pos[2]);
-
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
@@ -135,25 +160,25 @@ namespace out
         bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
-
         writeHeader(frame);
         _writeComment(step, includeMetadata);
 
+        _buffer.clear();
+
         for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", atom.name);
-
             const auto &vel = atom.velocity.numerical_value_in(angstrom / s);
 
-            buffer << std::format("{:20.8e}\t", vel[0]);
-            buffer << std::format("{:20.8e}\t", vel[1]);
-            buffer << std::format("{:20.8e}\n", vel[2]);
+            _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
+            _buffer.scientific(vel[0], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer.scientific(vel[1], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\t');
+            _buffer.scientific(vel[2], VEL_FILE_WIDTH, textFormat::PRECISION)
+                .put('\n');
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
@@ -169,8 +194,6 @@ namespace out
         bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
-
         writeHeader(frame);
         _writeForceComment(
             step,
@@ -178,21 +201,16 @@ namespace out
             includeMetadata
         );
 
+        _buffer.clear();
+
         for (const auto &atom : frame.atoms)
-        {
-            buffer << std::format("{:<5}\t", atom.name);
+            appendFixedLine(
+                _buffer,
+                atom.name,
+                atom.force.numerical_value_in(kcal_per_mol / angstrom)
+            );
 
-            const auto &force =
-                atom.force.numerical_value_in(kcal_per_mol / angstrom);
-
-            buffer << std::format("{:15.8f}\t", force[0]);
-            buffer << std::format("{:15.8f}\t", force[1]);
-            buffer << std::format("{:15.8f}\n", force[2]);
-        }
-
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
     /**
@@ -208,24 +226,24 @@ namespace out
         bool         includeMetadata
     )
     {
-        std::ostringstream buffer;
-
         writeHeader(frame);
         _writeComment(step, includeMetadata);
 
+        _buffer.clear();
+
         for (const auto &atom : frame.atoms)
         {
-            buffer << std::format("{:<5}\t", atom.name);
-            buffer << std::format(
-                "{:15.8f}\n",
-                atom.charge.numerical_value_in(elementary_charge)
-            );
-            buffer << std::flush;
+            _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
+            _buffer
+                .fixed(
+                    atom.charge.numerical_value_in(elementary_charge),
+                    textFormat::FIXED_WIDTH,
+                    textFormat::PRECISION
+                )
+                .put('\n');
         }
 
-        // Write the buffer to the file
-        _getFilePointer() << buffer.str();
-        _getFilePointer() << std::flush;
+        _flushBuffer();
     }
 
 }   // namespace out

@@ -1,6 +1,8 @@
 add_library(output
     output.cpp
     frame.cpp
+    textBuffer.cpp
+    extxyzOutput.cpp
     outputMessages.cpp
 
     energyOutput.cpp

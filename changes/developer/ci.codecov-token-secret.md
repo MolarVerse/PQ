@@ -1,0 +1,1 @@
+- Drop the Codecov upload token from `codecov.yml`; CI already passes it from the `CODECOV_TOKEN` secret.

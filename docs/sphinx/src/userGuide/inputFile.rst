@@ -354,6 +354,33 @@ The ``charge_file`` keyword sets the name for the :ref:`chargeFile`, which store
 
 .. centered:: *default value* = "default.chrg"
 
+.. _trajformatkey:
+
+Trajectory Format
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    traj_format = {string} -> "xyz"
+
+The ``traj_format`` keyword sets how MD runs write positions, velocities, forces and charges:
+
+    - **xyz** (default): the :ref:`trajectoryFile`, :ref:`velocityFile`, :ref:`forceFile` and :ref:`chargeFile`
+    - **extxyz**: one :ref:`extxyzFile` instead of these four files
+
+.. _extxyzfilekey:
+
+Extended XYZ File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    extxyz_file = {file} -> "default.extxyz"
+
+The ``extxyz_file`` keyword sets the name of the :ref:`extxyzFile`, which is written if ``traj_format = extxyz``. Like the other output files, it follows ``file_prefix``.
+
 .. _energyfilekey:
 
 Energy File
@@ -438,6 +465,20 @@ The ``reference_file`` keyword sets the name for the :ref:`refFile`, which lists
 
 .. centered:: *default value* = "default.ref"
 
+.. _optfilekey:
+
+Optimization File
+=================
+
+.. admonition:: Key
+    :class: tip
+
+    opt_file = {file} -> "default.opt"
+
+The ``opt_file`` keyword sets the name of the file in which geometry optimization jobs record the convergence of every step. Each line holds the step, the absolute and relative energy difference, the maximum and the RMS force, one flag per criterion (1: converged, -1: not converged, 0: criterion not used) and the four thresholds in the same order.
+
+.. centered:: *default value* = "default.opt"
+
 .. _rstfilekey:
 
 Restart File
@@ -446,9 +487,9 @@ Restart File
 .. admonition:: Key
     :class: tip
 
-    rst_file = {file} -> "default.rst"
+    restart_file = {file} -> "default.rst"
 
-The ``rst_file`` keyword sets the name for the :ref:`restartFile`, which contains all necessary information to restart (*i.e.* continue) the calculation from its current timestamp.
+The ``restart_file`` keyword sets the name for the :ref:`restartFile`, which contains all necessary information to restart (*i.e.* continue) the calculation from its current timestamp.
 
 .. centered:: *default value* = "default.rst"
 
@@ -2195,6 +2236,46 @@ Learning Rate Decay
     learning-rate-decay = {double}
 
 With the ``learning-rate-decay`` keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.
+
+.. _learningrateupdatefreqKey:
+
+Learning Rate Update Frequency
+==============================
+
+.. admonition:: Key
+    :class: tip
+
+    learning-rate-update-freq = {uint+} -> 1
+
+With the ``learning-rate-update-freq`` keyword the user can specify after how many optimization steps the learning rate is updated. It is used by the **constant-decay** strategy; the **exponential-decay** strategy recalculates the learning rate in every step and the **constant** strategy never changes it.
+
+.. centered:: *default value* = 1
+
+.. _minlearningrateKey:
+
+Minimum Learning Rate
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    min-learning-rate = {double} -> 1e-15
+
+With the ``min-learning-rate`` keyword the user can specify the lowest value the learning rate may take. If a strategy would go below it, the learning rate is set to this value and a warning is written. The value has to be greater than zero and smaller than :ref:`max-learning-rate <maxlearningrateKey>`, if that is set.
+
+.. centered:: *default value* = 1e-15
+
+.. _maxlearningrateKey:
+
+Maximum Learning Rate
+=====================
+
+.. admonition:: Key
+    :class: tip
+
+    max-learning-rate = {double}
+
+With the ``max-learning-rate`` keyword the user can specify the highest value the learning rate may take. If a strategy would go above it, the learning rate is set to this value and a warning is written. The value has to be greater than zero and greater than :ref:`min-learning-rate <minlearningrateKey>`. If the keyword is not set, the learning rate has no upper limit.
 
 .. _convergenceKeys:
 

@@ -48,6 +48,7 @@ class TestQMSetupAse : public ::testing::Test
         // environment
         const auto _ = std::remove("default.log");
         _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+        _settings.timings.setNumberOfStepsByUser(100U);
         _engine  = std::make_unique<engine::QMMDEngine>(_settings);
         _qmSetup = std::make_unique<setup::QMSetup>(
             *_engine,

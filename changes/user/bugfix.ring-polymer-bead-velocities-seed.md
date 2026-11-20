@@ -1,0 +1,1 @@
+- Fix ring polymer MD with a fixed `random_seed`: all beads started with identical velocities; every bead now gets its own Maxwell-Boltzmann velocities and the run stays reproducible for a given seed.
