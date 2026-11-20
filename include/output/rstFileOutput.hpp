@@ -24,6 +24,7 @@
 #define OUTPUT__RST_FILE_OUTPUT_HPP
 
 #include <cstddef>
+#include <optional>
 
 #include "output.hpp"
 #include "textBuffer.hpp"
@@ -48,7 +49,7 @@ namespace out
         using Output::Output;
 
         void write(
-            const Frame&        frame,
+            const Frame        &frame,
             size_t              step,
             std::optional<Time> finalTime
         );

@@ -125,7 +125,7 @@ namespace input::restartFile
 
         if (settings::GeneralSettings::isMDJobType())
         {
-            if (stepCount == 0)
+            if (stepCount == 0 && !_timingsSettings->isStartingTimeSet())
             {
                 _timingsSettings->setStartingTimeByUser(0 * fs);
             }
@@ -167,8 +167,8 @@ namespace input::restartFile
     }
 
     /**
-     * @brief wrapper function to construct a RestartFileReader object and
-     * call the read function
+     * @brief wrapper function to construct a RestartFileReader object and call
+     * the read function
      *
      * @param engine Reference to the Engine object
      * @param noseHooverSettings Reference to the NoseHooverSettings object

@@ -105,7 +105,11 @@ namespace out
         buffer << "Step " << step;
         if (finalTime.has_value())
         {
-            buffer << " Simulation_Time " << finalTime->numerical_value_in(ps);
+            // std::format keeps every digit, so the time reads back exactly
+            buffer << std::format(
+                " Simulation_Time {}",
+                finalTime->numerical_value_in(ps)
+            );
         }
         buffer << "\n";
 
