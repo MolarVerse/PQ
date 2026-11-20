@@ -193,7 +193,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         _settings.potentialSettings.getCoulombLongRangeType(),
         CoulombLongRangeType::REACTION_FIELD
     );
-    EXPECT_EQ(PotentialSettings::getReactionFieldEpsilon(), 80.0);
+    EXPECT_EQ(_settings.potentialSettings.getReactionFieldEpsilon(), 80.0);
 }
 
 TEST_F(TestInputFileReader, testPostProcessRequiredFail)

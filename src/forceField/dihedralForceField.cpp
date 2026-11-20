@@ -28,6 +28,7 @@
 #include "forceField.hpp"
 #include "molecule.hpp"
 #include "physicalData.hpp"
+#include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
 
@@ -181,7 +182,9 @@ namespace ff
                     molecule4,
                     atomIndices[0],
                     atomIndices[3],
-                    distance14
+                    distance14,
+                    potentialSettings.getScale14Coulomb(),
+                    potentialSettings.getScale14VDW()
                 );
 
                 forceMagnitude /= distance14;

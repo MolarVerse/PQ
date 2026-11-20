@@ -39,7 +39,9 @@ namespace ff
         const molsys::Molecule      *molecule_j,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
-        double                       distance
+        double                       distance,
+        double                       scale14Coulomb,
+        double                       scale14VDW
     );
 }   // namespace ff
 

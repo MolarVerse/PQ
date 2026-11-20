@@ -63,12 +63,19 @@ class PotentialSettings
 
     Setting<double, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
 
-    static inline double _scale14Coulomb = defaults::SCALE_14_COULOMB_DEFAULT;
-    static inline double _scale14VanDerWaals =
-        defaults::SCALE_14_VAN_DER_WAALS_DEFAULT;
+    Setting<double, "Scale 1-4 Coulomb"> _scale14Coulomb{
+        defaults::SCALE_14_COULOMB_DEFAULT
+    };
+    Setting<double, "Scale 1-4 Van der Waals"> _scale14VanDerWaals{
+        defaults::SCALE_14_VAN_DER_WAALS_DEFAULT
+    };
 
-    static inline double _wolfParameter        = defaults::WOLF_PARAM_DEFAULT;
-    static inline double _reactionFieldEpsilon = defaults::RF_EPSILON_DEFAULT;
+    Setting<double, "Wolf parameter"> _wolfParameter{
+        defaults::WOLF_PARAM_DEFAULT
+    };
+    Setting<double, "Reaction field epsilon"> _reactionFieldEpsilon{
+        defaults::RF_EPSILON_DEFAULT
+    };
 
     CoulombPotentialConfig _coulombConfig;
 
@@ -88,10 +95,11 @@ class PotentialSettings
     void setCoulombRadiusCutOffByUser(double coulombRadiusCutOff);
     void setNonCoulombRadiusCutOffByUser(double nonCoulombRadiusCutOff);
 
-    static void setScale14Coulomb(double scale14Coulomb);
-    static void setScale14VanDerWaals(double scale14VanDerWaals);
-    static void setReactionFieldEpsilon(double epsilon);
-    static void setWolfParameter(double wolfParameter);
+    void setScale14CoulombByUser(double scale14Coulomb);
+    void setScale14VanDerWaalsByUser(double scale14VanDerWaals);
+
+    void setReactionFieldEpsilonByUser(double epsilon);
+    void setWolfParameterByUser(double wolfParameter);
 
     /********************
      * standard getters *
@@ -100,13 +108,15 @@ class PotentialSettings
     [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
     [[nodiscard]] NonCoulombType       getNonCoulombType() const;
 
-    [[nodiscard]] double        getCoulombRadiusCutOff() const;
-    [[nodiscard]] double        getNonCoulombRadiusCutOff() const;
-    [[nodiscard]] bool          isNonCoulombRadiusCutOffSetByUser() const;
-    [[nodiscard]] static double getScale14Coulomb();
-    [[nodiscard]] static double getScale14VDW();
-    [[nodiscard]] static double getReactionFieldEpsilon();
-    [[nodiscard]] static double getWolfParameter();
+    [[nodiscard]] double getCoulombRadiusCutOff() const;
+    [[nodiscard]] double getNonCoulombRadiusCutOff() const;
+    [[nodiscard]] bool   isNonCoulombRadiusCutOffSetByUser() const;
+
+    [[nodiscard]] double getScale14Coulomb() const;
+    [[nodiscard]] double getScale14VDW() const;
+
+    [[nodiscard]] double getReactionFieldEpsilon() const;
+    [[nodiscard]] double getWolfParameter() const;
 
     friend struct ::PotentialSettingsUtils;
 };
