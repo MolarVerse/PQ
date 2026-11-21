@@ -78,7 +78,7 @@ namespace intraNonBonded
         [[nodiscard]]
         std::pair<EnergyPerMol, EnergyPerMol> calculateSingleInteraction(
             AtomIndex                    atomIdx1,
-            IntraNonBondedPartner        partner,
+            const IntraNonBondedPartner &partner,
             const Pos3D                 &box,
             const pot::CoulombPotential *coulPot,
             pot::NonCoulombPotential    *nonCoulPot,

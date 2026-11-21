@@ -72,7 +72,7 @@ namespace intraNonBonded
 
         for (size_t atomIndex1 = 0; atomIndex1 < partners.size(); ++atomIndex1)
         {
-            for (const auto partner : partners[atomIndex1])
+            for (const auto &partner : partners[atomIndex1])
             {
                 const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
                     calculateSingleInteraction(
@@ -111,7 +111,7 @@ namespace intraNonBonded
     std::pair<EnergyPerMol, EnergyPerMol> IntraNonBondedMap::
         calculateSingleInteraction(
             AtomIndex                    atomIdx1,
-            IntraNonBondedPartner        partner,
+            const IntraNonBondedPartner &partner,
             const Pos3D                 &box,
             const pot::CoulombPotential *coulPot,
             pot::NonCoulombPotential    *nonCoulPot,

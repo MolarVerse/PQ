@@ -37,8 +37,8 @@ namespace intraNonBonded
      */
     struct IntraNonBondedPartner
     {
-        AtomIndex atomIndex{0};
-        bool      isScaled14{false};
+        AtomIndex atomIndex;
+        bool      isScaled14;
 
         [[nodiscard]]
         bool operator==(const IntraNonBondedPartner &other) const;

@@ -76,7 +76,7 @@ int main()
     simulationBox.setBox(orthoBox, false);
 
     const auto& box     = simulationBox.getBoxDimensions();
-    const auto  partner = intraNonBondedType.getPartners()[0][0];
+    const auto& partner = intraNonBondedType.getPartners()[0][0];
 
     perfAllocBegin();
 
