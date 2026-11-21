@@ -582,11 +582,12 @@ namespace setup
         const auto startTemperature =
             _engine.getSettings().kinetics.getStartTemperature();
 
+        const auto jobtype = _engine.getSettings().generalSettings.getJobtype();
+
         // ring polymer beads get Maxwell-Boltzmann velocities on their own
         if (initVelocities == InitVelocities::FALSE && getZeroVelocities() &&
-            startTemperature > Temperature::zero() &&
-            settings::GeneralSettings::isMDJobType() &&
-            !settings::GeneralSettings::isRingPolymerMDActivated())
+            startTemperature > Temperature::zero() && isMDJobType(jobtype) &&
+            !isRingPolymerMDActivated(jobtype))
         {
             _writeSetupWarning(
                 log,

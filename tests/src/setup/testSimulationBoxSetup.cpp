@@ -850,7 +850,7 @@ TEST_F(TestZeroVelocityWarning, SilentWithoutTemperature)
 
 TEST_F(TestZeroVelocityWarning, SilentForNonMDJob)
 {
-    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_OPT);
     setup::SimulationBoxSetup::setZeroVelocities(true);
 
     const auto logContent = _writeSetupInfoAndReadLog();
@@ -860,7 +860,7 @@ TEST_F(TestZeroVelocityWarning, SilentForNonMDJob)
 
 TEST_F(TestZeroVelocityWarning, SilentForRingPolymerMD)
 {
-    settings::GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::RING_POLYMER_QM_MD);
     setup::SimulationBoxSetup::setZeroVelocities(true);
 
     const auto logContent = _writeSetupInfoAndReadLog();
