@@ -88,14 +88,18 @@ namespace waterModel
         return _eqOHDistance;
     }
 
-    inline const Angle &SPCFwIntraWater::getEqHOHAngle() const { return _eqHOHAngle; }
+    inline const Angle &SPCFwIntraWater::getEqHOHAngle() const
+    {
+        return _eqHOHAngle;
+    }
 
     inline const ForceConstant &SPCFwIntraWater::getForceConstantOHBond() const
     {
         return _forceConstantOHBond;
     }
 
-    inline const AngleForceConstant &SPCFwIntraWater::getForceConstantHOHAngle() const
+    inline const AngleForceConstant &SPCFwIntraWater::getForceConstantHOHAngle(
+    ) const
     {
         return _forceConstantHOHAngle;
     }
@@ -140,7 +144,8 @@ namespace waterModel
         return _forceConstantOHBond;
     }
 
-    inline const AngleForceConstant &qSPCFwIntraWater::getForceConstantHOHAngle() const
+    inline const AngleForceConstant &qSPCFwIntraWater::getForceConstantHOHAngle(
+    ) const
     {
         return _forceConstantHOHAngle;
     }

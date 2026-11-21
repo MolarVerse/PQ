@@ -67,8 +67,7 @@ double TestTriclinicBox::cosAlpha(const linalg::Vec3D &boxAngles)
 
 double TestTriclinicBox::cosBeta(const linalg::Vec3D &boxAngles)
 {
-    return molsys::TriclinicBox::_cosBeta(
-        (boxAngles * deg).in(mstd::units::rad)
+    return molsys::TriclinicBox::_cosBeta((boxAngles * deg).in(mstd::units::rad)
     );
 }
 
@@ -88,8 +87,7 @@ double TestTriclinicBox::sinAlpha(const linalg::Vec3D &boxAngles)
 
 double TestTriclinicBox::sinBeta(const linalg::Vec3D &boxAngles)
 {
-    return molsys::TriclinicBox::_sinBeta(
-        (boxAngles * deg).in(mstd::units::rad)
+    return molsys::TriclinicBox::_sinBeta((boxAngles * deg).in(mstd::units::rad)
     );
 }
 

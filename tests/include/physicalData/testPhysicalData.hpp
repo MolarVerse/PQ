@@ -54,9 +54,7 @@ inline void TestPhysicalData::SetUp()
     _physicalData->setCoulombEnergy(1.0 * kcal_per_mol);
     _physicalData->setNonCoulombEnergy(2.0 * kcal_per_mol);
     _physicalData->setTemperature(mstd::units::point<K>(3.0));
-    _physicalData->setMomentum(
-        linalg::Vec3D(4.0) * g_per_mol * angstrom / s
-    );
+    _physicalData->setMomentum(linalg::Vec3D(4.0) * g_per_mol * angstrom / s);
     _physicalData->setKineticEnergy(5.0 * kcal_per_mol);
     _physicalData->setVolume(6.0 * angstrom3);
     _physicalData->setDensity(7.0 * kg_per_litre);

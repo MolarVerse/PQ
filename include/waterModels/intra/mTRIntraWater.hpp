@@ -76,14 +76,14 @@ namespace waterModel
        public:
         using MTRIntraWater::MTRIntraWater;
 
-        [[nodiscard]] Distance getEqOHDistance() const override;
-        [[nodiscard]] Distance getEqHHDistance() const override;
-        [[nodiscard]] EnergyPerMol getDOH() const override;
-        [[nodiscard]] InvDistance getAlpha() const override;
+        [[nodiscard]] Distance           getEqOHDistance() const override;
+        [[nodiscard]] Distance           getEqHHDistance() const override;
+        [[nodiscard]] EnergyPerMol       getDOH() const override;
+        [[nodiscard]] InvDistance        getAlpha() const override;
         [[nodiscard]] InvDistanceSquared getBeta() const override;
-        [[nodiscard]] ForceConstant getLtt() const override;
-        [[nodiscard]] ForceConstant getLrt() const override;
-        [[nodiscard]] ForceConstant getLrr() const override;
+        [[nodiscard]] ForceConstant      getLtt() const override;
+        [[nodiscard]] ForceConstant      getLrt() const override;
+        [[nodiscard]] ForceConstant      getLrr() const override;
     };
 
     inline Distance SPCMTRIntraWater::getEqOHDistance() const
@@ -100,7 +100,10 @@ namespace waterModel
 
     inline InvDistance SPCMTRIntraWater::getAlpha() const { return _alpha; }
 
-    inline InvDistanceSquared SPCMTRIntraWater::getBeta() const { return _beta; }
+    inline InvDistanceSquared SPCMTRIntraWater::getBeta() const
+    {
+        return _beta;
+    }
 
     inline ForceConstant SPCMTRIntraWater::getLtt() const { return _ltt; }
 
@@ -132,14 +135,14 @@ namespace waterModel
 
        public:
         using MTRIntraWater::MTRIntraWater;
-        [[nodiscard]] Distance getEqOHDistance() const override;
-        [[nodiscard]] Distance getEqHHDistance() const override;
-        [[nodiscard]] EnergyPerMol getDOH() const override;
-        [[nodiscard]] InvDistance getAlpha() const override;
+        [[nodiscard]] Distance           getEqOHDistance() const override;
+        [[nodiscard]] Distance           getEqHHDistance() const override;
+        [[nodiscard]] EnergyPerMol       getDOH() const override;
+        [[nodiscard]] InvDistance        getAlpha() const override;
         [[nodiscard]] InvDistanceSquared getBeta() const override;
-        [[nodiscard]] ForceConstant getLtt() const override;
-        [[nodiscard]] ForceConstant getLrt() const override;
-        [[nodiscard]] ForceConstant getLrr() const override;
+        [[nodiscard]] ForceConstant      getLtt() const override;
+        [[nodiscard]] ForceConstant      getLrt() const override;
+        [[nodiscard]] ForceConstant      getLrr() const override;
     };
 
     inline Distance TIP3PMTRIntraWater::getEqOHDistance() const
@@ -156,7 +159,10 @@ namespace waterModel
 
     inline InvDistance TIP3PMTRIntraWater::getAlpha() const { return _alpha; }
 
-    inline InvDistanceSquared TIP3PMTRIntraWater::getBeta() const { return _beta; }
+    inline InvDistanceSquared TIP3PMTRIntraWater::getBeta() const
+    {
+        return _beta;
+    }
 
     inline ForceConstant TIP3PMTRIntraWater::getLtt() const { return _ltt; }
 

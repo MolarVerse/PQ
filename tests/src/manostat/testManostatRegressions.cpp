@@ -102,9 +102,7 @@ namespace
             auto atom = std::make_shared<molsys::Atom>();
             atom->setMass(1.0 * g_per_mol);
             atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
-            atom->setVelocity(
-                linalg::Vec3D{speed, 0.0, 0.0} * angstrom / s
-            );
+            atom->setVelocity(linalg::Vec3D{speed, 0.0, 0.0} * angstrom / s);
             molecule.addAtom(atom);
             _box.addAtom(atom);
         }

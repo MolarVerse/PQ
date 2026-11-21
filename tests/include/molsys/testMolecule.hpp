@@ -59,15 +59,9 @@ inline void TestMolecule::SetUp()
     _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom / s);
     _atom3->setVelocity(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom / s);
 
-    _atom1->setForce(
-        linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom
-    );
-    _atom2->setForce(
-        linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom
-    );
-    _atom3->setForce(
-        linalg::Vec3D(0.0, 1.0, 0.0) * kcal_per_mol / angstrom
-    );
+    _atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+    _atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+    _atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0) * kcal_per_mol / angstrom);
 
     _atom1->setMass(1.0 * g_per_mol);
     _atom2->setMass(2.0 * g_per_mol);

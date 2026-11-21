@@ -93,16 +93,20 @@ namespace linalg
         // assignment operator work as well)
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
         template <typename U>
-        requires(!std::same_as<U, T> && mstd::is_quantity_like_v<T> &&
-                 mstd::is_quantity_like_v<U> && std::convertible_to<U, T>)
+        requires(
+            !std::same_as<U, T> && mstd::is_quantity_like_v<T> &&
+            mstd::is_quantity_like_v<U> && std::convertible_to<U, T>
+        )
         Vector3D(const Vector3D<U> &vec);
         // implicit constructor from a quantity holding a Vector3D, e.g.
         // quantity<angstrom, Vector3D<double>> (which is what mp-units
         // produces for `vec * angstrom` with a non-const/temporary vec)
         template <typename Q>
-        requires(mstd::is_quantity_like_v<T> && mstd::is_quantity_like_v<Q> &&
-                 !std::same_as<Q, T> &&
-                 std::same_as<typename Q::rep, Vector3D<double>>)
+        requires(
+            mstd::is_quantity_like_v<T> && mstd::is_quantity_like_v<Q> &&
+            !std::same_as<Q, T> &&
+            std::same_as<typename Q::rep, Vector3D<double>>
+        )
         Vector3D(const Q &quantity);
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
