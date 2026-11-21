@@ -66,8 +66,7 @@ namespace
         physDat->set_kineticEnergy(sample.energy);
 
         opt.setSimulationBox(box);
-        opt.setPhysicalData(physDat);
-        opt.updateHistory();
+        opt.updateHistory(physDat->getTotalEnergy());
     }
 }   // namespace
 
@@ -289,14 +288,4 @@ TEST(TestOptimizer, hasConvergedReturnsFalseForLargeForce)
     );
 
     EXPECT_FALSE(opt.hasConverged());
-}
-
-/* ---------- old physical data setter ---------- */
-
-TEST(TestOptimizer, setPhysicalDataOldStoresPointer)
-{
-    opt::SteepestDescent opt;
-    auto                 phys = std::make_shared<physicalData::PhysicalData>();
-    phys->set_kineticEnergy(0.42 * kcal_per_mol);
-    EXPECT_NO_THROW(opt.setPhysicalDataOld(phys));
 }

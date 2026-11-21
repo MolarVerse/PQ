@@ -28,7 +28,6 @@
 #include <cstdint>
 #include <format>
 #include <iostream>
-#include <memory>
 
 #include "units.hpp"
 
@@ -50,14 +49,13 @@ static constexpr std::size_t   PER_SIDE   = 16;
 int main()
 {
     const auto box          = benchOptimizers::makeBox(ATOMS, PER_SIDE);
-    const auto physicalData = std::make_shared<physicalData::PhysicalData>();
+    auto       physicalData = physicalData::PhysicalData{};
 
     opt::SteepestDescent optimizer;
     optimizer.setSimulationBox(box);
-    optimizer.setPhysicalData(physicalData);
 
     // two entries are needed before the convergence check
-    optimizer.updateHistory();
+    optimizer.updateHistory(physicalData.getTotalEnergy());
 
     perfAllocBegin();
     CALLGRIND_ZERO_STATS;
@@ -65,10 +63,10 @@ int main()
     auto converged = 0U;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        physicalData->set_kineticEnergy(
+        physicalData.set_kineticEnergy(
             1.0 / static_cast<double>(i + 1) * kcal_per_mol
         );
-        optimizer.updateHistory();
+        optimizer.updateHistory(physicalData.getTotalEnergy());
         converged += optimizer.hasConverged() ? 1U : 0U;
     }
 

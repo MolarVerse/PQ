@@ -69,7 +69,7 @@ namespace engine
 
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
                 getSettings().timings.getStartingTime()

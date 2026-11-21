@@ -56,7 +56,6 @@ namespace engine
           _potential{std::make_shared<pot::PotentialBruteForce>(
               settings.hybridSettings
           )},
-          _physicalData{std::make_shared<physicalData::PhysicalData>()},
           _simulationBox{std::make_shared<molsys::SimulationBox>()},
           _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
           _forceField{std::make_shared<ff::ForceField>(settings.hybridSettings
@@ -130,26 +129,6 @@ namespace engine
     }
 
     /**
-     * @brief get the reference to the physical data
-     *
-     * @return physicalData::PhysicalData&
-     */
-    physicalData::PhysicalData &Engine::getPhysicalData()
-    {
-        return *_physicalData;
-    }
-
-    /**
-     * @brief get the reference to the average physical data
-     *
-     * @return physicalData::PhysicalData&
-     */
-    physicalData::PhysicalData &Engine::getAveragePhysicalData()
-    {
-        return _averagePhysicalData;
-    }
-
-    /**
      * @brief get the reference to the force field
      *
      * @return const std::shared_ptr<ff::ForceField>&
@@ -188,16 +167,6 @@ namespace engine
     molsys::SimulationBox *Engine::getSimulationBoxPtr()
     {
         return _simulationBox.get();
-    }
-
-    /**
-     * @brief get the pointer to the physical data
-     *
-     * @return physicalData::PhysicalData*
-     */
-    physicalData::PhysicalData *Engine::getPhysicalDataPtr()
-    {
-        return _physicalData.get();
     }
 
     /**
@@ -314,17 +283,6 @@ namespace engine
     ) const
     {
         return _simulationBox;
-    }
-
-    /**
-     * @brief get the shared pointer to the physical data
-     *
-     * @return std::shared_ptr<PhysicalData>
-     */
-    std::shared_ptr<physicalData::PhysicalData> Engine::getSharedPhysicalData(
-    ) const
-    {
-        return _physicalData;
     }
 
     /**
