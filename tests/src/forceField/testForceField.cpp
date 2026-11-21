@@ -359,13 +359,13 @@ TEST_F(TestForceField, calculateBondedInteractions)
     forceField
         .calculateBondedInteractions(box, physicalData, potentialSettings);
 
-    EXPECT_NE(physicalData.getBondEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getAngleEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getDihedralEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getImproperEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getCoulombEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getNonCoulombEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getVirial(), VirialPerMol::zero());
+    EXPECT_NE(physicalData.get_bondEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_angleEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_dihedralEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_improperEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_coulombEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_nonCoulombEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_virial(), VirialPerMol::zero());
 }
 
 /**
@@ -430,12 +430,12 @@ TEST_F(TestForceField, correctLinker)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -6,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         134.48580380716751,
         1e-6
     );
@@ -464,12 +464,12 @@ TEST_F(TestForceField, correctLinker)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -3,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         33.621450951791878,
         1e-6
     );

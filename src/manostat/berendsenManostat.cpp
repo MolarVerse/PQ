@@ -99,8 +99,8 @@ namespace manostat
             coulombRadiusCutoff
         );
 
-        physicalData.setVolume(simulationBox.getVolume());
-        physicalData.setDensity(simulationBox.getDensity());
+        physicalData.set_volume(simulationBox.getVolume());
+        physicalData.set_density(simulationBox.getDensity());
 
         auto scaleMolecule = [&muSimSpace, &box](auto &molecule)
         { molecule.scale(muSimSpace, box); };

@@ -129,7 +129,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         (::sqrt(14) - 1.2) * 3.0 / ::sqrt(14) * linalg::Vec3D(1.0, 2.0, 3.0);
 
     EXPECT_NEAR(
-        physicalData.getBondEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_bondEnergy().numerical_value_in(kcal_per_mol),
         (::sqrt(14) - 1.2) * (::sqrt(14) - 1.2) * 3.0 / 2.0,
         1e-6
     );
@@ -176,19 +176,19 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
 
     auto virial = force * linalg::Vec3D{-1.0, -2.0, -3.0};
     EXPECT_THAT(
-        diagonal(physicalData.getVirial()).numerical_value_in(kcal_per_mol),
+        diagonal(physicalData.get_virial()).numerical_value_in(kcal_per_mol),
         testing::ElementsAre(
             testing::DoubleNear(virial[0], 1e-6),
             testing::DoubleNear(virial[1], 1e-6),
@@ -214,7 +214,7 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
     force = {-0.68765171383567736, -1.3753034276713547, -2.062955141507032};
 
     EXPECT_NEAR(
-        physicalData.getBondEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_bondEnergy().numerical_value_in(kcal_per_mol),
         (::sqrt(14) - 1.2) * (::sqrt(14) - 1.2) * 3.0 / 2.0,
         1e-6
     );
@@ -261,19 +261,19 @@ TEST_F(TestBondForceField, calculateEnergyAndForces)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         17.379852093794977,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -0.00072939421499545261,
         1e-6
     );
 
     virial = force * linalg::Vec3D{-1.0, -2.0, -3.0};
     EXPECT_THAT(
-        diagonal(physicalData.getVirial()).numerical_value_in(kcal_per_mol),
+        diagonal(physicalData.get_virial()).numerical_value_in(kcal_per_mol),
         testing::ElementsAre(
             testing::DoubleNear(virial[0], 1e-6),
             testing::DoubleNear(virial[1], 1e-6),

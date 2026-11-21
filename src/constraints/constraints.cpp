@@ -305,8 +305,8 @@ namespace constraints
             { upperEnergy += distanceConstraint.get_upperEnergy(); }
         );
 
-        physicalData.setLowerDistanceConstraints(lowerEnergy);
-        physicalData.setUpperDistanceConstraints(upperEnergy);
+        physicalData.set_lowerDistanceConstraints(lowerEnergy);
+        physicalData.set_upperDistanceConstraints(upperEnergy);
     }
 
     /************************

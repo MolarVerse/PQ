@@ -255,13 +255,13 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     );
 
     EXPECT_NEAR(
-        physicalDataBF.getCoulombEnergy().numerical_value_in(kcal_per_mol),
-        physicalDataCL.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalDataBF.get_coulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalDataCL.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         kForceTolerance
     );
     EXPECT_NEAR(
-        physicalDataBF.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
-        physicalDataCL.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalDataBF.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalDataCL.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         kForceTolerance
     );
 

@@ -31,6 +31,7 @@
 #include "molecule.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 /**
@@ -48,19 +49,19 @@ class TestPhysicalData : public ::testing::Test
     void SetUp() override
     {
         _physicalData = std::make_unique<physicalData::PhysicalData>();
-        _physicalData->setCoulombEnergy(1.0 * kcal_per_mol);
-        _physicalData->setNonCoulombEnergy(2.0 * kcal_per_mol);
-        _physicalData->setTemperature(mstd::units::point<K>(3.0));
-        _physicalData->setMomentum(
+        _physicalData->set_coulombEnergy(1.0 * kcal_per_mol);
+        _physicalData->set_nonCoulombEnergy(2.0 * kcal_per_mol);
+        _physicalData->set_temperature(toTemperature(3.0));
+        _physicalData->set_momentum(
             linalg::Vec3D(4.0) * g_per_mol * angstrom / s
         );
-        _physicalData->setKineticEnergy(5.0 * kcal_per_mol);
-        _physicalData->setVolume(6.0 * angstrom3);
-        _physicalData->setDensity(7.0 * kg_per_litre);
-        _physicalData->setPressure(8.0 * bar);
-        _physicalData->setCoupledPressure(8.5 * bar);
-        _physicalData->setQMEnergy(9.0 * kcal_per_mol);
-        _physicalData->setQMReferenceEnergy(1.0 * kcal_per_mol);
+        _physicalData->set_kineticEnergy(5.0 * kcal_per_mol);
+        _physicalData->set_volume(6.0 * angstrom3);
+        _physicalData->set_density(7.0 * kg_per_litre);
+        _physicalData->set_pressure(8.0 * bar);
+        _physicalData->set_coupledPressure(8.5 * bar);
+        _physicalData->set_qmEnergy(9.0 * kcal_per_mol);
+        _physicalData->set_qmReferenceEnergy(1.0 * kcal_per_mol);
 
         _simulationBox = std::make_unique<molsys::SimulationBox>();
 

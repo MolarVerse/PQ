@@ -53,7 +53,7 @@ namespace out
         const physicalData::PhysicalData &physicalData
     )
     {
-        const auto &stress = physicalData.getStressTensor().numerical_value_in(
+        const auto &stress = physicalData.get_stressTensor().numerical_value_in(
             kcal_per_mol / angstrom3
         );
 

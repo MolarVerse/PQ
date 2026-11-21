@@ -1,0 +1,1 @@
+- Add integration tests for a triclinic box with DFTB+ (NVE against a reference with a check of the lattice that is written for DFTB+, a Berendsen manostat with `full_anisotropic` that changes the angles, `anisotropic` that keeps them) and a test that MM-MD refuses a triclinic box with the documented message.

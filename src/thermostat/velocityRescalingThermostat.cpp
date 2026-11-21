@@ -98,7 +98,7 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        const auto temp = physicalData.getTemperature();
+        const auto temp = physicalData.get_temperature();
         setTemperature(temp);
 
         if (utilities::isZero(getTemperature().quantity_from_zero()))
@@ -149,7 +149,7 @@ namespace thermostat
             berendsenFactor
         };
 
-        physicalData.setTemperature(temperature);
+        physicalData.set_temperature(temperature);
     }
 
     /**

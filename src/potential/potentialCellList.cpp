@@ -182,8 +182,8 @@ namespace pot
                 }
             }
         }
-        physicalData.setCoulombEnergy(totalCoulombEnergy);
-        physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+        physicalData.set_coulombEnergy(totalCoulombEnergy);
+        physicalData.set_nonCoulombEnergy(totalNonCoulombEnergy);
     }
 
     /**

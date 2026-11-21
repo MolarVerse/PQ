@@ -41,7 +41,7 @@ namespace engine
 
         getPotential()->calculateForces(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             getCellList(),
             getSettings().waterModelSettings,
             getSettings().potentialSettings
@@ -49,7 +49,7 @@ namespace engine
 
         _getInterWater().calculate(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             getPotential()->getCoulombPotSharedPtr(),
             getCellList(),
             getSettings().potentialSettings
@@ -57,20 +57,20 @@ namespace engine
 
         getIntraNonBonded()->calculate(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             getSettings().potentialSettings
         );
 
         const auto virial = virial::calculateVirial(getSimulationBox());
-        getPhysicalData().setVirial(virial);
+        get_physicalData().set_virial(virial);
 
         getForceField()->calculateBondedInteractions(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             getSettings().potentialSettings
         );
 
-        _getIntraWater().calculate(getSimulationBox(), getPhysicalData());
+        _getIntraWater().calculate(getSimulationBox(), get_physicalData());
     }
 
 }   // namespace engine

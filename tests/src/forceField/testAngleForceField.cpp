@@ -137,7 +137,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     );
 
     EXPECT_NEAR(
-        physicalData.getAngleEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_angleEnergy().numerical_value_in(kcal_per_mol),
         2.0999420826401303,
         1e-6
     );
@@ -205,17 +205,17 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_THAT(
-        diagonal(physicalData.getVirial()).numerical_value_in(kcal_per_mol),
+        diagonal(physicalData.get_virial()).numerical_value_in(kcal_per_mol),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-6),
             testing::DoubleNear(0.0, 1e-6),
@@ -240,7 +240,7 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     );
 
     EXPECT_NEAR(
-        physicalData.getAngleEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_angleEnergy().numerical_value_in(kcal_per_mol),
         2.0999420826401303,
         1e-6
     );
@@ -308,27 +308,27 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         -22.378958701288319,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -0.016255999999999989,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getVirial()[0][0].numerical_value_in(kcal_per_mol),
+        physicalData.get_virial()[0][0].numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getVirial()[1][1].numerical_value_in(kcal_per_mol),
+        physicalData.get_virial()[1][1].numerical_value_in(kcal_per_mol),
         -7.0737262359370403,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getVirial()[2][2].numerical_value_in(kcal_per_mol),
+        physicalData.get_virial()[2][2].numerical_value_in(kcal_per_mol),
         -28.294904943748161,
         1e-6
     );
@@ -400,8 +400,8 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).
-    EXPECT_FALSE(isnan(physicalData.getAngleEnergy()));
-    EXPECT_FALSE(isinf(physicalData.getAngleEnergy()));
+    EXPECT_FALSE(isnan(physicalData.get_angleEnergy()));
+    EXPECT_FALSE(isinf(physicalData.get_angleEnergy()));
 
     // All per-atom forces must be finite. Without the guard these would
     // be NaN from dividing by sin(pi) == 0 in the cross-product block.

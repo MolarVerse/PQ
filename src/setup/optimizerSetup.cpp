@@ -136,8 +136,6 @@ namespace setup
         }
 
         optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
-        optimizer->setPhysicalData(_optEngine.getSharedPhysicalData());
-        optimizer->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());
 
         return optimizer;
     }
@@ -243,8 +241,6 @@ namespace setup
         evaluator->setConstraints(_optEngine.getConstraints());
         evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
         evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
-        evaluator->setPhysicalData(_optEngine.getSharedPhysicalData());
-        evaluator->setPhysicalDataOld(_optEngine.getSharedPhysicalDataOld());
 
         return evaluator;
     }
@@ -371,7 +367,7 @@ namespace setup
         const auto decayLRMsg =
             std::format("Learning rate decay factor:  {}", decayLRStr);
 
-        const auto convStratMsg = std::format(
+        const auto convStrategyMsg = std::format(
             "Convergence strategy:        {}",
             ConvStrategyMeta::toString(convStrategy)
         );
@@ -397,7 +393,7 @@ namespace setup
 
         logOutput.writeEmptyLine();
 
-        logOutput.writeSetupInfo(convStratMsg);
+        logOutput.writeSetupInfo(convStrategyMsg);
         logOutput.writeSetupInfo(energyConvMsg);
         logOutput.writeSetupInfo(absEnergyMsg);
         logOutput.writeSetupInfo(maxForceMsg);

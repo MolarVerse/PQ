@@ -36,6 +36,7 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "logOutput.hpp"
 #include "maxwellBoltzmann.hpp"
 #include "molecule.hpp"
@@ -47,6 +48,8 @@
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
+#include "thermostatSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace setup
@@ -377,8 +380,8 @@ namespace setup
             out::StdoutOutput::writeDensityWarning();
         }
 
-        _engine.getPhysicalData().setVolume(simBox.getVolume());
-        _engine.getPhysicalData().setDensity(simBox.getDensity());
+        _engine.get_physicalData().set_volume(simBox.getVolume());
+        _engine.get_physicalData().set_density(simBox.getDensity());
     }
 
     /**
@@ -571,6 +574,28 @@ namespace setup
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
+                    _engine.getSettings().fileSettings.getStartFileName()
+                )
+            );
+        }
+
+        const auto startTemperature =
+            _engine.getSettings().kinetics.getStartTemperature();
+
+        const auto jobtype = _engine.getSettings().generalSettings.getJobtype();
+
+        // ring polymer beads get Maxwell-Boltzmann velocities on their own
+        if (initVelocities == InitVelocities::FALSE && getZeroVelocities() &&
+            startTemperature > Temperature::zero() && isMDJobType(jobtype) &&
+            !isRingPolymerMDActivated(jobtype))
+        {
+            _writeSetupWarning(
+                log,
+                std::format(
+                    "All velocities in \"{}\" are zero: the MD starts at 0 K. "
+                    "Set 'init_velocities = true' to draw them from a "
+                    "Maxwell-Boltzmann distribution; 'start_temp' only starts "
+                    "the temperature ramp",
                     _engine.getSettings().fileSettings.getStartFileName()
                 )
             );

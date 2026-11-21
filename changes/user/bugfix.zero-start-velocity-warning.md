@@ -1,0 +1,1 @@
+- MD now warns when all start velocities are zero, `init_velocities` is off and `start_temp` is above 0 K (#1261).

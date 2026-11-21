@@ -40,14 +40,10 @@ namespace opt
      * @brief update forces
      *
      */
-    void MMEvaluator::evaluate()
+    void MMEvaluator::evaluate(physicalData::PhysicalData& physicalData)
     {
-        _getPhysicalDataOld().copy(_getPhysicalData());
-
         _getSimulationBox().updateOldForces();
         _getSimulationBox().resetForces();
-
-        // _constraints->applyShake(_simulationBox);
 
         _getCellList().updateCellList(
             _getSimulationBox(),
@@ -56,7 +52,7 @@ namespace opt
 
         _getPotential().calculateForces(
             _getSimulationBox(),
-            _getPhysicalData(),
+            physicalData,
             _getCellList(),
             _getSettings().waterModelSettings,
             _getSettings().potentialSettings
@@ -64,33 +60,15 @@ namespace opt
 
         _getIntraNonBonded().calculate(
             _getSimulationBox(),
-            _getPhysicalData(),
+            physicalData,
             _getSettings().potentialSettings
         );
-
-        // const auto virial =
-        // virial::Virial::calculateVirial(_getSimulationBox());
-        // _physicalData->setVirial(virial);
 
         _getForceField().calculateBondedInteractions(
             _getSimulationBox(),
-            _getPhysicalData(),
+            physicalData,
             _getSettings().potentialSettings
         );
-
-        // _constraints->applyDistanceConstraints(
-        //     _simulationBox,
-        //     _physicalData,
-        //     calculateTotalSimulationTime()
-        // );
-
-        // _constraints.calculateConstraintBondRefs(_simulationBox);
-
-        // const auto virialCorrection =
-        // virial::Virial::intraMolecularVirialCorrection(_getSimulationBox());
-        // _physicalData->addVirial(virialCorrection);
-
-        // _constraints.applyRattle(_simulationBox);
     }
 
 }   // namespace opt
