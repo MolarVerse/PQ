@@ -133,11 +133,11 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
 
     _energyOutput->setFilename("default.en", false);
-    _energyOutput->write(1, *_physicalData, *_settings);
+    _energyOutput->write(7, *_physicalData, *_settings);
     _energyOutput->close();
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(1.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(7, *_physicalData, *_settings);
     _infoOutput->close();
 
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
@@ -169,6 +169,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
     // info cells as PQAnalysis InfoFileReader reads them
     std::ifstream            infoFile("default.info");
     std::vector<std::string> infoLabels;
+    std::vector<std::string> infoValues;
     std::string              line;
     for (auto lineIndex = 0; std::getline(infoFile, line); ++lineIndex)
     {
@@ -183,6 +184,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
 
         const auto words = splitWords(line);
         infoLabels.push_back(std::format("{}[{}]", words[1], words[3]));
+        infoValues.push_back(words[2]);
         if (words.size() == 8)
         {
             infoLabels.push_back(std::format("{}[{}]", words[4], words[6]));
@@ -191,9 +193,10 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
 
     ASSERT_EQ(tokens.size(), infoLabels.size());
     EXPECT_EQ(tokens[0], "SIMULATION-TIME[step]");
-    EXPECT_EQ(infoLabels[0], "SIMULATION-TIME[ps]");
+    EXPECT_EQ(infoValues[0], splitWords(data)[0]);
+    EXPECT_EQ(infoValues[0], "7");
 
-    for (std::size_t index = 1; index < tokens.size(); ++index)
+    for (std::size_t index = 0; index < tokens.size(); ++index)
     {
         EXPECT_EQ(tokens[index], infoLabels[index]);
     }

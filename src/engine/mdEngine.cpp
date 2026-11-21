@@ -323,11 +323,6 @@ namespace engine
                 static_cast<double>(outputFreq)
             );
 
-            const auto simTime = calculateTotalSimulationTime(
-                timeStep,
-                getSettings().timings.getStartingTime()
-            );
-
             getEngineOutput().writeEnergyFile(
                 effStep,
                 getAveragePhysicalData(),
@@ -339,7 +334,7 @@ namespace engine
                 getSettings()
             );
             getEngineOutput().getInfoOutput().write(
-                simTime,
+                effStep,
                 getAveragePhysicalData(),
                 getSettings()
             );

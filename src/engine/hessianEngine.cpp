@@ -337,15 +337,13 @@ namespace engine
                 static_cast<double>(outputFreq)
             );
 
-            const auto effStepDouble = static_cast<double>(effStep);
-
             getEngineOutput().writeEnergyFile(
                 effStep,
                 getAveragePhysicalData(),
                 getSettings()
             );
             getEngineOutput().getInfoOutput().write(
-                effStepDouble,
+                effStep,
                 getAveragePhysicalData(),
                 getSettings()
             );

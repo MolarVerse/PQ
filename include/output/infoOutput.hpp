@@ -23,11 +23,10 @@
 #ifndef OUTPUT__INFO_OUTPUT_HPP
 #define OUTPUT__INFO_OUTPUT_HPP
 
-#include <string_view>
+#include <cstddef>
 
 #include "energyColumns.hpp"
 #include "output.hpp"
-#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -51,12 +50,7 @@ namespace out
         using Output::Output;
 
         void write(
-            const Time                       &simulationTime,
-            const physicalData::PhysicalData &physicalData,
-            const Settings                   &settings
-        );
-        void write(
-            double                            effectiveStep,
+            std::size_t                       step,
             const physicalData::PhysicalData &physicalData,
             const Settings                   &settings
         );
@@ -64,21 +58,10 @@ namespace out
        private:
         void _prepare();
         void _writeHeader();
-        void _writeSimulationTime(const Time &simulationTime);
-        void _writeEffectiveStep(double effectiveStep);
+        void _writeStep(std::size_t step);
         void _finish(
             const physicalData::PhysicalData &physicalData,
             const Settings                   &settings
-        );
-        void _writeLeft(
-            double,
-            const std::string_view &,
-            const std::string_view &
-        );
-        void _writeLeftInteger(
-            double,
-            const std::string_view &,
-            const std::string_view &
         );
         void _writeColumn(const EnergyColumn &column, bool left);
         void _writeRight();

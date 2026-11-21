@@ -153,11 +153,6 @@ namespace engine
             getPhysicalData().copy(mean(rpmdData));
             getAveragePhysicalData() = mean(averageRPMDData);
 
-            const auto simTime = calculateTotalSimulationTime(
-                timeStep,
-                getSettings().timings.getStartingTime()
-            );
-
 #ifdef WITH_MPI
             if (mpi::MPI::isRoot())
 #endif
@@ -177,7 +172,7 @@ namespace engine
                     getAveragePhysicalData()
                 );
                 getEngineOutput().getInfoOutput().write(
-                    simTime,
+                    effStep,
                     getAveragePhysicalData(),
                     getSettings()
                 );

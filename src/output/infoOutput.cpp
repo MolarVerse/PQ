@@ -27,7 +27,6 @@
 #include "energyColumns.hpp"
 #include "globalTimer.hpp"
 #include "timerId.hpp"
-#include "units.hpp"
 
 namespace out
 {
@@ -45,27 +44,18 @@ namespace out
     }
 
     /**
-     * @brief Write the simulation time to the info output
+     * @brief write the step, the first column of the energy file
      *
-     * @param simulationTime the current simulation time of the system
+     * @param step
      */
-    void InfoOutput::_writeSimulationTime(const Time &simulationTime)
+    void InfoOutput::_writeStep(std::size_t step)
     {
-        _writeLeft(
-            simulationTime.numerical_value_in(ps),
-            "SIMULATION-TIME",
-            "ps"
+        _getFilePointer() << std::format(
+            "|   {:<15} {:15d} {:<8} ",
+            energyStepName,
+            step,
+            energyStepUnit
         );
-    }
-
-    /**
-     * @brief Write the effective step to the info output
-     *
-     * @param effectiveStep the current effective step of the simulation
-     */
-    void InfoOutput::_writeEffectiveStep(double effectiveStep)
-    {
-        _writeLeft(effectiveStep, "EFFECTIVE STEPS", "-");
     }
 
     /**
@@ -104,14 +94,14 @@ namespace out
     }
 
     /**
-     * @brief write info file with the current simulation time
+     * @brief write info file, labelled like the columns of the energy file
      *
-     * @param simulationTime
+     * @param step the effective step, the first column of the energy file
      * @param physicalData the physical data of the system
      * @param settings the simulation settings
      */
     void InfoOutput::write(
-        const Time                       &simulationTime,
+        std::size_t                       step,
         const physicalData::PhysicalData &physicalData,
         const Settings                   &settings
     )
@@ -120,29 +110,7 @@ namespace out
 
         _prepare();
 
-        _writeSimulationTime(simulationTime);
-
-        _finish(physicalData, settings);
-    }
-
-    /**
-     * @brief write info file with effective step
-     *
-     * @param effectiveStep
-     * @param physicalData the physical data of the system
-     * @param settings the simulation settings
-     */
-    void InfoOutput::write(
-        double                            effectiveStep,
-        const physicalData::PhysicalData &physicalData,
-        const Settings                   &settings
-    )
-    {
-        auto _ = scopedTimer(TimerId::Output, "InfoOutput");
-
-        _prepare();
-
-        _writeEffectiveStep(effectiveStep);
+        _writeStep(step);
 
         _finish(physicalData, settings);
     }
@@ -159,44 +127,6 @@ namespace out
                           << '\n';
 
         _getFilePointer() << std::format("{:-^89}", "") << '\n';
-    }
-
-    /**
-     * @brief write left column of info file
-     *
-     * @param value
-     * @param name
-     * @param unit
-     */
-    void InfoOutput::_writeLeft(
-        double                  value,
-        const std::string_view &name,
-        const std::string_view &unit
-    )
-    {
-        _getFilePointer(
-        ) << std::format("|   {:<15} {:15.5f} {:<8} ", name, value, unit);
-    }
-
-    /**
-     * @brief write left column of info file
-     *
-     * @param value
-     * @param name
-     * @param unit
-     */
-    void InfoOutput::_writeLeftInteger(
-        double                  value,
-        const std::string_view &name,
-        const std::string_view &unit
-    )
-    {
-        _getFilePointer() << std::format(
-            "|   {:<15} {:15d} {:<8} ",
-            name,
-            static_cast<int>(value),
-            unit
-        );
     }
 
     /**

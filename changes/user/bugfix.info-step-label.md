@@ -1,0 +1,1 @@
+- The first entry of the `.info` file is now the step number in `step`, like the first column of the `.en` file; it was the simulation time in ps, and optimizations wrote `EFFECTIVE STEPS` (#1292).

@@ -61,7 +61,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(100, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -87,7 +87,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldNotActive)
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
+        "|   SIMULATION-TIME             100 step     TEMPERATURE             "
         "1.00000 K          |"
     );
     std::getline(file, line);
@@ -149,7 +149,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(100, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -175,7 +175,7 @@ TEST_F(TestEnergyOutput, writeInfoForceFieldActive)
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
+        "|   SIMULATION-TIME             100 step     TEMPERATURE             "
         "1.00000 K          |"
     );
     std::getline(file, line);
@@ -249,7 +249,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(100, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -275,7 +275,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActive)
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
+        "|   SIMULATION-TIME             100 step     TEMPERATURE             "
         "1.00000 K          |"
     );
     std::getline(file, line);
@@ -344,7 +344,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     settings::GeneralSettings::setJobtype(JobType::MM_MD);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(100, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -370,7 +370,7 @@ TEST_F(TestEnergyOutput, writeInfoManostatIsActiveWithFixedAxis)
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
+        "|   SIMULATION-TIME             100 step     TEMPERATURE             "
         "1.00000 K          |"
     );
     std::getline(file, line);
@@ -445,7 +445,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(100, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -471,7 +471,7 @@ TEST_F(TestEnergyOutput, writeInfoQmIsActive)
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
+        "|   SIMULATION-TIME             100 step     TEMPERATURE             "
         "1.00000 K          |"
     );
     std::getline(file, line);
@@ -534,7 +534,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     );
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(100, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");
@@ -560,7 +560,7 @@ TEST_F(TestEnergyOutput, writeInfoNoseHooverActive)
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "|   SIMULATION-TIME       100.00000 ps       TEMPERATURE             "
+        "|   SIMULATION-TIME             100 step     TEMPERATURE             "
         "1.00000 K          |"
     );
     std::getline(file, line);
@@ -622,7 +622,7 @@ TEST_F(TestEnergyOutput, writeInfoQmmmSubtractsQMReferenceEnergy)
     _settings->thermostatSettings.setThermostatTypeByUser(ThermostatType::NONE);
 
     _infoOutput->setFilename("default.info", false);
-    _infoOutput->write(100.0 * ps, *_physicalData, *_settings);
+    _infoOutput->write(100, *_physicalData, *_settings);
     _infoOutput->close();
 
     std::ifstream file("default.info");

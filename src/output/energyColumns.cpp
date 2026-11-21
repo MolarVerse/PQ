@@ -307,7 +307,7 @@ namespace out
      */
     std::string energyFileHeader(const EnergyColumns &columns)
     {
-        auto header = std::format("#{}", energyStepLabel);
+        auto header = std::format("#{}[{}]", energyStepName, energyStepUnit);
 
         for (const auto &column : columns.get())
         {

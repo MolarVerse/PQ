@@ -166,9 +166,10 @@ Info File
 
 **File Type:** ``.info``
 
-Stores information about various quantities of the system and their units for the last frame calculated. The quantities are identical 
-to those in the ``.en`` file (described under section :ref:`energyFile`), except the first entry which is the total simulation time 
-in ps instead of the step number. Entries in the ``.info`` file are read from left to right and top to bottom.
+Stores information about various quantities of the system and their units for the last frame calculated. The quantities, their names
+and units are identical to those in the ``.en`` file (described under section :ref:`energyFile`), including the first entry
+``SIMULATION-TIME`` in ``step``. Multiply it by the time step to get the simulation time. Entries in the ``.info`` file are read
+from left to right and top to bottom.
 
 .. _hessianFile:
 
