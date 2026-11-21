@@ -182,7 +182,10 @@ TEST_F(
     ASSERT_FALSE(rpmdRestartFileExists());
 
     mpi::MPI::setRank(1);
-    _engine->writeOutput(_settings->outputFiles);
+    _engine->writeOutput(
+        _settings->generalSettings.getJobtype(),
+        _settings->outputFiles
+    );
     mpi::MPI::setRank(0);
 
     EXPECT_FALSE(rpmdRestartFileExists());
