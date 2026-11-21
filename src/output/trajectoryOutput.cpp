@@ -214,11 +214,13 @@ namespace out
         _buffer.clear();
 
         for (const auto &atom : frame.atoms)
+        {
             appendFixedLine(
                 _buffer,
                 atom.name,
                 atom.force.numerical_value_in(kcal_per_mol / angstrom)
             );
+        }
 
         _flushBuffer();
     }
