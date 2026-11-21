@@ -231,22 +231,22 @@ TEST_F(TestIntraNonBondedMap, calculateSingleInteractionAndCalculate)
     );
 
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         -67.242901903583757 * 0.75,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getIntraCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_intraCoulombEnergy().numerical_value_in(kcal_per_mol),
         -67.242901903583757 * 0.75,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         5.0 * 0.75,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getIntraNonCoulombEnergy().numerical_value_in(
+        physicalData.get_intraNonCoulombEnergy().numerical_value_in(
             kcal_per_mol
         ),
         5.0 * 0.75,

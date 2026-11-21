@@ -175,7 +175,7 @@ namespace
         simulationBox.setBox(orthoBox, false);
         simulationBox.setTotalMass(2.0 * g_per_mol);
 
-        physicalData.setVirial(VirialPerMol::zero());
+        physicalData.set_virial(VirialPerMol::zero());
         physicalData.setKineticEnergyMolecularVector(
             diagonalMatrix(linalg::Vec3D(0.0)) * kcal_per_mol
         );
@@ -283,11 +283,11 @@ TEST_F(TestManostat, CalculatePressure)
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(
-        _data->getPressure().numerical_value_in(bar),
+        _data->get_pressure().numerical_value_in(bar),
         3.0 * PRESSURE_FACTOR
     );
     EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure().numerical_value_in(bar),
+        _data->get_coupledPressure().numerical_value_in(bar),
         3.0 * PRESSURE_FACTOR
     );
 }
@@ -303,11 +303,11 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(
-        _data->getPressure().numerical_value_in(bar),
+        _data->get_pressure().numerical_value_in(bar),
         3.0 * PRESSURE_FACTOR
     );
     EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure().numerical_value_in(bar),
+        _data->get_coupledPressure().numerical_value_in(bar),
         2.25 * PRESSURE_FACTOR
     );
 
@@ -315,7 +315,7 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(
-        _data->getCoupledPressure().numerical_value_in(bar),
+        _data->get_coupledPressure().numerical_value_in(bar),
         3.0 * PRESSURE_FACTOR
     );
 
@@ -332,7 +332,7 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(
-        _data->getPressure().numerical_value_in(bar),
+        _data->get_pressure().numerical_value_in(bar),
         2.0 * PRESSURE_FACTOR
     );
 
@@ -383,7 +383,7 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
     auto boxNew = _box->getBoxDimensions();
 
     EXPECT_DOUBLE_EQ(
-        _data->getPressure().numerical_value_in(bar),
+        _data->get_pressure().numerical_value_in(bar),
         0.75 * PRESSURE_FACTOR
     );
     EXPECT_NEAR(
@@ -535,7 +535,7 @@ TEST_F(
 
     _manostat->calculatePressure(*_box, *_data);
     const auto timeStep = 0.5 * fs;
-    _settings->manostatSettings.setTargetPressureByUser(_data->getPressure());
+    _settings->manostatSettings.setTargetPressureByUser(_data->get_pressure());
     _settings->manostatSettings.setTauByUser(0.1 * fs);
     _settings->manostatSettings.setCompressibilityByUser(4.5 * per_bar);
     _manostat = std::make_unique<manostat::BerendsenManostat>(
@@ -572,7 +572,7 @@ TEST_F(TestManostat, applyNoneManostat)
     );
 
     EXPECT_DOUBLE_EQ(
-        _data->getPressure().numerical_value_in(bar),
+        _data->get_pressure().numerical_value_in(bar),
         3.0 * PRESSURE_FACTOR
     );
 }
@@ -609,7 +609,7 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     };
     _box->setBox(orthoBox, false);
 
-    _data->setVirial(VirialPerMol::zero());
+    _data->set_virial(VirialPerMol::zero());
     _data->setKineticEnergyMolecularVector(VirialPerMol::zero());
 
     auto molecule = molsys::Molecule();

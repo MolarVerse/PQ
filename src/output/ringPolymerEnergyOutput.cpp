@@ -50,7 +50,7 @@ namespace out
             dataVector.end(),
             EnergyPerMol::zero(),
             [](const auto &sum, const auto &data)
-            { return sum + data.getRingPolymerEnergy(); }
+            { return sum + data.get_ringPolymerEnergy(); }
         );
     }
 
@@ -69,10 +69,10 @@ namespace out
                    dataVector,
                    [](const auto &lhs, const auto &rhs)
                    {
-                       return lhs.getRingPolymerEnergy() <
-                              rhs.getRingPolymerEnergy();
+                       return lhs.get_ringPolymerEnergy() <
+                              rhs.get_ringPolymerEnergy();
                    }
-        )->getRingPolymerEnergy();
+        )->get_ringPolymerEnergy();
     }
 
     /**
@@ -117,7 +117,9 @@ namespace out
             {
                 _getFilePointer() << std::format(
                     "{:20.12f}\t",
-                    data.getRingPolymerEnergy().numerical_value_in(kcal_per_mol)
+                    data.get_ringPolymerEnergy().numerical_value_in(
+                        kcal_per_mol
+                    )
                 );
             }
         );

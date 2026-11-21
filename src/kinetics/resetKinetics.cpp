@@ -67,9 +67,9 @@ namespace kinetics
     {
         auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
 
-        auto momentum        = physicalData.getMomentum();
-        auto angularMomentum = physicalData.getAngularMomentum();
-        auto temperature     = physicalData.getTemperature();
+        auto momentum        = physicalData.get_momentum();
+        auto angularMomentum = physicalData.get_angularMomentum();
+        auto temperature     = physicalData.get_temperature();
 
         auto resetTemp = (step <= _settings->getNScale());
         resetTemp      = resetTemp || (0 == step % _settings->getFScale());
@@ -107,9 +107,9 @@ namespace kinetics
             angularMomentum = simulationBox.calculateAngularMomentum(momentum);
         }
 
-        physicalData.setTemperature(temperature);
-        physicalData.setMomentum(momentum);
-        physicalData.setAngularMomentum(angularMomentum);
+        physicalData.set_temperature(temperature);
+        physicalData.set_momentum(momentum);
+        physicalData.set_angularMomentum(angularMomentum);
     }
 
     /**
@@ -274,9 +274,9 @@ namespace kinetics
             return std::nullopt;
         }
 
-        const auto &momentum = physicalData.getMomentum();
+        const auto &momentum = physicalData.get_momentum();
         const auto  temperature =
-            physicalData.getTemperature().quantity_from_zero();
+            physicalData.get_temperature().quantity_from_zero();
         const auto nAtoms =
             static_cast<double>(simulationBox.getNumberOfAtoms());
 
