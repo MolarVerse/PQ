@@ -113,8 +113,6 @@ namespace molsys
         [[nodiscard]] double              getMolMass() const;
         [[nodiscard]] std::vector<double> getPartialCharges() const;
 
-        [[nodiscard]] bool isMMMolecule() const;
-
         void setPartialCharges(const std::vector<double> &partialCharges);
         void setAtomForcesToZero();
         void activateMolecule();

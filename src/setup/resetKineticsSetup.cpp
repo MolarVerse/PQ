@@ -40,7 +40,7 @@ namespace setup
      */
     void setupResetKinetics(engine::Engine &engine)
     {
-        if (!GeneralSettings::isMDJobType())
+        if (!isMDJobType(engine.getSettings().generalSettings.getJobtype()))
             return;
 
         out::StdoutOutput::writeSetup("Reset Kinetics");

@@ -138,7 +138,7 @@ namespace physicalData
      */
     void PhysicalData::updateAverages(const PhysicalData& other)
     {
-        _numberOfQMAtoms += other.getNumberOfQMAtoms();
+        _numberOfQMAtoms += other.getNumberOfActiveAtoms();
         _loopTime        += other.getLoopTime();
 
         _coulombEnergy         += other.getCoulombEnergy();

@@ -47,9 +47,9 @@ namespace QM
         const std::string fileName = "coords.xyz";
         std::ofstream     coordsFile(fileName);
 
-        coordsFile << simulationBox.getNumberOfQMAtoms() << "\n\n";
+        coordsFile << simulationBox.getNumberOfActiveAtoms() << "\n\n";
 
-        for (const auto &atom : simulationBox.getQMAtoms())
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
             coordsFile << std::format(
                 "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",

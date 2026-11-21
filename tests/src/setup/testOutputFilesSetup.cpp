@@ -69,7 +69,7 @@ namespace
 TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
 {
     cleanupPrefix();
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -93,7 +93,7 @@ TEST_F(TestSetup, setupOutputFilesOptJobReplaceDefaultsAndAssignsOptFile)
 TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
 {
     cleanupPrefix();
-    GeneralSettings::setJobtype(JobType::QMMM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -114,7 +114,7 @@ TEST_F(TestSetup, setupOutputFilesHybridPathAssignsCenterFile)
 TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
 {
     cleanupPrefix();
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setTimeStepByUser(0.5 * fs);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -139,7 +139,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathPreservesLegacyEnergyFormatByDefault)
 TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
 {
     cleanupPrefix();
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setIncludeOutputMetadataByUser(true);
     _settings->timings.setTimeStepByUser(0.5 * fs);
@@ -169,7 +169,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathWritesEnabledMetadata)
 TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 {
     cleanupPrefix();
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::EXTXYZ);
     _settings->timings.setNumberOfStepsByUser(100U);
@@ -194,7 +194,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathExtxyzReplacesTrajectoryFiles)
 TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
 {
     cleanupPrefix();
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->outputFiles.setTrajectoryFormatByUser(TrajectoryFormat::H5MD);
     _settings->timings.setTimeStepByUser(0.5 * fs);
@@ -230,7 +230,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathH5mdReplacesTrajectoryFiles)
 TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
 {
     cleanupPrefix();
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->outputFiles.setFilePrefixByUser(PREFIX);
     _settings->timings.setNumberOfStepsByUser(100U);
 

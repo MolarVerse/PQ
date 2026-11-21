@@ -46,7 +46,7 @@ namespace setup
      */
     void setupManostat(engine::Engine &engine)
     {
-        if (!GeneralSettings::isMDJobType())
+        if (!isMDJobType(engine.getSettings().generalSettings.getJobtype()))
             return;
 
         out::StdoutOutput::writeSetup("Manostat");

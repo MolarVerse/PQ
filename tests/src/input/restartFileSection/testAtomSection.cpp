@@ -187,7 +187,7 @@ TEST_F(TestAtomSection, testProcess)
 
     _section->process(line, *_engine, lineNumber);
 
-    GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     EXPECT_EQ(_engine->getSimulationBox().getMolecules().size(), 3);
 
@@ -218,7 +218,7 @@ TEST_F(TestAtomSection, testProcess)
         3
     );
 
-    EXPECT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 10);
+    EXPECT_EQ(_engine->getSimulationBox().getNumberOfActiveAtoms(), 10);
 }
 
 TEST_F(TestAtomSection, testProcessAtomLine)
@@ -263,11 +263,11 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
 
     _processQMAtomLine(line, _engine->getSimulationBox());
 
-    GeneralSettings::setJobtype(JobType::QM_MD);
-    auto atoms      = _engine->getSimulationBox().getQMAtoms();
+    _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
+    auto atoms      = _engine->getSimulationBox().getActiveAtoms();
     auto first_atom = *atoms.begin();
 
-    ASSERT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 1);
+    ASSERT_EQ(_engine->getSimulationBox().getNumberOfActiveAtoms(), 1);
     ASSERT_THAT(
         first_atom->getPosition(),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))

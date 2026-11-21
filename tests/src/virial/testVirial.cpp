@@ -94,17 +94,14 @@ TEST_F(TestVirial, intramolecularCorrection)
 
 TEST_F(TestVirial, calculateQMVirialWithNoQMAtomsIsZero)
 {
-    // an MM-only jobtype makes every atom non-QM regardless of its
-    // isActive() state
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    for (auto &molecule : _simBox->getMolecules())
+        molecule.deactivateMolecule();
 
     EXPECT_EQ(virial::calculateQMVirial(*_simBox), linalg::tensor3D{0.0});
 }
 
 TEST_F(TestVirial, calculateQMVirialSumsOnlyQMAtomContributions)
 {
-    GeneralSettings::setJobtype(JobType::QM_MD);
-
     const auto &molecule0 = _simBox->getMolecule(0);
     const auto &molecule1 = _simBox->getMolecule(1);
 

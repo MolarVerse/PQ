@@ -52,7 +52,7 @@ class TestInputValidation : public ::testing::Test
 
     void SetUp() override
     {
-        GeneralSettings::setJobtype(static_cast<JobType>(0));
+        _settings.generalSettings.setJobtypeByUser(static_cast<JobType>(0));
 
         _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
 
@@ -105,7 +105,7 @@ class TestInputValidation : public ::testing::Test
 
     void _configureMDJob(const JobType jobType)
     {
-        GeneralSettings::setJobtype(jobType);
+        _settings.generalSettings.setJobtypeByUser(jobType);
         _settings.timings.setNumberOfStepsByUser(100U);
         _setKeyword("nstep");
         _setKeyword("timestep");
@@ -127,7 +127,7 @@ class TestInputValidation : public ::testing::Test
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 {
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _setKeyword("timestep");
 
     ASSERT_THROW_MSG(
@@ -139,7 +139,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),
@@ -150,7 +150,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForOptimization)
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 {
-    GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
     _settings.hessianSettings.setOptimizeBeforeHessianByUser(true);
 
     ASSERT_THROW_MSG(
@@ -162,7 +162,7 @@ TEST_F(TestInputValidation, requiresNumberOfStepsForPreoptimizedHessian)
 
 TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
 {
-    GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
 
     EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
 }
@@ -173,7 +173,7 @@ TEST_F(TestInputValidation, hessianWithoutOptimizationNeedsNoTimings)
  */
 TEST_F(TestInputValidation, hessianWithoutOptimizationRunsWithUnsetTimings)
 {
-    GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
     _settings.timings = TimingsSettings();
 
     EXPECT_NO_THROW(_finalizeAndValidate());
@@ -185,7 +185,7 @@ TEST_F(TestInputValidation, hessianWithoutOptimizationRunsWithUnsetTimings)
  */
 TEST_F(TestInputValidation, optimizationRunsWithoutTimeStep)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings = TimingsSettings();
     _settings.timings.setNumberOfStepsByUser(100U);
     _setKeyword("nstep");
@@ -200,7 +200,7 @@ TEST_F(TestInputValidation, optimizationRunsWithoutTimeStep)
  */
 TEST_F(TestInputValidation, manostatDoesNotNeedTimeStepOutsideMD)
 {
-    GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
     _settings.timings = TimingsSettings();
     _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _setKeyword("pressure");
@@ -210,7 +210,7 @@ TEST_F(TestInputValidation, manostatDoesNotNeedTimeStepOutsideMD)
 
 TEST_F(TestInputValidation, requiresTimeStepForMD)
 {
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _setKeyword("nstep");
 
     ASSERT_THROW_MSG(
@@ -248,7 +248,7 @@ TEST_F(TestInputValidation, rejectsUnstableManostatRelaxationTime)
 
 TEST_F(TestInputValidation, requiresQMProgramForQMJob)
 {
-    GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
     _setKeyword("nstep");
     _setKeyword("timestep");
 
@@ -704,7 +704,7 @@ TEST_F(TestInputValidation, acceptsValidConditionalKeywords)
 
 TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT_DECAY
@@ -721,7 +721,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
 
 TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::EXPONENTIAL_DECAY
@@ -738,7 +738,7 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
 
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT
@@ -751,7 +751,7 @@ TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
 
 TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::LINESEARCH_WOLFE
@@ -767,7 +767,7 @@ TEST_F(TestInputValidation, rejectsUnimplementedLineSearchOptimization)
 
 TEST_F(TestInputValidation, rejectsOverlappingLearningRateBounds)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
     _settings.optimizerSettings.setLearningRateStrategyByUser(
         LearningRate::CONSTANT

@@ -35,7 +35,10 @@
  *
  * @param jobtype
  */
-void GeneralSettings::setJobtype(JobType jobtype) { _jobtype = jobtype; }
+void GeneralSettings::setJobtypeByUser(JobType jobtype)
+{
+    _jobtype.setByUser(jobtype);
+}
 
 /**
  * @brief sets the floating point type
@@ -125,7 +128,17 @@ size_t GeneralSettings::getNumberOfCells() { return _numberOfCells; }
  *
  * @return JobType
  */
-JobType GeneralSettings::getJobtype() { return _jobtype; }
+JobType GeneralSettings::getJobtype() const { return _jobtype.get(); }
+
+/**
+ * @brief checks if the jobtype has been set by the user
+ *
+ * @return true if set by user, false otherwise
+ */
+bool GeneralSettings::isJobtypeSetByUser() const
+{
+    return _jobtype.isSetByUser();
+}
 
 /**
  * @brief get the floating point type
@@ -187,94 +200,6 @@ IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
  * standard is-active methods *
  *                            *
  ******************************/
-
-/**
- * @brief Returns true if the jobtype does not use any MM type simulations
- *
- * @return true/false if the jobtype does not use any MM type simulations
- *
- */
-bool GeneralSettings::isQMOnlyJobtype()
-{
-    return (_jobtype & JobType::QM_MM) == JobType::QM;
-}
-
-/**
- * @brief Returns true if the jobtype does not use any QM type simulations
- *
- * @return true/false if the jobtype does not use any QM type simulations
- *
- */
-bool GeneralSettings::isMMOnlyJobtype()
-{
-    return (_jobtype & JobType::QM_MM) == JobType::MM;
-}
-
-/**
- * @brief Returns true if the jobtype is a hybrid type simulation
- *
- * @return true/false if the jobtype is a hybrid type simulation
- *
- */
-bool GeneralSettings::isHybridJobtype()
-{
-    return (_jobtype & JobType::QM_MM) == JobType::QM_MM;
-}
-
-/**
- * @brief Returns true if the jobtype performs an MD simulation
- *
- * @return true/false
- *
- */
-bool GeneralSettings::isMDJobType()
-{
-    return (_jobtype & JobType::MD) == JobType::MD;
-}
-
-/**
- * @brief Returns true if the jobtype does is based on optimization
- *
- * @return true/false
- *
- */
-bool GeneralSettings::isOptJobType()
-{
-    return (_jobtype & JobType::OPT) == JobType::OPT;
-}
-
-/**
- * @brief Returns true if the MM simulations are activated
- *
- * @return true/false
- *
- */
-bool GeneralSettings::isMMActivated()
-{
-    return (_jobtype & JobType::MM) == JobType::MM;
-}
-
-/**
- * @brief Returns true if the QM simulations are activated
- *
- * @return true/false
- *
- */
-bool GeneralSettings::isQMActivated()
-{
-    return (_jobtype & JobType::QM) == JobType::QM;
-}
-
-/**
- * @brief Returns true if the ring polymer MD simulations are activated
- *
- * @return true/false
- *
- */
-bool GeneralSettings::isRingPolymerMDActivated()
-{
-    return (_jobtype & JobType::RING_POLYMER) == JobType::RING_POLYMER;
-}
 
 /**
  * @brief Returns true if the cell list is activated

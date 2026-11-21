@@ -47,13 +47,14 @@ namespace
     void validateThermostat(
         const ThermostatSettings& thermostatSettings,
         const KineticsSettings&   kinetics,
-        const TimingsSettings&    timings
+        const TimingsSettings&    timings,
+        const GeneralSettings&    generalSettings
     )
     {
         const auto thermostatType = thermostatSettings.getThermostatType();
         const auto hasRamp        = kinetics.isStartTemperatureSet();
 
-        if (GeneralSettings::isMDJobType() &&
+        if (isMDJobType(generalSettings.getJobtype()) &&
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
@@ -148,14 +149,14 @@ namespace
 void Settings::finalize()
 {
     kinetics.finalize(timings.getNumberOfSteps());
-    potentialSettings.finalize();
+    potentialSettings.finalize(generalSettings.getJobtype());
     resetKinetics.finalize(timings.getNumberOfSteps());
     manostatSettings.finalize(referenceSettings);
     outputFiles.finalize();
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
     thermostatSettings.finalize(referenceSettings);
-    hybridSettings.finalize(fileSettings);
+    hybridSettings.finalize(fileSettings, generalSettings.getJobtype());
 
     const auto& qmMethod = qmSettings.getQMMethod();
 
@@ -186,5 +187,5 @@ void Settings::finalize()
  */
 void Settings::validate() const
 {
-    validateThermostat(thermostatSettings, kinetics, timings);
+    validateThermostat(thermostatSettings, kinetics, timings, generalSettings);
 }

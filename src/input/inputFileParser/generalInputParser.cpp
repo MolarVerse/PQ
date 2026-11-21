@@ -81,12 +81,15 @@ namespace input
      * 1) mm-md
      * 2) qm-md
      *
+     * @param generalSettings Reference to the general settings object where the
+     * job type will be set.
      * @param lineElements
      * @param lineNumber
      *
      * @throw exc::InputFileException if jobtype is not recognised
      */
     void GeneralInputParser::parseJobTypeForEngine(
+        GeneralSettings                &generalSettings,
         const std::vector<std::string> &lineElements,
         size_t                          lineNumber
     )
@@ -113,7 +116,7 @@ namespace input
             ));
         }
 
-        GeneralSettings::setJobtype(jobTypeEnum.value());
+        generalSettings.setJobtypeByUser(jobTypeEnum.value());
     }
 
     void GeneralInputParser::addDimensionalityKey()

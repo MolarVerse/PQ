@@ -58,7 +58,7 @@ namespace
         engine::Engine &engine
     )
     {
-        GeneralSettings::setJobtype(JobType::QMMM_MD);
+        settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
         settings.hybridSettings.setForcedCoreListByUser({});
         settings.hybridSettings.setForcedLayerListByUser({});
@@ -79,7 +79,8 @@ namespace
 
 TEST_F(TestSetup, setupHybridIsNoOpWhenQMMMNotActive)
 {
-    GeneralSettings::setJobtype(JobType::MM_MD);   // not QMMM_MD
+    // not QMMM_MD
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     EXPECT_NO_THROW(setup::setupHybrid(*_engine));
 }
 

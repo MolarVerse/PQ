@@ -148,7 +148,7 @@ TEST_F(TestInputFileReader, testReadFileNotFound)
 TEST_F(TestInputFileReader, testReadInputFileFunction)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(filename, _settings));
 }
 
@@ -166,7 +166,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldMissingEpsilon)
         inputFile << "long_range = reaction-field;\n";
     }
 
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     ASSERT_THROW_MSG(
         input::readInputFile(_fileName, _settings),
@@ -192,7 +192,7 @@ TEST_F(TestInputFileReader, testReadInputFileReactionFieldWithEpsilon)
         inputFile << "rf_epsilon = 80.0;\n";
     }
 
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     ASSERT_NO_THROW(input::readInputFile(_fileName, _settings));
     EXPECT_EQ(
         _settings.potentialSettings.getCoulombLongRangeType(),
@@ -323,19 +323,20 @@ TEST_F(TestInputFileReader, testMoldescriptorFileProcess)
 TEST_F(TestInputFileReader, testReadJobType)
 {
     std::string filename = "data/inputFileReader/inputFile.txt";
-    ASSERT_EQ(input::readJobType(filename), JobType::MM_MD);
-    EXPECT_EQ(GeneralSettings::getJobtype(), JobType::MM_MD);
+    ASSERT_NO_THROW(input::readJobType(_settings.generalSettings, filename));
+    EXPECT_EQ(_settings.generalSettings.getJobtype(), JobType::MM_MD);
 
     filename = "fileNotFound";
     ASSERT_THROW_MSG(
-        const auto _ = input::readJobType(filename),
+        input::readJobType(_settings.generalSettings, filename),
         exc::InputFileException,
         "\"fileNotFound\" File not found"
     );
 
-    filename = "data/inputFileReader/missingJobType.txt";
+    _settings.generalSettings = GeneralSettings{};
+    filename                  = "data/inputFileReader/missingJobType.txt";
     ASSERT_THROW_MSG(
-        const auto _ = input::readJobType(filename),
+        input::readJobType(_settings.generalSettings, filename),
         exc::InputFileException,
         "Missing keyword \"jobtype\" in input file"
     );
@@ -365,7 +366,7 @@ TEST_F(TestInputFileReader, testAllKeywordsAcceptValidValue)
     // explicitly so this test does not depend on whatever job type a
     // previously run test left behind in the shared, static
     // GeneralSettings state.
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     for (size_t i = 0; i < keywordsRef.size(); ++i)
     {

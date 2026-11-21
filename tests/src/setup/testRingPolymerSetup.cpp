@@ -308,11 +308,10 @@ TEST_F(
     ringPolymerSetupRunsAllStepsAndTheWrapperUsesRingPolymerEngine
 )
 {
-    Settings settings;
-    GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
-    settings.ringPolymerSettings.setNumberOfBeadsByUser(2);
-    settings.kinetics.setStartTemperatureByUser(toTemperature(300.0));
-    engine::RingPolymerQMMDEngine rpEngine{settings};
+    _settings->generalSettings.setJobtypeByUser(JobType::RING_POLYMER_QM_MD);
+    _settings->ringPolymerSettings.setNumberOfBeadsByUser(2);
+    _settings->kinetics.setStartTemperatureByUser(toTemperature(300.0));
+    engine::RingPolymerQMMDEngine rpEngine{*_settings};
     fillEngineBox(rpEngine);
 
     EXPECT_NO_THROW(setup::setupRingPolymer(rpEngine));

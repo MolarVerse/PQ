@@ -446,7 +446,10 @@ namespace physicalData
      *
      * @return double
      */
-    double PhysicalData::getNumberOfQMAtoms() const { return _numberOfQMAtoms; }
+    double PhysicalData::getNumberOfActiveAtoms() const
+    {
+        return _numberOfQMAtoms;
+    }
 
     /**
      * @brief get the loop time

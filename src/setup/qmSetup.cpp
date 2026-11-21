@@ -86,7 +86,7 @@ namespace setup
      */
     void setupQM(engine::Engine &engine)
     {
-        if (!GeneralSettings::isQMActivated())
+        if (!isQMActivated(engine.getSettings().generalSettings.getJobtype()))
             return;
 
         out::StdoutOutput::writeSetup("QM runner");

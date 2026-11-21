@@ -136,9 +136,9 @@ namespace molsys
      *
      * @return size_t
      */
-    size_t SimulationBox::getNumberOfQMAtoms() const
+    size_t SimulationBox::getNumberOfActiveAtoms() const
     {
-        return static_cast<size_t>(std::ranges::distance(getQMAtoms()));
+        return static_cast<size_t>(std::ranges::distance(getActiveAtoms()));
     }
 
     /**
@@ -146,10 +146,10 @@ namespace molsys
      *
      * @return set<string>
      */
-    std::set<std::string> SimulationBox::getUniqueQMAtomNames() const
+    std::set<std::string> SimulationBox::getUniqueActiveAtomNames() const
     {
         std::set<std::string> uniqueQMAtomNames;
-        for (const auto &atom : getQMAtoms())
+        for (const auto &atom : getActiveAtoms())
             uniqueQMAtomNames.insert(atom->getName());
         return uniqueQMAtomNames;
     }
@@ -411,11 +411,11 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::getFlattenedQMPositions() const
+    std::vector<double> SimulationBox::getFlattenedActiveAtomPositions() const
     {
         std::vector<double> positions;
 
-        auto addPositions = [&positions](auto &atom)
+        auto addPositions = [&positions](const auto &atom)
         {
             const auto position = atom->getPosition();
 
@@ -424,7 +424,7 @@ namespace molsys
             positions.push_back(position[2]);
         };
 
-        std::ranges::for_each(getQMAtoms(), addPositions);
+        std::ranges::for_each(getActiveAtoms(), addPositions);
 
         return positions;
     }

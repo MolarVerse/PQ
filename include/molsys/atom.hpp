@@ -109,8 +109,6 @@ namespace molsys
          ***************************/
 
         [[nodiscard]] bool isActive() const;
-        [[nodiscard]] bool isQMAtom() const;
-        [[nodiscard]] bool isMMAtom() const;
 
         [[nodiscard]] const std::string &getName() const { return _name; }
         [[nodiscard]] std::string        getAtomTypeName() const;

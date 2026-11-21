@@ -54,7 +54,7 @@ namespace QM
 
         coordsFile << "$coord\n";
 
-        for (const auto &atom : simulationBox.getQMAtoms())
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
             const auto pos = atom->getPosition() * ANGSTROM_TO_BOHR;
 

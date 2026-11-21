@@ -41,12 +41,14 @@
  */
 TEST_F(TestInputFileReader, testParseIntegrator)
 {
-    ReferenceSettings referenceSettings;
     // NOTE: this is only used because of this nonsense requirement in the input
     // file parse after all of the reworks this can be removed (HOPEFULLY)
-    GeneralSettings::setJobtype(JobType::MM_MD);
-    input::IntegratorInputParser parser(referenceSettings);
-    const auto                   funcMap = parser.getKeywordFuncMap();
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
+    input::IntegratorInputParser parser(
+        _settings.referenceSettings,
+        _settings.generalSettings
+    );
+    const auto funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("integrator"));
     const auto &parseFunc = funcMap.at("integrator");
 
@@ -58,7 +60,7 @@ TEST_F(TestInputFileReader, testParseIntegrator)
         GeneralSettings::getIntegratorType(),
         IntegratorType::VELOCITY_VERLET
     );
-    EXPECT_TRUE(referenceSettings.getReferenceFileNames().contains(
+    EXPECT_TRUE(_settings.referenceSettings.getReferenceFileNames().contains(
         ReferenceFiles::VELOCITY_VERLET_FILE
     ));
 

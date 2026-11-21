@@ -149,7 +149,7 @@ namespace waterModel
             if (water1.getMoltype() != waterTypeValue)
                 continue;
 
-            for (auto &water2 : simulationBox.getMMMolecules())
+            for (auto &water2 : simulationBox.getActiveMolecules())
             {
                 if (water2.getMoltype() != waterTypeValue)
                     continue;
@@ -234,7 +234,7 @@ namespace waterModel
             if (water1.getMoltype() != waterTypeValue)
                 continue;
 
-            for (auto &water2 : simulationBox.getMMMolecules())
+            for (auto &water2 : simulationBox.getActiveMolecules())
             {
                 if (water2.getMoltype() != waterTypeValue)
                     continue;

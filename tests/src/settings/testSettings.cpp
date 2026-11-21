@@ -40,20 +40,21 @@ TEST(TestSettings, setJobtypeTest)
 {
     using enum JobType;
 
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::getJobtype(), MM_MD);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(generalSettings.getJobtype(), MM_MD);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::getJobtype(), QM_MD);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(generalSettings.getJobtype(), QM_MD);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::getJobtype(), RING_POLYMER_QM_MD);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(generalSettings.getJobtype(), RING_POLYMER_QM_MD);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::getJobtype(), QMMM_MD);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(generalSettings.getJobtype(), QMMM_MD);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::getJobtype(), MM_OPT);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(generalSettings.getJobtype(), MM_OPT);
 }
 
 TEST(TestSettings, setFloatingPointTypeTest)
@@ -97,151 +98,159 @@ TEST(TestSettings, setDimensionalityTest)
 TEST(TestSettings, isQMOnlyJobtypeTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isQMOnlyJobtype(), false);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isQMOnlyJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isQMOnlyJobtype(), true);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isQMOnlyJobtype(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isQMOnlyJobtype(), true);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isQMOnlyJobtype(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isQMOnlyJobtype(), false);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isQMOnlyJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isQMOnlyJobtype(), false);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isQMOnlyJobtype(generalSettings.getJobtype()), false);
 }
 
 TEST(TestSettings, isMMOnlyJobtypeTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isMMOnlyJobtype(), true);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isMMOnlyJobtype(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isMMOnlyJobtype(), false);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isMMOnlyJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isMMOnlyJobtype(), false);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isMMOnlyJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isMMOnlyJobtype(), false);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isMMOnlyJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isMMOnlyJobtype(), true);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isMMOnlyJobtype(generalSettings.getJobtype()), true);
 }
 
 TEST(TestSettings, isHybridJobtypeTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isHybridJobtype(), false);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isHybridJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isHybridJobtype(), false);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isHybridJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isHybridJobtype(), false);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isHybridJobtype(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isHybridJobtype(), true);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isHybridJobtype(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isHybridJobtype(), false);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isHybridJobtype(generalSettings.getJobtype()), false);
 }
 
 TEST(TestSettings, isMDJobtypeTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isMDJobType(), true);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isMDJobType(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isMDJobType(), true);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isMDJobType(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isMDJobType(), true);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isMDJobType(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isMDJobType(), true);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isMDJobType(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isMDJobType(), false);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isMDJobType(generalSettings.getJobtype()), false);
 }
 
 TEST(TestSettings, isOptJobtypeTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isOptJobType(), false);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isOptJobType(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isOptJobType(), false);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isOptJobType(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isOptJobType(), false);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isOptJobType(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isOptJobType(), false);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isOptJobType(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isOptJobType(), true);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isOptJobType(generalSettings.getJobtype()), true);
 }
 
 TEST(TestSettings, isMMActivatedTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isMMActivated(), true);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isMMActivated(), false);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isMMActivated(), false);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isMMActivated(), true);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isMMActivated(), true);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isMMActivated(generalSettings.getJobtype()), true);
 }
 
 TEST(TestSettings, isQMActivatedTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isQMActivated(), false);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isQMActivated(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isQMActivated(), true);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isQMActivated(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isQMActivated(), true);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isQMActivated(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isQMActivated(), true);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isQMActivated(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isQMActivated(), false);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isQMActivated(generalSettings.getJobtype()), false);
 }
 
 TEST(TestSettings, isRingPolymerMDActivatedTest)
 {
     using enum JobType;
-    GeneralSettings::setJobtype(MM_MD);
-    EXPECT_EQ(GeneralSettings::isRingPolymerMDActivated(), false);
+    GeneralSettings generalSettings;
+    generalSettings.setJobtypeByUser(MM_MD);
+    EXPECT_EQ(isRingPolymerMDActivated(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(QM_MD);
-    EXPECT_EQ(GeneralSettings::isRingPolymerMDActivated(), false);
+    generalSettings.setJobtypeByUser(QM_MD);
+    EXPECT_EQ(isRingPolymerMDActivated(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(RING_POLYMER_QM_MD);
-    EXPECT_EQ(GeneralSettings::isRingPolymerMDActivated(), true);
+    generalSettings.setJobtypeByUser(RING_POLYMER_QM_MD);
+    EXPECT_EQ(isRingPolymerMDActivated(generalSettings.getJobtype()), true);
 
-    GeneralSettings::setJobtype(QMMM_MD);
-    EXPECT_EQ(GeneralSettings::isRingPolymerMDActivated(), false);
+    generalSettings.setJobtypeByUser(QMMM_MD);
+    EXPECT_EQ(isRingPolymerMDActivated(generalSettings.getJobtype()), false);
 
-    GeneralSettings::setJobtype(MM_OPT);
-    EXPECT_EQ(GeneralSettings::isRingPolymerMDActivated(), false);
+    generalSettings.setJobtypeByUser(MM_OPT);
+    EXPECT_EQ(isRingPolymerMDActivated(generalSettings.getJobtype()), false);
 }

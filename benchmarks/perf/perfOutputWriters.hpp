@@ -51,7 +51,6 @@
 #include "berendsenThermostat.hpp"
 #include "energyOutput.hpp"
 #include "frame.hpp"
-#include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "perfAlloc.hpp"
@@ -68,8 +67,6 @@ namespace benchOutputWriters
 
     inline int run(const std::size_t molecules, const std::uint64_t iterations)
     {
-        GeneralSettings::setJobtype(JobType::MM_MD);
-
         const auto perSide = static_cast<std::size_t>(
             std::ceil(std::cbrt(static_cast<double>(molecules)))
         );

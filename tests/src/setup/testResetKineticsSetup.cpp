@@ -30,13 +30,13 @@
 
 TEST_F(TestSetup, setupResetKineticsIsNoOpWhenNotMDJob)
 {
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_OPT);
     EXPECT_NO_THROW(setup::setupResetKinetics(*_engine));
 }
 
 TEST_F(TestSetup, setupResetKineticsPopulatesResetKineticsOnMDEngine)
 {
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->timings.setNumberOfStepsByUser(100);
 
     EXPECT_NO_THROW(setup::setupResetKinetics(*_mdEngine));
@@ -45,7 +45,7 @@ TEST_F(TestSetup, setupResetKineticsPopulatesResetKineticsOnMDEngine)
 
 TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
 {
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings->timings.setNumberOfStepsByUser(42);
 
     setup::ResetKineticsSetup setup(*_mdEngine);
@@ -54,7 +54,7 @@ TEST_F(TestSetup, setupConvertsZeroFrequenciesToNumberOfStepsPlusOne)
 
 TEST_F(TestSetup, setupAcceptsNonZeroFrequencies)
 {
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     setup::ResetKineticsSetup setup(*_mdEngine);
     EXPECT_NO_THROW(setup.setup());

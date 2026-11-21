@@ -90,7 +90,7 @@ namespace virial
 
         linalg::tensor3D virial = {0.0};
 
-        for (const auto &atom : simulationBox.getQMAtoms())
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
             const auto forcexyz = atom->getForce();
             const auto xyz      = atom->getPosition();

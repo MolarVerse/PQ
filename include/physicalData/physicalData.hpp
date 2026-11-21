@@ -198,7 +198,7 @@ namespace physicalData
          * standard getters *
          ********************/
 
-        [[nodiscard]] double getNumberOfQMAtoms() const;
+        [[nodiscard]] double getNumberOfActiveAtoms() const;
         [[nodiscard]] double getLoopTime() const;
 
         [[nodiscard]] double             getVolume() const;

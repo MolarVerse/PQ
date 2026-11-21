@@ -113,12 +113,9 @@ namespace
 
 TEST_F(TestSetup, setupManostatSkipsNonMDJobs)
 {
-    const auto jobType = GeneralSettings::getJobtype();
-    GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_OPT);
 
     EXPECT_NO_THROW(setup::setupManostat(*_engine));
-
-    GeneralSettings::setJobtype(jobType);
 }
 
 TEST_F(TestSetup, setupManostatNone)

@@ -100,9 +100,10 @@ class TestRingPolymerEngineOutputGating : public ::testing::Test
     {
         cleanupPrefix();
 
-        GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
-
         _settings = std::make_unique<Settings>();
+        _settings->generalSettings.setJobtypeByUser(
+            JobType::RING_POLYMER_QM_MD
+        );
         _settings->outputFiles.setFilePrefixByUser(PREFIX);
         _settings->outputFiles.setOutputFrequencyByUser(1);
         _settings->timings.setTimeStepByUser(0.5 * fs);
@@ -154,7 +155,10 @@ TEST_F(TestRingPolymerEngineOutputGating, rootRankWritesRingPolymerRstFile)
     removeRpmdRestartFile();
     ASSERT_FALSE(rpmdRestartFileExists());
 
-    _engine->writeOutput(_settings->outputFiles);
+    _engine->writeOutput(
+        _settings->generalSettings.getJobtype(),
+        _settings->outputFiles
+    );
 
     EXPECT_TRUE(rpmdRestartFileExists());
 }

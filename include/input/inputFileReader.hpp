@@ -48,6 +48,7 @@ class MaceSettings;            // forward declaration
 class DftbSettings;            // forward declaration
 class ThermostatSettings;      // forward declaration
 class KineticsSettings;        // forward declaration
+class GeneralSettings;         // forward declaration
 
 /**
  * @brief namespace for reading input files
@@ -55,10 +56,12 @@ class KineticsSettings;        // forward declaration
  */
 namespace input
 {
-    [[nodiscard]]
-    JobType readJobType(const std::string &fileName);
-    void    readInputFile(const std::string_view &fileName, Settings &settings);
-    void    processEqualSign(std::string &command, size_t lineNumber);
+    void readJobType(
+        GeneralSettings   &generalSettings,
+        const std::string &fileName
+    );
+    void readInputFile(const std::string_view &fileName, Settings &settings);
+    void processEqualSign(std::string &command, size_t lineNumber);
 
     /**
      * @class InputFileReader
@@ -136,13 +139,17 @@ namespace input
         ) const;
         void _validateManostat(
             const ManostatSettings &manostatSettings,
-            const TimingsSettings  &timings
+            const TimingsSettings  &timings,
+            JobType                 jobType
         ) const;
         void _validateReactionFieldCoulomb(
             CoulombLongRangeType longRangeCorrection
         ) const;
-        void        _validateRingPolymer() const;
-        static void _validateCellList(double coulombRadiusCutOff);
+        void        _validateRingPolymer(JobType jobtype) const;
+        static void _validateCellList(
+            double  coulombRadiusCutOff,
+            JobType jobType
+        );
     };
 
 }   // namespace input

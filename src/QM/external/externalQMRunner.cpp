@@ -33,6 +33,7 @@
 #include <string>
 #include <thread>
 
+#include "hybridSettings.hpp"
 #include "units.hpp"
 
 #if !defined(_WIN32)
@@ -48,7 +49,6 @@
 #include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
-#include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
 #include "qmSettings.hpp"
@@ -107,7 +107,7 @@ namespace
             {
                 ::sigaction(_signals.at(i), &action, &_previous.at(i));
 
-                // keep signals ignored by the caller (e.g. nohup) ignored
+                // keep signals ignored by the caller ignored
                 if (_previous.at(i).sa_handler == SIG_IGN)
                 {
                     ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
@@ -376,7 +376,7 @@ namespace QM
             );
         };
 
-        std::ranges::for_each(simulationBox.getQMAtoms(), readForces);
+        std::ranges::for_each(simulationBox.getActiveAtoms(), readForces);
 
         forceFile.close();
 
@@ -451,7 +451,7 @@ namespace QM
             atom->setQMCharge(charge);
         };
 
-        std::ranges::for_each(simulationBox.getQMAtoms(), readCharges);
+        std::ranges::for_each(simulationBox.getActiveAtoms(), readCharges);
 
         chargeFile.close();
     }
@@ -493,7 +493,7 @@ namespace QM
             _writeCoordsFile(simulationBox);
         }
 
-        if (GeneralSettings::isHybridJobtype())
+        if (hybridSettings.isActive())
         {
             auto _ = scopedTimer(TimerId::QMEngine, "Write Pointcharges");
             _writePointChargeFile(

@@ -72,12 +72,12 @@ namespace pot
         double totalNonCoulombEnergy = 0.0;
 
         size_t idxI = 0;
-        for (auto &mol1 : simulationBox.getMMMolecules())
+        for (auto &mol1 : simulationBox.getActiveMolecules())
         {
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
             size_t idxJ = 0;
-            for (auto &mol2 : simulationBox.getMMMolecules())
+            for (auto &mol2 : simulationBox.getActiveMolecules())
             {
                 MSTD_HOT_PATH;
 
@@ -156,7 +156,7 @@ namespace pot
         {
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-            for (auto &mol2 : simulationBox.getMMMolecules())
+            for (auto &mol2 : simulationBox.getActiveMolecules())
             {
                 MSTD_HOT_PATH;
 
@@ -220,7 +220,7 @@ namespace pot
 
             const auto isMol1Water = mol1.getMoltype() == waterTypeValue;
 
-            for (auto &mol2 : simulationBox.getMMMolecules())
+            for (auto &mol2 : simulationBox.getActiveMolecules())
             {
                 MSTD_HOT_PATH;
 

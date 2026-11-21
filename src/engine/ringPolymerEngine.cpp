@@ -61,10 +61,11 @@ namespace engine
      * @param outputSettings
      */
     void RingPolymerEngine::writeOutput(
+        JobType /*jobType*/,
         const OutputFileSettings &outputSettings
     )
     {
-        writeOutput(
+        _writeOutput(
             outputSettings,
             getSettings().timings.getTimeStep(),
             getSettings().timings.getStartingStepCount()
@@ -75,7 +76,7 @@ namespace engine
      * @brief writes the ring polymer output files.
      *
      */
-    void RingPolymerEngine::writeOutput(
+    void RingPolymerEngine::_writeOutput(
         const OutputFileSettings &outputSettings,
         const Time               &timeStep,
         size_t                    startingStepCount

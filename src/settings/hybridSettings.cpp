@@ -73,11 +73,14 @@ void HybridSettings::setInnerRegionCenterExpression(
  * @brief resolve the pending innerRegionCenter selection expression
  *
  * @param fileSettings
+ * @param jobType
  *
  * @throw exc::InputFileException if the selection is invalid or empty
  */
-void HybridSettings::finalize(const FileSettings &fileSettings)
+void HybridSettings::finalize(const FileSettings &fileSettings, JobType jobType)
 {
+    _isActive = isHybridJobtype(jobType);
+
     if (!_innerRegionCenterExpression.has_value())
         return;
 
@@ -342,3 +345,10 @@ QMForceDist HybridSettings::getQMForceDist() const
 {
     return _qmForceDist.get();
 }
+
+/**
+ * @brief check if the hybrid settings are active based on the job type
+ *
+ * @return bool
+ */
+bool HybridSettings::isActive() const { return _isActive; }

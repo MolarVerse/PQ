@@ -217,7 +217,8 @@ namespace engine
             );
 
             numQMAtoms +=
-                static_cast<double>(getSimulationBox().getNumberOfQMAtoms()) *
+                static_cast<double>(getSimulationBox().getNumberOfActiveAtoms()
+                ) *
                 globalSmF;
 
             // to not carry over qm_charges of atoms which are not qm
@@ -475,7 +476,7 @@ namespace engine
         configurator::HybridConfigurator::deactivateOuterMolecules(
             getSimulationBox()
         );
-        const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
+        const auto nQMAtoms = getSimulationBox().getNumberOfActiveAtoms();
         getPhysicalDataPtr()->setNumberOfQMAtoms(static_cast<double>(nQMAtoms));
         configurator::HybridConfigurator::activateMolecules(getSimulationBox());
     }

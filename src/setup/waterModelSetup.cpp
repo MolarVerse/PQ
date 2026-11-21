@@ -113,7 +113,7 @@ namespace setup
             );
         }
 
-        if (GeneralSettings::isQMOnlyJobtype())
+        if (isQMOnlyJobtype(_engine.getSettings().generalSettings.getJobtype()))
             throw exc::UserInputException(
                 "Water models are not supported for QM-only job types."
             );

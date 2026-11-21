@@ -30,6 +30,7 @@
 #include <atomic>
 #include <chrono>
 #include <thread>
+#include <vector>
 
 #include "units.hpp"
 
@@ -64,8 +65,8 @@ namespace QM
         [[nodiscard]]
         pybind11::array asePositions(const molsys::SimulationBox &simulationBox)
         {
-            const auto nAtoms = simulationBox.getNumberOfQMAtoms();
-            const auto pos    = simulationBox.getFlattenedQMPositions();
+            const auto nAtoms = simulationBox.getNumberOfActiveAtoms();
+            const auto pos    = simulationBox.getFlattenedActiveAtomPositions();
 
             const auto shape      = std::vector<size_t>{nAtoms, 3};
             const auto sizeDouble = sizeof(double);

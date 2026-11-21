@@ -93,7 +93,7 @@ namespace input::guffdat
      */
     bool isNeeded(const Settings &settings)
     {
-        if (!GeneralSettings::isMMActivated())
+        if (!isMMActivated(settings.generalSettings.getJobtype()))
             return false;
 
         if (settings.forceFieldSettings.isNonCoulombicActive())

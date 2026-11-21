@@ -28,6 +28,7 @@
 #include <vector>
 
 #include "enums/hybrid.hpp"
+#include "enums/jobtype.hpp"
 #include "fileSettings.hpp"
 #include "setting.hpp"
 
@@ -40,6 +41,8 @@
 class HybridSettings
 {
    private:
+    bool _isActive{false};
+
     Setting<std::vector<size_t>> _innerRegionCenter{std::vector<size_t>{0}};
     Setting<std::vector<int>>    _forcedCoreList{std::vector<int>{}};
     Setting<std::vector<int>>    _forcedLayerList{std::vector<int>{}};
@@ -57,6 +60,8 @@ class HybridSettings
     Setting<QMForceDist>     _qmForceDist{QMForceDist::EQUAL};
 
    public:
+    void finalize(const FileSettings &fileSettings, JobType jobType);
+
     /********************
      * standard setters *
      ********************/
@@ -77,11 +82,6 @@ class HybridSettings
     void setSmoothingMethodByUser(SmoothingMethod method);
     void setQMForceDistByUser(QMForceDist method);
 
-    /**
-     * @brief resolves pending selection expressions (needs the files)
-     */
-    void finalize(const FileSettings &fileSettings);
-
     /********************
      * standard getters *
      ********************/
@@ -100,6 +100,8 @@ class HybridSettings
 
     [[nodiscard]] SmoothingMethod getSmoothingMethod() const;
     [[nodiscard]] QMForceDist     getQMForceDist() const;
+
+    [[nodiscard]] bool isActive() const;
 };
 
 #endif   // SETTINGS__HYBRID_SETTINGS_HPP

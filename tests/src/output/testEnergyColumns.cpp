@@ -48,11 +48,11 @@ TEST_F(TestEnergyOutput, energyColumnsAllActive)
         ThermostatType::NOSE_HOOVER
     );
     _settings->constraintSettings.activateDistanceConstraintsByUser();
-    GeneralSettings::setJobtype(JobType::QMMM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QMMM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
 
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     std::vector<std::string_view> names;
     for (const auto &column : columns.get())
@@ -102,11 +102,11 @@ TEST_F(TestEnergyOutput, energyColumnsQM)
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
 
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     const auto active = columns.get();
 
@@ -134,11 +134,11 @@ TEST_F(TestEnergyOutput, energyColumnLabelAndHeader)
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
 
-    GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     EXPECT_EQ(
         out::energyFileHeader(columns),

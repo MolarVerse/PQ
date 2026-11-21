@@ -45,7 +45,7 @@ namespace setup
      */
     void setupHybrid(engine::Engine &engine)
     {
-        if (!GeneralSettings::isHybridJobtype())
+        if (!isHybridJobtype(engine.getSettings().generalSettings.getJobtype()))
             return;
 
         out::StdoutOutput::writeSetup("Hybrid Configuration");
@@ -321,7 +321,7 @@ namespace setup
     {
         auto &logOutput = _engine.getLogOutput();
 
-        const auto jobtype = GeneralSettings::getJobtype();
+        const auto jobtype = _engine.getSettings().generalSettings.getJobtype();
         const auto smoothingMethod =
             _engine.getSettings().hybridSettings.getSmoothingMethod();
         const auto innerRegionCenter =

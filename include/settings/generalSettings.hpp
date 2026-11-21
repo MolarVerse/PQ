@@ -31,6 +31,7 @@
 #include "enums/integrator.hpp"
 #include "enums/jobtype.hpp"
 #include "enums/virial.hpp"
+#include "setting.hpp"
 
 /**
  * @class Settings
@@ -41,7 +42,8 @@
 class GeneralSettings
 {
    private:
-    static inline JobType       _jobtype;
+    Setting<JobType, "JobType"> _jobtype;
+
     static inline FPType        _floatingPointType = FPType::DOUBLE;
     static inline uint_fast32_t _randomSeed;
     static inline bool          _isRandomSeedset = false;
@@ -68,7 +70,7 @@ class GeneralSettings
      * standard setter methods *
      ***************************/
 
-    static void setJobtype(JobType jobtype);
+    void setJobtypeByUser(JobType jobtype);
 
     static void setFloatingPointType(FPType);
 
@@ -86,7 +88,8 @@ class GeneralSettings
      * standard getter methods *
      ***************************/
 
-    [[nodiscard]] static JobType getJobtype();
+    [[nodiscard]] JobType getJobtype() const;
+    [[nodiscard]] bool    isJobtypeSetByUser() const;
 
     [[nodiscard]] static FPType      getFloatingPointType();
     [[nodiscard]] static std::string getFloatingPointPybindString();
@@ -109,14 +112,6 @@ class GeneralSettings
     static void activateIntraNonBonded();
     static void deactivateIntraNonBonded();
 
-    [[nodiscard]] static bool isQMOnlyJobtype();
-    [[nodiscard]] static bool isMMOnlyJobtype();
-    [[nodiscard]] static bool isHybridJobtype();
-    [[nodiscard]] static bool isMMActivated();
-    [[nodiscard]] static bool isQMActivated();
-    [[nodiscard]] static bool isRingPolymerMDActivated();
-    [[nodiscard]] static bool isMDJobType();
-    [[nodiscard]] static bool isOptJobType();
     [[nodiscard]] static bool isCellListActivated();
     [[nodiscard]] static bool isIntraNonBondedActivated();
 };

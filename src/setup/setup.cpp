@@ -80,7 +80,7 @@ namespace setup
         // needs to happen before readFiles(): the parameter file reader
         // dynamic_casts the non-Coulomb potential to its concrete type
         // while parsing the NONCOULOMBICS section
-        if (GeneralSettings::isMMActivated())
+        if (isMMActivated(engine.getSettings().generalSettings.getJobtype()))
             setupNonCoulombPotentialType(engine);
 
         setupOutputFiles(engine);
@@ -153,10 +153,10 @@ namespace setup
     void setupEngine(engine::Engine& engine)
     {
         const auto& settings = engine.getSettings();
-        if (GeneralSettings::isQMActivated())
+        if (isQMActivated(engine.getSettings().generalSettings.getJobtype()))
             setupQM(engine);
 
-        if (GeneralSettings::isMDJobType())
+        if (isMDJobType(engine.getSettings().generalSettings.getJobtype()))
         {
             switch (GeneralSettings::getIntegratorType())
             {
@@ -183,14 +183,14 @@ namespace setup
 
         setupCellList(engine);
 
-        if (GeneralSettings::isMDJobType())
+        if (isMDJobType(engine.getSettings().generalSettings.getJobtype()))
         {
             setupThermostat(engine);
 
             setupManostat(engine);
         }
 
-        if (GeneralSettings::isMMActivated())
+        if (isMMActivated(engine.getSettings().generalSettings.getJobtype()))
         {
             setupPotential(engine);
 
@@ -205,13 +205,13 @@ namespace setup
 
         setupConstraints(engine);
 
-        if (GeneralSettings::isMDJobType())
+        if (isMDJobType(engine.getSettings().generalSettings.getJobtype()))
             setupRingPolymer(engine);
 
-        if (GeneralSettings::isHybridJobtype())
+        if (isHybridJobtype(engine.getSettings().generalSettings.getJobtype()))
             setupHybrid(engine);
 
-        if (GeneralSettings::isOptJobType())
+        if (isOptJobType(engine.getSettings().generalSettings.getJobtype()))
             setupOptimizer(engine);
 
         engine.getLogOutput().flushQueuedWarnings();

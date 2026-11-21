@@ -44,8 +44,6 @@ class TestVirial : public ::testing::Test
 
     void SetUp() override
     {
-        _jobType = GeneralSettings::getJobtype();
-
         _simBox = std::make_unique<molsys::SimulationBox>();
         GeneralSettings::setVirialType(VirialType::ATOMIC);
 
@@ -85,7 +83,7 @@ class TestVirial : public ::testing::Test
         _simBox->setBox(orthoBox, false);
     }
 
-    void TearDown() override { GeneralSettings::setJobtype(_jobType); }
+    void TearDown() override {}
 };
 
 #endif
