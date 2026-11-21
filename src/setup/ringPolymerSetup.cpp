@@ -47,7 +47,9 @@ namespace setup
      */
     void setupRingPolymer(engine::Engine &engine)
     {
-        if (!settings::GeneralSettings::isRingPolymerMDActivated())
+        if (!isRingPolymerMDActivated(
+                engine.getSettings().generalSettings.getJobtype()
+            ))
         {
 #ifdef WITH_MPI
             if (mpi::MPI::getSize() > 1)

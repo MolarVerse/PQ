@@ -45,8 +45,8 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 
 int main()
 {
-    settings::GeneralSettings::setRandomSeed(42);
-    settings::GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(42);
+    GeneralSettings::setIsRandomSeedSet(true);
     const auto targetTemperature = toTemperature(300.0);
 
     auto box =

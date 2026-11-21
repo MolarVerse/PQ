@@ -113,7 +113,6 @@ namespace molsys
         [[nodiscard]] Mass                getMolMass() const;
         [[nodiscard]] std::vector<Charge> getPartialCharges() const;
 
-        [[nodiscard]] bool     isMMMolecule() const;
         [[nodiscard]] Quantity getSmoothingFactor() const;
 
         void setPartialCharges(const std::vector<Charge> &partialCharges);

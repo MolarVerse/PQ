@@ -40,7 +40,7 @@ namespace
         cellList.setNumberOfCells(cellsPerSide);
         cellList.resizeCells();
         cellList.setup(simBox, benchmarkSetup::cutOff);
-        settings::GeneralSettings::activateCellList();
+        GeneralSettings::activateCellList();
 
         for (auto _ : state)
         {

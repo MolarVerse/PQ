@@ -1,0 +1,1 @@
+- Add integration tests for the Berendsen manostat with `isotropy = anisotropic` and `xy` (compared with references), with a fixed axis and with the cell list, and for the stochastic rescaling manostat with a temperature ramp (same `random_seed` gives the same run).

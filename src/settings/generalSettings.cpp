@@ -24,317 +24,234 @@
 
 #include <string>
 
-namespace settings
+/***************************
+ *                         *
+ * standard setter methods *
+ *                         *
+ ***************************/
+
+/**
+ * @brief sets the jobtype to enum in settings
+ *
+ * @param jobtype
+ */
+void GeneralSettings::setJobtypeByUser(JobType jobtype)
 {
+    _jobtype.setByUser(jobtype);
+}
 
-    /***************************
-     *                         *
-     * standard setter methods *
-     *                         *
-     ***************************/
+/**
+ * @brief sets the floating point type
+ *
+ * @param floatingPointType
+ */
+void GeneralSettings::setFloatingPointType(FPType floatingPointType)
+{
+    _floatingPointType = floatingPointType;
+}
 
-    /**
-     * @brief sets the jobtype to enum in settings
-     *
-     * @param jobtype
-     */
-    void GeneralSettings::setJobtype(JobType jobtype) { _jobtype = jobtype; }
+/**
+ * @brief sets the random seed value
+ *
+ * @param randomSeed
+ */
+void GeneralSettings::setRandomSeed(uint_fast32_t randomSeed)
+{
+    _randomSeed = randomSeed;
+}
 
-    /**
-     * @brief sets the floating point type
-     *
-     * @param floatingPointType
-     */
-    void GeneralSettings::setFloatingPointType(FPType floatingPointType)
-    {
-        _floatingPointType = floatingPointType;
-    }
+/**
+ * @brief sets if the random seed value has been set
+ *
+ * @param isRandomSeedSet
+ */
+void GeneralSettings::setIsRandomSeedSet(bool isRandomSeedSet)
+{
+    _isRandomSeedset = isRandomSeedSet;
+}
 
-    /**
-     * @brief sets the random seed value
-     *
-     * @param randomSeed
-     */
-    void GeneralSettings::setRandomSeed(uint_fast32_t randomSeed)
-    {
-        _randomSeed = randomSeed;
-    }
+/**
+ * @brief sets the dimensionality
+ *
+ * @param dimensionality
+ */
+void GeneralSettings::setDimensionality(size_t dimensionality)
+{
+    _dimensionality = dimensionality;
+}
 
-    /**
-     * @brief sets if the random seed value has been set
-     *
-     * @param isRandomSeedSet
-     */
-    void GeneralSettings::setIsRandomSeedSet(bool isRandomSeedSet)
-    {
-        _isRandomSeedset = isRandomSeedSet;
-    }
+/**
+ * @brief sets the virial type
+ *
+ * @param virialType
+ */
+void GeneralSettings::setVirialType(VirialType virialType)
+{
+    _virial = virialType;
+}
 
-    /**
-     * @brief sets the dimensionality
-     *
-     * @param dimensionality
-     */
-    void GeneralSettings::setDimensionality(size_t dimensionality)
-    {
-        _dimensionality = dimensionality;
-    }
+/**
+ * @brief sets the integrator type
+ *
+ * @param integratorType
+ */
+void GeneralSettings::setIntegratorType(IntegratorType integratorType)
+{
+    _integrator = integratorType;
+}
 
-    /**
-     * @brief sets the virial type
-     *
-     * @param virialType
-     */
-    void GeneralSettings::setVirialType(VirialType virialType)
-    {
-        _virial = virialType;
-    }
+/**
+ * @brief sets the number of cells for the cell list
+ *
+ * @param numberOfCells
+ */
+void GeneralSettings::setNumberOfCells(size_t numberOfCells)
+{
+    _numberOfCells = numberOfCells;
+}
 
-    /**
-     * @brief sets the integrator type
-     *
-     * @param integratorType
-     */
-    void GeneralSettings::setIntegratorType(IntegratorType integratorType)
-    {
-        _integrator = integratorType;
-    }
+/**
+ * @brief gets the number of cells for the cell list
+ *
+ * @return size_t
+ */
+size_t GeneralSettings::getNumberOfCells() { return _numberOfCells; }
 
-    /**
-     * @brief sets the number of cells for the cell list
-     *
-     * @param numberOfCells
-     */
-    void GeneralSettings::setNumberOfCells(size_t numberOfCells)
-    {
-        _numberOfCells = numberOfCells;
-    }
+/***************************
+ *                         *
+ * standard getter methods *
+ *                         *
+ ***************************/
 
-    /**
-     * @brief gets the number of cells for the cell list
-     *
-     * @return size_t
-     */
-    size_t GeneralSettings::getNumberOfCells() { return _numberOfCells; }
+/**
+ * @brief get the jobtype
+ *
+ * @return JobType
+ */
+JobType GeneralSettings::getJobtype() const { return _jobtype.get(); }
 
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
+/**
+ * @brief checks if the jobtype has been set by the user
+ *
+ * @return true if set by user, false otherwise
+ */
+bool GeneralSettings::isJobtypeSetByUser() const
+{
+    return _jobtype.isSetByUser();
+}
 
-    /**
-     * @brief get the jobtype
-     *
-     * @return JobType
-     */
-    JobType GeneralSettings::getJobtype() { return _jobtype; }
+/**
+ * @brief get the floating point type
+ *
+ * @return FPType
+ */
+FPType GeneralSettings::getFloatingPointType() { return _floatingPointType; }
 
-    /**
-     * @brief get the floating point type
-     *
-     * @return FPType
-     */
-    FPType GeneralSettings::getFloatingPointType()
-    {
-        return _floatingPointType;
-    }
+/**
+ * @brief get the floating point string representation used in pybind11
+ * bindings
+ *
+ */
+std::string GeneralSettings::getFloatingPointPybindString()
+{
+    if (_floatingPointType == FPType::FLOAT)
+        return "float32";
 
-    /**
-     * @brief get the floating point string representation used in pybind11
-     * bindings
-     *
-     */
-    std::string GeneralSettings::getFloatingPointPybindString()
-    {
-        if (_floatingPointType == FPType::FLOAT)
-            return "float32";
+    return "float64";
+}
 
-        return "float64";
-    }
+/**
+ * @brief get the random seed value
+ *
+ * @return uint_fast32_t
+ */
+uint_fast32_t GeneralSettings::getRandomSeed() { return _randomSeed; }
 
-    /**
-     * @brief get the random seed value
-     *
-     * @return uint_fast32_t
-     */
-    uint_fast32_t GeneralSettings::getRandomSeed() { return _randomSeed; }
+/**
+ * @brief get if the random seed value has been set
+ *
+ * @return bool
+ */
+bool GeneralSettings::isRandomSeedSet() { return _isRandomSeedset; }
 
-    /**
-     * @brief get if the random seed value has been set
-     *
-     * @return bool
-     */
-    bool GeneralSettings::isRandomSeedSet() { return _isRandomSeedset; }
+/**
+ * @brief get the dimensionality
+ *
+ * @return size_t
+ */
+size_t GeneralSettings::getDimensionality() { return _dimensionality; }
 
-    /**
-     * @brief get the dimensionality
-     *
-     * @return size_t
-     */
-    size_t GeneralSettings::getDimensionality() { return _dimensionality; }
+/**
+ * @brief get the virial type
+ *
+ * @return VirialType
+ */
+VirialType GeneralSettings::getVirialType() { return _virial; }
 
-    /**
-     * @brief get the virial type
-     *
-     * @return VirialType
-     */
-    VirialType GeneralSettings::getVirialType() { return _virial; }
+/**
+ * @brief get the integrator type
+ *
+ * @return IntegratorType
+ */
+IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
 
-    /**
-     * @brief get the integrator type
-     *
-     * @return IntegratorType
-     */
-    IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
+/******************************
+ *                            *
+ * standard is-active methods *
+ *                            *
+ ******************************/
 
-    /******************************
-     *                            *
-     * standard is-active methods *
-     *                            *
-     ******************************/
+/**
+ * @brief Returns true if the cell list is activated
+ *
+ * @return true/false
+ *
+ */
+bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
 
-    /**
-     * @brief Returns true if the jobtype does not use any MM type simulations
-     *
-     * @return true/false if the jobtype does not use any MM type simulations
-     *
-     */
-    bool GeneralSettings::isQMOnlyJobtype()
-    {
-        return (_jobtype & JobType::QM_MM) == JobType::QM;
-    }
+/**
+ * @brief Returns true if the intra non-bonded interactions are activated
+ *
+ * @return true/false
+ *
+ */
+bool GeneralSettings::isIntraNonBondedActivated()
+{
+    return _isIntraNonBondedActivated;
+}
 
-    /**
-     * @brief Returns true if the jobtype does not use any QM type simulations
-     *
-     * @return true/false if the jobtype does not use any QM type simulations
-     *
-     */
-    bool GeneralSettings::isMMOnlyJobtype()
-    {
-        return (_jobtype & JobType::QM_MM) == JobType::MM;
-    }
+/*****************************
+ *                           *
+ * standard activate methods *
+ *                           *
+ *****************************/
 
-    /**
-     * @brief Returns true if the jobtype is a hybrid type simulation
-     *
-     * @return true/false if the jobtype is a hybrid type simulation
-     *
-     */
-    bool GeneralSettings::isHybridJobtype()
-    {
-        return (_jobtype & JobType::QM_MM) == JobType::QM_MM;
-    }
+/**
+ * @brief activate cell list
+ *
+ */
+void GeneralSettings::activateCellList() { _isCellListActivated = true; }
 
-    /**
-     * @brief Returns true if the jobtype performs an MD simulation
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isMDJobType()
-    {
-        return (_jobtype & JobType::MD) == JobType::MD;
-    }
+/**
+ * @brief deactivate cell list
+ *
+ */
+void GeneralSettings::deactivateCellList() { _isCellListActivated = false; }
 
-    /**
-     * @brief Returns true if the jobtype does is based on optimization
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isOptJobType()
-    {
-        return (_jobtype & JobType::OPT) == JobType::OPT;
-    }
+/**
+ * @brief activate intra non-bonded interactions
+ *
+ */
+void GeneralSettings::activateIntraNonBonded()
+{
+    _isIntraNonBondedActivated = true;
+}
 
-    /**
-     * @brief Returns true if the MM simulations are activated
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isMMActivated()
-    {
-        return (_jobtype & JobType::MM) == JobType::MM;
-    }
-
-    /**
-     * @brief Returns true if the QM simulations are activated
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isQMActivated()
-    {
-        return (_jobtype & JobType::QM) == JobType::QM;
-    }
-
-    /**
-     * @brief Returns true if the ring polymer MD simulations are activated
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isRingPolymerMDActivated()
-    {
-        return (_jobtype & JobType::RING_POLYMER) == JobType::RING_POLYMER;
-    }
-
-    /**
-     * @brief Returns true if the cell list is activated
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
-
-    /**
-     * @brief Returns true if the intra non-bonded interactions are activated
-     *
-     * @return true/false
-     *
-     */
-    bool GeneralSettings::isIntraNonBondedActivated()
-    {
-        return _isIntraNonBondedActivated;
-    }
-
-    /*****************************
-     *                           *
-     * standard activate methods *
-     *                           *
-     *****************************/
-
-    /**
-     * @brief activate cell list
-     *
-     */
-    void GeneralSettings::activateCellList() { _isCellListActivated = true; }
-
-    /**
-     * @brief deactivate cell list
-     *
-     */
-    void GeneralSettings::deactivateCellList() { _isCellListActivated = false; }
-
-    /**
-     * @brief activate intra non-bonded interactions
-     *
-     */
-    void GeneralSettings::activateIntraNonBonded()
-    {
-        _isIntraNonBondedActivated = true;
-    }
-
-    /**
-     * @brief deactivate intra non-bonded interactions
-     *
-     */
-    void GeneralSettings::deactivateIntraNonBonded()
-    {
-        _isIntraNonBondedActivated = false;
-    }
-
-}   // namespace settings
+/**
+ * @brief deactivate intra non-bonded interactions
+ *
+ */
+void GeneralSettings::deactivateIntraNonBonded()
+{
+    _isIntraNonBondedActivated = false;
+}

@@ -80,7 +80,7 @@ namespace out
                 physicalData.getTotalEnergy().numerical_value_in(kcal_per_mol),
         });
 
-        if (settings::GeneralSettings::isQMActivated())
+        if (isQMActivated(settings.generalSettings.getJobtype()))
         {
             _add({
                 .name  = "E(QM)",
@@ -92,7 +92,7 @@ namespace out
             _add({
                 .name  = "N(QM-ATOMS)",
                 .unit  = "-",
-                .value = physicalData.getNumberOfQMAtoms(),
+                .value = physicalData.getNumberOfActiveAtoms(),
             });
         }
 
@@ -110,7 +110,7 @@ namespace out
                 physicalData.getIntraEnergy().numerical_value_in(kcal_per_mol),
         });
 
-        if (settings::GeneralSettings::isMMActivated())
+        if (isMMActivated(settings.generalSettings.getJobtype()))
         {
             _add({
                 .name  = "E(COUL)",
@@ -160,7 +160,7 @@ namespace out
             });
         }
 
-        if (settings::GeneralSettings::isHybridJobtype())
+        if (isHybridJobtype(settings.generalSettings.getJobtype()))
         {
             _add({
                 .name  = "N(SM-MOL)",

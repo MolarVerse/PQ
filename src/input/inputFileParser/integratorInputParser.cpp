@@ -43,9 +43,11 @@ namespace input
      * _keywordRequiredMap and _keywordCountMap: 1) integrator "<string>"
      */
     IntegratorInputParser::IntegratorInputParser(
-        ReferenceSettings& referenceSettings
+        ReferenceSettings&     referenceSettings,
+        const GeneralSettings& generalSettings
     )
-        : _referenceSettings(referenceSettings)
+        : _referenceSettings(referenceSettings),
+          _generalSettings(generalSettings)
     {
         addIntegratorKey();
     }
@@ -68,7 +70,7 @@ namespace input
         const auto setValue = [this](IntegratorType integratorType)
         {
             // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/908
-            if (!settings::GeneralSettings::isMDJobType())
+            if (!isMDJobType(_generalSettings->getJobtype()))
             {
                 throw exc::InputFileException(
                     std::format(
@@ -77,7 +79,7 @@ namespace input
                 );
             }
 
-            settings::GeneralSettings::setIntegratorType(integratorType);
+            GeneralSettings::setIntegratorType(integratorType);
             _referenceSettings->addReferenceFile(
                 ReferenceFiles::VELOCITY_VERLET_FILE
             );

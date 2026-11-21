@@ -52,7 +52,7 @@ namespace input
         };
 
         const auto onSet = [](VirialType virial)
-        { settings::GeneralSettings::setVirialType(virial); };
+        { GeneralSettings::setVirialType(virial); };
 
         auto& key = _getRegistry().registerKey(
             KeyRegistry<VirialType>{

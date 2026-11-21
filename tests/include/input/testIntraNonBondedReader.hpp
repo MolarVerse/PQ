@@ -58,7 +58,7 @@ class TestIntraNonBondedReader : public ::testing::Test
         _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
         _engine->getSimulationBox().addMoleculeType(molecule1);
-        settings::GeneralSettings::activateIntraNonBonded();
+        GeneralSettings::activateIntraNonBonded();
 
         _intraNonBondedReader =
             std::make_unique<input::intraNonBondedReader::IntraNonBondedReader>(
