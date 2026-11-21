@@ -54,6 +54,7 @@
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace engine
 {
@@ -209,7 +210,9 @@ namespace engine
                     if (col != 0)
                         file << ' ';
 
-                    file << row[col];
+                    file << row[col].numerical_value_in(
+                        kcal_per_mol / angstrom2
+                    );
                 }
 
                 file << '\n';

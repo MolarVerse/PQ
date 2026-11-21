@@ -28,6 +28,12 @@ import numpy as np
 
 from PQAnalysis.io import read_trajectory, EnergyFileReader
 
+# Relative tolerance for comparing trajectories against the reference data.
+# The output has 9 significant digits, so the pqanalysis default of 1e-9 fails
+# on a one-digit difference in the last printed digit (floating-point roundoff
+# from a different order of unit conversions).
+TRAJ_RTOL = 1e-5
+
 
 def check_pq_output(
     base_name,
@@ -40,25 +46,25 @@ def check_pq_output(
     traj = read_trajectory(base_name + ".xyz")
     ref_traj = read_trajectory(str(ref_path / (base_name + ".xyz")))
 
-    assert traj.isclose(ref_traj)
+    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL)
 
     traj = read_trajectory(base_name + ".vel", traj_format="vel")
     ref_traj = read_trajectory(
         str(ref_path / (base_name + ".vel")), traj_format="vel")
 
-    assert traj.isclose(ref_traj)
+    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL)
 
     traj = read_trajectory(base_name + ".force", traj_format="force")
     ref_traj = read_trajectory(
         str(ref_path / (base_name + ".force")), traj_format="force")
 
-    assert traj.isclose(ref_traj)
+    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL)
 
     traj = read_trajectory(base_name + ".chrg", traj_format="charge")
     ref_traj = read_trajectory(
         str(ref_path / (base_name + ".chrg")), traj_format="charge")
 
-    assert traj.isclose(ref_traj)
+    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL)
 
     reader = EnergyFileReader(base_name + ".en")
     ref_reader = EnergyFileReader(

@@ -22,6 +22,8 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 ## How the tests work
 
 - `pytest integration_tests` from the repository root, with `build/apps/PQ` built (Release).
+  Set `PQ_BUILD_DIR` (e.g. `PQ_BUILD_DIR=.build pytest integration_tests`) to use a different build
+  directory than `build`; `os.path.join` makes an absolute path work too.
   CI runs them in the Release jobs on x86_64 and arm (`ci_build.yml`), in a conda environment with
   `dftbplus`, `xtb`, `pyscf==2.9.0`, `fennol`, `jax`, `ase` and `pqanalysis`.
 - Test data lives in `<name>.zip` next to the test directory (extracted once into `.zip_cache/`);
