@@ -1,1 +1,2 @@
 - make MoleculeType const correct and use const refs for containers
+- make physicalData being owned by value from engine and remove it from evaluator/optimizer
