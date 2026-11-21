@@ -30,13 +30,18 @@
 #include "morsePair.hpp"
 #include "potentialSettings.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace
 {
     template <typename EnergyFunction>
-    double centralDifference(const EnergyFunction &energyAt, double distance)
+    Force centralDifference(
+        const EnergyFunction &energyAt,
+        const Distance       &distance
+    )
     {
-        constexpr auto step = 1.0e-5;
+        constexpr auto step = 1.0e-5 * angstrom;
         return (energyAt(distance + step) - energyAt(distance - step)) /
                (2.0 * step);
     }
@@ -44,19 +49,24 @@ namespace
     template <typename Calculate>
     void expectForceIsNegativeEnergyDerivative(
         const Calculate &calculate,
-        double           distance,
-        double           tolerance
+        const Distance  &distance,
+        const double     tolerance
     )
     {
         const auto [energy, force] = calculate(distance);
         (void) energy;
 
         const auto energyDerivative = centralDifference(
-            [&calculate](double radius) { return calculate(radius).first; },
+            [&calculate](const Distance &radius)
+            { return calculate(radius).first; },
             distance
         );
 
-        EXPECT_NEAR(force, -energyDerivative, tolerance);
+        EXPECT_NEAR(
+            force.numerical_value_in(kcal_per_mol / angstrom),
+            -energyDerivative.numerical_value_in(kcal_per_mol / angstrom),
+            tolerance
+        );
     }
 
     std::array<double, defaults::NUM_GUFF_COEFFICIENTS> buildGuffCoefficients()
@@ -70,15 +80,19 @@ namespace
 TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
 {
     const auto potential = pot::LennardJonesPair(
-        4.0,
-        0.15,
-        -0.2,
-        LJParams{.c6 = -1.0, .c12 = 1.5}
+        4.0 * angstrom,
+        0.15 * kcal_per_mol,
+        -0.2 * kcal_per_mol / angstrom,
+        LJParams{
+            .c6  = -1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.5 * kcal_per_mol * angstrom12
+        }
     );
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](double radius) { return potential.calculate(radius); },
-        1.7,
+        [&potential](const Distance &radius)
+        { return potential.calculate(radius); },
+        1.7 * angstrom,
         1.0e-7
     );
 }
@@ -86,15 +100,20 @@ TEST(TestPairPotentialDerivatives, LennardJonesForceIsNegativeEnergyDerivative)
 TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
 {
     const auto potential = pot::BuckinghamPair(
-        4.0,
-        0.25,
-        -0.1,
-        BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
+        4.0 * angstrom,
+        0.25 * kcal_per_mol,
+        -0.1 * kcal_per_mol / angstrom,
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = -1.1 / angstrom,
+            .c6      = -0.4 * kcal_per_mol * angstrom6
+        }
     );
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](double radius) { return potential.calculate(radius); },
-        1.6,
+        [&potential](const Distance &radius)
+        { return potential.calculate(radius); },
+        1.6 * angstrom,
         1.0e-7
     );
 }
@@ -102,31 +121,37 @@ TEST(TestPairPotentialDerivatives, BuckinghamForceIsNegativeEnergyDerivative)
 TEST(TestPairPotentialDerivatives, MorseForceIsNegativeEnergyDerivative)
 {
     const auto potential = pot::MorsePair(
-        4.0,
-        0.3,
-        -0.2,
+        4.0 * angstrom,
+        0.3 * kcal_per_mol,
+        -0.2 * kcal_per_mol / angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.5,
-            .wellWidth           = 1.4,
-            .equilibriumDistance = 1.1
+            .dissociationEnergy  = 2.5 * kcal_per_mol,
+            .wellWidth           = 1.4 / angstrom,
+            .equilibriumDistance = 1.1 * angstrom
         }
     );
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](double radius) { return potential.calculate(radius); },
-        1.7,
+        [&potential](const Distance &radius)
+        { return potential.calculate(radius); },
+        1.7 * angstrom,
         1.0e-7
     );
 }
 
 TEST(TestPairPotentialDerivatives, GuffForceIsNegativeEnergyDerivative)
 {
-    const auto potential =
-        pot::GuffPair(4.0, 0.4, -0.2, buildGuffCoefficients());
+    const auto potential = pot::GuffPair(
+        4.0 * angstrom,
+        0.4 * kcal_per_mol,
+        -0.2 * kcal_per_mol / angstrom,
+        buildGuffCoefficients()
+    );
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential](double radius) { return potential.calculate(radius); },
-        1.8,
+        [&potential](const Distance &radius)
+        { return potential.calculate(radius); },
+        1.8 * angstrom,
         1.0e-6
     );
 }
@@ -137,14 +162,14 @@ TEST(
 )
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(4.0);
+    potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
     const auto potential     = pot::CoulombShiftedPotential(potentialSettings);
-    const auto chargeProduct = 0.75;
+    const auto chargeProduct = 0.75 * elementary_charge * elementary_charge;
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential, chargeProduct](double radius)
+        [&potential, chargeProduct](const Distance &radius)
         { return potential.calculate(radius, chargeProduct); },
-        1.7,
+        1.7 * angstrom,
         1.0e-7
     );
 }
@@ -152,56 +177,82 @@ TEST(
 TEST(TestPairPotentialDerivatives, WolfCoulombForceIsNegativeEnergyDerivative)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(4.0);
-    const auto potential     = pot::CoulombWolf(potentialSettings, 0.25);
-    const auto chargeProduct = -0.75;
+    potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    const auto potential = pot::CoulombWolf(potentialSettings, 0.25 / angstrom);
+    const auto chargeProduct = -0.75 * elementary_charge * elementary_charge;
 
     expectForceIsNegativeEnergyDerivative(
-        [&potential, chargeProduct](double radius)
+        [&potential, chargeProduct](const Distance &radius)
         { return potential.calculate(radius, chargeProduct); },
-        1.7,
+        1.7 * angstrom,
         1.0e-5
     );
 }
 
 TEST(TestPairPotentialDerivatives, ShiftedPotentialsAreZeroAtCutoff)
 {
-    constexpr auto cutoff        = 4.0;
-    constexpr auto chargeProduct = 0.75;
+    constexpr auto cutoff        = 4.0 * angstrom;
+    constexpr auto chargeProduct = 0.75 * elementary_charge * elementary_charge;
 
     PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(cutoff);
 
     const auto shiftedCoulomb = pot::CoulombShiftedPotential(potentialSettings);
-    const auto wolfCoulomb    = pot::CoulombWolf(potentialSettings, 0.25);
+    const auto wolfCoulomb =
+        pot::CoulombWolf(potentialSettings, 0.25 / angstrom);
 
     const auto [shiftedCoulombEnergy, shiftedCoulombForce] =
         shiftedCoulomb.calculate(cutoff, chargeProduct);
     const auto [wolfCoulombEnergy, wolfCoulombForce] =
         wolfCoulomb.calculate(cutoff, chargeProduct);
 
-    EXPECT_NEAR(shiftedCoulombEnergy, 0.0, 1.0e-12);
-    EXPECT_NEAR(shiftedCoulombForce, 0.0, 1.0e-12);
-    EXPECT_NEAR(wolfCoulombEnergy, 0.0, 1.0e-12);
-    EXPECT_NEAR(wolfCoulombForce, 0.0, 1.0e-12);
+    EXPECT_NEAR(
+        shiftedCoulombEnergy.numerical_value_in(kcal_per_mol),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(
+        shiftedCoulombForce.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(
+        wolfCoulombEnergy.numerical_value_in(kcal_per_mol),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(
+        wolfCoulombForce.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
 }
 
 TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
 {
-    constexpr auto cutoff = 4.0;
+    constexpr auto cutoff = 4.0 * angstrom;
 
-    const auto lennardJonesUnshifted =
-        pot::LennardJonesPair(cutoff, LJParams{.c6 = -1.0, .c12 = 1.5});
+    const auto lennardJonesUnshifted = pot::LennardJonesPair(
+        cutoff,
+        LJParams{
+            .c6  = -1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.5 * kcal_per_mol * angstrom12
+        }
+    );
     const auto buckinghamUnshifted = pot::BuckinghamPair(
         cutoff,
-        BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = -1.1 / angstrom,
+            .c6      = -0.4 * kcal_per_mol * angstrom6
+        }
     );
     const auto morseUnshifted = pot::MorsePair(
         cutoff,
         MorseParams{
-            .dissociationEnergy  = 2.5,
-            .wellWidth           = 1.4,
-            .equilibriumDistance = 1.1
+            .dissociationEnergy  = 2.5 * kcal_per_mol,
+            .wellWidth           = 1.4 / angstrom,
+            .equilibriumDistance = 1.1 * angstrom
         }
     );
     const auto guffUnshifted = pot::GuffPair(cutoff, buildGuffCoefficients());
@@ -219,22 +270,29 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
         cutoff,
         ljEnergyCutoff,
         ljForceCutoff,
-        LJParams{.c6 = -1.0, .c12 = 1.5}
+        LJParams{
+            .c6  = -1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.5 * kcal_per_mol * angstrom12
+        }
     );
     const auto buckingham = pot::BuckinghamPair(
         cutoff,
         buckEnergyCutoff,
         buckForceCutoff,
-        BuckinghamParams{.scaling = 2.0, .dRho = -1.1, .c6 = -0.4}
+        BuckinghamParams{
+            .scaling = 2.0 * kcal_per_mol,
+            .dRho    = -1.1 / angstrom,
+            .c6      = -0.4 * kcal_per_mol * angstrom6
+        }
     );
     const auto morse = pot::MorsePair(
         cutoff,
         morseEnergyCutoff,
         morseForceCutoff,
         MorseParams{
-            .dissociationEnergy  = 2.5,
-            .wellWidth           = 1.4,
-            .equilibriumDistance = 1.1
+            .dissociationEnergy  = 2.5 * kcal_per_mol,
+            .wellWidth           = 1.4 / angstrom,
+            .equilibriumDistance = 1.1 * angstrom
         }
     );
     const auto guff = pot::GuffPair(
@@ -249,12 +307,28 @@ TEST(TestPairPotentialDerivatives, NonCoulombShiftedPairsAreZeroAtCutoff)
     const auto [morseEnergy, morseForce] = morse.calculate(cutoff);
     const auto [guffEnergy, guffForce]   = guff.calculate(cutoff);
 
-    EXPECT_NEAR(ljEnergy, 0.0, 1.0e-12);
-    EXPECT_NEAR(ljForce, 0.0, 1.0e-12);
-    EXPECT_NEAR(buckEnergy, 0.0, 1.0e-12);
-    EXPECT_NEAR(buckForce, 0.0, 1.0e-12);
-    EXPECT_NEAR(morseEnergy, 0.0, 1.0e-12);
-    EXPECT_NEAR(morseForce, 0.0, 1.0e-12);
-    EXPECT_NEAR(guffEnergy, 0.0, 1.0e-12);
-    EXPECT_NEAR(guffForce, 0.0, 1.0e-12);
+    EXPECT_NEAR(ljEnergy.numerical_value_in(kcal_per_mol), 0.0, 1.0e-12);
+    EXPECT_NEAR(
+        ljForce.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(buckEnergy.numerical_value_in(kcal_per_mol), 0.0, 1.0e-12);
+    EXPECT_NEAR(
+        buckForce.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(morseEnergy.numerical_value_in(kcal_per_mol), 0.0, 1.0e-12);
+    EXPECT_NEAR(
+        morseForce.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(guffEnergy.numerical_value_in(kcal_per_mol), 0.0, 1.0e-12);
+    EXPECT_NEAR(
+        guffForce.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
 }

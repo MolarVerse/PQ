@@ -28,6 +28,7 @@
 #include <string_view>
 
 #include "exceptions.hpp"
+#include "unit_types.hpp"
 
 namespace waterModel
 {
@@ -48,9 +49,12 @@ namespace waterModel
      * @throws exc::WaterModelException if value is zero, negative, NaN or
      * infinite
      */
-    inline void checkNonDegenerate(double value, std::string_view what)
+    template <typename T>
+    inline void checkNonDegenerate(const T value, const std::string_view what)
     {
-        if (!(value > 0.0) || !std::isfinite(value))
+        using std::isfinite;
+
+        if (!(value > 0.0) || !isfinite(value))
         {
             throw exc::WaterModelException(
                 std::format(

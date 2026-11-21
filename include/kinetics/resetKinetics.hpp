@@ -30,7 +30,6 @@
 
 #include "resetKineticsSettings.hpp"
 #include "unit_types.hpp"
-#include "vector3d.hpp"
 
 namespace physicalData
 {
@@ -81,11 +80,11 @@ namespace kinetics
         );
         static void resetMomentum(
             molsys::SimulationBox &,
-            const linalg::Vec3D &momentum
+            const Momentum3D &momentum
         );
         static void resetAngularMomentum(
             molsys::SimulationBox &,
-            const linalg::Vec3D &angularMomentum
+            const AngularMomentum3D &angularMomentum
         );
 
        private:

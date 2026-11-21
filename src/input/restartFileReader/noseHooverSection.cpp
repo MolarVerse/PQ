@@ -28,6 +28,7 @@
 
 #include "exceptions.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 namespace input::restartFile
 {
@@ -71,7 +72,7 @@ namespace input::restartFile
         }
 
         const auto idx  = stoul(lineElements[1]);
-        const auto chi  = stod(lineElements[2]);
+        const auto chi  = stod(lineElements[2]) * kcal_per_mol * s;
         const auto zeta = stod(lineElements[3]);
 
         if (idx > _noseHooverSettings->getNoseHooverChainLength())
@@ -98,8 +99,8 @@ namespace input::restartFile
         }
 
         // the maps do not exist before the first chi line has been read
-        auto chis  = std::map<size_t, double>();
-        auto zetas = std::map<size_t, double>();
+        auto chis  = std::map<size_t, Action>();
+        auto zetas = std::map<size_t, Quantity>();
 
         if (_noseHooverSettings->isChiAndZetaSet())
         {

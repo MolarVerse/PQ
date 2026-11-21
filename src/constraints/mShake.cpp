@@ -30,7 +30,7 @@
 #include "matrix.hpp"
 #include "simulationBox.hpp"
 #include "stlVector.hpp"
-#include "units.hpp"
+#include "unit_types.hpp"
 #include "vector3d.hpp"
 
 namespace constraints
@@ -42,10 +42,10 @@ namespace constraints
          *
          */
         [[nodiscard]]
-        double calcMatrixElement(
+        PosSquaredInvMass calcMatrixElement(
             const std::tuple<size_t, size_t, size_t, size_t> &indices,
-            const std::pair<double, double>                  &masses,
-            const std::pair<linalg::Vec3D, linalg::Vec3D>    &pos
+            const std::pair<Mass, Mass>                      &masses,
+            const std::pair<Pos3D, Pos3D>                    &pos
         )
         {
             const auto elem_i = std::get<0>(indices);
@@ -73,9 +73,7 @@ namespace constraints
 
             auto mShakeElement  = (kronecker_ik - kronecker_il) / mass_i;
             mShakeElement      += (kronecker_jl - kronecker_jk) / mass_j;
-            mShakeElement      *= dot(pos_ij, pos_kl);
-
-            return mShakeElement;
+            return mShakeElement * dot(pos_ij, pos_kl);
         }
     }   // namespace
 
@@ -85,8 +83,8 @@ namespace constraints
      */
     struct MShake::MShakeMatrices
     {
-        std::vector<linalg::Matrix<double>> mShakeMatrices;
-        std::vector<linalg::Matrix<double>> mShakeInvMatrices;
+        std::vector<linalg::Matrix<PosSquaredInvMass>> mShakeMatrices;
+        std::vector<linalg::Matrix<MassInvPosSquared>> mShakeInvMatrices;
     };
 
     /**
@@ -121,8 +119,8 @@ namespace constraints
             const auto nAtoms = mShakeReference.getNumberOfAtoms();
             const auto nBonds = nAtoms * (nAtoms - 1) / 2;
 
-            std::vector<double>    rSquaredRefs;
-            linalg::Matrix<double> mShakeMatrix(nBonds, nBonds);
+            std::vector<DistanceSquared>      rSquaredRefs;
+            linalg::Matrix<PosSquaredInvMass> mShakeMatrix(nBonds, nBonds);
 
             size_t bond_ij = 0;
 
@@ -202,7 +200,7 @@ namespace constraints
     {
         auto &molecules = simulationBox.getMolecules();
 
-        const auto timeStepValue = timeStep.numerical_value_in(s);
+        const auto timeStepValue = timeStep;
         const auto timeFactor    = 4.0 * timeStepValue * timeStepValue;
         const auto shakeFactor   = 2.0 * timeStepValue * timeStepValue;
 
@@ -220,12 +218,12 @@ namespace constraints
                 _mShakeMatrices->mShakeInvMatrices[mShakeIndex].rows();
             auto &atoms = molecule.getAtoms();
 
-            std::vector<linalg::Vec3D> bondsUnconstrained(nBonds);
-            std::vector<linalg::Vec3D> bondsPrevious(nBonds);
-            std::vector<double>        shakeVector(nBonds);
-            linalg::Matrix<double>     mShakeMatrix(nBonds, nBonds);
+            std::vector<Pos3D>                bondsUnconstrained(nBonds);
+            std::vector<Pos3D>                bondsPrevious(nBonds);
+            std::vector<VelSquared>           shakeVector(nBonds);
+            linalg::Matrix<PosSquaredInvMass> mShakeMatrix(nBonds, nBonds);
 
-            std::vector<linalg::Vec3D> posUnconstrained;
+            std::vector<Pos3D> posUnconstrained;
 
             /******************************************************
              * initialize the unconstrained positions of all atoms *
@@ -356,19 +354,16 @@ namespace constraints
                         const auto &bondPrev = bondsPrevious[index_ij];
                         const auto &solution = solutionVector[index_ij];
 
-                        auto posAdjustment  = solution * bondPrev;
-                        posAdjustment      *= shakeFactor;
+                        auto posAdjustment = solution * bondPrev * shakeFactor;
 
                         posUnconstrained[i] -= posAdjustment / mass_i;
                         posUnconstrained[j] += posAdjustment / mass_j;
 
                         atoms[i]->addVelocity(
-                            -posAdjustment /
-                            (mass_i * timeStep.numerical_value_in(s))
+                            -posAdjustment / (mass_i * timeStep)
                         );
                         atoms[j]->addVelocity(
-                            posAdjustment /
-                            (mass_j * timeStep.numerical_value_in(s))
+                            posAdjustment / (mass_j * timeStep)
                         );
 
                         ++index_ij;
@@ -409,7 +404,7 @@ namespace constraints
                          * reference value is larger than the tolerance value *
                          ******************************************************/
 
-                        if (::fabs(r2Deviation) / (2.0 * r2Ref) > tolerance)
+                        if (mstd::fabs(r2Deviation) / (2.0 * r2Ref) > tolerance)
                             converged = false;
 
                         ++index_ij;
@@ -458,14 +453,15 @@ namespace constraints
 
             const auto mShakeIndex  = findMShakeReferenceIndex(moltype);
             const auto mShakeR2Refs = _mShakeRSquaredRefs[mShakeIndex];
-            auto mShakeMatrix = _mShakeMatrices->mShakeInvMatrices[mShakeIndex];
+            auto       mShakeInvMatrix =
+                _mShakeMatrices->mShakeInvMatrices[mShakeIndex];
             const auto nAtoms = molecule.getNumberOfAtoms();
-            const auto nBonds = mShakeMatrix.rows();
+            const auto nBonds = mShakeInvMatrix.rows();
 
             auto &atoms = molecule.getAtoms();
 
-            std::vector<double>        rattleVector(nBonds);
-            std::vector<linalg::Vec3D> bonds(nBonds);
+            std::vector<PosVel3D> rattleVector(nBonds);
+            std::vector<Pos3D>    bonds(nBonds);
 
             size_t index_ij = 0;
             for (size_t i = 0; i < nAtoms - 1; ++i)
@@ -499,7 +495,7 @@ namespace constraints
                     const auto mass_j = atoms[j]->getMass();
 
                     auto velConstraint =
-                        -stl::dot(mShakeMatrix(index_ij), rattleVector);
+                        -stl::dot(mShakeInvMatrix(index_ij), rattleVector);
 
                     const auto velAdjustment = velConstraint * bonds[index_ij];
 

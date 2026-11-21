@@ -25,6 +25,7 @@
 #include <format>
 
 #include "optimizer.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -39,11 +40,23 @@ namespace out
     {
         const auto& conv = optimizer.getConvergence();
 
-        const auto stepStr     = std::format("{:8d}\t", step);
-        const auto absEnStr    = std::format("{:.8e}\t", conv.getAbsEnergy());
-        const auto relEnStr    = std::format("{:.8e}\t", conv.getRelEnergy());
-        const auto maxForceStr = std::format("{:.8e}\t", conv.getAbsMaxForce());
-        const auto rmsForceStr = std::format("{:.8e}\t", conv.getAbsRMSForce());
+        const auto stepStr  = std::format("{:8d}\t", step);
+        const auto absEnStr = std::format(
+            "{:.8e}\t",
+            conv.getAbsEnergy().numerical_value_in(kcal_per_mol)
+        );
+        const auto relEnStr = std::format(
+            "{:.8e}\t",
+            conv.getRelEnergy().numerical_value_in(one)
+        );
+        const auto maxForceStr = std::format(
+            "{:.8e}\t",
+            conv.getAbsMaxForce().numerical_value_in(kcal_per_mol / angstrom)
+        );
+        const auto rmsForceStr = std::format(
+            "{:.8e}\t",
+            conv.getAbsRMSForce().numerical_value_in(kcal_per_mol / angstrom)
+        );
 
         _getFilePointer() << stepStr;
         _getFilePointer() << absEnStr;
@@ -99,14 +112,26 @@ namespace out
         _getFilePointer() << std::format("{:3d}\t", isMaxForceConvInt);
         _getFilePointer() << std::format("{:3d}\t", isRMSForceConvInt);
 
-        _getFilePointer(
-        ) << std::format("{:.8e}\t", conv.getRelEnergyConvThreshold());
-        _getFilePointer(
-        ) << std::format("{:.8e}\t", conv.getAbsEnergyConvThreshold());
-        _getFilePointer(
-        ) << std::format("{:.8e}\t", conv.getAbsMaxForceConvThreshold());
-        _getFilePointer(
-        ) << std::format("{:.8e}\n", conv.getAbsRMSForceConvThreshold());
+        _getFilePointer() << std::format(
+            "{:.8e}\t",
+            conv.getRelEnergyConvThreshold().numerical_value_in(one)
+        );
+        _getFilePointer() << std::format(
+            "{:.8e}\t",
+            conv.getAbsEnergyConvThreshold().numerical_value_in(kcal_per_mol)
+        );
+        _getFilePointer() << std::format(
+            "{:.8e}\t",
+            conv.getAbsMaxForceConvThreshold().numerical_value_in(
+                kcal_per_mol / angstrom
+            )
+        );
+        _getFilePointer() << std::format(
+            "{:.8e}\n",
+            conv.getAbsRMSForceConvThreshold().numerical_value_in(
+                kcal_per_mol / angstrom
+            )
+        );
 
         _getFilePointer().flush();
     }

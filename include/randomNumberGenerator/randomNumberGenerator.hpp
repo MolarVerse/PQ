@@ -42,7 +42,8 @@ namespace rng
        public:
         RandomNumberGenerator();
 
-        double getNormalDistribution(double mean, double stddev);
+        template <typename T>
+        T      getNormalDistribution(const T& mean, const T& stddev);
         double getUniformRealDistribution(double min, double max);
     };
 

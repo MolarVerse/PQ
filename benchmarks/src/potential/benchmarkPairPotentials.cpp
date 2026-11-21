@@ -29,6 +29,7 @@
 #include "lennardJonesPair.hpp"
 #include "morsePair.hpp"
 #include "potentialSettings.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -43,7 +44,7 @@ namespace
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(distance);
-            auto result = potential.calculate(distance);
+            auto result = potential.calculate(distance * angstrom);
             benchmark::DoNotOptimize(result);
         }
     }
@@ -55,28 +56,39 @@ namespace
     )
     {
         double distance      = static_cast<double>(state.range(0)) / 1000.0;
-        double chargeProduct = -0.25;
+        auto   chargeProduct = -0.25 * (elementary_charge * elementary_charge);
 
         for (auto _ : state)
         {
             benchmark::DoNotOptimize(distance);
             benchmark::DoNotOptimize(chargeProduct);
-            auto result = potential.calculate(distance, chargeProduct);
+            auto result =
+                potential.calculate(distance * angstrom, chargeProduct);
             benchmark::DoNotOptimize(result);
         }
     }
 
     void BM_LennardJones(benchmark::State& state)
     {
-        pot::LennardJonesPair potential(9.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+        pot::LennardJonesPair potential(
+            9.0 * angstrom,
+            LJParams{
+                .c6  = 2.0 * kcal_per_mol * angstrom6,
+                .c12 = 3.0 * kcal_per_mol * angstrom12
+            }
+        );
         runNonCoulombBenchmark(state, potential);
     }
 
     void BM_Buckingham(benchmark::State& state)
     {
         pot::BuckinghamPair potential(
-            9.0,
-            BuckinghamParams{.scaling = 1.0, .dRho = 0.3, .c6 = 2.0}
+            9.0 * angstrom,
+            BuckinghamParams{
+                .scaling = 1.0 * kcal_per_mol,
+                .dRho    = 0.3 / angstrom,
+                .c6      = 2.0 * kcal_per_mol * angstrom6
+            }
         );
         runNonCoulombBenchmark(state, potential);
     }
@@ -84,17 +96,17 @@ namespace
     void BM_Morse(benchmark::State& state)
     {
         pot::MorsePair potential(
-            9.0,
+            9.0 * angstrom,
             MorseParams{
-                .dissociationEnergy  = 1.0,
-                .wellWidth           = 2.0,
-                .equilibriumDistance = 1.5
+                .dissociationEnergy  = 1.0 * kcal_per_mol,
+                .wellWidth           = 2.0 / angstrom,
+                .equilibriumDistance = 1.5 * angstrom
             }
         );
         runNonCoulombBenchmark(state, potential);
     }
 
-    PotentialSettings makeCoulombSettings(double cutoff)
+    PotentialSettings makeCoulombSettings(const Distance& cutoff)
     {
         PotentialSettings settings;
         settings.setCoulombRadiusCutOffByUser(cutoff);
@@ -103,21 +115,21 @@ namespace
 
     void BM_CoulombShifted(benchmark::State& state)
     {
-        const auto                   settings = makeCoulombSettings(9.0);
+        const auto settings = makeCoulombSettings(9.0 * angstrom);
         pot::CoulombShiftedPotential potential(settings);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombWolf(benchmark::State& state)
     {
-        const auto       settings = makeCoulombSettings(9.0);
-        pot::CoulombWolf potential(settings, 0.25);
+        const auto       settings = makeCoulombSettings(9.0 * angstrom);
+        pot::CoulombWolf potential(settings, 0.25 / angstrom);
         runCoulombBenchmark(state, potential);
     }
 
     void BM_CoulombReactionField(benchmark::State& state)
     {
-        const auto                settings = makeCoulombSettings(9.0);
+        const auto settings = makeCoulombSettings(9.0 * angstrom);
         pot::CoulombReactionField potential(settings, 78.5);
         runCoulombBenchmark(state, potential);
     }

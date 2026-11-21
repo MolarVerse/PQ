@@ -27,7 +27,6 @@
 
 #include "atom.hpp"
 #include "berendsenManostat.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -39,6 +38,15 @@
 #include "triclinicBox.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
+
+namespace
+{
+    // pressure in bar corresponding to 1 kcal/mol/A^3
+    const double PRESSURE_FACTOR =
+        (1.0 * kcal_per_mol / angstrom3 / avogadro_constant)
+            .numerical_value_in(bar);
+}   // namespace
 
 class TestableSimSpaceScalingManostat : public manostat::BerendsenManostat
 {
@@ -161,25 +169,27 @@ namespace
         physicalData::PhysicalData& physicalData
     )
     {
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         simulationBox.setBox(orthoBox, false);
-        simulationBox.setTotalMass(2.0);
+        simulationBox.setTotalMass(2.0 * g_per_mol);
 
-        physicalData.setVirial(diagonalMatrix(linalg::Vec3D(0.0)));
+        physicalData.setVirial(VirialPerMol::zero());
         physicalData.setKineticEnergyMolecularVector(
-            diagonalMatrix(linalg::Vec3D(0.0))
+            diagonalMatrix(linalg::Vec3D(0.0)) * kcal_per_mol
         );
         physicalData.setKineticEnergyAtomicVector(
-            diagonalMatrix(linalg::Vec3D(0.0))
+            diagonalMatrix(linalg::Vec3D(0.0)) * kcal_per_mol
         );
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition({4.95, 0.0, 0.0});
-        atom2->setPosition({-4.85, 0.0, 0.0});
-        atom1->setMass(1.0);
-        atom2->setMass(1.0);
+        atom1->setPosition(linalg::Vec3D{4.95, 0.0, 0.0} * angstrom);
+        atom2->setPosition(linalg::Vec3D{-4.85, 0.0, 0.0} * angstrom);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(1.0 * g_per_mol);
 
         auto molecule = molsys::Molecule();
         molecule.addAtom(atom1);
@@ -191,12 +201,13 @@ namespace
         simulationBox.addMolecule(molecule);
     }
 
-    linalg::Vec3D getMinimumImageDistance(molsys::SimulationBox& simulationBox)
+    Pos3D getMinimumImageDistance(molsys::SimulationBox& simulationBox)
     {
         const auto mol = simulationBox.getMolecule(0);
 
-        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
-                         mol.getAtomPosition(AtomIndex{0});
+        auto dPosition =
+            (mol.getAtomPosition(AtomIndex{1}) -
+             mol.getAtomPosition(AtomIndex{0}));
         simulationBox.applyPBC(dPosition);
 
         return dPosition;
@@ -211,24 +222,34 @@ namespace
         const auto centerOfMass =
             simulationBox.getMolecule(0).getCenterOfMass();
 
-        EXPECT_NEAR(simulationBox.getBoxDimensions()[0], 9.8, 1e-12);
-        EXPECT_NEAR(centerOfMass[0], -4.851, 1e-12);
-        EXPECT_NEAR(centerOfMass[1], 0.0, 1e-12);
-        EXPECT_NEAR(centerOfMass[2], 0.0, 1e-12);
-        EXPECT_NEAR(dPosition[0], 0.2, 1e-12);
-        EXPECT_NEAR(dPosition[1], 0.0, 1e-12);
-        EXPECT_NEAR(dPosition[2], 0.0, 1e-12);
+        EXPECT_NEAR(
+            simulationBox.getBoxDimensions()[0].numerical_value_in(angstrom),
+            9.8,
+            1e-12
+        );
+        EXPECT_NEAR(
+            centerOfMass[0].numerical_value_in(angstrom),
+            -4.851,
+            1e-12
+        );
+        EXPECT_NEAR(centerOfMass[1].numerical_value_in(angstrom), 0.0, 1e-12);
+        EXPECT_NEAR(centerOfMass[2].numerical_value_in(angstrom), 0.0, 1e-12);
+        EXPECT_NEAR(dPosition[0].numerical_value_in(angstrom), 0.2, 1e-12);
+        EXPECT_NEAR(dPosition[1].numerical_value_in(angstrom), 0.0, 1e-12);
+        EXPECT_NEAR(dPosition[2].numerical_value_in(angstrom), 0.0, 1e-12);
 
         for (AtomIndex atomIndex{0}; atomIndex.get() < 2; ++atomIndex)
         {
             for (size_t axis = 0; axis < 3; ++axis)
             {
-                const auto coordinate =
-                    simulationBox.getMolecule(0).getAtomPosition(
-                        atomIndex
-                    )[axis];
+                const auto coordinate = simulationBox.getMolecule(0)
+                                            .getAtomPosition(atomIndex)[axis]
+                                            .numerical_value_in(angstrom);
                 const auto halfBoxLength =
-                    simulationBox.getBoxDimensions()[axis] / 2.0;
+                    simulationBox.getBoxDimensions()[axis].numerical_value_in(
+                        angstrom
+                    ) /
+                    2.0;
 
                 EXPECT_GE(coordinate, -halfBoxLength);
                 EXPECT_LT(coordinate, halfBoxLength);
@@ -236,15 +257,16 @@ namespace
         }
     }
 
-    double getMinimumImageDistance(
+    Distance getMinimumImageDistance(
         molsys::SimulationBox& simulationBox,
         size_t                 moleculeIndex
     )
     {
         const auto mol = simulationBox.getMolecule(moleculeIndex);
 
-        auto dPosition = mol.getAtomPosition(AtomIndex{1}) -
-                         mol.getAtomPosition(AtomIndex{0});
+        auto dPosition =
+            (mol.getAtomPosition(AtomIndex{1}) -
+             mol.getAtomPosition(AtomIndex{0}));
 
         simulationBox.applyPBC(dPosition);
 
@@ -324,15 +346,17 @@ TEST_F(TestManostat, ChangeVirialToAtomic)
  */
 TEST_F(TestManostat, testApplyBerendsenManostat)
 {
-    molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {2.0 * angstrom, 2.0 * angstrom, 2.0 * angstrom}
+    };
     _box->setBox(orthoBox, false);
     const auto boxOld = _box->getBoxDimensions();
 
     auto       molecule = molsys::Molecule();
     const auto atom     = std::make_shared<molsys::Atom>();
-    atom->setPosition({1.0, 0.0, 0.0});
+    atom->setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
     molecule.addAtom(atom);
-    molecule.setCenterOfMass({1.0, 0.0, 0.0});
+    molecule.setCenterOfMass({1.0 * angstrom, 0.0 * angstrom, 0.0 * angstrom});
 
     _box->addMolecule(molecule);
 
@@ -349,19 +373,39 @@ TEST_F(TestManostat, testApplyBerendsenManostat)
         )
     );
     const auto timeStep = 0.5 * fs;
-    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 0.99);
+    _manostat->applyManostat(
+        *_box,
+        *_data,
+        toTemperature(0.0),
+        timeStep,
+        0.99 * angstrom
+    );
     auto boxNew = _box->getBoxDimensions();
 
     EXPECT_DOUBLE_EQ(
         _data->getPressure().numerical_value_in(bar),
         0.75 * PRESSURE_FACTOR
     );
-    EXPECT_NEAR(boxNew[0], (boxOld * scaleFactors)[0], 1e-8);
-    EXPECT_NEAR(boxNew[1], (boxOld * scaleFactors)[1], 1e-8);
-    EXPECT_NEAR(boxNew[2], (boxOld * scaleFactors)[2], 1e-8);
+    EXPECT_NEAR(
+        boxNew[0].numerical_value_in(angstrom),
+        (boxOld * scaleFactors)[0].numerical_value_in(angstrom),
+        1e-8
+    );
+    EXPECT_NEAR(
+        boxNew[1].numerical_value_in(angstrom),
+        (boxOld * scaleFactors)[1].numerical_value_in(angstrom),
+        1e-8
+    );
+    EXPECT_NEAR(
+        boxNew[2].numerical_value_in(angstrom),
+        (boxOld * scaleFactors)[2].numerical_value_in(angstrom),
+        1e-8
+    );
     EXPECT_TRUE(
         utilities::compare(
-            _box->getMolecule(0).getAtomPosition(AtomIndex{0}),
+            _box->getMolecule(0)
+                .getAtomPosition(AtomIndex{0})
+                .numerical_value_in(angstrom),
             linalg::Vec3D(1.0, 0.0, 0.0) * scaleFactors,
             1e-9
         )
@@ -381,7 +425,13 @@ TEST_F(TestManostat, testApplyBerendsenManostatPreservesCutMoleculeGeometry)
         _settings->manostatSettings
     );
     const auto timeStep = 1.0 * fs;
-    manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 4.0);
+    manostat->applyManostat(
+        *_box,
+        *_data,
+        toTemperature(0.0),
+        timeStep,
+        4.0 * angstrom
+    );
 
     expectCutMoleculeScaled(*_box);
 }
@@ -405,7 +455,13 @@ TEST_F(
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
 
     const auto timeStep = 1.0 * fs;
-    manostat.applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 4.0);
+    manostat.applyManostat(
+        *_box,
+        *_data,
+        toTemperature(0.0),
+        timeStep,
+        4.0 * angstrom
+    );
 
     expectCutMoleculeScaled(*_box);
 }
@@ -420,10 +476,10 @@ TEST_F(
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition({-1.0, 0.0, 0.0});
-    atom2->setPosition({-0.8, 0.0, 0.0});
-    atom1->setMass(1.0);
-    atom2->setMass(1.0);
+    atom1->setPosition(linalg::Vec3D{-1.0, 0.0, 0.0} * angstrom);
+    atom2->setPosition(linalg::Vec3D{-0.8, 0.0, 0.0} * angstrom);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
 
     auto molecule = molsys::Molecule();
     molecule.addAtom(atom1);
@@ -433,7 +489,7 @@ TEST_F(
     _box->addAtom(atom1);
     _box->addAtom(atom2);
     _box->addMolecule(molecule);
-    _box->setTotalMass(4.0);
+    _box->setTotalMass(4.0 * g_per_mol);
 
     _settings->manostatSettings.setTargetPressureByUser(
         -3.0 * ::log(0.98) * bar
@@ -442,14 +498,24 @@ TEST_F(
     auto manostat =
         manostat::StochasticRescalingManostat(_settings->manostatSettings);
     const auto timeStep = 1.0 * fs;
-    manostat.applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 4.0);
+    manostat.applyManostat(
+        *_box,
+        *_data,
+        toTemperature(0.0),
+        timeStep,
+        4.0 * angstrom
+    );
 
     const auto cutDistance    = getMinimumImageDistance(*_box, 0);
     const auto insideDistance = getMinimumImageDistance(*_box, 1);
 
-    EXPECT_NEAR(cutDistance, 0.2, 1e-12);
-    EXPECT_NEAR(insideDistance, 0.2, 1e-12);
-    EXPECT_NEAR(cutDistance, insideDistance, 1e-12);
+    EXPECT_NEAR(cutDistance.numerical_value_in(angstrom), 0.2, 1e-12);
+    EXPECT_NEAR(insideDistance.numerical_value_in(angstrom), 0.2, 1e-12);
+    EXPECT_NEAR(
+        cutDistance.numerical_value_in(angstrom),
+        insideDistance.numerical_value_in(angstrom),
+        1e-12
+    );
 }
 
 /**
@@ -462,7 +528,9 @@ TEST_F(
     testApplyBerendsenManostatCutoffLargerThanHalfOfMinimumBoxDimension
 )
 {
-    molsys::OrthorhombicBox orthoBox{{2.0, 2.0, 2.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {2.0 * angstrom, 2.0 * angstrom, 2.0 * angstrom}
+    };
     _box->setBox(orthoBox, false);
 
     _manostat->calculatePressure(*_box, *_data);
@@ -475,8 +543,13 @@ TEST_F(
     );
 
     EXPECT_THROW_MSG(
-        _manostat
-            ->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 10.0),
+        _manostat->applyManostat(
+            *_box,
+            *_data,
+            toTemperature(0.0),
+            timeStep,
+            10.0 * angstrom
+        ),
         exc::ManostatException,
         "Coulomb radius cut off is larger than half of the minimal box "
         "dimension"
@@ -490,7 +563,13 @@ TEST_F(
 TEST_F(TestManostat, applyNoneManostat)
 {
     const auto timeStep = 1.0 * fs;
-    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 12.5);
+    _manostat->applyManostat(
+        *_box,
+        *_data,
+        toTemperature(0.0),
+        timeStep,
+        12.5 * angstrom
+    );
 
     EXPECT_DOUBLE_EQ(
         _data->getPressure().numerical_value_in(bar),
@@ -510,8 +589,9 @@ TEST_F(TestManostat, stochasticRescalingMuUsesLengthScaling)
         TestableStochasticRescalingManostat(_settings->manostatSettings);
     manostat.setPressure(1.0 * bar);
 
-    const auto mu = manostat.calculateMu(10.0, toTemperature(0.0), timeStep)
-                        .numerical_value_in(one);
+    const auto mu =
+        manostat.calculateMu(10.0 * angstrom3, toTemperature(0.0), timeStep)
+            .numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
 
     EXPECT_DOUBLE_EQ(mu[0][0], expected);
@@ -524,29 +604,35 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     const auto timeStep = 0.5 * fs;
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     _box->setBox(orthoBox, false);
 
-    _data->setVirial(linalg::tensor3D(0.0));
-    _data->setKineticEnergyMolecularVector(linalg::tensor3D(0.0));
+    _data->setVirial(VirialPerMol::zero());
+    _data->setKineticEnergyMolecularVector(VirialPerMol::zero());
 
     auto molecule = molsys::Molecule();
 
-    const auto addAtom = [this, &molecule](
-                             const linalg::Vec3D& position,
-                             const linalg::Vec3D& velocity
-                         )
+    const auto addAtom =
+        [this, &molecule](const Pos3D& position, const Vel3D& velocity)
     {
         auto atom = std::make_shared<molsys::Atom>();
-        atom->setMass(1.0);
+        atom->setMass(1.0 * g_per_mol);
         atom->setPosition(position);
         atom->setVelocity(velocity);
         molecule.addAtom(atom);
         _box->addAtom(atom);
     };
 
-    addAtom({1.0, 0.0, 0.0}, {2.0, 0.0, 0.0});
-    addAtom({2.0, 0.0, 0.0}, {4.0, 0.0, 0.0});
+    addAtom(
+        linalg::Vec3D{1.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{2.0, 0.0, 0.0} * angstrom / s
+    );
+    addAtom(
+        linalg::Vec3D{2.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{4.0, 0.0, 0.0} * angstrom / s
+    );
 
     molecule.calculateCenterOfMass(_box->getBox());
     _box->addMolecule(molecule);
@@ -563,23 +649,29 @@ TEST_F(TestManostat, stochasticRescalingPreservesInternalMolecularVelocities)
     const auto expectedCenterOfMassVelocity = linalg::Vec3D(3.0 / mu, 0.0, 0.0);
     const auto expectedRelativeVelocity     = linalg::Vec3D(2.0, 0.0, 0.0);
 
-    _manostat->applyManostat(*_box, *_data, toTemperature(0.0), timeStep, 0.49);
+    _manostat->applyManostat(
+        *_box,
+        *_data,
+        toTemperature(0.0),
+        timeStep,
+        0.49 * angstrom
+    );
 
-    const auto mol                  = _box->getMolecule(0);
-    const auto velocity0            = mol.getAtomVelocity(AtomIndex{0});
-    const auto velocity1            = mol.getAtomVelocity(AtomIndex{1});
+    const auto molecule2            = _box->getMolecule(0);
+    const auto velocity0            = molecule2.getAtomVelocity(AtomIndex{0});
+    const auto velocity1            = molecule2.getAtomVelocity(AtomIndex{1});
     const auto centerOfMassVelocity = (velocity0 + velocity1) / 2.0;
 
     EXPECT_TRUE(
         utilities::compare(
-            centerOfMassVelocity,
+            centerOfMassVelocity.numerical_value_in(angstrom / s),
             expectedCenterOfMassVelocity,
             1e-12
         )
     );
     EXPECT_TRUE(
         utilities::compare(
-            velocity1 - velocity0,
+            (velocity1 - velocity0).numerical_value_in(angstrom / s),
             expectedRelativeVelocity,
             1e-12
         )
@@ -727,7 +819,8 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto volume = 1.0;   // Assuming a unit volume for the test
+        const auto volume =
+            1.0 * angstrom3;   // Assuming a unit volume for the test
         const auto mu =
             manostat.calculateMu(volume, toTemperature(0.0), timeStep)
                 .numerical_value_in(one);
@@ -750,7 +843,8 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto volume = 1.0;   // Assuming a unit volume for the test
+        const auto volume =
+            1.0 * angstrom3;   // Assuming a unit volume for the test
         const auto mu =
             manostat.calculateMu(volume, toTemperature(0.0), timeStep)
                 .numerical_value_in(one);
@@ -773,7 +867,8 @@ TEST_F(TestManostat, stochasticRescalingFixedAxesMu)
             diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
         );
 
-        const auto volume = 1.0;   // Assuming a unit volume for the test
+        const auto volume =
+            1.0 * angstrom3;   // Assuming a unit volume for the test
         const auto mu =
             manostat.calculateMu(volume, toTemperature(0.0), timeStep)
                 .numerical_value_in(one);
@@ -799,7 +894,8 @@ TEST_F(TestManostat, anisotropicStochasticRescalingFixedAxesMu)
         diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * bar
     );
 
-    const auto volume = 1.0;   // Assuming a unit volume for the test
+    const auto volume =
+        1.0 * angstrom3;   // Assuming a unit volume for the test
     const auto mu = manostat.calculateMu(volume, toTemperature(0.0), timeStep)
                         .numerical_value_in(one);
     const auto expected = ::exp(-(0.12 * 0.5 / 0.25) * (7.0 - 1.0) / 3.0);
@@ -824,7 +920,8 @@ TEST_F(TestManostat, fullAnisotropicStochasticRescalingFixedAxesMu)
         linalg::tensor3D({{1.0, 0.2, 0.3}, {0.2, 2.0, 0.4}, {0.3, 0.4, 3.0}});
     manostat.setPressureTensor(pTensor * bar);
 
-    const auto volume = 1.0;   // Assuming a unit volume for the test
+    const auto volume =
+        1.0 * angstrom3;   // Assuming a unit volume for the test
     const auto mu = manostat.calculateMu(volume, toTemperature(0.0), timeStep)
                         .numerical_value_in(one);
     EXPECT_DOUBLE_EQ(mu[0][0], 1.0);
@@ -874,7 +971,8 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
         diagonalMatrix(linalg::Vec3D(1.0, 5.0, 3.0)) * bar
     );
 
-    const auto volume = 1.0;   // Assuming a unit volume for the test
+    const auto volume =
+        1.0 * angstrom3;   // Assuming a unit volume for the test
     const auto mu = manostat.calculateMu(volume, toTemperature(0.0), timeStep)
                         .numerical_value_in(one);
     // xz avg = 2.0, deltaPxy = 7.0 - 2.0 = 5.0
@@ -891,7 +989,9 @@ TEST_F(TestManostat, semiIsotropicStochasticRescalingFixedAnisotropicAxisMu)
 TEST_F(TestManostat, toSimSpaceScalingOrthorhombicIsIdentityTransform)
 {
     const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
-    const molsys::OrthorhombicBox box{{10.0, 11.0, 12.0}};
+    const molsys::OrthorhombicBox box{
+        {10.0 * angstrom, 11.0 * angstrom, 12.0 * angstrom}
+    };
 
     const auto result =
         TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
@@ -910,7 +1010,11 @@ TEST_F(TestManostat, toSimSpaceScalingFullAnisotropicIsIdentityTransform)
         {0.0, 1.1, 0.2},
         {0.0, 0.0, 0.9}
     );
-    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, true};
+    const molsys::TriclinicBox box{
+        {4.0 * angstrom, 5.0 * angstrom, 6.0 * angstrom},
+        linalg::Vec3D{80.0, 75.0, 70.0} * deg,
+        true
+    };
 
     const auto result =
         TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box);
@@ -925,7 +1029,11 @@ TEST_F(TestManostat, toSimSpaceScalingFullAnisotropicIsIdentityTransform)
 TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
 {
     const auto mu = linalg::diagonalMatrix(linalg::Vec3D{0.9, 1.0, 1.1});
-    const molsys::TriclinicBox box{{4.0, 5.0, 6.0}, {80.0, 75.0, 70.0}, false};
+    const molsys::TriclinicBox box{
+        {4.0 * angstrom, 5.0 * angstrom, 6.0 * angstrom},
+        linalg::Vec3D{80.0, 75.0, 70.0} * deg,
+        false
+    };
 
     const auto muSim =
         TestableSimSpaceScalingManostat::toSimSpaceScaling(mu, box)
@@ -935,7 +1043,13 @@ TEST_F(TestManostat, toSimSpaceScalingTriclinicFixedAngles)
     const auto          expected = box.getBoxMatrix() * (mu * vector);
     const auto          result   = muSim * (box.getBoxMatrix() * vector);
 
-    EXPECT_TRUE(utilities::compare(result, expected, 1e-12));
+    EXPECT_TRUE(
+        utilities::compare(
+            result.numerical_value_in(angstrom),
+            expected.numerical_value_in(angstrom),
+            1e-12
+        )
+    );
 
     // isotropic scaling is invariant under the transformation
     const auto isotropic = linalg::diagonalMatrix(linalg::Vec3D{0.95});

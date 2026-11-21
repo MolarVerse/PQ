@@ -65,10 +65,10 @@ int main()
 
     // rigid water: oxygen and two hydrogens
     const auto names  = std::vector<std::string>{"O", "H", "H"};
-    const auto refPos = std::vector<linalg::Vec3D>{
-        {0.0, 0.0, 0.0},
-        {0.585882, 0.756950, 0.0},
-        {0.585882, -0.756950, 0.0}
+    const auto refPos = std::vector<Pos3D>{
+        {0.0 * angstrom, 0.0 * angstrom, 0.0 * angstrom},
+        {0.585882 * angstrom, 0.756950 * angstrom, 0.0 * angstrom},
+        {0.585882 * angstrom, -0.756950 * angstrom, 0.0 * angstrom}
     };
 
     auto moleculeType = molsys::MoleculeType();
@@ -92,7 +92,9 @@ int main()
     mShake.initMShake();
 
     auto                    box = molsys::SimulationBox();
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     for (std::size_t molecule = 0; molecule < N_MOLECULES; ++molecule)
@@ -115,9 +117,12 @@ int main()
             auto atom = std::make_shared<molsys::Atom>();
             atom->setName(names.at(i));
             atom->initMass();
-            atom->setPosition(origin + refPos.at(i));
-            atom->setPositionOld(origin + refPos.at(i));
-            atom->setVelocity({0.01, -0.02 * static_cast<double>(i), 0.005});
+            atom->setPosition(origin * angstrom + refPos.at(i));
+            atom->setPositionOld(origin * angstrom + refPos.at(i));
+            atom->setVelocity(
+                linalg::Vec3D{0.01, -0.02 * static_cast<double>(i), 0.005} *
+                angstrom / s
+            );
             water.addAtom(atom);
         }
 
@@ -134,7 +139,7 @@ int main()
         {
             auto &atom  = molecule.getAtom(AtomIndex{1});
             auto  pos   = atom.getPosition();
-            pos[0]     += (i % 2 == 0) ? 0.02 : -0.02;
+            pos[0]     += (i % 2 == 0) ? 0.02 * angstrom : -0.02 * angstrom;
             atom.setPosition(pos);
         }
 
@@ -145,10 +150,9 @@ int main()
     // read state so the loop cannot be optimized away: the O-H bond length of
     // the first molecule (the reference value is restored by M-SHAKE)
     const auto &first = box.getMolecules().front();
-    const auto  bond  = norm(
-        first.getAtomPosition(AtomIndex{1}) -
-        first.getAtomPosition(AtomIndex{0})
-    );
+    const auto  bond  = norm((first.getAtomPosition(AtomIndex{1}) -
+                            first.getAtomPosition(AtomIndex{0}))
+                               .numerical_value_in(angstrom));
     std::cout << std::format("{:.6f}\n", bond);
     return 0;
 }

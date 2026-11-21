@@ -21,6 +21,7 @@
 ******************************************************************************/
 
 // only built with BUILD_WITH_HDF5; empty for tools without the HDF5 headers
+#include "units.hpp"
 #if __has_include(<hdf5.h>)
 
 #include <gtest/gtest.h>
@@ -45,7 +46,9 @@ namespace
     {
         molsys::SimulationBox simulationBox;
         simulationBox.setBox(
-            molsys::OrthorhombicBox{{10.0, 11.0, 12.0}},
+            molsys::OrthorhombicBox{
+                {10.0 * angstrom, 11.0 * angstrom, 12.0 * angstrom}
+            },
             false
         );
 
@@ -56,10 +59,20 @@ namespace
             const auto x    = static_cast<double>(i);
             auto       atom = std::make_shared<molsys::Atom>();
             atom->setName(names.at(i));
-            atom->setPosition({x + 1.0, 2.0, 3.0});
-            atom->setVelocity({0.0, x * 1.0e12, 0.0});
-            atom->setForce({0.0, 0.0, -x});
-            atom->setPartialCharge(0.5 * x);
+            atom->setPosition(
+                {(x + 1.0) * angstrom, 2.0 * angstrom, 3.0 * angstrom}
+            );
+            atom->setVelocity(
+                {0.0 * angstrom / s,
+                 x * 1.0e12 * angstrom / s,
+                 0.0 * angstrom / s}
+            );
+            atom->setForce(
+                {0.0 * kcal_per_mol / angstrom,
+                 0.0 * kcal_per_mol / angstrom,
+                 -x * kcal_per_mol / angstrom}
+            );
+            atom->setPartialCharge(0.5 * x * elementary_charge);
             molecule.addAtom(atom);
             simulationBox.addAtom(atom);
         }

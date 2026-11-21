@@ -86,9 +86,9 @@ namespace timings
     /**
      * @brief calculates the loop time of the simulation
      *
-     * @return double
+     * @return Time
      */
-    double GlobalTimer::calculateLoopTime() const
+    Time GlobalTimer::calculateLoopTime() const
     {
         return _getSimulationTimer().calculateLoopTime();
     }
@@ -96,9 +96,9 @@ namespace timings
     /**
      * @brief calculates the elapsed time of the simulation
      *
-     * @return double
+     * @return Time
      */
-    double GlobalTimer::calculateElapsedTime() const
+    Time GlobalTimer::calculateElapsedTime() const
     {
         return _getSimulationTimer().calculateElapsedTime();
     }

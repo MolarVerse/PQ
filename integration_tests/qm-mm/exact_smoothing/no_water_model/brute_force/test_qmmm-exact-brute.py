@@ -26,7 +26,7 @@ import pytest
 import os
 
 from conftest import execute_pq
-from analysis import check_pq_output
+from analysis import check_pq_output, DFTB_FORCE_ATOL
 
 
 @pytest.mark.parametrize(
@@ -48,4 +48,5 @@ def test_qmmm_exact_brute(test_with_data_dir):
     check_pq_output(
         "output-md-01",
         "qm-mm/exact_smoothing/no_water_model/brute_force",
+        force_atol=DFTB_FORCE_ATOL,
     )

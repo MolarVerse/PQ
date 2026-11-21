@@ -34,6 +34,7 @@
 #include "settings.hpp"
 #include "testEnergyOutput.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests the order of all columns with every option active
@@ -97,8 +98,8 @@ TEST_F(TestEnergyOutput, energyColumnsAllActive)
  */
 TEST_F(TestEnergyOutput, energyColumnsQM)
 {
-    _physicalData->setQMEnergy(7.0);
-    _physicalData->setQMReferenceEnergy(2.0);
+    _physicalData->setQMEnergy(7.0 * kcal_per_mol);
+    _physicalData->setQMReferenceEnergy(2.0 * kcal_per_mol);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);

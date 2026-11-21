@@ -49,6 +49,8 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 namespace input::guffdat
@@ -278,7 +280,7 @@ namespace input::guffdat
             );
         }
 
-        double rncCutOff = stod(lineCommands[4]);
+        Distance rncCutOff = stod(lineCommands[4]) * angstrom;
 
         if (rncCutOff < 0.0)
             rncCutOff =
@@ -286,7 +288,8 @@ namespace input::guffdat
                 );
 
         constexpr auto coulombCoeffIndex = 5;
-        const double   coulombCoeff = stod(lineCommands[coulombCoeffIndex]);
+        const auto     coulombCoeff =
+            stod(lineCommands[coulombCoeffIndex]) * kcal_per_mol * angstrom;
         std::vector<double> guffCoefficients;
 
         std::ranges::for_each(
@@ -334,7 +337,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        double                     rncCutOff
+        const Distance            &rncCutOff
     )
     {
         switch (_engine.getSettings().potentialSettings.getNonCoulombType())
@@ -425,15 +428,17 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        double                     rncCutOff
+        const Distance            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
             _engine.getPotential()->getNonCoulombPotential()
         );
 
-        const auto params =
-            LJParams{.c6 = coefficients[0], .c12 = coefficients[2]};
+        const auto params = LJParams{
+            .c6  = coefficients[0] * kcal_per_mol * angstrom6,
+            .c12 = coefficients[2] * kcal_per_mol * angstrom12
+        };
         const auto LJPair = pot::LennardJonesPair(rncCutOff, params);
 
         const auto [eCutOff, fCutOff] = LJPair.calculate(rncCutOff);
@@ -477,7 +482,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        double                     rncCutOff
+        const Distance            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -485,9 +490,9 @@ namespace input::guffdat
         );
 
         const auto params = BuckinghamParams{
-            .scaling = coefficients[0],
-            .dRho    = coefficients[1],
-            .c6      = coefficients[2]
+            .scaling = coefficients[0] * kcal_per_mol,
+            .dRho    = coefficients[1] / angstrom,
+            .c6      = coefficients[2] * kcal_per_mol * angstrom6
         };
         const auto buckPair           = pot::BuckinghamPair(rncCutOff, params);
         const auto [eCutOff, fCutOff] = buckPair.calculate(rncCutOff);
@@ -532,7 +537,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        double                     rncCutOff
+        const Distance            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -540,9 +545,9 @@ namespace input::guffdat
         );
 
         const auto params = MorseParams{
-            .dissociationEnergy  = coefficients[0],
-            .wellWidth           = coefficients[1],
-            .equilibriumDistance = coefficients[2]
+            .dissociationEnergy  = coefficients[0] * kcal_per_mol,
+            .wellWidth           = coefficients[1] / angstrom,
+            .equilibriumDistance = coefficients[2] * angstrom
         };
 
         const auto morsePair          = pot::MorsePair(rncCutOff, params);
@@ -590,7 +595,7 @@ namespace input::guffdat
         AtomType                                                   atomType1,
         AtomType                                                   atomType2,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients,
-        double                                                     rncCutOff
+        const Distance                                            &rncCutOff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -676,8 +681,8 @@ namespace input::guffdat
                 const auto coulombCoeff =
                     _guffCoulombCoeffs[i][i][atomType.get()][atomType.get()];
 
-                const auto prefactor     = coulombCoeff / COULOMB_PREFACTOR;
-                const auto prefactorSqrt = ::sqrt(prefactor);
+                const auto prefactor     = coulombCoeff / coulomb_prefactor;
+                const auto prefactorSqrt = mstd::sqrt(prefactor);
                 const auto prefactorSign =
                     utilities::sign(moleculeType->getPartialCharge(j));
                 const auto partialCharge = prefactorSqrt * prefactorSign;
@@ -751,7 +756,7 @@ namespace input::guffdat
                         const auto chargeSquared =
                             partialCharge1 * partialCharge2;
                         const auto prefactor =
-                            chargeSquared * COULOMB_PREFACTOR;
+                            chargeSquared * coulomb_prefactor;
 
                         if (!utilities::compare(
                                 prefactor,
@@ -762,17 +767,14 @@ namespace input::guffdat
                             throw exc::GuffDatException(
                                 std::format(
                                     "Invalid coulomb coefficient guff file for "
-                                    "molecule "
-                                    "types {} and {} and the {}. and the {}. "
-                                    "atom "
-                                    "type. The coulomb "
-                                    "coefficient should "
-                                    "be {} but is {}",
+                                    "molecule types {} and {} and the {}. and "
+                                    "the {}. atom type. The coulomb "
+                                    "coefficient should be {} but is {}",
                                     i + 1,
                                     j + 1,
                                     k.get() + 1,
                                     l.get() + 1,
-                                    prefactor,
+                                    prefactor.in(kcal_per_mol * angstrom),
                                     coeff
                                 )
                             );
@@ -903,11 +905,11 @@ namespace input::guffdat
      * @param coefficient
      */
     void GuffDatReader::setGuffCoulombCoefficients(
-        MolType  molType1,
-        MolType  molType2,
-        AtomType atomType1,
-        AtomType atomType2,
-        double   coefficient
+        MolType                   molType1,
+        MolType                   molType2,
+        AtomType                  atomType1,
+        AtomType                  atomType2,
+        const EnergyLengthPerMol &coefficient
     )
     {
         _guffCoulombCoeffs[molType1.get()][molType2.get()][atomType1.get()]
@@ -944,9 +946,10 @@ namespace input::guffdat
     /**
      * @brief Get the Guff Coulomb Coefficients object
      *
-     * @return std::vector<std::vector<std::vector<std::vector<double>>>>&
+     * @return
+     * std::vector<std::vector<std::vector<std::vector<EnergyLengthPerMol>>>>&
      */
-    std::vector<std::vector<std::vector<std::vector<double>>>> &GuffDatReader::
+    std::vector<std::vector<std::vector<std::vector<EnergyLengthPerMol>>>> &GuffDatReader::
         getGuffCoulombCoefficients()
     {
         return _guffCoulombCoeffs;

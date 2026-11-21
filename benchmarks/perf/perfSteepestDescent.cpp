@@ -28,6 +28,8 @@
 #include <format>
 #include <iostream>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -54,6 +56,9 @@ int main()
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i) optimizer.update(0.001, i);
 
-    std::cout << std::format("{:.6f}\n", benchOptimizers::sumOfPositions(*box));
+    std::cout << std::format(
+        "{:.6f}\n",
+        benchOptimizers::sumOfPositions(*box).numerical_value_in(angstrom)
+    );
     return 0;
 }

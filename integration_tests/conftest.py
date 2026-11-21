@@ -36,6 +36,8 @@ import subprocess
 import zipfile
 import pytest
 
+from diagnostics import format_process_failure
+
 
 ZIP_CACHE_DIRNAME = ".zip_cache"
 
@@ -106,20 +108,37 @@ def test_with_data_dir(example_dir):
     shutil.rmtree(tmpdir)
 
 
+class PQRunError(subprocess.CalledProcessError):
+    """A PQ run with a non-zero exit status; tests that expect a failing run
+    catch it as CalledProcessError and read returncode, stdout and stderr."""
+
+    def __str__(self):
+        return format_process_failure(
+            self.cmd, self.returncode, self.stdout, self.stderr)
+
+
 def execute_pq(input_file):
 
     # Path to the pq executable
     folder_path = pathlib.Path(__file__).parent.absolute()
 
-    # PQ lies in ../../build/apps/PQ
+    # PQ lies in ../<build dir>/apps/PQ; the build directory name defaults to
+    # "build" and can be overridden with the PQ_BUILD_DIR environment variable
+    # (a name relative to the repository root, or an absolute path)
+    build_dir = os.environ.get("PQ_BUILD_DIR", "build")
 
     pq_executable = os.path.join(
-        folder_path, "..", "build", "apps", "PQ")
+        folder_path, "..", build_dir, "apps", "PQ")
 
     # Run the pq executable with the input file
+    command = [pq_executable, input_file]
     process = subprocess.run(
-        [pq_executable, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     stdout = process.stdout
     stderr = process.stderr
+
+    if process.returncode != 0:
+        raise PQRunError(
+            process.returncode, command, output=stdout, stderr=stderr)
 
     return stdout, stderr

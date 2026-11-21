@@ -36,8 +36,8 @@ namespace timings
         std::array<Timer, TimerIdMeta::size> _timers{};
 
        public:
-        [[nodiscard]] double calculateLoopTime() const;
-        [[nodiscard]] double calculateElapsedTime() const;
+        [[nodiscard]] Time calculateLoopTime() const;
+        [[nodiscard]] Time calculateElapsedTime() const;
 
         [[nodiscard]] std::vector<Timer> sortTimers() const;
 

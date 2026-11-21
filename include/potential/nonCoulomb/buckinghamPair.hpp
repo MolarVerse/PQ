@@ -47,33 +47,28 @@ namespace pot
         explicit BuckinghamPair(
             ExtVdwType              vanDerWaalsType1,
             ExtVdwType              vanDerWaalsType2,
-            double                  cutOff,
+            const Pos&              cutOff,
             const BuckinghamParams& params
         );
 
-        explicit BuckinghamPair(double cutOff, const BuckinghamParams& params);
-
         explicit BuckinghamPair(
-            double                  cutOff,
-            double                  energyCutoff,
-            double                  forceCutoff,
+            const Pos&              cutOff,
             const BuckinghamParams& params
         );
 
-        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/906
-        // explicitly deleted to not implicitly create it with the wrong
-        // types!!! Needs cleanup
         explicit BuckinghamPair(
-            size_t,
-            size_t,
-            double,
+            const Pos&              cutOff,
+            const EnergyPerMol&     energyCutoff,
+            const Force&            forceCutoff,
             const BuckinghamParams& params
-        ) = delete;
+        );
 
         [[nodiscard]] bool operator==(const BuckinghamPair& other) const;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(double distance) const override;
+        std::pair<EnergyPerMol, Force> calculate(
+            const Pos& distance
+        ) const override;
 
         friend struct ::TestBuckinghamPairUtils;
     };

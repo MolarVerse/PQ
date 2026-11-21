@@ -31,7 +31,6 @@
 
 #include "box.hpp"
 #include "strongTypes.hpp"
-#include "vector3d.hpp"
 
 namespace molsys
 {
@@ -53,17 +52,17 @@ namespace out
     {
         struct Atom
         {
-            std::string   name;
-            MolType       moltype;
-            std::size_t   indexInMolecule;
-            linalg::Vec3D position;
-            linalg::Vec3D velocity;
-            linalg::Vec3D force;
-            double        charge;
+            std::string name;
+            MolType     moltype;
+            std::size_t indexInMolecule;
+            Pos3D       position;
+            Vel3D       velocity;
+            Force3D     force;
+            Charge      charge;
         };
 
         // (chi, zeta) of each chain link
-        using ChainLink = std::pair<double, double>;
+        using ChainLink = std::pair<Action, Quantity>;
 
         std::unique_ptr<molsys::Box> box;
         std::vector<Atom>            atoms;
@@ -76,7 +75,7 @@ namespace out
             const thermostat::Thermostat &thermostat
         );
 
-        [[nodiscard]] double totalForce() const;
+        [[nodiscard]] Force totalForce() const;
     };
 
 }   // namespace out

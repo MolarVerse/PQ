@@ -25,10 +25,9 @@
 #include <algorithm>
 #include <utility>
 
-#include "constants/conversionFactors.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 
 namespace physicalData
 {
@@ -40,7 +39,7 @@ namespace physicalData
      *
      * @return const linalg::tensor3D&
      */
-    const linalg::tensor3D& KineticEnergyVirialTensor::getVirialTensor(
+    const VirialPerMol& KineticEnergyVirialTensor::getVirialTensor(
         VirialType virialType
     ) const
     {
@@ -62,27 +61,30 @@ namespace physicalData
     {
         auto _ = scopedTimer(TimerId::PhysicalData, "Calc Kinetics");
 
-        _momentum = linalg::Vec3D();
-        linalg::tensor3D kineticEnergyAtomicTensor{};
-        linalg::tensor3D kineticEnergyMolecularTensor{};
+        _momentum = Momentum::zero();
+        MassVelSquaredTensor3D kineticEnergyAtomicTensor =
+            MassVelSquared::zero();
+        MassVelSquaredTensor3D kineticEnergyMolecularTensor =
+            MassVelSquared::zero();
 
         auto kinEnergyAndMomOfMol = [&kineticEnergyAtomicTensor,
                                      &kineticEnergyMolecularTensor,
                                      this](auto& molecule)
         {
             const auto numberOfAtoms     = molecule.getNumberOfAtoms();
-            auto       molecularMomentum = linalg::Vec3D();
+            Momentum3D molecularMomentum = Momentum::zero();
 
             for (AtomIndex i{0}; i.get() < numberOfAtoms; ++i)
             {
-                const auto velocities = molecule.getAtomVelocity(i);
+                const auto& velocities = molecule.getAtomVelocity(i);
 
                 const auto momentum = velocities * molecule.getAtomMass(i);
 
-                _momentum += momentum;
+                _momentum         += momentum;
+                molecularMomentum += momentum;
+
                 kineticEnergyAtomicTensor +=
                     tensorProduct(momentum, velocities);
-                molecularMomentum += momentum;
             }
 
             kineticEnergyMolecularTensor +=
@@ -95,18 +97,15 @@ namespace physicalData
             kinEnergyAndMomOfMol
         );
 
-        kineticEnergyAtomicTensor    *= KINETIC_ENERGY_FACTOR;
-        kineticEnergyMolecularTensor *= KINETIC_ENERGY_FACTOR;
+        const auto atomicEnergyTensor    = kineticEnergyAtomicTensor / 2.0;
+        const auto molecularEnergyTensor = kineticEnergyMolecularTensor / 2.0;
 
-        _kinEnergyVirialTensor.atomic    = kineticEnergyAtomicTensor;
-        _kinEnergyVirialTensor.molecular = kineticEnergyMolecularTensor;
+        _kinEnergyVirialTensor.atomic    = atomicEnergyTensor;
+        _kinEnergyVirialTensor.molecular = molecularEnergyTensor;
 
-        _kineticEnergy = trace(kineticEnergyAtomicTensor);
+        _kineticEnergy = trace(atomicEnergyTensor);
 
-        _angularMomentum  = simulationBox.calculateAngularMomentum(_momentum);
-        _angularMomentum *= FS_TO_S;
-
-        _momentum *= FS_TO_S;
+        _angularMomentum = simulationBox.calculateAngularMomentum(_momentum);
     }
 
     /**
@@ -237,51 +236,48 @@ namespace physicalData
     void PhysicalData::reset()
     {
         _numberOfQMAtoms = 0.0;
-        _loopTime        = 0.0;
+        _loopTime        = Time::zero();
 
-        _volume          = 0.0;
-        _density         = 0.0;
+        _volume          = Volume::zero();
+        _density         = Density::zero();
         _temperature     = Temperature::zero();
         _pressure        = Pressure::zero();
         _coupledPressure = Pressure::zero();
 
-        _kineticEnergy         = 0.0;
-        _coulombEnergy         = 0.0;
-        _nonCoulombEnergy      = 0.0;
-        _intraCoulombEnergy    = 0.0;
-        _intraNonCoulombEnergy = 0.0;
+        _kineticEnergy         = EnergyPerMol::zero();
+        _coulombEnergy         = EnergyPerMol::zero();
+        _nonCoulombEnergy      = EnergyPerMol::zero();
+        _intraCoulombEnergy    = EnergyPerMol::zero();
+        _intraNonCoulombEnergy = EnergyPerMol::zero();
 
-        _bondEnergy     = 0.0;
-        _angleEnergy    = 0.0;
-        _dihedralEnergy = 0.0;
-        _improperEnergy = 0.0;
+        _bondEnergy     = EnergyPerMol::zero();
+        _angleEnergy    = EnergyPerMol::zero();
+        _dihedralEnergy = EnergyPerMol::zero();
+        _improperEnergy = EnergyPerMol::zero();
 
-        _qmEnergy          = 0.0;
-        _qmReferenceEnergy = 0.0;
+        _qmEnergy          = EnergyPerMol::zero();
+        _qmReferenceEnergy = EnergyPerMol::zero();
 
         _numberOfSmoothingMol = 0.0;
 
-        _momentum        = {0.0, 0.0, 0.0};
-        _angularMomentum = {0.0, 0.0, 0.0};
+        _momentum        = Momentum::zero();
+        _angularMomentum = AngularMomentum::zero();
 
-        _noseHooverMomentumEnergy = 0.0;
+        _noseHooverMomentumEnergy = EnergyPerMol::zero();
         _noseHooverFrictionEnergy = 0.0;
 
-        _lowerDistanceConstraints = 0.0;
-        _upperDistanceConstraints = 0.0;
+        _lowerDistanceConstraints = EnergyPerMol::zero();
+        _upperDistanceConstraints = EnergyPerMol::zero();
 
-        _momentum        = {0.0, 0.0, 0.0};
-        _angularMomentum = {0.0, 0.0, 0.0};
+        _virial       = VirialPerMol::zero();
+        _stressTensor = Stress::zero();
 
-        _virial       = {0.0};
-        _stressTensor = {0.0};
-
-        _ringPolymerEnergy = 0.0;
+        _ringPolymerEnergy = EnergyPerMol::zero();
 
         // reset kinetic energy virial tensor, but make sure to keep the
         // isVirialAtomic flag as it is
-        _kinEnergyVirialTensor.atomic    = {0.0};
-        _kinEnergyVirialTensor.molecular = {0.0};
+        _kinEnergyVirialTensor.atomic    = EnergyPerMol::zero();
+        _kinEnergyVirialTensor.molecular = EnergyPerMol::zero();
     }
 
     /**
@@ -290,22 +286,22 @@ namespace physicalData
      */
     void PhysicalData::resetEnergies()
     {
-        _kineticEnergy         = 0.0;
-        _coulombEnergy         = 0.0;
-        _nonCoulombEnergy      = 0.0;
-        _intraCoulombEnergy    = 0.0;
-        _intraNonCoulombEnergy = 0.0;
+        _kineticEnergy         = EnergyPerMol::zero();
+        _coulombEnergy         = EnergyPerMol::zero();
+        _nonCoulombEnergy      = EnergyPerMol::zero();
+        _intraCoulombEnergy    = EnergyPerMol::zero();
+        _intraNonCoulombEnergy = EnergyPerMol::zero();
 
-        _bondEnergy     = 0.0;
-        _angleEnergy    = 0.0;
-        _dihedralEnergy = 0.0;
-        _improperEnergy = 0.0;
+        _bondEnergy     = EnergyPerMol::zero();
+        _angleEnergy    = EnergyPerMol::zero();
+        _dihedralEnergy = EnergyPerMol::zero();
+        _improperEnergy = EnergyPerMol::zero();
 
-        _qmEnergy          = 0.0;
-        _qmReferenceEnergy = 0.0;
+        _qmEnergy          = EnergyPerMol::zero();
+        _qmReferenceEnergy = EnergyPerMol::zero();
 
-        _kinEnergyVirialTensor.atomic    = {0.0};
-        _kinEnergyVirialTensor.molecular = {0.0};
+        _kinEnergyVirialTensor.atomic    = EnergyPerMol::zero();
+        _kinEnergyVirialTensor.molecular = EnergyPerMol::zero();
     }
 
     /**
@@ -323,11 +319,11 @@ namespace physicalData
     /**
      * @brief calculate total energy
      *
-     * @return double
+     * @return EnergyPerMol
      */
-    double PhysicalData::getTotalEnergy() const
+    EnergyPerMol PhysicalData::getTotalEnergy() const
     {
-        auto totalEnergy = 0.0;
+        auto totalEnergy = EnergyPerMol::zero();
 
         totalEnergy += _bondEnergy;
         totalEnergy += _angleEnergy;
@@ -348,9 +344,9 @@ namespace physicalData
     /**
      * @brief total energy without the kinetic energy
      *
-     * @return double
+     * @return EnergyPerMol
      */
-    double PhysicalData::getPotentialEnergy() const
+    EnergyPerMol PhysicalData::getPotentialEnergy() const
     {
         return getTotalEnergy() - _kineticEnergy;
     }
@@ -363,7 +359,9 @@ namespace physicalData
      *
      * @param intraCoulombEnergy
      */
-    void PhysicalData::addIntraCoulombEnergy(double intraCoulombEnergy)
+    void PhysicalData::addIntraCoulombEnergy(
+        const EnergyPerMol& intraCoulombEnergy
+    )
     {
         _intraCoulombEnergy += intraCoulombEnergy;
         _coulombEnergy      += intraCoulombEnergy;
@@ -377,7 +375,9 @@ namespace physicalData
      *
      * @param intraNonCoulombEnergy
      */
-    void PhysicalData::addIntraNonCoulombEnergy(double intraNonCoulombEnergy)
+    void PhysicalData::addIntraNonCoulombEnergy(
+        const EnergyPerMol& intraNonCoulombEnergy
+    )
     {
         _intraNonCoulombEnergy += intraNonCoulombEnergy;
         _nonCoulombEnergy      += intraNonCoulombEnergy;

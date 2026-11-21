@@ -32,6 +32,7 @@
 #include "orthorhombicBox.hpp"
 #include "settings.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -56,7 +57,7 @@
 
 static constexpr std::uint64_t ITERATIONS = 50;
 static constexpr MolType       WATER_TYPE{1};
-static constexpr double        CUTOFF                 = 9.0;
+static constexpr Distance      CUTOFF                 = 9.0 * angstrom;
 static constexpr auto          HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
 static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
@@ -75,7 +76,9 @@ int main()
 
     molsys::SimulationBox simBox;
 
-    molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {30.0 * angstrom, 30.0 * angstrom, 30.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
     simBox.setWaterType(WATER_TYPE);
 
@@ -84,10 +87,10 @@ int main()
     waterType.setNumberOfAtoms(3);
     simBox.addMoleculeType(waterType);
 
-    const auto makeAtom = [](std::string_view     name,
-                             const linalg::Vec3D &pos,
-                             double               charge,
-                             AtomNumber           atomicNumber)
+    const auto makeAtom = [](const std::string_view name,
+                             const Pos3D&           pos,
+                             const Charge&          charge,
+                             const AtomNumber       atomicNumber)
     {
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName(name);
@@ -114,19 +117,22 @@ int main()
 
                 molsys::Molecule molecule;
                 molecule.setMoltype(WATER_TYPE);
-                molecule.addAtom(
-                    makeAtom("O", oxygen, -0.82, OXYGEN_ATOMIC_NUMBER)
-                );
+                molecule.addAtom(makeAtom(
+                    "O",
+                    oxygen * angstrom,
+                    -0.82 * elementary_charge,
+                    OXYGEN_ATOMIC_NUMBER
+                ));
                 molecule.addAtom(makeAtom(
                     "H",
-                    oxygen + linalg::Vec3D(0.9572, 0.0, 0.0),
-                    0.41,
+                    (oxygen + linalg::Vec3D(0.9572, 0.0, 0.0)) * angstrom,
+                    0.41 * elementary_charge,
                     HYDROGEN_ATOMIC_NUMBER
                 ));
                 molecule.addAtom(makeAtom(
                     "H",
-                    oxygen + linalg::Vec3D(-0.24, 0.927, 0.0),
-                    0.41,
+                    (oxygen + linalg::Vec3D(-0.24, 0.927, 0.0)) * angstrom,
+                    0.41 * elementary_charge,
                     HYDROGEN_ATOMIC_NUMBER
                 ));
                 simBox.addMolecule(molecule);
@@ -135,19 +141,28 @@ int main()
     }
 
     waterModel::InterWaterState state;
-    state.oxygenCharge     = -0.82;
-    state.hydrogenCharge   = 0.41;
+    state.oxygenCharge     = -0.82 * elementary_charge;
+    state.hydrogenCharge   = 0.41 * elementary_charge;
     state.nonCoulombPairOO = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
-        LJParams{.c6 = 2.0, .c12 = 4.0}
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 4.0 * kcal_per_mol * angstrom12
+        }
     );
     state.nonCoulombPairOH = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
-        LJParams{.c6 = 0.5, .c12 = 1.5}
+        LJParams{
+            .c6  = 0.5 * kcal_per_mol * angstrom6,
+            .c12 = 1.5 * kcal_per_mol * angstrom12
+        }
     );
     state.nonCoulombPairHH = std::make_unique<pot::LennardJonesPair>(
         CUTOFF,
-        LJParams{.c6 = 0.2, .c12 = 0.8}
+        LJParams{
+            .c6  = 0.2 * kcal_per_mol * angstrom6,
+            .c12 = 0.8 * kcal_per_mol * angstrom12
+        }
     );
 
     waterModel::InterWater interWater(

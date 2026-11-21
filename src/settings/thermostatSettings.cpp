@@ -205,7 +205,7 @@ void ThermostatSettings::setRelaxationTimeByUser(const Time& relaxationTime)
  *
  * @param friction
  */
-void ThermostatSettings::setFrictionByUser(double friction)
+void ThermostatSettings::setFrictionByUser(const Frequency& friction)
 {
     _friction.setByUser(friction);
 }
@@ -310,9 +310,12 @@ const Time& ThermostatSettings::getRelaxationTime() const
 /**
  * @brief get the friction
  *
- * @return double
+ * @return const Frequency&
  */
-double ThermostatSettings::getFriction() const { return _friction.get(); }
+const Frequency& ThermostatSettings::getFriction() const
+{
+    return _friction.get();
+}
 
 /**
  * @brief get the nose hoover coupling frequency
@@ -327,9 +330,9 @@ const Frequency& NoseHooverSettings::getNoseHooverCouplingFrequency() const
 /**
  * @brief get chi
  *
- * @return std::map<size_t, double>
+ * @return std::map<size_t, Action>
  */
-const std::map<size_t, double>& NoseHooverSettings::getChi() const
+const std::map<size_t, Action>& NoseHooverSettings::getChi() const
 {
     return _chi.get();
 }
@@ -337,9 +340,9 @@ const std::map<size_t, double>& NoseHooverSettings::getChi() const
 /**
  * @brief get zeta
  *
- * @return std::map<size_t, double>
+ * @return std::map<size_t, Quantity>
  */
-const std::map<size_t, double>& NoseHooverSettings::getZeta() const
+const std::map<size_t, Quantity>& NoseHooverSettings::getZeta() const
 {
     return _zeta.get();
 }
@@ -359,7 +362,7 @@ bool NoseHooverSettings::isChiAndZetaSet() const
  *
  * @param chi the chi values to set
  */
-void NoseHooverSettings::setChiByUser(const std::map<size_t, double>& chi)
+void NoseHooverSettings::setChiByUser(const std::map<size_t, Action>& chi)
 {
     _chi.setByUser(chi);
 }
@@ -369,7 +372,7 @@ void NoseHooverSettings::setChiByUser(const std::map<size_t, double>& chi)
  *
  * @param zeta the zeta values to set
  */
-void NoseHooverSettings::setZetaByUser(const std::map<size_t, double>& zeta)
+void NoseHooverSettings::setZetaByUser(const std::map<size_t, Quantity>& zeta)
 {
     _zeta.setByUser(zeta);
 }

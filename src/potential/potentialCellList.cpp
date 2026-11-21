@@ -33,6 +33,7 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 #include "waterModelSettings.hpp"
 
 namespace pot
@@ -79,8 +80,8 @@ namespace pot
         const auto isWaterInterModelSet =
             waterModelSettings.isInterWaterModelSetAndNotNone();
 
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto isWaterPair =
             [waterTypeValue,
@@ -219,7 +220,7 @@ namespace pot
                    waterMolecules.end();
         };
 
-        double totalCoulombEnergy = 0.0;
+        auto totalCoulombEnergy = EnergyPerMol::zero();
 
         for (const auto &cell_i : cellList.getCells())
         {
@@ -370,8 +371,8 @@ namespace pot
                    waterMolecules.end();
         };
 
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         for (const auto &cell_i : cellList.getCells())
         {
@@ -545,8 +546,8 @@ namespace pot
                    waterMolecules.end();
         };
 
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         for (const auto &cell_i : cellList.getCells())
         {
@@ -676,8 +677,8 @@ namespace pot
                    waterMolecules.end();
         };
 
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         for (const auto &cell_i : cellList.getCells())
         {

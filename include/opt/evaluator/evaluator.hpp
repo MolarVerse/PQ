@@ -67,8 +67,8 @@ namespace opt
         [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const = 0;
         virtual void                                     evaluate()    = 0;
 
-        [[nodiscard]] virtual bool          supportsAnalyticHessian() const;
-        [[nodiscard]] virtual HessianMatrix calculateAnalyticHessian();
+        [[nodiscard]] virtual bool    supportsAnalyticHessian() const;
+        [[nodiscard]] virtual Hessian calculateAnalyticHessian();
 
         /***************************
          * standard setter methods *

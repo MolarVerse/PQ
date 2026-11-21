@@ -26,7 +26,7 @@
 #include <mstd/types.hpp>
 #include <unordered_set>
 
-#include "vector3d.hpp"
+#include "unit_types.hpp"
 
 class ExternalQMRunnerTest;   // forward declaration
 
@@ -44,8 +44,8 @@ namespace configurator
     {
        private:
         mstd::ConstRef<HybridSettings> _hybridSettings;
-        linalg::Vec3D                  _innerRegionCenter = {0.0};
-        static inline bool             _molChangedZone    = false;
+        Pos3D                          _innerRegionCenter{Pos::zero()};
+        static inline bool             _molChangedZone = false;
 
        public:
         explicit HybridConfigurator(const HybridSettings &hybridSettings);
@@ -68,8 +68,8 @@ namespace configurator
          * standard getters and setters *
          ********************************/
 
-        [[nodiscard]] linalg::Vec3D getInnerRegionCenter() const;
-        [[nodiscard]] static bool   getMoleculeChangedZone();
+        [[nodiscard]] const Pos3D &getInnerRegionCenter() const;
+        [[nodiscard]] static bool  getMoleculeChangedZone();
 
        private:
         static void _setMoleculeChangedZone(bool);

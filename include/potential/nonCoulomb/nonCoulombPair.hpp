@@ -49,21 +49,27 @@ namespace pot
         };
         std::pair<VdwType, VdwType> _internalTypes{VdwType{0}, VdwType{0}};
 
-        double _radialCutoff;
-        double _energyCutoff = 0.0;
-        double _forceCutoff  = 0.0;
+        Pos          _radialCutoff;
+        EnergyPerMol _energyCutoff = EnergyPerMol::zero();
+        Force        _forceCutoff  = Force::zero();
 
        public:
-        explicit NonCoulombPair(ExtVdwType, ExtVdwType, double);
-        explicit NonCoulombPair(double);
-        explicit NonCoulombPair(double, double, double);
+        explicit NonCoulombPair(ExtVdwType, ExtVdwType, const Pos &);
+        explicit NonCoulombPair(const Pos &);
+        explicit NonCoulombPair(
+            const Pos &,
+            const EnergyPerMol &energyCutoff,
+            const Force        &forceCutoff
+        );
 
         virtual ~NonCoulombPair() = default;
 
         [[nodiscard]] bool operator==(const NonCoulombPair &other) const;
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(double distance) const = 0;
+        virtual std::pair<EnergyPerMol, Force> calculate(
+            const Pos &distance
+        ) const = 0;
 
         /********************
          * standard setters *
@@ -71,9 +77,6 @@ namespace pot
 
         void setInternalType1(VdwType internalType1);
         void setInternalType2(VdwType internalType2);
-        void setRadialCutOff(double radialCutoff);
-        void setEnergyCutOff(double energyCutoff);
-        void setForceCutOff(double forceCutoff);
 
         /********************
          * standard getters *
@@ -87,6 +90,10 @@ namespace pot
         CONST_GETTER(_radialCutoff);
         CONST_GETTER(_energyCutoff);
         CONST_GETTER(_forceCutoff);
+
+        SETTER(_radialCutoff);
+        SETTER(_energyCutoff);
+        SETTER(_forceCutoff);
     };
 
 }   // namespace pot

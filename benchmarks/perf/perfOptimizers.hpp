@@ -32,6 +32,7 @@
 #include "atom.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace benchOptimizers
@@ -45,7 +46,7 @@ namespace benchOptimizers
     {
         auto box = std::make_shared<molsys::SimulationBox>();
 
-        const auto              length = SPACING * static_cast<double>(perSide);
+        const auto length = SPACING * static_cast<double>(perSide) * angstrom;
         molsys::OrthorhombicBox orthoBox{{length, length, length}};
         box->setBox(orthoBox, false);
 
@@ -58,20 +59,26 @@ namespace benchOptimizers
 
             auto atom = std::make_shared<molsys::Atom>();
             atom->setPosition(
-                {SPACING * static_cast<double>(column),
-                 SPACING * static_cast<double>(row),
-                 SPACING * static_cast<double>(layer)}
+                linalg::Vec3D{
+                    SPACING * static_cast<double>(column),
+                    SPACING * static_cast<double>(row),
+                    SPACING * static_cast<double>(layer)
+                } *
+                angstrom
             );
-            atom->setForce({0.5 + phase, -0.25 * phase, 0.1 - phase});
+            atom->setForce(
+                linalg::Vec3D{0.5 + phase, -0.25 * phase, 0.1 - phase} *
+                kcal_per_mol / angstrom
+            );
             box->addAtom(atom);
         }
 
         return box;
     }
 
-    inline double sumOfPositions(const molsys::SimulationBox &simulationBox)
+    inline Pos sumOfPositions(const molsys::SimulationBox &simulationBox)
     {
-        auto sum = 0.0;
+        Pos sum = 0.0 * angstrom;
         for (const auto &position : simulationBox.getPositions())
             sum += position[0] + position[1] + position[2];
         return sum;

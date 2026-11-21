@@ -24,6 +24,7 @@
 #define OPT__CONVERGENCE__CONVERGENCE_HPP
 
 #include "enums/convergence.hpp"
+#include "unit_types.hpp"
 
 namespace opt
 {
@@ -43,15 +44,15 @@ namespace opt
         bool _enableMaxForceConv = true;
         bool _enableRMSForceConv = true;
 
-        double _relEnergy   = 0.0;
-        double _absEnergy   = 0.0;
-        double _absMaxForce = 0.0;
-        double _absRMSForce = 0.0;
+        Quantity     _relEnergy   = 0.0;
+        EnergyPerMol _absEnergy   = EnergyPerMol::zero();
+        Force        _absMaxForce = Force::zero();
+        Force        _absRMSForce = Force::zero();
 
-        double _relEnergyConvThreshold   = 0.0;
-        double _absEnergyConvThreshold   = 0.0;
-        double _absMaxForceConvThreshold = 0.0;
-        double _absRMSForceConvThreshold = 0.0;
+        Quantity     _relEnergyConvThreshold   = 0.0;
+        EnergyPerMol _absEnergyConvThreshold   = EnergyPerMol::zero();
+        Force        _absMaxForceConvThreshold = Force::zero();
+        Force        _absRMSForceConvThreshold = Force::zero();
 
         ConvStrategy _energyConvStrategy;
 
@@ -61,26 +62,26 @@ namespace opt
             bool,
             bool,
             bool,
-            double,
-            double,
-            double,
-            double,
+            const Quantity&,
+            const EnergyPerMol&,
+            const Force&,
+            const Force&,
             ConvStrategy
         );
 
         [[nodiscard]] bool checkConvergence() const;
 
-        void calcEnergyConvergence(double, double);
-        void calcForceConvergence(double, double);
+        void calcEnergyConvergence(const EnergyPerMol&, const EnergyPerMol&);
+        void calcForceConvergence(const Force&, const Force&);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double getRelEnergy() const;
-        [[nodiscard]] double getAbsEnergy() const;
-        [[nodiscard]] double getAbsMaxForce() const;
-        [[nodiscard]] double getAbsRMSForce() const;
+        [[nodiscard]] const Quantity&     getRelEnergy() const;
+        [[nodiscard]] const EnergyPerMol& getAbsEnergy() const;
+        [[nodiscard]] const Force&        getAbsMaxForce() const;
+        [[nodiscard]] const Force&        getAbsRMSForce() const;
 
         [[nodiscard]] ConvStrategy getEnConvStrategy() const;
 
@@ -93,10 +94,10 @@ namespace opt
         [[nodiscard]] bool isAbsMaxForceConv() const;
         [[nodiscard]] bool isAbsRMSForceConv() const;
 
-        [[nodiscard]] double getRelEnergyConvThreshold() const;
-        [[nodiscard]] double getAbsEnergyConvThreshold() const;
-        [[nodiscard]] double getAbsMaxForceConvThreshold() const;
-        [[nodiscard]] double getAbsRMSForceConvThreshold() const;
+        [[nodiscard]] const Quantity&     getRelEnergyConvThreshold() const;
+        [[nodiscard]] const EnergyPerMol& getAbsEnergyConvThreshold() const;
+        [[nodiscard]] const Force&        getAbsMaxForceConvThreshold() const;
+        [[nodiscard]] const Force&        getAbsRMSForceConvThreshold() const;
     };
 }   // namespace opt
 

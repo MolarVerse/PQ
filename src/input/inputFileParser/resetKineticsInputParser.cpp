@@ -24,12 +24,12 @@
 
 #include <cstddef>
 
-#include "defaults.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
 #include "resetKineticsSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -274,14 +274,13 @@ namespace input
         };
 
         const auto setValue = [settings = _settings](double value)
-        { settings.get().setMomentumWarnThresholdByUser(value); };
+        { settings.get().setMomentumWarnThresholdByUser(value * one); };
 
         auto &keyword = _getRegistry().registerKey(
             KeyRegistry<double>{
-                .metadata     = metaData,
-                .defaultValue = defaults::MOMENTUM_WARN_THRESHOLD_DEFAULT,
-                .onSet        = setValue,
-                .validators   = {makeShared(PositiveGTEZeroDoubleValidator)}
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
             }
         );
 

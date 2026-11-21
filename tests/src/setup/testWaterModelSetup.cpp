@@ -33,12 +33,13 @@
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "interWater.hpp"
-#include "interWaterParamters.hpp"
+#include "interWaterParameters.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "strongTypes.hpp"
 #include "testSetup.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
 #include "waterModelSettings.hpp"
 #include "waterModelSetup.hpp"
 
@@ -65,8 +66,8 @@ namespace
         for (size_t i = 0; i < 3; ++i)
         {
             auto atom = std::make_shared<molsys::Atom>();
-            atom->setPartialCharge(0.0);
-            atom->setPosition({static_cast<double>(i), 0.0, 0.0});
+            atom->setPartialCharge(Charge::zero());
+            atom->setPosition(Pos3D::zero());
             water.addAtom(atom);
             simBox.addAtom(atom);
         }
@@ -264,8 +265,8 @@ TEST_F(TestSetup, waterModelSetupRejectsMismatchedCharges)
         setup::WaterModelSetup(*_mdEngine).setup(),
 
         exc::UserInputException,
-        "Water molecule partial charge mismatch for atom O: expected -0.82 "
-        "(according to SPC water model), got 0."
+        "Water molecule partial charge mismatch for atom O: expected -0.82 e "
+        "(according to SPC water model), got 0 e."
     );
 }
 
