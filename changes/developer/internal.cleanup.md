@@ -1,1 +1,2 @@
 - make MoleculeType const correct and use const refs for containers
+- use `mstd` `CONST_GETTER_SETTER` for `PhysicalData` members
