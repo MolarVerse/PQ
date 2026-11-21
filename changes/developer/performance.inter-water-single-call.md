@@ -1,1 +1,0 @@
-- `InterWaterStrategyCellList::calculate` picks the O-O/O-H/H-H pair inside one `singleInteraction` call, so GCC inlines `calculateSingleInteraction` there (interWater instruction count -19.6 % instead of +1.2 % after moving the accessors out of their classes).

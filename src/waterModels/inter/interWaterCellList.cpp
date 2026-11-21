@@ -66,20 +66,9 @@ namespace waterModel
         const auto waterType = simulationBox.getWaterType();
 
         const auto singleInteraction =
-            [&](auto &atomA, auto &atomB, bool isOxygenA, bool isOxygenB)
+            [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
         {
-            const pot::NonCoulombPair *nonCoulPair =
-                state.nonCoulombPairHH.get();
-            if (isOxygenA != isOxygenB)
-            {
-                nonCoulPair = state.nonCoulombPairOH.get();
-            }
-            else if (isOxygenA)
-            {
-                nonCoulPair = state.nonCoulombPairOO.get();
-            }
-
-            if (nonCoulPair != nullptr)
+            if (nonCoulPairPtr)
             {
                 calculateSingleInteraction<pot::MMChargeTag, pot::MMChargeTag>(
                     atomA,
@@ -87,7 +76,7 @@ namespace waterModel
                     coulPot,
                     rCutSquared,
                     box,
-                    *nonCoulPair,
+                    *nonCoulPairPtr,
                     totalCoulombEnergy,
                     totalNonCoulombEnergy
                 );
@@ -121,12 +110,33 @@ namespace waterModel
                             const bool isAtom_j_O =
                                 atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
-                            singleInteraction(
-                                *atom_i,
-                                *atom_j,
-                                isAtom_i_O,
-                                isAtom_j_O
-                            );
+                            // O-H interaction (different atom types)
+                            if (isAtom_i_O != isAtom_j_O)
+                            {
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    state.nonCoulombPairOH
+                                );
+                                // O-O interaction
+                            }
+                            else if (isAtom_i_O)
+                            {
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    state.nonCoulombPairOO
+                                );
+                                // H-H interaction
+                            }
+                            else
+                            {
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    state.nonCoulombPairHH
+                                );
+                            }
                         }
                     }
                 }
@@ -167,12 +177,33 @@ namespace waterModel
                                 const bool isAtom_j_O = atom_j->getAtomicNumber(
                                                         ) == oxygenAtomicNumber;
 
-                                singleInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    isAtom_i_O,
-                                    isAtom_j_O
-                                );
+                                // O-H interaction (different atom types)
+                                if (isAtom_i_O != isAtom_j_O)
+                                {
+                                    singleInteraction(
+                                        *atom_i,
+                                        *atom_j,
+                                        state.nonCoulombPairOH
+                                    );
+                                    // O-O interaction
+                                }
+                                else if (isAtom_i_O)
+                                {
+                                    singleInteraction(
+                                        *atom_i,
+                                        *atom_j,
+                                        state.nonCoulombPairOO
+                                    );
+                                    // H-H interaction
+                                }
+                                else
+                                {
+                                    singleInteraction(
+                                        *atom_i,
+                                        *atom_j,
+                                        state.nonCoulombPairHH
+                                    );
+                                }
                             }
                         }
                     }
