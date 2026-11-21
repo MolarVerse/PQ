@@ -1,0 +1,1 @@
+- Define the `PotentialSettings` getters for the Coulomb cutoff and the 1-4 scaling factors inline, so the intra-molecular force loop no longer pays a function call per pair (`forceKernel` instruction count -2 % instead of +7 % after the settings injection).

@@ -1,0 +1,1 @@
+- `SimulationBoxSetup::writeSetupInfo` warns on all-zero start velocities only for non-ring-polymer MD with `init_velocities = false` and a start temperature above 0 K (#1261).
