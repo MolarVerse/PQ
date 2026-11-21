@@ -248,11 +248,10 @@ TEST_F(TestSetup, setupOutputFilesRPMDPathRunsWithoutThrowing)
  */
 TEST_F(TestSetup, writeEngineSetupInfo)
 {
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
     auto &logOutput = _engine->getLogOutput();
     logOutput.setFilename("engineSetupInfo.log", false);
 
-    setup::writeEngineSetupInfo(logOutput);
+    setup::writeEngineSetupInfo(logOutput, JobType::MM_MD);
     logOutput.close();
 
     std::ifstream file("engineSetupInfo.log");

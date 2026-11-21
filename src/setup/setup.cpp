@@ -83,7 +83,10 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        writeEngineSetupInfo(engine.getLogOutput());
+        writeEngineSetupInfo(
+            engine.getLogOutput(),
+            engine.getSettings().generalSettings.getJobtype()
+        );
 
         // needs to happen before readFiles(): the parameter file reader
         // dynamic_casts the non-Coulomb potential to its concrete type
@@ -233,11 +236,11 @@ namespace setup
      * @param logOutput The log output object to which the engine setup
      * information will be written.
      */
-    void writeEngineSetupInfo(out::LogOutput& logOutput)
+    void writeEngineSetupInfo(out::LogOutput& logOutput, JobType jobType)
     {
         const auto msg = std::format(
             "Engine for jobtype: {}",
-            JobTypeMeta::toString(settings::GeneralSettings::getJobtype())
+            JobTypeMeta::toString(jobType)
         );
         logOutput.writeSetup(msg);
         out::StdoutOutput::writeSetup(msg);
