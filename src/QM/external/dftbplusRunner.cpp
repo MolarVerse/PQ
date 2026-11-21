@@ -62,21 +62,21 @@ namespace QM
         const std::string fileName = "coords";
         std::ofstream     coordsFile(fileName);
 
-        coordsFile << simulationBox.getNumberOfQMAtoms();
+        coordsFile << simulationBox.getNumberOfActiveAtoms();
         coordsFile << "  "
                    << (_getPeriodicity() == molsys::Periodicity::NON_PERIODIC
                            ? 'C'
                            : 'S')
                    << '\n';
 
-        const auto uniqueAtomNames = simulationBox.getUniqueQMAtomNames();
+        const auto uniqueAtomNames = simulationBox.getUniqueActiveAtomNames();
 
         for (const auto &atomName : uniqueAtomNames)
             coordsFile << atomName << "  ";
         coordsFile << "\n";
 
         size_t atomIndex = 1;
-        for (const auto &atom : simulationBox.getQMAtoms())
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
             const auto iter   = find(uniqueAtomNames, atom->getName());
             const auto atomId = distance(uniqueAtomNames.begin(), iter) + 1;

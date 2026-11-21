@@ -85,7 +85,7 @@ namespace
         molsys::CellList cellList;
         if constexpr (std::is_same_v<PotentialType, pot::PotentialCellList>)
         {
-            settings::GeneralSettings::activateCellList();
+            GeneralSettings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
             cellList.setup(simBox, benchmarkSetup::cutOff);

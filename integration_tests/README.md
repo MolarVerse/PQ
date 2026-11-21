@@ -57,6 +57,10 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `cgo` `test_cgo_temperature_ramp` | `run-01_temp_ramp.in` | `mm-md` | same | Berendsen thermostat with `start_temp`, `temp_ramp_steps`, `temp_ramp_frequency`; also checks the ramp lines of the log |
 | `cgo` `test_cgo_nose_hoover_ramp` | `run-01_nose_hoover.in` | `mm-md` | same | Nose-Hoover chain (length 3, `coupling_frequency = 3000`) with a ramp from 900 to 998.15 K; deterministic, compared with `ref_data_nose_hoover`; fails on NaN (a chain driven far from the system temperature, e.g. a ramp start of 600 K, blows up) |
 | `cgo` `test_cgo_stochastic_thermostat_follows_the_seed` (2 tests) | `run-01.in` with `velocity_rescaling` or `langevin` and `random_seed` | `mm-md` | same | no reference (stochastic): the same seed gives the same xyz/vel/force/energies bit for bit, another seed another run, and the thermostat changes the run compared with NVE |
+| `cgo` `test_cgo_berendsen_manostat_isotropy` (2 tests) | `run-01_NPT_anisotropic.in`, `run-01_NPT_xy.in` | `mm-md` | same | the NPT run with a manostat relaxation time of 0.1 ps and `isotropy = anisotropic` or `xy` (semi-isotropic); compared with `ref_data_NPT_anisotropic` / `ref_data_NPT_xy` (the box is in every frame header); fails on NaN |
+| `cgo` `test_cgo_anisotropic_manostat_keeps_a_fixed_axis` | the anisotropic NPT run with `fixed_axis = z` | `mm-md` | same | z stays at 27.44205774 in every frame, x moves by more than 1e-3, and without the fixed axis z moves (no reference) |
+| `cgo` `test_cgo_anisotropic_manostat_with_the_cell_list` (2 tests) | the anisotropic NPT run with `cell-list = on`, with the default and with `cell-number = 16` | `mm-md` | same | three different, differently moving box lengths; must equal the brute-force reference `ref_data_NPT_anisotropic` |
+| `cgo` `test_cgo_stochastic_manostat_follows_the_seed` | NPT run with `manostat = stochastic_rescaling`, `random_seed` and a temperature ramp (900 to 998.15 K) | `mm-md` | same | no reference (stochastic): the same seed gives the same xyz/vel/force/box/energies bit for bit, another seed another box, and the ramp changes the run |
 | `cgo` `test_cgo_NPT_cellList` | `run-01_NPT.in` with `cell-list = on` | `mm-md` | same | the NPT run with the cell list against the brute-force NPT reference (`ref_data_NPT`); the box hardly moves (0.01 %) |
 | `cgo` `test_cgo_NPT_cellList_follows_a_moving_box` | `run-01_NPT.in` with `cell-list = on; cell-number = 16` and a manostat relaxation time of 0.1 ps | `mm-md` | same | the box moves between 26.6 and 31.4 Angstrom in 10 steps and the neighbour cell count changes from 6 to 7; every frame (xyz, vel, force), the box and the energies must equal the same run without the cell list (no reference data) |
 | `cgo` `test_cgo_restart_round_trip` (3 tests) | `run-01.in` (NVE), `run-01_NPT.in`, `run-01.in` with a Nose-Hoover chain | `mm-md` | same | a 10-step run against 5 steps plus 5 more from the `.rst` the first part wrote; the final `.rst` and the last frames of `.xyz`, `.vel` and `.force` must be **identical to the byte** (the restart file keeps every digit), and the step counter, the box and the chain levels are checked. Builds its three inputs from the existing ones, no reference data |
@@ -99,8 +103,8 @@ intermolecular model are the same.
 | Temperature ramp (`start_temp`, `temp_ramp_steps`, `temp_ramp_frequency`) | yes, with Berendsen and with the Nose-Hoover chain (see coupling section for the others) |
 | `end_temp` as synonym of `temp` | no. Elsewhere: unit |
 | Manostat Berendsen, isotropic | yes (`cgo` NPT) |
-| Manostat stochastic rescaling | no. Elsewhere: unit |
-| `isotropy` semi/anisotropic/full, `fixed_axis`, `compressibility` | no. Elsewhere: unit |
+| Manostat stochastic rescaling | partly: reproducibility with `random_seed`, with a temperature ramp, and an effect on the box; no reference values and no check that the pressure is reached. Elsewhere: unit |
+| `isotropy` semi/anisotropic/full, `fixed_axis`, `compressibility` | partly, Berendsen only: `anisotropic` and `xy` against references, `fixed_axis = z`, and the anisotropic box with the cell list. No: `full_anisotropic` (it runs on the orthorhombic `cgo` box but the box blows up to 1e9 Angstrom in 10 steps, so it needs a triclinic box test, see the triclinic issue), `xz`/`yz`, the other fixed axes, `compressibility`, and the semi-isotropic/anisotropic stochastic manostat. Elsewhere: unit |
 | Virial `molecular` / `atomic` | yes, both, only inside the NPT run (the pressure column of `.en` is compared) |
 | `init_velocities`, `random_seed`, `density`, `floating_point_type` | no. Elsewhere: unit |
 | Reset kinetics (`nscale`, `fscale`, `nreset`, `freset`, angular, forces) | no. Elsewhere: unit |
@@ -199,8 +203,8 @@ every step, so the cells have to be rebuilt. `test_cgo_NPT_cellList_follows_a_mo
 box that moves by 15 % and crosses the point where the number of neighbouring cells changes, and
 compares with brute force. With the default 7 cells that number never changes in this run and a
 stale cell layout would still give the right result, so the cell number matters for this test. The
-stochastic rescaling manostat and the anisotropic variants change the box in other ways and are not
-covered.
+anisotropic Berendsen manostat (three different box lengths) is covered with the cell list; the
+stochastic rescaling manostat is not.
 
 **Neighbour search x everything that builds pair lists.** The cell list is covered for `cgo`
 (Buckingham/GUFF/Wolf) and for the water models and hybrid code in `qm-mm`, but **not with a force
@@ -221,8 +225,9 @@ depends on the pair (model, smoothing) or (intra model, inter model) would not s
 field and SHAKE together, and with Wolf; the bonded-only QM/MM runs use no SHAKE.
 
 **Thermostat x manostat x virial.** One thermostat with one manostat and both virial types. The
-stochastic manostat additionally reads the thermostat target (see ramp), the anisotropic variants
-change the cell differently; none of that is exercised.
+stochastic manostat additionally reads the thermostat target (see ramp): it now runs with a ramp
+(seed test), but there is no reference and no check of the pressure; the anisotropic variants are
+run with the Berendsen thermostat only.
 
 **Job type x output.** The trajectory writers are shared by MD and optimisation, but the optimiser
 and Hessian engines write different files (`.opt`, `.hessian`); only shape and finiteness of the
@@ -272,8 +277,8 @@ In rough order of value for the cost; each is a **new variant** of an existing c
 
 1. **Statistical test of the Langevin and velocity-rescaling thermostats** (average temperature
    within a tolerance over a longer run); the seed tests only prove reproducibility.
-2. **Stochastic rescaling manostat** and one **anisotropic** variant, with the ramp (they read the
-   global target).
+2. **Triclinic box** (`full_anisotropic`, angle changes) and the remaining isotropies and fixed
+   axes; a statistical test of the stochastic rescaling manostat (average pressure).
 3. **QM/MM that moves a molecule across a zone**: a start file with a molecule next to a boundary,
    or more steps, plus a non-zero `core_radius` and a `forced_*_list`.
 4. **M-SHAKE** on a rigid-water system, and **cell list with the force field and SHAKE** on `chig`.

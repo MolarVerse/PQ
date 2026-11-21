@@ -23,6 +23,7 @@
 #ifndef SETUP__SETUP_HPP
 #define SETUP__SETUP_HPP
 
+#include "enums/jobtype.hpp"
 namespace engine
 {
     class Engine;   // forward declaration
@@ -72,7 +73,7 @@ namespace setup
     );
     void setupEngine(engine::Engine &);
 
-    void writeEngineSetupInfo(out::LogOutput &);
+    void writeEngineSetupInfo(out::LogOutput &logOutput, JobType jobType);
 }   // namespace setup
 
 #endif   // SETUP__SETUP_HPP

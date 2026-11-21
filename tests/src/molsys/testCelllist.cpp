@@ -288,7 +288,7 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);
-    settings::GeneralSettings::activateCellList();
+    GeneralSettings::activateCellList();
 
     const auto cloned = _cellList->clone();
 
@@ -370,7 +370,7 @@ TEST_F(TestCellList, updateCellList)
     EXPECT_NO_THROW(
         _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff)
     );
-    settings::GeneralSettings::activateCellList();
+    GeneralSettings::activateCellList();
 
     auto molecule = molsys::Molecule();
 

@@ -46,7 +46,10 @@ namespace engine
         const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
         const auto &outputFileSettings = getSettings().outputFiles;
-        writeOutput(outputFileSettings);
+        writeOutput(
+            getSettings().generalSettings.getJobtype(),
+            outputFileSettings
+        );
 
         progressbar bar(static_cast<int>(nEpochs), true, std::cout);
 
@@ -61,7 +64,10 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            writeOutput(outputFileSettings);
+            writeOutput(
+                getSettings().generalSettings.getJobtype(),
+                outputFileSettings
+            );
             deleteTmpFiles();
         }
 
@@ -192,9 +198,12 @@ namespace engine
      * frequency.
      *
      */
-    void OptEngine::writeOutput(const OutputFileSettings &outputSettings)
+    void OptEngine::writeOutput(
+        JobType /*jobType*/,
+        const OutputFileSettings &outputSettings
+    )
     {
-        writeOutput(
+        _writeOutput(
             outputSettings,
             getSettings().timings.getStartingStepCount()
         );
@@ -207,7 +216,7 @@ namespace engine
      * frequency.
      *
      */
-    void OptEngine::writeOutput(
+    void OptEngine::_writeOutput(
         const OutputFileSettings &outputSettings,
         size_t                    startingStepCount
     )

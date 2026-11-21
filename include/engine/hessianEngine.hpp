@@ -26,6 +26,7 @@
 #include <memory>
 
 #include "engine.hpp"
+#include "enums/jobtype.hpp"
 #include "hessianBuilder.hpp"
 #include "learningRateStrategy.hpp"
 
@@ -48,11 +49,10 @@ namespace engine
         using Engine::Engine;
 
         void run() override;
-        void writeOutput(const OutputFileSettings &outputSettings) override;
         void writeOutput(
-            const OutputFileSettings &outputSettings,
-            size_t                    startingStepCount
-        );
+            JobType /*jobType*/,
+            const OutputFileSettings &outputSettings
+        ) override;
 
         [[nodiscard]]
         std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld();
@@ -72,6 +72,11 @@ namespace engine
         std::shared_ptr<opt::Optimizer> _setupEmptyOptimizer();
 
         void _writeOptimizationSetupInfo();
+
+        void _writeOutput(
+            const OutputFileSettings &outputSettings,
+            size_t                    startingStepCount
+        );
     };
 
 }   // namespace engine

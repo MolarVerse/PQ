@@ -123,7 +123,7 @@ namespace input::restartFile
 
         const auto stepCount = _timingsSettings->getStartingStepCount();
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(_engine.getSettings().generalSettings.getJobtype()))
         {
             if (stepCount == 0 && !_timingsSettings->isStartingTimeSet())
             {
@@ -208,9 +208,11 @@ namespace input::restartFile
      */
     void RestartFileReader::_writeStepInfo()
     {
-        auto &logFile = _engine.getLogOutput();
+        auto       &logFile = _engine.getLogOutput();
+        const auto &jobType =
+            _engine.getSettings().generalSettings.getJobtype();
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(jobType))
         {
             const auto timeStep  = _timingsSettings->getTimeStep().in(fs);
             const auto startStep = _timingsSettings->getStartingStepCount();
@@ -230,7 +232,7 @@ namespace input::restartFile
             msg += std::format("Total Simulation Time:  {}", finalTime) + "\n";
             logFile.writeSetupInfo(msg);
         }
-        else if (settings::GeneralSettings::isOptJobType())
+        else if (isOptJobType(jobType))
         {
             const auto  startStep = _timingsSettings->getStartingStepCount();
             const auto  nSteps    = _timingsSettings->getNumberOfSteps();
