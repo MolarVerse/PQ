@@ -24,6 +24,7 @@
 
 #include "constraintSettings.hpp"
 #include "referenceSettings.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 TEST(ConstraintSettingsTest, ShakeMaxIterRoundTrip)
@@ -66,8 +67,8 @@ TEST(ConstraintSettingsTest, ShakeToleranceRoundTrip)
 TEST(ConstraintSettingsTest, RattleToleranceRoundTrip)
 {
     ConstraintSettings settings;
-    settings.setRattleToleranceByUser(1.0e-6);
-    EXPECT_DOUBLE_EQ(settings.getRattleTolerance(), 1.0e-6);
+    settings.setRattleToleranceByUser(1.0e-6 * g_per_mol / s);
+    EXPECT_EQ(settings.getRattleTolerance(), 1.0e-6 * g_per_mol / s);
 }
 
 TEST(ConstraintSettingsTest, MShakeToleranceRoundTrip)

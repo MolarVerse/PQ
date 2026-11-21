@@ -70,9 +70,10 @@ namespace configurator
             );
         }
 
-        linalg::Vec3D center     = {0.0, 0.0, 0.0};
-        double        total_mass = 0.0;
-        const auto    positionAtom1 =
+        PosMass3D center{PosMass::zero()};
+        Mass      total_mass{Mass::zero()};
+
+        const auto positionAtom1 =
             simulationBox.getAtom(indices.at(0)).getPosition();
 
         for (const auto index : indices)
@@ -87,8 +88,8 @@ namespace configurator
             total_mass += mass;
         }
 
-        center             /= total_mass;
-        _innerRegionCenter  = center - simulationBox.calcShiftVector(center);
+        const auto com     = center / total_mass;
+        _innerRegionCenter = com - simulationBox.calcShiftVector(com);
     }   // TODO(ape): https://github.com/MolarVerse/PQ/issues/196
 
     /**
@@ -187,7 +188,7 @@ namespace configurator
             _hybridSettings->getSmoothingRegionThickness();
         const auto pointChargeThickness =
             _hybridSettings->getPointChargeThickness();
-        const auto coreEpsilon = std::numeric_limits<double>::epsilon();
+        const auto coreEpsilon = std::numeric_limits<Pos>::epsilon();
         const bool coreEnabled = coreRadius > coreEpsilon;
 
         _molChangedZone = false;
@@ -393,9 +394,9 @@ namespace configurator
                 );
             }
 
-            distanceFactor       -= 0.5;
-            const auto dfSquared  = distanceFactor * distanceFactor;
-            const auto smF        = (distanceFactor *
+            distanceFactor       = distanceFactor - 0.5;
+            const auto dfSquared = distanceFactor * distanceFactor;
+            const auto smF       = (distanceFactor *
                               (dfSquared * (-6.0 * dfSquared + 5.0) - 1.875)) +
                              0.5;
 
@@ -410,9 +411,9 @@ namespace configurator
     /**
      * @brief get the inner region center coordinates
      *
-     * @return pq::Vec3D innerRegionCenter
+     * @return Pos3D innerRegionCenter
      */
-    linalg::Vec3D HybridConfigurator::getInnerRegionCenter() const
+    const Pos3D& HybridConfigurator::getInnerRegionCenter() const
     {
         return _innerRegionCenter;
     }

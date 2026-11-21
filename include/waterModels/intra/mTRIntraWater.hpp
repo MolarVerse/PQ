@@ -23,7 +23,10 @@
 #ifndef WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
 #define WATER_MODELS__INTRA__M_TR_INTRA_WATER_HPP
 
+#include <mstd/units/new_units.hpp>
+
 #include "intraWater.hpp"
+#include "unit_types.hpp"
 
 namespace waterModel
 {
@@ -36,88 +39,107 @@ namespace waterModel
             physicalData::PhysicalData &physicalData
         ) override;
 
-        [[nodiscard]] virtual double getEqOHDistance() const = 0;   // Angström
-        [[nodiscard]] virtual double getEqHHDistance() const = 0;   // Angström
-        [[nodiscard]] virtual double getDOH() const   = 0;   // kcal mol^-1
-        [[nodiscard]] virtual double getAlpha() const = 0;   // Angström^-1
-        [[nodiscard]] virtual double getBeta() const  = 0;   // Angström^-2
+        [[nodiscard]] virtual Distance           getEqOHDistance() const = 0;
+        [[nodiscard]] virtual Distance           getEqHHDistance() const = 0;
+        [[nodiscard]] virtual EnergyPerMol       getDOH() const          = 0;
+        [[nodiscard]] virtual InvDistance        getAlpha() const        = 0;
+        [[nodiscard]] virtual InvDistanceSquared getBeta() const         = 0;
         [[nodiscard]]
-        virtual double getLtt() const = 0;   // kcal mol^-1 Angström^-2
+        virtual ForceConstant getLtt() const = 0;
         [[nodiscard]]
-        virtual double getLrt() const = 0;   // kcal mol^-1 Angström^-2
+        virtual ForceConstant getLrt() const = 0;
         [[nodiscard]]
-        virtual double getLrr() const = 0;   // kcal mol^-1 Angström^-2
+        virtual ForceConstant getLrr() const = 0;
     };
 
     class SPCMTRIntraWater : public MTRIntraWater
     {
        private:
-        static constexpr double _eqOHDistance = 1.0;           // Angström
-        static constexpr double _eqHHDistance = 1.632993162;   // Angström
-        static constexpr double _dOH   = 101.9048757170172;    // kcal mol^-1
-        static constexpr double _alpha = 2.511;                // Angström^-1
-        static constexpr double _beta  = 3.0;                  // Angström^-2
-        static constexpr double _ltt =
-            264.5841300191204;   // kcal mol^-1 Angström^-2
-        static constexpr double _lrt =
-            -211.0444550669216;   // kcal mol^-1 Angström^-2
-        static constexpr double _lrr =
-            155.7839388145315;   // kcal mol^-1 Angström^-2
+        static constexpr Distance _eqOHDistance = 1.0 * mstd::units::angstrom;
+        static constexpr Distance _eqHHDistance =
+            1.632993162 * mstd::units::angstrom;
+        static constexpr EnergyPerMol _dOH =
+            101.9048757170172 * mstd::units::kcal_per_mol;
+        static constexpr InvDistance _alpha = 2.511 / mstd::units::angstrom;
+        static constexpr InvDistanceSquared _beta =
+            3.0 / (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr ForceConstant _ltt =
+            264.5841300191204 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr ForceConstant _lrt =
+            -211.0444550669216 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr ForceConstant _lrr =
+            155.7839388145315 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
 
        public:
         using MTRIntraWater::MTRIntraWater;
 
         [[nodiscard]]
-        double getEqOHDistance() const override
+        Distance getEqOHDistance() const override
         {
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHHDistance() const override
+        Distance getEqHHDistance() const override
         {
             return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const override { return _dOH; }
-        [[nodiscard]] double getAlpha() const override { return _alpha; }
-        [[nodiscard]] double getBeta() const override { return _beta; }
-        [[nodiscard]] double getLtt() const override { return _ltt; }
-        [[nodiscard]] double getLrt() const override { return _lrt; }
-        [[nodiscard]] double getLrr() const override { return _lrr; }
+        [[nodiscard]] EnergyPerMol getDOH() const override { return _dOH; }
+        [[nodiscard]] InvDistance  getAlpha() const override { return _alpha; }
+        [[nodiscard]] InvDistanceSquared getBeta() const override
+        {
+            return _beta;
+        }
+        [[nodiscard]] ForceConstant getLtt() const override { return _ltt; }
+        [[nodiscard]] ForceConstant getLrt() const override { return _lrt; }
+        [[nodiscard]] ForceConstant getLrr() const override { return _lrr; }
     };
 
     class TIP3PMTRIntraWater : public MTRIntraWater
     {
        private:
-        static constexpr double _eqOHDistance = 0.9572;       // Angström
-        static constexpr double _eqHHDistance = 1.5139;       // Angström
-        static constexpr double _dOH   = 101.9048757170172;   // kcal mol^-1
-        static constexpr double _alpha = 2.483;               // Angström^-1
-        static constexpr double _beta  = 3.0;                 // Angström^-2
-        static constexpr double _ltt =
-            235.2449808795411;   // kcal mol^-1 Angström^-2
-        static constexpr double _lrt =
-            -181.2906309751434;   // kcal mol^-1 Angström^-2
-        static constexpr double _lrr =
-            127.1534416826004;   // kcal mol^-1 Angström^-2
+        static constexpr Distance _eqOHDistance =
+            0.9572 * mstd::units::angstrom;
+        static constexpr Distance _eqHHDistance =
+            1.5139 * mstd::units::angstrom;
+        static constexpr EnergyPerMol _dOH =
+            101.9048757170172 * mstd::units::kcal_per_mol;
+        static constexpr InvDistance _alpha = 2.483 / mstd::units::angstrom;
+        static constexpr InvDistanceSquared _beta =
+            3.0 / (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr ForceConstant _ltt =
+            235.2449808795411 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr ForceConstant _lrt =
+            -181.2906309751434 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr ForceConstant _lrr =
+            127.1534416826004 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
 
        public:
         using MTRIntraWater::MTRIntraWater;
         [[nodiscard]]
-        double getEqOHDistance() const override
+        Distance getEqOHDistance() const override
         {
             return _eqOHDistance;
         }
         [[nodiscard]]
-        double getEqHHDistance() const override
+        Distance getEqHHDistance() const override
         {
             return _eqHHDistance;
         }
-        [[nodiscard]] double getDOH() const override { return _dOH; }
-        [[nodiscard]] double getAlpha() const override { return _alpha; }
-        [[nodiscard]] double getBeta() const override { return _beta; }
-        [[nodiscard]] double getLtt() const override { return _ltt; }
-        [[nodiscard]] double getLrt() const override { return _lrt; }
-        [[nodiscard]] double getLrr() const override { return _lrr; }
+        [[nodiscard]] EnergyPerMol getDOH() const override { return _dOH; }
+        [[nodiscard]] InvDistance  getAlpha() const override { return _alpha; }
+        [[nodiscard]] InvDistanceSquared getBeta() const override
+        {
+            return _beta;
+        }
+        [[nodiscard]] ForceConstant getLtt() const override { return _ltt; }
+        [[nodiscard]] ForceConstant getLrt() const override { return _lrt; }
+        [[nodiscard]] ForceConstant getLrr() const override { return _lrr; }
     };
 
 }   // namespace waterModel

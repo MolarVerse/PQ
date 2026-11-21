@@ -42,7 +42,7 @@ SimulationBoxSettings::SimulationBoxSettings()
  *
  * @param density
  */
-void SimulationBoxSettings::setDensityByUser(double density)
+void SimulationBoxSettings::setDensityByUser(const Density& density)
 {
     _density.setByUser(density);
 }
@@ -67,9 +67,12 @@ void SimulationBoxSettings::setInitializeVelocsByUser(
 /**
  * @brief Get the density
  *
- * @return double
+ * @return const Density&
  */
-double SimulationBoxSettings::getDensity() const { return _density.get(); }
+const Density& SimulationBoxSettings::getDensity() const
+{
+    return _density.get();
+}
 
 /**
  * @brief get if the density is set

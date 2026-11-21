@@ -38,7 +38,7 @@ TEST(TestSettingsBuilder, OverridesAreAppliedAndTheRestKeepsItsDefault)
     EXPECT_EQ(100U, settings.getShakeMaxIter());
     EXPECT_DOUBLE_EQ(1.0e-8, settings.getShakeTolerance());
     EXPECT_EQ(defaults::RATTLE_MAX_ITER_DEFAULT, settings.getRattleMaxIter());
-    EXPECT_DOUBLE_EQ(
+    EXPECT_EQ(
         defaults::RATTLE_TOLERANCE_DEFAULT,
         settings.getRattleTolerance()
     );

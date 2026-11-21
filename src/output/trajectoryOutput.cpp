@@ -32,6 +32,7 @@
 #include "defaults.hpp"
 #include "frame.hpp"
 #include "hybridConfigurator.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace out
@@ -80,18 +81,18 @@ namespace out
      */
     void TrajectoryOutput::writeHeader(const Frame &frame)
     {
-        const auto dimensions = frame.box->get_boxDimensions();
-        const auto angles     = frame.box->getBoxAngles();
+        const auto &dimensions = frame.box->get_boxDimensions();
+        const auto &angles     = frame.box->getBoxAngles();
 
         _getFilePointer() << std::format(
             "{}  {} {} {}  {} {} {}\n",
             frame.atoms.size(),
-            dimensions[0],
-            dimensions[1],
-            dimensions[2],
-            angles[0],
-            angles[1],
-            angles[2]
+            dimensions[0].numerical_value_in(angstrom),
+            dimensions[1].numerical_value_in(angstrom),
+            dimensions[2].numerical_value_in(angstrom),
+            angles[0].numerical_value_in(deg),
+            angles[1].numerical_value_in(deg),
+            angles[2].numerical_value_in(deg)
         );
     }
 
@@ -115,7 +116,8 @@ namespace out
 
         for (const auto &atom : frame.atoms)
         {
-            const auto pos = frame.box->wrapPositionIntoBox(atom.position);
+            const auto pos = frame.box->wrapPositionIntoBox(atom.position)
+                                 .numerical_value_in(angstrom);
             appendFixedLine(_buffer, atom.name, pos);
         }
 
@@ -149,7 +151,7 @@ namespace out
         appendFixedLine(
             _buffer,
             std::string_view(&centerAtomName, 1),
-            configurator.getInnerRegionCenter()
+            configurator.getInnerRegionCenter().numerical_value_in(angstrom)
         );
 
         _flushBuffer();
@@ -175,7 +177,7 @@ namespace out
 
         for (const auto &atom : frame.atoms)
         {
-            const auto &vel = atom.velocity;
+            const auto &vel = atom.velocity.numerical_value_in(angstrom / s);
 
             _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
             _buffer.scientific(vel[0], VEL_FILE_WIDTH, textFormat::PRECISION)
@@ -203,12 +205,20 @@ namespace out
     )
     {
         writeHeader(frame);
-        _writeForceComment(step, frame.totalForce(), includeMetadata);
+        _writeForceComment(
+            step,
+            frame.totalForce().numerical_value_in(kcal_per_mol / angstrom),
+            includeMetadata
+        );
 
         _buffer.clear();
 
         for (const auto &atom : frame.atoms)
-            appendFixedLine(_buffer, atom.name, atom.force);
+            appendFixedLine(
+                _buffer,
+                atom.name,
+                atom.force.numerical_value_in(kcal_per_mol / angstrom)
+            );
 
         _flushBuffer();
     }
@@ -236,7 +246,7 @@ namespace out
             _buffer.left(atom.name, textFormat::NAME_WIDTH).put('\t');
             _buffer
                 .fixed(
-                    atom.charge,
+                    atom.charge.numerical_value_in(elementary_charge),
                     textFormat::FIXED_WIDTH,
                     textFormat::PRECISION
                 )

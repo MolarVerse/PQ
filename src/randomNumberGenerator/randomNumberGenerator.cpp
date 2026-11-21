@@ -56,14 +56,37 @@ namespace rng
      * @param mean
      * @param stddev
      */
-    double RandomNumberGenerator::getNormalDistribution(
-        double mean,
-        double stddev
+    template <typename T>
+    T RandomNumberGenerator::getNormalDistribution(
+        const T& mean,
+        const T& stddev
     )
     {
-        std::normal_distribution<double> distribution{mean, stddev};
-        return distribution(_generator);
+        if constexpr (mstd::is_quantity_like_v<T>)
+        {
+            std::normal_distribution<double> distribution{
+                mean.numerical_value_in(T::unit),
+                stddev.numerical_value_in(T::unit)
+            };
+            return distribution(_generator) * T::unit;
+        }
+        else
+        {
+            std::normal_distribution<T> distribution{mean, stddev};
+            return distribution(_generator);
+        }
     }
+
+    // explicit instantiations (note: no `<>` after `template`)
+    template Vel RandomNumberGenerator::getNormalDistribution<Vel>(
+        const Vel& mean,
+        const Vel& stddev
+    );
+
+    template double RandomNumberGenerator::getNormalDistribution<double>(
+        const double& mean,
+        const double& stddev
+    );
 
     /**
      * @brief get a random double from a uniform real distribution

@@ -28,6 +28,8 @@
 #include <vector>
 
 #include "physicalData.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -39,14 +41,14 @@ namespace out
      *
      * @return sum of all ring polymer spring energies
      */
-    double RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
+    EnergyPerMol RingPolymerEnergyOutput::_sumOfRingPolymerEnergies(
         const std::vector<physicalData::PhysicalData> &dataVector
     )
     {
         return std::accumulate(
             dataVector.begin(),
             dataVector.end(),
-            0.0,
+            EnergyPerMol::zero(),
             [](const auto &sum, const auto &data)
             { return sum + data.getRingPolymerEnergy(); }
         );
@@ -59,7 +61,7 @@ namespace out
      *
      * @return maximum ring polymer spring energy
      */
-    double RingPolymerEnergyOutput::_maxRingPolymerEnergy(
+    EnergyPerMol RingPolymerEnergyOutput::_maxRingPolymerEnergy(
         const std::vector<physicalData::PhysicalData> &dataVector
     )
     {
@@ -91,15 +93,21 @@ namespace out
     {
         _getFilePointer() << std::format("{:10d}\t", step);
 
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", _sumOfRingPolymerEnergies(dataVector));
-
-        _getFilePointer(
-        ) << std::format("{:20.12f}\t", _maxRingPolymerEnergy(dataVector));
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            _sumOfRingPolymerEnergies(dataVector)
+                .numerical_value_in(kcal_per_mol)
+        );
 
         _getFilePointer() << std::format(
             "{:20.12f}\t",
-            _sumOfRingPolymerEnergies(dataVector) /
+            _maxRingPolymerEnergy(dataVector).numerical_value_in(kcal_per_mol)
+        );
+
+        _getFilePointer() << std::format(
+            "{:20.12f}\t",
+            _sumOfRingPolymerEnergies(dataVector)
+                    .numerical_value_in(kcal_per_mol) /
                 static_cast<double>(dataVector.size())
         );
 
@@ -107,8 +115,10 @@ namespace out
             dataVector,
             [&](const auto &data)
             {
-                _getFilePointer()
-                    << std::format("{:20.12f}\t", data.getRingPolymerEnergy());
+                _getFilePointer() << std::format(
+                    "{:20.12f}\t",
+                    data.getRingPolymerEnergy().numerical_value_in(kcal_per_mol)
+                );
             }
         );
 

@@ -28,6 +28,8 @@
 #include <string>
 
 #include "outputMessages.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -64,7 +66,7 @@ namespace out
      * @brief write a message to the log file if the simulation ended normally
      *
      */
-    void LogOutput::writeEndedNormally(double elapsedTime)
+    void LogOutput::writeEndedNormally(const Time &elapsedTime)
     {
         _getFilePointer() << elapsedTimeMessage(elapsedTime) << '\n';
         _getFilePointer() << endedNormally() << '\n' << std::flush;
@@ -100,14 +102,14 @@ namespace out
      *
      * @param momentum
      */
-    void LogOutput::writeInitialMomentum(double momentum)
+    void LogOutput::writeInitialMomentum(const Momentum &momentum)
     {
         _getFilePointer() << "\n" << std::flush;
 
         _getFilePointer() << std::format(
             "{}Initial momentum = {:.5e} {}*amu/fs\n",
             INFO,
-            momentum,
+            momentum.numerical_value_in(g_per_mol * angstrom / fs),
             ANGSTROM
         );
 

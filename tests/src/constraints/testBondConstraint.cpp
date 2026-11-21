@@ -28,6 +28,7 @@
 
 #include "exceptions.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 /**
@@ -39,7 +40,7 @@ TEST_F(TestBondConstraint, calcRefBondLength)
     _bondConstraint->calculateConstraintBondRef(*_box);
     EXPECT_EQ(
         _bondConstraint->getShakeDistanceRef(),
-        linalg::Vec3D(0.0, -1.0, -2.0)
+        linalg::Vec3D(0.0, -1.0, -2.0) * angstrom
     );
 }
 
@@ -50,7 +51,8 @@ TEST_F(TestBondConstraint, calcRefBondLength)
 TEST_F(TestBondConstraint, calculateDistanceDelta)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    const auto distanceSquared = normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
+    const auto distanceSquared =
+        normSquared(linalg::Vec3D(0.0, -1.0, -2.0)) * angstrom * angstrom;
     const auto targetBondLengthSquared = _targetBondLength * _targetBondLength;
     EXPECT_EQ(
         _bondConstraint->calculateDistanceDelta(*_box),
@@ -66,32 +68,44 @@ TEST_F(TestBondConstraint, applyShake)
     _bondConstraint->calculateConstraintBondRef(*_box);
     const auto delta = _bondConstraint->calculateDistanceDelta(*_box);
 
-    const auto shakeForce =
-        delta / (1.0 + 0.5) / normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
-    const auto dPos     = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0);
+    const auto shakeForce = delta.numerical_value_in(DistanceSquared::unit) /
+                            (1.0 + 0.5) /
+                            normSquared(linalg::Vec3D(0.0, -1.0, -2.0));
+    const auto dPos = shakeForce * linalg::Vec3D(0.0, -1.0, -2.0) * angstrom;
     const auto timestep = 2.0 * fs;
 
     EXPECT_FALSE(_bondConstraint->applyShake(*_box, 0.0, timestep));
 
-    const auto mol = _box->getMolecules()[0];
+    const auto molecule = _box->getMolecules()[0];
     EXPECT_EQ(
-        mol.getAtomPosition(AtomIndex{0}),
-        linalg::Vec3D(1.0, 1.0, 1.0) + dPos
+        molecule.getAtomPosition(AtomIndex{0}),
+        linalg::Vec3D(1.0, 1.0, 1.0) * angstrom + dPos
     );
     EXPECT_EQ(
-        mol.getAtomPosition(AtomIndex{1}),
-        linalg::Vec3D(1.0, 2.0, 3.0) - 0.5 * dPos
+        molecule.getAtomPosition(AtomIndex{1}),
+        linalg::Vec3D(1.0, 2.0, 3.0) * angstrom - 0.5 * dPos
     );
 
-    const auto expectedDeltaVel = dPos / (timestep.numerical_value_in(s));
-    EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0) + expectedDeltaVel
-    );
-    EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{1}),
-        linalg::Vec3D(1.0, 1.0, 1.0) - 0.5 * expectedDeltaVel
-    );
+    const auto expectedDeltaVel = (dPos / timestep).in(angstrom / s);
+    const auto expectedVel1 =
+        linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s - 0.5 * expectedDeltaVel;
+
+    const auto vel0 = molecule.getAtomVelocity(AtomIndex{0});
+    const auto vel1 = molecule.getAtomVelocity(AtomIndex{1});
+
+    // the velocity is computed via a different unit conversion path than the
+    // expected value, so the results may differ in the last digits
+    for (std::size_t i = 0; i < 3; ++i)
+    {
+        EXPECT_DOUBLE_EQ(
+            vel0[i].numerical_value_in(angstrom / s),
+            expectedDeltaVel.numerical_value_in(angstrom / s)[i]
+        );
+        EXPECT_DOUBLE_EQ(
+            vel1[i].numerical_value_in(angstrom / s),
+            expectedVel1.numerical_value_in(angstrom / s)[i]
+        );
+    }
 
     EXPECT_TRUE(_bondConstraint->applyShake(*_box, 1000.0, timestep));
 }
@@ -102,7 +116,7 @@ TEST_F(TestBondConstraint, applyShake)
  */
 TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
 {
-    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(0.0, 0.0, 0.0));
+    _bondConstraint->setShakeDistanceRef(Pos3D{Pos::zero()});
 
     EXPECT_THROW_MSG(
         (void) _bondConstraint->applyShake(*_box, 0.0, 0.5 * fs),
@@ -119,7 +133,9 @@ TEST_F(TestBondConstraint, applyShakeRejectsZeroLengthReference)
 TEST_F(TestBondConstraint, applyShakeRejectsNonFiniteReference)
 {
     const auto nan = std::numeric_limits<double>::quiet_NaN();
-    _bondConstraint->setShakeDistanceRef(linalg::Vec3D(nan, 0.0, 0.0));
+    _bondConstraint->setShakeDistanceRef(
+        Pos3D{nan * angstrom, 0.0 * angstrom, 0.0 * angstrom}
+    );
 
     EXPECT_THROW_MSG(
         (void) _bondConstraint->applyShake(*_box, 0.0, 0.5 * fs),
@@ -139,7 +155,9 @@ TEST_F(TestBondConstraint, calculateVelocityDelta)
     const auto scalarProduct =
         dot(linalg::Vec3D(-1.0, -1.0, -1.0), linalg::Vec3D(0.0, -1.0, -2.0));
     EXPECT_EQ(
-        _bondConstraint->calculateVelocityDelta(),
+        _bondConstraint->calculateVelocityDelta().numerical_value_in(
+            g_per_mol / s
+        ),
         -scalarProduct / (1.0 + 0.5) / 5.0
     );
 }
@@ -150,20 +168,37 @@ TEST_F(TestBondConstraint, calculateVelocityDelta)
 TEST_F(TestBondConstraint, applyRattle)
 {
     _bondConstraint->calculateConstraintBondRef(*_box);
-    const auto delta    = _bondConstraint->calculateVelocityDelta();
-    const auto deltaVel = delta * _bondConstraint->getShakeDistanceRef();
+    const auto delta = _bondConstraint->calculateVelocityDelta();
 
-    EXPECT_FALSE(_bondConstraint->applyRattle(0.0));
+    // delta * r has the unit Mass * Pos / Time (momentum like), the velocity
+    // change of an atom is this divided by its mass
+    const auto deltaMomentum = delta * _bondConstraint->getShakeDistanceRef();
 
-    const auto mol = _box->getMolecules()[0];
-    EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{0}),
-        linalg::Vec3D(0.0, 0.0, 0.0) + deltaVel
-    );
-    EXPECT_EQ(
-        mol.getAtomVelocity(AtomIndex{1}),
-        linalg::Vec3D(1.0, 1.0, 1.0) - 0.5 * deltaVel
-    );
+    EXPECT_FALSE(_bondConstraint->applyRattle(MassPerTime::zero()));
 
-    EXPECT_TRUE(_bondConstraint->applyRattle(1000.0));
+    const auto molecule = _box->getMolecules()[0];
+
+    const auto mass0 = molecule.getAtomMass(AtomIndex{0});
+    const auto mass1 = molecule.getAtomMass(AtomIndex{1});
+
+    const Vel3D initialVel1  = linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s;
+    const Vel3D expectedVel0 = deltaMomentum / mass0;
+    const Vel3D expectedVel1 = initialVel1 - (deltaMomentum / mass1);
+
+    const auto vel0 = molecule.getAtomVelocity(AtomIndex{0});
+    const auto vel1 = molecule.getAtomVelocity(AtomIndex{1});
+
+    for (std::size_t i = 0; i < 3; ++i)
+    {
+        EXPECT_DOUBLE_EQ(
+            vel0[i].numerical_value_in(angstrom / s),
+            expectedVel0[i].numerical_value_in(angstrom / s)
+        );
+        EXPECT_DOUBLE_EQ(
+            vel1[i].numerical_value_in(angstrom / s),
+            expectedVel1[i].numerical_value_in(angstrom / s)
+        );
+    }
+
+    EXPECT_TRUE(_bondConstraint->applyRattle(1000.0 * g_per_mol / s));
 }

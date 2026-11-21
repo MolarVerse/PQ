@@ -24,7 +24,6 @@
 #define CONSTRAINTS__BOND_CONSTRAINT_HPP
 
 #include "bond.hpp"
-#include "vector3d.hpp"
 
 namespace molsys
 {
@@ -43,8 +42,8 @@ namespace constraints
     class BondConstraint : public connectivity::Bond
     {
        private:
-        double        _targetBondLength;
-        linalg::Vec3D _shakeDistanceRef;
+        Distance _targetBondLength;
+        Pos3D    _shakeDistanceRef;
 
        public:
         BondConstraint(
@@ -52,17 +51,18 @@ namespace constraints
             molsys::Molecule *molecule2,
             AtomIndex         atomIndex1,
             AtomIndex         atomIndex2,
-            double            bondLength
+            const Distance   &bondLength
         );
 
         void calculateConstraintBondRef(
             const molsys::SimulationBox &simulationBox
         );
 
-        [[nodiscard]] double calculateDistanceDelta(
+        [[nodiscard]]
+        DistanceSquared calculateDistanceDelta(
             const molsys::SimulationBox &
         ) const;
-        [[nodiscard]] double calculateVelocityDelta() const;
+        [[nodiscard]] MassPerTime calculateVelocityDelta() const;
 
         [[nodiscard]]
         bool applyShake(
@@ -71,20 +71,20 @@ namespace constraints
             const Time &timeStep
         );
 
-        [[nodiscard]] bool applyRattle(double);
+        [[nodiscard]] bool applyRattle(const MassPerTime &tolerance);
 
         /***************************
          * standard setter methods *
          ***************************/
 
-        void setShakeDistanceRef(const linalg::Vec3D &shakeDistanceRef);
+        void setShakeDistanceRef(const Pos3D &shakeDistanceRef);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] double        getTargetBondLength() const;
-        [[nodiscard]] linalg::Vec3D getShakeDistanceRef() const;
+        [[nodiscard]] const Distance &getTargetBondLength() const;
+        [[nodiscard]] const Pos3D    &getShakeDistanceRef() const;
     };
 
 }   // namespace constraints

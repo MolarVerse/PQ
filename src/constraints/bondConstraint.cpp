@@ -29,7 +29,7 @@
 #include "exceptions.hpp"
 #include "molecule.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
+#include "unit_types.hpp"
 
 namespace constraints
 {
@@ -48,7 +48,7 @@ namespace constraints
         molsys::Molecule *molecule2,
         AtomIndex         atomIndex1,
         AtomIndex         atomIndex2,
-        double            bondLength
+        const Distance   &bondLength
     )
         : connectivity::Bond(molecule1, molecule2, atomIndex1, atomIndex2),
           _targetBondLength(bondLength)
@@ -65,8 +65,6 @@ namespace constraints
         const molsys::SimulationBox &simulationBox
     )
     {
-        simulationBox.applyPBC(_shakeDistanceRef);
-
         const auto dxyz = kernel::distVec(
             get_molecules()[0]->getAtomPosition(get_atomIndices()[0]),
             get_molecules()[1]->getAtomPosition(get_atomIndices()[1]),
@@ -82,7 +80,7 @@ namespace constraints
      * @param simulationBox
      *
      */
-    double BondConstraint::calculateDistanceDelta(
+    DistanceSquared BondConstraint::calculateDistanceDelta(
         const molsys::SimulationBox &simulationBox
     ) const
     {
@@ -91,7 +89,7 @@ namespace constraints
         const auto pos2 =
             get_molecules()[1]->getAtomPosition(get_atomIndices()[1]);
 
-        auto dPosition = pos1 - pos2;
+        auto dPosition = (pos1 - pos2);
         simulationBox.applyPBC(dPosition);
 
         const auto distanceSquared = normSquared(dPosition);
@@ -129,7 +127,7 @@ namespace constraints
     {
         const auto delta = calculateDistanceDelta(simulationBox);
 
-        if (std::fabs(delta / (_targetBondLength * _targetBondLength)) >
+        if (mstd::fabs(delta / (_targetBondLength * _targetBondLength)) >
             tolerance)
         {
             auto *molecule1 = get_molecules()[0];
@@ -155,7 +153,7 @@ namespace constraints
 
             const auto shakeForce =
                 delta / (sumInvMass) / shakeDistanceRefSquared;
-            const auto dPosition = shakeForce * _shakeDistanceRef;
+            const auto dPosition = _shakeDistanceRef * shakeForce;
 
             molecule1->addAtomPosition(
                 get_atomIndices()[0],
@@ -166,7 +164,7 @@ namespace constraints
                 -invMass2 * dPosition
             );
 
-            const auto dVelocity = dPosition / timeStep.numerical_value_in(s);
+            const auto dVelocity = dPosition / timeStep;
 
             molecule1->addAtomVelocity(
                 get_atomIndices()[0],
@@ -187,7 +185,7 @@ namespace constraints
      * @brief calculates the velocity delta of a bond constraint
      *
      */
-    double BondConstraint::calculateVelocityDelta() const
+    MassPerTime BondConstraint::calculateVelocityDelta() const
     {
         const auto dVelocity =
             get_molecules()[0]->getAtomVelocity(get_atomIndices()[0]) -
@@ -216,11 +214,11 @@ namespace constraints
      * applied
      *
      */
-    bool BondConstraint::applyRattle(double tolerance)
+    bool BondConstraint::applyRattle(const MassPerTime &tolerance)
     {
         const auto delta = calculateVelocityDelta();
 
-        if (std::fabs(delta) > tolerance)
+        if (mstd::fabs(delta) > tolerance)
         {
             const auto dVelocity = delta * _shakeDistanceRef;
 
@@ -253,9 +251,7 @@ namespace constraints
      *
      * @param shakeDistanceRef
      */
-    void BondConstraint::setShakeDistanceRef(
-        const linalg::Vec3D &shakeDistanceRef
-    )
+    void BondConstraint::setShakeDistanceRef(const Pos3D &shakeDistanceRef)
     {
         _shakeDistanceRef = shakeDistanceRef;
     }
@@ -270,7 +266,7 @@ namespace constraints
      * @return target bond length
      */
     [[nodiscard]]
-    double BondConstraint::getTargetBondLength() const
+    const Distance &BondConstraint::getTargetBondLength() const
     {
         return _targetBondLength;
     }
@@ -281,7 +277,7 @@ namespace constraints
      * @return shake distance reference
      */
     [[nodiscard]]
-    linalg::Vec3D BondConstraint::getShakeDistanceRef() const
+    const Pos3D &BondConstraint::getShakeDistanceRef() const
     {
         return _shakeDistanceRef;
     }

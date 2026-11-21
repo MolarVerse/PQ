@@ -339,7 +339,7 @@ namespace input
      * @throws exc::InputFileException if an active cell list is incompatible
      * with the selected potential
      */
-    void InputFileReader::_validateCellList(double coulombRadiusCutOff)
+    void InputFileReader::_validateCellList(const Distance& coulombRadiusCutOff)
     {
         if (!settings::GeneralSettings::isCellListActivated())
             return;
@@ -349,7 +349,7 @@ namespace input
                 "Cell lists are not available for pure QM simulations"
             );
 
-        if (coulombRadiusCutOff <= 0.0)
+        if (coulombRadiusCutOff <= Distance::zero())
             throw exc::InputFileException(
                 "An active cell list requires rcoulomb to be greater than zero"
             );

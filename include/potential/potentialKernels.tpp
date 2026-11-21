@@ -73,10 +73,11 @@ namespace pot
      * @param mol2 Second molecule containing atom2
      * @param atom1 First atom in the interaction pair
      * @param atom2 Second atom in the interaction pair
-     * @return std::pair<double, double> Coulomb energy and non-Coulomb energy
+     * @return std::pair<EnergyPerMol, EnergyPerMol> Coulomb energy and
+     * non-Coulomb energy
      */
     template <typename ChargeTag1, typename ChargeTag2>
-    std::pair<double, double> Potential::calculateSingleInteraction(
+    std::pair<EnergyPerMol, EnergyPerMol> Potential::calculateSingleInteraction(
         const molsys::Box            &box,
         molsys::Molecule             &mol1,
         molsys::Molecule             &mol2,
@@ -85,25 +86,25 @@ namespace pot
         const CoulombPotentialConfig &config
     ) const
     {
-        auto coulombEnergy    = 0.0;
-        auto nonCoulombEnergy = 0.0;
+        auto coulombEnergy    = EnergyPerMol::zero();
+        auto nonCoulombEnergy = EnergyPerMol::zero();
 
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
         if (distanceSquared < config.cutoffSquared)
         {
-            const double distance   = ::sqrt(distanceSquared);
-            const auto   atomType_i = atom1.getAtomType();
-            const auto   atomType_j = atom2.getAtomType();
+            const auto distance   = mstd::sqrt(distanceSquared);
+            const auto atomType_i = atom1.getAtomType();
+            const auto atomType_j = atom2.getAtomType();
 
             const auto globalVdwType_i = atom1.getInternalGlobalVDWType();
             const auto globalVdwType_j = atom2.getInternalGlobalVDWType();
@@ -142,9 +143,7 @@ namespace pot
                 coulF += nonCoulF;
             }
 
-            coulF /= distance;
-
-            const auto forcexyz = coulF * dxyz;
+            const auto forcexyz = dxyz * (coulF / distance);
 
             const auto shiftForcexyz = forcexyz * txyz;
 
@@ -163,25 +162,25 @@ namespace pot
      * @details This template function computes only the electrostatic
      * interaction between two atoms, ignoring van der Waals forces. It's
      * optimized for cases where only Coulombic interactions are needed. The
-     * function applies periodic boundary conditions and respects the Coulomb
-     * cutoff radius.
+     * function applies periodic boundary conditions and respects the
+     * Coulomb cutoff radius.
      *
      * @tparam ChargeTag1 Charge type for atom1 (QMChargeTag or MMChargeTag)
      * @tparam ChargeTag2 Charge type for atom2 (QMChargeTag or MMChargeTag)
      * @param box Simulation box for periodic boundary conditions
      * @param atom1 First atom in the interaction pair
      * @param atom2 Second atom in the interaction pair
-     * @return double Coulomb energy of the interaction
+     * @return EnergyPerMol Coulomb energy of the interaction
      */
     template <typename ChargeTag1, typename ChargeTag2>
-    double Potential::calculateSingleCoulombInteraction(
+    EnergyPerMol Potential::calculateSingleCoulombInteraction(
         const molsys::Box            &box,
         molsys::Atom                 &atom1,
         molsys::Atom                 &atom2,
         const CoulombPotentialConfig &config
     ) const
     {
-        auto coulombEnergy = 0.0;
+        auto coulombEnergy = EnergyPerMol::zero();
 
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
@@ -192,11 +191,11 @@ namespace pot
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
         if (distanceSquared < config.cutoffSquared)
         {
-            const double distance = ::sqrt(distanceSquared);
+            const auto distance = mstd::sqrt(distanceSquared);
 
             const auto charge_i = getPartialCharge<ChargeTag1>(atom1);
             const auto charge_j = getPartialCharge<ChargeTag2>(atom2);
@@ -207,9 +206,7 @@ namespace pot
                 _coulombPotential->calculate(distance, coulombPreFactor);
             coulombEnergy = coulE;
 
-            coulF /= distance;
-
-            const auto forcexyz = coulF * dxyz;
+            const auto forcexyz = dxyz * (coulF / distance);
 
             const auto shiftForcexyz = forcexyz * txyz;
 
@@ -240,38 +237,39 @@ namespace pot
      * @param mol2 Second molecule containing atom2
      * @param atom1 First atom in the interaction pair (receives forces)
      * @param atom2 Second atom in the interaction pair (no forces applied)
-     * @return std::pair<double, double> Coulomb energy and non-Coulomb
-     * energy
+     * @return std::pair<EnergyPerMol, EnergyPerMol> Coulomb energy and
+     * non-Coulomb energy
      */
     template <typename ChargeTag1, typename ChargeTag2>
-    std::pair<double, double> Potential::calculateSingleInteractionOneWay(
-        const molsys::Box            &box,
-        molsys::Molecule             &mol1,
-        molsys::Molecule             &mol2,
-        molsys::Atom                 &atom1,
-        molsys::Atom                 &atom2,
-        const CoulombPotentialConfig &config
-    ) const
+    std::pair<EnergyPerMol, EnergyPerMol> Potential::
+        calculateSingleInteractionOneWay(
+            const molsys::Box            &box,
+            molsys::Molecule             &mol1,
+            molsys::Molecule             &mol2,
+            molsys::Atom                 &atom1,
+            molsys::Atom                 &atom2,
+            const CoulombPotentialConfig &config
+        ) const
     {
-        auto coulombEnergy    = 0.0;
-        auto nonCoulombEnergy = 0.0;
+        auto coulombEnergy    = EnergyPerMol::zero();
+        auto nonCoulombEnergy = EnergyPerMol::zero();
 
         const auto xyz_i = atom1.getPosition();
         const auto xyz_j = atom2.getPosition();
 
-        auto dxyz = xyz_i - xyz_j;
+        auto dxyz = (xyz_i - xyz_j);
 
         const auto txyz = -box.calcShiftVector(dxyz);
 
         dxyz += txyz;
 
-        const double distanceSquared = normSquared(dxyz);
+        const auto distanceSquared = normSquared(dxyz);
 
         if (distanceSquared < config.cutoffSquared)
         {
-            const double distance   = ::sqrt(distanceSquared);
-            const auto   atomType_i = atom1.getAtomType();
-            const auto   atomType_j = atom2.getAtomType();
+            const auto distance   = mstd::sqrt(distanceSquared);
+            const auto atomType_i = atom1.getAtomType();
+            const auto atomType_j = atom2.getAtomType();
 
             const auto globalVdwType_i = atom1.getInternalGlobalVDWType();
             const auto globalVdwType_j = atom2.getInternalGlobalVDWType();
@@ -310,9 +308,7 @@ namespace pot
                 coulF += nonCoulF;
             }
 
-            coulF /= distance;
-
-            const auto forcexyz = coulF * dxyz;
+            const auto forcexyz = dxyz * (coulF / distance);
 
             const auto shiftForcexyz = forcexyz * txyz;
 

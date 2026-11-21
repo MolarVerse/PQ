@@ -122,8 +122,9 @@ using VdwType = StrongSizeT<struct VdwTypeTag>;
  */
 struct LJParams
 {
-    double c6{0.0};
-    double c12{0.0};
+    // TODO: why initialize these??
+    C6  c6  = C6::zero();
+    C12 c12 = C12::zero();
 
     [[nodiscard]]
     bool operator==(const LJParams &other) const;
@@ -138,9 +139,9 @@ struct LJParams
  */
 struct MorseParams
 {
-    double dissociationEnergy;
-    double wellWidth;
-    double equilibriumDistance;
+    EnergyPerMol dissociationEnergy;
+    InvDistance  wellWidth;
+    Distance     equilibriumDistance;
 
     [[nodiscard]]
     bool operator==(const MorseParams &other) const;
@@ -154,9 +155,9 @@ struct MorseParams
  */
 struct BuckinghamParams
 {
-    double scaling;
-    double dRho;
-    double c6;
+    EnergyPerMol scaling;
+    InvDistance  dRho;
+    C6           c6;
 
     [[nodiscard]]
     bool operator==(const BuckinghamParams &other) const;
@@ -182,9 +183,9 @@ struct BondParams
 
 struct DihedralParams
 {
-    Energy forceConstant;   // Energy unit for dihedral force constant
-    double frequency;
-    Angle  phaseShift;
+    EnergyPerMol forceConstant;   // Energy unit for dihedral force constant
+    double       frequency;
+    Angle        phaseShift;
 
     [[nodiscard]]
     bool operator==(const DihedralParams &other) const;
@@ -197,7 +198,7 @@ struct JCouplingParams
     double a;
     double b;
     double c;
-    double phaseShift;
+    Angle  phaseShift;
 
     [[nodiscard]]
     bool operator==(const JCouplingParams &other) const;

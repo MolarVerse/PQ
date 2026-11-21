@@ -31,7 +31,9 @@
  */
 TEST_F(TestRingPolymerTrajectoryOutput, writeHeaderBoxIsExact)
 {
-    molsys::OrthorhombicBox orthoBox{{27.44205774, 27.44205774, 27.44205774}};
+    molsys::OrthorhombicBox orthoBox{
+        {27.44205774 * angstrom, 27.44205774 * angstrom, 27.44205774 * angstrom}
+    };
     for (auto &bead : _beads)
     {
         bead.setBox(orthoBox, false);

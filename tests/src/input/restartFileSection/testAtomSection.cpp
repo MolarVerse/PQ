@@ -41,6 +41,7 @@
 #include "restartFileSection.hpp"
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests the keyword function
@@ -236,15 +237,16 @@ TEST_F(TestAtomSection, testProcessAtomLine)
     _processAtomLine(line, _engine->getSimulationBox(), molecule);
 
     ASSERT_THAT(
-        molecule.getAtomPosition(AtomIndex{0}),
+        molecule.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        molecule.getAtomVelocity(AtomIndex{0}),
+        molecule.getAtomVelocity(AtomIndex{0}).numerical_value_in(angstrom / s),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        molecule.getAtomForce(AtomIndex{0}),
+        molecule.getAtomForce(AtomIndex{0})
+            .numerical_value_in(kcal_per_mol / angstrom),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 
@@ -269,15 +271,15 @@ TEST_F(TestAtomSection, testProcessQMAtomLine)
 
     ASSERT_EQ(_engine->getSimulationBox().getNumberOfQMAtoms(), 1);
     ASSERT_THAT(
-        first_atom->getPosition(),
+        first_atom->getPosition().numerical_value_in(angstrom),
         testing::ElementsAre(stod(line[3]), stod(line[4]), stod(line[5]))
     );
     ASSERT_THAT(
-        first_atom->getVelocity(),
+        first_atom->getVelocity().numerical_value_in(angstrom / s),
         testing::ElementsAre(stod(line[6]), stod(line[7]), stod(line[8]))
     );
     ASSERT_THAT(
-        first_atom->getForce(),
+        first_atom->getForce().numerical_value_in(kcal_per_mol / angstrom),
         testing::ElementsAre(stod(line[9]), stod(line[10]), stod(line[11]))
     );
 

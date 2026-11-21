@@ -38,7 +38,7 @@ namespace pot
     LennardJonesPair::LennardJonesPair(
         ExtVdwType      vanDerWaalsType1,
         ExtVdwType      vanDerWaalsType2,
-        double          cutOff,
+        const Pos      &cutOff,
         const LJParams &params
     )
         : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
@@ -52,7 +52,10 @@ namespace pot
      * @param cutOff
      * @param params
      */
-    LennardJonesPair::LennardJonesPair(double cutOff, const LJParams &params)
+    LennardJonesPair::LennardJonesPair(
+        const Pos      &cutOff,
+        const LJParams &params
+    )
         : NonCoulombPair(cutOff), _params(params)
     {
     }
@@ -66,10 +69,10 @@ namespace pot
      * @param params
      */
     LennardJonesPair::LennardJonesPair(
-        double          cutOff,
-        double          energyCutoff,
-        double          forceCutoff,
-        const LJParams &params
+        const Pos          &cutOff,
+        const EnergyPerMol &energyCutoff,
+        const Force        &forceCutoff,
+        const LJParams     &params
     )
         : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
     {
@@ -97,11 +100,14 @@ namespace pot
      * @brief calculates the energy and force of a LennardJonesPair
      *
      * @param distance
-     * @return std::pair<double, double>
+     * @return std::pair<EnergyPerMol, Force>
      */
-    std::pair<double, double> LennardJonesPair::calculate(double distance) const
+    std::pair<EnergyPerMol, Force> LennardJonesPair::calculate(
+        const Pos &distance
+    ) const
     {
-        const auto distanceThird   = distance * distance * distance;
+        const auto distance_       = distance;
+        const auto distanceThird   = distance_ * distance_ * distance_;
         const auto distanceSixth   = distanceThird * distanceThird;
         const auto distanceTwelfth = distanceSixth * distanceSixth;
 
@@ -111,8 +117,8 @@ namespace pot
         energy      -= get_forceCutoff() * (get_radialCutoff() - distance);
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        auto force  = 12.0 * _params.c12 / (distanceTwelfth * distance);
-        force      += 6.0 * _params.c6 / (distanceSixth * distance);
+        auto force  = 12.0 * _params.c12 / (distanceTwelfth * distance_);
+        force      += 6.0 * _params.c6 / (distanceSixth * distance_);
         force      -= get_forceCutoff();
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 

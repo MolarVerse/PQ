@@ -22,13 +22,13 @@
 
 #include "simulationBoxInputParser.hpp"
 
-#include "defaults.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "potentialSettings.hpp"
 #include "rangeValidator.hpp"
 #include "simulationBoxSettings.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -68,18 +68,18 @@ namespace input
             .name  = "rcoulomb",
             .title = "Coulomb cutoff radius",
             .description =
-                "Specifies the cutoff radius for Coulomb interactions"
+                "Specifies the cutoff radius for Coulomb interactions",
+            .unit = "angstrom"
         };
 
         const auto setValue = [this](double value)
-        { _potentialSettings->setCoulombRadiusCutOffByUser(value); };
+        { _potentialSettings->setCoulombRadiusCutOffByUser(value * angstrom); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
-                .metadata     = metaData,
-                .defaultValue = defaults::COULOMB_CUT_OFF_DEFAULT,
-                .onSet        = setValue,
-                .validators   = {makeShared(PositiveGTDoubleValidator)}
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)}
             }
         );
 
@@ -95,11 +95,16 @@ namespace input
             .name  = "rnoncoulomb",
             .title = "Non-Coulomb cutoff radius",
             .description =
-                "Specifies the cutoff radius for Non-Coulomb interactions"
+                "Specifies the cutoff radius for Non-Coulomb interactions",
+            .unit = "angstrom"
         };
 
         const auto setValue = [this](double value)
-        { _potentialSettings->setNonCoulombRadiusCutOffByUser(value); };
+        {
+            _potentialSettings->setNonCoulombRadiusCutOffByUser(
+                value * angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
@@ -120,11 +125,12 @@ namespace input
         const auto metaData = KeyMetadata{
             .name        = "density",
             .title       = "Density of the simulation box",
-            .description = "Specifies the density of the simulation box"
+            .description = "Specifies the density of the simulation box",
+            .unit        = "kg/litre"
         };
 
         const auto setValue = [settings = _settings](double value)
-        { settings->setDensityByUser(value); };
+        { settings->setDensityByUser(value * kg_per_litre); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

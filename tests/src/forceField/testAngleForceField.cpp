@@ -41,7 +41,9 @@
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 namespace pot
 {
@@ -56,19 +58,24 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
 {
     auto box = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     auto potentialSettings = PotentialSettings();
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
         ExtVdwType(1),
         ExtVdwType(1),
-        5.0,
-        LJParams{.c6 = 2.0, .c12 = 4.0}
+        5.0 * angstrom,
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 4.0 * kcal_per_mol * angstrom12
+        }
     );
     _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)
@@ -83,13 +90,13 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition({0.0, 0.0, 0.0});
-    atom2->setPosition({1.0, 1.0, 1.0});
-    atom3->setPosition({1.0, 2.0, 3.0});
+    atom1->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    atom2->setPosition(linalg::Vec3D{1.0, 1.0, 1.0} * angstrom);
+    atom3->setPosition(linalg::Vec3D{1.0, 2.0, 3.0} * angstrom);
 
-    atom1->setForce({0.0, 0.0, 0.0});
-    atom2->setForce({0.0, 0.0, 0.0});
-    atom3->setForce({0.0, 0.0, 0.0});
+    atom1->setForce(Force3D::zero());
+    atom2->setForce(Force3D::zero());
+    atom3->setForce(Force3D::zero());
 
     atom1->setInternalGlobalVDWType(VdwType{0});
     atom2->setInternalGlobalVDWType(VdwType{1});
@@ -99,9 +106,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
     atom2->setAtomType(AtomType{1});
     atom3->setAtomType(AtomType{1});
 
-    atom1->setPartialCharge(1.0);
-    atom2->setPartialCharge(-0.5);
-    atom3->setPartialCharge(-0.5);
+    atom1->setPartialCharge(1.0 * elementary_charge);
+    atom2->setPartialCharge(-0.5 * elementary_charge);
+    atom3->setPartialCharge(-0.5 * elementary_charge);
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -129,52 +136,86 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         potentialSettings
     );
 
-    EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{0})[0],
+        physicalData.getAngleEnergy().numerical_value_in(kcal_per_mol),
+        2.0999420826401303,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[0].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -0.62105043904006785,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{0})[1],
+        molecule.getAtomForce(AtomIndex{0})[1].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         0.20701681301335595,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{0})[2],
+        molecule.getAtomForce(AtomIndex{0})[2].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         1.0350840650667796,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{1})[0],
+        molecule.getAtomForce(AtomIndex{1})[0].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         1.4491176910934915,
         1e-6
     );
-    EXPECT_NEAR(molecule.getAtomForce(AtomIndex{1})[1], 0.0, 1e-6);
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{1})[2],
+        molecule.getAtomForce(AtomIndex{1})[1].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
+        0.0,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{1})[2].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -1.4491176910934915,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{2})[0],
+        molecule.getAtomForce(AtomIndex{2})[0].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -0.82806725205342369,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{2})[1],
+        molecule.getAtomForce(AtomIndex{2})[1].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -0.20701681301335595,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{2})[2],
+        molecule.getAtomForce(AtomIndex{2})[2].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         0.41403362602671184,
         1e-6
     );
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), 0.0, 1e-6);
-    EXPECT_NEAR(physicalData.getNonCoulombEnergy(), 0.0, 1e-6);
+    EXPECT_NEAR(
+        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        0.0,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        0.0,
+        1e-6
+    );
     EXPECT_THAT(
-        diagonal(physicalData.getVirial()),
+        diagonal(physicalData.getVirial()).numerical_value_in(kcal_per_mol),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-6),
             testing::DoubleNear(0.0, 1e-6),
@@ -182,9 +223,9 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         )
     );
 
-    molecule.setAtomForce(0, {0.0, 0.0, 0.0});
-    molecule.setAtomForce(1, {0.0, 0.0, 0.0});
-    molecule.setAtomForce(2, {0.0, 0.0, 0.0});
+    molecule.setAtomForce(AtomIndex{0}, Force3D::zero());
+    molecule.setAtomForce(AtomIndex{1}, Force3D::zero());
+    molecule.setAtomForce(AtomIndex{2}, Force3D::zero());
     physicalData.reset();
 
     angleFF.setIsLinker(true);
@@ -198,61 +239,99 @@ TEST_F(TestAngleForceField, calculateEnergyAndForces)
         potentialSettings
     );
 
-    EXPECT_NEAR(physicalData.getAngleEnergy(), 2.0999420826401303, 1e-6);
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{0})[0],
+        physicalData.getAngleEnergy().numerical_value_in(kcal_per_mol),
+        2.0999420826401303,
+        1e-6
+    );
+    EXPECT_NEAR(
+        molecule.getAtomForce(AtomIndex{0})[0].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -0.62105043904006785,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{0})[1],
+        molecule.getAtomForce(AtomIndex{0})[1].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         0.20701681301335595,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{0})[2],
+        molecule.getAtomForce(AtomIndex{0})[2].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         1.0350840650667796,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{1})[0],
+        molecule.getAtomForce(AtomIndex{1})[0].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         1.4491176910934915,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{1})[1],
+        molecule.getAtomForce(AtomIndex{1})[1].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         7.0737262359370403,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{1})[2],
+        molecule.getAtomForce(AtomIndex{1})[2].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         12.69833478078059,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{2})[0],
+        molecule.getAtomForce(AtomIndex{2})[0].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -0.82806725205342369,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{2})[1],
+        molecule.getAtomForce(AtomIndex{2})[1].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -7.2807430489503959,
         1e-6
     );
     EXPECT_NEAR(
-        molecule.getAtomForce(AtomIndex{2})[2],
+        molecule.getAtomForce(AtomIndex{2})[2].numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
         -13.733418845847369,
         1e-6
     );
-    EXPECT_NEAR(physicalData.getCoulombEnergy(), -22.378958701288319, 1e-6);
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy(),
+        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        -22.378958701288319,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -0.016255999999999989,
         1e-6
     );
-    EXPECT_NEAR(physicalData.getVirial()[0][0], 0.0, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[1][1], -7.0737262359370403, 1e-6);
-    EXPECT_NEAR(physicalData.getVirial()[2][2], -28.294904943748161, 1e-6);
+    EXPECT_NEAR(
+        physicalData.getVirial()[0][0].numerical_value_in(kcal_per_mol),
+        0.0,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getVirial()[1][1].numerical_value_in(kcal_per_mol),
+        -7.0737262359370403,
+        1e-6
+    );
+    EXPECT_NEAR(
+        physicalData.getVirial()[2][2].numerical_value_in(kcal_per_mol),
+        -28.294904943748161,
+        1e-6
+    );
 }
 
 /**
@@ -266,12 +345,14 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 {
     auto box = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     auto              physicalData = physicalData::PhysicalData();
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto molecule = molsys::Molecule();
@@ -283,13 +364,13 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
 
     // Strictly collinear: atom2 is the central atom, atom1 and atom3 are
     // 180 degrees apart along the x axis. alpha = pi -> sin(alpha) = 0.
-    atom1->setPosition({1.0, 0.0, 0.0});
-    atom2->setPosition({0.0, 0.0, 0.0});
-    atom3->setPosition({-1.0, 0.0, 0.0});
+    atom1->setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
+    atom2->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    atom3->setPosition(linalg::Vec3D{-1.0, 0.0, 0.0} * angstrom);
 
-    atom1->setForce({0.0, 0.0, 0.0});
-    atom2->setForce({0.0, 0.0, 0.0});
-    atom3->setForce({0.0, 0.0, 0.0});
+    atom1->setForce(Force3D::zero());
+    atom2->setForce(Force3D::zero());
+    atom3->setForce(Force3D::zero());
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -319,8 +400,8 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     );
 
     // Energy is finite at the singular angle (harmonic, deltaAngle ~ 0).
-    EXPECT_FALSE(std::isnan(physicalData.getAngleEnergy()));
-    EXPECT_FALSE(std::isinf(physicalData.getAngleEnergy()));
+    EXPECT_FALSE(isnan(physicalData.getAngleEnergy()));
+    EXPECT_FALSE(isinf(physicalData.getAngleEnergy()));
 
     // All per-atom forces must be finite. Without the guard these would
     // be NaN from dividing by sin(pi) == 0 in the cross-product block.
@@ -328,8 +409,8 @@ TEST_F(TestAngleForceField, collinearAngleProducesFiniteForces)
     {
         for (size_t i = 0; i < 3; ++i)
         {
-            EXPECT_FALSE(std::isnan(molecule.getAtomForce(atomIdx)[i]));
-            EXPECT_FALSE(std::isinf(molecule.getAtomForce(atomIdx)[i]));
+            EXPECT_FALSE(isnan(molecule.getAtomForce(atomIdx)[i]));
+            EXPECT_FALSE(isinf(molecule.getAtomForce(atomIdx)[i]));
         }
     }
 }

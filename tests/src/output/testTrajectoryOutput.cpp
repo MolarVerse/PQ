@@ -58,7 +58,9 @@ TEST_F(TestTrajectoryOutput, writeXyz)
  */
 TEST_F(TestTrajectoryOutput, writeHeaderBoxIsExact)
 {
-    molsys::OrthorhombicBox orthoBox{{27.44205774, 27.44205774, 27.44205774}};
+    molsys::OrthorhombicBox orthoBox{
+        {27.44205774 * angstrom, 27.44205774 * angstrom, 27.44205774 * angstrom}
+    };
     _simulationBox->setBox(orthoBox, false);
 
     _trajectoryOutput->setFilename("default.xyz", false);
@@ -97,7 +99,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
     HybridSettings                   hybridSettings;
     configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
-    _simulationBox->getAtom(1).setMass(1.0);
+    _simulationBox->getAtom(1).setMass(1.0 * g_per_mol);
     hybridSettings.setInnerRegionCenterByUser({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 
@@ -124,7 +126,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
     HybridSettings                   hybridSettings;
     configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
-    _simulationBox->getAtom(1).setMass(1.0);
+    _simulationBox->getAtom(1).setMass(1.0 * g_per_mol);
     hybridSettings.setInnerRegionCenterByUser({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 

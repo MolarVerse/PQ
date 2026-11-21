@@ -34,6 +34,7 @@
 #include "testNonCoulombPairUtils.hpp"
 #include "testParameterFileSection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestParameterFileSection, processSectionLennardJones)
 {
@@ -54,9 +55,15 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
     const auto *pair = dynamic_cast<const pot::LennardJonesPair *>(pairVector);
     EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(TestLJPairUtils::params(pair).c6, 1.22);
-    EXPECT_EQ(TestLJPairUtils::params(pair).c12, 234.3);
-    EXPECT_EQ(pair->get_radialCutoff(), 324.3);
+    EXPECT_EQ(
+        TestLJPairUtils::params(pair).c6,
+        1.22 * kcal_per_mol * angstrom6
+    );
+    EXPECT_EQ(
+        TestLJPairUtils::params(pair).c12,
+        234.3 * kcal_per_mol * angstrom12
+    );
+    EXPECT_EQ(pair->get_radialCutoff(), 324.3 * angstrom);
 
     lineElements = {"0", "1", "1.22", "234.3"};
     nonCoulombicsSection.processLJ(lineElements, *_engine, 0);
@@ -67,9 +74,15 @@ TEST_F(TestParameterFileSection, processSectionLennardJones)
         dynamic_cast<const pot::LennardJonesPair *>(pairVector2);
     EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(TestLJPairUtils::params(pair2).c6, 1.22);
-    EXPECT_EQ(TestLJPairUtils::params(pair2).c12, 234.3);
-    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
+    EXPECT_EQ(
+        TestLJPairUtils::params(pair2).c6,
+        1.22 * kcal_per_mol * angstrom6
+    );
+    EXPECT_EQ(
+        TestLJPairUtils::params(pair2).c12,
+        234.3 * kcal_per_mol * angstrom12
+    );
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5 * angstrom);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3"};
     EXPECT_THROW_MSG(
@@ -99,10 +112,16 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
     const auto *pair = dynamic_cast<const pot::BuckinghamPair *>(pairVector);
     EXPECT_EQ(pair->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).scaling, 1.22);
-    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).dRho, 234.3);
-    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).c6, 324.3);
-    EXPECT_EQ(pair->get_radialCutoff(), 435.0);
+    EXPECT_EQ(
+        TestBuckinghamPairUtils::params(pair).scaling,
+        1.22 * kcal_per_mol
+    );
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair).dRho, 234.3 / angstrom);
+    EXPECT_EQ(
+        TestBuckinghamPairUtils::params(pair).c6,
+        324.3 * kcal_per_mol * angstrom6
+    );
+    EXPECT_EQ(pair->get_radialCutoff(), 435.0 * angstrom);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processBuckingham(lineElements, *_engine, 0);
@@ -112,10 +131,16 @@ TEST_F(TestParameterFileSection, processSectionBuckingham)
     const auto *pair2 = dynamic_cast<const pot::BuckinghamPair *>(pairVector2);
     EXPECT_EQ(pair2->getVanDerWaalsType1(), ExtVdwType{0});
     EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
-    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).scaling, 1.22);
-    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).dRho, 234.3);
-    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).c6, 324.3);
-    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
+    EXPECT_EQ(
+        TestBuckinghamPairUtils::params(pair2).scaling,
+        1.22 * kcal_per_mol
+    );
+    EXPECT_EQ(TestBuckinghamPairUtils::params(pair2).dRho, 234.3 / angstrom);
+    EXPECT_EQ(
+        TestBuckinghamPairUtils::params(pair2).c6,
+        324.3 * kcal_per_mol * angstrom6
+    );
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5 * angstrom);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW_MSG(
@@ -147,10 +172,10 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     EXPECT_EQ(pair->getVanDerWaalsType2(), ExtVdwType{1});
 
     const auto &morseParams = TestMorsePairUtils::params(pair);
-    EXPECT_EQ(morseParams.dissociationEnergy, 1.22);
-    EXPECT_EQ(morseParams.wellWidth, 234.3);
-    EXPECT_EQ(morseParams.equilibriumDistance, 324.3);
-    EXPECT_EQ(pair->get_radialCutoff(), 435.0);
+    EXPECT_EQ(morseParams.dissociationEnergy, 1.22 * kcal_per_mol);
+    EXPECT_EQ(morseParams.wellWidth, 234.3 / angstrom);
+    EXPECT_EQ(morseParams.equilibriumDistance, 324.3 * angstrom);
+    EXPECT_EQ(pair->get_radialCutoff(), 435.0 * angstrom);
 
     lineElements = {"0", "1", "1.22", "234.3", "324.3"};
     nonCoulombicsSection.processMorse(lineElements, *_engine, 0);
@@ -162,10 +187,10 @@ TEST_F(TestParameterFileSection, processSectionMorse)
     EXPECT_EQ(pair2->getVanDerWaalsType2(), ExtVdwType{1});
 
     const auto &morseParams2 = TestMorsePairUtils::params(pair2);
-    EXPECT_EQ(morseParams2.dissociationEnergy, 1.22);
-    EXPECT_EQ(morseParams2.wellWidth, 234.3);
-    EXPECT_EQ(morseParams2.equilibriumDistance, 324.3);
-    EXPECT_EQ(pair2->get_radialCutoff(), 12.5);
+    EXPECT_EQ(morseParams2.dissociationEnergy, 1.22 * kcal_per_mol);
+    EXPECT_EQ(morseParams2.wellWidth, 234.3 / angstrom);
+    EXPECT_EQ(morseParams2.equilibriumDistance, 324.3 * angstrom);
+    EXPECT_EQ(pair2->get_radialCutoff(), 12.5 * angstrom);
 
     lineElements = {"1", "2", "1.0", "0", "2", "3.3", "345"};
     EXPECT_THROW_MSG(

@@ -30,6 +30,7 @@
 
 #include "molecule.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -49,17 +50,17 @@ namespace out
     )
     {
         const auto &dimensions = simulationBox.getBoxDimensions();
-        const auto  angles     = simulationBox.getBoxAngles();
+        const auto &angles     = simulationBox.getBoxAngles();
 
         _getFilePointer() << std::format(
             "{}  {} {} {}  {} {} {}\n",
             simulationBox.getNumberOfAtoms() * nBeads,
-            dimensions[0],
-            dimensions[1],
-            dimensions[2],
-            angles[0],
-            angles[1],
-            angles[2]
+            dimensions[0].numerical_value_in(angstrom),
+            dimensions[1].numerical_value_in(angstrom),
+            dimensions[2].numerical_value_in(angstrom),
+            angles[0].numerical_value_in(deg),
+            angles[1].numerical_value_in(deg),
+            angles[2].numerical_value_in(deg)
         );
     }
 
@@ -91,9 +92,18 @@ namespace out
                 for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
-                    const auto x        = molecule.getAtomPosition(j)[0];
-                    const auto y        = molecule.getAtomPosition(j)[1];
-                    const auto z        = molecule.getAtomPosition(j)[2];
+                    const auto x =
+                        molecule.getAtomPosition(j)[0].numerical_value_in(
+                            angstrom
+                        );
+                    const auto y =
+                        molecule.getAtomPosition(j)[1].numerical_value_in(
+                            angstrom
+                        );
+                    const auto z =
+                        molecule.getAtomPosition(j)[2].numerical_value_in(
+                            angstrom
+                        );
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
@@ -138,9 +148,13 @@ namespace out
                 for (AtomIndex j{0}; j.get() < nAtoms; ++j)
                 {
                     const auto atomName = molecule.getAtomName(j);
-                    const auto velX     = molecule.getAtomVelocity(j)[0];
-                    const auto velY     = molecule.getAtomVelocity(j)[1];
-                    const auto velZ     = molecule.getAtomVelocity(j)[2];
+                    const auto vel =
+                        molecule.getAtomVelocity(j).numerical_value_in(
+                            angstrom / s
+                        );
+                    const auto velX = vel[0];
+                    const auto velY = vel[1];
+                    const auto velZ = vel[2];
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
@@ -173,14 +187,18 @@ namespace out
 
         writeHeader(beads[0], beads.size());
 
-        auto totalForce = 0.0;
+        Force totalForce = Force::zero();
         std::ranges::for_each(
             beads,
             [&totalForce](auto &bead)
             { totalForce += bead.calculateTotalForce(); }
         );
 
-        _writeForceComment(step, totalForce, includeMetadata);
+        _writeForceComment(
+            step,
+            totalForce.numerical_value_in(kcal_per_mol / angstrom),
+            includeMetadata
+        );
 
         for (size_t i = 0; i < beads.size(); ++i)
         {
@@ -197,9 +215,18 @@ namespace out
 
                     buffer << std::format("{:>5}{}\t", atomName, i + 1);
 
-                    buffer << std::format("{:15.8f}\t", forceX);
-                    buffer << std::format("{:15.8f}\t", forceY);
-                    buffer << std::format("{:15.8f}\n", forceZ);
+                    buffer << std::format(
+                        "{:15.8f}\t",
+                        forceX.numerical_value_in(kcal_per_mol / angstrom)
+                    );
+                    buffer << std::format(
+                        "{:15.8f}\t",
+                        forceY.numerical_value_in(kcal_per_mol / angstrom)
+                    );
+                    buffer << std::format(
+                        "{:15.8f}\n",
+                        forceZ.numerical_value_in(kcal_per_mol / angstrom)
+                    );
                 }
             }
         }
@@ -237,7 +264,10 @@ namespace out
                         atom->getQMCharge().value_or(atom->getPartialCharge());
 
                     buffer << std::format("{:>5}{}\t", atom->getName(), i + 1);
-                    buffer << std::format("{:15.8f}\n", charge);
+                    buffer << std::format(
+                        "{:15.8f}\n",
+                        charge.numerical_value_in(elementary_charge)
+                    );
                     buffer << std::flush;
                 }
             }
