@@ -64,17 +64,20 @@ inline void TestManostat::SetUp()
         std::make_unique<manostat::Manostat>(_settings->manostatSettings);
     _data = std::make_unique<physicalData::PhysicalData>();
 
-    _data->setVolume(2.0);
-    _data->setVirial(diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)));
+    _data->setVolume(2.0 * angstrom3);
+    _data->setVirial(
+        diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
+    );
     _data->setKineticEnergyMolecularVector(
-        diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0))
+        diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
     );
     _data->setKineticEnergyAtomicVector(
-        diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0))
+        diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)) * kcal_per_mol
     );
 
     _box = std::make_unique<molsys::SimulationBox>();
-    molsys::OrthorhombicBox orthoBox{{cbrt(2.0), cbrt(2.0), cbrt(2.0)}};
+    const auto              boxLength = cbrt(2.0) * angstrom;
+    molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};
     _box->setBox(orthoBox, false);
 }
 

@@ -52,15 +52,15 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 int main()
 {
     const auto timeStep = 0.001 * fs;
-    settings::GeneralSettings::setRandomSeed(42);
-    settings::GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(42);
+    GeneralSettings::setIsRandomSeedSet(true);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto physicalData = physicalData::PhysicalData();
 
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(4.0);
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
     settings.manostatSettings.setTargetPressureByUser(1.0 * bar);
     settings.manostatSettings.setTauByUser(100.0 * ps);
     settings.manostatSettings.setCompressibilityByUser(4.6e-5 * per_bar);
@@ -85,6 +85,9 @@ int main()
     }
 
     // read state so the loop cannot be optimized away
-    std::cout << std::format("{:.6f}\n", box.getVolume());
+    std::cout << std::format(
+        "{:.6f}\n",
+        box.getVolume().numerical_value_in(angstrom * angstrom * angstrom)
+    );
     return 0;
 }

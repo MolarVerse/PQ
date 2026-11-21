@@ -157,7 +157,7 @@ namespace benchQMRunner
 
     inline void buildBox(molsys::SimulationBox &simulationBox)
     {
-        const auto length = SPACING * static_cast<double>(PER_SIDE);
+        const auto length = SPACING * static_cast<double>(PER_SIDE) * angstrom;
         molsys::OrthorhombicBox orthoBox{{length, length, length}};
         simulationBox.setBox(orthoBox, false);
 
@@ -187,8 +187,11 @@ namespace benchQMRunner
             {
                 auto atom = std::make_shared<molsys::Atom>();
                 atom->setName(names.at(i));
-                atom->setPosition(origin + offset.at(i));
-                atom->setPartialCharge((i == 0) ? -0.82 : 0.41);
+                atom->setPosition((origin + offset.at(i)) * angstrom);
+                atom->setPartialCharge(
+                    (i == 0) ? -0.82 * elementary_charge
+                             : 0.41 * elementary_charge
+                );
                 molecule.addAtom(atom);
                 simulationBox.addAtom(atom);
             }
@@ -229,7 +232,11 @@ namespace benchQMRunner
         const auto original = std::filesystem::current_path();
         std::filesystem::current_path(directory);
 
-        settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+        settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
+        settings.hybridSettings.finalize(
+            settings.fileSettings,
+            settings.generalSettings.getJobtype()
+        );
         settings.qmSettings.setRemoveNetForceByUser(true);
         settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
 
@@ -269,7 +276,10 @@ namespace benchQMRunner
         std::filesystem::remove_all(directory);
 
         // read state so the loop cannot be optimized away
-        std::cout << std::format("{:.6f}\n", physicalData.getQMEnergy());
+        std::cout << std::format(
+            "{:.6f}\n",
+            physicalData.getQMEnergy().numerical_value_in(kcal_per_mol)
+        );
         return 0;
     }
 }   // namespace benchQMRunner

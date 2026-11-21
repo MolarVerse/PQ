@@ -73,11 +73,14 @@ void HybridSettings::setInnerRegionCenterExpression(
  * @brief resolve the pending innerRegionCenter selection expression
  *
  * @param fileSettings
+ * @param jobType
  *
  * @throw exc::InputFileException if the selection is invalid or empty
  */
-void HybridSettings::finalize(const FileSettings &fileSettings)
+void HybridSettings::finalize(const FileSettings &fileSettings, JobType jobType)
 {
+    _isActive = isHybridJobtype(jobType);
+
     if (!_innerRegionCenterExpression.has_value())
         return;
 
@@ -176,7 +179,7 @@ void HybridSettings::setUseQMChargesByUser(bool useQMCharges)
  *
  * @param radius
  */
-void HybridSettings::setCoreRadiusByUser(double radius)
+void HybridSettings::setCoreRadiusByUser(const Distance &radius)
 {
     _coreRadius.setByUser(radius);
 }
@@ -188,7 +191,7 @@ void HybridSettings::setCoreRadiusByUser(double radius)
  *
  * @param radius
  */
-void HybridSettings::setLayerRadiusByUser(double radius)
+void HybridSettings::setLayerRadiusByUser(const Distance &radius)
 {
     _layerRadius.setByUser(radius);
 }
@@ -198,7 +201,9 @@ void HybridSettings::setLayerRadiusByUser(double radius)
  *
  * @param thickness
  */
-void HybridSettings::setSmoothingRegionThicknessByUser(double thickness)
+void HybridSettings::setSmoothingRegionThicknessByUser(
+    const Distance &thickness
+)
 {
     _smoothingRegionThickness.setByUser(thickness);
 }
@@ -211,7 +216,7 @@ void HybridSettings::setSmoothingRegionThicknessByUser(double thickness)
  *
  * @param radius
  */
-void HybridSettings::setPointChargeThicknessByUser(double radius)
+void HybridSettings::setPointChargeThicknessByUser(const Distance &radius)
 {
     _pointChargeThickness.setByUser(radius);
 }
@@ -227,7 +232,7 @@ void HybridSettings::setSmoothingMethodByUser(SmoothingMethod method)
 }
 
 /**
- * @brief set the type of QM force distribtion in hotspot smoothing
+ * @brief set the type of QM force distribution in hotspot smoothing
  *
  * @param method
  */
@@ -292,23 +297,29 @@ bool HybridSettings::getUseQMCharges() const { return _useQMCharges.get(); }
 /**
  * @brief get the coreRadius
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getCoreRadius() const { return _coreRadius.get(); }
+const Distance &HybridSettings::getCoreRadius() const
+{
+    return _coreRadius.get();
+}
 
 /**
  * @brief get the layerRadius
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getLayerRadius() const { return _layerRadius.get(); }
+const Distance &HybridSettings::getLayerRadius() const
+{
+    return _layerRadius.get();
+}
 
 /**
  * @brief get the smoothingRegionThickness
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getSmoothingRegionThickness() const
+const Distance &HybridSettings::getSmoothingRegionThickness() const
 {
     return _smoothingRegionThickness.get();
 }
@@ -316,9 +327,9 @@ double HybridSettings::getSmoothingRegionThickness() const
 /**
  * @brief get the pointChargeThickness
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getPointChargeThickness() const
+const Distance &HybridSettings::getPointChargeThickness() const
 {
     return _pointChargeThickness.get();
 }
@@ -342,3 +353,10 @@ QMForceDist HybridSettings::getQMForceDist() const
 {
     return _qmForceDist.get();
 }
+
+/**
+ * @brief check if the hybrid settings are active based on the job type
+ *
+ * @return bool
+ */
+bool HybridSettings::isActive() const { return _isActive; }

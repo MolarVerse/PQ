@@ -37,9 +37,10 @@
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "interWater.hpp"
-#include "interWaterParamters.hpp"
+#include "interWaterParameters.hpp"
 #include "mTRIntraWater.hpp"
 #include "mdEngine.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 namespace setup
@@ -113,7 +114,7 @@ namespace setup
             );
         }
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (isQMOnlyJobtype(_engine.getSettings().generalSettings.getJobtype()))
             throw exc::UserInputException(
                 "Water models are not supported for QM-only job types."
             );
@@ -270,13 +271,13 @@ namespace setup
         const auto checkCharge = [&modelName](
                                      const molsys::Molecule &water,
                                      AtomIndex               atomIndex,
-                                     const double            expected,
+                                     const Charge           &expected,
                                      const std::string      &atomName
                                  )
         {
-            constexpr double tol    = 1e-8;
-            const auto       actual = water.getPartialCharge(atomIndex);
-            if (std::abs(actual - expected) > tol)
+            constexpr auto tol    = 1e-8 * elementary_charge;
+            const auto     actual = water.getPartialCharge(atomIndex);
+            if (mstd::abs(actual - expected) > tol)
             {
                 throw exc::UserInputException(
                     std::format(
@@ -481,7 +482,7 @@ namespace setup
 
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
-        if (settings::GeneralSettings::isCellListActivated())
+        if (GeneralSettings::isCellListActivated())
         {
             strategy = std::make_unique<waterModel::InterWaterStrategyCellList>(
                 _engine.getSettings().hybridSettings

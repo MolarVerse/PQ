@@ -43,9 +43,9 @@ namespace pot
         using CoulombPotential::CoulombPotential;
 
         [[nodiscard]]
-        std::pair<double, double> calculate(
-            double distance,
-            double chargeProduct
+        std::pair<EnergyPerMol, Force> calculate(
+            const Distance&      distance,
+            const ChargeSquared& chargeProduct
         ) const override;
     };
 

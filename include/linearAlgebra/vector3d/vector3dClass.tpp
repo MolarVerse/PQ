@@ -92,6 +92,63 @@ namespace linalg
     {
     }
 
+    /**
+     * @brief vector with all components zero (uses T::zero() for
+     * quantities, value initialization otherwise)
+     *
+     * @tparam T
+     * @return Vector3D<T>
+     */
+    template <typename T>
+    constexpr Vector3D<T> Vector3D<T>::zero()
+    {
+        if constexpr (requires { T::zero(); })
+        {
+            return Vector3D(T::zero(), T::zero(), T::zero());
+        }
+        else
+        {
+            return Vector3D(T{}, T{}, T{});
+        }
+    }
+
+    /**
+     * @brief converting constructor between quantity vectors
+     *
+     * @tparam T
+     * @tparam U
+     * @param vec
+     */
+    template <typename T>
+    template <typename U>
+    requires(!std::same_as<U, T> && mstd::is_quantity_like_v<T> &&
+             mstd::is_quantity_like_v<U> && std::convertible_to<U, T>)
+    Vector3D<T>::Vector3D(const Vector3D<U> &vec)
+        : x(static_cast<T>(vec[0])),
+          y(static_cast<T>(vec[1])),
+          z(static_cast<T>(vec[2]))
+    {
+    }
+
+    /**
+     * @brief constructor from a quantity holding a Vector3D<double>
+     *
+     * @tparam T
+     * @tparam Q
+     * @param quantity
+     */
+    template <typename T>
+    template <typename Q>
+    requires(mstd::is_quantity_like_v<T> && mstd::is_quantity_like_v<Q> &&
+             !std::same_as<Q, T> &&
+             std::same_as<typename Q::rep, Vector3D<double>>)
+    Vector3D<T>::Vector3D(const Q &quantity)
+        : x(quantity.numerical_value_in(Q::unit)[0] * Q::unit),
+          y(quantity.numerical_value_in(Q::unit)[1] * Q::unit),
+          z(quantity.numerical_value_in(Q::unit)[2] * Q::unit)
+    {
+    }
+
     /********************
      *                  *
      * assign operators *
@@ -288,6 +345,73 @@ namespace linalg
         return *this;
     }
 
+    /**
+     * @brief operator /= for quantity elements and a dimensionless scalar
+     *
+     * @tparam T
+     * @tparam S
+     * @param scalar
+     * @return `Vector3D<T>&` (inplace division)
+     */
+    template <typename T>
+    template <typename S>
+    requires(
+        mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+        requires(T &elem, const S &scalar) { elem /= scalar; }
+    )
+    Vector3D<T> &Vector3D<T>::operator/=(const S &scalar)
+    {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return *this;
+    }
+
+    /**
+     * @brief operator *= for quantity elements and a dimensionless scalar
+     *
+     * @tparam T
+     * @tparam S
+     * @param scalar
+     * @return `Vector3D<T>&` (inplace multiplication)
+     */
+    template <typename T>
+    template <typename S>
+    requires(
+        mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+        requires(T &elem, const S &scalar) { elem *= scalar; }
+    )
+    Vector3D<T> &Vector3D<T>::operator*=(const S &scalar)
+    {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        return *this;
+    }
+
+    /**
+     * @brief component-wise operator *= for quantity elements and a vector of
+     * dimensionless values
+     *
+     * @tparam T
+     * @tparam S
+     * @param vec
+     * @return `Vector3D<T>&` (inplace multiplication)
+     */
+    template <typename T>
+    template <typename S>
+    requires(
+        mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+        requires(T &elem, const S &scalar) { elem *= scalar; }
+    )
+    Vector3D<T> &Vector3D<T>::operator*=(const Vector3D<S> &vec)
+    {
+        x *= vec[0];
+        y *= vec[1];
+        z *= vec[2];
+        return *this;
+    }
+
     /**********************
      *                    *
      * indexing operators *
@@ -331,7 +455,8 @@ namespace linalg
      */
     template <typename T>
     Vector3D<T> Vector3D<T>::operator-() const
-    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>
+    requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+             mstd::is_quantity_like_v<T>
     {
         return Vector3D<T>(-x, -y, -z);
     }

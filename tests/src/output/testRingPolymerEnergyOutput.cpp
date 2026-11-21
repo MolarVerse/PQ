@@ -29,15 +29,16 @@
 #include "physicalData.hpp"
 #include "ringPolymerEnergyOutput.hpp"
 #include "testOutputBase.hpp"
+#include "units.hpp"
 
 class TestRingPolymerEnergyOutput : public testing::Test
 {
    protected:
-    static double _sumOfRingPolymerEnergies(
+    static EnergyPerMol _sumOfRingPolymerEnergies(
         const std::vector<physicalData::PhysicalData> &dataVector
     );
 
-    static double _maxRingPolymerEnergy(
+    static EnergyPerMol _maxRingPolymerEnergy(
         const std::vector<physicalData::PhysicalData> &dataVector
     );
 };
@@ -60,20 +61,26 @@ TEST_F(TestRingPolymerEnergyOutput, sumOfRingPolymerEnergiesAddsAllReplicas)
 {
     out::RingPolymerEnergyOutput            out("dummy.rpe");
     std::vector<physicalData::PhysicalData> vec(3);
-    vec[0].setRingPolymerEnergy(1.0);
-    vec[1].setRingPolymerEnergy(2.5);
-    vec[2].setRingPolymerEnergy(3.5);
-    EXPECT_DOUBLE_EQ(_sumOfRingPolymerEnergies(vec), 7.0);
+    vec[0].setRingPolymerEnergy(1.0 * kcal_per_mol);
+    vec[1].setRingPolymerEnergy(2.5 * kcal_per_mol);
+    vec[2].setRingPolymerEnergy(3.5 * kcal_per_mol);
+    EXPECT_DOUBLE_EQ(
+        _sumOfRingPolymerEnergies(vec).numerical_value_in(kcal_per_mol),
+        7.0
+    );
 }
 
 TEST_F(TestRingPolymerEnergyOutput, maxRingPolymerEnergyReturnsLargestEntry)
 {
     out::RingPolymerEnergyOutput            out("dummy.rpe");
     std::vector<physicalData::PhysicalData> vec(3);
-    vec[0].setRingPolymerEnergy(1.0);
-    vec[1].setRingPolymerEnergy(9.0);
-    vec[2].setRingPolymerEnergy(5.0);
-    EXPECT_DOUBLE_EQ(_maxRingPolymerEnergy(vec), 9.0);
+    vec[0].setRingPolymerEnergy(1.0 * kcal_per_mol);
+    vec[1].setRingPolymerEnergy(9.0 * kcal_per_mol);
+    vec[2].setRingPolymerEnergy(5.0 * kcal_per_mol);
+    EXPECT_DOUBLE_EQ(
+        _maxRingPolymerEnergy(vec).numerical_value_in(kcal_per_mol),
+        9.0
+    );
 }
 
 TEST_F(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
@@ -84,8 +91,8 @@ TEST_F(TestRingPolymerEnergyOutput, writeEmitsStepSumMaxMeanAndPerBeadEnergies)
     out.setFilename(path, false);
 
     std::vector<physicalData::PhysicalData> vec(2);
-    vec[0].setRingPolymerEnergy(1.0);
-    vec[1].setRingPolymerEnergy(3.0);
+    vec[0].setRingPolymerEnergy(1.0 * kcal_per_mol);
+    vec[1].setRingPolymerEnergy(3.0 * kcal_per_mol);
 
     out.write(5, vec);
     out.close();

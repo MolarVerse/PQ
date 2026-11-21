@@ -30,6 +30,7 @@
 #include <sstream>
 
 #include "frame.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -70,8 +71,9 @@ namespace out
                        << std::format(
                               "{:2d}\t{}\t{}",
                               i + 1,
-                              readable(chi),
-                              readable(zeta)
+                              readable(chi.numerical_value_in(kcal_per_mol * s)
+                              ),
+                              readable(zeta.numerical_value_in(one))
                           )
                        << '\n';
             }
@@ -86,23 +88,39 @@ namespace out
      *
      * @param frame
      * @param step
+     * @param finalTime the optional final simulation time to be written in the
+     * restart file, optional because optimizer does not necessarily have a
+     * well-defined simulation time
      */
-    void RstFileOutput::write(const Frame &frame, size_t step)
+    void RstFileOutput::write(
+        const Frame              &frame,
+        const size_t              step,
+        const std::optional<Time> finalTime
+    )
     {
         using textFormat::FIXED_WIDTH;
         using textFormat::NAME_WIDTH;
 
         std::ostringstream buffer;
 
-        buffer << "Step " << step << '\n';
+        buffer << "Step " << step;
+        if (finalTime.has_value())
+        {
+            // std::format keeps every digit, so the time reads back exactly
+            buffer << std::format(
+                " Simulation_Time {}",
+                finalTime->numerical_value_in(ps)
+            );
+        }
+        buffer << "\n";
 
         // std::format writes the shortest text that reads back as the same
         // double; the stream operator of Vector3D keeps 6 digits only, which
         // changes the box of a restarted run
         buffer << std::format(
             "Box   {}  {}\n",
-            frame.box->get_boxDimensions(),
-            frame.box->getBoxAngles()
+            frame.box->get_boxDimensions().numerical_value_in(angstrom),
+            frame.box->getBoxAngles().numerical_value_in(deg)
         );
 
         writeNHChain(frame, buffer);
@@ -112,9 +130,10 @@ namespace out
 
         for (const auto &atom : frame.atoms)
         {
-            const auto &pos   = atom.position;
-            const auto &vel   = atom.velocity;
-            const auto &force = atom.force;
+            const auto &pos = atom.position.numerical_value_in(angstrom);
+            const auto &vel = atom.velocity.numerical_value_in(angstrom / s);
+            const auto &force =
+                atom.force.numerical_value_in(kcal_per_mol / angstrom);
 
             _buffer.left(atom.name, NAME_WIDTH).put('\t');
             _buffer.left(atom.indexInMolecule + 1, NAME_WIDTH).put('\t');

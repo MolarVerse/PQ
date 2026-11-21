@@ -47,15 +47,15 @@ static constexpr std::uint64_t ITERATIONS = 1000;
 int main()
 {
     const auto timeStep = 0.001 * fs;
-    settings::GeneralSettings::setRandomSeed(42);
-    settings::GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(42);
+    GeneralSettings::setIsRandomSeedSet(true);
 
     auto box =
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
     auto       physicalData      = physicalData::PhysicalData();
     const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat = thermostat::LangevinThermostat(1.0);
+    auto thermostat = thermostat::LangevinThermostat(1.0 * Hz);
 
     perfAllocBegin();
 
@@ -79,7 +79,7 @@ int main()
         physicalData.getTemperature().quantity_from_zero().numerical_value_in(
             K
         ),
-        box.calculateMomentum()[0]
+        box.calculateMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs)
     );
     return 0;
 }

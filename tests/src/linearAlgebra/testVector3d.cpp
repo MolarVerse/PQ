@@ -490,15 +490,15 @@ TEST(TestVector3d, minimum)
 {
     const auto vec1 = linalg::Vec3D(0.0, 1.0, 2.0);
 
-    EXPECT_EQ(minimum(vec1), 0.0);
+    EXPECT_EQ(min(vec1), 0.0);
 
     const auto vec2 = linalg::Vec3Di(0, 1, 2);
 
-    EXPECT_EQ(minimum(vec2), 0);
+    EXPECT_EQ(min(vec2), 0);
 
     const auto vec3 = linalg::Vec3Dul(0, 1, 2);
 
-    EXPECT_EQ(minimum(vec3), 0);
+    EXPECT_EQ(min(vec3), 0);
 }
 
 /**
@@ -509,15 +509,15 @@ TEST(TestVector3d, maximum)
 {
     const auto vec1 = linalg::Vec3D(0.0, 1.0, 2.0);
 
-    EXPECT_EQ(maximum(vec1), 2.0);
+    EXPECT_EQ(max(vec1), 2.0);
 
     const auto vec2 = linalg::Vec3Di(0, 1, 2);
 
-    EXPECT_EQ(maximum(vec2), 2);
+    EXPECT_EQ(max(vec2), 2);
 
     const auto vec3 = linalg::Vec3Dul(0, 1, 2);
 
-    EXPECT_EQ(maximum(vec3), 2);
+    EXPECT_EQ(max(vec3), 2);
 }
 
 /**

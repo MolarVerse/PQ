@@ -35,6 +35,7 @@
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace QM
 {
@@ -48,10 +49,10 @@ namespace QM
     )
     {
         auto file = std::ofstream("orca_coord.xyz");
-        file << simulationBox.getNumberOfQMAtoms() << "\n\n";
-        for (const auto &atom : simulationBox.getQMAtoms())
+        file << simulationBox.getNumberOfActiveAtoms() << "\n\n";
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
-            const auto pos = atom->getPosition();
+            const auto pos = atom->getPosition().numerical_value_in(angstrom);
             file << std::format(
                 "{} {:.12f} {:.12f} {:.12f}\n",
                 atom->getName(),
@@ -88,10 +89,14 @@ namespace QM
             {
                 for (const auto &atom : mol.getAtoms())
                 {
-                    const auto pos = atom->getPosition();
+                    const auto pos =
+                        atom->getPosition().numerical_value_in(angstrom);
+
                     body << std::format(
                         "{:.12f} {:.12f} {:.12f} {:.12f}\n",
-                        atom->getPartialCharge(),
+                        atom->getPartialCharge().numerical_value_in(
+                            elementary_charge
+                        ),
                         pos[0],
                         pos[1],
                         pos[2]

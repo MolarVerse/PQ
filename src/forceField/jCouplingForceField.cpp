@@ -122,7 +122,7 @@ namespace ff
      *
      * @param phaseShift
      */
-    void JCouplingForceField::setPhaseShift(double phaseShift)
+    void JCouplingForceField::setPhaseShift(const Angle &phaseShift)
     {
         _phaseShift = phaseShift;
     }
@@ -201,8 +201,11 @@ namespace ff
     /**
      * @brief get the phase shift
      *
-     * @return double
+     * @return const Angle&
      */
-    double JCouplingForceField::getPhaseShift() const { return _phaseShift; }
+    const Angle &JCouplingForceField::getPhaseShift() const
+    {
+        return _phaseShift;
+    }
 
 }   // namespace ff

@@ -35,6 +35,7 @@
 #include "orthorhombicBox.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestConstraints
@@ -74,15 +75,15 @@ inline void TestConstraints::SetUp()
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-    atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0));
-    atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-    atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-    atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0));
-    atom1->setMass(1.0);
-    atom2->setMass(1.0);
-    atom3->setMass(1.0);
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+    atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0) * angstrom);
+    atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+    atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+    atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0) * angstrom / s);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom3->setMass(1.0 * g_per_mol);
 
     molecule1.addAtom(atom1);
     molecule1.addAtom(atom2);
@@ -93,12 +94,12 @@ inline void TestConstraints::SetUp()
     auto atom4 = std::make_shared<molsys::Atom>();
     auto atom5 = std::make_shared<molsys::Atom>();
 
-    atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-    atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-    atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-    atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-    atom4->setMass(1.0);
-    atom5->setMass(1.0);
+    atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+    atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+    atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+    atom4->setMass(1.0 * g_per_mol);
+    atom5->setMass(1.0 * g_per_mol);
 
     molecule2.addAtom(atom4);
     molecule2.addAtom(atom5);
@@ -107,7 +108,9 @@ inline void TestConstraints::SetUp()
     _box->addMolecule(molecule1);
     _box->addMolecule(molecule2);
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     _box->setBox(orthoBox, false);
 
     Settings settings;
@@ -127,14 +130,14 @@ inline void TestConstraints::_addDefaultBondConstraints(
         _box->getMolecules().data(),
         AtomIndex{0},
         AtomIndex{1},
-        1.2
+        1.2 * angstrom
     );
     auto bondConstraint2 = constraints::BondConstraint(
         _box->getMolecules().data(),
         &(_box->getMolecules()[1]),
         AtomIndex{2},
         AtomIndex{1},
-        1.3
+        1.3 * angstrom
     );
 
     constraints.addBondConstraint(bondConstraint1);

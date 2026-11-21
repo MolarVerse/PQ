@@ -28,6 +28,7 @@
 #include "boxOutput.hpp"
 #include "orthorhombicBox.hpp"
 #include "testOutputBase.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
@@ -37,7 +38,9 @@ TEST(TestBoxFileOutput, writeEmitsStepAndDimensionsAndAngles)
     out::BoxFileOutput out(path);
     out.setFilename(path, false);
 
-    molsys::OrthorhombicBox box({10.0, 20.0, 30.0});
+    molsys::OrthorhombicBox box(
+        {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
+    );
 
     out.write(7, box);
     out.close();
@@ -61,7 +64,7 @@ TEST(TestBoxFileOutput, writeOneLinePerCall)
     out::BoxFileOutput out(path);
     out.setFilename(path, false);
 
-    molsys::OrthorhombicBox box(linalg::Vec3D(1.0, 2.0, 3.0));
+    molsys::OrthorhombicBox box(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
     out.write(1, box);
     out.write(2, box);

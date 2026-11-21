@@ -127,7 +127,7 @@ void AseQMRunnerTest::SetUp()
     sys.attr("modules")["fennol"]     = fennolModule;
     sys.attr("modules")["fennol.ase"] = aseAtoms;
 
-    constexpr auto          boxEdge = 10.0;
+    constexpr auto          boxEdge = 10.0 * angstrom;
     molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
     _simulationBox.setBox(box, false);
 }
@@ -145,7 +145,7 @@ QM::AseFennolRunner AseQMRunnerTest::_runner(
     FennolSettings fennolSettings;
     fennolSettings.setFennolModelPathByUser("model.fnx");
     fennolSettings.setUseGPUPreprocessingByUser(false);
-    settings::GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+    GeneralSettings::setFloatingPointType(FPType::DOUBLE);
 
     return QM::AseFennolRunner{settings, fennolSettings};
 }

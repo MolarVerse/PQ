@@ -48,9 +48,14 @@ namespace
     {
         auto *box = new molsys::SimulationBox();
 
-        const std::vector<double> masses{1.0, 12.0, 14.0, 16.0};
+        const std::vector<Mass> masses{
+            1.0 * g_per_mol,
+            12.0 * g_per_mol,
+            14.0 * g_per_mol,
+            16.0 * g_per_mol
+        };
 
-        auto totalMass = 0.0;
+        Mass totalMass = Mass::zero();
         for (size_t i = 0; i < 27; ++i)
         {
             const auto x      = static_cast<double>(i % 3);
@@ -66,9 +71,10 @@ namespace
                     (1.5 * x) + scalar,
                     (1.5 * y) - scalar,
                     (1.5 * z) + (0.5 * scalar)
-                )
+                ) *
+                angstrom
             );
-            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
+            atom->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
 
             totalMass += atom->getMass();
             box->addAtom(atom);
@@ -87,41 +93,39 @@ namespace
         MSTD_NO_MOVE(SeedGuard);
         explicit SeedGuard(uint_fast32_t seed)
         {
-            settings::GeneralSettings::setRandomSeed(seed);
-            settings::GeneralSettings::setIsRandomSeedSet(true);
+            GeneralSettings::setRandomSeed(seed);
+            GeneralSettings::setIsRandomSeedSet(true);
         }
 
-        ~SeedGuard() { settings::GeneralSettings::setIsRandomSeedSet(false); }
+        ~SeedGuard() { GeneralSettings::setIsRandomSeedSet(false); }
 
         MSTD_NO_COPY(SeedGuard);
     };
 
-    std::vector<linalg::Vec3D> velocitiesOf(
-        molsys::SimulationBox &simulationBox
-    )
+    std::vector<Vel3D> velocitiesOf(molsys::SimulationBox &simulationBox)
     {
-        std::vector<linalg::Vec3D> velocities;
+        std::vector<Vel3D> velocities;
         for (const auto &atom : simulationBox.getAtoms())
             velocities.push_back(atom->getVelocity());
         return velocities;
     }
 
     // sum of |m v| - natural scale of the total linear momentum
-    double momentumScale(molsys::SimulationBox &simulationBox)
+    Momentum momentumScale(molsys::SimulationBox &simulationBox)
     {
-        auto scale = 0.0;
+        Momentum scale = Momentum::zero();
         for (const auto &atom : simulationBox.getAtoms())
             scale += atom->getMass() * norm(atom->getVelocity());
         return scale;
     }
 
     // sum of |m (r - R)| |v| - natural scale of the total angular momentum
-    double angularMomentumScale(molsys::SimulationBox &simulationBox)
+    AngularMomentum angularMomentumScale(molsys::SimulationBox &simulationBox)
     {
         simulationBox.calculateCenterOfMass();
         const auto centerOfMass = simulationBox.getCenterOfMass();
 
-        auto scale = 0.0;
+        AngularMomentum scale = AngularMomentum::zero();
         for (const auto &atom : simulationBox.getAtoms())
         {
             const auto relativePosition = atom->getPosition() - centerOfMass;
@@ -131,7 +135,7 @@ namespace
         return scale;
     }
 
-    linalg::Vec3D angularMomentumOf(molsys::SimulationBox &simulationBox)
+    AngularMomentum3D angularMomentumOf(molsys::SimulationBox &simulationBox)
     {
         simulationBox.calculateCenterOfMass();
         return simulationBox.calculateAngularMomentum(
@@ -150,9 +154,16 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesLinearMomentum)
 
     const auto momentum = box->calculateMomentum();
     const auto scale    = momentumScale(*box);
-    ASSERT_GT(scale, 0.0);
+    ASSERT_GT(scale, Momentum::zero());
 
-    for (size_t i = 0; i < 3; ++i) EXPECT_NEAR(momentum[i], 0.0, 1e-10 * scale);
+    for (size_t i = 0; i < 3; ++i)
+    {
+        EXPECT_NEAR(
+            momentum[i].numerical_value_in(g_per_mol * angstrom / s),
+            0.0,
+            1e-10 * scale.numerical_value_in(g_per_mol * angstrom / s)
+        );
+    }
 
     delete box;
 }
@@ -167,10 +178,19 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesRemovesAngularMomentum)
 
     const auto angularMomentum = angularMomentumOf(*box);
     const auto scale           = angularMomentumScale(*box);
-    ASSERT_GT(scale, 0.0);
+    ASSERT_GT(scale, AngularMomentum::zero());
 
     for (size_t i = 0; i < 3; ++i)
-        EXPECT_NEAR(angularMomentum[i], 0.0, 1e-10 * scale);
+    {
+        EXPECT_NEAR(
+            angularMomentum[i].numerical_value_in(
+                g_per_mol * angstrom * angstrom / s
+            ),
+            0.0,
+            1e-10 *
+                scale.numerical_value_in(g_per_mol * angstrom * angstrom / s)
+        );
+    }
 
     delete box;
 }
@@ -223,8 +243,20 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesSatisfiesAllConstraintsTogether)
 
         for (size_t i = 0; i < 3; ++i)
         {
-            EXPECT_NEAR(momentum[i], 0.0, 1e-10 * pScale);
-            EXPECT_NEAR(angularMomentum[i], 0.0, 1e-10 * lScale);
+            EXPECT_NEAR(
+                momentum[i].numerical_value_in(g_per_mol * angstrom / s),
+                0.0,
+                1e-10 * pScale.numerical_value_in(g_per_mol * angstrom / s)
+            );
+            EXPECT_NEAR(
+                angularMomentum[i].numerical_value_in(
+                    g_per_mol * angstrom * angstrom / s
+                ),
+                0.0,
+                1e-10 * lScale.numerical_value_in(
+                            g_per_mol * angstrom * angstrom / s
+                        )
+            );
         }
         EXPECT_NEAR(
             box->calculateTemperature().quantity_from_zero().numerical_value_in(
@@ -249,8 +281,8 @@ TEST(TestMaxwellBoltzmann, initializeVelocitiesGivesFiniteNonZeroVelocities)
     for (const auto &atom : box->getAtoms())
     {
         const auto velocity = atom->getVelocity();
-        EXPECT_GT(norm(velocity), 0.0);
-        for (size_t i = 0; i < 3; ++i) EXPECT_TRUE(std::isfinite(velocity[i]));
+        EXPECT_GT(norm(velocity), 0.0 * angstrom / s);
+        for (size_t i = 0; i < 3; ++i) EXPECT_TRUE(isfinite(velocity[i]));
     }
 
     delete box;
@@ -276,12 +308,12 @@ TEST(
             box->getAtoms()[i]->getPosition(),
             reference->getAtoms()[i]->getPosition()
         );
-        EXPECT_DOUBLE_EQ(
+        EXPECT_EQ(
             box->getAtoms()[i]->getMass(),
             reference->getAtoms()[i]->getMass()
         );
     }
-    EXPECT_DOUBLE_EQ(box->getTotalMass(), reference->getTotalMass());
+    EXPECT_EQ(box->getTotalMass(), reference->getTotalMass());
 
     delete reference;
     delete box;
@@ -289,9 +321,9 @@ TEST(
 
 TEST(TestMaxwellBoltzmann, initializeVelocitiesIsReproducibleForFixedSeed)
 {
-    std::vector<linalg::Vec3D> first;
-    std::vector<linalg::Vec3D> second;
-    std::vector<linalg::Vec3D> other;
+    std::vector<Vel3D> first;
+    std::vector<Vel3D> second;
+    std::vector<Vel3D> other;
 
     {
         const SeedGuard guard(4711);

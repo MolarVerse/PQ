@@ -55,6 +55,18 @@ namespace linalg
        public:
         StaticMatrix3x3() = default;
 
+        /**
+         * @brief matrix with all elements zero
+         */
+        [[nodiscard]] static StaticMatrix3x3 zero()
+        {
+            return StaticMatrix3x3(
+                Vector3D<T>::zero(),
+                Vector3D<T>::zero(),
+                Vector3D<T>::zero()
+            );
+        }
+
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &data);
         explicit StaticMatrix3x3(const Vector3D<Vector3D<T>> &&data);
         explicit StaticMatrix3x3(

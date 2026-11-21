@@ -121,6 +121,48 @@ namespace input::restartFile
             ++lineNumber;
         }
 
+        const auto stepCount = _timingsSettings->getStartingStepCount();
+
+        if (isMDJobType(_engine.getSettings().generalSettings.getJobtype()))
+        {
+            if (stepCount == 0 && !_timingsSettings->isStartingTimeSet())
+            {
+                _timingsSettings->setStartingTimeByUser(0 * fs);
+            }
+            else if (!_timingsSettings->isStartingTimeSet())
+            {
+                // this entire message is only needed due to a bug we had
+                // it was not possible to derive the starting and end time of a
+                // simulation only from the number of steps alone it is actually
+                // very common to start with a time step of 0.5 fs and later
+                // applying some bond constraints to perform simulations at
+                // larger time steps (see Shake algorithm) But for certain
+                // features of PQ it is necessary to have an accurate starting
+                // time to correctly compute cumulative times and related
+                // quantities For example for the distance constraints there
+                // exist a time dependent force constant that relies on the
+                // accurate cumulative time to be correctly applied during all
+                // parts of the simulation also after restarting
+                const auto message = std::format(
+                    "Starting time not set by user while step count is "
+                    "non-zero -- total cumulative time not possible to "
+                    "be determined. Assuming a homogeneous timestep "
+                    "over all previous steps of {}. This problem can be "
+                    "resolved "
+                    "by providing the starting time in ps explicitly in the "
+                    "restart file after the step section e.g.:\n"
+                    "step 100 simulation_time 2",
+                    _timingsSettings->getTimeStep().in(fs)
+                );
+
+                _engine.getLogOutput().writeSetupWarning(message);
+                out::StdoutOutput::writeSetupWarning(message);
+                _timingsSettings->setStartingTimeByUser(
+                    _timingsSettings->getTimeStep() * stepCount
+                );
+            }
+        }
+
         _writeStepInfo();
     }
 
@@ -166,20 +208,31 @@ namespace input::restartFile
      */
     void RestartFileReader::_writeStepInfo()
     {
-        auto &logFile = _engine.getLogOutput();
+        auto       &logFile = _engine.getLogOutput();
+        const auto &jobType =
+            _engine.getSettings().generalSettings.getJobtype();
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(jobType))
         {
-            const auto  timeStep  = _timingsSettings->getTimeStep().in(fs);
-            const auto  startStep = _timingsSettings->getStartingStepCount();
-            const auto  nSteps    = _timingsSettings->getNumberOfSteps();
+            const auto timeStep  = _timingsSettings->getTimeStep().in(fs);
+            const auto startStep = _timingsSettings->getStartingStepCount();
+            const auto nSteps    = _timingsSettings->getNumberOfSteps();
+            const auto startTime = _timingsSettings->getStartingTime().in(ps);
+            const auto deltaTime =
+                _timingsSettings->calculateSimulationTimeOfRun().in(ps);
+            const auto finalTime =
+                _timingsSettings->calculateFinalSimulationTime().in(ps);
+
             std::string msg;
-            msg += std::format("Time Step:           {}", timeStep) + "\n";
-            msg += std::format("Starting Step Count: {}", startStep) + "\n";
-            msg += std::format("Number of steps:     {}", nSteps) + "\n";
+            msg += std::format("Time Step:              {}", timeStep) + "\n";
+            msg += std::format("Starting Step Count:    {}", startStep) + "\n";
+            msg += std::format("Number of steps:        {}", nSteps) + "\n";
+            msg += std::format("Starting Time:          {}", startTime) + "\n";
+            msg += std::format("Simulation Time of Run: {}", deltaTime) + "\n";
+            msg += std::format("Total Simulation Time:  {}", finalTime) + "\n";
             logFile.writeSetupInfo(msg);
         }
-        else if (settings::GeneralSettings::isOptJobType())
+        else if (isOptJobType(jobType))
         {
             const auto  startStep = _timingsSettings->getStartingStepCount();
             const auto  nSteps    = _timingsSettings->getNumberOfSteps();

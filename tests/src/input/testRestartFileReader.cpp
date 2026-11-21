@@ -69,6 +69,9 @@ TEST_F(TestRstFileReader, determineSection)
  */
 TEST_F(TestRstFileReader, rstFileReading)
 {
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
+    _settings.timings.setTimeStepByUser(0.5 * fs);
+    _settings.timings.setNumberOfStepsByUser(100);
     _settings.fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
     );
@@ -94,15 +97,17 @@ TEST_F(TestRstFileReader, rstFileReading)
  */
 TEST_F(TestRstFileReader, writeStepInfoMD)
 {
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.timings.setTimeStepByUser(0.5 * fs);
     _settings.timings.setNumberOfStepsByUser(100);
+    _settings.timings.setStartingTimeByUser(2 * ps);
     _settings.fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
     );
     _settings.fileSettings.setStartFileNameByUser(
         "examples/setup/h2o-qmcf.rst"
     );
+    const auto _ = std::remove("default.log");
     _engine->getLogOutput().setFilename("default.log", false);
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
@@ -118,11 +123,17 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
     getline(file, line);   // "Start File" message
     getline(file, line);   // empty line after it
     getline(file, line);
-    EXPECT_EQ(line, "         Time Step:           0.5 fs");
+    EXPECT_EQ(line, "         Time Step:              0.5 fs");
     getline(file, line);
-    EXPECT_EQ(line, "         Starting Step Count: 1232");
+    EXPECT_EQ(line, "         Starting Step Count:    1232");
     getline(file, line);
-    EXPECT_EQ(line, "         Number of steps:     100");
+    EXPECT_EQ(line, "         Number of steps:        100");
+    getline(file, line);
+    EXPECT_EQ(line, "         Starting Time:          2 ps");
+    getline(file, line);
+    EXPECT_EQ(line, "         Simulation Time of Run: 0.05 ps");
+    getline(file, line);
+    EXPECT_EQ(line, "         Total Simulation Time:  2.05 ps");
     getline(file, line);
     EXPECT_EQ(line, "");
 
@@ -137,7 +148,7 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
  */
 TEST_F(TestRstFileReader, writeStepInfoOpt)
 {
-    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100);
     _settings.fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
@@ -145,6 +156,7 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
     _settings.fileSettings.setStartFileNameByUser(
         "examples/setup/h2o-qmcf.rst"
     );
+    const auto _ = std::remove("default.log");
     _engine->getLogOutput().setFilename("default.log", false);
 
     input::molDescriptor::MoldescriptorReader(*_engine).read();
@@ -168,5 +180,4 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
 
     file.close();
     ASSERT_TRUE(std::remove("default.log") == 0);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 }

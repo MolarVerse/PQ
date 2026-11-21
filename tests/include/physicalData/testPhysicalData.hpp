@@ -51,17 +51,19 @@ class TestPhysicalData : public ::testing::Test
 inline void TestPhysicalData::SetUp()
 {
     _physicalData = std::make_unique<physicalData::PhysicalData>();
-    _physicalData->setCoulombEnergy(1.0);
-    _physicalData->setNonCoulombEnergy(2.0);
+    _physicalData->setCoulombEnergy(1.0 * kcal_per_mol);
+    _physicalData->setNonCoulombEnergy(2.0 * kcal_per_mol);
     _physicalData->setTemperature(mstd::units::point<K>(3.0));
-    _physicalData->setMomentum(linalg::Vec3D(4.0));
-    _physicalData->setKineticEnergy(5.0);
-    _physicalData->setVolume(6.0);
-    _physicalData->setDensity(7.0);
+    _physicalData->setMomentum(
+        linalg::Vec3D(4.0) * g_per_mol * angstrom / s
+    );
+    _physicalData->setKineticEnergy(5.0 * kcal_per_mol);
+    _physicalData->setVolume(6.0 * angstrom3);
+    _physicalData->setDensity(7.0 * kg_per_litre);
     _physicalData->setPressure(8.0 * bar);
     _physicalData->setCoupledPressure(8.5 * bar);
-    _physicalData->setQMEnergy(9.0);
-    _physicalData->setQMReferenceEnergy(1.0);
+    _physicalData->setQMEnergy(9.0 * kcal_per_mol);
+    _physicalData->setQMReferenceEnergy(1.0 * kcal_per_mol);
 
     _simulationBox = std::make_unique<molsys::SimulationBox>();
 
@@ -70,18 +72,18 @@ inline void TestPhysicalData::SetUp()
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setMass(1.0);
-    atom2->setMass(1.0);
-    atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-    atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+    atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
     molecule1.addAtom(atom1);
     molecule1.addAtom(atom2);
 
     auto molecule2 = molsys::Molecule();
 
     auto atom3 = std::make_shared<molsys::Atom>();
-    atom3->setMass(1.0);
-    atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+    atom3->setMass(1.0 * g_per_mol);
+    atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
     molecule2.addAtom(atom3);
 
     _simulationBox->addMolecule(molecule1);

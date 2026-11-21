@@ -25,9 +25,32 @@
 
 #include <Eigen/Dense>
 #include <cstddef>
+#include <mstd/type_traits/quantity_traits.hpp>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
 namespace linalg
 {
+    // element type of the inverse, e.g. Pos^2/Mass -> Mass/Pos^2
+    // (falls back to T for element types without a division, e.g. pointers,
+    // so that Matrix<T> can still be instantiated for them)
+    template <typename T>
+    struct InverseOfImpl
+    {
+        using type = T;
+    };
+
+    template <typename T>
+    requires requires(const T &elem) { 1.0 / elem; }
+    struct InverseOfImpl<T>
+    {
+        using type = std::remove_cvref_t<decltype(1.0 / std::declval<T>())>;
+    };
+
+    template <typename T>
+    using InverseOf = typename InverseOfImpl<T>::type;
+
     /**
      * @class Matrix
      *
@@ -56,8 +79,14 @@ namespace linalg
         [[nodiscard]] size_t cols() const;
         [[nodiscard]] size_t size() const;
 
-        Matrix<T>      inverse();
-        std::vector<T> solve(const std::vector<T> &rhs);
+        Matrix<InverseOf<T>> inverse();
+
+        // solves A * x = rhs; the element type of x is the quotient type
+        // rhs[0] / A(0, 0), e.g. Pos^2/Time^2 / (Pos^2/Mass) -> Mass/Time^2
+        template <typename U>
+        auto solve(const std::vector<U> &rhs)
+            -> std::vector<std::remove_cvref_t<
+                decltype(std::declval<U>() / std::declval<T>())>>;
     };
 
 }   // namespace linalg

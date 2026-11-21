@@ -24,28 +24,32 @@
 #define TESTS__INCLUDE__PRIVATE_HELPER__POTENTIAL_SETTINGS_UTILS_HPP
 
 #include "potentialSettings.hpp"
+#include "unit_types.hpp"
 
 struct PotentialSettingsUtils
 {
     static void setEnergyCutoff(
         PotentialSettings& settings,
-        double             energyCutoff
+        const InvDistance& energyCutoff
     );
 
-    static void setForceCutoff(PotentialSettings& settings, double forceCutoff);
+    static void setForceCutoff(
+        PotentialSettings&        settings,
+        const InvDistanceSquared& forceCutoff
+    );
 };
 
 inline void PotentialSettingsUtils::setEnergyCutoff(
     PotentialSettings& settings,
-    double             energyCutoff
+    const InvDistance& energyCutoff
 )
 {
     settings._coulombConfig.energyCutoff = energyCutoff;
 }
 
 inline void PotentialSettingsUtils::setForceCutoff(
-    PotentialSettings& settings,
-    double             forceCutoff
+    PotentialSettings&        settings,
+    const InvDistanceSquared& forceCutoff
 )
 {
     settings._coulombConfig.forceCutoff = forceCutoff;

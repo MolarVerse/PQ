@@ -29,6 +29,7 @@
 
 #include "atom.hpp"
 #include "molecule.hpp"
+#include "units.hpp"
 
 class TestMolecule : public ::testing::Test
 {
@@ -50,21 +51,27 @@ inline void TestMolecule::SetUp()
     _atom2->setExternalAtomType(ExtAtomType{2});
     _atom3->setExternalAtomType(ExtAtomType{2});
 
-    _atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-    _atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0));
-    _atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0));
+    _atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+    _atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
+    _atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
 
-    _atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-    _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0));
-    _atom3->setVelocity(linalg::Vec3D(0.0, 1.0, 0.0));
+    _atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+    _atom2->setVelocity(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom / s);
+    _atom3->setVelocity(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom / s);
 
-    _atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
-    _atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0));
-    _atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0));
+    _atom1->setForce(
+        linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom
+    );
+    _atom2->setForce(
+        linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom
+    );
+    _atom3->setForce(
+        linalg::Vec3D(0.0, 1.0, 0.0) * kcal_per_mol / angstrom
+    );
 
-    _atom1->setMass(1.0);
-    _atom2->setMass(2.0);
-    _atom3->setMass(3.0);
+    _atom1->setMass(1.0 * g_per_mol);
+    _atom2->setMass(2.0 * g_per_mol);
+    _atom3->setMass(3.0 * g_per_mol);
 
     _molecule->addAtom(_atom1);
     _molecule->addAtom(_atom2);

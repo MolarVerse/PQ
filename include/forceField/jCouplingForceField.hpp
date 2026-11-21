@@ -42,9 +42,9 @@ namespace molsys
 namespace ff
 {
     /**
-     * @class DihedralForceField
+     * @class JCouplingForceField
      *
-     * @brief Represents a dihedral between four atoms.
+     * @brief Represents a J-coupling interaction between four atoms.
      *
      */
     class JCouplingForceField : public connectivity::Dihedral
@@ -59,7 +59,7 @@ namespace ff
         double _a;
         double _b;
         double _c;
-        double _phaseShift;
+        Angle  _phaseShift;
 
        public:
         JCouplingForceField(
@@ -85,7 +85,7 @@ namespace ff
         void setA(double constA);
         void setB(double constB);
         void setC(double constC);
-        void setPhaseShift(double phaseShift);
+        void setPhaseShift(const Angle &phaseShift);
 
         /***************************
          * standard getter methods *
@@ -96,12 +96,12 @@ namespace ff
         [[nodiscard]] bool getUpperSymmetry() const;
         [[nodiscard]] bool getLowerSymmetry() const;
 
-        [[nodiscard]] double getJ0() const;
-        [[nodiscard]] double getForceConstant() const;
-        [[nodiscard]] double getA() const;
-        [[nodiscard]] double getB() const;
-        [[nodiscard]] double getC() const;
-        [[nodiscard]] double getPhaseShift() const;
+        [[nodiscard]] double       getJ0() const;
+        [[nodiscard]] double       getForceConstant() const;
+        [[nodiscard]] double       getA() const;
+        [[nodiscard]] double       getB() const;
+        [[nodiscard]] double       getC() const;
+        [[nodiscard]] const Angle &getPhaseShift() const;
     };
 
 }   // namespace ff

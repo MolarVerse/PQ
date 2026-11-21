@@ -23,6 +23,7 @@
 #include <cmath>
 #include <format>
 
+#include "enums/jobtype.hpp"
 #include "enums/qm.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -49,10 +50,10 @@ namespace input
          */
         void validateOptimizer(const Settings& settings)
         {
-            const auto optimizerActive =
-                settings::GeneralSettings::isOptJobType() ||
-                (settings::GeneralSettings::getJobtype() ==
-                     JobType::MM_HESSIAN &&
+            const auto& jobType = settings.generalSettings.getJobtype();
+            const auto  optimizerActive =
+                isOptJobType(jobType) ||
+                (jobType == JobType::MM_HESSIAN &&
                  settings.hessianSettings.optimizeBeforeHessian());
 
             if (!optimizerActive)
@@ -75,21 +76,29 @@ namespace input
     {
         _validateTimings(settings);
         validateOptimizer(settings);
-        _validateQM(
-            settings.qmSettings,
-            settings.maceSettings,
-            settings.dftbSettings
-        );
+
+        const auto& jobType = settings.generalSettings.getJobtype();
+        if (isQMActivated(jobType))
+        {
+            _validateQM(
+                settings.qmSettings,
+                settings.maceSettings,
+                settings.dftbSettings
+            );
+        }
         _validateThermostat(
             settings.simulationBoxSettings,
             settings.thermostatSettings
         );
-        _validateManostat(settings.manostatSettings, settings.timings);
-        _validateCellList(settings.potentialSettings.getCoulombRadiusCutOff());
+        _validateManostat(settings.manostatSettings, settings.timings, jobType);
+        _validateCellList(
+            settings.potentialSettings.getCoulombRadiusCutOff(),
+            jobType
+        );
         _validateReactionFieldCoulomb(
             settings.potentialSettings.getCoulombLongRangeType()
         );
-        _validateRingPolymer();
+        _validateRingPolymer(settings.generalSettings.getJobtype());
     }
 
     /**
@@ -102,10 +111,9 @@ namespace input
     {
         using enum JobType;
 
-        const auto jobType = settings::GeneralSettings::getJobtype();
+        const auto jobType = settings.generalSettings.getJobtype();
         const auto requiresNumberOfSteps =
-            settings::GeneralSettings::isMDJobType() ||
-            settings::GeneralSettings::isOptJobType() ||
+            isMDJobType(jobType) || isOptJobType(jobType) ||
             (jobType == MM_HESSIAN &&
              settings.hessianSettings.optimizeBeforeHessian());
 
@@ -119,8 +127,7 @@ namespace input
             );
         }
 
-        if (settings::GeneralSettings::isMDJobType() &&
-            !getKeywordSet("timestep"))
+        if (isMDJobType(jobType) && !getKeywordSet("timestep"))
         {
             throw exc::UserInputException(
                 std::format(
@@ -139,20 +146,17 @@ namespace input
      * or incompatible keywords
      */
     void InputFileReader::_validateQM(
-        const QMSettings&   settings,
+        const QMSettings&   qmSettings,
         const MaceSettings& maceSettings,
         const DftbSettings& dftbSettings
     ) const
     {
-        if (!settings::GeneralSettings::isQMActivated())
-            return;
-
-        if (!settings.isQMMethodSetByUser())
+        if (!qmSettings.isQMMethodSetByUser())
             throw exc::InputFileException(
                 "QM job selected but the \"qm_prog\" keyword has not been set"
             );
 
-        const auto qmMethod = settings.getQMMethod();
+        const auto qmMethod = qmSettings.getQMMethod();
 
         if (qmMethod == QMMethod::ASE_DFTBPLUS)
         {
@@ -305,7 +309,8 @@ namespace input
      */
     void InputFileReader::_validateManostat(
         const ManostatSettings& manostatSettings,
-        const TimingsSettings&  timings
+        const TimingsSettings&  timings,
+        JobType                 jobType
     ) const
     {
         const auto manostatType = manostatSettings.getManostatType();
@@ -324,7 +329,7 @@ namespace input
         }
 
         // only an MD job has a time step
-        if (settings::GeneralSettings::isMDJobType() &&
+        if (isMDJobType(jobType) &&
             timings.getTimeStep() > manostatSettings.getTau())
         {
             throw exc::InputFileException(
@@ -339,17 +344,20 @@ namespace input
      * @throws exc::InputFileException if an active cell list is incompatible
      * with the selected potential
      */
-    void InputFileReader::_validateCellList(double coulombRadiusCutOff)
+    void InputFileReader::_validateCellList(
+        const Distance& coulombRadiusCutOff,
+        JobType         jobType
+    )
     {
-        if (!settings::GeneralSettings::isCellListActivated())
+        if (!GeneralSettings::isCellListActivated())
             return;
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (isQMOnlyJobtype(jobType))
             throw exc::InputFileException(
                 "Cell lists are not available for pure QM simulations"
             );
 
-        if (coulombRadiusCutOff <= 0.0)
+        if (coulombRadiusCutOff <= Distance::zero())
             throw exc::InputFileException(
                 "An active cell list requires rcoulomb to be greater than zero"
             );
@@ -387,9 +395,9 @@ namespace input
      * @throws exc::InputFileException if a ring-polymer job omits
      * `rpmd_n_replica`
      */
-    void InputFileReader::_validateRingPolymer() const
+    void InputFileReader::_validateRingPolymer(JobType jobtype) const
     {
-        if (settings::GeneralSettings::isRingPolymerMDActivated() &&
+        if (isRingPolymerMDActivated(jobtype) &&
             !getKeywordSet("rpmd_n_replica"))
             throw exc::InputFileException(
                 "Number of beads not set for ring polymer simulation"

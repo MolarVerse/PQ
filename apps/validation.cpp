@@ -185,11 +185,11 @@ namespace
 
     void validateExternalQMScriptSelection(
         const QMSettings         &qmSettings,
-        const ExternalQMSettings &externalQMSettings
+        const ExternalQMSettings &externalQMSettings,
+        JobType                   jobType
     )
     {
-        if (!settings::GeneralSettings::isQMActivated() ||
-            !qmSettings.isExternalQMRunner())
+        if (!isQMActivated(jobType) || !qmSettings.isExternalQMRunner())
             return;
 
         const auto &script         = externalQMSettings.getQMScript();
@@ -226,11 +226,11 @@ namespace
 
     void validateInstalledExternalQMScript(
         const QMSettings         &qmSettings,
-        const ExternalQMSettings &externalQMSettings
+        const ExternalQMSettings &externalQMSettings,
+        JobType                   jobType
     )
     {
-        if (!settings::GeneralSettings::isQMActivated() ||
-            !qmSettings.isExternalQMRunner())
+        if (!isQMActivated(jobType) || !qmSettings.isExternalQMRunner())
             return;
 
         const auto &script         = externalQMSettings.getQMScript();
@@ -310,7 +310,8 @@ namespace
 
         validateExternalQMScriptSelection(
             settings.qmSettings,
-            settings.externalQMSettings
+            settings.externalQMSettings,
+            settings.generalSettings.getJobtype()
         );
     }
 
@@ -334,7 +335,7 @@ namespace
             );
         }
 
-        if (settings::GeneralSettings::isMMActivated() ||
+        if (isMMActivated(settings.generalSettings.getJobtype()) ||
             settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             requireFile(
@@ -343,7 +344,7 @@ namespace
             );
         }
 
-        if (settings::GeneralSettings::isMMActivated() &&
+        if (isMMActivated(settings.generalSettings.getJobtype()) &&
             !settings.forceFieldSettings.isNonCoulombicActive())
         {
             requireFile(
@@ -377,7 +378,7 @@ namespace
             );
         }
 
-        if (!settings::GeneralSettings::isQMActivated())
+        if (!isQMActivated(settings.generalSettings.getJobtype()))
             return;
 
         const auto method = settings.qmSettings.getQMMethod();
@@ -426,7 +427,8 @@ namespace
                 requireFile(modelPath, "MACE model file");
         }
 
-        if (settings.qmSettings.getQMMethod() == QMMethod::ORCA)
+        if (isQMActivated(settings.generalSettings.getJobtype()) &&
+            settings.qmSettings.getQMMethod() == QMMethod::ORCA)
         {
             requireFile(
                 settings.fileSettings.getOrcaFileName(),
@@ -436,13 +438,18 @@ namespace
 
         validateInstalledExternalQMScript(
             settings.qmSettings,
-            settings.externalQMSettings
+            settings.externalQMSettings,
+            settings.generalSettings.getJobtype()
         );
     }
 
-    void validateCompiledCapabilities(const QMSettings &qmSettings)
+    void validateCompiledCapabilities(
+        const QMSettings &qmSettings,
+        JobType           jobType
+    )
     {
-        if (PQ_BUILD_WITH_ASE || !settings::GeneralSettings::isQMActivated())
+        if (PQ_BUILD_WITH_ASE || !isQMActivated(jobType) ||
+            jobType == JobType::MM_OPT)
             return;
 
         const auto method = qmSettings.getQMMethod();
@@ -530,8 +537,8 @@ cli::ValidationResult cli::validateInputFile(
 
     try
     {
-        Settings   settings;
-        const auto _ = input::readJobType(std::string(inputFile));
+        Settings settings;
+        input::readJobType(settings.generalSettings, std::string(inputFile));
 
         input::InputFileReader reader(
             inputFile,
@@ -549,7 +556,10 @@ cli::ValidationResult cli::validateInputFile(
         validateInputDependencies(settings);
         if (scope == ValidationScope::INSTALLED)
         {
-            validateCompiledCapabilities(settings.qmSettings);
+            validateCompiledCapabilities(
+                settings.qmSettings,
+                settings.generalSettings.getJobtype()
+            );
             validateEffectiveFiles(settings);
         }
 

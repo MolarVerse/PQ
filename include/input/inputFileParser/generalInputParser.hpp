@@ -34,6 +34,8 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
+class GeneralSettings;   // forward declaration
+
 namespace input
 {
     /**
@@ -54,6 +56,7 @@ namespace input
         void parseJobType(const std::vector<std::string> &, size_t);
 
         static void parseJobTypeForEngine(
+            GeneralSettings &generalSettings,
             const std::vector<std::string> &,
             size_t
         );

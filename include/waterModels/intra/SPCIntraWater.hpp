@@ -23,8 +23,8 @@
 #ifndef WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
 #define WATER_MODELS__INTRA__SPC_INTRA_WATER_HPP
 
-#include "constants/conversionFactors.hpp"
 #include "intraWater.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -49,53 +49,53 @@ namespace waterModel
         ) override;
 
         [[nodiscard]]
-        virtual double getEqOHDistance() const = 0;   // Angström
+        virtual const Distance &getEqOHDistance() const = 0;
         [[nodiscard]]
-        virtual double getEqHOHAngle() const = 0;   // radians
+        virtual const Angle &getEqHOHAngle() const = 0;
         [[nodiscard]]
-        virtual double getForceConstantOHBond(
-        ) const = 0;   // kcal mol^-1 Angström^-2
+        virtual const ForceConstant &getForceConstantOHBond() const = 0;
         [[nodiscard]]
-        virtual double getForceConstantHOHAngle(
-        ) const = 0;   // kcal mol^-1 rad^-2
+        virtual const AngleForceConstant &getForceConstantHOHAngle() const = 0;
     };
 
     class SPCFwIntraWater : public SPCIntraWater
     {
        private:
-        static constexpr double _eqOHDistance = 1.012;   // Angström
-        static constexpr double _eqHOHAngle   = 113.24 * DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond =
-            1059.162;   // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle =
-            75.9;   // kcal mol^-1 rad^-2
+        static constexpr Distance _eqOHDistance = 1.012 * mstd::units::angstrom;
+        static constexpr Angle    _eqHOHAngle   = 113.24 * mstd::units::deg;
+        static constexpr ForceConstant _forceConstantOHBond =
+            1059.162 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr AngleForceConstant _forceConstantHOHAngle =
+            75.9 * mstd::units::kcal_per_mol /
+            (mstd::units::rad * mstd::units::rad);
 
        public:
         using SPCIntraWater::SPCIntraWater;
 
         [[nodiscard]]
-        double getEqOHDistance() const override;
+        const Distance &getEqOHDistance() const override;
         [[nodiscard]]
-        double getEqHOHAngle() const override;
+        const Angle &getEqHOHAngle() const override;
         [[nodiscard]]
-        double getForceConstantOHBond() const override;
+        const ForceConstant &getForceConstantOHBond() const override;
         [[nodiscard]]
-        double getForceConstantHOHAngle() const override;
+        const AngleForceConstant &getForceConstantHOHAngle() const override;
     };
 
-    inline double SPCFwIntraWater::getEqOHDistance() const
+    inline const Distance &SPCFwIntraWater::getEqOHDistance() const
     {
         return _eqOHDistance;
     }
 
-    inline double SPCFwIntraWater::getEqHOHAngle() const { return _eqHOHAngle; }
+    inline const Angle &SPCFwIntraWater::getEqHOHAngle() const { return _eqHOHAngle; }
 
-    inline double SPCFwIntraWater::getForceConstantOHBond() const
+    inline const ForceConstant &SPCFwIntraWater::getForceConstantOHBond() const
     {
         return _forceConstantOHBond;
     }
 
-    inline double SPCFwIntraWater::getForceConstantHOHAngle() const
+    inline const AngleForceConstant &SPCFwIntraWater::getForceConstantHOHAngle() const
     {
         return _forceConstantHOHAngle;
     }
@@ -103,42 +103,44 @@ namespace waterModel
     class qSPCFwIntraWater : public SPCIntraWater
     {
        private:
-        static constexpr double _eqOHDistance = 1.0;   // Angström
-        static constexpr double _eqHOHAngle   = 112.0 * DEG_TO_RAD;
-        static constexpr double _forceConstantOHBond =
-            1059.162;   // kcal mol^-1 Angström^-2
-        static constexpr double _forceConstantHOHAngle =
-            75.9;   // kcal mol^-1 rad^-2
+        static constexpr Distance _eqOHDistance = 1.0 * mstd::units::angstrom;
+        static constexpr Angle    _eqHOHAngle   = 112.0 * mstd::units::deg;
+        static constexpr ForceConstant _forceConstantOHBond =
+            1059.162 * mstd::units::kcal_per_mol /
+            (mstd::units::angstrom * mstd::units::angstrom);
+        static constexpr AngleForceConstant _forceConstantHOHAngle =
+            75.9 * mstd::units::kcal_per_mol /
+            (mstd::units::rad * mstd::units::rad);
 
        public:
         using SPCIntraWater::SPCIntraWater;
 
         [[nodiscard]]
-        double getEqOHDistance() const override;
+        const Distance &getEqOHDistance() const override;
         [[nodiscard]]
-        double getEqHOHAngle() const override;
+        const Angle &getEqHOHAngle() const override;
         [[nodiscard]]
-        double getForceConstantOHBond() const override;
+        const ForceConstant &getForceConstantOHBond() const override;
         [[nodiscard]]
-        double getForceConstantHOHAngle() const override;
+        const AngleForceConstant &getForceConstantHOHAngle() const override;
     };
 
-    inline double qSPCFwIntraWater::getEqOHDistance() const
+    inline const Distance &qSPCFwIntraWater::getEqOHDistance() const
     {
         return _eqOHDistance;
     }
 
-    inline double qSPCFwIntraWater::getEqHOHAngle() const
+    inline const Angle &qSPCFwIntraWater::getEqHOHAngle() const
     {
         return _eqHOHAngle;
     }
 
-    inline double qSPCFwIntraWater::getForceConstantOHBond() const
+    inline const ForceConstant &qSPCFwIntraWater::getForceConstantOHBond() const
     {
         return _forceConstantOHBond;
     }
 
-    inline double qSPCFwIntraWater::getForceConstantHOHAngle() const
+    inline const AngleForceConstant &qSPCFwIntraWater::getForceConstantHOHAngle() const
     {
         return _forceConstantHOHAngle;
     }

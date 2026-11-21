@@ -164,29 +164,91 @@ namespace linalg
     /**
      * @brief Inverts the matrix using Eigen library
      *
+     * @details The units are handled at the Eigen boundary: the numerical
+     * values are inverted and the result carries the inverse unit of the
+     * matrix elements (1 / T).
+     *
      * @tparam T
-     * @return Matrix<T> &
+     * @return Matrix<decltype(1.0 / T)>
      */
     template <typename T>
-    Matrix<T> Matrix<T>::inverse()
+    Matrix<InverseOf<T>> Matrix<T>::inverse()
     {
-        return Matrix<T>(_data.inverse());
+        using Result = InverseOf<T>;
+
+        auto numeric = []<typename V>(const V &value) -> double
+        {
+            if constexpr (mstd::is_quantity_like_v<V>)
+                return value.numerical_value_in(V::unit);
+            else
+                return static_cast<double>(value);
+        };
+
+        Eigen::MatrixXd values(_data.rows(), _data.cols());
+        for (Eigen::Index i = 0; i < _data.rows(); ++i)
+            for (Eigen::Index j = 0; j < _data.cols(); ++j)
+                values(i, j) = numeric(_data(i, j));
+
+        const Eigen::MatrixXd inverseValues = values.inverse();
+
+        const auto resultUnit = [&]
+        {
+            if constexpr (mstd::is_quantity_like_v<Result>)
+                return Result::unit;
+            else
+                return 1.0;
+        }();
+
+        Matrix<Result> result(_rows, _cols);
+        for (Eigen::Index i = 0; i < inverseValues.rows(); ++i)
+            for (Eigen::Index j = 0; j < inverseValues.cols(); ++j)
+                result(static_cast<size_t>(i), static_cast<size_t>(j)) =
+                    inverseValues(i, j) * resultUnit;
+
+        return result;
     }
 
     /**
-     * @brief solve the linear system of equations
+     * @brief solve the linear system of equations A * x = rhs in the least
+     * squares sense (normal equations), where the elements of A and rhs may
+     * be quantities
      *
-     * @tparam T
-     * @return Vector3D<T>
+     * @details The units are handled at the Eigen boundary: the numerical
+     * values (in the units of A and rhs) are solved for and the result is
+     * returned with the unit of the quotient rhs / A.
      *
+     * @tparam T element type of the matrix
+     * @tparam U element type of the right hand side
+     * @param rhs
+     * @return `std::vector<decltype(U / T)>`
      */
     template <typename T>
-    std::vector<T> Matrix<T>::solve(const std::vector<T> &rhs)
+    template <typename U>
+    auto Matrix<T>::solve(const std::vector<U> &rhs) -> std::vector<
+        std::remove_cvref_t<decltype(std::declval<U>() / std::declval<T>())>>
     {
-        Eigen::Matrix<T, Eigen::Dynamic, 1> bEigen(rhs.size());
-        std::ranges::copy(rhs, bEigen.data());
+        using Result = std::remove_cvref_t<
+            decltype(std::declval<U>() / std::declval<T>())>;
 
-        Eigen::MatrixXd              matrix = _data.transpose() * _data;
+        // numerical value of a (possibly unit carrying) element
+        auto numeric = []<typename V>(const V &value) -> double
+        {
+            if constexpr (mstd::is_quantity_like_v<V>)
+                return value.numerical_value_in(V::unit);
+            else
+                return static_cast<double>(value);
+        };
+
+        Eigen::MatrixXd matrixValues(_data.rows(), _data.cols());
+        for (Eigen::Index i = 0; i < _data.rows(); ++i)
+            for (Eigen::Index j = 0; j < _data.cols(); ++j)
+                matrixValues(i, j) = numeric(_data(i, j));
+
+        Eigen::VectorXd bEigen(static_cast<Eigen::Index>(rhs.size()));
+        for (size_t i = 0; i < rhs.size(); ++i)
+            bEigen(static_cast<Eigen::Index>(i)) = numeric(rhs[i]);
+
+        Eigen::MatrixXd matrix = matrixValues.transpose() * matrixValues;
         Eigen::LDLT<Eigen::MatrixXd> ldlt(matrix);
 
         if (ldlt.info() != Eigen::Success)
@@ -196,11 +258,23 @@ namespace linalg
                 "Matrix is not positive-definite."
             );
         }
-        auto solutionEigen = ldlt.solve(_data.transpose() * bEigen);
 
-        std::vector<T> solution;
-        for (int i = 0; i < solutionEigen.size(); ++i)
-            solution.push_back(solutionEigen(i));
+        const Eigen::VectorXd solutionEigen =
+            ldlt.solve(matrixValues.transpose() * bEigen);
+
+        // the unit of x is the unit of rhs / A
+        const auto resultUnit = [&]
+        {
+            if constexpr (mstd::is_quantity_like_v<Result>)
+                return Result::unit;
+            else
+                return 1.0;
+        }();
+
+        std::vector<Result> solution;
+        solution.reserve(static_cast<size_t>(solutionEigen.size()));
+        for (Eigen::Index i = 0; i < solutionEigen.size(); ++i)
+            solution.push_back(solutionEigen(i) * resultUnit);
 
         return solution;
     }

@@ -29,22 +29,17 @@
 #include <optional>
 #include <string>
 
-#include "constants/conversionFactors.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "mathUtilities.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "staticMatrix.hpp"
-#include "staticMatrix/staticMatrix3x3Class.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 
 namespace kinetics
 {
-    static constexpr double FRACTION_TO_PERCENT = 100.0;
-
     /**
      * @brief Construct a new Reset Kinetics:: Reset Kinetics object
      *
@@ -72,8 +67,8 @@ namespace kinetics
     {
         auto _ = scopedTimer(TimerId::ResetKinetics, "Reset Kinetics");
 
-        auto momentum        = physicalData.getMomentum() * S_TO_FS;
-        auto angularMomentum = physicalData.getAngularMomentum() * S_TO_FS;
+        auto momentum        = physicalData.getMomentum();
+        auto angularMomentum = physicalData.getAngularMomentum();
         auto temperature     = physicalData.getTemperature();
 
         auto resetTemp = (step <= _settings->getNScale());
@@ -113,8 +108,8 @@ namespace kinetics
         }
 
         physicalData.setTemperature(temperature);
-        physicalData.setMomentum(momentum * FS_TO_S);
-        physicalData.setAngularMomentum(angularMomentum * FS_TO_S);
+        physicalData.setMomentum(momentum);
+        physicalData.setAngularMomentum(angularMomentum);
     }
 
     /**
@@ -165,7 +160,7 @@ namespace kinetics
      */
     void ResetKinetics::resetMomentum(
         molsys::SimulationBox &simulationBox,
-        const linalg::Vec3D   &momentum
+        const Momentum3D      &momentum
     )
     {
         const auto momentumCorrection = momentum / simulationBox.getTotalMass();
@@ -187,14 +182,14 @@ namespace kinetics
      * @param angularMomentum the current angular momentum of the system
      */
     void ResetKinetics::resetAngularMomentum(
-        molsys::SimulationBox &simulationBox,
-        const linalg::Vec3D   &angularMomentum
+        molsys::SimulationBox   &simulationBox,
+        const AngularMomentum3D &angularMomentum
     )
     {
         simulationBox.calculateCenterOfMass();
         const auto centerOfMass = simulationBox.getCenterOfMass();
 
-        linalg::StaticMatrix3x3 helperMatrix{0.0};
+        InertiaTensor3D helperMatrix{Pos::zero() * Pos::zero() * Mass::zero()};
 
         auto addInertiaOfAtom = [&helperMatrix, &centerOfMass](const auto &atom)
         {
@@ -279,18 +274,16 @@ namespace kinetics
             return std::nullopt;
         }
 
-        const auto momentum    = physicalData.getMomentum();
-        const auto temperature = physicalData.getTemperature()
-                                     .quantity_from_zero()
-                                     .numerical_value_in(K);
+        const auto &momentum = physicalData.getMomentum();
+        const auto  temperature =
+            physicalData.getTemperature().quantity_from_zero();
         const auto nAtoms =
             static_cast<double>(simulationBox.getNumberOfAtoms());
 
         // momentum in amu*Angstrom/s, the velocity unit of TEMPERATURE_FACTOR
-        const auto momentumSquared        = normSquared(momentum * S_TO_FS);
-        const auto thermalMomentumSquared = temperature * nAtoms *
-                                            simulationBox.getTotalMass() /
-                                            TEMPERATURE_FACTOR;
+        const auto momentumSquared = normSquared(momentum);
+        const auto thermalMomentumSquared =
+            temperature * nAtoms * simulationBox.getTotalMass() * gas_constant;
 
         if (momentumSquared <= threshold * threshold * thermalMomentumSquared)
         {
@@ -300,12 +293,12 @@ namespace kinetics
         _momentumDriftWarned = true;
 
         return std::format(
-            "Total momentum reached {:.3e} amu*Angstrom/fs at step {}: the "
-            "centre of mass moves faster than {:g} % of the thermal velocity "
+            "Total momentum reached {::N[.3f]} at step {}: the "
+            "centre of mass moves faster than {} of the thermal velocity "
             "{}. Set momentum_warn_threshold = 0 to disable this warning.",
             norm(momentum),
             step,
-            threshold * FRACTION_TO_PERCENT,
+            threshold,
             *advice
         );
     }

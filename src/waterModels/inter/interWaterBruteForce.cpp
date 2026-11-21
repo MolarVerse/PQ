@@ -26,6 +26,7 @@
 #include "potential.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 
 namespace waterModel
 {
@@ -51,8 +52,8 @@ namespace waterModel
         const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         size_t idxI = 0;
         for (auto &water1 : simulationBox.getWaterTypeMolecules())
@@ -138,7 +139,7 @@ namespace waterModel
         const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy = 0.0;
+        auto totalCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
@@ -149,7 +150,7 @@ namespace waterModel
             if (water1.getMoltype() != waterTypeValue)
                 continue;
 
-            for (auto &water2 : simulationBox.getMMMolecules())
+            for (auto &water2 : simulationBox.getActiveMolecules())
             {
                 if (water2.getMoltype() != waterTypeValue)
                     continue;
@@ -220,8 +221,8 @@ namespace waterModel
         const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
@@ -234,7 +235,7 @@ namespace waterModel
             if (water1.getMoltype() != waterTypeValue)
                 continue;
 
-            for (auto &water2 : simulationBox.getMMMolecules())
+            for (auto &water2 : simulationBox.getActiveMolecules())
             {
                 if (water2.getMoltype() != waterTypeValue)
                     continue;
@@ -341,8 +342,8 @@ namespace waterModel
         const auto rCut        = potentialSettings.getCoulombRadiusCutOff();
         const auto rCutSquared = rCut * rCut;
 
-        auto totalCoulombEnergy    = 0.0;
-        auto totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});

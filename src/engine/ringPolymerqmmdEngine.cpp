@@ -69,10 +69,10 @@ namespace engine
 
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
-                getSettings().timings.getStartingStepCount()
+                getSettings().timings.getStartingTime()
             )
         );
 
@@ -388,10 +388,11 @@ namespace engine
 
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
-            auto positions = getRingPolymerBeads()[i].getFlattenedQMPositions();
-            auto velocities = getRingPolymerBeads()[i].flattenVelocities();
+            const auto bead       = getRingPolymerBeads()[i];
+            auto       positions  = bead.flattenPositions();
+            auto       velocities = bead.flattenVelocities();
 
-            auto &box = getRingPolymerBeads()[i].getBox();
+            auto &box = bead.getBox();
 
             const auto oldBoxDimensions = box.get_boxDimensions();
             auto       boxDimensions    = oldBoxDimensions.toStdVector();
@@ -434,11 +435,8 @@ namespace engine
                 MPI_COMM_WORLD
             );
 
-            const auto boxDimensionsVec = linalg::Vec3D(
-                boxDimensions[0],
-                boxDimensions[1],
-                boxDimensions[2]
-            );
+            const auto boxDimensionsVec =
+                Pos3D(boxDimensions[0], boxDimensions[1], boxDimensions[2]);
 
             getRingPolymerBeads()[i].deFlattenVelocities(velocities);
             getRingPolymerBeads()[i].deFlattenPositions(positions);

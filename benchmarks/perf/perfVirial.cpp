@@ -27,6 +27,7 @@
 #include <format>
 #include <iostream>
 
+#include "unit_types.hpp"
 #include "virial.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
@@ -48,13 +49,13 @@ int main()
         benchSetup::makePopulatedBox({.nMolecules = 20, .nAtomsPerMol = 3});
 
     auto physicalData = physicalData::PhysicalData();
-    settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 
     perfAllocBegin();
 
     CALLGRIND_ZERO_STATS;
 
-    linalg::tensor3D result{0.0};
+    VirialPerMol result{VirialPerMol::zero()};
 
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
@@ -64,7 +65,8 @@ int main()
 
     std::cout << std::format(
         "{:.6f}\n",
-        result[0][0] + result[1][1] + result[2][2]
+        (result[0][0] + result[1][1] + result[2][2])
+            .numerical_value_in(kcal_per_mol)
     );
     return 0;
 }

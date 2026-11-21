@@ -1,0 +1,1 @@
+- Check the files in batches of 30, each in a fresh `clangd-tidy` process (`scripts/clang_tidy.sh --batch-size`, 0 = one process), because one process over the 135 files of a large change grew until the runner was killed (exit 143); all batches run and the first failing exit status is returned. The VS Code tasks pass the batch size.

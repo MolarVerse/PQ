@@ -253,6 +253,7 @@ TEST(TestQMSetup, setupQMFull)
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
     setBuildCompatibleQMScript(settings.externalQMSettings);
 
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     engine::QMMDEngine engine(settings);
     EXPECT_NO_THROW(setup::setupQM(engine));
 }
@@ -261,6 +262,7 @@ TEST(TestQMSetup, setupQMFull)
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 {
     Settings settings;
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
@@ -274,12 +276,12 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderNotSet)
 TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetTrue)
 {
     Settings settings;
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
     settings.dftbSettings.setSlakosTypeByUser(SlakosType::THREEOB);
-    settings.dftbSettings.setUseThirdOrderDftbByUser(true);
     settings.finalize();
 
     EXPECT_EQ(settings.dftbSettings.useThirdOrderDftb(), true);
@@ -290,6 +292,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
     // this test has nothing to do with the current setup approach
     // it tests now basically the functionality of settings
     Settings settings;
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
@@ -304,6 +307,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlus3ob3rdOrderSetFalse)
 TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 {
     Settings settings;
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
@@ -319,6 +323,7 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusMatsci)
 TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 {
     Settings settings;
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
 
@@ -332,7 +337,8 @@ TEST(TestQMSetup, setupQMMethodAseDftbPlusCustom)
 
 TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
 {
-    Settings                            settings;
+    Settings settings;
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
     setup::QMSetup qmSetup(
@@ -510,7 +516,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
         "path/To/fennol_model.fnx"
     );
     settings.fennolSettings.setUseGPUPreprocessingByUser(false);
-    settings::GeneralSettings::setFloatingPointType(FPType::FLOAT);
+    GeneralSettings::setFloatingPointType(FPType::FLOAT);
 
     _qmSetup.setupWriteInfo();
 

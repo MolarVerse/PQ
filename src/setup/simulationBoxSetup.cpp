@@ -32,7 +32,6 @@
 
 #include "atom.hpp"
 #include "atomNumberMap.hpp"
-#include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
@@ -48,7 +47,7 @@
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
-#include "vector3d.hpp"
+#include "units.hpp"
 
 namespace setup
 {
@@ -309,12 +308,13 @@ namespace setup
      */
     void SimulationBoxSetup::calculateTotalCharge()
     {
-        double totalCharge = 0.0;
+        Charge totalCharge = Charge::zero();
 
         auto calcMolCharge = [&totalCharge](const ::molsys::Molecule &mol)
         {
             const auto &charges = mol.getPartialCharges();
-            totalCharge += std::accumulate(charges.begin(), charges.end(), 0.0);
+            totalCharge +=
+                std::accumulate(charges.begin(), charges.end(), Charge::zero());
         };
 
         auto &molecules = _engine.getSimulationBox().getMolecules();
@@ -358,7 +358,7 @@ namespace setup
         {
             const auto volume = simBox.getVolume();
             const auto density =
-                simBox.getTotalMass() / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
+                simBox.getTotalMass() / volume / avogadro_constant;
 
             simBox.setDensity(density);
         }
@@ -367,9 +367,9 @@ namespace setup
             simBox.setDensity(
                 _engine.getSettings().simulationBoxSettings.getDensity()
             );
-            const auto volume     = simBox.getVolume();
-            const auto convFactor = AMU_PER_ANGSTROM3_TO_KG_PER_L;
-            const auto density    = simBox.getTotalMass() / volume * convFactor;
+            const auto volume = simBox.getVolume();
+            const auto density =
+                simBox.getTotalMass() / volume / avogadro_constant;
 
             simBox.setDensity(density);
 
@@ -377,8 +377,8 @@ namespace setup
             out::StdoutOutput::writeDensityWarning();
         }
 
-        _engine.getPhysicalData().setVolume(simBox.getVolume());
-        _engine.getPhysicalData().setDensity(simBox.getDensity());
+        _engine.get_physicalData().setVolume(simBox.getVolume());
+        _engine.get_physicalData().setDensity(simBox.getDensity());
     }
 
     /**
@@ -400,8 +400,7 @@ namespace setup
             throw exc::InputFileException(
                 std::format(
                     "Rc cutoff is larger than half of the minimal box "
-                    "dimension of "
-                    "{} Angstrom.",
+                    "dimension of {}.",
                     minDim
                 )
             );
@@ -416,17 +415,17 @@ namespace setup
      */
     void SimulationBoxSetup::checkZeroVelocities()
     {
-        constexpr double epsilon    = 1e-10;
-        auto            &simBox     = _engine.getSimulationBox();
-        const auto       velocities = simBox.getVelocities();
+        constexpr auto epsilon    = 1e-10 * angstrom / s;
+        auto          &simBox     = _engine.getSimulationBox();
+        const auto     velocities = simBox.getVelocities();
 
         if ((std::ranges::any_of(
                 velocities,
                 [epsilon](const auto &vel)
                 {
-                    return std::abs(vel[0]) > epsilon ||
-                           std::abs(vel[1]) > epsilon ||
-                           std::abs(vel[2]) > epsilon;
+                    return mstd::abs(vel[0]) > epsilon ||
+                           mstd::abs(vel[1]) > epsilon ||
+                           mstd::abs(vel[2]) > epsilon;
                 }
             )))
             setZeroVelocities(false);
@@ -473,19 +472,33 @@ namespace setup
 
         log.writeSetupInfo(std::format("number of atoms:   {:8d}", nAtoms));
         log.writeSetupInfo(
-            std::format("total mass:        {:14.5f} g/mol", mass)
+            std::format(
+                "total mass:        {:14.5f} g/mol",
+                mass.numerical_value_in(g_per_mol)   // amu matches g/mol
+            )
         );
-        log.writeSetupInfo(std::format("total charge:      {:14.5f}", charge));
+        log.writeSetupInfo(
+            std::format(
+                "total charge:      {:14.5f}",
+                charge.numerical_value_in(elementary_charge)
+            )
+        );
         log.writeSetupInfo(std::format("unconstrained DOF: {:8d}", dof));
         log.writeEmptyLine();
 
-        const auto density = simBox.getDensity();
-        const auto volume  = simBox.getVolume();
-        const auto volumeStr =
-            std::format("{:14.5f} {}³", volume, out::ANGSTROM);
+        const auto density   = simBox.getDensity();
+        const auto volume    = simBox.getVolume();
+        const auto volumeStr = std::format(
+            "{:14.5f} {}³",
+            volume.numerical_value_in(angstrom * angstrom * angstrom),
+            out::ANGSTROM
+        );
 
         log.writeSetupInfo(
-            std::format("density:         {:14.5f} kg/L", density)
+            std::format(
+                "density:         {:14.5f} kg/L",
+                density.numerical_value_in(kg_per_litre)
+            )
         );
         log.writeSetupInfo(std::format("volume:          {}", volumeStr));
         log.writeEmptyLine();
@@ -494,17 +507,32 @@ namespace setup
         const auto boxB = simBox.getBoxDimensions()[1];
         const auto boxC = simBox.getBoxDimensions()[2];
 
-        const auto boxAStr = std::format("{:14.5f} {}", boxA, out::ANGSTROM);
-        const auto boxBStr = std::format("{:14.5f} {}", boxB, out::ANGSTROM);
-        const auto boxCstr = std::format("{:14.5f} {}", boxC, out::ANGSTROM);
+        const auto boxAStr = std::format(
+            "{:14.5f} {}",
+            boxA.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
+        const auto boxBStr = std::format(
+            "{:14.5f} {}",
+            boxB.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
+        const auto boxCstr = std::format(
+            "{:14.5f} {}",
+            boxC.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
 
         const auto alpha = simBox.getBoxAngles()[0];
         const auto beta  = simBox.getBoxAngles()[1];
         const auto gamma = simBox.getBoxAngles()[2];
 
-        const auto alphaStr = std::format("{:14.5f}°", alpha);
-        const auto betaStr  = std::format("{:14.5f}°", beta);
-        const auto gammaStr = std::format("{:14.5f}°", gamma);
+        const auto alphaStr =
+            std::format("{:14.5f}°", alpha.numerical_value_in(deg));
+        const auto betaStr =
+            std::format("{:14.5f}°", beta.numerical_value_in(deg));
+        const auto gammaStr =
+            std::format("{:14.5f}°", gamma.numerical_value_in(deg));
 
         log.writeSetupInfo(
             std::format("box dimensions:  {} {} {}", boxAStr, boxBStr, boxCstr)
@@ -521,8 +549,11 @@ namespace setup
 
         const auto coulombCutoff =
             _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
-        const auto coulombCutoffStr =
-            std::format("{:14.5f} {}", coulombCutoff, out::ANGSTROM);
+        const auto coulombCutoffStr = std::format(
+            "{:14.5f} {}",
+            coulombCutoff.numerical_value_in(angstrom),
+            out::ANGSTROM
+        );
 
         log.writeSetupInfo(
             std::format("coulomb cutoff:  {}", coulombCutoffStr)

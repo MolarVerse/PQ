@@ -22,19 +22,19 @@
 
 #include <gtest/gtest.h>
 
-#include "constants/internalConversionFactors.hpp"
 #include "coulombReactionField.hpp"
 #include "potentialSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests reaction-field energy, force, and cutoff continuity
  */
 TEST(TestCoulombReactionField, calculate)
 {
-    constexpr auto chargeProduct = 2.0;
-    constexpr auto cutoff        = 3.0;
+    constexpr auto chargeProduct = 2.0 * elementary_charge * elementary_charge;
+    constexpr auto cutoff        = 3.0 * angstrom;
     constexpr auto epsilon       = 80.0;
-    constexpr auto distance      = 2.0;
+    constexpr auto distance      = 2.0 * angstrom;
 
     PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(cutoff);
@@ -47,7 +47,7 @@ TEST(TestCoulombReactionField, calculate)
     const auto cutoffForce            = 1.0 / (cutoff * cutoff);
     const auto cutoffCubedInverse     = 1.0 / (cutoff * cutoff * cutoff);
     const auto deltaCutoff            = cutoff - distance;
-    const auto coulombPrefactor       = chargeProduct * COULOMB_PREFACTOR;
+    const auto coulombPrefactor       = chargeProduct * coulomb_prefactor;
 
     const auto expectedEnergy =
         coulombPrefactor *
@@ -60,11 +60,25 @@ TEST(TestCoulombReactionField, calculate)
          2.0 * reactionFieldPrefactor * cutoffCubedInverse * deltaCutoff);
 
     const auto [energy, force] = potential.calculate(distance, chargeProduct);
-    EXPECT_DOUBLE_EQ(energy, expectedEnergy);
-    EXPECT_DOUBLE_EQ(force, expectedForce);
+    EXPECT_DOUBLE_EQ(
+        energy.numerical_value_in(kcal_per_mol),
+        expectedEnergy.numerical_value_in(kcal_per_mol)
+    );
+    EXPECT_DOUBLE_EQ(
+        force.numerical_value_in(kcal_per_mol / angstrom),
+        expectedForce.numerical_value_in(kcal_per_mol / angstrom)
+    );
 
     const auto [cutoffEnergyValue, cutoffForceValue] =
         potential.calculate(cutoff, chargeProduct);
-    EXPECT_NEAR(cutoffEnergyValue, 0.0, 1.0e-12);
-    EXPECT_NEAR(cutoffForceValue, 0.0, 1.0e-12);
+    EXPECT_NEAR(
+        cutoffEnergyValue.numerical_value_in(kcal_per_mol),
+        0.0,
+        1.0e-12
+    );
+    EXPECT_NEAR(
+        cutoffForceValue.numerical_value_in(kcal_per_mol / angstrom),
+        0.0,
+        1.0e-12
+    );
 }

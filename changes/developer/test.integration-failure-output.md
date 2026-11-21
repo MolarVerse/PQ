@@ -1,0 +1,1 @@
+- Make failing integration tests say what went wrong: a PQ run with a non-zero exit status fails with the command, exit status, end of stdout and stderr, and a file that differs from its reference is reported with the worst value (frame, atom, column), the number of values out of tolerance and the differing frame headers.

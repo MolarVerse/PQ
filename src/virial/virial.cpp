@@ -26,6 +26,7 @@
 #include "globalTimer.hpp"
 #include "simulationBox.hpp"
 #include "timerId.hpp"
+#include "unit_types.hpp"
 
 namespace virial
 {
@@ -35,7 +36,7 @@ namespace virial
      * simulation box
      *
      * @param simulationBox simulation box containing all atoms
-     * @return linalg::tensor3D calculated virial tensor
+     * @return VirialPerMol calculated virial tensor
      *
      * @details This is an overloaded version of calculateVirial that computes
      * the virial tensor for all atoms in the simulation box and returns it
@@ -45,11 +46,11 @@ namespace virial
      * shift forces are reset to zero. This version is useful when you need the
      * virial value without side effects on the object state.
      */
-    linalg::tensor3D calculateVirial(molsys::SimulationBox &simulationBox)
+    VirialPerMol calculateVirial(molsys::SimulationBox &simulationBox)
     {
-        auto _ = scopedTimer(TimerId::Virial, "calculateVirial");
+        auto _ = scopedTimer(TimerId::VirialCalc, "calculateVirial");
 
-        linalg::tensor3D virial = {0.0};
+        VirialPerMol virial = VirialPerMol::zero();
 
         for (auto &atom : simulationBox.getAtoms())
         {
@@ -61,7 +62,7 @@ namespace virial
 
             virial += tensor + diagonalMatrix(shiftForcexyz);
 
-            atom->setShiftForce(0.0);
+            atom->setShiftForce(ShiftForce::zero());
         }
 
         return virial;
@@ -80,17 +81,15 @@ namespace virial
      * taken to be zero and are not considered.
      *
      * @param simulationBox simulation box containing QM atoms
-     * @return linalg::tensor3D virial tensor from QM atoms
+     * @return VirialPerMol virial tensor from QM atoms
      */
-    linalg::tensor3D calculateQMVirial(
-        const molsys::SimulationBox &simulationBox
-    )
+    VirialPerMol calculateQMVirial(const molsys::SimulationBox &simulationBox)
     {
-        auto _ = scopedTimer(TimerId::Virial, "calculateQMVirial");
+        auto _ = scopedTimer(TimerId::VirialCalc, "calculateQMVirial");
 
-        linalg::tensor3D virial = {0.0};
+        VirialPerMol virial = VirialPerMol::zero();
 
-        for (const auto &atom : simulationBox.getQMAtoms())
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
             const auto forcexyz = atom->getForce();
             const auto xyz      = atom->getPosition();
@@ -113,20 +112,21 @@ namespace virial
      * @param simulationBox simulation box containing molecules
      * @return linalg::tensor3D Intramolecular virial correction tensor
      */
-    linalg::tensor3D intraMolecularVirialCorrection(
+    VirialPerMol intraMolecularVirialCorrection(
         const molsys::SimulationBox &simulationBox
     )
     {
-        auto _ = scopedTimer(TimerId::Virial, "intraMolecularVirialCorrection");
+        auto _ =
+            scopedTimer(TimerId::VirialCalc, "intraMolecularVirialCorrection");
 
-        linalg::tensor3D virial{0.0};
+        VirialPerMol virial = VirialPerMol::zero();
 
-        if (settings::GeneralSettings::getVirialType() == VirialType::ATOMIC)
+        if (GeneralSettings::getVirialType() == VirialType::ATOMIC)
             return virial;
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
-            const auto centerOfMass = molecule.getCenterOfMass();
+            const auto &centerOfMass = molecule.getCenterOfMass();
 
             for (const auto &atom : molecule.getAtoms())
             {

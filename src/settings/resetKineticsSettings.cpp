@@ -144,7 +144,9 @@ void ResetKineticsSettings::setFResetForcesByUser(size_t fResetForces)
  *
  * @param threshold fraction of the thermal velocity, 0 disables the warning
  */
-void ResetKineticsSettings::setMomentumWarnThresholdByUser(double threshold)
+void ResetKineticsSettings::setMomentumWarnThresholdByUser(
+    const Percent& threshold
+)
 {
     _momentumWarnThreshold.setByUser(threshold);
 }
@@ -216,9 +218,9 @@ size_t ResetKineticsSettings::getFResetForces() const
 /**
  * @brief get the momentum drift warning threshold
  *
- * @return double
+ * @return const Percent&
  */
-double ResetKineticsSettings::getMomentumWarnThreshold() const
+const Percent& ResetKineticsSettings::getMomentumWarnThreshold() const
 {
     return _momentumWarnThreshold.get();
 }
@@ -242,7 +244,7 @@ std::optional<size_t> ResetKineticsSettings::getMomentumResetInterval() const
 {
     std::optional<size_t> interval;
 
-    for (const auto *setting : {&_fReset, &_fScale})
+    for (const auto* setting : {&_fReset, &_fScale})
     {
         if (setting->isSetByUser() && setting->get() > 0)
         {

@@ -37,6 +37,7 @@
 #include "moleculeType.hpp"
 #include "potentialBruteForce.hpp"
 #include "potentialSettings.hpp"
+#include "units.hpp"
 
 /**
  * @class TestGuffDatReader
@@ -69,8 +70,8 @@ inline void TestGuffDatReader::SetUp()
         ExtAtomType{2},
         AtomType{1}
     );
-    moleculeType1.addPartialCharge(0.5);
-    moleculeType1.addPartialCharge(-0.25);
+    moleculeType1.addPartialCharge(0.5 * elementary_charge);
+    moleculeType1.addPartialCharge(-0.25 * elementary_charge);
     moleculeType1.addAtomType(AtomType{0});
     moleculeType1.addAtomType(AtomType{1});
 
@@ -82,7 +83,7 @@ inline void TestGuffDatReader::SetUp()
         ExtAtomType{3},
         AtomType{0}
     );
-    moleculeType2.addPartialCharge(0.25);
+    moleculeType2.addPartialCharge(0.25 * elementary_charge);
     moleculeType2.addAtomType(AtomType{0});
 
     auto molecule1 = molsys::Molecule();
@@ -93,8 +94,8 @@ inline void TestGuffDatReader::SetUp()
 
     atom1->setExternalAtomType(ExtAtomType{1});
     atom2->setExternalAtomType(ExtAtomType{2});
-    atom1->setPartialCharge(0.5);
-    atom2->setPartialCharge(-0.25);
+    atom1->setPartialCharge(0.5 * elementary_charge);
+    atom2->setPartialCharge(-0.25 * elementary_charge);
     atom1->setAtomType(AtomType{0});
     atom2->setAtomType(AtomType{1});
 
@@ -110,7 +111,9 @@ inline void TestGuffDatReader::SetUp()
     _engine->getSimulationBox().addMoleculeType(moleculeType2);
     _engine->getSimulationBox().addMolecule(molecule1);
 
-    _settings.potentialSettings.setCoulombRadiusCutOffByUser(12.5);
+    _settings.potentialSettings.setCoulombRadiusCutOffByUser(
+        12.5 * angstrom
+    );
 
     _engine->makePotential(pot::PotentialBruteForce(_settings.hybridSettings));
     _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());

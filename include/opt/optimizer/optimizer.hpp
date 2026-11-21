@@ -28,7 +28,7 @@
 #include <memory>
 
 #include "convergence.hpp"
-#include "vector3d.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -53,11 +53,11 @@ namespace opt
        private:
         opt::Convergence _convergence;
 
-        std::deque<double>                     _energyHistory;
-        std::deque<double>                     _maxForceHistory;
-        std::deque<double>                     _rmsForceHistory;
-        std::deque<std::vector<linalg::Vec3D>> _forceHistory;
-        std::deque<std::vector<linalg::Vec3D>> _positionHistory;
+        std::deque<EnergyPerMol>         _energyHistory;
+        std::deque<Force>                _maxForceHistory;
+        std::deque<Force>                _rmsForceHistory;
+        std::deque<std::vector<Force3D>> _forceHistory;
+        std::deque<std::vector<Pos3D>>   _positionHistory;
 
         struct Impl;
         std::unique_ptr<Impl> _impl;
@@ -70,7 +70,7 @@ namespace opt
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 
-        void               updateHistory();
+        void               updateHistory(const EnergyPerMol& totalEnergy);
         [[nodiscard]] bool hasConverged();
 
         /***************************
@@ -80,12 +80,6 @@ namespace opt
         void setConvergence(opt::Convergence);
 
         void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
-        void setPhysicalData(
-            const std::shared_ptr<physicalData::PhysicalData>&
-        );
-        void setPhysicalDataOld(
-            const std::shared_ptr<physicalData::PhysicalData>&
-        );
 
         /***************************
          * standard getter methods *
@@ -93,24 +87,24 @@ namespace opt
 
         [[nodiscard]] size_t getHistoryIndex(int offset) const;
 
-        [[nodiscard]] double getEnergy() const;
-        [[nodiscard]] double getEnergy(int) const;
+        [[nodiscard]] const EnergyPerMol& getEnergy() const;
+        [[nodiscard]] const EnergyPerMol& getEnergy(int) const;
 
-        [[nodiscard]] double getRMSForce() const;
-        [[nodiscard]] double getRMSForce(int) const;
+        [[nodiscard]] const Force& getRMSForce() const;
+        [[nodiscard]] const Force& getRMSForce(int) const;
 
-        [[nodiscard]] double getMaxForce() const;
-        [[nodiscard]] double getMaxForce(int) const;
-
-        [[nodiscard]]
-        std::vector<linalg::Vec3D> getForces() const;
-        [[nodiscard]]
-        std::vector<linalg::Vec3D> getForces(int) const;
+        [[nodiscard]] const Force& getMaxForce() const;
+        [[nodiscard]] const Force& getMaxForce(int) const;
 
         [[nodiscard]]
-        std::vector<linalg::Vec3D> getPositions() const;
+        const std::vector<Force3D>& getForces() const;
         [[nodiscard]]
-        std::vector<linalg::Vec3D> getPositions(int) const;
+        const std::vector<Force3D>& getForces(int) const;
+
+        [[nodiscard]]
+        const std::vector<Pos3D>& getPositions() const;
+        [[nodiscard]]
+        const std::vector<Pos3D>& getPositions(int) const;
 
         [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;

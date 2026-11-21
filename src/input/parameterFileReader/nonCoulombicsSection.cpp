@@ -35,6 +35,7 @@
 #include "potentialSettings.hpp"
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 namespace input::parameterFile
 {
@@ -197,17 +198,24 @@ namespace input::parameterFile
         const auto c6        = stod(lineElements[2]);
         const auto c12       = stod(lineElements[3]);
 
-        auto cutOff = 5 == lineElements.size() ? stod(lineElements[4]) : -1.0;
+        auto cutOff = -1.0 * angstrom;
+
+        if (lineElements.size() == 5)
+            cutOff = stod(lineElements[4]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
-        cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+        if (cutOff < 0.0)
+            cutOff = coulombCutOff;
 
         auto &pot       = engine.getPotential()->getNonCoulombPotential();
         auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
 
-        const auto params = LJParams{.c6 = c6, .c12 = c12};
+        const auto params = LJParams{
+            .c6  = c6 * kcal_per_mol * angstrom6,
+            .c12 = c12 * kcal_per_mol * angstrom12
+        };
 
         potential.addNonCoulombicPair(
             std::make_shared<pot::LennardJonesPair>(
@@ -261,20 +269,26 @@ namespace input::parameterFile
         const auto atomType1 = ExtVdwType{stoul(lineElements[0])};
         const auto atomType2 = ExtVdwType{stoul(lineElements[1])};
         const auto scale     = stod(lineElements[2]);
-        const auto dRho      = stod(lineElements[3]);
+        const auto dRho      = stod(lineElements[3]) / angstrom;
         const auto c6        = stod(lineElements[4]);
 
-        auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+        auto cutOff = -1.0 * angstrom;
+        if (6 == lineElements.size())
+            cutOff = stod(lineElements[5]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
-        cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+        if (cutOff < 0.0)
+            cutOff = coulombCutOff;
 
         auto      &pot       = engine.getPotential()->getNonCoulombPotential();
         auto      &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
-        const auto params =
-            BuckinghamParams{.scaling = scale, .dRho = dRho, .c6 = c6};
+        const auto params    = BuckinghamParams{
+               .scaling = scale * kcal_per_mol,
+               .dRho    = dRho,
+               .c6      = c6 * kcal_per_mol * angstrom6
+        };
 
         potential.addNonCoulombicPair(
             std::make_shared<pot::BuckinghamPair>(
@@ -328,21 +342,24 @@ namespace input::parameterFile
         const auto atomType1           = ExtVdwType{stoul(lineElements[0])};
         const auto atomType2           = ExtVdwType{stoul(lineElements[1])};
         const auto dissociationEnergy  = stod(lineElements[2]);
-        const auto wellWidth           = stod(lineElements[3]);
-        const auto equilibriumDistance = stod(lineElements[4]);
+        const auto wellWidth           = stod(lineElements[3]) / angstrom;
+        const auto equilibriumDistance = stod(lineElements[4]) * angstrom;
 
-        auto cutOff = 6 == lineElements.size() ? stod(lineElements[5]) : -1.0;
+        auto cutOff = -1.0 * angstrom;
+        if (6 == lineElements.size())
+            cutOff = stod(lineElements[5]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
 
-        cutOff = cutOff < 0.0 ? coulombCutOff : cutOff;
+        if (cutOff < 0.0)
+            cutOff = coulombCutOff;
 
         auto &pot       = engine.getPotential()->getNonCoulombPotential();
         auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
 
         const auto params = MorseParams{
-            .dissociationEnergy  = dissociationEnergy,
+            .dissociationEnergy  = dissociationEnergy * kcal_per_mol,
             .wellWidth           = wellWidth,
             .equilibriumDistance = equilibriumDistance
         };

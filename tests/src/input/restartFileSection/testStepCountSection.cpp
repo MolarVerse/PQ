@@ -31,6 +31,7 @@
 #include "testRestartFileSection.hpp"
 #include "throwWithMessage.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 TEST_F(TestStepCountSection, testKeyword)
 {
@@ -47,13 +48,13 @@ TEST_F(TestStepCountSection, testNumberOfArguments)
     size_t lineNumber = 0;
     for (size_t i = 0; i < 10; ++i)
     {
-        if (i != 2)
+        if (i != 2 && i != 4)
         {
             auto line = std::vector<std::string>(i);
             ASSERT_THROW_MSG(
                 _section->process(line, *_engine, lineNumber),
                 exc::RstFileException,
-                "Error in line 0: Step count section must have 2 elements"
+                "Error in line 0: Step count section must have 2 or 4 elements"
             );
         }
     }
@@ -78,4 +79,55 @@ TEST_F(TestStepCountSection, testProcess)
     size_t lineNumber = 0;
     _section->process(line, *_engine, lineNumber);
     EXPECT_EQ(_settings.timings.getStartingStepCount(), 1000);
+}
+
+TEST_F(TestStepCountSection, testProcessWithSimulationTime)
+{
+    auto line =
+        std::vector<std::string>{"step", "1000", "Simulation_Time", "2.5"};
+    size_t lineNumber = 0;
+    _section->process(line, *_engine, lineNumber);
+
+    EXPECT_EQ(_settings.timings.getStartingStepCount(), 1000);
+    EXPECT_TRUE(_settings.timings.isStartingTimeSet());
+    EXPECT_DOUBLE_EQ(
+        _settings.timings.getStartingTime().numerical_value_in(ps),
+        2.5
+    );
+}
+
+TEST_F(TestStepCountSection, testWrongSimulationTimeKeyword)
+{
+    auto   line       = std::vector<std::string>{"step", "1000", "foo", "2.5"};
+    size_t lineNumber = 0;
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine, lineNumber),
+        exc::RstFileException,
+        "Error in line 0: Expected keyword \"simulation_time\" after the step "
+        "count but got \"foo\""
+    );
+}
+
+TEST_F(TestStepCountSection, testInvalidSimulationTime)
+{
+    auto line =
+        std::vector<std::string>{"step", "1000", "simulation_time", "2.5x"};
+    size_t lineNumber = 0;
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine, lineNumber),
+        exc::RstFileException,
+        "Error in line 0: Invalid simulation time \"2.5x\""
+    );
+}
+
+TEST_F(TestStepCountSection, testNegativeSimulationTime)
+{
+    auto line =
+        std::vector<std::string>{"step", "1000", "simulation_time", "-1"};
+    size_t lineNumber = 0;
+    ASSERT_THROW_MSG(
+        _section->process(line, *_engine, lineNumber),
+        exc::RstFileException,
+        "Error in line 0: Simulation time must not be negative"
+    );
 }

@@ -37,7 +37,9 @@
 #include "hybridSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "settings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 #if !defined(_WIN32)
 #include <sys/types.h>
@@ -49,7 +51,6 @@
 #endif
 
 #include "atom.hpp"
-#include "constants.hpp"
 #include "dftbplusRunner.hpp"
 #include "exceptions.hpp"
 #include "externalQMRunner.hpp"
@@ -204,7 +205,6 @@ class ExternalQMRunnerTest : public testing::Test
     std::unique_ptr<ExternalQMRunnerHarness> _runner;
     std::unique_ptr<QM::DFTBPlusRunner>      _dftbRunner;
 
-    JobType     _jobType;
     bool        _removeNetForce;
     double      _timeLimit;
     std::string _dftbFile;
@@ -324,7 +324,6 @@ void ExternalQMRunnerTest::SetUp()
         _settings.qmSettings,
         _settings.externalQMSettings
     );
-    _jobType        = settings::GeneralSettings::getJobtype();
     _removeNetForce = _settings.qmSettings.getRemoveNetForce();
     _originalPath   = std::filesystem::current_path();
 
@@ -337,20 +336,20 @@ void ExternalQMRunnerTest::SetUp()
 
     _settings.qmSettings.setRemoveNetForceByUser(false);
     _settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     auto atom = std::make_shared<molsys::Atom>();
     atom->setName("H");
     _simulationBox.addAtom(atom);
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     _simulationBox.setBox(orthoBox, false);
 }
 
 void ExternalQMRunnerTest::TearDown()
 {
-    settings::GeneralSettings::setJobtype(_jobType);
-
     std::filesystem::current_path(_originalPath);
     std::error_code error;
     std::filesystem::remove_all(_workPath, error);
@@ -757,9 +756,9 @@ namespace
         {
             return std::format(
                 "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-                x * ANGSTROM_TO_BOHR,
-                y * ANGSTROM_TO_BOHR,
-                z * ANGSTROM_TO_BOHR,
+                (x * angstrom).numerical_value_in(bohr),
+                (y * angstrom).numerical_value_in(bohr),
+                (z * angstrom).numerical_value_in(bohr),
                 charge
             );
         };
@@ -773,13 +772,13 @@ class QMWriterTest : public ExternalQMRunnerTest
    protected:
     void SetUp() override;
 
-    void _addAtom(const std::string &name, const linalg::Vec3D &position);
+    void _addAtom(const std::string &name, const Pos3D &position);
 
     void _addMolecule(
-        molsys::HybridZone   zone,
-        bool                 active,
-        const linalg::Vec3D &position,
-        double               charge
+        molsys::HybridZone zone,
+        bool               active,
+        const Pos3D       &position,
+        const Charge      &charge
     );
 
     void _addPointChargeMolecules();
@@ -790,17 +789,16 @@ void QMWriterTest::SetUp()
     ExternalQMRunnerTest::SetUp();
 
     // the fixture's atom "H" sits at the origin; add an O and a second H
-    _addAtom("O", {1.5, 2.25, -3.0});
-    _addAtom("H", {0.5, 0.5, 0.5});
+    _addAtom("O", linalg::Vec3D{1.5, 2.25, -3.0} * angstrom);
+    _addAtom("H", linalg::Vec3D{0.5, 0.5, 0.5} * angstrom);
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 12.0, 14.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 12.0 * angstrom, 14.0 * angstrom}
+    };
     _simulationBox.setBox(orthoBox, false);
 }
 
-void QMWriterTest::_addAtom(
-    const std::string   &name,
-    const linalg::Vec3D &position
-)
+void QMWriterTest::_addAtom(const std::string &name, const Pos3D &position)
 {
     auto atom = std::make_shared<molsys::Atom>();
     atom->setName(name);
@@ -809,10 +807,10 @@ void QMWriterTest::_addAtom(
 }
 
 void QMWriterTest::_addMolecule(
-    molsys::HybridZone   zone,
-    bool                 active,
-    const linalg::Vec3D &position,
-    double               charge
+    molsys::HybridZone zone,
+    bool               active,
+    const Pos3D       &position,
+    const Charge      &charge
 )
 {
     auto atom = std::make_shared<molsys::Atom>();
@@ -834,10 +832,30 @@ void QMWriterTest::_addPointChargeMolecules()
 {
     using enum molsys::HybridZone;
 
-    _addMolecule(SMOOTHING, false, {1.0, 2.0, 3.0}, 0.5);
-    _addMolecule(POINT_CHARGE, false, {4.0, 5.0, 6.0}, -0.8);
-    _addMolecule(OUTER, false, {7.0, 8.0, 9.0}, 0.1);
-    _addMolecule(POINT_CHARGE, true, {1.0, 1.0, 1.0}, 0.3);
+    _addMolecule(
+        SMOOTHING,
+        false,
+        linalg::Vec3D{1.0, 2.0, 3.0} * angstrom,
+        0.5 * elementary_charge
+    );
+    _addMolecule(
+        POINT_CHARGE,
+        false,
+        linalg::Vec3D{4.0, 5.0, 6.0} * angstrom,
+        -0.8 * elementary_charge
+    );
+    _addMolecule(
+        OUTER,
+        false,
+        linalg::Vec3D{7.0, 8.0, 9.0} * angstrom,
+        0.1 * elementary_charge
+    );
+    _addMolecule(
+        POINT_CHARGE,
+        true,
+        linalg::Vec3D{1.0, 1.0, 1.0} * angstrom,
+        0.3 * elementary_charge
+    );
 }
 
 TEST_F(QMWriterTest, dftbCoordsOfAnIsolatedSystemUseTheClusterFlag)
@@ -879,7 +897,12 @@ TEST_F(QMWriterTest, dftbPointChargesAreOnlyTheInactiveSmoothingAndPointCharge)
 
 TEST_F(QMWriterTest, dftbWithoutPointChargesLeavesNoFile)
 {
-    _addMolecule(molsys::HybridZone::OUTER, false, {7.0, 8.0, 9.0}, 0.1);
+    _addMolecule(
+        molsys::HybridZone::OUTER,
+        false,
+        linalg::Vec3D{7.0, 8.0, 9.0} * angstrom,
+        0.1 * elementary_charge
+    );
 
     _writePointChargeFile(
         *_dftbRunner,
@@ -948,9 +971,9 @@ TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
     {
         return std::format(
             "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",
-            x * ANGSTROM_TO_BOHR,
-            y * ANGSTROM_TO_BOHR,
-            z * ANGSTROM_TO_BOHR,
+            (x * angstrom).numerical_value_in(bohr),
+            (y * angstrom).numerical_value_in(bohr),
+            (z * angstrom).numerical_value_in(bohr),
             name
         );
     };

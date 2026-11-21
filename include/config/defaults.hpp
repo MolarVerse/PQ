@@ -24,6 +24,7 @@
 #define CONFIG__DEFAULTS_HPP
 
 #include <cstddef>
+#include <mstd/units/new_units.hpp>
 #include <mstd/units/wave_number.hpp>
 
 #include "enums/convergence.hpp"
@@ -88,28 +89,32 @@ namespace defaults
     static constexpr auto* QM_CHARGES_TEMP_FILE_DEFAULT    = "qm_charges";
     static constexpr auto* STRESS_TENSOR_TEMP_FILE_DEFAULT = "stress_tensor";
 
-    static constexpr double HESSIAN_DISPLACEMENT_DEFAULT = 1.0e-3;
-    static constexpr bool   HESSIAN_OPTIMIZE_DEFAULT     = true;
-    static constexpr auto*  HESSIAN_BUILDER_DEFAULT      = "central";
+    static constexpr Pos HESSIAN_DISPLACEMENT_DEFAULT =
+        1.0e-3 * mstd::units::angstrom;
+    static constexpr bool  HESSIAN_OPTIMIZE_DEFAULT = true;
+    static constexpr auto* HESSIAN_BUILDER_DEFAULT  = "central";
 
     static constexpr char INNER_REGION_CENTER_ATOM_NAME = 'X';
 
-    static constexpr double MOMENTUM_WARN_THRESHOLD_DEFAULT = 0.01;
+    static constexpr Percent MOMENTUM_WARN_THRESHOLD_DEFAULT{
+        1 * mstd::units::percent
+    };
 
-    static constexpr double COULOMB_CUT_OFF_DEFAULT  = 12.5;   // in Angstrom
-    static constexpr double SCALE_14_COULOMB_DEFAULT = 1.0;
-    static constexpr double SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
-    // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/903 add unit
-    static constexpr double WOLF_PARAM_DEFAULT = 0.25;
+    static constexpr Pos COULOMB_CUT_OFF_DEFAULT = 12.5 * mstd::units::angstrom;
+    static constexpr double      SCALE_14_COULOMB_DEFAULT       = 1.0;
+    static constexpr double      SCALE_14_VAN_DER_WAALS_DEFAULT = 1.0;
+    static constexpr InvDistance WOLF_PARAM_DEFAULT =
+        0.25 / mstd::units::angstrom;
     static constexpr double RF_EPSILON_DEFAULT = 1.0;
 
-    static constexpr bool   CONSTRAINTS_ACTIVE_DEFAULT = false;
-    static constexpr size_t SHAKE_MAX_ITER_DEFAULT     = 20;
-    static constexpr size_t RATTLE_MAX_ITER_DEFAULT    = 20;
-    static constexpr size_t MSHAKE_MAX_ITER_DEFAULT    = 20;
-    static constexpr double SHAKE_TOLERANCE_DEFAULT    = 1e-8;
-    static constexpr double RATTLE_TOLERANCE_DEFAULT   = 1e-8 * 1e12;
-    static constexpr double MSHAKE_TOLERANCE_DEFAULT   = 1e-8;
+    static constexpr bool        CONSTRAINTS_ACTIVE_DEFAULT = false;
+    static constexpr size_t      SHAKE_MAX_ITER_DEFAULT     = 20;
+    static constexpr size_t      RATTLE_MAX_ITER_DEFAULT    = 20;
+    static constexpr size_t      MSHAKE_MAX_ITER_DEFAULT    = 20;
+    static constexpr double      SHAKE_TOLERANCE_DEFAULT    = 1e-8;
+    static constexpr MassPerTime RATTLE_TOLERANCE_DEFAULT =
+        1e-8 * mstd::units::g / mstd::units::mol / mstd::units::ps;
+    static constexpr double MSHAKE_TOLERANCE_DEFAULT = 1e-8;
 
     static constexpr bool CELL_LIST_IS_ACTIVE_DEFAULT =
         false;   // default is brute force routine
@@ -119,8 +124,9 @@ namespace defaults
         3;   // default value for nose hoover chain length
     static constexpr Time BERENDSEN_THERMOSTAT_RELAX_TIME =
         0.1 * mstd::units::ps;
-    static constexpr double LANGEVIN_THERMOSTAT_FRICTION = 1.0e11;   // in s^-1
-    static constexpr auto   NH_COUPLING_FREQ =
+    static constexpr Frequency LANGEVIN_THERMOSTAT_FRICTION =
+        1.0e11 * mstd::units::Hz;
+    static constexpr auto NH_COUPLING_FREQ =
         mstd::toFreq(1.0e3 * mstd::units::per_cm);              // in cm^-1
     static constexpr double MAX_FRICTION_CONVERSION = 1.0e12;   // in s^-1
 
@@ -132,7 +138,7 @@ namespace defaults
     static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
 
     static constexpr TimeMs QM_LOOP_TIME_LIMIT_DEFAULT = 3600 * mstd::units::s;
-    static constexpr double VACUUM_BOX_DIMENSION       = 1000;   // in Å
+    static constexpr Pos    VACUUM_BOX_DIMENSION = 1000 * mstd::units::angstrom;
 
     static constexpr auto*  OPTIMIZER_DEFAULT             = "gradient-descent";
     static constexpr size_t N_EPOCHS_DEFAULT              = 100;
@@ -144,10 +150,13 @@ namespace defaults
         ConvStrategy::RIGOROUS;
     static constexpr ConvStrategy FORCE_CONV_STRATEGY_DEFAULT =
         ConvStrategy::RIGOROUS;
-    static constexpr double REL_ENERGY_CONV_DEFAULT = 1.0e-6;
-    static constexpr double ABS_ENERGY_CONV_DEFAULT = 1.0e-6;
-    static constexpr double MAX_FORCE_CONV_DEFAULT  = 1.0e-6;
-    static constexpr double RMS_FORCE_CONV_DEFAULT  = 1.0e-6;
+    static constexpr double       REL_ENERGY_CONV_DEFAULT = 1.0e-6;
+    static constexpr EnergyPerMol ABS_ENERGY_CONV_DEFAULT =
+        1.0e-6 * mstd::units::kcal_per_mol;
+    static constexpr Force MAX_FORCE_CONV_DEFAULT =
+        1.0e-6 * mstd::units::kcal_per_mol / mstd::units::angstrom;
+    static constexpr Force RMS_FORCE_CONV_DEFAULT =
+        1.0e-6 * mstd::units::kcal_per_mol / mstd::units::angstrom;
 
     static constexpr auto NUM_GUFF_COEFFICIENTS = 22;
 

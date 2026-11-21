@@ -22,8 +22,8 @@
 
 #include "coulombReactionField.hpp"
 
-#include "constants/internalConversionFactors.hpp"
 #include "potentialSettings.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -53,17 +53,16 @@ namespace pot
      *
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombReactionField::calculate(
-        double dist,
-        double chargeProduct
+    std::pair<EnergyPerMol, Force> CoulombReactionField::calculate(
+        const Distance&      dist,
+        const ChargeSquared& chargeProduct
     ) const
     {
-        const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
-        const auto dInv             = 1.0 / dist;
-        const auto deltaCutOff      = _get_cutoff() - dist;
-        const auto rCutEnergy       = _get_energyCutoff();
-        const auto rCutForce        = _get_forceCutoff();
-        const auto rfCutOffCubed    = _rfPrefactor * _get_invCubedCutoff();
+        const auto dInv          = 1.0 / dist;
+        const auto deltaCutOff   = _get_cutoff() - dist;
+        const auto rCutEnergy    = _get_energyCutoff();
+        const auto rCutForce     = _get_forceCutoff();
+        const auto rfCutOffCubed = _rfPrefactor * _get_invCubedCutoff();
 
         auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
         energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;
@@ -71,10 +70,9 @@ namespace pot
         auto force  = (dInv * dInv) - rCutForce;
         force      += 2.0 * rfCutOffCubed * deltaCutOff;
 
-        energy *= coulombPrefactor;
-        force  *= coulombPrefactor;
+        const auto prefactor = chargeProduct * coulomb_prefactor;
 
-        return {energy, force};
+        return {energy * prefactor, force * prefactor};
     }
 
 }   // namespace pot

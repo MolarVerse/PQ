@@ -34,12 +34,16 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 TEST_F(TestCellList, determineCellSize)
 {
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
-    EXPECT_EQ(_cellList->getCellSize(), linalg::Vec3D(5.0, 5.0, 5.0));
+    EXPECT_EQ(
+        _cellList->getCellSize(),
+        linalg::Vec3D(5.0, 5.0, 5.0) * angstrom
+    );
 }
 
 /**
@@ -54,13 +58,15 @@ TEST_F(TestCellList, determineCellSizeRejectsNonPositiveBoxDimensions)
         "unstable";
 
     EXPECT_THROW_MSG(
-        _cellList->determineCellSize(linalg::Vec3D(0.0, 10.0, 10.0)),
+        _cellList->determineCellSize(linalg::Vec3D(0.0, 10.0, 10.0) * angstrom),
         exc::CellListException,
         message
     );
 
     EXPECT_THROW_MSG(
-        _cellList->determineCellSize(linalg::Vec3D(10.0, -1.0, 10.0)),
+        _cellList->determineCellSize(
+            linalg::Vec3D(10.0, -1.0, 10.0) * angstrom
+        ),
         exc::CellListException,
         message
     );
@@ -75,7 +81,7 @@ TEST_F(TestCellList, determineCellSizeRejectsNonFiniteBoxDimensions)
     const auto nan = std::numeric_limits<double>::quiet_NaN();
 
     EXPECT_THROW_MSG(
-        _cellList->determineCellSize(linalg::Vec3D(10.0, nan, 10.0)),
+        _cellList->determineCellSize(linalg::Vec3D(10.0, nan, 10.0) * angstrom),
         exc::CellListException,
         "Invalid simulation box dimensions during cell-list setup - box "
         "dimensions must be finite and positive, the simulation has become "
@@ -123,8 +129,8 @@ TEST_F(TestCellList, getCellIndex)
 
 TEST_F(TestCellList, getCellIndexOfAtom)
 {
-    const auto position1 = linalg::Vec3D(1.0, 2.0, 3.0);
-    const auto position2 = linalg::Vec3D(6.0, 7.0, 8.0);
+    const auto position1 = linalg::Vec3D(1.0, 2.0, 3.0) * angstrom;
+    const auto position2 = linalg::Vec3D(6.0, 7.0, 8.0) * angstrom;
 
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
 
@@ -142,7 +148,9 @@ TEST_F(TestCellList, getCellIndexOfAtom)
 
 TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
 {
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     _simulationBox->setBox(orthoBox, false);
     _cellList->setNumberOfCells(2);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
@@ -150,21 +158,21 @@ TEST_F(TestCellList, getCellIndexOfAtomWrapsPeriodicBoundaryCoordinates)
     EXPECT_EQ(
         _cellList->getCellIndexOfAtom(
             _simulationBox->getBoxDimensions(),
-            linalg::Vec3D(-5.0, -5.0, -5.0)
+            linalg::Vec3D(-5.0, -5.0, -5.0) * angstrom
         ),
         linalg::Vec3Dul(0, 0, 0)
     );
     EXPECT_EQ(
         _cellList->getCellIndexOfAtom(
             _simulationBox->getBoxDimensions(),
-            linalg::Vec3D(0.0, 0.0, 0.0)
+            linalg::Vec3D(0.0, 0.0, 0.0) * angstrom
         ),
         linalg::Vec3Dul(1, 1, 1)
     );
     EXPECT_EQ(
         _cellList->getCellIndexOfAtom(
             _simulationBox->getBoxDimensions(),
-            linalg::Vec3D(5.0, 5.0, 5.0)
+            linalg::Vec3D(5.0, 5.0, 5.0) * angstrom
         ),
         linalg::Vec3Dul(0, 0, 0)
     );
@@ -205,7 +213,7 @@ TEST_F(TestCellList, addNeighbouringCells)
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
     _cellList->resizeCells();
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
-    _cellList->addNeighbouringCells(1.5);
+    _cellList->addNeighbouringCells(1.5 * angstrom);
 
     for (const auto &cell : _cellList->getCells())
     {
@@ -224,7 +232,7 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
     _cellList->determineCellBoundaries(_simulationBox->getBoxDimensions());
 
     EXPECT_THROW_MSG(
-        _cellList->addNeighbouringCells(4.0),
+        _cellList->addNeighbouringCells(4.0 * angstrom),
         exc::CellListException,
         "Invalid cell-list layout for x dimension: cell-number must be at "
         "least 2 * neighbour cells + 1 (required 3, configured 2). Decrease "
@@ -238,13 +246,15 @@ TEST_F(TestCellList, addNeighbouringCellsRejectsAliasedPeriodicOffsets)
  */
 TEST_F(TestCellList, checkCoulombCutoff)
 {
-    molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {50.0 * angstrom, 50.0 * angstrom, 50.0 * angstrom}
+    };
     _simulationBox->setBox(orthoBox, false);
     _cellList->determineCellSize(_simulationBox->getBoxDimensions());
-    EXPECT_NO_THROW(_cellList->checkCoulombCutoff(200.0));
+    EXPECT_NO_THROW(_cellList->checkCoulombCutoff(200.0 * angstrom));
 
     EXPECT_THROW_MSG(
-        _cellList->checkCoulombCutoff(0.1),
+        _cellList->checkCoulombCutoff(0.1 * angstrom),
         exc::CellListException,
         "Coulomb cutoff is smaller than half of the largest cell size."
     );
@@ -278,7 +288,7 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);
-    settings::GeneralSettings::activateCellList();
+    GeneralSettings::activateCellList();
 
     const auto cloned = _cellList->clone();
 
@@ -298,7 +308,7 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsNonFinitePositions)
 
     const auto atom = std::make_shared<molsys::Atom>();
     const auto nan  = std::numeric_limits<double>::quiet_NaN();
-    atom->setPosition(linalg::Vec3D(nan, nan, nan));
+    atom->setPosition(linalg::Vec3D(nan, nan, nan) * angstrom);
 
     molecule.addAtom(atom);
     _simulationBox->addMolecule(molecule);
@@ -318,7 +328,7 @@ TEST_F(TestCellList, getCellIndexOfAtomWrapsEscapedPositions)
     EXPECT_EQ(
         _cellList->getCellIndexOfAtom(
             _simulationBox->getBoxDimensions(),
-            linalg::Vec3D(-29.0, 0.0, 0.0)
+            linalg::Vec3D(-29.0, 0.0, 0.0) * angstrom
         ),
         linalg::Vec3Dul(1, 1, 1)
     );
@@ -332,7 +342,7 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
     auto molecule = molsys::Molecule();
 
     const auto atom = std::make_shared<molsys::Atom>();
-    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+    atom->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
     molecule.addAtom(atom);
     _simulationBox->addMolecule(molecule);
@@ -353,22 +363,22 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    const double coulombRadiusCutOff = 4.0;
+    const auto coulombRadiusCutOff = 4.0 * angstrom;
     _cellList->setNumberOfCells(11);
     _cellList->resizeCells();
 
     EXPECT_NO_THROW(
         _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff)
     );
-    settings::GeneralSettings::activateCellList();
+    GeneralSettings::activateCellList();
 
     auto molecule = molsys::Molecule();
 
     const auto atom1 = std::make_shared<molsys::Atom>();
     const auto atom2 = std::make_shared<molsys::Atom>();
 
-    atom1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-    atom2->setPosition(linalg::Vec3D(6.0, 7.0, 8.0));
+    atom1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(6.0, 7.0, 8.0) * angstrom);
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -378,7 +388,9 @@ TEST_F(TestCellList, updateCellList)
     _cellList->setup(*_simulationBox, coulombRadiusCutOff);
     auto cellSizeOld = _cellList->getCellSize();
 
-    molsys::OrthorhombicBox orthoBox{{50.0, 50.0, 50.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {50.0 * angstrom, 50.0 * angstrom, 50.0 * angstrom}
+    };
     _simulationBox->setBox(orthoBox, false);
 
     _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff);

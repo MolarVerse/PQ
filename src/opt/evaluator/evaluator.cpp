@@ -57,9 +57,9 @@ namespace opt
      * @throws exc::UserInputException if the evaluator does not support
      * analytic Hessian calculation
      *
-     * @return HessianMatrix
+     * @return Hessian
      */
-    HessianMatrix Evaluator::calculateAnalyticHessian()
+    Hessian Evaluator::calculateAnalyticHessian()
     {
         throw exc::UserInputException(
             "The selected evaluator does not support analytic Hessian "
@@ -118,30 +118,6 @@ namespace opt
     }
 
     /**
-     * @brief set the physical data as shared pointer
-     *
-     * @param physicalData - std::shared_ptr<PhysicalData>
-     */
-    void Evaluator::setPhysicalData(
-        const std::shared_ptr<physicalData::PhysicalData>& physicalData
-    )
-    {
-        _physicalData = physicalData;
-    }
-
-    /**
-     * @brief set the old physical data as shared pointer
-     *
-     * @param physicalData - std::shared_ptr<PhysicalData>
-     */
-    void Evaluator::setPhysicalDataOld(
-        const std::shared_ptr<physicalData::PhysicalData>& physicalData
-    )
-    {
-        _physicalDataOld = physicalData;
-    }
-
-    /**
      * @brief set the force field as shared pointer
      *
      * @param forceField - std::shared_ptr<ForceField>
@@ -163,46 +139,6 @@ namespace opt
     )
     {
         _intraNonBonded = intraNonBonded;
-    }
-
-    /**
-     * @brief Get the physical data as a reference
-     *
-     * @return physicalData::PhysicalData&
-     */
-    physicalData::PhysicalData& Evaluator::_getPhysicalData()
-    {
-        return *_physicalData;
-    }
-
-    /**
-     * @brief Get the physical data as a const reference
-     *
-     * @return const physicalData::PhysicalData&
-     */
-    const physicalData::PhysicalData& Evaluator::_getPhysicalData() const
-    {
-        return *_physicalData;
-    }
-
-    /**
-     * @brief Get the old physical data as a reference
-     *
-     * @return physicalData::PhysicalData&
-     */
-    physicalData::PhysicalData& Evaluator::_getPhysicalDataOld()
-    {
-        return *_physicalDataOld;
-    }
-
-    /**
-     * @brief Get the old physical data as a const reference
-     *
-     * @return const physicalData::PhysicalData&
-     */
-    const physicalData::PhysicalData& Evaluator::_getPhysicalDataOld() const
-    {
-        return *_physicalDataOld;
     }
 
     /**

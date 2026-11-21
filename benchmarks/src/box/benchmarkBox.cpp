@@ -25,21 +25,24 @@
 #include "orthorhombicBox.hpp"
 #include "staticMatrix.hpp"
 #include "triclinicBox.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace
 {
     molsys::OrthorhombicBox makeOrthorhombicBox()
     {
-        molsys::OrthorhombicBox box({20.0, 25.0, 30.0});
+        molsys::OrthorhombicBox box(
+            {20.0 * angstrom, 25.0 * angstrom, 30.0 * angstrom}
+        );
         return box;
     }
 
     molsys::TriclinicBox makeTriclinicBox()
     {
         molsys::TriclinicBox box{
-            {20.0, 25.0, 30.0},
-            {80.0, 90.0, 100.0},
+            {20.0 * angstrom, 25.0 * angstrom, 30.0 * angstrom},
+            linalg::Vec3D{80.0, 90.0, 100.0} * deg,
             false
         };
         return box;
@@ -47,8 +50,8 @@ namespace
 
     void BM_OrthorhombicShiftVector(benchmark::State& state)
     {
-        auto          box = makeOrthorhombicBox();
-        linalg::Vec3D vector{17.3, -14.1, 21.8};
+        auto  box    = makeOrthorhombicBox();
+        Pos3D vector = linalg::Vec3D{17.3, -14.1, 21.8} * angstrom;
 
         for (auto _ : state)
         {
@@ -60,8 +63,8 @@ namespace
 
     void BM_TriclinicShiftVector(benchmark::State& state)
     {
-        auto          box = makeTriclinicBox();
-        linalg::Vec3D vector{17.3, -14.1, 21.8};
+        auto  box    = makeTriclinicBox();
+        Pos3D vector = linalg::Vec3D{17.3, -14.1, 21.8} * angstrom;
 
         for (auto _ : state)
         {
@@ -73,8 +76,8 @@ namespace
 
     void BM_OrthorhombicWrapPosition(benchmark::State& state)
     {
-        auto          box = makeOrthorhombicBox();
-        linalg::Vec3D position{27.3, -34.1, 41.8};
+        auto  box      = makeOrthorhombicBox();
+        Pos3D position = linalg::Vec3D{27.3, -34.1, 41.8} * angstrom;
 
         for (auto _ : state)
         {
@@ -86,8 +89,8 @@ namespace
 
     void BM_TriclinicWrapPosition(benchmark::State& state)
     {
-        auto          box = makeTriclinicBox();
-        linalg::Vec3D position{27.3, -34.1, 41.8};
+        auto  box      = makeTriclinicBox();
+        Pos3D position = linalg::Vec3D{27.3, -34.1, 41.8} * angstrom;
 
         for (auto _ : state)
         {
@@ -99,8 +102,8 @@ namespace
 
     void BM_TriclinicCoordinateRoundTrip(benchmark::State& state)
     {
-        auto          box = makeTriclinicBox();
-        linalg::Vec3D vector{3.2, -1.7, 4.6};
+        auto  box    = makeTriclinicBox();
+        Pos3D vector = linalg::Vec3D{3.2, -1.7, 4.6} * angstrom;
 
         for (auto _ : state)
         {
@@ -113,8 +116,8 @@ namespace
 
     void BM_TriclinicToOrthoSpace(benchmark::State& state)
     {
-        auto          box = makeTriclinicBox();
-        linalg::Vec3D vector{3.2, -1.7, 4.6};
+        auto  box    = makeTriclinicBox();
+        Pos3D vector = linalg::Vec3D{3.2, -1.7, 4.6} * angstrom;
 
         for (auto _ : state)
         {
@@ -126,8 +129,8 @@ namespace
 
     void BM_TriclinicToSimSpace(benchmark::State& state)
     {
-        auto          box = makeTriclinicBox();
-        linalg::Vec3D vector{3.2, -1.7, 4.6};
+        auto box    = makeTriclinicBox();
+        auto vector = linalg::Vec3D{3.2, -1.7, 4.6};
 
         for (auto _ : state)
         {

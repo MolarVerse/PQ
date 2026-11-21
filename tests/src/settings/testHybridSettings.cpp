@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "hybridSettings.hpp"
+#include "units.hpp"
 
 TEST(HybridSettingsTest, InnerRegionCenterRoundTrip)
 {
@@ -62,17 +63,31 @@ TEST(HybridSettingsTest, BoolAndRadiusSettingsRoundTrip)
     hybridSettings.setUseQMChargesByUser(true);
     EXPECT_TRUE(hybridSettings.getUseQMCharges());
 
-    hybridSettings.setCoreRadiusByUser(2.5);
-    EXPECT_DOUBLE_EQ(hybridSettings.getCoreRadius(), 2.5);
+    hybridSettings.setCoreRadiusByUser(2.5 * angstrom);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getCoreRadius().numerical_value_in(angstrom),
+        2.5
+    );
 
-    hybridSettings.setLayerRadiusByUser(6.75);
-    EXPECT_DOUBLE_EQ(hybridSettings.getLayerRadius(), 6.75);
+    hybridSettings.setLayerRadiusByUser(6.75 * angstrom);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getLayerRadius().numerical_value_in(angstrom),
+        6.75
+    );
 
-    hybridSettings.setSmoothingRegionThicknessByUser(1.25);
-    EXPECT_DOUBLE_EQ(hybridSettings.getSmoothingRegionThickness(), 1.25);
+    hybridSettings.setSmoothingRegionThicknessByUser(1.25 * angstrom);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getSmoothingRegionThickness().numerical_value_in(
+            angstrom
+        ),
+        1.25
+    );
 
-    hybridSettings.setPointChargeThicknessByUser(4.5);
-    EXPECT_DOUBLE_EQ(hybridSettings.getPointChargeThickness(), 4.5);
+    hybridSettings.setPointChargeThicknessByUser(4.5 * angstrom);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getPointChargeThickness().numerical_value_in(angstrom),
+        4.5
+    );
 }
 
 TEST(HybridSettingsTest, EnumSettingsRoundTrip)

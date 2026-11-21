@@ -34,6 +34,7 @@
 #include "settings.hpp"
 #include "testEnergyOutput.hpp"
 #include "thermostatSettings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests the order of all columns with every option active
@@ -48,11 +49,11 @@ TEST_F(TestEnergyOutput, energyColumnsAllActive)
         ThermostatType::NOSE_HOOVER
     );
     _settings->constraintSettings.activateDistanceConstraintsByUser();
-    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QMMM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     std::vector<std::string_view> names;
     for (const auto &column : columns.get())
@@ -97,16 +98,16 @@ TEST_F(TestEnergyOutput, energyColumnsAllActive)
  */
 TEST_F(TestEnergyOutput, energyColumnsQM)
 {
-    _physicalData->setQMEnergy(7.0);
-    _physicalData->setQMReferenceEnergy(2.0);
+    _physicalData->setQMEnergy(7.0 * kcal_per_mol);
+    _physicalData->setQMReferenceEnergy(2.0 * kcal_per_mol);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     const auto active = columns.get();
 
@@ -134,11 +135,11 @@ TEST_F(TestEnergyOutput, energyColumnLabelAndHeader)
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     const out::EnergyColumns columns(*_physicalData, *_settings);
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
 
     EXPECT_EQ(
         out::energyFileHeader(columns),

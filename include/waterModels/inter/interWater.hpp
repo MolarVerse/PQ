@@ -27,6 +27,7 @@
 
 #include "coulombPotential.hpp"
 #include "nonCoulombPair.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -48,8 +49,8 @@ namespace waterModel
 {
     struct InterWaterState
     {
-        double oxygenCharge{0.0};
-        double hydrogenCharge{0.0};
+        Charge oxygenCharge{Charge::zero()};
+        Charge hydrogenCharge{Charge::zero()};
         bool   oxygenOnlyNonCoulomb{false};
 
         std::unique_ptr<pot::NonCoulombPair> nonCoulombPairOO;
@@ -116,11 +117,11 @@ namespace waterModel
             molsys::Atom                                 &atom1,
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-            double                                        rCutSquared,
+            const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
-            double                                       &coulombEnergy,
-            double                                       &nonCoulombEnergy
+            EnergyPerMol                                 &coulombEnergy,
+            EnergyPerMol                                 &nonCoulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -128,9 +129,9 @@ namespace waterModel
             molsys::Atom                                 &atom1,
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-            double                                        rCutSquared,
+            const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
-            double                                       &coulombEnergy
+            EnergyPerMol                                 &coulombEnergy
         );
 
         template <typename ChargeTag1, typename ChargeTag2>
@@ -138,15 +139,15 @@ namespace waterModel
             molsys::Atom                                 &atom1,
             molsys::Atom                                 &atom2,
             const std::shared_ptr<pot::CoulombPotential> &coulombPotential,
-            double                                        rCutSquared,
+            const DistanceSquared                        &rCutSquared,
             const molsys::Box                            &box,
             const pot::NonCoulombPair                    &nonCoulPair,
-            double                                       &coulombEnergy,
-            double                                       &nonCoulombEnergy
+            EnergyPerMol                                 &coulombEnergy,
+            EnergyPerMol                                 &nonCoulombEnergy
         );
 
         template <typename T>
-        double getPartialCharge(molsys::Atom &atom) const;
+        Charge getPartialCharge(molsys::Atom &atom) const;
     };
 
     class InterWater

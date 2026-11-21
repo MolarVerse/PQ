@@ -41,6 +41,8 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace pot
 {
@@ -110,17 +112,24 @@ namespace benchSetup
                 (0.4 * deviation) + (0.1 * deviation * deviation),
                 0.25 * deviation
             };
-            atom->setPosition(pos);
-            atom->setPositionOld(
-                pos
-            );   // at-rest start (stable for constraints)
-            atom->setVelocity({0.01 * (deviation + 1.0), -0.015, 0.02});
-            atom->setForce({0.1, -0.2, 0.05});
-            atom->setShiftForce({0.0, 0.0, 0.0});
-            atom->setMass(12.0);
+            atom->setPosition(pos * angstrom);
+            // at-rest start (stable for constraints)
+            atom->setPositionOld(pos * angstrom);
+            atom->setVelocity(
+                linalg::Vec3D{0.01 * (deviation + 1.0), -0.015, 0.02} *
+                angstrom / s
+            );
+            atom->setForce(
+                linalg::Vec3D{0.1, -0.2, 0.05} * kcal_per_mol / angstrom
+            );
+            atom->setShiftForce(ShiftForce3D::zero());
+            atom->setMass(12.0 * g_per_mol);
             atom->setAtomType(AtomType{i % 2});
             atom->setInternalGlobalVDWType(VdwType{i % 2});
-            atom->setPartialCharge((i % 2 == 0) ? 0.4 : -0.4);
+            atom->setPartialCharge(
+                (i % 2 == 0) ? 0.4 * elementary_charge
+                             : -0.4 * elementary_charge
+            );
 
             molecule.addAtom(atom);
         }
@@ -139,8 +148,11 @@ namespace benchSetup
         auto pair = pot::LennardJonesPair(
             ExtVdwType(0),
             ExtVdwType(1),
-            12.0,
-            LJParams{.c6 = 2.0, .c12 = 3.0}
+            12.0 * angstrom,
+            LJParams{
+                .c6  = 2.0 * kcal_per_mol * angstrom6,
+                .c12 = 3.0 * kcal_per_mol * angstrom12
+            }
         );
         potential.setNonCoulombPairsMatrix(0, 1, pair);
         potential.setNonCoulombPairsMatrix(1, 0, pair);
@@ -165,7 +177,9 @@ namespace benchSetup
     {
         auto box = molsys::SimulationBox();
 
-        molsys::OrthorhombicBox orthoBox{{30.0, 30.0, 30.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {30.0 * angstrom, 30.0 * angstrom, 30.0 * angstrom}
+        };
         box.setBox(orthoBox, false);
 
         for (std::size_t mol = 0; mol < params.nMolecules; ++mol)

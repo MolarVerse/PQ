@@ -48,10 +48,10 @@ TEST_F(TestTimingsSection, beginEndProducesFiniteNonNegativeTimes)
     _section->beginTimer();
     _section->endTimer();
 
-    EXPECT_GE(_section->calculateElapsedTime(), 0.0);
-    EXPECT_GE(_section->calculateLoopTime(), 0.0);
-    EXPECT_TRUE(std::isfinite(_section->calculateElapsedTime()));
-    EXPECT_TRUE(std::isfinite(_section->calculateLoopTime()));
+    EXPECT_GE(_section->calculateElapsedTime(), Time::zero());
+    EXPECT_GE(_section->calculateLoopTime(), Time::zero());
+    EXPECT_TRUE(isfinite(_section->calculateElapsedTime()));
+    EXPECT_TRUE(isfinite(_section->calculateLoopTime()));
 }
 
 /**

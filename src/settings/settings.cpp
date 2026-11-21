@@ -25,14 +25,12 @@
 #include <cmath>
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "hybridSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace
 {
@@ -47,13 +45,14 @@ namespace
     void validateThermostat(
         const ThermostatSettings& thermostatSettings,
         const KineticsSettings&   kinetics,
-        const TimingsSettings&    timings
+        const TimingsSettings&    timings,
+        const GeneralSettings&    generalSettings
     )
     {
         const auto thermostatType = thermostatSettings.getThermostatType();
         const auto hasRamp        = kinetics.isStartTemperatureSet();
 
-        if (settings::GeneralSettings::isMDJobType() &&
+        if (isMDJobType(generalSettings.getJobtype()) &&
             (thermostatType == ThermostatType::BERENDSEN ||
              thermostatType == ThermostatType::VELOCITY_RESCALING))
         {
@@ -76,15 +75,11 @@ namespace
                     mstd::max(maxTemperature, kinetics.getStartTemperature());
             }
 
-            const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
-            const auto conversionFactor =
-                UNIVERSAL_GAS_CONSTANT * unitConversion;
-            const auto sigmaSquared =
-                4.0 * thermostatSettings.getFriction() * conversionFactor *
-                maxTemperature.quantity_from_zero().numerical_value_in(K) /
-                timings.getTimeStep().numerical_value_in(fs);
+            const auto sigmaSquared = 4.0 * thermostatSettings.getFriction() *
+                                      maxTemperature.quantity_from_zero() /
+                                      timings.getTimeStep();
 
-            if (!std::isfinite(sigmaSquared))
+            if (!isfinite(sigmaSquared))
             {
                 throw exc::InputFileException(
                     "Langevin thermostat parameters produce a non-finite "
@@ -148,14 +143,14 @@ namespace
 void Settings::finalize()
 {
     kinetics.finalize(timings.getNumberOfSteps());
-    potentialSettings.finalize();
+    potentialSettings.finalize(generalSettings.getJobtype());
     resetKinetics.finalize(timings.getNumberOfSteps());
     manostatSettings.finalize(referenceSettings);
     outputFiles.finalize();
     waterModelSettings.finalize(referenceSettings);
     constraintSettings.finalize(referenceSettings, waterModelSettings);
     thermostatSettings.finalize(referenceSettings);
-    hybridSettings.finalize(fileSettings);
+    hybridSettings.finalize(fileSettings, generalSettings.getJobtype());
 
     const auto& qmMethod = qmSettings.getQMMethod();
 
@@ -186,5 +181,5 @@ void Settings::finalize()
  */
 void Settings::validate() const
 {
-    validateThermostat(thermostatSettings, kinetics, timings);
+    validateThermostat(thermostatSettings, kinetics, timings, generalSettings);
 }

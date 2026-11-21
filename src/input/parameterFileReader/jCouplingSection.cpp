@@ -24,10 +24,10 @@
 
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
 #include "jCouplingType.hpp"
+#include "units.hpp"
 
 namespace input::parameterFile
 {
@@ -101,7 +101,7 @@ namespace input::parameterFile
         auto constA        = stod(lineElements[3]);
         auto constB        = stod(lineElements[4]);
         auto constC        = stod(lineElements[5]);
-        auto phase         = stod(lineElements[6]) * DEG_TO_RAD;
+        auto phase         = stod(lineElements[6]) * deg;
 
         auto upperSymmetry = true;
         auto lowerSymmetry = true;
