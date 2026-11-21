@@ -62,7 +62,7 @@ namespace engine
         );
 
         const auto virial = virial::calculateVirial(getSimulationBox());
-        getPhysicalData().setVirial(virial);
+        getPhysicalData().set_virial(virial);
 
         getForceField()->calculateBondedInteractions(
             getSimulationBox(),

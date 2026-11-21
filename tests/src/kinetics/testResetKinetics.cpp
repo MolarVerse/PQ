@@ -146,7 +146,7 @@ namespace
         const auto angularMomentum = angularMomentumOf(simulationBox);
 
         EXPECT_NEAR(
-            physicalData.getTemperature()
+            physicalData.get_temperature()
                 .quantity_from_zero()
                 .numerical_value_in(K),
             simulationBox.calculateTemperature()
@@ -155,14 +155,14 @@ namespace
             1e-9
         );
         EXPECT_VECTOR_NEAR(
-            physicalData.getMomentum().numerical_value_in(
+            physicalData.get_momentum().numerical_value_in(
                 g_per_mol * angstrom / s
             ),
             momentum.numerical_value_in(g_per_mol * angstrom / s),
             tolerance.numerical_value_in(angstrom * g_per_mol / s)
         );
         EXPECT_VECTOR_NEAR(
-            physicalData.getAngularMomentum().numerical_value_in(
+            physicalData.get_angularMomentum().numerical_value_in(
                 g_per_mol * angstrom * angstrom / s
             ),
             angularMomentum.numerical_value_in(
@@ -236,13 +236,13 @@ TEST(TestResetKinetics, resetTemperatureRescalesVelocitiesAndStaysFinite)
 
     kinetics::ResetKinetics::resetTemperature(
         *box,
-        data.getTemperature(),
+        data.get_temperature(),
         toTemperature(300.0)
     );
 
     data.calculateTemperature(*box);
     const auto T_after =
-        data.getTemperature().quantity_from_zero().numerical_value_in(K);
+        data.get_temperature().quantity_from_zero().numerical_value_in(K);
 
     EXPECT_FALSE(std::isnan(T_after));
     EXPECT_FALSE(std::isinf(T_after));
@@ -257,13 +257,13 @@ TEST(TestResetKinetics, resetTemperatureScalesFiniteTemperatureToZero)
     data.calculateTemperature(*box);
     kinetics::ResetKinetics::resetTemperature(
         *box,
-        data.getTemperature(),
+        data.get_temperature(),
         toTemperature(0.0)
     );
 
     data.calculateTemperature(*box);
     EXPECT_DOUBLE_EQ(
-        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        data.get_temperature().quantity_from_zero().numerical_value_in(K),
         0.0
     );
     for (const auto &atom : box->getAtoms())
@@ -419,7 +419,7 @@ TEST(TestResetKinetics, resetTemperatureReachesTargetTemperature)
 
         kinetics::ResetKinetics::resetTemperature(
             *box,
-            data.getTemperature(),
+            data.get_temperature(),
             toTemperature(target)
         );
 
@@ -443,12 +443,13 @@ TEST(TestResetKinetics, resetTemperatureScalesAllVelocitiesByCommonFactor)
     const auto before    = velocitiesOf(*box);
     const auto positions = positionsOf(*box);
     const auto lambda    = ::sqrt(
-        300.0 / data.getTemperature().quantity_from_zero().numerical_value_in(K)
+        300.0 /
+        data.get_temperature().quantity_from_zero().numerical_value_in(K)
     );
 
     kinetics::ResetKinetics::resetTemperature(
         *box,
-        data.getTemperature(),
+        data.get_temperature(),
         toTemperature(300.0)
     );
 
@@ -480,12 +481,12 @@ TEST(TestResetKinetics, resetTemperatureUsesPassedTemperatureNotBoxTemperature)
         0.5 *
         ::sqrt(
             300.0 /
-            data.getTemperature().quantity_from_zero().numerical_value_in(K)
+            data.get_temperature().quantity_from_zero().numerical_value_in(K)
         );
 
     kinetics::ResetKinetics::resetTemperature(
         *box,
-        scaleAbsTemp(data.getTemperature(), 4.0),
+        scaleAbsTemp(data.get_temperature(), 4.0),
         toTemperature(300.0)
     );
 
@@ -537,7 +538,7 @@ TEST(TestResetKinetics, resetTemperatureCanHeatAndCool)
 {
     auto      *box   = makeBox();
     auto       data  = makeData(*box);
-    const auto temp0 = data.getTemperature();
+    const auto temp0 = data.get_temperature();
 
     kinetics::ResetKinetics::resetTemperature(
         *box,
@@ -984,21 +985,21 @@ TEST(TestResetKinetics, resetWithoutScheduledResetLeavesBoxUntouched)
     const kinetics::ResetKinetics reset{settings};
 
     const auto velocities      = velocitiesOf(*box);
-    const auto temp            = data.getTemperature();
-    const auto momentum        = data.getMomentum();
-    const auto angularMomentum = data.getAngularMomentum();
+    const auto temp            = data.get_temperature();
+    const auto momentum        = data.get_momentum();
+    const auto angularMomentum = data.get_angularMomentum();
 
     reset.reset(7U, data, *box, toTemperature(300.0));
 
     EXPECT_EQ(velocitiesOf(*box), velocities);
-    EXPECT_EQ(data.getTemperature(), temp);
+    EXPECT_EQ(data.get_temperature(), temp);
     EXPECT_VECTOR_NEAR(
-        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        data.get_momentum().numerical_value_in(g_per_mol * angstrom / s),
         momentum.numerical_value_in(g_per_mol * angstrom / s),
         1e-12
     );
     EXPECT_VECTOR_NEAR(
-        data.getAngularMomentum().numerical_value_in(
+        data.get_angularMomentum().numerical_value_in(
             g_per_mol * angstrom * angstrom / s
         ),
         angularMomentum.numerical_value_in(g_per_mol * angstrom * angstrom / s),
@@ -1020,9 +1021,9 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
     // values in PhysicalData deliberately do not match the box
     const linalg::Vec3D momentum(1.0, 2.0, 3.0);
     const linalg::Vec3D angularMomentum(-4.0, 5.0, -6.0);
-    data.setTemperature(toTemperature(123.0));
-    data.setMomentum(momentum * g_per_mol * angstrom / s);
-    data.setAngularMomentum(
+    data.set_temperature(toTemperature(123.0));
+    data.set_momentum(momentum * g_per_mol * angstrom / s);
+    data.set_angularMomentum(
         angularMomentum * g_per_mol * angstrom * angstrom / s
     );
 
@@ -1032,14 +1033,14 @@ TEST(TestResetKinetics, resetWithoutScheduledResetTakesDataAsSourceOfTruth)
 
     // nothing recalculated - the unit conversions S_TO_FS / FS_TO_S cancel
     EXPECT_EQ(velocitiesOf(*box), velocities);
-    EXPECT_EQ(data.getTemperature(), toTemperature(123.0));
+    EXPECT_EQ(data.get_temperature(), toTemperature(123.0));
     EXPECT_VECTOR_NEAR(
-        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        data.get_momentum().numerical_value_in(g_per_mol * angstrom / s),
         momentum,
         1e-12
     );
     EXPECT_VECTOR_NEAR(
-        data.getAngularMomentum().numerical_value_in(
+        data.get_angularMomentum().numerical_value_in(
             g_per_mol * angstrom * angstrom / s
         ),
         angularMomentum,
@@ -1060,7 +1061,8 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
     const auto before = velocitiesOf(*box);
     const auto vCom   = box->calculateMomentum() / box->getTotalMass();
     const auto lambda = ::sqrt(
-        300.0 / data.getTemperature().quantity_from_zero().numerical_value_in(K)
+        300.0 /
+        data.get_temperature().quantity_from_zero().numerical_value_in(K)
     );
 
     reset.reset(7U, data, *box, toTemperature(300.0));
@@ -1085,11 +1087,11 @@ TEST(TestResetKinetics, resetTemperatureBranchScalesAndRemovesMomentum)
 
     // the removed centre of mass motion carried kinetic energy
     EXPECT_LT(
-        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        data.get_temperature().quantity_from_zero().numerical_value_in(K),
         300.0
     );
     EXPECT_GT(
-        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        data.get_temperature().quantity_from_zero().numerical_value_in(K),
         0.0
     );
 
@@ -1132,7 +1134,7 @@ TEST(TestResetKinetics, resetMomentumBranchOnlyShiftsVelocities)
         1e-12
     );
     EXPECT_NEAR(
-        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s)[0],
+        data.get_momentum().numerical_value_in(g_per_mol * angstrom / s)[0],
         0.0,
         1e-12
     );
@@ -1140,7 +1142,7 @@ TEST(TestResetKinetics, resetMomentumBranchOnlyShiftsVelocities)
     // the temperature in data follows the (unscaled) box
     EXPECT_GT(
         std::abs(
-            data.getTemperature().quantity_from_zero().numerical_value_in(K) -
+            data.get_temperature().quantity_from_zero().numerical_value_in(K) -
             300.0
         ),
         1e-3
@@ -1159,7 +1161,7 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
     const kinetics::ResetKinetics reset{settings};
 
     const auto momentum = box->calculateMomentum();
-    const auto T_before = data.getTemperature();
+    const auto T_before = data.get_temperature();
 
     reset.reset(7U, data, *box, toTemperature(300.0));
 
@@ -1179,12 +1181,12 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
         1e-12
     );
     EXPECT_VECTOR_NEAR(
-        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        data.get_momentum().numerical_value_in(g_per_mol * angstrom / s),
         momentum.numerical_value_in(g_per_mol * angstrom / s),
         1e-12
     );
     EXPECT_VECTOR_NEAR(
-        data.getAngularMomentum().numerical_value_in(
+        data.get_angularMomentum().numerical_value_in(
             g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
@@ -1192,7 +1194,7 @@ TEST(TestResetKinetics, resetAngularBranchOnlyRemovesRotation)
     );
 
     // the rotational energy is gone -> data has to carry the new temperature
-    EXPECT_LT(data.getTemperature(), T_before);
+    EXPECT_LT(data.get_temperature(), T_before);
     expectDataMatchesBox(data, *box);
 
     delete box;
@@ -1222,8 +1224,8 @@ TEST(TestResetKinetics, resetTemperatureAndMomentumDueTogetherActOnlyOnce)
     // correction with the stale momentum would shift the velocities again
     EXPECT_EQ(velocitiesOf(*boxBoth), velocitiesOf(*boxTemperature));
     EXPECT_DOUBLE_EQ(
-        dataBoth.getTemperature().quantity_from_zero().numerical_value_in(K),
-        dataTemperature.getTemperature()
+        dataBoth.get_temperature().quantity_from_zero().numerical_value_in(K),
+        dataTemperature.get_temperature()
             .quantity_from_zero()
             .numerical_value_in(K)
     );
@@ -1280,12 +1282,12 @@ TEST(TestResetKinetics, resetAllBranchesMatchSequentialStaticCalls)
 
     // data reports the final state: no momentum, no angular momentum
     EXPECT_VECTOR_NEAR(
-        data.getMomentum().numerical_value_in(g_per_mol * angstrom / s),
+        data.get_momentum().numerical_value_in(g_per_mol * angstrom / s),
         linalg::Vec3D(0.0, 0.0, 0.0),
         velocityTolerance(*box).numerical_value_in(angstrom / s)
     );
     EXPECT_VECTOR_NEAR(
-        data.getAngularMomentum().numerical_value_in(
+        data.get_angularMomentum().numerical_value_in(
             g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),
@@ -1467,7 +1469,7 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
 
     auto data = makeData(*box);
     ASSERT_DOUBLE_EQ(
-        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        data.get_temperature().quantity_from_zero().numerical_value_in(K),
         0.0
     );
 
@@ -1485,7 +1487,7 @@ TEST(TestResetKinetics, resetOfMomentumAndAngularDoesNotNeedTemperature)
     }
 
     EXPECT_DOUBLE_EQ(
-        data.getTemperature().quantity_from_zero().numerical_value_in(K),
+        data.get_temperature().quantity_from_zero().numerical_value_in(K),
         0.0
     );
 
@@ -1535,11 +1537,11 @@ TEST(TestResetKinetics, resetDoesNotCarryStateBetweenCalls)
 
     EXPECT_EQ(velocitiesOf(*boxB), velocitiesOf(*boxC));
     EXPECT_DOUBLE_EQ(
-        dataB.getTemperature().quantity_from_zero().numerical_value_in(K),
-        dataC.getTemperature().quantity_from_zero().numerical_value_in(K)
+        dataB.get_temperature().quantity_from_zero().numerical_value_in(K),
+        dataC.get_temperature().quantity_from_zero().numerical_value_in(K)
     );
-    EXPECT_EQ(dataB.getMomentum(), dataC.getMomentum());
-    EXPECT_EQ(dataB.getAngularMomentum(), dataC.getAngularMomentum());
+    EXPECT_EQ(dataB.get_momentum(), dataC.get_momentum());
+    EXPECT_EQ(dataB.get_angularMomentum(), dataC.get_angularMomentum());
 
     delete boxA;
     delete boxB;
@@ -1605,7 +1607,7 @@ TEST(TestResetKinetics, resetAngularBranchUsesFreshCentreOfMass)
         1e-12
     );
     EXPECT_VECTOR_NEAR(
-        data.getAngularMomentum().numerical_value_in(
+        data.get_angularMomentum().numerical_value_in(
             g_per_mol * angstrom * angstrom / s
         ),
         linalg::Vec3D(0.0, 0.0, 0.0),

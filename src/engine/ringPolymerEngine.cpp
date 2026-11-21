@@ -139,7 +139,7 @@ namespace engine
 
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
         {
-            rpmdData[i].setLoopTime(elapsedTime);
+            rpmdData[i].set_loopTime(elapsedTime);
             averageRPMDData[i].updateAverages(rpmdData[i]);
         }
 

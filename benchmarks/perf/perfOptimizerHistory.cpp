@@ -65,7 +65,7 @@ int main()
     auto converged = 0U;
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
-        physicalData->setKineticEnergy(
+        physicalData->set_kineticEnergy(
             1.0 / static_cast<double>(i + 1) * kcal_per_mol
         );
         optimizer.updateHistory();

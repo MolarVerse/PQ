@@ -83,7 +83,7 @@ namespace
                 ),
                 false
             );
-            _data.setVirial(VirialPerMol::zero());
+            _data.set_virial(VirialPerMol::zero());
             _data.setKineticEnergyMolecularVector(VirialPerMol::zero());
             _data.setKineticEnergyAtomicVector(VirialPerMol::zero());
         }
@@ -110,8 +110,8 @@ namespace
             _box.calculateTotalMass();
             _box.calculateDensity();
             _box.calculateDegreesOfFreedom();
-            _data.setVolume(_box.getVolume());
-            _data.setDensity(_box.getDensity());
+            _data.set_volume(_box.getVolume());
+            _data.set_density(_box.getDensity());
         }
     };
 }   // namespace
@@ -128,7 +128,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
     );
     _addMolecule({0.0}, 0.0);
     _addMolecule({1.0}, 0.0);
-    _data.setVirial(
+    _data.set_virial(
         linalg::diagonalMatrix(
             _box.getVolume().numerical_value_in(angstrom3) / PRESSURE_FACTOR *
             kcal_per_mol
@@ -154,7 +154,7 @@ TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
             timeStep,
             0.1 * angstrom
         );
-        EXPECT_NEAR(_data.getPressure().numerical_value_in(bar), 1.0, 1e-12);
+        EXPECT_NEAR(_data.get_pressure().numerical_value_in(bar), 1.0, 1e-12);
         for (size_t i = 0; i < 3; ++i)
         {
             for (size_t j = 0; j < 3; ++j)
@@ -182,14 +182,14 @@ TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
         false
     );
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::YZ);
-    _data.setVirial(
+    _data.set_virial(
         linalg::tensor3D{{2.0, -1.0, 0.5}, {4.0, -2.0, 1.0}, {6.0, -3.0, 1.5}} *
         kcal_per_mol
     );
     manostat::Manostat pressure(_settings->manostatSettings);
     pressure.calculatePressure(_box, _data);
     EXPECT_NEAR(
-        _data.getPressure().numerical_value_in(bar),
+        _data.get_pressure().numerical_value_in(bar),
         0.5 * PRESSURE_FACTOR /
             _box.getVolume().numerical_value_in(Volume::unit),
         1e-12
@@ -197,7 +197,7 @@ TEST_F(ManostatRegression, triclinicLengthPressureMatchesMolecularWork)
     // r=(1,2,3), F=(2,-1,0.5): changing the first cell length
     // moves r_x by (1 - 2/sqrt(3)) times the fractional length change.
     EXPECT_NEAR(
-        _data.getCoupledPressure().numerical_value_in(bar),
+        _data.get_coupledPressure().numerical_value_in(bar),
         (2.0 - 4.0 / std::sqrt(3.0)) * PRESSURE_FACTOR /
             _box.getVolume().numerical_value_in(Volume::unit),
         1e-12
@@ -387,11 +387,11 @@ TEST_F(ManostatRegression, invalidScalingPreservesSimulationState)
             oldDensity.numerical_value_in(kg_per_litre)
         );
         EXPECT_DOUBLE_EQ(
-            _data.getVolume().numerical_value_in(angstrom3),
+            _data.get_volume().numerical_value_in(angstrom3),
             1000.0
         );
         EXPECT_DOUBLE_EQ(
-            _data.getDensity().numerical_value_in(kg_per_litre),
+            _data.get_density().numerical_value_in(kg_per_litre),
             oldDensity.numerical_value_in(kg_per_litre)
         );
         EXPECT_EQ(_box.getMolecule(0).getCenterOfMass(), oldCenter);
@@ -555,12 +555,12 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     _addMolecule({1.0}, speed);
     _data.calculateKinetics(_box);
     _data.calculateTemperature(_box);
-    const auto expectedEnergy = _data.getKineticEnergy() / (scale * scale);
+    const auto expectedEnergy = _data.get_kineticEnergy() / (scale * scale);
     manostat::Manostat pressure(_settings->manostatSettings);
     pressure.calculatePressure(_box, _data);
 
     _settings->manostatSettings.setTargetPressureByUser(
-        _data.getPressure() - (3.0 * std::log(scale) * bar)
+        _data.get_pressure() - (3.0 * std::log(scale) * bar)
     );
     _settings->manostatSettings.setTauByUser(1.0 * fs);
     _settings->manostatSettings.setCompressibilityByUser(1.0 * per_bar);
@@ -576,18 +576,18 @@ TEST_F(ManostatRegression, stochasticRescalingRefreshesKineticsBeforeReset)
     );
 
     EXPECT_NEAR(
-        (_data.getKineticEnergy() / expectedEnergy).numerical_value_in(one),
+        (_data.get_kineticEnergy() / expectedEnergy).numerical_value_in(one),
         1.0,
         1e-12
     );
     EXPECT_NEAR(
-        tempRatio(_data.getTemperature(), _box.calculateTemperature())
+        tempRatio(_data.get_temperature(), _box.calculateTemperature())
             .numerical_value_in(one),
         1.0,
         1e-12
     );
     EXPECT_NEAR(
-        _data.getMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs) /
+        _data.get_momentum()[0].numerical_value_in(g_per_mol * angstrom / fs) /
             (speed * angstrom / s).numerical_value_in(angstrom / fs),
         2.0 / scale,
         1e-12

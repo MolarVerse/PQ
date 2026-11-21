@@ -24,6 +24,7 @@
 #define PHYSICAL_DATA__PHYSICAL_DATA_HPP
 
 #include <memory>
+#include <mstd/utils/members.hpp>
 #include <vector>
 
 #include "enums/virial.hpp"
@@ -66,8 +67,8 @@ namespace physicalData
     class PhysicalData
     {
        private:
-        double _numberOfQMAtoms = 0.0;
-        Time   _loopTime        = Time::zero();
+        double _nQMAtoms = 0.0;
+        Time   _loopTime = Time::zero();
 
         Volume      _volume  = Volume::zero();
         Density     _density = Density::zero();
@@ -155,95 +156,60 @@ namespace physicalData
             const EnergyPerMol& upperDistanceConstraints
         );
 
+        /****************************
+         * auto getters and setters *
+         ****************************/
+
+        CONST_GETTER_SETTER(_nQMAtoms);
+        CONST_GETTER_SETTER(_loopTime);
+
+        CONST_GETTER_SETTER(_volume);
+        CONST_GETTER_SETTER(_density);
+        CONST_GETTER_SETTER(_temperature);
+        CONST_GETTER_SETTER(_pressure);
+        CONST_GETTER_SETTER(_coupledPressure);
+
+        CONST_GETTER_SETTER(_virial);
+        CONST_GETTER_SETTER(_stressTensor);
+
+        CONST_GETTER_SETTER(_momentum);
+        CONST_GETTER_SETTER(_angularMomentum);
+
+        CONST_GETTER_SETTER(_kineticEnergy);
+
+        CONST_GETTER_SETTER(_coulombEnergy);
+        CONST_GETTER_SETTER(_nonCoulombEnergy);
+        CONST_GETTER_SETTER(_intraCoulombEnergy);
+        CONST_GETTER_SETTER(_intraNonCoulombEnergy);
+
+        CONST_GETTER_SETTER(_bondEnergy);
+        CONST_GETTER_SETTER(_angleEnergy);
+        CONST_GETTER_SETTER(_dihedralEnergy);
+        CONST_GETTER_SETTER(_improperEnergy);
+
+        CONST_GETTER_SETTER(_qmEnergy);
+        CONST_GETTER_SETTER(_qmReferenceEnergy);
+
+        // special stuff
+        CONST_GETTER_SETTER(_noseHooverMomentumEnergy);
+        CONST_GETTER_SETTER(_noseHooverFrictionEnergy);
+        CONST_GETTER_SETTER(_lowerDistanceConstraints);
+        CONST_GETTER_SETTER(_upperDistanceConstraints);
+        CONST_GETTER_SETTER(_ringPolymerEnergy);
+        CONST_GETTER_SETTER(_numberOfSmoothingMol);
+
         /********************
          * standard setters *
          ********************/
 
-        void setNumberOfQMAtoms(double nQMAtoms);
-        void setLoopTime(const Time& loopTime);
-
-        void setVolume(const Volume& volume);
-        void setDensity(const Density& density);
-        void setTemperature(const Temperature& temperature);
-        void setPressure(const Pressure& pressure);
-        void setCoupledPressure(const Pressure& coupledPressure);
-
-        void setVirial(const VirialPerMol& virial);
-        void setStressTensor(const Stress& stressTensor);
-
-        void setMomentum(const Momentum3D& momentum);
-        void setAngularMomentum(const AngularMomentum3D& angularMomentum);
-
-        void setKineticEnergy(const EnergyPerMol& kineticEnergy);
         void setKineticEnergyAtomicVector(const VirialPerMol& vec);
         void setKineticEnergyMolecularVector(const VirialPerMol& vec);
-
-        void setCoulombEnergy(const EnergyPerMol& coulombEnergy);
-        void setNonCoulombEnergy(const EnergyPerMol& nonCoulombEnergy);
-        void setIntraCoulombEnergy(const EnergyPerMol& intraCoulombEnergy);
-        void setIntraNonCoulombEnergy(
-            const EnergyPerMol& intraNonCoulombEnergy
-        );
-
-        void setBondEnergy(const EnergyPerMol& bondEnergy);
-        void setAngleEnergy(const EnergyPerMol& angleEnergy);
-        void setDihedralEnergy(const EnergyPerMol& dihedralEnergy);
-        void setImproperEnergy(const EnergyPerMol& improperEnergy);
-
-        void setQMEnergy(const EnergyPerMol& qmEnergy);
-        void setQMReferenceEnergy(const EnergyPerMol& qmReferenceEnergy);
-
-        void setNumberOfSmoothingMolecules(double numberSmMol);
-
-        void setNoseHooverMomentumEnergy(const EnergyPerMol& momentumEnergy);
-        void setNoseHooverFrictionEnergy(const Quantity& frictionEnergy);
-
-        void setLowerDistanceConstraints(
-            const EnergyPerMol& lowerDistanceConstraints
-        );
-        void setUpperDistanceConstraints(
-            const EnergyPerMol& upperDistanceConstraints
-        );
-
-        void setRingPolymerEnergy(const EnergyPerMol& ringPolymerEnergy);
 
         /********************
          * standard getters *
          ********************/
 
-        [[nodiscard]] double      getNumberOfQMAtoms() const;
-        [[nodiscard]] const Time& getLoopTime() const;
-
-        [[nodiscard]] const Volume&      getVolume() const;
-        [[nodiscard]] const Density&     getDensity() const;
-        [[nodiscard]] const Temperature& getTemperature() const;
-        [[nodiscard]] const Pressure&    getPressure() const;
-        [[nodiscard]] const Pressure&    getCoupledPressure() const;
-
-        [[nodiscard]] const EnergyPerMol& getKineticEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getNonCoulombEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getCoulombEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getIntraCoulombEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getIntraNonCoulombEnergy() const;
-        [[nodiscard]] EnergyPerMol        getIntraEnergy() const;
-
-        [[nodiscard]] const EnergyPerMol& getBondEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getAngleEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getDihedralEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getImproperEnergy() const;
-
-        [[nodiscard]] const EnergyPerMol& getQMEnergy() const;
-        [[nodiscard]] const EnergyPerMol& getQMReferenceEnergy() const;
-
-        [[nodiscard]] double getNumberOfSmoothingMolecules() const;
-
-        [[nodiscard]] const EnergyPerMol& getNoseHooverMomentumEnergy() const;
-        [[nodiscard]] const Quantity&     getNoseHooverFrictionEnergy() const;
-
-        [[nodiscard]] const EnergyPerMol& getLowerDistanceConstraints() const;
-        [[nodiscard]] const EnergyPerMol& getUpperDistanceConstraints() const;
-
-        [[nodiscard]] const EnergyPerMol& getRingPolymerEnergy() const;
+        [[nodiscard]] EnergyPerMol getIntraEnergy() const;
 
         [[nodiscard]] const VirialPerMol& getKinEnergyAtomTensor() const;
         [[nodiscard]] const VirialPerMol& getKinEnergyMolTensor() const;
@@ -252,12 +218,6 @@ namespace physicalData
         const VirialPerMol& getKinEnergyVirialTensor(
             VirialType virialType
         ) const;
-
-        [[nodiscard]] const VirialPerMol& getVirial() const;
-        [[nodiscard]] const Stress&       getStressTensor() const;
-
-        [[nodiscard]] const Momentum3D&        getMomentum() const;
-        [[nodiscard]] const AngularMomentum3D& getAngularMomentum() const;
     };
 
 }   // namespace physicalData

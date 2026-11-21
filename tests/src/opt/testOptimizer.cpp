@@ -63,7 +63,7 @@ namespace
         box->addAtom(atom1);
         box->addAtom(atom2);
 
-        physDat->setKineticEnergy(sample.energy);
+        physDat->set_kineticEnergy(sample.energy);
 
         opt.setSimulationBox(box);
         opt.setPhysicalData(physDat);
@@ -297,6 +297,6 @@ TEST(TestOptimizer, setPhysicalDataOldStoresPointer)
 {
     opt::SteepestDescent opt;
     auto                 phys = std::make_shared<physicalData::PhysicalData>();
-    phys->setKineticEnergy(0.42 * kcal_per_mol);
+    phys->set_kineticEnergy(0.42 * kcal_per_mol);
     EXPECT_NO_THROW(opt.setPhysicalDataOld(phys));
 }

@@ -309,7 +309,7 @@ namespace QM
         const Stress stress_ = stress * hartree / bohr3 * avogadro_constant;
         const auto   virial  = stress_ * box.getVolume();
 
-        physicalData.setStressTensor(stress_);
+        physicalData.set_stressTensor(stress_);
         physicalData.addVirial(virial);
 
         stressFile.close();

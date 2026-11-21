@@ -246,7 +246,7 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        getPhysicalData().setLoopTime(
+        getPhysicalData().set_loopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
         getAveragePhysicalData().updateAverages(getPhysicalData());

@@ -62,14 +62,14 @@ namespace manostat
         const auto ekinVirial = physicalData.getKinEnergyVirialTensor(
             settings::GeneralSettings::getVirialType()
         );
-        const auto forceVirial = physicalData.getVirial();
+        const auto forceVirial = physicalData.get_virial();
         const auto volume      = simulationBox.getVolume();
 
         _pressureTensor =
             (2.0 * ekinVirial + forceVirial) / volume / avogadro_constant;
         _pressure = trace(_pressureTensor) / linalg::tensor3D::size;
 
-        physicalData.setPressure(_pressure);
+        physicalData.set_pressure(_pressure);
 
         const auto &box = simulationBox.getBox();
         if (!box.allowChangeOfAngles() && !box.isOrthorhombic())
@@ -98,11 +98,11 @@ namespace manostat
         if (numFree > 0)
         {
             p_avg /= static_cast<double>(numFree);
-            physicalData.setCoupledPressure(p_avg);
+            physicalData.set_coupledPressure(p_avg);
         }
         else
         {
-            physicalData.setCoupledPressure(_pressure);
+            physicalData.set_coupledPressure(_pressure);
         }
     }
 

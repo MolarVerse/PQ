@@ -60,7 +60,7 @@ int main()
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         result = virial::calculateVirial(box);
-        physicalData.setVirial(result);
+        physicalData.set_virial(result);
     }
 
     std::cout << std::format(

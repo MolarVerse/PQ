@@ -148,12 +148,12 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
 
     EXPECT_NEAR(
-        physicalData.getDihedralEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_dihedralEnergy().numerical_value_in(kcal_per_mol),
         3.9128709291752739,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getImproperEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_improperEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
@@ -242,17 +242,17 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_THAT(
-        diagonal(physicalData.getVirial()).numerical_value_in(kcal_per_mol),
+        diagonal(physicalData.get_virial()).numerical_value_in(kcal_per_mol),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-6),
             testing::DoubleNear(0.0, 1e-6),
@@ -279,12 +279,12 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
 
     EXPECT_NEAR(
-        physicalData.getImproperEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_improperEnergy().numerical_value_in(kcal_per_mol),
         3.9128709291752739,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getDihedralEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_dihedralEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
@@ -373,17 +373,17 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
     EXPECT_THAT(
-        diagonal(physicalData.getVirial()).numerical_value_in(kcal_per_mol),
+        diagonal(physicalData.get_virial()).numerical_value_in(kcal_per_mol),
         testing::ElementsAre(
             testing::DoubleNear(0.0, 1e-6),
             testing::DoubleNear(0.0, 1e-6),
@@ -410,12 +410,12 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     );
 
     EXPECT_NEAR(
-        physicalData.getDihedralEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_dihedralEnergy().numerical_value_in(kcal_per_mol),
         3.9128709291752739,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getImproperEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_improperEnergy().numerical_value_in(kcal_per_mol),
         0.0,
         1e-6
     );
@@ -504,27 +504,27 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         4.1158570930777021,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -4.100545344959669e-05,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getVirial()[0][0].numerical_value_in(kcal_per_mol),
+        physicalData.get_virial()[0][0].numerical_value_in(kcal_per_mol),
         3.9441496913242622,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getVirial()[1][1].numerical_value_in(kcal_per_mol),
+        physicalData.get_virial()[1][1].numerical_value_in(kcal_per_mol),
         0.98603742283106555,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getVirial()[2][2].numerical_value_in(kcal_per_mol),
+        physicalData.get_virial()[2][2].numerical_value_in(kcal_per_mol),
         2.2185842013698975,
         1e-6
     );

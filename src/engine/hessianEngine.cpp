@@ -326,7 +326,7 @@ namespace engine
 
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        getPhysicalData().setLoopTime(
+        getPhysicalData().set_loopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
         getAveragePhysicalData().updateAverages(getPhysicalData());
