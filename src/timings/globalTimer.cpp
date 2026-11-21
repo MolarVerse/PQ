@@ -73,17 +73,6 @@ namespace timings
     }
 
     /**
-     * @brief Get the Timer object for a specific TimerId (const version)
-     *
-     * @param id
-     * @return const Timer&
-     */
-    const Timer& GlobalTimer::_getTimer(TimerId id) const
-    {
-        return _timers.at(static_cast<size_t>(id));
-    }
-
-    /**
      * @brief calculates the loop time of the simulation
      *
      * @return Time
