@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestBondConstraint
@@ -44,7 +45,7 @@ class TestBondConstraint : public ::testing::Test
    protected:
     std::unique_ptr<molsys::SimulationBox>       _box;
     std::unique_ptr<constraints::BondConstraint> _bondConstraint;
-    double                                       _targetBondLength = 1.2;
+    Distance _targetBondLength = 1.2 * angstrom;
 
     void SetUp() override
     {
@@ -53,14 +54,14 @@ class TestBondConstraint : public ::testing::Test
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
-        atom1->setMass(1.0);
-        atom2->setMass(2.0);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(2.0 * g_per_mol);
 
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom1->setVelocity(Vel::zero());
+        atom2->setVelocity(Vel::zero() + 1.0 * angstrom / s);
 
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
@@ -68,7 +69,9 @@ class TestBondConstraint : public ::testing::Test
         _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _box->setBox(orthoBox, false);
 
         _bondConstraint = std::make_unique<constraints::BondConstraint>(

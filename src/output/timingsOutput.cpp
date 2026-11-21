@@ -24,8 +24,8 @@
 
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "globalTimer.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -63,7 +63,7 @@ namespace out
         _getFilePointer() << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
             "Total",
-            elapsedTime * MS_TO_S,
+            elapsedTime.numerical_value_in(s),
             100.0
         );
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
@@ -81,8 +81,8 @@ namespace out
             _getFilePointer() << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\n",
                 name,
-                time * MS_TO_S,
-                percentage
+                time.numerical_value_in(s),
+                percentage.numerical_value_in(one)
             );
         }
 
@@ -115,7 +115,7 @@ namespace out
         _getFilePointer() << std::format(
             "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
             "Total",
-            elapsedTime * MS_TO_S,
+            elapsedTime.numerical_value_in(s),
             100.0,
             100.0
         );
@@ -141,8 +141,8 @@ namespace out
             _getFilePointer() << std::format(
                 "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
                 name,
-                time * MS_TO_S,
-                percentage,
+                time.numerical_value_in(s),
+                percentage.numerical_value_in(one),
                 100.0
             );
             // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
@@ -158,9 +158,9 @@ namespace out
                 _getFilePointer() << std::format(
                     "{:<30}\t{:>10.3f}\t{:>10.3f}\t{:>10.3f}\n",
                     subName,
-                    subTime * MS_TO_S,
-                    subTotPercentage,
-                    subPercentage
+                    subTime.numerical_value_in(s),
+                    subTotPercentage.numerical_value_in(one),
+                    subPercentage.numerical_value_in(one)
                 );
             }
 

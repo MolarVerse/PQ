@@ -31,6 +31,7 @@
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace QM
 {
@@ -54,9 +55,9 @@ namespace QM
             coordsFile << std::format(
                 "{:5s}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 atom->getName(),
-                atom->getPosition()[0],
-                atom->getPosition()[1],
-                atom->getPosition()[2]
+                atom->getPosition().numerical_value_in(angstrom)[0],
+                atom->getPosition().numerical_value_in(angstrom)[1],
+                atom->getPosition().numerical_value_in(angstrom)[2]
             );
         }
 

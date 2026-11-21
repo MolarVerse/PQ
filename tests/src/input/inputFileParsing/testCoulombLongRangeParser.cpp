@@ -27,6 +27,7 @@
 #include "potentialSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "long-range" command
@@ -88,7 +89,7 @@ TEST_F(TestInputFileReader, testParseWolfParameter)
 
     std::vector<std::string> lineElements = {"wolf_param", "=", "1.0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getWolfParameter(), 1.0);
+    EXPECT_EQ(settings.getWolfParameter(), 1.0 / angstrom);
 
     _clearParser(parser);
 

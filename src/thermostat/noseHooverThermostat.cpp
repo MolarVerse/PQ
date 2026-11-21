@@ -25,8 +25,6 @@
 #include <algorithm>
 #include <cstddef>
 
-#include "constants/conversionFactors.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "physicalData.hpp"
@@ -112,20 +110,16 @@ namespace thermostat
 
         _requireCoupling(simulationBox, targetTemperature);
 
-        const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
         const auto kT_target =
-            boltzmannConstant *
-            targetTemperature.quantity_from_zero().numerical_value_in(K);
+            targetTemperature.quantity_from_zero() * gas_constant;
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
         const auto couplingFreq = _nhSettings->getNoseHooverCouplingFrequency();
-        const auto couplingFreqSquared =
-            (couplingFreq * couplingFreq).numerical_value_in(Hz * Hz);
+        const auto couplingFreqSquared = (couplingFreq * couplingFreq);
 
-        auto factor  = _chi[0] * couplingFreqSquared;
-        factor      /= (kT_target * degreesOfFreedom);
-        factor      *= MOMENTUM_TO_FORCE;
+        auto factor =
+            _chi[0] * couplingFreqSquared / (kT_target * degreesOfFreedom);
 
         auto applyNoseHoover = [factor](auto &atom)
         { atom->addForce(-factor * atom->getVelocity() * atom->getMass()); };
@@ -163,26 +157,24 @@ namespace thermostat
             static_cast<double>(simulationBox.getDegreesOfFreedom());
 
         const auto couplingFreq = _nhSettings->getNoseHooverCouplingFrequency();
-        const auto couplingFreqSquared =
-            (couplingFreq * couplingFreq).numerical_value_in(Hz * Hz);
-        const auto boltzmannConstant = BOLTZMANN_CONSTANT_IN_KCAL_PER_MOL;
+        const auto couplingFreqSquared = couplingFreq * couplingFreq;
 
         const auto thermalEnergy =
-            boltzmannConstant *
-            getTemperature().quantity_from_zero().numerical_value_in(K);
+            getTemperature().quantity_from_zero() * gas_constant;
         const auto thermalEnergyTarget =
-            boltzmannConstant *
-            targetTemperature.quantity_from_zero().numerical_value_in(K);
+            targetTemperature.quantity_from_zero() * gas_constant;
 
-        auto chi = (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
-        chi -= _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
+        auto chiHelper =
+            (thermalEnergy - thermalEnergyTarget) * degreesOfFreedom;
+        chiHelper -=
+            _chi[0] * _chi[1] / thermalEnergyTarget * couplingFreqSquared;
 
-        _chi[0] += timeStep.numerical_value_in(s) * chi;
+        _chi[0] += timeStep * chiHelper;
 
         auto helpRatio = _chi[0] / (thermalEnergyTarget * degreesOfFreedom) *
                          couplingFreqSquared;
 
-        _zeta[0]   += helpRatio * timeStep.numerical_value_in(s);
+        _zeta[0]   += helpRatio * timeStep;
         auto ratio  = helpRatio * _chi[0];
 
         auto energyMomentum = ratio;
@@ -190,15 +182,15 @@ namespace thermostat
 
         for (size_t i = 1; i < _chi.size() - 1; ++i)
         {
-            chi  = ratio;
-            chi -= thermalEnergyTarget;
-            chi -= _chi[i] * _chi[i + 1] / thermalEnergyTarget *
-                   couplingFreqSquared;
+            chiHelper  = ratio;
+            chiHelper -= thermalEnergyTarget;
+            chiHelper -= _chi[i] * _chi[i + 1] / thermalEnergyTarget *
+                         couplingFreqSquared;
 
-            _chi[i] += timeStep.numerical_value_in(s) * chi;
+            _chi[i] += timeStep * chiHelper;
 
             helpRatio  = _chi[i] / thermalEnergyTarget * couplingFreqSquared;
-            _zeta[i]  += helpRatio * timeStep.numerical_value_in(s);
+            _zeta[i]  += helpRatio * timeStep;
             ratio      = helpRatio * _chi[i];
 
             energyMomentum += ratio;
@@ -220,9 +212,9 @@ namespace thermostat
      * @details only the real chain links are returned, not the internal zero
      * boundary term
      *
-     * @return std::vector<double>
+     * @return std::vector<Action>
      */
-    std::vector<double> NoseHooverThermostat::getChi() const
+    std::vector<Action> NoseHooverThermostat::getChi() const
     {
         return {_chi.begin(), _chi.end() - 1};
     }
@@ -233,9 +225,9 @@ namespace thermostat
      * @details only the real chain links are returned, not the internal
      * boundary term
      *
-     * @return std::vector<double>
+     * @return std::vector<Quantity>
      */
-    std::vector<double> NoseHooverThermostat::getZeta() const
+    std::vector<Quantity> NoseHooverThermostat::getZeta() const
     {
         return {_zeta.begin(), _zeta.end() - 1};
     }

@@ -25,7 +25,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <mstd/math.hpp>
 #include <numeric>
+#include <type_traits>
 #include <vector>
 
 namespace stl
@@ -72,28 +74,38 @@ namespace stl
     /**
      * @brief dot product of two vectors
      *
-     * @param lhs std::vector<T>
-     * @param rhs std::vector<T>
+     * @param lhs std::vector
+     * @param rhs std::vector
      *
-     * @return T dot product of lhs and rhs
+     * @return product type of T and U holding the dot product of lhs and rhs
      */
-    template <typename T>
-    T dot(const std::vector<T> &lhs, const std::vector<T> &rhs)
+    template <typename T, typename U>
+    auto dot(const std::vector<T> &lhs, const std::vector<U> &rhs)
+        -> std::remove_cvref_t<decltype(lhs[0] * rhs[0])>
     {
-        return std::inner_product(lhs.begin(), lhs.end(), rhs.begin(), T());
+        using Result = std::remove_cvref_t<decltype(lhs[0] * rhs[0])>;
+
+        return std::inner_product(
+            lhs.begin(),
+            lhs.end(),
+            rhs.begin(),
+            Result{}
+        );
     }
 
     /**
      * @brief root mean square of a vector
      *
-     * @param vec std::vector<T>
+     * @param vec std::vector
      *
      * @return T root mean square of vec
      */
     template <typename T>
     T rms(const std::vector<T> &vec)
     {
-        return std::sqrt(dot(vec, vec) / static_cast<T>(vec.size()));
+        return static_cast<T>(
+            mstd::sqrt(dot(vec, vec) / static_cast<double>(vec.size()))
+        );
     }
 
 }   // namespace stl

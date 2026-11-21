@@ -31,6 +31,7 @@
 #include "qmmmMDEngine.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 class QMMMEnergiesTest : public ::testing::Test
 {
@@ -76,24 +77,45 @@ TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
     auto                &data = *engine.getPhysicalDataPtr();
 
     data.resetEnergies();
-    data.addCoulombEnergy(10.0);
-    data.addIntraCoulombEnergy(1.0);
-    data.addNonCoulombEnergy(20.0);
-    data.addIntraNonCoulombEnergy(2.0);
-    data.setQMReferenceEnergy(-4.0);
+    data.addCoulombEnergy(10.0 * kcal_per_mol);
+    data.addIntraCoulombEnergy(1.0 * kcal_per_mol);
+    data.addNonCoulombEnergy(20.0 * kcal_per_mol);
+    data.addIntraNonCoulombEnergy(2.0 * kcal_per_mol);
+    data.setQMReferenceEnergy(-4.0 * kcal_per_mol);
 
-    ASSERT_DOUBLE_EQ(data.getCoulombEnergy(), 11.0);
-    ASSERT_DOUBLE_EQ(data.getNonCoulombEnergy(), 22.0);
+    ASSERT_DOUBLE_EQ(
+        data.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        11.0
+    );
+    ASSERT_DOUBLE_EQ(
+        data.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        22.0
+    );
 
     _scaleAndAccumulate(engine, 0.5);
     _scaleAndAccumulate(engine, 0.5);
     _moveEnergies(engine);
 
-    EXPECT_DOUBLE_EQ(data.getCoulombEnergy(), 11.0);
-    EXPECT_DOUBLE_EQ(data.getNonCoulombEnergy(), 22.0);
-    EXPECT_DOUBLE_EQ(data.getIntraCoulombEnergy(), 1.0);
-    EXPECT_DOUBLE_EQ(data.getIntraNonCoulombEnergy(), 2.0);
-    EXPECT_DOUBLE_EQ(data.getQMReferenceEnergy(), -4.0);
+    EXPECT_DOUBLE_EQ(
+        data.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        11.0
+    );
+    EXPECT_DOUBLE_EQ(
+        data.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        22.0
+    );
+    EXPECT_DOUBLE_EQ(
+        data.getIntraCoulombEnergy().numerical_value_in(kcal_per_mol),
+        1.0
+    );
+    EXPECT_DOUBLE_EQ(
+        data.getIntraNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        2.0
+    );
+    EXPECT_DOUBLE_EQ(
+        data.getQMReferenceEnergy().numerical_value_in(kcal_per_mol),
+        -4.0
+    );
 }
 
 TEST_F(QMMMEnergiesTest, exactSmoothingHandlesMoleculeIndicesAbove31)
@@ -120,9 +142,9 @@ TEST_F(QMMMEnergiesTest, sumsReferenceEnergiesOfActiveMolecules)
     auto                &simBox = engine.getSimulationBox();
 
     auto water = molsys::MoleculeType{MolType{1}};
-    water.setQMReferenceEnergy(-10.0);
+    water.setQMReferenceEnergy(-10.0 * kcal_per_mol);
     auto ion = molsys::MoleculeType{MolType{2}};
-    ion.setQMReferenceEnergy(3.0);
+    ion.setQMReferenceEnergy(3.0 * kcal_per_mol);
     simBox.addMoleculeType(water);
     simBox.addMoleculeType(ion);
 
@@ -136,12 +158,21 @@ TEST_F(QMMMEnergiesTest, sumsReferenceEnergiesOfActiveMolecules)
     simBox.addMolecule(molsys::Molecule{MolType{0}});
 
     auto &data = *engine.getPhysicalDataPtr();
-    data.setQMEnergy(100.0);
+    data.setQMEnergy(100.0 * kcal_per_mol);
 
     _calculateReference(engine);
 
     // 2 * -10 + 3; inactive and moltype-0 molecules add nothing
-    EXPECT_DOUBLE_EQ(data.getQMEnergy(), 100.0);
-    EXPECT_DOUBLE_EQ(data.getQMReferenceEnergy(), -17.0);
-    EXPECT_DOUBLE_EQ(data.getTotalEnergy(), 117.0);
+    EXPECT_DOUBLE_EQ(
+        data.getQMEnergy().numerical_value_in(kcal_per_mol),
+        100.0
+    );
+    EXPECT_DOUBLE_EQ(
+        data.getQMReferenceEnergy().numerical_value_in(kcal_per_mol),
+        -17.0
+    );
+    EXPECT_DOUBLE_EQ(
+        data.getTotalEnergy().numerical_value_in(kcal_per_mol),
+        117.0
+    );
 }

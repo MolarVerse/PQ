@@ -27,6 +27,8 @@
 #include <memory>
 #include <string>
 
+#include "unit_types.hpp"
+
 namespace timings
 {
     /**
@@ -61,9 +63,9 @@ namespace timings
         void beginTimer();
         void endTimer();
 
-        [[nodiscard]] double calculateElapsedTime() const;
-        [[nodiscard]] double calculateLoopTime() const;
-        [[nodiscard]] double calculateAverageLoopTime() const;
+        [[nodiscard]] Time calculateElapsedTime() const;
+        [[nodiscard]] Time calculateLoopTime() const;
+        [[nodiscard]] Time calculateAverageLoopTime() const;
 
         [[nodiscard]] std::string getName() const;
     };

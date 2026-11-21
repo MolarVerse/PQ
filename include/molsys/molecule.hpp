@@ -83,7 +83,7 @@ namespace molsys
         // 0 (neutral) as default when molecule has no moltype
         int _charge = 0;
 
-        linalg::Vec3D _centerOfMass{0.0, 0.0, 0.0};
+        Pos3D _centerOfMass;
 
         std::vector<std::shared_ptr<Atom>> _atoms;
 
@@ -94,10 +94,10 @@ namespace molsys
         bool       _isForcedLayer = false;
         bool       _isForcedOuter = false;
 
-        std::optional<double> _smoothingFactor;
+        std::optional<Quantity> _smoothingFactor;
 
        public:
-        Molecule() = default;
+        Molecule();
         explicit Molecule(std::string_view name);
         explicit Molecule(MolType moltype);
 
@@ -106,16 +106,17 @@ namespace molsys
         void scale(const QuantityTensor3D &, const Box &);
         void scaleVelocity(const QuantityTensor3D &);
 
-        [[nodiscard]] size_t                  getNumberOfAtomTypes();
+        [[nodiscard]] size_t                  getNumberOfAtomTypes() const;
         [[nodiscard]] std::vector<ExtVdwType> getExternalGlobalVDWTypes() const;
 
-        [[nodiscard]] std::vector<double> getAtomMasses() const;
-        [[nodiscard]] double              getMolMass() const;
-        [[nodiscard]] std::vector<double> getPartialCharges() const;
+        [[nodiscard]] std::vector<Mass>   getAtomMasses() const;
+        [[nodiscard]] Mass                getMolMass() const;
+        [[nodiscard]] std::vector<Charge> getPartialCharges() const;
 
-        [[nodiscard]] bool isMMMolecule() const;
+        [[nodiscard]] bool     isMMMolecule() const;
+        [[nodiscard]] Quantity getSmoothingFactor() const;
 
-        void setPartialCharges(const std::vector<double> &partialCharges);
+        void setPartialCharges(const std::vector<Charge> &partialCharges);
         void setAtomForcesToZero();
         void activateMolecule();
         void deactivateMolecule();
@@ -125,46 +126,44 @@ namespace molsys
          *****************************************/
 
         void addAtom(const std::shared_ptr<Atom> &atom);
-        void addAtomPosition(AtomIndex index, const linalg::Vec3D &position);
-        void addAtomVelocity(AtomIndex index, const linalg::Vec3D &velocity);
-        void addAtomForce(AtomIndex index, const linalg::Vec3D &force);
-        void addAtomShiftForce(
-            AtomIndex            index,
-            const linalg::Vec3D &shiftForce
-        );
+        void addAtomPosition(AtomIndex index, const Pos3D &position);
+        void addAtomVelocity(AtomIndex index, const Vel3D &velocity);
+        void addAtomForce(AtomIndex index, const Force3D &force);
+        void addAtomShiftForce(AtomIndex index, const ShiftForce3D &shiftForce);
 
         /*****************************************
          * standard setter methods for atom data *
          ****************************************/
 
-        void setAtomPosition(size_t index, const linalg::Vec3D &position);
-        void setAtomVelocity(size_t index, const linalg::Vec3D &velocity);
-        void setAtomForce(size_t index, const linalg::Vec3D &force);
-        void setAtomShiftForce(size_t index, const linalg::Vec3D &shiftForce);
+        void setAtomPosition(AtomIndex index, const Pos3D &position);
+        void setAtomVelocity(AtomIndex index, const Vel3D &velocity);
+        void setAtomForce(AtomIndex index, const Force3D &force);
+        void setAtomShiftForce(AtomIndex index, const ShiftForce3D &shiftForce);
 
         /****************************************
          * standard getters for atom properties *
          *****************************************/
 
         [[nodiscard]]
-        linalg::Vec3D getAtomPosition(AtomIndex index) const;
+        const Pos3D &getAtomPosition(AtomIndex index) const;
 
         [[nodiscard]]
-        std::vector<linalg::Vec3D> getAtomPositions() const;
+        std::vector<Pos3D> getAtomPositions() const;
 
         [[nodiscard]]
-        linalg::Vec3D getAtomVelocity(AtomIndex index) const;
+        const Vel3D &getAtomVelocity(AtomIndex index) const;
 
         [[nodiscard]]
-        linalg::Vec3D getAtomForce(AtomIndex) const;
+        const Force3D &getAtomForce(AtomIndex index) const;
 
-        [[nodiscard]] linalg::Vec3D getAtomShiftForce(size_t index) const;
+        [[nodiscard]]
+        const ShiftForce3D &getAtomShiftForce(AtomIndex index) const;
 
-        [[nodiscard]] AtomNumber  getAtomicNumber(size_t index) const;
-        [[nodiscard]] double      getAtomMass(AtomIndex index) const;
-        [[nodiscard]] double      getPartialCharge(AtomIndex index) const;
-        [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
-        [[nodiscard]] std::string getAtomName(AtomIndex index) const;
+        [[nodiscard]] AtomNumber    getAtomicNumber(AtomIndex index) const;
+        [[nodiscard]] const Mass   &getAtomMass(AtomIndex index) const;
+        [[nodiscard]] const Charge &getPartialCharge(AtomIndex index) const;
+        [[nodiscard]] AtomType      getAtomType(AtomIndex index) const;
+        [[nodiscard]] std::string   getAtomName(AtomIndex index) const;
         [[nodiscard]]
         VdwType getInternalGlobalVDWType(AtomIndex index) const;
 
@@ -179,10 +178,9 @@ namespace molsys
         [[nodiscard]] int         getCharge() const;
         [[nodiscard]] std::string getName() const;
 
-        [[nodiscard]] linalg::Vec3D getCenterOfMass() const;
-        [[nodiscard]] HybridZone    getHybridZone() const;
-        [[nodiscard]] bool          isActive() const { return _isActive; }
-        [[nodiscard]] double        getSmoothingFactor() const;
+        [[nodiscard]] const Pos3D &getCenterOfMass() const;
+        [[nodiscard]] HybridZone   getHybridZone() const;
+        [[nodiscard]] bool         isActive() const { return _isActive; }
 
         [[nodiscard]] Atom &getAtom(AtomIndex index);
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
@@ -201,9 +199,9 @@ namespace molsys
         void setMoltype(MolType moltype);
 
         void setCharge(int charge);
-        void setCenterOfMass(const linalg::Vec3D &centerOfMass);
+        void setCenterOfMass(const Pos3D &centerOfMass);
         void setHybridZone(HybridZone hybridZone);
-        void setSmoothingFactor(double factor);
+        void setSmoothingFactor(const Quantity &factor);
 
         void setForcedCore(bool isForcedCore);
         void setForcedLayer(bool isForcedLayer);

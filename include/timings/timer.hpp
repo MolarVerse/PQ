@@ -59,8 +59,8 @@ namespace timings
         [[nodiscard]]
         std::vector<TimingsSection> getTimingDetails() const;
 
-        [[nodiscard]] double calculateElapsedTime() const;
-        [[nodiscard]] double calculateLoopTime() const;
+        [[nodiscard]] Time calculateElapsedTime() const;
+        [[nodiscard]] Time calculateLoopTime() const;
 
         [[nodiscard]]
         size_t findTimingsSectionIndex(std::string_view name) const;

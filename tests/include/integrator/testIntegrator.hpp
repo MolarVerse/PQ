@@ -32,6 +32,7 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 /**
@@ -56,24 +57,26 @@ class TestIntegrator : public ::testing::Test
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
 
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0));
+        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
 
-        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0));
+        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(1.0, 3.0, 5.0) * kcal_per_mol / angstrom);
 
-        atom1->setMass(1.0);
-        atom2->setMass(2.0);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(2.0 * g_per_mol);
 
         _molecule1->addAtom(atom1);
         _molecule1->addAtom(atom2);
 
         _box = std::make_unique<molsys::SimulationBox>();
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _box->setBox(orthoBox, false);
 
         _box->addMolecule(*_molecule1);

@@ -57,9 +57,9 @@ namespace opt
      * @throws exc::UserInputException if the evaluator does not support
      * analytic Hessian calculation
      *
-     * @return HessianMatrix
+     * @return Hessian
      */
-    HessianMatrix Evaluator::calculateAnalyticHessian()
+    Hessian Evaluator::calculateAnalyticHessian()
     {
         throw exc::UserInputException(
             "The selected evaluator does not support analytic Hessian "

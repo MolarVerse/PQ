@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "output.hpp"
+#include "unit_types.hpp"
 
 class TestRingPolymerEnergyOutput;   // forward declaration
 
@@ -49,18 +50,18 @@ namespace out
         using Output::Output;
 
         void write(
-            size_t step,
-            const std::vector<physicalData::PhysicalData> &
+            size_t                                         step,
+            const std::vector<physicalData::PhysicalData> &dataVector
         );
 
        private:
         [[nodiscard]]
-        static double _sumOfRingPolymerEnergies(
+        static EnergyPerMol _sumOfRingPolymerEnergies(
             const std::vector<physicalData::PhysicalData> &dataVector
         );
 
         [[nodiscard]]
-        static double _maxRingPolymerEnergy(
+        static EnergyPerMol _maxRingPolymerEnergy(
             const std::vector<physicalData::PhysicalData> &dataVector
         );
 

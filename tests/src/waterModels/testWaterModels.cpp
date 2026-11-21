@@ -22,7 +22,6 @@
 
 #include <gtest/gtest.h>
 
-#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <memory>
@@ -43,7 +42,7 @@
 #include "hybridSettings.hpp"
 #include "interWater.hpp"
 #include "interWaterKernels.tpp"   // IWYU pragma: keep -- for template specialization
-#include "interWaterParamters.hpp"
+#include "interWaterParameters.hpp"
 #include "lennardJonesPair.hpp"
 #include "mTRIntraWater.hpp"
 #include "molecule.hpp"
@@ -57,23 +56,25 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 namespace
 {
     constexpr MolType kWaterType{1};
-    constexpr double  kCutOff = 4.0;
+    constexpr auto    kCutOff = 4.0 * angstrom;
 
     struct WaterGeometry
     {
-        double oh1;
-        double oh2;
-        double angle;
+        Distance oh1;
+        Distance oh2;
+        Angle    angle;
     };
 
     void addWater(
         molsys::SimulationBox   &simulationBox,
-        const linalg::Vec3D     &origin,
+        const Pos3D             &origin,
         const WaterGeometry     &geometry,
         const molsys::HybridZone zone,
         const bool               active,
@@ -85,30 +86,32 @@ namespace
         const auto hydrogen2 = std::make_shared<molsys::Atom>();
 
         oxygen->setAtomicNumber(AtomNumber{8});
-        oxygen->setPartialCharge(-0.82);
-        oxygen->setQMCharge(-0.9);
+        oxygen->setPartialCharge(-0.82 * elementary_charge);
+        oxygen->setQMCharge(-0.9 * elementary_charge);
         oxygen->setPosition(origin);
         oxygen->setAtomType(AtomType{0});
         oxygen->setInternalGlobalVDWType(VdwType{0});
         oxygen->setForceToZero();
 
         hydrogen1->setAtomicNumber(AtomNumber{1});
-        hydrogen1->setPartialCharge(0.41);
-        hydrogen1->setQMCharge(0.45);
-        hydrogen1->setPosition(origin + linalg::Vec3D{geometry.oh1, 0.0, 0.0});
+        hydrogen1->setPartialCharge(0.41 * elementary_charge);
+        hydrogen1->setQMCharge(0.45 * elementary_charge);
+        hydrogen1->setPosition(
+            origin + Pos3D{geometry.oh1, 0.0 * angstrom, 0.0 * angstrom}
+        );
         hydrogen1->setAtomType(AtomType{1});
         hydrogen1->setInternalGlobalVDWType(VdwType{0});
         hydrogen1->setForceToZero();
 
         hydrogen2->setAtomicNumber(AtomNumber{1});
-        hydrogen2->setPartialCharge(0.41);
-        hydrogen2->setQMCharge(0.45);
+        hydrogen2->setPartialCharge(0.41 * elementary_charge);
+        hydrogen2->setQMCharge(0.45 * elementary_charge);
         hydrogen2->setPosition(
             origin +
-            linalg::Vec3D{
-                geometry.oh2 * std::cos(geometry.angle),
-                geometry.oh2 * std::sin(geometry.angle),
-                0.0
+            Pos3D{
+                geometry.oh2 * mstd::cos(geometry.angle),
+                geometry.oh2 * mstd::sin(geometry.angle),
+                0.0 * angstrom
             }
         );
         hydrogen2->setAtomType(AtomType{1});
@@ -134,7 +137,7 @@ namespace
 
     void addWater(
         molsys::SimulationBox   &simulationBox,
-        const linalg::Vec3D     &origin,
+        const Pos3D             &origin,
         const WaterGeometry     &geometry,
         const molsys::HybridZone zone
     )
@@ -144,7 +147,7 @@ namespace
 
     void addWater(
         molsys::SimulationBox   &simulationBox,
-        const linalg::Vec3D     &origin,
+        const Pos3D             &origin,
         const WaterGeometry     &geometry,
         const molsys::HybridZone zone,
         bool                     active
@@ -157,12 +160,14 @@ namespace
     {
         molsys::SimulationBox simBox;
 
-        molsys::OrthorhombicBox orthoBox{{20.0, 20.0, 20.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {20.0 * angstrom, 20.0 * angstrom, 20.0 * angstrom}
+        };
         simBox.setBox(orthoBox, false);
         simBox.setWaterType(kWaterType);
         addWater(
             simBox,
-            {0.0, 0.0, 0.0},
+            linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING
         );
@@ -185,12 +190,24 @@ namespace
                                 mol.getAtomForce(AtomIndex{1}) +
                                 mol.getAtomForce(AtomIndex{2});
 
-        EXPECT_NEAR(totalForce[0], 0.0, 1.0e-12);
-        EXPECT_NEAR(totalForce[1], 0.0, 1.0e-12);
-        EXPECT_NEAR(totalForce[2], 0.0, 1.0e-12);
-        EXPECT_TRUE(std::isfinite(data.getBondEnergy()));
-        EXPECT_TRUE(std::isfinite(data.getAngleEnergy()));
-        EXPECT_GT(data.getBondEnergy(), 0.0);
+        EXPECT_NEAR(
+            totalForce[0].numerical_value_in(kcal_per_mol / angstrom),
+            0.0,
+            1.0e-12
+        );
+        EXPECT_NEAR(
+            totalForce[1].numerical_value_in(kcal_per_mol / angstrom),
+            0.0,
+            1.0e-12
+        );
+        EXPECT_NEAR(
+            totalForce[2].numerical_value_in(kcal_per_mol / angstrom),
+            0.0,
+            1.0e-12
+        );
+        EXPECT_TRUE(isfinite(data.getBondEnergy()));
+        EXPECT_TRUE(isfinite(data.getAngleEnergy()));
+        EXPECT_GT(data.getBondEnergy(), 0.0 * kcal_per_mol);
     }
 
     /**
@@ -209,26 +226,32 @@ namespace
         model.calculate(simBox, data);
 
         const auto mol     = simBox.getMolecule(0);
-        auto       total   = linalg::Vec3D{0.0, 0.0, 0.0};
-        auto       biggest = 1.0;
+        Force3D    total   = Force3D::zero();
+        Force      biggest = 1.0 * kcal_per_mol / angstrom;
 
         for (std::size_t atom = 0; atom < 3; ++atom)
         {
-            const auto force = mol.getAtomForce(AtomIndex{atom});
+            const auto &force = mol.getAtomForce(AtomIndex{atom});
             for (std::size_t axis = 0; axis < 3; ++axis)
             {
-                EXPECT_TRUE(std::isfinite(force[axis]))
+                EXPECT_TRUE(isfinite(force[axis]))
                     << "atom " << atom << " axis " << axis;
-                biggest = std::max(biggest, std::fabs(force[axis]));
+                biggest = max(biggest, mstd::fabs(force[axis]));
             }
             total += force;
         }
 
         for (std::size_t axis = 0; axis < 3; ++axis)
-            EXPECT_NEAR(total[axis], 0.0, 1.0e-9 * biggest);
+        {
+            EXPECT_NEAR(
+                total[axis].numerical_value_in(kcal_per_mol / angstrom),
+                0.0,
+                1.0e-9 * biggest.numerical_value_in(kcal_per_mol / angstrom)
+            );
+        }
 
-        EXPECT_TRUE(std::isfinite(data.getBondEnergy()));
-        EXPECT_TRUE(std::isfinite(data.getAngleEnergy()));
+        EXPECT_TRUE(isfinite(data.getBondEnergy()));
+        EXPECT_TRUE(isfinite(data.getAngleEnergy()));
     }
 
     /**
@@ -281,7 +304,10 @@ namespace
 
         const auto pair = std::make_shared<pot::LennardJonesPair>(
             kCutOff,
-            LJParams{.c6 = -1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = -1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         );
 
         for (MolType mol1{1}; mol1.get() <= 2; ++mol1)
@@ -367,26 +393,28 @@ namespace
     molsys::SimulationBox makeHybridWaterBox()
     {
         constexpr WaterGeometry geometry{
-            .oh1   = 0.96,
-            .oh2   = 0.98,
-            .angle = 1.82
+            .oh1   = 0.96 * angstrom,
+            .oh2   = 0.98 * angstrom,
+            .angle = 1.82 * rad
         };
 
         molsys::SimulationBox   simBox;
-        molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+        };
         simBox.setBox(orthoBox, false);
         simBox.setWaterType(kWaterType);
 
         addWater(
             simBox,
-            {-5.8, -5.5, -5.5},
+            linalg::Vec3D{-5.8, -5.5, -5.5} * angstrom,
             geometry,
             molsys::HybridZone::CORE,
             false
         );
         addWater(
             simBox,
-            {-5.2, -3.5, -5.5},
+            linalg::Vec3D{-5.2, -3.5, -5.5} * angstrom,
             geometry,
             molsys::HybridZone::CORE,
             false,
@@ -394,14 +422,14 @@ namespace
         );
         addWater(
             simBox,
-            {-4.2, -5.2, -5.2},
+            linalg::Vec3D{-4.2, -5.2, -5.2} * angstrom,
             geometry,
             molsys::HybridZone::LAYER,
             false
         );
         addWater(
             simBox,
-            {-3.8, -3.2, -5.2},
+            linalg::Vec3D{-3.8, -3.2, -5.2} * angstrom,
             geometry,
             molsys::HybridZone::LAYER,
             false,
@@ -409,19 +437,19 @@ namespace
         );
         addWater(
             simBox,
-            {-1.8, -5.0, -5.0},
+            linalg::Vec3D{-1.8, -5.0, -5.0} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING
         );
         addWater(
             simBox,
-            {-0.2, -4.8, -4.8},
+            linalg::Vec3D{-0.2, -4.8, -4.8} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING
         );
         addWater(
             simBox,
-            {-1.0, -3.0, -5.0},
+            linalg::Vec3D{-1.0, -3.0, -5.0} * angstrom,
             geometry,
             molsys::HybridZone::SMOOTHING,
             true,
@@ -429,13 +457,13 @@ namespace
         );
         addWater(
             simBox,
-            {1.5, -4.6, -4.6},
+            linalg::Vec3D{1.5, -4.6, -4.6} * angstrom,
             geometry,
             molsys::HybridZone::OUTER
         );
         addWater(
             simBox,
-            {-3.5, -3.5, -3.5},
+            linalg::Vec3D{-3.5, -3.5, -3.5} * angstrom,
             geometry,
             molsys::HybridZone::OUTER,
             true,
@@ -478,17 +506,17 @@ TEST(IntraWater, FlexibleSpcModelsProduceFiniteConservativeForces)
     waterModel::SPCFwIntraWater spcFw{hybridSettings};
     expectIntraModelConservesForce(
         spcFw,
-        {.oh1   = spcFw.getEqOHDistance() + 0.04,
-         .oh2   = spcFw.getEqOHDistance() - 0.03,
-         .angle = spcFw.getEqHOHAngle() + 0.05}
+        {.oh1   = spcFw.getEqOHDistance() + 0.04 * angstrom,
+         .oh2   = spcFw.getEqOHDistance() - 0.03 * angstrom,
+         .angle = spcFw.getEqHOHAngle() + 0.05 * rad}
     );
 
     waterModel::qSPCFwIntraWater qSpcFw{hybridSettings};
     expectIntraModelConservesForce(
         qSpcFw,
-        {.oh1   = qSpcFw.getEqOHDistance() + 0.03,
-         .oh2   = qSpcFw.getEqOHDistance() - 0.02,
-         .angle = qSpcFw.getEqHOHAngle() - 0.04}
+        {.oh1   = qSpcFw.getEqOHDistance() + 0.03 * angstrom,
+         .oh2   = qSpcFw.getEqOHDistance() - 0.02 * angstrom,
+         .angle = qSpcFw.getEqHOHAngle() - 0.04 * rad}
     );
 }
 
@@ -500,19 +528,31 @@ TEST(IntraWater, MtrModelsProduceFiniteConservativeForces)
     waterModel::SPCMTRIntraWater spcMtr{hybridSettings};
     expectIntraModelConservesForce(
         spcMtr,
-        {.oh1 = 1.04, .oh2 = 0.97, .angle = 1.88}
+        {.oh1 = 1.04 * angstrom, .oh2 = 0.97 * angstrom, .angle = 1.88 * rad}
     );
-    EXPECT_DOUBLE_EQ(spcMtr.getEqOHDistance(), 1.0);
-    EXPECT_DOUBLE_EQ(spcMtr.getEqHHDistance(), 1.632993162);
+    EXPECT_DOUBLE_EQ(
+        spcMtr.getEqOHDistance().numerical_value_in(angstrom),
+        1.0
+    );
+    EXPECT_DOUBLE_EQ(
+        spcMtr.getEqHHDistance().numerical_value_in(angstrom),
+        1.632993162
+    );
 
     waterModel::TIP3PMTRIntraWater tip3pMtr{hybridSettings};
     hybridSettings.setSmoothingMethodByUser(SmoothingMethod::EXACT);
     expectIntraModelConservesForce(
         tip3pMtr,
-        {.oh1 = 1.00, .oh2 = 0.93, .angle = 1.82}
+        {.oh1 = 1.00 * angstrom, .oh2 = 0.93 * angstrom, .angle = 1.82 * rad}
     );
-    EXPECT_DOUBLE_EQ(tip3pMtr.getEqOHDistance(), 0.9572);
-    EXPECT_DOUBLE_EQ(tip3pMtr.getEqHHDistance(), 1.5139);
+    EXPECT_DOUBLE_EQ(
+        tip3pMtr.getEqOHDistance().numerical_value_in(angstrom),
+        0.9572
+    );
+    EXPECT_DOUBLE_EQ(
+        tip3pMtr.getEqHHDistance().numerical_value_in(angstrom),
+        1.5139
+    );
 }
 
 TEST(IntraWater, SpcModelsRejectDegenerateGeometry)
@@ -527,22 +567,22 @@ TEST(IntraWater, SpcModelsRejectDegenerateGeometry)
     // distance
     expectDegenerateGeometryThrows(
         spcFw,
-        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        {.oh1 = 0.0 * angstrom, .oh2 = 1.0 * angstrom, .angle = 1.9 * rad},
         "O-H1 distance"
     );
     expectDegenerateGeometryThrows(
         spcFw,
-        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        {.oh1 = 1.0 * angstrom, .oh2 = 0.0 * angstrom, .angle = 1.9 * rad},
         "O-H2 distance"
     );
     expectDegenerateGeometryThrows(
         qSpcFw,
-        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        {.oh1 = 0.0 * angstrom, .oh2 = 1.0 * angstrom, .angle = 1.9 * rad},
         "O-H1 distance"
     );
     expectDegenerateGeometryThrows(
         qSpcFw,
-        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        {.oh1 = 1.0 * angstrom, .oh2 = 0.0 * angstrom, .angle = 1.9 * rad},
         "O-H2 distance"
     );
 
@@ -550,17 +590,17 @@ TEST(IntraWater, SpcModelsRejectDegenerateGeometry)
     // different bond lengths): the angle force divides by sin(angle) = 0
     expectDegenerateGeometryThrows(
         spcFw,
-        {.oh1 = 1.0, .oh2 = 1.0, .angle = 0.0},
+        {.oh1 = 1.0 * angstrom, .oh2 = 1.0 * angstrom, .angle = 0.0 * rad},
         "H-O-H angle"
     );
     expectDegenerateGeometryThrows(
         spcFw,
-        {.oh1 = 1.0, .oh2 = 0.5, .angle = 0.0},
+        {.oh1 = 1.0 * angstrom, .oh2 = 0.5 * angstrom, .angle = 0.0 * rad},
         "H-O-H angle"
     );
     expectDegenerateGeometryThrows(
         qSpcFw,
-        {.oh1 = 1.0, .oh2 = 1.0, .angle = 0.0},
+        {.oh1 = 1.0 * angstrom, .oh2 = 1.0 * angstrom, .angle = 0.0 * rad},
         "H-O-H angle"
     );
 }
@@ -575,17 +615,19 @@ TEST(IntraWater, SpcModelsStayFiniteNextToTheDegenerateGeometries)
     waterModel::SPCFwIntraWater spcFw{hybridSettings};
     expectFiniteAndConservative(
         spcFw,
-        {.oh1 = 1.04, .oh2 = 0.97, .angle = std::numbers::pi}
+        {.oh1   = 1.04 * angstrom,
+         .oh2   = 0.97 * angstrom,
+         .angle = std::numbers::pi * rad}
     );
 
     // a tiny but non-zero angle and a very short bond are finite as well
     expectFiniteAndConservative(
         spcFw,
-        {.oh1 = 1.04, .oh2 = 0.97, .angle = 1.0e-6}
+        {.oh1 = 1.04 * angstrom, .oh2 = 0.97 * angstrom, .angle = 1.0e-6 * rad}
     );
     expectFiniteAndConservative(
         spcFw,
-        {.oh1 = 1.0e-6, .oh2 = 0.97, .angle = 1.9}
+        {.oh1 = 1.0e-6 * angstrom, .oh2 = 0.97 * angstrom, .angle = 1.9 * rad}
     );
 }
 
@@ -599,34 +641,34 @@ TEST(IntraWater, MtrModelsRejectDegenerateGeometry)
 
     expectDegenerateGeometryThrows(
         spcMtr,
-        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        {.oh1 = 0.0 * angstrom, .oh2 = 1.0 * angstrom, .angle = 1.9 * rad},
         "O-H1 distance"
     );
     expectDegenerateGeometryThrows(
         spcMtr,
-        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        {.oh1 = 1.0 * angstrom, .oh2 = 0.0 * angstrom, .angle = 1.9 * rad},
         "O-H2 distance"
     );
     expectDegenerateGeometryThrows(
         tip3pMtr,
-        {.oh1 = 0.0, .oh2 = 1.0, .angle = 1.9},
+        {.oh1 = 0.0 * angstrom, .oh2 = 1.0 * angstrom, .angle = 1.9 * rad},
         "O-H1 distance"
     );
     expectDegenerateGeometryThrows(
         tip3pMtr,
-        {.oh1 = 1.0, .oh2 = 0.0, .angle = 1.9},
+        {.oh1 = 1.0 * angstrom, .oh2 = 0.0 * angstrom, .angle = 1.9 * rad},
         "O-H2 distance"
     );
 
     // equal bond lengths and angle 0 put the two hydrogens on top of each other
     expectDegenerateGeometryThrows(
         spcMtr,
-        {.oh1 = 1.0, .oh2 = 1.0, .angle = 0.0},
+        {.oh1 = 1.0 * angstrom, .oh2 = 1.0 * angstrom, .angle = 0.0 * rad},
         "H-H distance"
     );
     expectDegenerateGeometryThrows(
         tip3pMtr,
-        {.oh1 = 0.9, .oh2 = 0.9, .angle = 0.0},
+        {.oh1 = 0.9 * angstrom, .oh2 = 0.9 * angstrom, .angle = 0.0 * rad},
         "H-H distance"
     );
 }
@@ -642,12 +684,14 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
     // vanishes)
     expectFiniteAndConservative(
         spcMtr,
-        {.oh1 = 1.04, .oh2 = 0.97, .angle = 0.0}
+        {.oh1 = 1.04 * angstrom, .oh2 = 0.97 * angstrom, .angle = 0.0 * rad}
     );
     // a linear molecule
     expectFiniteAndConservative(
         spcMtr,
-        {.oh1 = 1.04, .oh2 = 0.97, .angle = std::numbers::pi}
+        {.oh1   = 1.04 * angstrom,
+         .oh2   = 0.97 * angstrom,
+         .angle = std::numbers::pi * rad}
     );
 }
 
@@ -655,39 +699,47 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
     PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
+    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
     molsys::SimulationBox   simBox;
-    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     molsys::Atom atom1;
-    atom1.setPosition({0.0, 0.0, 0.0});
-    atom1.setPartialCharge(-0.8);
-    atom1.setQMCharge(-0.9);
+    atom1.setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    atom1.setPartialCharge(-0.8 * elementary_charge);
+    atom1.setQMCharge(-0.9 * elementary_charge);
     atom1.setForceToZero();
 
     molsys::Atom atom2;
-    atom2.setPosition({1.2, 0.1, 0.0});
-    atom2.setPartialCharge(0.4);
-    atom2.setQMCharge(0.45);
+    atom2.setPosition(linalg::Vec3D{1.2, 0.1, 0.0} * angstrom);
+    atom2.setPartialCharge(0.4 * elementary_charge);
+    atom2.setQMCharge(0.45 * elementary_charge);
     atom2.setForceToZero();
 
     const auto coulomb =
         std::make_shared<pot::CoulombShiftedPotential>(potentialSettings);
     const pot::LennardJonesPair nonCoulomb(
         kCutOff,
-        LJParams{.c6 = -1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = -1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
 
     HybridSettings            hybridSettings;
     ExposedInterWaterStrategy strategy{hybridSettings};
 
-    EXPECT_DOUBLE_EQ(nonCoulomb.get_radialCutoff(), kCutOff);
+    EXPECT_DOUBLE_EQ(
+        nonCoulomb.get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff.numerical_value_in(angstrom)
+    );
 
-    double coulombEnergy    = 0.0;
-    double nonCoulombEnergy = 0.0;
+    EnergyPerMol coulombEnergy    = EnergyPerMol::zero();
+    EnergyPerMol nonCoulombEnergy = EnergyPerMol::zero();
     strategy.calculateSingleInteraction<pot::MMChargeTag, pot::MMChargeTag>(
         atom1,
         atom2,
@@ -699,14 +751,14 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
         nonCoulombEnergy
     );
 
-    EXPECT_NE(coulombEnergy, 0.0);
-    EXPECT_NE(nonCoulombEnergy, 0.0);
+    EXPECT_NE(coulombEnergy, EnergyPerMol::zero());
+    EXPECT_NE(nonCoulombEnergy, EnergyPerMol::zero());
     EXPECT_EQ(atom1.getForce(), -atom2.getForce());
 
     atom1.setForceToZero();
     atom2.setForceToZero();
     hybridSettings.setUseQMChargesByUser(true);
-    coulombEnergy = 0.0;
+    coulombEnergy = EnergyPerMol::zero();
     strategy
         .calculateSingleCoulombInteraction<pot::QMChargeTag, pot::MMChargeTag>(
             atom1,
@@ -716,14 +768,19 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             simBox.getBox(),
             coulombEnergy
         );
-    EXPECT_NE(coulombEnergy, 0.0);
+    EXPECT_NE(coulombEnergy, EnergyPerMol::zero());
     EXPECT_EQ(atom1.getForce(), -atom2.getForce());
-    EXPECT_DOUBLE_EQ(strategy.getPartialCharge<pot::QMChargeTag>(atom1), -0.9);
+    EXPECT_DOUBLE_EQ(
+        strategy.getPartialCharge<pot::QMChargeTag>(atom1).numerical_value_in(
+            elementary_charge
+        ),
+        -0.9
+    );
 
     atom1.setForceToZero();
     atom2.setForceToZero();
-    coulombEnergy    = 0.0;
-    nonCoulombEnergy = 0.0;
+    coulombEnergy    = EnergyPerMol::zero();
+    nonCoulombEnergy = EnergyPerMol::zero();
     strategy
         .calculateSingleInteractionOneWay<pot::MMChargeTag, pot::QMChargeTag>(
             atom1,
@@ -735,12 +792,22 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             coulombEnergy,
             nonCoulombEnergy
         );
-    EXPECT_NE(atom1.getForce(), linalg::Vec3D{});
-    EXPECT_EQ(atom2.getForce(), linalg::Vec3D{});
+    EXPECT_NE(atom1.getForce(), Force3D::zero());
+    EXPECT_EQ(atom2.getForce(), Force3D::zero());
 
     hybridSettings.setUseQMChargesByUser(false);
-    EXPECT_DOUBLE_EQ(strategy.getPartialCharge<pot::QMChargeTag>(atom1), -0.8);
-    EXPECT_DOUBLE_EQ(strategy.getPartialCharge<pot::MMChargeTag>(atom2), 0.4);
+    EXPECT_DOUBLE_EQ(
+        strategy.getPartialCharge<pot::QMChargeTag>(atom1).numerical_value_in(
+            elementary_charge
+        ),
+        -0.8
+    );
+    EXPECT_DOUBLE_EQ(
+        strategy.getPartialCharge<pot::MMChargeTag>(atom2).numerical_value_in(
+            elementary_charge
+        ),
+        0.4
+    );
 }
 
 TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
@@ -751,15 +818,24 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 
     auto oxygenOxygen = std::make_unique<pot::LennardJonesPair>(
         kCutOff,
-        LJParams{.c6 = -1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = -1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     auto oxygenHydrogen = std::make_unique<pot::LennardJonesPair>(
         kCutOff,
-        LJParams{.c6 = -1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = -1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     auto hydrogenHydrogen = std::make_unique<pot::LennardJonesPair>(
         kCutOff,
-        LJParams{.c6 = -1.0, .c12 = 1.0}
+        LJParams{
+            .c6  = -1.0 * kcal_per_mol * angstrom6,
+            .c12 = 1.0 * kcal_per_mol * angstrom12
+        }
     );
     const auto *oxygenOxygenView     = oxygenOxygen.get();
     const auto *oxygenHydrogenView   = oxygenHydrogen.get();
@@ -807,14 +883,29 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
         settings.potentialSettings
     );
 
-    EXPECT_DOUBLE_EQ(oxygenOxygenView->get_radialCutoff(), kCutOff);
-    EXPECT_DOUBLE_EQ(oxygenHydrogenView->get_radialCutoff(), kCutOff);
-    EXPECT_DOUBLE_EQ(hydrogenHydrogenView->get_radialCutoff(), kCutOff);
-    EXPECT_TRUE(std::isfinite(oxygenOxygenView->get_energyCutoff()));
-    EXPECT_TRUE(std::isfinite(oxygenHydrogenView->get_energyCutoff()));
-    EXPECT_TRUE(std::isfinite(hydrogenHydrogenView->get_energyCutoff()));
-    EXPECT_DOUBLE_EQ(physicalData.getCoulombEnergy(), 0.0);
-    EXPECT_DOUBLE_EQ(physicalData.getNonCoulombEnergy(), 0.0);
+    EXPECT_DOUBLE_EQ(
+        oxygenOxygenView->get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff.numerical_value_in(angstrom)
+    );
+    EXPECT_DOUBLE_EQ(
+        oxygenHydrogenView->get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff.numerical_value_in(angstrom)
+    );
+    EXPECT_DOUBLE_EQ(
+        hydrogenHydrogenView->get_radialCutoff().numerical_value_in(angstrom),
+        kCutOff.numerical_value_in(angstrom)
+    );
+    EXPECT_TRUE(isfinite(oxygenOxygenView->get_energyCutoff()));
+    EXPECT_TRUE(isfinite(oxygenHydrogenView->get_energyCutoff()));
+    EXPECT_TRUE(isfinite(hydrogenHydrogenView->get_energyCutoff()));
+    EXPECT_DOUBLE_EQ(
+        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
+    EXPECT_DOUBLE_EQ(
+        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        0.0
+    );
 }
 
 TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
@@ -825,8 +916,14 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
     settings.hybridSettings.setUseQMChargesByUser(true);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom
+    );
+    PotentialSettingsUtils::setForceCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom2
+    );
     settings.waterModelSettings.setWaterInterModelByUser(WaterInterModel::SPC);
 
     const auto coulomb = std::make_shared<pot::CoulombShiftedPotential>(
@@ -904,10 +1001,10 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
         settings.potentialSettings
     );
 
-    EXPECT_TRUE(std::isfinite(bruteForceData.getCoulombEnergy()));
-    EXPECT_TRUE(std::isfinite(bruteForceData.getNonCoulombEnergy()));
-    EXPECT_TRUE(std::isfinite(cellListData.getCoulombEnergy()));
-    EXPECT_TRUE(std::isfinite(cellListData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.getCoulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.getCoulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.getNonCoulombEnergy()));
 }
 
 namespace
@@ -921,14 +1018,14 @@ namespace
     molsys::SimulationBox makeSpreadWaterBox(const bool mixMolTypes)
     {
         constexpr WaterGeometry geometry{
-            .oh1   = 0.96,
-            .oh2   = 0.98,
-            .angle = 1.82
+            .oh1   = 0.96 * angstrom,
+            .oh2   = 0.98 * angstrom,
+            .angle = 1.82 * rad
         };
 
-        constexpr int    perAxis = 4;
-        constexpr double length  = 15.0;
-        constexpr double spacing = length / perAxis;
+        constexpr int  perAxis = 4;
+        constexpr auto length  = 15.0 * angstrom;
+        constexpr auto spacing = length / perAxis;
 
         molsys::SimulationBox   simBox;
         molsys::OrthorhombicBox orthoBox{{length, length, length}};
@@ -952,10 +1049,13 @@ namespace
                     const auto jitter = [index](const double phase)
                     { return 0.4 * std::sin((7.0 * index) + phase); };
 
-                    const linalg::Vec3D origin = {
-                        (-0.5 * length) + (spacing * (ix + 0.5)) + jitter(0.0),
-                        (-0.5 * length) + (spacing * (iy + 0.5)) + jitter(1.0),
-                        (-0.5 * length) + (spacing * (iz + 0.5)) + jitter(2.0)
+                    const Pos3D origin = {
+                        (-0.5 * length) + (spacing * (ix + 0.5)) +
+                            jitter(0.0) * angstrom,
+                        (-0.5 * length) + (spacing * (iy + 0.5)) +
+                            jitter(1.0) * angstrom,
+                        (-0.5 * length) + (spacing * (iz + 0.5)) +
+                            jitter(2.0) * angstrom
                     };
 
                     const auto zone = zones.at(static_cast<size_t>(index) % 4);
@@ -980,16 +1080,14 @@ namespace
 {
     struct StrategyResult
     {
-        double                     coulombEnergy{};
-        double                     nonCoulombEnergy{};
-        std::vector<linalg::Vec3D> forces;
+        EnergyPerMol         coulombEnergy{};
+        EnergyPerMol         nonCoulombEnergy{};
+        std::vector<Force3D> forces;
     };
 
-    std::vector<linalg::Vec3D> collectForces(
-        molsys::SimulationBox &simulationBox
-    )
+    std::vector<Force3D> collectForces(molsys::SimulationBox &simulationBox)
     {
-        auto forces = std::vector<linalg::Vec3D>();
+        auto forces = std::vector<Force3D>();
 
         for (const auto &molecule : simulationBox.getMolecules())
         {
@@ -1019,9 +1117,12 @@ namespace
         settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
-            0.0
+            0.0 / angstrom
         );
-        PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+        PotentialSettingsUtils::setForceCutoff(
+            settings.potentialSettings,
+            0.0 / angstrom2
+        );
 
         settings.waterModelSettings.setWaterInterModelByUser(
             WaterInterModel::SPC
@@ -1093,11 +1194,14 @@ namespace
         const std::string    &stage
     )
     {
-        EXPECT_NEAR(bruteForce.coulombEnergy, cellList.coulombEnergy, 1e-9)
-            << stage;
         EXPECT_NEAR(
-            bruteForce.nonCoulombEnergy,
-            cellList.nonCoulombEnergy,
+            bruteForce.coulombEnergy.numerical_value_in(kcal_per_mol),
+            cellList.coulombEnergy.numerical_value_in(kcal_per_mol),
+            1e-9
+        ) << stage;
+        EXPECT_NEAR(
+            bruteForce.nonCoulombEnergy.numerical_value_in(kcal_per_mol),
+            cellList.nonCoulombEnergy.numerical_value_in(kcal_per_mol),
             1e-9
         ) << stage;
 
@@ -1108,8 +1212,12 @@ namespace
             for (size_t axis = 0; axis < 3; ++axis)
             {
                 EXPECT_NEAR(
-                    bruteForce.forces[i][axis],
-                    cellList.forces[i][axis],
+                    bruteForce.forces[i][axis].numerical_value_in(
+                        kcal_per_mol / angstrom
+                    ),
+                    cellList.forces[i][axis].numerical_value_in(
+                        kcal_per_mol / angstrom
+                    ),
                     1e-8
                 ) << stage
                   << ", atom " << i << ", axis " << axis;
@@ -1156,15 +1264,19 @@ TEST(InterWater, BruteForceAndCellListGiveTheSameEnergiesAndForces)
                 );
 
             // the comparison is only meaningful if the waters interact
-            EXPECT_NE(bruteForce.coulombEnergy, 0.0) << name;
-            EXPECT_NE(bruteForce.nonCoulombEnergy, 0.0) << name;
+            EXPECT_NE(bruteForce.coulombEnergy, EnergyPerMol::zero()) << name;
+            EXPECT_NE(bruteForce.nonCoulombEnergy, EnergyPerMol::zero())
+                << name;
 
-            double largestForce = 0.0;
+            Force largestForce = Force::zero();
             for (const auto &force : bruteForce.forces)
             {
-                largestForce = std::max(largestForce, std::abs(force[0]));
+                largestForce = mstd::max(largestForce, mstd::abs(force[0]));
             }
-            EXPECT_GT(largestForce, 1e-3) << name;
+            EXPECT_GT(
+                largestForce.numerical_value_in(kcal_per_mol / angstrom),
+                1e-3
+            ) << name;
 
             expectSameResult(bruteForce, cellList, name);
         }
@@ -1175,8 +1287,8 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
     PotentialSettings potentialSettings;
     potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
+    PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
     HybridSettings           hybridSettings;
     pot::PotentialBruteForce potential{hybridSettings};
@@ -1185,7 +1297,9 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     );
     potential.setNonCoulombPotential(makeNonCoulombPotential());
 
-    molsys::OrthorhombicBox box({15.0, 15.0, 15.0});
+    molsys::OrthorhombicBox box(
+        {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+    );
 
     molsys::Molecule mol1;
     mol1.setMoltype(MolType{1});
@@ -1193,16 +1307,16 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
     mol2.setMoltype(MolType{2});
 
     molsys::Atom atom1;
-    atom1.setPosition({0.0, 0.0, 0.0});
-    atom1.setPartialCharge(-0.8);
-    atom1.setQMCharge(-0.9);
+    atom1.setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    atom1.setPartialCharge(-0.8 * elementary_charge);
+    atom1.setQMCharge(-0.9 * elementary_charge);
     atom1.setAtomType(AtomType{0});
     atom1.setInternalGlobalVDWType(VdwType{0});
     atom1.setForceToZero();
 
     molsys::Atom atom2;
-    atom2.setPosition({1.2, 0.1, 0.0});
-    atom2.setPartialCharge(0.4);
+    atom2.setPosition(linalg::Vec3D{1.2, 0.1, 0.0} * angstrom);
+    atom2.setPartialCharge(0.4 * elementary_charge);
     atom2.setAtomType(AtomType{0});
     atom2.setInternalGlobalVDWType(VdwType{0});
     atom2.setForceToZero();
@@ -1216,7 +1330,7 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
         atom2,
         potentialSettings.get_coulombConfig()
     );
-    EXPECT_NE(coulombEnergy, 0.0);
+    EXPECT_NE(coulombEnergy, EnergyPerMol::zero());
     EXPECT_EQ(atom1.getForce(), -atom2.getForce());
 
     atom1.setForceToZero();
@@ -1231,14 +1345,24 @@ TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
         atom2,
         potentialSettings.get_coulombConfig()
     );
-    EXPECT_NE(energies.first, 0.0);
-    EXPECT_NE(energies.second, 0.0);
-    EXPECT_NE(atom1.getForce(), linalg::Vec3D{});
-    EXPECT_EQ(atom2.getForce(), linalg::Vec3D{});
+    EXPECT_NE(energies.first, EnergyPerMol::zero());
+    EXPECT_NE(energies.second, EnergyPerMol::zero());
+    EXPECT_NE(atom1.getForce(), Force3D::zero());
+    EXPECT_EQ(atom2.getForce(), Force3D::zero());
 
     hybridSettings.setUseQMChargesByUser(false);
-    EXPECT_DOUBLE_EQ(potential.getPartialCharge<pot::QMChargeTag>(atom1), -0.8);
-    EXPECT_DOUBLE_EQ(potential.getPartialCharge<pot::MMChargeTag>(atom2), 0.4);
+    EXPECT_DOUBLE_EQ(
+        potential.getPartialCharge<pot::QMChargeTag>(atom1).numerical_value_in(
+            elementary_charge
+        ),
+        -0.8
+    );
+    EXPECT_DOUBLE_EQ(
+        potential.getPartialCharge<pot::MMChargeTag>(atom2).numerical_value_in(
+            elementary_charge
+        ),
+        0.4
+    );
 }
 
 namespace
@@ -1263,9 +1387,12 @@ namespace
         settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
-            0.0
+            0.0 / angstrom
         );
-        PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+        PotentialSettingsUtils::setForceCutoff(
+            settings.potentialSettings,
+            0.0 / angstrom2
+        );
 
         auto simulationBox = makeSpreadWaterBox(true);
         configurator::HybridConfigurator::activateMolecules(simulationBox);
@@ -1376,15 +1503,19 @@ TEST(PotentialStrategies, BruteForceAndCellListGiveTheSameEnergiesAndForces)
             const auto cellList =
                 runPotential<pot::PotentialCellList>(stage, settings);
 
-            EXPECT_NE(bruteForce.coulombEnergy, 0.0) << name;
-            EXPECT_NE(bruteForce.nonCoulombEnergy, 0.0) << name;
+            EXPECT_NE(bruteForce.coulombEnergy, EnergyPerMol::zero()) << name;
+            EXPECT_NE(bruteForce.nonCoulombEnergy, EnergyPerMol::zero())
+                << name;
 
-            double largestForce = 0.0;
+            Force largestForce = Force::zero();
             for (const auto &force : bruteForce.forces)
             {
-                largestForce = std::max(largestForce, std::abs(force[0]));
+                largestForce = mstd::max(largestForce, mstd::abs(force[0]));
             }
-            EXPECT_GT(largestForce, 1e-3) << name;
+            EXPECT_GT(
+                largestForce.numerical_value_in(kcal_per_mol / angstrom),
+                1e-3
+            ) << name;
 
             expectSameResult(bruteForce, cellList, name);
         }
@@ -1399,8 +1530,14 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     HybridSettings hybridSettings;
     hybridSettings.setUseQMChargesByUser(true);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom
+    );
+    PotentialSettingsUtils::setForceCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom2
+    );
 
     auto                       simBoxBruteForce = makeHybridWaterBox();
     molsys::CellList           unusedCellList;
@@ -1466,10 +1603,10 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
         settings.potentialSettings
     );
 
-    EXPECT_TRUE(std::isfinite(bruteForceData.getCoulombEnergy()));
-    EXPECT_TRUE(std::isfinite(bruteForceData.getNonCoulombEnergy()));
-    EXPECT_TRUE(std::isfinite(cellListData.getCoulombEnergy()));
-    EXPECT_TRUE(std::isfinite(cellListData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.getCoulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.getCoulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.getNonCoulombEnergy()));
     EXPECT_NE(bruteForce.clone(), nullptr);
     EXPECT_NE(cellListPotential.clone(), nullptr);
 
@@ -1495,28 +1632,39 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
         settings.potentialSettings
     );
 
-    EXPECT_TRUE(std::isfinite(filteredData.getCoulombEnergy()));
-    EXPECT_TRUE(std::isfinite(filteredData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(filteredData.getCoulombEnergy()));
+    EXPECT_TRUE(isfinite(filteredData.getNonCoulombEnergy()));
 }
 
 TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)
 {
-    constexpr WaterGeometry geometry{.oh1 = 0.96, .oh2 = 0.96, .angle = 1.82};
+    constexpr WaterGeometry geometry{
+        .oh1   = 0.96 * angstrom,
+        .oh2   = 0.96 * angstrom,
+        .angle = 1.82 * rad
+    };
     molsys::SimulationBox   simBox;
-    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
     simBox.setWaterType(kWaterType);
-    addWater(simBox, {-2.0, 0.0, 0.0}, geometry, molsys::HybridZone::OUTER);
     addWater(
         simBox,
-        {0.0, 0.0, 0.0},
+        linalg::Vec3D{-2.0, 0.0, 0.0} * angstrom,
+        geometry,
+        molsys::HybridZone::OUTER
+    );
+    addWater(
+        simBox,
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
         geometry,
         molsys::HybridZone::CORE,
         false
     );
     addWater(
         simBox,
-        {2.0, 0.0, 0.0},
+        linalg::Vec3D{2.0, 0.0, 0.0} * angstrom,
         geometry,
         molsys::HybridZone::OUTER,
         true,

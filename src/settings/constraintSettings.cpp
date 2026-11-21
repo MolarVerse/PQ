@@ -24,6 +24,7 @@
 
 #include "defaults.hpp"
 #include "referenceSettings.hpp"
+#include "unit_types.hpp"
 #include "waterModelSettings.hpp"
 
 /**
@@ -245,7 +246,7 @@ double ConstraintSettings::getShakeTolerance() const
  *
  * @return the tolerance
  */
-double ConstraintSettings::getRattleTolerance() const
+const MassPerTime& ConstraintSettings::getRattleTolerance() const
 {
     return _rattleTolerance.get();
 }
@@ -311,7 +312,9 @@ void ConstraintSettings::setShakeToleranceByUser(double shakeTolerance)
  *
  * @param rattleTolerance
  */
-void ConstraintSettings::setRattleToleranceByUser(double rattleTolerance)
+void ConstraintSettings::setRattleToleranceByUser(
+    const MassPerTime& rattleTolerance
+)
 {
     _rattleTolerance.setByUser(rattleTolerance);
 }

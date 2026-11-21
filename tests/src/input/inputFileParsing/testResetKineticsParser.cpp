@@ -30,6 +30,7 @@
 #include "resetKineticsSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests parsing the "nscale" command
@@ -207,7 +208,7 @@ TEST_F(TestInputFileReader, testParseMomentumWarnThreshold)
     ASSERT_TRUE(funcMap.contains("momentum_warn_threshold"));
     const auto &parseFunc = funcMap.at("momentum_warn_threshold");
 
-    EXPECT_DOUBLE_EQ(settings.getMomentumWarnThreshold(), 0.01);
+    EXPECT_EQ(settings.getMomentumWarnThreshold(), 1 * percent);
 
     std::vector<std::string> lineElements = {
         "momentum_warn_threshold",
@@ -215,13 +216,13 @@ TEST_F(TestInputFileReader, testParseMomentumWarnThreshold)
         "0.05"
     };
     parseFunc(lineElements, 0);
-    EXPECT_DOUBLE_EQ(settings.getMomentumWarnThreshold(), 0.05);
+    EXPECT_EQ(settings.getMomentumWarnThreshold(), 5 * percent);
 
     _clearParser(parser);
 
     lineElements = {"momentum_warn_threshold", "=", "0"};
     parseFunc(lineElements, 0);
-    EXPECT_DOUBLE_EQ(settings.getMomentumWarnThreshold(), 0.0);
+    EXPECT_EQ(settings.getMomentumWarnThreshold(), 0.0 * percent);
 
     _clearParser(parser);
 

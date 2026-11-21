@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "output.hpp"
+#include "unit_types.hpp"
 
 namespace out
 {
@@ -48,10 +49,10 @@ namespace out
         void writeInfo(const std::string &message);
 
         void writeHeader();
-        void writeEndedNormally(double elapsedTime);
+        void writeEndedNormally(const Time &elapsedTime);
 
         void writeDensityWarning();
-        void writeInitialMomentum(double momentum);
+        void writeInitialMomentum(const Momentum &momentum);
 
         void writeOptWarning(const std::string &message);
 

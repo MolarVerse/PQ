@@ -28,6 +28,7 @@
 
 #include "outputMessages.hpp"
 #include "systemInfo.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests writing header to stdout
@@ -128,7 +129,7 @@ TEST_F(TestStdoutOutput, writeHeader)
 TEST_F(TestStdoutOutput, writeEndedNormally)
 {
     testing::internal::CaptureStdout();
-    out::StdoutOutput::writeEndedNormally(0.1);
+    out::StdoutOutput::writeEndedNormally(0.1 * s);
     std::string output = testing::internal::GetCapturedStdout();
 
     std::stringstream sstream(output);

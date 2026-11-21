@@ -176,7 +176,7 @@ void HybridSettings::setUseQMChargesByUser(bool useQMCharges)
  *
  * @param radius
  */
-void HybridSettings::setCoreRadiusByUser(double radius)
+void HybridSettings::setCoreRadiusByUser(const Distance &radius)
 {
     _coreRadius.setByUser(radius);
 }
@@ -188,7 +188,7 @@ void HybridSettings::setCoreRadiusByUser(double radius)
  *
  * @param radius
  */
-void HybridSettings::setLayerRadiusByUser(double radius)
+void HybridSettings::setLayerRadiusByUser(const Distance &radius)
 {
     _layerRadius.setByUser(radius);
 }
@@ -198,7 +198,9 @@ void HybridSettings::setLayerRadiusByUser(double radius)
  *
  * @param thickness
  */
-void HybridSettings::setSmoothingRegionThicknessByUser(double thickness)
+void HybridSettings::setSmoothingRegionThicknessByUser(
+    const Distance &thickness
+)
 {
     _smoothingRegionThickness.setByUser(thickness);
 }
@@ -211,7 +213,7 @@ void HybridSettings::setSmoothingRegionThicknessByUser(double thickness)
  *
  * @param radius
  */
-void HybridSettings::setPointChargeThicknessByUser(double radius)
+void HybridSettings::setPointChargeThicknessByUser(const Distance &radius)
 {
     _pointChargeThickness.setByUser(radius);
 }
@@ -227,7 +229,7 @@ void HybridSettings::setSmoothingMethodByUser(SmoothingMethod method)
 }
 
 /**
- * @brief set the type of QM force distribtion in hotspot smoothing
+ * @brief set the type of QM force distribution in hotspot smoothing
  *
  * @param method
  */
@@ -292,23 +294,29 @@ bool HybridSettings::getUseQMCharges() const { return _useQMCharges.get(); }
 /**
  * @brief get the coreRadius
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getCoreRadius() const { return _coreRadius.get(); }
+const Distance &HybridSettings::getCoreRadius() const
+{
+    return _coreRadius.get();
+}
 
 /**
  * @brief get the layerRadius
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getLayerRadius() const { return _layerRadius.get(); }
+const Distance &HybridSettings::getLayerRadius() const
+{
+    return _layerRadius.get();
+}
 
 /**
  * @brief get the smoothingRegionThickness
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getSmoothingRegionThickness() const
+const Distance &HybridSettings::getSmoothingRegionThickness() const
 {
     return _smoothingRegionThickness.get();
 }
@@ -316,9 +324,9 @@ double HybridSettings::getSmoothingRegionThickness() const
 /**
  * @brief get the pointChargeThickness
  *
- * @return double
+ * @return const Distance &
  */
-double HybridSettings::getPointChargeThickness() const
+const Distance &HybridSettings::getPointChargeThickness() const
 {
     return _pointChargeThickness.get();
 }

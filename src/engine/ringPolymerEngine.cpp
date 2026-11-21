@@ -26,7 +26,6 @@
 #include <cstddef>
 
 #include "atom.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "engineOutput.hpp"
 #include "frame.hpp"
 #include "globalTimer.hpp"
@@ -207,16 +206,14 @@ namespace engine
     {
         const auto nBeads = _ringPolymerBeads.size();
         const auto nAtoms = _ringPolymerBeads[0].getNumberOfAtoms();
-        const auto temp   = _getKinetics()
-                              .getCurrentTargetTemperature()
-                              .quantity_from_zero()
-                              .numerical_value_in(K);
+        const auto temp =
+            _getKinetics().getCurrentTargetTemperature().quantity_from_zero();
 
         // to silence narrowing conversion warning -- here not a problem
         const auto nBeads_ = static_cast<double>(nBeads);
 
-        const auto rpmd_factor =
-            RPMD_PREFACTOR * nBeads_ * nBeads_ * temp * temp;
+        const auto rpmd_factor = nBeads_ * nBeads_ * kb * kb / reduced_planck /
+                                 reduced_planck * temp * temp;
 
         for (size_t i = 0; i < nBeads; ++i)
         {
@@ -257,9 +254,9 @@ namespace engine
             getSimulationBox().getAtoms(),
             [](auto &atom)
             {
-                atom->setPosition({0.0, 0.0, 0.0});
-                atom->setVelocity({0.0, 0.0, 0.0});
-                atom->setForce({0.0, 0.0, 0.0});
+                atom->setPosition(Pos3D::zero());
+                atom->setVelocity(Vel3D::zero());
+                atom->setForce(Force3D::zero());
             }
         );
 

@@ -45,14 +45,14 @@ namespace constraints
      * @param dSpringConstantDt
      */
     DistanceConstraint::DistanceConstraint(
-        molsys::Molecule *molecule1,
-        molsys::Molecule *molecule2,
-        AtomIndex         atomIndex1,
-        AtomIndex         atomIndex2,
-        double            lowerDistance,
-        double            upperDistance,
-        double            springConstant,
-        double            dSpringConstantDt
+        molsys::Molecule           *molecule1,
+        molsys::Molecule           *molecule2,
+        AtomIndex                   atomIndex1,
+        AtomIndex                   atomIndex2,
+        const Distance             &lowerDistance,
+        const Distance             &upperDistance,
+        const ForceConstant        &springConstant,
+        const ForceConstantPerTime &dSpringConstantDt
     )
         : Bond(molecule1, molecule2, atomIndex1, atomIndex2),
           _lowerDistance(lowerDistance),
@@ -78,9 +78,9 @@ namespace constraints
         const Time                  &timeInterval
     )
     {
-        _lowerEnergy = 0.0;
-        _upperEnergy = 0.0;
-        _force       = {0.0};
+        _lowerEnergy  = EnergyPerMol::zero();
+        _upperEnergy  = EnergyPerMol::zero();
+        Force3D force = Force3D::zero();
 
         if (timeInterval < 0.0 * fs)
             return;
@@ -94,16 +94,15 @@ namespace constraints
         const auto pos1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto pos2 = molecule2->getAtomPosition(atomIndices[1]);
 
-        auto dPos = pos2 - pos1;
+        auto dPos = (pos2 - pos1);
         simulationBox.applyPBC(dPos);
 
         const auto distance = norm(dPos);
         const auto force_constant =
-            _springConstant +
-            (_dSpringConstantDt * timeInterval.numerical_value_in(fs));
+            _springConstant + (_dSpringConstantDt * timeInterval);
 
         if ((distance < _lowerDistance || distance > _upperDistance) &&
-            (!std::isfinite(distance) || 0.0 == distance))
+            (!isfinite(distance) || 0.0 == distance))
         {
             throw exc::ShakeException(
                 "Degenerate distance-constraint separation - the atom "
@@ -114,83 +113,23 @@ namespace constraints
 
         if (distance < _lowerDistance)
         {
-            const auto delta = _lowerDistance - distance;
+            const auto delta = (_lowerDistance - distance);
             _lowerEnergy     = 0.5 * force_constant * delta * delta;
-            _force           = -force_constant * delta * dPos / distance;
+            force            = -force_constant * delta * dPos / distance;
         }
         else if (distance > _upperDistance)
         {
-            const auto delta = distance - _upperDistance;
+            const auto delta = (distance - _upperDistance);
             _upperEnergy     = 0.5 * force_constant * delta * delta;
-            _force           = +force_constant * delta * dPos / distance;
+            force            = +force_constant * delta * dPos / distance;
         }
         else
         {
             return;
         }
 
-        molecule1->addAtomForce(atomIndices[0], _force);
-        molecule2->addAtomForce(atomIndices[1], -_force);
+        molecule1->addAtomForce(atomIndices[0], force);
+        molecule2->addAtomForce(atomIndices[1], -force);
     }
-
-    /***************************
-     *                         *
-     * standard getter methods *
-     *                         *
-     ***************************/
-
-    /**
-     * @brief get lower distance
-     *
-     * @return double
-     */
-    double DistanceConstraint::getLowerDistance() const
-    {
-        return _lowerDistance;
-    }
-
-    /**
-     * @brief get upper distance
-     *
-     * @return double
-     */
-    double DistanceConstraint::getUpperDistance() const
-    {
-        return _upperDistance;
-    }
-
-    /**
-     * @brief get spring constant
-     *
-     * @return double
-     */
-    double DistanceConstraint::getSpringConstant() const
-    {
-        return _springConstant;
-    }
-
-    /**
-     * @brief get dSpringConstantDt
-     *
-     * @return double
-     */
-    double DistanceConstraint::getDSpringConstantDt() const
-    {
-        return _dSpringConstantDt;
-    }
-
-    /**
-     * @brief get lower energy
-     *
-     * @return double
-     */
-    double DistanceConstraint::getLowerEnergy() const { return _lowerEnergy; }
-
-    /**
-     * @brief get upper energy
-     *
-     * @return double
-     */
-    double DistanceConstraint::getUpperEnergy() const { return _upperEnergy; }
 
 }   // namespace constraints

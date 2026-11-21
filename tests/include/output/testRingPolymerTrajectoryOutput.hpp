@@ -33,6 +33,7 @@
 #include "orthorhombicBox.hpp"
 #include "ringPolymerTrajectoryOutput.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 /**
  * @class TestRingPolymerTrajectoryOutput
@@ -56,9 +57,13 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         _simulationBox1 = std::make_unique<molsys::SimulationBox>();
         _simulationBox2 = std::make_unique<molsys::SimulationBox>();
 
-        molsys::OrthorhombicBox orthoBox1{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox1{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _simulationBox1->setBox(orthoBox1, false);
-        molsys::OrthorhombicBox orthoBox2{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox2{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _simulationBox2->setBox(orthoBox2, false);
 
         auto molecule1_1 = molsys::Molecule();
@@ -69,30 +74,46 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         const auto atom1_2 = std::make_shared<molsys::Atom>();
         const auto atom2_2 = std::make_shared<molsys::Atom>();
 
-        atom1_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2_1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom1_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2_1->setForce(linalg::Vec3D(2.0, 3.0, 4.0));
-        atom1_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2_1->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0));
+        atom1_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2_1->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+        atom1_1->setForce(
+            linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom
+        );
+        atom2_1->setForce(
+            linalg::Vec3D(2.0, 3.0, 4.0) * kcal_per_mol / angstrom
+        );
+        atom1_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+        atom2_1->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0) * angstrom / s);
         atom1_1->setName("H");
         atom2_1->setName("O");
-        atom1_1->setPartialCharge(1.0);
-        atom2_1->setPartialCharge(-1.0);
+        atom1_1->setPartialCharge(1.0 * elementary_charge);
+        atom2_1->setPartialCharge(-1.0 * elementary_charge);
         molecule1_1.setMoltype(MolType{1});
         molecule1_1.addAtom(atom1_1);
         molecule1_1.addAtom(atom2_1);
 
-        atom1_2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom2_2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) + 1.0);
-        atom1_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom2_2->setForce(linalg::Vec3D(2.0, 3.0, 4.0) + 1.0);
-        atom1_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom2_2->setVelocity(linalg::Vec3D(3.0, 4.0, 5.0) + 1.0);
+        atom1_2->setPosition((linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * angstrom);
+        atom2_2->setPosition((linalg::Vec3D(1.0, 2.0, 3.0) + 1.0) * angstrom);
+        atom1_2->setForce(
+            (linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * kcal_per_mol / angstrom
+        );
+        atom2_2->setForce(
+            (linalg::Vec3D(2.0, 3.0, 4.0) + 1.0) * kcal_per_mol / angstrom
+        );
+        atom1_2->setVelocity(
+            (linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * angstrom / s
+        );
+        atom2_2->setVelocity(
+            (linalg::Vec3D(3.0, 4.0, 5.0) + 1.0) * angstrom / s
+        );
         atom1_2->setName("H");
         atom2_2->setName("O");
-        atom1_2->setPartialCharge(1.0 + 1.0);
-        atom2_2->setPartialCharge(-1.0 + 1.0);
+        atom1_2->setPartialCharge(
+            1.0 * elementary_charge + 1.0 * elementary_charge
+        );
+        atom2_2->setPartialCharge(
+            -1.0 * elementary_charge + 1.0 * elementary_charge
+        );
         molecule1_2.setMoltype(MolType{1});
         molecule1_2.addAtom(atom1_2);
         molecule1_2.addAtom(atom2_2);
@@ -103,19 +124,27 @@ class TestRingPolymerTrajectoryOutput : public ::testing::Test
         const auto atom3_1 = std::make_shared<molsys::Atom>();
         const auto atom3_2 = std::make_shared<molsys::Atom>();
 
-        atom3_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3_1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom3_1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom3_1->setForce(
+            linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom
+        );
+        atom3_1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
         atom3_1->setName("Ar");
-        atom3_1->setPartialCharge(0.0);
+        atom3_1->setPartialCharge(0.0 * elementary_charge);
         molecule2_1.setMoltype(MolType{2});
         molecule2_1.addAtom(atom3_1);
 
-        atom3_2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom3_2->setForce(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
-        atom3_2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) + 1.0);
+        atom3_2->setPosition((linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * angstrom);
+        atom3_2->setForce(
+            (linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * kcal_per_mol / angstrom
+        );
+        atom3_2->setVelocity(
+            (linalg::Vec3D(1.0, 1.0, 1.0) + 1.0) * angstrom / s
+        );
         atom3_2->setName("Ar");
-        atom3_2->setPartialCharge(0.0 + 1.0);
+        atom3_2->setPartialCharge(
+            0.0 * elementary_charge + 1.0 * elementary_charge
+        );
         molecule2_2.setMoltype(MolType{2});
         molecule2_2.addAtom(atom3_2);
 

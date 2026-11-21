@@ -37,7 +37,7 @@ namespace pot
     BuckinghamPair::BuckinghamPair(
         ExtVdwType              vanDerWaalsType1,
         ExtVdwType              vanDerWaalsType2,
-        double                  cutOff,
+        const Pos&              cutOff,
         const BuckinghamParams& params
     )
         : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
@@ -52,7 +52,7 @@ namespace pot
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
-        const double            cutOff,
+        const Pos&              cutOff,
         const BuckinghamParams& params
     )
         : NonCoulombPair(cutOff), _params(params)
@@ -68,9 +68,9 @@ namespace pot
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
-        double                  cutOff,
-        double                  energyCutoff,
-        double                  forceCutoff,
+        const Pos&              cutOff,
+        const EnergyPerMol&     energyCutoff,
+        const Force&            forceCutoff,
         const BuckinghamParams& params
     )
         : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
@@ -94,13 +94,17 @@ namespace pot
      * [BuckinghamPair](https://doi.org/10.1098/rspa.1938.0173)
      *
      * @param distance
-     * @return std::pair<double, double>
+     * @return std::pair<EnergyPerMol, Force>
      */
-    std::pair<double, double> BuckinghamPair::calculate(double distance) const
+    std::pair<EnergyPerMol, Force> BuckinghamPair::calculate(
+        const Pos& distance
+    ) const
     {
-        const auto distanceThird = distance * distance * distance;
+        const auto distance_     = distance;
+        const auto distanceThird = distance_ * distance_ * distance_;
         const auto distanceSixth = distanceThird * distanceThird;
-        const auto expTerm = _params.scaling * ::exp(_params.dRho * distance);
+        const auto expTerm =
+            _params.scaling * mstd::exp(_params.dRho * distance);
 
         auto energy =
             expTerm + (_params.c6 / distanceSixth) - get_energyCutoff();
@@ -111,7 +115,7 @@ namespace pot
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
         force +=
-            6.0 * _params.c6 / (distanceSixth * distance) - get_forceCutoff();
+            6.0 * _params.c6 / (distanceSixth * distance_) - get_forceCutoff();
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,
         // readability-magic-numbers)
 

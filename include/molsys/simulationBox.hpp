@@ -73,14 +73,14 @@ namespace molsys
 
         size_t _degreesOfFreedom = 0;
 
-        double _totalMass   = 0.0;
-        double _totalCharge = 0.0;
-        double _density     = 0.0;
+        Mass    _totalMass   = Mass::zero();
+        Charge  _totalCharge = Charge::zero();
+        Density _density     = Density::zero();
 
         std::shared_ptr<Box> _box;
         bool                 _boxSetViaStartFile = false;
 
-        linalg::Vec3D                      _centerOfMass = {0.0, 0.0, 0.0};
+        Pos3D                              _centerOfMass = {Pos::zero()};
         std::vector<std::shared_ptr<Atom>> _atoms;
         std::vector<Molecule>              _molecules;
         std::vector<MoleculeType>          _moleculeTypes;
@@ -101,7 +101,7 @@ namespace molsys
 
         void checkCoulRadiusCutOff(
             const ExceptionType&,
-            double coulombRadiusCutOff
+            const Distance& coulombRadiusCutOff
         ) const;
         void setupExternalToInternalGlobalVdwTypesMap();
 
@@ -125,22 +125,19 @@ namespace molsys
         void setPartialChargesOfMoleculesFromMoleculeTypes();
         void initPositions(double displacement);
 
-        [[nodiscard]] Temperature   calculateTemperature();
-        [[nodiscard]] double        calculateTotalForce() const;
-        [[nodiscard]] linalg::Vec3D calculateTotalForceVector() const;
-        [[nodiscard]] double        calculateRMSForce() const;
-        [[nodiscard]] double        calculateMaxForce() const;
-        [[nodiscard]] double        calculateRMSForceOld() const;
-        [[nodiscard]] double        calculateMaxForceOld() const;
-        [[nodiscard]] linalg::Vec3D calculateMomentum();
-        [[nodiscard]] linalg::Vec3D calculateAngularMomentum(
-            const linalg::Vec3D&
-        );
-        [[nodiscard]] linalg::Vec3D calcBoxDimFromDensity() const;
-        [[nodiscard]] linalg::Vec3D calcShiftVector(
-            const linalg::Vec3D& position
-        ) const;
-        [[nodiscard]] int calcActiveMolCharge() const;
+        [[nodiscard]] Temperature calculateTemperature();
+        [[nodiscard]] Force       calculateTotalForce() const;
+        [[nodiscard]] Force3D     calculateTotalForceVector() const;
+        [[nodiscard]] Force       calculateRMSForce() const;
+        [[nodiscard]] Force       calculateMaxForce() const;
+        [[nodiscard]] Force       calculateRMSForceOld() const;
+        [[nodiscard]] Force       calculateMaxForceOld() const;
+        [[nodiscard]] Momentum3D  calculateMomentum();
+        [[nodiscard]]
+        AngularMomentum3D   calculateAngularMomentum(const Momentum3D&);
+        [[nodiscard]] Pos3D calcBoxDimFromDensity() const;
+        [[nodiscard]] Pos3D calcShiftVector(const Pos3D& position) const;
+        [[nodiscard]] int   calcActiveMolCharge() const;
 
         [[nodiscard]]
         bool moleculeTypeExists(MolType moleculeType) const;
@@ -161,14 +158,16 @@ namespace molsys
         void buildAtomIndexLookup();
         void clearAtomIndexLookup();
 
-#ifdef WITH_MPI
-        [[nodiscard]] std::vector<double> flattenVelocities();
-        [[nodiscard]] std::vector<double> flattenForces();
-        [[nodiscard]] std::vector<double> flattenPartialCharges();
+        [[nodiscard]] std::vector<Pos>   flattenPositions() const;
+        [[nodiscard]] std::vector<Force> flattenForces() const;
 
-        void deFlattenPositions(const std::vector<double>& positions);
-        void deFlattenVelocities(const std::vector<double>& velocities);
-        void deFlattenForces(const std::vector<double>& forces);
+#ifdef WITH_MPI
+        [[nodiscard]] std::vector<Vel>    flattenVelocities() const;
+        [[nodiscard]] std::vector<Charge> flattenPartialCharges() const;
+
+        void deFlattenPositions(const std::vector<Pos>& positions);
+        void deFlattenVelocities(const std::vector<Vel>& velocities);
+        void deFlattenForces(const std::vector<Force>& forces);
 #endif
 
         /************************
@@ -197,17 +196,18 @@ namespace molsys
         [[nodiscard]] size_t                 getDegreesOfFreedom() const;
         [[nodiscard]] size_t                 getNumberOfAtoms() const;
         [[nodiscard]] size_t                 getNumberOfQMAtoms() const;
-        [[nodiscard]] double                 getTotalMass() const;
-        [[nodiscard]] double                 getTotalCharge() const;
-        [[nodiscard]] double                 getDensity() const;
-        [[nodiscard]] linalg::Vec3D&         getCenterOfMass();
+        [[nodiscard]] const Mass&            getTotalMass() const;
+        [[nodiscard]] const Charge&          getTotalCharge() const;
+        [[nodiscard]] const Density&         getDensity() const;
+        [[nodiscard]] const Pos3D&           getCenterOfMass() const;
+        [[nodiscard]] std::vector<size_t>    getInnerRegionCenterAtomIndices();
 
         [[nodiscard]] Atom&         getAtom(size_t index);
         [[nodiscard]] Molecule&     getMolecule(size_t index);
         [[nodiscard]] MoleculeType& getMoleculeType(size_t index);
 
-        [[nodiscard]] std::vector<double> getAtomicScalarForces() const;
-        [[nodiscard]] std::vector<double> getAtomicScalarForcesOld() const;
+        [[nodiscard]] std::vector<Force> getAtomicScalarForces() const;
+        [[nodiscard]] std::vector<Force> getAtomicScalarForcesOld() const;
 
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>&       getAtoms();
         [[nodiscard]] const std::vector<std::shared_ptr<Atom>>& getAtoms(
@@ -228,13 +228,13 @@ namespace molsys
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr();
         [[nodiscard]] std::shared_ptr<Box> getBoxPtr() const;
 
-        [[nodiscard]] std::vector<linalg::Vec3D> getPositions() const;
-        [[nodiscard]] std::vector<linalg::Vec3D> getVelocities() const;
-        [[nodiscard]] std::vector<linalg::Vec3D> getForces() const;
-        [[nodiscard]] std::vector<AtomNumber>    getAtomicNumbers() const;
-        [[nodiscard]] std::vector<double>        flattenPositions() const;
-        [[nodiscard]] std::set<std::string>      getUniqueQMAtomNames() const;
-        [[nodiscard]] std::vector<double> getFlattenedQMPositions() const;
+        [[nodiscard]] std::vector<Pos3D>      getPositions() const;
+        [[nodiscard]] std::vector<Vel3D>      getVelocities() const;
+        [[nodiscard]] std::vector<Force3D>    getForces() const;
+        [[nodiscard]] std::vector<AtomNumber> getAtomicNumbers() const;
+        [[nodiscard]] std::set<std::string>   getUniqueQMAtomNames() const;
+        [[nodiscard]]
+        std::vector<double> getFlattenedQMPositionsInAngstrom() const;
 
         [[nodiscard]] bool wasBoxSetViaStartFile() const;
 
@@ -244,9 +244,9 @@ namespace molsys
 
         void setWaterType(MolType waterType);
         void setAmmoniaType(MolType ammoniaType);
-        void setTotalMass(double totalMass);
-        void setTotalCharge(double totalCharge);
-        void setDensity(double density);
+        void setTotalMass(const Mass& totalMass);
+        void setTotalCharge(const Charge& totalCharge);
+        void setDensity(const Density& density);
         void setDegreesOfFreedom(size_t degreesOfFreedom);
 
         template <typename T>
@@ -256,14 +256,14 @@ namespace molsys
          * Forwards the box methods to the box object *
          **********************************************/
 
-        void applyPBC(linalg::Vec3D& position) const;
+        void applyPBC(Pos3D& position) const;
         void scaleBox(const QuantityTensor3D& scalingTensor);
 
-        [[nodiscard]] double getVolume() const;
-        [[nodiscard]] double getMinimalBoxDimension() const;
+        [[nodiscard]] Volume getVolume() const;
+        [[nodiscard]] Pos    getMinimalBoxDimension() const;
 
-        [[nodiscard]] const linalg::Vec3D& getBoxDimensions() const;
-        [[nodiscard]] linalg::Vec3D        getBoxAngles() const;
+        [[nodiscard]] const Pos3D&   getBoxDimensions() const;
+        [[nodiscard]] const Angle3D& getBoxAngles() const;
     };
 
 }   // namespace molsys

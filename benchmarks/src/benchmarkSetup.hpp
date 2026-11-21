@@ -30,16 +30,17 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 namespace benchmarkSetup
 {
-    inline constexpr double cellEdge = 3.0;
-    inline constexpr double cutOff   = 4.0;
+    inline constexpr Pos cellEdge = 3.0 * angstrom;
+    inline constexpr Pos cutOff   = 4.0 * angstrom;
 
     inline molsys::SimulationBox makeLattice(const std::size_t cellsPerSide)
     {
-        const double boxEdge = cellEdge * static_cast<double>(cellsPerSide);
+        const auto boxEdge = cellEdge * static_cast<double>(cellsPerSide);
 
         molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
         molsys::SimulationBox   simulationBox;
@@ -52,8 +53,8 @@ namespace benchmarkSetup
             {
                 for (std::size_t z = 0; z < cellsPerSide; ++z)
                 {
-                    auto                atom = std::make_shared<molsys::Atom>();
-                    const linalg::Vec3D position{
+                    auto        atom     = std::make_shared<molsys::Atom>();
+                    const Pos3D position = {
                         (-boxEdge / 2.0) +
                             ((static_cast<double>(x) + 0.5) * cellEdge),
                         (-boxEdge / 2.0) +
@@ -63,17 +64,25 @@ namespace benchmarkSetup
                     };
                     atom->setPosition(position);
                     atom->setPositionOld(position);
-                    atom->setVelocity({
-                        0.001 * static_cast<double>(atomIndex + 1),
-                        -0.015,
-                        0.02,
-                    });
-                    atom->setForce({0.1, -0.2, 0.05});
-                    atom->setMass(12.0);
+                    atom->setVelocity(
+                        linalg::Vec3D{
+                            0.001 * static_cast<double>(atomIndex + 1),
+                            -0.015,
+                            0.02,
+                        } *
+                        angstrom / s
+                    );
+                    atom->setForce(
+                        linalg::Vec3D{0.1, -0.2, 0.05} * kcal_per_mol / angstrom
+                    );
+                    atom->setMass(12.0 * g_per_mol);
                     atom->setAtomType(AtomType{0});
                     atom->setInternalGlobalVDWType(VdwType{0});
-                    atom->setPartialCharge(atomIndex++ % 2 == 0 ? 0.4 : -0.4);
-                    atom->setShiftForce({0.0, 0.0, 0.0});
+                    const auto charge = atomIndex++ % 2 == 0 ? 0.4 : -0.4;
+                    atom->setPartialCharge(charge * elementary_charge);
+                    atom->setShiftForce(
+                        linalg::Vec3D{0.0, 0.0, 0.0} * kcal_per_mol
+                    );
 
                     molsys::Molecule molecule;
                     molecule.setMoltype(MolType{1});
@@ -96,7 +105,7 @@ namespace benchmarkSetup
     {
         simulationBox.resetForces();
         for (const auto& atom : simulationBox.getAtoms())
-            atom->setShiftForce({0.0, 0.0, 0.0});
+            atom->setShiftForce(linalg::Vec3D{0.0, 0.0, 0.0} * kcal_per_mol);
     }
 }   // namespace benchmarkSetup
 
