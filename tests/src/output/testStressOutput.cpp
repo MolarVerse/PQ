@@ -28,6 +28,7 @@
 #include "physicalData.hpp"
 #include "stressOutput.hpp"
 #include "testOutputBase.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 
 TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
@@ -44,7 +45,8 @@ TEST(TestStressOutput, writeEmitsStepAndAllNineTensorComponents)
             linalg::Vec3D{1.1, 2.2, 3.3},
             linalg::Vec3D{4.4, 5.5, 6.6},
             linalg::Vec3D{7.7, 8.8, 9.9}
-        }
+        } *
+        kcal_per_mol / angstrom3
     );
 
     out.write(11, data);

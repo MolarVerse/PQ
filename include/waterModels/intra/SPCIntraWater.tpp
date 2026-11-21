@@ -94,13 +94,11 @@ namespace waterModel
                 -forceMagnitudeOH1 * deltaDistanceOH1 / 2.0
             );
 
-            forceMagnitudeOH1 /= distOH1;
-
-            const auto forceOH1 = forceMagnitudeOH1 * dOH1;
+            const auto forceOH1 = forceMagnitudeOH1 * dOH1 / distOH1;
             oxygen.addForce(forceOH1);
             hydrogen1.addForce(-forceOH1);
 
-            auto dOH2 = posO - posH2;
+            auto dOH2 = (posO - posH2);
 
             simulationBox.applyPBC(dOH2);
 
@@ -115,9 +113,7 @@ namespace waterModel
                 -forceMagnitudeOH2 * deltaDistanceOH2 / 2.0
             );
 
-            forceMagnitudeOH2 /= distOH2;
-
-            const auto forceOH2 = forceMagnitudeOH2 * dOH2;
+            const auto forceOH2 = forceMagnitudeOH2 * dOH2 / distOH2;
             oxygen.addForce(forceOH2);
             hydrogen2.addForce(-forceOH2);
 
@@ -128,7 +124,9 @@ namespace waterModel
             const auto smoothing = _getHybridSettings().getSmoothingMethod();
 
             if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)
-                smF = water.getSmoothingFactor();
+                smF = water.getSmoothingFactor().numerical_value_in(
+                    mp_units::one
+                );
 
             physicalData.addVirial(tensorProduct(dOH1, forceOH1) * (1 - smF));
             physicalData.addVirial(tensorProduct(dOH2, forceOH2) * (1 - smF));
@@ -142,15 +140,14 @@ namespace waterModel
                 -forceMagnitudeAngle * deltaAngle / 2.0
             );
 
-            const auto normalDistance = distOH1 * distOH2 * ::sin(alpha);
+            const auto normalDistance = distOH1 * distOH2 * mstd::sin(alpha);
             checkNonDegenerate(
-                normalDistance,
+                distOH1 * distOH2 * mstd::sin(alpha),
                 "sine of the H-O-H angle times both O-H distances (an angle of "
                 "0, both hydrogens on the same ray from the oxygen)"
             );
 
-            auto normalPosition  = cross(dOH2, dOH1);
-            normalPosition      /= normalDistance;
+            auto normalPosition = cross(dOH2, dOH1) / normalDistance;
 
             auto forceAngle = forceMagnitudeAngle / (distOH1 * distOH1);
             auto forcexyz   = forceAngle * cross(dOH1, normalPosition);

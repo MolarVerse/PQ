@@ -31,4 +31,21 @@
 #define ASSERT_VECTOR_NEAR(vector1, vector2) \
     EXPECT_VECTOR_NEAR(vector1, vector2)
 
+#define EXPECT_VELOCITIES_NEAR(simulationBox, expected, tolerance) \
+    const auto actual = velocitiesOf(simulationBox);               \
+    ASSERT_EQ(actual.size(), expected.size());                     \
+                                                                   \
+    for (size_t i = 0; i < actual.size(); ++i)                     \
+    {                                                              \
+        SCOPED_TRACE("atom " + std::to_string(i));                 \
+        EXPECT_VECTOR_NEAR(                                        \
+            actual[i].numerical_value_in(angstrom / s),            \
+            expected[i].numerical_value_in(angstrom / s),          \
+            tolerance.numerical_value_in(angstrom / s)             \
+        );                                                         \
+    }
+
+#define ASSERT_VELOCITIES_NEAR(simulationBox, expected, tolerance) \
+    EXPECT_VELOCITIES_NEAR(simulationBox, expected, tolerance)
+
 #endif   // TESTS__INCLUDE__MACROS__VECTOR_NEAR_HPP

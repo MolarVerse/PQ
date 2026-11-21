@@ -74,9 +74,10 @@ namespace out
             .value = physicalData.getPressure().numerical_value_in(bar),
         });
         _add({
-            .name  = "E(TOT)",
-            .unit  = kcal,
-            .value = physicalData.getTotalEnergy(),
+            .name = "E(TOT)",
+            .unit = kcal,
+            .value =
+                physicalData.getTotalEnergy().numerical_value_in(kcal_per_mol),
         });
 
         if (settings::GeneralSettings::isQMActivated())
@@ -84,8 +85,9 @@ namespace out
             _add({
                 .name  = "E(QM)",
                 .unit  = kcal,
-                .value = physicalData.getQMEnergy() -
-                         physicalData.getQMReferenceEnergy(),
+                .value = (physicalData.getQMEnergy() -
+                          physicalData.getQMReferenceEnergy())
+                             .numerical_value_in(kcal_per_mol),
             });
             _add({
                 .name  = "N(QM-ATOMS)",
@@ -97,12 +99,15 @@ namespace out
         _add({
             .name  = "E(KIN)",
             .unit  = kcal,
-            .value = physicalData.getKineticEnergy(),
+            .value = physicalData.getKineticEnergy().numerical_value_in(
+                kcal_per_mol
+            ),
         });
         _add({
-            .name  = "E(INTRA)",
-            .unit  = kcal,
-            .value = physicalData.getIntraEnergy(),
+            .name = "E(INTRA)",
+            .unit = kcal,
+            .value =
+                physicalData.getIntraEnergy().numerical_value_in(kcal_per_mol),
         });
 
         if (settings::GeneralSettings::isMMActivated())
@@ -110,12 +115,16 @@ namespace out
             _add({
                 .name  = "E(COUL)",
                 .unit  = kcal,
-                .value = physicalData.getCoulombEnergy(),
+                .value = physicalData.getCoulombEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
             });
             _add({
                 .name  = "E(NON-COUL)",
                 .unit  = kcal,
-                .value = physicalData.getNonCoulombEnergy(),
+                .value = physicalData.getNonCoulombEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
             });
         }
 
@@ -124,22 +133,30 @@ namespace out
             _add({
                 .name  = "E(BOND)",
                 .unit  = kcal,
-                .value = physicalData.getBondEnergy(),
+                .value = physicalData.getBondEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
             });
             _add({
                 .name  = "E(ANGLE)",
                 .unit  = kcal,
-                .value = physicalData.getAngleEnergy(),
+                .value = physicalData.getAngleEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
             });
             _add({
                 .name  = "E(DIHEDRAL)",
                 .unit  = kcal,
-                .value = physicalData.getDihedralEnergy(),
+                .value = physicalData.getDihedralEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
             });
             _add({
                 .name  = "E(IMPROPER)",
                 .unit  = kcal,
-                .value = physicalData.getImproperEnergy(),
+                .value = physicalData.getImproperEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
             });
         }
 
@@ -153,7 +170,9 @@ namespace out
             _add({
                 .name  = "E(QM-REF)",
                 .unit  = kcal,
-                .value = physicalData.getQMReferenceEnergy(),
+                .value = physicalData.getQMReferenceEnergy().numerical_value_in(
+                    kcal_per_mol
+                ),
             });
         }
 
@@ -162,12 +181,13 @@ namespace out
             _add({
                 .name  = "VOLUME",
                 .unit  = "A^3",
-                .value = physicalData.getVolume(),
+                .value = physicalData.getVolume().numerical_value_in(angstrom3),
             });
             _add({
-                .name  = "DENSITY",
-                .unit  = "g/cm^3",
-                .value = physicalData.getDensity(),
+                .name = "DENSITY",
+                .unit = "g/cm^3",
+                .value =
+                    physicalData.getDensity().numerical_value_in(kg_per_litre),
             });
 
             if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
@@ -188,12 +208,14 @@ namespace out
             _add({
                 .name  = "E(NH-MOMENTUM)",
                 .unit  = kcal,
-                .value = physicalData.getNoseHooverMomentumEnergy(),
+                .value = physicalData.getNoseHooverMomentumEnergy()
+                             .numerical_value_in(kcal_per_mol),
             });
             _add({
                 .name  = "E(NH-FRICTION)",
                 .unit  = kcal,
-                .value = physicalData.getNoseHooverFrictionEnergy(),
+                .value = physicalData.getNoseHooverFrictionEnergy()
+                             .numerical_value_in(one),
             });
         }
 
@@ -202,25 +224,28 @@ namespace out
             _add({
                 .name  = "LOWER-DIST-CONSTR",
                 .unit  = kcal,
-                .value = physicalData.getLowerDistanceConstraints(),
+                .value = physicalData.getLowerDistanceConstraints()
+                             .numerical_value_in(kcal_per_mol),
             });
             _add({
                 .name  = "UPPER-DIST-CONSTR",
                 .unit  = kcal,
-                .value = physicalData.getUpperDistanceConstraints(),
+                .value = physicalData.getUpperDistanceConstraints()
+                             .numerical_value_in(kcal_per_mol),
             });
         }
 
         _add({
-            .name   = "MOMENTUM",
-            .unit   = "amuA/fs",
-            .value  = norm(physicalData.getMomentum()),
+            .name  = "MOMENTUM",
+            .unit  = "amuA/fs",
+            .value = norm(physicalData.getMomentum())
+                         .numerical_value_in(g_per_mol * angstrom / fs),
             .format = SCIENTIFIC,
         });
         _add({
             .name   = "LOOPTIME",
             .unit   = "s",
-            .value  = physicalData.getLoopTime(),
+            .value  = physicalData.getLoopTime().numerical_value_in(s),
             .format = TIME,
         });
     }

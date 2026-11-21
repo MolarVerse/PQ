@@ -45,7 +45,7 @@ namespace molsys
      *
      * @return size_t
      */
-    size_t MoleculeType::getNumberOfAtomTypes()
+    size_t MoleculeType::getNumberOfAtomTypes() const
     {
         return utilities::getUniqueElements(_atomTypes).size();
     }
@@ -81,7 +81,7 @@ namespace molsys
      *
      * @param partialCharge
      */
-    void MoleculeType::addPartialCharge(double partialCharge)
+    void MoleculeType::addPartialCharge(const Charge &partialCharge)
     {
         _partialCharges.push_back(partialCharge);
     }
@@ -168,7 +168,9 @@ namespace molsys
      *
      * @param qmReferenceEnergy in kcal/mol
      */
-    void MoleculeType::setQMReferenceEnergy(double qmReferenceEnergy)
+    void MoleculeType::setQMReferenceEnergy(
+        const EnergyPerMol &qmReferenceEnergy
+    )
     {
         _qmReferenceEnergy = qmReferenceEnergy;
     }
@@ -179,7 +181,10 @@ namespace molsys
      * @param index
      * @param partialCharge
      */
-    void MoleculeType::setPartialCharge(AtomIndex index, double partialCharge)
+    void MoleculeType::setPartialCharge(
+        AtomIndex     index,
+        const Charge &partialCharge
+    )
     {
         _partialCharges[index.get()] = partialCharge;
     }
@@ -190,7 +195,7 @@ namespace molsys
      * @param partialCharges
      */
     void MoleculeType::setPartialCharges(
-        const std::vector<double> &partialCharges
+        const std::vector<Charge> &partialCharges
     )
     {
         _partialCharges = partialCharges;
@@ -267,11 +272,12 @@ namespace molsys
     /**
      * @brief get the QM reference energy of the molecule type
      *
-     * @return double in kcal/mol, 0 if not set
+     * @return EnergyPerMol the QM reference energy of the molecule type, 0 if
+     * not set
      */
-    double MoleculeType::getQMReferenceEnergy() const
+    EnergyPerMol MoleculeType::getQMReferenceEnergy() const
     {
-        return _qmReferenceEnergy.value_or(0.0);
+        return _qmReferenceEnergy.value_or(EnergyPerMol::zero());
     }
 
     /**
@@ -288,9 +294,9 @@ namespace molsys
      * @brief get the partial charge of an atom
      *
      * @param index
-     * @return double
+     * @return const Charge&
      */
-    double MoleculeType::getPartialCharge(AtomIndex index) const
+    const Charge &MoleculeType::getPartialCharge(AtomIndex index) const
     {
         return _partialCharges[index.get()];
     }
@@ -298,17 +304,17 @@ namespace molsys
     /**
      * @brief get the name of the molecule
      *
-     * @return std::string
+     * @return const std::string&
      */
-    std::string MoleculeType::getName() const { return _name; }
+    const std::string &MoleculeType::getName() const { return _name; }
 
     /**
      * @brief get the name of an atom
      *
      * @param index
-     * @return std::string
+     * @return const std::string&
      */
-    std::string MoleculeType::getAtomName(AtomIndex index) const
+    const std::string &MoleculeType::getAtomName(AtomIndex index) const
     {
         return _atomNames[index.get()];
     }
@@ -316,9 +322,9 @@ namespace molsys
     /**
      * @brief get the atom names of the molecule
      *
-     * @return std::vector<std::string>
+     * @return const std::vector<std::string>&
      */
-    std::vector<std::string> MoleculeType::getAtomNames() const
+    const std::vector<std::string> &MoleculeType::getAtomNames() const
     {
         return _atomNames;
     }
@@ -326,9 +332,9 @@ namespace molsys
     /**
      * @brief get the external atom types of the molecule
      *
-     * @return std::vector<ExtAtomType>&
+     * @return const std::vector<ExtAtomType>&
      */
-    std::vector<ExtAtomType> &MoleculeType::getExternalAtomTypes()
+    const std::vector<ExtAtomType> &MoleculeType::getExternalAtomTypes() const
     {
         return _externalAtomTypes;
     }
@@ -336,9 +342,10 @@ namespace molsys
     /**
      * @brief get the external global VDW types of the molecule
      *
-     * @return std::vector<ExtVdwType>&
+     * @return const std::vector<ExtVdwType>&
      */
-    std::vector<ExtVdwType> &MoleculeType::getExternalGlobalVDWTypes()
+    const std::vector<ExtVdwType> &MoleculeType::getExternalGlobalVDWTypes(
+    ) const
     {
         return _externalGlobalVDWTypes;
     }
@@ -346,9 +353,9 @@ namespace molsys
     /**
      * @brief get the partial charges of the molecule
      *
-     * @return std::vector<double>&
+     * @return const std::vector<Charge>&
      */
-    std::vector<double> &MoleculeType::getPartialCharges()
+    const std::vector<Charge> &MoleculeType::getPartialCharges() const
     {
         return _partialCharges;
     }

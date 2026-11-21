@@ -30,7 +30,6 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace ff
 {
@@ -97,9 +96,9 @@ namespace ff
         const auto position1 = molecule1->getAtomPosition(atomIndices[0]);
         const auto position4 = molecule4->getAtomPosition(atomIndices[3]);
 
-        auto dPosition12 = position1 - position2;
-        auto dPosition23 = position2 - position3;
-        auto dPosition43 = position4 - position3;
+        auto dPosition12 = (position1 - position2);
+        auto dPosition23 = (position2 - position3);
+        auto dPosition43 = (position4 - position3);
 
         simulationBox.applyPBC(dPosition12);
         simulationBox.applyPBC(dPosition23);
@@ -116,13 +115,10 @@ namespace ff
         auto phi = angle(crossPosition123, crossPosition432);
         phi      = dot(dPosition12, crossPosition432) > 0.0 ? -phi : phi;
 
-        const auto cosine = ::cos(
-            (_params.frequency * phi) +
-            _params.phaseShift.numerical_value_in(rad)
-        );
-        const auto energy =
-            _params.forceConstant.numerical_value_in(kcal_per_mol / rad / rad) *
-            (1.0 + cosine);
+        const auto cosine =
+            mstd::cos((_params.frequency * phi) + _params.phaseShift);
+
+        const auto energy = _params.forceConstant * (1.0 + cosine);
 
         if (isImproperDihedral)
             physicalData.addImproperEnergy(energy);
@@ -135,30 +131,27 @@ namespace ff
         forceMagnitude           = distance23 / distance432Squared;
         const auto forceVector43 = forceMagnitude * crossPosition432;
 
-        forceMagnitude             = dot(dPosition12, dPosition23);
-        forceMagnitude            /= (distance123Squared * distance23);
-        const auto forceVector123  = forceMagnitude * crossPosition123;
-
-        forceMagnitude             = dot(dPosition43, dPosition23);
-        forceMagnitude            /= (distance432Squared * distance23);
-        const auto forceVector432  = forceMagnitude * crossPosition432;
-
-        const auto sine = ::sin(
-            (_params.frequency * phi) +
-            _params.phaseShift.numerical_value_in(rad)
-        );
         forceMagnitude =
-            _params.forceConstant.numerical_value_in(kcal_per_mol / rad / rad) *
-            _params.frequency * sine;
+            dot(dPosition12, dPosition23) / (distance123Squared * distance23);
+        const auto forceVector123 = forceMagnitude * crossPosition123;
+
+        forceMagnitude =
+            dot(dPosition43, dPosition23) / (distance432Squared * distance23);
+        const auto forceVector432 = forceMagnitude * crossPosition432;
+
+        const auto sine =
+            mstd::sin((_params.frequency * phi) + _params.phaseShift);
+        const auto forceMagnitudeEnergy =
+            _params.forceConstant * _params.frequency * sine;
 
         const auto diffForce123_432 = forceVector123 - forceVector432;
 
-        const auto force_0 = -forceMagnitude * forceVector12;
+        const auto force_0 = -forceMagnitudeEnergy * forceVector12;
         const auto force_1 =
-            forceMagnitude * (forceVector12 + diffForce123_432);
+            forceMagnitudeEnergy * (forceVector12 + diffForce123_432);
         const auto force_2 =
-            +forceMagnitude * (-forceVector43 - diffForce123_432);
-        const auto force_3 = forceMagnitude * forceVector43;
+            +forceMagnitudeEnergy * (-forceVector43 - diffForce123_432);
+        const auto force_3 = forceMagnitudeEnergy * forceVector43;
 
         molecule1->addAtomForce(atomIndices[0], force_0);
         molecule2->addAtomForce(atomIndices[1], force_1);
@@ -167,33 +160,33 @@ namespace ff
 
         if (_isLinker)
         {
-            auto dPosition14 = position1 - position4;
+            auto dPosition14 = (position1 - position4);
             simulationBox.applyPBC(dPosition14);
 
-            const auto distance14 = norm(dPosition14);
+            const auto distance14Quantity = norm(dPosition14);
 
-            if (distance14 < potentialSettings.getCoulombRadiusCutOff())
+            if (distance14Quantity < potentialSettings.getCoulombRadiusCutOff())
             {
-                forceMagnitude = correctLinker<DihedralForceField>(
-                    coulombPot,
-                    nonCoulombPot,
-                    physicalData,
-                    molecule1,
-                    molecule4,
-                    atomIndices[0],
-                    atomIndices[3],
-                    distance14,
-                    potentialSettings.getScale14Coulomb(),
-                    potentialSettings.getScale14VDW()
-                );
+                const auto forceMagnitudeLinker =
+                    correctLinker<DihedralForceField>(
+                        coulombPot,
+                        nonCoulombPot,
+                        physicalData,
+                        molecule1,
+                        molecule4,
+                        atomIndices[0],
+                        atomIndices[3],
+                        distance14Quantity,
+                        potentialSettings.getScale14Coulomb(),
+                        potentialSettings.getScale14VDW()
+                    );
 
-                forceMagnitude /= distance14;
-
-                const auto forcexyz = forceMagnitude * dPosition14;
+                const auto forcexyz =
+                    forceMagnitudeLinker * (dPosition14 / distance14Quantity);
 
                 using enum SmoothingMethod;
 
-                auto smF = 0.0;
+                Quantity smF = 0.0;
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

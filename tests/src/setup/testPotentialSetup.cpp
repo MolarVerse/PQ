@@ -40,6 +40,7 @@
 #include "testSetup.hpp"
 #include "testUtils.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief setup the reaction-field Coulomb potential
@@ -146,21 +147,42 @@ TEST_F(TestSetup, setupNonCoulombicPairs)
         _engine->getPotential()->getNonCoulombPotential()
     );
 
-    const auto zero = ExtVdwType(0);
-    const auto one  = ExtVdwType(1);
-
     auto nonCoulombPair1 = pot::LennardJonesPair(
-        zero,
-        zero,
-        10.0,
-        LJParams{.c6 = 2.0, .c12 = 3.0}
+        ExtVdwType{0},
+        ExtVdwType{0},
+        10.0 * angstrom,
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
     );
-    auto nonCoulombPair2 =
-        pot::LennardJonesPair(one, zero, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
-    auto nonCoulombPair3 =
-        pot::LennardJonesPair(zero, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
-    auto nonCoulombPair4 =
-        pot::LennardJonesPair(one, one, 10.0, LJParams{.c6 = 2.0, .c12 = 3.0});
+    auto nonCoulombPair2 = pot::LennardJonesPair(
+        ExtVdwType{1},
+        ExtVdwType{0},
+        10.0 * angstrom,
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
+    );
+    auto nonCoulombPair3 = pot::LennardJonesPair(
+        ExtVdwType{0},
+        ExtVdwType{1},
+        10.0 * angstrom,
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
+    );
+    auto nonCoulombPair4 = pot::LennardJonesPair(
+        ExtVdwType{1},
+        ExtVdwType{1},
+        10.0 * angstrom,
+        LJParams{
+            .c6  = 2.0 * kcal_per_mol * angstrom6,
+            .c12 = 3.0 * kcal_per_mol * angstrom12
+        }
+    );
 
     nonCoulombPotential.addNonCoulombicPair(
         std::make_shared<pot::LennardJonesPair>(nonCoulombPair1)

@@ -76,10 +76,10 @@ namespace intraNonBonded
         ) const;
 
         [[nodiscard]]
-        std::pair<double, double> calculateSingleInteraction(
+        std::pair<EnergyPerMol, EnergyPerMol> calculateSingleInteraction(
             AtomIndex                    atomIdx1,
             int                          atomIdx2,
-            const linalg::Vec3D         &box,
+            const Pos3D                 &box,
             const pot::CoulombPotential *coulPot,
             pot::NonCoulombPotential    *nonCoulPot,
             const PotentialSettings     &potentialSettings

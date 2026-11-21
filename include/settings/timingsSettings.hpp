@@ -40,8 +40,12 @@ class TimingsSettings
     Setting<Time, "Time Step">             _timeStep;
     Setting<size_t, "Number of Steps">     _numberOfSteps{0};
     Setting<size_t, "Starting Step Count"> _startingStepCount{0};
+    Setting<Time, "Starting Time">         _startingTime;
 
    public:
+    [[nodiscard]] Time calculateFinalSimulationTime() const;
+    [[nodiscard]] Time calculateSimulationTimeOfRun() const;
+
     /********************
      * standard setters *
      ********************/
@@ -49,6 +53,7 @@ class TimingsSettings
     void setTimeStepByUser(const Time& timeStep);
     void setStartingStepCountByUser(size_t stepCount);
     void setNumberOfStepsByUser(size_t numberOfSteps);
+    void setStartingTimeByUser(const Time& startingTime);
 
     /********************
      * standard getters *
@@ -57,6 +62,9 @@ class TimingsSettings
     [[nodiscard]] const Time& getTimeStep() const;
     [[nodiscard]] size_t      getStartingStepCount() const;
     [[nodiscard]] size_t      getNumberOfSteps() const;
+    [[nodiscard]] const Time& getStartingTime() const;
+
+    [[nodiscard]] bool isStartingTimeSet() const;
 };
 
 #endif   // SETTINGS__TIMINGS_SETTINGS_HPP

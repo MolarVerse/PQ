@@ -29,6 +29,7 @@
 #include "hessianSettings.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestInputFileReader, parseHessianFile)
 {
@@ -78,7 +79,7 @@ TEST_F(TestInputFileReader, parseHessianDisplacement)
         "0.001"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(hessianSettings.getDisplacement(), 0.001);
+    EXPECT_EQ(hessianSettings.getDisplacement(), 0.001 * angstrom);
 
     _clearParser(parser);
 

@@ -45,8 +45,8 @@ namespace thermostat
         // chainLength + 1 entries; the last one is a fixed zero boundary term
         // needed by the chi[i] * chi[i + 1] coupling of the last real link. It
         // is never updated and never exposed through the getters.
-        std::vector<double> _chi{0.0};    // in kcal/mol s
-        std::vector<double> _zeta{0.0};   // unitless
+        std::vector<Action>   _chi{Action::zero()};
+        std::vector<Quantity> _zeta{0.0};
 
        public:
         explicit NoseHooverThermostat(const NoseHooverSettings &nhSettings);
@@ -67,8 +67,8 @@ namespace thermostat
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::vector<double> getChi() const;
-        [[nodiscard]] std::vector<double> getZeta() const;
+        [[nodiscard]] std::vector<Action>   getChi() const;
+        [[nodiscard]] std::vector<Quantity> getZeta() const;
 
         [[nodiscard]]
         ThermostatType getThermostatType() const override;

@@ -23,22 +23,24 @@
 #ifndef CONFIG__RIGID_WATER_GEOMETRY_HPP
 #define CONFIG__RIGID_WATER_GEOMETRY_HPP
 
-static constexpr double SPC_OH_DIST = 1.0;           // Angström
-static constexpr double SPC_HH_DIST = 1.632993162;   // Angström
+#include "unit_types.hpp"
 
-static constexpr double SPC_E_OH_DIST = SPC_OH_DIST;   // Angström
-static constexpr double SPC_E_HH_DIST = SPC_HH_DIST;   // Angström
+static constexpr Distance SPC_OH_DIST = 1.0 * mstd::units::angstrom;
+static constexpr Distance SPC_HH_DIST = 1.632993162 * mstd::units::angstrom;
 
-static constexpr double SPC_DC_OH_DIST = SPC_OH_DIST;   // Angström
-static constexpr double SPC_DC_HH_DIST = SPC_HH_DIST;   // Angström
+static constexpr Distance SPC_E_OH_DIST = SPC_OH_DIST;
+static constexpr Distance SPC_E_HH_DIST = SPC_HH_DIST;
 
-static constexpr double H2O_DC_OH_DIST = 0.958;     // Angström
-static constexpr double H2O_DC_HH_DIST = 1.56441;   // Angström
+static constexpr Distance SPC_DC_OH_DIST = SPC_OH_DIST;
+static constexpr Distance SPC_DC_HH_DIST = SPC_HH_DIST;
 
-static constexpr double TIP3P_OH_DIST = 0.9572;   // Angström
-static constexpr double TIP3P_HH_DIST = 1.5139;   // Angström
+static constexpr Distance H2O_DC_OH_DIST = 0.958 * mstd::units::angstrom;
+static constexpr Distance H2O_DC_HH_DIST = 1.56441 * mstd::units::angstrom;
 
-static constexpr double OPC3_OH_DIST = 0.97888;       // Angström
-static constexpr double OPC3_HH_DIST = 1.598492306;   // Angström
+static constexpr Distance TIP3P_OH_DIST = 0.9572 * mstd::units::angstrom;
+static constexpr Distance TIP3P_HH_DIST = 1.5139 * mstd::units::angstrom;
+
+static constexpr Distance OPC3_OH_DIST = 0.97888 * mstd::units::angstrom;
+static constexpr Distance OPC3_HH_DIST = 1.598492306 * mstd::units::angstrom;
 
 #endif   // CONFIG__RIGID_WATER_GEOMETRY_HPP

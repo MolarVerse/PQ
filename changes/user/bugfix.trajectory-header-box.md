@@ -1,0 +1,1 @@
+- The box in the header of every frame of the `.xyz`, `.vel`, `.force` and `.chrg` trajectory files (also for ring polymer runs) is written with full precision instead of 6 significant digits, so box fluctuations of NPT runs are no longer rounded to 1e-4 Angstrom.

@@ -23,9 +23,7 @@
 #include "integrator.hpp"
 
 #include "atom.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace integrator
 {
@@ -44,8 +42,7 @@ namespace integrator
         const auto force    = atom->getForce();
         const auto mass     = atom->getMass();
 
-        velocity += timeStep.numerical_value_in(fs) * force / mass *
-                    V_VERLET_VELOCITY_FACTOR;
+        velocity += 0.5 * timeStep * force / mass;
 
         atom->setVelocity(velocity);
     }
@@ -67,7 +64,7 @@ namespace integrator
         auto       position = atom->getPosition();
         const auto velocity = atom->getVelocity();
 
-        position += timeStep.numerical_value_in(s) * velocity;
+        position += timeStep * velocity;
 
         simulationBox.applyPBC(position);
 

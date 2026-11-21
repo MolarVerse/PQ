@@ -37,7 +37,10 @@ TEST_F(TestEngine, calculateTotalSimulationTimeFreshRun)
 
     // a freshly constructed engine starts at step 1
     EXPECT_EQ(_engine->getStep(), 1);
-    EXPECT_EQ(_engine->calculateTotalSimulationTime(timeStep, 0), timeStep);
+    EXPECT_EQ(
+        _engine->calculateTotalSimulationTime(timeStep, 0 * fs),
+        timeStep
+    );
 }
 
 /**
@@ -52,8 +55,8 @@ TEST_F(TestEngine, calculateTotalSimulationTimeIncludesRestartOffset)
 
     // effStep = engine step (1) + restart offset (1000) = 1001
     EXPECT_EQ(
-        _engine->calculateTotalSimulationTime(timeStep, 1000),
-        1001 * timeStep
+        _engine->calculateTotalSimulationTime(timeStep, 1000 * fs),
+        1000.5 * fs
     );
 }
 
@@ -66,5 +69,8 @@ TEST_F(TestEngine, calculateTotalSimulationTimeScalesWithTimeStep)
 {
     const auto timeStep = 2.0 * fs;
 
-    EXPECT_EQ(_engine->calculateTotalSimulationTime(timeStep, 0), timeStep);
+    EXPECT_EQ(
+        _engine->calculateTotalSimulationTime(timeStep, 0 * fs),
+        timeStep
+    );
 }

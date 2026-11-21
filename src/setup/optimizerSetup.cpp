@@ -30,7 +30,6 @@
 #include "constant.hpp"
 #include "constantDecay.hpp"
 #include "convergenceSettings.hpp"
-#include "defaults.hpp"
 #include "engine.hpp"
 #include "enums/convergence.hpp"
 #include "expDecay.hpp"
@@ -39,6 +38,7 @@
 #include "optEngine.hpp"
 #include "optimizerSettings.hpp"
 #include "steepestDescent.hpp"
+#include "units.hpp"
 
 namespace setup
 {
@@ -261,38 +261,19 @@ namespace setup
         const auto &convSettings   = _optEngine.getSettings().convSettings;
         const auto  energyStrategy = convSettings.getEnConvStrategy();
 
-        const auto useEnergyOptional   = convSettings.getUseEnergyConv();
-        const auto useMaxForceOptional = convSettings.getUseMaxForceConv();
-        const auto useRMSForceOptional = convSettings.getUseRMSForceConv();
+        const auto useEnergy   = convSettings.getUseEnergyConv();
+        const auto useMaxForce = convSettings.getUseMaxForceConv();
+        const auto useRMSForce = convSettings.getUseRMSForceConv();
 
-        const auto energyOptional    = convSettings.getEnergyConv();
-        const auto absEnergyOptional = convSettings.getAbsEnergyConv();
-        const auto relEnergyOptional = convSettings.getRelEnergyConv();
-        const auto forceOptional     = convSettings.getForceConv();
-        const auto maxForceOptional  = convSettings.getMaxForceConv();
-        const auto rmsForceOptional  = convSettings.getRMSForceConv();
-
-        const auto defaultRelEnergy = defaults::REL_ENERGY_CONV_DEFAULT;
-        const auto defaultAbsEnergy = defaults::ABS_ENERGY_CONV_DEFAULT;
-        const auto defaultMaxForce  = defaults::MAX_FORCE_CONV_DEFAULT;
-        const auto defaultRMSForce  = defaults::RMS_FORCE_CONV_DEFAULT;
-
-        auto relEnergy = energyOptional.value_or(defaultRelEnergy);
-        auto absEnergy = energyOptional.value_or(defaultAbsEnergy);
-
-        relEnergy = relEnergyOptional.value_or(relEnergy);
-        absEnergy = absEnergyOptional.value_or(absEnergy);
-
-        auto maxForce = forceOptional.value_or(defaultMaxForce);
-        auto rmsForce = forceOptional.value_or(defaultRMSForce);
-
-        maxForce = maxForceOptional.value_or(maxForce);
-        rmsForce = rmsForceOptional.value_or(rmsForce);
+        const auto absEnergy = convSettings.getAbsEnergyConv();
+        const auto relEnergy = convSettings.getRelEnergyConv();
+        const auto maxForce  = convSettings.getMaxForceConv();
+        const auto rmsForce  = convSettings.getRMSForceConv();
 
         const opt::Convergence convergence(
-            useEnergyOptional,
-            useMaxForceOptional,
-            useRMSForceOptional,
+            useEnergy,
+            useMaxForce,
+            useRMSForce,
             relEnergy,
             absEnergy,
             maxForce,
@@ -326,10 +307,20 @@ namespace setup
         const auto maxForceConv  = convergence.getAbsMaxForceConvThreshold();
         const auto rmsForceConv  = convergence.getAbsRMSForceConvThreshold();
 
-        auto relEnergyConvStr = std::format("{:.2e}", relEnergyConv);
-        auto absEnergyConvStr = std::format("{:.2e}", absEnergyConv);
-        auto maxForceConvStr  = std::format("{:.2e}", maxForceConv);
-        auto rmsForceConvStr  = std::format("{:.2e}", rmsForceConv);
+        auto relEnergyConvStr =
+            std::format("{:.2e}", relEnergyConv.numerical_value_in(one));
+        auto absEnergyConvStr = std::format(
+            "{:.2e}",
+            absEnergyConv.numerical_value_in(kcal_per_mol)
+        );
+        auto maxForceConvStr = std::format(
+            "{:.2e}",
+            maxForceConv.numerical_value_in(kcal_per_mol / angstrom)
+        );
+        auto rmsForceConvStr = std::format(
+            "{:.2e}",
+            rmsForceConv.numerical_value_in(kcal_per_mol / angstrom)
+        );
 
         using enum ConvStrategy;
 
