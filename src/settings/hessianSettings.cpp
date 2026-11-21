@@ -64,7 +64,7 @@ void HessianSettings::setHessianInfoFileByUser(const std::string &filename)
  *
  * @param displacement The displacement value to be used.
  */
-void HessianSettings::setDisplacementByUser(double displacement)
+void HessianSettings::setDisplacementByUser(const Pos &displacement)
 {
     _displacement.setByUser(displacement);
 }
@@ -115,7 +115,10 @@ std::string HessianSettings::getHessianInfoFile() const
  *
  * @return The displacement value.
  */
-double HessianSettings::getDisplacement() const { return _displacement.get(); }
+const Pos &HessianSettings::getDisplacement() const
+{
+    return _displacement.get();
+}
 
 /**
  * @brief Check whether to optimize before Hessian calculations.

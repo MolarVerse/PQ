@@ -2376,21 +2376,6 @@ With the ``use-rms-force-conv`` keyword the user can enable or disable the root 
 
 .. centered:: *default value* = true
 
-.. _energyconvergencethresholdKey:
-
-Energy Convergence Threshold
-============================
-
-.. admonition:: Key
-    :class: tip
-
-    energy-conv = {double} -> 1e-6
-
-With the ``energy-conv`` keyword the user can specify the energy convergence threshold for all kind of optimization jobs.
-This keyword will set both the absolute and relative energy convergence threshold.
-
-.. centered:: *default value* = 1e-6
-
 .. _relativeenergyconvergencethresholdKey:
 
 Relative Energy Convergence Threshold
@@ -2416,20 +2401,6 @@ Absolute Energy Convergence Threshold
     abs-energy-conv = {double} -> 1e-6
 
 With the ``abs-energy-conv`` keyword the user can specify the absolute energy convergence threshold for all kind of optimization jobs. This keyword overrides the ``energy-conv`` keyword.
-
-.. centered:: *default value* = 1e-6
-
-.. _forceconvergencethresholdKeys:
-
-Force Convergence Threshold
-===========================
-
-.. admonition:: Key
-    :class: tip
-
-    force-conv = {double} -> 1e-6
-
-With the ``force-conv`` keyword the user can specify the force convergence threshold for all kind of optimization jobs. This keyword will set both the maximum and root mean square force convergence threshold.
 
 .. centered:: *default value* = 1e-6
 

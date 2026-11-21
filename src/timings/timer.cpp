@@ -55,9 +55,9 @@ namespace timings
      * @brief calculates the elapsed time in ms
      *
      */
-    double Timer::calculateElapsedTime() const
+    Time Timer::calculateElapsedTime() const
     {
-        double elapsedTime = 0;
+        Time elapsedTime = Time::zero();
 
         for (const auto& timing : _timingDetails)
             elapsedTime += timing.calculateElapsedTime();
@@ -69,9 +69,9 @@ namespace timings
      * @brief calculates the loop time in s
      *
      */
-    double Timer::calculateLoopTime() const
+    Time Timer::calculateLoopTime() const
     {
-        auto loopTime = 0.0;
+        Time loopTime = Time::zero();
 
         for (const auto& timing : _timingDetails)
             loopTime += timing.calculateLoopTime();

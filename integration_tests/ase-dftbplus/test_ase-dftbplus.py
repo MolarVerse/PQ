@@ -26,7 +26,7 @@ import pytest
 import os
 
 from conftest import execute_pq
-from analysis import check_pq_output
+from analysis import check_pq_output, DFTB_FORCE_ATOL
 
 
 @pytest.mark.parametrize(
@@ -45,4 +45,4 @@ def test_ase_dftbplus(test_with_data_dir):
     # check if stderr is empty
     assert stderr == b""
 
-    check_pq_output("malondialdehyde-md-01", "ase-dftbplus")
+    check_pq_output("malondialdehyde-md-01", "ase-dftbplus", force_atol=DFTB_FORCE_ATOL)

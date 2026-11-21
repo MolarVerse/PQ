@@ -27,6 +27,7 @@
 
 #include "enums/waterModels.hpp"
 #include "setting.hpp"
+#include "unit_types.hpp"
 
 class ReferenceSettings;
 
@@ -38,8 +39,8 @@ class ReferenceSettings;
  */
 struct RigidWaterGeometry
 {
-    double dOH{0.0};
-    double dHH{0.0};
+    Distance dOH{Distance::zero()};
+    Distance dHH{Distance::zero()};
 };
 
 /**

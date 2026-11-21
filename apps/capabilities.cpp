@@ -32,7 +32,6 @@
 #include <ostream>
 #include <string_view>
 
-#include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
 #include "externalQMScripts.hpp"
 #include "jsonOutput.hpp"
@@ -232,10 +231,10 @@ namespace
             "ps"
         );
         json.value("exclusive_minimum", 0);
-        json.value("maximum", std::numeric_limits<double>::max() / PS_TO_FS);
+        json.value("maximum", std::numeric_limits<double>::max());
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", FS_TO_PS);
+        json.value("factor", (1.0 * fs).numerical_value_in(ps));
         json.endObject();
         json.value(
             "default",
@@ -256,8 +255,7 @@ namespace
         );
         json.value(
             "default",
-            defaults::LANGEVIN_THERMOSTAT_FRICTION /
-                defaults::MAX_FRICTION_CONVERSION
+            defaults::LANGEVIN_THERMOSTAT_FRICTION.numerical_value_in(one / ps)
         );
         json.endObject();
 
@@ -276,10 +274,7 @@ namespace
             "cm^-1"
         );
         json.value("minimum", 0);
-        json.value(
-            "maximum",
-            std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ
-        );
+        json.value("maximum", std::sqrt(std::numeric_limits<double>::max()));
         json.value(
             "default",
             mstd::toWavenumber(defaults::NH_COUPLING_FREQ)
@@ -300,10 +295,10 @@ namespace
             "ps"
         );
         json.value("exclusive_minimum", 0);
-        json.value("maximum", std::numeric_limits<double>::max() / PS_TO_FS);
+        json.value("maximum", std::numeric_limits<double>::max());
         json.beginObject("minimum_from");
         json.value("parameter", "timestep");
-        json.value("factor", FS_TO_PS);
+        json.value("factor", (1.0 * fs).numerical_value_in(ps));
         json.endObject();
         json.value(
             "default",
@@ -337,7 +332,10 @@ namespace
             "angstrom"
         );
         json.value("minimum", 0);
-        json.value("default", defaults::COULOMB_CUT_OFF_DEFAULT);
+        json.value(
+            "default",
+            defaults::COULOMB_CUT_OFF_DEFAULT.numerical_value_in(angstrom)
+        );
         json.endObject();
 
         json.endObject();

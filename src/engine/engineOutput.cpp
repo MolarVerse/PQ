@@ -291,13 +291,19 @@ namespace engine
     /**
      * @brief wrapper for restart file output function
      *
-     * @param frame
-     * @param step
+     * @param frame the frame to be written to the restart file
+     * @param step the current MD step
+     * @param finalTime the simulation time corresponding to this frame, if
+     * available
      */
-    void EngineOutput::writeRstFile(const out::Frame &frame, size_t step)
+    void EngineOutput::writeRstFile(
+        const out::Frame &frame,
+        size_t            step,
+        const Time       &finalTime
+    )
     {
         auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-        _rstFileOutput->write(frame, step);
+        _rstFileOutput->write(frame, step, finalTime);
     }
 
     /**
@@ -354,6 +360,7 @@ namespace engine
      * @param thermostat
      * @param step
      * @param potentialEnergy written to the extxyz file
+     * @param finalTime
      *
      * @throw the first error of an earlier frame write
      */
@@ -361,7 +368,8 @@ namespace engine
         const molsys::SimulationBox  &simulationBox,
         const thermostat::Thermostat &thermostat,
         const size_t                  step,
-        const double                  potentialEnergy
+        const double                  potentialEnergy,
+        const std::optional<Time>    &finalTime
     )
     {
         if (!_frameWriterChecked)
@@ -379,12 +387,14 @@ namespace engine
 
         if (!_frameWriter)
         {
-            _writeFrame(frame, step, metadata);
+            _writeFrame(frame, step, metadata, finalTime);
             return;
         }
 
-        _frameWriter->submit([this, frame = std::move(frame), step, metadata]
-                             { _writeFrame(frame, step, metadata); });
+        _frameWriter->submit(
+            [this, frame = std::move(frame), step, metadata, finalTime]
+            { _writeFrame(frame, step, metadata, finalTime); }
+        );
     }
 
     /**
@@ -448,11 +458,14 @@ namespace engine
      * @param frame
      * @param step
      * @param metadata whether to include step metadata
+     * @param finalTime the simulation time corresponding to this frame, if
+     * available
      */
     void EngineOutput::_writeFrame(
-        const out::Frame &frame,
-        const size_t      step,
-        const bool        metadata
+        const out::Frame          &frame,
+        const size_t               step,
+        const bool                 metadata,
+        const std::optional<Time> &finalTime
     )
     {
         if (_extxyzOutput)
@@ -471,7 +484,10 @@ namespace engine
             _chargeOutput->writeCharges(frame, step, metadata);
         }
 
-        _rstFileOutput->write(frame, step);
+        // ATTENTION WITH NON MD SIMULATIONS: the finalTime parameter may be
+        // std::nullopt, indicating that there is no well-defined simulation
+        // time for this frame.
+        _rstFileOutput->write(frame, step, finalTime);
     }
 
     /**
@@ -500,7 +516,7 @@ namespace engine
     )
     {
         auto _ = scopedTimer(TimerId::Output, "RstFileOutput");
-        _rstFileOutput->write(out::Frame{simulationBox}, step);
+        _rstFileOutput->write(out::Frame{simulationBox}, step, std::nullopt);
     }
 
     /**

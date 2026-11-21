@@ -37,6 +37,7 @@
 #include "staticMatrix.hpp"
 #include "stringUtilities.hpp"
 #include "systemInfo.hpp"
+#include "units.hpp"
 
 #ifdef WITH_HDF5
 #include "hdf5Wrapper.hpp"
@@ -93,9 +94,6 @@ namespace out
 
 namespace out
 {
-    // H5MD readers know Angstrom fs-1, not the Angstrom s-1 of PQ
-    constexpr double PER_S_TO_PER_FS = 1.0e-15;
-
     /**
      * @brief open HDF5 file and the H5MD elements written each frame
      */
@@ -303,8 +301,9 @@ namespace out
         const auto time      = static_cast<double>(step) * timeStep;
 
         // H5MD edges are the box vectors as rows
-        const auto edges =
-            linalg::transpose(frame.box->getBoxMatrix()).toStdVector();
+        const auto edges = linalg::transpose(frame.box->getBoxMatrix())
+                               .numerical_value_in(angstrom)
+                               .toStdVector();
 
         box->append(stepValue, time, std::span<const double>{edges});
 
@@ -315,9 +314,8 @@ namespace out
             time,
             [&](std::size_t atomIndex)
             {
-                return frame.box->wrapPositionIntoBox(
-                    atoms[atomIndex].position
-                );
+                return frame.box->wrapPositionIntoBox(atoms[atomIndex].position)
+                    .numerical_value_in(angstrom);
             }
         );
         appendVectors(
@@ -325,18 +323,29 @@ namespace out
             stepValue,
             time,
             [&](std::size_t atomIndex)
-            { return atoms[atomIndex].velocity * PER_S_TO_PER_FS; }
+            {
+                return atoms[atomIndex].velocity.numerical_value_in(
+                    angstrom / fs
+                );
+            }
         );
         appendVectors(
             *force,
             stepValue,
             time,
-            [&](std::size_t atomIndex) { return atoms[atomIndex].force; }
+            [&](std::size_t atomIndex)
+            {
+                return atoms[atomIndex].force.numerical_value_in(
+                    kcal_per_mol / angstrom
+                );
+            }
         );
 
         for (std::size_t atomIndex = 0; atomIndex < nAtoms; ++atomIndex)
         {
-            buffer[atomIndex] = static_cast<float>(atoms[atomIndex].charge);
+            buffer[atomIndex] = static_cast<float>(
+                atoms[atomIndex].charge.numerical_value_in(elementary_charge)
+            );
         }
         charge->append(
             stepValue,

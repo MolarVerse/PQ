@@ -32,6 +32,8 @@
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 /**
  * @class TestDistanceConstraint
@@ -48,10 +50,11 @@ class TestDistanceConstraint : public ::testing::Test
     std::shared_ptr<molsys::Atom> _atom1;
     std::shared_ptr<molsys::Atom> _atom2;
 
-    double _lowerDistance     = 1.0;
-    double _upperDistance     = 3.0;
-    double _springConstant    = 10.0;
-    double _dSpringConstantDt = 0.0;
+    Distance             _lowerDistance  = 1.0 * angstrom;
+    Distance             _upperDistance  = 3.0 * angstrom;
+    ForceConstant        _springConstant = 10.0 * kcal_per_mol / angstrom2;
+    ForceConstantPerTime _dSpringConstantDt =
+        0.0 * kcal_per_mol / angstrom2 / s;
 
     void SetUp() override
     {
@@ -60,8 +63,8 @@ class TestDistanceConstraint : public ::testing::Test
         _atom1 = std::make_shared<molsys::Atom>();
         _atom2 = std::make_shared<molsys::Atom>();
 
-        _atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        _atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
+        _atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        _atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
 
         _atom1->setForceToZero();
         _atom2->setForceToZero();
@@ -72,7 +75,9 @@ class TestDistanceConstraint : public ::testing::Test
         _box = std::make_unique<molsys::SimulationBox>();
         _box->addMolecule(molecule1);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _box->setBox(orthoBox, false);
 
         _distanceConstraint = std::make_unique<constraints::DistanceConstraint>(

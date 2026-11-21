@@ -24,6 +24,9 @@
 
 #include <cmath>
 
+#include "unit_types.hpp"
+#include "units.hpp"
+
 namespace pot
 {
     /**
@@ -33,7 +36,7 @@ namespace pot
      * @param coefficients
      */
     GuffPair::GuffPair(
-        double                                                     cutOff,
+        const Pos                                                 &cutOff,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients
     )
         : NonCoulombPair(cutOff), _coefficients(coefficients)
@@ -49,9 +52,9 @@ namespace pot
      * @param coefficients
      */
     GuffPair::GuffPair(
-        double                                                     cutOff,
-        double                                                     energyCutoff,
-        double                                                     forceCutoff,
+        const Pos                                                 &cutOff,
+        const EnergyPerMol                                        &energyCutoff,
+        const Force                                               &forceCutoff,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients
     )
         : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
@@ -68,98 +71,112 @@ namespace pot
      * identical for any distance > 0.
      *
      * @param distance
-     * @return std::pair<double, double>
+     * @return std::pair<EnergyPerMol, Force>
      */
-    std::pair<double, double> GuffPair::calculate(double distance) const
+    std::pair<EnergyPerMol, Force> GuffPair::calculate(
+        const Pos &distance
+    ) const
     {
-        double energy = 0.0;
-        double force  = 0.0;
+        EnergyPerMol cumulativeEnergy = EnergyPerMol::zero();
+        Force        cumulativeForce  = Force::zero();
 
-        if (const auto coeff1 = _coefficients.at(0); coeff1 != 0.0)
+        // Power-law term, coefficients [coeff, n] starting at `index`:
+        //   E = coeff / r^n          (coeff in kcal/mol * Å^n)
+        //   F = -dE/dr = n * E / r
+        // Skipped entirely if coeff == 0.
+        auto addPowerTerms =
+            [this, &distance, &cumulativeEnergy, &cumulativeForce](size_t index)
         {
-            const auto power2           = _coefficients.at(1);
-            const auto distance_power2  = ::pow(distance, power2);
-            energy                     += coeff1 / distance_power2;
-            force += power2 * coeff1 / (distance_power2 * distance);
-        }
-        if (const auto coeff3 = _coefficients.at(2); coeff3 != 0.0)
+            const auto coeff = _coefficients.at(index);
+            if (coeff == 0.0)
+                return;
+
+            const auto power = _coefficients.at(index + 1);
+
+            const auto distance_power =
+                mstd::pow(distance.numerical_value_in(Pos::unit), power);
+
+            cumulativeEnergy += coeff / distance_power * kcal_per_mol;
+            cumulativeForce +=
+                power * (coeff / distance_power * kcal_per_mol) / distance;
+        };
+
+        // Fermi-like (logistic) term, coefficients [coeff, cexp, rExp]:
+        //   h = exp(cexp * (r - rExp))      (cexp in 1/Å, rExp in Å)
+        //   E = coeff / (1 + h)
+        //   F = -dE/dr = E * cexp * h / (1 + h)
+        // Skipped entirely if coeff == 0.
+        auto addExpTerm =
+            [this, &distance, &cumulativeEnergy, &cumulativeForce](size_t index)
         {
-            const auto power4           = _coefficients.at(3);
-            const auto distance_power4  = ::pow(distance, power4);
-            energy                     += coeff3 / distance_power4;
-            force += power4 * coeff3 / (distance_power4 * distance);
-        }
+            const auto coeff = _coefficients.at(index);
+            if (coeff == 0.0)
+                return;
 
-        if (const auto coeff5 = _coefficients.at(4); coeff5 != 0.0)
+            const auto cexp = _coefficients.at(index + 1) / angstrom;
+            const auto rExp = _coefficients.at(index + 2) * angstrom;
+
+            const auto helper = mstd::exp(cexp * (distance - rExp));
+
+            const auto energy_ = coeff * kcal_per_mol / (1 + helper);
+
+            cumulativeEnergy += energy_;
+            cumulativeForce  += energy_ * cexp * helper / (1 + helper);
+        };
+
+        // Stretched-exponential term, coefficients [coeff, cexp, rExp, n]:
+        //   d = (r - rExp)^n                (rExp in Å, d in Å^n)
+        //   E = coeff * exp(cexp * d)       (cexp in 1/Å^n)
+        //   F = -dE/dr = -cexp * n * d / (r - rExp) * E
+        // Skipped entirely if coeff == 0.
+        auto addPowExpTerm =
+            [this, &distance, &cumulativeEnergy, &cumulativeForce](size_t index)
         {
-            const auto power6           = _coefficients.at(5);
-            const auto distance_power6  = ::pow(distance, power6);
-            energy                     += coeff5 / distance_power6;
-            force += power6 * coeff5 / (distance_power6 * distance);
-        }
-        if (const auto coeff7 = _coefficients.at(6); coeff7 != 0.0)
-        {
-            const auto power8           = _coefficients.at(7);
-            const auto distance_power8  = ::pow(distance, power8);
-            energy                     += coeff7 / distance_power8;
-            force += power8 * coeff7 / (distance_power8 * distance);
-        }
+            const auto coeff = _coefficients.at(index);
+            if (coeff == 0.0)
+                return;
 
-        if (const auto coeff9 = _coefficients.at(8); coeff9 != 0.0)
-        {
-            const auto cexp10 = _coefficients.at(9);
-            const auto rExp11 = _coefficients.at(10);
+            const auto cexp  = _coefficients.at(index + 1);
+            const auto rExp  = _coefficients.at(index + 2) * angstrom;
+            const auto power = _coefficients.at(index + 3);
 
-            const auto helper = ::exp(cexp10 * (distance - rExp11));
+            const auto distance_n =
+                ::pow((distance - rExp).numerical_value_in(Pos::unit), power);
+            const auto helper = coeff * ::exp(cexp * distance_n) * kcal_per_mol;
 
-            energy += coeff9 / (1 + helper);
-            force  += coeff9 * cexp10 * helper / ((1 + helper) * (1 + helper));
-        }
+            cumulativeEnergy += helper;
+            cumulativeForce +=
+                -cexp * power * distance_n / (distance - rExp) * helper;
+        };
 
-        if (const auto c12 = _coefficients.at(11); c12 != 0.0)
-        {
-            const auto cexp13 = _coefficients.at(12);
-            const auto rExp14 = _coefficients.at(13);
+        size_t index = 0;
 
-            const auto helper = ::exp(cexp13 * (distance - rExp14));
+        // the first four terms are power terms
+        addPowerTerms(index);
+        index += 2;
+        addPowerTerms(index);
+        index += 2;
+        addPowerTerms(index);
+        index += 2;
+        addPowerTerms(index);
+        index += 2;
 
-            energy += c12 / (1 + helper);
-            force  += c12 * cexp13 * helper / ((1 + helper) * (1 + helper));
-        }
+        // the next two terms are exponential terms
+        addExpTerm(index);
+        index += 3;
+        addExpTerm(index);
+        index += 3;
 
-        if (const auto c15 = _coefficients.at(14); c15 != 0.0)
-        {
-            const auto cexp16 = _coefficients.at(15);
-            const auto rExp17 = _coefficients.at(16);
-            const auto n18    = _coefficients.at(17);
+        // the next two terms are power-exponential terms
+        addPowExpTerm(index);
+        index += 4;
+        addPowExpTerm(index);
 
-            const auto distance_n18 = ::pow(distance - rExp17, n18);
-            const auto helper       = c15 * ::exp(cexp16 * distance_n18);
+        cumulativeEnergy += -get_energyCutoff() -
+                            get_forceCutoff() * (get_radialCutoff() - distance);
+        cumulativeForce += -get_forceCutoff();
 
-            energy += helper;
-            force +=
-                -cexp16 * n18 * distance_n18 / (distance - rExp17) * helper;
-        }
-
-        if (const auto c19 = _coefficients.at(18); c19 != 0.0)
-        {
-            const auto cexp20 = _coefficients.at(19);
-            const auto rExp21 = _coefficients.at(20);
-            const auto n22    = _coefficients.at(21);
-
-            const auto distance_n22 = ::pow(distance - rExp21, n22);
-            const auto helper       = c19 * ::exp(cexp20 * distance_n22);
-
-            energy += helper;
-            force +=
-                -cexp20 * n22 * distance_n22 / (distance - rExp21) * helper;
-        }
-
-        energy += -get_energyCutoff() -
-                  get_forceCutoff() * (get_radialCutoff() - distance);
-        force += -get_forceCutoff();
-
-        return {energy, force};
+        return {cumulativeEnergy, cumulativeForce};
     }
 
 }   // namespace pot

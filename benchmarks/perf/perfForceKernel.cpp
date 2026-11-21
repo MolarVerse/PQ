@@ -31,6 +31,7 @@
 
 #include "settings.hpp"
 #include "strongTypes.hpp"
+#include "unit_types.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -51,7 +52,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(10.0);
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
     auto coulombPotential =
@@ -69,7 +70,9 @@ int main()
 
     auto simulationBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     simulationBox.setBox(orthoBox, false);
 
     const auto& box     = simulationBox.getBoxDimensions();
@@ -79,7 +82,7 @@ int main()
 
     CALLGRIND_ZERO_STATS;
 
-    double sink = 0.0;
+    EnergyPerMol sink = EnergyPerMol::zero();
     for (std::uint64_t i = 0; i < ITERATIONS; ++i)
     {
         const auto [coulombEnergy, nonCoulombEnergy] =
@@ -95,6 +98,6 @@ int main()
         sink += coulombEnergy + nonCoulombEnergy;
     }
 
-    std::cout << std::format("{:.6f}\n", sink);
+    std::cout << std::format("{:.6f}\n", sink.numerical_value_in(kcal_per_mol));
     return 0;
 }

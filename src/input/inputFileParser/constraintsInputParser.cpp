@@ -31,6 +31,7 @@
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
 #include "rangeValidator.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -193,7 +194,8 @@ namespace input
         const auto metaData = KeyMetadata{
             .name        = "rattle-tolerance",
             .title       = "Rattle tolerance",
-            .description = "Keyword to set the rattle tolerance"
+            .description = "Keyword to set the rattle tolerance",
+            .unit        = "g_per_mol / s"
         };
 
         const auto defaultValue = 1e-8;
@@ -204,7 +206,11 @@ namespace input
         };
 
         const auto setValue = [this](auto value)
-        { _constraintSettings->setRattleToleranceByUser(value); };
+        {
+            _constraintSettings->setRattleToleranceByUser(
+                value * g_per_mol / s
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{

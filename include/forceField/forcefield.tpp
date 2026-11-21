@@ -48,7 +48,7 @@ namespace ff
      * @return double
      */
     template <typename T>
-    double correctLinker(
+    Force correctLinker(
         const pot::CoulombPotential &coulombPotential,
         pot::NonCoulombPotential    &nonCoulombPotential,
         physicalData::PhysicalData  &physicalData,
@@ -56,7 +56,7 @@ namespace ff
         const molsys::Molecule      *molecule_j,
         AtomIndex                    atomIndex1,
         AtomIndex                    atomIndex2,
-        double                       distance,
+        const Distance              &distance,
         double                       scale14Coulomb,
         double                       scale14VDW
     )

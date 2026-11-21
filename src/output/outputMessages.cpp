@@ -27,6 +27,8 @@
 #include <string>
 
 #include "systemInfo.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -105,12 +107,12 @@ namespace out
      * @param elapsedTime
      * @return string
      */
-    std::string elapsedTimeMessage(double elapsedTime)
+    std::string elapsedTimeMessage(const Time &elapsedTime)
     {
         return std::format(
             "\n\n{}Elapsed time = {:.5f} s\n",
             OUTPUT,
-            elapsedTime
+            elapsedTime.numerical_value_in(s)
         );
     }
 

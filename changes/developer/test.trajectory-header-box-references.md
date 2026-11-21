@@ -1,0 +1,1 @@
+- Update the frame headers of the cgo and chig reference trajectories of the integration tests to the box written with full precision (only the header lines changed).

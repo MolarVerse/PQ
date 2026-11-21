@@ -27,6 +27,7 @@
 #include <ostream>
 
 #include "box.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -36,22 +37,27 @@ namespace out
      * @param step
      * @param box
      */
-    void BoxFileOutput::write(size_t step, const molsys::Box &box)
+    void BoxFileOutput::write(size_t step, const molsys::Box& box)
     {
         _getFilePointer() << std::format("{:<5}\t", step);
 
+        const auto& boxDimensions =
+            box.get_boxDimensions().numerical_value_in(angstrom);
+
         _getFilePointer() << std::format(
             "{:15.8f}\t{:15.8f}\t{:15.8f}\t",
-            box.get_boxDimensions()[0],
-            box.get_boxDimensions()[1],
-            box.get_boxDimensions()[2]
+            boxDimensions[0],
+            boxDimensions[1],
+            boxDimensions[2]
         );
+
+        const auto& boxAngles = box.getBoxAngles().numerical_value_in(deg);
 
         _getFilePointer() << std::format(
             "{:15.8f}\t{:15.8f}\t{:15.8f}\n",
-            box.getBoxAngles()[0],
-            box.getBoxAngles()[1],
-            box.getBoxAngles()[2]
+            boxAngles[0],
+            boxAngles[1],
+            boxAngles[2]
         );
 
         _getFilePointer() << std::flush;

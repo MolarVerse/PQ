@@ -64,8 +64,8 @@ namespace intraNonBonded
         const PotentialSettings     &potentialSettings
     ) const
     {
-        auto        coulombEnergy    = 0.0;
-        auto        nonCoulombEnergy = 0.0;
+        auto        coulombEnergy    = EnergyPerMol::zero();
+        auto        nonCoulombEnergy = EnergyPerMol::zero();
         const auto &box              = simulationBox.getBoxDimensions();
 
         const auto &partners = _intraNonBondedContainer->getPartners();
@@ -105,23 +105,24 @@ namespace intraNonBonded
      * @param potentialSettings Reference to the PotentialSettings object used
      * to configure interaction cutoffs and other potential-related parameters
      *
-     * @return std::pair<double, double> - the coulomb and non-coulomb energy
-     * for the interaction
+     * @return std::pair<EnergyPerMol, EnergyPerMol> - the coulomb and
+     * non-coulomb energy for the interaction
      */
-    std::pair<double, double> IntraNonBondedMap::calculateSingleInteraction(
-        AtomIndex                    atomIdx1,
-        IntraNonBondedPartner        partner,
-        const linalg::Vec3D         &box,
-        const pot::CoulombPotential *coulPot,
-        pot::NonCoulombPotential    *nonCoulPot,
-        const PotentialSettings     &potentialSettings
-    ) const
+    std::pair<EnergyPerMol, EnergyPerMol> IntraNonBondedMap::
+        calculateSingleInteraction(
+            AtomIndex                    atomIdx1,
+            IntraNonBondedPartner        partner,
+            const Pos3D                 &box,
+            const pot::CoulombPotential *coulPot,
+            pot::NonCoulombPotential    *nonCoulPot,
+            const PotentialSettings     &potentialSettings
+        ) const
     {
         if (!_molecule->isActive())
-            return {0.0, 0.0};
+            return {EnergyPerMol::zero(), EnergyPerMol::zero()};
 
-        auto coulombEnergy    = 0.0;
-        auto nonCoulombEnergy = 0.0;
+        auto coulombEnergy    = EnergyPerMol::zero();
+        auto nonCoulombEnergy = EnergyPerMol::zero();
 
         const auto atomIdx2 = partner.atomIndex;
         const bool scale    = partner.isScaled14;
@@ -129,7 +130,7 @@ namespace intraNonBonded
         const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
         const auto &pos2 = _molecule->getAtomPosition(atomIdx2);
 
-        auto       dPos = pos1 - pos2;
+        auto       dPos = (pos1 - pos2);
         const auto txyz = -box * round(dPos / box);
         // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/911
 
@@ -191,9 +192,7 @@ namespace intraNonBonded
                 force            += nonCoulombForce;
             }
 
-            force /= distance;
-
-            const auto forcexyz = force * dPos;
+            const auto forcexyz = force * dPos / distance;
 
             const auto shiftForcexyz = forcexyz * txyz;
 

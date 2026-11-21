@@ -115,7 +115,7 @@ class AseQMRunnerTest : public ::testing::Test
         sys.attr("modules")["fennol"]     = fennolModule;
         sys.attr("modules")["fennol.ase"] = aseAtoms;
 
-        constexpr auto          boxEdge = 10.0;
+        constexpr auto          boxEdge = 10.0 * angstrom;
         molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
         _simulationBox.setBox(box, false);
     }

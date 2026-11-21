@@ -48,12 +48,12 @@ namespace manostat
             physicalData::PhysicalData &physicalData,
             const Temperature          &targetTemperature,
             const Time                 &timeStep,
-            double                      coulombRadiusCutOff
+            const Distance             &coulombRadiusCutOff
         ) override;
 
         [[nodiscard]] virtual QuantityTensor3D calculateMu(
 
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature,
             const Time        &timeStep
         );
@@ -80,7 +80,7 @@ namespace manostat
 
         [[nodiscard]]
         QuantityTensor3D calculateMu(
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature,
             const Time        &timeStep
         ) override;
@@ -101,7 +101,7 @@ namespace manostat
 
         [[nodiscard]]
         QuantityTensor3D calculateMu(
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature,
             const Time        &timeStep
         ) override;
@@ -122,7 +122,7 @@ namespace manostat
 
         [[nodiscard]]
         QuantityTensor3D calculateMu(
-            double             volume,
+            const Volume      &volume,
             const Temperature &targetTemperature,
             const Time        &timeStep
         ) override;

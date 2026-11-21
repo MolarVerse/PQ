@@ -44,7 +44,7 @@ namespace pot
      */
     Potential::~Potential() = default;
 
-    template std::pair<double, double> pot::Potential::
+    template std::pair<EnergyPerMol, EnergyPerMol> pot::Potential::
         calculateSingleInteraction<pot::QMChargeTag, pot::MMChargeTag>(
             molsys::Box const &,
             molsys::Molecule &,
@@ -54,7 +54,7 @@ namespace pot
             const CoulombPotentialConfig &config
         ) const;
 
-    template std::pair<double, double> pot::Potential::
+    template std::pair<EnergyPerMol, EnergyPerMol> pot::Potential::
         calculateSingleInteraction<pot::MMChargeTag, pot::QMChargeTag>(
             molsys::Box const &,
             molsys::Molecule &,
@@ -64,7 +64,7 @@ namespace pot
             const CoulombPotentialConfig &config
         ) const;
 
-    template std::pair<double, double> pot::Potential::
+    template std::pair<EnergyPerMol, EnergyPerMol> pot::Potential::
         calculateSingleInteraction<pot::MMChargeTag, pot::MMChargeTag>(
             molsys::Box const &,
             molsys::Molecule &,
@@ -74,7 +74,7 @@ namespace pot
             const CoulombPotentialConfig &config
         ) const;
 
-    template double pot::Potential::
+    template EnergyPerMol pot::Potential::
         calculateSingleCoulombInteraction<pot::QMChargeTag, pot::MMChargeTag>(
             molsys::Box const &,
             molsys::Atom &,
@@ -82,7 +82,7 @@ namespace pot
             const CoulombPotentialConfig &config
         ) const;
 
-    template double pot::Potential::
+    template EnergyPerMol pot::Potential::
         calculateSingleCoulombInteraction<pot::MMChargeTag, pot::QMChargeTag>(
             molsys::Box const &,
             molsys::Atom &,
@@ -90,7 +90,7 @@ namespace pot
             const CoulombPotentialConfig &config
         ) const;
 
-    template std::pair<double, double> pot::Potential::
+    template std::pair<EnergyPerMol, EnergyPerMol> pot::Potential::
         calculateSingleInteractionOneWay<pot::MMChargeTag, pot::QMChargeTag>(
             molsys::Box const &,
             molsys::Molecule &,
@@ -100,7 +100,7 @@ namespace pot
             const CoulombPotentialConfig &config
         ) const;
 
-    template std::pair<double, double> pot::Potential::
+    template std::pair<EnergyPerMol, EnergyPerMol> pot::Potential::
         calculateSingleInteractionOneWay<pot::QMChargeTag, pot::MMChargeTag>(
             molsys::Box const &,
             molsys::Molecule &,

@@ -49,10 +49,8 @@ namespace input
         void addUseForceConvergenceKey();
         void addUseMaxForceConvergenceKey();
         void addUseRMSForceConvergenceKey();
-        void addEnergyConvergenceKey();
         void addRelativeEnergyConvergenceKey();
         void addAbsoluteEnergyConvergenceKey();
-        void addForceConvergenceKey();
         void addMaxForceConvergenceKey();
         void addRMSForceConvergenceKey();
     };

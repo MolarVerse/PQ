@@ -24,6 +24,7 @@
 #define LINEAR_ALGEBRA__VECTOR3D__VECTOR3D_CLASS_HPP
 
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <mstd/type_traits/quantity_traits.hpp>
 #include <vector>
@@ -77,6 +78,18 @@ namespace linalg
         ~Vector3D() = default;
 
         constexpr Vector3D();
+
+        /**
+         * @brief vector with all components zero (uses T::zero() for
+         * quantities, value initialization otherwise)
+         */
+        [[nodiscard]] static constexpr Vector3D zero()
+        {
+            if constexpr (requires { T::zero(); })
+                return Vector3D(T::zero(), T::zero(), T::zero());
+            else
+                return Vector3D(T{}, T{}, T{});
+        }
         Vector3D(const T xValue, const T yValue, const T zValue)
             : x(xValue), y(yValue), z(zValue)
         {
@@ -85,6 +98,35 @@ namespace linalg
         Vector3D(Vector3D<T> &&xyz_) noexcept : xyz(std::move(xyz_.xyz)) {}
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
         Vector3D(const T xyz_) : x(xyz_), y(xyz_), z(xyz_) {}
+        // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
+
+        // implicit converting constructor between quantity vectors, e.g.
+        // Vector3D<quantity<angstrom>> ->
+        // Vector3D<quantity<distance[angstrom]>> (lets the converting
+        // assignment operator work as well)
+        // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
+        template <typename U>
+        requires(!std::same_as<U, T> && mstd::is_quantity_like_v<T> &&
+                 mstd::is_quantity_like_v<U> && std::convertible_to<U, T>)
+        Vector3D(const Vector3D<U> &vec)
+            : x(static_cast<T>(vec[0])),
+              y(static_cast<T>(vec[1])),
+              z(static_cast<T>(vec[2]))
+        {
+        }
+        // implicit constructor from a quantity holding a Vector3D, e.g.
+        // quantity<angstrom, Vector3D<double>> (which is what mp-units
+        // produces for `vec * angstrom` with a non-const/temporary vec)
+        template <typename Q>
+        requires(mstd::is_quantity_like_v<T> && mstd::is_quantity_like_v<Q> &&
+                 !std::same_as<Q, T> &&
+                 std::same_as<typename Q::rep, Vector3D<double>>)
+        Vector3D(const Q &quantity)
+            : x(quantity.numerical_value_in(Q::unit)[0] * Q::unit),
+              y(quantity.numerical_value_in(Q::unit)[1] * Q::unit),
+              z(quantity.numerical_value_in(Q::unit)[2] * Q::unit)
+        {
+        }
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
         using value_type = T;
@@ -127,6 +169,33 @@ namespace linalg
         Vector3D &operator/=(const T &vec)
         requires pq::Arithmetic<T>;
 
+        // quantity elements divided in place by a dimensionless scalar, e.g.
+        // Vector3D<Pos> /= 2.0 or Vector3D<Pos> /= quantity<one>
+        template <typename S>
+        requires(
+            mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+            requires(T &elem, const S &scalar) { elem /= scalar; }
+        )
+        Vector3D &operator/=(const S &scalar);
+
+        // quantity elements multiplied in place by a dimensionless scalar,
+        // e.g. Vector3D<Vel> *= 2.0 or Vector3D<Vel> *= quantity<one>
+        template <typename S>
+        requires(
+            mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+            requires(T &elem, const S &scalar) { elem *= scalar; }
+        )
+        Vector3D &operator*=(const S &scalar);
+
+        // quantity elements multiplied component-wise by a vector of
+        // dimensionless values, e.g. Vector3D<Vel> *= Vector3D<double>
+        template <typename S>
+        requires(
+            mstd::is_quantity_like_v<T> && !std::same_as<S, T> &&
+            requires(T &elem, const S &scalar) { elem *= scalar; }
+        )
+        Vector3D &operator*=(const Vector3D<S> &vec);
+
         /**********************
          * indexing operators *
          **********************/
@@ -139,7 +208,8 @@ namespace linalg
          *******************/
 
         Vector3D operator-() const
-        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T>;
+        requires pq::ArithmeticVector3D<T> || pq::Arithmetic<T> ||
+                 mstd::is_quantity_like_v<T>;
 
         /********************
          * iterator methods *

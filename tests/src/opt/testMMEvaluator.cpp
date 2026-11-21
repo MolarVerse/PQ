@@ -38,6 +38,7 @@
 #include "potentialBruteForce.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -47,7 +48,9 @@ namespace
     {
         auto box = std::make_shared<molsys::SimulationBox>();
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         box->setBox(orthoBox, false);
 
         // One molecule with two atoms so the brute-force inter-molecular loop
@@ -56,12 +59,12 @@ namespace
 
         auto atom1 = std::make_shared<molsys::Atom>();
         auto atom2 = std::make_shared<molsys::Atom>();
-        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0));
-        atom2->setForce(linalg::Vec3D(0.0, 0.5, 0.0));
-        atom1->setMass(1.0);
-        atom2->setMass(1.0);
+        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom1->setForce(linalg::Vec3D(0.5, 0.0, 0.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(0.0, 0.5, 0.0) * kcal_per_mol / angstrom);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(1.0 * g_per_mol);
 
         mol.addAtom(atom1);
         mol.addAtom(atom2);
@@ -133,18 +136,20 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     // re-wire a fresh evaluator with a known shared box and check the box.
     auto box = std::make_shared<molsys::SimulationBox>();
 
-    molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
     box->setBox(orthoBox, false);
 
-    auto mol = molsys::Molecule();
+    auto molecule = molsys::Molecule();
 
     auto atom = std::make_shared<molsys::Atom>();
-    atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0));
-    atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0));
-    atom->setMass(1.0);
-    mol.addAtom(atom);
+    atom->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+    atom->setForce(linalg::Vec3D(7.0, 7.0, 7.0) * kcal_per_mol / angstrom);
+    atom->setMass(1.0 * g_per_mol);
+    molecule.addAtom(atom);
 
-    box->addMolecule(mol);
+    box->addMolecule(molecule);
     box->addAtom(atom);
 
     Settings         settings2;
@@ -170,5 +175,5 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
 
     eval2.evaluate();
 
-    EXPECT_EQ(box->getAtoms()[0]->getForce(), linalg::Vec3D(0.0, 0.0, 0.0));
+    EXPECT_EQ(box->getAtoms()[0]->getForce(), Force3D::zero());
 }
