@@ -500,7 +500,7 @@ namespace QM
         physicalData::PhysicalData &physicalData
     ) const
     {
-        physicalData.setQMEnergy(_energy * eV * avogadro_constant);
+        physicalData.set_qmEnergy(_energy * eV * avogadro_constant);
     }
 
     /**
@@ -536,7 +536,7 @@ namespace QM
 
         const auto virial = stress * simulationBox.getVolume();
 
-        physicalData.setStressTensor(stress);
+        physicalData.set_stressTensor(stress);
         physicalData.addVirial(virial);
     }
 

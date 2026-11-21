@@ -37,10 +37,10 @@
  */
 TEST_F(TestEnergyOutput, writeMomentumFile)
 {
-    _physicalData->setMomentum(
+    _physicalData->set_momentum(
         linalg::Vec3D(3.0, 4.0, 0.0) * g_per_mol * angstrom / fs
     );
-    _physicalData->setAngularMomentum(
+    _physicalData->set_angularMomentum(
         linalg::Vec3D(4.0, 0.0, 3.0) * g_per_mol * angstrom * angstrom / fs
     );
 

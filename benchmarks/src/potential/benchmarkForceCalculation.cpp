@@ -107,9 +107,9 @@ namespace
                 settings.waterModelSettings,
                 settings.potentialSettings
             );
-            auto tmp = physicalData.getCoulombEnergy();
+            auto tmp = physicalData.get_coulombEnergy();
             benchmark::DoNotOptimize(tmp);
-            auto tmpNonCoulomb = physicalData.getNonCoulombEnergy();
+            auto tmpNonCoulomb = physicalData.get_nonCoulombEnergy();
             benchmark::DoNotOptimize(tmpNonCoulomb);
         }
 

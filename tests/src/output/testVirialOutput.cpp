@@ -39,7 +39,7 @@ TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
     out.setFilename(path, false);
 
     physicalData::PhysicalData data;
-    data.setVirial(
+    data.set_virial(
         linalg::tensor3D{
             linalg::Vec3D{0.1, 0.2, 0.3},
             linalg::Vec3D{0.4, 0.5, 0.6},

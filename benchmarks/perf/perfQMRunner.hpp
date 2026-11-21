@@ -264,7 +264,7 @@ namespace benchQMRunner
         // read state so the loop cannot be optimized away
         std::cout << std::format(
             "{:.6f}\n",
-            physicalData.getQMEnergy().numerical_value_in(kcal_per_mol)
+            physicalData.get_qmEnergy().numerical_value_in(kcal_per_mol)
         );
         return 0;
     }
