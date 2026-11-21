@@ -1,0 +1,1 @@
+- Add integration tests for the Nose-Hoover chain thermostat with a temperature ramp (compared with a reference) and for the velocity rescaling and Langevin thermostats (same `random_seed` gives the same run, another seed another run, and the thermostat changes the run); the failure messages of the integration tests now count NaN as out of tolerance.
