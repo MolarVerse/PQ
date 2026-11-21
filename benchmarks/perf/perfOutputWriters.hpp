@@ -153,6 +153,7 @@ namespace benchOutputWriters
         physicalData.setCoulombEnergy(-34.5 * kcal_per_mol);
         physicalData.setNonCoulombEnergy(7.25 * kcal_per_mol);
         Settings settings;
+        settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
 
         perfAllocBegin();
 
