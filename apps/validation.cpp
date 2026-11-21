@@ -71,10 +71,10 @@ namespace
     };
 
     cli::ValidationResult invalidResult(
-        const std::string_view      inputFile,
-        const std::string_view      message,
-        const std::optional<size_t> lineNumber,
-        const ValidationScope       scope
+        std::string_view      inputFile,
+        std::string_view      message,
+        std::optional<size_t> lineNumber,
+        ValidationScope       scope
     )
     {
         return {
@@ -91,7 +91,7 @@ namespace
 
     void requireFile(
         const std::filesystem::path &fileName,
-        const std::string_view       description
+        std::string_view             description
     )
     {
         if (!std::filesystem::is_regular_file(fileName))
@@ -108,7 +108,7 @@ namespace
 
     void requireDirectory(
         const std::filesystem::path &directoryName,
-        const std::string_view       description
+        std::string_view             description
     )
     {
         if (!std::filesystem::is_directory(directoryName))
@@ -123,7 +123,7 @@ namespace
         }
     }
 
-    bool isRemoteResource(const std::string_view value)
+    bool isRemoteResource(std::string_view value)
     {
         return value.starts_with("https://") || value.starts_with("http://");
     }
@@ -150,7 +150,7 @@ namespace
         return utilities::installedDataPath(files.installedRelativePath);
     }
 
-    std::filesystem::path bundledQMScriptPath(const std::string_view script)
+    std::filesystem::path bundledQMScriptPath(std::string_view script)
     {
         return runtimeAssetPath(
             Files{
@@ -162,7 +162,7 @@ namespace
         );
     }
 
-    std::filesystem::path bundledSlakosPath(const SlakosType type)
+    std::filesystem::path bundledSlakosPath(SlakosType type)
     {
         const auto name = SlakosTypeMeta::toString(type);
 
@@ -501,13 +501,13 @@ namespace
         }
     }
 
-    std::string_view string(const cli::ValidationSeverity severity)
+    std::string_view string(cli::ValidationSeverity severity)
     {
         return severity == cli::ValidationSeverity::WARNING ? "warning"
                                                             : "error";
     }
 
-    std::string_view string(const ValidationScope scope)
+    std::string_view string(ValidationScope scope)
     {
         return scope == ValidationScope::PORTABLE ? "portable" : "installed";
     }
@@ -519,8 +519,8 @@ cli::ValidationResult cli::validateInputFile(std::string_view inputFile)
 }
 
 cli::ValidationResult cli::validateInputFile(
-    const std::string_view inputFile,
-    const ValidationScope  scope
+    std::string_view inputFile,
+    ValidationScope  scope
 )
 {
     auto engine = std::unique_ptr<engine::Engine>();

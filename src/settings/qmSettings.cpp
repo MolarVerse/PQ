@@ -48,7 +48,7 @@ namespace
      * fetched build-tree data is used while running an uninstalled ASE
      * build.
      */
-    std::string builtinSlakosPath(const SlakosType type)
+    std::string builtinSlakosPath(SlakosType type)
     {
 #ifdef __SLAKOS_DIR__
         const auto installedPath = utilities::installedDataPath(
@@ -148,7 +148,7 @@ namespace
      * @param script The name of the QM script
      * @return std::string The full path to the bundled QM script
      */
-    std::string bundledQMScriptPath(const std::string_view script)
+    std::string bundledQMScriptPath(std::string_view script)
     {
         const auto installedPath = utilities::installedDataPath(
             std::filesystem::path("scripts") / script

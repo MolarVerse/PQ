@@ -150,7 +150,7 @@ namespace utilities
      * @param myString
      * @return string
      */
-    std::string toLowerCopy(const std::string_view myString)
+    std::string toLowerCopy(std::string_view myString)
     {
         return toLowerCopy(std::string(myString));
     }
@@ -182,7 +182,7 @@ namespace utilities
      * @param myString
      * @return string
      */
-    std::string toLowerAndReplaceDashesCopy(const std::string_view myString)
+    std::string toLowerAndReplaceDashesCopy(std::string_view myString)
     {
         return toLowerAndReplaceDashesCopy(std::string(myString));
     }
@@ -213,7 +213,7 @@ namespace utilities
      * @param argument
      * @return std::string
      */
-    std::string shellQuote(const std::string_view argument)
+    std::string shellQuote(std::string_view argument)
     {
         std::string quoted{"'"};
         quoted.reserve(argument.size() + 2);

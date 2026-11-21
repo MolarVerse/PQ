@@ -88,10 +88,7 @@ namespace
             _data.setKineticEnergyAtomicVector(VirialPerMol::zero());
         }
 
-        void _addMolecule(
-            const std::vector<double>& positions,
-            const double               speed
-        )
+        void _addMolecule(const std::vector<double>& positions, double speed)
         {
             molsys::Molecule molecule;
             for (const auto x : positions)

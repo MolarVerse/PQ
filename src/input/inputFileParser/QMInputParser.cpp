@@ -64,7 +64,7 @@ namespace input
      * and manage any external QM scripts or methods.
      */
     QMInputParser::QMInputParser(
-        const bool          resolveBuiltInSlakosPath,
+        bool                resolveBuiltInSlakosPath,
         ReferenceSettings  &referenceSettings,
         QMSettings         &qmSettings,
         MaceSettings       &maceSettings,

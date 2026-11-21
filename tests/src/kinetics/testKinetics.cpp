@@ -32,10 +32,10 @@
 namespace
 {
     KineticsSettings rampSettings(
-        const double start,
-        const double end,
-        const size_t steps,
-        const size_t frequency
+        double start,
+        double end,
+        size_t steps,
+        size_t frequency
     )
     {
         KineticsSettings settings;
@@ -47,7 +47,7 @@ namespace
         return settings;
     }
 
-    void expectTemperature(const kinetics::Kinetics &kin, const double kelvin)
+    void expectTemperature(const kinetics::Kinetics &kin, double kelvin)
     {
         EXPECT_DOUBLE_EQ(
             kin.getCurrentTargetTemperature()

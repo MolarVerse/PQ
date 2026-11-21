@@ -926,11 +926,11 @@ namespace input::guffdat
      * @param isSet
      */
     void GuffDatReader::setIsGuffPairSet(
-        MolType    molType1,
-        MolType    molType2,
-        AtomType   atomType1,
-        AtomType   atomType2,
-        const bool isSet
+        MolType  molType1,
+        MolType  molType2,
+        AtomType atomType1,
+        AtomType atomType2,
+        bool     isSet
     )
     {
         _isGuffPairSet[molType1.get()][molType2.get()][atomType1.get()]

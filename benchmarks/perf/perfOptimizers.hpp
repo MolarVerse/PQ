@@ -40,8 +40,8 @@ namespace benchOptimizers
     inline constexpr double SPACING = 2.0;
 
     inline std::shared_ptr<molsys::SimulationBox> makeBox(
-        const std::size_t atoms,
-        const std::size_t perSide
+        std::size_t atoms,
+        std::size_t perSide
     )
     {
         auto box = std::make_shared<molsys::SimulationBox>();

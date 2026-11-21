@@ -83,8 +83,7 @@ namespace input::restartFile
         };
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        auto checkPositive = [](const auto dimension)
-        { return dimension < 0.0; };
+        auto checkPositive = [](auto dimension) { return dimension < 0.0; };
 
         if (std::ranges::any_of(boxDimensions, checkPositive))
             throw exc::RstFileException("All box dimensions must be positive");
@@ -101,7 +100,7 @@ namespace input::restartFile
                 stod(lineElements[6]) * deg
             };
 
-            auto checkAngles = [defaultAngle](const Angle angle)
+            auto checkAngles = [defaultAngle](Angle angle)
             { return angle < 0.0 || angle > 2.0 * defaultAngle; };
 
             if (std::ranges::any_of(boxAngles, checkAngles))

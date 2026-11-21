@@ -145,10 +145,7 @@ namespace input::topology
      *
      * @throws exc::TopologyException if endedNormal is false
      */
-    void AngleSection::endedNormally(
-        const bool endedNormal,
-        size_t     lineNumber
-    ) const
+    void AngleSection::endedNormally(bool endedNormal, size_t lineNumber) const
     {
         if (!endedNormal)
         {

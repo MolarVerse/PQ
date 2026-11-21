@@ -73,7 +73,7 @@ namespace
  */
 // NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
 // linkage
-extern "C" void pqRecordQMCancelSignal(const int signalNumber)
+extern "C" void pqRecordQMCancelSignal(int signalNumber)
 {
     CancelState::flag = signalNumber;
 }
@@ -138,9 +138,9 @@ namespace
      * @param pollInterval interval between checks whether pid exited
      */
     void stopProcessGroup(
-        const pid_t                     pid,
-        int                            &status,
-        const std::chrono::milliseconds pollInterval
+        pid_t                     pid,
+        int                      &status,
+        std::chrono::milliseconds pollInterval
     )
     {
         constexpr auto terminateGracePeriod = std::chrono::seconds(1);
@@ -543,8 +543,8 @@ namespace QM
     }
 
     void ExternalQMRunner::_executeCommand(
-        const std::string_view command,
-        const std::string_view program
+        std::string_view command,
+        std::string_view program
     ) const
     {
 #if defined(_WIN32)
