@@ -56,9 +56,8 @@ namespace
 
 TEST_F(TestSetup, setupOptimizerIsNoOpWhenNotOptJob)
 {
-    OptimizerSettings optimizerSettings;
-    resetOptimizerSettings(optimizerSettings);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    resetOptimizerSettings(_settings->optimizerSettings);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     EXPECT_NO_THROW(setup::setupOptimizer(*_engine));
 }
 
@@ -263,7 +262,7 @@ TEST_F(TestSetup, setupConvergenceWritesIntoOptimizer)
 TEST_F(TestSetup, setupEvaluatorMMOpt)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_OPT);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -273,7 +272,7 @@ TEST_F(TestSetup, setupEvaluatorMMOpt)
 TEST_F(TestSetup, setupEvaluatorUnknownJobThrows)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
+    _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
 
     engine::OptEngine     optEngine{*_settings};
     setup::OptimizerSetup setup(optEngine);
@@ -292,7 +291,7 @@ TEST_F(TestSetup, setupEvaluatorUnknownJobThrows)
 TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings->optimizerSettings.setOptimizerByUser(
         OptimizerType::STEEPEST_DESCENT
     );
@@ -311,7 +310,7 @@ TEST_F(TestSetup, setupWiresOptimizerAndLearningRateAndEvaluator)
 TEST_F(TestSetup, hessianOptimizationValidatesLearningRateBounds)
 {
     resetOptimizerSettings(_settings->optimizerSettings);
-    settings::GeneralSettings::setJobtype(JobType::MM_HESSIAN);
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_HESSIAN);
     _settings->optimizerSettings.setMinLearningRateByUser(0.5);
     _settings->optimizerSettings.setMaxLearningRateByUser(0.5);
 

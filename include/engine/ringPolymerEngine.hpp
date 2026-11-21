@@ -47,12 +47,10 @@ namespace engine
             _averageRingPolymerBeadsPhysicalData;
 
        public:
-        void writeOutput(const OutputFileSettings &outputSettings) override;
         void writeOutput(
-            const OutputFileSettings &outputSettings,
-            const Time               &timeStep,
-            size_t                    startingStepCount
-        );
+            JobType /*jobType*/,
+            const OutputFileSettings &outputSettings
+        ) override;
 
         void resizeRingPolymerBeadPhysicalData(size_t numberOfBeads);
 
@@ -82,6 +80,13 @@ namespace engine
         {
             return _ringPolymerBeadsPhysicalData;
         }
+
+       private:
+        void _writeOutput(
+            const OutputFileSettings &outputSettings,
+            const Time               &timeStep,
+            size_t                    startingStepCount
+        );
     };
 }   // namespace engine
 

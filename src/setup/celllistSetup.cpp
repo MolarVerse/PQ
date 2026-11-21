@@ -38,7 +38,7 @@ namespace setup
      */
     void setupCellList(engine::Engine &engine)
     {
-        if (settings::GeneralSettings::isCellListActivated())
+        if (GeneralSettings::isCellListActivated())
         {
             out::StdoutOutput::writeSetup("Cell List");
             engine.getLogOutput().writeSetup("Cell List");
@@ -69,12 +69,10 @@ namespace setup
         const auto &potential     = _engine.getPotential();
         const auto  nonCoulombPot = potential->getNonCoulombPotSharedPtr();
 
-        if (settings::GeneralSettings::isCellListActivated())
+        if (GeneralSettings::isCellListActivated())
         {
             auto &cellList = _engine.getCellList();
-            cellList.setNumberOfCells(
-                settings::GeneralSettings::getNumberOfCells()
-            );
+            cellList.setNumberOfCells(GeneralSettings::getNumberOfCells());
             cellList.resizeCells();
             cellList.setup(
                 _engine.getSimulationBox(),

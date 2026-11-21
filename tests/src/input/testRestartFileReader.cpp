@@ -69,6 +69,9 @@ TEST_F(TestRstFileReader, determineSection)
  */
 TEST_F(TestRstFileReader, rstFileReading)
 {
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
+    _settings.timings.setTimeStepByUser(0.5 * fs);
+    _settings.timings.setNumberOfStepsByUser(100);
     _settings.fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
     );
@@ -94,7 +97,7 @@ TEST_F(TestRstFileReader, rstFileReading)
  */
 TEST_F(TestRstFileReader, writeStepInfoMD)
 {
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.timings.setTimeStepByUser(0.5 * fs);
     _settings.timings.setNumberOfStepsByUser(100);
     _settings.timings.setStartingTimeByUser(2 * ps);
@@ -145,7 +148,7 @@ TEST_F(TestRstFileReader, writeStepInfoMD)
  */
 TEST_F(TestRstFileReader, writeStepInfoOpt)
 {
-    settings::GeneralSettings::setJobtype(JobType::MM_OPT);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100);
     _settings.fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
@@ -177,5 +180,4 @@ TEST_F(TestRstFileReader, writeStepInfoOpt)
 
     file.close();
     ASSERT_TRUE(std::remove("default.log") == 0);
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
 }

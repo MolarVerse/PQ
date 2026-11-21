@@ -51,6 +51,7 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "topologyReader.hpp"
+#include "units.hpp"
 
 namespace benchInputReaders
 {
@@ -130,6 +131,8 @@ namespace benchInputReaders
         writeFiles(directory, molecules);
 
         Settings settings;
+        settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
+        settings.timings.setTimeStepByUser(0.5 * fs);
         settings.fileSettings.setMolDescriptorFileNameByUser(
             (directory / "moldescriptor.dat").string()
         );

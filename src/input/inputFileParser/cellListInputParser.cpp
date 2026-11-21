@@ -72,9 +72,9 @@ namespace input
         const auto setValue = [](bool isActivated)
         {
             if (isActivated)
-                settings::GeneralSettings::activateCellList();
+                GeneralSettings::activateCellList();
             else
-                settings::GeneralSettings::deactivateCellList();
+                GeneralSettings::deactivateCellList();
         };
 
         auto &key = _getRegistry().registerKey<bool>(KeyRegistry<bool>{
@@ -107,7 +107,7 @@ namespace input
         };
 
         const auto setValue = [](size_t numberOfCells)
-        { settings::GeneralSettings::setNumberOfCells(numberOfCells); };
+        { GeneralSettings::setNumberOfCells(numberOfCells); };
 
         const auto validator = RangeValidator<size_t>(1, std::nullopt);
 

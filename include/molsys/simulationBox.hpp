@@ -37,6 +37,8 @@
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
 
+class GeneralSettings;
+
 /**
  * @namespace molsys
  *
@@ -67,6 +69,8 @@ namespace molsys
      */
     class SimulationBox : public SimulationBoxView<SimulationBox>
     {
+        friend class SimulationBoxView<SimulationBox>;
+
        private:
         std::optional<MolType> _waterType;
         std::optional<MolType> _ammoniaType;
@@ -195,7 +199,7 @@ namespace molsys
         [[nodiscard]] size_t                 getNumberOfMolecules() const;
         [[nodiscard]] size_t                 getDegreesOfFreedom() const;
         [[nodiscard]] size_t                 getNumberOfAtoms() const;
-        [[nodiscard]] size_t                 getNumberOfQMAtoms() const;
+        [[nodiscard]] size_t                 getNumberOfActiveAtoms() const;
         [[nodiscard]] const Mass&            getTotalMass() const;
         [[nodiscard]] const Charge&          getTotalCharge() const;
         [[nodiscard]] const Density&         getDensity() const;
@@ -232,9 +236,9 @@ namespace molsys
         [[nodiscard]] std::vector<Vel3D>      getVelocities() const;
         [[nodiscard]] std::vector<Force3D>    getForces() const;
         [[nodiscard]] std::vector<AtomNumber> getAtomicNumbers() const;
-        [[nodiscard]] std::set<std::string>   getUniqueQMAtomNames() const;
+        [[nodiscard]] std::set<std::string>   getUniqueActiveAtomNames() const;
         [[nodiscard]]
-        std::vector<double> getFlattenedQMPositionsInAngstrom() const;
+        std::vector<double> getFlattenedActiveAtomPositionsInAngstrom() const;
 
         [[nodiscard]] bool wasBoxSetViaStartFile() const;
 

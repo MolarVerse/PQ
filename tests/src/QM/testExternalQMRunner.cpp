@@ -174,7 +174,6 @@ class ExternalQMRunnerTest : public testing::Test
     std::unique_ptr<ExternalQMRunnerHarness> _runner;
     std::unique_ptr<QM::DFTBPlusRunner>      _dftbRunner;
 
-    JobType     _jobType;
     bool        _removeNetForce;
     double      _timeLimit;
     std::string _dftbFile;
@@ -252,7 +251,6 @@ class ExternalQMRunnerTest : public testing::Test
             _settings.qmSettings,
             _settings.externalQMSettings
         );
-        _jobType        = settings::GeneralSettings::getJobtype();
         _removeNetForce = _settings.qmSettings.getRemoveNetForce();
         _originalPath   = std::filesystem::current_path();
 
@@ -265,7 +263,7 @@ class ExternalQMRunnerTest : public testing::Test
 
         _settings.qmSettings.setRemoveNetForceByUser(false);
         _settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
-        settings::GeneralSettings::setJobtype(JobType::QM_MD);
+        _settings.generalSettings.setJobtypeByUser(JobType::QM_MD);
 
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName("H");
@@ -279,8 +277,6 @@ class ExternalQMRunnerTest : public testing::Test
 
     void TearDown() override
     {
-        settings::GeneralSettings::setJobtype(_jobType);
-
         std::filesystem::current_path(_originalPath);
         std::error_code error;
         std::filesystem::remove_all(_workPath, error);

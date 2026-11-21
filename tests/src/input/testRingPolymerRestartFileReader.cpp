@@ -84,9 +84,10 @@ class TestRingPolymerRestartFileReader : public ::testing::Test
 
     void SetUp() override
     {
-        settings::GeneralSettings::setJobtype(JobType::RING_POLYMER_QM_MD);
-
         _settings = std::make_unique<Settings>();
+        _settings->generalSettings.setJobtypeByUser(
+            JobType::RING_POLYMER_QM_MD
+        );
         _settings->ringPolymerSettings.setNumberOfBeadsByUser(2);
         _settings->fileSettings.setRingPolymerStartFileNameByUser(FILE_NAME);
         _settings->timings.setNumberOfStepsByUser(1);
