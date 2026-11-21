@@ -123,7 +123,7 @@ namespace input::restartFile
 
         const auto stepCount = _timingsSettings->getStartingStepCount();
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(_engine.getSettings().generalSettings.getJobtype()))
         {
             if (stepCount == 0 && !_timingsSettings->isStartingTimeSet())
             {
