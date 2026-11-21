@@ -40,6 +40,15 @@ class FormatProcessFailureTest(unittest.TestCase):
         self.assertNotIn("line 94\n", message)
         self.assertIn("95 earlier lines left out", message)
 
+    def test_blank_lines_do_not_use_up_the_lines_shown(self):
+        stdout = b"Error: the real reason\n" + b"\n" * 100
+
+        message = diagnostics.format_process_failure(
+            ["pq"], 1, stdout, b"", stdout_lines=5)
+
+        self.assertIn("Error: the real reason", message)
+        self.assertNotIn("left out", message)
+
     def test_an_empty_stream_is_marked_not_blank(self):
         message = diagnostics.format_process_failure(["pq"], 1, b"", b"")
 

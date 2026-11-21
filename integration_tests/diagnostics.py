@@ -38,7 +38,8 @@ def format_process_failure(command, returncode, stdout, stderr,
     (up to stderr_lines).
     """
     def tail(data, count):
-        lines = data.decode(errors="replace").splitlines()
+        lines = [line for line in data.decode(errors="replace").splitlines()
+                 if line.strip()]
         shown = lines[-count:]
         if len(lines) > count:
             shown.insert(0, f"... ({len(lines) - count} earlier lines left out)")

@@ -108,6 +108,15 @@ def test_with_data_dir(example_dir):
     shutil.rmtree(tmpdir)
 
 
+class PQRunError(subprocess.CalledProcessError):
+    """A PQ run with a non-zero exit status; tests that expect a failing run
+    catch it as CalledProcessError and read returncode, stdout and stderr."""
+
+    def __str__(self):
+        return format_process_failure(
+            self.cmd, self.returncode, self.stdout, self.stderr)
+
+
 def execute_pq(input_file):
 
     # Path to the pq executable
@@ -129,8 +138,7 @@ def execute_pq(input_file):
     stderr = process.stderr
 
     if process.returncode != 0:
-        pytest.fail(
-            format_process_failure(command, process.returncode, stdout, stderr),
-            pytrace=False)
+        raise PQRunError(
+            process.returncode, command, output=stdout, stderr=stderr)
 
     return stdout, stderr
