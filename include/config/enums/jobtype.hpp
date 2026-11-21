@@ -71,4 +71,30 @@ namespace mstd
     };
 }   // namespace mstd
 
+#include "enums/jobtype.hpp"
+
+[[nodiscard]]
+bool isQMOnlyJobtype(JobType jobtype);
+
+[[nodiscard]]
+bool isMMOnlyJobtype(JobType jobtype);
+
+[[nodiscard]]
+bool isHybridJobtype(JobType jobtype);
+
+[[nodiscard]]
+bool isMDJobType(JobType jobtype);
+
+[[nodiscard]]
+bool isOptJobType(JobType jobtype);
+
+[[nodiscard]]
+bool isMMActivated(JobType jobtype);
+
+[[nodiscard]]
+bool isQMActivated(JobType jobtype);
+
+[[nodiscard]]
+bool isRingPolymerMDActivated(JobType jobtype);
+
 #endif   // CONFIG__ENUMS__JOBTYPE_HPP

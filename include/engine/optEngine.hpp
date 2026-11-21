@@ -59,11 +59,10 @@ namespace engine
 
         void run() override;
         void takeStep();
-        void writeOutput(const OutputFileSettings &outputSettings) override;
         void writeOutput(
-            const OutputFileSettings &outputSettings,
-            size_t                    startingStepCount
-        );
+            JobType                   jobType,
+            const OutputFileSettings &outputSettings
+        ) override;
 
         static void throwOnFailure(
             bool                            converged,
@@ -103,6 +102,12 @@ namespace engine
         );
 
         [[nodiscard]] out::OptOutput &getOptOutput();
+
+       private:
+        void _writeOutput(
+            const OutputFileSettings &outputSettings,
+            size_t                    startingStepCount
+        );
     };
 
 }   // namespace engine

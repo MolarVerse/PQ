@@ -233,7 +233,7 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
         settings.potentialSettings
     );
 
-    settings::GeneralSettings::activateCellList();
+    GeneralSettings::activateCellList();
 
     molsys::CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);

@@ -67,9 +67,9 @@ namespace
         void SetUp() override
         {
             _settings = std::make_unique<Settings>();
-            settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
-            settings::GeneralSettings::setRandomSeed(42);
-            settings::GeneralSettings::setIsRandomSeedSet(true);
+            GeneralSettings::setVirialType(VirialType::MOLECULAR);
+            GeneralSettings::setRandomSeed(42);
+            GeneralSettings::setIsRandomSeedSet(true);
             _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
             _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
             _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
@@ -256,7 +256,7 @@ TEST_F(ManostatRegression, berendsenModesHaveSameHydrostaticVolumeResponse)
 TEST_F(ManostatRegression, molecularCouplingAllowsAtomicVirial)
 {
     _addMolecule({-0.2, 0.2}, 0.0);
-    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
+    GeneralSettings::setVirialType(VirialType::ATOMIC);
     manostat::BerendsenManostat berendsen(_settings->manostatSettings);
     manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings
     );
@@ -622,7 +622,7 @@ TEST_F(ManostatRegression, atomicVirialSupportsMonatomicPressureCoupling)
     _addMolecule({-1.0}, 1e13);
     _addMolecule({1.0}, -1e13);
     _data.calculateKinetics(_box);
-    settings::GeneralSettings::setVirialType(VirialType::ATOMIC);
+    GeneralSettings::setVirialType(VirialType::ATOMIC);
     _settings->manostatSettings.setCompressibilityByUser(0.001 * per_bar);
     manostat::BerendsenManostat berendsen(_settings->manostatSettings);
     manostat::StochasticRescalingManostat stochastic(_settings->manostatSettings

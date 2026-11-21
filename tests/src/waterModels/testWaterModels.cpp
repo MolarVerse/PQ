@@ -478,7 +478,7 @@ namespace
         const WaterModelSettings &waterModelSettings
     )
     {
-        settings::GeneralSettings::activateCellList();
+        GeneralSettings::activateCellList();
 
         molsys::CellList cellList;
         cellList.setNumberOfCells(3);
@@ -913,7 +913,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
     Settings settings;
     settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     settings.hybridSettings.setUseQMChargesByUser(true);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
     PotentialSettingsUtils::setEnergyCutoff(
@@ -1107,7 +1107,7 @@ namespace
     template <typename Strategy>
     StrategyResult runInterWater(int stage, bool spread, Settings settings)
     {
-        settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+        settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;
         settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
         settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
@@ -1376,7 +1376,7 @@ namespace
     template <typename Strategy>
     StrategyResult runPotential(int stage, Settings settings)
     {
-        settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+        settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;
         settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
         settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
@@ -1522,7 +1522,7 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
     Settings settings;
     settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
-    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
+    settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     HybridSettings hybridSettings;
     hybridSettings.setUseQMChargesByUser(true);
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);

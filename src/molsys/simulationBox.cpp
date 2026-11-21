@@ -551,8 +551,7 @@ namespace molsys
     {
         const auto nAtoms = getNumberOfAtoms();
 
-        _degreesOfFreedom =
-            (3 * nAtoms) - settings::GeneralSettings::getDimensionality();
+        _degreesOfFreedom = (3 * nAtoms) - GeneralSettings::getDimensionality();
     }
 
     /**
@@ -935,18 +934,19 @@ namespace molsys
      */
     void SimulationBox::removeNetForce()
     {
-        const auto nAtoms = getNumberOfQMAtoms();
+        const auto nAtoms = getNumberOfActiveAtoms();
 
         if (nAtoms == 0)
             return;
 
         Force3D totalForce = Force::zero();
 
-        for (const auto& atom : getQMAtoms()) totalForce += atom->getForce();
+        for (const auto& atom : getActiveAtoms())
+            totalForce += atom->getForce();
 
         const auto correctionForce = -totalForce / static_cast<double>(nAtoms);
 
-        for (auto& atom : getQMAtoms()) atom->addForce(correctionForce);
+        for (auto& atom : getActiveAtoms()) atom->addForce(correctionForce);
     }
 
     /**

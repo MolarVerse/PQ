@@ -490,7 +490,7 @@ TEST_F(TestInputFileReader, fileKeywordsWithoutPathValidationAcceptAnyName)
 
     for (const auto &testCase : cases)
     {
-        settings::GeneralSettings::deactivateIntraNonBonded();
+        GeneralSettings::deactivateIntraNonBonded();
 
         FileSettings            settings;
         input::FilesInputParser parser{false, settings};
@@ -504,12 +504,12 @@ TEST_F(TestInputFileReader, fileKeywordsWithoutPathValidationAcceptAnyName)
 
         EXPECT_EQ(testCase.getter(settings), name) << testCase.keyword;
         EXPECT_EQ(
-            settings::GeneralSettings::isIntraNonBondedActivated(),
+            GeneralSettings::isIntraNonBondedActivated(),
             testCase.keyword == "intra-nonBonded_file"
         ) << testCase.keyword;
     }
 
-    settings::GeneralSettings::deactivateIntraNonBonded();
+    GeneralSettings::deactivateIntraNonBonded();
 }
 
 /**
@@ -520,7 +520,7 @@ TEST_F(TestInputFileReader, intraNonBondedKeywordActivatesInteractions)
 {
     for (const auto validate : {true, false})
     {
-        settings::GeneralSettings::deactivateIntraNonBonded();
+        GeneralSettings::deactivateIntraNonBonded();
 
         FileSettings            settings;
         input::FilesInputParser parser{validate, settings};
@@ -534,13 +534,12 @@ TEST_F(TestInputFileReader, intraNonBondedKeywordActivatesInteractions)
             0
         );
 
-        EXPECT_TRUE(settings::GeneralSettings::isIntraNonBondedActivated())
-            << validate;
+        EXPECT_TRUE(GeneralSettings::isIntraNonBondedActivated()) << validate;
         EXPECT_EQ(
             settings.getIntraNonBondedFileName(),
             "data/intraNonBondedReader/intraNonBonded.dat"
         ) << validate;
     }
 
-    settings::GeneralSettings::deactivateIntraNonBonded();
+    GeneralSettings::deactivateIntraNonBonded();
 }

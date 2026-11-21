@@ -83,12 +83,15 @@ namespace setup
 
         setupOutputFiles(engine);
 
-        writeEngineSetupInfo(engine.getLogOutput());
+        writeEngineSetupInfo(
+            engine.getLogOutput(),
+            engine.getSettings().generalSettings.getJobtype()
+        );
 
         // needs to happen before readFiles(): the parameter file reader
         // dynamic_casts the non-Coulomb potential to its concrete type
         // while parsing the NONCOULOMBICS section
-        if (settings::GeneralSettings::isMMActivated())
+        if (isMMActivated(engine.getSettings().generalSettings.getJobtype()))
             setupNonCoulombPotentialType(engine);
 
         readFiles(engine, nhSettings, timingsSettings, potentialSettings);
@@ -160,12 +163,12 @@ namespace setup
     {
         const auto& settings = engine.getSettings();
 
-        if (settings::GeneralSettings::isQMActivated())
+        if (isQMActivated(engine.getSettings().generalSettings.getJobtype()))
             setupQM(engine);
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(engine.getSettings().generalSettings.getJobtype()))
         {
-            switch (settings::GeneralSettings::getIntegratorType())
+            switch (GeneralSettings::getIntegratorType())
             {
                 case IntegratorType::VELOCITY_VERLET:
                 {
@@ -190,14 +193,14 @@ namespace setup
 
         setupCellList(engine);
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(engine.getSettings().generalSettings.getJobtype()))
         {
             setupThermostat(engine);
 
             setupManostat(engine);
         }
 
-        if (settings::GeneralSettings::isMMActivated())
+        if (isMMActivated(engine.getSettings().generalSettings.getJobtype()))
         {
             setupPotential(engine);
 
@@ -212,13 +215,13 @@ namespace setup
 
         setupConstraints(engine);
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(engine.getSettings().generalSettings.getJobtype()))
             setupRingPolymer(engine);
 
-        if (settings::GeneralSettings::isHybridJobtype())
+        if (isHybridJobtype(engine.getSettings().generalSettings.getJobtype()))
             setupHybrid(engine);
 
-        if (settings::GeneralSettings::isOptJobType())
+        if (isOptJobType(engine.getSettings().generalSettings.getJobtype()))
             setupOptimizer(engine);
 
         engine.getLogOutput().flushQueuedWarnings();
@@ -232,12 +235,13 @@ namespace setup
      *
      * @param logOutput The log output object to which the engine setup
      * information will be written.
+     * @param jobType The type of job for which the engine is being set up.
      */
-    void writeEngineSetupInfo(out::LogOutput& logOutput)
+    void writeEngineSetupInfo(out::LogOutput& logOutput, JobType jobType)
     {
         const auto msg = std::format(
             "Engine for jobtype: {}",
-            JobTypeMeta::toString(settings::GeneralSettings::getJobtype())
+            JobTypeMeta::toString(jobType)
         );
         logOutput.writeSetup(msg);
         out::StdoutOutput::writeSetup(msg);

@@ -44,12 +44,12 @@ TEST_F(TestSetup, setupIntraNonBonded)
     intraNonBonded->addIntraNonBondedContainer(intraNonBondedContainer);
     _engine->getSimulationBox().addMolecule(molecule);
 
-    settings::GeneralSettings::deactivateIntraNonBonded();
+    GeneralSettings::deactivateIntraNonBonded();
     setup::setupIntraNonBonded(*_engine);
 
     EXPECT_EQ(intraNonBonded->getIntraNonBondedMaps().size(), 0);
 
-    settings::GeneralSettings::activateIntraNonBonded();
+    GeneralSettings::activateIntraNonBonded();
     setup::setupIntraNonBonded(*_engine);
 
     EXPECT_EQ(intraNonBonded->getIntraNonBondedMaps().size(), 1);
