@@ -49,12 +49,19 @@ namespace out
         size_t                       nBeads
     )
     {
-        _getFilePointer() << simulationBox.getNumberOfAtoms() * nBeads << "  ";
-        _getFilePointer(
-        ) << simulationBox.getBoxDimensions().numerical_value_in(angstrom);
-        _getFilePointer(
-        ) << "  "
-          << simulationBox.getBoxAngles().numerical_value_in(deg) << '\n';
+        const auto &dimensions = simulationBox.getBoxDimensions();
+        const auto &angles     = simulationBox.getBoxAngles();
+
+        _getFilePointer() << std::format(
+            "{}  {} {} {}  {} {} {}\n",
+            simulationBox.getNumberOfAtoms() * nBeads,
+            dimensions[0].numerical_value_in(angstrom),
+            dimensions[1].numerical_value_in(angstrom),
+            dimensions[2].numerical_value_in(angstrom),
+            angles[0].numerical_value_in(deg),
+            angles[1].numerical_value_in(deg),
+            angles[2].numerical_value_in(deg)
+        );
     }
 
     /**

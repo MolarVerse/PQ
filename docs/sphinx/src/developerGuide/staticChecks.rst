@@ -95,6 +95,12 @@ The LINT workflow runs ``scripts/clang_tidy.sh`` on the changed C++ files. The c
     $ scripts/clang_tidy.sh -p build --all        # every tracked C++ file
     $ scripts/clang_tidy.sh -p build --recheck    # only the files that had findings in the last run
     $ scripts/clang_tidy.sh -p build --base <sha> --head <sha>
+    $ scripts/clang_tidy.sh -p build --batch-size 10   # files per clangd-tidy process (default 30, 0 = all in one)
+
+The files are checked in batches, each in a fresh ``clangd-tidy`` process (``--batch-size`` or the environment
+variable ``CLANG_TIDY_BATCH_SIZE``, default 30): one process over every file of a large change keeps growing, because the
+headers are parsed again and again, and was killed on the CI runner. All batches run even if one finds something, and the
+exit status is the first failing one. The VS Code tasks pass the batch size explicitly.
 
 The report of the last run is ``clangd-tidy-report.log``. Configure with ``-DCMAKE_EXPORT_COMPILE_COMMANDS=ON``. The
 finding you will meet most often is *Statement should be inside braces*
