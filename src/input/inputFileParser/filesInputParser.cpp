@@ -162,7 +162,7 @@ namespace input
 
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
-            settings::GeneralSettings::activateIntraNonBonded();
+            GeneralSettings::activateIntraNonBonded();
 
             if constexpr (std::is_same_v<T, std::string>)
                 _fileSettings->setIntraNonBondedFileNameByUser(value);

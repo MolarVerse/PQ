@@ -7,7 +7,7 @@
             "command": "bash",
             "args": [
                 "-c",
-                "scripts/clang_tidy.sh"
+                "scripts/clang_tidy.sh --batch-size 30"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -36,7 +36,7 @@
             "command": "bash",
             "args": [
                 "-c",
-                "scripts/clang_tidy.sh --all"
+                "scripts/clang_tidy.sh --all --batch-size 30"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -65,7 +65,7 @@
             "command": "bash",
             "args": [
                 "-c",
-                "scripts/clang_tidy.sh --recheck"
+                "scripts/clang_tidy.sh --recheck --batch-size 30"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

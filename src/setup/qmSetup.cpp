@@ -86,7 +86,7 @@ namespace setup
      */
     void setupQM(engine::Engine &engine)
     {
-        if (!settings::GeneralSettings::isQMActivated())
+        if (!isQMActivated(engine.getSettings().generalSettings.getJobtype()))
             return;
 
         out::StdoutOutput::writeSetup("QM runner");
@@ -177,7 +177,7 @@ namespace setup
             const auto modelSize = _maceSettings->getMaceModel();
             const auto modelPath = _maceSettings->getMaceModelPath();
             const auto floatingPointStr =
-                settings::GeneralSettings::getFloatingPointPybindString();
+                GeneralSettings::getFloatingPointPybindString();
             const auto        maceMode = _maceSettings->getMaceMode();
             const auto *const useDisp =
                 _qmSettings->useDispersionCorr() ? "on" : "off";
@@ -232,7 +232,7 @@ namespace setup
             const auto useGPUPreprocessing =
                 _fennolSettings->useGPUPreprocessing();
             const bool useFloat64 =
-                settings::GeneralSettings::getFloatingPointType() == DOUBLE;
+                GeneralSettings::getFloatingPointType() == DOUBLE;
 
             const auto modelPathMsg =
                 std::format("Model path:               {}", modelPath);

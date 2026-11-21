@@ -38,8 +38,8 @@ namespace driver
      */
     void Driver::run(const std::string &inputFileName)
     {
-        Settings   settings;
-        const auto jobType = input::readJobType(inputFileName);
+        Settings settings;
+        input::readJobType(settings.generalSettings, inputFileName);
 
         input::readInputFile(inputFileName, settings);
 
@@ -47,7 +47,9 @@ namespace driver
         settings.validate();
 
         std::unique_ptr<engine::Engine> engine =
-            engine::engineFactory.at(jobType)(settings);
+            engine::engineFactory.at(settings.generalSettings.getJobtype())(
+                settings
+            );
 
         setup::setupRequestedJob(
             *engine,

@@ -89,7 +89,7 @@ namespace virial
 
         VirialPerMol virial = VirialPerMol::zero();
 
-        for (const auto &atom : simulationBox.getQMAtoms())
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
             const auto forcexyz = atom->getForce();
             const auto xyz      = atom->getPosition();
@@ -121,7 +121,7 @@ namespace virial
 
         VirialPerMol virial = VirialPerMol::zero();
 
-        if (settings::GeneralSettings::getVirialType() == VirialType::ATOMIC)
+        if (GeneralSettings::getVirialType() == VirialType::ATOMIC)
             return virial;
 
         for (const auto &molecule : simulationBox.getMolecules())

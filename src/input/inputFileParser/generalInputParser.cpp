@@ -81,12 +81,15 @@ namespace input
      * 1) mm-md
      * 2) qm-md
      *
+     * @param generalSettings Reference to the general settings object where the
+     * job type will be set.
      * @param lineElements
      * @param lineNumber
      *
      * @throw exc::InputFileException if jobtype is not recognised
      */
     void GeneralInputParser::parseJobTypeForEngine(
+        GeneralSettings                &generalSettings,
         const std::vector<std::string> &lineElements,
         size_t                          lineNumber
     )
@@ -113,7 +116,7 @@ namespace input
             ));
         }
 
-        settings::GeneralSettings::setJobtype(jobTypeEnum.value());
+        generalSettings.setJobtypeByUser(jobTypeEnum.value());
     }
 
     void GeneralInputParser::addDimensionalityKey()
@@ -140,7 +143,7 @@ namespace input
         };
 
         const auto setValue = [](size_t value)
-        { settings::GeneralSettings::setDimensionality(value); };
+        { GeneralSettings::setDimensionality(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -164,7 +167,7 @@ namespace input
         };
 
         const auto setValue = [](FPType value)
-        { settings::GeneralSettings::setFloatingPointType(value); };
+        { GeneralSettings::setFloatingPointType(value); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<FPType>{.metadata = metaData, .onSet = setValue}
@@ -183,8 +186,8 @@ namespace input
 
         const auto setValue = [](std::uint_fast32_t value)
         {
-            settings::GeneralSettings::setRandomSeed(value);
-            settings::GeneralSettings::setIsRandomSeedSet(true);
+            GeneralSettings::setRandomSeed(value);
+            GeneralSettings::setIsRandomSeedSet(true);
         };
 
         const auto validator = RangeValidator<std::uint_fast32_t>{

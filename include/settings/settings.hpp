@@ -27,6 +27,7 @@
 #include "convergenceSettings.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "hessianSettings.hpp"
 #include "hybridSettings.hpp"
 #include "manostatSettings.hpp"
@@ -47,6 +48,7 @@
  */
 struct Settings
 {
+    GeneralSettings generalSettings;
     TimingsSettings timings;
 
     ResetKineticsSettings resetKinetics;

@@ -28,7 +28,6 @@
 
 #include "box.hpp"
 #include "collectionUtilities.hpp"
-#include "generalSettings.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
 
@@ -226,31 +225,6 @@ namespace molsys
             partialCharges[i] = _atoms[i]->getPartialCharge();
 
         return partialCharges;
-    }
-
-    /**
-     * @brief Determines if this molecule should be treated as a MM molecule
-     *
-     * @details The classification logic is as follows:
-     * - For MM-only simulations: all molecules are MM molecules
-     * - For QM-only simulations: no molecules are MM molecules
-     * - For hybrid QM/MM simulations: active molecules are MM molecules
-     *
-     * @return true if the molecule should be treated with MM methods, false
-     * otherwise
-     */
-    bool Molecule::isMMMolecule() const
-    {
-        if (settings::GeneralSettings::isMMOnlyJobtype())
-            return true;
-
-        if (settings::GeneralSettings::isQMOnlyJobtype())
-            return false;
-
-        if (isActive())
-            return true;
-
-        return false;
     }
 
     /**

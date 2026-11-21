@@ -72,7 +72,7 @@ namespace QM
                 pybind11::bool_(qmSettings.useDispersionCorr());
             calculatorArgs["enable_cueq"] = pybind11::bool_(enableCueq);
             calculatorArgs["default_dtype"] =
-                settings::GeneralSettings::getFloatingPointPybindString();
+                GeneralSettings::getFloatingPointPybindString();
             calculatorArgs["device"] = pybind11::str("cuda");
 
             _setAseCalculator(

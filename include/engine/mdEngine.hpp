@@ -64,8 +64,12 @@ namespace engine
         ~MDEngine() override = default;
 
         void run() override;
-        void writeOutput(const OutputFileSettings &outputSettings) override;
         void writeOutput(
+            JobType                   jobType,
+            const OutputFileSettings &outputSettings
+        ) override;
+        void writeOutput(
+            JobType                   jobType,
             const OutputFileSettings &outputSettings,
             const Time               &timeStep,
             size_t                    startingStepCount

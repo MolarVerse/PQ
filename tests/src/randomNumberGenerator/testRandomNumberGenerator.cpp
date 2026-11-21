@@ -34,14 +34,11 @@ class TestRandomNumberGenerator : public ::testing::Test
    protected:
     void SetUp() override
     {
-        settings::GeneralSettings::setIsRandomSeedSet(true);
-        settings::GeneralSettings::setRandomSeed(42);
+        GeneralSettings::setIsRandomSeedSet(true);
+        GeneralSettings::setRandomSeed(42);
     }
 
-    void TearDown() override
-    {
-        settings::GeneralSettings::setIsRandomSeedSet(false);
-    }
+    void TearDown() override { GeneralSettings::setIsRandomSeedSet(false); }
 };
 
 /**
@@ -112,8 +109,8 @@ TEST_F(TestRandomNumberGenerator, normalDistributionMean)
  */
 TEST_F(TestRandomNumberGenerator, determinismWithSeed)
 {
-    settings::GeneralSettings::setIsRandomSeedSet(true);
-    settings::GeneralSettings::setRandomSeed(73);
+    GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(73);
 
     rng::RandomNumberGenerator rng1{};
     rng::RandomNumberGenerator rng2{};

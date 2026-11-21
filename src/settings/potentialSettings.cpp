@@ -23,7 +23,6 @@
 #include "potentialSettings.hpp"
 
 #include "enums/potential.hpp"
-#include "generalSettings.hpp"
 
 /**
  * @brief Construct a new Coulomb Potential Config object
@@ -57,9 +56,9 @@ PotentialSettings::PotentialSettings()
  * For QM-only jobs, certain potential settings might need to be adjusted,
  * such as setting the Coulomb radius cut off to zero.
  */
-void PotentialSettings::finalize()
+void PotentialSettings::finalize(JobType jobType)
 {
-    if (settings::GeneralSettings::isQMOnlyJobtype())
+    if (isQMOnlyJobtype(jobType))
         _coulombConfig = CoulombPotentialConfig(Distance::zero());
 }
 

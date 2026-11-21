@@ -46,10 +46,7 @@ namespace input::intraNonBondedReader
      *
      * @return bool
      */
-    bool isNeeded()
-    {
-        return settings::GeneralSettings::isIntraNonBondedActivated();
-    }
+    bool isNeeded() { return GeneralSettings::isIntraNonBondedActivated(); }
 
     /**
      * @brief construct IntraNonBondedReader object and read the file

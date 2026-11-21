@@ -126,7 +126,10 @@ namespace input
             std::make_unique<HessianInputParser>(settings.hessianSettings)
         );
         _parsers.push_back(
-            std::make_unique<IntegratorInputParser>(settings.referenceSettings)
+            std::make_unique<IntegratorInputParser>(
+                settings.referenceSettings,
+                settings.generalSettings
+            )
         );
         _parsers.push_back(
             std::make_unique<ManostatInputParser>(settings.manostatSettings)
@@ -353,10 +356,13 @@ namespace input
      * @details this is just the first parsing of the input file and includes
      * only the jobtype keyword
      *
+     * @param generalSettings
      * @param fileName
-     * @return The job type specified in the input file.
      */
-    JobType readJobType(const std::string &fileName)
+    void readJobType(
+        GeneralSettings   &generalSettings,
+        const std::string &fileName
+    )
     {
         std::ifstream inputFile(fileName);
 
@@ -367,7 +373,6 @@ namespace input
 
         std::string line;
         size_t      lineNumber(1);
-        bool        jobtypeFound{false};
 
         while (getline(inputFile, line))
         {
@@ -380,7 +385,7 @@ namespace input
             }
 
             auto processInputCommand =
-                [lineNumber, &jobtypeFound](auto &command)
+                [lineNumber, &generalSettings](auto &command)
             {
                 processEqualSign(command, lineNumber);
 
@@ -388,10 +393,10 @@ namespace input
                 if (!lineElements.empty() && "jobtype" == lineElements[0])
                 {
                     GeneralInputParser::parseJobTypeForEngine(
+                        generalSettings,
                         lineElements,
                         lineNumber
                     );
-                    jobtypeFound = true;
                 }
             };
 
@@ -411,12 +416,10 @@ namespace input
             ++lineNumber;
         }
 
-        if (!jobtypeFound)
+        if (!generalSettings.isJobtypeSetByUser())
             throw exc::InputFileException(
                 "Missing keyword \"jobtype\" in input file"
             );
-
-        return settings::GeneralSettings::getJobtype();
     }
 
     /**
