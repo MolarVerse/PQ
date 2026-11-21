@@ -83,8 +83,7 @@ namespace input::restartFile
         };
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        auto checkPositive = [](auto dimension)
-        { return dimension < 0.0; };
+        auto checkPositive = [](auto dimension) { return dimension < 0.0; };
 
         if (std::ranges::any_of(boxDimensions, checkPositive))
             throw exc::RstFileException("All box dimensions must be positive");

@@ -88,8 +88,8 @@ int main()
     simBox.addMoleculeType(waterType);
 
     const auto makeAtom = [](std::string_view name,
-                             const Pos3D&           pos,
-                             const Charge&          charge,
+                             const Pos3D&     pos,
+                             const Charge&    charge,
                              AtomNumber       atomicNumber)
     {
         auto atom = std::make_shared<molsys::Atom>();

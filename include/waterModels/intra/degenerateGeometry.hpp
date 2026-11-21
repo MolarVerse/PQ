@@ -28,7 +28,6 @@
 #include <string_view>
 
 #include "exceptions.hpp"
-#include "unit_types.hpp"
 
 namespace waterModel
 {
