@@ -163,9 +163,8 @@ namespace ff
         auto isJCouplingId = [id](const JCouplingType &jCouplingType)
         { return jCouplingType.getId() == id; };
 
-        auto       jCouplings = _jCouplingTypes;
         const auto jCouplingType =
-            std::ranges::find_if(jCouplings, isJCouplingId);
+            std::ranges::find_if(_jCouplingTypes, isJCouplingId);
 
         if (jCouplingType != _jCouplingTypes.end())
             return *jCouplingType;
