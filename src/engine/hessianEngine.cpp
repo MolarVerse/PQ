@@ -269,7 +269,8 @@ namespace engine
 
         auto builder = setupHessianBuilder(hessianSettings);
 
-        const auto hessian = builder->build(*evaluator, getSimulationBox());
+        const auto hessian =
+            builder->build(*evaluator, getSimulationBox(), get_physicalData());
 
         writeHessian(hessian, hessianSettings);
         writeHessianInfo(hessian, hessianSettings);
@@ -329,34 +330,32 @@ namespace engine
 
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        getPhysicalData().setLoopTime(
+        auto &physicalData        = get_physicalData();
+        auto &averagePhysicalData = get_averagePhysicalData();
+
+        physicalData.setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        getAveragePhysicalData().updateAverages(getPhysicalData());
+        averagePhysicalData.updateAverages(physicalData);
 
         if (0 == getStep() % outputFreq)
         {
-            getAveragePhysicalData().makeAverages(
-                static_cast<double>(outputFreq)
-            );
+            averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
 
             const auto effStepDouble = static_cast<double>(effStep);
 
-            getEngineOutput().writeEnergyFile(
-                effStep,
-                getAveragePhysicalData(),
-                getSettings()
-            );
+            getEngineOutput()
+                .writeEnergyFile(effStep, averagePhysicalData, getSettings());
             getEngineOutput().getInfoOutput().write(
                 effStepDouble,
-                getAveragePhysicalData(),
+                averagePhysicalData,
                 getSettings()
             );
 
-            getAveragePhysicalData() = physicalData::PhysicalData();
+            averagePhysicalData = physicalData::PhysicalData();
         }
 
-        getPhysicalData().reset();
+        physicalData.reset();
     }
 
     std::shared_ptr<opt::Evaluator> HessianEngine::_setupEvaluator()
@@ -377,8 +376,6 @@ namespace engine
         evaluator->setForceField(getForceField());
         evaluator->setConstraints(getConstraints());
         evaluator->setIntraNonBonded(getIntraNonBonded());
-        evaluator->setPhysicalData(getSharedPhysicalData());
-        evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
         return evaluator;
     }
@@ -406,8 +403,8 @@ namespace engine
         _converged  = false;
         _optStopped = false;
 
-        _evaluator->evaluate();
-        _optimizer->updateHistory();
+        _evaluator->evaluate(get_physicalData());
+        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
 
         const auto &outputFileSettings = getSettings().outputFiles;
         const auto &jobType = getSettings().generalSettings.getJobtype();
@@ -451,9 +448,9 @@ namespace engine
     {
         _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
 
-        _evaluator->evaluate();
+        _evaluator->evaluate(get_physicalData());
 
-        _optimizer->updateHistory();
+        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
 
         _converged = _optimizer->hasConverged();
 
@@ -525,8 +522,6 @@ namespace engine
         }
 
         optimizer->setSimulationBox(getSharedSimulationBox());
-        optimizer->setPhysicalData(getSharedPhysicalData());
-        optimizer->setPhysicalDataOld(getSharedPhysicalDataOld());
 
         return optimizer;
     }

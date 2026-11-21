@@ -70,7 +70,7 @@ namespace opt
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 
-        void               updateHistory();
+        void               updateHistory(const EnergyPerMol& totalEnergy);
         [[nodiscard]] bool hasConverged();
 
         /***************************
@@ -80,12 +80,6 @@ namespace opt
         void setConvergence(opt::Convergence);
 
         void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
-        void setPhysicalData(
-            const std::shared_ptr<physicalData::PhysicalData>&
-        );
-        void setPhysicalDataOld(
-            const std::shared_ptr<physicalData::PhysicalData>&
-        );
 
         /***************************
          * standard getter methods *

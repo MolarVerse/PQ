@@ -74,7 +74,7 @@ TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
 {
     Settings             settings;
     engine::QMMMMDEngine engine{settings};
-    auto                &data = *engine.getPhysicalDataPtr();
+    auto                &data = engine.get_physicalData();
 
     data.resetEnergies();
     data.addCoulombEnergy(10.0 * kcal_per_mol);
@@ -157,7 +157,7 @@ TEST_F(QMMMEnergiesTest, sumsReferenceEnergiesOfActiveMolecules)
     simBox.addMolecule(molsys::Molecule{MolType{2}});
     simBox.addMolecule(molsys::Molecule{MolType{0}});
 
-    auto &data = *engine.getPhysicalDataPtr();
+    auto &data = engine.get_physicalData();
     data.setQMEnergy(100.0 * kcal_per_mol);
 
     _calculateReference(engine);

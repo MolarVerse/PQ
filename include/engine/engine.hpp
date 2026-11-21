@@ -26,6 +26,7 @@
 #include <cstddef>
 #include <memory>
 #include <mstd/types.hpp>
+#include <mstd/utils/members.hpp>
 
 #include "constraints.hpp"
 #include "engineOutput.hpp"
@@ -56,9 +57,9 @@ namespace engine
         EngineOutput _engineOutput;
 
         physicalData::PhysicalData _averagePhysicalData;
+        physicalData::PhysicalData _physicalData;
 
         std::shared_ptr<pot::Potential>                 _potential;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
         std::shared_ptr<ff::ForceField>                 _forceField;
@@ -93,6 +94,9 @@ namespace engine
          * standard getter methods *
          ***************************/
 
+        GETTER(_physicalData);
+        GETTER(_averagePhysicalData);
+
         [[nodiscard]]
         const molsys::CellList &getCellList() const;
         [[nodiscard]]
@@ -109,8 +113,6 @@ namespace engine
 
         [[nodiscard]] molsys::SimulationBox       &getSimulationBox();
         [[nodiscard]] const molsys::SimulationBox &getSimulationBox() const;
-        [[nodiscard]] physicalData::PhysicalData  &getPhysicalData();
-        [[nodiscard]] physicalData::PhysicalData  &getAveragePhysicalData();
 
         [[nodiscard]] const Settings &getSettings() const;
 
@@ -133,8 +135,7 @@ namespace engine
          * get pointer methods *
          ***********************/
 
-        [[nodiscard]] molsys::SimulationBox      *getSimulationBoxPtr();
-        [[nodiscard]] physicalData::PhysicalData *getPhysicalDataPtr();
+        [[nodiscard]] molsys::SimulationBox *getSimulationBoxPtr();
 
         /******************************
          * get shared pointer methods *
@@ -142,9 +143,6 @@ namespace engine
 
         [[nodiscard]]
         std::shared_ptr<molsys::SimulationBox> getSharedSimulationBox() const;
-        [[nodiscard]]
-        std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalData(
-        ) const;
 
         /***************************
          * make unique_ptr methods *

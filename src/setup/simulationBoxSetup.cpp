@@ -377,8 +377,8 @@ namespace setup
             out::StdoutOutput::writeDensityWarning();
         }
 
-        _engine.getPhysicalData().setVolume(simBox.getVolume());
-        _engine.getPhysicalData().setDensity(simBox.getDensity());
+        _engine.get_physicalData().setVolume(simBox.getVolume());
+        _engine.get_physicalData().setDensity(simBox.getDensity());
     }
 
     /**
