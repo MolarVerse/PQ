@@ -26,6 +26,7 @@
 #include <string>
 
 #include "progressbar.hpp"
+#include "terminalProgressBar.hpp"
 
 TEST(TestProgressbar, singleIterationCompletes)
 {
@@ -35,4 +36,27 @@ TEST(TestProgressbar, singleIterationCompletes)
     bar.update();
 
     EXPECT_NE(output.str().find("100%"), std::string::npos);
+}
+
+TEST(TestProgressbar, terminalBarWritesProgress)
+{
+    auto output = std::ostringstream();
+    auto bar    = utilities::TerminalProgressBar(1, output, true);
+
+    bar.update();
+
+    EXPECT_NE(output.str().find("100%"), std::string::npos);
+}
+
+TEST(TestProgressbar, redirectedOutputStaysEmpty)
+{
+    auto output = std::ostringstream();
+    auto bar    = utilities::TerminalProgressBar(5000, output, false);
+
+    for (int step = 0; step < 5000; ++step)
+    {
+        bar.update();
+    }
+
+    EXPECT_TRUE(output.str().empty());
 }
