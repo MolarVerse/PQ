@@ -84,7 +84,13 @@ def read_frames(path):
 
 
 def _excess(value, reference, rtol, atol):
-    """|value - reference| in units of the allowed deviation (> 1 fails)."""
+    """|value - reference| in units of the allowed deviation (> 1 fails).
+
+    A NaN on either side is never close (as in isclose), so it counts as
+    infinitely far."""
+    if value != value or reference != reference:
+        return float("inf")
+
     allowed = atol + rtol * abs(reference)
     deviation = abs(value - reference)
 
