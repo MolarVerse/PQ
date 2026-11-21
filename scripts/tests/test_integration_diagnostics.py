@@ -117,6 +117,15 @@ class DescribeTrajectoryDifferenceTest(unittest.TestCase):
         self.assertIn("0 of 3 values are out of tolerance", passing)
         self.assertNotIn("worst", passing)
 
+    def test_a_nan_is_out_of_tolerance_even_if_the_reference_has_it_too(self):
+        reference = frame(BOX, [("H", ["nan", "2.0", "-nan"])])
+        new = frame(BOX, [("H", ["nan", "2.0", "3.0"])])
+
+        message = self.describe(new, reference)
+
+        self.assertIn("2 of 3 values are out of tolerance", message)
+        self.assertIn("worst", message)
+
     def test_a_reference_of_zero_needs_an_exact_value(self):
         reference = frame(BOX, [("H", ["0.0", "0.0", "0.0"])])
         new = frame(BOX, [("H", ["0.0", "1e-9", "0.0"])])

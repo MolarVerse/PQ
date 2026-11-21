@@ -55,6 +55,8 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `cgo` `test_cgo_NPT` | `run-01_NPT.in` | `mm-md` | same | Berendsen thermostat + Berendsen manostat (isotropic), molecular virial, `output_freq = 2` |
 | `cgo` `test_cgo_atomic_virial` | `run-01_atomic_virial.in` | `mm-md` | same | the NPT run with `virial = atomic` |
 | `cgo` `test_cgo_temperature_ramp` | `run-01_temp_ramp.in` | `mm-md` | same | Berendsen thermostat with `start_temp`, `temp_ramp_steps`, `temp_ramp_frequency`; also checks the ramp lines of the log |
+| `cgo` `test_cgo_nose_hoover_ramp` | `run-01_nose_hoover.in` | `mm-md` | same | Nose-Hoover chain (length 3, `coupling_frequency = 3000`) with a ramp from 900 to 998.15 K; deterministic, compared with `ref_data_nose_hoover`; fails on NaN (a chain driven far from the system temperature, e.g. a ramp start of 600 K, blows up) |
+| `cgo` `test_cgo_stochastic_thermostat_follows_the_seed` (2 tests) | `run-01.in` with `velocity_rescaling` or `langevin` and `random_seed` | `mm-md` | same | no reference (stochastic): the same seed gives the same xyz/vel/force/energies bit for bit, another seed another run, and the thermostat changes the run compared with NVE |
 | `cgo` `test_cgo_NPT_cellList` | `run-01_NPT.in` with `cell-list = on` | `mm-md` | same | the NPT run with the cell list against the brute-force NPT reference (`ref_data_NPT`); the box hardly moves (0.01 %) |
 | `cgo` `test_cgo_NPT_cellList_follows_a_moving_box` | `run-01_NPT.in` with `cell-list = on; cell-number = 16` and a manostat relaxation time of 0.1 ps | `mm-md` | same | the box moves between 26.6 and 31.4 Angstrom in 10 steps and the neighbour cell count changes from 6 to 7; every frame (xyz, vel, force), the box and the energies must equal the same run without the cell list (no reference data) |
 | `cgo` `test_cgo_restart_round_trip` (3 tests) | `run-01.in` (NVE), `run-01_NPT.in`, `run-01.in` with a Nose-Hoover chain | `mm-md` | same | a 10-step run against 5 steps plus 5 more from the `.rst` the first part wrote; the final `.rst` and the last frames of `.xyz`, `.vel` and `.force` must be **identical to the byte** (the restart file keeps every digit), and the step counter, the box and the chain levels are checked. Builds its three inputs from the existing ones, no reference data |
@@ -92,8 +94,9 @@ intermolecular model are the same.
 |---|---|
 | Velocity Verlet (the only integrator) | yes |
 | Thermostat Berendsen | yes (`cgo` NPT/ramp, all `qm-mm`) |
-| Thermostat velocity rescaling, Langevin, Nose-Hoover chain | no. Elsewhere: unit, perf benchmarks |
-| Temperature ramp (`start_temp`, `temp_ramp_steps`, `temp_ramp_frequency`) | yes, with Berendsen (see coupling section for the other thermostats) |
+| Thermostat Nose-Hoover chain | yes (`cgo`, with a ramp, against a reference; also the restart test) |
+| Thermostat velocity rescaling, Langevin | partly: reproducibility with `random_seed` and an effect on the run, no reference values and no check that the temperature is reached (see stochastic features). Elsewhere: unit, perf benchmarks |
+| Temperature ramp (`start_temp`, `temp_ramp_steps`, `temp_ramp_frequency`) | yes, with Berendsen and with the Nose-Hoover chain (see coupling section for the others) |
 | `end_temp` as synonym of `temp` | no. Elsewhere: unit |
 | Manostat Berendsen, isotropic | yes (`cgo` NPT) |
 | Manostat stochastic rescaling | no. Elsewhere: unit |
@@ -187,7 +190,8 @@ The thermostats read the first; the **stochastic rescaling manostat, reset kinet
 Maxwell-Boltzmann velocities read the second**. So Berendsen covers the writer and one reader of
 the first value. A ramp test per thermostat is not needed for the ramp itself, but Nose-Hoover
 (chain state) and Langevin (noise) have internal state that the Berendsen test cannot reveal; they
-need their *own* integration test, with or without a ramp. The readers of the global value are
+need their *own* integration test, with or without a ramp. Nose-Hoover now has one (with a ramp);
+Langevin and velocity rescaling only the seed test. The readers of the global value are
 exercised by none.
 
 **Neighbour search x manostat (covered for the Berendsen manostat).** A manostat changes the box
@@ -253,7 +257,9 @@ Hessian are checked, so a wrong Hessian would pass.
   They can be made reproducible with `random_seed`, but the reference would depend on the random
   number generator of the standard library, so it is fragile across toolchains. Better covered by
   *statistical* tests (average temperature within a tolerance over a longer run), which do not fit
-  a 10-step reference test.
+  a 10-step reference test. What is covered: Langevin and velocity rescaling are run with a fixed
+  `random_seed` and must reproduce themselves exactly (and differ for another seed); the
+  statistical test is still missing.
 - **Long-run physics** (RDF, diffusion, energy conservation over thousands of steps) and
   performance. These belong in a nightly job and in the perf gate, not here.
 - **Other platforms and build types** (Windows, macOS, Debug, static/LTO builds, Singularity
@@ -264,8 +270,8 @@ Hessian are checked, so a wrong Hessian would pass.
 In rough order of value for the cost; each is a **new variant** of an existing cheap test (the
 `cgo` pattern below), so existing references stay untouched.
 
-1. **Nose-Hoover, Langevin and velocity-rescaling** thermostats on `cgo` (one variant each, the
-   Nose-Hoover one with a ramp since it keeps internal state).
+1. **Statistical test of the Langevin and velocity-rescaling thermostats** (average temperature
+   within a tolerance over a longer run); the seed tests only prove reproducibility.
 2. **Stochastic rescaling manostat** and one **anisotropic** variant, with the ramp (they read the
    global target).
 3. **QM/MM that moves a molecule across a zone**: a start file with a molecule next to a boundary,
