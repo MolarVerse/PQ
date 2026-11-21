@@ -23,7 +23,7 @@
 #ifndef VIRIAL__VIRIAL_HPP
 #define VIRIAL__VIRIAL_HPP
 
-#include "staticMatrix.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -33,15 +33,13 @@ namespace molsys
 namespace virial
 {
     [[nodiscard]]
-    linalg::tensor3D calculateQMVirial(const molsys::SimulationBox&);
+    VirialPerMol calculateQMVirial(const molsys::SimulationBox&);
 
     [[nodiscard]]
-    linalg::tensor3D calculateVirial(molsys::SimulationBox&);
+    VirialPerMol calculateVirial(molsys::SimulationBox&);
 
     [[nodiscard]]
-    linalg::tensor3D intraMolecularVirialCorrection(
-        const molsys::SimulationBox&
-    );
+    VirialPerMol intraMolecularVirialCorrection(const molsys::SimulationBox&);
 }   // namespace virial
 
 #endif   // VIRIAL__VIRIAL_HPP

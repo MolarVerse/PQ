@@ -1,0 +1,1 @@
+- Give `check_pq_output` an optional absolute force tolerance (`force_atol`) and use it (`DFTB_FORCE_ATOL`, 1e-4 kcal/mol/Angstrom) in the dftb+ based integration tests, so the noise of dftb+ forces on components close to zero no longer fails the qm-mm tests.

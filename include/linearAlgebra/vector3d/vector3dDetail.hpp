@@ -239,12 +239,15 @@ namespace linalg
             VectorVectorOperands<U, V> || VectorScalarOperands<U, V>;
 
         /**
-         * @brief a Vector3D (lhs) multiplied by a quantity-like scalar (rhs)
+         * @brief a Vector3D multiplied by a quantity-like scalar (either
+         * order)
          */
         template <typename U, typename V>
         concept QuantityScalarOperands =
-            NumericVector3D<U> && !pq::isVector3D_v<V> &&
-            mstd::NonArithmeticScalar<pq::InnerType_t<U>, V>;
+            (NumericVector3D<U> && !pq::isVector3D_v<V> &&
+             mstd::NonArithmeticScalar<pq::InnerType_t<U>, V>) ||
+            (NumericVector3D<V> && !pq::isVector3D_v<U> &&
+             mstd::NonArithmeticScalar<U, pq::InnerType_t<V>>);
 
         /**
          * @brief operands of the binary operator `*`

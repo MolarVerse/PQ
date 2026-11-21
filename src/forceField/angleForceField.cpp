@@ -32,7 +32,6 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
-#include "units.hpp"
 
 namespace ff
 {
@@ -103,32 +102,28 @@ namespace ff
         const auto distance12Squared = normSquared(dPosition12);
         const auto distance13Squared = normSquared(dPosition13);
 
-        const auto distance12 = ::sqrt(distance12Squared);
-        const auto distance13 = ::sqrt(distance13Squared);
+        const auto distance12 = mstd::sqrt(distance12Squared);
+        const auto distance13 = mstd::sqrt(distance13Squared);
 
-        const auto alpha = angle(dPosition12, dPosition13);
-        const auto equilibriumAngle =
-            _params.equilibrium.numerical_value_in(rad);
-        const auto deltaAngle = alpha - equilibriumAngle;
+        const auto alpha            = angle(dPosition12, dPosition13);
+        const auto equilibriumAngle = _params.equilibrium;
+        const auto deltaAngle       = alpha - equilibriumAngle;
 
-        auto forceMagnitude = -_params.forceConstant.numerical_value_in(
-                                  kcal_per_mol / rad / rad
-                              ) *
-                              deltaAngle;
+        auto forceMagnitude = -_params.forceConstant * deltaAngle;
 
         physicalData.addAngleEnergy(-forceMagnitude * deltaAngle / 2.0);
 
-        auto forcexyz = linalg::Vec3D{0.0, 0.0, 0.0};
+        auto forcexyz = Force3D::zero();
 
         // Guard against near-collinear angles where division by sin(alpha) is
         // unstable.
-        const auto sinAlpha = ::sin(alpha);
+        const auto sinAlpha = mstd::sin(alpha);
         if (std::fabs(sinAlpha) >= COLINEAR_SINALPHA_THRESHOLD)
         {
             const auto normalDistance = distance12 * distance13 * sinAlpha;
 
-            auto normalPosition  = cross(dPosition13, dPosition12);
-            normalPosition      /= normalDistance;
+            auto normalPosition =
+                cross(dPosition13, dPosition12) / normalDistance;
 
             auto force = forceMagnitude / distance12Squared;
             forcexyz   = force * cross(dPosition12, normalPosition);
@@ -145,33 +140,32 @@ namespace ff
 
         if (_isLinker)
         {
-            auto dPosition23 = position2 - position3;
+            auto dPosition23 = (position2 - position3);
             simulationBox.applyPBC(dPosition23);
 
             const auto distance23 = norm(dPosition23);
 
             if (distance23 < potentialSettings.getCoulombRadiusCutOff())
             {
-                forceMagnitude = correctLinker<AngleForceField>(
-                    coulombPot,
-                    nonCoulombPot,
-                    physicalData,
-                    molecule2,
-                    molecule3,
-                    atomIndices[1],
-                    atomIndices[2],
-                    distance23,
-                    potentialSettings.getScale14Coulomb(),
-                    potentialSettings.getScale14VDW()
-                );
+                const auto forceMagnitudeLinker =
+                    correctLinker<AngleForceField>(
+                        coulombPot,
+                        nonCoulombPot,
+                        physicalData,
+                        molecule2,
+                        molecule3,
+                        atomIndices[1],
+                        atomIndices[2],
+                        distance23,
+                        potentialSettings.getScale14Coulomb(),
+                        potentialSettings.getScale14VDW()
+                    );
 
-                forceMagnitude /= distance23;
-
-                forcexyz = forceMagnitude * dPosition23;
+                forcexyz = forceMagnitudeLinker * dPosition23 / distance23;
 
                 using enum SmoothingMethod;
 
-                auto smF = 0.0;
+                Quantity smF = 0.0;
 
                 if (smoothing == HOTSPOT &&
                     molecule1->getHybridZone() == molsys::HybridZone::SMOOTHING)

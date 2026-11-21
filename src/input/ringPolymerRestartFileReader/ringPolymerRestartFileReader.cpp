@@ -32,6 +32,7 @@
 #include "ringPolymerEngine.hpp"
 #include "ringPolymerSettings.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input::ringPolymer
 {
@@ -93,21 +94,21 @@ namespace input::ringPolymer
                 }
 
                 atom->setPosition(
-                    {stod(lineElements[3]),
-                     stod(lineElements[4]),
-                     stod(lineElements[5])}
+                    {stod(lineElements[3]) * angstrom,
+                     stod(lineElements[4]) * angstrom,
+                     stod(lineElements[5]) * angstrom}
                 );
 
                 atom->setVelocity(
-                    {stod(lineElements[6]),
-                     stod(lineElements[7]),
-                     stod(lineElements[8])}
+                    {stod(lineElements[6]) * angstrom / s,
+                     stod(lineElements[7]) * angstrom / s,
+                     stod(lineElements[8]) * angstrom / s}
                 );
 
                 atom->setForce(
-                    {stod(lineElements[9]),
-                     stod(lineElements[10]),
-                     stod(lineElements[11])}
+                    {stod(lineElements[9]) * kcal_per_mol / angstrom,
+                     stod(lineElements[10]) * kcal_per_mol / angstrom,
+                     stod(lineElements[11]) * kcal_per_mol / angstrom}
                 );
                 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
             }

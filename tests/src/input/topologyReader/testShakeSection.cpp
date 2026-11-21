@@ -30,6 +30,7 @@
 #include "shakeSection.hpp"
 #include "testTopologySection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief test shake section processing one line
@@ -53,7 +54,7 @@ TEST_F(TestTopologySection, processSectionShake)
     EXPECT_EQ(molecules[1], &(_engine->getSimulationBox().getMolecules()[1]));
     EXPECT_EQ(atomIndices[0], AtomIndex{0});
     EXPECT_EQ(atomIndices[1], AtomIndex{0});
-    EXPECT_EQ(bondConstraint0.getTargetBondLength(), 1.0);
+    EXPECT_EQ(bondConstraint0.getTargetBondLength(), 1.0 * angstrom);
 
     lineElements = {"1", "1", "1.0", "0"};
     EXPECT_THROW_MSG(

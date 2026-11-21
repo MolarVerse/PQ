@@ -23,35 +23,37 @@
 #include <gtest/gtest.h>
 
 #include "convergenceSettings.hpp"
+#include "units.hpp"
 
 TEST(ConvSettingsTest, EnergyConvSettersAndOptionalGetters)
 {
     ConvSettings convSettings;
-    convSettings.setEnergyConvByUser(1.0e-6);
-    ASSERT_TRUE(convSettings.getEnergyConv().has_value());
-    EXPECT_DOUBLE_EQ(convSettings.getEnergyConv().value(), 1.0e-6);
-
     convSettings.setRelEnergyConvByUser(1.0e-5);
-    ASSERT_TRUE(convSettings.getRelEnergyConv().has_value());
-    EXPECT_DOUBLE_EQ(convSettings.getRelEnergyConv().value(), 1.0e-5);
+    EXPECT_DOUBLE_EQ(convSettings.getRelEnergyConv(), 1.0e-5);
 
-    convSettings.setAbsEnergyConvByUser(1.0e-4);
-    ASSERT_TRUE(convSettings.getAbsEnergyConv().has_value());
-    EXPECT_DOUBLE_EQ(convSettings.getAbsEnergyConv().value(), 1.0e-4);
+    convSettings.setAbsEnergyConvByUser(1.0e-4 * kcal_per_mol);
+    EXPECT_DOUBLE_EQ(
+        convSettings.getAbsEnergyConv().numerical_value_in(kcal_per_mol),
+        1.0e-4
+    );
 }
 
 TEST(ConvSettingsTest, ForceConvSettersAndOptionalGetters)
 {
     ConvSettings convSettings;
-    convSettings.setForceConvByUser(1.0e-3);
-    ASSERT_TRUE(convSettings.getForceConv().has_value());
-    EXPECT_DOUBLE_EQ(convSettings.getForceConv().value(), 1.0e-3);
+    convSettings.setMaxForceConvByUser(1.0e-2 * kcal_per_mol / angstrom);
+    EXPECT_DOUBLE_EQ(
+        convSettings.getMaxForceConv().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
+        1.0e-2
+    );
 
-    convSettings.setMaxForceConvByUser(1.0e-2);
-    ASSERT_TRUE(convSettings.getMaxForceConv().has_value());
-    EXPECT_DOUBLE_EQ(convSettings.getMaxForceConv().value(), 1.0e-2);
-
-    convSettings.setRMSForceConvByUser(1.0e-3);
-    ASSERT_TRUE(convSettings.getRMSForceConv().has_value());
-    EXPECT_DOUBLE_EQ(convSettings.getRMSForceConv().value(), 1.0e-3);
+    convSettings.setRMSForceConvByUser(1.0e-3 * kcal_per_mol / angstrom);
+    EXPECT_DOUBLE_EQ(
+        convSettings.getRMSForceConv().numerical_value_in(
+            kcal_per_mol / angstrom
+        ),
+        1.0e-3
+    );
 }

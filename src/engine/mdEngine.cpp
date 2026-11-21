@@ -22,7 +22,6 @@
 
 #include "mdEngine.hpp"
 
-#include "constants/conversionFactors.hpp"
 #include "constraintSettings.hpp"
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
@@ -32,6 +31,7 @@
 #include "outputFileSettings.hpp"
 #include "progressbar.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 #ifdef WITH_MPI
@@ -70,7 +70,7 @@ namespace engine
         getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
 
         getEngineOutput().getLogOutput().writeInitialMomentum(
-            norm(getPhysicalDataPtr()->getMomentum())
+            norm(getPhysicalData().getMomentum())
         );
 
         const auto  nSteps = getSettings().timings.getNumberOfSteps();
@@ -93,7 +93,7 @@ namespace engine
         timings::GlobalTimer::get().stopSimulationTimer();
 
         const auto elapsedTime =
-            timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
+            timings::GlobalTimer::get().calculateElapsedTime();
 
 #ifdef WITH_MPI
         if (mpi::MPI::isRoot())
@@ -271,7 +271,9 @@ namespace engine
                 getSimulationBox(),
                 *_thermostat,
                 effStep,
-                getPhysicalData().getPotentialEnergy()
+                getPhysicalData().getPotentialEnergy().numerical_value_in(
+                    kcal_per_mol
+                )
             );
 
             getEngineOutput().writeVirialFile(

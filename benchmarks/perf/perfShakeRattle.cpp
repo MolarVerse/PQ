@@ -61,7 +61,9 @@ int main()
     settings.constraintSettings.setShakeMaxIterByUser(100);
     settings.constraintSettings.setRattleMaxIterByUser(100);
     settings.constraintSettings.setShakeToleranceByUser(1.0e-8);
-    settings.constraintSettings.setRattleToleranceByUser(1.0e-8);
+    settings.constraintSettings.setRattleToleranceByUser(
+        1.0e-8 * g_per_mol / s
+    );
     settings.constraintSettings.activateShakeByUser();
     auto constr = constraints::Constraints(settings.constraintSettings);
 
@@ -73,7 +75,7 @@ int main()
                 &molecule,
                 AtomIndex{0},
                 AtomIndex{1},
-                0.85
+                0.85 * angstrom
             )
         );
     }
@@ -91,15 +93,18 @@ int main()
         for (auto &molecule : molecules)
         {
             auto &atom  = molecule.getAtom(AtomIndex{1});
-            auto  pos   = atom.getPosition();
+            auto  pos   = atom.getPosition().numerical_value_in(angstrom);
             pos[0]     += (i % 2 == 0) ? 0.02 : -0.02;
-            atom.setPosition(pos);
+            atom.setPosition(pos * angstrom);
         }
         constr.applyShake(box, timeStep);
         constr.applyRattle(box);
     }
 
     // read state so the loop cannot be optimized away
-    std::cout << std::format("{:.6f}\n", box.calculateMomentum()[0]);
+    std::cout << std::format(
+        "{:.6f}\n",
+        box.calculateMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs)
+    );
     return 0;
 }

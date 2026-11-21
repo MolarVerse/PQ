@@ -25,7 +25,6 @@
 #include <cmath>
 
 #include "box.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -66,10 +65,9 @@ namespace manostat
         const auto forceVirial = physicalData.getVirial();
         const auto volume      = simulationBox.getVolume();
 
-        auto pressureTensor  = (2.0 * ekinVirial + forceVirial) / volume;
-        pressureTensor      *= PRESSURE_FACTOR_PA;
-        _pressureTensor      = pressureTensor * Pa;
-        _pressure            = trace(_pressureTensor) / linalg::tensor3D::size;
+        _pressureTensor =
+            (2.0 * ekinVirial + forceVirial) / volume / avogadro_constant;
+        _pressure = trace(_pressureTensor) / linalg::tensor3D::size;
 
         physicalData.setPressure(_pressure);
 
@@ -147,7 +145,7 @@ namespace manostat
     void Manostat::_validateScaling(
         const molsys::SimulationBox &simulationBox,
         const QuantityTensor3D      &mu,
-        double                       coulombRadiusCutOff
+        const Distance              &coulombRadiusCutOff
     )
     {
         const auto determinant = det(mu);
@@ -177,7 +175,7 @@ namespace manostat
     void Manostat::_validateCandidate(
         molsys::Box            &candidate,
         const QuantityTensor3D &mu,
-        double                  coulombRadiusCutOff
+        const Distance         &coulombRadiusCutOff
     )
     {
         candidate.scaleBox(mu);
@@ -185,17 +183,17 @@ namespace manostat
         const auto dimensions = candidate.get_boxDimensions();
         const auto angles     = candidate.getBoxAngles();
         const auto matrix = candidate.getBoxMatrix(molsys::Periodicity::XYZ);
-        if (!std::isfinite(volume) || volume <= 0.0 ||
-            !linalg::isFinite(matrix) || !linalg::isFinite(inverse(matrix)))
+        if (!isfinite(volume) || volume <= 0.0 || !linalg::isFinite(matrix) ||
+            !linalg::isFinite(inverse(matrix)))
         {
             throw exc::ManostatException("Invalid manostat cell geometry");
         }
 
-        constexpr double straightAngle = 180.0;
+        constexpr auto straightAngle = 180.0 * deg;
         for (size_t i = 0; i < 3; ++i)
         {
-            if (!std::isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
-                !std::isfinite(angles[i]) || angles[i] <= 0.0 ||
+            if (!isfinite(dimensions[i]) || dimensions[i] <= 0.0 ||
+                !isfinite(angles[i]) || angles[i] <= 0.0 ||
                 angles[i] >= straightAngle)
             {
                 throw exc::ManostatException("Invalid manostat cell geometry");
@@ -245,7 +243,7 @@ namespace manostat
         physicalData::PhysicalData &physicalData,
         const Temperature & /*targetTemperature*/,
         const Time & /*timeStep*/,
-        double /*coulombRadiusCutOff*/
+        const Distance & /*coulombRadiusCutOff*/
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Calc Pressure");

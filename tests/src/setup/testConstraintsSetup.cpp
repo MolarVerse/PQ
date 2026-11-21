@@ -39,6 +39,8 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "testSetup.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -50,9 +52,9 @@ namespace
      * calculations are well defined
      */
     void addDiatomicMolecule(
-        engine::Engine      &engine,
-        const linalg::Vec3D &position1,
-        const linalg::Vec3D &position2
+        engine::Engine &engine,
+        const Pos3D    &position1,
+        const Pos3D    &position2
     )
     {
         auto &simBox = engine.getSimulationBox();
@@ -61,19 +63,21 @@ namespace
 
         auto atom1 = std::make_shared<molsys::Atom>();
         atom1->setPosition(position1);
-        atom1->setMass(1.0);
+        atom1->setMass(1.0 * g_per_mol);
         molecule.addAtom(atom1);
         simBox.addAtom(atom1);
 
         auto atom2 = std::make_shared<molsys::Atom>();
         atom2->setPosition(position2);
-        atom2->setMass(1.0);
+        atom2->setMass(1.0 * g_per_mol);
         molecule.addAtom(atom2);
         simBox.addAtom(atom2);
 
         simBox.addMolecule(molecule);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         simBox.setBox(orthoBox, false);
     }
 
@@ -83,7 +87,7 @@ namespace
      */
     void addBondConstraintToLastMolecule(
         engine::Engine &engine,
-        double          bondLength
+        Distance        bondLength
     )
     {
         auto &simBox   = engine.getSimulationBox();
@@ -119,18 +123,20 @@ namespace
         molecule.setMoltype(kMShakeMolType);
 
         auto atom1 = std::make_shared<molsys::Atom>();
-        atom1->setPosition({0.0, 0.0, 0.0});
+        atom1->setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
         molecule.addAtom(atom1);
         simBox.addAtom(atom1);
 
         auto atom2 = std::make_shared<molsys::Atom>();
-        atom2->setPosition({1.0, 0.0, 0.0});
+        atom2->setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
         molecule.addAtom(atom2);
         simBox.addAtom(atom2);
 
         simBox.addMolecule(molecule);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         simBox.setBox(orthoBox, false);
     }
 }   // namespace
@@ -143,8 +149,12 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 {
     _settings->constraintSettings.activateShakeByUser();
 
-    addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
-    addBondConstraintToLastMolecule(*_engine, 1.0);
+    addDiatomicMolecule(
+        *_engine,
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{1.0, 0.0, 0.0} * angstrom
+    );
+    addBondConstraintToLastMolecule(*_engine, 1.0 * angstrom);
 
     auto &simBox = _engine->getSimulationBox();
     simBox.setDegreesOfFreedom(10);
@@ -156,7 +166,7 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 
     EXPECT_EQ(
         constraints->getBondConstraints()[0].getShakeDistanceRef(),
-        linalg::Vec3D(-1.0, 0.0, 0.0)
+        linalg::Vec3D(-1.0, 0.0, 0.0) * angstrom
     );
     EXPECT_EQ(constraints->getNumberOfBondConstraints(), 1);
     EXPECT_EQ(simBox.getDegreesOfFreedom(), 9);
@@ -230,8 +240,12 @@ TEST_F(TestSetup, setupConstraintsWrapperRunsWhenShakeActive)
 {
     _settings->constraintSettings.activateShakeByUser();
 
-    addDiatomicMolecule(*_engine, {0.0, 0.0, 0.0}, {1.0, 0.0, 0.0});
-    addBondConstraintToLastMolecule(*_engine, 1.0);
+    addDiatomicMolecule(
+        *_engine,
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{1.0, 0.0, 0.0} * angstrom
+    );
+    addBondConstraintToLastMolecule(*_engine, 1.0 * angstrom);
 
     auto &simBox = _engine->getSimulationBox();
     simBox.setDegreesOfFreedom(10);
@@ -242,7 +256,7 @@ TEST_F(TestSetup, setupConstraintsWrapperRunsWhenShakeActive)
 
     EXPECT_EQ(
         constraints->getBondConstraints()[0].getShakeDistanceRef(),
-        linalg::Vec3D(-1.0, 0.0, 0.0)
+        linalg::Vec3D(-1.0, 0.0, 0.0) * angstrom
     );
     EXPECT_EQ(simBox.getDegreesOfFreedom(), 9);
 }
@@ -256,7 +270,7 @@ TEST_F(TestSetup, constraintsSetupLogsToleranceAndMaxIterOfSettings)
     auto &constraintSettings = _settings->constraintSettings;
     constraintSettings.activateShakeByUser();
     constraintSettings.setShakeToleranceByUser(1e-5);
-    constraintSettings.setRattleToleranceByUser(1e-4);
+    constraintSettings.setRattleToleranceByUser(1e-4 * g_per_mol / s);
     constraintSettings.setShakeMaxIterByUser(37);
     constraintSettings.setRattleMaxIterByUser(41);
 

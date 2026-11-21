@@ -25,14 +25,12 @@
 #include <cmath>
 #include <format>
 
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "hybridSettings.hpp"
 #include "resetKineticsSettings.hpp"
 #include "timingsSettings.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace
 {
@@ -76,15 +74,11 @@ namespace
                     mstd::max(maxTemperature, kinetics.getStartTemperature());
             }
 
-            const auto unitConversion = M2_TO_ANGSTROM2 * KG_TO_GRAM / FS_TO_S;
-            const auto conversionFactor =
-                UNIVERSAL_GAS_CONSTANT * unitConversion;
-            const auto sigmaSquared =
-                4.0 * thermostatSettings.getFriction() * conversionFactor *
-                maxTemperature.quantity_from_zero().numerical_value_in(K) /
-                timings.getTimeStep().numerical_value_in(fs);
+            const auto sigmaSquared = 4.0 * thermostatSettings.getFriction() *
+                                      maxTemperature.quantity_from_zero() /
+                                      timings.getTimeStep();
 
-            if (!std::isfinite(sigmaSquared))
+            if (!isfinite(sigmaSquared))
             {
                 throw exc::InputFileException(
                     "Langevin thermostat parameters produce a non-finite "

@@ -27,6 +27,7 @@
 
 #include "morsePair.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests the equals operator of pot::MorsePair
@@ -41,22 +42,22 @@ TEST(TestMorsePair, equalsOperator)
     const auto nonCoulombPair1 = pot::MorsePair(
         vdwType1,
         vdwType2,
-        1.0,
+        1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
-            .wellWidth           = 3.0,
-            .equilibriumDistance = 4.0
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
+            .wellWidth           = 3.0 / angstrom,
+            .equilibriumDistance = 4.0 * angstrom
         }
     );
 
     const auto nonCoulombPair2 = pot::MorsePair(
         vdwType1,
         vdwType2,
-        1.0,
+        1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
-            .wellWidth           = 3.0,
-            .equilibriumDistance = 4.0
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
+            .wellWidth           = 3.0 / angstrom,
+            .equilibriumDistance = 4.0 * angstrom
         }
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair2);
@@ -64,11 +65,11 @@ TEST(TestMorsePair, equalsOperator)
     const auto nonCoulombPair3 = pot::MorsePair(
         vdwType2,
         vdwType1,
-        1.0,
+        1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
-            .wellWidth           = 3.0,
-            .equilibriumDistance = 4.0
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
+            .wellWidth           = 3.0 / angstrom,
+            .equilibriumDistance = 4.0 * angstrom
         }
     );
     EXPECT_TRUE(nonCoulombPair1 == nonCoulombPair3);
@@ -76,11 +77,11 @@ TEST(TestMorsePair, equalsOperator)
     const auto nonCoulombPair4 = pot::MorsePair(
         vdwType1,
         vdwType3,
-        1.0,
+        1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
-            .wellWidth           = 3.0,
-            .equilibriumDistance = 4.0
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
+            .wellWidth           = 3.0 / angstrom,
+            .equilibriumDistance = 4.0 * angstrom
         }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair4);
@@ -88,11 +89,11 @@ TEST(TestMorsePair, equalsOperator)
     const auto nonCoulombPair5 = pot::MorsePair(
         vdwType1,
         vdwType2,
-        2.0,
+        2.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
-            .wellWidth           = 3.0,
-            .equilibriumDistance = 4.0
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
+            .wellWidth           = 3.0 / angstrom,
+            .equilibriumDistance = 4.0 * angstrom
         }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair5);
@@ -100,11 +101,11 @@ TEST(TestMorsePair, equalsOperator)
     const auto nonCoulombPair6 = pot::MorsePair(
         vdwType1,
         vdwType2,
-        1.0,
+        1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 3.0,
-            .wellWidth           = 3.0,
-            .equilibriumDistance = 4.0
+            .dissociationEnergy  = 3.0 * kcal_per_mol,
+            .wellWidth           = 3.0 / angstrom,
+            .equilibriumDistance = 4.0 * angstrom
         }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair6);
@@ -112,11 +113,11 @@ TEST(TestMorsePair, equalsOperator)
     const auto nonCoulombPair7 = pot::MorsePair(
         vdwType1,
         vdwType2,
-        1.0,
+        1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
-            .wellWidth           = 4.0,
-            .equilibriumDistance = 4.0
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
+            .wellWidth           = 4.0 / angstrom,
+            .equilibriumDistance = 4.0 * angstrom
         }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair7);
@@ -124,11 +125,11 @@ TEST(TestMorsePair, equalsOperator)
     const auto nonCoulombPair8 = pot::MorsePair(
         vdwType1,
         vdwType2,
-        1.0,
+        1.0 * angstrom,
         MorseParams{
-            .dissociationEnergy  = 2.0,
-            .wellWidth           = 3.0,
-            .equilibriumDistance = 5.0
+            .dissociationEnergy  = 2.0 * kcal_per_mol,
+            .wellWidth           = 3.0 / angstrom,
+            .equilibriumDistance = 5.0 * angstrom
         }
     );
     EXPECT_FALSE(nonCoulombPair1 == nonCoulombPair8);
@@ -146,28 +147,28 @@ TEST(TestMorsePair, calculateEnergyAndForces)
     const double forceCutoff  = 2.0;
 
     const auto potential = pot::MorsePair(
-        rncCutoff,
-        energyCutoff,
-        forceCutoff,
+        rncCutoff * angstrom,
+        energyCutoff * kcal_per_mol,
+        forceCutoff * kcal_per_mol / angstrom,
         MorseParams{
-            .dissociationEnergy  = coefficients[0],
-            .wellWidth           = coefficients[1],
-            .equilibriumDistance = coefficients[2]
+            .dissociationEnergy  = coefficients[0] * kcal_per_mol,
+            .wellWidth           = coefficients[1] / angstrom,
+            .equilibriumDistance = coefficients[2] * angstrom
         }
     );
 
     const auto distance        = 2.0;
-    const auto [energy, force] = potential.calculate(distance);
+    const auto [energy, force] = potential.calculate(distance * angstrom);
 
     const auto expTerm = ::exp(-coefficients[1] * (distance - coefficients[2]));
 
     EXPECT_DOUBLE_EQ(
-        energy,
+        energy.numerical_value_in(kcal_per_mol),
         (coefficients[0] * ::pow(1 - expTerm, 2)) - energyCutoff -
             (forceCutoff * (rncCutoff - distance))
     );
     EXPECT_DOUBLE_EQ(
-        force,
+        force.numerical_value_in(kcal_per_mol / angstrom),
         (-2 * coefficients[0] * coefficients[1] * (1 - expTerm) * expTerm) -
             forceCutoff
     );

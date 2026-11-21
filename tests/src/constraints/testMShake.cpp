@@ -36,6 +36,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 /**
@@ -69,9 +70,11 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     refAtoms[0].setName("H");
     refAtoms[1].setName("H");
     refAtoms[2].setName("H");
-    refAtoms[0].setPosition({0.0, 0.0, 0.0});
-    refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
+    refAtoms[0].setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    refAtoms[1].setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
+    refAtoms[2].setPosition(
+        linalg::Vec3D{0.5, std::numbers::sqrt3 / 2.0, 0.0} * angstrom
+    );
 
     auto mShakeRef = constraints::MShakeReference();
     mShakeRef.setMoleculeType(moltype);
@@ -84,39 +87,42 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
     // --- molsys::SimulationBox with one slightly-stretched triangle ---
     auto simBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
 
-    const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0);
-    const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = linalg::Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
+    const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0) * angstrom;
+    const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0) * angstrom;
+    const auto refPos2 =
+        linalg::Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0) * angstrom;
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
 
-    atom1->setMass(1.0);
-    atom2->setMass(1.0);
-    atom3->setMass(1.0);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom3->setMass(1.0 * g_per_mol);
 
     // Stretch bond 0-1 by a small amount; M-SHAKE must pull atom 1
     // back along the bond to restore the rigid triangle. The
     // perturbation is intentionally small so the algorithm converges
     // well within the iteration bound.
     atom1->setPosition(refPos0);
-    atom2->setPosition({1.0001, 0.0, 0.0});
+    atom2->setPosition(linalg::Vec3D{1.0001, 0.0, 0.0} * angstrom);
     atom3->setPosition(refPos2);
 
     atom1->setPositionOld(refPos0);
     atom2->setPositionOld(refPos1);
     atom3->setPositionOld(refPos2);
 
-    atom1->setVelocity({0.0, 0.0, 0.0});
-    atom2->setVelocity({0.0, 0.0, 0.0});
-    atom3->setVelocity({0.0, 0.0, 0.0});
+    atom1->setVelocity(Vel::zero());
+    atom2->setVelocity(Vel::zero());
+    atom3->setVelocity(Vel::zero());
 
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
@@ -131,8 +137,10 @@ TEST(TestMShake, applyMShakeThreeAtomMolecule)
 
     // After convergence the perturbed bond 0-1 must be back to the
     // reference length 1.0 within the requested tolerance.
-    const auto pos0   = molecule.getAtomPosition(AtomIndex{0});
-    const auto pos1   = molecule.getAtomPosition(AtomIndex{1});
+    const auto pos0 =
+        molecule.getAtomPosition(AtomIndex{0}).numerical_value_in(angstrom);
+    const auto pos1 =
+        molecule.getAtomPosition(AtomIndex{1}).numerical_value_in(angstrom);
     const auto bond01 = norm(pos1 - pos0);
     EXPECT_NEAR(bond01, 1.0, 1.0e-5);
 }
@@ -160,7 +168,7 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
     for (size_t i = 0; i < 3; ++i)
     {
         refAtoms[i].setName(names[i]);
-        refAtoms[i].setPosition(refPos[i]);
+        refAtoms[i].setPosition(linalg::Vec3D{refPos[i]} * angstrom);
     }
 
     auto mShakeRef = constraints::MShakeReference();
@@ -173,22 +181,24 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
 
     auto simBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
 
     // same geometry as the reference, rotated and shifted
-    const auto pos = std::vector<linalg::Vec3D>{
-        {10.0, 10.0, 10.0},
-        {10.0, 10.585882, 10.756950},
-        {10.0, 10.585882, 9.243050}
+    const auto pos = std::vector<Pos3D>{
+        linalg::Vec3D{10.0, 10.0, 10.0} * angstrom,
+        linalg::Vec3D{10.0, 10.585882, 10.756950} * angstrom,
+        linalg::Vec3D{10.0, 10.585882, 9.243050} * angstrom
     };
-    const auto vel = std::vector<linalg::Vec3D>{
-        {0.3, -0.2, 0.1},
-        {-1.1, 2.0, 0.7},
-        {0.9, -1.4, -2.3}
+    const auto vel = std::vector<Vel3D>{
+        linalg::Vec3D{0.3, -0.2, 0.1} * angstrom / s,
+        linalg::Vec3D{-1.1, 2.0, 0.7} * angstrom / s,
+        linalg::Vec3D{0.9, -1.4, -2.3} * angstrom / s,
     };
 
     auto atoms = std::vector<std::shared_ptr<molsys::Atom>>();
@@ -205,7 +215,7 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
 
     simBox.addMolecule(molecule);
 
-    auto momentumBefore = linalg::Vec3D(0.0, 0.0, 0.0);
+    Momentum3D momentumBefore = Momentum::zero();
     for (const auto &atom : atoms)
     {
         momentumBefore += atom->getMass() * atom->getVelocity();
@@ -217,13 +227,19 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
     {
         for (size_t j = i + 1; j < 3; ++j)
         {
-            const auto bond = atoms[i]->getPosition() - atoms[j]->getPosition();
+            const auto bond =
+                (atoms[i]->getPosition() - atoms[j]->getPosition())
+                    .numerical_value_in(angstrom);
             const auto dVel = atoms[i]->getVelocity() - atoms[j]->getVelocity();
-            EXPECT_NEAR(dot(bond, dVel), 0.0, 1.0e-10);
+            EXPECT_NEAR(
+                dot(bond, dVel.numerical_value_in(angstrom / s)),
+                0.0,
+                1.0e-10
+            );
         }
     }
 
-    auto momentumAfter = linalg::Vec3D(0.0, 0.0, 0.0);
+    Momentum3D momentumAfter = Momentum::zero();
     for (const auto &atom : atoms)
     {
         momentumAfter += atom->getMass() * atom->getVelocity();
@@ -231,7 +247,11 @@ TEST(TestMShake, applyMRattleRemovesBondVelocities)
 
     for (size_t k = 0; k < 3; ++k)
     {
-        EXPECT_NEAR(momentumAfter[k], momentumBefore[k], 1.0e-10);
+        EXPECT_NEAR(
+            momentumAfter[k].numerical_value_in(g_per_mol * angstrom / s),
+            momentumBefore[k].numerical_value_in(g_per_mol * angstrom / s),
+            1.0e-10
+        );
     }
 }
 
@@ -251,9 +271,11 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
     refAtoms[0].setName("H");
     refAtoms[1].setName("H");
     refAtoms[2].setName("H");
-    refAtoms[0].setPosition({0.0, 0.0, 0.0});
-    refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
+    refAtoms[0].setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    refAtoms[1].setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
+    refAtoms[2].setPosition(
+        linalg::Vec3D{0.5, std::numbers::sqrt3 / 2.0, 0.0} * angstrom
+    );
 
     auto mShakeRef = constraints::MShakeReference();
     mShakeRef.setMoleculeType(moltype);
@@ -265,32 +287,35 @@ TEST(TestMShake, applyMShakeThrowsWhenIterationLimitTooSmall)
 
     auto simBox = molsys::SimulationBox();
 
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     simBox.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
     molecule.setMoltype(MolType{1});
 
-    const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0);
-    const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0);
-    const auto refPos2 = linalg::Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0);
+    const auto refPos0 = linalg::Vec3D(0.0, 0.0, 0.0) * angstrom;
+    const auto refPos1 = linalg::Vec3D(1.0, 0.0, 0.0) * angstrom;
+    const auto refPos2 =
+        linalg::Vec3D(0.5, std::numbers::sqrt3 / 2.0, 0.0) * angstrom;
 
     auto atom1 = std::make_shared<molsys::Atom>();
     auto atom2 = std::make_shared<molsys::Atom>();
     auto atom3 = std::make_shared<molsys::Atom>();
-    atom1->setMass(1.0);
-    atom2->setMass(1.0);
-    atom3->setMass(1.0);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom3->setMass(1.0 * g_per_mol);
     // Large perturbation so the solver cannot converge in 1 iteration.
     atom1->setPosition(refPos0);
-    atom2->setPosition({1.5, 0.0, 0.0});
+    atom2->setPosition(linalg::Vec3D{1.5, 0.0, 0.0} * angstrom);
     atom3->setPosition(refPos2);
     atom1->setPositionOld(refPos0);
     atom2->setPositionOld(refPos1);
     atom3->setPositionOld(refPos2);
-    atom1->setVelocity({0.0, 0.0, 0.0});
-    atom2->setVelocity({0.0, 0.0, 0.0});
-    atom3->setVelocity({0.0, 0.0, 0.0});
+    atom1->setVelocity(Vel::zero());
+    atom2->setVelocity(Vel::zero());
+    atom3->setVelocity(Vel::zero());
     molecule.addAtom(atom1);
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
@@ -322,9 +347,11 @@ TEST(TestMShake, countsMShakeMoleculesSeparatelyFromBonds)
     refAtoms[0].setName("H");
     refAtoms[1].setName("H");
     refAtoms[2].setName("H");
-    refAtoms[0].setPosition({0.0, 0.0, 0.0});
-    refAtoms[1].setPosition({1.0, 0.0, 0.0});
-    refAtoms[2].setPosition({0.5, std::numbers::sqrt3 / 2.0, 0.0});
+    refAtoms[0].setPosition(linalg::Vec3D{0.0, 0.0, 0.0} * angstrom);
+    refAtoms[1].setPosition(linalg::Vec3D{1.0, 0.0, 0.0} * angstrom);
+    refAtoms[2].setPosition(
+        linalg::Vec3D{0.5, std::numbers::sqrt3 / 2.0, 0.0} * angstrom
+    );
 
     auto mShakeRef = constraints::MShakeReference();
     mShakeRef.setMoleculeType(moltype);

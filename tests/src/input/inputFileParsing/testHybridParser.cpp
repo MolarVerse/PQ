@@ -32,6 +32,7 @@
 #include "inputConverter.hpp"
 #include "testInputFileReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestInputFileReader, parseInnerRegionCenter)
 {
@@ -128,12 +129,18 @@ TEST_F(TestInputFileReader, parseRegionRadii)
     const auto& parseLayerRadiusFunc = funcMap.at("layer_radius");
 
     parseCoreRadiusFunc({"core_radius", "=", "3.5"}, 0);
-    EXPECT_DOUBLE_EQ(hybridSettings.getCoreRadius(), 3.5);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getCoreRadius().numerical_value_in(angstrom),
+        3.5
+    );
 
     _clearParser(parser);
 
     parseLayerRadiusFunc({"layer_radius", "=", "8.25"}, 0);
-    EXPECT_DOUBLE_EQ(hybridSettings.getLayerRadius(), 8.25);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getLayerRadius().numerical_value_in(angstrom),
+        8.25
+    );
 
     _clearParser(parser);
 
@@ -172,12 +179,20 @@ TEST_F(TestInputFileReader, parseThicknesses)
         {"smoothing_region_thickness", "=", "1.25"},
         0
     );
-    EXPECT_DOUBLE_EQ(hybridSettings.getSmoothingRegionThickness(), 1.25);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getSmoothingRegionThickness().numerical_value_in(
+            angstrom
+        ),
+        1.25
+    );
 
     _clearParser(parser);
 
     parsePointChargeThicknessFunc({"point_charge_thickness", "=", "4.75"}, 0);
-    EXPECT_DOUBLE_EQ(hybridSettings.getPointChargeThickness(), 4.75);
+    EXPECT_DOUBLE_EQ(
+        hybridSettings.getPointChargeThickness().numerical_value_in(angstrom),
+        4.75
+    );
 
     _clearParser(parser);
 

@@ -24,7 +24,6 @@
 
 #include <csignal>
 #include <memory>
-#include <utility>
 #include <vector>
 
 #include "atom.hpp"
@@ -35,6 +34,7 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 #ifdef WITH_PYBIND11
 #include <pybind11/embed.h>
@@ -45,25 +45,25 @@ namespace
     class HarmonicEvaluator : public opt::Evaluator
     {
        private:
-        std::vector<double> _forceConstants;
-        bool                _analyticSupported = false;
+        std::vector<ForceConstant> _forceConstants;
+        bool                       _analyticSupported = false;
 
        public:
         explicit HarmonicEvaluator(
-            const Settings     &settings,
-            std::vector<double> forceConstants,
-            const bool          analyticSupported
+            const Settings                   &settings,
+            const std::vector<ForceConstant> &forceConstants,
+            const bool                        analyticSupported
         )
             : opt::Evaluator(settings),
-              _forceConstants(std::move(forceConstants)),
+              _forceConstants(forceConstants),
               _analyticSupported(analyticSupported)
         {
         }
         explicit HarmonicEvaluator(
-            const Settings     &settings,
-            std::vector<double> forceConstants
+            const Settings                   &settings,
+            const std::vector<ForceConstant> &forceConstants
         )
-            : HarmonicEvaluator(settings, std::move(forceConstants), false)
+            : HarmonicEvaluator(settings, forceConstants, false)
         {
         }
 
@@ -97,9 +97,14 @@ namespace
             return _analyticSupported;
         }
 
-        [[nodiscard]] opt::HessianMatrix calculateAnalyticHessian() override
+        [[nodiscard]] Hessian calculateAnalyticHessian() override
         {
-            return {{2.0, 4.0}, {6.0, 8.0}};
+            return {
+                {2.0 * kcal_per_mol / angstrom / angstrom,
+                 4.0 * kcal_per_mol / angstrom / angstrom},
+                {6.0 * kcal_per_mol / angstrom / angstrom,
+                 8.0 * kcal_per_mol / angstrom / angstrom}
+            };
         }
     };
 
@@ -108,10 +113,10 @@ namespace
         auto box = std::make_shared<molsys::SimulationBox>();
 
         auto atom0 = std::make_shared<molsys::Atom>();
-        atom0->setPosition({1.0, -2.0, 3.0});
+        atom0->setPosition(linalg::Vec3D{1.0, -2.0, 3.0} * angstrom);
 
         auto atom1 = std::make_shared<molsys::Atom>();
-        atom1->setPosition({-4.0, 5.0, -6.0});
+        atom1->setPosition(linalg::Vec3D{-4.0, 5.0, -6.0} * angstrom);
 
         box->addAtom(atom0);
         box->addAtom(atom1);
@@ -120,8 +125,8 @@ namespace
     }
 
     void expectDiagonalHessian(
-        const opt::HessianMatrix  &hessian,
-        const std::vector<double> &diagonal
+        const Hessian                    &hessian,
+        const std::vector<ForceConstant> &diagonal
     )
     {
         ASSERT_EQ(hessian.size(), diagonal.size());
@@ -132,8 +137,18 @@ namespace
 
             for (size_t col = 0; col < hessian[row].size(); ++col)
             {
-                const auto expected = row == col ? diagonal[row] : 0.0;
-                EXPECT_NEAR(hessian[row][col], expected, 1.0e-10);
+                const auto expected =
+                    row == col ? diagonal[row]
+                               : 0.0 * kcal_per_mol / angstrom / angstrom;
+                EXPECT_NEAR(
+                    hessian[row][col].numerical_value_in(
+                        kcal_per_mol / angstrom / angstrom
+                    ),
+                    expected.numerical_value_in(
+                        kcal_per_mol / angstrom / angstrom
+                    ),
+                    1.0e-10
+                );
             }
         }
     }
@@ -142,33 +157,41 @@ namespace
     {
         EXPECT_EQ(
             simulationBox.getAtom(0).getPosition(),
-            linalg::Vec3D(1.0, -2.0, 3.0)
+            linalg::Vec3D(1.0, -2.0, 3.0) * angstrom
         );
         EXPECT_EQ(
             simulationBox.getAtom(1).getPosition(),
-            linalg::Vec3D(-4.0, 5.0, -6.0)
+            linalg::Vec3D(-4.0, 5.0, -6.0) * angstrom
         );
     }
 }   // namespace
 
 TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 {
-    const auto diagonal = std::vector<double>{1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+    const auto diagonal = std::vector<ForceConstant>{
+        1.0 * kcal_per_mol / angstrom / angstrom,
+        2.0 * kcal_per_mol / angstrom / angstrom,
+        3.0 * kcal_per_mol / angstrom / angstrom,
+        4.0 * kcal_per_mol / angstrom / angstrom,
+        5.0 * kcal_per_mol / angstrom / angstrom,
+        6.0 * kcal_per_mol / angstrom / angstrom
+    };
 
+    const auto displacement = 1.0e-4 * angstrom;
     for (const auto &builder : {
              std::shared_ptr<opt::HessianBuilder>(
                  std::make_shared<opt::CentralForceDifferenceHessianBuilder>(
-                     1.0e-4
+                     displacement
                  )
              ),
              std::shared_ptr<opt::HessianBuilder>(
                  std::make_shared<opt::ForwardForceDifferenceHessianBuilder>(
-                     1.0e-4
+                     displacement
                  )
              ),
              std::shared_ptr<opt::HessianBuilder>(
                  std::make_shared<opt::FivePointForceDifferenceHessianBuilder>(
-                     1.0e-4
+                     displacement
                  )
              ),
          })
@@ -182,8 +205,14 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
 
         expectDiagonalHessian(hessian, diagonal);
         expectPositionsRestored(*box);
-        EXPECT_EQ(box->getAtom(0).getForce(), linalg::Vec3D(-1.0, 4.0, -9.0));
-        EXPECT_EQ(box->getAtom(1).getForce(), linalg::Vec3D(16.0, -25.0, 36.0));
+        EXPECT_EQ(
+            box->getAtom(0).getForce(),
+            linalg::Vec3D(-1.0, 4.0, -9.0) * kcal_per_mol / angstrom
+        );
+        EXPECT_EQ(
+            box->getAtom(1).getForce(),
+            linalg::Vec3D(16.0, -25.0, 36.0) * kcal_per_mol / angstrom
+        );
     }
 }
 
@@ -194,10 +223,19 @@ TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
 
     auto              box = makeSimulationBox();
     Settings          settings;
-    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    HarmonicEvaluator evaluator(
+        settings,
+        {1.0 * kcal_per_mol / angstrom / angstrom,
+         2.0 * kcal_per_mol / angstrom / angstrom,
+         3.0 * kcal_per_mol / angstrom / angstrom,
+         4.0 * kcal_per_mol / angstrom / angstrom,
+         5.0 * kcal_per_mol / angstrom / angstrom,
+         6.0 * kcal_per_mol / angstrom / angstrom}
+    );
     evaluator.setSimulationBox(box);
 
-    const auto builder = opt::CentralForceDifferenceHessianBuilder(1.0e-4);
+    const auto builder =
+        opt::CentralForceDifferenceHessianBuilder(1.0e-4 * angstrom);
 
     ASSERT_EQ(std::raise(SIGINT), 0);
 
@@ -219,7 +257,15 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 {
     auto              box = makeSimulationBox();
     Settings          settings;
-    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0});
+    HarmonicEvaluator evaluator(
+        settings,
+        {1.0 * kcal_per_mol / angstrom / angstrom,
+         2.0 * kcal_per_mol / angstrom / angstrom,
+         3.0 * kcal_per_mol / angstrom / angstrom,
+         4.0 * kcal_per_mol / angstrom / angstrom,
+         5.0 * kcal_per_mol / angstrom / angstrom,
+         6.0 * kcal_per_mol / angstrom / angstrom}
+    );
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
@@ -234,7 +280,16 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 {
     auto              box = makeSimulationBox();
     Settings          settings;
-    HarmonicEvaluator evaluator(settings, {1.0, 2.0, 3.0, 4.0, 5.0, 6.0}, true);
+    HarmonicEvaluator evaluator(
+        settings,
+        {1.0 * kcal_per_mol / angstrom / angstrom,
+         2.0 * kcal_per_mol / angstrom / angstrom,
+         3.0 * kcal_per_mol / angstrom / angstrom,
+         4.0 * kcal_per_mol / angstrom / angstrom,
+         5.0 * kcal_per_mol / angstrom / angstrom,
+         6.0 * kcal_per_mol / angstrom / angstrom},
+        true
+    );
     evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
@@ -242,35 +297,59 @@ TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 
     ASSERT_EQ(hessian.size(), 2U);
     ASSERT_EQ(hessian[0].size(), 2U);
-    EXPECT_DOUBLE_EQ(hessian[0][0], 2.0);
-    EXPECT_DOUBLE_EQ(hessian[0][1], 5.0);
-    EXPECT_DOUBLE_EQ(hessian[1][0], 5.0);
-    EXPECT_DOUBLE_EQ(hessian[1][1], 8.0);
+    EXPECT_DOUBLE_EQ(
+        hessian[0][0].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        2.0
+    );
+    EXPECT_DOUBLE_EQ(
+        hessian[0][1].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        5.0
+    );
+    EXPECT_DOUBLE_EQ(
+        hessian[1][0].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        5.0
+    );
+    EXPECT_DOUBLE_EQ(
+        hessian[1][1].numerical_value_in(kcal_per_mol / angstrom / angstrom),
+        8.0
+    );
 }
 
 TEST(TestHessianBuilder, makeHessianBuilderSelectsConcreteStrategies)
 {
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::CentralForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::CENTRAL, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::CENTRAL,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::ForwardForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::FORWARD, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::FORWARD,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::FivePointForceDifferenceHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::FIVE_POINT, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::FIVE_POINT,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );
     EXPECT_NE(
         std::dynamic_pointer_cast<opt::AnalyticHessianBuilder>(
-            opt::makeHessianBuilder(HessianBuilderType::ANALYTIC, 1.0e-3)
+            opt::makeHessianBuilder(
+                HessianBuilderType::ANALYTIC,
+                1.0e-3 * angstrom
+            )
         ),
         nullptr
     );

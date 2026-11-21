@@ -26,6 +26,7 @@
 #include <limits>
 
 #include "exceptions.hpp"
+#include "units.hpp"
 
 namespace engine
 {
@@ -166,7 +167,7 @@ namespace engine
                  molsys::HybridZone::SMOOTHING
              ))
         {
-            const auto smF = mol.getSmoothingFactor();
+            const auto smF = mol.getSmoothingFactor().numerical_value_in(one);
             for (auto& atom : mol.getAtoms()) atom->scaleForce(smF);
         }
     }
@@ -188,7 +189,7 @@ namespace engine
                  molsys::HybridZone::SMOOTHING
              ))
         {
-            const auto smF = mol.getSmoothingFactor();
+            const auto smF = mol.getSmoothingFactor().numerical_value_in(one);
             for (auto& atom : mol.getAtoms()) atom->scaleForce(1 - smF);
         }
     }
@@ -269,7 +270,7 @@ namespace engine
         const std::unordered_set<size_t>& inactiveForInnerCalcMolecules
     ) const
     {
-        double globalSmoothingFactor = 1;
+        Quantity globalSmoothingFactor = 1;
 
         size_t index = 0;
         for (const auto& mol : getSimulationBox().getMoleculesInsideZone(
@@ -284,7 +285,7 @@ namespace engine
             ++index;
         }
 
-        return globalSmoothingFactor;
+        return globalSmoothingFactor.numerical_value_ref_in(one);
     }
 
 }   // namespace engine

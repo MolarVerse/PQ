@@ -33,6 +33,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 namespace
 {
@@ -40,7 +41,9 @@ namespace
     {
         molsys::SimulationBox simulationBox;
         simulationBox.setBox(
-            molsys::OrthorhombicBox{{10.0, 11.0, 12.0}},
+            molsys::OrthorhombicBox{
+                {10.0 * angstrom, 11.0 * angstrom, 12.0 * angstrom}
+            },
             false
         );
 
@@ -49,7 +52,7 @@ namespace
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setName(name);
-            atom->setPosition({1.0, 2.0, 3.0});
+            atom->setPosition({1.0 * angstrom, 2.0 * angstrom, 3.0 * angstrom});
             molecule.addAtom(atom);
             simulationBox.addAtom(atom);
         }

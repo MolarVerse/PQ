@@ -29,6 +29,7 @@
 #include <utility>
 
 #include "referenceSettings.hpp"
+#include "units.hpp"
 #include "waterModelSettings.hpp"
 
 TEST(TestWaterModelSettings, FlagsAndEnumSettersRoundTrip)
@@ -268,14 +269,17 @@ TEST(TestWaterModelSettings, FinalizeAddsNoReferenceWhenNeitherModelSet)
 
 namespace
 {
-    constexpr double RAD_TO_DEG = 57.29577951308232;
 
     /**
      * @brief H-O-H angle in degrees of a rigid water geometry
      */
-    double hohAngle(const RigidWaterGeometry &geometry)
+    Angle hohAngle(const RigidWaterGeometry &geometry)
     {
-        return 2.0 * std::asin(0.5 * geometry.dHH / geometry.dOH) * RAD_TO_DEG;
+        return 2.0 *
+               ::asin(
+                   0.5 * (geometry.dHH / geometry.dOH).numerical_value_in(one)
+               ) *
+               rad;
     }
 
     std::optional<RigidWaterGeometry> geometryOf(const WaterIntraModel model)
@@ -304,32 +308,44 @@ TEST(TestWaterModelSettings, RigidGeometryMatchesTheModels)
     struct Case
     {
         WaterIntraModel model;
-        double          dOH;
-        double          angle;
+        Pos             dOH;
+        Angle           angle;
     };
 
-    constexpr double tetrahedral = 109.47122063449069;
-    constexpr double tip3pAngle  = 104.52;
+    constexpr Angle tetrahedral = 109.47122063449069 * deg;
+    constexpr Angle tip3pAngle  = 104.52 * deg;
 
     const std::array cases = {
-        Case{.model = WaterIntraModel::SPC, .dOH = 1.0, .angle = tetrahedral},
-        Case{.model = WaterIntraModel::SPC_E, .dOH = 1.0, .angle = tetrahedral},
+        Case{
+            .model = WaterIntraModel::SPC,
+            .dOH   = 1.0 * angstrom,
+            .angle = tetrahedral
+        },
+        Case{
+            .model = WaterIntraModel::SPC_E,
+            .dOH   = 1.0 * angstrom,
+            .angle = tetrahedral
+        },
         Case{
             .model = WaterIntraModel::SPC_DC,
-            .dOH   = 1.0,
+            .dOH   = 1.0 * angstrom,
             .angle = tetrahedral
         },
         Case{
             .model = WaterIntraModel::H2O_DC,
-            .dOH   = 0.958,
+            .dOH   = 0.958 * angstrom,
             .angle = tetrahedral
         },
         Case{
             .model = WaterIntraModel::TIP3P,
-            .dOH   = 0.9572,
+            .dOH   = 0.9572 * angstrom,
             .angle = tip3pAngle
         },
-        Case{.model = WaterIntraModel::OPC3, .dOH = 0.97888, .angle = 109.47},
+        Case{
+            .model = WaterIntraModel::OPC3,
+            .dOH   = 0.97888 * angstrom,
+            .angle = 109.47 * deg
+        },
     };
 
     for (const auto &testCase : cases)
@@ -338,10 +354,16 @@ TEST(TestWaterModelSettings, RigidGeometryMatchesTheModels)
 
         ASSERT_TRUE(geometry.has_value())
             << WaterIntraModelMeta::toString(testCase.model);
-        EXPECT_NEAR(geometry->dOH, testCase.dOH, 1e-9)
-            << WaterIntraModelMeta::toString(testCase.model);
-        EXPECT_NEAR(hohAngle(*geometry), testCase.angle, 1e-3)
-            << WaterIntraModelMeta::toString(testCase.model);
+        EXPECT_NEAR(
+            geometry->dOH.numerical_value_in(angstrom),
+            testCase.dOH.numerical_value_in(angstrom),
+            1e-9
+        ) << WaterIntraModelMeta::toString(testCase.model);
+        EXPECT_NEAR(
+            hohAngle(*geometry).numerical_value_in(deg),
+            testCase.angle.numerical_value_in(deg),
+            1e-3
+        ) << WaterIntraModelMeta::toString(testCase.model);
     }
 }
 

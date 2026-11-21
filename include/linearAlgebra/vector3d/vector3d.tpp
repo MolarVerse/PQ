@@ -58,6 +58,26 @@ namespace linalg
     }
 
     /**
+     * @brief operator == between a vector of quantities and a quantity
+     * holding a vector, e.g. `Pos3D == Vec3D{...} * angstrom`
+     *
+     * @param lhs
+     * @param rhs
+     * @return bool
+     */
+    template <typename U, typename Q>
+    requires(
+        mstd::is_quantity_like_v<U> && mstd::is_quantity_like_v<Q> &&
+        std::same_as<typename Q::rep, Vector3D<double>> &&
+        std::constructible_from<Vector3D<U>, const Q &> &&
+        std::equality_comparable<U>
+    )
+    bool operator==(const Vector3D<U> &lhs, const Q &rhs)
+    {
+        return lhs == Vector3D<U>(rhs);
+    }
+
+    /**
      * @brief operator !=
      *
      * @param lhs
@@ -491,6 +511,55 @@ namespace linalg
     }
 
     /**
+     * @brief round function for a Vector3d object of quantities, rounds the
+     * numerical value in the unit of each element (to the nearest integer,
+     * ties to even)
+     *
+     * @code
+     * round(Vector3D<quantity<one>>)
+     * @endcode
+     *
+     * @tparam U
+     * @param vec
+     * @return `Vector3D<typename U::value_type>`
+     */
+    template <pq::QuantityLikeVector3D U>
+    auto round(const U &vec) -> Vector3D<typename U::value_type>
+    {
+        using T = typename U::value_type;
+
+        const auto rounded = [](const T &elem)
+        {
+            return T(std::rint(elem.numerical_value_in(elem.unit)) * elem.unit);
+        };
+
+        return Vector3D<T>(rounded(vec[0]), rounded(vec[1]), rounded(vec[2]));
+    }
+
+    /**
+     * @brief floor function for a Vector3d object of quantities, floors the
+     * numerical value in the unit of each element
+     *
+     * @tparam U
+     * @param vec
+     * @return `Vector3D<typename U::value_type>`
+     */
+    template <pq::QuantityLikeVector3D U>
+    auto floor(const U &vec) -> Vector3D<typename U::value_type>
+    {
+        using T = typename U::value_type;
+
+        const auto floored = [](const T &elem)
+        {
+            return T(
+                std::floor(elem.numerical_value_in(elem.unit)) * elem.unit
+            );
+        };
+
+        return Vector3D<T>(floored(vec[0]), floored(vec[1]), floored(vec[2]));
+    }
+
+    /**
      * @brief floor function for a Vector3d object
      *
      * @code
@@ -559,6 +628,48 @@ namespace linalg
         );
     }
 
+    /**
+     * @brief ceil function for a Vector3d object of quantities, rounds the
+     * numerical value in the unit of each element up
+     *
+     * @tparam U
+     * @param vec
+     * @return `Vector3D<typename U::value_type>`
+     */
+    template <pq::QuantityLikeVector3D U>
+    auto ceil(const U &vec) -> Vector3D<typename U::value_type>
+    {
+        using T = typename U::value_type;
+
+        const auto ceiled = [](const T &elem)
+        {
+            return T(std::ceil(elem.numerical_value_in(elem.unit)) * elem.unit);
+        };
+
+        return Vector3D<T>(ceiled(vec[0]), ceiled(vec[1]), ceiled(vec[2]));
+    }
+
+    /**
+     * @brief rint function for a Vector3d object of quantities, rounds the
+     * numerical value in the unit of each element (current rounding mode)
+     *
+     * @tparam U
+     * @param vec
+     * @return `Vector3D<typename U::value_type>`
+     */
+    template <pq::QuantityLikeVector3D U>
+    auto rint(const U &vec) -> Vector3D<typename U::value_type>
+    {
+        using T = typename U::value_type;
+
+        const auto rinted = [](const T &elem)
+        {
+            return T(std::rint(elem.numerical_value_in(elem.unit)) * elem.unit);
+        };
+
+        return Vector3D<T>(rinted(vec[0]), rinted(vec[1]), rinted(vec[2]));
+    }
+
     /*********************
      *                   *
      * min/max functions *
@@ -576,44 +687,15 @@ namespace linalg
      * @param vec
      * @return `InnerType_t<U>`
      */
-    template <pq::ArithmeticVector3D U>
-    auto minimum(const U &vec) -> pq::InnerType_t<U>
-    {
-        return std::min(vec[0], std::min(vec[1], vec[2]));
-    }
-
-    /**
-     * @brief maximum function for a Vector3d object
-     *
-     * @code
-     * maximum(Vector3D<int>)
-     * @endcode
-     *
-     * @tparam U
-     * @param vec
-     * @return `InnerType_t<U>`
-     */
-    template <pq::ArithmeticVector3D U>
-    auto maximum(const U &vec) -> pq::InnerType_t<U>
-    {
-        return std::max(vec[0], std::max(vec[1], vec[2]));
-    }
-
-    /**
-     * @brief minimum function for a Vector3d object
-     *
-     * @code
-     * minimum(Vector3D<int>)
-     * @endcode
-     *
-     * @tparam U
-     * @param vec
-     * @return `InnerType_t<U>`
-     */
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto min(const U &vec) -> pq::InnerType_t<U>
     {
-        return minimum(vec);
+        if (vec[0] <= vec[1] && vec[0] <= vec[2])
+            return vec[0];
+        if (vec[1] <= vec[0] && vec[1] <= vec[2])
+            return vec[1];
+        return vec[2];
     }
 
     /**
@@ -627,10 +709,15 @@ namespace linalg
      * @param vec
      * @return `InnerType_t<U>`
      */
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto max(const U &vec) -> pq::InnerType_t<U>
     {
-        return maximum(vec);
+        if (vec[0] >= vec[1] && vec[0] >= vec[2])
+            return vec[0];
+        if (vec[1] >= vec[0] && vec[1] >= vec[2])
+            return vec[1];
+        return vec[2];
     }
 
     /**
@@ -641,13 +728,14 @@ namespace linalg
      * @param vec
      * @return decltype(max(vec[0]))
      */
-    template <pq::ArithmeticVector3D U>
-    auto max(const std::vector<U> &vec) -> decltype(maximum(vec[0]))
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
+    auto max(const std::vector<U> &vec) -> decltype(max(vec[0]))
     {
-        std::vector<decltype(maximum(vec[0]))> maxs;
+        std::vector<decltype(max(vec[0]))> maxs;
         maxs.reserve(vec.size());
 
-        for (const auto &value : vec) maxs.push_back(maximum(value));
+        for (const auto &value : vec) maxs.push_back(max(value));
 
         return *std::ranges::max_element(maxs.begin(), maxs.end());
     }
@@ -659,7 +747,8 @@ namespace linalg
      * @param vec
      * @return decltype(norm(vec[0]))
      */
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto maxNorm(const std::vector<U> &vec) -> decltype(norm(vec[0]))
     {
         std::vector<decltype(norm(vec[0]))> norms;
@@ -711,6 +800,34 @@ namespace linalg
     }
 
     /**
+     * @brief normSquared function for a Vector3d object of quantities
+     *
+     * @tparam U
+     * @param vec
+     * @return the squared quantity, e.g. length^2 for a Vector3D of lengths
+     */
+    template <pq::QuantityLikeVector3D U>
+    auto normSquared(const U &vec)
+        -> std::remove_cvref_t<decltype(vec[0] * vec[0])>
+    {
+        return vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+    }
+
+    /**
+     * @brief norm function for a Vector3d object of quantities
+     *
+     * @tparam U
+     * @param vec
+     * @return `typename U::value_type`
+     */
+    template <pq::QuantityLikeVector3D U>
+    auto norm(const U &vec) -> typename U::value_type
+    {
+        return static_cast<typename U::value_type>(mstd::sqrt(normSquared(vec))
+        );
+    }
+
+    /**
      * @brief norms function for a std::vector of Vector3d objects
      *
      * @code
@@ -721,7 +838,8 @@ namespace linalg
      * @param vec
      * @return std::vector<decltype(norm(vec[0])>
      */
-    template <pq::ArithmeticVector3D U>
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
     auto norms(std::vector<U> vec) -> std::vector<decltype(norm(vec[0]))>
     {
         std::vector<decltype(norm(vec[0]))> norms;
@@ -743,14 +861,17 @@ namespace linalg
      * @param vec
      * @return decltype(norm(vec[0]) / vec.size())
      */
-    template <pq::ArithmeticVector3D U>
-    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]) / vec.size())
+    template <typename U>
+    requires(pq::QuantityLikeVector3D<U> || pq::ArithmeticVector3D<U>)
+    auto rms(const std::vector<U> &vec) -> decltype(norm(vec[0]))
     {
-        auto rms = 0.0;
+        std::remove_cvref_t<decltype(normSquared(vec[0]))> sumSquared{};
 
-        for (const auto &value : vec) rms += normSquared(value);
+        for (const auto &value : vec) sumSquared += normSquared(value);
 
-        return std::sqrt(rms / static_cast<double>(vec.size()));
+        return static_cast<decltype(norm(vec[0]))>(
+            mstd::sqrt(sumSquared / static_cast<double>(vec.size()))
+        );
     }
 
     /****************
@@ -768,10 +889,12 @@ namespace linalg
      *
      * @tparam U
      * @param vec
-     * @return decltype(vec[0] + vec[0])
+     * @return decltype(vec[0] + vec[1] + vec[2]) (for quantities, the same
+     * quantity type as the elements)
      */
-    template <pq::ArithmeticVector3D U>
-    auto sum(const U &vec) -> decltype(vec[0] + vec[0])
+    template <typename U>
+    requires pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>
+    auto sum(const U &vec) -> decltype(vec[0] + vec[1] + vec[2])
     {
         return vec[0] + vec[1] + vec[2];
     }
@@ -791,10 +914,12 @@ namespace linalg
      *
      * @tparam U
      * @param vec
-     * @return decltype(vec[0] * vec[0])
+     * @return decltype(vec[0] * vec[1] * vec[2]) (for quantities, e.g.
+     * length^3 for a Vector3D of lengths)
      */
-    template <pq::ArithmeticVector3D U>
-    auto prod(const U &vec) -> decltype(vec[0] * vec[0])
+    template <typename U>
+    requires pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>
+    auto prod(const U &vec) -> decltype(vec[0] * vec[1] * vec[2])
     {
         return vec[0] * vec[1] * vec[2];
     }
@@ -877,10 +1002,16 @@ namespace linalg
      * @tparam V
      * @param lhs
      * @param rhs
-     * @return decltype(lhs.x * rhs.x)
+     * @return decltype(lhs.x * rhs.x) (for quantities, the product quantity,
+     * e.g. length^2 for two Vector3D's of lengths)
      */
-    template <pq::ArithmeticVector3D U>
-    auto dot(const U &lhs, const U &rhs) -> decltype(lhs[0] * rhs[0])
+    template <typename U, typename V>
+    requires(
+        (pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>) &&
+        (pq::ArithmeticVector3D<V> || pq::QuantityLikeVector3D<V>)
+    )
+    auto dot(const U &lhs, const V &rhs)
+        -> std::remove_cvref_t<decltype(lhs[0] * rhs[0])>
     {
         return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
     }
@@ -904,11 +1035,15 @@ namespace linalg
      * @param rhs
      * @return `Vector3D<decltype(lhs.x * rhs.x)>`
      */
-    template <pq::ArithmeticVector3D U>
-    auto cross(const U &lhs, const U &rhs)
-        -> Vector3D<decltype(lhs[0] * rhs[0])>
+    template <typename U, typename V>
+    requires(
+        (pq::ArithmeticVector3D<U> || pq::QuantityLikeVector3D<U>) &&
+        (pq::ArithmeticVector3D<V> || pq::QuantityLikeVector3D<V>)
+    )
+    auto cross(const U &lhs, const V &rhs)
+        -> Vector3D<std::remove_cvref_t<decltype(lhs[0] * rhs[0])>>
     {
-        return Vector3D<decltype(lhs[0] * rhs[0])>(
+        return Vector3D<std::remove_cvref_t<decltype(lhs[0] * rhs[0])>>(
             lhs[1] * rhs[2] - lhs[2] * rhs[1],
             lhs[2] * rhs[0] - lhs[0] * rhs[2],
             lhs[0] * rhs[1] - lhs[1] * rhs[0]

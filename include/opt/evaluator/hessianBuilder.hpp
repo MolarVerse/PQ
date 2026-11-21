@@ -27,7 +27,7 @@
 #include <vector>
 
 #include "enums/hessian.hpp"
-#include "vector3d.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -38,8 +38,6 @@ namespace opt
 {
     class Evaluator;   // forward declaration
 
-    using HessianMatrix = std::vector<std::vector<double>>;
-
     class HessianBuilder
     {
        public:
@@ -47,7 +45,7 @@ namespace opt
         virtual ~HessianBuilder() = default;
 
         [[nodiscard]]
-        virtual HessianMatrix build(
+        virtual Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const = 0;
@@ -56,21 +54,21 @@ namespace opt
     class ForceDifferenceHessianBuilder : public HessianBuilder
     {
        private:
-        double _displacement;
+        Pos _displacement;
 
        public:
-        explicit ForceDifferenceHessianBuilder(double displacement);
+        explicit ForceDifferenceHessianBuilder(const Pos &displacement);
 
-        static void symmetrize(HessianMatrix &hessian);
+        static void symmetrize(Hessian &hessian);
 
        protected:
         static void _restorePositions(
-            molsys::SimulationBox            &simulationBox,
-            const std::vector<linalg::Vec3D> &positions
+            molsys::SimulationBox    &simulationBox,
+            const std::vector<Pos3D> &positions
         );
 
         [[nodiscard]]
-        double _getDisplacement() const;
+        Pos _getDisplacement() const;
     };
 
     class CentralForceDifferenceHessianBuilder
@@ -80,7 +78,7 @@ namespace opt
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;
@@ -93,7 +91,7 @@ namespace opt
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;
@@ -106,7 +104,7 @@ namespace opt
         using ForceDifferenceHessianBuilder::ForceDifferenceHessianBuilder;
 
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;
@@ -116,7 +114,7 @@ namespace opt
     {
        public:
         [[nodiscard]]
-        HessianMatrix build(
+        Hessian build(
             Evaluator             &evaluator,
             molsys::SimulationBox &simulationBox
         ) const override;
@@ -125,7 +123,7 @@ namespace opt
     [[nodiscard]]
     std::shared_ptr<HessianBuilder> makeHessianBuilder(
         HessianBuilderType builder,
-        double             displacement
+        const Pos         &displacement
     );
 
 }   // namespace opt

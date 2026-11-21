@@ -56,7 +56,7 @@ namespace out
      *
      * @param elapsedTime
      */
-    void StdoutOutput::writeEndedNormally(double elapsedTime)
+    void StdoutOutput::writeEndedNormally(const Time &elapsedTime)
     {
         std::cout << elapsedTimeMessage(elapsedTime) << '\n';
         std::cout << endedNormally() << '\n' << std::flush;

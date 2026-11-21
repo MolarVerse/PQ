@@ -46,14 +46,14 @@ namespace molsys
         MolType               _moltype;
         std::optional<size_t> _numberOfAtoms;
 
-        int                   _charge = 0;
-        std::optional<double> _qmReferenceEnergy;
+        int                         _charge = 0;
+        std::optional<EnergyPerMol> _qmReferenceEnergy;
 
         std::vector<std::string> _atomNames;
         std::vector<AtomType>    _atomTypes;
         std::vector<ExtAtomType> _externalAtomTypes;
         std::vector<ExtVdwType>  _externalGlobalVDWTypes;
-        std::vector<double>      _partialCharges;
+        std::vector<Charge>      _partialCharges;
 
         std::map<ExtAtomType, AtomType> _externalToInternalAtomTypes;
 
@@ -70,7 +70,7 @@ namespace molsys
 
         void addAtomName(const std::string &atomName);
         void addExternalAtomType(ExtAtomType externalAtomType);
-        void addPartialCharge(double partialCharge);
+        void addPartialCharge(const Charge &partialCharge);
         void addExternalGlobalVDWType(ExtVdwType externalGlobalVDWType);
 
         void addExternalToInternalAtomTypeElement(ExtAtomType, AtomType);
@@ -86,9 +86,9 @@ namespace molsys
         void setMoltype(MolType moltype);
 
         void setCharge(int charge);
-        void setQMReferenceEnergy(double qmReferenceEnergy);
-        void setPartialCharge(AtomIndex index, double partialCharge);
-        void setPartialCharges(const std::vector<double> &partialCharges);
+        void setQMReferenceEnergy(const EnergyPerMol &qmReferenceEnergy);
+        void setPartialCharge(AtomIndex index, const Charge &partialCharge);
+        void setPartialCharges(const std::vector<Charge> &partialCharges);
 
         /***************************
          * standard getter methods *
@@ -100,18 +100,18 @@ namespace molsys
         [[nodiscard]] AtomType    getAtomType(AtomIndex index) const;
         [[nodiscard]] AtomType    getInternalAtomType(ExtAtomType type) const;
 
-        [[nodiscard]] int    getCharge() const;
-        [[nodiscard]] double getQMReferenceEnergy() const;
-        [[nodiscard]] bool   hasQMReferenceEnergy() const;
-        [[nodiscard]] double getPartialCharge(AtomIndex index) const;
+        [[nodiscard]] int           getCharge() const;
+        [[nodiscard]] EnergyPerMol  getQMReferenceEnergy() const;
+        [[nodiscard]] bool          hasQMReferenceEnergy() const;
+        [[nodiscard]] const Charge &getPartialCharge(AtomIndex index) const;
 
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] std::string getAtomName(AtomIndex index) const;
 
-        [[nodiscard]] std::vector<std::string>  getAtomNames() const;
-        [[nodiscard]] std::vector<ExtAtomType> &getExternalAtomTypes();
-        [[nodiscard]] std::vector<ExtVdwType>  &getExternalGlobalVDWTypes();
-        [[nodiscard]] std::vector<double>      &getPartialCharges();
+        [[nodiscard]] std::vector<std::string>   getAtomNames() const;
+        [[nodiscard]] std::vector<ExtAtomType>  &getExternalAtomTypes();
+        [[nodiscard]] std::vector<ExtVdwType>   &getExternalGlobalVDWTypes();
+        [[nodiscard]] const std::vector<Charge> &getPartialCharges() const;
 
         [[nodiscard]]
         const std::map<ExtAtomType, AtomType> &getExternalToInternalAtomTypes(

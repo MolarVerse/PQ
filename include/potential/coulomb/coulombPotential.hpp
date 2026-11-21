@@ -27,6 +27,8 @@
 #include <mstd/utils/members.hpp>
 #include <utility>
 
+#include "unit_types.hpp"
+
 class PotentialSettings;
 struct CoulombPotentialConfig;
 
@@ -48,17 +50,20 @@ namespace pot
     class CoulombPotential
     {
        private:
-        double _cutoff;
-        double _energyCutoff;
-        double _forceCutoff;
-        double _invCubedCutoff;
+        Distance           _cutoff;
+        InvDistance        _energyCutoff;
+        InvDistanceSquared _forceCutoff;
+        InvDistanceCubed   _invCubedCutoff;
 
        public:
         explicit CoulombPotential(const PotentialSettings& potentialSettings);
         virtual ~CoulombPotential() = default;
 
         [[nodiscard]]
-        virtual std::pair<double, double> calculate(double, double) const = 0;
+        virtual std::pair<EnergyPerMol, Force> calculate(
+            const Distance&      distance,
+            const ChargeSquared& chargeProduct
+        ) const = 0;
 
        protected:
         INTERNAL_CONST_GETTER(_cutoff);

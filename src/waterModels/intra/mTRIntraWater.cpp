@@ -33,6 +33,7 @@
 #include "hybridSettings.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 
 namespace waterModel
 {
@@ -63,9 +64,9 @@ namespace waterModel
             const auto posH1 = hydrogen1.getPosition();
             const auto posH2 = hydrogen2.getPosition();
 
-            auto dOH1 = posO - posH1;
-            auto dOH2 = posO - posH2;
-            auto dHH  = posH1 - posH2;
+            auto dOH1 = (posO - posH1);
+            auto dOH2 = (posO - posH2);
+            auto dHH  = (posH1 - posH2);
 
             simulationBox.applyPBC(dOH1);
             simulationBox.applyPBC(dOH2);
@@ -83,29 +84,31 @@ namespace waterModel
             const auto deltaOH2 = distOH2 - eqOHDistance;
             const auto deltaHH  = distHH - eqHHDistance;
 
-            const auto expFactorOH1 = std::exp(-alpha * deltaOH1);
-            const auto expFactorOH2 = std::exp(-alpha * deltaOH2);
+            const auto expFactorOH1 = mstd::exp(-alpha * deltaOH1);
+            const auto expFactorOH2 = mstd::exp(-alpha * deltaOH2);
 
             const auto morseFactorOH1 = 1.0 - expFactorOH1;
             const auto morseFactorOH2 = 1.0 - expFactorOH2;
 
             const auto gaussianFactor =
-                std::exp(-beta * (deltaOH1 * deltaOH1 + deltaOH2 * deltaOH2));
+                mstd::exp(-beta * (deltaOH1 * deltaOH1 + deltaOH2 * deltaOH2));
 
-            const auto bondEnergy = DOH * (morseFactorOH1 * morseFactorOH1 +
-                                           morseFactorOH2 * morseFactorOH2);
+            const EnergyPerMol bondEnergy =
+                DOH * ((morseFactorOH1 * morseFactorOH1) +
+                       (morseFactorOH2 * morseFactorOH2));
 
-            auto angleEnergy  = Lrr * deltaOH1 * deltaOH2;
-            angleEnergy      += Lrt * (deltaOH1 + deltaOH2) * deltaHH;
-            angleEnergy      += 0.5 * Ltt * deltaHH * deltaHH;
-            angleEnergy      *= gaussianFactor;
+            EnergyPerMol angleEnergy  = Lrr * deltaOH1 * deltaOH2;
+            angleEnergy              += Lrt * (deltaOH1 + deltaOH2) * deltaHH;
+            angleEnergy              += 0.5 * Ltt * deltaHH * deltaHH;
+            angleEnergy              *= gaussianFactor;
 
-            auto fOH1  = 2.0 * DOH * alpha * morseFactorOH1 * expFactorOH1;
-            fOH1      += gaussianFactor * (Lrr * deltaOH2 + Lrt * deltaHH) -
+            Force fOH1  = 2.0 * DOH * alpha * morseFactorOH1 * expFactorOH1;
+            fOH1       += gaussianFactor * (Lrr * deltaOH2 + Lrt * deltaHH) -
                     2.0 * beta * deltaOH1 * angleEnergy;
-            auto fOH2  = 2.0 * DOH * alpha * morseFactorOH2 * expFactorOH2;
-            fOH2      += gaussianFactor * (Lrr * deltaOH1 + Lrt * deltaHH) -
-                    2.0 * beta * deltaOH2 * angleEnergy;
+            Force fOH2 = 2.0 * DOH * alpha * morseFactorOH2 * expFactorOH2;
+            fOH2 +=
+                (gaussianFactor * (Lrr * deltaOH1 + Lrt * deltaHH) -
+                 2.0 * beta * deltaOH2 * angleEnergy);
             const auto fAngle =
                 gaussianFactor * (Lrt * (deltaOH1 + deltaOH2) + Ltt * deltaHH);
 
@@ -114,13 +117,13 @@ namespace waterModel
             const auto forceAngle = fAngle * dHH / distHH;
 
             oxygen.addForce(-forceOH1 - forceOH2);
-            hydrogen1.addForce(+forceOH1 - forceAngle);
-            hydrogen2.addForce(+forceOH2 + forceAngle);
+            hydrogen1.addForce(forceOH1 - forceAngle);
+            hydrogen2.addForce(forceOH2 + forceAngle);
 
             using enum molsys::HybridZone;
             using enum SmoothingMethod;
 
-            auto       smF       = 0.0;
+            Quantity   smF       = 0.0;
             const auto smoothing = _getHybridSettings().getSmoothingMethod();
 
             if (smoothing == HOTSPOT && water.getHybridZone() == SMOOTHING)

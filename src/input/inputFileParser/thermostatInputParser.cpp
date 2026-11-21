@@ -24,11 +24,9 @@
 
 #include <cmath>
 #include <cstddef>
-#include <limits>
 #include <mstd/units/wave_number.hpp>
 #include <optional>
 
-#include "constants.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
 #include "keyRegistry.hpp"
@@ -219,16 +217,11 @@ namespace input
         const auto setValue = [this](double value)
         { _thermostatSettings->setRelaxationTimeByUser(value * ps); };
 
-        const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
-            0.0,
-            std::numeric_limits<double>::max() / PS_TO_FS
-        };
-
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
                 .metadata   = metaData,
                 .onSet      = setValue,
-                .validators = {makeShared(validator)}
+                .validators = {makeShared(PositiveGTDoubleValidator)}
             }
         );
 
@@ -240,27 +233,18 @@ namespace input
         const auto metaData = KeyMetadata{
             .name        = "friction",
             .title       = "Friction",
-            .description = "Specifies the friction of the thermostat"
+            .description = "Specifies the friction of the thermostat",
+            .unit        = "ps⁻¹"
         };
 
         const auto setValue = [this](double value)
-        {
-            _thermostatSettings->setFrictionByUser(
-                value * NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
-            );
-        };
-
-        const auto validator = RangeValidator<double, Greater::GE, Less::LE>{
-            0.0,
-            std::numeric_limits<double>::max() /
-                NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
-        };
+        { _thermostatSettings->setFrictionByUser(value / ps); };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
                 .metadata   = metaData,
                 .onSet      = setValue,
-                .validators = {makeShared(validator)}
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
             }
         );
 
@@ -310,16 +294,11 @@ namespace input
             );
         };
 
-        const auto validator = RangeValidator<double, Greater::GE, Less::LE>{
-            0.0,
-            std::sqrt(std::numeric_limits<double>::max()) / PER_CM_TO_HZ
-        };
-
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
                 .metadata   = metaData,
                 .onSet      = setValue,
-                .validators = {makeShared(validator)}
+                .validators = {makeShared(PositiveGTEZeroDoubleValidator)}
             }
         );
 

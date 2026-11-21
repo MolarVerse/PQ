@@ -26,7 +26,6 @@
 #include <string>
 
 #include "berendsenThermostat.hpp"
-#include "constants/internalConversionFactors.hpp"
 #include "langevinThermostat.hpp"
 #include "mdEngine.hpp"
 #include "noseHooverThermostat.hpp"
@@ -223,7 +222,7 @@ namespace setup
         log.writeSetupInfo(
             std::format(
                 "Friction:           {} 1/ps",
-                friction / NOSE_HOVER_FRICTION_INPUT_TO_INTERNAL
+                friction.numerical_value_in(one / ps)
             )
         );
         log.writeEmptyLine();

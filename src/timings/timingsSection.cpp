@@ -24,16 +24,14 @@
 
 #include <chrono>
 
-#include "constants/conversionFactors.hpp"
+#include "units.hpp"
 
 namespace timings
 {
 
-    using Time = std::chrono::time_point<std::chrono::high_resolution_clock>;
-    using Duration = std::chrono::duration<double>;
-
-    using ms = std::chrono::milliseconds;
-    using ns = std::chrono::nanoseconds;
+    using ChronoTime =
+        std::chrono::time_point<std::chrono::high_resolution_clock>;
+    using ChronoDuration = std::chrono::duration<double>;
 
     /**
      * @brief Timings struct to store timing information
@@ -41,10 +39,10 @@ namespace timings
      */
     struct TimingsSection::Timings
     {
-        Time     start;
-        Time     end;
-        Duration totalTime    = Duration::zero();
-        Duration lastStepTime = Duration::zero();
+        ChronoTime     start;
+        ChronoTime     end;
+        ChronoDuration totalTime    = ChronoDuration::zero();
+        ChronoDuration lastStepTime = ChronoDuration::zero();
     };
 
     /**
@@ -117,34 +115,34 @@ namespace timings
      * @brief calculates the elapsed time in ms
      *
      */
-    double TimingsSection::calculateElapsedTime() const
+    Time TimingsSection::calculateElapsedTime() const
     {
-        return static_cast<double>(duration_cast<ns>(_time->totalTime).count()
-               ) *
-               NS_TO_MS;
+        return duration_cast<std::chrono::nanoseconds>(_time->totalTime)
+                   .count() *
+               ns;
     }
 
-    double TimingsSection::calculateAverageLoopTime() const
+    /**
+     * @brief calculates the average loop time in ms
+     *
+     */
+    Time TimingsSection::calculateAverageLoopTime() const
     {
         auto time =
-            static_cast<double>(duration_cast<ns>(_time->totalTime).count());
+            duration_cast<std::chrono::nanoseconds>(_time->totalTime).count();
 
-        time = time * NS_TO_S / static_cast<double>(_steps);
-
-        return time;
+        return time * ns / static_cast<double>(_steps);
     }
 
     /**
      * @brief calculates the loop time in s
      *
      */
-    double TimingsSection::calculateLoopTime() const
+    Time TimingsSection::calculateLoopTime() const
     {
-        auto time =
-            static_cast<double>(duration_cast<ns>(_time->lastStepTime).count());
-        time = time * NS_TO_S;
-
-        return time;
+        auto time = duration_cast<std::chrono::nanoseconds>(_time->lastStepTime)
+                        .count();
+        return time * ns;
     }
 
     /**

@@ -40,7 +40,7 @@
     X(Output)              \
     X(Potential)           \
     X(IntraNonBonded)      \
-    X(Virial)              \
+    X(VirialCalc)          \
     X(ResetKinetics)       \
     X(WaterIntraPotential) \
     X(WaterInterPotential) \
@@ -48,6 +48,8 @@
     X(Setup)
 
 MSTD_ENUM(TimerId, std::uint8_t, TIMER_ID_LIST);
+
+#undef TIMER_ID_LIST
 
 std::string toString(TimerId id);
 

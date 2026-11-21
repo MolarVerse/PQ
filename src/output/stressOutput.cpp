@@ -25,6 +25,7 @@
 #include <format>
 
 #include "physicalData.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -52,7 +53,9 @@ namespace out
         const physicalData::PhysicalData &physicalData
     )
     {
-        const auto &stress = physicalData.getStressTensor();
+        const auto &stress = physicalData.getStressTensor().numerical_value_in(
+            kcal_per_mol / angstrom3
+        );
 
         _getFilePointer() << std::format("{:10d}\t", step);
         _getFilePointer() << std::format("{:20.5e}\t", stress[0][0]);

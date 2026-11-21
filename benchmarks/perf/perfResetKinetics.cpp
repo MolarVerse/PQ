@@ -80,7 +80,7 @@ int main()
     std::cout << std::format(
         "{:.6f} {:.6f}\n",
         box.calculateTemperature().quantity_from_zero().numerical_value_in(K),
-        box.calculateMomentum()[0]
+        box.calculateMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs)
     );
     return 0;
 }
