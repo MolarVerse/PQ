@@ -1,0 +1,1 @@
+- Fix the build of `dev`: `testIntraNonBondedMap.cpp` called the old `PhysicalData` accessors `getIntraCoulombEnergy` and `getIntraNonCoulombEnergy`, which the automatic getters renamed to `get_intraCoulombEnergy` and `get_intraNonCoulombEnergy`.

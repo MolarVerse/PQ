@@ -423,12 +423,12 @@ TEST_F(TestIntraNonBondedMap, scaledPartnerAtomOne)
     const auto physicalData = _calculatePair(molecule, container);
 
     EXPECT_NEAR(
-        physicalData.getIntraCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_intraCoulombEnergy().numerical_value_in(kcal_per_mol),
         -67.242901903583757 * 0.75,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getIntraNonCoulombEnergy().numerical_value_in(
+        physicalData.get_intraNonCoulombEnergy().numerical_value_in(
             kcal_per_mol
         ),
         5.0 * 0.75,
@@ -461,12 +461,12 @@ TEST_F(TestIntraNonBondedMap, unscaledPartner)
     const auto physicalData = _calculatePair(molecule, container);
 
     EXPECT_NEAR(
-        physicalData.getIntraCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_intraCoulombEnergy().numerical_value_in(kcal_per_mol),
         -67.242901903583757,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getIntraNonCoulombEnergy().numerical_value_in(
+        physicalData.get_intraNonCoulombEnergy().numerical_value_in(
             kcal_per_mol
         ),
         5.0,
