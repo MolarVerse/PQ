@@ -34,16 +34,18 @@ from PQAnalysis.io import read_trajectory, EnergyFileReader
 # from a different order of unit conversions).
 TRAJ_RTOL = 1e-5
 
-# Absolute tolerance for the forces: forces from a QM program carry a noise of
-# about 1e-5 kcal/mol/Angstrom (its SCC convergence), which a purely relative
-# tolerance turns into a failure for components close to zero.
-FORCE_ATOL = 1e-4
+# Absolute tolerance for the forces of tests that use dftb+: its forces carry a
+# noise of about 1e-5 kcal/mol/Angstrom (SCC convergence), which a purely
+# relative tolerance turns into a failure for components close to zero. Other
+# tests compare forces with the relative tolerance only.
+DFTB_FORCE_ATOL = 1e-4
 
 
 def check_pq_output(
     base_name,
     folder_name,
     ref_folder="ref_data",
+    force_atol=0.0,
 ):
 
     ref_path = Path(ref_folder)
@@ -63,7 +65,7 @@ def check_pq_output(
     ref_traj = read_trajectory(
         str(ref_path / (base_name + ".force")), traj_format="force")
 
-    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL, atol=FORCE_ATOL)
+    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL, atol=force_atol)
 
     traj = read_trajectory(base_name + ".chrg", traj_format="charge")
     ref_traj = read_trajectory(
