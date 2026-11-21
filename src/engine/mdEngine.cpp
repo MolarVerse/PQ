@@ -145,7 +145,7 @@ namespace engine
             getPhysicalData(),
             calculateTotalSimulationTime(
                 timeStep,
-                getSettings().timings.getStartingStepCount()
+                getSettings().timings.getStartingTime()
             )
         );
 
@@ -273,6 +273,10 @@ namespace engine
                 effStep,
                 getPhysicalData().getPotentialEnergy().numerical_value_in(
                     kcal_per_mol
+                ),
+                calculateTotalSimulationTime(
+                    timeStep,
+                    getSettings().timings.getStartingTime()
                 )
             );
 
@@ -319,8 +323,10 @@ namespace engine
                 static_cast<double>(outputFreq)
             );
 
-            const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep;
+            const auto simTime = calculateTotalSimulationTime(
+                timeStep,
+                getSettings().timings.getStartingTime()
+            );
 
             getEngineOutput().writeEnergyFile(
                 effStep,

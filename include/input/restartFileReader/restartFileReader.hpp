@@ -62,7 +62,7 @@ namespace input::restartFile
 
         std::unique_ptr<RestartFileSection>              _atomSection;
         std::vector<std::unique_ptr<RestartFileSection>> _sections;
-        mstd::ConstRef<TimingsSettings>                  _timingsSettings;
+        mstd::Ref<TimingsSettings>                       _timingsSettings;
 
        public:
         RestartFileReader(

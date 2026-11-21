@@ -122,7 +122,8 @@ namespace
                     simulationBox,
                     thermostat,
                     step,
-                    -1.5 * static_cast<double>(step)
+                    -1.5 * static_cast<double>(step),
+                    100 * fs
                 );
             }
 

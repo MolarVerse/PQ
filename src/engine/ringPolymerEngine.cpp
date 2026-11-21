@@ -98,7 +98,14 @@ namespace engine
                 getEngineOutput().writeVelFile(frame, effStep);
                 getEngineOutput().writeForceFile(frame, effStep);
                 getEngineOutput().writeChargeFile(frame, effStep);
-                getEngineOutput().writeRstFile(frame, effStep);
+                getEngineOutput().writeRstFile(
+                    frame,
+                    effStep,
+                    calculateTotalSimulationTime(
+                        timeStep,
+                        getSettings().timings.getStartingTime()
+                    )
+                );
 
                 getEngineOutput().writeRingPolymerRstFile(_ringPolymerBeads);
                 getEngineOutput().writeRingPolymerXyzFile(
@@ -146,8 +153,10 @@ namespace engine
             getPhysicalData().copy(mean(rpmdData));
             getAveragePhysicalData() = mean(averageRPMDData);
 
-            const auto effStepDouble = static_cast<double>(effStep);
-            const auto simTime       = effStepDouble * timeStep;
+            const auto simTime = calculateTotalSimulationTime(
+                timeStep,
+                getSettings().timings.getStartingTime()
+            );
 
 #ifdef WITH_MPI
             if (mpi::MPI::isRoot())
