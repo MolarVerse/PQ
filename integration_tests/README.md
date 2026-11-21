@@ -69,6 +69,8 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `dftbplus` `test_dftbplus_triclinic_box` | `run-01_triclinic.in` | `qm-md` | 9 atoms, triclinic box 9 x 10 x 11 Å with angles 75, 80, 70°, 2 steps | NVE; compared with `ref_data_triclinic`, and the lattice written for DFTB+ (`geom.gen`) must have exactly these lengths and angles; the box is small so that the periodic images interact |
 | `dftbplus` `test_dftbplus_triclinic_box_full_anisotropic_manostat` | `run-01_triclinic_npt.in` | `qm-md` | same, 6 steps | Berendsen thermostat + Berendsen manostat with `isotropy = full_anisotropic` (DFTB+ stress): all three angles and lengths change; compared with `ref_data_triclinic_npt` |
 | `dftbplus` `test_dftbplus_triclinic_box_anisotropic_manostat_keeps_the_angles` | the NPT input with `isotropy = anisotropic` | `qm-md` | same | the angles stay at 75, 80, 70° in every frame and the lengths move (no reference) |
+| `dftbplus` `test_dftbplus_full_anisotropic_manostat_from_a_box_with_right_angles` | the NPT input with a start box without angles (`Box 9 10 11`) and `isotropy = full_anisotropic` | `qm-md` | same | the angles must change from 90° (issue #1297: the box used to stay orthorhombic and only the molecules were sheared) |
+| `cgo` `test_mm_md_refuses_a_full_anisotropic_manostat` | `run-01_NPT_anisotropic.in` with `isotropy = full_anisotropic` | `mm-md` | cgo | PQ exits with "isotropy = full_anisotropic needs a triclinic box" (issue #1297; used to explode the box silently); to be replaced when MM-MD supports triclinic boxes (issue #910) |
 | `cgo` `test_mm_md_refuses_a_triclinic_box` | `run-01.in` with a triclinic `Box` line in the start file | `mm-md` | cgo | PQ exits with "Triclinic box is only supported for QM-MD and RP-QM-MD" (issue #910); has to be replaced by a real test when MM-MD supports triclinic boxes |
 | `ase-dftbplus` | `run-01.in` | `qm-md` | 9 atoms, 2 steps | ASE DFTB+ with the `3ob` Slater-Koster set |
 | `ase-xtb` | `run-01.in` | `qm-md` | 9 atoms, 2 steps | ASE xTB, GFN2 |
@@ -108,7 +110,7 @@ intermolecular model are the same.
 | `end_temp` as synonym of `temp` | no. Elsewhere: unit |
 | Manostat Berendsen, isotropic | yes (`cgo` NPT) |
 | Manostat stochastic rescaling | partly: reproducibility with `random_seed`, with a temperature ramp, and an effect on the box; no reference values and no check that the pressure is reached. Elsewhere: unit |
-| `isotropy` semi/anisotropic/full, `fixed_axis`, `compressibility` | partly, Berendsen only: `anisotropic` and `xy` against references, `fixed_axis = z`, and the anisotropic box with the cell list. `full_anisotropic` only with a triclinic box (QM-MD, see the triclinic row below; on the orthorhombic `cgo` box it runs but the box blows up to 1e9 Angstrom in 10 steps, which is not tested). No: `xz`/`yz`, the other fixed axes, `compressibility`, and the semi-isotropic/anisotropic stochastic manostat. Elsewhere: unit |
+| `isotropy` semi/anisotropic/full, `fixed_axis`, `compressibility` | partly, Berendsen only: `anisotropic` and `xy` against references, `fixed_axis = z`, and the anisotropic box with the cell list. `full_anisotropic` in QM-MD (also from a box with 90° angles, see the triclinic row below) and its refusal in MM-MD. No: `xz`/`yz`, the other fixed axes, `compressibility`, and the semi-isotropic/anisotropic stochastic manostat. Elsewhere: unit |
 | Virial `molecular` / `atomic` | yes, both, only inside the NPT run (the pressure column of `.en` is compared) |
 | `init_velocities`, `random_seed`, `density`, `floating_point_type` | no. Elsewhere: unit |
 | Reset kinetics (`nscale`, `fscale`, `nreset`, `freset`, angular, forces) | no. Elsewhere: unit |
@@ -180,7 +182,7 @@ intermolecular model are the same.
 | Output files written but **not compared**: `.rst .box .stress .vir .mom .instant_en .info` (content), `.log`, `.timings`, `.ref` | see "What the checks cannot see" |
 | `overwrite_output`, `include_output_metadata`, custom file names | partly: `overwrite_output = on` in the QM tests; the rest no |
 | Restart from a file that PQ wrote | yes, exactly (byte for byte): MM state, box and Nose-Hoover chain state (NVE, Berendsen NPT, Nose-Hoover chain on `cgo`). No: a restart in the middle of a temperature ramp, with the Langevin thermostat or with the cell list, and QM or QM/MM restarts |
-| Triclinic boxes | yes for QM-MD with DFTB+ (NVE, and a manostat with `full_anisotropic` that changes the angles, `anisotropic` that keeps them). MM-MD does not support them yet (issue #910); the refusal is tested. No: ring polymer QM-MD, ASE and the other QM programs, the cell list and `fixed_axis` with a triclinic box |
+| Triclinic boxes | yes for QM-MD with DFTB+ (NVE, and a manostat with `full_anisotropic` that changes the angles, `anisotropic` that keeps them). A cubic start box with `full_anisotropic` becomes a box that can change its angles (QM-MD). MM-MD does not support triclinic boxes yet (issue #910); the refusal, also for `full_anisotropic`, is tested. No: ring polymer QM-MD, ASE and the other QM programs, the cell list and `fixed_axis` with a triclinic box |
 | Input errors and validation messages | one (`oh_mm_hessian`). Elsewhere: unit (`inputFileParser`, `inputValidation`) |
 | Command line (arguments, `--version`, missing file) | no. Elsewhere: unit (`testPQCli`) |
 
