@@ -205,9 +205,9 @@ namespace
             0.0,
             1.0e-12
         );
-        EXPECT_TRUE(isfinite(data.getBondEnergy()));
-        EXPECT_TRUE(isfinite(data.getAngleEnergy()));
-        EXPECT_GT(data.getBondEnergy(), 0.0 * kcal_per_mol);
+        EXPECT_TRUE(isfinite(data.get_bondEnergy()));
+        EXPECT_TRUE(isfinite(data.get_angleEnergy()));
+        EXPECT_GT(data.get_bondEnergy(), 0.0 * kcal_per_mol);
     }
 
     /**
@@ -250,8 +250,8 @@ namespace
             );
         }
 
-        EXPECT_TRUE(isfinite(data.getBondEnergy()));
-        EXPECT_TRUE(isfinite(data.getAngleEnergy()));
+        EXPECT_TRUE(isfinite(data.get_bondEnergy()));
+        EXPECT_TRUE(isfinite(data.get_angleEnergy()));
     }
 
     /**
@@ -944,11 +944,11 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
     EXPECT_TRUE(isfinite(oxygenHydrogenView->get_energyCutoff()));
     EXPECT_TRUE(isfinite(hydrogenHydrogenView->get_energyCutoff()));
     EXPECT_DOUBLE_EQ(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         0.0
     );
     EXPECT_DOUBLE_EQ(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         0.0
     );
 }
@@ -1046,10 +1046,10 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
         settings.potentialSettings
     );
 
-    EXPECT_TRUE(isfinite(bruteForceData.getCoulombEnergy()));
-    EXPECT_TRUE(isfinite(bruteForceData.getNonCoulombEnergy()));
-    EXPECT_TRUE(isfinite(cellListData.getCoulombEnergy()));
-    EXPECT_TRUE(isfinite(cellListData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.get_coulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.get_nonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.get_coulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.get_nonCoulombEnergy()));
 }
 
 namespace
@@ -1227,8 +1227,8 @@ namespace
         }
 
         return {
-            .coulombEnergy    = physicalData.getCoulombEnergy(),
-            .nonCoulombEnergy = physicalData.getNonCoulombEnergy(),
+            .coulombEnergy    = physicalData.get_coulombEnergy(),
+            .nonCoulombEnergy = physicalData.get_nonCoulombEnergy(),
             .forces           = collectForces(simulationBox)
         };
     }
@@ -1504,8 +1504,8 @@ namespace
         }
 
         return {
-            .coulombEnergy    = physicalData.getCoulombEnergy(),
-            .nonCoulombEnergy = physicalData.getNonCoulombEnergy(),
+            .coulombEnergy    = physicalData.get_coulombEnergy(),
+            .nonCoulombEnergy = physicalData.get_nonCoulombEnergy(),
             .forces           = collectForces(simulationBox)
         };
     }
@@ -1648,10 +1648,10 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
         settings.potentialSettings
     );
 
-    EXPECT_TRUE(isfinite(bruteForceData.getCoulombEnergy()));
-    EXPECT_TRUE(isfinite(bruteForceData.getNonCoulombEnergy()));
-    EXPECT_TRUE(isfinite(cellListData.getCoulombEnergy()));
-    EXPECT_TRUE(isfinite(cellListData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.get_coulombEnergy()));
+    EXPECT_TRUE(isfinite(bruteForceData.get_nonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.get_coulombEnergy()));
+    EXPECT_TRUE(isfinite(cellListData.get_nonCoulombEnergy()));
     EXPECT_NE(bruteForce.clone(), nullptr);
     EXPECT_NE(cellListPotential.clone(), nullptr);
 
@@ -1677,8 +1677,8 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
         settings.potentialSettings
     );
 
-    EXPECT_TRUE(isfinite(filteredData.getCoulombEnergy()));
-    EXPECT_TRUE(isfinite(filteredData.getNonCoulombEnergy()));
+    EXPECT_TRUE(isfinite(filteredData.get_coulombEnergy()));
+    EXPECT_TRUE(isfinite(filteredData.get_nonCoulombEnergy()));
 }
 
 TEST(SimulationBoxViews, ConstAndMutableWaterViewsFilterCorrectly)

@@ -207,7 +207,7 @@ int main()
 
     // read state so the loop cannot be optimized away
     std::cout << std::fixed << std::setprecision(6)
-              << physicalData.getCoulombEnergy() << " "
-              << physicalData.getNonCoulombEnergy() << "\n";
+              << physicalData.get_coulombEnergy() << " "
+              << physicalData.get_nonCoulombEnergy() << "\n";
     return 0;
 }

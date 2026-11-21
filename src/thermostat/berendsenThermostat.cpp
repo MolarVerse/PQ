@@ -60,7 +60,7 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        setTemperature(physicalData.getTemperature());
+        setTemperature(physicalData.get_temperature());
 
         if (utilities::isZero(getTemperature().quantity_from_zero()))
         {
@@ -85,7 +85,7 @@ namespace thermostat
         for (const auto &atom : simulationBox.getAtoms())
             atom->scaleVelocity(berendsenFactor);
 
-        physicalData.setTemperature(
+        physicalData.set_temperature(
             Temperature{
                 getTemperature().quantity_from_zero() * berendsenFactor *
                 berendsenFactor

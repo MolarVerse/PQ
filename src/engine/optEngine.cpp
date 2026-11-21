@@ -242,7 +242,7 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        get_physicalData().setLoopTime(
+        get_physicalData().set_loopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
         get_averagePhysicalData().updateAverages(get_physicalData());

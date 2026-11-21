@@ -70,7 +70,7 @@ namespace engine
         get_physicalData().calculateKinetics(getSimulationBox());
 
         getEngineOutput().getLogOutput().writeInitialMomentum(
-            norm(get_physicalData().getMomentum())
+            norm(get_physicalData().get_momentum())
         );
 
         const auto  nSteps = getSettings().timings.getNumberOfSteps();
@@ -214,9 +214,7 @@ namespace engine
         if (isQMOnlyJobtype(jobType))
         {
             const auto nQMAtoms = getSimulationBox().getNumberOfActiveAtoms();
-            get_physicalData().setNumberOfQMAtoms(
-                static_cast<double>(nQMAtoms)
-            );
+            get_physicalData().set_nQMAtoms(static_cast<double>(nQMAtoms));
         }
     }
 
@@ -320,7 +318,7 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        get_physicalData().setLoopTime(
+        get_physicalData().set_loopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
         get_averagePhysicalData().updateAverages(get_physicalData());

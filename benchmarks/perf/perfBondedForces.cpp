@@ -149,8 +149,8 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f}\n",
-        (physicalData.getBondEnergy() + physicalData.getAngleEnergy() +
-         physicalData.getDihedralEnergy())
+        (physicalData.get_bondEnergy() + physicalData.get_angleEnergy() +
+         physicalData.get_dihedralEnergy())
                 .numerical_value_in(kcal_per_mol) +
             molecule.getAtomForce(AtomIndex{0})[0].numerical_value_in(
                 kcal_per_mol / angstrom

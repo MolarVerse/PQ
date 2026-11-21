@@ -333,7 +333,7 @@ namespace engine
         auto &physicalData        = get_physicalData();
         auto &averagePhysicalData = get_averagePhysicalData();
 
-        physicalData.setLoopTime(
+        physicalData.set_loopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
         averagePhysicalData.updateAverages(physicalData);

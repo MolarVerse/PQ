@@ -98,8 +98,8 @@ TEST_F(TestEnergyOutput, energyColumnsAllActive)
  */
 TEST_F(TestEnergyOutput, energyColumnsQM)
 {
-    _physicalData->setQMEnergy(7.0 * kcal_per_mol);
-    _physicalData->setQMReferenceEnergy(2.0 * kcal_per_mol);
+    _physicalData->set_qmEnergy(7.0 * kcal_per_mol);
+    _physicalData->set_qmReferenceEnergy(2.0 * kcal_per_mol);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::NONE);

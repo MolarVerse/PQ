@@ -63,7 +63,7 @@ namespace
         box->addAtom(atom1);
         box->addAtom(atom2);
 
-        physDat->setKineticEnergy(sample.energy);
+        physDat->set_kineticEnergy(sample.energy);
 
         opt.setSimulationBox(box);
         opt.updateHistory(physDat->getTotalEnergy());

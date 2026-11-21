@@ -95,14 +95,14 @@ TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
     data.addIntraCoulombEnergy(1.0 * kcal_per_mol);
     data.addNonCoulombEnergy(20.0 * kcal_per_mol);
     data.addIntraNonCoulombEnergy(2.0 * kcal_per_mol);
-    data.setQMReferenceEnergy(-4.0 * kcal_per_mol);
+    data.set_qmReferenceEnergy(-4.0 * kcal_per_mol);
 
     ASSERT_DOUBLE_EQ(
-        data.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        data.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         11.0
     );
     ASSERT_DOUBLE_EQ(
-        data.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        data.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         22.0
     );
 
@@ -111,23 +111,23 @@ TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
     _moveEnergies(engine);
 
     EXPECT_DOUBLE_EQ(
-        data.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        data.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         11.0
     );
     EXPECT_DOUBLE_EQ(
-        data.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        data.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         22.0
     );
     EXPECT_DOUBLE_EQ(
-        data.getIntraCoulombEnergy().numerical_value_in(kcal_per_mol),
+        data.get_intraCoulombEnergy().numerical_value_in(kcal_per_mol),
         1.0
     );
     EXPECT_DOUBLE_EQ(
-        data.getIntraNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        data.get_intraNonCoulombEnergy().numerical_value_in(kcal_per_mol),
         2.0
     );
     EXPECT_DOUBLE_EQ(
-        data.getQMReferenceEnergy().numerical_value_in(kcal_per_mol),
+        data.get_qmReferenceEnergy().numerical_value_in(kcal_per_mol),
         -4.0
     );
 }
@@ -172,17 +172,17 @@ TEST_F(QMMMEnergiesTest, sumsReferenceEnergiesOfActiveMolecules)
     simBox.addMolecule(molsys::Molecule{MolType{0}});
 
     auto &data = engine.get_physicalData();
-    data.setQMEnergy(100.0 * kcal_per_mol);
+    data.set_qmEnergy(100.0 * kcal_per_mol);
 
     _calculateReference(engine);
 
     // 2 * -10 + 3; inactive and moltype-0 molecules add nothing
     EXPECT_DOUBLE_EQ(
-        data.getQMEnergy().numerical_value_in(kcal_per_mol),
+        data.get_qmEnergy().numerical_value_in(kcal_per_mol),
         100.0
     );
     EXPECT_DOUBLE_EQ(
-        data.getQMReferenceEnergy().numerical_value_in(kcal_per_mol),
+        data.get_qmReferenceEnergy().numerical_value_in(kcal_per_mol),
         -17.0
     );
     EXPECT_DOUBLE_EQ(

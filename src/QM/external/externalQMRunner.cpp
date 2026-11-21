@@ -346,7 +346,7 @@ namespace QM
             );
         }
 
-        physicalData.setQMEnergy(energy * hartree * avogadro_constant);
+        physicalData.set_qmEnergy(energy * hartree * avogadro_constant);
 
         auto readForces = [&forceFile, &forceFileName, &qmSettings](auto &atom)
         {

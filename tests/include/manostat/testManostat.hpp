@@ -64,8 +64,8 @@ inline void TestManostat::SetUp()
         std::make_unique<manostat::Manostat>(_settings->manostatSettings);
     _data = std::make_unique<physicalData::PhysicalData>();
 
-    _data->setVolume(2.0 * angstrom3);
-    _data->setVirial(
+    _data->set_volume(2.0 * angstrom3);
+    _data->set_virial(
         diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
     );
     _data->setKineticEnergyMolecularVector(
