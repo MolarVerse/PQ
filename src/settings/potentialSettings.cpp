@@ -180,16 +180,6 @@ NonCoulombType PotentialSettings::getNonCoulombType() const
 }
 
 /**
- * @brief get the Coulomb radius cut off
- *
- * @return Pos
- */
-const Distance& PotentialSettings::getCoulombRadiusCutOff() const
-{
-    return _coulombConfig.cutoff;
-}
-
-/**
  * @brief get the non-Coulomb radius cut off
  *
  * @return std::optional<Pos>
@@ -207,26 +197,6 @@ const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
 bool PotentialSettings::isNonCoulombRadiusCutOffSetByUser() const
 {
     return _nonCoulombRadiusCutOff.isSetByUser();
-}
-
-/**
- * @brief get the 1-4 Coulomb scaling factor
- *
- * @return double
- */
-double PotentialSettings::getScale14Coulomb() const
-{
-    return _scale14Coulomb.get();
-}
-
-/**
- * @brief get the 1-4 Van der Waals scaling factor
- *
- * @return double
- */
-double PotentialSettings::getScale14VDW() const
-{
-    return _scale14VanDerWaals.get();
 }
 
 /**
