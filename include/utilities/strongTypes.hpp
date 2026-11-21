@@ -143,7 +143,7 @@ using VdwType = StrongSizeT<struct VdwTypeTag>;
  */
 struct LJParams
 {
-    // TODO: why initialize these??
+    // TODO(97gamjak): why initialize these??
     C6  c6  = C6::zero();
     C12 c12 = C12::zero();
 

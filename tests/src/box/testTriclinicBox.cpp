@@ -105,7 +105,7 @@ PosTensor3D TestTriclinicBox::getBoxMatrix(molsys::TriclinicBox &box)
 
 void TestTriclinicBox::setBoxAngles(
     molsys::TriclinicBox &box,
-    const linalg::Vec3D  &boxAngles
+    const Angle3D        &boxAngles
 )
 {
     box._set_angles(boxAngles);
