@@ -1,0 +1,1 @@
+- The progress bar is shown only when stdout is a terminal; redirected output no longer fills with backspaces (#1291).

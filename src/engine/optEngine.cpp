@@ -29,7 +29,7 @@
 #include "globalTimer.hpp"
 #include "interrupt.hpp"
 #include "outputFileSettings.hpp"
-#include "progressbar.hpp"
+#include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
 
 namespace engine
@@ -48,7 +48,7 @@ namespace engine
         const auto &outputFileSettings = getSettings().outputFiles;
         writeOutput(outputFileSettings);
 
-        progressbar bar(static_cast<int>(nEpochs), true, std::cout);
+        utilities::TerminalProgressBar bar(static_cast<int>(nEpochs));
 
         for (size_t i = 0; i < nEpochs; ++i)
         {

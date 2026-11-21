@@ -50,9 +50,9 @@
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
-#include "progressbar.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
+#include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
 #include "units.hpp"
 
@@ -410,7 +410,7 @@ namespace engine
 
         const auto nSteps = getSettings().timings.getNumberOfSteps();
 
-        progressbar bar(static_cast<int>(nSteps), true, std::cout);
+        utilities::TerminalProgressBar bar(static_cast<int>(nSteps));
 
         for (size_t i = 0; i < nSteps; ++i)
         {
