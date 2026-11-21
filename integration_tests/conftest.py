@@ -36,6 +36,8 @@ import subprocess
 import zipfile
 import pytest
 
+from diagnostics import format_process_failure
+
 
 ZIP_CACHE_DIRNAME = ".zip_cache"
 
@@ -120,9 +122,15 @@ def execute_pq(input_file):
         folder_path, "..", build_dir, "apps", "PQ")
 
     # Run the pq executable with the input file
+    command = [pq_executable, input_file]
     process = subprocess.run(
-        [pq_executable, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     stdout = process.stdout
     stderr = process.stderr
+
+    if process.returncode != 0:
+        pytest.fail(
+            format_process_failure(command, process.returncode, stdout, stderr),
+            pytrace=False)
 
     return stdout, stderr
