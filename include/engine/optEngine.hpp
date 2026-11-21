@@ -48,9 +48,6 @@ namespace engine
         std::shared_ptr<opt::LearningRateStrategy> _learningRateStrategy;
         std::shared_ptr<opt::Evaluator>            _evaluator;
 
-        std::shared_ptr<physicalData::PhysicalData> _physicalDataOld =
-            std::make_shared<physicalData::PhysicalData>();
-
         bool _converged  = false;
         bool _optStopped = false;
 
@@ -97,10 +94,6 @@ namespace engine
         [[nodiscard]] std::shared_ptr<opt::LearningRateStrategy> getSharedLearningRate(
         );
         [[nodiscard]] std::shared_ptr<opt::Evaluator> getSharedEvaluator();
-
-        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
-        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
-        );
 
         [[nodiscard]] out::OptOutput &getOptOutput();
     };

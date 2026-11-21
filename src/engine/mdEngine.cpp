@@ -67,10 +67,10 @@ namespace engine
      */
     void MDEngine::run()
     {
-        getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
+        get_physicalData().calculateKinetics(getSimulationBox());
 
         getEngineOutput().getLogOutput().writeInitialMomentum(
-            norm(getPhysicalData().getMomentum())
+            norm(get_physicalData().getMomentum())
         );
 
         const auto  nSteps = getSettings().timings.getNumberOfSteps();
@@ -117,7 +117,7 @@ namespace engine
         const auto &timeStep = getSettings().timings.getTimeStep();
         _thermostat->applyThermostatHalfStep(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             _kinetics.getCurrentTargetTemperature(),
             timeStep
         );
@@ -142,7 +142,7 @@ namespace engine
 
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
                 getSettings().timings.getStartingTime()
@@ -155,7 +155,7 @@ namespace engine
         {
             const auto virial =
                 virial::intraMolecularVirialCorrection(getSimulationBox());
-            getPhysicalDataPtr()->addVirial(virial);
+            get_physicalData().addVirial(virial);
         }
 
         _thermostat->applyThermostatOnForces(
@@ -169,19 +169,19 @@ namespace engine
 
         _thermostat->applyThermostat(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             _kinetics.getCurrentTargetTemperature(),
             timeStep
         );
 
-        getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
+        get_physicalData().calculateKinetics(getSimulationBox());
 
         const auto &currentTargetTemperature =
             _kinetics.getCurrentTargetTemperature();
 
         _manostat->applyManostat(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             currentTargetTemperature,
             timeStep,
             getSettings().potentialSettings.getCoulombRadiusCutOff()
@@ -189,7 +189,7 @@ namespace engine
 
         const auto driftWarning = _resetKinetics.checkMomentumDrift(
             getStep(),
-            getPhysicalData(),
+            get_physicalData(),
             getSimulationBox()
         );
 
@@ -201,7 +201,7 @@ namespace engine
 
         _resetKinetics.reset(
             getStep(),
-            getPhysicalData(),
+            get_physicalData(),
             getSimulationBox(),
             currentTargetTemperature
         );
@@ -211,7 +211,7 @@ namespace engine
         if (settings::GeneralSettings::isQMOnlyJobtype())
         {
             const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
-            getPhysicalDataPtr()->setNumberOfQMAtoms(
+            get_physicalData().setNumberOfQMAtoms(
                 static_cast<double>(nQMAtoms)
             );
         }
@@ -271,7 +271,7 @@ namespace engine
                 getSimulationBox(),
                 *_thermostat,
                 effStep,
-                getPhysicalData().getPotentialEnergy().numerical_value_in(
+                get_physicalData().getPotentialEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
                 calculateTotalSimulationTime(
@@ -282,12 +282,12 @@ namespace engine
 
             getEngineOutput().writeVirialFile(
                 effStep,
-                getPhysicalData()
+                get_physicalData()
             );   // use physicalData instead of averagePhysicalData
 
             getEngineOutput().writeStressFile(
                 effStep,
-                getPhysicalData()
+                get_physicalData()
             );   // use physicalData instead of averagePhysicalData
 
             getEngineOutput().writeBoxFile(
@@ -312,14 +312,14 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        getPhysicalDataPtr()->setLoopTime(
+        get_physicalData().setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        getAveragePhysicalData().updateAverages(getPhysicalData());
+        get_averagePhysicalData().updateAverages(get_physicalData());
 
         if (0 == getStep() % outputFreq)
         {
-            getAveragePhysicalData().makeAverages(
+            get_averagePhysicalData().makeAverages(
                 static_cast<double>(outputFreq)
             );
 
@@ -330,28 +330,28 @@ namespace engine
 
             getEngineOutput().writeEnergyFile(
                 effStep,
-                getAveragePhysicalData(),
+                get_averagePhysicalData(),
                 getSettings()
             );
             getEngineOutput().writeInstantEnergyFile(
                 effStep,
-                getPhysicalData(),
+                get_physicalData(),
                 getSettings()
             );
             getEngineOutput().getInfoOutput().write(
                 simTime,
-                getAveragePhysicalData(),
+                get_averagePhysicalData(),
                 getSettings()
             );
             getEngineOutput().writeMomentumFile(
                 effStep,
-                getAveragePhysicalData()
+                get_averagePhysicalData()
             );
 
-            getAveragePhysicalData() = physicalData::PhysicalData();
+            get_averagePhysicalData() = physicalData::PhysicalData();
         }
 
-        getPhysicalDataPtr()->reset();
+        get_physicalData().reset();
     }
 
     /**

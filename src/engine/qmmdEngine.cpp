@@ -32,7 +32,7 @@ namespace engine
     {
         getQMRunner()->run(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             getSettings().fileSettings,
             getSettings().hybridSettings
         );

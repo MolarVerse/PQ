@@ -56,16 +56,14 @@ namespace opt
         std::shared_ptr<molsys::SimulationBox>          _simulationBox;
         std::shared_ptr<constraints::Constraints>       _constraints;
         std::shared_ptr<ff::ForceField>                 _forceField;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalData;
-        std::shared_ptr<physicalData::PhysicalData>     _physicalDataOld;
         std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
 
        public:
         explicit Evaluator(const Settings& settings);
         virtual ~Evaluator();
 
-        [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const = 0;
-        virtual void                                     evaluate()    = 0;
+        [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const  = 0;
+        virtual void evaluate(physicalData::PhysicalData& physicalData) = 0;
 
         [[nodiscard]] virtual bool    supportsAnalyticHessian() const;
         [[nodiscard]] virtual Hessian calculateAnalyticHessian();
@@ -79,29 +77,12 @@ namespace opt
         void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
         void setConstraints(const std::shared_ptr<constraints::Constraints>&);
 
-        void setPhysicalData(
-            const std::shared_ptr<physicalData::PhysicalData>&
-        );
-        void setPhysicalDataOld(
-            const std::shared_ptr<physicalData::PhysicalData>&
-        );
-
         void setForceField(const std::shared_ptr<ff::ForceField>&);
         void setIntraNonBonded(
             const std::shared_ptr<intraNonBonded::IntraNonBonded>&
         );
 
        protected:
-        [[nodiscard]]
-        physicalData::PhysicalData& _getPhysicalData();
-        [[nodiscard]]
-        const physicalData::PhysicalData& _getPhysicalData() const;
-
-        [[nodiscard]]
-        physicalData::PhysicalData& _getPhysicalDataOld();
-        [[nodiscard]]
-        const physicalData::PhysicalData& _getPhysicalDataOld() const;
-
         [[nodiscard]]
         molsys::SimulationBox& _getSimulationBox();
         [[nodiscard]]

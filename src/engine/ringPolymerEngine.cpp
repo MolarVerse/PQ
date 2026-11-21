@@ -150,8 +150,8 @@ namespace engine
                     static_cast<double>(outputFreq)
                 );
 
-            getPhysicalData().copy(mean(rpmdData));
-            getAveragePhysicalData() = mean(averageRPMDData);
+            get_physicalData().copy(mean(rpmdData));
+            get_averagePhysicalData() = mean(averageRPMDData);
 
             const auto simTime = calculateTotalSimulationTime(
                 timeStep,
@@ -164,21 +164,21 @@ namespace engine
             {
                 getEngineOutput().writeEnergyFile(
                     effStep,
-                    getAveragePhysicalData(),
+                    get_averagePhysicalData(),
                     getSettings()
                 );
                 getEngineOutput().writeInstantEnergyFile(
                     effStep,
-                    getPhysicalData(),
+                    get_physicalData(),
                     getSettings()
                 );
                 getEngineOutput().writeMomentumFile(
                     effStep,
-                    getAveragePhysicalData()
+                    get_averagePhysicalData()
                 );
                 getEngineOutput().getInfoOutput().write(
                     simTime,
-                    getAveragePhysicalData(),
+                    get_averagePhysicalData(),
                     getSettings()
                 );
 
@@ -191,7 +191,7 @@ namespace engine
             for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
                 averageRPMDData[i] = physicalData::PhysicalData();
 
-            getAveragePhysicalData() = physicalData::PhysicalData();
+            get_averagePhysicalData() = physicalData::PhysicalData();
         }
 
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)

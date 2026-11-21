@@ -67,16 +67,17 @@ namespace opt
          */
         [[nodiscard]]
         std::vector<Force> evaluateForces(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox,
-            size_t                 coordinateIndex,
-            const Pos             &displacement
+            Evaluator                  &evaluator,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            size_t                      coordinateIndex,
+            const Pos                  &displacement
         )
         {
             utilities::throwIfInterrupted();
 
             displaceCoordinate(simulationBox, coordinateIndex, displacement);
-            evaluator.evaluate();
+            evaluator.evaluate(physicalData);
             const auto forces = simulationBox.flattenForces();
             displaceCoordinate(simulationBox, coordinateIndex, -displacement);
 
@@ -139,8 +140,9 @@ namespace opt
      * @param simulationBox
      */
     Hessian CentralForceDifferenceHessianBuilder::build(
-        Evaluator             &evaluator,
-        molsys::SimulationBox &simulationBox
+        Evaluator                  &evaluator,
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -157,10 +159,20 @@ namespace opt
 
         for (size_t col = 0; col < numberOfCoordinates; ++col)
         {
-            const auto fPlus =
-                evaluateForces(evaluator, simulationBox, col, displacement);
-            const auto fMinus =
-                evaluateForces(evaluator, simulationBox, col, -displacement);
+            const auto fPlus = evaluateForces(
+                evaluator,
+                simulationBox,
+                physicalData,
+                col,
+                displacement
+            );
+            const auto fMinus = evaluateForces(
+                evaluator,
+                simulationBox,
+                physicalData,
+                col,
+                -displacement
+            );
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
                 hessian[row][col] =
@@ -169,7 +181,7 @@ namespace opt
             _restorePositions(simulationBox, originalPositions);
         }
 
-        evaluator.evaluate();
+        evaluator.evaluate(physicalData);
         symmetrize(hessian);
 
         return hessian;
@@ -183,8 +195,9 @@ namespace opt
      * @param simulationBox
      */
     Hessian ForwardForceDifferenceHessianBuilder::build(
-        Evaluator             &evaluator,
-        molsys::SimulationBox &simulationBox
+        Evaluator                  &evaluator,
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -197,15 +210,20 @@ namespace opt
         );
 
         const auto originalPositions = simulationBox.getPositions();
-        evaluator.evaluate();
+        evaluator.evaluate(physicalData);
         const auto forces0 = simulationBox.flattenForces();
 
         const auto displacement = _getDisplacement();
 
         for (size_t col = 0; col < numberOfCoordinates; ++col)
         {
-            const auto fPlus =
-                evaluateForces(evaluator, simulationBox, col, displacement);
+            const auto fPlus = evaluateForces(
+                evaluator,
+                simulationBox,
+                physicalData,
+                col,
+                displacement
+            );
 
             for (size_t row = 0; row < numberOfCoordinates; ++row)
                 hessian[row][col] = -(fPlus[row] - forces0[row]) / displacement;
@@ -213,7 +231,7 @@ namespace opt
             _restorePositions(simulationBox, originalPositions);
         }
 
-        evaluator.evaluate();
+        evaluator.evaluate(physicalData);
         symmetrize(hessian);
 
         return hessian;
@@ -227,8 +245,9 @@ namespace opt
      * @param simulationBox
      */
     Hessian FivePointForceDifferenceHessianBuilder::build(
-        Evaluator             &evaluator,
-        molsys::SimulationBox &simulationBox
+        Evaluator                  &evaluator,
+        molsys::SimulationBox      &simulationBox,
+        physicalData::PhysicalData &physicalData
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -246,19 +265,31 @@ namespace opt
 
         for (size_t col = 0; col < numberOfCoordinates; ++col)
         {
-            const auto fPlus =
-                evaluateForces(evaluator, simulationBox, col, displacement);
-            const auto fMinus =
-                evaluateForces(evaluator, simulationBox, col, -displacement);
+            const auto fPlus = evaluateForces(
+                evaluator,
+                simulationBox,
+                physicalData,
+                col,
+                displacement
+            );
+            const auto fMinus = evaluateForces(
+                evaluator,
+                simulationBox,
+                physicalData,
+                col,
+                -displacement
+            );
             const auto fPlus2 = evaluateForces(
                 evaluator,
                 simulationBox,
+                physicalData,
                 col,
                 2.0 * displacement
             );
             const auto fMinus2 = evaluateForces(
                 evaluator,
                 simulationBox,
+                physicalData,
                 col,
                 -2.0 * displacement
             );
@@ -275,7 +306,7 @@ namespace opt
             _restorePositions(simulationBox, originalPositions);
         }
 
-        evaluator.evaluate();
+        evaluator.evaluate(physicalData);
         symmetrize(hessian);
 
         return hessian;
@@ -287,7 +318,8 @@ namespace opt
      */
     Hessian AnalyticHessianBuilder::build(
         Evaluator &evaluator,
-        molsys::SimulationBox & /*simulationBox*/
+        molsys::SimulationBox & /*simulationBox*/,
+        physicalData::PhysicalData & /*physicalData*/
     ) const
     {
         if (!evaluator.supportsAnalyticHessian())

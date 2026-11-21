@@ -79,8 +79,6 @@ namespace
         eval.setPotential(
             std::make_shared<pot::PotentialBruteForce>(settings.hybridSettings)
         );
-        eval.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
-        eval.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
         eval.setForceField(
             std::make_shared<ff::ForceField>(settings.hybridSettings)
         );
@@ -110,11 +108,12 @@ TEST(TestMMEvaluator, cloneProducesMMEvaluatorInstance)
 
 TEST(TestMMEvaluator, evaluateRunsWithMinimalDependencies)
 {
-    Settings         settings;
-    opt::MMEvaluator eval{settings};
-    molsys::CellList cellList;
+    Settings                   settings;
+    physicalData::PhysicalData physicalData;
+    opt::MMEvaluator           eval{settings};
+    molsys::CellList           cellList;
     wireUp(eval, cellList);
-    EXPECT_NO_THROW(eval.evaluate());
+    EXPECT_NO_THROW(eval.evaluate(physicalData));
 }
 
 TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
@@ -127,10 +126,12 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     molsys::CellList cellList;
     wireUp(eval, cellList);
 
+    physicalData::PhysicalData physicalData;
+
     // Borrow the wired-up simulation box back from a fresh setup by re-wiring
     // a second evaluator on the same shared structures isn't trivial, so test
     // the post-condition via the evaluator's own evaluate() exit state.
-    eval.evaluate();
+    eval.evaluate(physicalData);
 
     // We can't reach the box pointer through opt::MMEvaluator's public API, so
     // re-wire a fresh evaluator with a known shared box and check the box.
@@ -160,8 +161,6 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     eval2.setPotential(
         std::make_shared<pot::PotentialBruteForce>(settings.hybridSettings)
     );
-    eval2.setPhysicalData(std::make_shared<physicalData::PhysicalData>());
-    eval2.setPhysicalDataOld(std::make_shared<physicalData::PhysicalData>());
     eval2.setForceField(
         std::make_shared<ff::ForceField>(settings.hybridSettings)
     );
@@ -173,7 +172,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
 
     settings::GeneralSettings::setVirialType(VirialType::MOLECULAR);
 
-    eval2.evaluate();
+    eval2.evaluate(physicalData);
 
     EXPECT_EQ(box->getAtoms()[0]->getForce(), Force3D::zero());
 }

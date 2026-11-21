@@ -37,21 +37,20 @@ namespace opt
      */
     struct Optimizer::Impl
     {
-        std::shared_ptr<molsys::SimulationBox>      simulationBox;
-        std::shared_ptr<physicalData::PhysicalData> physicalData;
-        std::shared_ptr<physicalData::PhysicalData> physicalDataOld;
+        std::shared_ptr<molsys::SimulationBox> simulationBox;
     };
 
     Optimizer::Optimizer() : _impl(std::make_unique<Impl>()) {}
+
     Optimizer::~Optimizer() = default;
 
     /**
      * @brief update the optimizer history
      *
      */
-    void Optimizer::updateHistory()
+    void Optimizer::updateHistory(const EnergyPerMol& totalEnergy)
     {
-        _energyHistory.push_back(_impl->physicalData->getTotalEnergy());
+        _energyHistory.push_back(totalEnergy);
         _forceHistory.push_back(_impl->simulationBox->getForces());
         _positionHistory.push_back(_impl->simulationBox->getPositions());
 
@@ -116,30 +115,6 @@ namespace opt
     )
     {
         _impl->simulationBox = simulationBox;
-    }
-
-    /**
-     * @brief set physical data shared pointer
-     *
-     * @param physicalData
-     */
-    void Optimizer::setPhysicalData(
-        const std::shared_ptr<physicalData::PhysicalData>& physicalData
-    )
-    {
-        _impl->physicalData = physicalData;
-    }
-
-    /**
-     * @brief set old physical data shared pointer
-     *
-     * @param physicalData
-     */
-    void Optimizer::setPhysicalDataOld(
-        const std::shared_ptr<physicalData::PhysicalData>& physicalData
-    )
-    {
-        _impl->physicalDataOld = physicalData;
     }
 
     /***************************
