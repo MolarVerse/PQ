@@ -62,7 +62,7 @@ namespace molsys
         explicit MoleculeType(MolType moltype);
         explicit MoleculeType(const std::string_view &name);
 
-        [[nodiscard]] size_t getNumberOfAtomTypes();
+        [[nodiscard]] size_t getNumberOfAtomTypes() const;
 
         /**************************
          * standard adder methods *
@@ -105,12 +105,14 @@ namespace molsys
         [[nodiscard]] bool          hasQMReferenceEnergy() const;
         [[nodiscard]] const Charge &getPartialCharge(AtomIndex index) const;
 
-        [[nodiscard]] std::string getName() const;
-        [[nodiscard]] std::string getAtomName(AtomIndex index) const;
+        [[nodiscard]] const std::string &getName() const;
+        [[nodiscard]] const std::string &getAtomName(AtomIndex index) const;
 
-        [[nodiscard]] std::vector<std::string>   getAtomNames() const;
-        [[nodiscard]] std::vector<ExtAtomType>  &getExternalAtomTypes();
-        [[nodiscard]] std::vector<ExtVdwType>   &getExternalGlobalVDWTypes();
+        [[nodiscard]] const std::vector<std::string> &getAtomNames() const;
+        [[nodiscard]]
+        const std::vector<ExtAtomType> &getExternalAtomTypes() const;
+        [[nodiscard]]
+        const std::vector<ExtVdwType> &getExternalGlobalVDWTypes() const;
         [[nodiscard]] const std::vector<Charge> &getPartialCharges() const;
 
         [[nodiscard]]

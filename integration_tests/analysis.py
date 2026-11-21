@@ -28,6 +28,9 @@ import numpy as np
 
 from PQAnalysis.io import read_trajectory, EnergyFileReader
 
+from diagnostics import (describe_table_difference,
+                         describe_trajectory_difference)
+
 # Relative tolerance for comparing trajectories against the reference data.
 # The output has 9 significant digits, so the pqanalysis default of 1e-9 fails
 # on a one-digit difference in the last printed digit (floating-point roundoff
@@ -41,6 +44,20 @@ TRAJ_RTOL = 1e-5
 DFTB_FORCE_ATOL = 1e-4
 
 
+def _check_trajectory(base_name, ref_path, extension, rtol, atol=0.0,
+                      traj_format=None):
+    name = base_name + "." + extension
+    ref_name = str(ref_path / name)
+    options = {} if traj_format is None else {"traj_format": traj_format}
+
+    traj = read_trajectory(name, **options)
+    ref_traj = read_trajectory(ref_name, **options)
+
+    if not traj.isclose(ref_traj, rtol=rtol, atol=atol):
+        raise AssertionError(
+            describe_trajectory_difference(name, ref_name, rtol, atol))
+
+
 def check_pq_output(
     base_name,
     folder_name,
@@ -50,28 +67,13 @@ def check_pq_output(
 
     ref_path = Path(ref_folder)
 
-    traj = read_trajectory(base_name + ".xyz")
-    ref_traj = read_trajectory(str(ref_path / (base_name + ".xyz")))
-
-    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL)
-
-    traj = read_trajectory(base_name + ".vel", traj_format="vel")
-    ref_traj = read_trajectory(
-        str(ref_path / (base_name + ".vel")), traj_format="vel")
-
-    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL)
-
-    traj = read_trajectory(base_name + ".force", traj_format="force")
-    ref_traj = read_trajectory(
-        str(ref_path / (base_name + ".force")), traj_format="force")
-
-    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL, atol=force_atol)
-
-    traj = read_trajectory(base_name + ".chrg", traj_format="charge")
-    ref_traj = read_trajectory(
-        str(ref_path / (base_name + ".chrg")), traj_format="charge")
-
-    assert traj.isclose(ref_traj, rtol=TRAJ_RTOL)
+    _check_trajectory(base_name, ref_path, "xyz", TRAJ_RTOL)
+    _check_trajectory(base_name, ref_path, "vel", TRAJ_RTOL,
+                      traj_format="vel")
+    _check_trajectory(base_name, ref_path, "force", TRAJ_RTOL, force_atol,
+                      traj_format="force")
+    _check_trajectory(base_name, ref_path, "chrg", TRAJ_RTOL,
+                      traj_format="charge")
 
     reader = EnergyFileReader(base_name + ".en")
     ref_reader = EnergyFileReader(
@@ -80,7 +82,14 @@ def check_pq_output(
     energy = reader.read()
     ref_energy = ref_reader.read()
 
-    assert np.allclose(energy.data[:-2], ref_energy.data[:-2])
+    if not np.allclose(energy.data[:-2], ref_energy.data[:-2]):
+        raise AssertionError(describe_table_difference(
+            base_name + ".en",
+            np.asarray(energy.data[:-2]).T.tolist(),
+            np.asarray(ref_energy.data[:-2]).T.tolist(),
+            rtol=1e-5, atol=1e-8))
 
-    assert energy.info_given
-    assert energy.info == ref_energy.info
+    assert energy.info_given, f"{base_name}.en has no info block"
+    assert energy.info == ref_energy.info, (
+        f"the column description of {base_name}.en differs from the "
+        f"reference:\n  {energy.info}\n  reference: {ref_energy.info}")

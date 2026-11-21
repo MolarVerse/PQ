@@ -35,6 +35,12 @@ setting that leaves relevant variants open (the note says which); **no** = no in
   The reference files are named `ref_data*` inside each zip; a test variant uses its own
   `ref_data_<variant>` directory. Tests that use dftb+ pass `force_atol=DFTB_FORCE_ATOL`, an
   absolute tolerance for its noisy forces; all other tests compare forces with the relative one only.
+- A failing test says what went wrong. If `PQ` exits with a non-zero status, `execute_pq` fails with
+  the command, the exit status, the end of stdout (where PQ prints its error) and stderr. If a file
+  differs from its reference, `check_pq_output` names the file and reports the worst value (frame,
+  atom, column, both values), how many values are out of tolerance, and which frame headers (the
+  box) differ. The messages are made in `diagnostics.py`, which has unit tests in
+  `scripts/tests/test_integration_diagnostics.py`.
 - `oh_mm_hessian` does not use reference data: it checks that the Hessian file is a finite
   6 x 6 matrix, the info file, and the error message of one invalid input.
 - Runs are **2 to 10 steps** long. These tests find "the output changed", not "the physics is right
