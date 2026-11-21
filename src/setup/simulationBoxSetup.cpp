@@ -36,6 +36,7 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "forceFieldSettings.hpp"
+#include "generalSettings.hpp"
 #include "logOutput.hpp"
 #include "maxwellBoltzmann.hpp"
 #include "molecule.hpp"
@@ -571,6 +572,23 @@ namespace setup
                 std::format(
                     "Ignoring 'init_velocities' because non-zero velocities in "
                     "\"{}\"",
+                    _engine.getSettings().fileSettings.getStartFileName()
+                )
+            );
+        }
+
+        // ring polymer beads get Maxwell-Boltzmann velocities on their own
+        if (initVelocities == InitVelocities::FALSE && getZeroVelocities() &&
+            settings::GeneralSettings::isMDJobType() &&
+            !settings::GeneralSettings::isRingPolymerMDActivated())
+        {
+            _writeSetupWarning(
+                log,
+                std::format(
+                    "All velocities in \"{}\" are zero: the MD starts at 0 K. "
+                    "Set 'init_velocities = true' to draw them from a "
+                    "Maxwell-Boltzmann distribution; 'start_temp' only starts "
+                    "the temperature ramp",
                     _engine.getSettings().fileSettings.getStartFileName()
                 )
             );
