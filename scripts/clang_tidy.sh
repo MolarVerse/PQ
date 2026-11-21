@@ -8,6 +8,10 @@ recheck=false
 base_ref=""
 head_ref=""
 compile_db="."
+# Every batch is a fresh clangd-tidy process. One process over all the files of
+# a large change keeps growing (the headers are parsed again and again) and has
+# been killed on the CI runner; 0 checks everything in one process.
+batch_size="${CLANG_TIDY_BATCH_SIZE:-30}"
 while [[ $# -gt 0 ]]; do
     case "$1" in
     --all)
@@ -30,12 +34,21 @@ while [[ $# -gt 0 ]]; do
         compile_db="$2"
         shift 2
         ;;
+    --batch-size)
+        batch_size="$2"
+        shift 2
+        ;;
     *)
         echo "Unknown option: $1"
         exit 1
         ;;
     esac
 done
+
+if ! [[ "$batch_size" =~ ^[0-9]+$ ]]; then
+    echo "--batch-size needs a number of files (0 = all in one process), got: $batch_size"
+    exit 1
+fi
 
 if $all_files && $recheck; then
     echo "--all and --recheck are mutually exclusive"
@@ -121,4 +134,28 @@ if [[ ${#files[@]} -eq 0 ]]; then
 fi
 
 echo "  Files: ${#files[@]}"
-clangd-tidy "${files[@]}" -p="$compile_db" --fail-on-severity=hint --tqdm -j1
+
+run_clangd_tidy() {
+    clangd-tidy "$@" -p="$compile_db" --fail-on-severity=hint --tqdm -j1
+}
+
+total=${#files[@]}
+if ((batch_size == 0 || batch_size >= total)); then
+    run_clangd_tidy "${files[@]}"
+    exit $?
+fi
+
+# All batches run even if one finds something, so that the report is complete;
+# the exit status is the first failing one.
+batches=$(((total + batch_size - 1) / batch_size))
+echo "  Batches: $batches of up to $batch_size files"
+status=0
+for ((start = 0; start < total; start += batch_size)); do
+    last=$((start + batch_size))
+    ((last > total)) && last=$total
+    echo "  Batch $((start / batch_size + 1)) of $batches: files $((start + 1))-$last"
+    run_clangd_tidy "${files[@]:start:batch_size}"
+    code=$?
+    ((status == 0)) && status=$code
+done
+exit $status
