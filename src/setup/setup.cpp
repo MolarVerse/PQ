@@ -235,6 +235,7 @@ namespace setup
      *
      * @param logOutput The log output object to which the engine setup
      * information will be written.
+     * @param jobType The type of job for which the engine is being set up.
      */
     void writeEngineSetupInfo(out::LogOutput& logOutput, JobType jobType)
     {
