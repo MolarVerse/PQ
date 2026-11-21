@@ -23,6 +23,7 @@
 #include "trajectoryOutput.hpp"
 
 #include <cstddef>
+#include <format>
 #include <ios>
 #include <ostream>
 #include <string_view>
@@ -80,10 +81,19 @@ namespace out
      */
     void TrajectoryOutput::writeHeader(const Frame &frame)
     {
-        _getFilePointer(
-        ) << frame.atoms.size()
-          << "  " << frame.box->get_boxDimensions().numerical_value_in(angstrom)
-          << "  " << frame.box->getBoxAngles().numerical_value_in(deg) << '\n';
+        const auto &dimensions = frame.box->get_boxDimensions();
+        const auto &angles     = frame.box->getBoxAngles();
+
+        _getFilePointer() << std::format(
+            "{}  {} {} {}  {} {} {}\n",
+            frame.atoms.size(),
+            dimensions[0].numerical_value_in(angstrom),
+            dimensions[1].numerical_value_in(angstrom),
+            dimensions[2].numerical_value_in(angstrom),
+            angles[0].numerical_value_in(deg),
+            angles[1].numerical_value_in(deg),
+            angles[2].numerical_value_in(deg)
+        );
     }
 
     /**
@@ -204,11 +214,13 @@ namespace out
         _buffer.clear();
 
         for (const auto &atom : frame.atoms)
+        {
             appendFixedLine(
                 _buffer,
                 atom.name,
                 atom.force.numerical_value_in(kcal_per_mol / angstrom)
             );
+        }
 
         _flushBuffer();
     }
