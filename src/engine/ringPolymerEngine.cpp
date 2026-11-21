@@ -60,10 +60,11 @@ namespace engine
      * @param outputSettings
      */
     void RingPolymerEngine::writeOutput(
+        JobType /*jobType*/,
         const OutputFileSettings &outputSettings
     )
     {
-        writeOutput(
+        _writeOutput(
             outputSettings,
             getSettings().timings.getTimeStep(),
             getSettings().timings.getStartingStepCount()
@@ -74,7 +75,7 @@ namespace engine
      * @brief writes the ring polymer output files.
      *
      */
-    void RingPolymerEngine::writeOutput(
+    void RingPolymerEngine::_writeOutput(
         const OutputFileSettings &outputSettings,
         const Time               &timeStep,
         size_t                    startingStepCount
@@ -150,8 +151,8 @@ namespace engine
                     static_cast<double>(outputFreq)
                 );
 
-            getPhysicalData().copy(mean(rpmdData));
-            getAveragePhysicalData() = mean(averageRPMDData);
+            get_physicalData().copy(mean(rpmdData));
+            get_averagePhysicalData() = mean(averageRPMDData);
 
 #ifdef WITH_MPI
             if (mpi::MPI::isRoot())
@@ -159,21 +160,21 @@ namespace engine
             {
                 getEngineOutput().writeEnergyFile(
                     effStep,
-                    getAveragePhysicalData(),
+                    get_averagePhysicalData(),
                     getSettings()
                 );
                 getEngineOutput().writeInstantEnergyFile(
                     effStep,
-                    getPhysicalData(),
+                    get_physicalData(),
                     getSettings()
                 );
                 getEngineOutput().writeMomentumFile(
                     effStep,
-                    getAveragePhysicalData()
+                    get_averagePhysicalData()
                 );
                 getEngineOutput().getInfoOutput().write(
                     effStep,
-                    getAveragePhysicalData(),
+                    get_averagePhysicalData(),
                     getSettings()
                 );
 
@@ -186,7 +187,7 @@ namespace engine
             for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)
                 averageRPMDData[i] = physicalData::PhysicalData();
 
-            getAveragePhysicalData() = physicalData::PhysicalData();
+            get_averagePhysicalData() = physicalData::PhysicalData();
         }
 
         for (size_t i = 0; i < _ringPolymerBeads.size(); ++i)

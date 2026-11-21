@@ -32,7 +32,6 @@
 #include <vector>
 
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
@@ -593,9 +592,6 @@ TEST_F(
  */
 TEST_F(TestSimulationBox, removeNetForce)
 {
-    const auto jobtype = settings::GeneralSettings::getJobtype();
-    settings::GeneralSettings::setJobtype(JobType::QM_MD);
-
     molsys::SimulationBox simBox;
     auto                  atom1 = molsys::Atom();
     auto                  atom2 = molsys::Atom();
@@ -647,7 +643,6 @@ TEST_F(TestSimulationBox, removeNetForce)
         1e-10
     );
 
-    settings::GeneralSettings::setJobtype(jobtype);
     EXPECT_VECTOR_NEAR(
         simBox.getAtom(1).getForce().numerical_value_in(
             kcal_per_mol / angstrom
@@ -908,9 +903,6 @@ TEST_F(TestSimulationBox, activeChargeAndEmptyForceRemoval)
 
 TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
 {
-    const auto jobtype = settings::GeneralSettings::getJobtype();
-    settings::GeneralSettings::setJobtype(JobType::QMMM_MD);
-
     molsys::SimulationBox simBox;
     auto                  qmAtom1 = std::make_shared<molsys::Atom>();
     auto                  qmAtom2 = std::make_shared<molsys::Atom>();
@@ -949,6 +941,4 @@ TEST_F(TestSimulationBox, removeNetForceTouchesOnlyQMAtoms)
         linalg::Vec3D({0.0, 0.0, 0.0}),
         1e-10
     );
-
-    settings::GeneralSettings::setJobtype(jobtype);
 }

@@ -24,7 +24,6 @@
 
 #include "atomMassMap.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "stringUtilities.hpp"
 
 namespace molsys
@@ -152,54 +151,6 @@ namespace molsys
      * @details currently only used for hybrid calculations
      */
     bool Atom::isActive() const { return _isActive; }
-
-    /**
-     * @brief determine if an atom should be treated as QM
-     *
-     * @return true if the atom should be treated as QM, false otherwise
-     *
-     * @details Checks if an atom qualifies as a QM atom based on:
-     *          - QM-only job types (all atoms are QM)
-     *          - MM-only job types (no atoms are MM)
-     *          - Atom is activated for hybrid calculation
-     */
-    bool Atom::isQMAtom() const
-    {
-        if (settings::GeneralSettings::isQMOnlyJobtype())
-            return true;
-
-        if (settings::GeneralSettings::isMMOnlyJobtype())
-            return false;
-
-        if (isActive())
-            return true;
-
-        return false;
-    }
-
-    /**
-     * @brief determine if an atom should be treated as MM
-     *
-     * @return true if the atom should be treated as MM, false otherwise
-     *
-     * @details Checks if an atom qualifies as a MM atom based on:
-     *          - MM-only job types (all atoms are MM)
-     *          - QM-only job types (no atoms are MM)
-     *          - Atom is activated for hybrid calculation
-     */
-    bool Atom::isMMAtom() const
-    {
-        if (settings::GeneralSettings::isMMOnlyJobtype())
-            return true;
-
-        if (settings::GeneralSettings::isQMOnlyJobtype())
-            return false;
-
-        if (isActive())
-            return true;
-
-        return false;
-    }
 
     /**
      * @brief return the atom type name

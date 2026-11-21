@@ -34,6 +34,11 @@ namespace molsys
     class SimulationBox;   // forward declaration
 }   // namespace molsys
 
+namespace physicalData
+{
+    class PhysicalData;   // forward declaration
+}   // namespace physicalData
+
 namespace opt
 {
     class Evaluator;   // forward declaration
@@ -46,8 +51,9 @@ namespace opt
 
         [[nodiscard]]
         virtual Hessian build(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox
+            Evaluator                  &evaluator,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) const = 0;
     };
 
@@ -79,8 +85,9 @@ namespace opt
 
         [[nodiscard]]
         Hessian build(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox
+            Evaluator                  &evaluator,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) const override;
     };
 
@@ -92,8 +99,9 @@ namespace opt
 
         [[nodiscard]]
         Hessian build(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox
+            Evaluator                  &evaluator,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) const override;
     };
 
@@ -105,8 +113,9 @@ namespace opt
 
         [[nodiscard]]
         Hessian build(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox
+            Evaluator                  &evaluator,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) const override;
     };
 
@@ -115,8 +124,9 @@ namespace opt
        public:
         [[nodiscard]]
         Hessian build(
-            Evaluator             &evaluator,
-            molsys::SimulationBox &simulationBox
+            Evaluator                  &evaluator,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         ) const override;
     };
 

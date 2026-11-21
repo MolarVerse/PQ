@@ -269,7 +269,8 @@ namespace engine
 
         auto builder = setupHessianBuilder(hessianSettings);
 
-        const auto hessian = builder->build(*evaluator, getSimulationBox());
+        const auto hessian =
+            builder->build(*evaluator, getSimulationBox(), get_physicalData());
 
         writeHessian(hessian, hessianSettings);
         writeHessianInfo(hessian, hessianSettings);
@@ -291,9 +292,12 @@ namespace engine
      *
      * @param outputSettings The settings for output files.
      */
-    void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
+    void HessianEngine::writeOutput(
+        JobType /*jobType*/,
+        const OutputFileSettings &outputSettings
+    )
     {
-        writeOutput(
+        _writeOutput(
             outputSettings,
             getSettings().timings.getStartingStepCount()
         );
@@ -306,7 +310,7 @@ namespace engine
      * @param startingStepCount The step count from which to start writing
      * output files.
      */
-    void HessianEngine::writeOutput(
+    void HessianEngine::_writeOutput(
         const OutputFileSettings &outputSettings,
         size_t                    startingStepCount
     )
@@ -326,39 +330,37 @@ namespace engine
 
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        getPhysicalData().setLoopTime(
+        auto &physicalData        = get_physicalData();
+        auto &averagePhysicalData = get_averagePhysicalData();
+
+        physicalData.setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        getAveragePhysicalData().updateAverages(getPhysicalData());
+        averagePhysicalData.updateAverages(physicalData);
 
         if (0 == getStep() % outputFreq)
         {
-            getAveragePhysicalData().makeAverages(
-                static_cast<double>(outputFreq)
-            );
+            averagePhysicalData.makeAverages(static_cast<double>(outputFreq));
 
-            getEngineOutput().writeEnergyFile(
-                effStep,
-                getAveragePhysicalData(),
-                getSettings()
-            );
+            getEngineOutput()
+                .writeEnergyFile(effStep, averagePhysicalData, getSettings());
             getEngineOutput().getInfoOutput().write(
                 effStep,
-                getAveragePhysicalData(),
+                averagePhysicalData,
                 getSettings()
             );
 
-            getAveragePhysicalData() = physicalData::PhysicalData();
+            averagePhysicalData = physicalData::PhysicalData();
         }
 
-        getPhysicalData().reset();
+        physicalData.reset();
     }
 
     std::shared_ptr<opt::Evaluator> HessianEngine::_setupEvaluator()
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
-        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN)
+        if (getSettings().generalSettings.getJobtype() == JobType::MM_HESSIAN)
             evaluator = std::make_shared<opt::MMEvaluator>(getSettings());
 
         else
@@ -372,8 +374,6 @@ namespace engine
         evaluator->setForceField(getForceField());
         evaluator->setConstraints(getConstraints());
         evaluator->setIntraNonBonded(getIntraNonBonded());
-        evaluator->setPhysicalData(getSharedPhysicalData());
-        evaluator->setPhysicalDataOld(getSharedPhysicalDataOld());
 
         return evaluator;
     }
@@ -401,10 +401,12 @@ namespace engine
         _converged  = false;
         _optStopped = false;
 
-        _evaluator->evaluate();
-        _optimizer->updateHistory();
+        _evaluator->evaluate(get_physicalData());
+        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
 
-        writeOutput(getSettings().outputFiles);
+        const auto &outputFileSettings = getSettings().outputFiles;
+        const auto &jobType = getSettings().generalSettings.getJobtype();
+        writeOutput(jobType, outputFileSettings);
 
         const auto nSteps = getSettings().timings.getNumberOfSteps();
 
@@ -421,7 +423,7 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            writeOutput(getSettings().outputFiles);
+            writeOutput(jobType, outputFileSettings);
             deleteTmpFiles();
         }
 
@@ -444,9 +446,9 @@ namespace engine
     {
         _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
 
-        _evaluator->evaluate();
+        _evaluator->evaluate(get_physicalData());
 
-        _optimizer->updateHistory();
+        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
 
         _converged = _optimizer->hasConverged();
 
@@ -518,8 +520,6 @@ namespace engine
         }
 
         optimizer->setSimulationBox(getSharedSimulationBox());
-        optimizer->setPhysicalData(getSharedPhysicalData());
-        optimizer->setPhysicalDataOld(getSharedPhysicalDataOld());
 
         return optimizer;
     }

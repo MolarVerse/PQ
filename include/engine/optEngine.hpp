@@ -48,9 +48,6 @@ namespace engine
         std::shared_ptr<opt::LearningRateStrategy> _learningRateStrategy;
         std::shared_ptr<opt::Evaluator>            _evaluator;
 
-        std::shared_ptr<physicalData::PhysicalData> _physicalDataOld =
-            std::make_shared<physicalData::PhysicalData>();
-
         bool _converged  = false;
         bool _optStopped = false;
 
@@ -59,11 +56,10 @@ namespace engine
 
         void run() override;
         void takeStep();
-        void writeOutput(const OutputFileSettings &outputSettings) override;
         void writeOutput(
-            const OutputFileSettings &outputSettings,
-            size_t                    startingStepCount
-        );
+            JobType                   jobType,
+            const OutputFileSettings &outputSettings
+        ) override;
 
         static void throwOnFailure(
             bool                            converged,
@@ -98,11 +94,13 @@ namespace engine
         );
         [[nodiscard]] std::shared_ptr<opt::Evaluator> getSharedEvaluator();
 
-        [[nodiscard]] physicalData::PhysicalData &getPhysicalDataOld();
-        [[nodiscard]] std::shared_ptr<physicalData::PhysicalData> getSharedPhysicalDataOld(
-        );
-
         [[nodiscard]] out::OptOutput &getOptOutput();
+
+       private:
+        void _writeOutput(
+            const OutputFileSettings &outputSettings,
+            size_t                    startingStepCount
+        );
     };
 
 }   // namespace engine

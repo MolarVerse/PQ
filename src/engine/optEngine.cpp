@@ -40,13 +40,16 @@ namespace engine
      */
     void OptEngine::run()
     {
-        _evaluator->evaluate();
-        _optimizer->updateHistory();
+        _evaluator->evaluate(get_physicalData());
+        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
 
         const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
         const auto &outputFileSettings = getSettings().outputFiles;
-        writeOutput(outputFileSettings);
+        writeOutput(
+            getSettings().generalSettings.getJobtype(),
+            outputFileSettings
+        );
 
         progressbar bar(static_cast<int>(nEpochs), true, std::cout);
 
@@ -61,7 +64,10 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            writeOutput(outputFileSettings);
+            writeOutput(
+                getSettings().generalSettings.getJobtype(),
+                outputFileSettings
+            );
             deleteTmpFiles();
         }
 
@@ -147,9 +153,9 @@ namespace engine
     {
         _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
 
-        _evaluator->evaluate();
+        _evaluator->evaluate(get_physicalData());
 
-        _optimizer->updateHistory();
+        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
 
         _converged = _optimizer->hasConverged();
 
@@ -192,9 +198,12 @@ namespace engine
      * frequency.
      *
      */
-    void OptEngine::writeOutput(const OutputFileSettings &outputSettings)
+    void OptEngine::writeOutput(
+        JobType /*jobType*/,
+        const OutputFileSettings &outputSettings
+    )
     {
-        writeOutput(
+        _writeOutput(
             outputSettings,
             getSettings().timings.getStartingStepCount()
         );
@@ -207,7 +216,7 @@ namespace engine
      * frequency.
      *
      */
-    void OptEngine::writeOutput(
+    void OptEngine::_writeOutput(
         const OutputFileSettings &outputSettings,
         size_t                    startingStepCount
     )
@@ -223,19 +232,6 @@ namespace engine
             getEngineOutput().writeForceFile(frame, effStep);
             getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
             getEngineOutput().writeOptFile(getStep(), *_optimizer);
-
-            // getEngineOutput().writeVirialFile(
-            //     effStep,
-            //     getPhysicalData()
-            // );   // use physicalData instead of averagePhysicalData
-
-            // getEngineOutput().writeStressFile(
-            //     effStep,
-            //     getPhysicalData()
-            // );   // use physicalData instead of averagePhysicalData
-
-            // getEngineOutput().writeBoxFile(effStep,
-            // _simulationBox->getBox());
         }
 
         // NOTE:
@@ -246,32 +242,32 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        getPhysicalData().setLoopTime(
+        get_physicalData().setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        getAveragePhysicalData().updateAverages(getPhysicalData());
+        get_averagePhysicalData().updateAverages(get_physicalData());
 
         if (0 == getStep() % outputFreq)
         {
-            getAveragePhysicalData().makeAverages(
+            get_averagePhysicalData().makeAverages(
                 static_cast<double>(outputFreq)
             );
 
             getEngineOutput().writeEnergyFile(
                 effStep,
-                getAveragePhysicalData(),
+                get_averagePhysicalData(),
                 getSettings()
             );
             getEngineOutput().getInfoOutput().write(
                 effStep,
-                getAveragePhysicalData(),
+                get_averagePhysicalData(),
                 getSettings()
             );
 
-            getAveragePhysicalData() = physicalData::PhysicalData();
+            get_averagePhysicalData() = physicalData::PhysicalData();
         }
 
-        getPhysicalData().reset();
+        get_physicalData().reset();
     }
 
     /***************************
@@ -384,27 +380,6 @@ namespace engine
     std::shared_ptr<opt::Evaluator> OptEngine::getSharedEvaluator()
     {
         return _evaluator;
-    }
-
-    /**
-     * @brief get the old physical data reference
-     *
-     * @return PhysicalData&
-     */
-    physicalData::PhysicalData &OptEngine::getPhysicalDataOld()
-    {
-        return *_physicalDataOld;
-    }
-
-    /**
-     * @brief get the shared old physical data reference
-     *
-     * @return SharedPhysicalData&
-     */
-    std::shared_ptr<physicalData::PhysicalData> OptEngine::
-        getSharedPhysicalDataOld()
-    {
-        return _physicalDataOld;
     }
 
     /**

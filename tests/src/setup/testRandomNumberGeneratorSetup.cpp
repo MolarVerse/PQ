@@ -35,8 +35,8 @@ TEST(TestRandomNumberGeneratorSetup, setupWithoutRandomSeed)
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
     engine.getEngineOutput().getLogOutput().setFilename("default.log", false);
 
-    settings::GeneralSettings::setIsRandomSeedSet(false);
-    settings::GeneralSettings::setRandomSeed(1);
+    GeneralSettings::setIsRandomSeedSet(false);
+    GeneralSettings::setRandomSeed(1);
 
     setupRandomNumberGenerator.setup();
 
@@ -56,8 +56,8 @@ TEST(TestRandomNumberGeneratorSetup, setupWithRandomSeed)
     auto setupRandomNumberGenerator = setup::RandomNumberGeneratorSetup(engine);
     engine.getEngineOutput().getLogOutput().setFilename("default.log", false);
 
-    settings::GeneralSettings::setIsRandomSeedSet(true);
-    settings::GeneralSettings::setRandomSeed(73);
+    GeneralSettings::setIsRandomSeedSet(true);
+    GeneralSettings::setRandomSeed(73);
 
     setupRandomNumberGenerator.setup();
 

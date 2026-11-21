@@ -100,9 +100,10 @@ namespace setup
 
         // extxyz or h5md replace the xyz, velocity, force and charge files of
         // MD runs
-        const auto format         = outputFileSettings.getTrajectoryFormat();
-        const auto textTrajectory = !settings::GeneralSettings::isMDJobType() ||
-                                    format == TrajectoryFormat::XYZ;
+        const auto format = outputFileSettings.getTrajectoryFormat();
+        const auto textTrajectory =
+            !isMDJobType(_engine.getSettings().generalSettings.getJobtype()) ||
+            format == TrajectoryFormat::XYZ;
 
         if (textTrajectory)
         {
@@ -116,7 +117,7 @@ namespace setup
             );
         }
 
-        if (settings::GeneralSettings::isMDJobType())
+        if (isMDJobType(_engine.getSettings().generalSettings.getJobtype()))
         {
             auto &mdEngine = dynamic_cast<engine::MDEngine &>(_engine);
 
@@ -180,7 +181,9 @@ namespace setup
                 overwriteOutputFiles
             );
 
-            if (settings::GeneralSettings::isHybridJobtype())
+            if (isHybridJobtype(
+                    _engine.getSettings().generalSettings.getJobtype()
+                ))
             {
                 const auto hybridCenterFile =
                     outputFileSettings.getHybridCenterFileName();
@@ -198,7 +201,9 @@ namespace setup
                 mdEngine.getInstantEnergyOutput().writeHeader(timeStep);
             }
 
-            if (settings::GeneralSettings::isRingPolymerMDActivated())
+            if (isRingPolymerMDActivated(
+                    _engine.getSettings().generalSettings.getJobtype()
+                ))
             {
                 const auto rstFile_ =
                     outputFileSettings.getRPMDRestartFileName();
@@ -239,7 +244,7 @@ namespace setup
             }
         }
 
-        if (settings::GeneralSettings::isOptJobType())
+        if (isOptJobType(_engine.getSettings().generalSettings.getJobtype()))
         {
             auto &optEngine = dynamic_cast<engine::OptEngine &>(_engine);
 
@@ -251,7 +256,8 @@ namespace setup
             );
         }
 
-        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN &&
+        if (_engine.getSettings().generalSettings.getJobtype() ==
+                JobType::MM_HESSIAN &&
             _engine.getSettings().hessianSettings.optimizeBeforeHessian())
         {
             auto &hessianEngine =

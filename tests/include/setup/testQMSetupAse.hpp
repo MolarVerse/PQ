@@ -47,6 +47,7 @@ class TestQMSetupAse : public ::testing::Test
         // Remove any existing default log file to ensure a clean test
         // environment
         const auto _ = std::remove("default.log");
+        _settings.generalSettings.setJobtypeByUser(JobType::QM);
         _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
         _settings.timings.setNumberOfStepsByUser(100U);
         _engine  = std::make_unique<engine::QMMDEngine>(_settings);

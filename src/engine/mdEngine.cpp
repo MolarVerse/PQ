@@ -67,15 +67,16 @@ namespace engine
      */
     void MDEngine::run()
     {
-        getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
+        get_physicalData().calculateKinetics(getSimulationBox());
 
         getEngineOutput().getLogOutput().writeInitialMomentum(
-            norm(getPhysicalData().getMomentum())
+            norm(get_physicalData().getMomentum())
         );
 
         const auto  nSteps = getSettings().timings.getNumberOfSteps();
         progressbar bar(static_cast<int>(nSteps), true, std::cout);
         const auto &outputFileSettings = getSettings().outputFiles;
+        const auto  jobType = getSettings().generalSettings.getJobtype();
 
         for (; getStep() <= nSteps; _setStep(getStep() + 1))
         {
@@ -84,7 +85,7 @@ namespace engine
             bar.update();
             takeStep();
 
-            writeOutput(outputFileSettings);
+            writeOutput(jobType, outputFileSettings);
             deleteTmpFiles();
         }
 
@@ -117,7 +118,7 @@ namespace engine
         const auto &timeStep = getSettings().timings.getTimeStep();
         _thermostat->applyThermostatHalfStep(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             _kinetics.getCurrentTargetTemperature(),
             timeStep
         );
@@ -138,24 +139,26 @@ namespace engine
     {
         _resetKinetics.resetForces(getStep(), getSimulationBox());
 
-        const auto &timeStep = getSettings().timings.getTimeStep();
+        const auto &timingsSettings = getSettings().timings;
+        const auto &timeStep        = timingsSettings.getTimeStep();
 
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
-                getSettings().timings.getStartingTime()
+                timingsSettings.getStartingTime()
             )
         );
 
         getConstraints()->calculateConstraintBondRefs(getSimulationBox());
 
-        if (!settings::GeneralSettings::isHybridJobtype())
+        const auto jobType = getSettings().generalSettings.getJobtype();
+        if (!isHybridJobtype(jobType))
         {
             const auto virial =
                 virial::intraMolecularVirialCorrection(getSimulationBox());
-            getPhysicalDataPtr()->addVirial(virial);
+            get_physicalData().addVirial(virial);
         }
 
         _thermostat->applyThermostatOnForces(
@@ -169,19 +172,19 @@ namespace engine
 
         _thermostat->applyThermostat(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             _kinetics.getCurrentTargetTemperature(),
             timeStep
         );
 
-        getPhysicalDataPtr()->calculateKinetics(getSimulationBox());
+        get_physicalData().calculateKinetics(getSimulationBox());
 
         const auto &currentTargetTemperature =
             _kinetics.getCurrentTargetTemperature();
 
         _manostat->applyManostat(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             currentTargetTemperature,
             timeStep,
             getSettings().potentialSettings.getCoulombRadiusCutOff()
@@ -189,7 +192,7 @@ namespace engine
 
         const auto driftWarning = _resetKinetics.checkMomentumDrift(
             getStep(),
-            getPhysicalData(),
+            get_physicalData(),
             getSimulationBox()
         );
 
@@ -201,17 +204,17 @@ namespace engine
 
         _resetKinetics.reset(
             getStep(),
-            getPhysicalData(),
+            get_physicalData(),
             getSimulationBox(),
             currentTargetTemperature
         );
 
         _kinetics.applyTemperatureRamping();
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (isQMOnlyJobtype(jobType))
         {
-            const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
-            getPhysicalDataPtr()->setNumberOfQMAtoms(
+            const auto nQMAtoms = getSimulationBox().getNumberOfActiveAtoms();
+            get_physicalData().setNumberOfQMAtoms(
                 static_cast<double>(nQMAtoms)
             );
         }
@@ -240,9 +243,13 @@ namespace engine
      * @brief Writes output files using the default time step.
      *
      */
-    void MDEngine::writeOutput(const OutputFileSettings &outputSettings)
+    void MDEngine::writeOutput(
+        JobType                   jobType,
+        const OutputFileSettings &outputSettings
+    )
     {
         writeOutput(
+            jobType,
             outputSettings,
             getSettings().timings.getTimeStep(),
             getSettings().timings.getStartingStepCount()
@@ -257,6 +264,7 @@ namespace engine
      *
      */
     void MDEngine::writeOutput(
+        JobType                   jobType,
         const OutputFileSettings &outputSettings,
         const Time               &timeStep,
         size_t                    startingStepCount
@@ -271,7 +279,7 @@ namespace engine
                 getSimulationBox(),
                 *_thermostat,
                 effStep,
-                getPhysicalData().getPotentialEnergy().numerical_value_in(
+                get_physicalData().getPotentialEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
                 calculateTotalSimulationTime(
@@ -282,12 +290,12 @@ namespace engine
 
             getEngineOutput().writeVirialFile(
                 effStep,
-                getPhysicalData()
+                get_physicalData()
             );   // use physicalData instead of averagePhysicalData
 
             getEngineOutput().writeStressFile(
                 effStep,
-                getPhysicalData()
+                get_physicalData()
             );   // use physicalData instead of averagePhysicalData
 
             getEngineOutput().writeBoxFile(
@@ -295,7 +303,7 @@ namespace engine
                 getSimulationBox().getBox()
             );
 
-            if (settings::GeneralSettings::isHybridJobtype())
+            if (isHybridJobtype(jobType))
             {
                 getEngineOutput().writeHybridCenterXyzFile(
                     _configurator,
@@ -312,41 +320,41 @@ namespace engine
         // problem - could also be a feature and not a bug
         timings::GlobalTimer::get().stopAndRestartSimulationTimer();
 
-        getPhysicalDataPtr()->setLoopTime(
+        get_physicalData().setLoopTime(
             timings::GlobalTimer::get().calculateLoopTime()
         );
-        getAveragePhysicalData().updateAverages(getPhysicalData());
+        get_averagePhysicalData().updateAverages(get_physicalData());
 
         if (0 == getStep() % outputFreq)
         {
-            getAveragePhysicalData().makeAverages(
+            get_averagePhysicalData().makeAverages(
                 static_cast<double>(outputFreq)
             );
 
             getEngineOutput().writeEnergyFile(
                 effStep,
-                getAveragePhysicalData(),
+                get_averagePhysicalData(),
                 getSettings()
             );
             getEngineOutput().writeInstantEnergyFile(
                 effStep,
-                getPhysicalData(),
+                get_physicalData(),
                 getSettings()
             );
             getEngineOutput().getInfoOutput().write(
                 effStep,
-                getAveragePhysicalData(),
+                get_averagePhysicalData(),
                 getSettings()
             );
             getEngineOutput().writeMomentumFile(
                 effStep,
-                getAveragePhysicalData()
+                get_averagePhysicalData()
             );
 
-            getAveragePhysicalData() = physicalData::PhysicalData();
+            get_averagePhysicalData() = physicalData::PhysicalData();
         }
 
-        getPhysicalDataPtr()->reset();
+        get_physicalData().reset();
     }
 
     /**
