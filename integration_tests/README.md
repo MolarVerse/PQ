@@ -66,6 +66,10 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `cgo` `test_cgo_restart_round_trip` (3 tests) | `run-01.in` (NVE), `run-01_NPT.in`, `run-01.in` with a Nose-Hoover chain | `mm-md` | same | a 10-step run against 5 steps plus 5 more from the `.rst` the first part wrote; the final `.rst` and the last frames of `.xyz`, `.vel` and `.force` must be **identical to the byte** (the restart file keeps every digit), and the step counter, the box and the chain levels are checked. Builds its three inputs from the existing ones, no reference data |
 | `chig` `test_chig` | `run-01.in` | `mm-md` | chignolin in water, 7382 atoms, 10 steps of 0.5 fs | `force-field = on` (bonds, angles, dihedrals, impropers, LJ from the parameter file, topology with 191 linker `*` entries), intra-nonbonded file, SHAKE/RATTLE, Wolf |
 | `dftbplus` | `run-01.in` | `qm-md` | 9 atoms, 100 Å box, 2 steps | external DFTB+ runner with the periodic-stress script and a custom `dftb_file` |
+| `dftbplus` `test_dftbplus_triclinic_box` | `run-01_triclinic.in` | `qm-md` | 9 atoms, triclinic box 9 x 10 x 11 Å with angles 75, 80, 70°, 2 steps | NVE; compared with `ref_data_triclinic`, and the lattice written for DFTB+ (`geom.gen`) must have exactly these lengths and angles; the box is small so that the periodic images interact |
+| `dftbplus` `test_dftbplus_triclinic_box_full_anisotropic_manostat` | `run-01_triclinic_npt.in` | `qm-md` | same, 6 steps | Berendsen thermostat + Berendsen manostat with `isotropy = full_anisotropic` (DFTB+ stress): all three angles and lengths change; compared with `ref_data_triclinic_npt` |
+| `dftbplus` `test_dftbplus_triclinic_box_anisotropic_manostat_keeps_the_angles` | the NPT input with `isotropy = anisotropic` | `qm-md` | same | the angles stay at 75, 80, 70° in every frame and the lengths move (no reference) |
+| `cgo` `test_mm_md_refuses_a_triclinic_box` | `run-01.in` with a triclinic `Box` line in the start file | `mm-md` | cgo | PQ exits with "Triclinic box is only supported for QM-MD and RP-QM-MD" (issue #910); has to be replaced by a real test when MM-MD supports triclinic boxes |
 | `ase-dftbplus` | `run-01.in` | `qm-md` | 9 atoms, 2 steps | ASE DFTB+ with the `3ob` Slater-Koster set |
 | `ase-xtb` | `run-01.in` | `qm-md` | 9 atoms, 2 steps | ASE xTB, GFN2 |
 | `pyscf` | `run-01.in` | `qm-md` | 9 atoms, 2 steps | PySCF runner with the Hartree-Fock script |
@@ -104,7 +108,7 @@ intermolecular model are the same.
 | `end_temp` as synonym of `temp` | no. Elsewhere: unit |
 | Manostat Berendsen, isotropic | yes (`cgo` NPT) |
 | Manostat stochastic rescaling | partly: reproducibility with `random_seed`, with a temperature ramp, and an effect on the box; no reference values and no check that the pressure is reached. Elsewhere: unit |
-| `isotropy` semi/anisotropic/full, `fixed_axis`, `compressibility` | partly, Berendsen only: `anisotropic` and `xy` against references, `fixed_axis = z`, and the anisotropic box with the cell list. No: `full_anisotropic` (it runs on the orthorhombic `cgo` box but the box blows up to 1e9 Angstrom in 10 steps, so it needs a triclinic box test, see the triclinic issue), `xz`/`yz`, the other fixed axes, `compressibility`, and the semi-isotropic/anisotropic stochastic manostat. Elsewhere: unit |
+| `isotropy` semi/anisotropic/full, `fixed_axis`, `compressibility` | partly, Berendsen only: `anisotropic` and `xy` against references, `fixed_axis = z`, and the anisotropic box with the cell list. `full_anisotropic` only with a triclinic box (QM-MD, see the triclinic row below; on the orthorhombic `cgo` box it runs but the box blows up to 1e9 Angstrom in 10 steps, which is not tested). No: `xz`/`yz`, the other fixed axes, `compressibility`, and the semi-isotropic/anisotropic stochastic manostat. Elsewhere: unit |
 | Virial `molecular` / `atomic` | yes, both, only inside the NPT run (the pressure column of `.en` is compared) |
 | `init_velocities`, `random_seed`, `density`, `floating_point_type` | no. Elsewhere: unit |
 | Reset kinetics (`nscale`, `fscale`, `nreset`, `freset`, angular, forces) | no. Elsewhere: unit |
@@ -176,7 +180,7 @@ intermolecular model are the same.
 | Output files written but **not compared**: `.rst .box .stress .vir .mom .instant_en .info` (content), `.log`, `.timings`, `.ref` | see "What the checks cannot see" |
 | `overwrite_output`, `include_output_metadata`, custom file names | partly: `overwrite_output = on` in the QM tests; the rest no |
 | Restart from a file that PQ wrote | yes, exactly (byte for byte): MM state, box and Nose-Hoover chain state (NVE, Berendsen NPT, Nose-Hoover chain on `cgo`). No: a restart in the middle of a temperature ramp, with the Langevin thermostat or with the cell list, and QM or QM/MM restarts |
-| Triclinic boxes | no (not supported for MM-MD yet, issue #910); all start files are orthorhombic |
+| Triclinic boxes | yes for QM-MD with DFTB+ (NVE, and a manostat with `full_anisotropic` that changes the angles, `anisotropic` that keeps them). MM-MD does not support them yet (issue #910); the refusal is tested. No: ring polymer QM-MD, ASE and the other QM programs, the cell list and `fixed_axis` with a triclinic box |
 | Input errors and validation messages | one (`oh_mm_hessian`). Elsewhere: unit (`inputFileParser`, `inputValidation`) |
 | Command line (arguments, `--version`, missing file) | no. Elsewhere: unit (`testPQCli`) |
 
@@ -277,8 +281,9 @@ In rough order of value for the cost; each is a **new variant** of an existing c
 
 1. **Statistical test of the Langevin and velocity-rescaling thermostats** (average temperature
    within a tolerance over a longer run); the seed tests only prove reproducibility.
-2. **Triclinic box** (`full_anisotropic`, angle changes) and the remaining isotropies and fixed
-   axes; a statistical test of the stochastic rescaling manostat (average pressure).
+2. The remaining isotropies and fixed axes (`xz`, `yz`, the other `fixed_axis` values,
+   `compressibility`), a triclinic box with the ring polymer or the ASE runner, and a statistical
+   test of the stochastic rescaling manostat (average pressure).
 3. **QM/MM that moves a molecule across a zone**: a start file with a molecule next to a boundary,
    or more steps, plus a non-zero `core_radius` and a `forced_*_list`.
 4. **M-SHAKE** on a rigid-water system, and **cell list with the force field and SHAKE** on `chig`.
