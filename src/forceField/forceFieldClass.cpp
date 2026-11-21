@@ -162,16 +162,13 @@ namespace ff
      * @throws exc::TopologyException if j-coupling type with id not
      * found
      */
-    const JCouplingType &ForceField::findJCouplingTypeById(
-        const size_t id
-    ) const
+    const JCouplingType &ForceField::findJCouplingTypeById(size_t id) const
     {
         auto isJCouplingId = [id](const JCouplingType &jCouplingType)
         { return jCouplingType.getId() == id; };
 
-        auto       jCouplings = _jCouplingTypes;
         const auto jCouplingType =
-            std::ranges::find_if(jCouplings, isJCouplingId);
+            std::ranges::find_if(_jCouplingTypes, isJCouplingId);
 
         if (jCouplingType != _jCouplingTypes.end())
             return *jCouplingType;
