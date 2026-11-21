@@ -77,9 +77,12 @@ namespace engine
         explicit Engine(const Settings &settings);
         virtual ~Engine();
 
-        virtual void run()                                                 = 0;
-        virtual void writeOutput(const OutputFileSettings &outputSettings) = 0;
-        void         deleteTmpFiles() const;
+        virtual void run() = 0;
+        virtual void writeOutput(
+            JobType /*jobType*/,
+            const OutputFileSettings &outputSettings
+        ) = 0;
+        void deleteTmpFiles() const;
 
         [[nodiscard]]
         Time calculateTotalSimulationTime(

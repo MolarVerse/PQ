@@ -69,9 +69,9 @@ namespace setup
     {
         auto &logOutput = _engine.getLogOutput();
 
-        if (settings::GeneralSettings::isRandomSeedSet())
+        if (GeneralSettings::isRandomSeedSet())
         {
-            const auto randomSeed = settings::GeneralSettings::getRandomSeed();
+            const auto randomSeed = GeneralSettings::getRandomSeed();
             const auto randomNumberGeneratorMessage =
                 std::format("Random seed has been set to: {}", randomSeed);
 

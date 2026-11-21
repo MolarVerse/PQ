@@ -265,7 +265,7 @@ namespace molsys
         const Distance &coulombRadiusCutOff
     )
     {
-        if (!settings::GeneralSettings::isCellListActivated())
+        if (!GeneralSettings::isCellListActivated())
             return;
 
         auto _ = scopedTimer(TimerId::CellList, "Update");

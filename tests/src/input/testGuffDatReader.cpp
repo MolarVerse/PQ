@@ -809,7 +809,7 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 TEST_F(TestGuffDatReader, readGuffDat)
 {
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings.fileSettings.setGuffDatFileNameByUser(
         "data/guffDatReader/guff.dat"
@@ -834,7 +834,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
@@ -842,7 +842,7 @@ TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowNotActivated)
 TEST_F(TestGuffDatReader, readGuffDatErrorButNoThrowMMNotActivated)
 {
     _guffDatReader->setFilename("");   // just to produce any kind of error
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 }
@@ -857,10 +857,10 @@ TEST_F(TestGuffDatReader, isNeeded)
 {
     Settings settings;
 
-    settings::GeneralSettings::setJobtype(JobType::QM);
+    settings.generalSettings.setJobtypeByUser(JobType::QM);
     EXPECT_FALSE(input::guffdat::isNeeded(settings));
 
-    settings::GeneralSettings::setJobtype(JobType::MM_MD);
+    settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     EXPECT_TRUE(input::guffdat::isNeeded(settings));
 

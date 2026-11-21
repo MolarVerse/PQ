@@ -292,9 +292,12 @@ namespace engine
      *
      * @param outputSettings The settings for output files.
      */
-    void HessianEngine::writeOutput(const OutputFileSettings &outputSettings)
+    void HessianEngine::writeOutput(
+        JobType /*jobType*/,
+        const OutputFileSettings &outputSettings
+    )
     {
-        writeOutput(
+        _writeOutput(
             outputSettings,
             getSettings().timings.getStartingStepCount()
         );
@@ -307,7 +310,7 @@ namespace engine
      * @param startingStepCount The step count from which to start writing
      * output files.
      */
-    void HessianEngine::writeOutput(
+    void HessianEngine::_writeOutput(
         const OutputFileSettings &outputSettings,
         size_t                    startingStepCount
     )
@@ -359,7 +362,7 @@ namespace engine
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
-        if (settings::GeneralSettings::getJobtype() == JobType::MM_HESSIAN)
+        if (getSettings().generalSettings.getJobtype() == JobType::MM_HESSIAN)
             evaluator = std::make_shared<opt::MMEvaluator>(getSettings());
 
         else
@@ -403,7 +406,9 @@ namespace engine
         _evaluator->evaluate(get_physicalData());
         _optimizer->updateHistory(get_physicalData().getTotalEnergy());
 
-        writeOutput(getSettings().outputFiles);
+        const auto &outputFileSettings = getSettings().outputFiles;
+        const auto &jobType = getSettings().generalSettings.getJobtype();
+        writeOutput(jobType, outputFileSettings);
 
         const auto nSteps = getSettings().timings.getNumberOfSteps();
 
@@ -420,7 +425,7 @@ namespace engine
             if (_converged || _optStopped)
                 break;
 
-            writeOutput(getSettings().outputFiles);
+            writeOutput(jobType, outputFileSettings);
             deleteTmpFiles();
         }
 

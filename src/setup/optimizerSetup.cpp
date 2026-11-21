@@ -50,7 +50,7 @@ namespace setup
      */
     void setupOptimizer(engine::Engine &engine)
     {
-        if (!settings::GeneralSettings::isOptJobType())
+        if (!isOptJobType(engine.getSettings().generalSettings.getJobtype()))
             return;
 
         out::StdoutOutput::writeSetup("Optimizer");
@@ -221,7 +221,7 @@ namespace setup
     {
         std::shared_ptr<opt::Evaluator> evaluator;
 
-        if (settings::GeneralSettings::getJobtype() == JobType::MM_OPT)
+        if (isOptJobType(_optEngine.getSettings().generalSettings.getJobtype()))
         {
             evaluator =
                 std::make_shared<opt::MMEvaluator>(_optEngine.getSettings());

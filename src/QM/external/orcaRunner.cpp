@@ -49,8 +49,8 @@ namespace QM
     )
     {
         auto file = std::ofstream("orca_coord.xyz");
-        file << simulationBox.getNumberOfQMAtoms() << "\n\n";
-        for (const auto &atom : simulationBox.getQMAtoms())
+        file << simulationBox.getNumberOfActiveAtoms() << "\n\n";
+        for (const auto &atom : simulationBox.getActiveAtoms())
         {
             const auto pos = atom->getPosition().numerical_value_in(angstrom);
             file << std::format(

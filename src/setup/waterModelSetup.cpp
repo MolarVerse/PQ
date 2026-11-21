@@ -114,7 +114,7 @@ namespace setup
             );
         }
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (isQMOnlyJobtype(_engine.getSettings().generalSettings.getJobtype()))
             throw exc::UserInputException(
                 "Water models are not supported for QM-only job types."
             );
@@ -482,7 +482,7 @@ namespace setup
 
         std::unique_ptr<waterModel::InterWaterStrategy> strategy;
 
-        if (settings::GeneralSettings::isCellListActivated())
+        if (GeneralSettings::isCellListActivated())
         {
             strategy = std::make_unique<waterModel::InterWaterStrategyCellList>(
                 _engine.getSettings().hybridSettings

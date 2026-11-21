@@ -46,13 +46,13 @@ TEST_F(TestInputFileReader, parseCellListActivated)
 
     std::vector<std::string> lineElements = {"cell-list", "=", "off"};
     parseFunc(lineElements, 0);
-    EXPECT_FALSE(settings::GeneralSettings::isCellListActivated());
+    EXPECT_FALSE(GeneralSettings::isCellListActivated());
 
     _clearParser(parser);
 
     lineElements = {"cell-list", "=", "on"};
     parseFunc(lineElements, 0);
-    EXPECT_TRUE(settings::GeneralSettings::isCellListActivated());
+    EXPECT_TRUE(GeneralSettings::isCellListActivated());
 
     _clearParser(parser);
 
@@ -80,7 +80,7 @@ TEST_F(TestInputFileReader, numberOfCells)
 
     std::vector<std::string> lineElements = {"cell-number", "=", "3"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings::GeneralSettings::getNumberOfCells(), 3);
+    EXPECT_EQ(GeneralSettings::getNumberOfCells(), 3);
 
     _clearParser(parser);
 

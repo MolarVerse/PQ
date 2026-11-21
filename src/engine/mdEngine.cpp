@@ -76,6 +76,7 @@ namespace engine
         const auto  nSteps = getSettings().timings.getNumberOfSteps();
         progressbar bar(static_cast<int>(nSteps), true, std::cout);
         const auto &outputFileSettings = getSettings().outputFiles;
+        const auto  jobType = getSettings().generalSettings.getJobtype();
 
         for (; getStep() <= nSteps; _setStep(getStep() + 1))
         {
@@ -84,7 +85,7 @@ namespace engine
             bar.update();
             takeStep();
 
-            writeOutput(outputFileSettings);
+            writeOutput(jobType, outputFileSettings);
             deleteTmpFiles();
         }
 
@@ -138,20 +139,22 @@ namespace engine
     {
         _resetKinetics.resetForces(getStep(), getSimulationBox());
 
-        const auto &timeStep = getSettings().timings.getTimeStep();
+        const auto &timingsSettings = getSettings().timings;
+        const auto &timeStep        = timingsSettings.getTimeStep();
 
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
             get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
-                getSettings().timings.getStartingTime()
+                timingsSettings.getStartingTime()
             )
         );
 
         getConstraints()->calculateConstraintBondRefs(getSimulationBox());
 
-        if (!settings::GeneralSettings::isHybridJobtype())
+        const auto jobType = getSettings().generalSettings.getJobtype();
+        if (!isHybridJobtype(jobType))
         {
             const auto virial =
                 virial::intraMolecularVirialCorrection(getSimulationBox());
@@ -208,9 +211,9 @@ namespace engine
 
         _kinetics.applyTemperatureRamping();
 
-        if (settings::GeneralSettings::isQMOnlyJobtype())
+        if (isQMOnlyJobtype(jobType))
         {
-            const auto nQMAtoms = getSimulationBox().getNumberOfQMAtoms();
+            const auto nQMAtoms = getSimulationBox().getNumberOfActiveAtoms();
             get_physicalData().setNumberOfQMAtoms(
                 static_cast<double>(nQMAtoms)
             );
@@ -240,9 +243,13 @@ namespace engine
      * @brief Writes output files using the default time step.
      *
      */
-    void MDEngine::writeOutput(const OutputFileSettings &outputSettings)
+    void MDEngine::writeOutput(
+        JobType                   jobType,
+        const OutputFileSettings &outputSettings
+    )
     {
         writeOutput(
+            jobType,
             outputSettings,
             getSettings().timings.getTimeStep(),
             getSettings().timings.getStartingStepCount()
@@ -257,6 +264,7 @@ namespace engine
      *
      */
     void MDEngine::writeOutput(
+        JobType                   jobType,
         const OutputFileSettings &outputSettings,
         const Time               &timeStep,
         size_t                    startingStepCount
@@ -295,7 +303,7 @@ namespace engine
                 getSimulationBox().getBox()
             );
 
-            if (settings::GeneralSettings::isHybridJobtype())
+            if (isHybridJobtype(jobType))
             {
                 getEngineOutput().writeHybridCenterXyzFile(
                     _configurator,

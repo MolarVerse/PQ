@@ -27,6 +27,7 @@
 #include <mstd/utils/members.hpp>
 
 #include "defaults.hpp"
+#include "enums/jobtype.hpp"
 #include "enums/potential.hpp"
 #include "setting.hpp"
 #include "unit_types.hpp"
@@ -82,7 +83,7 @@ class PotentialSettings
 
    public:
     PotentialSettings();
-    void finalize();
+    void finalize(JobType jobType);
 
     CONST_GETTER(_coulombConfig);
 
