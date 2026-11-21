@@ -39,6 +39,7 @@
 #include "potential.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 
 namespace setup
 {
@@ -266,8 +267,8 @@ namespace setup
 
         const auto coulRCut =
             _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
-        auto wolfParam = 0.0;
-        auto rfEpsilon = 0.0;
+        InvDistance wolfParam = InvDistance::zero();
+        auto        rfEpsilon = 0.0;
 
         if (coulLRType == CoulombLongRangeType::WOLF)
             wolfParam = potentialSettings.getWolfParameter();

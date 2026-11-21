@@ -111,10 +111,13 @@ def execute_pq(input_file):
     # Path to the pq executable
     folder_path = pathlib.Path(__file__).parent.absolute()
 
-    # PQ lies in ../../build/apps/PQ
+    # PQ lies in ../<build dir>/apps/PQ; the build directory name defaults to
+    # "build" and can be overridden with the PQ_BUILD_DIR environment variable
+    # (a name relative to the repository root, or an absolute path)
+    build_dir = os.environ.get("PQ_BUILD_DIR", "build")
 
     pq_executable = os.path.join(
-        folder_path, "..", "build", "apps", "PQ")
+        folder_path, "..", build_dir, "apps", "PQ")
 
     # Run the pq executable with the input file
     process = subprocess.run(

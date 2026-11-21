@@ -24,7 +24,6 @@
 
 #include <format>
 
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "frame.hpp"
 #include "globalTimer.hpp"
@@ -83,7 +82,7 @@ namespace engine
         timings::GlobalTimer::get().stopSimulationTimer();
 
         const auto elapsedTime =
-            timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
+            timings::GlobalTimer::get().calculateElapsedTime();
 
         getEngineOutput().writeTimingsFile();
 

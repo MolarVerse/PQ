@@ -36,6 +36,7 @@
 #include "hybridSettings.hpp"
 #include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 #include "virial.hpp"
 
@@ -62,15 +63,15 @@ namespace engine
         std::vector<double> getDistanceWeights(
             const molsys::Molecule &smoothingMol,
             const std::vector<std::reference_wrapper<molsys::Molecule>>
-                        &recipientMolecules,
-            const double layerRadius
+                           &recipientMolecules,
+            const Distance &layerRadius
         )
         {
             const auto          weightingRadius = 2.0 * layerRadius;
             std::vector<double> weights;
             weights.reserve(recipientMolecules.size());
 
-            const auto       smoothingCOM = smoothingMol.getCenterOfMass();
+            const auto      &smoothingCOM = smoothingMol.getCenterOfMass();
             constexpr double x3Coeff      = 10.0;
             constexpr double x4Coeff      = 15.0;
             constexpr double x5Coeff      = 6.0;
@@ -82,12 +83,12 @@ namespace engine
 
                 const auto distance = linalg::norm(delta);
 
-                auto switchedWeight = 0.0;
+                Quantity switchedWeight = 0.0;
                 if (weightingRadius > 0.0)
                 {
                     const auto x = distance / weightingRadius;
 
-                    if (x < 1)
+                    if (x < 1.0)
                     {
                         const auto x_3 = x * x * x;
                         const auto x_4 = x_3 * x;
@@ -98,7 +99,7 @@ namespace engine
                     }
                 }
 
-                weights.push_back(switchedWeight);
+                weights.push_back(switchedWeight.numerical_value_in(one));
             }
 
             return weights;
@@ -181,10 +182,10 @@ namespace engine
         using enum molsys::Periodicity;
         using std::ranges::distance;
 
-        linalg::tensor3D virial     = {0.0};
-        auto             numQMAtoms = 0.0;
-        auto            &atoms      = getSimulationBox().getAtoms();
-        const auto       nSmMol     = static_cast<size_t>(distance(
+        VirialPerMol virial     = VirialPerMol::zero();
+        auto         numQMAtoms = 0.0;
+        auto        &atoms      = getSimulationBox().getAtoms();
+        const auto   nSmMol     = static_cast<size_t>(distance(
             getSimulationBox().getMoleculesInsideZone(
                 molsys::HybridZone::SMOOTHING
             )
@@ -284,7 +285,7 @@ namespace engine
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
-            getPhysicalDataPtr()->setVirial({0.0});
+            getPhysicalDataPtr()->setVirial(VirialPerMol::zero());
 
             getForceField()->calculateBondedInteractions(
                 getSimulationBox(),
@@ -333,8 +334,8 @@ namespace engine
     {
         using enum molsys::Periodicity;
 
-        auto            &atoms  = getSimulationBox().getAtoms();
-        linalg::tensor3D virial = {0.0};
+        auto        &atoms  = getSimulationBox().getAtoms();
+        VirialPerMol virial = VirialPerMol::zero();
 
         // Set number of QM atoms in physical data for output purposes
         _setNumberOfQMAtoms();
@@ -443,7 +444,7 @@ namespace engine
         // smoothing molecules with (1 - smF)
 
         // bonded interactions directly add to physical data virial
-        getPhysicalDataPtr()->setVirial({0.0});
+        getPhysicalDataPtr()->setVirial(VirialPerMol::zero());
 
         getForceField()->calculateBondedInteractions(
             getSimulationBox(),
@@ -492,9 +493,9 @@ namespace engine
      */
     void QMMMMDEngine::_calculateQMReferenceEnergy()
     {
-        auto &simBox          = getSimulationBox();
-        auto &moleculeTypes   = simBox.getMoleculeTypes();
-        auto  referenceEnergy = 0.0;
+        auto        &simBox          = getSimulationBox();
+        auto        &moleculeTypes   = simBox.getMoleculeTypes();
+        EnergyPerMol referenceEnergy = EnergyPerMol::zero();
 
         for (const auto &mol : simBox.getMolecules())
         {
@@ -551,7 +552,7 @@ namespace engine
 
     /**
      * @brief Scale current PhysicalData energies and add them to the
-     * internal QM/MM PhyscialData object. Used for the exact smoothing
+     * internal QM/MM PhysicalData object. Used for the exact smoothing
      * method.
      *
      * @param globalSmF Global smoothing factor for the current
@@ -680,9 +681,10 @@ namespace engine
                  molsys::HybridZone::SMOOTHING
              ))
         {
-            const auto smF = smoothingMol.getSmoothingFactor();
+            const auto smF =
+                smoothingMol.getSmoothingFactor().numerical_value_in(one);
 
-            auto deficitForce = linalg::Vec3D{0.0};
+            auto deficitForce = Force3D::zero();
             for (auto &atom : smoothingMol.getAtoms())
             {
                 deficitForce += atom->getForce() * (1 - smF);
@@ -734,7 +736,9 @@ namespace engine
                 for (auto &atom : recipientMol.getAtoms())
                 {
                     const auto massFraction = atom->getMass() / molMass;
-                    atom->addForce(molShare * massFraction);
+                    atom->addForce(
+                        molShare * massFraction.numerical_value_in(one)
+                    );
                 }
             }
         }

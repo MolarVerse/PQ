@@ -30,6 +30,7 @@
 #include "potentialSettings.hpp"
 #include "testSetup.hpp"
 #include "testUtils.hpp"
+#include "units.hpp"
 
 /**
  * @brief test the setup cell list function after parsing input
@@ -42,10 +43,12 @@ TEST_F(TestSetup, setupCellList)
 
     test::checkType(_engine->getPotential(), typeid(pot::PotentialBruteForce));
 
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0);
+    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
     GeneralSettings::activateCellList();
 
-    molsys::OrthorhombicBox orthoBox{{15.0, 15.0, 15.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
+    };
     _engine->getSimulationBox().setBox(orthoBox, false);
     _engine->getCellList().setNumberOfCells(3);
     cellListSetup.setup();

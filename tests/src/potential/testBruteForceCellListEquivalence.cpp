@@ -45,6 +45,8 @@
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "strongTypes.hpp"
+#include "units.hpp"
+#include "vector3d.hpp"
 
 namespace
 {
@@ -55,15 +57,15 @@ namespace
     // cutoff = 4 yield nNeighbour = 1, so kCellsPerSide = 3 is sufficient and
     // the half-neighbour list in molsys::CellList visits each cell pair exactly
     // once.
-    constexpr double kBoxEdge        = 15.0;
-    constexpr double kCoulombCutOff  = 4.0;
-    constexpr size_t kCellsPerSide   = 3;
-    constexpr double kForceTolerance = 1.0e-10;
+    constexpr Distance kBoxEdge        = 15.0 * angstrom;
+    constexpr Distance kCoulombCutOff  = 4.0 * angstrom;
+    constexpr size_t   kCellsPerSide   = 3;
+    constexpr double   kForceTolerance = 1.0e-10;
 
     struct Placement
     {
-        MolType       molType;
-        linalg::Vec3D position;
+        MolType molType;
+        Pos3D   position;
     };
 
     /*
@@ -85,7 +87,7 @@ namespace
         molsys::OrthorhombicBox orthoBox{{kBoxEdge, kBoxEdge, kBoxEdge}};
         simBox.setBox(orthoBox, false);
 
-        auto buildMoleculeType = [](MolType molType, double charge)
+        auto buildMoleculeType = [](MolType molType, const Charge &charge)
         {
             molsys::MoleculeType molType_;
             molType_.setMoltype(molType);
@@ -100,8 +102,12 @@ namespace
             return molType_;
         };
 
-        simBox.addMoleculeType(buildMoleculeType(MolType{1}, 0.5));
-        simBox.addMoleculeType(buildMoleculeType(MolType{2}, -0.3));
+        simBox.addMoleculeType(
+            buildMoleculeType(MolType{1}, 0.5 * elementary_charge)
+        );
+        simBox.addMoleculeType(
+            buildMoleculeType(MolType{2}, -0.3 * elementary_charge)
+        );
 
         for (const auto &placement : placements)
         {
@@ -110,7 +116,8 @@ namespace
             atom->setAtomType(AtomType{0});
             atom->setExternalAtomType(ExtAtomType{placement.molType.get()});
             atom->setPartialCharge(
-                placement.molType == MolType{1} ? 0.5 : -0.3
+                placement.molType == MolType{1} ? 0.5 * elementary_charge
+                                                : -0.3 * elementary_charge
             );
             atom->setInternalGlobalVDWType(VdwType{0});
             atom->setForceToZero();
@@ -141,7 +148,10 @@ namespace
 
         const auto pair = std::make_shared<pot::LennardJonesPair>(
             kCoulombCutOff,
-            LJParams{.c6 = -1.0, .c12 = 1.0}
+            LJParams{
+                .c6  = -1.0 * kcal_per_mol * angstrom6,
+                .c12 = 1.0 * kcal_per_mol * angstrom12
+            }
         );
 
         for (size_t m1 = 1; m1 <= 2; ++m1)
@@ -164,8 +174,14 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
     Settings settings;
     settings.potentialSettings.setCoulombRadiusCutOffByUser(kCoulombCutOff);
-    PotentialSettingsUtils::setEnergyCutoff(settings.potentialSettings, 0.0);
-    PotentialSettingsUtils::setForceCutoff(settings.potentialSettings, 0.0);
+    PotentialSettingsUtils::setEnergyCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom
+    );
+    PotentialSettingsUtils::setForceCutoff(
+        settings.potentialSettings,
+        0.0 / angstrom2
+    );
 
     // Cell layout: box 15 Å, 3 cells per side, cellSize 5 Å, cutoff 4 Å.
     // Cells per axis: [-7.5,-2.5], [-2.5,+2.5], [+2.5,+7.5]. Placements are
@@ -173,12 +189,18 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     // cell, one in-cutoff pair across neighbouring cells (including across a
     // periodic boundary), and an out-of-cutoff pair both paths must skip.
     const std::vector<Placement> placements = {
-        {.molType = MolType{1}, .position = {-5.0, -5.0, -5.0}},
-        {.molType = MolType{2}, .position = {-3.0, -4.0, -3.5}},
-        {.molType = MolType{1}, .position = {1.0, 1.5, 2.0}},
-        {.molType = MolType{2}, .position = {2.0, 2.5, 3.5}},
-        {.molType = MolType{1}, .position = {-1.0, 3.0, 1.0}},
-        {.molType = MolType{2}, .position = {7.0, -7.0, 6.0}},
+        {.molType  = MolType{1},
+         .position = linalg::Vec3D{-5.0, -5.0, -5.0} * angstrom},
+        {.molType  = MolType{2},
+         .position = linalg::Vec3D{-3.0, -4.0, -3.5} * angstrom},
+        {.molType  = MolType{1},
+         .position = linalg::Vec3D{1.0, 1.5, 2.0} * angstrom},
+        {.molType  = MolType{2},
+         .position = linalg::Vec3D{2.0, 2.5, 3.5} * angstrom},
+        {.molType  = MolType{1},
+         .position = linalg::Vec3D{-1.0, 3.0, 1.0} * angstrom},
+        {.molType  = MolType{2},
+         .position = linalg::Vec3D{7.0, -7.0, 6.0} * angstrom},
     };
 
     auto simBoxBF = buildSimulationBox(placements);
@@ -233,13 +255,13 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     );
 
     EXPECT_NEAR(
-        physicalDataBF.getCoulombEnergy(),
-        physicalDataCL.getCoulombEnergy(),
+        physicalDataBF.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalDataCL.getCoulombEnergy().numerical_value_in(kcal_per_mol),
         kForceTolerance
     );
     EXPECT_NEAR(
-        physicalDataBF.getNonCoulombEnergy(),
-        physicalDataCL.getNonCoulombEnergy(),
+        physicalDataBF.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalDataCL.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
         kForceTolerance
     );
 
@@ -257,15 +279,24 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
             const auto fBF = molBF.getAtomForce(atomIdx);
             const auto fCL = molCL.getAtomForce(atomIdx);
 
-            EXPECT_NEAR(fBF[0], fCL[0], kForceTolerance)
-                << "force x mismatch on molecule " << i << " atom "
-                << atomIdx.get();
-            EXPECT_NEAR(fBF[1], fCL[1], kForceTolerance)
-                << "force y mismatch on molecule " << i << " atom "
-                << atomIdx.get();
-            EXPECT_NEAR(fBF[2], fCL[2], kForceTolerance)
-                << "force z mismatch on molecule " << i << " atom "
-                << atomIdx.get();
+            EXPECT_NEAR(
+                fBF.numerical_value_in(kcal_per_mol / angstrom)[0],
+                fCL.numerical_value_in(kcal_per_mol / angstrom)[0],
+                kForceTolerance
+            ) << "force x mismatch on molecule "
+              << i << " atom " << atomIdx.get();
+            EXPECT_NEAR(
+                fBF.numerical_value_in(kcal_per_mol / angstrom)[1],
+                fCL.numerical_value_in(kcal_per_mol / angstrom)[1],
+                kForceTolerance
+            ) << "force y mismatch on molecule "
+              << i << " atom " << atomIdx.get();
+            EXPECT_NEAR(
+                fBF.numerical_value_in(kcal_per_mol / angstrom)[2],
+                fCL.numerical_value_in(kcal_per_mol / angstrom)[2],
+                kForceTolerance
+            ) << "force z mismatch on molecule "
+              << i << " atom " << atomIdx.get();
         }
     }
 }

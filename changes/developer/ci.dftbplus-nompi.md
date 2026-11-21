@@ -1,0 +1,1 @@
+- Pin the conda-forge `dftbplus` of the integration tests to the `nompi` build; the MPI build of dftbplus 26.1 refuses to run with OpenMP threads unless `OMP_NUM_THREADS=1`, which failed every QM integration test.

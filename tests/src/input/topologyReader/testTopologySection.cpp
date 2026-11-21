@@ -28,6 +28,7 @@
 #include "exceptions.hpp"
 #include "shakeSection.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests full process function
@@ -72,7 +73,7 @@ TEST_F(TestTopologySection, processShakeSection)
     );
     EXPECT_EQ(bondConstraints[0].get_atomIndices()[0], AtomIndex{0});
     EXPECT_EQ(bondConstraints[0].get_atomIndices()[1], AtomIndex{0});
-    EXPECT_EQ(bondConstraints[0].getTargetBondLength(), 1.0);
+    EXPECT_EQ(bondConstraints[0].getTargetBondLength(), 1.0 * angstrom);
 
     EXPECT_EQ(
         bondConstraints[1].get_molecules()[0],
@@ -84,7 +85,7 @@ TEST_F(TestTopologySection, processShakeSection)
     );
     EXPECT_EQ(bondConstraints[1].get_atomIndices()[0], AtomIndex{0});
     EXPECT_EQ(bondConstraints[1].get_atomIndices()[1], AtomIndex{1});
-    EXPECT_EQ(bondConstraints[1].getTargetBondLength(), 1.2);
+    EXPECT_EQ(bondConstraints[1].getTargetBondLength(), 1.2 * angstrom);
 
     EXPECT_EQ(lineNumber, 5);
 }

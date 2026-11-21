@@ -95,11 +95,11 @@ namespace out
     /**
      * @brief norm of the sum of all atomic forces
      *
-     * @return double
+     * @return Force
      */
-    double Frame::totalForce() const
+    Force Frame::totalForce() const
     {
-        linalg::Vec3D total(0.0);
+        Force3D total = Force3D::zero();
 
         for (const auto &atom : atoms) total += atom.force;
 

@@ -30,17 +30,21 @@
 #include "collectionUtilities.hpp"
 #include "strongTypes.hpp"
 #include "unit_types.hpp"
-#include "units.hpp"
 
 namespace molsys
 {
+
+    Molecule::Molecule() : Molecule("") {}
 
     /**
      * @brief Construct a new Molecule:: Molecule object
      *
      * @param name
      */
-    Molecule::Molecule(std::string_view name) : _name(name) {}
+    Molecule::Molecule(std::string_view name)
+        : _name(name), _centerOfMass{Pos::zero(), Pos::zero(), Pos::zero()}
+    {
+    }
 
     /**
      * @brief Construct a new Molecule:: Molecule object
@@ -54,7 +58,7 @@ namespace molsys
      *
      * @return int
      */
-    size_t Molecule::getNumberOfAtomTypes()
+    size_t Molecule::getNumberOfAtomTypes() const
     {
         std::vector<ExtAtomType> extAtomTypes;
 
@@ -76,7 +80,7 @@ namespace molsys
      */
     void Molecule::calculateCenterOfMass(const Box &box)
     {
-        _centerOfMass            = {0.0, 0.0, 0.0};
+        PosMass3D  comHelper     = PosMass::zero();
         const auto positionAtom1 = _atoms[0]->getPosition();
 
         for (const auto &atom : _atoms)
@@ -85,10 +89,10 @@ namespace molsys
             const auto position = atom->getPosition();
             const auto deltaPos = position - positionAtom1;
 
-            _centerOfMass += mass * (position - box.calcShiftVector(deltaPos));
+            comHelper += mass * (position - box.calcShiftVector(deltaPos));
         }
 
-        _centerOfMass /= getMolMass();
+        _centerOfMass = comHelper / getMolMass();
 
         _centerOfMass -= box.calcShiftVector(_centerOfMass);
     }
@@ -130,9 +134,7 @@ namespace molsys
      */
     void Molecule::scale(const QuantityTensor3D &scalingTensor, const Box &box)
     {
-        const auto shift =
-            scalingTensor.numerical_value_in(one) * _centerOfMass -
-            _centerOfMass;
+        const auto shift = scalingTensor * _centerOfMass - _centerOfMass;
 
         auto scaleAtomPosition = [&box, shift](const auto &atom)
         {
@@ -162,18 +164,16 @@ namespace molsys
      */
     void Molecule::scaleVelocity(const QuantityTensor3D &scalingTensor)
     {
-        auto centerOfMassVelocity = linalg::Vec3D(0.0);
+        Momentum3D centerOfMassVelocity = Momentum::zero();
 
         for (const auto &atom : _atoms)
             centerOfMassVelocity += atom->getMass() * atom->getVelocity();
 
-        centerOfMassVelocity /= getMolMass();
+        const auto comVelocity = centerOfMassVelocity / getMolMass();
 
-        const auto scaledCenterOfMassVelocity =
-            scalingTensor.numerical_value_in(one) * centerOfMassVelocity;
+        const auto scaledCenterOfMassVelocity = scalingTensor * comVelocity;
 
-        const auto velocityShift =
-            scaledCenterOfMassVelocity - centerOfMassVelocity;
+        const auto velocityShift = scaledCenterOfMassVelocity - comVelocity;
 
         auto shiftAtomVelocity = [velocityShift](const auto &atom)
         { atom->addVelocity(velocityShift); };
@@ -200,11 +200,11 @@ namespace molsys
     /**
      * @brief returns the atom masses of the atoms in the molecule
      *
-     * @return std::vector<double>
+     * @return std::vector<Mass>
      */
-    std::vector<double> Molecule::getAtomMasses() const
+    std::vector<Mass> Molecule::getAtomMasses() const
     {
-        std::vector<double> atomMasses(getNumberOfAtoms());
+        std::vector<Mass> atomMasses(getNumberOfAtoms());
 
         for (size_t i = 0; i < getNumberOfAtoms(); ++i)
             atomMasses[i] = _atoms[i]->getMass();
@@ -215,11 +215,11 @@ namespace molsys
     /**
      * @brief returns the partial charges of the atoms in the molecule
      *
-     * @return std::vector<double>
+     * @return std::vector<Charge>
      */
-    std::vector<double> Molecule::getPartialCharges() const
+    std::vector<Charge> Molecule::getPartialCharges() const
     {
-        std::vector<double> partialCharges(getNumberOfAtoms());
+        std::vector<Charge> partialCharges(getNumberOfAtoms());
 
         for (size_t i = 0; i < getNumberOfAtoms(); ++i)
             partialCharges[i] = _atoms[i]->getPartialCharge();
@@ -232,7 +232,7 @@ namespace molsys
      *
      * @param partialCharges
      */
-    void Molecule::setPartialCharges(const std::vector<double> &partialCharges)
+    void Molecule::setPartialCharges(const std::vector<Charge> &partialCharges)
     {
         for (size_t i = 0; i < getNumberOfAtoms(); ++i)
             _atoms[i]->setPartialCharge(partialCharges[i]);
@@ -292,10 +292,7 @@ namespace molsys
      * @param index
      * @param position
      */
-    void Molecule::addAtomPosition(
-        AtomIndex            index,
-        const linalg::Vec3D &position
-    )
+    void Molecule::addAtomPosition(AtomIndex index, const Pos3D &position)
     {
         _atoms[index.get()]->addPosition(position);
     }
@@ -306,35 +303,32 @@ namespace molsys
      * @param index
      * @param velocity
      */
-    void Molecule::addAtomVelocity(
-        AtomIndex            index,
-        const linalg::Vec3D &velocity
-    )
+    void Molecule::addAtomVelocity(AtomIndex index, const Vel3D &velocity)
     {
         _atoms[index.get()]->addVelocity(velocity);
     }
 
     /**
-     * @brief add a linalg::Vec3D to the current force of the atom by index
+     * @brief add a Force3D to the current force of the atom by index
      *
      * @param index
      * @param force
      */
-    void Molecule::addAtomForce(AtomIndex index, const linalg::Vec3D &force)
+    void Molecule::addAtomForce(AtomIndex index, const Force3D &force)
     {
         _atoms[index.get()]->addForce(force);
     }
 
     /**
-     * @brief add a linalg::Vec3D to the current shift force of the atom by
+     * @brief add a ShiftForce3D to the current shift force of the atom by
      * index
      *
      * @param index
      * @param shiftForce
      */
     void Molecule::addAtomShiftForce(
-        AtomIndex            index,
-        const linalg::Vec3D &shiftForce
+        AtomIndex           index,
+        const ShiftForce3D &shiftForce
     )
     {
         _atoms[index.get()]->addShiftForce(shiftForce);
@@ -352,9 +346,9 @@ namespace molsys
      * @param index
      * @param position
      */
-    void Molecule::setAtomPosition(size_t index, const linalg::Vec3D &position)
+    void Molecule::setAtomPosition(AtomIndex index, const Pos3D &position)
     {
-        _atoms[index]->setPosition(position);
+        _atoms[index.get()]->setPosition(position);
     }
 
     /**
@@ -363,9 +357,9 @@ namespace molsys
      * @param index
      * @param velocity
      */
-    void Molecule::setAtomVelocity(size_t index, const linalg::Vec3D &velocity)
+    void Molecule::setAtomVelocity(AtomIndex index, const Vel3D &velocity)
     {
-        _atoms[index]->setVelocity(velocity);
+        _atoms[index.get()]->setVelocity(velocity);
     }
 
     /**
@@ -374,23 +368,23 @@ namespace molsys
      * @param index
      * @param force
      */
-    void Molecule::setAtomForce(size_t index, const linalg::Vec3D &force)
+    void Molecule::setAtomForce(AtomIndex index, const Force3D &force)
     {
-        _atoms[index]->setForce(force);
+        _atoms[index.get()]->setForce(force);
     }
 
     /**
-     * @brief set the shift force of the atom by index
+     * @brief set the ShiftForce3D of the atom by index
      *
      * @param index
      * @param shiftForce
      */
     void Molecule::setAtomShiftForce(
-        size_t               index,
-        const linalg::Vec3D &shiftForce
+        AtomIndex           index,
+        const ShiftForce3D &shiftForce
     )
     {
-        _atoms[index]->setShiftForce(shiftForce);
+        _atoms[index.get()]->setShiftForce(shiftForce);
     }
 
     /****************************************
@@ -403,9 +397,9 @@ namespace molsys
      * @brief returns the position of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const Pos3D&
      */
-    linalg::Vec3D Molecule::getAtomPosition(AtomIndex index) const
+    const Pos3D &Molecule::getAtomPosition(AtomIndex index) const
     {
         return _atoms[index.get()]->getPosition();
     }
@@ -413,11 +407,11 @@ namespace molsys
     /**
      * @brief returns the positions of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Pos3D>
      */
-    std::vector<linalg::Vec3D> Molecule::getAtomPositions() const
+    std::vector<Pos3D> Molecule::getAtomPositions() const
     {
-        std::vector<linalg::Vec3D> positions;
+        std::vector<Pos3D> positions;
         positions.reserve(_atoms.size());
         for (const auto &atom : _atoms)
             positions.push_back(atom->getPosition());
@@ -429,9 +423,9 @@ namespace molsys
      * @brief returns the velocity of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const Vel3D&
      */
-    linalg::Vec3D Molecule::getAtomVelocity(AtomIndex index) const
+    const Vel3D &Molecule::getAtomVelocity(AtomIndex index) const
     {
         return _atoms[index.get()]->getVelocity();
     }
@@ -440,9 +434,9 @@ namespace molsys
      * @brief returns the force of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const Force3D&
      */
-    linalg::Vec3D Molecule::getAtomForce(AtomIndex index) const
+    const Force3D &Molecule::getAtomForce(AtomIndex index) const
     {
         return _atoms[index.get()]->getForce();
     }
@@ -451,11 +445,11 @@ namespace molsys
      * @brief returns the shift force of the atom by index
      *
      * @param index
-     * @return linalg::Vec3D
+     * @return const ShiftForce3D&
      */
-    linalg::Vec3D Molecule::getAtomShiftForce(size_t index) const
+    const ShiftForce3D &Molecule::getAtomShiftForce(AtomIndex index) const
     {
-        return _atoms[index]->getShiftForce();
+        return _atoms[index.get()]->getShiftForce();
     }
 
     /**
@@ -464,18 +458,18 @@ namespace molsys
      * @param index
      * @return AtomNumber
      */
-    AtomNumber Molecule::getAtomicNumber(size_t index) const
+    AtomNumber Molecule::getAtomicNumber(AtomIndex index) const
     {
-        return _atoms[index]->getAtomicNumber();
+        return _atoms[index.get()]->getAtomicNumber();
     }
 
     /**
      * @brief returns the mass of the atom by index
      *
      * @param index
-     * @return double
+     * @return const Mass&
      */
-    double Molecule::getAtomMass(AtomIndex index) const
+    const Mass &Molecule::getAtomMass(AtomIndex index) const
     {
         return _atoms[index.get()]->getMass();
     }
@@ -484,9 +478,9 @@ namespace molsys
      * @brief returns the partial charge of the atom by index
      *
      * @param index
-     * @return double
+     * @return const Charge&
      */
-    double Molecule::getPartialCharge(AtomIndex index) const
+    const Charge &Molecule::getPartialCharge(AtomIndex index) const
     {
         return _atoms[index.get()]->getPartialCharge();
     }
@@ -558,15 +552,15 @@ namespace molsys
     /**
      * @brief returns the molecular mass of the molecule
      *
-     * @return double
+     * @return Mass
      */
-    double Molecule::getMolMass() const
+    Mass Molecule::getMolMass() const
     {
         return std::accumulate(
             _atoms.begin(),
             _atoms.end(),
-            0.0,
-            [](double sum, const auto &atom) { return sum + atom->getMass(); }
+            Mass::zero(),
+            [](Mass sum, const auto &atom) { return sum + atom->getMass(); }
         );
     }
 
@@ -580,9 +574,9 @@ namespace molsys
     /**
      * @brief returns the center of mass of the molecule
      *
-     * @return linalg::Vec3D
+     * @return const Pos3D &
      */
-    linalg::Vec3D Molecule::getCenterOfMass() const { return _centerOfMass; }
+    const Pos3D &Molecule::getCenterOfMass() const { return _centerOfMass; }
 
     /**
      * @brief return the Hybrid zone of the molecule
@@ -597,7 +591,7 @@ namespace molsys
      *
      * @return double
      */
-    double Molecule::getSmoothingFactor() const
+    Quantity Molecule::getSmoothingFactor() const
     {
         if (_smoothingFactor.has_value())
             return _smoothingFactor.value();
@@ -691,7 +685,7 @@ namespace molsys
      *
      * @param centerOfMass
      */
-    void Molecule::setCenterOfMass(const linalg::Vec3D &centerOfMass)
+    void Molecule::setCenterOfMass(const Pos3D &centerOfMass)
     {
         _centerOfMass = centerOfMass;
     }
@@ -711,7 +705,7 @@ namespace molsys
      *
      * @param factor
      */
-    void Molecule::setSmoothingFactor(double factor)
+    void Molecule::setSmoothingFactor(const Quantity &factor)
     {
         _smoothingFactor = factor;
     }

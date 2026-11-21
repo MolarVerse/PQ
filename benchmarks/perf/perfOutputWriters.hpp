@@ -70,7 +70,8 @@ namespace benchOutputWriters
         const auto perSide = static_cast<std::size_t>(
             std::ceil(std::cbrt(static_cast<double>(molecules)))
         );
-        const double boxLength = SPACING * static_cast<double>(perSide);
+        const auto boxLength =
+            SPACING * static_cast<double>(perSide) * angstrom;
 
         molsys::SimulationBox   simBox;
         molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};
@@ -104,10 +105,19 @@ namespace benchOutputWriters
                 const auto offset = static_cast<double>(mol % 7) * 0.001;
                 auto       atom   = std::make_shared<molsys::Atom>();
                 atom->setName(names.at(i));
-                atom->setPosition(origin + shift.at(i));
-                atom->setVelocity({0.01 + offset, -0.02, 0.005 * index});
-                atom->setForce({1.5 - offset, 0.25 * index, -0.75});
-                atom->setPartialCharge(i == 0 ? -0.82 : 0.41);
+                atom->setPosition((origin + shift.at(i)) * angstrom);
+                atom->setVelocity(
+                    linalg::Vec3D{0.01 + offset, -0.02, 0.005 * index} *
+                    angstrom / s
+                );
+                atom->setForce(
+                    linalg::Vec3D{1.5 - offset, 0.25 * index, -0.75} *
+                    kcal_per_mol / angstrom
+                );
+                atom->setPartialCharge(
+                    i == 0 ? -0.82 * elementary_charge
+                           : 0.41 * elementary_charge
+                );
                 molecule.addAtom(atom);
                 simBox.addAtom(atom);
             }
@@ -139,9 +149,9 @@ namespace benchOutputWriters
         auto physicalData = physicalData::PhysicalData();
         physicalData.setTemperature(toTemperature(300.0));
         physicalData.setPressure(1.0 * bar);
-        physicalData.setKineticEnergy(12.5);
-        physicalData.setCoulombEnergy(-34.5);
-        physicalData.setNonCoulombEnergy(7.25);
+        physicalData.setKineticEnergy(12.5 * kcal_per_mol);
+        physicalData.setCoulombEnergy(-34.5 * kcal_per_mol);
+        physicalData.setNonCoulombEnergy(7.25 * kcal_per_mol);
         Settings settings;
 
         perfAllocBegin();

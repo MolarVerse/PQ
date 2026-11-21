@@ -27,6 +27,7 @@
 
 #include "physicalData.hpp"
 #include "testOutputBase.hpp"
+#include "units.hpp"
 #include "vector3d.hpp"
 #include "virialOutput.hpp"
 
@@ -43,7 +44,8 @@ TEST(TestVirialOutput, writeEmitsStepAndAllNineTensorComponents)
             linalg::Vec3D{0.1, 0.2, 0.3},
             linalg::Vec3D{0.4, 0.5, 0.6},
             linalg::Vec3D{0.7, 0.8, 0.9}
-        }
+        } *
+        kcal_per_mol
     );
 
     out.write(42, data);

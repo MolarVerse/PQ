@@ -28,6 +28,18 @@
 
 namespace molsys
 {
+    /**
+     * @brief Construct a new Cell object
+     *
+     * Initializes the lower and upper boundaries to zero and the cell index to
+     * (0, 0, 0)
+     */
+    Cell::Cell()
+        : _lowerBoundary{Pos::zero()},
+          _upperBoundary{Pos::zero()},
+          _cellIndex{0, 0, 0}
+    {
+    }
 
     /**
      * @brief clears the molecules vector
@@ -171,22 +183,16 @@ namespace molsys
     /**
      * @brief returns the lower boundary of the cell
      *
-     * @return const linalg::Vec3D&
+     * @return const Pos3D&
      */
-    const linalg::Vec3D &Cell::getLowerBoundary() const
-    {
-        return _lowerBoundary;
-    }
+    const Pos3D &Cell::getLowerBoundary() const { return _lowerBoundary; }
 
     /**
      * @brief returns the upper boundary of the cell
      *
-     * @return const linalg::Vec3D&
+     * @return const Pos3D&
      */
-    const linalg::Vec3D &Cell::getUpperBoundary() const
-    {
-        return _upperBoundary;
-    }
+    const Pos3D &Cell::getUpperBoundary() const { return _upperBoundary; }
 
     /**
      * @brief returns the cell index
@@ -304,7 +310,7 @@ namespace molsys
      *
      * @param lowerBoundary
      */
-    void Cell::setLowerBoundary(const linalg::Vec3D &lowerBoundary)
+    void Cell::setLowerBoundary(const Pos3D &lowerBoundary)
     {
         _lowerBoundary = lowerBoundary;
     }
@@ -314,7 +320,7 @@ namespace molsys
      *
      * @param upperBoundary
      */
-    void Cell::setUpperBoundary(const linalg::Vec3D &upperBoundary)
+    void Cell::setUpperBoundary(const Pos3D &upperBoundary)
     {
         _upperBoundary = upperBoundary;
     }

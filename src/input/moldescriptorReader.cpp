@@ -40,6 +40,7 @@
 #include "moleculeType.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input::molDescriptor
 {
@@ -285,7 +286,9 @@ namespace input::molDescriptor
                 molecule.addExternalAtomType(
                     ExtAtomType{stoul(lineElements[1])}
                 );
-                molecule.addPartialCharge(stod(lineElements[2]));
+                molecule.addPartialCharge(
+                    stod(lineElements[2]) * elementary_charge
+                );
 
                 ++atomCount;
             }
@@ -367,7 +370,7 @@ namespace input::molDescriptor
             );
         }
 
-        molecule.setQMReferenceEnergy(energy);
+        molecule.setQMReferenceEnergy(energy * kcal_per_mol);
     }
 
     /**

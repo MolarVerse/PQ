@@ -86,8 +86,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
         exc::InputFileException,
         "Invalid value \"-100.0\" for key \"p_relaxation\" at line 0 in input "
         "file: "
-        "failed validation with message Value must be between 0 and "
-        "1.7976931348623156e+305"
+        "failed validation with message Value must be greater than 0"
     );
 
     _clearParser(parser);
@@ -97,19 +96,7 @@ TEST_F(TestInputFileReader, ParseRelaxationTimeManostat)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"0\" for key \"p_relaxation\" at line 0 in input file: "
-        "failed validation with message Value must be between 0 and "
-        "1.7976931348623156e+305"
-    );
-
-    _clearParser(parser);
-
-    lineElements = {"p_relaxation", "=", "1e308"};
-    EXPECT_THROW_MSG(
-        parseFunc(lineElements, 0),
-        exc::InputFileException,
-        "Invalid value \"1e308\" for key \"p_relaxation\" at line 0 in input "
-        "file: failed validation with message Value must be between 0 and "
-        "1.7976931348623156e+305"
+        "failed validation with message Value must be greater than 0"
     );
 }
 

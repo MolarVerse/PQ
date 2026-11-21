@@ -46,7 +46,6 @@
 #endif
 
 #include "box.hpp"
-#include "constants/conversionFactors.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "globalTimer.hpp"
@@ -344,7 +343,7 @@ namespace QM
             );
         }
 
-        physicalData.setQMEnergy(energy * HARTREE_TO_KCAL_PER_MOL);
+        physicalData.setQMEnergy(energy * hartree * avogadro_constant);
 
         auto readForces = [&forceFile, &forceFileName, &qmSettings](auto &atom)
         {
@@ -371,9 +370,7 @@ namespace QM
                 }
             }
 
-            atom->setForce(
-                -grad * HARTREE_PER_BOHR_TO_KCAL_PER_MOL_PER_ANGSTROM
-            );
+            atom->setForce(-grad * hartree / bohr * avogadro_constant);
         };
 
         std::ranges::for_each(simulationBox.getActiveAtoms(), readForces);
@@ -448,7 +445,7 @@ namespace QM
                 );
             }
 
-            atom->setQMCharge(charge);
+            atom->setQMCharge(charge * elementary_charge);
         };
 
         std::ranges::for_each(simulationBox.getActiveAtoms(), readCharges);

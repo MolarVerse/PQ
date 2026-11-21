@@ -34,7 +34,6 @@
 #include <string>
 
 #include "box.hpp"
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "hybridConfigurator.hpp"
@@ -43,6 +42,7 @@
 #include "qmSettings.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace QM
 {
@@ -85,9 +85,9 @@ namespace QM
                 "{:5d} {:5d}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 atomIndex,
                 atomId,
-                atom->getPosition()[0],
-                atom->getPosition()[1],
-                atom->getPosition()[2]
+                atom->getPosition()[0].numerical_value_in(angstrom),
+                atom->getPosition()[1].numerical_value_in(angstrom),
+                atom->getPosition()[2].numerical_value_in(angstrom)
             );
             ++atomIndex;
         }
@@ -109,25 +109,25 @@ namespace QM
             coordsFile << std::format(
                 "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 "",
-                boxMatrix[0][0],
-                boxMatrix[1][0],
-                boxMatrix[2][0]
+                boxMatrix[0][0].numerical_value_in(angstrom),
+                boxMatrix[1][0].numerical_value_in(angstrom),
+                boxMatrix[2][0].numerical_value_in(angstrom)
             );
 
             coordsFile << std::format(
                 "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 "",
-                boxMatrix[0][1],
-                boxMatrix[1][1],
-                boxMatrix[2][1]
+                boxMatrix[0][1].numerical_value_in(angstrom),
+                boxMatrix[1][1].numerical_value_in(angstrom),
+                boxMatrix[2][1].numerical_value_in(angstrom)
             );
 
             coordsFile << std::format(
                 "{:11}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
                 "",
-                boxMatrix[0][2],
-                boxMatrix[1][2],
-                boxMatrix[2][2]
+                boxMatrix[0][2].numerical_value_in(angstrom),
+                boxMatrix[1][2].numerical_value_in(angstrom),
+                boxMatrix[2][2].numerical_value_in(angstrom)
             );
         }
 
@@ -168,10 +168,12 @@ namespace QM
                 {
                     pcFile << std::format(
                         "{:16.12f}\t{:16.12f}\t{:16.12f}\t{:16.12f}\n",
-                        atom->getPosition()[0],
-                        atom->getPosition()[1],
-                        atom->getPosition()[2],
-                        atom->getPartialCharge()
+                        atom->getPosition()[0].numerical_value_in(angstrom),
+                        atom->getPosition()[1].numerical_value_in(angstrom),
+                        atom->getPosition()[2].numerical_value_in(angstrom),
+                        atom->getPartialCharge().numerical_value_in(
+                            elementary_charge
+                        )
                     );
                     _usePointCharges = true;
                 }
@@ -304,11 +306,10 @@ namespace QM
             }
         }
 
-        const auto conversion = HARTREE_PER_BOHR3_TO_KCAL_PER_MOL_PER_ANGSTROM3;
-        stress                = stress * conversion;
-        const auto virial     = stress * box.getVolume();
+        const Stress stress_ = stress * hartree / bohr3 * avogadro_constant;
+        const auto   virial  = stress_ * box.getVolume();
 
-        physicalData.setStressTensor(stress);
+        physicalData.setStressTensor(stress_);
         physicalData.addVirial(virial);
 
         stressFile.close();

@@ -30,6 +30,7 @@
 #include "physicalData.hpp"
 #include "potentialSettings.hpp"
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
 #include "waterModelSettings.hpp"
 
 namespace pot
@@ -68,8 +69,8 @@ namespace pot
         const auto isWaterInterModelSet =
             waterModelSettings.isInterWaterModelSetAndNotNone();
 
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         size_t idxI = 0;
         for (auto &mol1 : simulationBox.getActiveMolecules())
@@ -144,7 +145,7 @@ namespace pot
 
         const auto box = simulationBox.getBoxPtr();
 
-        double totalCoulombEnergy = 0.0;
+        auto totalCoulombEnergy = EnergyPerMol::zero();
 
         const auto waterTypeValue =
             simulationBox.getWaterType().value_or(MolType{0});
@@ -210,8 +211,8 @@ namespace pot
         const auto isWaterInterModelSet =
             waterModelSettings.isInterWaterModelSetAndNotNone();
 
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         for (auto &mol1 : simulationBox.getInactiveMolecules())
         {
@@ -309,8 +310,8 @@ namespace pot
         const auto isWaterInterModelSet =
             waterModelSettings.isInterWaterModelSetAndNotNone();
 
-        double totalCoulombEnergy    = 0.0;
-        double totalNonCoulombEnergy = 0.0;
+        auto totalCoulombEnergy    = EnergyPerMol::zero();
+        auto totalNonCoulombEnergy = EnergyPerMol::zero();
 
         using enum molsys::HybridZone;
         for (auto &mol1 : simulationBox.getMoleculesInsideZone(SMOOTHING))

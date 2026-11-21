@@ -24,6 +24,7 @@
 #define OUTPUT__STDOUT_OUTPUT_HPP
 
 #include "output.hpp"
+#include "unit_types.hpp"
 
 namespace out
 {
@@ -41,7 +42,7 @@ namespace out
         static void writeInfo(const std::string &message);
 
         static void writeHeader();
-        static void writeEndedNormally(double elapsedTime);
+        static void writeEndedNormally(const Time &elapsedTime);
 
         static void writeDensityWarning();
         static void writeOptWarning(const std::string &message);

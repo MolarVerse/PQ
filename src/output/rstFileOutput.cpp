@@ -30,6 +30,7 @@
 #include <sstream>
 
 #include "frame.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -70,8 +71,9 @@ namespace out
                        << std::format(
                               "{:2d}\t{}\t{}",
                               i + 1,
-                              readable(chi),
-                              readable(zeta)
+                              readable(chi.numerical_value_in(kcal_per_mol * s)
+                              ),
+                              readable(zeta.numerical_value_in(one))
                           )
                        << '\n';
             }
@@ -101,8 +103,8 @@ namespace out
         // changes the box of a restarted run
         buffer << std::format(
             "Box   {}  {}\n",
-            frame.box->get_boxDimensions(),
-            frame.box->getBoxAngles()
+            frame.box->get_boxDimensions().numerical_value_in(angstrom),
+            frame.box->getBoxAngles().numerical_value_in(deg)
         );
 
         writeNHChain(frame, buffer);
@@ -112,9 +114,10 @@ namespace out
 
         for (const auto &atom : frame.atoms)
         {
-            const auto &pos   = atom.position;
-            const auto &vel   = atom.velocity;
-            const auto &force = atom.force;
+            const auto &pos = atom.position.numerical_value_in(angstrom);
+            const auto &vel = atom.velocity.numerical_value_in(angstrom / s);
+            const auto &force =
+                atom.force.numerical_value_in(kcal_per_mol / angstrom);
 
             _buffer.left(atom.name, NAME_WIDTH).put('\t');
             _buffer.left(atom.indexInMolecule + 1, NAME_WIDTH).put('\t');

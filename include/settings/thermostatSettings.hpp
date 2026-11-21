@@ -50,8 +50,8 @@ class NoseHooverSettings
         defaults::NH_COUPLING_FREQ
     };
 
-    Setting<std::map<size_t, double>, "Nose-Hoover Chi Values">  _chi;
-    Setting<std::map<size_t, double>, "Nose-Hoover Zeta Values"> _zeta;
+    Setting<std::map<size_t, Action>, "Nose-Hoover Chi Values">    _chi;
+    Setting<std::map<size_t, Quantity>, "Nose-Hoover Zeta Values"> _zeta;
 
    public:
     void setNoseHooverChainLengthByUser(size_t chainLength);
@@ -60,11 +60,11 @@ class NoseHooverSettings
     [[nodiscard]] size_t           getNoseHooverChainLength() const;
     [[nodiscard]] const Frequency& getNoseHooverCouplingFrequency() const;
 
-    void setChiByUser(const std::map<size_t, double>& chi);
-    void setZetaByUser(const std::map<size_t, double>& zeta);
+    void setChiByUser(const std::map<size_t, Action>& chi);
+    void setZetaByUser(const std::map<size_t, Quantity>& zeta);
 
-    [[nodiscard]] const std::map<size_t, double>& getChi() const;
-    [[nodiscard]] const std::map<size_t, double>& getZeta() const;
+    [[nodiscard]] const std::map<size_t, Action>&   getChi() const;
+    [[nodiscard]] const std::map<size_t, Quantity>& getZeta() const;
 
     [[nodiscard]] bool isChiAndZetaSet() const;
 };
@@ -128,7 +128,7 @@ class ThermostatSettings
     Setting<Time, "Relaxation Time"> _relaxationTime{
         defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
     };
-    Setting<double, "Friction"> _friction{
+    Setting<Frequency, "Friction"> _friction{
         defaults::LANGEVIN_THERMOSTAT_FRICTION
     };
 
@@ -142,7 +142,7 @@ class ThermostatSettings
     void setThermostatTypeByUser(ThermostatType thermostatType);
 
     void setRelaxationTimeByUser(const Time& relaxationTime);
-    void setFrictionByUser(double);
+    void setFrictionByUser(const Frequency& friction);
 
     /***************************
      * standard getter methods *
@@ -150,8 +150,8 @@ class ThermostatSettings
 
     [[nodiscard]] ThermostatType getThermostatType() const;
 
-    [[nodiscard]] const Time& getRelaxationTime() const;
-    [[nodiscard]] double      getFriction() const;
+    [[nodiscard]] const Time&      getRelaxationTime() const;
+    [[nodiscard]] const Frequency& getFriction() const;
 };
 
 #endif   // SETTINGS__THERMOSTAT_SETTINGS_HPP

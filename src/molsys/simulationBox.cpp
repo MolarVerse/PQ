@@ -26,12 +26,14 @@
 #include <format>
 #include <numeric>
 
-#include "constants.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
+#include "vector3d/vector3dClass.hpp"
 
 namespace molsys
 {
@@ -558,7 +560,7 @@ namespace molsys
      */
     void SimulationBox::calculateTotalMass()
     {
-        _totalMass = 0.0;
+        _totalMass = Mass::zero();
 
         auto accumulateMass = [this](const auto& atom)
         { _totalMass += atom->getMass(); };
@@ -572,14 +574,14 @@ namespace molsys
      */
     void SimulationBox::calculateCenterOfMass()
     {
-        _centerOfMass = linalg::Vec3D{0.0};
+        PosMass3D comHelper = PosMass::zero();
 
-        auto accumulateMassWeightedPos = [this](const auto& atom)
-        { _centerOfMass += atom->getMass() * atom->getPosition(); };
+        auto accumulateMassWeightedPos = [&comHelper](const auto& atom)
+        { comHelper += atom->getMass() * atom->getPosition(); };
 
         std::ranges::for_each(_atoms, accumulateMassWeightedPos);
 
-        _centerOfMass /= _totalMass;
+        _centerOfMass = comHelper / _totalMass;
     }
 
     /**
@@ -597,11 +599,11 @@ namespace molsys
     /**
      * @brief calculate momentum of simulationBox
      *
-     * @return linalg::Vec3D
+     * @return Momentum3D
      */
-    linalg::Vec3D SimulationBox::calculateMomentum()
+    Momentum3D SimulationBox::calculateMomentum()
     {
-        auto momentum = linalg::Vec3D{0.0};
+        Momentum3D momentum = Momentum::zero();
 
         auto accumulateAtomicMomentum = [&momentum](const auto& atom)
         { momentum += atom->getMass() * atom->getVelocity(); };
@@ -615,13 +617,11 @@ namespace molsys
      * @brief calculate angular momentum of simulationBox
      *
      */
-    linalg::Vec3D SimulationBox::calculateAngularMomentum(
-        const linalg::Vec3D& momentum
+    AngularMomentum3D SimulationBox::calculateAngularMomentum(
+        const Momentum3D& momentum
     )
     {
-        auto angularMom = linalg::Vec3D{0.0};
-
-        calculateCenterOfMass();
+        AngularMomentum3D angularMom = AngularMomentum::zero();
 
         calculateCenterOfMass();
 
@@ -642,9 +642,9 @@ namespace molsys
     /**
      * @brief calculate total force of simulationBox as scalar
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateTotalForce() const
+    Force SimulationBox::calculateTotalForce() const
     {
         const auto totalForce = calculateTotalForceVector();
 
@@ -654,11 +654,11 @@ namespace molsys
     /**
      * @brief calculate total force of simulationBox as vector
      *
-     * @return linalg::Vec3D
+     * @return Force3D
      */
-    linalg::Vec3D SimulationBox::calculateTotalForceVector() const
+    Force3D SimulationBox::calculateTotalForceVector() const
     {
-        linalg::Vec3D totalForce(0.0);
+        Force3D totalForce = Force::zero();
 
         auto accumulateForce = [&totalForce](const auto& atom)
         { totalForce += atom->getForce(); };
@@ -671,9 +671,9 @@ namespace molsys
     /**
      * @brief calculate RMS force of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateRMSForce() const
+    Force SimulationBox::calculateRMSForce() const
     {
         const auto scalarForces = getAtomicScalarForces();
 
@@ -683,9 +683,9 @@ namespace molsys
     /**
      * @brief calculate max scalar force of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateMaxForce() const
+    Force SimulationBox::calculateMaxForce() const
     {
         const auto scalarForces = getAtomicScalarForces();
 
@@ -695,9 +695,9 @@ namespace molsys
     /**
      * @brief calculate rms old force of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateRMSForceOld() const
+    Force SimulationBox::calculateRMSForceOld() const
     {
         const auto scalarForces = getAtomicScalarForcesOld();
 
@@ -707,9 +707,9 @@ namespace molsys
     /**
      * @brief calculate max force old of simulationBox
      *
-     * @return double
+     * @return Force
      */
-    double SimulationBox::calculateMaxForceOld() const
+    Force SimulationBox::calculateMaxForceOld() const
     {
         const auto scalarForces = getAtomicScalarForcesOld();
 
@@ -722,17 +722,17 @@ namespace molsys
      */
     Temperature SimulationBox::calculateTemperature()
     {
-        auto temperature = 0.0;
+        MassVelSquared twoEkinSum = MassVelSquared::zero();
 
-        auto accumulateTemperature = [&temperature](const auto& atom)
-        { temperature += atom->getMass() * normSquared(atom->getVelocity()); };
+        auto accumulateTemperature = [&twoEkinSum](const auto& atom)
+        { twoEkinSum += atom->getMass() * normSquared(atom->getVelocity()); };
 
         std::ranges::for_each(_atoms, accumulateTemperature);
 
-        temperature *=
-            TEMPERATURE_FACTOR / static_cast<double>(_degreesOfFreedom);
+        const auto temperature =
+            twoEkinSum / static_cast<double>(_degreesOfFreedom) / gas_constant;
 
-        return toTemperature(temperature);
+        return Temperature(temperature);
     }
 
     /**
@@ -744,7 +744,7 @@ namespace molsys
      */
     void SimulationBox::checkCoulRadiusCutOff(
         const ExceptionType& exceptionType,
-        double               coulombRadiusCutOff
+        const Distance&      coulombRadiusCutOff
     ) const
     {
         if (getMinimalBoxDimension() < 2.0 * coulombRadiusCutOff)
@@ -767,14 +767,14 @@ namespace molsys
     void SimulationBox::calculateDensity()
     {
         const auto volume = _box->getVolume();
-        _density          = _totalMass / volume * AMU_PER_ANGSTROM3_TO_KG_PER_L;
+        _density          = _totalMass / volume / avogadro_constant;
     }
 
     /**
      * @brief calculate box dimensions from density
      *
      */
-    linalg::Vec3D SimulationBox::calcBoxDimFromDensity() const
+    Pos3D SimulationBox::calcBoxDimFromDensity() const
     {
         return OrthorhombicBox::calcBoxDimFromDensity(_totalMass, _density);
     }
@@ -783,9 +783,7 @@ namespace molsys
      * @brief calculate shift vector for a given position
      *
      */
-    [[nodiscard]] linalg::Vec3D SimulationBox::calcShiftVector(
-        const linalg::Vec3D& position
-    ) const
+    Pos3D SimulationBox::calcShiftVector(const Pos3D& position) const
     {
         return _box->calcShiftVector(position);
     }
@@ -805,21 +803,21 @@ namespace molsys
      */
     void SimulationBox::initPositions(const double displacement)
     {
-        rng::RandomNumberGenerator randomNumberGenerator{};
+        rng::RandomNumberGenerator rng{};
 
-        auto displacePositions =
-            [&randomNumberGenerator, displacement, this](auto& atom)
+        auto displacePositions = [&rng, displacement, this](auto& atom)
         {
-            const auto random = linalg::Vec3D{
-                randomNumberGenerator
-                    .getUniformRealDistribution(-displacement, displacement),
-                randomNumberGenerator
-                    .getUniformRealDistribution(-displacement, displacement),
-                randomNumberGenerator
-                    .getUniformRealDistribution(-displacement, displacement)
-            };
+            Pos3D position = atom->getPosition();
 
-            auto position = atom->getPosition() + random;
+            const auto random =
+                linalg::Vec3D{
+                    rng.getUniformRealDistribution(-displacement, displacement),
+                    rng.getUniformRealDistribution(-displacement, displacement),
+                    rng.getUniformRealDistribution(-displacement, displacement)
+                } *
+                Pos3D::value_type::unit;
+
+            position += random;
 
             applyPBC(position);
 
@@ -941,7 +939,7 @@ namespace molsys
         if (nAtoms == 0)
             return;
 
-        auto totalForce = linalg::Vec3D(0.0);
+        Force3D totalForce = Force::zero();
 
         for (const auto& atom : getActiveAtoms())
             totalForce += atom->getForce();
@@ -949,6 +947,98 @@ namespace molsys
         const auto correctionForce = -totalForce / static_cast<double>(nAtoms);
 
         for (auto& atom : getActiveAtoms()) atom->addForce(correctionForce);
+    }
+
+    /**
+     * @brief flattens positions of each atom into a single vector of Pos
+     *
+     * @return std::vector<Pos>
+     */
+    std::vector<Pos> SimulationBox::flattenPositions() const
+    {
+        std::vector<Pos> positions;
+
+        auto addPositions = [&positions](auto& atom)
+        {
+            const auto pos = atom->getPosition();
+
+            positions.push_back(pos[0]);
+            positions.push_back(pos[1]);
+            positions.push_back(pos[2]);
+        };
+
+        std::ranges::for_each(_atoms, addPositions);
+
+        return positions;
+    }
+
+    /**
+     * @brief flattens forces of each atom into a single vector of doubles
+     *
+     * @return std::vector<Force>
+     */
+    std::vector<Force> SimulationBox::flattenForces() const
+    {
+        std::vector<Force> forces;
+
+        auto addForces = [&forces](auto& atom)
+        {
+            const auto force = atom->getForce();
+
+            forces.push_back(force[0]);
+            forces.push_back(force[1]);
+            forces.push_back(force[2]);
+        };
+
+        std::ranges::for_each(_atoms, addForces);
+
+        return forces;
+    }
+
+    /**
+     * @brief flattens positions of each atom into a single vector of Pos
+     *
+     * @return std::vector<Pos>
+     */
+    std::vector<Pos> SimulationBox::flattenPositions() const
+    {
+        std::vector<Pos> positions;
+
+        auto addPositions = [&positions](auto& atom)
+        {
+            const auto pos = atom->getPosition();
+
+            positions.push_back(pos[0]);
+            positions.push_back(pos[1]);
+            positions.push_back(pos[2]);
+        };
+
+        std::ranges::for_each(_atoms, addPositions);
+
+        return positions;
+    }
+
+    /**
+     * @brief flattens forces of each atom into a single vector of doubles
+     *
+     * @return std::vector<Force>
+     */
+    std::vector<Force> SimulationBox::flattenForces() const
+    {
+        std::vector<Force> forces;
+
+        auto addForces = [&forces](auto& atom)
+        {
+            const auto force = atom->getForce();
+
+            forces.push_back(force[0]);
+            forces.push_back(force[1]);
+            forces.push_back(force[2]);
+        };
+
+        std::ranges::for_each(_atoms, addForces);
+
+        return forces;
     }
 
 }   // namespace molsys

@@ -35,15 +35,19 @@
 
 // NOLINTBEGIN(readability-identifier-length)
 
+inline constexpr auto percent = mstd::units::percent;
+
 inline constexpr auto one = mstd::units::one;
 
-inline constexpr auto rad = mstd::units::rad;
-inline constexpr auto deg = mstd::units::deg;
+inline constexpr auto rad        = mstd::units::rad;
+inline constexpr auto deg        = mstd::units::deg;
+inline constexpr auto NINETY_DEG = 90 * deg;
 
 inline constexpr auto fs = mstd::units::fs;
 inline constexpr auto ps = mstd::units::ps;
-inline constexpr auto s  = mstd::units::s;
+inline constexpr auto ns = mstd::units::ns;
 inline constexpr auto ms = mstd::units::ms;
+inline constexpr auto s  = mstd::units::s;
 
 inline constexpr auto bar     = mstd::units::bar;
 inline constexpr auto Pa      = mstd::units::Pa;
@@ -55,9 +59,45 @@ inline constexpr auto K = mstd::units::K;
 inline constexpr auto per_cm = mstd::units::per_cm;
 inline constexpr auto Hz     = mstd::units::Hz;
 
-inline constexpr auto angstrom = mstd::units::angstrom;
+inline constexpr auto angstrom   = mstd::units::angstrom;
+inline constexpr auto angstrom2  = angstrom * angstrom;
+inline constexpr auto angstrom3  = angstrom * angstrom * angstrom;
+inline constexpr auto angstrom6  = angstrom3 * angstrom3;
+inline constexpr auto angstrom12 = angstrom6 * angstrom6;
+inline constexpr auto bohr       = mstd::units::bohr;
+inline constexpr auto bohr3      = bohr * bohr * bohr;
+inline constexpr auto litre      = mstd::units::litre;
+
+inline constexpr auto mol = mstd::units::mol;
+
+inline constexpr auto amu = mstd::units::amu;
+inline constexpr auto kg  = mstd::units::kg;
+inline constexpr auto g   = mstd::units::g;
+
+inline constexpr auto g_per_mol = g / mol;
+
+inline constexpr auto kg_per_litre = kg / litre;
 
 inline constexpr auto kcal_per_mol = mstd::units::kcal_per_mol;
+inline constexpr auto hartree      = mstd::units::hartree;
+inline constexpr auto eV           = mstd::units::eV;
+
+// constants
+
+inline constexpr auto kb                = mstd::units::boltzmann_constant;
+inline constexpr auto avogadro_constant = mstd::units::avogadro_constant;
+inline constexpr auto gas_constant      = kb * avogadro_constant;
+inline constexpr auto planck            = mstd::units::planck_constant;
+inline constexpr auto reduced_planck    = mstd::units::reduced_planck_constant;
+
+inline constexpr auto elementary_charge = mstd::units::elementary_charge;
+
+// 1 / (4 π ε0) per mole, with ε0 = 1 / (μ0 c²)
+inline constexpr auto coulomb_prefactor =
+    1.0 *
+    (mp_units::si::magnetic_constant * mp_units::si::speed_of_light_in_vacuum *
+     mp_units::si::speed_of_light_in_vacuum * avogadro_constant) /
+    (4.0 * std::numbers::pi);
 
 // NOLINTEND(readability-identifier-length)
 #endif   // UTILITIES__UNITS_HPP

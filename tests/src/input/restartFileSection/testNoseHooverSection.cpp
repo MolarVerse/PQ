@@ -32,6 +32,7 @@
 #include "testRestartFileSection.hpp"
 #include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 TEST_F(TestNoseHooverSection, testKeyword)
 {
@@ -78,10 +79,13 @@ TEST_F(TestNoseHooverSection, testProcessConvertsToZeroBasedIndices)
     _section->process(line2, *_engine, lineNumber);
     _section->process(line3, *_engine, lineNumber);
 
-    const auto expectedChi =
-        std::map<size_t, double>{{0, 0.1}, {1, 0.2}, {2, 0.3}};
+    const auto expectedChi = std::map<size_t, Action>{
+        {0, 0.1 * kcal_per_mol * s},
+        {1, 0.2 * kcal_per_mol * s},
+        {2, 0.3 * kcal_per_mol * s}
+    };
     const auto expectedZeta =
-        std::map<size_t, double>{{0, 0.4}, {1, 0.5}, {2, 0.6}};
+        std::map<size_t, Quantity>{{0, 0.4}, {1, 0.5}, {2, 0.6}};
 
     EXPECT_EQ(nhSettings.getChi(), expectedChi);
     EXPECT_EQ(nhSettings.getZeta(), expectedZeta);

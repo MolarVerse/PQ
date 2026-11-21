@@ -34,6 +34,7 @@
 #include "orthorhombicBox.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 #include "virial.hpp"
 
 class TestVirial : public ::testing::Test
@@ -52,13 +53,15 @@ class TestVirial : public ::testing::Test
         const auto atom1 = std::make_shared<molsys::Atom>();
         const auto atom2 = std::make_shared<molsys::Atom>();
 
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setForce(linalg::Vec3D(1.0, 2.0, 3.0));
-        atom1->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom2->setShiftForce(linalg::Vec3D(1.0, 2.0, 3.0));
-        molecule1.setCenterOfMass(linalg::Vec3D(1.0, 1.0, 1.0));
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+        atom1->setForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom);
+        atom2->setForce(linalg::Vec3D(1.0, 2.0, 3.0) * kcal_per_mol / angstrom);
+        atom1->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol);
+        atom2->setShiftForce(linalg::Vec3D(1.0, 2.0, 3.0) * kcal_per_mol);
+        molecule1.setCenterOfMass(
+            Pos3D{1.0 * angstrom, 1.0 * angstrom, 1.0 * angstrom}
+        );
         molecule1.addAtom(atom1);
         molecule1.addAtom(atom2);
 
@@ -66,10 +69,10 @@ class TestVirial : public ::testing::Test
 
         auto atom3 = std::make_shared<molsys::Atom>();
 
-        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        atom3->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0));
-        molecule2.setCenterOfMass(linalg::Vec3D(0.0, 0.0, 0.0));
+        atom3->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom3->setForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol / angstrom);
+        atom3->setShiftForce(linalg::Vec3D(1.0, 1.0, 1.0) * kcal_per_mol);
+        molecule2.setCenterOfMass(Pos3D{Pos::zero()});
         molecule2.addAtom(atom3);
 
         _simBox->addMolecule(molecule1);
@@ -79,7 +82,9 @@ class TestVirial : public ::testing::Test
         _simBox->addAtom(atom2);
         _simBox->addAtom(atom3);
 
-        molsys::OrthorhombicBox orthoBox{{10.0, 10.0, 10.0}};
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
         _simBox->setBox(orthoBox, false);
     }
 

@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "mShakeReference.hpp"
+#include "unit_types.hpp"
 
 namespace molsys
 {
@@ -46,8 +47,8 @@ namespace constraints
     class MShake
     {
        private:
-        std::vector<MShakeReference>     _mShakeReferences;
-        std::vector<std::vector<double>> _mShakeRSquaredRefs;
+        std::vector<MShakeReference>              _mShakeReferences;
+        std::vector<std::vector<DistanceSquared>> _mShakeRSquaredRefs;
 
         struct MShakeMatrices;
         std::unique_ptr<MShakeMatrices> _mShakeMatrices;

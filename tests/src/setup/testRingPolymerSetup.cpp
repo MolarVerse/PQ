@@ -34,6 +34,7 @@
 #include "enums/jobtype.hpp"
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
+#include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
 #include "ringPolymerSettings.hpp"
 #include "ringPolymerSetup.hpp"
@@ -80,12 +81,19 @@ namespace
             auto molecule = molsys::Molecule();
             auto atom     = std::make_shared<molsys::Atom>();
 
-            atom->setMass(1.0 + (static_cast<double>(index % 4) * 5.0));
+            atom->setMass(
+                (1.0 + (static_cast<double>(index % 4) * 5.0)) * g_per_mol
+            );
             const auto value = static_cast<double>(index);
             atom->setPosition(
-                {value, 2.0 * std::sin(value), 3.0 * std::cos(0.7 * value)}
+                linalg::Vec3D{
+                    value,
+                    2.0 * std::sin(value),
+                    3.0 * std::cos(0.7 * value)
+                } *
+                angstrom
             );
-            atom->setVelocity({0.0, 0.0, 0.0});
+            atom->setVelocity(Vel3D::zero());
             molecule.addAtom(atom);
 
             simulationBox.addMolecule(molecule);
@@ -145,15 +153,17 @@ TEST_F(TestSetup, ringPolymerSetupBeadsAreIndependentCopiesOfTheBox)
         );
     }
 
-    beads[0].getAtoms()[5]->setPosition({-1.0, -2.0, -3.0});
+    beads[0].getAtoms()[5]->setPosition(
+        linalg::Vec3D{-1.0, -2.0, -3.0} * angstrom
+    );
 
     EXPECT_EQ(
         beads[1].getAtoms()[5]->getPosition(),
-        linalg::Vec3D(5, 2.0 * std::sin(5.0), 3.0 * std::cos(3.5))
+        linalg::Vec3D(5, 2.0 * std::sin(5.0), 3.0 * std::cos(3.5)) * angstrom
     );
     EXPECT_EQ(
         rpEngine.getSimulationBox().getAtoms()[5]->getPosition(),
-        linalg::Vec3D(5, 2.0 * std::sin(5.0), 3.0 * std::cos(3.5))
+        linalg::Vec3D(5, 2.0 * std::sin(5.0), 3.0 * std::cos(3.5)) * angstrom
     );
     EXPECT_NE(beads[0].getAtoms()[5], beads[1].getAtoms()[5]);
 }
@@ -189,13 +199,13 @@ TEST_F(TestSetup, ringPolymerSetupInitializesVelocitiesAtStartTemperature)
         EXPECT_NEAR(temperatureOf(bead), 250.0, 1e-6);
 
         // velocities are in A/s, so compare with the thermal momentum scale
-        double momentumScale = 0.0;
+        Momentum momentumScale = Momentum::zero();
         for (const auto &atom : bead.getAtoms())
         {
             momentumScale += atom->getMass() * norm(atom->getVelocity());
         }
 
-        EXPECT_GT(momentumScale, 0.0);
+        EXPECT_GT(momentumScale, Momentum::zero());
         EXPECT_LT(norm(bead.calculateMomentum()), 1e-10 * momentumScale);
     }
 
@@ -233,7 +243,7 @@ TEST_F(TestSetup, ringPolymerSetupVelocitiesAreReproducibleWithRandomSeed)
 
         GeneralSettings::setIsRandomSeedSet(false);
 
-        auto velocities = std::vector<linalg::Vec3D>();
+        auto velocities = std::vector<Vel3D>();
         for (const auto &bead : rpEngine.getRingPolymerBeads())
         {
             velocities.push_back(bead.getAtoms()[0]->getVelocity());
@@ -288,14 +298,20 @@ TEST_F(TestSetup, ringPolymerSetupReadsBeadsFromRestartFile)
 
     EXPECT_EQ(
         beads[0].getAtoms()[0]->getPosition(),
-        linalg::Vec3D(100, 1, 0.5)
+        linalg::Vec3D(100, 1, 0.5) * angstrom
     );
     EXPECT_EQ(
         beads[1].getAtoms()[2]->getPosition(),
-        linalg::Vec3D(200, 3, 0.5)
+        linalg::Vec3D(200, 3, 0.5) * angstrom
     );
-    EXPECT_EQ(beads[1].getAtoms()[2]->getVelocity(), linalg::Vec3D(.1, .2, .3));
-    EXPECT_EQ(beads[1].getAtoms()[2]->getForce(), linalg::Vec3D(1, 2, 3));
+    EXPECT_EQ(
+        beads[1].getAtoms()[2]->getVelocity(),
+        linalg::Vec3D(.1, .2, .3) * angstrom / s
+    );
+    EXPECT_EQ(
+        beads[1].getAtoms()[2]->getForce(),
+        linalg::Vec3D(1, 2, 3) * kcal_per_mol / angstrom
+    );
 
     std::filesystem::remove(fileName);
 }
@@ -320,6 +336,6 @@ TEST_F(
     EXPECT_EQ(rpEngine.getRingPolymerBeadsPhysicalData().size(), 2);
     EXPECT_NE(
         rpEngine.getRingPolymerBeads()[0].getAtoms()[0]->getVelocity(),
-        linalg::Vec3D(0.0, 0.0, 0.0)
+        Vel3D::zero()
     );
 }

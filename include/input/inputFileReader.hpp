@@ -33,6 +33,7 @@
 #include "enums/jobtype.hpp"
 #include "enums/potential.hpp"
 #include "inputFileParser.hpp"
+#include "unit_types.hpp"
 
 namespace engine
 {
@@ -147,8 +148,8 @@ namespace input
         ) const;
         void        _validateRingPolymer(JobType jobtype) const;
         static void _validateCellList(
-            double  coulombRadiusCutOff,
-            JobType jobType
+            const Distance &coulombRadiusCutOff,
+            JobType         jobType
         );
     };
 

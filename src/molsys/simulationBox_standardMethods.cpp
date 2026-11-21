@@ -25,6 +25,7 @@
 
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
+#include "units.hpp"
 
 namespace molsys
 {
@@ -157,30 +158,33 @@ namespace molsys
     /**
      * @brief get the total mass
      *
-     * @return double
+     * @return const Mass&
      */
-    double SimulationBox::getTotalMass() const { return _totalMass; }
+    const Mass &SimulationBox::getTotalMass() const { return _totalMass; }
 
     /**
      * @brief get the total charge
      *
-     * @return double
+     * @return const Charge&
      */
-    double SimulationBox::getTotalCharge() const { return _totalCharge; }
+    const Charge &SimulationBox::getTotalCharge() const { return _totalCharge; }
 
     /**
      * @brief get the density
      *
-     * @return double
+     * @return const Density&
      */
-    double SimulationBox::getDensity() const { return _density; }
+    const Density &SimulationBox::getDensity() const { return _density; }
 
     /**
      * @brief get the center of mass
      *
-     * @return linalg::Vec3D&
+     * @return const Pos3D&
      */
-    linalg::Vec3D &SimulationBox::getCenterOfMass() { return _centerOfMass; }
+    const Pos3D &SimulationBox::getCenterOfMass() const
+    {
+        return _centerOfMass;
+    }
 
     /**
      * @brief get atom by index
@@ -218,11 +222,11 @@ namespace molsys
     /**
      * @brief get atomic scalar forces
      *
-     * @return std::vector<double>
+     * @return std::vector<Force>
      */
-    std::vector<double> SimulationBox::getAtomicScalarForces() const
+    std::vector<Force> SimulationBox::getAtomicScalarForces() const
     {
-        std::vector<double> atomicScalarForces;
+        std::vector<Force> atomicScalarForces;
         atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -234,11 +238,11 @@ namespace molsys
     /**
      * @brief get atomic scalar forces old
      *
-     * @return std::vector<double>
+     * @return std::vector<Force>
      */
-    std::vector<double> SimulationBox::getAtomicScalarForcesOld() const
+    std::vector<Force> SimulationBox::getAtomicScalarForcesOld() const
     {
-        std::vector<double> atomicScalarForces;
+        std::vector<Force> atomicScalarForces;
         atomicScalarForces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -346,11 +350,11 @@ namespace molsys
     /**
      * @brief get all positions of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Pos3D>
      */
-    std::vector<linalg::Vec3D> SimulationBox::getPositions() const
+    std::vector<Pos3D> SimulationBox::getPositions() const
     {
-        std::vector<linalg::Vec3D> positions;
+        std::vector<Pos3D> positions;
         positions.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -362,11 +366,11 @@ namespace molsys
     /**
      * @brief get all velocities of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Vel3D>
      */
-    std::vector<linalg::Vec3D> SimulationBox::getVelocities() const
+    std::vector<Vel3D> SimulationBox::getVelocities() const
     {
-        std::vector<linalg::Vec3D> velocities;
+        std::vector<Vel3D> velocities;
         velocities.reserve(_atoms.size());
 
         for (const auto &atom : _atoms)
@@ -378,11 +382,11 @@ namespace molsys
     /**
      * @brief get all forces of all atoms
      *
-     * @return std::vector<linalg::Vec3D>
+     * @return std::vector<Force3D>
      */
-    std::vector<linalg::Vec3D> SimulationBox::getForces() const
+    std::vector<Force3D> SimulationBox::getForces() const
     {
-        std::vector<linalg::Vec3D> forces;
+        std::vector<Force3D> forces;
         forces.reserve(_atoms.size());
 
         for (const auto &atom : _atoms) forces.push_back(atom->getForce());
@@ -411,13 +415,15 @@ namespace molsys
      *
      * @return std::vector<double>
      */
-    std::vector<double> SimulationBox::getFlattenedActiveAtomPositions() const
+    std::vector<double> SimulationBox::
+        getFlattenedActiveAtomPositionsInAngstrom() const
     {
         std::vector<double> positions;
 
         auto addPositions = [&positions](const auto &atom)
         {
-            const auto position = atom->getPosition();
+            const auto position =
+                atom->getPosition().numerical_value_in(angstrom);
 
             positions.push_back(position[0]);
             positions.push_back(position[1]);
@@ -470,7 +476,7 @@ namespace molsys
      *
      * @param totalMass
      */
-    void SimulationBox::setTotalMass(const double totalMass)
+    void SimulationBox::setTotalMass(const Mass &totalMass)
     {
         _totalMass = totalMass;
     }
@@ -480,7 +486,7 @@ namespace molsys
      *
      * @param totalCharge
      */
-    void SimulationBox::setTotalCharge(const double totalCharge)
+    void SimulationBox::setTotalCharge(const Charge &totalCharge)
     {
         _totalCharge = totalCharge;
     }
@@ -490,7 +496,10 @@ namespace molsys
      *
      * @param density
      */
-    void SimulationBox::setDensity(const double density) { _density = density; }
+    void SimulationBox::setDensity(const Density &density)
+    {
+        _density = density;
+    }
 
     /**
      * @brief set the degrees of freedom
@@ -513,7 +522,7 @@ namespace molsys
      *
      * @param position
      */
-    void SimulationBox::applyPBC(linalg::Vec3D &position) const
+    void SimulationBox::applyPBC(Pos3D &position) const
     {
         _box->applyPBC(position);
     }
@@ -532,16 +541,16 @@ namespace molsys
     /**
      * @brief calculates the volume
      *
-     * @return double
+     * @return Volume
      */
-    double SimulationBox::getVolume() const { return _box->getVolume(); }
+    Volume SimulationBox::getVolume() const { return _box->getVolume(); }
 
     /**
      * @brief gets the minimal box dimension
      *
-     * @return double
+     * @return Pos
      */
-    double SimulationBox::getMinimalBoxDimension() const
+    Pos SimulationBox::getMinimalBoxDimension() const
     {
         return _box->getMinimalBoxDimension();
     }
@@ -549,9 +558,9 @@ namespace molsys
     /**
      * @brief gets the box dimensions
      *
-     * @return const linalg::Vec3D &
+     * @return const Pos3D &
      */
-    const linalg::Vec3D &SimulationBox::getBoxDimensions() const
+    const Pos3D &SimulationBox::getBoxDimensions() const
     {
         return _box->get_boxDimensions();
     }
@@ -559,9 +568,9 @@ namespace molsys
     /**
      * @brief gets the box angles
      *
-     * @return linalg::Vec3D
+     * @return const Angle3D &
      */
-    linalg::Vec3D SimulationBox::getBoxAngles() const
+    const Angle3D &SimulationBox::getBoxAngles() const
     {
         return _box->getBoxAngles();
     }

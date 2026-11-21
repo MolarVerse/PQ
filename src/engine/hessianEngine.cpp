@@ -31,9 +31,7 @@
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
-#include "constants.hpp"
 #include "convergenceSettings.hpp"
-#include "defaults.hpp"
 #include "enums/hessian.hpp"
 #include "enums/optimizer.hpp"
 #include "evaluator.hpp"
@@ -56,6 +54,7 @@
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "timingsSettings.hpp"
+#include "units.hpp"
 
 namespace engine
 {
@@ -167,28 +166,10 @@ namespace engine
             const auto useMaxForceOptional = settings.getUseMaxForceConv();
             const auto useRMSForceOptional = settings.getUseRMSForceConv();
 
-            const auto energyOptional    = settings.getEnergyConv();
-            const auto absEnergyOptional = settings.getAbsEnergyConv();
-            const auto relEnergyOptional = settings.getRelEnergyConv();
-            const auto forceOptional     = settings.getForceConv();
-            const auto maxForceOptional  = settings.getMaxForceConv();
-            const auto rmsForceOptional  = settings.getRMSForceConv();
-
-            auto relEnergy =
-                energyOptional.value_or(defaults::REL_ENERGY_CONV_DEFAULT);
-            auto absEnergy =
-                energyOptional.value_or(defaults::ABS_ENERGY_CONV_DEFAULT);
-
-            relEnergy = relEnergyOptional.value_or(relEnergy);
-            absEnergy = absEnergyOptional.value_or(absEnergy);
-
-            auto maxForce =
-                forceOptional.value_or(defaults::MAX_FORCE_CONV_DEFAULT);
-            auto rmsForce =
-                forceOptional.value_or(defaults::RMS_FORCE_CONV_DEFAULT);
-
-            maxForce = maxForceOptional.value_or(maxForce);
-            rmsForce = rmsForceOptional.value_or(rmsForce);
+            const auto absEnergy = settings.getAbsEnergyConv();
+            const auto relEnergy = settings.getRelEnergyConv();
+            const auto maxForce  = settings.getMaxForceConv();
+            const auto rmsForce  = settings.getRMSForceConv();
 
             const opt::Convergence convergence(
                 useEnergyOptional,
@@ -208,8 +189,8 @@ namespace engine
          * @brief write the hessian matrix to the file
          */
         void writeHessian(
-            const opt::HessianMatrix &hessian,
-            const HessianSettings    &hessianSettings
+            const Hessian         &hessian,
+            const HessianSettings &hessianSettings
         )
         {
             std::ofstream file(hessianSettings.getHessianFile());
@@ -229,7 +210,9 @@ namespace engine
                     if (col != 0)
                         file << ' ';
 
-                    file << row[col];
+                    file << row[col].numerical_value_in(
+                        kcal_per_mol / angstrom2
+                    );
                 }
 
                 file << '\n';
@@ -242,8 +225,8 @@ namespace engine
          * @param hessian
          */
         void writeHessianInfo(
-            const opt::HessianMatrix &hessian,
-            const HessianSettings    &hessianSettings
+            const Hessian         &hessian,
+            const HessianSettings &hessianSettings
         )
         {
             std::ofstream file(hessianSettings.getHessianInfoFile());
@@ -297,7 +280,7 @@ namespace engine
         getEngineOutput().writeTimingsFile();
 
         const auto elapsedTime =
-            timings::GlobalTimer::get().calculateElapsedTime() * MS_TO_S;
+            timings::GlobalTimer::get().calculateElapsedTime();
 
         getEngineOutput().getLogOutput().writeEndedNormally(elapsedTime);
         out::StdoutOutput::writeEndedNormally(elapsedTime);

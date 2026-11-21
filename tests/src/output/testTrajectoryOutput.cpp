@@ -78,7 +78,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyz)
     HybridSettings                   hybridSettings;
     configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
-    _simulationBox->getAtom(1).setMass(1.0);
+    _simulationBox->getAtom(1).setMass(1.0 * g_per_mol);
     hybridSettings.setInnerRegionCenterByUser({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 
@@ -105,7 +105,7 @@ TEST_F(TestTrajectoryOutput, writeHybridCenterXyzMetadata)
     HybridSettings                   hybridSettings;
     configurator::HybridConfigurator hybridConfigurator{hybridSettings};
 
-    _simulationBox->getAtom(1).setMass(1.0);
+    _simulationBox->getAtom(1).setMass(1.0 * g_per_mol);
     hybridSettings.setInnerRegionCenterByUser({1});
     hybridConfigurator.calculateInnerRegionCenter(*_simulationBox);
 

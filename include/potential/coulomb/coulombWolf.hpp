@@ -23,9 +23,11 @@
 #ifndef POTENTIAL__COULOMB__COULOMB_WOLF_HPP
 #define POTENTIAL__COULOMB__COULOMB_WOLF_HPP
 
+#include <mstd/utils/members.hpp>
 #include <utility>
 
 #include "coulombPotential.hpp"
+#include "unit_types.hpp"
 
 namespace pot
 {
@@ -41,21 +43,21 @@ namespace pot
     class CoulombWolf : public CoulombPotential
     {
        protected:
-        static inline double _kappa;
-        static inline double _wolfParam1;
-        static inline double _wolfParam2;
-        static inline double _wolfParam3;
+        static inline InvDistance        _kappa;
+        static inline InvDistance        _wolfParam1;
+        static inline InvDistance        _wolfParam2;
+        static inline InvDistanceSquared _wolfParam3;
 
        public:
         explicit CoulombWolf(
             const PotentialSettings& potentialSettings,
-            double                   kappa
+            const InvDistance&       kappa
         );
 
         [[nodiscard]]
-        std::pair<double, double> calculate(
-            double distance,
-            double chargeProduct
+        std::pair<EnergyPerMol, Force> calculate(
+            const Distance&      distance,
+            const ChargeSquared& chargeProduct
         ) const override;
     };
 

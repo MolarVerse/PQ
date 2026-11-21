@@ -26,7 +26,7 @@ import os
 
 import pytest
 
-from analysis import check_pq_output
+from analysis import check_pq_output, DFTB_FORCE_ATOL
 from conftest import execute_pq
 
 
@@ -46,4 +46,5 @@ def test_qmmm_hotspot_cell(test_with_data_dir):
     check_pq_output(
         "output-md-01",
         "qm-mm/hotspot_smoothing/no_water_model/cell_list",
+        force_atol=DFTB_FORCE_ATOL,
     )

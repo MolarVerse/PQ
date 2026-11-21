@@ -24,9 +24,9 @@
 
 #include <cmath>
 
-#include "constants/internalConversionFactors.hpp"
 #include "coulombWolf.hpp"
 #include "settings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests calculation of Coulomb potential with wolf long-range correction
@@ -39,9 +39,11 @@ TEST(TestCoulombWolf, calculate)
     const double kappa         = 0.25;
 
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
+    settings.potentialSettings.setCoulombRadiusCutOffByUser(
+        rcCutoff * angstrom
+    );
     const auto guffWolfCoulomb =
-        pot::CoulombWolf(settings.potentialSettings, kappa);
+        pot::CoulombWolf(settings.potentialSettings, kappa / angstrom);
     const auto constParam1 = ::erfc(kappa * rcCutoff) / rcCutoff;
     const auto constParam2 = 2.0 * kappa / ::sqrt(M_PI);
     const auto constParam3 =
@@ -50,22 +52,34 @@ TEST(TestCoulombWolf, calculate)
 
     auto distance = 2.0;
 
-    auto param1 = ::erfc(kappa * distance);
-    const auto [energy, force] =
-        guffWolfCoulomb.calculate(distance, chargeProduct);
-
-    EXPECT_DOUBLE_EQ(
-        energy,
-        chargeProduct * COULOMB_PREFACTOR *
-            (param1 / distance - constParam1 +
-             constParam3 * (distance - rcCutoff))
+    auto param1                = ::erfc(kappa * distance);
+    const auto [energy, force] = guffWolfCoulomb.calculate(
+        distance * angstrom,
+        chargeProduct * elementary_charge * elementary_charge
     );
-    EXPECT_DOUBLE_EQ(
-        force,
-        chargeProduct * COULOMB_PREFACTOR *
+
+    EXPECT_NEAR(
+        energy.numerical_value_in(kcal_per_mol),
+        chargeProduct *
+            coulomb_prefactor.numerical_value_in(
+                kcal_per_mol * angstrom /
+                (elementary_charge * elementary_charge)
+            ) *
+            (param1 / distance - constParam1 +
+             constParam3 * (distance - rcCutoff)),
+        1e-10
+    );
+    EXPECT_NEAR(
+        force.numerical_value_in(kcal_per_mol / angstrom),
+        chargeProduct *
+            coulomb_prefactor.numerical_value_in(
+                kcal_per_mol * angstrom /
+                (elementary_charge * elementary_charge)
+            ) *
             (param1 / (distance * distance) +
              constParam2 * ::exp(-kappa * kappa * distance * distance) /
                  distance -
-             constParam3)
+             constParam3),
+        1e-10
     );
 }

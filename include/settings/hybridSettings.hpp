@@ -23,6 +23,7 @@
 #ifndef SETTINGS__HYBRID_SETTINGS_HPP
 #define SETTINGS__HYBRID_SETTINGS_HPP
 
+#include <mstd/units/new_units.hpp>
 #include <optional>
 #include <string>
 #include <vector>
@@ -51,10 +52,10 @@ class HybridSettings
 
     Setting<bool> _useQMCharges{true};
 
-    Setting<double> _coreRadius{0.0};
-    Setting<double> _layerRadius{0.0};
-    Setting<double> _smoothingRegionThickness{0.0};
-    Setting<double> _pointChargeThickness{0.0};
+    Setting<Distance> _coreRadius{0.0 * mstd::units::angstrom};
+    Setting<Distance> _layerRadius{0.0 * mstd::units::angstrom};
+    Setting<Distance> _smoothingRegionThickness{0.0 * mstd::units::angstrom};
+    Setting<Distance> _pointChargeThickness{0.0 * mstd::units::angstrom};
 
     Setting<SmoothingMethod> _smoothing{SmoothingMethod::HOTSPOT};
     Setting<QMForceDist>     _qmForceDist{QMForceDist::EQUAL};
@@ -74,10 +75,10 @@ class HybridSettings
 
     void setUseQMChargesByUser(bool useQMCharges);
 
-    void setCoreRadiusByUser(double radius);
-    void setLayerRadiusByUser(double radius);
-    void setSmoothingRegionThicknessByUser(double thickness);
-    void setPointChargeThicknessByUser(double radius);
+    void setCoreRadiusByUser(const Distance &radius);
+    void setLayerRadiusByUser(const Distance &radius);
+    void setSmoothingRegionThicknessByUser(const Distance &thickness);
+    void setPointChargeThicknessByUser(const Distance &radius);
 
     void setSmoothingMethodByUser(SmoothingMethod method);
     void setQMForceDistByUser(QMForceDist method);
@@ -93,10 +94,10 @@ class HybridSettings
 
     [[nodiscard]] bool getUseQMCharges() const;
 
-    [[nodiscard]] double getCoreRadius() const;
-    [[nodiscard]] double getLayerRadius() const;
-    [[nodiscard]] double getSmoothingRegionThickness() const;
-    [[nodiscard]] double getPointChargeThickness() const;
+    [[nodiscard]] const Distance &getCoreRadius() const;
+    [[nodiscard]] const Distance &getLayerRadius() const;
+    [[nodiscard]] const Distance &getSmoothingRegionThickness() const;
+    [[nodiscard]] const Distance &getPointChargeThickness() const;
 
     [[nodiscard]] SmoothingMethod getSmoothingMethod() const;
     [[nodiscard]] QMForceDist     getQMForceDist() const;
