@@ -69,6 +69,9 @@ TEST_F(TestRstFileReader, determineSection)
  */
 TEST_F(TestRstFileReader, rstFileReading)
 {
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
+    _settings.timings.setTimeStepByUser(0.5 * fs);
+    _settings.timings.setNumberOfStepsByUser(100);
     _settings.fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
     );
