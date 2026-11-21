@@ -73,12 +73,12 @@ namespace
     };
 
     void addWater(
-        molsys::SimulationBox   &simulationBox,
-        const Pos3D             &origin,
-        const WaterGeometry     &geometry,
-        const molsys::HybridZone zone,
-        const bool               active,
-        MolType                  molType
+        molsys::SimulationBox &simulationBox,
+        const Pos3D           &origin,
+        const WaterGeometry   &geometry,
+        molsys::HybridZone     zone,
+        bool                   active,
+        MolType                molType
     )
     {
         const auto oxygen    = std::make_shared<molsys::Atom>();
@@ -136,21 +136,21 @@ namespace
     }
 
     void addWater(
-        molsys::SimulationBox   &simulationBox,
-        const Pos3D             &origin,
-        const WaterGeometry     &geometry,
-        const molsys::HybridZone zone
+        molsys::SimulationBox &simulationBox,
+        const Pos3D           &origin,
+        const WaterGeometry   &geometry,
+        molsys::HybridZone     zone
     )
     {
         addWater(simulationBox, origin, geometry, zone, true, kWaterType);
     }
 
     void addWater(
-        molsys::SimulationBox   &simulationBox,
-        const Pos3D             &origin,
-        const WaterGeometry     &geometry,
-        const molsys::HybridZone zone,
-        bool                     active
+        molsys::SimulationBox &simulationBox,
+        const Pos3D           &origin,
+        const WaterGeometry   &geometry,
+        molsys::HybridZone     zone,
+        bool                   active
     )
     {
         addWater(simulationBox, origin, geometry, zone, active, kWaterType);

@@ -50,7 +50,7 @@ namespace
     void expectForceIsNegativeEnergyDerivative(
         const Calculate &calculate,
         const Distance  &distance,
-        const double     tolerance
+        double     tolerance
     )
     {
         const auto [energy, force] = calculate(distance);

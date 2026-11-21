@@ -90,8 +90,7 @@ namespace linalg
             else
                 return Vector3D(T{}, T{}, T{});
         }
-        Vector3D(const T xValue, const T yValue, const T zValue)
-            : x(xValue), y(yValue), z(zValue)
+        Vector3D(T xValue, T yValue, T zValue) : x(xValue), y(yValue), z(zValue)
         {
         }
         Vector3D(const Vector3D<T> &xyz_) : xyz(xyz_.xyz) {}

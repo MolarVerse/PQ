@@ -93,9 +93,9 @@ namespace out
      * well-defined simulation time
      */
     void RstFileOutput::write(
-        const Frame              &frame,
-        const size_t              step,
-        const std::optional<Time> finalTime
+        const Frame        &frame,
+        size_t              step,
+        std::optional<Time> finalTime
     )
     {
         using textFormat::FIXED_WIDTH;

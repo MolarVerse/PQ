@@ -98,10 +98,10 @@ namespace benchWaterScaling
         waterType.setNumberOfAtoms(3);
         simBox.addMoleculeType(waterType);
 
-        const auto makeAtom = [](const std::string_view name,
-                                 const Pos3D           &pos,
-                                 const double           charge,
-                                 const AtomNumber       atomicNumber)
+        const auto makeAtom = [](std::string_view name,
+                                 const Pos3D     &pos,
+                                 double           charge,
+                                 AtomNumber       atomicNumber)
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setName(name);

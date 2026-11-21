@@ -50,7 +50,7 @@ namespace waterModel
      * infinite
      */
     template <typename T>
-    inline void checkNonDegenerate(const T value, const std::string_view what)
+    inline void checkNonDegenerate(T value, std::string_view what)
     {
         using std::isfinite;
 
