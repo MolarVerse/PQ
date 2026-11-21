@@ -48,6 +48,8 @@
 #include "stdoutOutput.hpp"
 #include "stringUtilities.hpp"
 #include "strongTypes.hpp"
+#include "thermostatSettings.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 namespace setup
@@ -577,8 +579,12 @@ namespace setup
             );
         }
 
+        const auto startTemperature =
+            _engine.getSettings().kinetics.getStartTemperature();
+
         // ring polymer beads get Maxwell-Boltzmann velocities on their own
         if (initVelocities == InitVelocities::FALSE && getZeroVelocities() &&
+            startTemperature > Temperature::zero() &&
             settings::GeneralSettings::isMDJobType() &&
             !settings::GeneralSettings::isRingPolymerMDActivated())
         {

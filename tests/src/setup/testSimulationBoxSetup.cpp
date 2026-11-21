@@ -45,7 +45,9 @@
 #include "simulationBoxSetup.hpp"
 #include "strongTypes.hpp"
 #include "testSetup.hpp"
+#include "thermostatSettings.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
 #include "units.hpp"
 
 TEST_F(TestSetup, setAtomNames)
@@ -751,8 +753,15 @@ TEST_F(TestSetup, testWriteSetupInfoMaxwellForceNonZeroVelocities)
 class TestZeroVelocityWarning : public TestSetup
 {
    protected:
+    void        SetUp() override;
     std::string _writeSetupInfoAndReadLog();
 };
+
+void TestZeroVelocityWarning::SetUp()
+{
+    TestSetup::SetUp();
+    _settings->kinetics.setStartTemperatureByUser(toTemperature(300.0));
+}
 
 std::string TestZeroVelocityWarning::_writeSetupInfoAndReadLog()
 {
@@ -807,12 +816,32 @@ TEST_F(TestZeroVelocityWarning, SilentWithNonZeroVelocity)
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
-    atom2->setVelocity({0.0, 0.0, 1.0});
+    atom2->setVelocity(linalg::Vec3D{0.0, 0.0, 1.0} * angstrom / s);
     simBox.getAtoms().push_back(atom1);
     simBox.getAtoms().push_back(atom2);
 
     setup::SimulationBoxSetup simBoxSetup(*_engine);
     simBoxSetup.checkZeroVelocities();
+
+    const auto logContent = _writeSetupInfoAndReadLog();
+
+    EXPECT_EQ(logContent.find(ZERO_VELOCITY_WARNING), std::string::npos);
+}
+
+TEST_F(TestZeroVelocityWarning, SilentWithZeroStartTemperature)
+{
+    _settings->kinetics.setStartTemperatureByUser(Temperature::zero());
+    setup::SimulationBoxSetup::setZeroVelocities(true);
+
+    const auto logContent = _writeSetupInfoAndReadLog();
+
+    EXPECT_EQ(logContent.find(ZERO_VELOCITY_WARNING), std::string::npos);
+}
+
+TEST_F(TestZeroVelocityWarning, SilentWithoutTemperature)
+{
+    _settings->kinetics = KineticsSettings();
+    setup::SimulationBoxSetup::setZeroVelocities(true);
 
     const auto logContent = _writeSetupInfoAndReadLog();
 
