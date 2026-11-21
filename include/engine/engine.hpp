@@ -86,7 +86,7 @@ namespace engine
         [[nodiscard]]
         Time calculateTotalSimulationTime(
             const Time &timeStep,
-            size_t      startingStepCount
+            const Time &startingTime
         ) const;
 
         /***************************
