@@ -53,13 +53,14 @@ TEST_F(TestRstFileOutput, write)
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "Step 10");
+    EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
     EXPECT_EQ(line, "Box   10 10 10  90 90 90");
     getline(file, line);
@@ -97,22 +98,27 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
 {
     NoseHooverSettings noseHooverSettings;
     noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
-    const auto chis =
-        std::map<size_t, double>{{0, 1.0}, {1, 2.0}, {2, 3.0}, {3, 0.0}};
+    const auto chis = std::map<size_t, Action>{
+        {0, 1.0 * kcal_per_mol * s},
+        {1, 2.0 * kcal_per_mol * s},
+        {2, 3.0 * kcal_per_mol * s},
+        {3, 0.0 * kcal_per_mol * s}
+    };
     const auto zetas =
-        std::map<size_t, double>{{0, 3.0}, {1, 2.0}, {2, 1.0}, {3, 0.0}};
+        std::map<size_t, Quantity>{{0, 3.0}, {1, 2.0}, {2, 1.0}, {3, 0.0}};
     noseHooverSettings.setChiByUser(chis);
     noseHooverSettings.setZetaByUser(zetas);
     noseHooverSettings.setNoseHooverChainLengthByUser(3);
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
+    _rstFileOutput
+        ->write(out::Frame{*_simulationBox, thermostat}, 10, 100 * fs);
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "Step 10");
+    EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
     EXPECT_EQ(line, "Box   10 10 10  90 90 90");
     getline(file, line);
@@ -158,14 +164,14 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
     const out::Frame frame{*_simulationBox, thermostat::Thermostat()};
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(frame, 10);
+    _rstFileOutput->write(frame, 10, 100 * fs);
     EXPECT_FALSE(std::filesystem::exists("default.rst.tmp"));
 
     // a directory in the way makes writing the temporary file fail
     std::filesystem::create_directory("default.rst.tmp");
 
     EXPECT_THROW_MSG(
-        _rstFileOutput->write(frame, 11),
+        _rstFileOutput->write(frame, 11, 100 * fs),
         exc::InputFileException,
         "Could not write file - filename = default.rst.tmp"
     );
@@ -175,7 +181,7 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, "Step 10");
+    EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
 }
 
 /**
@@ -188,15 +194,18 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
  */
 TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
 {
-    const auto length = 27.44205774028026567635;
+    const auto length = 27.44205774028026567635 * angstrom;
 
-    molsys::OrthorhombicBox orthoBox{{length, 0.5 * length, 1.0 / 3.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {length, 0.5 * length, 1.0 / 3.0 * angstrom}
+    };
     _simulationBox->setBox(orthoBox, false);
 
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
 
@@ -217,8 +226,8 @@ TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
         gamma;
 
     EXPECT_EQ(keyword, "Box");
-    EXPECT_EQ(lengthA, length);
-    EXPECT_EQ(lengthB, 0.5 * length);
+    EXPECT_EQ(lengthA, length.numerical_value_in(angstrom));
+    EXPECT_EQ(lengthB, 0.5 * length.numerical_value_in(angstrom));
     EXPECT_EQ(lengthC, 1.0 / 3.0);
     EXPECT_EQ(alpha, 90.0);
     EXPECT_EQ(beta, 90.0);
@@ -290,15 +299,26 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
         const auto value = [shift](const size_t axis)
         { return awkwardValues.at((shift + axis) % awkwardValues.size()); };
 
-        atoms.at(index)->setPosition({value(0), value(1), value(2)});
-        atoms.at(index)->setVelocity({value(3), value(4), value(5)});
-        atoms.at(index)->setForce({value(6), value(7), value(8)});
+        atoms.at(index)->setPosition(
+            {value(0) * angstrom, value(1) * angstrom, value(2) * angstrom}
+        );
+        atoms.at(index)->setVelocity(
+            {value(3) * angstrom / s,
+             value(4) * angstrom / s,
+             value(5) * angstrom / s}
+        );
+        atoms.at(index)->setForce(
+            {value(6) * kcal_per_mol / angstrom,
+             value(7) * kcal_per_mol / angstrom,
+             value(8) * kcal_per_mol / angstrom}
+        );
     }
 
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
 
@@ -337,10 +357,10 @@ TEST_F(TestRstFileOutput, noseHooverChainIsWrittenExactly)
     NoseHooverSettings noseHooverSettings;
     noseHooverSettings.setNoseHooverCouplingFrequencyByUser(1.0e13 * Hz);
     noseHooverSettings.setChiByUser(
-        {{0, awkwardValues.at(0)},
-         {1, awkwardValues.at(3)},
-         {2, awkwardValues.at(4)},
-         {3, 0.0}}
+        {{0, awkwardValues.at(0) * kcal_per_mol * s},
+         {1, awkwardValues.at(3) * kcal_per_mol * s},
+         {2, awkwardValues.at(4) * kcal_per_mol * s},
+         {3, 0.0 * kcal_per_mol * s}}
     );
     noseHooverSettings.setZetaByUser(
         {{0, awkwardValues.at(1)},
@@ -352,7 +372,8 @@ TEST_F(TestRstFileOutput, noseHooverChainIsWrittenExactly)
     auto thermostat = thermostat::NoseHooverThermostat(noseHooverSettings);
 
     _rstFileOutput->setFilename("default.rst", false);
-    _rstFileOutput->write(out::Frame{*_simulationBox, thermostat}, 10);
+    _rstFileOutput
+        ->write(out::Frame{*_simulationBox, thermostat}, 10, 100 * fs);
     _rstFileOutput->close();
 
     std::ifstream file("default.rst");
@@ -401,14 +422,23 @@ TEST_F(TestRstFileOutput, subnormalValuesAreWrittenAsZero)
 
     ASSERT_EQ(atoms.size(), 3);
 
-    atoms.at(0)->setPosition({1.0e-310, -1.0e-310, tiny});
-    atoms.at(0)->setVelocity({-tiny, 2.5e-320, 1.0});
-    atoms.at(0)->setForce({1.0e-309, -2.0e-309, 0.5});
+    atoms.at(0)->setPosition(
+        {1.0e-310 * angstrom, -1.0e-310 * angstrom, tiny * angstrom}
+    );
+    atoms.at(0)->setVelocity(
+        {-tiny * angstrom / s, 2.5e-320 * angstrom / s, 1.0 * angstrom / s}
+    );
+    atoms.at(0)->setForce(
+        {1.0e-309 * kcal_per_mol / angstrom,
+         -2.0e-309 * kcal_per_mol / angstrom,
+         0.5 * kcal_per_mol / angstrom}
+    );
 
     _rstFileOutput->setFilename("default.rst", false);
     _rstFileOutput->write(
         out::Frame{*_simulationBox, thermostat::Thermostat()},
-        10
+        10,
+        100 * fs
     );
     _rstFileOutput->close();
 

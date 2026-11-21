@@ -1,0 +1,1 @@
+- Fix the total simulation time after a restart: the time is no longer derived from the step count and the current time step alone, which was wrong if the time step changed between runs. Restart files now store `Simulation_Time` (in ps) after the step count; if it is missing for a non-zero step count, PQ warns and assumes a constant time step.

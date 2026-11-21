@@ -27,6 +27,7 @@
 #include <mstd/enum.hpp>
 
 #include "setting.hpp"
+#include "unit_types.hpp"
 
 class ReferenceSettings;
 class WaterModelSettings;
@@ -48,9 +49,9 @@ class ConstraintSettings
     Setting<size_t> _rattleMaxIter;
     Setting<size_t> _mshakeMaxIter;
 
-    Setting<double> _shakeTolerance;
-    Setting<double> _rattleTolerance;
-    Setting<double> _mshakeTolerance;
+    Setting<double>      _shakeTolerance;
+    Setting<MassPerTime> _rattleTolerance;
+    Setting<double>      _mshakeTolerance;
 
    public:
     ConstraintSettings();
@@ -90,12 +91,12 @@ class ConstraintSettings
     [[nodiscard]] bool isMShakeActivated() const;
     [[nodiscard]] bool isDistanceConstraintsActivated() const;
 
-    [[nodiscard]] size_t getShakeMaxIter() const;
-    [[nodiscard]] size_t getRattleMaxIter() const;
-    [[nodiscard]] size_t getMShakeMaxIter() const;
-    [[nodiscard]] double getShakeTolerance() const;
-    [[nodiscard]] double getRattleTolerance() const;
-    [[nodiscard]] double getMShakeTolerance() const;
+    [[nodiscard]] size_t             getShakeMaxIter() const;
+    [[nodiscard]] size_t             getRattleMaxIter() const;
+    [[nodiscard]] size_t             getMShakeMaxIter() const;
+    [[nodiscard]] double             getShakeTolerance() const;
+    [[nodiscard]] const MassPerTime& getRattleTolerance() const;
+    [[nodiscard]] double             getMShakeTolerance() const;
 
     /***************************
      * standard setter methods *
@@ -105,7 +106,7 @@ class ConstraintSettings
     void setRattleMaxIterByUser(size_t rattleMaxIter);
     void setMShakeMaxIterByUser(size_t mshakeMaxIter);
     void setShakeToleranceByUser(double shakeTolerance);
-    void setRattleToleranceByUser(double rattleTolerance);
+    void setRattleToleranceByUser(const MassPerTime& rattleTolerance);
     void setMShakeToleranceByUser(double mshakeTolerance);
 };
 

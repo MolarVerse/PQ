@@ -27,6 +27,7 @@
 #include "keyRegistry.hpp"
 #include "potentialSettings.hpp"
 #include "rangeValidator.hpp"
+#include "units.hpp"
 
 namespace input
 {
@@ -88,17 +89,21 @@ namespace input
             .title = "Wolf long-range correction parameter",
             .description =
                 "Specifies the parameter for the Wolf long-range correction",
+            .unit = "1/angstrom"
         };
 
         const auto setValue = [this](double wolfParameter)
-        { _potentialSettings->setWolfParameterByUser(wolfParameter); };
+        {
+            _potentialSettings->setWolfParameterByUser(
+                wolfParameter / angstrom
+            );
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<double>{
-                .metadata     = metaData,
-                .defaultValue = defaults::WOLF_PARAM_DEFAULT,
-                .onSet        = setValue,
-                .validators   = {makeShared(PositiveGTDoubleValidator)},
+                .metadata   = metaData,
+                .onSet      = setValue,
+                .validators = {makeShared(PositiveGTDoubleValidator)},
             }
         );
 

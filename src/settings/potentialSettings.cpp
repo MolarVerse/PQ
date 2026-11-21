@@ -30,7 +30,7 @@
  *
  * @param cutoff_ The cutoff distance for the Coulomb potential
  */
-CoulombPotentialConfig::CoulombPotentialConfig(double cutoff_)
+CoulombPotentialConfig::CoulombPotentialConfig(const Distance& cutoff_)
     : cutoff(cutoff_),
       cutoffSquared(cutoff_ * cutoff_),
       energyCutoff(1 / cutoff_),
@@ -60,7 +60,7 @@ PotentialSettings::PotentialSettings()
 void PotentialSettings::finalize()
 {
     if (settings::GeneralSettings::isQMOnlyJobtype())
-        _coulombConfig = CoulombPotentialConfig(0.0);
+        _coulombConfig = CoulombPotentialConfig(Distance::zero());
 }
 
 /********************
@@ -94,7 +94,9 @@ void PotentialSettings::setCoulombLongRangeTypeByUser(CoulombLongRangeType type)
  *
  * @param coulombRadiusCutOff
  */
-void PotentialSettings::setCoulombRadiusCutOffByUser(double coulombRadiusCutOff)
+void PotentialSettings::setCoulombRadiusCutOffByUser(
+    const Pos& coulombRadiusCutOff
+)
 {
     _coulombConfig = CoulombPotentialConfig(coulombRadiusCutOff);
 }
@@ -105,7 +107,7 @@ void PotentialSettings::setCoulombRadiusCutOffByUser(double coulombRadiusCutOff)
  * @param nonCoulombRadiusCutOff
  */
 void PotentialSettings::setNonCoulombRadiusCutOffByUser(
-    double nonCoulombRadiusCutOff
+    const Pos& nonCoulombRadiusCutOff
 )
 {
     _nonCoulombRadiusCutOff.setByUser(nonCoulombRadiusCutOff);
@@ -147,7 +149,7 @@ void PotentialSettings::setReactionFieldEpsilonByUser(double epsilon)
  *
  * @param wolfParameter
  */
-void PotentialSettings::setWolfParameterByUser(double wolfParameter)
+void PotentialSettings::setWolfParameterByUser(const InvDistance& wolfParameter)
 {
     _wolfParameter.setByUser(wolfParameter);
 }
@@ -181,9 +183,9 @@ NonCoulombType PotentialSettings::getNonCoulombType() const
 /**
  * @brief get the non-Coulomb radius cut off
  *
- * @return std::optional<double>
+ * @return std::optional<Pos>
  */
-double PotentialSettings::getNonCoulombRadiusCutOff() const
+const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
 {
     return _nonCoulombRadiusCutOff.get();
 }
@@ -211,9 +213,9 @@ double PotentialSettings::getReactionFieldEpsilon() const
 /**
  * @brief get the Wolf parameter
  *
- * @return double
+ * @return const InvDistance&
  */
-double PotentialSettings::getWolfParameter() const
+const InvDistance& PotentialSettings::getWolfParameter() const
 {
     return _wolfParameter.get();
 }

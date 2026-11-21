@@ -25,6 +25,7 @@
 #include <cmath>
 
 #include "enums/convergence.hpp"
+#include "unit_types.hpp"
 
 namespace opt
 {
@@ -42,14 +43,14 @@ namespace opt
      * @param energyConvStrategy
      */
     Convergence::Convergence(
-        bool         enableEnergyConv,
-        bool         enableMaxForceConv,
-        bool         enableRMSForceConv,
-        double       relEnergyConvThreshold,
-        double       absEnergyConvThreshold,
-        double       absMaxForceConvThreshold,
-        double       absRMSForceConvThreshold,
-        ConvStrategy energyConvStrategy
+        bool                enableEnergyConv,
+        bool                enableMaxForceConv,
+        bool                enableRMSForceConv,
+        const Quantity&     relEnergyConvThreshold,
+        const EnergyPerMol& absEnergyConvThreshold,
+        const Force&        absMaxForceConvThreshold,
+        const Force&        absRMSForceConvThreshold,
+        ConvStrategy        energyConvStrategy
     )
         : _enableEnergyConv(enableEnergyConv),
           _enableMaxForceConv(enableMaxForceConv),
@@ -96,10 +97,13 @@ namespace opt
      * @param energyOld
      * @param energyNew
      */
-    void Convergence::calcEnergyConvergence(double energyOld, double energyNew)
+    void Convergence::calcEnergyConvergence(
+        const EnergyPerMol& energyOld,
+        const EnergyPerMol& energyNew
+    )
     {
-        _absEnergy = std::abs(energyNew - energyOld);
-        _relEnergy = _absEnergy / std::abs(energyOld);
+        _absEnergy = mstd::abs(energyNew - energyOld);
+        _relEnergy = _absEnergy / mstd::abs(energyOld);
 
         if (_enableEnergyConv)
         {
@@ -114,10 +118,13 @@ namespace opt
      * @param maxForce
      * @param rmsForce
      */
-    void Convergence::calcForceConvergence(double maxForce, double rmsForce)
+    void Convergence::calcForceConvergence(
+        const Force& maxForce,
+        const Force& rmsForce
+    )
     {
-        _absMaxForce = std::abs(maxForce);
-        _absRMSForce = std::abs(rmsForce);
+        _absMaxForce = mstd::abs(maxForce);
+        _absRMSForce = mstd::abs(rmsForce);
 
         if (_enableMaxForceConv)
             _isAbsMaxForceConv = _absMaxForce < _absMaxForceConvThreshold;
@@ -135,30 +142,30 @@ namespace opt
     /**
      * @brief get relative energy difference
      *
-     * @return double
+     * @return const Quantity&
      */
-    double Convergence::getRelEnergy() const { return _relEnergy; }
+    const Quantity& Convergence::getRelEnergy() const { return _relEnergy; }
 
     /**
      * @brief get absolute energy difference
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double Convergence::getAbsEnergy() const { return _absEnergy; }
+    const EnergyPerMol& Convergence::getAbsEnergy() const { return _absEnergy; }
 
     /**
      * @brief get absolute maximum force
      *
-     * @return double
+     * @return const Force&
      */
-    double Convergence::getAbsMaxForce() const { return _absMaxForce; }
+    const Force& Convergence::getAbsMaxForce() const { return _absMaxForce; }
 
     /**
      * @brief get absolute RMS force
      *
-     * @return double
+     * @return const Force&
      */
-    double Convergence::getAbsRMSForce() const { return _absRMSForce; }
+    const Force& Convergence::getAbsRMSForce() const { return _absRMSForce; }
 
     /**
      * @brief get energy convergence strategy
@@ -173,14 +180,14 @@ namespace opt
     /**
      * @brief get if energy convergence is enabled
      *
-     * @return double
+     * @return bool
      */
     bool Convergence::isEnergyConvEnabled() const { return _enableEnergyConv; }
 
     /**
      * @brief get if maximum force convergence is enabled
      *
-     * @return double
+     * @return bool
      */
     bool Convergence::isMaxForceConvEnabled() const
     {
@@ -190,7 +197,7 @@ namespace opt
     /**
      * @brief get if RMS force convergence is enabled
      *
-     * @return double
+     * @return bool
      */
     bool Convergence::isRMSForceConvEnabled() const
     {
@@ -232,9 +239,9 @@ namespace opt
     /**
      * @brief get the relative energy convergence threshold
      *
-     * @return double
+     * @return const Quantity&
      */
-    double Convergence::getRelEnergyConvThreshold() const
+    const Quantity& Convergence::getRelEnergyConvThreshold() const
     {
         return _relEnergyConvThreshold;
     }
@@ -242,9 +249,9 @@ namespace opt
     /**
      * @brief get the absolute energy convergence threshold
      *
-     * @return double
+     * @return const EnergyPerMol&
      */
-    double Convergence::getAbsEnergyConvThreshold() const
+    const EnergyPerMol& Convergence::getAbsEnergyConvThreshold() const
     {
         return _absEnergyConvThreshold;
     }
@@ -252,9 +259,9 @@ namespace opt
     /**
      * @brief get the absolute maximum force convergence threshold
      *
-     * @return double
+     * @return const Force&
      */
-    double Convergence::getAbsMaxForceConvThreshold() const
+    const Force& Convergence::getAbsMaxForceConvThreshold() const
     {
         return _absMaxForceConvThreshold;
     }
@@ -262,9 +269,9 @@ namespace opt
     /**
      * @brief get the absolute RMS force convergence threshold
      *
-     * @return double
+     * @return const Force&
      */
-    double Convergence::getAbsRMSForceConvThreshold() const
+    const Force& Convergence::getAbsRMSForceConvThreshold() const
     {
         return _absRMSForceConvThreshold;
     }

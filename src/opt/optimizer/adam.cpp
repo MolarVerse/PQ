@@ -25,6 +25,8 @@
 #include <cmath>
 
 #include "simulationBox.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 namespace opt
 {
@@ -36,8 +38,8 @@ namespace opt
      */
     Adam::Adam(size_t nAtoms)
     {
-        _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-        _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+        _momentum1.resize(nAtoms, Force3D::zero());
+        _momentum2.resize(nAtoms, Force3DSquared::zero());
     }
 
     /**
@@ -50,8 +52,8 @@ namespace opt
     Adam::Adam(double beta1, double beta2, size_t nAtoms)
         : _beta1(beta1), _beta2(beta2)
     {
-        _momentum1.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
-        _momentum2.resize(nAtoms, linalg::Vec3D(0.0, 0.0, 0.0));
+        _momentum1.resize(nAtoms, Force3D::zero());
+        _momentum2.resize(nAtoms, Force3DSquared::zero());
     }
 
     /**
@@ -89,11 +91,22 @@ namespace opt
             _momentum2[i] =
                 _beta2 * _momentum2[i] + (1.0 - _beta2) * force * force;
 
-            const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
-            const auto mom2 = _momentum2[i] / (1.0 - std::pow(_beta2, step));
+            const auto epsilon = Force3DSquared{1e-8 * ForceSquared::unit};
 
-            constexpr auto epsilon = 1e-8;
-            auto pos_new = pos - learningRate * mom1 / (sqrt(mom2 + epsilon));
+            const auto mom1 = _momentum1[i] / (1.0 - std::pow(_beta1, step));
+            const auto mom2 =
+                _momentum2[i] / (1.0 - std::pow(_beta2, step)) + epsilon;
+
+            const auto mom2sqrt = Force3D{
+                mstd::sqrt(mom2[0]),
+                mstd::sqrt(mom2[1]),
+                mstd::sqrt(mom2[2])
+            };
+
+            // learning rate update for the atom's position using the Adam
+            // optimizer formula - for the sake of the overload we unfortunately
+            // need to work unitless
+            auto pos_new = pos - learningRate * angstrom * mom1 / mom2sqrt;
 
             simulationBox.applyPBC(pos_new);
 

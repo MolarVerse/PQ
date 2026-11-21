@@ -55,7 +55,7 @@ namespace input::guffdat
         size_t      _lineNumber = 1;
         std::string _fileName   = defaults::GUFF_FILE_DEFAULT;
 
-        std::vector<std::vector<std::vector<std::vector<double>>>>
+        std::vector<std::vector<std::vector<std::vector<EnergyLengthPerMol>>>>
             _guffCoulombCoeffs;
         std::vector<std::vector<std::vector<std::vector<bool>>>> _isGuffPairSet;
 
@@ -78,7 +78,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            double                     rncCutOff
+            const Distance            &rncCutOff
         );
         void addLennardJonesPair(
             MolType                    molType1,
@@ -86,7 +86,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            double                     rncCutOff
+            const Distance            &rncCutOff
         );
         void addBuckinghamPair(
             MolType                    molType1,
@@ -94,7 +94,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            double                     rncCutOff
+            const Distance            &rncCutOff
         );
         void addMorsePair(
             MolType                    molType1,
@@ -102,7 +102,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            double                     rncCutOff
+            const Distance            &rncCutOff
         );
         void addGuffPair(
             MolType  molType1,
@@ -110,8 +110,8 @@ namespace input::guffdat
             AtomType atomType1,
             AtomType atomType2,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>
-                  &coefficients,
-            double rncCutOff
+                           &coefficients,
+            const Distance &rncCutOff
         );
 
         /********************
@@ -120,11 +120,11 @@ namespace input::guffdat
 
         void setFilename(const std::string_view &filename);
         void setGuffCoulombCoefficients(
-            MolType  molType1,
-            MolType  molType2,
-            AtomType atomType1,
-            AtomType atomType2,
-            double   coefficient
+            MolType                   molType1,
+            MolType                   molType2,
+            AtomType                  atomType1,
+            AtomType                  atomType2,
+            const EnergyLengthPerMol &coefficient
         );
         void setIsGuffPairSet(
             MolType  molType1,
@@ -139,8 +139,8 @@ namespace input::guffdat
          ********************/
 
         [[nodiscard]]
-        std::vector<std::vector<
-            std::vector<std::vector<double>>>> &getGuffCoulombCoefficients();
+        std::vector<std::vector<std::vector<
+            std::vector<EnergyLengthPerMol>>>> &getGuffCoulombCoefficients();
         [[nodiscard]]
         std::vector<
             std::vector<std::vector<std::vector<bool>>>> &getIsGuffPairSet();

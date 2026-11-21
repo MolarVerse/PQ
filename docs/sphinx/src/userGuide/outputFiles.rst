@@ -268,11 +268,14 @@ Restart File
 
 Stores the coordinates, velocities, and forces of each atom for the last performed simulation step in the following format:
     
-    | **line 1:** "Step" step_number
+    | **line 1:** "Step" step_number ["Simulation_Time" time_in_ps]
     | **line 2:** "Box" *a* *b* *c* *α* *β* *γ*
     | **line 3 to (n_atoms + 2):** element running_index moltype *x* *y* *z* *v*:sub:`x` *v*:sub:`y` *v*:sub:`z` *F*:sub:`x` *F*:sub:`y` *F*:sub:`z`
 
-The first line contains the string "Step" followed by the total number of performed simulation steps. The second line starts with the string 
+The first line contains the string "Step" followed by the total number of performed simulation steps. For molecular dynamics runs it is
+continued by the string "Simulation_Time" and the total simulation time in ps accumulated over all previous steps, e.g. ``Step 100 Simulation_Time 2``.
+This time is needed to restart correctly if the time step changed during the course of a simulation. If it is missing in a restart file with a
+non-zero step count, PQ assumes that all previous steps used the current time step and writes a warning. The second line starts with the string 
 "Box" followed by the parameters *a*, *b*, *c*, *α*, *β*, and *γ*, which denote the parameters of the simulation box in units of Å and degrees. 
 The following lines contain the element symbol, a running index just for human readability, the moltype the atom belongs to according to the 
 :ref:`moldescriptorFile` setup file, the Cartesian coordinates in Å, the velocities in :math:`\frac{\text{Å}}{\text{s}}`, and the forces in 

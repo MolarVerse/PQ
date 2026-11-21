@@ -149,12 +149,13 @@ namespace engine
         void writeVelFile(const out::Frame &, size_t);
         void writeForceFile(const out::Frame &, size_t);
         void writeChargeFile(const out::Frame &, size_t);
-        void writeRstFile(const out::Frame &, size_t);
+        void writeRstFile(const out::Frame &, size_t, const Time &finalTime);
         void writeFrame(
             const molsys::SimulationBox &,
             const thermostat::Thermostat &,
-            size_t step,
-            double potentialEnergy
+            size_t                     step,
+            double                     potentialEnergy,
+            const std::optional<Time> &finalTime
         );
         void openExtxyzOutput(const std::string &filename, bool overwrite);
         void openH5mdOutput(
@@ -242,7 +243,12 @@ namespace engine
 
        private:
         void _startFrameWriter(std::size_t nAtoms);
-        void _writeFrame(const out::Frame &, size_t step, bool metadata);
+        void _writeFrame(
+            const out::Frame &,
+            size_t                     step,
+            bool                       metadata,
+            const std::optional<Time> &finalTime
+        );
     };
 
 }   // namespace engine

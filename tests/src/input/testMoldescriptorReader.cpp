@@ -34,6 +34,7 @@
 #include "simulationBox.hpp"
 #include "testMoldesctripotReader.hpp"
 #include "throwWithMessage.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests constructor of input::molDescriptor::MoldescriptorReader
@@ -197,7 +198,9 @@ TEST_F(TestMoldescriptorReader, qmReferenceEnergy)
 
     auto &simBox = engine->getSimulationBox();
     EXPECT_DOUBLE_EQ(
-        simBox.findMoleculeType(MolType{1}).getQMReferenceEnergy(),
+        simBox.findMoleculeType(MolType{1})
+            .getQMReferenceEnergy()
+            .numerical_value_in(kcal_per_mol),
         -2554.71
     );
     EXPECT_EQ(
@@ -205,7 +208,9 @@ TEST_F(TestMoldescriptorReader, qmReferenceEnergy)
         size_t{3}
     );
     EXPECT_DOUBLE_EQ(
-        simBox.findMoleculeType(MolType{2}).getQMReferenceEnergy(),
+        simBox.findMoleculeType(MolType{2})
+            .getQMReferenceEnergy()
+            .numerical_value_in(kcal_per_mol),
         0.0
     );
     EXPECT_TRUE(simBox.findMoleculeType(MolType{2}).hasQMReferenceEnergy());

@@ -24,8 +24,9 @@
 
 #include <cmath>
 
-#include "constants/internalConversionFactors.hpp"
 #include "potentialSettings.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 #ifndef M_PI
 #define M_PI std::numbers::pi
@@ -46,21 +47,21 @@ namespace pot
      */
     CoulombWolf::CoulombWolf(
         const PotentialSettings& potentialSettings,
-        double                   kappa
+        const InvDistance&       kappa
     )
         : CoulombPotential(potentialSettings)
     {
-        _kappa             = kappa;
-        const auto& config = potentialSettings.get_coulombConfig();
-        _wolfParam1        = ::erfc(_kappa * config.cutoff) / config.cutoff;
-        _wolfParam2        = 2.0 * _kappa / ::sqrt(M_PI);
+        _kappa            = kappa;
+        const auto cutoff = _get_cutoff();
+        _wolfParam1       = mstd::erfc(_kappa * cutoff) / cutoff;
+        _wolfParam2       = 2.0 * _kappa / ::sqrt(M_PI);
 
         const auto kappaSquared  = _kappa * _kappa;
-        const auto coulRCSquared = config.cutoff * config.cutoff;
-        const auto expFactor     = ::exp(-kappaSquared * coulRCSquared);
+        const auto coulRCSquared = cutoff * cutoff;
+        const auto expFactor     = mstd::exp(-kappaSquared * coulRCSquared);
 
-        _wolfParam3  = _wolfParam1 / config.cutoff;
-        _wolfParam3 += _wolfParam2 * expFactor / config.cutoff;
+        _wolfParam3  = _wolfParam1 / cutoff;
+        _wolfParam3 += _wolfParam2 * expFactor / cutoff;
     }
 
     /**
@@ -71,16 +72,14 @@ namespace pot
      * @param chargeProduct
      * @return std::pair<double, double>
      */
-    std::pair<double, double> CoulombWolf::calculate(
-        double distance,
-        double chargeProduct
+    std::pair<EnergyPerMol, Force> CoulombWolf::calculate(
+        const Distance&      distance,
+        const ChargeSquared& chargeProduct
     ) const
     {
-        const auto coulombPrefactor = chargeProduct * COULOMB_PREFACTOR;
-
         const auto kappaDistance = _kappa * distance;
-        const auto erfcFactor    = ::erfc(kappaDistance);
-        const auto expFactor     = ::exp(-kappaDistance * kappaDistance);
+        const auto erfcFactor    = mstd::erfc(kappaDistance);
+        const auto expFactor     = mstd::exp(-kappaDistance * kappaDistance);
 
         auto energy  = (erfcFactor / distance) - _wolfParam1;
         energy      += _wolfParam3 * (distance - _get_cutoff());
@@ -89,10 +88,8 @@ namespace pot
         force      += _wolfParam2 * expFactor / distance;
         force      -= _wolfParam3;
 
-        energy *= coulombPrefactor;
-        force  *= coulombPrefactor;
-
-        return {energy, force};
+        const auto chargeFactor = chargeProduct * coulomb_prefactor;
+        return {energy * chargeFactor, force * chargeFactor};
     }
 
 }   // namespace pot

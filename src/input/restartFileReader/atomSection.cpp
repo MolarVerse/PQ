@@ -32,10 +32,12 @@
 #include "atom.hpp"
 #include "engine.hpp"
 #include "exceptions.hpp"
+#include "intraNonBondedMap.hpp"
 #include "molecule.hpp"
 #include "moleculeType.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "units.hpp"
 
 namespace input::restartFile
 {
@@ -59,7 +61,7 @@ namespace input::restartFile
                 const auto y = utilities::stringToFiniteDouble(lineElements[4]);
                 const auto z = utilities::stringToFiniteDouble(lineElements[5]);
 
-                atom->setPosition({x, y, z});
+                atom->setPosition(linalg::Vec3D(x, y, z) * angstrom);
 
                 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
                 if (lineElements.size() > 6)
@@ -71,17 +73,22 @@ namespace input::restartFile
                     const auto velZ =
                         utilities::stringToFiniteDouble(lineElements[8]);
 
-                    atom->setVelocity({velX, velY, velZ});
+                    atom->setVelocity(
+                        linalg::Vec3D(velX, velY, velZ) * angstrom / s
+                    );
                 }
 
                 if (lineElements.size() > 9)
                 {
                     const auto forceX =
-                        utilities::stringToFiniteDouble(lineElements[9]);
+                        utilities::stringToFiniteDouble(lineElements[9]) *
+                        kcal_per_mol / angstrom;
                     const auto forceY =
-                        utilities::stringToFiniteDouble(lineElements[10]);
+                        utilities::stringToFiniteDouble(lineElements[10]) *
+                        kcal_per_mol / angstrom;
                     const auto forceZ =
-                        utilities::stringToFiniteDouble(lineElements[11]);
+                        utilities::stringToFiniteDouble(lineElements[11]) *
+                        kcal_per_mol / angstrom;
 
                     atom->setForce({forceX, forceY, forceZ});
                 }
@@ -95,7 +102,9 @@ namespace input::restartFile
                     const auto oldZ =
                         utilities::stringToFiniteDouble(lineElements[14]);
 
-                    atom->setPositionOld({oldX, oldY, oldZ});
+                    atom->setPositionOld(
+                        linalg::Vec3D(oldX, oldY, oldZ) * angstrom
+                    );
                 }
 
                 if (lineElements.size() > 15)
@@ -107,17 +116,22 @@ namespace input::restartFile
                     const auto oldVz =
                         utilities::stringToFiniteDouble(lineElements[17]);
 
-                    atom->setVelocityOld({oldVx, oldVy, oldVz});
+                    atom->setVelocityOld(
+                        linalg::Vec3D(oldVx, oldVy, oldVz) * angstrom / s
+                    );
                 }
 
                 if (lineElements.size() > 18)
                 {
                     const auto oldFx =
-                        utilities::stringToFiniteDouble(lineElements[18]);
+                        utilities::stringToFiniteDouble(lineElements[18]) *
+                        kcal_per_mol / angstrom;
                     const auto oldFy =
-                        utilities::stringToFiniteDouble(lineElements[19]);
+                        utilities::stringToFiniteDouble(lineElements[19]) *
+                        kcal_per_mol / angstrom;
                     const auto oldFz =
-                        utilities::stringToFiniteDouble(lineElements[20]);
+                        utilities::stringToFiniteDouble(lineElements[20]) *
+                        kcal_per_mol / angstrom;
 
                     atom->setForceOld({oldFx, oldFy, oldFz});
                 }

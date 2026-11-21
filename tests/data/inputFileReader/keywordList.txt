@@ -16,10 +16,8 @@ use-energy-conv              false      true
 use-force-conv               false      true
 use-max-force-conv           false      true
 use-rms-force-conv           false      true
-energy-conv                  false      0.0001
 rel-energy-conv              false      0.0001
 abs-energy-conv              false      0.0001
-force-conv                   false      0.0001
 max-force-conv               false      0.0001
 rms-force-conv               false      0.0001
 

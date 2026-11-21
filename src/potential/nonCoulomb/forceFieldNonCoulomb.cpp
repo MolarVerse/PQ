@@ -101,8 +101,8 @@ namespace pot
             const auto &[energy, force] =
                 nonCoulombPair->calculate(radialCutoff);
 
-            nonCoulombPair->setEnergyCutOff(energy);
-            nonCoulombPair->setForceCutOff(force);
+            nonCoulombPair->set_energyCutoff(energy);
+            nonCoulombPair->set_forceCutoff(force);
         };
 
         std::ranges::for_each(_nonCoulPairsVec, setEnergyAndForceCutOff);

@@ -22,10 +22,8 @@
 
 #include "manostatInputParser.hpp"
 
-#include <limits>
 #include <optional>
 
-#include "constants/conversionFactors.hpp"
 #include "defaults.hpp"
 #include "inputKeyAdapter.hpp"
 #include "keyMetaData.hpp"
@@ -136,11 +134,6 @@ namespace input
         const auto setValue = [this](double relaxationTime)
         { _manostatSettings->setTauByUser(relaxationTime * ps); };
 
-        const auto validator = RangeValidator<double, Greater::GT, Less::LE>{
-            0.0,
-            std::numeric_limits<double>::max() / PS_TO_FS
-        };
-
         const auto defaultValue = 1.0;
 
         auto &key = _getRegistry().registerKey(
@@ -148,7 +141,7 @@ namespace input
                 .metadata     = metaData,
                 .defaultValue = defaultValue,
                 .onSet        = setValue,
-                .validators   = {makeShared(validator)}
+                .validators   = {makeShared(PositiveGTDoubleValidator)}
             }
         );
 

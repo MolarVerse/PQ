@@ -27,6 +27,7 @@
 #include "jCouplingForceField.hpp"
 #include "jCouplingType.hpp"
 #include "molecule.hpp"
+#include "units.hpp"
 
 /* ---------- JCouplingType ---------- */
 
@@ -44,7 +45,7 @@ TEST(TestJCouplingType, operatorEqual)
             .a             = 3.0,
             .b             = 4.0,
             .c             = 5.0,
-            .phaseShift    = 6.0
+            .phaseShift    = 6.0 * rad
         }
     );
     const ff::JCouplingType t1_same(
@@ -55,7 +56,7 @@ TEST(TestJCouplingType, operatorEqual)
             .a             = 3.0,
             .b             = 4.0,
             .c             = 5.0,
-            .phaseShift    = 6.0
+            .phaseShift    = 6.0 * rad
         }
     );
     const ff::JCouplingType t1_otherId(
@@ -66,7 +67,7 @@ TEST(TestJCouplingType, operatorEqual)
             .a             = 3.0,
             .b             = 4.0,
             .c             = 5.0,
-            .phaseShift    = 6.0
+            .phaseShift    = 6.0 * rad
         }
     );
     const ff::JCouplingType t1_otherJ0(
@@ -77,7 +78,7 @@ TEST(TestJCouplingType, operatorEqual)
             .a             = 3.0,
             .b             = 4.0,
             .c             = 5.0,
-            .phaseShift    = 6.0
+            .phaseShift    = 6.0 * rad
         }
     );
     const ff::JCouplingType t1_otherK(
@@ -88,7 +89,7 @@ TEST(TestJCouplingType, operatorEqual)
             .a             = 3.0,
             .b             = 4.0,
             .c             = 5.0,
-            .phaseShift    = 6.0
+            .phaseShift    = 6.0 * rad
         }
     );
 
@@ -108,7 +109,7 @@ TEST(TestJCouplingType, getters)
             .a             = 3.0,
             .b             = 4.0,
             .c             = 5.0,
-            .phaseShift    = 6.0
+            .phaseShift    = 6.0 * rad
         }
     );
     EXPECT_EQ(type.getId(), 7U);
@@ -117,7 +118,7 @@ TEST(TestJCouplingType, getters)
     EXPECT_DOUBLE_EQ(type.getParams().a, 3.0);
     EXPECT_DOUBLE_EQ(type.getParams().b, 4.0);
     EXPECT_DOUBLE_EQ(type.getParams().c, 5.0);
-    EXPECT_DOUBLE_EQ(type.getParams().phaseShift, 6.0);
+    EXPECT_DOUBLE_EQ(type.getParams().phaseShift.numerical_value_in(rad), 6.0);
 }
 
 TEST(TestJCouplingType, symmetryFlagSetters)
@@ -130,7 +131,7 @@ TEST(TestJCouplingType, symmetryFlagSetters)
             .a             = 3.0,
             .b             = 4.0,
             .c             = 5.0,
-            .phaseShift    = 6.0
+            .phaseShift    = 6.0 * rad
         }
     );
 
@@ -168,14 +169,14 @@ TEST(TestJCouplingForceField, settersAndGetters)
     forceField.setA(3.5);
     forceField.setB(4.5);
     forceField.setC(5.5);
-    forceField.setPhaseShift(0.25);
+    forceField.setPhaseShift(0.25 * rad);
 
     EXPECT_DOUBLE_EQ(forceField.getJ0(), 1.5);
     EXPECT_DOUBLE_EQ(forceField.getForceConstant(), 2.5);
     EXPECT_DOUBLE_EQ(forceField.getA(), 3.5);
     EXPECT_DOUBLE_EQ(forceField.getB(), 4.5);
     EXPECT_DOUBLE_EQ(forceField.getC(), 5.5);
-    EXPECT_DOUBLE_EQ(forceField.getPhaseShift(), 0.25);
+    EXPECT_DOUBLE_EQ(forceField.getPhaseShift().numerical_value_in(rad), 0.25);
 }
 
 TEST(TestJCouplingForceField, symmetryFlagsDefaultTrue)

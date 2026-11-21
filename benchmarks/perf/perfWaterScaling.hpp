@@ -38,6 +38,7 @@
 #include <utility>
 
 #include "settings.hpp"
+#include "units.hpp"
 
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
@@ -63,11 +64,11 @@
 
 namespace benchWaterScaling
 {
-    inline constexpr MolType WATER_TYPE{1};
-    inline constexpr double  CUTOFF                 = 9.0;
-    inline constexpr double  SPACING                = 4.5;
-    inline constexpr auto    HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
-    inline constexpr auto    OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
+    inline constexpr MolType  WATER_TYPE{1};
+    inline constexpr Distance CUTOFF                 = 9.0 * angstrom;
+    inline constexpr double   SPACING                = 4.5;
+    inline constexpr auto     HYDROGEN_ATOMIC_NUMBER = AtomNumber{1};
+    inline constexpr auto     OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
     inline int run(
         const std::size_t   perSide,
@@ -81,10 +82,14 @@ namespace benchWaterScaling
         );
 
         const double boxLength = (SPACING * static_cast<double>(perSide)) + 3.0;
-        const auto   numberOfCells = static_cast<size_t>(boxLength / CUTOFF);
+        const auto   numberOfCells = static_cast<size_t>(
+            boxLength / CUTOFF.numerical_value_in(angstrom)
+        );
 
         molsys::SimulationBox   simBox;
-        molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};
+        molsys::OrthorhombicBox orthoBox{
+            {boxLength * angstrom, boxLength * angstrom, boxLength * angstrom}
+        };
         simBox.setBox(orthoBox, false);
         simBox.setWaterType(WATER_TYPE);
 
@@ -94,7 +99,7 @@ namespace benchWaterScaling
         simBox.addMoleculeType(waterType);
 
         const auto makeAtom = [](const std::string_view name,
-                                 const linalg::Vec3D   &pos,
+                                 const Pos3D           &pos,
                                  const double           charge,
                                  const AtomNumber       atomicNumber)
         {
@@ -104,7 +109,7 @@ namespace benchWaterScaling
             atom->setPosition(pos);
             atom->setAtomType(AtomType{0});
             atom->setInternalGlobalVDWType(VdwType{0});
-            atom->setPartialCharge(charge);
+            atom->setPartialCharge(charge * elementary_charge);
             atom->setForceToZero();
             return atom;
         };
@@ -123,18 +128,21 @@ namespace benchWaterScaling
 
                     molsys::Molecule molecule;
                     molecule.setMoltype(WATER_TYPE);
-                    molecule.addAtom(
-                        makeAtom("O", oxygen, -0.82, OXYGEN_ATOMIC_NUMBER)
-                    );
+                    molecule.addAtom(makeAtom(
+                        "O",
+                        oxygen * angstrom,
+                        -0.82,
+                        OXYGEN_ATOMIC_NUMBER
+                    ));
                     molecule.addAtom(makeAtom(
                         "H",
-                        oxygen + linalg::Vec3D(0.9572, 0.0, 0.0),
+                        (oxygen + linalg::Vec3D(0.9572, 0.0, 0.0)) * angstrom,
                         0.41,
                         HYDROGEN_ATOMIC_NUMBER
                     ));
                     molecule.addAtom(makeAtom(
                         "H",
-                        oxygen + linalg::Vec3D(-0.24, 0.927, 0.0),
+                        (oxygen + linalg::Vec3D(-0.24, 0.927, 0.0)) * angstrom,
                         0.41,
                         HYDROGEN_ATOMIC_NUMBER
                     ));
@@ -144,19 +152,28 @@ namespace benchWaterScaling
         }
 
         waterModel::InterWaterState state;
-        state.oxygenCharge     = -0.82;
-        state.hydrogenCharge   = 0.41;
+        state.oxygenCharge     = -0.82 * elementary_charge;
+        state.hydrogenCharge   = 0.41 * elementary_charge;
         state.nonCoulombPairOO = std::make_unique<pot::LennardJonesPair>(
             CUTOFF,
-            LJParams{.c6 = 2.0, .c12 = 4.0}
+            LJParams{
+                .c6  = 2.0 * kcal_per_mol * angstrom6,
+                .c12 = 4.0 * kcal_per_mol * angstrom12
+            }
         );
         state.nonCoulombPairOH = std::make_unique<pot::LennardJonesPair>(
             CUTOFF,
-            LJParams{.c6 = 0.5, .c12 = 1.5}
+            LJParams{
+                .c6  = 0.5 * kcal_per_mol * angstrom6,
+                .c12 = 1.5 * kcal_per_mol * angstrom12
+            }
         );
         state.nonCoulombPairHH = std::make_unique<pot::LennardJonesPair>(
             CUTOFF,
-            LJParams{.c6 = 0.2, .c12 = 0.8}
+            LJParams{
+                .c6  = 0.2 * kcal_per_mol * angstrom6,
+                .c12 = 0.8 * kcal_per_mol * angstrom12
+            }
         );
 
         waterModel::InterWater interWater(

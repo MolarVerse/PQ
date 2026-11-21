@@ -29,6 +29,7 @@
 
 #include "box.hpp"
 #include "frame.hpp"
+#include "units.hpp"
 
 namespace out
 {
@@ -58,7 +59,8 @@ namespace out
         using textFormat::NAME_WIDTH;
         using textFormat::PRECISION;
 
-        const auto matrix = frame.box->getBoxMatrix();
+        const auto matrix =
+            frame.box->getBoxMatrix().numerical_value_in(angstrom);
 
         _buffer.clear();
         _buffer.left(frame.atoms.size(), 0).put('\n');
@@ -85,7 +87,8 @@ namespace out
 
         for (const auto &atom : frame.atoms)
         {
-            const auto pos = frame.box->wrapPositionIntoBox(atom.position);
+            const auto pos = frame.box->wrapPositionIntoBox(atom.position)
+                                 .numerical_value_in(angstrom);
 
             _buffer.left(atom.name, NAME_WIDTH);
 
@@ -94,8 +97,9 @@ namespace out
                 _buffer.put(' ').fixed(value, FIXED_WIDTH, PRECISION);
             }
 
-            const auto &vel   = atom.velocity;
-            const auto &force = atom.force;
+            const auto vel = atom.velocity.numerical_value_in(angstrom / s);
+            const auto force =
+                atom.force.numerical_value_in(kcal_per_mol / angstrom);
 
             for (const double value : {vel[0], vel[1], vel[2]})
             {
@@ -107,7 +111,11 @@ namespace out
                 _buffer.put(' ').fixed(value, FIXED_WIDTH, PRECISION);
             }
 
-            _buffer.put(' ').fixed(atom.charge, FIXED_WIDTH, PRECISION);
+            _buffer.put(' ').fixed(
+                atom.charge.numerical_value_in(elementary_charge),
+                FIXED_WIDTH,
+                PRECISION
+            );
             _buffer.put('\n');
         }
 

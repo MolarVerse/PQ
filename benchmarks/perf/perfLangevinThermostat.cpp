@@ -55,7 +55,7 @@ int main()
     auto       physicalData      = physicalData::PhysicalData();
     const auto targetTemperature = toTemperature(300.0);
     benchSetup::scaleVelocitiesToTemperature(box, targetTemperature);
-    auto thermostat = thermostat::LangevinThermostat(1.0);
+    auto thermostat = thermostat::LangevinThermostat(1.0 * Hz);
 
     perfAllocBegin();
 
@@ -79,7 +79,7 @@ int main()
         physicalData.getTemperature().quantity_from_zero().numerical_value_in(
             K
         ),
-        box.calculateMomentum()[0]
+        box.calculateMomentum()[0].numerical_value_in(g_per_mol * angstrom / fs)
     );
     return 0;
 }

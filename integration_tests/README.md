@@ -22,16 +22,25 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 ## How the tests work
 
 - `pytest integration_tests` from the repository root, with `build/apps/PQ` built (Release).
+  Set `PQ_BUILD_DIR` (e.g. `PQ_BUILD_DIR=.build pytest integration_tests`) to use a different build
+  directory than `build`; `os.path.join` makes an absolute path work too.
   CI runs them in the Release jobs on x86_64 and arm (`ci_build.yml`), in a conda environment with
   `dftbplus`, `xtb`, `pyscf==2.9.0`, `fennol`, `jax`, `ase` and `pqanalysis`.
 - Test data lives in `<name>.zip` next to the test directory (extracted once into `.zip_cache/`);
   each test copies it into `tmpdir/`, runs `PQ`, and asserts that `stderr` is empty.
-- `analysis.check_pq_output(prefix, folder, ref_folder="ref_data")` compares with the reference:
+- `analysis.check_pq_output(prefix, folder, ref_folder="ref_data", force_atol=0.0)` compares with the reference:
   the **trajectory** (`.xyz`), **velocities** (`.vel`), **forces** (`.force`), **charges**
   (`.chrg`) with `isclose`, and the **energy file** (`.en`, all columns except the last two, which
   are the momentum and the loop time as far as I can tell) plus its column description.
   The reference files are named `ref_data*` inside each zip; a test variant uses its own
-  `ref_data_<variant>` directory.
+  `ref_data_<variant>` directory. Tests that use dftb+ pass `force_atol=DFTB_FORCE_ATOL`, an
+  absolute tolerance for its noisy forces; all other tests compare forces with the relative one only.
+- A failing test says what went wrong. If `PQ` exits with a non-zero status, `execute_pq` fails with
+  the command, the exit status, the end of stdout (where PQ prints its error) and stderr. If a file
+  differs from its reference, `check_pq_output` names the file and reports the worst value (frame,
+  atom, column, both values), how many values are out of tolerance, and which frame headers (the
+  box) differ. The messages are made in `diagnostics.py`, which has unit tests in
+  `scripts/tests/test_integration_diagnostics.py`.
 - `oh_mm_hessian` does not use reference data: it checks that the Hessian file is a finite
   6 x 6 matrix, the info file, and the error message of one invalid input.
 - Runs are **2 to 10 steps** long. These tests find "the output changed", not "the physics is right

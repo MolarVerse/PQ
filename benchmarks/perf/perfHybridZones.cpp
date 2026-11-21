@@ -35,6 +35,8 @@
 #include <string>
 #include <vector>
 
+#include "units.hpp"
+
 #ifdef PQ_WITH_CALLGRIND
 #include <valgrind/callgrind.h>
 #else
@@ -74,7 +76,7 @@ namespace
             auto atom = std::make_shared<molsys::Atom>();
             atom->setName(names.at(i));
             atom->initMass();
-            atom->setPosition(origin + offset.at(i));
+            atom->setPosition((origin + offset.at(i)) * angstrom);
             water.addAtom(atom);
         }
 
@@ -95,13 +97,15 @@ namespace
 int main()
 {
     HybridSettings hybridSettings;
-    hybridSettings.setCoreRadiusByUser(4.0);
-    hybridSettings.setLayerRadiusByUser(12.0);
-    hybridSettings.setSmoothingRegionThicknessByUser(3.0);
-    hybridSettings.setPointChargeThicknessByUser(6.0);
+    hybridSettings.setCoreRadiusByUser(4.0 * angstrom);
+    hybridSettings.setLayerRadiusByUser(12.0 * angstrom);
+    hybridSettings.setSmoothingRegionThicknessByUser(3.0 * angstrom);
+    hybridSettings.setPointChargeThicknessByUser(6.0 * angstrom);
 
     auto                    box = molsys::SimulationBox();
-    molsys::OrthorhombicBox orthoBox{{100.0, 100.0, 100.0}};
+    molsys::OrthorhombicBox orthoBox{
+        {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+    };
     box.setBox(orthoBox, false);
 
     const auto half = 0.5 * SPACING * static_cast<double>(PER_SIDE);
@@ -138,7 +142,7 @@ int main()
         for (auto &atom : box.getAtoms())
         {
             auto pos  = atom->getPosition();
-            pos[0]   += shift;
+            pos[0]   += shift * angstrom;
             atom->setPosition(pos);
         }
 
@@ -153,11 +157,11 @@ int main()
 
     // read state so the loop cannot be optimized away: the sum of all
     // smoothing factors of the last iteration
-    auto sum = 0.0;
+    Quantity sum = 0.0;
     for (const auto &molecule :
          box.getMoleculesInsideZone(molsys::HybridZone::SMOOTHING))
         sum += molecule.getSmoothingFactor();
 
-    std::cout << std::format("{:.6f}\n", sum);
+    std::cout << std::format("{:.6f}\n", sum.numerical_value_in(one));
     return 0;
 }

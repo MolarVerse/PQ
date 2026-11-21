@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>
 
-#include "constants/internalConversionFactors.hpp"
 #include "coulombShiftedPotential.hpp"
 #include "settings.hpp"
+#include "units.hpp"
 
 /**
  * @brief tests calculation of shifted Coulomb potential
@@ -32,8 +32,8 @@
  */
 TEST(TestCoulombShiftedPotential, calculate)
 {
-    const auto chargeProduct = 2.0;
-    const auto rcCutoff      = 3.0;
+    const auto chargeProduct = 2.0 * elementary_charge * elementary_charge;
+    const auto rcCutoff      = 3.0 * angstrom;
     const auto energyCutOff  = 1 / rcCutoff;
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
@@ -42,18 +42,22 @@ TEST(TestCoulombShiftedPotential, calculate)
     const auto potential =
         pot::CoulombShiftedPotential(settings.potentialSettings);
 
-    auto distance = 2.0;
+    auto distance = 2.0 * angstrom;
 
     const auto [energy, force] = potential.calculate(distance, chargeProduct);
 
-    EXPECT_DOUBLE_EQ(
-        energy,
-        chargeProduct * COULOMB_PREFACTOR *
-            (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance))
+    EXPECT_NEAR(
+        energy.numerical_value_in(kcal_per_mol),
+        (chargeProduct * coulomb_prefactor *
+         (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance)))
+            .numerical_value_in(kcal_per_mol),
+        1e-10
     );
-    EXPECT_DOUBLE_EQ(
-        force,
-        chargeProduct * COULOMB_PREFACTOR *
-            (1 / (distance * distance) - forceCutoff)
+    EXPECT_NEAR(
+        force.numerical_value_in(kcal_per_mol / angstrom),
+        (chargeProduct * coulomb_prefactor *
+         (1 / (distance * distance) - forceCutoff))
+            .numerical_value_in(kcal_per_mol / angstrom),
+        1e-10
     );
 }

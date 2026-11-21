@@ -25,6 +25,7 @@
 
 #include "enums/simulationBox.hpp"
 #include "setting.hpp"
+#include "unit_types.hpp"
 
 /**
  * @brief SimulationBoxSettings
@@ -35,7 +36,7 @@
 class SimulationBoxSettings
 {
    private:
-    Setting<double> _density;
+    Setting<Density> _density;
 
     Setting<InitVelocities> _initializeVelocities;
 
@@ -46,14 +47,14 @@ class SimulationBoxSettings
      * standard setters *
      ********************/
 
-    void setDensityByUser(double density);
+    void setDensityByUser(const Density& density);
     void setInitializeVelocsByUser(InitVelocities initializeVelocities);
 
     /********************
      * standard getters *
      ********************/
 
-    [[nodiscard]] double         getDensity() const;
+    [[nodiscard]] const Density& getDensity() const;
     [[nodiscard]] bool           isDensitySetByUser() const;
     [[nodiscard]] InitVelocities getInitializeVelocities() const;
 };
