@@ -76,7 +76,7 @@ namespace benchWaterScaling
         Settings            settings
     )
     {
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(CUTOFF);
         settings.waterModelSettings.setWaterInterModelByUser(
             WaterInterModel::SPC_E
         );
@@ -193,7 +193,7 @@ namespace benchWaterScaling
         cellList.resizeCells();
         cellList.setup(
             simBox,
-            settings.potentialSettings.getCoulombRadiusCutOff()
+            settings.potentialSettings.getCoulombRadiusCutoff()
         );
 
         auto physicalData = physicalData::PhysicalData();
@@ -206,7 +206,7 @@ namespace benchWaterScaling
         {
             cellList.updateCellList(
                 simBox,
-                settings.potentialSettings.getCoulombRadiusCutOff()
+                settings.potentialSettings.getCoulombRadiusCutoff()
             );
             interWater.calculate(
                 simBox,

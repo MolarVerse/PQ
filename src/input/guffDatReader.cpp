@@ -284,7 +284,7 @@ namespace input::guffdat
 
         if (rncCutOff < 0.0)
             rncCutOff =
-                _engine.getSettings().potentialSettings.getCoulombRadiusCutOff(
+                _engine.getSettings().potentialSettings.getCoulombRadiusCutoff(
                 );
 
         constexpr auto coulombCoeffIndex = 5;

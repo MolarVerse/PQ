@@ -144,7 +144,7 @@ namespace intraNonBonded
         dPos                += txyz;
         const auto distance  = norm(dPos);
 
-        if (distance < potentialSettings.getCoulombRadiusCutOff())
+        if (distance < potentialSettings.getCoulombRadiusCutoff())
         {
             const auto charge1 = _molecule->getPartialCharge(atomIdx1);
             const auto charge2 = _molecule->getPartialCharge(atomIdx2);

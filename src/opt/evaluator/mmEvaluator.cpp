@@ -51,7 +51,7 @@ namespace opt
 
         _getCellList().updateCellList(
             _getSimulationBox(),
-            _getSettings().potentialSettings.getCoulombRadiusCutOff()
+            _getSettings().potentialSettings.getCoulombRadiusCutoff()
         );
 
         _getPotential().calculateForces(

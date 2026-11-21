@@ -38,7 +38,7 @@ TEST(TestCoulombShiftedPotential, calculate)
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(rcCutoff);
     const auto potential =
         pot::CoulombShiftedPotential(settings.potentialSettings);
 

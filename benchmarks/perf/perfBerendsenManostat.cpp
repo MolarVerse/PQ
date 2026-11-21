@@ -56,7 +56,7 @@ int main()
     auto physicalData = physicalData::PhysicalData();
 
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
     settings.manostatSettings.setTargetPressureByUser(1.0 * bar);
     settings.manostatSettings.setTauByUser(100.0 * fs);
     settings.manostatSettings.setCompressibilityByUser(4.6e-5 * per_bar);
@@ -75,7 +75,7 @@ int main()
             physicalData,
             toTemperature(300.0),
             timeStep,
-            settings.potentialSettings.getCoulombRadiusCutOff()
+            settings.potentialSettings.getCoulombRadiusCutoff()
         );
     }
 

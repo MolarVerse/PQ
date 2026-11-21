@@ -173,7 +173,7 @@ namespace
 TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCoulombCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCoulombCutOff);
     PotentialSettingsUtils::setEnergyCutoff(
         settings.potentialSettings,
         0.0 / angstrom
@@ -240,11 +240,11 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     cellList.resizeCells();
     cellList.setup(
         simBoxCL,
-        settings.potentialSettings.getCoulombRadiusCutOff()
+        settings.potentialSettings.getCoulombRadiusCutoff()
     );
     cellList.updateCellList(
         simBoxCL,
-        settings.potentialSettings.getCoulombRadiusCutOff()
+        settings.potentialSettings.getCoulombRadiusCutoff()
     );
     cellListPotential.calculateForces(
         simBoxCL,

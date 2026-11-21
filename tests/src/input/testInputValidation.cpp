@@ -82,7 +82,7 @@ class TestInputValidation : public ::testing::Test
         _settings.potentialSettings.setCoulombLongRangeTypeByUser(
             CoulombLongRangeType::SHIFTED
         );
-        _settings.potentialSettings.setCoulombRadiusCutOffByUser(
+        _settings.potentialSettings.setCoulombRadiusCutoffByUser(
             defaults::COULOMB_CUT_OFF_DEFAULT
         );
 
@@ -378,7 +378,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
     GeneralSettings::activateCellList();
-    _settings.potentialSettings.setCoulombRadiusCutOffByUser(0.0 * angstrom);
+    _settings.potentialSettings.setCoulombRadiusCutoffByUser(0.0 * angstrom);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

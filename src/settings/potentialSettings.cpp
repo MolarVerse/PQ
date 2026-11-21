@@ -91,25 +91,25 @@ void PotentialSettings::setCoulombLongRangeTypeByUser(CoulombLongRangeType type)
 /**
  * @brief Set the Coulomb radius cut off in the PotentialSettings class
  *
- * @param coulombRadiusCutOff
+ * @param coulombRadiusCutoff
  */
-void PotentialSettings::setCoulombRadiusCutOffByUser(
-    const Pos& coulombRadiusCutOff
+void PotentialSettings::setCoulombRadiusCutoffByUser(
+    const Pos& coulombRadiusCutoff
 )
 {
-    _coulombConfig = CoulombPotentialConfig(coulombRadiusCutOff);
+    _coulombConfig = CoulombPotentialConfig(coulombRadiusCutoff);
 }
 
 /**
  * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
  *
- * @param nonCoulombRadiusCutOff
+ * @param nonCoulombRadiusCutoff
  */
-void PotentialSettings::setNonCoulombRadiusCutOffByUser(
-    const Pos& nonCoulombRadiusCutOff
+void PotentialSettings::setNonCoulombRadiusCutoffByUser(
+    const Pos& nonCoulombRadiusCutoff
 )
 {
-    _nonCoulombRadiusCutOff.setByUser(nonCoulombRadiusCutOff);
+    _nonCoulombRadiusCutoff.setByUser(nonCoulombRadiusCutoff);
 }
 
 /**
@@ -184,7 +184,7 @@ NonCoulombType PotentialSettings::getNonCoulombType() const
  *
  * @return Pos
  */
-const Distance& PotentialSettings::getCoulombRadiusCutOff() const
+const Distance& PotentialSettings::getCoulombRadiusCutoff() const
 {
     return _coulombConfig.cutoff;
 }
@@ -194,9 +194,9 @@ const Distance& PotentialSettings::getCoulombRadiusCutOff() const
  *
  * @return std::optional<Pos>
  */
-const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
+const Distance& PotentialSettings::getNonCoulombRadiusCutoff() const
 {
-    return _nonCoulombRadiusCutOff.get();
+    return _nonCoulombRadiusCutoff.get();
 }
 
 /**
@@ -204,9 +204,9 @@ const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
  *
  * @return true if set by user, false otherwise
  */
-bool PotentialSettings::isNonCoulombRadiusCutOffSetByUser() const
+bool PotentialSettings::isNonCoulombRadiusCutoffSetByUser() const
 {
-    return _nonCoulombRadiusCutOff.isSetByUser();
+    return _nonCoulombRadiusCutoff.isSetByUser();
 }
 
 /**

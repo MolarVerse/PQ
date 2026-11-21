@@ -92,7 +92,7 @@ namespace input
         );
         _validateManostat(settings.manostatSettings, settings.timings, jobType);
         _validateCellList(
-            settings.potentialSettings.getCoulombRadiusCutOff(),
+            settings.potentialSettings.getCoulombRadiusCutoff(),
             jobType
         );
         _validateReactionFieldCoulomb(

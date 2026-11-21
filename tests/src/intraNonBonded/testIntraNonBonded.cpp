@@ -201,7 +201,7 @@ TEST_F(TestIntraNonBonded, calculate)
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
     _setNonCoulombPairsMatrix(
         linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>(2, 2)

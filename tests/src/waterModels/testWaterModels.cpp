@@ -698,7 +698,7 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
     PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
     PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
@@ -813,8 +813,8 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 {
     Settings settings;
-    settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
 
     auto oxygenOxygen = std::make_unique<pot::LennardJonesPair>(
         kCutOff,
@@ -911,11 +911,11 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
     Settings settings;
-    settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
     settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     settings.hybridSettings.setUseQMChargesByUser(true);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
     PotentialSettingsUtils::setEnergyCutoff(
         settings.potentialSettings,
         0.0 / angstrom
@@ -1113,8 +1113,8 @@ namespace
     {
         settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-        settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
+        settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutOff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
             0.0 / angstrom
@@ -1286,7 +1286,7 @@ TEST(InterWater, BruteForceAndCellListGiveTheSameEnergiesAndForces)
 TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
     PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
     PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
@@ -1382,9 +1382,9 @@ namespace
     {
         settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-        settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
+        settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutOff);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
             0.0 / angstrom
@@ -1525,11 +1525,11 @@ TEST(PotentialStrategies, BruteForceAndCellListGiveTheSameEnergiesAndForces)
 TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
     Settings settings;
-    settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutOff);
     settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     HybridSettings hybridSettings;
     hybridSettings.setUseQMChargesByUser(true);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutOff);
     PotentialSettingsUtils::setEnergyCutoff(
         settings.potentialSettings,
         0.0 / angstrom

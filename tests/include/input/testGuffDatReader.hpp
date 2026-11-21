@@ -108,7 +108,7 @@ class TestGuffDatReader : public ::testing::Test
         _engine->getSimulationBox().addMoleculeType(moleculeType2);
         _engine->getSimulationBox().addMolecule(molecule1);
 
-        _settings.potentialSettings.setCoulombRadiusCutOffByUser(
+        _settings.potentialSettings.setCoulombRadiusCutoffByUser(
             12.5 * angstrom
         );
 

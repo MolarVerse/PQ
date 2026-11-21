@@ -72,7 +72,7 @@ namespace
         auto       simBox       = benchmarkSetup::makeLattice(cellsPerSide);
 
         Settings settings;
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(
             benchmarkSetup::cutOff
         );
 

@@ -63,7 +63,7 @@ TEST_F(TestDihedralForceField, calculateEnergyAndForces)
     box.setBox(orthoBox, false);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(20.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(20.0 * angstrom);
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 

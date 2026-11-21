@@ -31,16 +31,16 @@ namespace pot
      *
      * @param vanDerWaalsType1
      * @param vanDerWaalsType2
-     * @param cutOff
+     * @param cutoff
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
         ExtVdwType              vanDerWaalsType1,
         ExtVdwType              vanDerWaalsType2,
-        const Pos&              cutOff,
+        const Pos&              cutoff,
         const BuckinghamParams& params
     )
-        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutoff),
           _params(params)
     {
     }
@@ -48,32 +48,32 @@ namespace pot
     /**
      * @brief Construct a new Buckingham Pair:: Buckingham Pair object
      *
-     * @param cutOff
+     * @param cutoff
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
-        const Pos&              cutOff,
+        const Pos&              cutoff,
         const BuckinghamParams& params
     )
-        : NonCoulombPair(cutOff), _params(params)
+        : NonCoulombPair(cutoff), _params(params)
     {
     }
 
     /**
      * @brief Construct a new Buckingham Pair:: Buckingham Pair object
      *
-     * @param cutOff
+     * @param cutoff
      * @param energyCutoff
      * @param forceCutoff
      * @param params
      */
     BuckinghamPair::BuckinghamPair(
-        const Pos&              cutOff,
+        const Pos&              cutoff,
         const EnergyPerMol&     energyCutoff,
         const Force&            forceCutoff,
         const BuckinghamParams& params
     )
-        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
+        : NonCoulombPair(cutoff, energyCutoff, forceCutoff), _params(params)
     {
     }
 

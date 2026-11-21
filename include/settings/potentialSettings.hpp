@@ -63,7 +63,7 @@ class PotentialSettings
     Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType;
     Setting<NonCoulombType, "Non coulomb type">              _nonCoulombType;
 
-    Setting<Distance, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
+    Setting<Distance, "Non coulomb radius cut off"> _nonCoulombRadiusCutoff;
 
     Setting<double, "Scale 1-4 Coulomb"> _scale14Coulomb{
         defaults::SCALE_14_COULOMB_DEFAULT
@@ -94,8 +94,8 @@ class PotentialSettings
     void setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
     void setNonCoulombTypeByUser(NonCoulombType type);
 
-    void setCoulombRadiusCutOffByUser(const Pos& coulombRadiusCutOff);
-    void setNonCoulombRadiusCutOffByUser(const Pos& nonCoulombRadiusCutOff);
+    void setCoulombRadiusCutoffByUser(const Pos& coulombRadiusCutoff);
+    void setNonCoulombRadiusCutoffByUser(const Pos& nonCoulombRadiusCutoff);
 
     void setScale14CoulombByUser(double scale14Coulomb);
     void setScale14VanDerWaalsByUser(double scale14VanDerWaals);
@@ -110,9 +110,9 @@ class PotentialSettings
     [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
     [[nodiscard]] NonCoulombType       getNonCoulombType() const;
 
-    [[nodiscard]] const Distance& getCoulombRadiusCutOff() const;
-    [[nodiscard]] const Distance& getNonCoulombRadiusCutOff() const;
-    [[nodiscard]] bool            isNonCoulombRadiusCutOffSetByUser() const;
+    [[nodiscard]] const Distance& getCoulombRadiusCutoff() const;
+    [[nodiscard]] const Distance& getNonCoulombRadiusCutoff() const;
+    [[nodiscard]] bool            isNonCoulombRadiusCutoffSetByUser() const;
 
     [[nodiscard]] double getScale14Coulomb() const;
     [[nodiscard]] double getScale14VDW() const;
