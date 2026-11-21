@@ -138,6 +138,7 @@ namespace opt
      *
      * @param evaluator
      * @param simulationBox
+     * @param physicalData
      */
     Hessian CentralForceDifferenceHessianBuilder::build(
         Evaluator                  &evaluator,
@@ -193,6 +194,7 @@ namespace opt
      *
      * @param evaluator
      * @param simulationBox
+     * @param physicalData
      */
     Hessian ForwardForceDifferenceHessianBuilder::build(
         Evaluator                  &evaluator,
@@ -243,6 +245,7 @@ namespace opt
      *
      * @param evaluator
      * @param simulationBox
+     * @param physicalData
      */
     Hessian FivePointForceDifferenceHessianBuilder::build(
         Evaluator                  &evaluator,
