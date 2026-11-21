@@ -32,13 +32,9 @@
 class TestRandomNumberGenerator : public ::testing::Test
 {
    protected:
-    void SetUp() override
-    {
-        GeneralSettings::setIsRandomSeedSet(true);
-        GeneralSettings::setRandomSeed(42);
-    }
+    GeneralSettings _generalSettings;
 
-    void TearDown() override { GeneralSettings::setIsRandomSeedSet(false); }
+    void SetUp() override { _generalSettings.setRandomSeedByUser(42); }
 };
 
 /**
@@ -47,10 +43,10 @@ class TestRandomNumberGenerator : public ::testing::Test
  */
 TEST_F(TestRandomNumberGenerator, uniformRealDistributionRange)
 {
-    rng::RandomNumberGenerator rng{};
-    constexpr double           min{5.0};
-    constexpr double           max{10.0};
-    constexpr int              numSamples{1000};
+    auto             rng = rng::RandomNumberGenerator::create(_generalSettings);
+    constexpr double min{5.0};
+    constexpr double max{10.0};
+    constexpr int    numSamples{1000};
 
     for (int i{0}; i < numSamples; ++i)
     {
@@ -66,10 +62,10 @@ TEST_F(TestRandomNumberGenerator, uniformRealDistributionRange)
  */
 TEST_F(TestRandomNumberGenerator, uniformRealDistributionMean)
 {
-    rng::RandomNumberGenerator rng{};
-    constexpr double           min{0.0};
-    constexpr double           max{10.0};
-    constexpr int              numSamples{10000};
+    auto             rng = rng::RandomNumberGenerator::create(_generalSettings);
+    constexpr double min{0.0};
+    constexpr double max{10.0};
+    constexpr int    numSamples{10000};
 
     double sum{0.0};
     for (int i{0}; i < numSamples; ++i)
@@ -88,10 +84,10 @@ TEST_F(TestRandomNumberGenerator, uniformRealDistributionMean)
  */
 TEST_F(TestRandomNumberGenerator, normalDistributionMean)
 {
-    rng::RandomNumberGenerator rng{};
-    constexpr double           mean{5.0};
-    constexpr double           stddev{2.0};
-    constexpr int              numSamples{10000};
+    auto             rng = rng::RandomNumberGenerator::create(_generalSettings);
+    constexpr double mean{5.0};
+    constexpr double stddev{2.0};
+    constexpr int    numSamples{10000};
 
     double sum{0.0};
     for (int i{0}; i < numSamples; ++i)
@@ -109,11 +105,11 @@ TEST_F(TestRandomNumberGenerator, normalDistributionMean)
  */
 TEST_F(TestRandomNumberGenerator, determinismWithSeed)
 {
-    GeneralSettings::setIsRandomSeedSet(true);
-    GeneralSettings::setRandomSeed(73);
+    GeneralSettings localSettings;
+    localSettings.setRandomSeedByUser(73);
 
-    rng::RandomNumberGenerator rng1{};
-    rng::RandomNumberGenerator rng2{};
+    auto rng1 = rng::RandomNumberGenerator::create(localSettings);
+    auto rng2 = rng::RandomNumberGenerator::create(localSettings);
 
     for (int i{0}; i < 100; ++i)
     {
@@ -129,7 +125,7 @@ TEST_F(TestRandomNumberGenerator, determinismWithSeed)
  */
 TEST_F(TestRandomNumberGenerator, edgeCases)
 {
-    rng::RandomNumberGenerator rng{};
+    auto rng = rng::RandomNumberGenerator::create(_generalSettings);
 
     EXPECT_NO_THROW(rng.getUniformRealDistribution(5.0, 5.0));
     EXPECT_NO_THROW(rng.getNormalDistribution(0.0, 0.0));
@@ -143,7 +139,7 @@ TEST_F(TestRandomNumberGenerator, edgeCases)
  */
 TEST_F(TestRandomNumberGenerator, normalDistributionShape)
 {
-    rng::RandomNumberGenerator rng{};
+    auto rng = rng::RandomNumberGenerator::create(_generalSettings);
 
     constexpr double mean{0.0};
     constexpr double stddev{1.0};

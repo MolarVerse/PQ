@@ -121,7 +121,9 @@ namespace input
                 settings.potentialSettings
             )
         );
-        _parsers.push_back(std::make_unique<GeneralInputParser>());
+        _parsers.push_back(
+            std::make_unique<GeneralInputParser>(settings.generalSettings)
+        );
         _parsers.push_back(
             std::make_unique<HessianInputParser>(settings.hessianSettings)
         );

@@ -105,7 +105,7 @@ TEST_F(TestInputFileReader, JobType)
         "- qmmm-md\n"
     );
 
-    input::GeneralInputParser parser;
+    input::GeneralInputParser parser{generalSettings};
     EXPECT_NO_THROW(parser.parseJobType(lineElements, 0));
 }
 
@@ -115,7 +115,8 @@ TEST_F(TestInputFileReader, JobType)
  */
 TEST_F(TestInputFileReader, parseDimensionality)
 {
-    input::GeneralInputParser parser;
+    GeneralSettings           generalSettings;
+    input::GeneralInputParser parser{generalSettings};
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("dim"));
 
@@ -165,7 +166,8 @@ TEST_F(TestInputFileReader, parseDimensionality)
  */
 TEST_F(TestInputFileReader, parseFloatingPointType)
 {
-    input::GeneralInputParser parser;
+    GeneralSettings           generalSettings;
+    input::GeneralInputParser parser{generalSettings};
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("floating_point_type"));
     const auto& parseFunc = funcMap.at("floating_point_type");
@@ -176,13 +178,13 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
         "float"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::getFloatingPointType(), FPType::FLOAT);
+    EXPECT_EQ(generalSettings.getFloatingPointType(), FPType::FLOAT);
 
     _clearParser(parser);
 
     lineElements = {"floating_point_type", "=", "double"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::getFloatingPointType(), FPType::DOUBLE);
+    EXPECT_EQ(generalSettings.getFloatingPointType(), FPType::DOUBLE);
 
     _clearParser(parser);
 
@@ -201,32 +203,33 @@ TEST_F(TestInputFileReader, parseFloatingPointType)
  */
 TEST_F(TestInputFileReader, parseRandomSeed)
 {
-    input::GeneralInputParser parser;
+    GeneralSettings           generalSettings;
+    input::GeneralInputParser parser{generalSettings};
     const auto                funcMap = parser.getKeywordFuncMap();
     ASSERT_TRUE(funcMap.contains("random_seed"));
     const auto& parseFunc = funcMap.at("random_seed");
 
     std::vector<std::string> lineElements = {"random_seed", "=", "0"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), true);
-    EXPECT_EQ(GeneralSettings::getRandomSeed(), 0);
-    GeneralSettings::setIsRandomSeedSet(false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), true);
+    EXPECT_EQ(generalSettings.getRandomSeed(), 0);
+    generalSettings = GeneralSettings{};
 
     _clearParser(parser);
 
     lineElements = {"random_seed", "=", "+73"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), true);
-    EXPECT_EQ(GeneralSettings::getRandomSeed(), 73);
-    GeneralSettings::setIsRandomSeedSet(false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), true);
+    EXPECT_EQ(generalSettings.getRandomSeed(), 73);
+    generalSettings = GeneralSettings{};
 
     _clearParser(parser);
 
     lineElements = {"random_seed", "=", std::to_string(UINT32_MAX)};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), true);
-    EXPECT_EQ(GeneralSettings::getRandomSeed(), UINT32_MAX);
-    GeneralSettings::setIsRandomSeedSet(false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), true);
+    EXPECT_EQ(generalSettings.getRandomSeed(), UINT32_MAX);
+    generalSettings = GeneralSettings{};
 
     _clearParser(parser);
 
@@ -242,7 +245,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         "input file: failed validation with message Value must be between 0 "
         "and 4294967295"
     );
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), false);
 
     _clearParser(parser);
 
@@ -253,7 +256,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         "Invalid value \"-1\" for key \"random_seed\" at line 0 in input file. "
         "Value must be a positive integer"
     );
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), false);
 
     _clearParser(parser);
 
@@ -265,7 +268,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         "file. "
         "Value must be a positive integer"
     );
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), false);
 
     _clearParser(parser);
 
@@ -277,7 +280,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         "file. "
         "Value must be a positive integer"
     );
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), false);
 
     _clearParser(parser);
 
@@ -289,7 +292,7 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         "file. "
         "Value must be a positive integer"
     );
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), false);
 
     _clearParser(parser);
 
@@ -300,5 +303,5 @@ TEST_F(TestInputFileReader, parseRandomSeed)
         "Invalid value \"+\" for key \"random_seed\" at line 0 in input file. "
         "Value must be a positive integer"
     );
-    EXPECT_EQ(GeneralSettings::isRandomSeedSet(), false);
+    EXPECT_EQ(generalSettings.isRandomSeedSetByUser(), false);
 }

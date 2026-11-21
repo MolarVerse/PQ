@@ -23,6 +23,7 @@
 #include "generalSettings.hpp"
 
 #include <string>
+#include <utility>
 
 /***************************
  *                         *
@@ -45,9 +46,9 @@ void GeneralSettings::setJobtypeByUser(JobType jobtype)
  *
  * @param floatingPointType
  */
-void GeneralSettings::setFloatingPointType(FPType floatingPointType)
+void GeneralSettings::setFloatingPointTypeByUser(FPType floatingPointType)
 {
-    _floatingPointType = floatingPointType;
+    _floatingPointType.setByUser(floatingPointType);
 }
 
 /**
@@ -55,19 +56,9 @@ void GeneralSettings::setFloatingPointType(FPType floatingPointType)
  *
  * @param randomSeed
  */
-void GeneralSettings::setRandomSeed(uint_fast32_t randomSeed)
+void GeneralSettings::setRandomSeedByUser(uint_fast32_t randomSeed)
 {
-    _randomSeed = randomSeed;
-}
-
-/**
- * @brief sets if the random seed value has been set
- *
- * @param isRandomSeedSet
- */
-void GeneralSettings::setIsRandomSeedSet(bool isRandomSeedSet)
-{
-    _isRandomSeedset = isRandomSeedSet;
+    _randomSeed.setByUser(randomSeed);
 }
 
 /**
@@ -145,19 +136,25 @@ bool GeneralSettings::isJobtypeSetByUser() const
  *
  * @return FPType
  */
-FPType GeneralSettings::getFloatingPointType() { return _floatingPointType; }
+FPType GeneralSettings::getFloatingPointType() const
+{
+    return _floatingPointType.get();
+}
 
 /**
  * @brief get the floating point string representation used in pybind11
  * bindings
  *
  */
-std::string GeneralSettings::getFloatingPointPybindString()
+std::string GeneralSettings::getFloatingPointPybindString() const
 {
-    if (_floatingPointType == FPType::FLOAT)
-        return "float32";
+    switch (_floatingPointType.get())
+    {
+        case FPType::FLOAT: return "float32";
+        case FPType::DOUBLE: return "float64";
+    }
 
-    return "float64";
+    std::unreachable();
 }
 
 /**
@@ -165,14 +162,20 @@ std::string GeneralSettings::getFloatingPointPybindString()
  *
  * @return uint_fast32_t
  */
-uint_fast32_t GeneralSettings::getRandomSeed() { return _randomSeed; }
+uint_fast32_t GeneralSettings::getRandomSeed() const
+{
+    return _randomSeed.get();
+}
 
 /**
  * @brief get if the random seed value has been set
  *
  * @return bool
  */
-bool GeneralSettings::isRandomSeedSet() { return _isRandomSeedset; }
+bool GeneralSettings::isRandomSeedSetByUser() const
+{
+    return _randomSeed.isSetByUser();
+}
 
 /**
  * @brief get the dimensionality

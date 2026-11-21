@@ -47,7 +47,8 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.fennolSettings,
         settings.dftbSettings,
         settings.xtbSettings,
-        settings.externalQMSettings
+        settings.externalQMSettings,
+        settings.generalSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
@@ -57,7 +58,8 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.fennolSettings,
         settings.dftbSettings,
         settings.xtbSettings,
-        settings.externalQMSettings
+        settings.externalQMSettings,
+        settings.generalSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
@@ -67,7 +69,8 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.fennolSettings,
         settings.dftbSettings,
         settings.xtbSettings,
-        settings.externalQMSettings
+        settings.externalQMSettings,
+        settings.generalSettings
     );
 
     settings.qmSettings.setQMMethodByUser(QMMethod::ORCA);
@@ -77,7 +80,8 @@ TEST(TestQMRunnerManager, createsTheExternalRunnerForEachMethod)
         settings.fennolSettings,
         settings.dftbSettings,
         settings.xtbSettings,
-        settings.externalQMSettings
+        settings.externalQMSettings,
+        settings.generalSettings
     );
     EXPECT_NE(dynamic_cast<QM::OrcaRunner *>(orca.get()), nullptr);
 
@@ -96,7 +100,8 @@ TEST(TestQMRunnerManager, eachCallCreatesANewRunner)
         settings.fennolSettings,
         settings.dftbSettings,
         settings.xtbSettings,
-        settings.externalQMSettings
+        settings.externalQMSettings,
+        settings.generalSettings
     );
     const auto second = engine::QMRunnerManager::createQMRunner(
         settings.qmSettings,
@@ -104,7 +109,8 @@ TEST(TestQMRunnerManager, eachCallCreatesANewRunner)
         settings.fennolSettings,
         settings.dftbSettings,
         settings.xtbSettings,
-        settings.externalQMSettings
+        settings.externalQMSettings,
+        settings.generalSettings
     );
 
     EXPECT_NE(first.get(), second.get());
@@ -121,7 +127,8 @@ TEST(TestQMRunnerManager, rejectsMissingQMProgram)
             settings.fennolSettings,
             settings.dftbSettings,
             settings.xtbSettings,
-            settings.externalQMSettings
+            settings.externalQMSettings,
+            settings.generalSettings
         ),
         exc::InputFileException,
         "A QM based jobtype was requested but no valid external program via "
@@ -144,7 +151,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.fennolSettings,
             settings.dftbSettings,
             settings.xtbSettings,
-            settings.externalQMSettings
+            settings.externalQMSettings,
+            settings.generalSettings
         ),
         exc::CompileTimeException,
         "The ASE DFTB+ QM method was requested but ASE was not enabled at "

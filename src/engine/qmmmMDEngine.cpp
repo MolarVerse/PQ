@@ -35,7 +35,9 @@
 #include "generalSettings.hpp"
 #include "hybridSettings.hpp"
 #include "intraNonBondedMap.hpp"
+#include "mdEngine.hpp"
 #include "molecule.hpp"
+#include "randomNumberGenerator.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 #include "virial.hpp"
@@ -105,6 +107,22 @@ namespace engine
             return weights;
         }
     }   // namespace
+
+    /**
+     * @brief Construct a new QMMMMDEngine object
+     *
+     * @param settings The simulation settings used to configure the engine
+     *
+     * @details This constructor initializes the QMMMMDEngine with the
+     * provided settings and sets up the random number generator based on
+     * the general settings.
+     */
+    QMMMMDEngine::QMMMMDEngine(const Settings &settings)
+        : MDEngine(settings),
+          HybridMDEngine(settings),
+          _rng(rng::RandomNumberGenerator::create(settings.generalSettings))
+    {
+    }
 
     /**
      * @brief calculate QM/MM forces

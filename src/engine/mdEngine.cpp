@@ -55,7 +55,8 @@ namespace engine
           _thermostat(std::make_unique<thermostat::Thermostat>()),
           _manostat(
               manostat::ManostatFactory::createManostat(
-                  settings.manostatSettings
+                  settings.manostatSettings,
+                  settings.generalSettings
               )
           )
     {

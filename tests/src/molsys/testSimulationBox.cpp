@@ -32,6 +32,7 @@
 #include <vector>
 
 #include "exceptions.hpp"
+#include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
@@ -885,8 +886,9 @@ TEST_F(TestSimulationBox, forceMetricsAndAtomStateUpdates)
         EXPECT_EQ(atom->getForceOuter(), Force3D::zero());
     }
 
-    const auto firstPosition = _simulationBox->getAtom(0).getPosition();
-    _simulationBox->initPositions(0.0);
+    const auto      firstPosition = _simulationBox->getAtom(0).getPosition();
+    GeneralSettings generalSettings;
+    _simulationBox->initPositions(0.0, generalSettings);
     EXPECT_EQ(_simulationBox->getAtom(0).getPosition(), firstPosition);
 }
 

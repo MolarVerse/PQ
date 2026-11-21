@@ -44,9 +44,8 @@ class GeneralSettings
    private:
     Setting<JobType, "JobType"> _jobtype;
 
-    static inline FPType        _floatingPointType = FPType::DOUBLE;
-    static inline uint_fast32_t _randomSeed;
-    static inline bool          _isRandomSeedset = false;
+    Setting<FPType, "FloatingPointType"> _floatingPointType{FPType::DOUBLE};
+    Setting<uint_fast32_t, "RandomSeed"> _randomSeed;
 
     static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
 
@@ -72,10 +71,8 @@ class GeneralSettings
 
     void setJobtypeByUser(JobType jobtype);
 
-    static void setFloatingPointType(FPType);
-
-    static void setRandomSeed(uint_fast32_t randomSeed);
-    static void setIsRandomSeedSet(bool isRandomSeedSet);
+    void setFloatingPointTypeByUser(FPType);
+    void setRandomSeedByUser(uint_fast32_t randomSeed);
 
     static void setDimensionality(size_t dimensionality);
 
@@ -91,11 +88,11 @@ class GeneralSettings
     [[nodiscard]] JobType getJobtype() const;
     [[nodiscard]] bool    isJobtypeSetByUser() const;
 
-    [[nodiscard]] static FPType      getFloatingPointType();
-    [[nodiscard]] static std::string getFloatingPointPybindString();
+    [[nodiscard]] FPType      getFloatingPointType() const;
+    [[nodiscard]] std::string getFloatingPointPybindString() const;
 
-    [[nodiscard]] static uint_fast32_t getRandomSeed();
-    [[nodiscard]] static bool          isRandomSeedSet();
+    [[nodiscard]] uint_fast32_t getRandomSeed() const;
+    [[nodiscard]] bool          isRandomSeedSetByUser() const;
 
     [[nodiscard]] static size_t getDimensionality();
 

@@ -176,10 +176,8 @@ TEST_F(TestSetup, ringPolymerSetupBeadsAreIndependentCopiesOfTheBox)
  */
 TEST_F(TestSetup, ringPolymerSetupInitializesVelocitiesAtStartTemperature)
 {
-    GeneralSettings::setRandomSeed(11);
-    GeneralSettings::setIsRandomSeedSet(true);
-
     Settings settings;
+    settings.generalSettings.setRandomSeedByUser(11);
     settings.ringPolymerSettings.setNumberOfBeadsByUser(3);
     settings.kinetics.setStartTemperatureByUser(toTemperature(250.0));
     engine::RingPolymerQMMDEngine rpEngine{settings};
@@ -188,8 +186,6 @@ TEST_F(TestSetup, ringPolymerSetupInitializesVelocitiesAtStartTemperature)
     setup::RingPolymerSetup setup(rpEngine);
     setup.setupSimulationBox();
     setup.initializeBeads();
-
-    GeneralSettings::setIsRandomSeedSet(false);
 
     auto &beads = rpEngine.getRingPolymerBeads();
 
@@ -228,10 +224,8 @@ TEST_F(TestSetup, ringPolymerSetupVelocitiesAreReproducibleWithRandomSeed)
 {
     const auto velocitiesWithSeed = [](const uint_fast32_t seed)
     {
-        GeneralSettings::setRandomSeed(seed);
-        GeneralSettings::setIsRandomSeedSet(true);
-
         Settings settings;
+        settings.generalSettings.setRandomSeedByUser(seed);
         settings.ringPolymerSettings.setNumberOfBeadsByUser(2);
         settings.kinetics.setStartTemperatureByUser(toTemperature(300.0));
         engine::RingPolymerQMMDEngine rpEngine{settings};
@@ -240,8 +234,6 @@ TEST_F(TestSetup, ringPolymerSetupVelocitiesAreReproducibleWithRandomSeed)
         setup::RingPolymerSetup setup(rpEngine);
         setup.setupSimulationBox();
         setup.initializeBeads();
-
-        GeneralSettings::setIsRandomSeedSet(false);
 
         auto velocities = std::vector<Vel3D>();
         for (const auto &bead : rpEngine.getRingPolymerBeads())

@@ -44,7 +44,8 @@ namespace engine
         const FennolSettings     &fennolSettings,
         const DftbSettings       &dftbSettings,
         const XtbSettings        &xtbSettings,
-        const ExternalQMSettings &externalQMSettings
+        const ExternalQMSettings &externalQMSettings,
+        const GeneralSettings    &generalSettings
     )
     {
         _qmRunner = QMRunnerManager::createQMRunner(
@@ -53,7 +54,8 @@ namespace engine
             fennolSettings,
             dftbSettings,
             xtbSettings,
-            externalQMSettings
+            externalQMSettings,
+            generalSettings
         );
     }
 

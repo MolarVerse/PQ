@@ -43,8 +43,9 @@ namespace QM
      * fails
      */
     AseFennolRunner::AseFennolRunner(
-        const QMSettings     &qmSettings,
-        const FennolSettings &fennolSettings
+        const QMSettings      &qmSettings,
+        const FennolSettings  &fennolSettings,
+        const GeneralSettings &generalSettings
     )
         : AseQMRunner(qmSettings)
     {
@@ -60,7 +61,7 @@ namespace QM
             calculatorArgs["gpu_preprocessing"] =
                 pybind11::bool_(fennolSettings.useGPUPreprocessing());
             calculatorArgs["use_float64"] = pybind11::bool_(
-                GeneralSettings::getFloatingPointType() == FPType::DOUBLE
+                generalSettings.getFloatingPointType() == FPType::DOUBLE
             );
 
             _setAseCalculator(

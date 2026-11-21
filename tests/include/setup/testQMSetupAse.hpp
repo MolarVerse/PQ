@@ -51,15 +51,7 @@ class TestQMSetupAse : public ::testing::Test
         _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
         _settings.timings.setNumberOfStepsByUser(100U);
         _engine  = std::make_unique<engine::QMMDEngine>(_settings);
-        _qmSetup = std::make_unique<setup::QMSetup>(
-            *_engine,
-            _settings.qmSettings,
-            _settings.maceSettings,
-            _settings.fennolSettings,
-            _settings.dftbSettings,
-            _settings.xtbSettings,
-            _settings.externalQMSettings
-        );
+        _qmSetup = std::make_unique<setup::QMSetup>(*_engine, _settings);
         _engine->getEngineOutput().getLogOutput().setFilename(
             "default.log",
             false

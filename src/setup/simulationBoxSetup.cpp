@@ -449,7 +449,9 @@ namespace setup
              !getZeroVelocities()))
             return;
 
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann{
+            _engine.getSettings().generalSettings
+        };
         maxwellBoltzmann.initializeVelocities(
             _engine.getSimulationBox(),
             _engine.getSettings().kinetics.getStartTemperature()

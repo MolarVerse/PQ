@@ -47,8 +47,9 @@ namespace QM
      * @throw pybind11::error_already_set if the import of the mace module fails
      */
     AseMaceRunner::AseMaceRunner(
-        const QMSettings   &qmSettings,
-        const MaceSettings &maceSettings
+        const QMSettings      &qmSettings,
+        const MaceSettings    &maceSettings,
+        const GeneralSettings &generalSettings
     )
         : AseQMRunner(qmSettings)
     {
@@ -72,7 +73,7 @@ namespace QM
                 pybind11::bool_(qmSettings.useDispersionCorr());
             calculatorArgs["enable_cueq"] = pybind11::bool_(enableCueq);
             calculatorArgs["default_dtype"] =
-                GeneralSettings::getFloatingPointPybindString();
+                generalSettings.getFloatingPointPybindString();
             calculatorArgs["device"] = pybind11::str("cuda");
 
             _setAseCalculator(

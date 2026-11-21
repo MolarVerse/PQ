@@ -120,22 +120,22 @@ class AseQMRunnerTest : public ::testing::Test
         _simulationBox.setBox(box, false);
     }
 
-    static QM::AseFennolRunner _runner(
-        const QMSettings &settings,
-        const double      delay
-    )
+    static QM::AseFennolRunner _runner(Settings settings, const double delay)
     {
         pybind11::module_::import("sys")
             .attr("modules")["ase.atoms"]
             .attr("FENNIXCalculator")
             .attr("delay") = delay;
 
-        FennolSettings fennolSettings;
-        fennolSettings.setFennolModelPathByUser("model.fnx");
-        fennolSettings.setUseGPUPreprocessingByUser(false);
-        GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+        settings.fennolSettings.setFennolModelPathByUser("model.fnx");
+        settings.fennolSettings.setUseGPUPreprocessingByUser(false);
+        settings.generalSettings.setFloatingPointTypeByUser(FPType::DOUBLE);
 
-        return QM::AseFennolRunner{settings, fennolSettings};
+        return QM::AseFennolRunner{
+            settings.qmSettings,
+            settings.fennolSettings,
+            settings.generalSettings
+        };
     }
 };
 
@@ -144,7 +144,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     Settings settings;
     settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
     settings.qmSettings.setQMLoopTimeLimitByUser(0.5 * s);
-    auto runner = AseQMRunnerTest::_runner(settings.qmSettings, 10.0);
+    auto runner = AseQMRunnerTest::_runner(settings, 10.0);
 
     const auto start = std::chrono::steady_clock::now();
 
@@ -172,7 +172,7 @@ TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
     // the interpreter is usable again
     settings.qmSettings.setQMLoopTimeLimitByUser(0.0 * s);
     EXPECT_NO_THROW(
-        AseQMRunnerTest::_runner(settings.qmSettings, 0.0)
+        AseQMRunnerTest::_runner(settings, 0.0)
             .run(
                 _simulationBox,
                 _physicalData,
@@ -188,7 +188,7 @@ TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
     Settings settings;
     settings.qmSettings.setQMLoopTimeLimitByUser(10.0 * s);
     settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
-    auto runner = AseQMRunnerTest::_runner(settings.qmSettings, 0.0);
+    auto runner = AseQMRunnerTest::_runner(settings, 0.0);
 
     EXPECT_NO_THROW(runner.run(
         _simulationBox,

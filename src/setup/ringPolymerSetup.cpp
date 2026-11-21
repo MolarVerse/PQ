@@ -159,7 +159,9 @@ namespace setup
     {
         // one generator for all beads: a generator per bead would be seeded
         // with the same user seed and give every bead the same velocities
-        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
+        maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann{
+            _engine.getSettings().generalSettings
+        };
 
         const auto &startTemperature =
             _engine.getSettings().kinetics.getStartTemperature();

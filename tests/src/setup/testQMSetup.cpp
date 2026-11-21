@@ -134,15 +134,7 @@ TEST(TestQMSetup, setupDftbplus)
     Settings settings;
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
-    auto               setupQM = setup::QMSetup(
-        engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    auto               setupQM = setup::QMSetup(engine, settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
     setBuildCompatibleQMScript(settings.externalQMSettings);
@@ -165,15 +157,7 @@ TEST(TestQMSetup, setupPySCF)
     Settings settings;
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
-    auto               setupQM = setup::QMSetup(
-        engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    auto               setupQM = setup::QMSetup(engine, settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::PYSCF);
     setBuildCompatibleQMScript(settings.externalQMSettings);
@@ -196,15 +180,7 @@ TEST(TestQMSetup, setupTurbomoleRunner)
     Settings settings;
     settings.timings.setNumberOfStepsByUser(100U);
     engine::QMMDEngine engine(settings);
-    auto               setupQM = setup::QMSetup(
-        engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    auto               setupQM = setup::QMSetup(engine, settings);
 
     settings.qmSettings.setQMMethodByUser(QMMethod::TURBOMOLE);
     setBuildCompatibleQMScript(settings.externalQMSettings);
@@ -316,15 +292,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitDefault)
     settings.generalSettings.setJobtypeByUser(JobType::QM);
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(
-        *engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    setup::QMSetup qmSetup(*engine, settings);
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
@@ -355,15 +323,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitNegative)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(
-        *engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    setup::QMSetup qmSetup(*engine, settings);
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
@@ -395,15 +355,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitZero)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(
-        *engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    setup::QMSetup qmSetup(*engine, settings);
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
@@ -435,15 +387,7 @@ TEST(TestQMSetup, setupQMLoopTimeLimitPositive)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup qmSetup(
-        *engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    setup::QMSetup qmSetup(*engine, settings);
 
     engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::DFTBPLUS);
@@ -475,15 +419,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
     Settings                            settings;
     std::unique_ptr<engine::QMMDEngine> _engine =
         std::make_unique<engine::QMMDEngine>(settings);
-    setup::QMSetup _qmSetup(
-        *_engine,
-        settings.qmSettings,
-        settings.maceSettings,
-        settings.fennolSettings,
-        settings.dftbSettings,
-        settings.xtbSettings,
-        settings.externalQMSettings
-    );
+    setup::QMSetup _qmSetup(*_engine, settings);
 
     _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
     settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
@@ -491,7 +427,7 @@ TEST(TestQMSetup, setupQMRunnerFennol)
         "path/To/fennol_model.fnx"
     );
     settings.fennolSettings.setUseGPUPreprocessingByUser(false);
-    GeneralSettings::setFloatingPointType(FPType::FLOAT);
+    settings.generalSettings.setFloatingPointTypeByUser(FPType::FLOAT);
 
     _qmSetup.setupWriteInfo();
 
