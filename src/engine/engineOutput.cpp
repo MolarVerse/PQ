@@ -291,8 +291,10 @@ namespace engine
     /**
      * @brief wrapper for restart file output function
      *
-     * @param frame
-     * @param step
+     * @param frame the frame to be written to the restart file
+     * @param step the current MD step
+     * @param finalTime the simulation time corresponding to this frame, if
+     * available
      */
     void EngineOutput::writeRstFile(
         const out::Frame &frame,
@@ -358,6 +360,7 @@ namespace engine
      * @param thermostat
      * @param step
      * @param potentialEnergy written to the extxyz file
+     * @param finalTime
      *
      * @throw the first error of an earlier frame write
      */
@@ -455,6 +458,8 @@ namespace engine
      * @param frame
      * @param step
      * @param metadata whether to include step metadata
+     * @param finalTime the simulation time corresponding to this frame, if
+     * available
      */
     void EngineOutput::_writeFrame(
         const out::Frame          &frame,
