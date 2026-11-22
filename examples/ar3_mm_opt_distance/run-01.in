@@ -1,0 +1,12 @@
+# Argon trimer, a distance constraint pulls atoms 1 and 2 to 4.5 Å
+jobtype = mm-opt;
+force-field = off;
+rcoulomb = 9.0;
+distance-constraints = on;
+topology_file = ar3.top;
+start_file = start.rst;
+file_prefix = ar3-dist-opt;
+nstep = 5000;
+optimizer = steepest-descent;
+learning-rate-strategy = constant;
+initial-learning-rate = 0.004;

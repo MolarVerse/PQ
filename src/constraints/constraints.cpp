@@ -364,13 +364,53 @@ namespace constraints
 
         effective_time = effective_time > 0.0 * fs ? effective_time : -1 * fs;
 
+        _applyDistanceConstraints(simulationBox, physicalData, effective_time);
+    }
+
+    /**
+     * @brief applies the distance constraints with the time independent
+     * spring constant
+     *
+     * @details for geometry optimizations, which have no simulation time
+     *
+     * @param simulationBox
+     * @param physicalData the physical data object to update with constraint
+     * energies
+     */
+    void Constraints::applyStaticDistanceConstraints(
+        const molsys::SimulationBox &simulationBox,
+        physicalData::PhysicalData  &physicalData
+    )
+    {
+        if (!_constraintSettings->isDistanceConstraintsActivated())
+        {
+            return;
+        }
+
+        _applyDistanceConstraints(simulationBox, physicalData, 0.0 * fs);
+    }
+
+    /**
+     * @brief applies all distance constraints and stores their energies
+     *
+     * @param simulationBox
+     * @param physicalData
+     * @param timeInterval time since the start of the constraints, negative
+     * to skip them
+     */
+    void Constraints::_applyDistanceConstraints(
+        const molsys::SimulationBox &simulationBox,
+        physicalData::PhysicalData  &physicalData,
+        const Time                  &timeInterval
+    )
+    {
         std::ranges::for_each(
             _distanceConstraints,
-            [&simulationBox, effective_time](auto &distanceConstraint)
+            [&simulationBox, timeInterval](auto &distanceConstraint)
             {
                 distanceConstraint.applyDistanceConstraint(
                     simulationBox,
-                    effective_time
+                    timeInterval
                 );
             }
         );

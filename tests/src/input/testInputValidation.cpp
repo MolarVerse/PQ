@@ -754,18 +754,13 @@ TEST_F(TestInputValidation, acceptsMShakeInOptimization)
     EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
-TEST_F(TestInputValidation, rejectsDistanceConstraintsInOptimization)
+TEST_F(TestInputValidation, acceptsDistanceConstraintsInOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.constraintSettings.activateDistanceConstraintsByUser();
     _setKeyword("nstep");
 
-    ASSERT_THROW_MSG(
-        _finalizeAndValidate(),
-        exc::InputFileException,
-        "Job type MM_OPT does not apply distance constraints. Set "
-        "distance-constraints = off."
-    );
+    EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
 TEST_F(TestInputValidation, acceptsShakeInMD)

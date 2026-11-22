@@ -1,2 +1,3 @@
 - `mm-opt` now supports `shake = on`: the constrained bonds keep their length during the optimization (#1320).
 - `mm-opt` now supports `shake = mshake`, for example to optimize rigid water (#1321).
+- `mm-opt` now supports `distance-constraints = on` and adds their penalty with the static force constant (#1322).

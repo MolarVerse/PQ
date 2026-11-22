@@ -31,6 +31,7 @@
 #include "globalTimer.hpp"
 #include "interrupt.hpp"
 #include "outputFileSettings.hpp"
+#include "physicalData.hpp"
 #include "simulationBox.hpp"
 #include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
@@ -234,6 +235,24 @@ namespace engine
     }
 
     /**
+     * @brief the energy that the optimizer minimizes
+     *
+     * @details the total energy plus the distance constraint penalties
+     *
+     * @param physicalData
+     *
+     * @return EnergyPerMol
+     */
+    EnergyPerMol OptEngine::optimizedEnergy(
+        const physicalData::PhysicalData &physicalData
+    )
+    {
+        return physicalData.getTotalEnergy() +
+               physicalData.get_lowerDistanceConstraints() +
+               physicalData.get_upperDistanceConstraints();
+    }
+
+    /**
      * @brief evaluate the forces and add the energy to the optimizer history
      *
      * @details with SHAKE or M-SHAKE the forces are projected onto the
@@ -243,13 +262,18 @@ namespace engine
     {
         _evaluator->evaluate(get_physicalData());
 
+        getConstraints()->applyStaticDistanceConstraints(
+            getSimulationBox(),
+            get_physicalData()
+        );
+
         if (getSettings().constraintSettings.isShakeLikeActive())
         {
             getConstraints()->calculateConstraintBondRefs(getSimulationBox());
             getConstraints()->projectForces(getSimulationBox());
         }
 
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _optimizer->updateHistory(optimizedEnergy(get_physicalData()));
     }
 
     /**
