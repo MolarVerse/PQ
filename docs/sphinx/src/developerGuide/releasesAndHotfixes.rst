@@ -16,6 +16,15 @@ Normal release
 #. Open the generated PR to ``main``. Link its issue, review and merge once
    checks pass. The release branch starts from ``dev``.
 
+The version that PQ reports (banner, output file headers) is not stored in a
+file: CMake takes the last ``vX.Y.Z`` tag (``git describe``), giving
+``v1.1.0-<hash>``. The tag of a release is created when it is published, so on
+the branch ``release/v1.2.0`` the version is taken from the branch name instead
+and builds of the release PR report ``v1.2.0-<hash>``. CI checkouts of a pull
+request are detached; there the branch name is read from ``GITHUB_HEAD_REF``
+(``GITHUB_REF_NAME`` for a push). Other branches, including hotfix branches
+(their version is in the PR title), report the last tag.
+
 ******
 Hotfix
 ******
