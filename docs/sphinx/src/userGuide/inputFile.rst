@@ -99,7 +99,7 @@ Possible options are:
 
    4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.
 
-   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics.
+   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. See ``examples/ar3_mm_opt`` for a small input.
 
    6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
 
@@ -2263,9 +2263,9 @@ Learning Rate Decay
 .. admonition:: Key
     :class: tip
 
-    learning-rate-decay = {double}
+    learning-rate-decay = {double} -> 1.0
 
-With the ``learning-rate-decay`` keyword the user can specify the decay speed of the learning rate. Pay attention this key is used at the moment for different kind of decay strategies and therefore the value is dependent on the chosen strategy.
+With the ``learning-rate-decay`` keyword the user can specify the decay speed of the learning rate. Its meaning depends on the strategy. For ``exponential-decay`` the learning rate after step *n* is the initial learning rate times exp(-decay · *n* / ``nstep``), so the default of 1.0 lowers it by a factor of e over the run. For ``constant-decay`` the value is subtracted from the learning rate at every update; it has no default there and must be set.
 
 .. _learningrateupdatefreqKey:
 

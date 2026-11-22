@@ -39,7 +39,8 @@ OptimizerSettings::OptimizerSettings()
       _nEpochs(defaults::N_EPOCHS_DEFAULT),
       _lRupdateFrequency(defaults::LR_UPDATE_FREQUENCY_DEFAULT),
       _initialLearningRate(defaults::INITIAL_LEARNING_RATE_DEFAULT),
-      _minLearningRate(defaults::MIN_LEARNING_RATE_DEFAULT)
+      _minLearningRate(defaults::MIN_LEARNING_RATE_DEFAULT),
+      _learningRateDecay(defaults::LEARNING_RATE_DECAY_DEFAULT)
 {
 }
 
@@ -150,18 +151,13 @@ void OptimizerSettings::validateLearningRateStrategy() const
         );
     }
 
-    const auto needsDecay = strategy == LearningRate::CONSTANT_DECAY ||
-                            strategy == LearningRate::EXPONENTIAL_DECAY;
-
-    if (needsDecay && !isLearningRateDecaySetByUser())
+    // constant-decay subtracts the decay, so the default rate does not fit it
+    if (strategy == LearningRate::CONSTANT_DECAY &&
+        !isLearningRateDecaySetByUser())
     {
         throw exc::UserInputException(
-            std::format(
-                "The {} learning rate strategy requires "
-                "learning-rate-decay.",
-                strategy == LearningRate::CONSTANT_DECAY ? "constant-decay"
-                                                         : "exponential-decay"
-            )
+            "The constant-decay learning rate strategy requires "
+            "learning-rate-decay."
         );
     }
 }

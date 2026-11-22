@@ -719,7 +719,7 @@ TEST_F(TestInputValidation, requiresDecayForConstantDecayOptimization)
     );
 }
 
-TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
+TEST_F(TestInputValidation, acceptsExponentialDecayWithDefaultDecay)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.timings.setNumberOfStepsByUser(100U);
@@ -728,11 +728,10 @@ TEST_F(TestInputValidation, requiresDecayForExponentialDecayOptimization)
     );
     _setKeyword("nstep");
 
-    ASSERT_THROW_MSG(
-        _reader->validateInputConfiguration(_settings),
-        exc::UserInputException,
-        "The exponential-decay learning rate strategy requires "
-        "learning-rate-decay."
+    EXPECT_NO_THROW(_reader->validateInputConfiguration(_settings));
+    EXPECT_DOUBLE_EQ(
+        _settings.optimizerSettings.getLearningRateDecay(),
+        defaults::LEARNING_RATE_DECAY_DEFAULT
     );
 }
 
