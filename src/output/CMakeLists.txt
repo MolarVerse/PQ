@@ -7,6 +7,7 @@ add_library(output
     aseTrajOutput.cpp
     atomicNumber.cpp
     ulmJson.cpp
+    ulmWriter.cpp
     outputMessages.cpp
 
     energyColumns.cpp

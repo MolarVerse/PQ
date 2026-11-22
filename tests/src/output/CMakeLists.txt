@@ -24,6 +24,7 @@ set(source_files
     testAseTrajOutput.cpp
     testAtomicNumber.cpp
     testUlmJson.cpp
+    testUlmWriter.cpp
 )
 
 # Per-test extra include dirs and libs (defaults to empty for the legacy tests).
