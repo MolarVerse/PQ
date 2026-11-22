@@ -127,7 +127,7 @@ namespace
     template <typename T>
     T readValue(const std::string &data, std::int64_t position)
     {
-        T value{};
+        T          value{};
         const auto bytes =
             data.substr(static_cast<std::size_t>(position), sizeof(T));
         std::memcpy(&value, bytes.data(), sizeof(T));
@@ -153,7 +153,7 @@ namespace
     // byte offset of array name in the JSON text
     std::int64_t arrayOffset(const std::string &json, const std::string &name)
     {
-        const auto key = json.find("\"" + name + ".\": {\"ndarray\"");
+        const auto key = json.find('"' + name + R"(.": {"ndarray")");
         EXPECT_NE(key, std::string::npos) << name;
 
         const auto end   = json.find("]}", key);
@@ -181,7 +181,7 @@ namespace
 
     double jsonValue(const std::string &json, const std::string &name)
     {
-        const auto key = json.find("\"" + name + "\": ");
+        const auto key = json.find('"' + name + R"(": )");
         EXPECT_NE(key, std::string::npos) << name;
 
         return std::stod(json.substr(key + name.size() + 4));
@@ -309,7 +309,7 @@ TEST(TestAseTrajOutput, growsTheOffsetsTable)
 
         const auto json = itemJson(data, itemIndex);
         EXPECT_TRUE(json.ends_with(
-            "\"info\": {\"step\": " + std::to_string(index) + "}}"
+            R"("info": {"step": )" + std::to_string(index) + "}}"
         )) << index;
     }
 
