@@ -42,7 +42,8 @@ setting that leaves relevant variants open (the note says which); **no** = no in
   box) differ. The messages are made in `diagnostics.py`, which has unit tests in
   `scripts/tests/test_integration_diagnostics.py`.
 - `oh_mm_hessian` does not use reference data: it checks that the Hessian file is a finite
-  6 x 6 matrix, the info file, and the error message of one invalid input.
+  6 x 6 matrix, the info file, and the error message of one invalid input (its Hessian is the zero
+  matrix). `hessian_bond` checks the values against the analytic Hessian of a harmonic bond.
 - Runs are **2 to 10 steps** long. These tests find "the output changed", not "the physics is right
   over a long run".
 
@@ -81,6 +82,10 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `mace` (2 inputs) | `run-01.in`, `run-02.in` | `qm-md` | 9 atoms, 2 steps | MACE-OFF and MACE-MP, small model. **Skipped in CI** (needs `torch`, `mace` and a CUDA device) |
 | `qm-mm/*` (8 tests) | `run-01.in` in 8 directories | `qmmm-md` | one K ion + 2000 waters (6001 atoms), box 39 Å, 2 steps | DFTB+ as QM program, Berendsen thermostat; the 8 = smoothing `hotspot`/`exact` x `brute_force`/`cell_list` x (`force-field = bonded` with topology \| `force-field = off` with a water model) |
 | `oh_mm_hessian` (4 tests) | `run-01.in`, `run-02-no-opt.in` | `mm-hessian` | 2 atoms | optimisation then Hessian, Hessian alone, with and without `max-learning-rate`, and the error for a minimum learning rate not below the maximum |
+| `hessian_bond` `test_numerical_hessian_equals_the_analytic_one` (6 tests) | `run.in` with `hessian_builder` central, forward, five_point and a stretched or an equilibrium start file | `mm-hessian` | one tilted O-H bond (harmonic, k = 500, r0 = 1 Å), `force-field = bonded` | the Hessian equals the analytic `k (u u^T + (1 - r0/r)(1 - u u^T))` blocks within the error of each stencil (central 4e-5, forward 0.1, five point 6e-11 at a displacement of 0.001 Å; the stretched bond must also not be *more* accurate than its stencil allows); symmetric; shifting both atoms costs no energy (except forward) |
+| `hessian_bond` `test_central_hessian_error_follows_the_displacement` | displacement 0.001 and 0.002 | `mm-hessian` | same | the central error grows as the displacement squared (ratio 3 to 5) |
+| `hessian_bond` `test_hessian_info_file_describes_the_run` | five_point | `mm-hessian` | same | builder, displacement, definition (-dF_i/dx_j) and unit (kcal/mol/Å²) of the info file |
+| `hessian_bond` `test_analytic_builder_is_refused_for_the_mm_evaluator` | `hessian_builder = analytic` | `mm-hessian` | same | "The selected evaluator does not support analytic Hessians" |
 
 Each water model appears in exactly one QM/MM test, so it is always combined with one particular
 smoothing method and neighbour search: `spc_fw` (exact, brute force), `spc-mtr` (exact, cell
@@ -97,7 +102,7 @@ intermolecular model are the same.
 | `qm-md` | yes, DFTB+, ASE DFTB+, ASE xTB, PySCF, FeNNol (MACE skipped) |
 | `qmmm-md` | partly: DFTB+ only, 2 steps, no zone changes (see coupling section) |
 | `mm-opt` | no. Elsewhere: unit (`tests/src/opt`) |
-| `mm-hessian` | partly: 2 atoms, central differences only; values are not compared |
+| `mm-hessian` | yes for a harmonic bond (`hessian_bond`: values against the analytic Hessian); `oh_mm_hessian` only checks the shape (its two atoms do not interact, the Hessian is the zero matrix). Not: angles, dihedrals, non-bonded forces, periodic images, more than 2 atoms |
 | `qm-rpmd` (ring polymer) | no. Elsewhere: regression (`qm-rpmd-mpi-smoke`, MPI build, one smoke step), example |
 
 ### Integrator, thermostat, ramp, manostat, kinetics
@@ -170,8 +175,8 @@ intermolecular model are the same.
 | Adam, decaying/exponential/line-search learning rates | no. Elsewhere: unit |
 | Convergence strategies and thresholds | no. Elsewhere: unit |
 | `max-learning-rate` | yes, with and without, plus the error message |
-| Hessian builder `central` | yes (shape and finiteness only) |
-| Hessian builders forward, five-point, analytic | no. Elsewhere: unit |
+| Hessian builder `central` | yes (values against the analytic Hessian, error order checked) |
+| Hessian builders forward, five-point | yes (same). Analytic: refused for the MM evaluator (tested). Elsewhere: unit |
 | `optimize_before_hessian = false` | yes |
 
 ### Input, output and restart
@@ -241,8 +246,9 @@ stochastic manostat additionally reads the thermostat target (see ramp): it now 
 run with the Berendsen thermostat only.
 
 **Job type x output.** The trajectory writers are shared by MD and optimisation, but the optimiser
-and Hessian engines write different files (`.opt`, `.hessian`); only shape and finiteness of the
-Hessian are checked, so a wrong Hessian would pass.
+and Hessian engines write different files (`.opt`, `.hessian`). The Hessian of a harmonic bond is
+checked against the analytic one; angles, dihedrals and non-bonded forces are not, and
+`oh_mm_hessian` only checks shape and finiteness.
 
 ## What the checks cannot see
 
@@ -297,8 +303,8 @@ In rough order of value for the cost; each is a **new variant** of an existing c
 5. **Water models** in a pure MM run, and the remaining models with different intra/inter pairs.
 6. **Comparison of the other outputs** (`.rst`, `.box`, `.stress`, `.vir`, `.mom`) in
    `check_pq_output`, which costs nothing but reference size.
-7. **A value check for the Hessian** (analytic result for a harmonic OH bond) instead of shape
-   only, and the other Hessian builders.
+7. The Hessian of angles, dihedrals and non-bonded forces (analytic or against forces), and the
+   Hessian after `optimize_before_hessian = true`.
 8. **`mm-opt` and `Adam`/decaying learning rates** with a real number of optimisation steps.
 
 ## Adding a test
