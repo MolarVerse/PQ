@@ -30,12 +30,11 @@
 #include <string>
 #include <vector>
 
-#include "atomNumberMap.hpp"
+#include "atomicNumber.hpp"
 #include "box.hpp"
 #include "exceptions.hpp"
 #include "frame.hpp"
 #include "staticMatrix.hpp"
-#include "stringUtilities.hpp"
 #include "systemInfo.hpp"
 #include "units.hpp"
 
@@ -45,35 +44,6 @@
 
 namespace out
 {
-    // species of atoms without an element (dummy and virtual atoms)
-    constexpr int NO_ELEMENT  = 0;
-    constexpr int MAX_ELEMENT = 118;
-
-    /**
-     * @brief H5MD species of an atom: its atomic number, 0 for atoms without
-     * an element (dummy and virtual atoms)
-     *
-     * @param name PQ atom name
-     * @return int
-     */
-    int H5mdOutput::species(const std::string &name)
-    {
-        const auto key = utilities::toLowerCopy(name);
-
-        if (!atomNumberMap.contains(key) || key == "dum")
-        {
-            return NO_ELEMENT;
-        }
-
-        const auto number = atomNumberMap.at(key).get();
-        if (number > MAX_ELEMENT)
-        {
-            return NO_ELEMENT;
-        }
-
-        return static_cast<int>(number);
-    }
-
     /**
      * @brief whether PQ was built with HDF5
      *
@@ -178,7 +148,7 @@ namespace out
         std::vector<std::string> names;
         for (const auto &atom : frame.atoms)
         {
-            speciesOfAtoms.push_back(H5mdOutput::species(atom.name));
+            speciesOfAtoms.push_back(atomicNumber(atom.name));
             names.push_back(atom.name);
         }
 

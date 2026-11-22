@@ -32,6 +32,7 @@
 
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
+#include "aseTrajOutput.hpp"
 #include "extxyzOutput.hpp"
 #include "h5mdOutput.hpp"
 #include "infoOutput.hpp"
@@ -93,6 +94,7 @@ namespace engine
 
         std::unique_ptr<out::ExtxyzOutput> _extxyzOutput;
         std::unique_ptr<out::H5mdOutput>   _h5mdOutput;
+        std::unique_ptr<out::AseTrajOutput> _aseTrajOutput;
 
         std::unique_ptr<out::LogOutput>    _logOutput;
         std::unique_ptr<out::StdoutOutput> _stdoutOutput;
@@ -163,6 +165,7 @@ namespace engine
             bool               overwrite,
             double             timeStep
         );
+        void openAseTrajOutput(const std::string &filename, bool overwrite);
         void waitForFrames();
 
         [[nodiscard]] static bool asyncOutputFits(

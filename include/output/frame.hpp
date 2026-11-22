@@ -59,6 +59,7 @@ namespace out
             Vel3D       velocity;
             Force3D     force;
             Charge      charge;
+            Mass        mass;
         };
 
         // (chi, zeta) of each chain link

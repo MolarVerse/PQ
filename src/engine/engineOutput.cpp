@@ -332,6 +332,22 @@ namespace engine
     }
 
     /**
+     * @brief write every MD frame to an ASE trajectory file instead of the
+     * xyz, velocity, force and charge files
+     *
+     * @param filename
+     * @param overwrite whether an existing file may be replaced
+     */
+    void EngineOutput::openAseTrajOutput(
+        const std::string &filename,
+        bool               overwrite
+    )
+    {
+        _aseTrajOutput =
+            std::make_unique<out::AseTrajOutput>(filename, overwrite);
+    }
+
+    /**
      * @brief write every MD frame to an extxyz file instead of the xyz,
      * velocity, force and charge files
      *
@@ -453,7 +469,7 @@ namespace engine
 
     /**
      * @brief write the trajectory files (xyz, velocity, force and charge,
-     * or one extxyz or H5MD file) and the restart file of one frame
+     * or one extxyz, H5MD or ASE file) and the restart file of one frame
      *
      * @param frame
      * @param step
@@ -475,6 +491,10 @@ namespace engine
         else if (_h5mdOutput)
         {
             _h5mdOutput->write(frame, step);
+        }
+        else if (_aseTrajOutput)
+        {
+            _aseTrajOutput->write(frame, step);
         }
         else
         {

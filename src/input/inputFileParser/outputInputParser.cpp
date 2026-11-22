@@ -84,6 +84,7 @@ namespace input
         addChargeFilenameKeyword();
         addExtxyzFilenameKeyword();
         addH5mdFilenameKeyword();
+        addAseTrajFilenameKeyword();
         addMomentumFilenameKeyword();
         addVirialFilenameKeyword();
         addStressFilenameKeyword();
@@ -556,7 +557,8 @@ namespace input
             .description =
                 "File format of the MD trajectory: xyz (separate xyz, vel, "
                 "force and chrg files), extxyz (one extended xyz file in PQ "
-                "units) or h5md (one H5MD/HDF5 file in PQ units)"
+                "units), h5md (one H5MD/HDF5 file in PQ units) or ase (one "
+                "ASE .traj file in ASE units)"
         };
 
         const auto setValue = [this](TrajectoryFormat value)
@@ -624,6 +626,35 @@ namespace input
             KeyRegistry<std::string>{
                 .metadata     = metaData,
                 .defaultValue = DefaultFiles::h5mdFile,
+                .onSet        = setValue,
+            }
+        );
+
+        addKeyword(metaData.name, adapt(key), false);
+    }
+
+    /**
+     * @brief add ASE trajectory filename keyword to the input parser
+     *
+     * @details the ASE trajectory is only written if traj_format = ase
+     */
+    void OutputInputParser::addAseTrajFilenameKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "ase_traj_file",
+            .title = "ASE trajectory filename",
+            .description =
+                "Filename for the ASE trajectory (.traj), written if "
+                "traj_format = ase"
+        };
+
+        const auto setValue = [this](const std::string &value)
+        { _outputFileSettings->setAseTrajFileNameByUser(value); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<std::string>{
+                .metadata     = metaData,
+                .defaultValue = DefaultFiles::aseTrajFile,
                 .onSet        = setValue,
             }
         );

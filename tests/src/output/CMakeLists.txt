@@ -21,6 +21,9 @@ set(source_files
     testTextBuffer.cpp
     testExtxyzOutput.cpp
     testH5mdOutput.cpp
+    testAseTrajOutput.cpp
+    testAtomicNumber.cpp
+    testUlmJson.cpp
 )
 
 # Per-test extra include dirs and libs (defaults to empty for the legacy tests).
