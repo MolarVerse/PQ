@@ -38,10 +38,12 @@ class TestStdoutOutput : public ::testing::Test
    protected:
     std::unique_ptr<out::StdoutOutput> _stdoutOutput;
 
-    void SetUp() override
-    {
-        _stdoutOutput = std::make_unique<out::StdoutOutput>("stdout");
-    }
+    void SetUp() override;
 };
+
+inline void TestStdoutOutput::SetUp()
+{
+    _stdoutOutput = std::make_unique<out::StdoutOutput>("stdout");
+}
 
 #endif   // TESTS__INCLUDE__OUTPUT__TEST_STDOUT_OUTPUT_HPP

@@ -50,14 +50,19 @@ namespace waterModel
         virtual void calculate(
             molsys::SimulationBox& /*simBox*/,
             physicalData::PhysicalData& /*physData*/
-        )
-        {
-        }
+        );
 
        protected:
         [[nodiscard]]
         const HybridSettings& _getHybridSettings() const;
     };
+
+    inline void IntraWater::calculate(
+        molsys::SimulationBox& /*simBox*/,
+        physicalData::PhysicalData& /*physData*/
+    )
+    {
+    }
 
 }   // namespace waterModel
 

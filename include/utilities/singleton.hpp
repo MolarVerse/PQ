@@ -39,11 +39,7 @@ template <typename T>
 class Singleton
 {
    public:
-    static T& get()
-    {
-        static T instance;
-        return instance;
-    }
+    static T& get();
 
     MSTD_NO_COPY(Singleton);
     MSTD_NO_MOVE(Singleton);
@@ -52,5 +48,12 @@ class Singleton
     Singleton()  = default;
     ~Singleton() = default;
 };
+
+template <typename T>
+T& Singleton<T>::get()
+{
+    static T instance;
+    return instance;
+}
 
 #endif   // UTILITIES__SINGLETON_HPP

@@ -41,42 +41,44 @@ class TestThermostat : public ::testing::Test
     std::unique_ptr<molsys::SimulationBox>      _simulationBox;
     std::unique_ptr<thermostat::Thermostat>     _thermostat;
 
-    void SetUp() override
-    {
-        _thermostat = std::make_unique<thermostat::Thermostat>();
-        _data       = std::make_unique<physicalData::PhysicalData>();
-
-        _simulationBox = std::make_unique<molsys::SimulationBox>();
-
-        auto molecule1 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setMass(1.0 * g_per_mol);
-        atom2->setMass(1.0 * g_per_mol);
-        atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
-        atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-
-        auto molecule2 = molsys::Molecule();
-
-        auto atom3 = std::make_shared<molsys::Atom>();
-
-        atom3->setMass(1.0 * g_per_mol);
-        atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
-
-        molecule2.addAtom(atom3);
-
-        _simulationBox->addMolecule(molecule1);
-        _simulationBox->addMolecule(molecule2);
-        _simulationBox->addAtom(atom1);
-        _simulationBox->addAtom(atom2);
-        _simulationBox->addAtom(atom3);
-
-        _simulationBox->calculateDegreesOfFreedom();
-    }
+    void SetUp() override;
 };
+
+inline void TestThermostat::SetUp()
+{
+    _thermostat = std::make_unique<thermostat::Thermostat>();
+    _data       = std::make_unique<physicalData::PhysicalData>();
+
+    _simulationBox = std::make_unique<molsys::SimulationBox>();
+
+    auto molecule1 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom1->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+    atom2->setVelocity(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom / s);
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+
+    auto molecule2 = molsys::Molecule();
+
+    auto atom3 = std::make_shared<molsys::Atom>();
+
+    atom3->setMass(1.0 * g_per_mol);
+    atom3->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+
+    molecule2.addAtom(atom3);
+
+    _simulationBox->addMolecule(molecule1);
+    _simulationBox->addMolecule(molecule2);
+    _simulationBox->addAtom(atom1);
+    _simulationBox->addAtom(atom2);
+    _simulationBox->addAtom(atom3);
+
+    _simulationBox->calculateDegreesOfFreedom();
+}
 
 #endif

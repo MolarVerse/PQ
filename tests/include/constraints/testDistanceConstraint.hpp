@@ -56,41 +56,43 @@ class TestDistanceConstraint : public ::testing::Test
     ForceConstantPerTime _dSpringConstantDt =
         0.0 * kcal_per_mol / angstrom2 / s;
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::Molecule();
-
-        _atom1 = std::make_shared<molsys::Atom>();
-        _atom2 = std::make_shared<molsys::Atom>();
-
-        _atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
-        _atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
-
-        _atom1->setForceToZero();
-        _atom2->setForceToZero();
-
-        molecule1.addAtom(_atom1);
-        molecule1.addAtom(_atom2);
-
-        _box = std::make_unique<molsys::SimulationBox>();
-        _box->addMolecule(molecule1);
-
-        molsys::OrthorhombicBox orthoBox{
-            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-        };
-        _box->setBox(orthoBox, false);
-
-        _distanceConstraint = std::make_unique<constraints::DistanceConstraint>(
-            _box->getMolecules().data(),
-            _box->getMolecules().data(),
-            AtomIndex{0},
-            AtomIndex{1},
-            _lowerDistance,
-            _upperDistance,
-            _springConstant,
-            _dSpringConstantDt
-        );
-    }
+    void SetUp() override;
 };
+
+inline void TestDistanceConstraint::SetUp()
+{
+    auto molecule1 = molsys::Molecule();
+
+    _atom1 = std::make_shared<molsys::Atom>();
+    _atom2 = std::make_shared<molsys::Atom>();
+
+    _atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    _atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+
+    _atom1->setForceToZero();
+    _atom2->setForceToZero();
+
+    molecule1.addAtom(_atom1);
+    molecule1.addAtom(_atom2);
+
+    _box = std::make_unique<molsys::SimulationBox>();
+    _box->addMolecule(molecule1);
+
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
+    _box->setBox(orthoBox, false);
+
+    _distanceConstraint = std::make_unique<constraints::DistanceConstraint>(
+        _box->getMolecules().data(),
+        _box->getMolecules().data(),
+        AtomIndex{0},
+        AtomIndex{1},
+        _lowerDistance,
+        _upperDistance,
+        _springConstant,
+        _dSpringConstantDt
+    );
+}
 
 #endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_DISTANCE_CONSTRAINT_HPP

@@ -82,10 +82,7 @@ namespace molsys
         [[nodiscard]] const Pos3D           &getUpperBoundary() const;
         [[nodiscard]] const linalg::Vec3Dul &getCellIndex() const;
 
-        [[nodiscard]] Molecule *getMolecule(size_t index) const
-        {
-            return _molecules[index];
-        }
+        [[nodiscard]] Molecule *getMolecule(size_t index) const;
         [[nodiscard]] const std::vector<Molecule *> &getMolecules() const;
         [[nodiscard]] std::vector<Molecule *>       &getMolecules();
 
@@ -93,10 +90,7 @@ namespace molsys
         [[nodiscard]] const std::vector<Cell *> &getNeighbourCells() const;
 
         [[nodiscard]]
-        const std::vector<Atom *> &getAtoms(size_t molIndex) const
-        {
-            return _atoms[molIndex];
-        }
+        const std::vector<Atom *> &getAtoms(size_t molIndex) const;
 
         [[nodiscard]] const std::vector<size_t> &getCoreMoleculeIndices() const;
         [[nodiscard]] const std::vector<size_t> &getSmoothingMoleculeIndices(
@@ -118,6 +112,16 @@ namespace molsys
         void setUpperBoundary(const Pos3D &upperBoundary);
         void setCellIndex(const linalg::Vec3Dul &cellIndex);
     };
+
+    inline Molecule *Cell::getMolecule(size_t index) const
+    {
+        return _molecules[index];
+    }
+
+    inline const std::vector<Atom *> &Cell::getAtoms(size_t molIndex) const
+    {
+        return _atoms[molIndex];
+    }
 
 }   // namespace molsys
 

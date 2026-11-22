@@ -48,42 +48,72 @@ namespace
     template <>
     struct SampleValues<int>
     {
-        static int first() { return 42; }
-        static int second() { return -7; }
-        static int zero() { return 0; }
+        static int first();
+        static int second();
+        static int zero();
     };
+
+    int SampleValues<int>::first() { return 42; }
+
+    int SampleValues<int>::second() { return -7; }
+
+    int SampleValues<int>::zero() { return 0; }
 
     template <>
     struct SampleValues<double>
     {
-        static double first() { return 3.14; }
-        static double second() { return -2.5; }
-        static double zero() { return 0.0; }
+        static double first();
+        static double second();
+        static double zero();
     };
+
+    double SampleValues<double>::first() { return 3.14; }
+
+    double SampleValues<double>::second() { return -2.5; }
+
+    double SampleValues<double>::zero() { return 0.0; }
 
     template <>
     struct SampleValues<bool>
     {
-        static bool first() { return true; }
-        static bool second() { return false; }
-        static bool zero() { return false; }
+        static bool first();
+        static bool second();
+        static bool zero();
     };
+
+    bool SampleValues<bool>::first() { return true; }
+
+    bool SampleValues<bool>::second() { return false; }
+
+    bool SampleValues<bool>::zero() { return false; }
 
     template <>
     struct SampleValues<std::string>
     {
-        static std::string first() { return "hello"; }
-        static std::string second() { return "world"; }
-        static std::string zero() { return ""; }
+        static std::string first();
+        static std::string second();
+        static std::string zero();
     };
+
+    std::string SampleValues<std::string>::first() { return "hello"; }
+
+    std::string SampleValues<std::string>::second() { return "world"; }
+
+    std::string SampleValues<std::string>::zero() { return ""; }
 
     template <>
     struct SampleValues<Color>
     {
-        static Color first() { return Color::GREEN; }
-        static Color second() { return Color::BLUE; }
-        static Color zero() { return Color::RED; }
+        static Color first();
+        static Color second();
+        static Color zero();
     };
+
+    Color SampleValues<Color>::first() { return Color::GREEN; }
+
+    Color SampleValues<Color>::second() { return Color::BLUE; }
+
+    Color SampleValues<Color>::zero() { return Color::RED; }
 
     template <typename T>
     class SettingTypedTest : public ::testing::Test
