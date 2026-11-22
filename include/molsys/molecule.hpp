@@ -170,7 +170,7 @@ namespace molsys
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] MolType getMoltype() const { return _moltype; }
+        [[nodiscard]] MolType getMoltype() const;
         [[nodiscard]] size_t  getNumberOfAtoms() const;
         [[nodiscard]] size_t  getDegreesOfFreedom() const;
 
@@ -179,7 +179,7 @@ namespace molsys
 
         [[nodiscard]] const Pos3D &getCenterOfMass() const;
         [[nodiscard]] HybridZone   getHybridZone() const;
-        [[nodiscard]] bool         isActive() const { return _isActive; }
+        [[nodiscard]] bool         isActive() const;
 
         [[nodiscard]] Atom &getAtom(AtomIndex index);
         [[nodiscard]] std::vector<std::shared_ptr<Atom>>       &getAtoms();
@@ -206,6 +206,10 @@ namespace molsys
         void setForcedLayer(bool isForcedLayer);
         void setForcedOuter(bool isForcedOuter);
     };
+
+    inline MolType Molecule::getMoltype() const { return _moltype; }
+
+    inline bool Molecule::isActive() const { return _isActive; }
 
 }   // namespace molsys
 

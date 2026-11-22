@@ -30,19 +30,28 @@ struct TestOutputFileSettings
 {
     static std::string determineMostCommonPrefix(
         const OutputFileSettings& settings
-    )
-    {
-        return settings._determineMostCommonPrefix();
-    }
+    );
 
     static void replaceDefaultValues(
         OutputFileSettings& settings,
         const std::string&  prefix
-    )
-    {
-        settings._replaceDefaultValues(prefix);
-    }
+    );
 };
+
+std::string TestOutputFileSettings::determineMostCommonPrefix(
+    const OutputFileSettings& settings
+)
+{
+    return settings._determineMostCommonPrefix();
+}
+
+void TestOutputFileSettings::replaceDefaultValues(
+    OutputFileSettings& settings,
+    const std::string&  prefix
+)
+{
+    settings._replaceDefaultValues(prefix);
+}
 
 /**
  * @brief tests setting output frequency

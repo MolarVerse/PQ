@@ -30,8 +30,10 @@
 
 struct TestOutputUtils
 {
-    static void openFile(out::Output &output) { output._openFile(); }
+    static void openFile(out::Output &output);
 };
+
+void TestOutputUtils::openFile(out::Output &output) { output._openFile(); }
 
 /**
  * @brief tests setting output filename

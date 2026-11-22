@@ -39,11 +39,13 @@ class TestTimingsSection : public ::testing::Test
    protected:
     std::unique_ptr<timings::TimingsSection> _section;
 
-    void SetUp() override
-    {
-        _section = std::make_unique<timings::TimingsSection>("test-section");
-    }
+    void SetUp() override;
 };
+
+inline void TestTimingsSection::SetUp()
+{
+    _section = std::make_unique<timings::TimingsSection>("test-section");
+}
 
 /**
  * @class TestTimer
@@ -56,7 +58,9 @@ class TestTimer : public ::testing::Test
    protected:
     std::unique_ptr<timings::Timer> _timer;
 
-    void SetUp() override { _timer = std::make_unique<timings::Timer>(); }
+    void SetUp() override;
 };
+
+inline void TestTimer::SetUp() { _timer = std::make_unique<timings::Timer>(); }
 
 #endif   // TESTS__INCLUDE__TIMINGS__TEST_TIMINGS_HPP

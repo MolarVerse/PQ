@@ -41,12 +41,23 @@ class TestMoldescriptorReader : public ::testing::Test
     std::unique_ptr<Settings> _settings;
 
     [[nodiscard]]
-    static std::unique_ptr<engine::Engine> _makeEngine(const Settings &settings)
-    {
-        return std::make_unique<engine::MMMDEngine>(settings);
-    }
+    static std::unique_ptr<engine::Engine> _makeEngine(
+        const Settings &settings
+    );
 
-    void SetUp() override { _settings = std::make_unique<Settings>(); }
+    void SetUp() override;
 };
+
+inline std::unique_ptr<engine::Engine> TestMoldescriptorReader::_makeEngine(
+    const Settings &settings
+)
+{
+    return std::make_unique<engine::MMMDEngine>(settings);
+}
+
+inline void TestMoldescriptorReader::SetUp()
+{
+    _settings = std::make_unique<Settings>();
+}
 
 #endif

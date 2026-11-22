@@ -47,35 +47,48 @@ class TestInputFileReader : public ::testing::Test
     Settings                                _settings;
     std::unique_ptr<input::InputFileReader> _inputFileReader;
 
-    void SetUp() override
-    {
-        // NOTE: here the MMOPTEngine is used as dummy engine
-        //       for testing the InputFileReader class
-        //       The mdEngine is used only for special cases
-        //       where optEngine is not supported
-        _inputFileReader =
-            std::make_unique<input::InputFileReader>("input.in", _settings);
-    }
+    void SetUp() override;
 
-    void TearDown() override { _removeFile(); }
+    void TearDown() override;
 
-    static void _clearParser(input::InputFileParser &parser)
-    {
-        parser._clear();
-    }
+    static void _clearParser(input::InputFileParser &parser);
 
-    void _removeFile() const
-    {
-        static_cast<void>(std::remove(_fileName.c_str()));
-    }
+    void _removeFile() const;
 
     static auto _parseSelectionNoPython(
         input::Converter<input::SelectionTag> &converter,
         const std::string                     &key
-    )
-    {
-        return converter._parseSelectionNoPython(key);
-    }
+    );
 };
+
+inline void TestInputFileReader::SetUp()
+{
+    // NOTE: here the MMOPTEngine is used as dummy engine
+    //       for testing the InputFileReader class
+    //       The mdEngine is used only for special cases
+    //       where optEngine is not supported
+    _inputFileReader =
+        std::make_unique<input::InputFileReader>("input.in", _settings);
+}
+
+inline void TestInputFileReader::TearDown() { _removeFile(); }
+
+inline void TestInputFileReader::_clearParser(input::InputFileParser &parser)
+{
+    parser._clear();
+}
+
+inline void TestInputFileReader::_removeFile() const
+{
+    static_cast<void>(std::remove(_fileName.c_str()));
+}
+
+inline auto TestInputFileReader::_parseSelectionNoPython(
+    input::Converter<input::SelectionTag> &converter,
+    const std::string                     &key
+)
+{
+    return converter._parseSelectionNoPython(key);
+}
 
 #endif

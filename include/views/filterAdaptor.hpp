@@ -40,26 +40,27 @@ namespace pqviews
         Pred pred;
 
         template <typename Range>
-        auto operator()(Range&& range) const
-        {
-            if constexpr (std::is_lvalue_reference_v<Range>)
-            {
-                // For lvalue references, store a reference to avoid copying
-                return FilterView<Range, Pred>{
-                    std::forward<Range>(range),
-                    pred
-                };
-            }
-            else
-            {
-                // For rvalue references, decay
-                return FilterView<std::decay_t<Range>, Pred>{
-                    std::forward<Range>(range),
-                    pred
-                };
-            }
-        }
+        auto operator()(Range&& range) const;
     };
+
+    template <typename Pred>
+    template <typename Range>
+    auto FilterAdaptor<Pred>::operator()(Range&& range) const
+    {
+        if constexpr (std::is_lvalue_reference_v<Range>)
+        {
+            // For lvalue references, store a reference to avoid copying
+            return FilterView<Range, Pred>{std::forward<Range>(range), pred};
+        }
+        else
+        {
+            // For rvalue references, decay
+            return FilterView<std::decay_t<Range>, Pred>{
+                std::forward<Range>(range),
+                pred
+            };
+        }
+    }
 
     /**
      * @brief Creates a FilterAdaptor with the given predicate

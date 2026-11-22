@@ -49,34 +49,36 @@ class TestManostat : public ::testing::Test
     std::unique_ptr<manostat::Manostat>         _manostat;
     std::unique_ptr<Settings>                   _settings;
 
-    void SetUp() override
-    {
-        _settings = std::make_unique<Settings>();
-        _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-        _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-        _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
-        _settings->manostatSettings.setTauByUser(1.0 * fs);
-        _settings->manostatSettings.setCompressibilityByUser(0.03 * per_bar);
-        _manostat =
-            std::make_unique<manostat::Manostat>(_settings->manostatSettings);
-        _data = std::make_unique<physicalData::PhysicalData>();
-
-        _data->set_volume(2.0 * angstrom3);
-        _data->set_virial(
-            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
-        );
-        _data->setKineticEnergyMolecularVector(
-            diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
-        );
-        _data->setKineticEnergyAtomicVector(
-            diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)) * kcal_per_mol
-        );
-
-        _box = std::make_unique<molsys::SimulationBox>();
-        const auto              boxLength = cbrt(2.0) * angstrom;
-        molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};
-        _box->setBox(orthoBox, false);
-    }
+    void SetUp() override;
 };
+
+inline void TestManostat::SetUp()
+{
+    _settings = std::make_unique<Settings>();
+    _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
+    _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
+    _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
+    _settings->manostatSettings.setTauByUser(1.0 * fs);
+    _settings->manostatSettings.setCompressibilityByUser(0.03 * per_bar);
+    _manostat =
+        std::make_unique<manostat::Manostat>(_settings->manostatSettings);
+    _data = std::make_unique<physicalData::PhysicalData>();
+
+    _data->set_volume(2.0 * angstrom3);
+    _data->set_virial(
+        diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
+    );
+    _data->setKineticEnergyMolecularVector(
+        diagonalMatrix(linalg::Vec3D(1.0, 2.0, 3.0)) * kcal_per_mol
+    );
+    _data->setKineticEnergyAtomicVector(
+        diagonalMatrix(linalg::Vec3D(1.0, 1.0, 1.0)) * kcal_per_mol
+    );
+
+    _box = std::make_unique<molsys::SimulationBox>();
+    const auto              boxLength = cbrt(2.0) * angstrom;
+    molsys::OrthorhombicBox orthoBox{{boxLength, boxLength, boxLength}};
+    _box->setBox(orthoBox, false);
+}
 
 #endif

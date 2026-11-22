@@ -38,14 +38,18 @@ namespace pqviews
         Func func;
 
         template <typename Range>
-        auto operator()(Range&& range) const
-        {
-            return TransformView<std::decay_t<Range>, Func>{
-                std::forward<Range>(range),
-                func
-            };
-        }
+        auto operator()(Range&& range) const;
     };
+
+    template <typename Func>
+    template <typename Range>
+    auto TransformAdaptor<Func>::operator()(Range&& range) const
+    {
+        return TransformView<std::decay_t<Range>, Func>{
+            std::forward<Range>(range),
+            func
+        };
+    }
 
     /**
      * @brief Creates a TransformAdaptor with the given transformation function
