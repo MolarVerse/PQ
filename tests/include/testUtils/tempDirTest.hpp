@@ -59,7 +59,8 @@ inline void TempDirTest::SetUp()
 
 inline void TempDirTest::TearDown() { std::filesystem::remove_all(_root); }
 
-inline std::filesystem::path TempDirTest::_makeDir(const std::string &name
+inline std::filesystem::path TempDirTest::_makeDir(
+    const std::string &name
 ) const
 {
     auto path = _root / name;

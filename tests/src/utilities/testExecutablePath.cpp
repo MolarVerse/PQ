@@ -63,8 +63,7 @@ TEST(ExecutablePathTest, resolvesInstalledDataRelativeToExecutable)
 TEST_F(SearchPathTest, isExecutableFileNeedsRegularExecutableFile)
 {
     EXPECT_TRUE(utilities::isExecutableFile(_makeFile(_root / "run", true)));
-    EXPECT_FALSE(utilities::isExecutableFile(_makeFile(_root / "read", false))
-    );
+    EXPECT_FALSE(utilities::isExecutableFile(_makeFile(_root / "read", false)));
     EXPECT_FALSE(utilities::isExecutableFile(_makeDir("dir")));
     EXPECT_FALSE(utilities::isExecutableFile(_root / "missing"));
 }
@@ -109,8 +108,9 @@ TEST_F(SearchPathTest, nothingFound)
     _makeFile(_makeDir("noExec") / _programName, false);
 
     EXPECT_FALSE(utilities::findInSearchPath("", _programName).has_value());
-    EXPECT_FALSE(utilities::findInSearchPath(_separator, _programName)
-                     .has_value());
+    EXPECT_FALSE(
+        utilities::findInSearchPath(_separator, _programName).has_value()
+    );
     EXPECT_FALSE(
         utilities::findInSearchPath((_root / "noExec").string(), _programName)
             .has_value()
