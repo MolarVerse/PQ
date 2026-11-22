@@ -38,7 +38,10 @@ TEST(TestUlmJson, number)
     EXPECT_EQ(out::ulm::number(-1.5), "-1.5");
     EXPECT_EQ(out::ulm::number(0.1), "0.1");
     EXPECT_EQ(out::ulm::number(1e-5), "1e-05");
-    EXPECT_EQ(out::ulm::number(std::numeric_limits<double>::quiet_NaN()), "NaN");
+    EXPECT_EQ(
+        out::ulm::number(std::numeric_limits<double>::quiet_NaN()),
+        "NaN"
+    );
     EXPECT_EQ(
         out::ulm::number(std::numeric_limits<double>::infinity()),
         "Infinity"

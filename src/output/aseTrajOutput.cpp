@@ -58,15 +58,15 @@ namespace out
         std::sqrt((1.0 * amu / eV).numerical_value_in((s * s) / angstrom2));
 
     // ULM layout of ase/io/ulm.py (version 3)
-    constexpr std::string_view ULM_MAGIC   = "- of UlmASE-Trajectory  ";
-    constexpr std::int64_t     ULM_VERSION = 3;
-    constexpr std::int64_t     NITEMS_POSITION  = 32;
-    constexpr std::int64_t     OFFSETS_POINTER  = 40;
-    constexpr std::int64_t     HEADER_SIZE      = 48;
-    constexpr std::size_t      OFFSETS_GROWTH   = 42;
-    constexpr std::int64_t     ALIGNMENT        = 8;
-    constexpr std::int64_t     INT_SIZE         = 8;
-    constexpr std::string_view ASE_VERSION      = "3.29.0";
+    constexpr std::string_view ULM_MAGIC       = "- of UlmASE-Trajectory  ";
+    constexpr std::int64_t     ULM_VERSION     = 3;
+    constexpr std::int64_t     NITEMS_POSITION = 32;
+    constexpr std::int64_t     OFFSETS_POINTER = 40;
+    constexpr std::int64_t     HEADER_SIZE     = 48;
+    constexpr std::size_t      OFFSETS_GROWTH  = 42;
+    constexpr std::int64_t     ALIGNMENT       = 8;
+    constexpr std::int64_t     INT_SIZE        = 8;
+    constexpr std::string_view ASE_VERSION     = "3.29.0";
 
     /**
      * @brief write values as raw bytes
@@ -343,8 +343,14 @@ namespace out
             return position;
         }
 
-        const std::string padding(static_cast<std::size_t>(ALIGNMENT - rest), '#');
-        _file.write(padding.data(), static_cast<std::streamsize>(padding.size()));
+        const std::string padding(
+            static_cast<std::size_t>(ALIGNMENT - rest),
+            '#'
+        );
+        _file.write(
+            padding.data(),
+            static_cast<std::streamsize>(padding.size())
+        );
 
         return position + ALIGNMENT - rest;
     }

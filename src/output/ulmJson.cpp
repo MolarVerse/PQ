@@ -54,7 +54,7 @@ namespace out::ulm
             return value > 0.0 ? "Infinity" : "-Infinity";
         }
 
-        constexpr std::size_t   MAX_LENGTH = 32;
+        constexpr std::size_t        MAX_LENGTH = 32;
         std::array<char, MAX_LENGTH> buffer{};
 
         const auto result =

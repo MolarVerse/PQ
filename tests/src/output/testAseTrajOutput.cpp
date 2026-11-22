@@ -264,11 +264,7 @@ TEST(TestAseTrajOutput, writesUlmFramesInAseUnits)
         }
     }
 
-    EXPECT_NEAR(
-        jsonValue(json, "energy"),
-        -1.5 * ASE_KCAL_PER_MOL,
-        TOLERANCE
-    );
+    EXPECT_NEAR(jsonValue(json, "energy"), -1.5 * ASE_KCAL_PER_MOL, TOLERANCE);
 
     const auto second = itemJson(data, 1);
     EXPECT_EQ(second.find("numbers."), std::string::npos);
@@ -310,10 +306,8 @@ TEST(TestAseTrajOutput, growsTheOffsetsTable)
     for (std::size_t index = 0; index < nFrames; ++index)
     {
         const auto itemIndex = static_cast<std::int64_t>(index);
-        const auto position  = readValue<std::int64_t>(
-            data,
-            offsets + (8 * itemIndex)
-        );
+        const auto position =
+            readValue<std::int64_t>(data, offsets + (8 * itemIndex));
         EXPECT_GT(position, previous);
         previous = position;
 

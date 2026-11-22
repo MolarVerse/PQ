@@ -30,9 +30,9 @@
 #include <string>
 #include <vector>
 
+#include "aseTrajOutput.hpp"
 #include "boxOutput.hpp"
 #include "energyOutput.hpp"
-#include "aseTrajOutput.hpp"
 #include "extxyzOutput.hpp"
 #include "h5mdOutput.hpp"
 #include "infoOutput.hpp"
@@ -92,8 +92,8 @@ namespace engine
         std::unique_ptr<out::TrajectoryOutput> _chargeOutput;
         std::unique_ptr<out::RstFileOutput>    _rstFileOutput;
 
-        std::unique_ptr<out::ExtxyzOutput> _extxyzOutput;
-        std::unique_ptr<out::H5mdOutput>   _h5mdOutput;
+        std::unique_ptr<out::ExtxyzOutput>  _extxyzOutput;
+        std::unique_ptr<out::H5mdOutput>    _h5mdOutput;
         std::unique_ptr<out::AseTrajOutput> _aseTrajOutput;
 
         std::unique_ptr<out::LogOutput>    _logOutput;

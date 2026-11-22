@@ -98,8 +98,8 @@ namespace setup
         );
         _engine.getInfoOutput().setFilename(infoFileName, overwriteOutputFiles);
 
-        // extxyz, h5md or ase replace the xyz, velocity, force and charge files of
-        // MD runs
+        // extxyz, h5md or ase replace the xyz, velocity, force and charge files
+        // of MD runs
         const auto format = outputFileSettings.getTrajectoryFormat();
         const auto textTrajectory =
             !isMDJobType(_engine.getSettings().generalSettings.getJobtype()) ||
