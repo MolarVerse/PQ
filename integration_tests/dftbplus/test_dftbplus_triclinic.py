@@ -33,7 +33,11 @@ wrong lattice would change the energy.
   Compared with a reference.
 * The same with `isotropy = anisotropic`: the angles must stay exactly as they
   are (no reference).
-* An MM-MD run with a triclinic start box is refused with a clear message.
+* `full_anisotropic` also works from a box with 90 degree angles (it has to be
+  a box that can shear, otherwise the molecules are sheared in a cell that is
+  not: issue 1297).
+* An MM-MD run with a triclinic start box, or with `full_anisotropic`, is
+  refused with a clear message.
 """
 
 import math
@@ -164,3 +168,50 @@ def test_mm_md_refuses_a_triclinic_box(test_with_data_dir):
     assert error.value.returncode != 0
     output = error.value.stdout + error.value.stderr
     assert b"Triclinic box is only supported for QM-MD and RP-QM-MD" in output
+
+
+@pytest.mark.parametrize("example_dir", ["dftbplus/"], indirect=False)
+def test_dftbplus_full_anisotropic_manostat_from_a_box_with_right_angles(
+        test_with_data_dir):
+    """The start box has no angles; full_anisotropic has to be able to change
+    them (issue 1297: before, the box stayed orthorhombic)."""
+    start = pathlib.Path("input.rst")
+    text, count = re.subn(r"^Box\s+.*$", "Box   9.0   10.0   11.0",
+                          start.read_text(), count=1, flags=re.MULTILINE)
+    assert count == 1
+    pathlib.Path("cubic.rst").write_text(text)
+
+    text = pathlib.Path("run-01_triclinic_npt.in").read_text()
+    assert "input_triclinic.rst" in text
+    pathlib.Path("cubic.in").write_text(
+        text.replace("input_triclinic.rst", "cubic.rst"))
+
+    _, stderr = execute_pq("cubic.in")
+
+    assert stderr == b""
+
+    _assert_finite("xyz", "vel", "force", "en", "box")
+
+    boxes = _boxes()
+    assert len(boxes) > 1
+    changes = [abs(angle - 90.0) for angle in boxes[-1][3:]]
+    assert min(changes) > 1e-3 and max(changes) > 0.05, (
+        f"the box angles must change from 90 degrees: {changes}")
+    assert abs(boxes[-1][0] - LENGTHS[0]) > 1e-3, "the lengths must move"
+
+
+@pytest.mark.parametrize("example_dir", ["cgo/"], indirect=False)
+def test_mm_md_refuses_a_full_anisotropic_manostat(test_with_data_dir):
+    """Issue 1297 (and 910): without a triclinic box in MM-MD the shear of a
+    full anisotropic manostat made the box explode; now it is refused."""
+    text = pathlib.Path("run-01_NPT_anisotropic.in").read_text()
+    assert "isotropy = anisotropic;" in text
+    pathlib.Path("full.in").write_text(
+        text.replace("isotropy = anisotropic;", "isotropy = full_anisotropic;"))
+
+    with pytest.raises(subprocess.CalledProcessError) as error:
+        execute_pq("full.in")
+
+    assert error.value.returncode != 0
+    output = error.value.stdout + error.value.stderr
+    assert b"isotropy = full_anisotropic needs a triclinic box" in output

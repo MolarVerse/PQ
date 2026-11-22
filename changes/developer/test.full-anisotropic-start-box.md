@@ -1,0 +1,1 @@
+- Add unit tests for the box section (a manostat with full anisotropic coupling makes the box triclinic, other settings keep it orthorhombic, MM-MD refuses both) and integration tests for `full_anisotropic` from a box with 90° angles (QM-MD) and its refusal in MM-MD.
