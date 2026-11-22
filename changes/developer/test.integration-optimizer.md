@@ -1,0 +1,1 @@
+- Add integration tests for mm-opt with steepest descent and Adam on a harmonic O-H bond: every written frame and .opt row is compared with a Python model, for the constant, exponential decay and constant decay learning rates (with update frequency and minimum learning rate), including the convergence epoch and the failure message.
