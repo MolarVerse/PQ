@@ -192,7 +192,7 @@ TEST(TestEngineOutputFrames, aseTrajReplacesTheXyzFiles)
 
     const auto   content = readFile(prefix + ".traj");
     std::int64_t nItems  = 0;
-    std::memcpy(&nItems, content.data() + 32, sizeof(nItems));
+    std::memcpy(&nItems, content.substr(32, 8).data(), sizeof(nItems));
 
     EXPECT_EQ(nItems, 3);
     EXPECT_NE(content.find(R"("info": {"step": 3}})"), std::string::npos);

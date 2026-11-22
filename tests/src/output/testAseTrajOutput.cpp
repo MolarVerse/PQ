@@ -128,11 +128,9 @@ namespace
     T readValue(const std::string &data, std::int64_t position)
     {
         T value{};
-        std::memcpy(
-            &value,
-            data.data() + static_cast<std::size_t>(position),
-            sizeof(T)
-        );
+        const auto bytes =
+            data.substr(static_cast<std::size_t>(position), sizeof(T));
+        std::memcpy(&value, bytes.data(), sizeof(T));
         return value;
     }
 
@@ -175,11 +173,9 @@ namespace
         std::vector<T> values(size);
 
         EXPECT_EQ(offset % 8, 0) << name;
-        std::memcpy(
-            values.data(),
-            data.data() + static_cast<std::size_t>(offset),
-            size * sizeof(T)
-        );
+        const auto bytes =
+            data.substr(static_cast<std::size_t>(offset), size * sizeof(T));
+        std::memcpy(values.data(), bytes.data(), bytes.size());
         return values;
     }
 
