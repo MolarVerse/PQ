@@ -1,0 +1,1 @@
+- Add integration tests for M-SHAKE on 2000 rigid TIP3P waters (reference, bond lengths and bond velocities of every water) and for the cell list together with the force field, SHAKE and Wolf on `chig` (must equal brute force).
