@@ -1,1 +1,2 @@
 - CMake takes the version of a build on the branch `release/vX.Y.Z` from the branch name (`vX.Y.Z-<hash>`) instead of the last tag, so builds of a release PR report the new version before its tag exists; detached CI checkouts use `GITHUB_HEAD_REF` or `GITHUB_REF_NAME`.
+- CMake warns at configure time when no `vX.Y.Z` tag is reachable and the version of the build is therefore the unknown `v0.0.0` (source archive, clone without tags, no git).

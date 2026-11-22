@@ -25,6 +25,11 @@ request are detached; there the branch name is read from ``GITHUB_HEAD_REF``
 (``GITHUB_REF_NAME`` for a push). Other branches, including hotfix branches
 (their version is in the PR title), report the last tag.
 
+Without any reachable tag (a source archive, a clone without tags, no git) the
+version is ``v0.0.0`` and CMake prints a warning at configure time; checks that
+compare against the version, such as the removal of deprecated code, then do
+not fire. A release branch does not need tags: its version comes from its name.
+
 ******
 Hotfix
 ******

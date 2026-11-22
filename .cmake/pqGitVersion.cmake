@@ -84,4 +84,13 @@ else()
     set(GIT_VERSION "v0.0.0")
 endif()
 
+if(GIT_VERSION STREQUAL "v0.0.0")
+    message(WARNING
+        "No git tag of the form vX.Y.Z is reachable (a source archive, a "
+        "clone without tags or no git at all): the version of this build is "
+        "unknown (v0.0.0) and checks that depend on it, such as the removal "
+        "of deprecated code, cannot fire. Fetch the tags (git fetch --tags) "
+        "or build from a clone of the repository.")
+endif()
+
 message("-- git Version: ${GIT_VERSION}")
