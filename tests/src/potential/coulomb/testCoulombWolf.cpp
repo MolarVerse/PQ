@@ -39,7 +39,7 @@ TEST(TestCoulombWolf, calculate)
     const double kappa         = 0.25;
 
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(
         rcCutoff * angstrom
     );
     const auto guffWolfCoulomb =

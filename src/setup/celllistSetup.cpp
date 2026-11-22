@@ -76,7 +76,7 @@ namespace setup
             cellList.resizeCells();
             cellList.setup(
                 _engine.getSimulationBox(),
-                _engine.getSettings().potentialSettings.getCoulombRadiusCutOff()
+                _engine.getSettings().potentialSettings.getCoulombRadiusCutoff()
             );
             _engine.makePotential(
                 pot::PotentialCellList(_engine.getSettings().hybridSettings)
