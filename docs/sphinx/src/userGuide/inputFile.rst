@@ -369,6 +369,7 @@ The ``traj_format`` keyword sets how MD runs write positions, velocities, forces
     - **xyz** (default): the :ref:`trajectoryFile`, :ref:`velocityFile`, :ref:`forceFile` and :ref:`chargeFile`
     - **extxyz**: one :ref:`extxyzFile` instead of these four files
     - **h5md**: one :ref:`h5mdFile` instead of these four files (needs PQ built with ``-DBUILD_WITH_HDF5=ON``)
+    - **ase**: one :ref:`aseTrajFile` in ASE units instead of these four files
 
 .. _extxyzfilekey:
 
@@ -393,6 +394,18 @@ H5MD File
     h5md_file = {file} -> "default.h5md"
 
 The ``h5md_file`` keyword sets the name of the :ref:`h5mdFile`, which is written if ``traj_format = h5md``. Like the other output files, it follows ``file_prefix``.
+
+.. _asetrajfilekey:
+
+ASE Trajectory File
+===================
+
+.. admonition:: Key
+    :class: tip
+
+    ase_traj_file = {file} -> "default.traj"
+
+The ``ase_traj_file`` keyword sets the name of the :ref:`aseTrajFile`, which is written if ``traj_format = ase``. Like the other output files, it follows ``file_prefix``.
 
 .. _energyfilekey:
 

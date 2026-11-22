@@ -1,0 +1,1 @@
+- `out::AseTrajOutput` writes the ULM format of `ase/io/ulm.py` natively on the writer thread (8-byte aligned arrays, JSON per frame, offsets table growing by 42). `Frame::Atom` now carries the mass; the atomic number helper moved from `H5mdOutput::species` to `out::atomicNumber` (#1309).
