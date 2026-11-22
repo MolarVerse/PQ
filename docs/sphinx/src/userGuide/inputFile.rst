@@ -99,7 +99,7 @@ Possible options are:
 
    4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.
 
-   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. With :ref:`shake <shakeKey>` = ``on`` the constrained bonds keep their length and the forces are projected onto the constraints, so convergence uses the constrained forces (see ``examples/h2o_mm_opt_shake``). ``mm-opt`` stops with an error if ``shake = mshake`` or ``distance-constraints`` is on. See ``examples/ar3_mm_opt`` for a small input.
+   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. With :ref:`shake <shakeKey>` = ``on`` or ``mshake`` the constrained bonds keep their length and the forces are projected onto the constraints, so convergence uses the constrained forces (see ``examples/h2o_mm_opt_shake`` and ``examples/h2o_mm_opt_mshake``). SHAKE on all three distances of a molecule needs more ``shake-iter`` and ``rattle-iter``; use M-SHAKE for rigid molecules instead. ``mm-opt`` stops with an error if ``distance-constraints`` is on. See ``examples/ar3_mm_opt`` for a small input.
 
    6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
 

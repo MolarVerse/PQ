@@ -4,6 +4,9 @@
    angle relaxes to 104.5°.
 2. The same water without SHAKE but with stiff bonds reaches the same
    geometry.
+3. ``h2o_mm_opt_mshake``: both waters of the dimer stay rigid with M-SHAKE.
+4. The dimer with SHAKE on all three distances of each water reaches the same
+   energy.
 """
 
 import argparse
@@ -24,6 +27,21 @@ ANGLES
 1 104.5 100.0
 END
 """
+
+RIGID_SHAKE = """SHAKE
+1 2 0.957199
+1 3 0.957199
+2 3 1.5139
+4 5 0.957199
+4 6 0.957199
+5 6 1.5139
+END
+"""
+
+# from mshake.top
+RIGID_OH = math.hypot(0.585882, 0.756950)
+RIGID_HH = 2 * 0.756950
+DIMER_ENERGY = -6.46783
 
 
 def run_pq(pq, directory, replace, files):
@@ -55,6 +73,10 @@ def read_positions(rst_file):
     return positions
 
 
+def read_energy(en_file):
+    return float(en_file.read_text().splitlines()[-1].split()[3])
+
+
 def angle(center, first, second):
     vec1 = [a - b for a, b in zip(first, center)]
     vec2 = [a - b for a, b in zip(second, center)]
@@ -80,22 +102,36 @@ def expect(values, targets, tolerance):
     ]
 
 
-def check_shake(positions):
+def check_shake(positions, _energy):
     geometry = water_geometry(positions)
     return expect(geometry, {"O-H1": 0.9572, "O-H2": 0.9572}, 1e-6) + expect(
         geometry, {"H-O-H": 104.5}, 1e-2
     )
 
 
-def check_stiff(positions):
+def check_stiff(positions, _energy):
     geometry = water_geometry(positions)
     return expect(
         geometry, {"O-H1": 0.9572, "O-H2": 0.9572, "H-O-H": 104.5}, 1e-3
     )
 
 
+def check_rigid_dimer(positions, energy):
+    problems = []
+    for first in (0, 3):
+        oxygen, hydrogen1, hydrogen2 = positions[first : first + 3]
+        distances = {
+            "O-H1": math.dist(oxygen, hydrogen1),
+            "O-H2": math.dist(oxygen, hydrogen2),
+            "H-H": math.dist(hydrogen1, hydrogen2),
+        }
+        targets = {"O-H1": RIGID_OH, "O-H2": RIGID_OH, "H-H": RIGID_HH}
+        problems += expect(distances, targets, 1e-6)
+    return problems + expect({"E": energy}, {"E": DIMER_ENERGY}, 1e-4)
+
+
 CASES = [
-    ("shake", "h2o_mm_opt_shake", {}, {}, "h2o-opt.rst", check_shake),
+    ("shake", "h2o_mm_opt_shake", {}, {}, "h2o-opt", check_shake),
     (
         "stiff bonds without shake",
         "h2o_mm_opt_shake",
@@ -105,8 +141,20 @@ CASES = [
             "initial-learning-rate = 0.002;": "initial-learning-rate = 0.00004;",
         },
         {"h2o.param": STIFF_BONDS},
-        "h2o-opt.rst",
+        "h2o-opt",
         check_stiff,
+    ),
+    ("mshake", "h2o_mm_opt_mshake", {}, {}, "h2o-dimer-opt", check_rigid_dimer),
+    (
+        "shake on all water distances",
+        "h2o_mm_opt_mshake",
+        {
+            "shake = mshake;": "shake = on;\nshake-iter = 100;\nrattle-iter = 100;",
+            "mshake_file = mshake.top;\n": "",
+        },
+        {"shake.top": RIGID_SHAKE},
+        "h2o-dimer-opt",
+        check_rigid_dimer,
     ),
 ]
 
@@ -119,7 +167,7 @@ def main():
 
     problems = []
 
-    for name, example, replace, files, rst, check in CASES:
+    for name, example, replace, files, prefix, check in CASES:
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp) / example
             shutil.copytree(args.examples / example, directory)
@@ -129,7 +177,9 @@ def main():
                 problems.append(f"{name} (exit code {code}):\n{output[-1500:]}")
                 continue
 
-            for problem in check(read_positions(directory / rst)):
+            positions = read_positions(directory / f"{prefix}.rst")
+            energy = read_energy(directory / f"{prefix}.en")
+            for problem in check(positions, energy):
                 problems.append(f"{name}: {problem}")
 
     for problem in problems:

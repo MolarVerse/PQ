@@ -1,0 +1,13 @@
+# Geometry optimization of a rigid TIP3P water dimer with M-SHAKE
+jobtype = mm-opt;
+force-field = off;
+rcoulomb = 9.0;
+shake = mshake;
+mshake_file = mshake.top;
+topology_file = shake.top;
+start_file = start.rst;
+file_prefix = h2o-dimer-opt;
+nstep = 2000;
+optimizer = adam;
+learning-rate-strategy = constant;
+initial-learning-rate = 0.01;

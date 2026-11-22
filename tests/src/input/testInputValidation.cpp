@@ -745,18 +745,13 @@ TEST_F(TestInputValidation, acceptsShakeInOptimization)
     EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
-TEST_F(TestInputValidation, rejectsMShakeInOptimization)
+TEST_F(TestInputValidation, acceptsMShakeInOptimization)
 {
     _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
     _settings.constraintSettings.activateMShakeByUser();
     _setKeyword("nstep");
 
-    ASSERT_THROW_MSG(
-        _finalizeAndValidate(),
-        exc::InputFileException,
-        "Job type MM_OPT does not apply M-SHAKE or distance constraints. Set "
-        "shake = off or on and distance-constraints = off."
-    );
+    EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
 TEST_F(TestInputValidation, rejectsDistanceConstraintsInOptimization)
@@ -768,8 +763,8 @@ TEST_F(TestInputValidation, rejectsDistanceConstraintsInOptimization)
     ASSERT_THROW_MSG(
         _finalizeAndValidate(),
         exc::InputFileException,
-        "Job type MM_OPT does not apply M-SHAKE or distance constraints. Set "
-        "shake = off or on and distance-constraints = off."
+        "Job type MM_OPT does not apply distance constraints. Set "
+        "distance-constraints = off."
     );
 }
 

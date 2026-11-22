@@ -26,7 +26,6 @@
 #include <format>
 #include <vector>
 
-#include "atom.hpp"
 #include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
@@ -40,8 +39,8 @@ namespace constraints
 {
     namespace
     {
-        // any value works, it only scales the RATTLE tolerance
-        constexpr Time OPT_TIME_STEP = 1.0 * ps;
+        // sets how tightly the RATTLE tolerance holds on the forces
+        constexpr Time OPT_TIME_STEP = 1.0 * fs;
     }   // namespace
 
     /**

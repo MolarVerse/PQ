@@ -141,8 +141,8 @@ namespace
     /**
      * @brief rejects the constraints that geometry optimizations do not apply
      *
-     * @throws exc::InputFileException if mm-opt has M-SHAKE or distance
-     * constraints active
+     * @throws exc::InputFileException if mm-opt has distance constraints
+     * active
      */
     void validateOptConstraints(
         const ConstraintSettings& constraintSettings,
@@ -152,7 +152,6 @@ namespace
         const auto jobType = generalSettings.getJobtype();
 
         const auto unsupported =
-            constraintSettings.isMShakeActivated() ||
             constraintSettings.isDistanceConstraintsActivated();
 
         if (!isOptJobType(jobType) || !unsupported)
@@ -162,8 +161,8 @@ namespace
 
         throw exc::InputFileException(
             std::format(
-                "Job type {} does not apply M-SHAKE or distance constraints. "
-                "Set shake = off or on and distance-constraints = off.",
+                "Job type {} does not apply distance constraints. Set "
+                "distance-constraints = off.",
                 JobTypeMeta::toString(jobType)
             )
         );
