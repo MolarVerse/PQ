@@ -47,7 +47,8 @@ namespace
         void SetUp() override;
         void TearDown() override;
 
-        [[nodiscard]] std::filesystem::path _makeDir(const std::string &name
+        [[nodiscard]] std::filesystem::path _makeDir(
+            const std::string &name
         ) const;
         static std::filesystem::path _makeFile(
             const std::filesystem::path &path,
@@ -67,7 +68,8 @@ namespace
 
     void TestEmbeddedPython::TearDown() { std::filesystem::remove_all(_root); }
 
-    std::filesystem::path TestEmbeddedPython::_makeDir(const std::string &name
+    std::filesystem::path TestEmbeddedPython::_makeDir(
+        const std::string &name
     ) const
     {
         auto path = _root / name;
@@ -129,8 +131,8 @@ TEST_F(TestEmbeddedPython, skipsFilesThatCannotRun)
     _makeFile(good / _programName, true);
     std::filesystem::create_directories(_makeDir("isDir") / _programName);
 
-    const auto searchPath = (_root / "isDir").string() + ":" +
-                            noExec.string() + ":" + good.string();
+    const auto searchPath = (_root / "isDir").string() + ":" + noExec.string() +
+                            ":" + good.string();
 
     EXPECT_EQ(
         utilities::findPythonProgram(searchPath, _programName, {}),
@@ -154,12 +156,14 @@ TEST_F(TestEmbeddedPython, nothingFoundLeavesPythonDefault)
 {
     const auto empty = _makeDir("empty");
 
-    EXPECT_FALSE(utilities::findPythonProgram(
-                     empty.string(),
-                     _programName,
-                     _root / "missing-python"
-    )
-                     .has_value());
+    EXPECT_FALSE(
+        utilities::findPythonProgram(
+            empty.string(),
+            _programName,
+            _root / "missing-python"
+        )
+            .has_value()
+    );
     EXPECT_FALSE(
         utilities::findPythonProgram(empty.string(), _programName, {})
             .has_value()
@@ -179,9 +183,7 @@ TEST(TestEmbeddedPythonDeathTest, startKeepsPQHandler)
             const auto handler = utilities::isInterruptHandlerInstalled();
             utilities::stopPython();
             utilities::stopPython();
-            std::exit(
-                started && handler && ::Py_IsInitialized() == 0 ? 0 : 1
-            );
+            std::exit(started && handler && ::Py_IsInitialized() == 0 ? 0 : 1);
         },
         testing::ExitedWithCode(0),
         ""

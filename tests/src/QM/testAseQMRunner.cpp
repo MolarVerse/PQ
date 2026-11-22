@@ -208,17 +208,22 @@ namespace
         Settings       settings;
         FennolSettings fennolSettings;
         settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+        const auto exitCode = [] { return ::Py_IsInitialized() != 0 ? 0 : 1; };
 
         try
         {
-            const QM::AseFennolRunner runner(settings.qmSettings, fennolSettings);
+            const QM::AseFennolRunner runner(
+                settings.qmSettings,
+                fennolSettings
+            );
         }
         catch (const std::exception &)
         {
             // ase or fennol may be missing
+            std::exit(exitCode());
         }
 
-        std::exit(::Py_IsInitialized() != 0 ? 0 : 1);
+        std::exit(exitCode());
     }
 }   // namespace
 
