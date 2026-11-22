@@ -65,6 +65,8 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `cgo` `test_cgo_NPT_cellList_follows_a_moving_box` | `run-01_NPT.in` with `cell-list = on; cell-number = 16` and a manostat relaxation time of 0.1 ps | `mm-md` | same | the box moves between 26.6 and 31.4 Angstrom in 10 steps and the neighbour cell count changes from 6 to 7; every frame (xyz, vel, force), the box and the energies must equal the same run without the cell list (no reference data) |
 | `cgo` `test_cgo_restart_round_trip` (3 tests) | `run-01.in` (NVE), `run-01_NPT.in`, `run-01.in` with a Nose-Hoover chain | `mm-md` | same | a 10-step run against 5 steps plus 5 more from the `.rst` the first part wrote; the final `.rst` and the last frames of `.xyz`, `.vel` and `.force` must be **identical to the byte** (the restart file keeps every digit), and the step counter, the box and the chain levels are checked. Builds its three inputs from the existing ones, no reference data |
 | `chig` `test_chig` | `run-01.in` | `mm-md` | chignolin in water, 7382 atoms, 10 steps of 0.5 fs | `force-field = on` (bonds, angles, dihedrals, impropers, LJ from the parameter file, topology with 191 linker `*` entries), intra-nonbonded file, SHAKE/RATTLE, Wolf |
+| `chig` `test_chig_cell_list_equals_brute_force` (2 tests) | `run-01.in` with `rcoulomb = 10`, 5 steps, with and without `cell-list = on` (7 and 9 cells) | `mm-md` | same | force field, topology, intra non-bonded file, SHAKE and Wolf with the cell list; the runs must agree (no reference); the reference run's cutoff of 20 Å cannot be used because the cell list needs a box of at least twice the cutoff, the box is 40 to 43 Å |
+| `mshake` `test_mshake_water` | `run-01.in` | `mm-md` | 2000 TIP3P waters (6000 atoms), box 39.4 Å, 10 steps, Berendsen thermostat, `output_freq = 5` | `shake = mshake` with `mshake_file` (the `h2o_mm-mshake` example, with a deterministic thermostat); compared with `ref_data`, and independently every water keeps its O-H and H-H distances (2e-8 Å off) and has no relative velocity along a bond (3e-7 of its size) in every frame |
 | `dftbplus` | `run-01.in` | `qm-md` | 9 atoms, 100 Å box, 2 steps | external DFTB+ runner with the periodic-stress script and a custom `dftb_file` |
 | `dftbplus` `test_dftbplus_triclinic_box` | `run-01_triclinic.in` | `qm-md` | 9 atoms, triclinic box 9 x 10 x 11 Å with angles 75, 80, 70°, 2 steps | NVE; compared with `ref_data_triclinic`, and the lattice written for DFTB+ (`geom.gen`) must have exactly these lengths and angles; the box is small so that the periodic images interact |
 | `dftbplus` `test_dftbplus_triclinic_box_full_anisotropic_manostat` | `run-01_triclinic_npt.in` | `qm-md` | same, 6 steps | Berendsen thermostat + Berendsen manostat with `isotropy = full_anisotropic` (DFTB+ stress): all three angles and lengths change; compared with `ref_data_triclinic_npt` |
@@ -130,7 +132,7 @@ intermolecular model are the same.
 | Linker `*` entries | yes (`chig`, 191 entries; none in `qm-mm`) |
 | J-coupling terms | no, and the term is not part of the force calculation yet (issue #904) |
 | Intra-nonbonded file | yes (`chig`) |
-| Cell list | yes in NVE (`cgo`), with a Berendsen manostat that moves the box (`cgo`), with the water models and the hybrid code (`qm-mm`); not with a force field (see coupling) |
+| Cell list | yes in NVE (`cgo`), with a Berendsen manostat that moves the box (`cgo`), with the water models and the hybrid code (`qm-mm`); with the force field, topology and SHAKE (`chig`, against brute force at a 10 Å cutoff) |
 | Brute force neighbours | yes |
 | Water models | partly: `spc_fw`, `spc-mtr`, `tip3p`, `spc_e`, only in QM/MM. No: `spc`, `qspc_fw`, `spc_dc`, `h2o_dc`, `opc3`, `tip3p_mtr`, and no pure-MM water run |
 
@@ -140,7 +142,7 @@ intermolecular model are the same.
 |---|---|
 | SHAKE / RATTLE (topology `SHAKE` section) | yes (`chig`), with tolerances `1e-3` / `1e9` that are loose on purpose |
 | Rigid water through the water models (`shake-iter`, `rattle-iter`) | yes (`qm-mm` hotspot tests) |
-| M-SHAKE (`mshake_file`, `shake = mshake`) | no. Elsewhere: regression (SHAKE vs M-SHAKE give the same trajectory), unit, example |
+| M-SHAKE (`mshake_file`, `shake = mshake`) | yes (`mshake`: reference, bond lengths and bond velocities). Not: M-SHAKE with other molecules than TIP3P water, with a manostat or with the force field. Elsewhere: regression (SHAKE vs M-SHAKE give the same trajectory), unit, example |
 | Distance constraints (`DIST_CONSTRAINTS`) | no. Elsewhere: unit |
 
 ### QM programs and hybrid QM/MM
@@ -213,8 +215,10 @@ anisotropic Berendsen manostat (three different box lengths) is covered with the
 stochastic rescaling manostat is not.
 
 **Neighbour search x everything that builds pair lists.** The cell list is covered for `cgo`
-(Buckingham/GUFF/Wolf) and for the water models and hybrid code in `qm-mm`, but **not with a force
-field, topology, linker entries or SHAKE** (`chig` is brute force only).
+(Buckingham/GUFF/Wolf), for the water models and hybrid code in `qm-mm`, and for `chig` (force
+field, topology, intra non-bonded file, SHAKE, Wolf, at a 10 Å cutoff), but **not with linker
+entries**, and the 20 Å cutoff of the `chig` reference run cannot use the cell list at all (it needs
+a box of at least twice the cutoff).
 
 **QM x MM (does not carry over).** QM-only runs cover every QM program; MM-only runs cover the
 force field. A QM/MM run adds code that neither exercises: zone assignment and smoothing factors,
@@ -228,7 +232,8 @@ covered, each in one fixed combination, and always with identical intra/inter mo
 depends on the pair (model, smoothing) or (intra model, inter model) would not show.
 
 **Force field x shake x long range (one combination).** `chig` is the only run with the force
-field and SHAKE together, and with Wolf; the bonded-only QM/MM runs use no SHAKE.
+field and SHAKE together, and with Wolf (compared with a reference and, at a 10 Å cutoff, with the
+cell list); the bonded-only QM/MM runs use no SHAKE.
 
 **Thermostat x manostat x virial.** One thermostat with one manostat and both virial types. The
 stochastic manostat additionally reads the thermostat target (see ramp): it now runs with a ramp
@@ -288,7 +293,7 @@ In rough order of value for the cost; each is a **new variant** of an existing c
    test of the stochastic rescaling manostat (average pressure).
 3. **QM/MM that moves a molecule across a zone**: a start file with a molecule next to a boundary,
    or more steps, plus a non-zero `core_radius` and a `forced_*_list`.
-4. **M-SHAKE** on a rigid-water system, and **cell list with the force field and SHAKE** on `chig`.
+4. M-SHAKE with other molecules than TIP3P water, with a manostat, or with the force field.
 5. **Water models** in a pure MM run, and the remaining models with different intra/inter pairs.
 6. **Comparison of the other outputs** (`.rst`, `.box`, `.stress`, `.vir`, `.mom`) in
    `check_pq_output`, which costs nothing but reference size.
