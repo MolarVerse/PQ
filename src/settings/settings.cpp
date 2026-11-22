@@ -25,6 +25,8 @@
 #include <cmath>
 #include <format>
 
+#include "constraintSettings.hpp"
+#include "enums/jobtype.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
 #include "hybridSettings.hpp"
@@ -135,6 +137,36 @@ namespace
             );
         }
     }
+
+    /**
+     * @brief rejects constraints in geometry optimizations
+     *
+     * @details the optimizer does not apply them, so the run would silently
+     * ignore them; a rigid water model turns SHAKE on in finalize()
+     *
+     * @throws exc::InputFileException if mm-opt has any constraint active
+     */
+    void validateOptConstraints(
+        const ConstraintSettings& constraintSettings,
+        const GeneralSettings&    generalSettings
+    )
+    {
+        const auto jobType = generalSettings.getJobtype();
+
+        if (!isOptJobType(jobType) || !constraintSettings.isActive())
+        {
+            return;
+        }
+
+        throw exc::InputFileException(
+            std::format(
+                "Job type {} does not apply SHAKE, M-SHAKE or distance "
+                "constraints. Set shake = off and distance-constraints = off "
+                "(a rigid water model also turns SHAKE on).",
+                JobTypeMeta::toString(jobType)
+            )
+        );
+    }
 }   // namespace
 
 /**
@@ -182,4 +214,5 @@ void Settings::finalize()
 void Settings::validate() const
 {
     validateThermostat(thermostatSettings, kinetics, timings, generalSettings);
+    validateOptConstraints(constraintSettings, generalSettings);
 }

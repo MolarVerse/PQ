@@ -26,6 +26,7 @@
 #include <memory>
 #include <string>
 
+#include "constraintSettings.hpp"
 #include "defaults.hpp"
 #include "exceptions.hpp"
 #include "generalSettings.hpp"
@@ -733,6 +734,44 @@ TEST_F(TestInputValidation, acceptsExponentialDecayWithDefaultDecay)
         _settings.optimizerSettings.getLearningRateDecay(),
         defaults::LEARNING_RATE_DECAY_DEFAULT
     );
+}
+
+TEST_F(TestInputValidation, rejectsShakeInOptimization)
+{
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
+    _settings.constraintSettings.activateShakeByUser();
+    _setKeyword("nstep");
+
+    ASSERT_THROW_MSG(
+        _finalizeAndValidate(),
+        exc::InputFileException,
+        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
+        "constraints. Set shake = off and distance-constraints = off (a "
+        "rigid water model also turns SHAKE on)."
+    );
+}
+
+TEST_F(TestInputValidation, rejectsDistanceConstraintsInOptimization)
+{
+    _settings.generalSettings.setJobtypeByUser(JobType::MM_OPT);
+    _settings.constraintSettings.activateDistanceConstraintsByUser();
+    _setKeyword("nstep");
+
+    ASSERT_THROW_MSG(
+        _finalizeAndValidate(),
+        exc::InputFileException,
+        "Job type MM_OPT does not apply SHAKE, M-SHAKE or distance "
+        "constraints. Set shake = off and distance-constraints = off (a "
+        "rigid water model also turns SHAKE on)."
+    );
+}
+
+TEST_F(TestInputValidation, acceptsShakeInMD)
+{
+    _configureMDJob(JobType::MM_MD);
+    _settings.constraintSettings.activateShakeByUser();
+
+    EXPECT_NO_THROW(_finalizeAndValidate());
 }
 
 TEST_F(TestInputValidation, acceptsConstantOptimizationWithoutDecay)
