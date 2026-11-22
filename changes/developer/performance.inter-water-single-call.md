@@ -1,0 +1,1 @@
+- `InterWaterStrategyCellList::calculate` picks the O-O/O-H/H-H pair in one lambda, so GCC inlines `calculateSingleInteraction` in the loop (#1304).

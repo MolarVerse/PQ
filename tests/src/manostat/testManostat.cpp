@@ -301,7 +301,7 @@ namespace
 
     Distance getMinimumImageDistance(
         molsys::SimulationBox& simulationBox,
-        const size_t           moleculeIndex
+        size_t                 moleculeIndex
     )
     {
         const auto mol = simulationBox.getMolecule(moleculeIndex);

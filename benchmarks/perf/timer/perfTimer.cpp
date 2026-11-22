@@ -55,7 +55,7 @@ namespace
         return value;
     }
 
-    std::uint64_t now(const clockid_t clock)
+    std::uint64_t now(clockid_t clock)
     {
         constexpr std::uint64_t nanosecondsPerSecond = 1'000'000'000;
 

@@ -54,8 +54,7 @@ namespace timings
         [[nodiscard]] Timer       &_getSimulationTimer();
         [[nodiscard]] const Timer &_getSimulationTimer() const;
 
-        [[nodiscard]] Timer       &_getTimer(TimerId id);
-        [[nodiscard]] const Timer &_getTimer(TimerId id) const;
+        [[nodiscard]] Timer &_getTimer(TimerId id);
     };
 }   // namespace timings
 

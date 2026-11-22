@@ -57,7 +57,7 @@ namespace benchInputReaders
 {
     inline void writeFiles(
         const std::filesystem::path &directory,
-        const std::size_t            molecules
+        std::size_t                  molecules
     )
     {
         std::ofstream(directory / "moldescriptor.dat")
@@ -121,7 +121,7 @@ namespace benchInputReaders
         topology << "END\n";
     }
 
-    inline int run(const std::size_t molecules, const std::uint64_t iterations)
+    inline int run(std::size_t molecules, std::uint64_t iterations)
     {
         const auto directory =
             std::filesystem::temp_directory_path() /

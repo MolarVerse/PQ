@@ -69,13 +69,13 @@
 
 namespace
 {
-    void writeFile(const std::string_view fileName, const std::string_view text)
+    void writeFile(std::string_view fileName, std::string_view text)
     {
         auto file = std::ofstream(std::string(fileName));
         file << text;
     }
 
-    std::string readFile(const std::string_view fileName)
+    std::string readFile(std::string_view fileName)
     {
         auto file   = std::ifstream(std::string(fileName));
         auto buffer = std::stringstream();
@@ -308,7 +308,7 @@ void ExternalQMRunnerTest::_readStressTensor(
     runner._readStressTensor(box, physicalData, stressFileName);
 }
 
-void ExternalQMRunnerTest::_setMoleculeChangedZone(const bool changed)
+void ExternalQMRunnerTest::_setMoleculeChangedZone(bool changed)
 {
     configurator::HybridConfigurator::_setMoleculeChangedZone(changed);
 }
@@ -925,7 +925,7 @@ TEST_F(QMWriterTest, dftbEnablesPointChargesOnlyForTheExecutionThatWroteThem)
     );
     const auto path = _configureQuotedScript(settings.externalQMSettings);
     const auto suffix =
-        [fileSettings = settings.fileSettings](const int usePointCharges)
+        [fileSettings = settings.fileSettings](int usePointCharges)
     {
         return std::format(
             " {} {} {}",
@@ -964,10 +964,7 @@ TEST_F(QMWriterTest, turbomoleCoordsAreInBohr)
 
     _writeCoordsFile(runner, _simulationBox);
 
-    const auto line = [](const double       x,
-                         const double       y,
-                         const double       z,
-                         const std::string &name)
+    const auto line = [](double x, double y, double z, const std::string &name)
     {
         return std::format(
             "   {:16.12f}   {:16.12f}   {:16.12f}   {}\n",

@@ -29,7 +29,7 @@
 #include "interrupt.hpp"
 #include "manostatFactory.hpp"
 #include "outputFileSettings.hpp"
-#include "progressbar.hpp"
+#include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
 #include "units.hpp"
 #include "velocityVerlet.hpp"
@@ -73,8 +73,8 @@ namespace engine
             norm(get_physicalData().get_momentum())
         );
 
-        const auto  nSteps = getSettings().timings.getNumberOfSteps();
-        progressbar bar(static_cast<int>(nSteps), true, std::cout);
+        const auto nSteps = getSettings().timings.getNumberOfSteps();
+        utilities::TerminalProgressBar bar(static_cast<int>(nSteps));
         const auto &outputFileSettings = getSettings().outputFiles;
         const auto  jobType = getSettings().generalSettings.getJobtype();
 

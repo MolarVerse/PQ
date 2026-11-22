@@ -85,7 +85,7 @@ namespace
 
     // writes 3 frames with async output on or off, as xyz files or one
     // extxyz file; returns the files' content
-    std::string writeFrames(const bool async, const bool extxyz)
+    std::string writeFrames(bool async, bool extxyz)
     {
         const std::string prefix =
             std::string(async ? "engineOutputAsync" : "engineOutputSync") +

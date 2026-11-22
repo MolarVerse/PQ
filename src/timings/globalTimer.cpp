@@ -67,18 +67,7 @@ namespace timings
      * @param id
      * @return Timer&
      */
-    Timer& GlobalTimer::_getTimer(const TimerId id)
-    {
-        return _timers.at(static_cast<size_t>(id));
-    }
-
-    /**
-     * @brief Get the Timer object for a specific TimerId (const version)
-     *
-     * @param id
-     * @return const Timer&
-     */
-    const Timer& GlobalTimer::_getTimer(const TimerId id) const
+    Timer& GlobalTimer::_getTimer(TimerId id)
     {
         return _timers.at(static_cast<size_t>(id));
     }

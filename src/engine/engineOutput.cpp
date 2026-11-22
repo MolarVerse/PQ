@@ -318,8 +318,8 @@ namespace engine
      */
     void EngineOutput::openH5mdOutput(
         const std::string &filename,
-        const bool         overwrite,
-        const double       timeStep
+        bool               overwrite,
+        double             timeStep
     )
     {
         if (!out::H5mdOutput::available())
@@ -340,7 +340,7 @@ namespace engine
      */
     void EngineOutput::openExtxyzOutput(
         const std::string &filename,
-        const bool         overwrite
+        bool               overwrite
     )
     {
         _extxyzOutput = std::make_unique<out::ExtxyzOutput>(filename);
@@ -367,8 +367,8 @@ namespace engine
     void EngineOutput::writeFrame(
         const molsys::SimulationBox  &simulationBox,
         const thermostat::Thermostat &thermostat,
-        const size_t                  step,
-        const double                  potentialEnergy,
+        size_t                        step,
+        double                        potentialEnergy,
         const std::optional<Time>    &finalTime
     )
     {
@@ -407,8 +407,8 @@ namespace engine
      * @return true if unknown, as most systems have enough
      */
     bool EngineOutput::asyncOutputFits(
-        const std::size_t                nAtoms,
-        const std::optional<std::size_t> availableMemory
+        std::size_t                nAtoms,
+        std::optional<std::size_t> availableMemory
     )
     {
         if (!availableMemory)
@@ -433,7 +433,7 @@ namespace engine
      *
      * @param nAtoms
      */
-    void EngineOutput::_startFrameWriter(const std::size_t nAtoms)
+    void EngineOutput::_startFrameWriter(std::size_t nAtoms)
     {
         if (!_outputFileSettings->getAsyncOutput())
             return;
@@ -463,8 +463,8 @@ namespace engine
      */
     void EngineOutput::_writeFrame(
         const out::Frame          &frame,
-        const size_t               step,
-        const bool                 metadata,
+        size_t                     step,
+        bool                       metadata,
         const std::optional<Time> &finalTime
     )
     {
