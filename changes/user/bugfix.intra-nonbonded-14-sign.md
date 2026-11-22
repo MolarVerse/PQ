@@ -1,0 +1,1 @@
+- Fix partner atom 1 marked as `-1` in the intra non-bonded file losing its 1-4 scaling (#1255).

@@ -89,7 +89,7 @@ namespace pqviews
         // make it default constructible, copyable, and movable
         Sentinel() = default;
         // Required by std::sentinel_for
-        explicit Sentinel(Iter end) : _end(end) {}
+        explicit Sentinel(Iter end);
 
         /**
          * @brief checks if the iterator is equal to the sentinel
@@ -158,6 +158,11 @@ namespace pqviews
             return -(sentinel - it);
         }
     };
+
+    template <typename Iter>
+    Sentinel<Iter>::Sentinel(Iter end) : _end(end)
+    {
+    }
 
 }   // namespace pqviews
 

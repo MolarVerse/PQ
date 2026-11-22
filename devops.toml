@@ -47,6 +47,8 @@ ast_check_enabled_ids = [
     "noMaybeUnusedParam",
     "noVoidPointerParam",
     "preferMstdCopyMoveMacros",
+    "noConstValueParam",
+    "noInClassMemberDefinition",
 ]
 
 [cpp.forbidden_spellings]

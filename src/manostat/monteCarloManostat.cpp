@@ -21,3 +21,19 @@
 ******************************************************************************/
 
 #include "monteCarloManostat.hpp"
+
+namespace manostat
+{
+    /**
+     * @brief applies the Monte Carlo manostat, not implemented yet
+     */
+    void MonteCarloManostat::applyManostat(
+        molsys::SimulationBox& /*simulationBox*/,
+        physicalData::PhysicalData& /*physicalData*/,
+        const Temperature& /*targetTemperature*/,
+        const Time& /*timeStep*/,
+        const Distance& /*coulombRadiusCutOff*/
+    )
+    {
+    }
+}   // namespace manostat

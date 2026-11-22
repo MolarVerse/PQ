@@ -64,56 +64,56 @@ namespace
         physicalData::PhysicalData _data;
         std::unique_ptr<Settings>  _settings;
 
-        void SetUp() override
-        {
-            _settings = std::make_unique<Settings>();
-            GeneralSettings::setVirialType(VirialType::MOLECULAR);
-            GeneralSettings::setRandomSeed(42);
-            GeneralSettings::setIsRandomSeedSet(true);
-            _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
-            _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
-            _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
-            _settings->manostatSettings.setTauByUser(1.0 * fs);
-            _settings->manostatSettings.setCompressibilityByUser(
-                0.03 * per_bar
-            );
-            _box.setBox(
-                molsys::OrthorhombicBox(
-                    {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-                ),
-                false
-            );
-            _data.set_virial(VirialPerMol::zero());
-            _data.setKineticEnergyMolecularVector(VirialPerMol::zero());
-            _data.setKineticEnergyAtomicVector(VirialPerMol::zero());
-        }
+        void SetUp() override;
 
-        void _addMolecule(
-            const std::vector<double>& positions,
-            const double               speed
-        )
-        {
-            molsys::Molecule molecule;
-            for (const auto x : positions)
-            {
-                auto atom = std::make_shared<molsys::Atom>();
-                atom->setMass(1.0 * g_per_mol);
-                atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
-                atom->setVelocity(
-                    linalg::Vec3D{speed, 0.0, 0.0} * angstrom / s
-                );
-                molecule.addAtom(atom);
-                _box.addAtom(atom);
-            }
-            molecule.calculateCenterOfMass(_box.getBox());
-            _box.addMolecule(molecule);
-            _box.calculateTotalMass();
-            _box.calculateDensity();
-            _box.calculateDegreesOfFreedom();
-            _data.set_volume(_box.getVolume());
-            _data.set_density(_box.getDensity());
-        }
+        void _addMolecule(const std::vector<double>& positions, double speed);
     };
+
+    void ManostatRegression::SetUp()
+    {
+        _settings = std::make_unique<Settings>();
+        GeneralSettings::setVirialType(VirialType::MOLECULAR);
+        GeneralSettings::setRandomSeed(42);
+        GeneralSettings::setIsRandomSeedSet(true);
+        _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
+        _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);
+        _settings->manostatSettings.setTargetPressureByUser(1.0 * bar);
+        _settings->manostatSettings.setTauByUser(1.0 * fs);
+        _settings->manostatSettings.setCompressibilityByUser(0.03 * per_bar);
+        _box.setBox(
+            molsys::OrthorhombicBox(
+                {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+            ),
+            false
+        );
+        _data.set_virial(VirialPerMol::zero());
+        _data.setKineticEnergyMolecularVector(VirialPerMol::zero());
+        _data.setKineticEnergyAtomicVector(VirialPerMol::zero());
+    }
+
+    void ManostatRegression::_addMolecule(
+        const std::vector<double>& positions,
+        double                     speed
+    )
+    {
+        molsys::Molecule molecule;
+        for (const auto x : positions)
+        {
+            auto atom = std::make_shared<molsys::Atom>();
+            atom->setMass(1.0 * g_per_mol);
+            atom->setPosition(linalg::Vec3D{x, 0.0, 0.0} * angstrom);
+            atom->setVelocity(linalg::Vec3D{speed, 0.0, 0.0} * angstrom / s);
+            molecule.addAtom(atom);
+            _box.addAtom(atom);
+        }
+        molecule.calculateCenterOfMass(_box.getBox());
+        _box.addMolecule(molecule);
+        _box.calculateTotalMass();
+        _box.calculateDensity();
+        _box.calculateDegreesOfFreedom();
+        _data.set_volume(_box.getVolume());
+        _data.set_density(_box.getDensity());
+    }
 }   // namespace
 
 TEST_F(ManostatRegression, triclinicHydrostaticBalancePreservesCell)
@@ -419,36 +419,41 @@ namespace
         std::array<double, N>                sums{};
         std::array<std::array<double, N>, N> products{};
 
-        void add(const std::array<double, N>& sample)
-        {
-            ++count;
-            for (size_t i = 0; i < N; ++i)
-            {
-                sums.at(i) += sample.at(i);
-                for (size_t j = 0; j < N; ++j)
-                {
-                    products.at(i).at(j) += sample.at(i) * sample.at(j);
-                }
-            }
-        }
+        void add(const std::array<double, N>& sample);
 
-        void expectIndependentStandardNormals() const
+        void expectIndependentStandardNormals() const;
+    };
+
+    template <size_t N>
+    void NoiseMoments<N>::add(const std::array<double, N>& sample)
+    {
+        ++count;
+        for (size_t i = 0; i < N; ++i)
         {
-            const auto sampleCount = static_cast<double>(count);
-            for (size_t i = 0; i < N; ++i)
+            sums.at(i) += sample.at(i);
+            for (size_t j = 0; j < N; ++j)
             {
-                const auto mean = sums.at(i) / sampleCount;
-                EXPECT_NEAR(mean, 0.0, 0.06);
-                for (size_t j = 0; j < N; ++j)
-                {
-                    const auto covariance =
-                        (products.at(i).at(j) / sampleCount) -
-                        (mean * sums.at(j) / sampleCount);
-                    EXPECT_NEAR(covariance, i == j ? 1.0 : 0.0, 0.08);
-                }
+                products.at(i).at(j) += sample.at(i) * sample.at(j);
             }
         }
-    };
+    }
+
+    template <size_t N>
+    void NoiseMoments<N>::expectIndependentStandardNormals() const
+    {
+        const auto sampleCount = static_cast<double>(count);
+        for (size_t i = 0; i < N; ++i)
+        {
+            const auto mean = sums.at(i) / sampleCount;
+            EXPECT_NEAR(mean, 0.0, 0.06);
+            for (size_t j = 0; j < N; ++j)
+            {
+                const auto covariance = (products.at(i).at(j) / sampleCount) -
+                                        (mean * sums.at(j) / sampleCount);
+                EXPECT_NEAR(covariance, i == j ? 1.0 : 0.0, 0.08);
+            }
+        }
+    }
 }   // namespace
 
 TEST_F(ManostatRegression, stochasticCellModesHaveIndependentNoise)

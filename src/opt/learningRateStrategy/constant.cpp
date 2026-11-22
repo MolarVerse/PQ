@@ -45,4 +45,13 @@ namespace opt
         return std::make_shared<ConstantLRStrategy>(*this);
     }
 
+    /**
+     * @brief a constant learning rate is never updated
+     */
+    void ConstantLRStrategy::updateLearningRate(
+        size_t /*currentStep*/,
+        size_t /*totalSteps*/
+    )
+    {
+    }
 }   // namespace opt

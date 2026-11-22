@@ -103,6 +103,20 @@ TEST_F(TestTimer, defaultTimerName)
 }
 
 /**
+ * @brief tests that the TimerId given to the constructor or to setTimerId
+ * sets the timer name
+ *
+ */
+TEST_F(TestTimer, timerIdSetsTimerName)
+{
+    timings::Timer timer(TimerId::Output);
+    EXPECT_EQ(timer.getTimerName(), toString(TimerId::Output));
+
+    timer.setTimerId(TimerId::Setup);
+    EXPECT_EQ(timer.getTimerName(), toString(TimerId::Setup));
+}
+
+/**
  * @brief tests that starting then stopping the default-named section
  * succeeds without throwing
  *

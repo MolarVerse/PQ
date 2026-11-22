@@ -26,16 +26,28 @@ namespace intraNonBonded
 {
 
     /**
+     * @brief compares two partners by atom index and 1-4 flag
+     *
+     * @param other
+     * @return bool
+     */
+    bool IntraNonBondedPartner::operator==(const IntraNonBondedPartner &other
+    ) const
+    {
+        return atomIndex == other.atomIndex && isScaled14 == other.isScaled14;
+    }
+
+    /**
      * @brief constructor for IntraNonBondedContainer
      *
      * @param molType
-     * @param atomIndices
+     * @param partners partner atoms of each reference atom
      */
     IntraNonBondedContainer::IntraNonBondedContainer(
-        MolType                              molType,
-        const std::vector<std::vector<int>> &atomIndices
+        MolType                                    molType,
+        const std::vector<IntraNonBondedPartners> &partners
     )
-        : _molType(molType), _atomIndices(atomIndices)
+        : _molType(molType), _partners(partners)
     {
     }
 
@@ -53,14 +65,14 @@ namespace intraNonBonded
     MolType IntraNonBondedContainer::getMolType() const { return _molType; }
 
     /**
-     * @brief get the atomIndices
+     * @brief get the partner atoms of each reference atom
      *
-     * @return std::vector<std::vector<int>>
+     * @return const std::vector<IntraNonBondedPartners>&
      */
-    std::vector<std::vector<int>> IntraNonBondedContainer::getAtomIndices(
-    ) const
+    const std::vector<IntraNonBondedPartners> &IntraNonBondedContainer::
+        getPartners() const
     {
-        return _atomIndices;
+        return _partners;
     }
 
 }   // namespace intraNonBonded

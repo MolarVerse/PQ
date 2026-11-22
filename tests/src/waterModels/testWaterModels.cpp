@@ -73,12 +73,12 @@ namespace
     };
 
     void addWater(
-        molsys::SimulationBox   &simulationBox,
-        const Pos3D             &origin,
-        const WaterGeometry     &geometry,
-        const molsys::HybridZone zone,
-        const bool               active,
-        MolType                  molType
+        molsys::SimulationBox &simulationBox,
+        const Pos3D           &origin,
+        const WaterGeometry   &geometry,
+        molsys::HybridZone     zone,
+        bool                   active,
+        MolType                molType
     )
     {
         const auto oxygen    = std::make_shared<molsys::Atom>();
@@ -136,21 +136,21 @@ namespace
     }
 
     void addWater(
-        molsys::SimulationBox   &simulationBox,
-        const Pos3D             &origin,
-        const WaterGeometry     &geometry,
-        const molsys::HybridZone zone
+        molsys::SimulationBox &simulationBox,
+        const Pos3D           &origin,
+        const WaterGeometry   &geometry,
+        molsys::HybridZone     zone
     )
     {
         addWater(simulationBox, origin, geometry, zone, true, kWaterType);
     }
 
     void addWater(
-        molsys::SimulationBox   &simulationBox,
-        const Pos3D             &origin,
-        const WaterGeometry     &geometry,
-        const molsys::HybridZone zone,
-        bool                     active
+        molsys::SimulationBox &simulationBox,
+        const Pos3D           &origin,
+        const WaterGeometry   &geometry,
+        molsys::HybridZone     zone,
+        bool                   active
     )
     {
         addWater(simulationBox, origin, geometry, zone, active, kWaterType);
@@ -341,9 +341,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateCoreToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -352,9 +350,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateLayerToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -363,9 +359,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateOuterToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -374,9 +368,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateHotspotSmoothingMMForces(
             const waterModel::InterWaterState & /*state*/,
@@ -385,10 +377,63 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
     };
+
+    void ExposedInterWaterStrategy::calculate(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateCoreToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateLayerToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateOuterToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateHotspotSmoothingMMForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
 
     molsys::SimulationBox makeHybridWaterBox()
     {
@@ -1015,7 +1060,7 @@ namespace
      * the hybrid zones cycle through all four types, the core and layer waters
      * are not active; with mixMolTypes every third molecule has moltype 2
      */
-    molsys::SimulationBox makeSpreadWaterBox(const bool mixMolTypes)
+    molsys::SimulationBox makeSpreadWaterBox(bool mixMolTypes)
     {
         constexpr WaterGeometry geometry{
             .oh1   = 0.96 * angstrom,
@@ -1046,7 +1091,7 @@ namespace
             {
                 for (int iz = 0; iz < perAxis; ++iz)
                 {
-                    const auto jitter = [index](const double phase)
+                    const auto jitter = [index](double phase)
                     { return 0.4 * std::sin((7.0 * index) + phase); };
 
                     const Pos3D origin = {
@@ -1105,11 +1150,7 @@ namespace
      * returns the energies and the forces after the given stage
      */
     template <typename Strategy>
-    StrategyResult runInterWater(
-        const int  stage,
-        const bool spread,
-        Settings   settings
-    )
+    StrategyResult runInterWater(int stage, bool spread, Settings settings)
     {
         settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;
@@ -1378,7 +1419,7 @@ namespace
      * list indices are assigned again, as in QMMMMDEngine
      */
     template <typename Strategy>
-    StrategyResult runPotential(const int stage, Settings settings)
+    StrategyResult runPotential(int stage, Settings settings)
     {
         settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;

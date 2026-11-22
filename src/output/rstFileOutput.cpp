@@ -45,7 +45,7 @@ namespace out
          * value is zero for any physical purpose, so it is written as a zero
          * of the same sign; all other values are written exactly.
          */
-        double readable(const double value)
+        double readable(double value)
         {
             if (std::fpclassify(value) == FP_SUBNORMAL)
                 return std::copysign(0.0, value);
@@ -93,9 +93,9 @@ namespace out
      * well-defined simulation time
      */
     void RstFileOutput::write(
-        const Frame              &frame,
-        const size_t              step,
-        const std::optional<Time> finalTime
+        const Frame        &frame,
+        size_t              step,
+        std::optional<Time> finalTime
     )
     {
         using textFormat::FIXED_WIDTH;

@@ -1138,6 +1138,8 @@ Possible options are:
 
    6. **full_anisotropic** - all axes are coupled in an anisotropic way and the box angles are also scaled
 
+      This needs a box that can change its angles, so the box becomes a triclinic box also if the start file gives angles of 90°. Triclinic boxes are only supported for QM-MD and RP-QM-MD; in a classical MM-MD run ``full_anisotropic`` is refused with an error.
+
 .. _fixedAxisKey:
 
 Fixed Axis

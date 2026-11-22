@@ -65,7 +65,7 @@ namespace benchOutputWriters
 {
     inline constexpr double SPACING = 3.1;
 
-    inline int run(const std::size_t molecules, const std::uint64_t iterations)
+    inline int run(std::size_t molecules, std::uint64_t iterations)
     {
         const auto perSide = static_cast<std::size_t>(
             std::ceil(std::cbrt(static_cast<double>(molecules)))

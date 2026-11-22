@@ -31,7 +31,7 @@ namespace ff
      * @param id
      * @param params
      */
-    AngleType::AngleType(const AngleId id, const AngleParams &params)
+    AngleType::AngleType(AngleId id, const AngleParams &params)
         : _id(id), _params(params)
     {
     }

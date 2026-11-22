@@ -38,6 +38,7 @@
 #include "forceFieldClass.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "hybridSettings.hpp"
+#include "jCouplingType.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -210,6 +211,48 @@ TEST_F(TestForceField, findImproperDihedralTypeByIdNotFoundError)
         exc::TopologyException,
         "Improper dihedral type with id " + DihedralId(0).toString() +
             " not found."
+    );
+}
+
+/**
+ * @brief tests findJCouplingTypeById function
+ *
+ */
+TEST_F(TestForceField, findJCouplingTypeById)
+{
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
+    const auto           params     = JCouplingParams{
+                      .J0            = 1.0,
+                      .forceConstant = 2.0,
+                      .a             = 3.0,
+                      .b             = 4.0,
+                      .c             = 5.0,
+                      .phaseShift    = 0.5 * rad
+    };
+
+    forceField.addJCouplingType(ff::JCouplingType(0, params));
+    forceField.addJCouplingType(ff::JCouplingType(1, params));
+
+    EXPECT_EQ(
+        forceField.findJCouplingTypeById(1),
+        ff::JCouplingType(1, params)
+    );
+}
+
+/**
+ * @brief tests findJCouplingTypeById function for not found error
+ *
+ */
+TEST_F(TestForceField, findJCouplingTypeByIdNotFoundError)
+{
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
+
+    EXPECT_THROW_MSG(
+        const auto _ = forceField.findJCouplingTypeById(0),
+        exc::TopologyException,
+        "J-coupling type with id 0 not found."
     );
 }
 

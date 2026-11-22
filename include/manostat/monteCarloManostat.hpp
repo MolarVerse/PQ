@@ -43,14 +43,12 @@ namespace manostat
         using Manostat::Manostat;
 
         void applyManostat(
-            molsys::SimulationBox& /*simBox*/,
-            physicalData::PhysicalData& /*physData*/,
-            const Temperature& /*targetTemperature*/,
-            const Time& /*timeStep*/,
-            const Distance& /*coulombRadiusCutoff*/
-        ) override
-        {
-        }
+            molsys::SimulationBox&      simulationBox,
+            physicalData::PhysicalData& physicalData,
+            const Temperature&          targetTemperature,
+            const Time&                 timeStep,
+            const Distance&             coulombRadiusCutoff
+        ) override;
     };
 }   // namespace manostat
 

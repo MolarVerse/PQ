@@ -56,9 +56,9 @@ namespace out
         std::array<char, SCRATCH_SIZE> _scratch{};
 
        public:
-        void clear() noexcept { _data.clear(); }
+        void clear() noexcept;
 
-        [[nodiscard]] std::string_view view() const noexcept { return _data; }
+        [[nodiscard]] std::string_view view() const noexcept;
 
         TextBuffer &put(char character);
         TextBuffer &append(std::string_view text);
@@ -81,6 +81,10 @@ namespace out
         );
         std::string_view _toChars(double value, std::chars_format);
     };
+
+    inline void TextBuffer::clear() noexcept { _data.clear(); }
+
+    inline std::string_view TextBuffer::view() const noexcept { return _data; }
 
 }   // namespace out
 

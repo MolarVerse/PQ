@@ -93,19 +93,15 @@ namespace QM
         virtual void _writeCoordsFile(const molsys::SimulationBox &) = 0;
 
         virtual void _writePointChargeFile(
-            const molsys::SimulationBox & /*simBox*/,
-            const std::string & /*pointChargeFileName*/
-        )
-        {
-        }
+            const molsys::SimulationBox &simulationBox,
+            const std::string           &pointChargeFileName
+        );
 
         virtual void _readStressTensor(
-            const molsys::Box & /*simBox*/,
-            physicalData::PhysicalData & /*physData*/,
-            const std::string & /*stressFileName*/
-        )
-        {
-        }
+            const molsys::Box          &box,
+            physicalData::PhysicalData &physicalData,
+            const std::string          &stressFileName
+        );
 
        private:
         static void _readForceFile(

@@ -66,9 +66,20 @@ namespace waterModel
         const auto waterType = simulationBox.getWaterType();
 
         const auto singleInteraction =
-            [&](auto &atomA, auto &atomB, const auto &nonCoulPairPtr)
+            [&](auto &atomA, auto &atomB, bool isOxygenA, bool isOxygenB)
         {
-            if (nonCoulPairPtr)
+            const pot::NonCoulombPair *nonCoulPair =
+                state.nonCoulombPairHH.get();
+            if (isOxygenA != isOxygenB)
+            {
+                nonCoulPair = state.nonCoulombPairOH.get();
+            }
+            else if (isOxygenA)
+            {
+                nonCoulPair = state.nonCoulombPairOO.get();
+            }
+
+            if (nonCoulPair != nullptr)
             {
                 calculateSingleInteraction<pot::MMChargeTag, pot::MMChargeTag>(
                     atomA,
@@ -76,7 +87,7 @@ namespace waterModel
                     coulPot,
                     rCutSquared,
                     box,
-                    *nonCoulPairPtr,
+                    *nonCoulPair,
                     totalCoulombEnergy,
                     totalNonCoulombEnergy
                 );
@@ -110,33 +121,12 @@ namespace waterModel
                             const bool isAtom_j_O =
                                 atom_j->getAtomicNumber() == oxygenAtomicNumber;
 
-                            // O-H interaction (different atom types)
-                            if (isAtom_i_O != isAtom_j_O)
-                            {
-                                singleInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    state.nonCoulombPairOH
-                                );
-                                // O-O interaction
-                            }
-                            else if (isAtom_i_O)
-                            {
-                                singleInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    state.nonCoulombPairOO
-                                );
-                                // H-H interaction
-                            }
-                            else
-                            {
-                                singleInteraction(
-                                    *atom_i,
-                                    *atom_j,
-                                    state.nonCoulombPairHH
-                                );
-                            }
+                            singleInteraction(
+                                *atom_i,
+                                *atom_j,
+                                isAtom_i_O,
+                                isAtom_j_O
+                            );
                         }
                     }
                 }
@@ -177,33 +167,12 @@ namespace waterModel
                                 const bool isAtom_j_O = atom_j->getAtomicNumber(
                                                         ) == oxygenAtomicNumber;
 
-                                // O-H interaction (different atom types)
-                                if (isAtom_i_O != isAtom_j_O)
-                                {
-                                    singleInteraction(
-                                        *atom_i,
-                                        *atom_j,
-                                        state.nonCoulombPairOH
-                                    );
-                                    // O-O interaction
-                                }
-                                else if (isAtom_i_O)
-                                {
-                                    singleInteraction(
-                                        *atom_i,
-                                        *atom_j,
-                                        state.nonCoulombPairOO
-                                    );
-                                    // H-H interaction
-                                }
-                                else
-                                {
-                                    singleInteraction(
-                                        *atom_i,
-                                        *atom_j,
-                                        state.nonCoulombPairHH
-                                    );
-                                }
+                                singleInteraction(
+                                    *atom_i,
+                                    *atom_j,
+                                    isAtom_i_O,
+                                    isAtom_j_O
+                                );
                             }
                         }
                     }
@@ -256,7 +225,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();
@@ -393,7 +362,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();
@@ -634,7 +603,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();
@@ -840,7 +809,7 @@ namespace waterModel
 
         const auto isNonWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) ==
                    waterMolecules.end();
