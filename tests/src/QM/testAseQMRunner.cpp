@@ -25,6 +25,8 @@
 #include <pybind11/embed.h>
 
 #include <chrono>
+#include <cstdlib>
+#include <exception>
 #include <memory>
 
 #include "aseFennolRunner.hpp"
@@ -194,4 +196,34 @@ TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
         settings.fileSettings,
         settings.hybridSettings
     ));
+}
+
+namespace
+{
+    /**
+     * @brief exit code 0 if building a runner started Python
+     */
+    [[noreturn]] void constructRunnerAndExit()
+    {
+        Settings       settings;
+        FennolSettings fennolSettings;
+        settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+
+        try
+        {
+            const QM::AseFennolRunner runner(settings.qmSettings, fennolSettings);
+        }
+        catch (const std::exception &)
+        {
+            // ase or fennol may be missing
+        }
+
+        std::exit(::Py_IsInitialized() != 0 ? 0 : 1);
+    }
+}   // namespace
+
+// death tests run first, in a child process without an interpreter
+TEST(AseQMRunnerDeathTest, constructorStartsPython)
+{
+    EXPECT_EXIT(constructRunnerAndExit(), testing::ExitedWithCode(0), "");
 }

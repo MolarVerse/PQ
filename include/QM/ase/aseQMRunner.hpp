@@ -71,6 +71,9 @@ namespace QM
 
        protected:
         void _setAseCalculator(const pybind11::object &calculator);
+
+       private:
+        [[nodiscard]] static std::unique_ptr<AseInterface> _makeAseInterface();
     };
 
 }   // namespace QM

@@ -23,6 +23,7 @@ target_link_libraries(aseQM
     physicalData
     exceptions
     interrupt
+    embeddedPython
 
     QM
 

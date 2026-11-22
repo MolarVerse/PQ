@@ -17,7 +17,7 @@ Legend used below: **yes** = a test runs it and compares the result; **partly** 
 setting that leaves relevant variants open (the note says which); **no** = no integration test.
 "Elsewhere" names the other place that exercises it: **unit** = `tests/src` (GoogleTest),
 **regression** = `tests/regression` (ctest, runs in every build job), **example** = `examples/`
-(documentation inputs; only `oh_mm_hessian` is also run here).
+(documentation inputs; only `oh_mm_hessian` and `h2o_mm` are also run here).
 
 ## How the tests work
 
@@ -77,6 +77,7 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `mace` (2 inputs) | `run-01.in`, `run-02.in` | `qm-md` | 9 atoms, 2 steps | MACE-OFF and MACE-MP, small model. **Skipped in CI** (needs `torch`, `mace` and a CUDA device) |
 | `qm-mm/*` (8 tests) | `run-01.in` in 8 directories | `qmmm-md` | one K ion + 2000 waters (6001 atoms), box 39 Å, 2 steps | DFTB+ as QM program, Berendsen thermostat; the 8 = smoothing `hotspot`/`exact` x `brute_force`/`cell_list` x (`force-field = bonded` with topology \| `force-field = off` with a water model) |
 | `oh_mm_hessian` (4 tests) | `run-01.in`, `run-02-no-opt.in` | `mm-hessian` | 2 atoms | optimisation then Hessian, Hessian alone, with and without `max-learning-rate`, and the error for a minimum learning rate not below the maximum |
+| `mm_without_python` | `examples/h2o_mm/run-01.in`, 5 steps | `mm-md` | water | `PATH` without any Python: an MM run must not start the embedded Python, stderr stays empty (#1264) |
 
 Each water model appears in exactly one QM/MM test, so it is always combined with one particular
 smoothing method and neighbour search: `spc_fw` (exact, brute force), `spc-mtr` (exact, cell
