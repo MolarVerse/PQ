@@ -26,6 +26,7 @@
 #include <format>
 #include <vector>
 
+#include "atom.hpp"
 #include "constraintSettings.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
@@ -37,6 +38,11 @@
 
 namespace constraints
 {
+    namespace
+    {
+        // any value works, it only scales the RATTLE tolerance
+        constexpr Time OPT_TIME_STEP = 1.0 * ps;
+    }   // namespace
 
     /**
      * @brief constructor
@@ -243,6 +249,86 @@ namespace constraints
                     std::ranges::count(convergedVector, false)
                 )
             );
+        }
+    }
+
+    /**
+     * @brief corrects the positions with SHAKE or M-SHAKE, keeping the
+     * velocities
+     *
+     * @details for geometry optimizations, which have no time step
+     *
+     * @param simulationBox
+     */
+    void Constraints::applyShakeToPositions(
+        molsys::SimulationBox &simulationBox
+    )
+    {
+        if (!_constraintSettings->isShakeLikeActive())
+        {
+            return;
+        }
+
+        const auto velocities = simulationBox.getVelocities();
+
+        applyShake(simulationBox, OPT_TIME_STEP);
+
+        _setVelocities(simulationBox, velocities);
+    }
+
+    /**
+     * @brief removes the constraint components from the forces
+     *
+     * @details applies RATTLE to the velocities M^-1 F dt, so the forces
+     * become M P M^-1 F with P the RATTLE projection. They vanish exactly at a
+     * constrained minimum. The velocities are kept.
+     *
+     * @param simulationBox
+     */
+    void Constraints::projectForces(molsys::SimulationBox &simulationBox)
+    {
+        if (!_constraintSettings->isShakeLikeActive())
+        {
+            return;
+        }
+
+        const auto velocities = simulationBox.getVelocities();
+
+        for (const auto &atom : simulationBox.getAtoms())
+        {
+            atom->setVelocity(
+                OPT_TIME_STEP * atom->getForce() / atom->getMass()
+            );
+        }
+
+        applyRattle(simulationBox);
+
+        for (const auto &atom : simulationBox.getAtoms())
+        {
+            atom->setForce(
+                atom->getMass() * atom->getVelocity() / OPT_TIME_STEP
+            );
+        }
+
+        _setVelocities(simulationBox, velocities);
+    }
+
+    /**
+     * @brief sets the velocities of all atoms in the order of getAtoms()
+     *
+     * @param simulationBox
+     * @param velocities
+     */
+    void Constraints::_setVelocities(
+        molsys::SimulationBox    &simulationBox,
+        const std::vector<Vel3D> &velocities
+    )
+    {
+        auto &atoms = simulationBox.getAtoms();
+
+        for (size_t index = 0; index < atoms.size(); ++index)
+        {
+            atoms[index]->setVelocity(velocities[index]);
         }
     }
 

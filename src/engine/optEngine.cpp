@@ -24,11 +24,14 @@
 
 #include <format>
 
+#include "constraintSettings.hpp"
+#include "constraints.hpp"
 #include "exceptions.hpp"
 #include "frame.hpp"
 #include "globalTimer.hpp"
 #include "interrupt.hpp"
 #include "outputFileSettings.hpp"
+#include "simulationBox.hpp"
 #include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
 
@@ -40,8 +43,9 @@ namespace engine
      */
     void OptEngine::run()
     {
-        _evaluator->evaluate(get_physicalData());
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        getSimulationBox().updateOldPositions();
+        getConstraints()->applyShakeToPositions(getSimulationBox());
+        _evaluate();
 
         const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
@@ -191,10 +195,9 @@ namespace engine
     void OptEngine::takeStep()
     {
         _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
+        getConstraints()->applyShakeToPositions(getSimulationBox());
 
-        _evaluator->evaluate(get_physicalData());
-
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _evaluate();
 
         _converged = _optimizer->hasConverged();
 
@@ -228,6 +231,25 @@ namespace engine
         }
 
         _setStep(getStep() + 1);
+    }
+
+    /**
+     * @brief evaluate the forces and add the energy to the optimizer history
+     *
+     * @details with SHAKE or M-SHAKE the forces are projected onto the
+     * constraint surface, so the convergence checks see the constrained forces
+     */
+    void OptEngine::_evaluate()
+    {
+        _evaluator->evaluate(get_physicalData());
+
+        if (getSettings().constraintSettings.isShakeLikeActive())
+        {
+            getConstraints()->calculateConstraintBondRefs(getSimulationBox());
+            getConstraints()->projectForces(getSimulationBox());
+        }
+
+        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
     }
 
     /**

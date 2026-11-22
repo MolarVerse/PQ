@@ -1,0 +1,1 @@
+- `OptEngine` applies SHAKE after each optimizer step and projects the forces with RATTLE (`Constraints::applyShakeToPositions`, `Constraints::projectForces`); `regression_mm_opt_constraints` runs the new `h2o_mm_opt_shake` example (#1320).

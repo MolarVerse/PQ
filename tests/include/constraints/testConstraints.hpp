@@ -135,6 +135,42 @@ class TestConstraints : public ::testing::Test
         constraints.addBondConstraint(bondConstraint1);
         constraints.addBondConstraint(bondConstraint2);
     }
+
+    /**
+     * @brief a box with one molecule of two atoms (masses 1 and 3) at
+     * distance 1.1 Å along x, both with velocity (5, 5, 5) Å/s
+     *
+     * @return std::unique_ptr<molsys::SimulationBox>
+     */
+    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox> _makeDimerBox()
+    {
+        auto molecule = molsys::Molecule();
+
+        auto atom1 = std::make_shared<molsys::Atom>();
+        auto atom2 = std::make_shared<molsys::Atom>();
+
+        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+        atom2->setPosition(linalg::Vec3D(2.1, 1.0, 1.0) * angstrom);
+        atom1->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
+        atom2->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
+        atom1->setMass(1.0 * g_per_mol);
+        atom2->setMass(3.0 * g_per_mol);
+
+        molecule.addAtom(atom1);
+        molecule.addAtom(atom2);
+
+        auto simulationBox = std::make_unique<molsys::SimulationBox>();
+        simulationBox->addMolecule(molecule);
+        simulationBox->addAtom(atom1);
+        simulationBox->addAtom(atom2);
+
+        molsys::OrthorhombicBox orthoBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        };
+        simulationBox->setBox(orthoBox, false);
+
+        return simulationBox;
+    }
 };
 
 #endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

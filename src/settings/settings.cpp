@@ -139,12 +139,10 @@ namespace
     }
 
     /**
-     * @brief rejects constraints in geometry optimizations
+     * @brief rejects the constraints that geometry optimizations do not apply
      *
-     * @details the optimizer does not apply them, so the run would silently
-     * ignore them; a rigid water model turns SHAKE on in finalize()
-     *
-     * @throws exc::InputFileException if mm-opt has any constraint active
+     * @throws exc::InputFileException if mm-opt has M-SHAKE or distance
+     * constraints active
      */
     void validateOptConstraints(
         const ConstraintSettings& constraintSettings,
@@ -153,16 +151,19 @@ namespace
     {
         const auto jobType = generalSettings.getJobtype();
 
-        if (!isOptJobType(jobType) || !constraintSettings.isActive())
+        const auto unsupported =
+            constraintSettings.isMShakeActivated() ||
+            constraintSettings.isDistanceConstraintsActivated();
+
+        if (!isOptJobType(jobType) || !unsupported)
         {
             return;
         }
 
         throw exc::InputFileException(
             std::format(
-                "Job type {} does not apply SHAKE, M-SHAKE or distance "
-                "constraints. Set shake = off and distance-constraints = off "
-                "(a rigid water model also turns SHAKE on).",
+                "Job type {} does not apply M-SHAKE or distance constraints. "
+                "Set shake = off or on and distance-constraints = off.",
                 JobTypeMeta::toString(jobType)
             )
         );

@@ -102,6 +102,120 @@ TEST_F(TestConstraints, applyShakeConverged)
     );
 }
 
+TEST_F(TestConstraints, applyShakeToPositionsKeepsVelocities)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config) { config.activateShakeByUser(); })
+            .build();
+    constraints::Constraints constraints(settings);
+
+    auto simulationBox = _makeDimerBox();
+    auto *molecule     = simulationBox->getMolecules().data();
+    constraints.addBondConstraint(
+        constraints::BondConstraint(
+            molecule,
+            molecule,
+            AtomIndex{0},
+            AtomIndex{1},
+            1.0 * angstrom
+        )
+    );
+    constraints.calculateConstraintBondRefs(*simulationBox);
+
+    constraints.applyShakeToPositions(*simulationBox);
+
+    const auto distance = norm(
+        molecule->getAtomPosition(AtomIndex{1}) -
+        molecule->getAtomPosition(AtomIndex{0})
+    );
+    EXPECT_NEAR(distance.numerical_value_in(angstrom), 1.0, 1e-7);
+
+    for (const auto &atom : simulationBox->getAtoms())
+    {
+        EXPECT_THAT(
+            atom->getVelocity().numerical_value_in(angstrom / s),
+            testing::ElementsAre(5.0, 5.0, 5.0)
+        );
+    }
+}
+
+TEST_F(TestConstraints, projectForcesRemovesTheBondComponent)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config) { config.activateShakeByUser(); })
+            .build();
+    constraints::Constraints constraints(settings);
+
+    auto simulationBox = _makeDimerBox();
+    auto *molecule     = simulationBox->getMolecules().data();
+    constraints.addBondConstraint(
+        constraints::BondConstraint(
+            molecule,
+            molecule,
+            AtomIndex{0},
+            AtomIndex{1},
+            1.1 * angstrom
+        )
+    );
+    constraints.calculateConstraintBondRefs(*simulationBox);
+
+    auto &atoms = simulationBox->getAtoms();
+    atoms[0]->setForce(linalg::Vec3D(4.0, 2.0, 0.0) * kcal_per_mol / angstrom);
+    atoms[1]->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+
+    constraints.projectForces(*simulationBox);
+
+    // the bond direction keeps the force that moves both atoms together
+    EXPECT_THAT(
+        atoms[0]->getForce().numerical_value_in(kcal_per_mol / angstrom),
+        testing::ElementsAre(
+            testing::DoubleNear(1.0, 1e-9),
+            testing::DoubleNear(2.0, 1e-9),
+            testing::DoubleNear(0.0, 1e-9)
+        )
+    );
+    EXPECT_THAT(
+        atoms[1]->getForce().numerical_value_in(kcal_per_mol / angstrom),
+        testing::ElementsAre(
+            testing::DoubleNear(3.0, 1e-9),
+            testing::DoubleNear(0.0, 1e-9),
+            testing::DoubleNear(0.0, 1e-9)
+        )
+    );
+
+    for (const auto &atom : atoms)
+    {
+        EXPECT_THAT(
+            atom->getVelocity().numerical_value_in(angstrom / s),
+            testing::ElementsAre(5.0, 5.0, 5.0)
+        );
+    }
+}
+
+TEST_F(TestConstraints, projectForcesWithoutShakeKeepsTheForces)
+{
+    const auto settings = testSettings::make<ConstraintSettings>().build();
+    constraints::Constraints constraints(settings);
+
+    auto simulationBox = _makeDimerBox();
+    auto &atoms        = simulationBox->getAtoms();
+    atoms[0]->setForce(linalg::Vec3D(4.0, 2.0, 0.0) * kcal_per_mol / angstrom);
+
+    constraints.projectForces(*simulationBox);
+    constraints.applyShakeToPositions(*simulationBox);
+
+    EXPECT_THAT(
+        atoms[0]->getForce().numerical_value_in(kcal_per_mol / angstrom),
+        testing::ElementsAre(4.0, 2.0, 0.0)
+    );
+    EXPECT_THAT(
+        atoms[1]->getPosition().numerical_value_in(angstrom),
+        testing::ElementsAre(2.1, 1.0, 1.0)
+    );
+}
+
 /**
  * @brief test apply shake algorithm to all bond constraints and it does not
  * converge

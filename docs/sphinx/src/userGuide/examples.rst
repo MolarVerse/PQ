@@ -59,6 +59,9 @@ be run from its own directory so relative setup-file paths resolve as intended.
     * - ``examples/oh_mm_hessian``
       - MM Hessian
       - Geometry optimization followed by the Hessian (``run-01.in``) or the Hessian alone (``run-02-no-opt.in``); see the ``README.md`` in the folder.
+    * - ``examples/h2o_mm_opt_shake``
+      - MM-OPT with SHAKE
+      - Geometry optimization of one water molecule with SHAKE on the O-H bonds.
     * - ``examples/orca``
       - ORCA QM-MD
       - HF, DFT and RI-MP2 with the bundled ORCA drivers; needs ORCA, see the ``README.md`` in the folder.

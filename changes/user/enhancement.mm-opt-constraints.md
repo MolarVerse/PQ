@@ -1,0 +1,1 @@
+- `mm-opt` now supports `shake = on`: the constrained bonds keep their length during the optimization (#1320).
