@@ -20,8 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifndef TEST_UTILS__TEMP_DIR_TEST_HPP
-#define TEST_UTILS__TEMP_DIR_TEST_HPP
+#ifndef TESTS__INCLUDE__TEST_UTILS__TEMP_DIR_TEST_HPP
+#define TESTS__INCLUDE__TEST_UTILS__TEMP_DIR_TEST_HPP
 
 #include <gtest/gtest.h>
 
@@ -85,4 +85,4 @@ inline std::filesystem::path TempDirTest::_makeFile(
     return path;
 }
 
-#endif   // TEST_UTILS__TEMP_DIR_TEST_HPP
+#endif   // TESTS__INCLUDE__TEST_UTILS__TEMP_DIR_TEST_HPP
