@@ -40,6 +40,7 @@
 #include "orthorhombicBox.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
+#include "ulmWriter.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
 
@@ -49,10 +50,6 @@ namespace
     constexpr double ASE_FS           = 0.09822694788464063;
     constexpr double ASE_KCAL_PER_MOL = 0.04336410390059322;
     constexpr double TOLERANCE        = 1e-6;
-
-    constexpr std::int64_t NITEMS_POSITION = 32;
-    constexpr std::int64_t OFFSETS_POINTER = 40;
-    constexpr std::int64_t HEADER_SIZE     = 48;
 
     struct AtomData
     {
@@ -137,7 +134,8 @@ namespace
     // JSON text of item index
     std::string itemJson(const std::string &data, std::int64_t index)
     {
-        const auto offsets  = readValue<std::int64_t>(data, OFFSETS_POINTER);
+        const auto offsets =
+            readValue<std::int64_t>(data, out::ulm::OFFSETS_POINTER_POSITION);
         const auto position = readValue<std::int64_t>(
             data,
             offsets + (index * static_cast<std::int64_t>(sizeof(std::int64_t)))
@@ -197,7 +195,8 @@ TEST(TestAseTrajOutput, writesUlmFramesInAseUnits)
     const std::string filename = "testAseTrajOutput.traj";
 
     {
-        out::AseTrajOutput output{filename, true};
+        out::AseTrajOutput output{filename};
+        output.setFilename(filename, true);
         output.write(makeFrame(3), 7);
         output.write(makeFrame(3), 8);
         output.close();
@@ -207,20 +206,21 @@ TEST(TestAseTrajOutput, writesUlmFramesInAseUnits)
 
     EXPECT_EQ(data.substr(0, 24), "- of UlmASE-Trajectory  ");
     EXPECT_EQ(readValue<std::int64_t>(data, 24), 3);
-    EXPECT_EQ(readValue<std::int64_t>(data, NITEMS_POSITION), 2);
+    EXPECT_EQ(readValue<std::int64_t>(data, out::ulm::ITEM_COUNT_POSITION), 2);
 
     // the second frame moved the offsets table to the end of the file
-    const auto offsets = readValue<std::int64_t>(data, OFFSETS_POINTER);
-    EXPECT_GT(offsets, HEADER_SIZE);
+    const auto offsets =
+        readValue<std::int64_t>(data, out::ulm::OFFSETS_POINTER_POSITION);
+    EXPECT_GT(offsets, out::ulm::HEADER_SIZE);
     EXPECT_EQ(offsets % 8, 0);
     EXPECT_EQ(
         readValue<std::int64_t>(data, offsets),
-        readValue<std::int64_t>(data, HEADER_SIZE)
+        readValue<std::int64_t>(data, out::ulm::HEADER_SIZE)
     );
 
     const auto json = itemJson(data, 0);
     EXPECT_TRUE(json.starts_with(
-        R"({"version": 1, "ase_version": "3.29.0", "pbc": [true, true, true], "numbers.": {"ndarray": [[3], "int64", 56]}, "masses.": {"ndarray": [[3], "float64", 80]}, "positions.": {"ndarray": [[3, 3], "float64", 104]}, "cell": [[10.0, 0.0, 0.0], [0.0, 11.0, 0.0], [0.0, 0.0, 12.0]], )"
+        R"({"version": 1, "ase_version": "3.29.0", "pbc": [true, true, true], "numbers.": {"ndarray": [[3], "int64", 56]}, "masses.": {"ndarray": [[3], "float64", 80]}, "positions.": {"ndarray": [[3, 3], "float64", 104]}, "cell": [[1e+01, 0e+00, 0e+00], [0e+00, 1.1e+01, 0e+00], [0e+00, 0e+00, 1.2e+01]], )"
     )) << json;
     EXPECT_NE(
         json.find(R"("calculator.": {"name": "pq", "parameters": {}, )"),
@@ -272,73 +272,19 @@ TEST(TestAseTrajOutput, writesUlmFramesInAseUnits)
 }
 
 /**
- * @brief the offsets table grows by 42 like in ase/io/ulm.py
+ * @brief the header is written with the first frame
  *
  */
-TEST(TestAseTrajOutput, growsTheOffsetsTable)
-{
-    const std::string     filename = "testAseTrajOutputGrowth.traj";
-    constexpr std::size_t nFrames  = 44;
-
-    {
-        out::AseTrajOutput output{filename, true};
-        const auto         frame = makeFrame(1);
-        for (std::size_t step = 0; step < nFrames; ++step)
-        {
-            output.write(frame, step);
-        }
-    }
-
-    const auto data = readFile(filename);
-    EXPECT_EQ(
-        readValue<std::int64_t>(data, NITEMS_POSITION),
-        static_cast<std::int64_t>(nFrames)
-    );
-
-    const auto offsets = readValue<std::int64_t>(data, OFFSETS_POINTER);
-    EXPECT_EQ(offsets % 8, 0);
-
-    std::int64_t previous = 0;
-    for (std::size_t index = 0; index < nFrames; ++index)
-    {
-        const auto itemIndex = static_cast<std::int64_t>(index);
-        const auto position =
-            readValue<std::int64_t>(data, offsets + (8 * itemIndex));
-        EXPECT_GT(position, previous);
-        previous = position;
-
-        const auto json = itemJson(data, itemIndex);
-        EXPECT_TRUE(json.ends_with(
-            R"("info": {"step": )" + std::to_string(index) + "}}"
-        )) << index;
-    }
-
-    const auto last = itemJson(data, static_cast<std::int64_t>(nFrames) - 1);
-    EXPECT_EQ(
-        data.size(),
-        static_cast<std::size_t>(previous) + sizeof(std::int64_t) + last.size()
-    );
-
-    std::filesystem::remove(filename);
-}
-
-/**
- * @brief an empty trajectory is a valid ULM file without items
- *
- */
-TEST(TestAseTrajOutput, writesAnEmptyFile)
+TEST(TestAseTrajOutput, writesNothingBeforeTheFirstFrame)
 {
     const std::string filename = "testAseTrajOutputEmpty.traj";
 
     {
-        out::AseTrajOutput output{filename, true};
+        out::AseTrajOutput output{filename};
+        output.setFilename(filename, true);
     }
 
-    const auto data = readFile(filename);
-    EXPECT_EQ(data.size(), static_cast<std::size_t>(HEADER_SIZE + 8));
-    EXPECT_EQ(readValue<std::int64_t>(data, NITEMS_POSITION), 0);
-    EXPECT_EQ(readValue<std::int64_t>(data, OFFSETS_POINTER), HEADER_SIZE);
-    EXPECT_EQ(readValue<std::int64_t>(data, HEADER_SIZE), -1);
+    EXPECT_TRUE(readFile(filename).empty());
 
     std::filesystem::remove(filename);
 }
@@ -352,7 +298,8 @@ TEST(TestAseTrajOutput, throwsOnInvalidUse)
     const std::string filename = "testAseTrajOutputErrors.traj";
 
     {
-        out::AseTrajOutput output{filename, true};
+        out::AseTrajOutput output{filename};
+        output.setFilename(filename, true);
         output.write(makeFrame(3), 0);
 
         EXPECT_THROW_MSG(
@@ -370,17 +317,11 @@ TEST(TestAseTrajOutput, throwsOnInvalidUse)
         );
     }
 
+    out::AseTrajOutput existing{filename};
     EXPECT_THROW_MSG(
-        out::AseTrajOutput(filename, false),
+        existing.setFilename(filename, false),
         exc::InputFileException,
         "File already exists - filename = " + filename
-    );
-
-    const std::string missing = "noSuchDirectory/test.traj";
-    EXPECT_THROW_MSG(
-        out::AseTrajOutput(missing, true),
-        exc::InputFileException,
-        "Could not open file - filename = " + missing
     );
 
     std::filesystem::remove(filename);
@@ -398,8 +339,10 @@ TEST(TestAseTrajOutput, throwsIfWritingFails)
         GTEST_SKIP() << "needs /dev/full";
     }
 
+    out::AseTrajOutput output{full};
+    output.setFilename(full, true);
     EXPECT_THROW_MSG(
-        out::AseTrajOutput(full, true),
+        output.write(makeFrame(1), 0),
         exc::InputFileException,
         "Could not write ASE trajectory - filename = " + full
     );

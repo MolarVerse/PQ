@@ -23,7 +23,6 @@ set(source_files
     testH5mdOutput.cpp
     testAseTrajOutput.cpp
     testAtomicNumber.cpp
-    testUlmJson.cpp
     testUlmWriter.cpp
 )
 

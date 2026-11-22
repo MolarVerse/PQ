@@ -343,8 +343,8 @@ namespace engine
         bool               overwrite
     )
     {
-        _aseTrajOutput =
-            std::make_unique<out::AseTrajOutput>(filename, overwrite);
+        _aseTrajOutput = std::make_unique<out::AseTrajOutput>(filename);
+        _aseTrajOutput->setFilename(filename, overwrite);
     }
 
     /**

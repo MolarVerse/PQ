@@ -6,7 +6,6 @@ add_library(output
     h5mdOutput.cpp
     aseTrajOutput.cpp
     atomicNumber.cpp
-    ulmJson.cpp
     ulmWriter.cpp
     outputMessages.cpp
 
