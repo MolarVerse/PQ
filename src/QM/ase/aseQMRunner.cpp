@@ -313,7 +313,15 @@ namespace QM
      * @throw std::runtime_error if Python cannot be started
      */
     AseQMRunner::AseQMRunner(const QMSettings &settings)
-        : QMRunner(settings), _ase(_makeAseInterface())
+        : QMRunner(settings),
+          // AseInterface holds numpy objects, so Python must run first
+          _ase(
+              []
+              {
+                  utilities::startPython();
+                  return std::make_unique<AseInterface>();
+              }()
+          )
     {
         try
         {
@@ -338,18 +346,6 @@ namespace QM
     }
 
     AseQMRunner::~AseQMRunner() = default;
-
-    /**
-     * @brief start Python first: the numpy members of AseInterface need it
-     *
-     * @throw std::runtime_error if Python cannot be started
-     */
-    std::unique_ptr<AseQMRunner::AseInterface> AseQMRunner::_makeAseInterface()
-    {
-        utilities::startPython();
-
-        return std::make_unique<AseInterface>();
-    }
 
     /**
      * @brief run the ASE QM calculation

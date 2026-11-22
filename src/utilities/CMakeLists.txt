@@ -86,6 +86,7 @@ if(BUILD_WITH_PYBIND11)
         pybind11::embed
         PRIVATE
         interrupt
+        utilities
     )
 
     install(TARGETS embeddedPython

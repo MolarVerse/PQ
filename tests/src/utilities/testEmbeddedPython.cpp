@@ -26,77 +26,24 @@
 #include <csignal>
 #include <cstdlib>
 #include <filesystem>
-#include <fstream>
 #include <string>
 
 #include "embeddedPython.hpp"
 #include "interrupt.hpp"
+#include "tempDirTest.hpp"
+
+#if !defined(_WIN32)
+#include <pthread.h>
+#endif
 
 namespace
 {
     constexpr auto _programName = "python3.99";
 
-    /**
-     * @brief fresh directory with fake interpreters, removed afterwards
-     */
-    class TestEmbeddedPython : public ::testing::Test
-    {
-       protected:
-        std::filesystem::path _root;
-
-        void SetUp() override;
-        void TearDown() override;
-
-        [[nodiscard]] std::filesystem::path _makeDir(
-            const std::string &name
-        ) const;
-        static std::filesystem::path _makeFile(
-            const std::filesystem::path &path,
-            bool                         executable
-        );
-    };
-
-    void TestEmbeddedPython::SetUp()
-    {
-        const auto *const info =
-            ::testing::UnitTest::GetInstance()->current_test_info();
-        _root = std::filesystem::temp_directory_path() /
-                (std::string("pqEmbeddedPython-") + info->name());
-        std::filesystem::remove_all(_root);
-        std::filesystem::create_directories(_root);
-    }
-
-    void TestEmbeddedPython::TearDown() { std::filesystem::remove_all(_root); }
-
-    std::filesystem::path TestEmbeddedPython::_makeDir(
-        const std::string &name
-    ) const
-    {
-        auto path = _root / name;
-        std::filesystem::create_directories(path);
-        return path;
-    }
-
-    std::filesystem::path TestEmbeddedPython::_makeFile(
-        const std::filesystem::path &path,
-        bool                         executable
-    )
-    {
-        std::ofstream(path) << "#!/bin/sh\n";
-
-        auto perms = std::filesystem::perms::owner_read |
-                     std::filesystem::perms::owner_write;
-        if (executable)
-        {
-            perms |= std::filesystem::perms::owner_exec;
-        }
-        std::filesystem::permissions(path, perms);
-
-        return path;
-    }
+    using FindPythonTest = TempDirTest;
 }   // namespace
 
-TEST(TestPythonProgramName, matchesLinkedLibpython)
+TEST(PythonProgramNameTest, matchesLinkedLibpython)
 {
     EXPECT_EQ(
         utilities::pythonProgramName(),
@@ -105,57 +52,43 @@ TEST(TestPythonProgramName, matchesLinkedLibpython)
     );
 }
 
-TEST_F(TestEmbeddedPython, firstExecutableOnPathWins)
+TEST_F(FindPythonTest, searchPathWinsOverBuildPython)
 {
-    const auto empty  = _makeDir("empty");
-    const auto first  = _makeDir("first");
-    const auto second = _makeDir("second");
-    const auto build  = _makeFile(_root / "build-python", true);
-    _makeFile(first / _programName, true);
-    _makeFile(second / _programName, true);
-
-    const auto searchPath =
-        empty.string() + "::" + first.string() + ":" + second.string();
+    const auto bin   = _makeDir("bin");
+    const auto build = _makeFile(_root / "build-python", true);
+    _makeFile(bin / _programName, true);
 
     EXPECT_EQ(
-        utilities::findPythonProgram(searchPath, _programName, build),
-        first / _programName
+        utilities::findPythonProgram(bin.string(), _programName, build),
+        bin / _programName
     );
 }
 
-TEST_F(TestEmbeddedPython, skipsFilesThatCannotRun)
+TEST_F(FindPythonTest, fallsBackToBuildPython)
 {
     const auto noExec = _makeDir("noExec");
-    const auto good   = _makeDir("good");
+    const auto build  = _makeFile(_root / "build-python", true);
     _makeFile(noExec / _programName, false);
-    _makeFile(good / _programName, true);
-    std::filesystem::create_directories(_makeDir("isDir") / _programName);
-
-    const auto searchPath = (_root / "isDir").string() + ":" + noExec.string() +
-                            ":" + good.string();
 
     EXPECT_EQ(
-        utilities::findPythonProgram(searchPath, _programName, {}),
-        good / _programName
-    );
-}
-
-TEST_F(TestEmbeddedPython, fallsBackToBuildPython)
-{
-    const auto empty = _makeDir("empty");
-    const auto build = _makeFile(_root / "build-python", true);
-
-    EXPECT_EQ(
-        utilities::findPythonProgram(empty.string(), _programName, build),
+        utilities::findPythonProgram(noExec.string(), _programName, build),
         build
     );
     EXPECT_EQ(utilities::findPythonProgram("", _programName, build), build);
 }
 
-TEST_F(TestEmbeddedPython, nothingFoundLeavesPythonDefault)
+TEST_F(FindPythonTest, nothingFoundLeavesPythonDefault)
 {
     const auto empty = _makeDir("empty");
 
+    EXPECT_FALSE(
+        utilities::findPythonProgram(
+            empty.string(),
+            _programName,
+            _makeFile(_root / "build-python", false)
+        )
+            .has_value()
+    );
     EXPECT_FALSE(
         utilities::findPythonProgram(
             empty.string(),
@@ -171,8 +104,33 @@ TEST_F(TestEmbeddedPython, nothingFoundLeavesPythonDefault)
 }
 
 #if !defined(_WIN32)
+namespace
+{
+    using EmbeddedPythonDeathTest = TempDirTest;
+
+    /**
+     * @brief sys.executable of the running interpreter
+     */
+    std::string pythonExecutable()
+    {
+        return pybind11::module_::import("sys")
+            .attr("executable")
+            .cast<std::string>();
+    }
+
+    /**
+     * @brief true if the calling thread blocks SIGINT
+     */
+    bool sigintBlocked()
+    {
+        sigset_t mask{};
+        ::pthread_sigmask(SIG_SETMASK, nullptr, &mask);
+        return ::sigismember(&mask, SIGINT) == 1;
+    }
+}   // namespace
+
 // death tests run in a child process, so each one starts its own interpreter
-TEST(TestEmbeddedPythonDeathTest, startKeepsPQHandler)
+TEST_F(EmbeddedPythonDeathTest, startKeepsPQHandler)
 {
     EXPECT_EXIT(
         {
@@ -181,29 +139,32 @@ TEST(TestEmbeddedPythonDeathTest, startKeepsPQHandler)
             utilities::startPython();
             const auto started = ::Py_IsInitialized() != 0;
             const auto handler = utilities::isInterruptHandlerInstalled();
+            const auto blocked = sigintBlocked();
             utilities::stopPython();
             utilities::stopPython();
-            std::exit(started && handler && ::Py_IsInitialized() == 0 ? 0 : 1);
+            const auto stopped = ::Py_IsInitialized() == 0;
+            std::exit(started && handler && !blocked && stopped ? 0 : 1);
         },
         testing::ExitedWithCode(0),
         ""
     );
 }
 
-TEST(TestEmbeddedPythonDeathTest, startWithoutPQHandlerKeepsPythonHandler)
+TEST_F(EmbeddedPythonDeathTest, startWithoutPQHandlerKeepsPythonHandler)
 {
     EXPECT_EXIT(
         {
             static_cast<void>(std::signal(SIGINT, SIG_DFL));
             utilities::startPython();
-            std::exit(utilities::isInterruptHandlerInstalled() ? 1 : 0);
+            const auto handler = utilities::isInterruptHandlerInstalled();
+            std::exit(!handler && !sigintBlocked() ? 0 : 1);
         },
         testing::ExitedWithCode(0),
         ""
     );
 }
 
-TEST(TestEmbeddedPythonDeathTest, ctrlCBeforeStartRaisesKeyboardInterrupt)
+TEST_F(EmbeddedPythonDeathTest, ctrlCBeforeStartRaisesKeyboardInterrupt)
 {
     EXPECT_EXIT(
         {
@@ -221,6 +182,38 @@ TEST(TestEmbeddedPythonDeathTest, ctrlCBeforeStartRaisesKeyboardInterrupt)
             }
 
             std::exit(1);
+        },
+        testing::ExitedWithCode(0),
+        ""
+    );
+}
+
+TEST_F(EmbeddedPythonDeathTest, interpreterFromSearchPath)
+{
+    const auto bin     = _makeDir("bin");
+    const auto program = bin / utilities::pythonProgramName();
+    std::filesystem::create_symlink(PQ_PYTHON_EXECUTABLE, program);
+
+    EXPECT_EXIT(
+        {
+            ::setenv("PATH", bin.c_str(), 1);
+            utilities::startPython();
+            std::exit(pythonExecutable() == program.string() ? 0 : 1);
+        },
+        testing::ExitedWithCode(0),
+        ""
+    );
+}
+
+TEST_F(EmbeddedPythonDeathTest, buildInterpreterWithoutSearchPath)
+{
+    const auto empty = _makeDir("empty");
+
+    EXPECT_EXIT(
+        {
+            ::setenv("PATH", empty.c_str(), 1);
+            utilities::startPython();
+            std::exit(pythonExecutable() == PQ_PYTHON_EXECUTABLE ? 0 : 1);
         },
         testing::ExitedWithCode(0),
         ""

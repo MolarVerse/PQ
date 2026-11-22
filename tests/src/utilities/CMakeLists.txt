@@ -40,6 +40,10 @@ target_link_libraries(testInterrupt PRIVATE interrupt)
 
 if(BUILD_WITH_PYBIND11)
     target_link_libraries(testEmbeddedPython PRIVATE embeddedPython interrupt)
+    target_compile_definitions(testEmbeddedPython
+        PRIVATE
+        PQ_PYTHON_EXECUTABLE="${Python3_EXECUTABLE}"
+    )
 endif()
 target_link_libraries(testSerialWorker PRIVATE serialWorker)
 target_link_libraries(testMathUtilities PRIVATE config_headers)

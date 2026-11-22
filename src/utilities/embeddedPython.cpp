@@ -30,76 +30,66 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <system_error>
 
-#include "interrupt.hpp"
+#include "executablePath.hpp"
 
 #if !defined(_WIN32)
 #include <pthread.h>
 
 #include <csignal>
+#include <mstd/utils.hpp>
+
+#include "interrupt.hpp"
 #endif
 
+#if !defined(_WIN32)
 namespace
 {
-#if defined(_WIN32)
-    constexpr char _pathSeparator = ';';
-#else
-    constexpr char _pathSeparator = ':';
-#endif
-
     /**
-     * @brief true if path is a regular file that someone may execute
+     * @brief hands SIGINT to Python while it starts and gives it back to PQ
      *
-     * @param path candidate file
+     * @details Python installs its handler only over SIG_DFL, so PQ's handler
+     * is reset and SIGINT blocked until the guard ends
      */
-    bool isExecutableFile(const std::filesystem::path &path)
+    class SigintRelease
     {
-        std::error_code error;
-        const auto      status = std::filesystem::status(path, error);
+       private:
+        bool     _released = false;
+        sigset_t _oldMask{};
 
-        if (error || !std::filesystem::is_regular_file(status))
+       public:
+        SigintRelease();
+        ~SigintRelease();
+
+        MSTD_NO_COPY(SigintRelease);
+        MSTD_NO_MOVE(SigintRelease);
+    };
+
+    SigintRelease::SigintRelease()
+    {
+        if (!utilities::isInterruptHandlerInstalled())
         {
-            return false;
+            return;
         }
 
-        constexpr auto anyExec = std::filesystem::perms::owner_exec |
-                                 std::filesystem::perms::group_exec |
-                                 std::filesystem::perms::others_exec;
-
-        return (status.permissions() & anyExec) != std::filesystem::perms::none;
-    }
-#if !defined(_WIN32)
-    /**
-     * @brief block SIGINT and reset it to SIG_DFL: Python installs its
-     * handler only over SIG_DFL
-     *
-     * @return the previous signal mask
-     */
-    sigset_t releaseSigint()
-    {
         sigset_t sigintOnly{};
-        sigset_t oldMask{};
         ::sigemptyset(&sigintOnly);
         ::sigaddset(&sigintOnly, SIGINT);
-        ::pthread_sigmask(SIG_BLOCK, &sigintOnly, &oldMask);
+        ::pthread_sigmask(SIG_BLOCK, &sigintOnly, &_oldMask);
         static_cast<void>(std::signal(SIGINT, SIG_DFL));
-
-        return oldMask;
+        _released = true;
     }
 
-    /**
-     * @brief install PQ's SIGINT handler again and restore the signal mask
-     *
-     * @param oldMask mask returned by releaseSigint
-     */
-    void reclaimSigint(const sigset_t &oldMask)
+    SigintRelease::~SigintRelease()
     {
-        utilities::installInterruptHandler();
-        ::pthread_sigmask(SIG_SETMASK, &oldMask, nullptr);
+        if (_released)
+        {
+            utilities::installInterruptHandler();
+            ::pthread_sigmask(SIG_SETMASK, &_oldMask, nullptr);
+        }
     }
-#endif
 }   // namespace
+#endif
 
 namespace utilities
 {
@@ -128,33 +118,15 @@ namespace utilities
         const std::filesystem::path &buildPython
     )
     {
-        while (!searchPath.empty())
+        auto program = findInSearchPath(searchPath, programName);
+
+        if (!program.has_value() && !buildPython.empty() &&
+            isExecutableFile(buildPython))
         {
-            const auto end       = searchPath.find(_pathSeparator);
-            const auto directory = searchPath.substr(0, end);
-
-            if (!directory.empty())
-            {
-                auto candidate = std::filesystem::path(directory) / programName;
-                if (isExecutableFile(candidate))
-                {
-                    return candidate;
-                }
-            }
-
-            if (end == std::string_view::npos)
-            {
-                break;
-            }
-            searchPath.remove_prefix(end + 1);
+            program = buildPython;
         }
 
-        if (!buildPython.empty() && isExecutableFile(buildPython))
-        {
-            return buildPython;
-        }
-
-        return std::nullopt;
+        return program;
     }
 
     /**
@@ -195,33 +167,10 @@ namespace utilities
             }
         }
 
-#if defined(_WIN32)
-        pybind11::initialize_interpreter(&config);
-#else
-        std::optional<sigset_t> oldMask;
-        if (isInterruptHandlerInstalled())
-        {
-            oldMask = releaseSigint();
-        }
-
-        try
-        {
-            pybind11::initialize_interpreter(&config);
-        }
-        catch (...)
-        {
-            if (oldMask.has_value())
-            {
-                reclaimSigint(*oldMask);
-            }
-            throw;
-        }
-
-        if (oldMask.has_value())
-        {
-            reclaimSigint(*oldMask);
-        }
+#if !defined(_WIN32)
+        const SigintRelease sigintRelease;
 #endif
+        pybind11::initialize_interpreter(&config);
     }
 
     /**
