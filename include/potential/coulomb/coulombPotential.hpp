@@ -39,8 +39,8 @@ namespace pot
      *
      * @brief CoulombPotential is a base class for all coulomb type potentials
      *
-     * @details it inherits in general the coulombRadiusCutOff,
-     * coulombEnergyCutOff and coulombForceCutOff to all coulomb type potentials
+     * @details it inherits in general the coulombRadiusCutoff,
+     * coulombEnergyCutoff and coulombForceCutoff to all coulomb type potentials
      *
      * @details available for:
      * - shifted potential

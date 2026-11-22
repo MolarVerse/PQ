@@ -51,7 +51,7 @@ namespace
         nonCoulomb->resizeGuff(0, 0, 0, 1);
 
         const auto pair = std::make_shared<pot::LennardJonesPair>(
-            benchmarkSetup::cutOff,
+            benchmarkSetup::cutoff,
             LJParams{
                 .c6  = 1.0 * kcal_per_mol * angstrom6,
                 .c12 = 1.0 * kcal_per_mol * angstrom12
@@ -73,7 +73,7 @@ namespace
 
         Settings settings;
         settings.potentialSettings.setCoulombRadiusCutoffByUser(
-            benchmarkSetup::cutOff
+            benchmarkSetup::cutoff
         );
 
         PotentialType forceCalculation{settings.hybridSettings};
@@ -88,8 +88,8 @@ namespace
             GeneralSettings::activateCellList();
             cellList.setNumberOfCells(cellsPerSide);
             cellList.resizeCells();
-            cellList.setup(simBox, benchmarkSetup::cutOff);
-            cellList.updateCellList(simBox, benchmarkSetup::cutOff);
+            cellList.setup(simBox, benchmarkSetup::cutoff);
+            cellList.updateCellList(simBox, benchmarkSetup::cutoff);
         }
 
         physicalData::PhysicalData physicalData;

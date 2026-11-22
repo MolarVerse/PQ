@@ -47,14 +47,14 @@ namespace pot
         explicit MorsePair(
             ExtVdwType         vanDerWaalsType1,
             ExtVdwType         vanDerWaalsType2,
-            const Pos         &cutOff,
+            const Pos         &cutoff,
             const MorseParams &params
         );
 
-        explicit MorsePair(const Pos &cutOff, const MorseParams &params);
+        explicit MorsePair(const Pos &cutoff, const MorseParams &params);
 
         explicit MorsePair(
-            const Pos          &cutOff,
+            const Pos          &cutoff,
             const EnergyPerMol &energyCutoff,
             const Force        &forceCutoff,
             const MorseParams  &params

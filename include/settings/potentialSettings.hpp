@@ -128,7 +128,7 @@ class PotentialSettings
  *
  * @return const Distance&
  */
-inline const Distance& PotentialSettings::getCoulombRadiusCutOff() const
+inline const Distance& PotentialSettings::getCoulombRadiusCutoff() const
 {
     return _coulombConfig.cutoff;
 }

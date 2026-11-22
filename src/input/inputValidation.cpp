@@ -345,7 +345,7 @@ namespace input
      * with the selected potential
      */
     void InputFileReader::_validateCellList(
-        const Distance& coulombRadiusCutOff,
+        const Distance& coulombRadiusCutoff,
         JobType         jobType
     )
     {
@@ -357,7 +357,7 @@ namespace input
                 "Cell lists are not available for pure QM simulations"
             );
 
-        if (coulombRadiusCutOff <= Distance::zero())
+        if (coulombRadiusCutoff <= Distance::zero())
             throw exc::InputFileException(
                 "An active cell list requires rcoulomb to be greater than zero"
             );

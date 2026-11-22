@@ -39,12 +39,12 @@ namespace
         molsys::CellList cellList;
         cellList.setNumberOfCells(cellsPerSide);
         cellList.resizeCells();
-        cellList.setup(simBox, benchmarkSetup::cutOff);
+        cellList.setup(simBox, benchmarkSetup::cutoff);
         GeneralSettings::activateCellList();
 
         for (auto _ : state)
         {
-            cellList.updateCellList(simBox, benchmarkSetup::cutOff);
+            cellList.updateCellList(simBox, benchmarkSetup::cutoff);
             benchmark::DoNotOptimize(cellList.getCells().data());
         }
 

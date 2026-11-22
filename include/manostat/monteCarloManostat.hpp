@@ -47,7 +47,7 @@ namespace manostat
             physicalData::PhysicalData& /*physData*/,
             const Temperature& /*targetTemperature*/,
             const Time& /*timeStep*/,
-            const Distance& /*coulombRadiusCutOff*/
+            const Distance& /*coulombRadiusCutoff*/
         ) override
         {
         }

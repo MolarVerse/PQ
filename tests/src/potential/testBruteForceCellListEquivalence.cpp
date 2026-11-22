@@ -58,7 +58,7 @@ namespace
     // the half-neighbour list in molsys::CellList visits each cell pair exactly
     // once.
     constexpr Distance kBoxEdge        = 15.0 * angstrom;
-    constexpr Distance kCoulombCutOff  = 4.0 * angstrom;
+    constexpr Distance kCoulombCutoff  = 4.0 * angstrom;
     constexpr size_t   kCellsPerSide   = 3;
     constexpr double   kForceTolerance = 1.0e-10;
 
@@ -147,7 +147,7 @@ namespace
         }
 
         const auto pair = std::make_shared<pot::LennardJonesPair>(
-            kCoulombCutOff,
+            kCoulombCutoff,
             LJParams{
                 .c6  = -1.0 * kcal_per_mol * angstrom6,
                 .c12 = 1.0 * kcal_per_mol * angstrom12
@@ -173,7 +173,7 @@ namespace
 TEST(PotentialEquivalence, BruteForceMatchesCellList)
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCoulombCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCoulombCutoff);
     PotentialSettingsUtils::setEnergyCutoff(
         settings.potentialSettings,
         0.0 / angstrom

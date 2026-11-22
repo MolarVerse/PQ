@@ -196,7 +196,7 @@ const Distance& PotentialSettings::getNonCoulombRadiusCutoff() const
  */
 bool PotentialSettings::isNonCoulombRadiusCutoffSetByUser() const
 {
-    return _nonCoulombRadiusCutOff.isSetByUser();
+    return _nonCoulombRadiusCutoff.isSetByUser();
 }
 
 /**
