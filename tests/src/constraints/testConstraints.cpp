@@ -421,13 +421,17 @@ TEST_F(TestConstraints, applyShakeToPositionsConvergesOnAWideTriangle)
     };
 
     constraints::Constraints mdConstraints(settings);
-    auto mdBox = _makeWideTriangleBox(mdConstraints);
+    auto                     mdBox = _makeWideTriangleBox(mdConstraints);
     displace(*mdBox);
 
-    EXPECT_THROW(mdConstraints.applyShake(*mdBox, 1.0 * fs), exc::ShakeException);
+    EXPECT_THROW_MSG(
+        mdConstraints.applyShake(*mdBox, 1.0 * fs),
+        exc::ShakeException,
+        "Shake algorithm did not converge for 3 bonds."
+    );
 
     constraints::Constraints optConstraints(settings);
-    auto optBox = _makeWideTriangleBox(optConstraints);
+    auto                     optBox = _makeWideTriangleBox(optConstraints);
     displace(*optBox);
 
     EXPECT_NO_THROW(optConstraints.applyShakeToPositions(*optBox));
@@ -452,15 +456,23 @@ TEST_F(TestConstraints, projectForcesConvergesOnAWideTriangle)
 
     auto  simulationBox = _makeWideTriangleBox(constraints);
     auto &atoms         = simulationBox->getAtoms();
-    atoms[1]->setForce(linalg::Vec3D(100.0, 0.0, 0.0) * kcal_per_mol / angstrom);
-    atoms[2]->setForce(linalg::Vec3D(0.0, 100.0, 0.0) * kcal_per_mol / angstrom);
+    atoms[1]->setForce(
+        linalg::Vec3D(100.0, 0.0, 0.0) * kcal_per_mol / angstrom
+    );
+    atoms[2]->setForce(
+        linalg::Vec3D(0.0, 100.0, 0.0) * kcal_per_mol / angstrom
+    );
 
     for (const auto &atom : atoms)
     {
         atom->setVelocity(1.0 * fs * atom->getForce() / atom->getMass());
     }
 
-    EXPECT_THROW(constraints.applyRattle(*simulationBox), exc::ShakeException);
+    EXPECT_THROW_MSG(
+        constraints.applyRattle(*simulationBox),
+        exc::ShakeException,
+        "Rattle algorithm did not converge for 3 bonds."
+    );
 
     for (const auto &atom : atoms)
     {
@@ -469,11 +481,8 @@ TEST_F(TestConstraints, projectForcesConvergesOnAWideTriangle)
 
     EXPECT_NO_THROW(constraints.projectForces(*simulationBox));
 
-    for (const auto &[first, second] : std::vector<std::pair<size_t, size_t>>{
-             {0, 1},
-             {0, 2},
-             {1, 2}
-         })
+    for (const auto &[first, second] :
+         std::vector<std::pair<size_t, size_t>>{{0, 1}, {0, 2}, {1, 2}})
     {
         const auto dAccel =
             atoms[first]->getForce() / atoms[first]->getMass() -
@@ -482,9 +491,8 @@ TEST_F(TestConstraints, projectForcesConvergesOnAWideTriangle)
             atoms[first]->getPosition() - atoms[second]->getPosition();
 
         EXPECT_NEAR(
-            dot(dAccel, bondVector).numerical_value_in(
-                kcal_per_mol / g_per_mol
-            ),
+            dot(dAccel, bondVector)
+                .numerical_value_in(kcal_per_mol / g_per_mol),
             0.0,
             1e-5
         );
