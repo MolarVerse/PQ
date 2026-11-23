@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_WITH_PYTHON_BINDINGS
+#ifdef WITH_PYTHON_BINDINGS
 
 #include <Python.h>
 #include <gtest/gtest.h>
@@ -102,4 +102,4 @@ TEST(TestPythonSelection, missingPQAnalysisThrows)
     );
 }
 
-#endif   // WITH_WITH_PYTHON_BINDINGS
+#endif   // WITH_PYTHON_BINDINGS

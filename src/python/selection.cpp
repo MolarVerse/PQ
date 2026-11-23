@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_WITH_PYTHON_BINDINGS
+#ifdef WITH_PYTHON_BINDINGS
 
 #include "selection.hpp"
 
@@ -190,4 +190,4 @@ std::vector<int> pq_python::select(
     return result;
 }
 
-#endif   // WITH_WITH_PYTHON_BINDINGS
+#endif   // WITH_PYTHON_BINDINGS
