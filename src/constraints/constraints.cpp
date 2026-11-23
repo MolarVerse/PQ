@@ -101,11 +101,13 @@ namespace constraints
             return;
 
         if (_constraintSettings->isShakeActivated())
+        {
             _applyShake(
                 simulationBox,
                 timeStep,
                 _constraintSettings->getShakeMaxIter()
             );
+        }
 
         if (_constraintSettings->isMShakeActivated())
             _applyMShake(simulationBox, timeStep);
@@ -207,7 +209,9 @@ namespace constraints
             return;
 
         if (_constraintSettings->isShakeActivated())
+        {
             _applyRattle(_constraintSettings->getRattleMaxIter());
+        }
 
         if (_constraintSettings->isMShakeActivated())
             _applyMRattle(simulationBox);

@@ -188,8 +188,9 @@ class TestConstraints : public ::testing::Test
      *
      * @return std::unique_ptr<molsys::SimulationBox>
      */
-    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox>
-    _makeWideTriangleBox(constraints::Constraints &constraints)
+    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox> _makeWideTriangleBox(
+        constraints::Constraints &constraints
+    )
     {
         const auto halfAngle = 70.0 * std::numbers::pi / 180.0;
         const auto masses    = std::vector<double>{16.0, 1.0, 1.0};
@@ -230,11 +231,8 @@ class TestConstraints : public ::testing::Test
 
         auto *moleculePtr = simulationBox->getMolecules().data();
 
-        for (const auto &[first, second] : std::vector<std::pair<size_t, size_t>>{
-                 {0, 1},
-                 {0, 2},
-                 {1, 2}
-             })
+        for (const auto &[first, second] :
+             std::vector<std::pair<size_t, size_t>>{{0, 1}, {0, 2}, {1, 2}})
         {
             constraints.addBondConstraint(
                 constraints::BondConstraint(
