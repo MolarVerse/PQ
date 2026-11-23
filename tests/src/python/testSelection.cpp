@@ -22,13 +22,16 @@
 
 #ifdef WITH_WITH_PYTHON_BINDINGS
 
+#include <Python.h>
 #include <gtest/gtest.h>
 
 #include <filesystem>
 #include <fstream>
 #include <vector>
 
+#include "exceptions.hpp"
 #include "selection.hpp"
+#include "throwWithMessage.hpp"
 
 TEST(TestPythonSelection, selectsAtomsFromRestartFile)
 {
@@ -54,6 +57,49 @@ TEST(TestPythonSelection, selectsAtomsFromRestartFile)
     );
 
     std::filesystem::remove(restartFile);
+}
+
+TEST(TestPythonSelection, missingPQAnalysisThrows)
+{
+    if (::Py_IsInitialized() == 0)
+    {
+        ::Py_Initialize();
+    }
+
+    ASSERT_EQ(
+        ::PyRun_SimpleString(
+            "import sys\n"
+            "class _PQBlocker:\n"
+            "    def find_spec(self, name, path=None, target=None):\n"
+            "        if name.split('.')[0] == 'PQAnalysis':\n"
+            "            raise ImportError('PQAnalysis blocked by test')\n"
+            "_pqBlocker = _PQBlocker()\n"
+            "_pqSavedModules = {name: module for name, module in "
+            "sys.modules.items() if name.split('.')[0] == 'PQAnalysis'}\n"
+            "for _pqName in _pqSavedModules:\n"
+            "    del sys.modules[_pqName]\n"
+            "sys.meta_path.insert(0, _pqBlocker)\n"
+        ),
+        0
+    );
+
+    EXPECT_THROW_MSG(
+        pq_python::select("O", "missing.rst", ""),
+        exc::InputFileException,
+        "Selection \"O\" needs the Python package PQAnalysis, but "
+        "\"PQAnalysis.topology.api\" could not be imported "
+        "(ImportError: PQAnalysis blocked by test). Install it into the "
+        "Python PQ was built with: "
+        "pip install PQAnalysis"
+    );
+
+    ASSERT_EQ(
+        ::PyRun_SimpleString(
+            "sys.meta_path.remove(_pqBlocker)\n"
+            "sys.modules.update(_pqSavedModules)\n"
+        ),
+        0
+    );
 }
 
 #endif   // WITH_WITH_PYTHON_BINDINGS

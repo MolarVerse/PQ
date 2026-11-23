@@ -1,0 +1,1 @@
+- `pq_python::select` checks every Python C-API result and throws `InputFileException` with the Python error; `testSelection` covers a blocked PQAnalysis import (#1334).

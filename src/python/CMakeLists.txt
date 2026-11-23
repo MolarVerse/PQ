@@ -12,6 +12,7 @@ target_include_directories(pq_python
 target_link_libraries(pq_python
     PUBLIC
     Python::Python
+    exceptions
 )
 
 install(TARGETS pq_python

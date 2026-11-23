@@ -1,0 +1,1 @@
+- PQ now stops with a clear error that asks to install PQAnalysis when a Python selection cannot import it, instead of crashing (#1334).
