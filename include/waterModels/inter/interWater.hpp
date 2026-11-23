@@ -190,7 +190,7 @@ namespace waterModel
         );
 
        private:
-        void _setNonCoulombCutOffRadii(
+        void _setNonCoulombCutoffRadii(
             const PotentialSettings &potentialSettings
         ) const;
         void _initNonCoulombPairs() const;
@@ -201,7 +201,7 @@ namespace waterModel
         const PotentialSettings &potentialSettings
     )
     {
-        _setNonCoulombCutOffRadii(potentialSettings);
+        _setNonCoulombCutoffRadii(potentialSettings);
         _initNonCoulombPairs();
     }
 

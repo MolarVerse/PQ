@@ -32,16 +32,16 @@ namespace pot
      *
      * @param vanDerWaalsType1
      * @param vanDerWaalsType2
-     * @param cutOff
+     * @param cutoff
      * @param params
      */
     LennardJonesPair::LennardJonesPair(
         ExtVdwType      vanDerWaalsType1,
         ExtVdwType      vanDerWaalsType2,
-        const Pos      &cutOff,
+        const Pos      &cutoff,
         const LJParams &params
     )
-        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutOff),
+        : NonCoulombPair(vanDerWaalsType1, vanDerWaalsType2, cutoff),
           _params(params)
     {
     }
@@ -49,32 +49,32 @@ namespace pot
     /**
      * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
      *
-     * @param cutOff
+     * @param cutoff
      * @param params
      */
     LennardJonesPair::LennardJonesPair(
-        const Pos      &cutOff,
+        const Pos      &cutoff,
         const LJParams &params
     )
-        : NonCoulombPair(cutOff), _params(params)
+        : NonCoulombPair(cutoff), _params(params)
     {
     }
 
     /**
      * @brief Construct a new Lennard Jones Pair:: Lennard Jones Pair object
      *
-     * @param cutOff
+     * @param cutoff
      * @param energyCutoff
      * @param forceCutoff
      * @param params
      */
     LennardJonesPair::LennardJonesPair(
-        const Pos          &cutOff,
+        const Pos          &cutoff,
         const EnergyPerMol &energyCutoff,
         const Force        &forceCutoff,
         const LJParams     &params
     )
-        : NonCoulombPair(cutOff, energyCutoff, forceCutoff), _params(params)
+        : NonCoulombPair(cutoff, energyCutoff, forceCutoff), _params(params)
     {
     }
 

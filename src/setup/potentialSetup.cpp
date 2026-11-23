@@ -266,7 +266,7 @@ namespace setup
         log.writeEmptyLine();
 
         const auto coulRCut =
-            _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
+            _engine.getSettings().potentialSettings.getCoulombRadiusCutoff();
         InvDistance wolfParam = InvDistance::zero();
         auto        rfEpsilon = 0.0;
 

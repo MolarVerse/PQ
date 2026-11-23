@@ -218,27 +218,27 @@ namespace waterModel
      * H-H are only updated when oxygen-only non-Coulomb interactions are
      * disabled.
      */
-    void InterWater::_setNonCoulombCutOffRadii(
+    void InterWater::_setNonCoulombCutoffRadii(
         const PotentialSettings &potentialSettings
     ) const
     {
-        const auto radialCutOff =
-            potentialSettings.isNonCoulombRadiusCutOffSetByUser()
-                ? potentialSettings.getNonCoulombRadiusCutOff()
-                : potentialSettings.getCoulombRadiusCutOff();
+        const auto radialCutoff =
+            potentialSettings.isNonCoulombRadiusCutoffSetByUser()
+                ? potentialSettings.getNonCoulombRadiusCutoff()
+                : potentialSettings.getCoulombRadiusCutoff();
 
-        const auto setCutOff = [radialCutOff](const auto &nonCoulombPair)
+        const auto setCutoff = [radialCutoff](const auto &nonCoulombPair)
         {
             if (nonCoulombPair != nullptr)
-                nonCoulombPair->set_radialCutoff(radialCutOff);
+                nonCoulombPair->set_radialCutoff(radialCutoff);
         };
 
-        setCutOff(_state.nonCoulombPairOO);
+        setCutoff(_state.nonCoulombPairOO);
 
         if (!_state.oxygenOnlyNonCoulomb)
         {
-            setCutOff(_state.nonCoulombPairOH);
-            setCutOff(_state.nonCoulombPairHH);
+            setCutoff(_state.nonCoulombPairOH);
+            setCutoff(_state.nonCoulombPairHH);
         }
     }
 
@@ -252,20 +252,20 @@ namespace waterModel
      */
     void InterWater::_initNonCoulombPairs() const
     {
-        const auto setForceAndEnergyCutOff = [](const auto &nonCoulombPair)
+        const auto setForceAndEnergyCutoff = [](const auto &nonCoulombPair)
         {
             if (nonCoulombPair == nullptr)
                 return;
 
-            const auto [energyCutOff, forceCutOff] =
+            const auto [energyCutoff, forceCutoff] =
                 nonCoulombPair->calculate(nonCoulombPair->get_radialCutoff());
-            nonCoulombPair->set_energyCutoff(energyCutOff);
-            nonCoulombPair->set_forceCutoff(forceCutOff);
+            nonCoulombPair->set_energyCutoff(energyCutoff);
+            nonCoulombPair->set_forceCutoff(forceCutoff);
         };
 
-        setForceAndEnergyCutOff(_state.nonCoulombPairOO);
-        setForceAndEnergyCutOff(_state.nonCoulombPairOH);
-        setForceAndEnergyCutOff(_state.nonCoulombPairHH);
+        setForceAndEnergyCutoff(_state.nonCoulombPairOO);
+        setForceAndEnergyCutoff(_state.nonCoulombPairOH);
+        setForceAndEnergyCutoff(_state.nonCoulombPairHH);
     }
 
 }   // namespace waterModel

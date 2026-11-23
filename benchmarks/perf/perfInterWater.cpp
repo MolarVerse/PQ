@@ -64,8 +64,8 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(CUTOFF);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(CUTOFF);
     settings.waterModelSettings.setWaterInterModelByUser(
         WaterInterModel::SPC_E
     );
@@ -182,11 +182,10 @@ int main()
     molsys::CellList cellList;
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
-    cellList.setup(simBox, settings.potentialSettings.getCoulombRadiusCutOff());
-    cellList.updateCellList(
-        simBox,
-        settings.potentialSettings.getCoulombRadiusCutOff()
-    );
+    const auto& coulombCutoff =
+        settings.potentialSettings.getCoulombRadiusCutoff();
+    cellList.setup(simBox, coulombCutoff);
+    cellList.updateCellList(simBox, coulombCutoff);
 
     auto physicalData = physicalData::PhysicalData();
 

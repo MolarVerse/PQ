@@ -39,10 +39,10 @@ namespace pot
     ) const
     {
         const auto dInv                = 1.0 / distance;
-        const auto deltaCutOff         = _get_cutoff() - distance;
-        const auto forceCutOffIntegral = _get_forceCutoff() * deltaCutOff;
+        const auto deltaCutoff         = _get_cutoff() - distance;
+        const auto forceCutoffIntegral = _get_forceCutoff() * deltaCutoff;
 
-        auto energy = dInv - _get_energyCutoff() - forceCutOffIntegral;
+        auto energy = dInv - _get_energyCutoff() - forceCutoffIntegral;
         auto force  = (dInv * dInv) - _get_forceCutoff();
 
         const auto prefactor = chargeProduct * coulomb_prefactor;

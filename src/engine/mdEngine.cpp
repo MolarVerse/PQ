@@ -187,7 +187,7 @@ namespace engine
             get_physicalData(),
             currentTargetTemperature,
             timeStep,
-            getSettings().potentialSettings.getCoulombRadiusCutOff()
+            getSettings().potentialSettings.getCoulombRadiusCutoff()
         );
 
         const auto driftWarning = _resetKinetics.checkMomentumDrift(

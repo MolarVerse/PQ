@@ -379,7 +379,7 @@ namespace engine
                     data,
                     _getKinetics().getCurrentTargetTemperature(),
                     timeStep,
-                    getSettings().potentialSettings.getCoulombRadiusCutOff()
+                    getSettings().potentialSettings.getCoulombRadiusCutoff()
                 );
             }
         }
@@ -463,7 +463,7 @@ namespace engine
                 data,
                 _getKinetics().getCurrentTargetTemperature(),
                 timeStep,
-                getSettings().potentialSettings.getCoulombRadiusCutOff()
+                getSettings().potentialSettings.getCoulombRadiusCutoff()
             );
         }
     }

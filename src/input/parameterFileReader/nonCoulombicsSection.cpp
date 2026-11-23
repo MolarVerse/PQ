@@ -163,8 +163,8 @@ namespace input::parameterFile
      * 2. global van der Waals type 2
      * 3. c6
      * 4. c12
-     * 5. cutOff (optional); if not given or -1, the global Coulomb radius
-     * cutOff is used
+     * 5. cutoff (optional); if not given or -1, the global Coulomb radius
+     * cutoff is used
      *
      * @param lineElements
      * @param engine
@@ -198,16 +198,16 @@ namespace input::parameterFile
         const auto c6        = stod(lineElements[2]);
         const auto c12       = stod(lineElements[3]);
 
-        auto cutOff = -1.0 * angstrom;
+        auto cutoff = -1.0 * angstrom;
 
         if (lineElements.size() == 5)
-            cutOff = stod(lineElements[4]) * angstrom;
+            cutoff = stod(lineElements[4]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
+        const auto coulombCutoff = _potentialSettings->getCoulombRadiusCutoff();
 
-        if (cutOff < 0.0)
-            cutOff = coulombCutOff;
+        if (cutoff < 0.0)
+            cutoff = coulombCutoff;
 
         auto &pot       = engine.getPotential()->getNonCoulombPotential();
         auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
@@ -221,7 +221,7 @@ namespace input::parameterFile
             std::make_shared<pot::LennardJonesPair>(
                 atomType1,
                 atomType2,
-                cutOff,
+                cutoff,
                 params
             )
         );
@@ -237,8 +237,8 @@ namespace input::parameterFile
      * 3. a
      * 4. dRho
      * 5. c6
-     * 6. cutOff (optional); if not given or -1, the global Coulomb radius
-     * cutOff is used
+     * 6. cutoff (optional); if not given or -1, the global Coulomb radius
+     * cutoff is used
      *
      * @param lineElements
      * @param engine
@@ -272,15 +272,15 @@ namespace input::parameterFile
         const auto dRho      = stod(lineElements[3]) / angstrom;
         const auto c6        = stod(lineElements[4]);
 
-        auto cutOff = -1.0 * angstrom;
+        auto cutoff = -1.0 * angstrom;
         if (6 == lineElements.size())
-            cutOff = stod(lineElements[5]) * angstrom;
+            cutoff = stod(lineElements[5]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
+        const auto coulombCutoff = _potentialSettings->getCoulombRadiusCutoff();
 
-        if (cutOff < 0.0)
-            cutOff = coulombCutOff;
+        if (cutoff < 0.0)
+            cutoff = coulombCutoff;
 
         auto      &pot       = engine.getPotential()->getNonCoulombPotential();
         auto      &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
@@ -294,7 +294,7 @@ namespace input::parameterFile
             std::make_shared<pot::BuckinghamPair>(
                 atomType1,
                 atomType2,
-                cutOff,
+                cutoff,
                 params
             )
         );
@@ -310,8 +310,8 @@ namespace input::parameterFile
      * 3. dissociationEnergy
      * 4. wellWidth
      * 5. equilibriumDistance
-     * 6. cutOff (optional); if not given or -1, the global Coulomb radius
-     * cutOff is used
+     * 6. cutoff (optional); if not given or -1, the global Coulomb radius
+     * cutoff is used
      *
      * @param lineElements
      * @param engine
@@ -345,15 +345,15 @@ namespace input::parameterFile
         const auto wellWidth           = stod(lineElements[3]) / angstrom;
         const auto equilibriumDistance = stod(lineElements[4]) * angstrom;
 
-        auto cutOff = -1.0 * angstrom;
+        auto cutoff = -1.0 * angstrom;
         if (6 == lineElements.size())
-            cutOff = stod(lineElements[5]) * angstrom;
+            cutoff = stod(lineElements[5]) * angstrom;
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        const auto coulombCutOff = _potentialSettings->getCoulombRadiusCutOff();
+        const auto coulombCutoff = _potentialSettings->getCoulombRadiusCutoff();
 
-        if (cutOff < 0.0)
-            cutOff = coulombCutOff;
+        if (cutoff < 0.0)
+            cutoff = coulombCutoff;
 
         auto &pot       = engine.getPotential()->getNonCoulombPotential();
         auto &potential = dynamic_cast<pot::ForceFieldNonCoulomb &>(pot);
@@ -368,7 +368,7 @@ namespace input::parameterFile
             std::make_shared<pot::MorsePair>(
                 atomType1,
                 atomType2,
-                cutOff,
+                cutoff,
                 params
             )
         );

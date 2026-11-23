@@ -111,7 +111,7 @@ inline void TestGuffDatReader::SetUp()
     _engine->get_simulationBox().addMoleculeType(moleculeType2);
     _engine->get_simulationBox().addMolecule(molecule1);
 
-    _settings.potentialSettings.setCoulombRadiusCutOffByUser(12.5 * angstrom);
+    _settings.potentialSettings.setCoulombRadiusCutoffByUser(12.5 * angstrom);
 
     _engine->makePotential(pot::PotentialBruteForce(_settings.hybridSettings));
     _engine->getPotential()->makeNonCoulombPotential(pot::GuffNonCoulomb());

@@ -48,8 +48,6 @@ class GeneralSettings
     static inline uint_fast32_t _randomSeed;
     static inline bool          _isRandomSeedset = false;
 
-    static inline size_t _dimensionality = defaults::DIMENSIONALITY_DEFAULT;
-
     static inline VirialType _virial = VirialType::MOLECULAR;
 
     // setting velocity verlet as default integrator type for backward
@@ -77,8 +75,6 @@ class GeneralSettings
     static void setRandomSeed(uint_fast32_t randomSeed);
     static void setIsRandomSeedSet(bool isRandomSeedSet);
 
-    static void setDimensionality(size_t dimensionality);
-
     static void setVirialType(VirialType virialType);
     static void setIntegratorType(IntegratorType integratorType);
 
@@ -96,8 +92,6 @@ class GeneralSettings
 
     [[nodiscard]] static uint_fast32_t getRandomSeed();
     [[nodiscard]] static bool          isRandomSeedSet();
-
-    [[nodiscard]] static size_t getDimensionality();
 
     [[nodiscard]] static VirialType     getVirialType();
     [[nodiscard]] static IntegratorType getIntegratorType();

@@ -126,7 +126,14 @@ namespace input
             .title = "Dimensionality",
             .description =
                 "Specifies the dimensionality of the simulation (3 or 3d)",
-            .errorMessage = "Dimensionality must be 3 or 3d"
+            .errorMessage = "Dimensionality must be 3 or 3d",
+            .lifecycle    = deprecate(
+                {.deprecatedSince = v1_1_0,
+                    .removedIn       = v2_0_0,
+                    .message = "Since this key is only possible to be used for "
+                                  "3-dimensional simulations, it will be removed in "
+                                  "future versions"}
+            )
         };
 
         auto customParser = [](std::string_view value) -> std::optional<size_t>
@@ -142,8 +149,12 @@ namespace input
             return std::nullopt;
         };
 
-        const auto setValue = [](size_t value)
-        { GeneralSettings::setDimensionality(value); };
+        const auto setValue = [](size_t /*value*/)
+        {
+            // do nothing as this key had always only one allowed value
+            // (3-dimensional) and if it would not have been three it would have
+            // even be used wrong -- key will be removed with version 2.0.0
+        };
 
         auto &key = _getRegistry().registerKey(
             KeyRegistry<size_t>{
@@ -162,7 +173,8 @@ namespace input
             .name  = "floating_point_type",
             .title = "Floating Point Type",
             .description =
-                "Specifies the floating point type for the simulation (float "
+                "Specifies the floating point type for the simulation "
+                "(float "
                 "or double)"
         };
 

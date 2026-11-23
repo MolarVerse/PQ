@@ -35,10 +35,10 @@
 #include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
-#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
+#include "version.hpp"
 
 /**
  * @brief tests writing timestep metadata
@@ -74,7 +74,10 @@ TEST_F(TestEnergyOutput, columnHeader)
     std::ifstream file("default.en");
     std::string   line;
     std::getline(file, line);
-    EXPECT_EQ(line, std::format("# PQ energy file {}", sysinfo::VERSION));
+    EXPECT_EQ(
+        line,
+        std::format("# PQ energy file {}", CURRENT_VERSION.to_string())
+    );
     std::getline(file, line);
     EXPECT_EQ(
         line,
