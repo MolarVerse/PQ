@@ -31,6 +31,7 @@
 #include "adam.hpp"
 #include "constant.hpp"
 #include "constantDecay.hpp"
+#include "constraints.hpp"
 #include "convergenceSettings.hpp"
 #include "enums/hessian.hpp"
 #include "enums/optimizer.hpp"
@@ -50,6 +51,7 @@
 #include "optimizerSettings.hpp"
 #include "outputFileSettings.hpp"
 #include "physicalData.hpp"
+#include "simulationBox.hpp"
 #include "stdoutOutput.hpp"
 #include "steepestDescent.hpp"
 #include "terminalProgressBar.hpp"
@@ -403,8 +405,9 @@ namespace engine
         _converged  = false;
         _optStopped = false;
 
-        _evaluator->evaluate(get_physicalData());
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        getSimulationBox().updateOldPositions();
+        getConstraints()->applyShakeToPositions(getSimulationBox());
+        _evaluateOptimization();
 
         const auto &outputFileSettings = getSettings().outputFiles;
         const auto &jobType = getSettings().generalSettings.getJobtype();
@@ -447,10 +450,9 @@ namespace engine
     void HessianEngine::_takeOptimizationStep()
     {
         _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
+        getConstraints()->applyShakeToPositions(getSimulationBox());
 
-        _evaluator->evaluate(get_physicalData());
-
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _evaluateOptimization();
 
         _converged = _optimizer->hasConverged();
 
@@ -484,6 +486,20 @@ namespace engine
         }
 
         _setStep(getStep() + 1);
+    }
+
+    /**
+     * @brief evaluate like mm-opt, with SHAKE, M-SHAKE and distance
+     * constraints, and add the energy to the optimizer history
+     */
+    void HessianEngine::_evaluateOptimization()
+    {
+        _optimizer->updateHistory(OptEngine::evaluateConstrained(
+            *_evaluator,
+            *getConstraints(),
+            getSimulationBox(),
+            get_physicalData()
+        ));
     }
 
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()

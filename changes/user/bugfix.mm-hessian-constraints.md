@@ -1,0 +1,1 @@
+- `mm-hessian` now keeps SHAKE, M-SHAKE and distance constraints during the pre-optimization; the Hessian is the unconstrained one at that geometry (#1331).

@@ -101,7 +101,7 @@ Possible options are:
 
    5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. With :ref:`shake <shakeKey>` = ``on`` or ``mshake`` the constrained bonds keep their length and the forces are projected onto the constraints, so convergence uses the constrained forces (see ``examples/h2o_mm_opt_shake`` and ``examples/h2o_mm_opt_mshake``). In ``mm-opt`` SHAKE and RATTLE run up to at least 1000 iterations, so also SHAKE on all three distances of a molecule converges with the default ``shake-iter`` and ``rattle-iter``. :ref:`distance-constraints <distanceConstraintsKey>` add their penalty energy and forces with the static force constant; ``dforce_constant_dt`` is not used (see ``examples/ar3_mm_opt_distance``). See ``examples/ar3_mm_opt`` for a small input.
 
-   6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
+   6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry. The pre-optimization applies SHAKE, M-SHAKE and distance constraints like ``mm-opt``. The Hessian is then the one of the unconstrained MM energy at the constrained minimum: no projection onto the constraints and no distance-constraint penalty.
 
 .. _timestepKey:
 

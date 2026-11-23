@@ -1,0 +1,1 @@
+- `HessianEngine` evaluates the pre-optimization with the new `OptEngine::evaluateConstrained`, shared with `mm-opt`; `regression_mm_opt_constraints` runs `h2o_mm_opt_shake` as `mm-hessian` (#1331).

@@ -303,7 +303,8 @@ namespace constraints
     /**
      * @brief removes the constraint components from the forces
      *
-     * @details applies RATTLE to the velocities M^-1 F dt, so the forces
+     * @details takes the bond references at the current positions and
+     * applies RATTLE to the velocities M^-1 F dt, so the forces
      * become M P M^-1 F with P the RATTLE projection. They vanish exactly at a
      * constrained minimum. The velocities are kept. RATTLE iterates up to at
      * least OPT_MAX_ITER times.
@@ -316,6 +317,8 @@ namespace constraints
         {
             return;
         }
+
+        calculateConstraintBondRefs(simulationBox);
 
         const auto velocities = simulationBox.getVelocities();
 

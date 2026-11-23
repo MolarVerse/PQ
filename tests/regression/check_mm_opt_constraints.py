@@ -10,6 +10,8 @@
 5. ``ar3_mm_opt_distance``: a distance constraint pulls atoms 1 and 2 from
    4.2 Å to its target of 4.5 Å; the argon attraction keeps them slightly
    closer.
+6. ``h2o_mm_opt_shake`` as ``mm-hessian``: the pre-optimization keeps the
+   SHAKE bonds and the Hessian is a symmetric 9x9 matrix.
 """
 
 import argparse
@@ -105,21 +107,21 @@ def expect(values, targets, tolerance):
     ]
 
 
-def check_shake(positions, _energy):
+def check_shake(positions, _energy, _prefix):
     geometry = water_geometry(positions)
     return expect(geometry, {"O-H1": 0.9572, "O-H2": 0.9572}, 1e-6) + expect(
         geometry, {"H-O-H": 104.5}, 1e-2
     )
 
 
-def check_stiff(positions, _energy):
+def check_stiff(positions, _energy, _prefix):
     geometry = water_geometry(positions)
     return expect(
         geometry, {"O-H1": 0.9572, "O-H2": 0.9572, "H-O-H": 104.5}, 1e-3
     )
 
 
-def check_rigid_dimer(positions, energy):
+def check_rigid_dimer(positions, energy, _prefix):
     problems = []
     for first in (0, 3):
         oxygen, hydrogen1, hydrogen2 = positions[first : first + 3]
@@ -133,9 +135,25 @@ def check_rigid_dimer(positions, energy):
     return problems + expect({"E": energy}, {"E": DIMER_ENERGY}, 1e-4)
 
 
-def check_distance(positions, _energy):
+def check_distance(positions, _energy, _prefix):
     distance = {"Ar1-Ar2": math.dist(positions[0], positions[1])}
     return expect(distance, {"Ar1-Ar2": 4.5}, 2e-3)
+
+
+def check_hessian(positions, energy, prefix):
+    rows = [
+        [float(value) for value in line.split()]
+        for line in prefix.with_suffix(".hessian").read_text().splitlines()
+    ]
+    if len(rows) != 9 or any(len(row) != 9 for row in rows):
+        return [f"Hessian has shape {len(rows)}x{len(rows[0]) if rows else 0}"]
+    problems = [
+        f"Hessian[{row}][{col}] != Hessian[{col}][{row}]"
+        for row in range(9)
+        for col in range(row + 1, 9)
+        if rows[row][col] != rows[col][row]
+    ]
+    return problems + check_shake(positions, energy, prefix)
 
 
 CASES = [
@@ -163,6 +181,18 @@ CASES = [
         {"shake.top": RIGID_SHAKE},
         "h2o-dimer-opt",
         check_rigid_dimer,
+    ),
+    (
+        "shake mm-hessian",
+        "h2o_mm_opt_shake",
+        {
+            "jobtype = mm-opt;": "jobtype = mm-hessian;\n"
+            "hessian_file = h2o-opt.hessian;\n"
+            "hessian_info_file = h2o-opt.hessian.info;",
+        },
+        {},
+        "h2o-opt",
+        check_hessian,
     ),
     (
         "distance constraint",
@@ -195,7 +225,7 @@ def main():
 
             positions = read_positions(directory / f"{prefix}.rst")
             energy = read_energy(directory / f"{prefix}.en")
-            for problem in check(positions, energy):
+            for problem in check(positions, energy, directory / prefix):
                 problems.append(f"{name}: {problem}")
 
     for problem in problems:

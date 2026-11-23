@@ -28,11 +28,13 @@
 #include <string>
 #include <vector>
 
+#include "constraints.hpp"
 #include "engine.hpp"
 #include "evaluator.hpp"
 #include "learningRateStrategy.hpp"
 #include "optimizer.hpp"
 #include "physicalData.hpp"
+#include "simulationBox.hpp"
 #include "unit_types.hpp"
 
 namespace engine
@@ -79,6 +81,12 @@ namespace engine
         [[nodiscard]] static std::string  notConvergedMessage(size_t nEpochs);
         [[nodiscard]] static EnergyPerMol optimizedEnergy(
             const physicalData::PhysicalData &physicalData
+        );
+        [[nodiscard]] static EnergyPerMol evaluateConstrained(
+            opt::Evaluator             &evaluator,
+            constraints::Constraints   &constraints,
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData
         );
 
         /***************************

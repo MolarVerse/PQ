@@ -67,6 +67,7 @@ namespace engine
         );
         void _runOptimization();
         void _takeOptimizationStep();
+        void _evaluateOptimization();
 
         [[nodiscard]]
         std::shared_ptr<opt::Optimizer> _setupEmptyOptimizer();
