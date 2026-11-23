@@ -63,7 +63,7 @@
 namespace
 {
     constexpr MolType kWaterType{1};
-    constexpr auto    kCutOff = 4.0 * angstrom;
+    constexpr auto    kCutoff = 4.0 * angstrom;
 
     struct WaterGeometry
     {
@@ -303,7 +303,7 @@ namespace
         }
 
         const auto pair = std::make_shared<pot::LennardJonesPair>(
-            kCutOff,
+            kCutoff,
             LJParams{
                 .c6  = -1.0 * kcal_per_mol * angstrom6,
                 .c12 = 1.0 * kcal_per_mol * angstrom12
@@ -341,9 +341,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateCoreToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -352,9 +350,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateLayerToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -363,9 +359,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateOuterToOuterForces(
             const waterModel::InterWaterState & /*state*/,
@@ -374,9 +368,7 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         void calculateHotspotSmoothingMMForces(
             const waterModel::InterWaterState & /*state*/,
@@ -385,10 +377,63 @@ namespace
             const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
             const molsys::CellList & /*cellList*/,
             const PotentialSettings & /*potentialSettings*/
-        ) override
-        {
-        }
+        ) override;
     };
+
+    void ExposedInterWaterStrategy::calculate(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateCoreToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateLayerToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateOuterToOuterForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
+
+    void ExposedInterWaterStrategy::calculateHotspotSmoothingMMForces(
+        const waterModel::InterWaterState & /*state*/,
+        molsys::SimulationBox & /*simBox*/,
+        physicalData::PhysicalData & /*data*/,
+        const std::shared_ptr<pot::CoulombPotential> & /*coulomb*/,
+        const molsys::CellList & /*cellList*/,
+        const PotentialSettings & /*potentialSettings*/
+    )
+    {
+    }
 
     molsys::SimulationBox makeHybridWaterBox()
     {
@@ -483,8 +528,8 @@ namespace
         molsys::CellList cellList;
         cellList.setNumberOfCells(3);
         cellList.resizeCells();
-        cellList.setup(simulationBox, kCutOff);
-        cellList.updateCellList(simulationBox, kCutOff);
+        cellList.setup(simulationBox, kCutoff);
+        cellList.updateCellList(simulationBox, kCutoff);
         cellList.assignMoleculeHybridZoneIndices();
         cellList.assignWaterMoleculeIndices(simulationBox, waterModelSettings);
         return cellList;
@@ -698,7 +743,7 @@ TEST(IntraWater, MtrModelsStayFiniteNextToTheDegenerateGeometries)
 TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
     PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
     PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
@@ -723,7 +768,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
     const auto coulomb =
         std::make_shared<pot::CoulombShiftedPotential>(potentialSettings);
     const pot::LennardJonesPair nonCoulomb(
-        kCutOff,
+        kCutoff,
         LJParams{
             .c6  = -1.0 * kcal_per_mol * angstrom6,
             .c12 = 1.0 * kcal_per_mol * angstrom12
@@ -735,7 +780,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 
     EXPECT_DOUBLE_EQ(
         nonCoulomb.get_radialCutoff().numerical_value_in(angstrom),
-        kCutOff.numerical_value_in(angstrom)
+        kCutoff.numerical_value_in(angstrom)
     );
 
     EnergyPerMol coulombEnergy    = EnergyPerMol::zero();
@@ -744,7 +789,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
         atom1,
         atom2,
         coulomb,
-        kCutOff * kCutOff,
+        kCutoff * kCutoff,
         simBox.getBox(),
         nonCoulomb,
         coulombEnergy,
@@ -764,7 +809,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             atom1,
             atom2,
             coulomb,
-            kCutOff * kCutOff,
+            kCutoff * kCutoff,
             simBox.getBox(),
             coulombEnergy
         );
@@ -786,7 +831,7 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
             atom1,
             atom2,
             coulomb,
-            kCutOff * kCutOff,
+            kCutoff * kCutoff,
             simBox.getBox(),
             nonCoulomb,
             coulombEnergy,
@@ -813,25 +858,25 @@ TEST(InterWater, PairEvaluatorsApplySymmetricAndOneWayForces)
 TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 {
     Settings settings;
-    settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutoff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
 
     auto oxygenOxygen = std::make_unique<pot::LennardJonesPair>(
-        kCutOff,
+        kCutoff,
         LJParams{
             .c6  = -1.0 * kcal_per_mol * angstrom6,
             .c12 = 1.0 * kcal_per_mol * angstrom12
         }
     );
     auto oxygenHydrogen = std::make_unique<pot::LennardJonesPair>(
-        kCutOff,
+        kCutoff,
         LJParams{
             .c6  = -1.0 * kcal_per_mol * angstrom6,
             .c12 = 1.0 * kcal_per_mol * angstrom12
         }
     );
     auto hydrogenHydrogen = std::make_unique<pot::LennardJonesPair>(
-        kCutOff,
+        kCutoff,
         LJParams{
             .c6  = -1.0 * kcal_per_mol * angstrom6,
             .c12 = 1.0 * kcal_per_mol * angstrom12
@@ -885,15 +930,15 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 
     EXPECT_DOUBLE_EQ(
         oxygenOxygenView->get_radialCutoff().numerical_value_in(angstrom),
-        kCutOff.numerical_value_in(angstrom)
+        kCutoff.numerical_value_in(angstrom)
     );
     EXPECT_DOUBLE_EQ(
         oxygenHydrogenView->get_radialCutoff().numerical_value_in(angstrom),
-        kCutOff.numerical_value_in(angstrom)
+        kCutoff.numerical_value_in(angstrom)
     );
     EXPECT_DOUBLE_EQ(
         hydrogenHydrogenView->get_radialCutoff().numerical_value_in(angstrom),
-        kCutOff.numerical_value_in(angstrom)
+        kCutoff.numerical_value_in(angstrom)
     );
     EXPECT_TRUE(isfinite(oxygenOxygenView->get_energyCutoff()));
     EXPECT_TRUE(isfinite(oxygenHydrogenView->get_energyCutoff()));
@@ -911,11 +956,11 @@ TEST(InterWater, NonOxygenOnlyStateInitializesEveryPair)
 TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
 {
     Settings settings;
-    settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutoff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
     settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     settings.hybridSettings.setUseQMChargesByUser(true);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
     PotentialSettingsUtils::setEnergyCutoff(
         settings.potentialSettings,
         0.0 / angstrom
@@ -1109,8 +1154,8 @@ namespace
     {
         settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-        settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
+        settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutoff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
             0.0 / angstrom
@@ -1282,7 +1327,7 @@ TEST(InterWater, BruteForceAndCellListGiveTheSameEnergiesAndForces)
 TEST(PotentialTemplates, QmChargesAndOneWayInteractions)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
     PotentialSettingsUtils::setEnergyCutoff(potentialSettings, 0.0 / angstrom);
     PotentialSettingsUtils::setForceCutoff(potentialSettings, 0.0 / angstrom2);
 
@@ -1378,9 +1423,9 @@ namespace
     {
         settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
         const HybridSettings hybridSettings;
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
-        settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
+        settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutoff);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
         PotentialSettingsUtils::setEnergyCutoff(
             settings.potentialSettings,
             0.0 / angstrom
@@ -1521,11 +1566,11 @@ TEST(PotentialStrategies, BruteForceAndCellListGiveTheSameEnergiesAndForces)
 TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
 {
     Settings settings;
-    settings.potentialSettings.setNonCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setNonCoulombRadiusCutoffByUser(kCutoff);
     settings.generalSettings.setJobtypeByUser(JobType::QMMM_MD);
     HybridSettings hybridSettings;
     hybridSettings.setUseQMChargesByUser(true);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(kCutOff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(kCutoff);
     PotentialSettingsUtils::setEnergyCutoff(
         settings.potentialSettings,
         0.0 / angstrom

@@ -1,0 +1,1 @@
+- Fix the `full_anisotropic` manostat with a start box of 90° angles: the box now becomes a triclinic box that can change its angles (QM-MD, RP-QM-MD) instead of growing without bound in MM runs; MM-MD, which has no triclinic boxes yet, refuses `full_anisotropic` with an error.

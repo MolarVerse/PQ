@@ -37,7 +37,7 @@ TEST(TestCoulombReactionField, calculate)
     constexpr auto distance      = 2.0 * angstrom;
 
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(cutoff);
+    potentialSettings.setCoulombRadiusCutoffByUser(cutoff);
 
     const auto potential =
         pot::CoulombReactionField(potentialSettings, epsilon);

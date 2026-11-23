@@ -54,60 +54,7 @@ class TestConstraints : public ::testing::Test
     std::unique_ptr<molsys::SimulationBox>    _box;
     std::unique_ptr<constraints::Constraints> _constraints;
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-        auto atom3 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
-        atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0) * angstrom);
-        atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
-        atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
-        atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0) * angstrom / s);
-        atom1->setMass(1.0 * g_per_mol);
-        atom2->setMass(1.0 * g_per_mol);
-        atom3->setMass(1.0 * g_per_mol);
-
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-        molecule1.addAtom(atom3);
-
-        auto molecule2 = molsys::Molecule();
-
-        auto atom4 = std::make_shared<molsys::Atom>();
-        auto atom5 = std::make_shared<molsys::Atom>();
-
-        atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
-        atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
-        atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
-        atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
-        atom4->setMass(1.0 * g_per_mol);
-        atom5->setMass(1.0 * g_per_mol);
-
-        molecule2.addAtom(atom4);
-        molecule2.addAtom(atom5);
-
-        _box = std::make_unique<molsys::SimulationBox>();
-        _box->addMolecule(molecule1);
-        _box->addMolecule(molecule2);
-
-        molsys::OrthorhombicBox orthoBox{
-            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-        };
-        _box->setBox(orthoBox, false);
-
-        Settings settings;
-        settings.constraintSettings.activateShakeByUser();
-        _constraints = std::make_unique<constraints::Constraints>(
-            settings.constraintSettings
-        );
-
-        _addDefaultBondConstraints(*_constraints);
-    }
+    void SetUp() override;
 
     /**
      * @brief adds the two bond constraints used by the fixture's molecules
@@ -120,26 +67,9 @@ class TestConstraints : public ::testing::Test
      *
      * @param constraints
      */
-    void _addDefaultBondConstraints(constraints::Constraints &constraints) const
-    {
-        auto bondConstraint1 = constraints::BondConstraint(
-            _box->getMolecules().data(),
-            _box->getMolecules().data(),
-            AtomIndex{0},
-            AtomIndex{1},
-            1.2 * angstrom
-        );
-        auto bondConstraint2 = constraints::BondConstraint(
-            _box->getMolecules().data(),
-            &(_box->getMolecules()[1]),
-            AtomIndex{2},
-            AtomIndex{1},
-            1.3 * angstrom
-        );
-
-        constraints.addBondConstraint(bondConstraint1);
-        constraints.addBondConstraint(bondConstraint2);
-    }
+    void _addDefaultBondConstraints(
+        constraints::Constraints &constraints
+    ) const;
 
     /**
      * @brief a box with one molecule of two atoms (masses 1 and 3) at
@@ -147,35 +77,7 @@ class TestConstraints : public ::testing::Test
      *
      * @return std::unique_ptr<molsys::SimulationBox>
      */
-    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox> _makeDimerBox()
-    {
-        auto molecule = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
-        atom2->setPosition(linalg::Vec3D(2.1, 1.0, 1.0) * angstrom);
-        atom1->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
-        atom2->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
-        atom1->setMass(1.0 * g_per_mol);
-        atom2->setMass(3.0 * g_per_mol);
-
-        molecule.addAtom(atom1);
-        molecule.addAtom(atom2);
-
-        auto simulationBox = std::make_unique<molsys::SimulationBox>();
-        simulationBox->addMolecule(molecule);
-        simulationBox->addAtom(atom1);
-        simulationBox->addAtom(atom2);
-
-        molsys::OrthorhombicBox orthoBox{
-            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-        };
-        simulationBox->setBox(orthoBox, false);
-
-        return simulationBox;
-    }
+    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox> _makeDimerBox();
 
     /**
      * @brief a box with one water-like molecule (masses 16, 1, 1), O-H 1 Å and
@@ -190,65 +92,175 @@ class TestConstraints : public ::testing::Test
      */
     [[nodiscard]] static std::unique_ptr<molsys::SimulationBox> _makeWideTriangleBox(
         constraints::Constraints &constraints
-    )
-    {
-        const auto halfAngle = 70.0 * std::numbers::pi / 180.0;
-        const auto masses    = std::vector<double>{16.0, 1.0, 1.0};
-        const auto positions = std::vector<linalg::Vec3D>{
-            {5.0, 5.0, 5.0},
-            {5.0 + std::cos(halfAngle), 5.0 + std::sin(halfAngle), 5.0},
-            {5.0 + std::cos(halfAngle), 5.0 - std::sin(halfAngle), 5.0}
-        };
-
-        auto molecule = molsys::Molecule();
-        auto atoms    = std::vector<std::shared_ptr<molsys::Atom>>();
-
-        for (size_t index = 0; index < positions.size(); ++index)
-        {
-            auto atom = std::make_shared<molsys::Atom>();
-            atom->setPosition(positions[index] * angstrom);
-            atom->setVelocity(Vel3D::zero());
-            atom->setForce(Force3D::zero());
-            atom->setMass(masses[index] * g_per_mol);
-            molecule.addAtom(atom);
-            atoms.push_back(atom);
-        }
-
-        auto simulationBox = std::make_unique<molsys::SimulationBox>();
-        simulationBox->addMolecule(molecule);
-
-        for (const auto &atom : atoms)
-        {
-            simulationBox->addAtom(atom);
-        }
-
-        simulationBox->setBox(
-            molsys::OrthorhombicBox{
-                {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-            },
-            false
-        );
-
-        auto *moleculePtr = simulationBox->getMolecules().data();
-
-        for (const auto &[first, second] :
-             std::vector<std::pair<size_t, size_t>>{{0, 1}, {0, 2}, {1, 2}})
-        {
-            constraints.addBondConstraint(
-                constraints::BondConstraint(
-                    moleculePtr,
-                    moleculePtr,
-                    AtomIndex{first},
-                    AtomIndex{second},
-                    norm(positions[first] - positions[second]) * angstrom
-                )
-            );
-        }
-
-        constraints.calculateConstraintBondRefs(*simulationBox);
-
-        return simulationBox;
-    }
+    );
 };
+
+inline void TestConstraints::SetUp()
+{
+    auto molecule1 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+    atom3->setPosition(linalg::Vec3D(2.0, 0.0, 0.0) * angstrom);
+    atom1->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+    atom2->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+    atom3->setVelocity(linalg::Vec3D(2.0, 2.0, 2.0) * angstrom / s);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(1.0 * g_per_mol);
+    atom3->setMass(1.0 * g_per_mol);
+
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+    molecule1.addAtom(atom3);
+
+    auto molecule2 = molsys::Molecule();
+
+    auto atom4 = std::make_shared<molsys::Atom>();
+    auto atom5 = std::make_shared<molsys::Atom>();
+
+    atom4->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    atom5->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+    atom4->setVelocity(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom / s);
+    atom5->setVelocity(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom / s);
+    atom4->setMass(1.0 * g_per_mol);
+    atom5->setMass(1.0 * g_per_mol);
+
+    molecule2.addAtom(atom4);
+    molecule2.addAtom(atom5);
+
+    _box = std::make_unique<molsys::SimulationBox>();
+    _box->addMolecule(molecule1);
+    _box->addMolecule(molecule2);
+
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
+    _box->setBox(orthoBox, false);
+
+    Settings settings;
+    settings.constraintSettings.activateShakeByUser();
+    _constraints =
+        std::make_unique<constraints::Constraints>(settings.constraintSettings);
+
+    _addDefaultBondConstraints(*_constraints);
+}
+
+inline void TestConstraints::_addDefaultBondConstraints(
+    constraints::Constraints &constraints
+) const
+{
+    auto bondConstraint1 = constraints::BondConstraint(
+        _box->getMolecules().data(),
+        _box->getMolecules().data(),
+        AtomIndex{0},
+        AtomIndex{1},
+        1.2 * angstrom
+    );
+    auto bondConstraint2 = constraints::BondConstraint(
+        _box->getMolecules().data(),
+        &(_box->getMolecules()[1]),
+        AtomIndex{2},
+        AtomIndex{1},
+        1.3 * angstrom
+    );
+
+    constraints.addBondConstraint(bondConstraint1);
+    constraints.addBondConstraint(bondConstraint2);
+}
+
+inline std::unique_ptr<molsys::SimulationBox> TestConstraints::_makeDimerBox()
+{
+    auto molecule = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(2.1, 1.0, 1.0) * angstrom);
+    atom1->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
+    atom2->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(3.0 * g_per_mol);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+
+    auto simulationBox = std::make_unique<molsys::SimulationBox>();
+    simulationBox->addMolecule(molecule);
+    simulationBox->addAtom(atom1);
+    simulationBox->addAtom(atom2);
+
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
+    simulationBox->setBox(orthoBox, false);
+
+    return simulationBox;
+}
+
+inline std::unique_ptr<molsys::SimulationBox> TestConstraints::
+    _makeWideTriangleBox(constraints::Constraints &constraints)
+{
+    const auto halfAngle = 70.0 * std::numbers::pi / 180.0;
+    const auto masses    = std::vector<double>{16.0, 1.0, 1.0};
+    const auto positions = std::vector<linalg::Vec3D>{
+        {5.0, 5.0, 5.0},
+        {5.0 + std::cos(halfAngle), 5.0 + std::sin(halfAngle), 5.0},
+        {5.0 + std::cos(halfAngle), 5.0 - std::sin(halfAngle), 5.0}
+    };
+
+    auto molecule = molsys::Molecule();
+    auto atoms    = std::vector<std::shared_ptr<molsys::Atom>>();
+
+    for (size_t index = 0; index < positions.size(); ++index)
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setPosition(positions[index] * angstrom);
+        atom->setVelocity(Vel3D::zero());
+        atom->setForce(Force3D::zero());
+        atom->setMass(masses[index] * g_per_mol);
+        molecule.addAtom(atom);
+        atoms.push_back(atom);
+    }
+
+    auto simulationBox = std::make_unique<molsys::SimulationBox>();
+    simulationBox->addMolecule(molecule);
+
+    for (const auto &atom : atoms)
+    {
+        simulationBox->addAtom(atom);
+    }
+
+    simulationBox->setBox(
+        molsys::OrthorhombicBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        },
+        false
+    );
+
+    auto *moleculePtr = simulationBox->getMolecules().data();
+
+    for (const auto &[first, second] :
+         std::vector<std::pair<size_t, size_t>>{{0, 1}, {0, 2}, {1, 2}})
+    {
+        constraints.addBondConstraint(
+            constraints::BondConstraint(
+                moleculePtr,
+                moleculePtr,
+                AtomIndex{first},
+                AtomIndex{second},
+                norm(positions[first] - positions[second]) * angstrom
+            )
+        );
+    }
+
+    constraints.calculateConstraintBondRefs(*simulationBox);
+
+    return simulationBox;
+}
 
 #endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

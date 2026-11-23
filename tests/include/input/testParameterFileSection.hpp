@@ -45,28 +45,32 @@ class TestParameterFileSection : public ::testing::Test
     std::unique_ptr<engine::Engine> _engine;
     std::string                     _parameterFileName = "param.param";
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::Molecule();
-        auto molecule2 = molsys::Molecule();
+    void SetUp() override;
 
-        // NOTE: use dummy engine for testing
-        //       this is implemented by base class Engine
-        //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-
-        _engine->getSimulationBox().addMolecule(molecule1);
-        _engine->getSimulationBox().addMolecule(molecule2);
-
-        _engine->getPotential()->makeNonCoulombPotential(
-            pot::ForceFieldNonCoulomb()
-        );
-    }
-
-    void TearDown() override
-    {
-        static_cast<void>(std::filesystem::remove(_parameterFileName));
-    }
+    void TearDown() override;
 };
+
+inline void TestParameterFileSection::SetUp()
+{
+    auto molecule1 = molsys::Molecule();
+    auto molecule2 = molsys::Molecule();
+
+    // NOTE: use dummy engine for testing
+    //       this is implemented by base class Engine
+    //       and works therefore for all derived classes
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+
+    _engine->getSimulationBox().addMolecule(molecule1);
+    _engine->getSimulationBox().addMolecule(molecule2);
+
+    _engine->getPotential()->makeNonCoulombPotential(
+        pot::ForceFieldNonCoulomb()
+    );
+}
+
+inline void TestParameterFileSection::TearDown()
+{
+    static_cast<void>(std::filesystem::remove(_parameterFileName));
+}
 
 #endif   // TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_SECTION_HPP

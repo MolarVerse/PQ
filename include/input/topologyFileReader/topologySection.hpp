@@ -67,11 +67,13 @@ namespace input::topology
 
        protected:
         [[nodiscard]]
-        std::ifstream *_getFilePointer() const
-        {
-            return _fp;
-        }
+        std::ifstream *_getFilePointer() const;
     };
+
+    inline std::ifstream *TopologySection::_getFilePointer() const
+    {
+        return _fp;
+    }
 
 }   // namespace input::topology
 

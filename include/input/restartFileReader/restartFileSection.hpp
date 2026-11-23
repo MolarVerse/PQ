@@ -56,11 +56,21 @@ namespace input::restartFile
                    size_t                   &lineNumber
                ) = 0;
 
-        void setFilePointer(std::ifstream *file) { _fp = file; }
+        void setFilePointer(std::ifstream *file);
 
        protected:
-        [[nodiscard]] std::ifstream *_getFilePointer() const { return _fp; }
+        [[nodiscard]] std::ifstream *_getFilePointer() const;
     };
+
+    inline void RestartFileSection::setFilePointer(std::ifstream *file)
+    {
+        _fp = file;
+    }
+
+    inline std::ifstream *RestartFileSection::_getFilePointer() const
+    {
+        return _fp;
+    }
 
 }   // namespace input::restartFile
 

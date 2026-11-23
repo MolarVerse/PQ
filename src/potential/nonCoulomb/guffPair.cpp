@@ -32,32 +32,32 @@ namespace pot
     /**
      * @brief Construct a new Guff Pair:: Guff Pair object
      *
-     * @param cutOff
+     * @param cutoff
      * @param coefficients
      */
     GuffPair::GuffPair(
-        const Pos                                                 &cutOff,
+        const Pos                                                 &cutoff,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients
     )
-        : NonCoulombPair(cutOff), _coefficients(coefficients)
+        : NonCoulombPair(cutoff), _coefficients(coefficients)
     {
     }
 
     /**
      * @brief Construct a new Guff Pair:: Guff Pair object
      *
-     * @param cutOff
+     * @param cutoff
      * @param energyCutoff
      * @param forceCutoff
      * @param coefficients
      */
     GuffPair::GuffPair(
-        const Pos                                                 &cutOff,
+        const Pos                                                 &cutoff,
         const EnergyPerMol                                        &energyCutoff,
         const Force                                               &forceCutoff,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients
     )
-        : NonCoulombPair(cutOff, energyCutoff, forceCutoff),
+        : NonCoulombPair(cutoff, energyCutoff, forceCutoff),
           _coefficients(coefficients)
     {
     }
