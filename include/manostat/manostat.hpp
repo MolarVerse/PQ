@@ -39,6 +39,7 @@ namespace physicalData
 }   // namespace physicalData
 
 class ManostatSettings;   // forward declaration
+class GeneralSettings;    // forward declaration for GeneralSettings
 
 namespace manostat
 {

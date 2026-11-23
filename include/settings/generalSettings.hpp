@@ -30,7 +30,6 @@
 #include "enums/general.hpp"
 #include "enums/integrator.hpp"
 #include "enums/jobtype.hpp"
-#include "enums/virial.hpp"
 #include "setting.hpp"
 
 /**
@@ -46,8 +45,6 @@ class GeneralSettings
 
     Setting<FPType, "FloatingPointType"> _floatingPointType{FPType::DOUBLE};
     Setting<uint_fast32_t, "RandomSeed"> _randomSeed;
-
-    static inline VirialType _virial = VirialType::MOLECULAR;
 
     // setting velocity verlet as default integrator type for backward
     // compatibility until 0.7.0 it was not necessary to specify the
@@ -72,7 +69,6 @@ class GeneralSettings
     void setFloatingPointTypeByUser(FPType);
     void setRandomSeedByUser(uint_fast32_t randomSeed);
 
-    static void setVirialType(VirialType virialType);
     static void setIntegratorType(IntegratorType integratorType);
 
     static void setNumberOfCells(size_t numberOfCells);
@@ -90,7 +86,6 @@ class GeneralSettings
     [[nodiscard]] uint_fast32_t getRandomSeed() const;
     [[nodiscard]] bool          isRandomSeedSetByUser() const;
 
-    [[nodiscard]] static VirialType     getVirialType();
     [[nodiscard]] static IntegratorType getIntegratorType();
     [[nodiscard]] static size_t         getNumberOfCells();
 

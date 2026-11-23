@@ -158,7 +158,9 @@ namespace input
         _parsers.push_back(
             std::make_unique<TimingsInputParser>(settings.timings)
         );
-        _parsers.push_back(std::make_unique<VirialInputParser>());
+        _parsers.push_back(
+            std::make_unique<VirialInputParser>(settings.manostatSettings)
+        );
         _parsers.push_back(
             std::make_unique<HybridInputParser>(settings.hybridSettings)
         );

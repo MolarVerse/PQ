@@ -34,8 +34,6 @@ class TestRandomNumberGenerator : public ::testing::Test
    protected:
     GeneralSettings _generalSettings;
     void            SetUp() override;
-
-    void TearDown() override;
 };
 
 void TestRandomNumberGenerator::SetUp()

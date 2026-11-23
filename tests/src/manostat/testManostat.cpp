@@ -29,7 +29,6 @@
 #include "berendsenManostat.hpp"
 #include "enums/manostat.hpp"
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "manostatSettings.hpp"
 #include "mathUtilities.hpp"
 #include "molecule.hpp"
@@ -370,16 +369,13 @@ TEST_F(TestManostat, CalculatePressureWithFixedAxis)
  */
 TEST_F(TestManostat, ChangeVirialToAtomic)
 {
-    GeneralSettings::setVirialType(VirialType::ATOMIC);
+    _settings->manostatSettings.setVirialTypeByUser(VirialType::ATOMIC);
     _manostat->calculatePressure(*_box, *_data);
 
     EXPECT_DOUBLE_EQ(
         _data->get_pressure().numerical_value_in(bar),
         2.0 * PRESSURE_FACTOR
     );
-
-    // set virial type back to molecular for other tests
-    GeneralSettings::setVirialType(VirialType::MOLECULAR);
 }
 
 /**

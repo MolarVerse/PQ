@@ -62,16 +62,6 @@ void GeneralSettings::setRandomSeedByUser(uint_fast32_t randomSeed)
 }
 
 /**
- * @brief sets the virial type
- *
- * @param virialType
- */
-void GeneralSettings::setVirialType(VirialType virialType)
-{
-    _virial = virialType;
-}
-
-/**
  * @brief sets the integrator type
  *
  * @param integratorType
@@ -166,13 +156,6 @@ bool GeneralSettings::isRandomSeedSetByUser() const
 {
     return _randomSeed.isSetByUser();
 }
-
-/**
- * @brief get the virial type
- *
- * @return VirialType
- */
-VirialType GeneralSettings::getVirialType() { return _virial; }
 
 /**
  * @brief get the integrator type

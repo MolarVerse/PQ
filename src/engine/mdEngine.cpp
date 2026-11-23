@@ -157,8 +157,10 @@ namespace engine
         const auto jobType = getSettings().generalSettings.getJobtype();
         if (!isHybridJobtype(jobType))
         {
-            const auto virial =
-                virial::intraMolecularVirialCorrection(getSimulationBox());
+            const auto virial = virial::intraMolecularVirialCorrection(
+                getSimulationBox(),
+                getSettings().manostatSettings
+            );
             get_physicalData().addVirial(virial);
         }
 

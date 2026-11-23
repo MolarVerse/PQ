@@ -254,9 +254,11 @@ namespace engine
             _calculateQMReferenceEnergy();
 
             virial += virial::calculateQMVirial(getSimulationBox()) * globalSmF;
-            virial +=
-                virial::intraMolecularVirialCorrection(getSimulationBox()) *
-                globalSmF;
+            virial += virial::intraMolecularVirialCorrection(
+                          getSimulationBox(),
+                          getSettings().manostatSettings
+                      ) *
+                      globalSmF;
             _addScaledCurrentForcesToInnerAndReset(atoms, globalSmF);
 
             // STEP 3: Setup and run MM calculation, accumulate MM forces
@@ -297,9 +299,11 @@ namespace engine
             );
 
             virial += virial::calculateVirial(getSimulationBox()) * globalSmF;
-            virial +=
-                virial::intraMolecularVirialCorrection(getSimulationBox()) *
-                globalSmF;
+            virial += virial::intraMolecularVirialCorrection(
+                          getSimulationBox(),
+                          getSettings().manostatSettings
+                      ) *
+                      globalSmF;
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // bonded interactions directly add to physical data virial
@@ -314,9 +318,11 @@ namespace engine
             _getIntraWater().calculate(getSimulationBox(), get_physicalData());
 
             virial += get_physicalData().get_virial() * globalSmF;
-            virial +=
-                virial::intraMolecularVirialCorrection(getSimulationBox()) *
-                globalSmF;
+            virial += virial::intraMolecularVirialCorrection(
+                          getSimulationBox(),
+                          getSettings().manostatSettings
+                      ) *
+                      globalSmF;
             _addScaledCurrentForcesToOuterAndReset(atoms, globalSmF);
 
             // STEP 4: Scale and accumulate hybrid energies and delete temp
@@ -376,7 +382,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateQMVirial(getSimulationBox());
-        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            getSimulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToInnerAndReset(atoms);
 
         // STEP 2: Setup and run inter-nonbonded calculation between
@@ -413,7 +422,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesInner();
         virial += virial::calculateVirial(getSimulationBox());
-        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            getSimulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 3: Calculate inter-nonbonded forces between SMOOTHING
@@ -437,7 +449,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(getSimulationBox());
-        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            getSimulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 4: Setup and run intra-nonbonded calculation and scale
@@ -455,7 +470,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesOuter();
         virial += virial::calculateVirial(getSimulationBox());
-        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            getSimulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         // STEP 5: Run intra-bonded calculation and scale forces of
@@ -474,7 +492,10 @@ namespace engine
 
         _scaleSmoothingMoleculeForcesOuter();
         virial += get_physicalData().get_virial();
-        virial += virial::intraMolecularVirialCorrection(getSimulationBox());
+        virial += virial::intraMolecularVirialCorrection(
+            getSimulationBox(),
+            getSettings().manostatSettings
+        );
         _addCurrentForcesToOuterAndReset(atoms);
 
         get_physicalData().set_virial(virial);

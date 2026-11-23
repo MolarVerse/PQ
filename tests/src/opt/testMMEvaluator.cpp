@@ -29,7 +29,6 @@
 #include "constraints.hpp"
 #include "enums/virial.hpp"
 #include "forceFieldClass.hpp"
-#include "generalSettings.hpp"
 #include "intraNonBonded.hpp"
 #include "mmEvaluator.hpp"
 #include "molecule.hpp"
@@ -93,7 +92,7 @@ namespace
             )
         );
 
-        GeneralSettings::setVirialType(VirialType::MOLECULAR);
+        settings.manostatSettings.setVirialTypeByUser(VirialType::MOLECULAR);
     }
 }   // namespace
 
@@ -170,7 +169,7 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
         std::make_shared<constraints::Constraints>(constraintSettings)
     );
 
-    GeneralSettings::setVirialType(VirialType::MOLECULAR);
+    settings.manostatSettings.setVirialTypeByUser(VirialType::MOLECULAR);
 
     eval2.evaluate(physicalData);
 

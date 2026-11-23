@@ -93,10 +93,7 @@ class AseQMRunnerTest : public ::testing::Test
    protected:
     void SetUp() override;
 
-    static QM::AseFennolRunner _runner(
-        const QMSettings &settings,
-        double            delay
-    );
+    static QM::AseFennolRunner _runner(Settings settings, double delay);
 };
 
 void AseQMRunnerTest::SetUpTestSuite()
@@ -132,7 +129,10 @@ void AseQMRunnerTest::SetUp()
     _simulationBox.setBox(box, false);
 }
 
-static QM::AseFennolRunner _runner(Settings settings, const double delay)
+QM::AseFennolRunner AseQMRunnerTest::_runner(
+    Settings     settings,
+    const double delay
+)
 {
     pybind11::module_::import("sys")
         .attr("modules")["ase.atoms"]
