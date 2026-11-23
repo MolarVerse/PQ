@@ -494,12 +494,14 @@ namespace engine
      */
     void HessianEngine::_evaluateOptimization()
     {
-        _optimizer->updateHistory(OptEngine::evaluateConstrained(
-            *_evaluator,
-            *getConstraints(),
-            getSimulationBox(),
-            get_physicalData()
-        ));
+        _optimizer->updateHistory(
+            OptEngine::evaluateConstrained(
+                *_evaluator,
+                *getConstraints(),
+                getSimulationBox(),
+                get_physicalData()
+            )
+        );
     }
 
     std::shared_ptr<opt::Optimizer> HessianEngine::_setupEmptyOptimizer()

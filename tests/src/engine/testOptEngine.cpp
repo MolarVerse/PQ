@@ -20,9 +20,8 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#include <gtest/gtest.h>
-
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <memory>
 #include <string>
@@ -67,7 +66,9 @@ namespace
     )
     {
         auto &atoms = _getSimulationBox().getAtoms();
-        atoms[0]->setForce(linalg::Vec3D(4.0, 2.0, 0.0) * kcal_per_mol / angstrom);
+        atoms[0]->setForce(
+            linalg::Vec3D(4.0, 2.0, 0.0) * kcal_per_mol / angstrom
+        );
         atoms[1]->setForce(Force3D::zero());
         physicalData.addBondEnergy(1.0 * kcal_per_mol);
     }
@@ -208,7 +209,7 @@ TEST(TestOptEngine, evaluateConstrainedProjectsTheForcesOntoShake)
             .apply([](auto &config) { config.activateShakeByUser(); })
             .build();
     constraints::Constraints constraints(constraintSettings);
-    auto simulationBox = makeShakeDimer(constraints);
+    auto                     simulationBox = makeShakeDimer(constraints);
 
     const Settings         settings;
     ConstantForceEvaluator evaluator(settings);
@@ -248,7 +249,7 @@ TEST(TestOptEngine, evaluateConstrainedWithoutConstraintsKeepsTheForces)
     const auto constraintSettings =
         testSettings::make<ConstraintSettings>().build();
     constraints::Constraints constraints(constraintSettings);
-    auto simulationBox = makeShakeDimer(constraints);
+    auto                     simulationBox = makeShakeDimer(constraints);
 
     const Settings         settings;
     ConstantForceEvaluator evaluator(settings);
