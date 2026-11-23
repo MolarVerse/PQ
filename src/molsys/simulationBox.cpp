@@ -27,7 +27,6 @@
 #include <numeric>
 
 #include "exceptions.hpp"
-#include "generalSettings.hpp"
 #include "orthorhombicBox.hpp"
 #include "randomNumberGenerator.hpp"
 #include "stlVector.hpp"
@@ -551,7 +550,7 @@ namespace molsys
     {
         const auto nAtoms = getNumberOfAtoms();
 
-        _degreesOfFreedom = (3 * nAtoms) - GeneralSettings::getDimensionality();
+        _degreesOfFreedom = (3 * nAtoms) - 3;
     }
 
     /**
