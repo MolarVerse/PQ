@@ -283,6 +283,17 @@ set_property(TEST regression_mm_opt_example PROPERTY LABELS "regression;examples
 set_property(TEST regression_mm_opt_example PROPERTY TIMEOUT 300)
 
 add_test(
+    NAME regression_mm_opt_final_step
+    COMMAND
+        ${Python3_EXECUTABLE}
+        ${CMAKE_CURRENT_SOURCE_DIR}/check_mm_opt_final_step.py
+        --pq $<TARGET_FILE:PQ>
+        --example ${PROJECT_SOURCE_DIR}/examples/ar3_mm_opt
+)
+set_property(TEST regression_mm_opt_final_step PROPERTY LABELS "regression;examples")
+set_property(TEST regression_mm_opt_final_step PROPERTY TIMEOUT 120)
+
+add_test(
     NAME regression_mm_opt_constraints
     COMMAND
         ${Python3_EXECUTABLE}
