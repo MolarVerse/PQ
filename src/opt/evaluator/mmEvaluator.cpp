@@ -22,6 +22,7 @@
 
 #include "mmEvaluator.hpp"
 
+#include "intraNonBonded.hpp"
 #include "settings.hpp"
 
 namespace opt
@@ -40,32 +41,36 @@ namespace opt
      * @brief update forces
      *
      */
-    void MMEvaluator::evaluate(physicalData::PhysicalData& physicalData)
+    void MMEvaluator::evaluate(
+        physicalData::PhysicalData&     physicalData,
+        molsys::SimulationBox&          simulationBox,
+        intraNonBonded::IntraNonBonded& intraNonBonded
+    )
     {
-        _getSimulationBox().updateOldForces();
-        _getSimulationBox().resetForces();
+        simulationBox.updateOldForces();
+        simulationBox.resetForces();
 
         _getCellList().updateCellList(
-            _getSimulationBox(),
+            simulationBox,
             _getSettings().potentialSettings.getCoulombRadiusCutOff()
         );
 
         _getPotential().calculateForces(
-            _getSimulationBox(),
+            simulationBox,
             physicalData,
             _getCellList(),
             _getSettings().waterModelSettings,
             _getSettings().potentialSettings
         );
 
-        _getIntraNonBonded().calculate(
-            _getSimulationBox(),
+        intraNonBonded.calculate(
+            simulationBox,
             physicalData,
             _getSettings().potentialSettings
         );
 
         _getForceField().calculateBondedInteractions(
-            _getSimulationBox(),
+            simulationBox,
             physicalData,
             _getSettings().potentialSettings
         );

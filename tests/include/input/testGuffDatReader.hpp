@@ -107,9 +107,9 @@ inline void TestGuffDatReader::SetUp()
     //       and works therefore for all derived classes
     _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
-    _engine->getSimulationBox().addMoleculeType(moleculeType1);
-    _engine->getSimulationBox().addMoleculeType(moleculeType2);
-    _engine->getSimulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMoleculeType(moleculeType1);
+    _engine->get_simulationBox().addMoleculeType(moleculeType2);
+    _engine->get_simulationBox().addMolecule(molecule1);
 
     _settings.potentialSettings.setCoulombRadiusCutOffByUser(12.5 * angstrom);
 

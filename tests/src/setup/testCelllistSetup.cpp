@@ -49,7 +49,7 @@ TEST_F(TestSetup, setupCellList)
     molsys::OrthorhombicBox orthoBox{
         {15.0 * angstrom, 15.0 * angstrom, 15.0 * angstrom}
     };
-    _engine->getSimulationBox().setBox(orthoBox, false);
+    _engine->get_simulationBox().setBox(orthoBox, false);
     _engine->getCellList().setNumberOfCells(3);
     cellListSetup.setup();
 

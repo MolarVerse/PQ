@@ -43,9 +43,13 @@ namespace opt
      *
      * @param learningRate
      */
-    void SteepestDescent::update(double learningRate, size_t /* totalSteps*/)
+    void SteepestDescent::update(
+        double learningRate,
+        size_t /* totalSteps*/,
+        molsys::SimulationBox& simulationBox
+    )
     {
-        const auto& atoms = _getSimulationBox().getAtoms();
+        const auto& atoms = simulationBox.getAtoms();
 
         // we need here this special handling as the learning rate dimension
         // differs depending on the type of optimizer
@@ -58,7 +62,7 @@ namespace opt
             const auto pos   = atom->getPosition();
 
             auto pos_new = pos + learningRateQuantity * force;
-            _getSimulationBox().applyPBC(pos_new);
+            simulationBox.applyPBC(pos_new);
 
             atom->setPositionOld(pos);
             atom->setPosition(pos_new);

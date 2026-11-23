@@ -67,8 +67,8 @@ namespace engine
 
         qmCalculation();
 
-        getConstraints()->applyDistanceConstraints(
-            getSimulationBox(),
+        get_constraints().applyDistanceConstraints(
+            get_simulationBox(),
             get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
