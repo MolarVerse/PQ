@@ -38,7 +38,7 @@ struct Settings;
 namespace intraNonBonded
 {
     class IntraNonBonded;
-}
+}   // namespace intraNonBonded
 
 namespace opt
 {

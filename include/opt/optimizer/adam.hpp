@@ -58,7 +58,7 @@ namespace opt
         void update(
             double                 learningRate,
             size_t                 step,
-            molsys::SimulationBox &box
+            molsys::SimulationBox &simulationBox
         ) override;
     };
 }   // namespace opt
