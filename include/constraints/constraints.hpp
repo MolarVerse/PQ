@@ -134,7 +134,7 @@ namespace constraints
          * standard setter methods *
          ***************************/
 
-        void setStartTime(const Time &startTime) { _startTime = startTime; }
+        void setStartTime(const Time &startTime);
 
        private:
         void _applyShake(
@@ -161,6 +161,11 @@ namespace constraints
             const std::vector<Vel3D> &velocities
         );
     };
+
+    inline void Constraints::setStartTime(const Time &startTime)
+    {
+        _startTime = startTime;
+    }
 
 }   // namespace constraints
 

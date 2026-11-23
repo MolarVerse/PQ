@@ -109,7 +109,7 @@ namespace
     PotentialSettings makeCoulombSettings(const Distance& cutoff)
     {
         PotentialSettings settings;
-        settings.setCoulombRadiusCutOffByUser(cutoff);
+        settings.setCoulombRadiusCutoffByUser(cutoff);
         return settings;
     }
 

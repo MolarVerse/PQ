@@ -44,12 +44,7 @@ namespace opt
         [[nodiscard]]
         std::shared_ptr<LearningRateStrategy> clone() const override;
 
-        void updateLearningRate(
-            size_t /*currentStep*/,
-            size_t /*totalSteps*/
-        ) override
-        {
-        }
+        void updateLearningRate(size_t currentStep, size_t totalSteps) override;
     };
 
 }   // namespace opt

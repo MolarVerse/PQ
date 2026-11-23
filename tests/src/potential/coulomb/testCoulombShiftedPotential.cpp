@@ -34,11 +34,11 @@ TEST(TestCoulombShiftedPotential, calculate)
 {
     const auto chargeProduct = 2.0 * elementary_charge * elementary_charge;
     const auto rcCutoff      = 3.0 * angstrom;
-    const auto energyCutOff  = 1 / rcCutoff;
+    const auto energyCutoff  = 1 / rcCutoff;
     const auto forceCutoff   = 1 / (rcCutoff * rcCutoff);
 
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(rcCutoff);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(rcCutoff);
     const auto potential =
         pot::CoulombShiftedPotential(settings.potentialSettings);
 
@@ -49,7 +49,7 @@ TEST(TestCoulombShiftedPotential, calculate)
     EXPECT_NEAR(
         energy.numerical_value_in(kcal_per_mol),
         (chargeProduct * coulomb_prefactor *
-         (1 / distance - energyCutOff - forceCutoff * (rcCutoff - distance)))
+         (1 / distance - energyCutoff - forceCutoff * (rcCutoff - distance)))
             .numerical_value_in(kcal_per_mol),
         1e-10
     );

@@ -61,25 +61,16 @@ namespace engine
          * standard add methods *
          ************************/
 
-        void addRingPolymerBead(const molsys::SimulationBox &simulationBox)
-        {
-            _ringPolymerBeads.push_back(simulationBox);
-        }
+        void addRingPolymerBead(const molsys::SimulationBox &simulationBox);
 
         /***************************
          * standard getter methods *
          ***************************/
 
-        [[nodiscard]] std::vector<molsys::SimulationBox> &getRingPolymerBeads()
-        {
-            return _ringPolymerBeads;
-        }
+        [[nodiscard]] std::vector<molsys::SimulationBox> &getRingPolymerBeads();
 
         [[nodiscard]] std::vector<physicalData::PhysicalData> &getRingPolymerBeadsPhysicalData(
-        )
-        {
-            return _ringPolymerBeadsPhysicalData;
-        }
+        );
 
        private:
         void _writeOutput(
@@ -88,6 +79,25 @@ namespace engine
             size_t                    startingStepCount
         );
     };
+
+    inline void RingPolymerEngine::addRingPolymerBead(
+        const molsys::SimulationBox &simulationBox
+    )
+    {
+        _ringPolymerBeads.push_back(simulationBox);
+    }
+
+    inline std::vector<molsys::SimulationBox> &RingPolymerEngine::
+        getRingPolymerBeads()
+    {
+        return _ringPolymerBeads;
+    }
+
+    inline std::vector<physicalData::PhysicalData> &RingPolymerEngine::
+        getRingPolymerBeadsPhysicalData()
+    {
+        return _ringPolymerBeadsPhysicalData;
+    }
 }   // namespace engine
 
 #endif   // ENGINE__RING_POLYMER_ENGINE_HPP

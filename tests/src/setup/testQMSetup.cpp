@@ -51,38 +51,63 @@ namespace
         explicit DefaultExternalQMRunner(
             const QMSettings         &qmSettings,
             const ExternalQMSettings &externalQMSettings
-        )
-            : QM::ExternalQMRunner(qmSettings, externalQMSettings)
-        {
-        }
+        );
 
         void execute(
             const molsys::SimulationBox & /*simBox*/,
             const FileSettings & /*fileSettings*/,
             const HybridSettings & /*hybridSettings*/
-        ) override
-        {
-        }
+        ) override;
 
         // the optional hooks are protected -> expose the base defaults
-        void callWritePointChargeFile(molsys::SimulationBox &simulationBox)
-        {
-            _writePointChargeFile(simulationBox, "point_charges");
-        }
+        void callWritePointChargeFile(molsys::SimulationBox &simulationBox);
 
         void callReadStressTensor(
             molsys::Box                &box,
             physicalData::PhysicalData &physicalData
-        )
-        {
-            _readStressTensor(box, physicalData, "stress_tensor");
-        }
+        );
 
        protected:
-        void _writeCoordsFile(const molsys::SimulationBox & /*simBox*/) override
-        {
-        }
+        void _writeCoordsFile(
+            const molsys::SimulationBox & /*simBox*/
+        ) override;
     };
+
+    DefaultExternalQMRunner::DefaultExternalQMRunner(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings
+    )
+        : QM::ExternalQMRunner(qmSettings, externalQMSettings)
+    {
+    }
+
+    void DefaultExternalQMRunner::execute(
+        const molsys::SimulationBox & /*simBox*/,
+        const FileSettings & /*fileSettings*/,
+        const HybridSettings & /*hybridSettings*/
+    )
+    {
+    }
+
+    void DefaultExternalQMRunner::callWritePointChargeFile(
+        molsys::SimulationBox &simulationBox
+    )
+    {
+        _writePointChargeFile(simulationBox, "point_charges");
+    }
+
+    void DefaultExternalQMRunner::callReadStressTensor(
+        molsys::Box                &box,
+        physicalData::PhysicalData &physicalData
+    )
+    {
+        _readStressTensor(box, physicalData, "stress_tensor");
+    }
+
+    void DefaultExternalQMRunner::
+        _writeCoordsFile(const molsys::SimulationBox & /*simBox*/)
+    {
+    }
 
     // the full path variant is valid for all build types (including
     // singularity and static builds)

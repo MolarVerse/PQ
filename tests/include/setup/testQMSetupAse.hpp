@@ -42,35 +42,36 @@ class TestQMSetupAse : public ::testing::Test
     std::unique_ptr<engine::QMMDEngine> _engine;
     std::unique_ptr<setup::QMSetup>     _qmSetup;
 
-    void SetUp() override
-    {
-        // Remove any existing default log file to ensure a clean test
-        // environment
-        const auto _ = std::remove("default.log");
-        _settings.generalSettings.setJobtypeByUser(JobType::QM);
-        _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
-        _settings.timings.setNumberOfStepsByUser(100U);
-        _engine  = std::make_unique<engine::QMMDEngine>(_settings);
-        _qmSetup = std::make_unique<setup::QMSetup>(
-            *_engine,
-            _settings.qmSettings,
-            _settings.maceSettings,
-            _settings.fennolSettings,
-            _settings.dftbSettings,
-            _settings.xtbSettings,
-            _settings.externalQMSettings
-        );
-        _engine->getEngineOutput().getLogOutput().setFilename(
-            "default.log",
-            false
-        );
-    }
+    void SetUp() override;
 
-    void TearDown() override
-    {
-        const auto errorCode = std::remove("default.log");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-    }
+    void TearDown() override;
 };
+
+inline void TestQMSetupAse::SetUp()
+{
+    // Remove any existing default log file to ensure a clean test
+    // environment
+    const auto _ = std::remove("default.log");
+    _settings.generalSettings.setJobtypeByUser(JobType::QM);
+    _settings.qmSettings.setQMMethodByUser(QMMethod::ASE_DFTBPLUS);
+    _settings.timings.setNumberOfStepsByUser(100U);
+    _engine  = std::make_unique<engine::QMMDEngine>(_settings);
+    _qmSetup = std::make_unique<setup::QMSetup>(
+        *_engine,
+        _settings.qmSettings,
+        _settings.maceSettings,
+        _settings.fennolSettings,
+        _settings.dftbSettings,
+        _settings.xtbSettings,
+        _settings.externalQMSettings
+    );
+    _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
+}
+
+inline void TestQMSetupAse::TearDown()
+{
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
+}
 
 #endif   // TESTS__INCLUDE__SETUP__TEST_QM_SETUP_ASE_HPP

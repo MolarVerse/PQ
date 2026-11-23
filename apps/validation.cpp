@@ -59,16 +59,23 @@ namespace
         std::streambuf *_original;
 
        public:
-        ScopedStreamRedirect(std::ostream &stream, std::streambuf *replacement)
-            : _stream(stream), _original(stream.rdbuf(replacement))
-        {
-        }
+        ScopedStreamRedirect(std::ostream &stream, std::streambuf *replacement);
 
         MSTD_NO_COPY(ScopedStreamRedirect);
         MSTD_NO_MOVE(ScopedStreamRedirect);
 
-        ~ScopedStreamRedirect() { _stream.rdbuf(_original); }
+        ~ScopedStreamRedirect();
     };
+
+    ScopedStreamRedirect::ScopedStreamRedirect(
+        std::ostream   &stream,
+        std::streambuf *replacement
+    )
+        : _stream(stream), _original(stream.rdbuf(replacement))
+    {
+    }
+
+    ScopedStreamRedirect::~ScopedStreamRedirect() { _stream.rdbuf(_original); }
 
     cli::ValidationResult invalidResult(
         std::string_view      inputFile,

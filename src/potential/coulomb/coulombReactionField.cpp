@@ -59,16 +59,16 @@ namespace pot
     ) const
     {
         const auto dInv          = 1.0 / dist;
-        const auto deltaCutOff   = _get_cutoff() - dist;
+        const auto deltaCutoff   = _get_cutoff() - dist;
         const auto rCutEnergy    = _get_energyCutoff();
         const auto rCutForce     = _get_forceCutoff();
-        const auto rfCutOffCubed = _rfPrefactor * _get_invCubedCutoff();
+        const auto rfCutoffCubed = _rfPrefactor * _get_invCubedCutoff();
 
         auto energy  = dInv - (2.0 * rCutEnergy) + (dist * rCutForce);
-        energy      += rfCutOffCubed * deltaCutOff * deltaCutOff;
+        energy      += rfCutoffCubed * deltaCutoff * deltaCutoff;
 
         auto force  = (dInv * dInv) - rCutForce;
-        force      += 2.0 * rfCutOffCubed * deltaCutOff;
+        force      += 2.0 * rfCutoffCubed * deltaCutoff;
 
         const auto prefactor = chargeProduct * coulomb_prefactor;
 

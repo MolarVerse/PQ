@@ -94,37 +94,40 @@ namespace
         std::array<struct sigaction, _nSignals> _previous{};
 
        public:
-        ScopedCancelSignals()
-        {
-            CancelState::flag = 0;
-
-            struct sigaction action{};
-            action.sa_handler = pqRecordQMCancelSignal;
-            ::sigemptyset(&action.sa_mask);
-
-            for (std::size_t i = 0; i < _signals.size(); ++i)
-            {
-                ::sigaction(_signals.at(i), &action, &_previous.at(i));
-
-                // keep signals ignored by the caller ignored
-                if (_previous.at(i).sa_handler == SIG_IGN)
-                {
-                    ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
-                }
-            }
-        }
-
-        ~ScopedCancelSignals()
-        {
-            for (std::size_t i = 0; i < _signals.size(); ++i)
-            {
-                ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
-            }
-        }
+        ScopedCancelSignals();
+        ~ScopedCancelSignals();
 
         MSTD_NO_COPY(ScopedCancelSignals);
         MSTD_NO_MOVE(ScopedCancelSignals);
     };
+
+    ScopedCancelSignals::ScopedCancelSignals()
+    {
+        CancelState::flag = 0;
+
+        struct sigaction action{};
+        action.sa_handler = pqRecordQMCancelSignal;
+        ::sigemptyset(&action.sa_mask);
+
+        for (std::size_t i = 0; i < _signals.size(); ++i)
+        {
+            ::sigaction(_signals.at(i), &action, &_previous.at(i));
+
+            // keep signals ignored by the caller ignored
+            if (_previous.at(i).sa_handler == SIG_IGN)
+            {
+                ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+            }
+        }
+    }
+
+    ScopedCancelSignals::~ScopedCancelSignals()
+    {
+        for (std::size_t i = 0; i < _signals.size(); ++i)
+        {
+            ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+        }
+    }
 
     /**
      * @brief terminates the process group of pid and reaps pid
@@ -633,6 +636,27 @@ namespace QM
                 std::format("{} command failed with status {}", program, status)
             );
 #endif
+    }
+
+    /**
+     * @brief writes the point charge file; no point charges by default
+     */
+    void ExternalQMRunner::_writePointChargeFile(
+        const molsys::SimulationBox & /*simulationBox*/,
+        const std::string & /*pointChargeFileName*/
+    )
+    {
+    }
+
+    /**
+     * @brief reads the stress tensor; no stress tensor by default
+     */
+    void ExternalQMRunner::_readStressTensor(
+        const molsys::Box & /*box*/,
+        physicalData::PhysicalData & /*physicalData*/,
+        const std::string & /*stressFileName*/
+    )
+    {
     }
 
     /********************************

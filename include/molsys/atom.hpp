@@ -96,13 +96,10 @@ namespace molsys
 
         void addPosition(const Pos3D &position);
         void addVelocity(const Vel3D &velocity);
-        void addForce(const Force3D &force) { _force += force; }
+        void addForce(const Force3D &force);
         void addForceInner(const Force3D &force);
         void addForceOuter(const Force3D &force);
-        void addShiftForce(const ShiftForce3D &shiftForce)
-        {
-            _shiftForce += shiftForce;
-        }
+        void addShiftForce(const ShiftForce3D &shiftForce);
 
         /***************************
          * standard getter methods *
@@ -110,7 +107,7 @@ namespace molsys
 
         [[nodiscard]] bool isActive() const;
 
-        [[nodiscard]] const std::string &getName() const { return _name; }
+        [[nodiscard]] const std::string &getName() const;
         [[nodiscard]] std::string        getAtomTypeName() const;
 
         [[nodiscard]] ExtAtomType getExternalAtomType() const;
@@ -119,26 +116,19 @@ namespace molsys
         [[nodiscard]] ExtVdwType getExternalGlobalVDWType() const;
         [[nodiscard]] VdwType    getInternalGlobalVDWType() const;
 
-        [[nodiscard]]
-        AtomNumber getAtomicNumber() const
-        {
-            return _atomicNumber;
-        }
+        [[nodiscard]] AtomNumber getAtomicNumber() const;
 
-        [[nodiscard]] const Mass   &getMass() const;
-        [[nodiscard]] const Charge &getPartialCharge() const
-        {
-            return _partialCharge;
-        }
+        [[nodiscard]] const Mass                  &getMass() const;
+        [[nodiscard]] const Charge                &getPartialCharge() const;
         [[nodiscard]] const std::optional<Charge> &getQMCharge() const;
 
-        [[nodiscard]] const Pos3D   &getPosition() const { return _position; }
-        [[nodiscard]] const Pos3D   &getPositionOld() const;
-        [[nodiscard]] const Vel3D   &getVelocity() const;
-        [[nodiscard]] const Force3D &getForce() const;
-        [[nodiscard]] const Force3D &getForceOld() const;
-        [[nodiscard]] const Force3D &getForceInner() const;
-        [[nodiscard]] const Force3D &getForceOuter() const;
+        [[nodiscard]] const Pos3D        &getPosition() const;
+        [[nodiscard]] const Pos3D        &getPositionOld() const;
+        [[nodiscard]] const Vel3D        &getVelocity() const;
+        [[nodiscard]] const Force3D      &getForce() const;
+        [[nodiscard]] const Force3D      &getForceOld() const;
+        [[nodiscard]] const Force3D      &getForceInner() const;
+        [[nodiscard]] const Force3D      &getForceOuter() const;
         [[nodiscard]] const ShiftForce3D &getShiftForce() const;
 
         /***************************
@@ -177,6 +167,24 @@ namespace molsys
 
         void resetQMCharge();
     };
+
+    inline void Atom::addForce(const Force3D &force) { _force += force; }
+
+    inline void Atom::addShiftForce(const ShiftForce3D &shiftForce)
+    {
+        _shiftForce += shiftForce;
+    }
+
+    inline const std::string &Atom::getName() const { return _name; }
+
+    inline AtomNumber Atom::getAtomicNumber() const { return _atomicNumber; }
+
+    inline const Charge &Atom::getPartialCharge() const
+    {
+        return _partialCharge;
+    }
+
+    inline const Pos3D &Atom::getPosition() const { return _position; }
 }   // namespace molsys
 
 #endif   // MOLSYS__ATOM_HPP

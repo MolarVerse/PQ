@@ -469,7 +469,7 @@ TEST_F(TestSetup, testCheckRcCutoff)
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
     };
     _engine->getSimulationBox().setBox(orthoBox, false);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(14.0 * angstrom);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(14.0 * angstrom);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW_MSG(
         simulationBoxSetup.checkRcCutoff(),
@@ -478,7 +478,7 @@ TEST_F(TestSetup, testCheckRcCutoff)
     );
 
     setup::SimulationBoxSetup simulationBox2Setup(*_engine);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
     EXPECT_NO_THROW(simulationBox2Setup.checkRcCutoff());
 }
 
@@ -596,7 +596,7 @@ TEST_F(TestSetup, testFullSetup)
     };
     _settings->fileSettings.setStartFileNameByUser("input.rst");
     _engine->getSimulationBox().setBox(orthoBox, true);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
 
     EXPECT_NO_THROW(setup::setupSimulationBox(*_engine));
 }
@@ -621,7 +621,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
         {5.73 * angstrom, 9.93 * angstrom, 11.14 * angstrom}
     };
     simBox.setBox(orthoBox, false);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(5.79 * angstrom);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(5.79 * angstrom);
     _settings->fileSettings.setStartFileNameByUser("input.rst");
     setup::SimulationBoxSetup::setZeroVelocities(false);
 

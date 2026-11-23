@@ -71,16 +71,10 @@ namespace input
 
        protected:
         [[nodiscard]]
-        const std::string &_getKey() const
-        {
-            return _key;
-        }
+        const std::string &_getKey() const;
 
         [[nodiscard]]
-        const std::string &_getRaw() const
-        {
-            return _raw;
-        }
+        const std::string &_getRaw() const;
     };
 
     /**
