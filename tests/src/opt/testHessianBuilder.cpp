@@ -52,61 +52,81 @@ namespace
         explicit HarmonicEvaluator(
             const Settings                   &settings,
             const std::vector<ForceConstant> &forceConstants,
-            const bool                        analyticSupported
-        )
-            : opt::Evaluator(settings),
-              _forceConstants(forceConstants),
-              _analyticSupported(analyticSupported)
-        {
-        }
+            bool                              analyticSupported
+        );
         explicit HarmonicEvaluator(
             const Settings                   &settings,
             const std::vector<ForceConstant> &forceConstants
-        )
-            : HarmonicEvaluator(settings, forceConstants, false)
-        {
-        }
+        );
 
         [[nodiscard]]
-        std::shared_ptr<Evaluator> clone() const override
-        {
-            return std::make_shared<HarmonicEvaluator>(*this);
-        }
+        std::shared_ptr<Evaluator> clone() const override;
 
-        void evaluate(physicalData::PhysicalData & /*physicalData*/) override
-        {
-            auto &simulationBox = _getSimulationBox();
+        void evaluate(physicalData::PhysicalData & /*physicalData*/) override;
 
-            for (size_t atomIndex = 0;
-                 atomIndex < simulationBox.getNumberOfAtoms();
-                 ++atomIndex)
-            {
-                auto      &atom     = simulationBox.getAtom(atomIndex);
-                const auto position = atom.getPosition();
-                const auto offset   = 3 * atomIndex;
-                atom.setForce(
-                    {-_forceConstants[offset] * position[0],
-                     -_forceConstants[offset + 1] * position[1],
-                     -_forceConstants[offset + 2] * position[2]}
-                );
-            }
-        }
+        [[nodiscard]] bool supportsAnalyticHessian() const override;
 
-        [[nodiscard]] bool supportsAnalyticHessian() const override
-        {
-            return _analyticSupported;
-        }
-
-        [[nodiscard]] Hessian calculateAnalyticHessian() override
-        {
-            return {
-                {2.0 * kcal_per_mol / angstrom / angstrom,
-                 4.0 * kcal_per_mol / angstrom / angstrom},
-                {6.0 * kcal_per_mol / angstrom / angstrom,
-                 8.0 * kcal_per_mol / angstrom / angstrom}
-            };
-        }
+        [[nodiscard]] Hessian calculateAnalyticHessian() override;
     };
+
+    HarmonicEvaluator::HarmonicEvaluator(
+        const Settings                   &settings,
+        const std::vector<ForceConstant> &forceConstants,
+        bool                              analyticSupported
+    )
+        : opt::Evaluator(settings),
+          _forceConstants(forceConstants),
+          _analyticSupported(analyticSupported)
+    {
+    }
+
+    HarmonicEvaluator::HarmonicEvaluator(
+        const Settings                   &settings,
+        const std::vector<ForceConstant> &forceConstants
+    )
+        : HarmonicEvaluator(settings, forceConstants, false)
+    {
+    }
+
+    std::shared_ptr<opt::Evaluator> HarmonicEvaluator::clone() const
+    {
+        return std::make_shared<HarmonicEvaluator>(*this);
+    }
+
+    void HarmonicEvaluator::evaluate(
+        physicalData::PhysicalData & /*physicalData*/
+    )
+    {
+        auto &simulationBox = _getSimulationBox();
+
+        for (size_t atomIndex = 0; atomIndex < simulationBox.getNumberOfAtoms();
+             ++atomIndex)
+        {
+            auto      &atom     = simulationBox.getAtom(atomIndex);
+            const auto position = atom.getPosition();
+            const auto offset   = 3 * atomIndex;
+            atom.setForce(
+                {-_forceConstants[offset] * position[0],
+                 -_forceConstants[offset + 1] * position[1],
+                 -_forceConstants[offset + 2] * position[2]}
+            );
+        }
+    }
+
+    bool HarmonicEvaluator::supportsAnalyticHessian() const
+    {
+        return _analyticSupported;
+    }
+
+    Hessian HarmonicEvaluator::calculateAnalyticHessian()
+    {
+        return {
+            {2.0 * kcal_per_mol / angstrom / angstrom,
+             4.0 * kcal_per_mol / angstrom / angstrom},
+            {6.0 * kcal_per_mol / angstrom / angstrom,
+             8.0 * kcal_per_mol / angstrom / angstrom}
+        };
+    }
 
     std::shared_ptr<molsys::SimulationBox> makeSimulationBox()
     {

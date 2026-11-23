@@ -121,7 +121,7 @@ namespace engine
         _getHybridConfigurator().calculateSmoothingFactors(getSimulationBox());
         getCellList().updateCellList(
             getSimulationBox(),
-            getSettings().potentialSettings.getCoulombRadiusCutOff()
+            getSettings().potentialSettings.getCoulombRadiusCutoff()
         );
         get_physicalData().set_numberOfSmoothingMol(
             static_cast<double>(std::ranges::distance(

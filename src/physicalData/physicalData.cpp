@@ -185,7 +185,7 @@ namespace physicalData
      *
      * @param outputFrequency
      */
-    void PhysicalData::makeAverages(const double outputFrequency)
+    void PhysicalData::makeAverages(double outputFrequency)
     {
         _nQMAtoms /= outputFrequency;
         _loopTime /= outputFrequency;

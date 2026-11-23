@@ -111,12 +111,16 @@ namespace molsys
        protected:
         explicit Box(const Pos3D &boxDimensions, const Angle3D &angles);
 
-        static constexpr auto _dimsPtr() { return &Box::_boxDimensions; }
-        static constexpr auto _anglesPtr() { return &Box::_angles; }
+        static constexpr auto _dimsPtr();
+        static constexpr auto _anglesPtr();
 
         INTERNAL_PROPERTY_SETTER(_boxDimensions);
         INTERNAL_PROPERTY_SETTER(_angles);
     };
+
+    constexpr auto Box::_dimsPtr() { return &Box::_boxDimensions; }
+
+    constexpr auto Box::_anglesPtr() { return &Box::_angles; }
 
 }   // namespace molsys
 

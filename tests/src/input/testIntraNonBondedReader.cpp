@@ -29,6 +29,7 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "intraNonBondedContainer.hpp"
+#include "strongTypes.hpp"
 #include "throwWithMessage.hpp"
 
 TEST_F(TestIntraNonBondedReader, findMoleculeType)
@@ -138,9 +139,58 @@ TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
     const auto container =
         _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
     EXPECT_EQ(container.getMolType(), MolType{0});
-    const auto &atomIndices = container.getAtomIndices();
+    const auto &partners = container.getPartners();
 
-    EXPECT_EQ(atomIndices[0], std::vector<int>({1, -2}));
-    EXPECT_EQ(atomIndices[1], std::vector<int>({}));
-    EXPECT_EQ(atomIndices[2], std::vector<int>({1}));
+    using intraNonBonded::IntraNonBondedPartners;
+    EXPECT_EQ(
+        partners[0],
+        IntraNonBondedPartners({
+            {.atomIndex = AtomIndex{1}, .isScaled14 = false},
+            {.atomIndex = AtomIndex{2}, .isScaled14 = true},
+        })
+    );
+    EXPECT_EQ(partners[1], IntraNonBondedPartners({}));
+    EXPECT_EQ(
+        partners[2],
+        IntraNonBondedPartners({
+            {.atomIndex = AtomIndex{1}, .isScaled14 = false},
+        })
+    );
+}
+
+TEST_F(TestIntraNonBondedReader, scaledPartnerAtomOne)
+{
+    _settings.fileSettings.setIntraNonBondedFileNameByUser(
+        "data/intraNonBondedReader/scaledPartnerAtomOne.dat"
+    );
+    input::intraNonBondedReader::readIntraNonBondedFile(*_engine);
+
+    const auto container =
+        _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
+    const auto &partners = container.getPartners();
+
+    using intraNonBonded::IntraNonBondedPartners;
+    EXPECT_EQ(partners[0], IntraNonBondedPartners({}));
+    EXPECT_EQ(partners[1], IntraNonBondedPartners({}));
+    EXPECT_EQ(
+        partners[2],
+        IntraNonBondedPartners({
+            {.atomIndex = AtomIndex{0}, .isScaled14 = true},
+            {.atomIndex = AtomIndex{1}, .isScaled14 = false},
+        })
+    );
+}
+
+TEST_F(TestIntraNonBondedReader, atomIndexZero)
+{
+    _intraNonBondedReader->setFileName(
+        "data/intraNonBondedReader/atomIndexZero.dat"
+    );
+    _intraNonBondedReader->reInitializeFp();
+    EXPECT_THROW_MSG(
+        _intraNonBondedReader->read(),
+        exc::IntraNonBondedException,
+        "ERROR: atom index '-0' in line 2 in file "
+        "'data/intraNonBondedReader/atomIndexZero.dat' is out of range"
+    );
 }

@@ -280,11 +280,11 @@ namespace input::guffdat
             );
         }
 
-        Distance rncCutOff = stod(lineCommands[4]) * angstrom;
+        Distance rncCutoff = stod(lineCommands[4]) * angstrom;
 
-        if (rncCutOff < 0.0)
-            rncCutOff =
-                _engine.getSettings().potentialSettings.getCoulombRadiusCutOff(
+        if (rncCutoff < 0.0)
+            rncCutoff =
+                _engine.getSettings().potentialSettings.getCoulombRadiusCutoff(
                 );
 
         constexpr auto coulombCoeffIndex = 5;
@@ -314,7 +314,7 @@ namespace input::guffdat
             atomType1,
             atomType2,
             guffCoefficients,
-            rncCutOff
+            rncCutoff
         );
     }
 
@@ -327,7 +327,7 @@ namespace input::guffdat
      * @param atomType1
      * @param atomType2
      * @param coefficients
-     * @param rncCutOff
+     * @param rncCutoff
      *
      * @throws exc::UserInputException if nonCoulombic type is invalid
      */
@@ -337,7 +337,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        const Distance            &rncCutOff
+        const Distance            &rncCutoff
     )
     {
         switch (_engine.getSettings().potentialSettings.getNonCoulombType())
@@ -350,7 +350,7 @@ namespace input::guffdat
                     atomType1,
                     atomType2,
                     coefficients,
-                    rncCutOff
+                    rncCutoff
                 );
                 break;
             }
@@ -362,7 +362,7 @@ namespace input::guffdat
                     atomType1,
                     atomType2,
                     coefficients,
-                    rncCutOff
+                    rncCutoff
                 );
                 break;
             }
@@ -374,7 +374,7 @@ namespace input::guffdat
                     atomType1,
                     atomType2,
                     coefficients,
-                    rncCutOff
+                    rncCutoff
                 );
                 break;
             }
@@ -390,7 +390,7 @@ namespace input::guffdat
                     atomType1,
                     atomType2,
                     coeffs,
-                    rncCutOff
+                    rncCutoff
                 );
                 break;
             }
@@ -420,7 +420,7 @@ namespace input::guffdat
      * @param atomType1
      * @param atomType2
      * @param coefficients
-     * @param rncCutOff
+     * @param rncCutoff
      */
     void GuffDatReader::addLennardJonesPair(
         MolType                    molType1,
@@ -428,7 +428,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        const Distance            &rncCutOff
+        const Distance            &rncCutoff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -439,16 +439,16 @@ namespace input::guffdat
             .c6  = coefficients[0] * kcal_per_mol * angstrom6,
             .c12 = coefficients[2] * kcal_per_mol * angstrom12
         };
-        const auto LJPair = pot::LennardJonesPair(rncCutOff, params);
+        const auto LJPair = pot::LennardJonesPair(rncCutoff, params);
 
-        const auto [eCutOff, fCutOff] = LJPair.calculate(rncCutOff);
+        const auto [eCutoff, fCutoff] = LJPair.calculate(rncCutoff);
 
         guffNonCoulomb.setGuffNonCoulPair(
             {molType1, molType2, atomType1, atomType2},
             std::make_shared<pot::LennardJonesPair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 params
             )
         );
@@ -456,9 +456,9 @@ namespace input::guffdat
         guffNonCoulomb.setGuffNonCoulPair(
             {molType2, molType1, atomType2, atomType1},
             std::make_shared<pot::LennardJonesPair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 params
             )
         );
@@ -474,7 +474,7 @@ namespace input::guffdat
      * @param atomType1
      * @param atomType2
      * @param coefficients
-     * @param rncCutOff
+     * @param rncCutoff
      */
     void GuffDatReader::addBuckinghamPair(
         MolType                    molType1,
@@ -482,7 +482,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        const Distance            &rncCutOff
+        const Distance            &rncCutoff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -494,15 +494,15 @@ namespace input::guffdat
             .dRho    = coefficients[1] / angstrom,
             .c6      = coefficients[2] * kcal_per_mol * angstrom6
         };
-        const auto buckPair           = pot::BuckinghamPair(rncCutOff, params);
-        const auto [eCutOff, fCutOff] = buckPair.calculate(rncCutOff);
+        const auto buckPair           = pot::BuckinghamPair(rncCutoff, params);
+        const auto [eCutoff, fCutoff] = buckPair.calculate(rncCutoff);
 
         guffNonCoulomb.setGuffNonCoulPair(
             {molType1, molType2, atomType1, atomType2},
             std::make_shared<pot::BuckinghamPair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 params
             )
         );
@@ -510,9 +510,9 @@ namespace input::guffdat
         guffNonCoulomb.setGuffNonCoulPair(
             {molType2, molType1, atomType2, atomType1},
             std::make_shared<pot::BuckinghamPair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 params
             )
         );
@@ -529,7 +529,7 @@ namespace input::guffdat
      * @param atomType1
      * @param atomType2
      * @param coefficients
-     * @param rncCutOff
+     * @param rncCutoff
      */
     void GuffDatReader::addMorsePair(
         MolType                    molType1,
@@ -537,7 +537,7 @@ namespace input::guffdat
         AtomType                   atomType1,
         AtomType                   atomType2,
         const std::vector<double> &coefficients,
-        const Distance            &rncCutOff
+        const Distance            &rncCutoff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -550,15 +550,15 @@ namespace input::guffdat
             .equilibriumDistance = coefficients[2] * angstrom
         };
 
-        const auto morsePair          = pot::MorsePair(rncCutOff, params);
-        const auto [eCutOff, fCutOff] = morsePair.calculate(rncCutOff);
+        const auto morsePair          = pot::MorsePair(rncCutoff, params);
+        const auto [eCutoff, fCutoff] = morsePair.calculate(rncCutoff);
 
         guffNonCoulomb.setGuffNonCoulPair(
             {molType1, molType2, atomType1, atomType2},
             std::make_shared<pot::MorsePair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 params
             )
         );
@@ -571,9 +571,9 @@ namespace input::guffdat
                 atomType1,
             },
             std::make_shared<pot::MorsePair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 params
             )
         );
@@ -587,7 +587,7 @@ namespace input::guffdat
      * @param atomType1
      * @param atomType2
      * @param coefficients
-     * @param rncCutOff
+     * @param rncCutoff
      */
     void GuffDatReader::addGuffPair(
         MolType                                                    molType1,
@@ -595,22 +595,22 @@ namespace input::guffdat
         AtomType                                                   atomType1,
         AtomType                                                   atomType2,
         const std::array<double, defaults::NUM_GUFF_COEFFICIENTS> &coefficients,
-        const Distance                                            &rncCutOff
+        const Distance                                            &rncCutoff
     )
     {
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
             _engine.getPotential()->getNonCoulombPotential()
         );
 
-        const auto guffPair           = pot::GuffPair(rncCutOff, coefficients);
-        const auto [eCutOff, fCutOff] = guffPair.calculate(rncCutOff);
+        const auto guffPair           = pot::GuffPair(rncCutoff, coefficients);
+        const auto [eCutoff, fCutoff] = guffPair.calculate(rncCutoff);
 
         guffNonCoulomb.setGuffNonCoulPair(
             {molType1, molType2, atomType1, atomType2},
             std::make_shared<pot::GuffPair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 coefficients
             )
         );
@@ -618,9 +618,9 @@ namespace input::guffdat
         guffNonCoulomb.setGuffNonCoulPair(
             {molType2, molType1, atomType2, atomType1},
             std::make_shared<pot::GuffPair>(
-                rncCutOff,
-                eCutOff,
-                fCutOff,
+                rncCutoff,
+                eCutoff,
+                fCutoff,
                 coefficients
             )
         );
@@ -926,11 +926,11 @@ namespace input::guffdat
      * @param isSet
      */
     void GuffDatReader::setIsGuffPairSet(
-        MolType    molType1,
-        MolType    molType2,
-        AtomType   atomType1,
-        AtomType   atomType2,
-        const bool isSet
+        MolType  molType1,
+        MolType  molType2,
+        AtomType atomType1,
+        AtomType atomType2,
+        bool     isSet
     )
     {
         _isGuffPairSet[molType1.get()][molType2.get()][atomType1.get()]

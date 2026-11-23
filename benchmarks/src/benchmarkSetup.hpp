@@ -36,9 +36,9 @@
 namespace benchmarkSetup
 {
     inline constexpr Pos cellEdge = 3.0 * angstrom;
-    inline constexpr Pos cutOff   = 4.0 * angstrom;
+    inline constexpr Pos cutoff   = 4.0 * angstrom;
 
-    inline molsys::SimulationBox makeLattice(const std::size_t cellsPerSide)
+    inline molsys::SimulationBox makeLattice(std::size_t cellsPerSide)
     {
         const auto boxEdge = cellEdge * static_cast<double>(cellsPerSide);
 

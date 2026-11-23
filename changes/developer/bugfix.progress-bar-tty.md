@@ -1,0 +1,1 @@
+- New `utilities::TerminalProgressBar` wraps the external progress bar and writes nothing when `isatty` reports that stdout is not a terminal (#1291).

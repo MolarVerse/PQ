@@ -59,7 +59,7 @@ namespace manostat
      * @param physicalData
      * @param targetTemperature The target temperature for the system
      * @param timeStep the integration time step used for velocity updates
-     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
      */
     void BerendsenManostat::applyManostat(
@@ -67,7 +67,7 @@ namespace manostat
         physicalData::PhysicalData &physicalData,
         const Temperature & /*targetTemperature*/,
         const Time     &timeStep,
-        const Distance &coulombRadiusCutOff
+        const Distance &coulombRadiusCutoff
     )
     {
         auto _ = scopedTimer(TimerId::Manostat, "Berendsen");
@@ -76,7 +76,7 @@ namespace manostat
 
         const auto mu = calculateMu(timeStep);
 
-        _validateScaling(simulationBox, mu, coulombRadiusCutOff);
+        _validateScaling(simulationBox, mu, coulombRadiusCutoff);
 
         // Reconstruction temporarily unwraps atoms. Molecule::scale() below
         // wraps every position into the resized box.
@@ -94,9 +94,9 @@ namespace manostat
         const auto  muSimSpace = _toSimSpaceScaling(mu, box);
 
         simulationBox.scaleBox(mu);
-        simulationBox.checkCoulRadiusCutOff(
+        simulationBox.checkCoulRadiusCutoff(
             ExceptionType::ManostatError,
-            coulombRadiusCutOff
+            coulombRadiusCutoff
         );
 
         physicalData.set_volume(simulationBox.getVolume());

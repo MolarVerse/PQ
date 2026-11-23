@@ -139,7 +139,7 @@ namespace constraints
 
             converged = std::ranges::all_of(
                 convergedVector,
-                [](const bool isConverged) { return isConverged; }
+                [](bool isConverged) { return isConverged; }
             );
 
             ++iter;
@@ -229,7 +229,7 @@ namespace constraints
 
             converged = std::ranges::all_of(
                 convergedVector,
-                [](const bool isConverged) { return isConverged; }
+                [](bool isConverged) { return isConverged; }
             );
 
             ++iter;

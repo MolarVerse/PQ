@@ -4,12 +4,14 @@ add_library(utilities
     mathUtilities.cpp
     strongTypes.cpp
     systemMemory.cpp
+    terminalProgressBar.cpp
 )
 
 target_include_directories(utilities
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/include/utilities
+    ${PROJECT_SOURCE_DIR}/external/progressbar/include
 )
 
 target_link_libraries(utilities

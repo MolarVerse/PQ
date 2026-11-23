@@ -39,65 +39,67 @@ class TestSimulationBox : public ::testing::Test
    protected:
     std::unique_ptr<molsys::SimulationBox> _simulationBox;
 
-    void SetUp() override
-    {
-        _simulationBox = std::make_unique<molsys::SimulationBox>();
-
-        auto molecule1 = molsys::Molecule();
-        auto molecule2 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-        auto atom3 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
-        atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
-        atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
-        atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
-        atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom);
-        atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0) * kcal_per_mol / angstrom);
-        atom1->setMass(1.0 * g_per_mol);
-        atom2->setMass(2.0 * g_per_mol);
-        atom3->setMass(3.0 * g_per_mol);
-
-        molecule1.setMoltype(MolType{1});
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-        molecule1.addAtom(atom3);
-
-        auto atom4 = std::make_shared<molsys::Atom>();
-        auto atom5 = std::make_shared<molsys::Atom>();
-
-        atom4->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
-        atom5->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
-        atom4->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
-        atom5->setForce(linalg::Vec3D(0.0, 0.0, 1.0) * kcal_per_mol / angstrom);
-        atom4->setMass(1.0 * g_per_mol);
-        atom5->setMass(2.0 * g_per_mol);
-
-        molecule2.setMoltype(MolType{2});
-        molecule2.addAtom(atom4);
-        molecule2.addAtom(atom5);
-
-        _simulationBox->addMolecule(molecule1);
-        _simulationBox->addMolecule(molecule2);
-
-        const auto moleculeType1 = molsys::MoleculeType(MolType{1});
-        const auto moleculeType2 = molsys::MoleculeType(MolType{2});
-
-        _simulationBox->addMoleculeType(moleculeType1);
-        _simulationBox->addMoleculeType(moleculeType2);
-        _simulationBox->addAtom(atom1);
-        _simulationBox->addAtom(atom2);
-        _simulationBox->addAtom(atom3);
-        _simulationBox->addAtom(atom4);
-        _simulationBox->addAtom(atom5);
-
-        molsys::OrthorhombicBox orthoBox{
-            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-        };
-        _simulationBox->setBox(orthoBox, false);
-    }
+    void SetUp() override;
 };
+
+inline void TestSimulationBox::SetUp()
+{
+    _simulationBox = std::make_unique<molsys::SimulationBox>();
+
+    auto molecule1 = molsys::Molecule();
+    auto molecule2 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+    auto atom3 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
+    atom3->setPosition(linalg::Vec3D(0.0, 1.0, 0.0) * angstrom);
+    atom1->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+    atom2->setForce(linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+    atom3->setForce(linalg::Vec3D(0.0, 1.0, 0.0) * kcal_per_mol / angstrom);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(2.0 * g_per_mol);
+    atom3->setMass(3.0 * g_per_mol);
+
+    molecule1.setMoltype(MolType{1});
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+    molecule1.addAtom(atom3);
+
+    auto atom4 = std::make_shared<molsys::Atom>();
+    auto atom5 = std::make_shared<molsys::Atom>();
+
+    atom4->setPosition(linalg::Vec3D(0.0, 0.0, 0.0) * angstrom);
+    atom5->setPosition(linalg::Vec3D(1.0, 0.0, 0.0) * angstrom);
+    atom4->setForce(linalg::Vec3D(0.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+    atom5->setForce(linalg::Vec3D(0.0, 0.0, 1.0) * kcal_per_mol / angstrom);
+    atom4->setMass(1.0 * g_per_mol);
+    atom5->setMass(2.0 * g_per_mol);
+
+    molecule2.setMoltype(MolType{2});
+    molecule2.addAtom(atom4);
+    molecule2.addAtom(atom5);
+
+    _simulationBox->addMolecule(molecule1);
+    _simulationBox->addMolecule(molecule2);
+
+    const auto moleculeType1 = molsys::MoleculeType(MolType{1});
+    const auto moleculeType2 = molsys::MoleculeType(MolType{2});
+
+    _simulationBox->addMoleculeType(moleculeType1);
+    _simulationBox->addMoleculeType(moleculeType2);
+    _simulationBox->addAtom(atom1);
+    _simulationBox->addAtom(atom2);
+    _simulationBox->addAtom(atom3);
+    _simulationBox->addAtom(atom4);
+    _simulationBox->addAtom(atom5);
+
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
+    _simulationBox->setBox(orthoBox, false);
+}
 
 #endif   // TESTS__INCLUDE__MOLSYS__TEST_SIMULATION_BOX_HPP

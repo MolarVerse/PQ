@@ -36,8 +36,8 @@ namespace connectivity
     Bond::Bond(
         molsys::Molecule *molecule1,
         molsys::Molecule *molecule2,
-        const AtomIndex   atomIndex1,
-        const AtomIndex   atomIndex2
+        AtomIndex         atomIndex1,
+        AtomIndex         atomIndex2
     )
         : ConnectivityElement({molecule1, molecule2}, {atomIndex1, atomIndex2})
     {

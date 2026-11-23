@@ -31,7 +31,7 @@ namespace out
     /**
      * @brief format an integer into the scratch buffer
      */
-    std::string_view TextBuffer::_toChars(const std::size_t value)
+    std::string_view TextBuffer::_toChars(std::size_t value)
     {
         const auto result = std::to_chars(
             _scratch.data(),
@@ -46,9 +46,9 @@ namespace out
      * @brief format a double into the scratch buffer
      */
     std::string_view TextBuffer::_toChars(
-        const double            value,
-        const std::chars_format format,
-        const int               precision
+        double            value,
+        std::chars_format format,
+        int               precision
     )
     {
         const auto result = std::to_chars(
@@ -67,8 +67,8 @@ namespace out
      * same value into the scratch buffer
      */
     std::string_view TextBuffer::_toChars(
-        const double            value,
-        const std::chars_format format
+        double            value,
+        std::chars_format format
     )
     {
         const auto result = std::to_chars(
@@ -84,7 +84,7 @@ namespace out
     /**
      * @brief append spaces so that a field of the given length fills width
      */
-    void TextBuffer::_pad(const std::size_t length, const std::size_t width)
+    void TextBuffer::_pad(std::size_t length, std::size_t width)
     {
         if (length < width)
             _data.append(width - length, ' ');
@@ -93,7 +93,7 @@ namespace out
     /**
      * @brief append one character
      */
-    TextBuffer &TextBuffer::put(const char character)
+    TextBuffer &TextBuffer::put(char character)
     {
         _data.push_back(character);
         return *this;
@@ -102,7 +102,7 @@ namespace out
     /**
      * @brief append text as it is
      */
-    TextBuffer &TextBuffer::append(const std::string_view text)
+    TextBuffer &TextBuffer::append(std::string_view text)
     {
         _data.append(text);
         return *this;
@@ -111,10 +111,7 @@ namespace out
     /**
      * @brief append text left aligned, like "{:<width}"
      */
-    TextBuffer &TextBuffer::left(
-        const std::string_view text,
-        const std::size_t      width
-    )
+    TextBuffer &TextBuffer::left(std::string_view text, std::size_t width)
     {
         _data.append(text);
         _pad(text.size(), width);
@@ -124,10 +121,7 @@ namespace out
     /**
      * @brief append an integer left aligned, like "{:<width}"
      */
-    TextBuffer &TextBuffer::left(
-        const std::size_t value,
-        const std::size_t width
-    )
+    TextBuffer &TextBuffer::left(std::size_t value, std::size_t width)
     {
         return left(_toChars(value), width);
     }
@@ -136,9 +130,9 @@ namespace out
      * @brief append a double right aligned, like "{:width.precisionf}"
      */
     TextBuffer &TextBuffer::fixed(
-        const double      value,
-        const std::size_t width,
-        const int         precision
+        double      value,
+        std::size_t width,
+        int         precision
     )
     {
         const auto text = _toChars(value, std::chars_format::fixed, precision);
@@ -152,9 +146,9 @@ namespace out
      * @brief append a double right aligned, like "{:width.precisione}"
      */
     TextBuffer &TextBuffer::scientific(
-        const double      value,
-        const std::size_t width,
-        const int         precision
+        double      value,
+        std::size_t width,
+        int         precision
     )
     {
         const auto text =
@@ -169,10 +163,7 @@ namespace out
      * @brief append a double right aligned in fixed notation with the fewest
      * digits that read back as exactly the same value
      */
-    TextBuffer &TextBuffer::exactFixed(
-        const double      value,
-        const std::size_t width
-    )
+    TextBuffer &TextBuffer::exactFixed(double value, std::size_t width)
     {
         const auto text = _toChars(value, std::chars_format::fixed);
 
@@ -185,10 +176,7 @@ namespace out
      * @brief append a double right aligned in scientific notation with the
      * fewest digits that read back as exactly the same value
      */
-    TextBuffer &TextBuffer::exactScientific(
-        const double      value,
-        const std::size_t width
-    )
+    TextBuffer &TextBuffer::exactScientific(double value, std::size_t width)
     {
         const auto text = _toChars(value, std::chars_format::scientific);
 

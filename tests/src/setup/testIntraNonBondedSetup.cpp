@@ -28,6 +28,7 @@
 #include "intraNonBondedContainer.hpp"
 #include "intraNonBondedSetup.hpp"
 #include "molecule.hpp"
+#include "strongTypes.hpp"
 #include "testSetup.hpp"
 
 /**
@@ -36,9 +37,11 @@
  */
 TEST_F(TestSetup, setupIntraNonBonded)
 {
-    auto molecule = molsys::Molecule{MolType{1}};
-    auto intraNonBondedContainer =
-        intraNonBonded::IntraNonBondedContainer(MolType{1}, {{-1}});
+    auto molecule                = molsys::Molecule{MolType{1}};
+    auto intraNonBondedContainer = intraNonBonded::IntraNonBondedContainer(
+        MolType{1},
+        {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+    );
 
     const auto& intraNonBonded = _engine->getIntraNonBonded();
     intraNonBonded->addIntraNonBondedContainer(intraNonBondedContainer);

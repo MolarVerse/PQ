@@ -50,80 +50,91 @@ class TestInputValidation : public ::testing::Test
     std::unique_ptr<engine::OptEngine>      _engine;
     std::unique_ptr<input::InputFileReader> _reader;
 
-    void SetUp() override
-    {
-        _settings.generalSettings.setJobtypeByUser(static_cast<JobType>(0));
+    void SetUp() override;
 
-        _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
+    void _setKeyword(const std::string &keyword);
 
-        _settings.optimizerSettings.setLearningRateStrategyByUser(
-            LearningRate::CONSTANT
-        );
-        _settings.optimizerSettings.setMinLearningRateByUser(1.0e-15);
-        _settings.optimizerSettings.setMaxLearningRateByUser(1.0);
-
-        _settings.manostatSettings.setManostatTypeByUser(ManostatType::NONE);
-        _settings.manostatSettings.setTauByUser(
-            defaults::BERENDSEN_MANOSTAT_RELAX_TIME
-        );
-
-        _settings.kinetics.setRampingStepsByUser(0);
-        _settings.kinetics.setRampingFrequencyByUser(1);
-        _settings.thermostatSettings.setRelaxationTimeByUser(
-            defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
-        );
-        _settings.thermostatSettings.setFrictionByUser(
-            defaults::LANGEVIN_THERMOSTAT_FRICTION
-        );
-        _settings.simulationBoxSettings.setInitializeVelocsByUser(
-            InitVelocities::FALSE
-        );
-
-        _settings.potentialSettings.setCoulombLongRangeTypeByUser(
-            CoulombLongRangeType::SHIFTED
-        );
-        _settings.potentialSettings.setCoulombRadiusCutOffByUser(
-            defaults::COULOMB_CUT_OFF_DEFAULT
-        );
-
-        _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
-        _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
-        _settings.fennolSettings.setFennolModelPathByUser("");
-
-        _engine = std::make_unique<engine::OptEngine>(_settings);
-        _reader =
-            std::make_unique<input::InputFileReader>("input.in", _settings);
-
-        _settings.timings.setTimeStepByUser(0.5 * fs);
-        _settings.timings.setNumberOfStepsByUser(100U);
-    }
-
-    void _setKeyword(const std::string &keyword)
-    {
-        _reader->setKeywordCount(keyword, 1);
-    }
-
-    void _configureMDJob(const JobType jobType)
-    {
-        _settings.generalSettings.setJobtypeByUser(jobType);
-        _settings.timings.setNumberOfStepsByUser(100U);
-        _setKeyword("nstep");
-        _setKeyword("timestep");
-        if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
-            _setKeyword("qm_prog");
-    }
+    void _configureMDJob(JobType jobType);
 
     // the value checks moved out of the reader into Settings::validate(),
     // which runs after Settings::finalize()
-    void _finalizeAndValidate()
-    {
-        _reader->validateInputConfiguration(_settings);
-        _settings.finalize();
-        _settings.validate();
-    }
+    void _finalizeAndValidate();
 
-    void TearDown() override { GeneralSettings::deactivateCellList(); }
+    void TearDown() override;
 };
+
+void TestInputValidation::SetUp()
+{
+    _settings.generalSettings.setJobtypeByUser(static_cast<JobType>(0));
+
+    _settings.hessianSettings.setOptimizeBeforeHessianByUser(false);
+
+    _settings.optimizerSettings.setLearningRateStrategyByUser(
+        LearningRate::CONSTANT
+    );
+    _settings.optimizerSettings.setMinLearningRateByUser(1.0e-15);
+    _settings.optimizerSettings.setMaxLearningRateByUser(1.0);
+
+    _settings.manostatSettings.setManostatTypeByUser(ManostatType::NONE);
+    _settings.manostatSettings.setTauByUser(
+        defaults::BERENDSEN_MANOSTAT_RELAX_TIME
+    );
+
+    _settings.kinetics.setRampingStepsByUser(0);
+    _settings.kinetics.setRampingFrequencyByUser(1);
+    _settings.thermostatSettings.setRelaxationTimeByUser(
+        defaults::BERENDSEN_THERMOSTAT_RELAX_TIME
+    );
+    _settings.thermostatSettings.setFrictionByUser(
+        defaults::LANGEVIN_THERMOSTAT_FRICTION
+    );
+    _settings.simulationBoxSettings.setInitializeVelocsByUser(
+        InitVelocities::FALSE
+    );
+
+    _settings.potentialSettings.setCoulombLongRangeTypeByUser(
+        CoulombLongRangeType::SHIFTED
+    );
+    _settings.potentialSettings.setCoulombRadiusCutoffByUser(
+        defaults::COULOMB_CUT_OFF_DEFAULT
+    );
+
+    _settings.dftbSettings.setSlakosTypeByUser(SlakosType::NONE);
+    _settings.dftbSettings.setUseThirdOrderDftbByUser(false);
+    _settings.fennolSettings.setFennolModelPathByUser("");
+
+    _engine = std::make_unique<engine::OptEngine>(_settings);
+    _reader = std::make_unique<input::InputFileReader>("input.in", _settings);
+
+    _settings.timings.setTimeStepByUser(0.5 * fs);
+    _settings.timings.setNumberOfStepsByUser(100U);
+}
+
+void TestInputValidation::_setKeyword(const std::string &keyword)
+{
+    _reader->setKeywordCount(keyword, 1);
+}
+
+void TestInputValidation::_configureMDJob(JobType jobType)
+{
+    _settings.generalSettings.setJobtypeByUser(jobType);
+    _settings.timings.setNumberOfStepsByUser(100U);
+    _setKeyword("nstep");
+    _setKeyword("timestep");
+    if (jobType == JobType::QM_MD || jobType == JobType::RING_POLYMER_QM_MD)
+        _setKeyword("qm_prog");
+}
+
+// the value checks moved out of the reader into Settings::validate(),
+// which runs after Settings::finalize()
+void TestInputValidation::_finalizeAndValidate()
+{
+    _reader->validateInputConfiguration(_settings);
+    _settings.finalize();
+    _settings.validate();
+}
+
+void TestInputValidation::TearDown() { GeneralSettings::deactivateCellList(); }
 
 TEST_F(TestInputValidation, requiresNumberOfStepsForMD)
 {
@@ -378,7 +389,7 @@ TEST_F(TestInputValidation, rejectsCellListWithoutCoulombCutoff)
 {
     _configureMDJob(JobType::MM_MD);
     GeneralSettings::activateCellList();
-    _settings.potentialSettings.setCoulombRadiusCutOffByUser(0.0 * angstrom);
+    _settings.potentialSettings.setCoulombRadiusCutoffByUser(0.0 * angstrom);
 
     ASSERT_THROW_MSG(
         _reader->validateInputConfiguration(_settings),

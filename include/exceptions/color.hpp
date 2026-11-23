@@ -59,7 +59,7 @@ namespace Color
         Code _code;
 
        public:
-        explicit Modifier(const Code pCode) : _code(pCode) {}
+        explicit Modifier(Code pCode);
         friend std::ostream &operator<<(
             std::ostream   &ostream,
             const Modifier &mod
@@ -69,6 +69,8 @@ namespace Color
                            << "m";
         }
     };
+
+    inline Modifier::Modifier(Code pCode) : _code(pCode) {}
 }   // namespace Color
 
 #endif   // EXCEPTIONS__COLOR_HPP

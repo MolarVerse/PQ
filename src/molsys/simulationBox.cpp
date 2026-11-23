@@ -358,7 +358,7 @@ namespace molsys
      * @return pair<Molecule *, AtomIndex>
      */
     std::pair<Molecule*, AtomIndex> SimulationBox::
-        findMoleculeByGlobalAtomIndex(const size_t atomIndex)
+        findMoleculeByGlobalAtomIndex(size_t atomIndex)
     {
         if (_atomIndexOffsets.size() == _molecules.size() + 1 &&
             atomIndex > 0 && atomIndex <= _atomIndexOffsets.back())
@@ -741,12 +741,12 @@ namespace molsys
      * @throw exc::UserInputException if coulomb radius cut off is larger than
      * half of the minimal box dimension
      */
-    void SimulationBox::checkCoulRadiusCutOff(
+    void SimulationBox::checkCoulRadiusCutoff(
         const ExceptionType& exceptionType,
-        const Distance&      coulombRadiusCutOff
+        const Distance&      coulombRadiusCutoff
     ) const
     {
-        if (getMinimalBoxDimension() < 2.0 * coulombRadiusCutOff)
+        if (getMinimalBoxDimension() < 2.0 * coulombRadiusCutoff)
         {
             const std::string message =
                 "Coulomb radius cut off is larger than half of the minimal box "
@@ -800,7 +800,7 @@ namespace molsys
      * @brief initialize positions of all atoms
      *
      */
-    void SimulationBox::initPositions(const double displacement)
+    void SimulationBox::initPositions(double displacement)
     {
         rng::RandomNumberGenerator rng{};
 

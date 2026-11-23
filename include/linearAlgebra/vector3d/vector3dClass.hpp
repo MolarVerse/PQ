@@ -79,25 +79,12 @@ namespace linalg
 
         constexpr Vector3D();
 
-        /**
-         * @brief vector with all components zero (uses T::zero() for
-         * quantities, value initialization otherwise)
-         */
-        [[nodiscard]] static constexpr Vector3D zero()
-        {
-            if constexpr (requires { T::zero(); })
-                return Vector3D(T::zero(), T::zero(), T::zero());
-            else
-                return Vector3D(T{}, T{}, T{});
-        }
-        Vector3D(const T xValue, const T yValue, const T zValue)
-            : x(xValue), y(yValue), z(zValue)
-        {
-        }
-        Vector3D(const Vector3D<T> &xyz_) : xyz(xyz_.xyz) {}
-        Vector3D(Vector3D<T> &&xyz_) noexcept : xyz(std::move(xyz_.xyz)) {}
+        [[nodiscard]] static constexpr Vector3D zero();
+        Vector3D(T xValue, T yValue, T zValue);
+        Vector3D(const Vector3D<T> &xyz_);
+        Vector3D(Vector3D<T> &&xyz_) noexcept;
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
-        Vector3D(const T xyz_) : x(xyz_), y(xyz_), z(xyz_) {}
+        Vector3D(T xyz_);
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
         // implicit converting constructor between quantity vectors, e.g.
@@ -106,27 +93,21 @@ namespace linalg
         // assignment operator work as well)
         // NOLINTBEGIN(google-explicit-constructor, hicpp-explicit-conversions)
         template <typename U>
-        requires(!std::same_as<U, T> && mstd::is_quantity_like_v<T> &&
-                 mstd::is_quantity_like_v<U> && std::convertible_to<U, T>)
-        Vector3D(const Vector3D<U> &vec)
-            : x(static_cast<T>(vec[0])),
-              y(static_cast<T>(vec[1])),
-              z(static_cast<T>(vec[2]))
-        {
-        }
+        requires(
+            !std::same_as<U, T> && mstd::is_quantity_like_v<T> &&
+            mstd::is_quantity_like_v<U> && std::convertible_to<U, T>
+        )
+        Vector3D(const Vector3D<U> &vec);
         // implicit constructor from a quantity holding a Vector3D, e.g.
         // quantity<angstrom, Vector3D<double>> (which is what mp-units
         // produces for `vec * angstrom` with a non-const/temporary vec)
         template <typename Q>
-        requires(mstd::is_quantity_like_v<T> && mstd::is_quantity_like_v<Q> &&
-                 !std::same_as<Q, T> &&
-                 std::same_as<typename Q::rep, Vector3D<double>>)
-        Vector3D(const Q &quantity)
-            : x(quantity.numerical_value_in(Q::unit)[0] * Q::unit),
-              y(quantity.numerical_value_in(Q::unit)[1] * Q::unit),
-              z(quantity.numerical_value_in(Q::unit)[2] * Q::unit)
-        {
-        }
+        requires(
+            mstd::is_quantity_like_v<T> && mstd::is_quantity_like_v<Q> &&
+            !std::same_as<Q, T> &&
+            std::same_as<typename Q::rep, Vector3D<double>>
+        )
+        Vector3D(const Q &quantity);
         // NOLINTEND(google-explicit-constructor, hicpp-explicit-conversions)
 
         using value_type = T;

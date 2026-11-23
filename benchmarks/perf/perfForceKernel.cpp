@@ -52,7 +52,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
     auto molecule            = benchSetup::makeMolecule({.nAtoms = 2});
     auto nonCoulombPotential = benchSetup::makeNonCoulomb();
     auto coulombPotential =
@@ -61,8 +61,10 @@ int main()
     settings.potentialSettings.setScale14CoulombByUser(0.75);
     settings.potentialSettings.setScale14VanDerWaalsByUser(0.75);
 
-    auto intraNonBondedType =
-        intraNonBonded::IntraNonBondedContainer(MolType{0}, {{-1}});
+    auto intraNonBondedType = intraNonBonded::IntraNonBondedContainer(
+        MolType{0},
+        {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
+    );
     auto intraNonBondedMap =
         intraNonBonded::IntraNonBondedMap(&molecule, &intraNonBondedType);
 
@@ -74,7 +76,7 @@ int main()
     simulationBox.setBox(orthoBox, false);
 
     const auto& box     = simulationBox.getBoxDimensions();
-    const auto  atomIdx = intraNonBondedType.getAtomIndices()[0][0];
+    const auto& partner = intraNonBondedType.getPartners()[0][0];
 
     perfAllocBegin();
 
@@ -86,7 +88,7 @@ int main()
         const auto [coulombEnergy, nonCoulombEnergy] =
             intraNonBondedMap.calculateSingleInteraction(
                 AtomIndex{0},
-                atomIdx,
+                partner,
                 box,
                 &coulombPotential,
                 &nonCoulombPotential,

@@ -66,19 +66,11 @@ namespace cli
 
         template <std::integral T>
         requires(!std::same_as<std::remove_cv_t<T>, bool>)
-        void value(const T value)
-        {
-            _beforeValue();
-            _output << value;
-        }
+        void value(T value);
 
         template <std::integral T>
         requires(!std::same_as<std::remove_cv_t<T>, bool>)
-        void value(const std::string_view key, const T value)
-        {
-            _beforeMember(key);
-            _output << value;
-        }
+        void value(std::string_view key, T value);
 
        private:
         void _indent() const;
@@ -88,6 +80,22 @@ namespace cli
         void _beginContainer(std::string_view key, char opening);
         void _endContainer(char closing);
     };
+
+    template <std::integral T>
+    requires(!std::same_as<std::remove_cv_t<T>, bool>)
+    void JsonWriter::value(T value)
+    {
+        _beforeValue();
+        _output << value;
+    }
+
+    template <std::integral T>
+    requires(!std::same_as<std::remove_cv_t<T>, bool>)
+    void JsonWriter::value(std::string_view key, T value)
+    {
+        _beforeMember(key);
+        _output << value;
+    }
 }   // namespace cli
 
 #endif   // APPS__JSON_OUTPUT_HPP

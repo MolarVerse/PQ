@@ -36,39 +36,53 @@
 class QMMMEnergiesTest : public ::testing::Test
 {
    protected:
-    static void _scaleAndAccumulate(engine::QMMMMDEngine &engine, double smF)
-    {
-        engine._scaleAndAccumulateEnergies(smF);
-    }
+    static void _scaleAndAccumulate(engine::QMMMMDEngine &engine, double smF);
 
-    static void _moveEnergies(engine::QMMMMDEngine &engine)
-    {
-        engine._moveEnergiesToPhysicalData();
-    }
+    static void _moveEnergies(engine::QMMMMDEngine &engine);
 
-    static void _calculateReference(engine::QMMMMDEngine &engine)
-    {
-        engine._calculateQMReferenceEnergy();
-    }
+    static void _calculateReference(engine::QMMMMDEngine &engine);
 
     static std::unordered_set<size_t> _inactiveSet(
         size_t bits,
         size_t nMolecules
-    )
-    {
-        return engine::QMMMMDEngine::_generateInactiveSmoothingMoleculeSet(
-            bits,
-            nMolecules
-        );
-    }
+    );
 
-    static size_t _numberOfConfigurations(size_t nMolecules)
-    {
-        return engine::QMMMMDEngine::_numberOfSmoothingConfigurations(
-            nMolecules
-        );
-    }
+    static size_t _numberOfConfigurations(size_t nMolecules);
 };
+
+void QMMMEnergiesTest::_scaleAndAccumulate(
+    engine::QMMMMDEngine &engine,
+    double                smF
+)
+{
+    engine._scaleAndAccumulateEnergies(smF);
+}
+
+void QMMMEnergiesTest::_moveEnergies(engine::QMMMMDEngine &engine)
+{
+    engine._moveEnergiesToPhysicalData();
+}
+
+void QMMMEnergiesTest::_calculateReference(engine::QMMMMDEngine &engine)
+{
+    engine._calculateQMReferenceEnergy();
+}
+
+std::unordered_set<size_t> QMMMEnergiesTest::_inactiveSet(
+    size_t bits,
+    size_t nMolecules
+)
+{
+    return engine::QMMMMDEngine::_generateInactiveSmoothingMoleculeSet(
+        bits,
+        nMolecules
+    );
+}
+
+size_t QMMMEnergiesTest::_numberOfConfigurations(size_t nMolecules)
+{
+    return engine::QMMMMDEngine::_numberOfSmoothingConfigurations(nMolecules);
+}
 
 TEST_F(QMMMEnergiesTest, exactSmoothingCountsIntraEnergyOnce)
 {

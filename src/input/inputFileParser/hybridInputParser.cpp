@@ -63,7 +63,7 @@ namespace input
         /**
          * @brief error message for an invalid forced-list value
          */
-        std::string moleculeIndexError(const std::string_view key)
+        std::string moleculeIndexError(std::string_view key)
         {
             return std::format(
                 "{} takes molecule indices, e.g. 0,2-4 (the selection grammar "

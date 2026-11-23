@@ -4,7 +4,7 @@ add_executable(testSelection
 
 target_compile_definitions(testSelection
     PRIVATE
-    WITH_WITH_PYTHON_BINDINGS
+    WITH_PYTHON_BINDINGS
 )
 
 target_link_libraries(testSelection

@@ -1,0 +1,1 @@
+- Turn on the `noConstValueParam` devops check and drop top-level `const` from by-value parameters.

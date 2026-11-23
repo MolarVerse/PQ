@@ -1,0 +1,12 @@
+jobtype = mm-hessian;
+force-field = bonded;
+rcoulomb = 9.0;
+start_file = start.rst;
+parameter_file = bond.param;
+topology_file = topology.top;
+file_prefix = bond;
+hessian_file = bond.hessian;
+hessian_info_file = bond.hessian.info;
+hessian_displacement = 0.001;
+optimize_before_hessian = false;
+hessian_builder = central;

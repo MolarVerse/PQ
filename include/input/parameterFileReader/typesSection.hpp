@@ -60,14 +60,10 @@ namespace input::parameterFile
         ) override;
 
         void processHeader(
-            std::vector<std::string> & /*lineElements*/,
-            engine::Engine & /*engine*/,
-            size_t /*lineNumber*/
-        ) override
-        {
-            // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/905
-            // implement processHeader
-        }
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine,
+            size_t                    lineNumber
+        ) override;
     };
 
 }   // namespace input::parameterFile
