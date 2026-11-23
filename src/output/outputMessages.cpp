@@ -29,6 +29,7 @@
 #include "systemInfo.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 namespace out
 {
@@ -41,6 +42,7 @@ namespace out
     std::string header()
     {
         std::stringstream header_title;
+        const auto       &version = CURRENT_VERSION.to_string();
 
         header_title << R"(
 ************************************************************************
@@ -71,7 +73,7 @@ namespace out
                      << '\n';
 
         header_title << '\n';
-        header_title << OUTPUT << "Version:       " << sysinfo::VERSION << '\n';
+        header_title << OUTPUT << "Version:       " << version << '\n';
         header_title << OUTPUT << "Compile date:  " << sysinfo::COMPILE_DATE
                      << '\n';
 

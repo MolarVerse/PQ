@@ -35,8 +35,8 @@
 #include "defaults.hpp"
 #include "externalQMScripts.hpp"
 #include "jsonOutput.hpp"
-#include "systemInfo.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 namespace
 {
@@ -405,7 +405,7 @@ void cli::writeCapabilities(std::ostream &output)
     json.beginObject();
     json.value("schema", "pq.capabilities");
     json.value("schema_version", 2);
-    json.value("version", sysinfo::VERSION);
+    json.value("version", CURRENT_VERSION.to_string());
     writeBuildCapabilities(json);
     writeCliCapabilities(json);
     writeInputCapabilities(json);
