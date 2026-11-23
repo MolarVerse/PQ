@@ -1,1 +1,1 @@
-- `learning-rate-decay` defaults to 1.0, `OptEngine::run` only throws when the learning rate strategy stops the run, `Settings::validate` rejects constraints for optimization jobs, and `regression_mm_opt_example` runs the new `ar3_mm_opt` example (#1263, #1300).
+- `learning-rate-decay` defaults to 1.0, `OptEngine::run` only throws when the learning rate strategy stops the run, and `regression_mm_opt_example` runs the new `ar3_mm_opt` example (#1263).
