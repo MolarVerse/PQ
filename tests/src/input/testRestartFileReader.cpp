@@ -24,7 +24,7 @@
 
 #include <gtest/gtest.h>
 
-#include <cstdio>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -127,7 +127,7 @@ TEST_F(TestRstFileReader, startFileWithoutAtomsIsRefused)
         );
     }
 
-    std::remove(filename.c_str());
+    std::filesystem::remove(filename);
 }
 
 /**
