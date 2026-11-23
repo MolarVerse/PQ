@@ -99,7 +99,7 @@ Possible options are:
 
    4. **qmmm-md** - Represents a hybrid quantum mechanics - molecular mechanics molecular dynamics simulation.
 
-   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. With :ref:`shake <shakeKey>` = ``on`` or ``mshake`` the constrained bonds keep their length and the forces are projected onto the constraints, so convergence uses the constrained forces (see ``examples/h2o_mm_opt_shake`` and ``examples/h2o_mm_opt_mshake``). SHAKE on all three distances of a molecule needs more ``shake-iter`` and ``rattle-iter``; use M-SHAKE for rigid molecules instead. :ref:`distance-constraints <distanceConstraintsKey>` add their penalty energy and forces with the static force constant; ``dforce_constant_dt`` is not used (see ``examples/ar3_mm_opt_distance``). See ``examples/ar3_mm_opt`` for a small input.
+   5. **mm-opt** - represents a geometry optimization calculation using molecular mechanics. If the optimizer has not converged after ``nstep`` epochs, PQ writes a warning and ends normally. With :ref:`shake <shakeKey>` = ``on`` or ``mshake`` the constrained bonds keep their length and the forces are projected onto the constraints, so convergence uses the constrained forces (see ``examples/h2o_mm_opt_shake`` and ``examples/h2o_mm_opt_mshake``). In ``mm-opt`` SHAKE and RATTLE run up to at least 1000 iterations, so also SHAKE on all three distances of a molecule converges with the default ``shake-iter`` and ``rattle-iter``. :ref:`distance-constraints <distanceConstraintsKey>` add their penalty energy and forces with the static force constant; ``dforce_constant_dt`` is not used (see ``examples/ar3_mm_opt_distance``). See ``examples/ar3_mm_opt`` for a small input.
 
    6. **mm-hessian** - represents a molecular mechanics Hessian calculation. By default, the geometry is optimized first and the Hessian is built at the optimized structure. Set ``optimize_before_hessian = false`` to calculate the Hessian directly at the input geometry.
 
@@ -1378,7 +1378,7 @@ Shake Iteration
 
     shake-iter = {uint+} -> 20
 
-With the ``shake-iter`` keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the shake algorithm.
+With the ``shake-iter`` keyword the user can specify the maximum number of iterations until the convergence of the bond lengths should be reached within the shake algorithm. ``mm-opt`` uses at least 1000.
 
 .. centered:: *default value* = 20
 
@@ -1408,7 +1408,7 @@ Rattle Iteration
 
     rattle-iter = {uint+} -> 20
 
-With the ``rattle-iter`` keyword the user can specify the maximum number of iterations until the convergence of the velocities of the shaked bonds should be reached within the rattle algorithm.
+With the ``rattle-iter`` keyword the user can specify the maximum number of iterations until the convergence of the velocities of the shaked bonds should be reached within the rattle algorithm. ``mm-opt`` uses at least 1000.
 
 .. centered:: *default value* = 20
 

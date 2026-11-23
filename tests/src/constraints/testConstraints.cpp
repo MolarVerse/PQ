@@ -27,6 +27,7 @@
 #include <cstddef>
 #include <memory>
 #include <numbers>
+#include <utility>
 #include <vector>
 
 #include "distanceConstraint.hpp"
@@ -403,6 +404,91 @@ TEST_F(TestConstraints, projectForcesWithoutShakeKeepsTheForces)
         atoms[1]->getPosition().numerical_value_in(angstrom),
         testing::ElementsAre(2.1, 1.0, 1.0)
     );
+}
+
+TEST_F(TestConstraints, applyShakeToPositionsConvergesOnAWideTriangle)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config) { config.activateShakeByUser(); })
+            .build();
+
+    const auto displace = [](molsys::SimulationBox &simulationBox)
+    {
+        auto &atoms = simulationBox.getAtoms();
+        atoms[1]->addPosition(linalg::Vec3D(0.01, 0.0, 0.0) * angstrom);
+        atoms[2]->addPosition(linalg::Vec3D(0.0, 0.01, 0.0) * angstrom);
+    };
+
+    constraints::Constraints mdConstraints(settings);
+    auto mdBox = _makeWideTriangleBox(mdConstraints);
+    displace(*mdBox);
+
+    EXPECT_THROW(mdConstraints.applyShake(*mdBox, 1.0 * fs), exc::ShakeException);
+
+    constraints::Constraints optConstraints(settings);
+    auto optBox = _makeWideTriangleBox(optConstraints);
+    displace(*optBox);
+
+    EXPECT_NO_THROW(optConstraints.applyShakeToPositions(*optBox));
+
+    for (const auto &bond : optConstraints.getBondConstraints())
+    {
+        EXPECT_NEAR(
+            bond.calculateDistanceDelta(*optBox).numerical_value_in(angstrom2),
+            0.0,
+            1e-6
+        );
+    }
+}
+
+TEST_F(TestConstraints, projectForcesConvergesOnAWideTriangle)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config) { config.activateShakeByUser(); })
+            .build();
+    constraints::Constraints constraints(settings);
+
+    auto  simulationBox = _makeWideTriangleBox(constraints);
+    auto &atoms         = simulationBox->getAtoms();
+    atoms[1]->setForce(linalg::Vec3D(100.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+    atoms[2]->setForce(linalg::Vec3D(0.0, 100.0, 0.0) * kcal_per_mol / angstrom);
+
+    for (const auto &atom : atoms)
+    {
+        atom->setVelocity(1.0 * fs * atom->getForce() / atom->getMass());
+    }
+
+    EXPECT_THROW(constraints.applyRattle(*simulationBox), exc::ShakeException);
+
+    for (const auto &atom : atoms)
+    {
+        atom->setVelocity(Vel3D::zero());
+    }
+
+    EXPECT_NO_THROW(constraints.projectForces(*simulationBox));
+
+    for (const auto &[first, second] : std::vector<std::pair<size_t, size_t>>{
+             {0, 1},
+             {0, 2},
+             {1, 2}
+         })
+    {
+        const auto dAccel =
+            atoms[first]->getForce() / atoms[first]->getMass() -
+            atoms[second]->getForce() / atoms[second]->getMass();
+        const auto bondVector =
+            atoms[first]->getPosition() - atoms[second]->getPosition();
+
+        EXPECT_NEAR(
+            dot(dAccel, bondVector).numerical_value_in(
+                kcal_per_mol / g_per_mol
+            ),
+            0.0,
+            1e-5
+        );
+    }
 }
 
 /**

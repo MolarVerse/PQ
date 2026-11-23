@@ -23,6 +23,7 @@
 #include "constraints.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <format>
 #include <vector>
 
@@ -41,6 +42,9 @@ namespace constraints
     {
         // sets how tightly the RATTLE tolerance holds on the forces
         constexpr Time OPT_TIME_STEP = 1.0 * fs;
+
+        // a projected full force needs more passes than an MD step
+        constexpr size_t OPT_MAX_ITER = 1000;
     }   // namespace
 
     /**
@@ -97,7 +101,11 @@ namespace constraints
             return;
 
         if (_constraintSettings->isShakeActivated())
-            _applyShake(simulationBox, timeStep);
+            _applyShake(
+                simulationBox,
+                timeStep,
+                _constraintSettings->getShakeMaxIter()
+            );
 
         if (_constraintSettings->isMShakeActivated())
             _applyMShake(simulationBox, timeStep);
@@ -108,13 +116,15 @@ namespace constraints
      *
      * @param simulationBox
      * @param timeStep the integration time step used for velocity updates
+     * @param maxIter
      *
      * @throws exc::ShakeException if shake algorithm does not
      * converge
      */
     void Constraints::_applyShake(
         molsys::SimulationBox &simulationBox,
-        const Time            &timeStep
+        const Time            &timeStep,
+        size_t                 maxIter
     )
     {
         auto _ = scopedTimer(TimerId::Constraints, "Shake");
@@ -124,7 +134,7 @@ namespace constraints
 
         size_t iter = 0;
 
-        while (!converged && iter <= _constraintSettings->getShakeMaxIter())
+        while (!converged && iter <= maxIter)
         {
             convergedVector.clear();
 
@@ -197,7 +207,7 @@ namespace constraints
             return;
 
         if (_constraintSettings->isShakeActivated())
-            _applyRattle();
+            _applyRattle(_constraintSettings->getRattleMaxIter());
 
         if (_constraintSettings->isMShakeActivated())
             _applyMRattle(simulationBox);
@@ -206,10 +216,12 @@ namespace constraints
     /**
      * @brief applies the rattle algorithm to all bond constraints
      *
+     * @param maxIter
+     *
      * @throws exc::ShakeException if rattle algorithm does not
      * converge
      */
-    void Constraints::_applyRattle()
+    void Constraints::_applyRattle(size_t maxIter)
     {
         auto _ = scopedTimer(TimerId::Constraints, "Rattle");
 
@@ -218,7 +230,7 @@ namespace constraints
 
         size_t iter = 0;
 
-        while (!converged && iter <= _constraintSettings->getRattleMaxIter())
+        while (!converged && iter <= maxIter)
         {
             convergedVector.clear();
 
@@ -255,7 +267,8 @@ namespace constraints
      * @brief corrects the positions with SHAKE or M-SHAKE, keeping the
      * velocities
      *
-     * @details for geometry optimizations, which have no time step
+     * @details for geometry optimizations, which have no time step; SHAKE
+     * iterates up to at least OPT_MAX_ITER times
      *
      * @param simulationBox
      */
@@ -270,7 +283,19 @@ namespace constraints
 
         const auto velocities = simulationBox.getVelocities();
 
-        applyShake(simulationBox, OPT_TIME_STEP);
+        if (_constraintSettings->isShakeActivated())
+        {
+            _applyShake(
+                simulationBox,
+                OPT_TIME_STEP,
+                std::max(_constraintSettings->getShakeMaxIter(), OPT_MAX_ITER)
+            );
+        }
+
+        if (_constraintSettings->isMShakeActivated())
+        {
+            _applyMShake(simulationBox, OPT_TIME_STEP);
+        }
 
         _setVelocities(simulationBox, velocities);
     }
@@ -280,7 +305,8 @@ namespace constraints
      *
      * @details applies RATTLE to the velocities M^-1 F dt, so the forces
      * become M P M^-1 F with P the RATTLE projection. They vanish exactly at a
-     * constrained minimum. The velocities are kept.
+     * constrained minimum. The velocities are kept. RATTLE iterates up to at
+     * least OPT_MAX_ITER times.
      *
      * @param simulationBox
      */
@@ -300,7 +326,17 @@ namespace constraints
             );
         }
 
-        applyRattle(simulationBox);
+        if (_constraintSettings->isShakeActivated())
+        {
+            _applyRattle(
+                std::max(_constraintSettings->getRattleMaxIter(), OPT_MAX_ITER)
+            );
+        }
+
+        if (_constraintSettings->isMShakeActivated())
+        {
+            _applyMRattle(simulationBox);
+        }
 
         for (const auto &atom : simulationBox.getAtoms())
         {

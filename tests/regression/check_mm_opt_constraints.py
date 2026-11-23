@@ -157,7 +157,7 @@ CASES = [
         "shake on all water distances",
         "h2o_mm_opt_mshake",
         {
-            "shake = mshake;": "shake = on;\nshake-iter = 100;\nrattle-iter = 100;",
+            "shake = mshake;": "shake = on;",
             "mshake_file = mshake.top;\n": "",
         },
         {"shake.top": RIGID_SHAKE},

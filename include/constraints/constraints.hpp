@@ -139,14 +139,15 @@ namespace constraints
        private:
         void _applyShake(
             molsys::SimulationBox &simulationBox,
-            const Time            &timeStep
+            const Time            &timeStep,
+            size_t                 maxIter
         );
         void _applyMShake(
             molsys::SimulationBox &simulationBox,
             const Time            &timeStep
         );
 
-        void _applyRattle();
+        void _applyRattle(size_t maxIter);
         void _applyMRattle(molsys::SimulationBox &simulationBox);
 
         void _applyDistanceConstraints(

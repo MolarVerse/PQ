@@ -1,0 +1,1 @@
+- `mm-opt` with SHAKE on all three distances of a molecule now converges with the default `shake-iter` and `rattle-iter` (#1330).

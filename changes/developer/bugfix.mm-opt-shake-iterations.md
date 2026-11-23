@@ -1,0 +1,1 @@
+- `Constraints::applyShakeToPositions` and `Constraints::projectForces` iterate SHAKE and RATTLE up to at least 1000 times; MD keeps `shake-iter` and `rattle-iter` (#1330).

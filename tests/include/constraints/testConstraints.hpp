@@ -25,7 +25,12 @@
 
 #include <gtest/gtest.h>
 
+#include <cmath>
+#include <cstddef>
 #include <memory>
+#include <numbers>
+#include <utility>
+#include <vector>
 
 #include "atom.hpp"
 #include "bondConstraint.hpp"
@@ -168,6 +173,81 @@ class TestConstraints : public ::testing::Test
             {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
         };
         simulationBox->setBox(orthoBox, false);
+
+        return simulationBox;
+    }
+
+    /**
+     * @brief a box with one water-like molecule (masses 16, 1, 1), O-H 1 Å and
+     * H-O-H 140°, constrained on all three distances
+     *
+     * @details a wide constraint triangle needs far more than 20 SHAKE or
+     * RATTLE passes
+     *
+     * @param constraints gets the three bond constraints
+     *
+     * @return std::unique_ptr<molsys::SimulationBox>
+     */
+    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox>
+    _makeWideTriangleBox(constraints::Constraints &constraints)
+    {
+        const auto halfAngle = 70.0 * std::numbers::pi / 180.0;
+        const auto masses    = std::vector<double>{16.0, 1.0, 1.0};
+        const auto positions = std::vector<linalg::Vec3D>{
+            {5.0, 5.0, 5.0},
+            {5.0 + std::cos(halfAngle), 5.0 + std::sin(halfAngle), 5.0},
+            {5.0 + std::cos(halfAngle), 5.0 - std::sin(halfAngle), 5.0}
+        };
+
+        auto molecule = molsys::Molecule();
+        auto atoms    = std::vector<std::shared_ptr<molsys::Atom>>();
+
+        for (size_t index = 0; index < positions.size(); ++index)
+        {
+            auto atom = std::make_shared<molsys::Atom>();
+            atom->setPosition(positions[index] * angstrom);
+            atom->setVelocity(Vel3D::zero());
+            atom->setForce(Force3D::zero());
+            atom->setMass(masses[index] * g_per_mol);
+            molecule.addAtom(atom);
+            atoms.push_back(atom);
+        }
+
+        auto simulationBox = std::make_unique<molsys::SimulationBox>();
+        simulationBox->addMolecule(molecule);
+
+        for (const auto &atom : atoms)
+        {
+            simulationBox->addAtom(atom);
+        }
+
+        simulationBox->setBox(
+            molsys::OrthorhombicBox{
+                {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+            },
+            false
+        );
+
+        auto *moleculePtr = simulationBox->getMolecules().data();
+
+        for (const auto &[first, second] : std::vector<std::pair<size_t, size_t>>{
+                 {0, 1},
+                 {0, 2},
+                 {1, 2}
+             })
+        {
+            constraints.addBondConstraint(
+                constraints::BondConstraint(
+                    moleculePtr,
+                    moleculePtr,
+                    AtomIndex{first},
+                    AtomIndex{second},
+                    norm(positions[first] - positions[second]) * angstrom
+                )
+            );
+        }
+
+        constraints.calculateConstraintBondRefs(*simulationBox);
 
         return simulationBox;
     }
