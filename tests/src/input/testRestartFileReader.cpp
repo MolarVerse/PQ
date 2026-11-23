@@ -29,8 +29,8 @@
 #include <string>
 #include <vector>
 
-#include "fileSettings.hpp"
 #include "exceptions.hpp"
+#include "fileSettings.hpp"
 #include "generalSettings.hpp"
 #include "moldescriptorReader.hpp"
 #include "restartFileReader.hpp"
