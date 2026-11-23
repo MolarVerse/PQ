@@ -86,58 +86,69 @@ class AseQMRunnerTest : public ::testing::Test
     physicalData::PhysicalData _physicalData;
 
    public:
-    static void SetUpTestSuite()
-    {
-        Python::guard = std::make_unique<pybind11::scoped_interpreter>();
-    }
+    static void SetUpTestSuite();
 
-    static void TearDownTestSuite() { Python::guard.reset(); }
+    static void TearDownTestSuite();
 
    protected:
-    void SetUp() override
-    {
-        const auto types = pybind11::module_::import("types");
-        const auto sys   = pybind11::module_::import("sys");
+    void SetUp() override;
 
-        auto aseModule             = types.attr("ModuleType")("ase");
-        auto aseAtoms              = types.attr("ModuleType")("ase.atoms");
-        aseModule.attr("__path__") = pybind11::list();
-        aseModule.attr("atoms")    = aseAtoms;
-
-        pybind11::exec(fakeAseAtoms, aseAtoms.attr("__dict__"));
-
-        auto fennolModule             = types.attr("ModuleType")("fennol");
-        fennolModule.attr("__path__") = pybind11::list();
-        fennolModule.attr("ase")      = aseAtoms;
-
-        sys.attr("modules")["ase"]        = aseModule;
-        sys.attr("modules")["ase.atoms"]  = aseAtoms;
-        sys.attr("modules")["fennol"]     = fennolModule;
-        sys.attr("modules")["fennol.ase"] = aseAtoms;
-
-        constexpr auto          boxEdge = 10.0 * angstrom;
-        molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
-        _simulationBox.setBox(box, false);
-    }
-
-    static QM::AseFennolRunner _runner(Settings settings, const double delay)
-    {
-        pybind11::module_::import("sys")
-            .attr("modules")["ase.atoms"]
-            .attr("FENNIXCalculator")
-            .attr("delay") = delay;
-
-        settings.fennolSettings.setFennolModelPathByUser("model.fnx");
-        settings.fennolSettings.setUseGPUPreprocessingByUser(false);
-        settings.generalSettings.setFloatingPointTypeByUser(FPType::DOUBLE);
-
-        return QM::AseFennolRunner{
-            settings.qmSettings,
-            settings.fennolSettings,
-            settings.generalSettings
-        };
-    }
+    static QM::AseFennolRunner _runner(
+        const QMSettings &settings,
+        double            delay
+    );
 };
+
+void AseQMRunnerTest::SetUpTestSuite()
+{
+    Python::guard = std::make_unique<pybind11::scoped_interpreter>();
+}
+
+void AseQMRunnerTest::TearDownTestSuite() { Python::guard.reset(); }
+
+void AseQMRunnerTest::SetUp()
+{
+    const auto types = pybind11::module_::import("types");
+    const auto sys   = pybind11::module_::import("sys");
+
+    auto aseModule             = types.attr("ModuleType")("ase");
+    auto aseAtoms              = types.attr("ModuleType")("ase.atoms");
+    aseModule.attr("__path__") = pybind11::list();
+    aseModule.attr("atoms")    = aseAtoms;
+
+    pybind11::exec(fakeAseAtoms, aseAtoms.attr("__dict__"));
+
+    auto fennolModule             = types.attr("ModuleType")("fennol");
+    fennolModule.attr("__path__") = pybind11::list();
+    fennolModule.attr("ase")      = aseAtoms;
+
+    sys.attr("modules")["ase"]        = aseModule;
+    sys.attr("modules")["ase.atoms"]  = aseAtoms;
+    sys.attr("modules")["fennol"]     = fennolModule;
+    sys.attr("modules")["fennol.ase"] = aseAtoms;
+
+    constexpr auto          boxEdge = 10.0 * angstrom;
+    molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
+    _simulationBox.setBox(box, false);
+}
+
+static QM::AseFennolRunner _runner(Settings settings, const double delay)
+{
+    pybind11::module_::import("sys")
+        .attr("modules")["ase.atoms"]
+        .attr("FENNIXCalculator")
+        .attr("delay") = delay;
+
+    settings.fennolSettings.setFennolModelPathByUser("model.fnx");
+    settings.fennolSettings.setUseGPUPreprocessingByUser(false);
+    settings.generalSettings.setFloatingPointTypeByUser(FPType::DOUBLE);
+
+    return QM::AseFennolRunner{
+        settings.qmSettings,
+        settings.fennolSettings,
+        settings.generalSettings
+    };
+}
 
 TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 {

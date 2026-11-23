@@ -33,9 +33,15 @@ class TestRandomNumberGenerator : public ::testing::Test
 {
    protected:
     GeneralSettings _generalSettings;
+    void            SetUp() override;
 
-    void SetUp() override { _generalSettings.setRandomSeedByUser(42); }
+    void TearDown() override;
 };
+
+void TestRandomNumberGenerator::SetUp()
+{
+    _generalSettings.setRandomSeedByUser(42);
+}
 
 /**
  * @brief test randomNumberGenerator uniform real distribution range

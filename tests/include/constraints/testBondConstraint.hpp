@@ -47,41 +47,43 @@ class TestBondConstraint : public ::testing::Test
     std::unique_ptr<constraints::BondConstraint> _bondConstraint;
     Distance _targetBondLength = 1.2 * angstrom;
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::Molecule();
-
-        auto atom1 = std::make_shared<molsys::Atom>();
-        auto atom2 = std::make_shared<molsys::Atom>();
-
-        atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
-        atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
-
-        atom1->setMass(1.0 * g_per_mol);
-        atom2->setMass(2.0 * g_per_mol);
-
-        atom1->setVelocity(Vel::zero());
-        atom2->setVelocity(Vel::zero() + 1.0 * angstrom / s);
-
-        molecule1.addAtom(atom1);
-        molecule1.addAtom(atom2);
-
-        _box = std::make_unique<molsys::SimulationBox>();
-        _box->addMolecule(molecule1);
-
-        molsys::OrthorhombicBox orthoBox{
-            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
-        };
-        _box->setBox(orthoBox, false);
-
-        _bondConstraint = std::make_unique<constraints::BondConstraint>(
-            _box->getMolecules().data(),
-            _box->getMolecules().data(),
-            AtomIndex{0},
-            AtomIndex{1},
-            _targetBondLength
-        );
-    }
+    void SetUp() override;
 };
+
+inline void TestBondConstraint::SetUp()
+{
+    auto molecule1 = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(1.0, 2.0, 3.0) * angstrom);
+
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(2.0 * g_per_mol);
+
+    atom1->setVelocity(Vel::zero());
+    atom2->setVelocity(Vel::zero() + 1.0 * angstrom / s);
+
+    molecule1.addAtom(atom1);
+    molecule1.addAtom(atom2);
+
+    _box = std::make_unique<molsys::SimulationBox>();
+    _box->addMolecule(molecule1);
+
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
+    _box->setBox(orthoBox, false);
+
+    _bondConstraint = std::make_unique<constraints::BondConstraint>(
+        _box->getMolecules().data(),
+        _box->getMolecules().data(),
+        AtomIndex{0},
+        AtomIndex{1},
+        _targetBondLength
+    );
+}
 
 #endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_BOND_CONSTRAINT_HPP

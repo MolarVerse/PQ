@@ -69,7 +69,7 @@ namespace engine
 
         getConstraints()->applyDistanceConstraints(
             getSimulationBox(),
-            getPhysicalData(),
+            get_physicalData(),
             calculateTotalSimulationTime(
                 timeStep,
                 getSettings().timings.getStartingTime()
@@ -150,10 +150,10 @@ namespace engine
         for (size_t i = 0; i < getRingPolymerBeads().size(); ++i)
         {
             auto forces   = getRingPolymerBeads()[i].flattenForces();
-            auto qmEnergy = getRingPolymerBeadsPhysicalData()[i].getQMEnergy();
+            auto qmEnergy = getRingPolymerBeadsPhysicalData()[i].get_qmEnergy();
 
             auto virial =
-                getRingPolymerBeadsPhysicalData()[i].getVirial().toStdVector();
+                getRingPolymerBeadsPhysicalData()[i].get_virial().toStdVector();
 
             ::MPI_Bcast(
                 forces.data(),
@@ -179,8 +179,8 @@ namespace engine
             );
 
             getRingPolymerBeads()[i].deFlattenForces(forces);
-            getRingPolymerBeadsPhysicalData()[i].setQMEnergy(qmEnergy);
-            getRingPolymerBeadsPhysicalData()[i].setVirial(
+            getRingPolymerBeadsPhysicalData()[i].set_qmEnergy(qmEnergy);
+            getRingPolymerBeadsPhysicalData()[i].set_virial(
                 linalg::StaticMatrix3x3(virial)
             );
         }
@@ -297,10 +297,10 @@ namespace engine
             auto &data = getRingPolymerBeadsPhysicalData()[i];
 
             auto velocities  = getRingPolymerBeads()[i].flattenVelocities();
-            auto temperature = data.getTemperature();
+            auto temperature = data.get_temperature();
 
-            auto noseHooverMomentumEnergy = data.getNoseHooverMomentumEnergy();
-            auto noseHooverFrictionEnergy = data.getNoseHooverFrictionEnergy();
+            auto noseHooverMomentumEnergy = data.get_noseHooverMomentumEnergy();
+            auto noseHooverFrictionEnergy = data.get_noseHooverFrictionEnergy();
 
             ::MPI_Bcast(
                 velocities.data(),
@@ -332,9 +332,9 @@ namespace engine
             );
 
             getRingPolymerBeads()[i].deFlattenVelocities(velocities);
-            data.setTemperature(temperature);
-            data.setNoseHooverMomentumEnergy(noseHooverMomentumEnergy);
-            data.setNoseHooverFrictionEnergy(noseHooverFrictionEnergy);
+            data.set_temperature(temperature);
+            data.set_noseHooverMomentumEnergy(noseHooverMomentumEnergy);
+            data.set_noseHooverFrictionEnergy(noseHooverFrictionEnergy);
         }
     }
 #else
@@ -379,7 +379,7 @@ namespace engine
                     data,
                     _getKinetics().getCurrentTargetTemperature(),
                     timeStep,
-                    getSettings().potentialSettings.getCoulombRadiusCutOff()
+                    getSettings().potentialSettings.getCoulombRadiusCutoff()
                 );
             }
         }
@@ -396,8 +396,8 @@ namespace engine
 
             const auto oldBoxDimensions = box.get_boxDimensions();
             auto       boxDimensions    = oldBoxDimensions.toStdVector();
-            auto volume  = getRingPolymerBeadsPhysicalData()[i].getVolume();
-            auto density = getRingPolymerBeadsPhysicalData()[i].getDensity();
+            auto volume  = getRingPolymerBeadsPhysicalData()[i].get_volume();
+            auto density = getRingPolymerBeadsPhysicalData()[i].get_density();
 
             ::MPI_Bcast(
                 velocities.data(),
@@ -445,8 +445,8 @@ namespace engine
                 linalg::diagonalMatrix(boxDimensionsVec / oldBoxDimensions);
             box.scaleBox(scalingTensor);
 
-            getRingPolymerBeadsPhysicalData()[i].setVolume(volume);
-            getRingPolymerBeadsPhysicalData()[i].setDensity(density);
+            getRingPolymerBeadsPhysicalData()[i].set_volume(volume);
+            getRingPolymerBeadsPhysicalData()[i].set_density(density);
         }
     }
 #else
@@ -463,7 +463,7 @@ namespace engine
                 data,
                 _getKinetics().getCurrentTargetTemperature(),
                 timeStep,
-                getSettings().potentialSettings.getCoulombRadiusCutOff()
+                getSettings().potentialSettings.getCoulombRadiusCutoff()
             );
         }
     }

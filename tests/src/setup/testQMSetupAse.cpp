@@ -282,12 +282,14 @@ class FENNIXCalculator:
 
 struct TestQMSetupAseUtil
 {
-    static std::string setUseForTesting(Settings& settings)
-    {
-        settings.maceSettings._useForTesting = true;
-        return MaceSettings::_testModelTypeStr;
-    }
+    static std::string setUseForTesting(Settings& settings);
 };
+
+std::string TestQMSetupAseUtil::setUseForTesting(Settings& settings)
+{
+    settings.maceSettings._useForTesting = true;
+    return MaceSettings::_testModelTypeStr;
+}
 
 #ifdef WITH_ASE
 TEST_F(TestQMSetupAse, setupAseMaceRunnerConstructsCalculator)

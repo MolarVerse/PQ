@@ -45,9 +45,9 @@ namespace out
          * @brief append "name\tx\ty\tz\n" in fixed notation
          */
         void appendFixedLine(
-            TextBuffer            &buffer,
-            const std::string_view name,
-            const linalg::Vec3D   &vec
+            TextBuffer          &buffer,
+            std::string_view     name,
+            const linalg::Vec3D &vec
         )
         {
             buffer.left(name, textFormat::NAME_WIDTH).put('\t');
@@ -135,7 +135,7 @@ namespace out
      */
     void TrajectoryOutput::writeHybridCenterXyz(
         const configurator::HybridConfigurator &configurator,
-        const size_t                            step,
+        size_t                                  step,
         bool                                    includeMetadata
     )
     {

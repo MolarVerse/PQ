@@ -66,20 +66,16 @@ namespace thermostat
         );
 
         virtual void applyThermostatOnForces(
-            molsys::SimulationBox & /*simBox*/,
-            const Temperature & /*targetTemperature*/
-        )
-        {
-        }
+            molsys::SimulationBox &simulationBox,
+            const Temperature     &targetTemperature
+        );
 
         virtual void applyThermostatHalfStep(
-            molsys::SimulationBox & /*simBox*/,
-            physicalData::PhysicalData & /*physData*/,
-            const Temperature & /*targetTemperature*/,
-            const Time & /*timeStep*/
-        )
-        {
-        }
+            molsys::SimulationBox      &simulationBox,
+            physicalData::PhysicalData &physicalData,
+            const Temperature          &targetTemperature,
+            const Time                 &timeStep
+        );
 
         /***************************
          * standard setter methods *

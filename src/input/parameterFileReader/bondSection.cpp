@@ -102,4 +102,17 @@ namespace input::parameterFile
         engine.getForceField()->addBondType(bondType);
     }
 
+    /**
+     * @brief processes the header of the section, not implemented yet
+     */
+    void BondSection::processHeader(
+        std::vector<std::string> & /*lineElements*/,
+        engine::Engine & /*engine*/,
+        size_t /*lineNumber*/
+    )
+    {
+        // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/905
+        // implement processHeader
+    }
+
 }   // namespace input::parameterFile

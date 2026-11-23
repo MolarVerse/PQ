@@ -65,7 +65,7 @@ namespace benchOutputWriters
 {
     inline constexpr double SPACING = 3.1;
 
-    inline int run(const std::size_t molecules, const std::uint64_t iterations)
+    inline int run(std::size_t molecules, std::uint64_t iterations)
     {
         const auto perSide = static_cast<std::size_t>(
             std::ceil(std::cbrt(static_cast<double>(molecules)))
@@ -147,11 +147,11 @@ namespace benchOutputWriters
 
         thermostat::BerendsenThermostat thermostat(0.1 * fs);
         auto physicalData = physicalData::PhysicalData();
-        physicalData.setTemperature(toTemperature(300.0));
-        physicalData.setPressure(1.0 * bar);
-        physicalData.setKineticEnergy(12.5 * kcal_per_mol);
-        physicalData.setCoulombEnergy(-34.5 * kcal_per_mol);
-        physicalData.setNonCoulombEnergy(7.25 * kcal_per_mol);
+        physicalData.set_temperature(toTemperature(300.0));
+        physicalData.set_pressure(1.0 * bar);
+        physicalData.set_kineticEnergy(12.5 * kcal_per_mol);
+        physicalData.set_coulombEnergy(-34.5 * kcal_per_mol);
+        physicalData.set_nonCoulombEnergy(7.25 * kcal_per_mol);
         Settings settings;
         settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
 

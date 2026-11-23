@@ -62,16 +62,6 @@ void GeneralSettings::setRandomSeedByUser(uint_fast32_t randomSeed)
 }
 
 /**
- * @brief sets the dimensionality
- *
- * @param dimensionality
- */
-void GeneralSettings::setDimensionality(size_t dimensionality)
-{
-    _dimensionality = dimensionality;
-}
-
-/**
  * @brief sets the virial type
  *
  * @param virialType
@@ -176,13 +166,6 @@ bool GeneralSettings::isRandomSeedSetByUser() const
 {
     return _randomSeed.isSetByUser();
 }
-
-/**
- * @brief get the dimensionality
- *
- * @return size_t
- */
-size_t GeneralSettings::getDimensionality() { return _dimensionality; }
 
 /**
  * @brief get the virial type

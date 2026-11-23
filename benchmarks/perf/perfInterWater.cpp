@@ -64,8 +64,8 @@ static constexpr auto          OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(CUTOFF);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(CUTOFF);
     settings.waterModelSettings.setWaterInterModelByUser(
         WaterInterModel::SPC_E
     );
@@ -87,10 +87,10 @@ int main()
     waterType.setNumberOfAtoms(3);
     simBox.addMoleculeType(waterType);
 
-    const auto makeAtom = [](const std::string_view name,
-                             const Pos3D&           pos,
-                             const Charge&          charge,
-                             const AtomNumber       atomicNumber)
+    const auto makeAtom = [](std::string_view name,
+                             const Pos3D&     pos,
+                             const Charge&    charge,
+                             AtomNumber       atomicNumber)
     {
         auto atom = std::make_shared<molsys::Atom>();
         atom->setName(name);
@@ -182,11 +182,10 @@ int main()
     molsys::CellList cellList;
     cellList.setNumberOfCells(3);
     cellList.resizeCells();
-    cellList.setup(simBox, settings.potentialSettings.getCoulombRadiusCutOff());
-    cellList.updateCellList(
-        simBox,
-        settings.potentialSettings.getCoulombRadiusCutOff()
-    );
+    const auto& coulombCutoff =
+        settings.potentialSettings.getCoulombRadiusCutoff();
+    cellList.setup(simBox, coulombCutoff);
+    cellList.updateCellList(simBox, coulombCutoff);
 
     auto physicalData = physicalData::PhysicalData();
 
@@ -207,7 +206,7 @@ int main()
 
     // read state so the loop cannot be optimized away
     std::cout << std::fixed << std::setprecision(6)
-              << physicalData.getCoulombEnergy() << " "
-              << physicalData.getNonCoulombEnergy() << "\n";
+              << physicalData.get_coulombEnergy() << " "
+              << physicalData.get_nonCoulombEnergy() << "\n";
     return 0;
 }

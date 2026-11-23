@@ -91,25 +91,25 @@ void PotentialSettings::setCoulombLongRangeTypeByUser(CoulombLongRangeType type)
 /**
  * @brief Set the Coulomb radius cut off in the PotentialSettings class
  *
- * @param coulombRadiusCutOff
+ * @param coulombRadiusCutoff
  */
-void PotentialSettings::setCoulombRadiusCutOffByUser(
-    const Pos& coulombRadiusCutOff
+void PotentialSettings::setCoulombRadiusCutoffByUser(
+    const Pos& coulombRadiusCutoff
 )
 {
-    _coulombConfig = CoulombPotentialConfig(coulombRadiusCutOff);
+    _coulombConfig = CoulombPotentialConfig(coulombRadiusCutoff);
 }
 
 /**
  * @brief Set the non-Coulomb radius cut off in the PotentialSettings class
  *
- * @param nonCoulombRadiusCutOff
+ * @param nonCoulombRadiusCutoff
  */
-void PotentialSettings::setNonCoulombRadiusCutOffByUser(
-    const Pos& nonCoulombRadiusCutOff
+void PotentialSettings::setNonCoulombRadiusCutoffByUser(
+    const Pos& nonCoulombRadiusCutoff
 )
 {
-    _nonCoulombRadiusCutOff.setByUser(nonCoulombRadiusCutOff);
+    _nonCoulombRadiusCutoff.setByUser(nonCoulombRadiusCutoff);
 }
 
 /**
@@ -180,23 +180,13 @@ NonCoulombType PotentialSettings::getNonCoulombType() const
 }
 
 /**
- * @brief get the Coulomb radius cut off
- *
- * @return Pos
- */
-const Distance& PotentialSettings::getCoulombRadiusCutOff() const
-{
-    return _coulombConfig.cutoff;
-}
-
-/**
  * @brief get the non-Coulomb radius cut off
  *
  * @return std::optional<Pos>
  */
-const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
+const Distance& PotentialSettings::getNonCoulombRadiusCutoff() const
 {
-    return _nonCoulombRadiusCutOff.get();
+    return _nonCoulombRadiusCutoff.get();
 }
 
 /**
@@ -204,29 +194,9 @@ const Distance& PotentialSettings::getNonCoulombRadiusCutOff() const
  *
  * @return true if set by user, false otherwise
  */
-bool PotentialSettings::isNonCoulombRadiusCutOffSetByUser() const
+bool PotentialSettings::isNonCoulombRadiusCutoffSetByUser() const
 {
-    return _nonCoulombRadiusCutOff.isSetByUser();
-}
-
-/**
- * @brief get the 1-4 Coulomb scaling factor
- *
- * @return double
- */
-double PotentialSettings::getScale14Coulomb() const
-{
-    return _scale14Coulomb.get();
-}
-
-/**
- * @brief get the 1-4 Van der Waals scaling factor
- *
- * @return double
- */
-double PotentialSettings::getScale14VDW() const
-{
-    return _scale14VanDerWaals.get();
+    return _nonCoulombRadiusCutoff.isSetByUser();
 }
 
 /**

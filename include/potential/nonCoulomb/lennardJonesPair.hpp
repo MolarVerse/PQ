@@ -49,14 +49,14 @@ namespace pot
         explicit LennardJonesPair(
             ExtVdwType      vanDerWaalsType1,
             ExtVdwType      vanDerWaalsType2,
-            const Pos      &cutOff,
+            const Pos      &cutoff,
             const LJParams &params
         );
 
-        explicit LennardJonesPair(const Pos &cutOff, const LJParams &params);
+        explicit LennardJonesPair(const Pos &cutoff, const LJParams &params);
 
         explicit LennardJonesPair(
-            const Pos          &cutOff,
+            const Pos          &cutoff,
             const EnergyPerMol &energyCutoff,
             const Force        &forceCutoff,
             const LJParams     &params

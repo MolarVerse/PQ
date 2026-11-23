@@ -31,7 +31,7 @@ namespace ff
      * @param id
      * @param params
      */
-    JCouplingType::JCouplingType(const size_t id, const JCouplingParams &params)
+    JCouplingType::JCouplingType(size_t id, const JCouplingParams &params)
         : _id(id), _params(params)
     {
     }

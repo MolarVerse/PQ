@@ -83,38 +83,52 @@ namespace benchQMRunner
             const ExternalQMSettings &externalQMSettings,
             const FileSettings       &fileSettings,
             std::filesystem::path     directory
-        )
-            : Runner(qmSettings, externalQMSettings),
-              _directory(std::move(directory)),
-              _fileSettings(fileSettings)
-        {
-        }
+        );
 
        protected:
         void _executeCommand(
-            const std::string_view /*command*/,
-            const std::string_view /*program*/
-        ) const override
-        {
-            constexpr auto overwrite =
-                std::filesystem::copy_options::overwrite_existing;
-            std::filesystem::copy_file(
-                _directory / "forces.canned",
-                _fileSettings.getQMForcesTempFileName(),
-                overwrite
-            );
-            std::filesystem::copy_file(
-                _directory / "charges.canned",
-                _fileSettings.getQMChargesTempFileName(),
-                overwrite
-            );
-            std::filesystem::copy_file(
-                _directory / "stress.canned",
-                _fileSettings.getStressTensorTempFileName(),
-                overwrite
-            );
-        }
+            std::string_view command,
+            std::string_view program
+        ) const override;
     };
+
+    template <typename Runner>
+    CannedResultsRunner<Runner>::CannedResultsRunner(
+        const QMSettings         &qmSettings,
+        const ExternalQMSettings &externalQMSettings,
+        const FileSettings       &fileSettings,
+        std::filesystem::path     directory
+    )
+        : Runner(qmSettings, externalQMSettings),
+          _directory(std::move(directory)),
+          _fileSettings(fileSettings)
+    {
+    }
+
+    template <typename Runner>
+    void CannedResultsRunner<Runner>::_executeCommand(
+        std::string_view /*command*/,
+        std::string_view /*program*/
+    ) const
+    {
+        constexpr auto overwrite =
+            std::filesystem::copy_options::overwrite_existing;
+        std::filesystem::copy_file(
+            _directory / "forces.canned",
+            _fileSettings.getQMForcesTempFileName(),
+            overwrite
+        );
+        std::filesystem::copy_file(
+            _directory / "charges.canned",
+            _fileSettings.getQMChargesTempFileName(),
+            overwrite
+        );
+        std::filesystem::copy_file(
+            _directory / "stress.canned",
+            _fileSettings.getStressTensorTempFileName(),
+            overwrite
+        );
+    }
 
     inline void writeCannedResults(const std::filesystem::path &directory)
     {
@@ -199,9 +213,9 @@ namespace benchQMRunner
 
     template <typename Runner>
     inline int run(
-        Settings                  settings,
-        const molsys::Periodicity periodicity,
-        const std::uint64_t       iterations
+        Settings            settings,
+        molsys::Periodicity periodicity,
+        std::uint64_t       iterations
     )
     {
         const auto directory =
@@ -264,7 +278,7 @@ namespace benchQMRunner
         // read state so the loop cannot be optimized away
         std::cout << std::format(
             "{:.6f}\n",
-            physicalData.getQMEnergy().numerical_value_in(kcal_per_mol)
+            physicalData.get_qmEnergy().numerical_value_in(kcal_per_mol)
         );
         return 0;
     }

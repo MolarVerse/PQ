@@ -282,7 +282,7 @@ namespace
                rad;
     }
 
-    std::optional<RigidWaterGeometry> geometryOf(const WaterIntraModel model)
+    std::optional<RigidWaterGeometry> geometryOf(WaterIntraModel model)
     {
         WaterModelSettings settings;
         settings.setWaterIntraModelByUser(model);

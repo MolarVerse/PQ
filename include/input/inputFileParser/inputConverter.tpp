@@ -179,6 +179,18 @@ namespace input
 
         return message;
     }
+
+    template <typename T>
+    const std::string& ConverterBase<T>::_getKey() const
+    {
+        return _key;
+    }
+
+    template <typename T>
+    const std::string& ConverterBase<T>::_getRaw() const
+    {
+        return _raw;
+    }
 }   // namespace input
 
 #endif   // INPUT__INPUT_FILE_PARSER__INPUT_CONVERTER_TPP

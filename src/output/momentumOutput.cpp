@@ -51,12 +51,12 @@ namespace out
         const physicalData::PhysicalData &physicalData
     )
     {
-        const auto mom = physicalData.getMomentum().numerical_value_in(
+        const auto mom = physicalData.get_momentum().numerical_value_in(
             g_per_mol * angstrom / fs
         );
 
         const auto angularMom =
-            physicalData.getAngularMomentum().numerical_value_in(
+            physicalData.get_angularMomentum().numerical_value_in(
                 g_per_mol * angstrom * angstrom / fs
             );
 

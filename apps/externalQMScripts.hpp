@@ -114,7 +114,7 @@ namespace cli
     };
 
     inline std::span<const ExternalQMScriptInfo> externalQMScripts(
-        const QMMethod method
+        QMMethod method
     )
     {
         using enum QMMethod;
@@ -136,7 +136,7 @@ namespace cli
         return {};
     }
 
-    inline std::string_view externalQMProgramName(const QMMethod method)
+    inline std::string_view externalQMProgramName(QMMethod method)
     {
         using enum QMMethod;
 
@@ -157,7 +157,7 @@ namespace cli
         return "";
     }
 
-    inline std::string_view recommendedExternalQMScript(const QMMethod method)
+    inline std::string_view recommendedExternalQMScript(QMMethod method)
     {
         using enum QMMethod;
 
@@ -178,10 +178,7 @@ namespace cli
         return "";
     }
 
-    inline bool isExternalQMScript(
-        const QMMethod         method,
-        const std::string_view script
-    )
+    inline bool isExternalQMScript(QMMethod method, std::string_view script)
     {
         const auto scripts = externalQMScripts(method);
 

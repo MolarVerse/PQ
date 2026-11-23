@@ -1,0 +1,1 @@
+- Fix `ForceField::findJCouplingTypeById`, which searched a copy of the list and could return a dangling reference.

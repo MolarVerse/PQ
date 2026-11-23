@@ -1,1 +1,4 @@
 - make MoleculeType const correct and use const refs for containers
+- make physicalData being owned by value from engine and remove it from evaluator/optimizer
+- use `mstd` `CONST_GETTER_SETTER` for `PhysicalData` members
+- enforce writing cutoff without capital `O`

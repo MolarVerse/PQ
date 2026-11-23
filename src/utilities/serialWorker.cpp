@@ -32,7 +32,7 @@ namespace utilities
      *
      * @param capacity maximum number of queued and running tasks, at least 1
      */
-    SerialWorker::SerialWorker(const std::size_t capacity)
+    SerialWorker::SerialWorker(std::size_t capacity)
         : _capacity(capacity > 0 ? capacity : 1), _thread([this] { _work(); })
     {
     }

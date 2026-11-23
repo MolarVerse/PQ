@@ -54,7 +54,7 @@ namespace out
     )
     {
         const auto virial =
-            physicalData.getVirial().numerical_value_in(kcal_per_mol);
+            physicalData.get_virial().numerical_value_in(kcal_per_mol);
 
         _getFilePointer() << std::format("{:10d}\t", step);
         _getFilePointer() << std::format("{:20.5e}\t", virial[0][0]);

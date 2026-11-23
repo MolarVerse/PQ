@@ -53,7 +53,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(20.0 * angstrom);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(20.0 * angstrom);
     auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{
@@ -149,8 +149,8 @@ int main()
     // read state so the loop cannot be optimized away
     std::cout << std::format(
         "{:.6f}\n",
-        (physicalData.getBondEnergy() + physicalData.getAngleEnergy() +
-         physicalData.getDihedralEnergy())
+        (physicalData.get_bondEnergy() + physicalData.get_angleEnergy() +
+         physicalData.get_dihedralEnergy())
                 .numerical_value_in(kcal_per_mol) +
             molecule.getAtomForce(AtomIndex{0})[0].numerical_value_in(
                 kcal_per_mol / angstrom

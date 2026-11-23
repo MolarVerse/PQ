@@ -87,7 +87,7 @@ namespace out
      *
      * @throw InputFileException if the temporary file cannot be written
      */
-    void Output::_replaceFile(const std::string_view content)
+    void Output::_replaceFile(std::string_view content)
     {
         const auto tmpName = _fileName + ".tmp";
 
@@ -147,9 +147,9 @@ namespace out
      * @return formatted force comment
      */
     std::string Output::_formatForceComment(
-        const size_t step,
-        const double totalForce,
-        bool         includeMetadata
+        size_t step,
+        double totalForce,
+        bool   includeMetadata
     )
     {
         const auto stepMetadata =

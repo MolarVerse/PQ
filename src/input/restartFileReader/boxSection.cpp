@@ -83,8 +83,7 @@ namespace input::restartFile
         };
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        auto checkPositive = [](const auto dimension)
-        { return dimension < 0.0; };
+        auto checkPositive = [](auto dimension) { return dimension < 0.0; };
 
         if (std::ranges::any_of(boxDimensions, checkPositive))
             throw exc::RstFileException("All box dimensions must be positive");
@@ -101,7 +100,7 @@ namespace input::restartFile
                 stod(lineElements[6]) * deg
             };
 
-            auto checkAngles = [defaultAngle](const Angle angle)
+            auto checkAngles = [defaultAngle](Angle angle)
             { return angle < 0.0 || angle > 2.0 * defaultAngle; };
 
             if (std::ranges::any_of(boxAngles, checkAngles))
@@ -111,27 +110,49 @@ namespace input::restartFile
         }
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        if (!utilities::compare(
-                boxAngles,
-                Angle3D{defaultAngle, defaultAngle, defaultAngle},
-                TRICLINIC_BOX_ANGLE_THRESHOLD
-            ))
-        {
-            bool isFullIsotropic =
-                engine.getSettings().manostatSettings.getIsotropy() ==
-                Isotropy::FULL_ANISOTROPIC;
-            molsys::TriclinicBox box{boxDimensions, boxAngles, isFullIsotropic};
-            engine.getSimulationBox().setBox(box, true);
+        const auto hasTriclinicAngles = !utilities::compare(
+            boxAngles,
+            Angle3D{defaultAngle, defaultAngle, defaultAngle},
+            TRICLINIC_BOX_ANGLE_THRESHOLD
+        );
 
+        const auto &manostatSettings = engine.getSettings().manostatSettings;
+        const bool  isFullAnisotropic =
+            manostatSettings.getIsotropy() == Isotropy::FULL_ANISOTROPIC;
+
+        // A manostat with full anisotropic coupling shears the box, so it needs
+        // a box that may change its angles, also if it starts with 90 degrees:
+        // an orthorhombic box would take only the diagonal of the scaling while
+        // the molecules are scaled with all of it.
+        const bool needsShearableBox =
+            isFullAnisotropic &&
+            manostatSettings.getManostatType() != ManostatType::NONE;
+
+        if (hasTriclinicAngles || needsShearableBox)
+        {
             const auto jobType =
                 engine.getSettings().generalSettings.getJobtype();
 
             // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/910
             if (jobType != JobType::QM_MD &&
                 jobType != JobType::RING_POLYMER_QM_MD)
+            {
                 throw exc::InputFileException(
-                    "Triclinic box is only supported for QM-MD and RP-QM-MD"
+                    hasTriclinicAngles
+                        ? "Triclinic box is only supported for QM-MD and "
+                          "RP-QM-MD"
+                        : "isotropy = full_anisotropic needs a triclinic box "
+                          "(it changes the box angles), which is only "
+                          "supported for QM-MD and RP-QM-MD"
                 );
+            }
+
+            molsys::TriclinicBox box{
+                boxDimensions,
+                boxAngles,
+                isFullAnisotropic
+            };
+            engine.getSimulationBox().setBox(box, true);
         }
         else
         {

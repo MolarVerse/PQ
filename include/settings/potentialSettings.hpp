@@ -63,7 +63,7 @@ class PotentialSettings
     Setting<CoulombLongRangeType, "Coulomb long range type"> _coulombLRType;
     Setting<NonCoulombType, "Non coulomb type">              _nonCoulombType;
 
-    Setting<Distance, "Non coulomb radius cut off"> _nonCoulombRadiusCutOff;
+    Setting<Distance, "Non coulomb radius cut off"> _nonCoulombRadiusCutoff;
 
     Setting<double, "Scale 1-4 Coulomb"> _scale14Coulomb{
         defaults::SCALE_14_COULOMB_DEFAULT
@@ -94,8 +94,8 @@ class PotentialSettings
     void setCoulombLongRangeTypeByUser(CoulombLongRangeType type);
     void setNonCoulombTypeByUser(NonCoulombType type);
 
-    void setCoulombRadiusCutOffByUser(const Pos& coulombRadiusCutOff);
-    void setNonCoulombRadiusCutOffByUser(const Pos& nonCoulombRadiusCutOff);
+    void setCoulombRadiusCutoffByUser(const Pos& coulombRadiusCutoff);
+    void setNonCoulombRadiusCutoffByUser(const Pos& nonCoulombRadiusCutoff);
 
     void setScale14CoulombByUser(double scale14Coulomb);
     void setScale14VanDerWaalsByUser(double scale14VanDerWaals);
@@ -110,9 +110,9 @@ class PotentialSettings
     [[nodiscard]] CoulombLongRangeType getCoulombLongRangeType() const;
     [[nodiscard]] NonCoulombType       getNonCoulombType() const;
 
-    [[nodiscard]] const Distance& getCoulombRadiusCutOff() const;
-    [[nodiscard]] const Distance& getNonCoulombRadiusCutOff() const;
-    [[nodiscard]] bool            isNonCoulombRadiusCutOffSetByUser() const;
+    [[nodiscard]] const Distance& getCoulombRadiusCutoff() const;
+    [[nodiscard]] const Distance& getNonCoulombRadiusCutoff() const;
+    [[nodiscard]] bool            isNonCoulombRadiusCutoffSetByUser() const;
 
     [[nodiscard]] double getScale14Coulomb() const;
     [[nodiscard]] double getScale14VDW() const;
@@ -122,5 +122,35 @@ class PotentialSettings
 
     friend struct ::PotentialSettingsUtils;
 };
+
+/**
+ * @brief get the Coulomb radius cut off
+ *
+ * @return const Distance&
+ */
+inline const Distance& PotentialSettings::getCoulombRadiusCutoff() const
+{
+    return _coulombConfig.cutoff;
+}
+
+/**
+ * @brief get the 1-4 Coulomb scaling factor
+ *
+ * @return double
+ */
+inline double PotentialSettings::getScale14Coulomb() const
+{
+    return _scale14Coulomb.get();
+}
+
+/**
+ * @brief get the 1-4 Van der Waals scaling factor
+ *
+ * @return double
+ */
+inline double PotentialSettings::getScale14VDW() const
+{
+    return _scale14VanDerWaals.get();
+}
 
 #endif   // SETTINGS__POTENTIAL_SETTINGS_HPP

@@ -71,12 +71,12 @@ namespace benchWaterScaling
     inline constexpr auto     OXYGEN_ATOMIC_NUMBER   = AtomNumber{8};
 
     inline int run(
-        const std::size_t   perSide,
-        const std::uint64_t iterations,
-        Settings            settings
+        std::size_t   perSide,
+        std::uint64_t iterations,
+        Settings      settings
     )
     {
-        settings.potentialSettings.setCoulombRadiusCutOffByUser(CUTOFF);
+        settings.potentialSettings.setCoulombRadiusCutoffByUser(CUTOFF);
         settings.waterModelSettings.setWaterInterModelByUser(
             WaterInterModel::SPC_E
         );
@@ -98,10 +98,10 @@ namespace benchWaterScaling
         waterType.setNumberOfAtoms(3);
         simBox.addMoleculeType(waterType);
 
-        const auto makeAtom = [](const std::string_view name,
-                                 const Pos3D           &pos,
-                                 const double           charge,
-                                 const AtomNumber       atomicNumber)
+        const auto makeAtom = [](std::string_view name,
+                                 const Pos3D     &pos,
+                                 double           charge,
+                                 AtomNumber       atomicNumber)
         {
             auto atom = std::make_shared<molsys::Atom>();
             atom->setName(name);
@@ -193,7 +193,7 @@ namespace benchWaterScaling
         cellList.resizeCells();
         cellList.setup(
             simBox,
-            settings.potentialSettings.getCoulombRadiusCutOff()
+            settings.potentialSettings.getCoulombRadiusCutoff()
         );
 
         auto physicalData = physicalData::PhysicalData();
@@ -206,7 +206,7 @@ namespace benchWaterScaling
         {
             cellList.updateCellList(
                 simBox,
-                settings.potentialSettings.getCoulombRadiusCutOff()
+                settings.potentialSettings.getCoulombRadiusCutoff()
             );
             interWater.calculate(
                 simBox,
@@ -219,8 +219,8 @@ namespace benchWaterScaling
 
         // read state so the loop cannot be optimized away
         std::cout << std::fixed << std::setprecision(6)
-                  << physicalData.getCoulombEnergy() << " "
-                  << physicalData.getNonCoulombEnergy() << "\n";
+                  << physicalData.get_coulombEnergy() << " "
+                  << physicalData.get_nonCoulombEnergy() << "\n";
         return 0;
     }
 }   // namespace benchWaterScaling

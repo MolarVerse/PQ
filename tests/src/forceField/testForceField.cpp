@@ -38,6 +38,7 @@
 #include "forceFieldClass.hpp"
 #include "forceFieldNonCoulomb.hpp"
 #include "hybridSettings.hpp"
+#include "jCouplingType.hpp"
 #include "lennardJonesPair.hpp"
 #include "matrix.hpp"
 #include "molecule.hpp"
@@ -214,6 +215,48 @@ TEST_F(TestForceField, findImproperDihedralTypeByIdNotFoundError)
 }
 
 /**
+ * @brief tests findJCouplingTypeById function
+ *
+ */
+TEST_F(TestForceField, findJCouplingTypeById)
+{
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
+    const auto           params     = JCouplingParams{
+                      .J0            = 1.0,
+                      .forceConstant = 2.0,
+                      .a             = 3.0,
+                      .b             = 4.0,
+                      .c             = 5.0,
+                      .phaseShift    = 0.5 * rad
+    };
+
+    forceField.addJCouplingType(ff::JCouplingType(0, params));
+    forceField.addJCouplingType(ff::JCouplingType(1, params));
+
+    EXPECT_EQ(
+        forceField.findJCouplingTypeById(1),
+        ff::JCouplingType(1, params)
+    );
+}
+
+/**
+ * @brief tests findJCouplingTypeById function for not found error
+ *
+ */
+TEST_F(TestForceField, findJCouplingTypeByIdNotFoundError)
+{
+    const HybridSettings hybridSettings;
+    auto                 forceField = ff::ForceField(hybridSettings);
+
+    EXPECT_THROW_MSG(
+        const auto _ = forceField.findJCouplingTypeById(0),
+        exc::TopologyException,
+        "J-coupling type with id 0 not found."
+    );
+}
+
+/**
  * @brief tests calculateBondedInteractions
  *
  * @details checks only if all energies are not zero - rest is checked in the
@@ -230,7 +273,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
     box.setBox(orthoBox, false);
 
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(20.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(20.0 * angstrom);
     auto physicalData     = physicalData::PhysicalData();
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
@@ -359,13 +402,13 @@ TEST_F(TestForceField, calculateBondedInteractions)
     forceField
         .calculateBondedInteractions(box, physicalData, potentialSettings);
 
-    EXPECT_NE(physicalData.getBondEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getAngleEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getDihedralEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getImproperEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getCoulombEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getNonCoulombEnergy(), EnergyPerMol::zero());
-    EXPECT_NE(physicalData.getVirial(), VirialPerMol::zero());
+    EXPECT_NE(physicalData.get_bondEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_angleEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_dihedralEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_improperEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_coulombEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_nonCoulombEnergy(), EnergyPerMol::zero());
+    EXPECT_NE(physicalData.get_virial(), VirialPerMol::zero());
 }
 
 /**
@@ -375,7 +418,7 @@ TEST_F(TestForceField, calculateBondedInteractions)
 TEST_F(TestForceField, correctLinker)
 {
     PotentialSettings potentialSettings;
-    potentialSettings.setCoulombRadiusCutOffByUser(10.0 * angstrom);
+    potentialSettings.setCoulombRadiusCutoffByUser(10.0 * angstrom);
     auto coulombPotential = pot::CoulombShiftedPotential(potentialSettings);
 
     auto nonCoulombPair = pot::LennardJonesPair(
@@ -430,12 +473,12 @@ TEST_F(TestForceField, correctLinker)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -6,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         134.48580380716751,
         1e-6
     );
@@ -464,12 +507,12 @@ TEST_F(TestForceField, correctLinker)
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getNonCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_nonCoulombEnergy().numerical_value_in(kcal_per_mol),
         -3,
         1e-6
     );
     EXPECT_NEAR(
-        physicalData.getCoulombEnergy().numerical_value_in(kcal_per_mol),
+        physicalData.get_coulombEnergy().numerical_value_in(kcal_per_mol),
         33.621450951791878,
         1e-6
     );

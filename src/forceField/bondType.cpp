@@ -31,7 +31,7 @@ namespace ff
      * @param id
      * @param params
      */
-    BondType::BondType(const BondId id, const BondParams &params)
+    BondType::BondType(BondId id, const BondParams &params)
         : _id(id), _params(params)
     {
     }

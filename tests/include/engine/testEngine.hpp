@@ -41,12 +41,16 @@ class TestEngine : public ::testing::Test
     Settings                            _settings;
     std::unique_ptr<engine::MMMDEngine> _engine;
 
-    void SetUp() override
-    {
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-    }
+    void SetUp() override;
 
-    void TearDown() override {}
+    void TearDown() override;
 };
+
+inline void TestEngine::SetUp()
+{
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+}
+
+inline void TestEngine::TearDown() {}
 
 #endif   // TESTS__INCLUDE__ENGINE__TEST_ENGINE_HPP

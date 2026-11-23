@@ -151,7 +151,7 @@ namespace thermostat
 
         physicalData.calculateTemperature(simulationBox);
 
-        setTemperature(physicalData.getTemperature());
+        setTemperature(physicalData.get_temperature());
 
         const auto degreesOfFreedom =
             static_cast<double>(simulationBox.getDegreesOfFreedom());
@@ -197,8 +197,8 @@ namespace thermostat
             energyFriction += _zeta[i];
         }
 
-        physicalData.setNoseHooverMomentumEnergy(energyMomentum);
-        physicalData.setNoseHooverFrictionEnergy(energyFriction);
+        physicalData.set_noseHooverMomentumEnergy(energyMomentum);
+        physicalData.set_noseHooverFrictionEnergy(energyFriction);
     }
     /***************************
      *                         *

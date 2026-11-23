@@ -30,9 +30,9 @@
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "settings.hpp"
-#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 namespace out
 {
@@ -64,14 +64,14 @@ namespace out
         _add({
             .name  = "TEMPERATURE",
             .unit  = "K",
-            .value = physicalData.getTemperature()
+            .value = physicalData.get_temperature()
                          .quantity_from_zero()
                          .numerical_value_in(K),
         });
         _add({
             .name  = "PRESSURE",
             .unit  = "bar",
-            .value = physicalData.getPressure().numerical_value_in(bar),
+            .value = physicalData.get_pressure().numerical_value_in(bar),
         });
         _add({
             .name = "E(TOT)",
@@ -85,21 +85,21 @@ namespace out
             _add({
                 .name  = "E(QM)",
                 .unit  = kcal,
-                .value = (physicalData.getQMEnergy() -
-                          physicalData.getQMReferenceEnergy())
+                .value = (physicalData.get_qmEnergy() -
+                          physicalData.get_qmReferenceEnergy())
                              .numerical_value_in(kcal_per_mol),
             });
             _add({
                 .name  = "N(QM-ATOMS)",
                 .unit  = "-",
-                .value = physicalData.getNumberOfActiveAtoms(),
+                .value = physicalData.get_nQMAtoms(),
             });
         }
 
         _add({
             .name  = "E(KIN)",
             .unit  = kcal,
-            .value = physicalData.getKineticEnergy().numerical_value_in(
+            .value = physicalData.get_kineticEnergy().numerical_value_in(
                 kcal_per_mol
             ),
         });
@@ -115,14 +115,14 @@ namespace out
             _add({
                 .name  = "E(COUL)",
                 .unit  = kcal,
-                .value = physicalData.getCoulombEnergy().numerical_value_in(
+                .value = physicalData.get_coulombEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
             });
             _add({
                 .name  = "E(NON-COUL)",
                 .unit  = kcal,
-                .value = physicalData.getNonCoulombEnergy().numerical_value_in(
+                .value = physicalData.get_nonCoulombEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
             });
@@ -133,28 +133,28 @@ namespace out
             _add({
                 .name  = "E(BOND)",
                 .unit  = kcal,
-                .value = physicalData.getBondEnergy().numerical_value_in(
+                .value = physicalData.get_bondEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
             });
             _add({
                 .name  = "E(ANGLE)",
                 .unit  = kcal,
-                .value = physicalData.getAngleEnergy().numerical_value_in(
+                .value = physicalData.get_angleEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
             });
             _add({
                 .name  = "E(DIHEDRAL)",
                 .unit  = kcal,
-                .value = physicalData.getDihedralEnergy().numerical_value_in(
+                .value = physicalData.get_dihedralEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
             });
             _add({
                 .name  = "E(IMPROPER)",
                 .unit  = kcal,
-                .value = physicalData.getImproperEnergy().numerical_value_in(
+                .value = physicalData.get_improperEnergy().numerical_value_in(
                     kcal_per_mol
                 ),
             });
@@ -165,29 +165,29 @@ namespace out
             _add({
                 .name  = "N(SM-MOL)",
                 .unit  = "-",
-                .value = physicalData.getNumberOfSmoothingMolecules(),
+                .value = physicalData.get_numberOfSmoothingMol(),
             });
             _add({
                 .name  = "E(QM-REF)",
                 .unit  = kcal,
-                .value = physicalData.getQMReferenceEnergy().numerical_value_in(
-                    kcal_per_mol
-                ),
+                .value = physicalData.get_qmReferenceEnergy()
+                             .numerical_value_in(kcal_per_mol),
             });
         }
 
         if (settings.manostatSettings.getManostatType() != ManostatType::NONE)
         {
             _add({
-                .name  = "VOLUME",
-                .unit  = "A^3",
-                .value = physicalData.getVolume().numerical_value_in(angstrom3),
+                .name = "VOLUME",
+                .unit = "A^3",
+                .value =
+                    physicalData.get_volume().numerical_value_in(angstrom3),
             });
             _add({
                 .name = "DENSITY",
                 .unit = "g/cm^3",
                 .value =
-                    physicalData.getDensity().numerical_value_in(kg_per_litre),
+                    physicalData.get_density().numerical_value_in(kg_per_litre),
             });
 
             if (settings.manostatSettings.getFixedAxis() != FixedAxis::NONE)
@@ -195,7 +195,7 @@ namespace out
                 _add({
                     .name  = "P(COUPLED)",
                     .unit  = "bar",
-                    .value = physicalData.getCoupledPressure()
+                    .value = physicalData.get_coupledPressure()
                                  .numerical_value_in(bar),
                     .aloneInInfoRow = true,
                 });
@@ -208,13 +208,13 @@ namespace out
             _add({
                 .name  = "E(NH-MOMENTUM)",
                 .unit  = kcal,
-                .value = physicalData.getNoseHooverMomentumEnergy()
+                .value = physicalData.get_noseHooverMomentumEnergy()
                              .numerical_value_in(kcal_per_mol),
             });
             _add({
                 .name  = "E(NH-FRICTION)",
                 .unit  = kcal,
-                .value = physicalData.getNoseHooverFrictionEnergy()
+                .value = physicalData.get_noseHooverFrictionEnergy()
                              .numerical_value_in(one),
             });
         }
@@ -224,13 +224,13 @@ namespace out
             _add({
                 .name  = "LOWER-DIST-CONSTR",
                 .unit  = kcal,
-                .value = physicalData.getLowerDistanceConstraints()
+                .value = physicalData.get_lowerDistanceConstraints()
                              .numerical_value_in(kcal_per_mol),
             });
             _add({
                 .name  = "UPPER-DIST-CONSTR",
                 .unit  = kcal,
-                .value = physicalData.getUpperDistanceConstraints()
+                .value = physicalData.get_upperDistanceConstraints()
                              .numerical_value_in(kcal_per_mol),
             });
         }
@@ -238,14 +238,14 @@ namespace out
         _add({
             .name  = "MOMENTUM",
             .unit  = "amuA/fs",
-            .value = norm(physicalData.getMomentum())
+            .value = norm(physicalData.get_momentum())
                          .numerical_value_in(g_per_mol * angstrom / fs),
             .format = SCIENTIFIC,
         });
         _add({
             .name   = "LOOPTIME",
             .unit   = "s",
-            .value  = physicalData.getLoopTime().numerical_value_in(s),
+            .value  = physicalData.get_loopTime().numerical_value_in(s),
             .format = TIME,
         });
     }
@@ -291,7 +291,7 @@ namespace out
      */
     std::string energyFileMarker()
     {
-        return std::format("# PQ energy file {}", sysinfo::VERSION);
+        return std::format("# PQ energy file {}", CURRENT_VERSION.to_string());
     }
 
     /**

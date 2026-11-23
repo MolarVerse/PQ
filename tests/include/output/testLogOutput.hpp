@@ -38,16 +38,20 @@ class TestLogOutput : public ::testing::Test
    protected:
     std::unique_ptr<out::LogOutput> _logOutput;
 
-    void SetUp() override
-    {
-        _logOutput = std::make_unique<out::LogOutput>("default.log");
-    }
+    void SetUp() override;
 
-    void TearDown() override
-    {
-        const auto errorCode = std::remove("default.log");
-        EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
-    }
+    void TearDown() override;
 };
+
+inline void TestLogOutput::SetUp()
+{
+    _logOutput = std::make_unique<out::LogOutput>("default.log");
+}
+
+inline void TestLogOutput::TearDown()
+{
+    const auto errorCode = std::remove("default.log");
+    EXPECT_EQ(errorCode, 0) << "Failed to remove file: default.log";
+}
 
 #endif   // TESTS__INCLUDE__OUTPUT__TEST_LOG_OUTPUT_HPP

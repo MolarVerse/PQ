@@ -75,9 +75,9 @@ namespace linalg
 
         [[nodiscard]] std::pair<size_t, size_t> shape() const;
 
-        [[nodiscard]] size_t rows() const { return _rows; }
-        [[nodiscard]] size_t cols() const { return _cols; }
-        [[nodiscard]] size_t size() const { return _rows * _cols; }
+        [[nodiscard]] size_t rows() const;
+        [[nodiscard]] size_t cols() const;
+        [[nodiscard]] size_t size() const;
 
         Matrix<InverseOf<T>> inverse();
 

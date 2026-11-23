@@ -31,10 +31,7 @@ namespace ff
      * @param id
      * @param params
      */
-    DihedralType::DihedralType(
-        const DihedralId      id,
-        const DihedralParams &params
-    )
+    DihedralType::DihedralType(DihedralId id, const DihedralParams &params)
         : _id(id), _params(params)
     {
     }

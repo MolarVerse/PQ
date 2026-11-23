@@ -35,10 +35,10 @@
 #include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
-#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
+#include "version.hpp"
 
 /**
  * @brief tests writing timestep metadata
@@ -74,7 +74,10 @@ TEST_F(TestEnergyOutput, columnHeader)
     std::ifstream file("default.en");
     std::string   line;
     std::getline(file, line);
-    EXPECT_EQ(line, std::format("# PQ energy file {}", sysinfo::VERSION));
+    EXPECT_EQ(
+        line,
+        std::format("# PQ energy file {}", CURRENT_VERSION.to_string())
+    );
     std::getline(file, line);
     EXPECT_EQ(
         line,
@@ -207,15 +210,15 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
  */
 TEST_F(TestEnergyOutput, forceFieldNotActive)
 {
-    _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
-    _physicalData->setCoulombEnergy(4.0 * kcal_per_mol);
-    _physicalData->setNonCoulombEnergy(5.0 * kcal_per_mol);
-    _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
-    _physicalData->setIntraCoulombEnergy(9.0 * kcal_per_mol);
-    _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
-    _physicalData->setLoopTime(0.1 * s);
+    _physicalData->set_temperature(toTemperature(1.0));
+    _physicalData->set_pressure(2.0 * bar);
+    _physicalData->set_kineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->set_coulombEnergy(4.0 * kcal_per_mol);
+    _physicalData->set_nonCoulombEnergy(5.0 * kcal_per_mol);
+    _physicalData->set_momentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
+    _physicalData->set_intraCoulombEnergy(9.0 * kcal_per_mol);
+    _physicalData->set_intraNonCoulombEnergy(10.0 * kcal_per_mol);
+    _physicalData->set_loopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
@@ -246,20 +249,20 @@ TEST_F(TestEnergyOutput, forceFieldNotActive)
  */
 TEST_F(TestEnergyOutput, forceFieldActive)
 {
-    _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
-    _physicalData->setCoulombEnergy(4.0 * kcal_per_mol);
-    _physicalData->setNonCoulombEnergy(5.0 * kcal_per_mol);
-    _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
-    _physicalData->setIntraCoulombEnergy(9.0 * kcal_per_mol);
-    _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
+    _physicalData->set_temperature(toTemperature(1.0));
+    _physicalData->set_pressure(2.0 * bar);
+    _physicalData->set_kineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->set_coulombEnergy(4.0 * kcal_per_mol);
+    _physicalData->set_nonCoulombEnergy(5.0 * kcal_per_mol);
+    _physicalData->set_momentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
+    _physicalData->set_intraCoulombEnergy(9.0 * kcal_per_mol);
+    _physicalData->set_intraNonCoulombEnergy(10.0 * kcal_per_mol);
 
-    _physicalData->setBondEnergy(19.0 * kcal_per_mol);
-    _physicalData->setAngleEnergy(20.0 * kcal_per_mol);
-    _physicalData->setDihedralEnergy(21.0 * kcal_per_mol);
-    _physicalData->setImproperEnergy(22.0 * kcal_per_mol);
-    _physicalData->setLoopTime(0.1 * s);
+    _physicalData->set_bondEnergy(19.0 * kcal_per_mol);
+    _physicalData->set_angleEnergy(20.0 * kcal_per_mol);
+    _physicalData->set_dihedralEnergy(21.0 * kcal_per_mol);
+    _physicalData->set_improperEnergy(22.0 * kcal_per_mol);
+    _physicalData->set_loopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::ON);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
@@ -292,18 +295,18 @@ TEST_F(TestEnergyOutput, forceFieldActive)
  */
 TEST_F(TestEnergyOutput, manostatActive)
 {
-    _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
-    _physicalData->setCoulombEnergy(4.0 * kcal_per_mol);
-    _physicalData->setNonCoulombEnergy(5.0 * kcal_per_mol);
-    _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
-    _physicalData->setIntraCoulombEnergy(9.0 * kcal_per_mol);
-    _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
+    _physicalData->set_temperature(toTemperature(1.0));
+    _physicalData->set_pressure(2.0 * bar);
+    _physicalData->set_kineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->set_coulombEnergy(4.0 * kcal_per_mol);
+    _physicalData->set_nonCoulombEnergy(5.0 * kcal_per_mol);
+    _physicalData->set_momentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
+    _physicalData->set_intraCoulombEnergy(9.0 * kcal_per_mol);
+    _physicalData->set_intraNonCoulombEnergy(10.0 * kcal_per_mol);
 
-    _physicalData->setVolume(19.0 * angstrom3);
-    _physicalData->setDensity(20.0 * kg_per_litre);
-    _physicalData->setLoopTime(0.1 * s);
+    _physicalData->set_volume(19.0 * angstrom3);
+    _physicalData->set_density(20.0 * kg_per_litre);
+    _physicalData->set_loopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
@@ -337,19 +340,19 @@ TEST_F(TestEnergyOutput, manostatActive)
  */
 TEST_F(TestEnergyOutput, manostatActiveWithFixedAxis)
 {
-    _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setPressure(2.0 * bar);
-    _physicalData->setCoupledPressure(2.5 * bar);
-    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
-    _physicalData->setCoulombEnergy(4.0 * kcal_per_mol);
-    _physicalData->setNonCoulombEnergy(5.0 * kcal_per_mol);
-    _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
-    _physicalData->setIntraCoulombEnergy(9.0 * kcal_per_mol);
-    _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
+    _physicalData->set_temperature(toTemperature(1.0));
+    _physicalData->set_pressure(2.0 * bar);
+    _physicalData->set_coupledPressure(2.5 * bar);
+    _physicalData->set_kineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->set_coulombEnergy(4.0 * kcal_per_mol);
+    _physicalData->set_nonCoulombEnergy(5.0 * kcal_per_mol);
+    _physicalData->set_momentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
+    _physicalData->set_intraCoulombEnergy(9.0 * kcal_per_mol);
+    _physicalData->set_intraNonCoulombEnergy(10.0 * kcal_per_mol);
 
-    _physicalData->setVolume(19.0 * angstrom3);
-    _physicalData->setDensity(20.0 * kg_per_litre);
-    _physicalData->setLoopTime(0.1 * s);
+    _physicalData->set_volume(19.0 * angstrom3);
+    _physicalData->set_density(20.0 * kg_per_litre);
+    _physicalData->set_loopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
@@ -385,18 +388,18 @@ TEST_F(TestEnergyOutput, qmActive)
 {
     _physicalData->reset();
 
-    _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
-    _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
-    _physicalData->setIntraCoulombEnergy(0.0 * kcal_per_mol);
-    _physicalData->setIntraNonCoulombEnergy(0.0 * kcal_per_mol);
+    _physicalData->set_temperature(toTemperature(1.0));
+    _physicalData->set_pressure(2.0 * bar);
+    _physicalData->set_kineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->set_momentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
+    _physicalData->set_intraCoulombEnergy(0.0 * kcal_per_mol);
+    _physicalData->set_intraNonCoulombEnergy(0.0 * kcal_per_mol);
 
-    _physicalData->setQMEnergy(5.0 * kcal_per_mol);
+    _physicalData->set_qmEnergy(5.0 * kcal_per_mol);
 
-    _physicalData->setVolume(19.0 * angstrom3);
-    _physicalData->setDensity(20.0 * kg_per_litre);
-    _physicalData->setLoopTime(0.1 * s);
+    _physicalData->set_volume(19.0 * angstrom3);
+    _physicalData->set_density(20.0 * kg_per_litre);
+    _physicalData->set_loopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::QM_MD);
@@ -428,17 +431,17 @@ TEST_F(TestEnergyOutput, qmActive)
  */
 TEST_F(TestEnergyOutput, noseHooverActive)
 {
-    _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
-    _physicalData->setCoulombEnergy(4.0 * kcal_per_mol);
-    _physicalData->setNonCoulombEnergy(5.0 * kcal_per_mol);
-    _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
-    _physicalData->setIntraCoulombEnergy(9.0 * kcal_per_mol);
-    _physicalData->setIntraNonCoulombEnergy(10.0 * kcal_per_mol);
-    _physicalData->setNoseHooverMomentumEnergy(11.0 * kcal_per_mol);
-    _physicalData->setNoseHooverFrictionEnergy(12.0);
-    _physicalData->setLoopTime(0.1 * s);
+    _physicalData->set_temperature(toTemperature(1.0));
+    _physicalData->set_pressure(2.0 * bar);
+    _physicalData->set_kineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->set_coulombEnergy(4.0 * kcal_per_mol);
+    _physicalData->set_nonCoulombEnergy(5.0 * kcal_per_mol);
+    _physicalData->set_momentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
+    _physicalData->set_intraCoulombEnergy(9.0 * kcal_per_mol);
+    _physicalData->set_intraNonCoulombEnergy(10.0 * kcal_per_mol);
+    _physicalData->set_noseHooverMomentumEnergy(11.0 * kcal_per_mol);
+    _physicalData->set_noseHooverFrictionEnergy(12.0);
+    _physicalData->set_loopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
@@ -477,16 +480,16 @@ TEST_F(TestEnergyOutput, qmmmActiveSubtractsQMReferenceEnergy)
 {
     _physicalData->reset();
 
-    _physicalData->setTemperature(toTemperature(1.0));
-    _physicalData->setPressure(2.0 * bar);
-    _physicalData->setKineticEnergy(3.0 * kcal_per_mol);
-    _physicalData->setCoulombEnergy(4.0 * kcal_per_mol);
-    _physicalData->setNonCoulombEnergy(5.0 * kcal_per_mol);
-    _physicalData->setMomentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
-    _physicalData->setQMEnergy(7.0 * kcal_per_mol);
-    _physicalData->setQMReferenceEnergy(2.0 * kcal_per_mol);
-    _physicalData->setNumberOfSmoothingMolecules(1.0);
-    _physicalData->setLoopTime(0.1 * s);
+    _physicalData->set_temperature(toTemperature(1.0));
+    _physicalData->set_pressure(2.0 * bar);
+    _physicalData->set_kineticEnergy(3.0 * kcal_per_mol);
+    _physicalData->set_coulombEnergy(4.0 * kcal_per_mol);
+    _physicalData->set_nonCoulombEnergy(5.0 * kcal_per_mol);
+    _physicalData->set_momentum(linalg::Vec3D(6.0) * g_per_mol * angstrom / fs);
+    _physicalData->set_qmEnergy(7.0 * kcal_per_mol);
+    _physicalData->set_qmReferenceEnergy(2.0 * kcal_per_mol);
+    _physicalData->set_numberOfSmoothingMol(1.0);
+    _physicalData->set_loopTime(0.1 * s);
 
     _settings->forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
     _settings->generalSettings.setJobtypeByUser(JobType::QMMM_MD);

@@ -22,8 +22,6 @@
 
 #include "intraNonBondedMap.hpp"
 
-#include <cstdlib>
-
 #include "coulombPotential.hpp"
 #include "nonCoulombPotential.hpp"
 #include "physicalData.hpp"
@@ -70,20 +68,16 @@ namespace intraNonBonded
         auto        nonCoulombEnergy = EnergyPerMol::zero();
         const auto &box              = simulationBox.getBoxDimensions();
 
-        const auto nAtomIndices =
-            _intraNonBondedContainer->getAtomIndices().size();
+        const auto &partners = _intraNonBondedContainer->getPartners();
 
-        for (size_t atomIndex1 = 0; atomIndex1 < nAtomIndices; ++atomIndex1)
+        for (size_t atomIndex1 = 0; atomIndex1 < partners.size(); ++atomIndex1)
         {
-            const auto atomIndices =
-                _intraNonBondedContainer->getAtomIndices()[atomIndex1];
-
-            for (const auto atomIndex : atomIndices)
+            for (const auto &partner : partners[atomIndex1])
             {
                 const auto [coulombEnergyTemp, nonCoulombEnergyTemp] =
                     calculateSingleInteraction(
                         AtomIndex{atomIndex1},
-                        atomIndex,
+                        partner,
                         box,
                         coulombPotential,
                         nonCoulombPotential,
@@ -104,7 +98,7 @@ namespace intraNonBonded
      * pair within a single molecule
      *
      * @param atomIdx1
-     * @param atomIdx2AsInt
+     * @param partner partner atom and its 1-4 flag
      * @param box
      * @param coulPot
      * @param nonCoulPot
@@ -117,7 +111,7 @@ namespace intraNonBonded
     std::pair<EnergyPerMol, EnergyPerMol> IntraNonBondedMap::
         calculateSingleInteraction(
             AtomIndex                    atomIdx1,
-            int                          atomIdx2AsInt,
+            const IntraNonBondedPartner &partner,
             const Pos3D                 &box,
             const pot::CoulombPotential *coulPot,
             pot::NonCoulombPotential    *nonCoulPot,
@@ -130,9 +124,8 @@ namespace intraNonBonded
         auto coulombEnergy    = EnergyPerMol::zero();
         auto nonCoulombEnergy = EnergyPerMol::zero();
 
-        const auto atomIdx2 =
-            AtomIndex{static_cast<size_t>(::abs(atomIdx2AsInt))};
-        const bool scale = atomIdx2AsInt < 0;
+        const auto atomIdx2 = partner.atomIndex;
+        const bool scale    = partner.isScaled14;
 
         const auto &pos1 = _molecule->getAtomPosition(atomIdx1);
         const auto &pos2 = _molecule->getAtomPosition(atomIdx2);
@@ -144,7 +137,7 @@ namespace intraNonBonded
         dPos                += txyz;
         const auto distance  = norm(dPos);
 
-        if (distance < potentialSettings.getCoulombRadiusCutOff())
+        if (distance < potentialSettings.getCoulombRadiusCutoff())
         {
             const auto charge1 = _molecule->getPartialCharge(atomIdx1);
             const auto charge2 = _molecule->getPartialCharge(atomIdx2);
@@ -239,13 +232,14 @@ namespace intraNonBonded
     }
 
     /**
-     * @brief get the atom indices of the IntraNonBondedContainer object
+     * @brief get the partner atoms of the IntraNonBondedContainer object
      *
-     * @return std::vector<std::vector<int>>
+     * @return const std::vector<IntraNonBondedPartners>&
      */
-    std::vector<std::vector<int>> IntraNonBondedMap::getAtomIndices() const
+    const std::vector<IntraNonBondedPartners> &IntraNonBondedMap::getPartners(
+    ) const
     {
-        return _intraNonBondedContainer->getAtomIndices();
+        return _intraNonBondedContainer->getPartners();
     }
 
 }   // namespace intraNonBonded

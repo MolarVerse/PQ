@@ -47,7 +47,13 @@ ast_check_enabled_ids = [
     "noMaybeUnusedParam",
     "noVoidPointerParam",
     "preferMstdCopyMoveMacros",
+    "noConstValueParam",
+    "noInClassMemberDefinition",
 ]
+
+[cpp.forbidden_spellings]
+cutOff = { replacement = "cutoff", within_words = true }
+CutOff = { replacement = "Cutoff", within_words = true }
 
 # Per-check configuration — one sub-table per check id.
 # The paramNameForType check has NO built-in defaults, so you must

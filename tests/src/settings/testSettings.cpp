@@ -94,12 +94,6 @@ TEST(TestSettings, setIsRandomSeedTest)
     EXPECT_EQ(generalSettings2.isRandomSeedSetByUser(), false);
 }
 
-TEST(TestSettings, setDimensionalityTest)
-{
-    GeneralSettings::setDimensionality(3);
-    EXPECT_EQ(GeneralSettings::getDimensionality(), 3);
-}
-
 TEST(TestSettings, isQMOnlyJobtypeTest)
 {
     using enum JobType;

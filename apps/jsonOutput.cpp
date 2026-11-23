@@ -26,7 +26,7 @@
 #include <ostream>
 #include <string>
 
-void cli::writeJsonString(std::ostream &output, const std::string_view value)
+void cli::writeJsonString(std::ostream &output, std::string_view value)
 {
     output << '"';
 
@@ -85,14 +85,14 @@ void cli::JsonWriter::_beforeValue()
     _firstValues.back() = false;
 }
 
-void cli::JsonWriter::_beforeMember(const std::string_view key)
+void cli::JsonWriter::_beforeMember(std::string_view key)
 {
     _beforeValue();
     writeJsonString(_output, key);
     _output << ": ";
 }
 
-void cli::JsonWriter::_beginContainer(const char opening)
+void cli::JsonWriter::_beginContainer(char opening)
 {
     _beforeValue();
     _output << opening;
@@ -100,10 +100,7 @@ void cli::JsonWriter::_beginContainer(const char opening)
     _firstValues.push_back(true);
 }
 
-void cli::JsonWriter::_beginContainer(
-    const std::string_view key,
-    const char             opening
-)
+void cli::JsonWriter::_beginContainer(std::string_view key, char opening)
 {
     _beforeMember(key);
     _output << opening;
@@ -111,7 +108,7 @@ void cli::JsonWriter::_beginContainer(
     _firstValues.push_back(true);
 }
 
-void cli::JsonWriter::_endContainer(const char closing)
+void cli::JsonWriter::_endContainer(char closing)
 {
     const auto empty = _firstValues.back();
     _firstValues.pop_back();
@@ -128,7 +125,7 @@ void cli::JsonWriter::_endContainer(const char closing)
 
 void cli::JsonWriter::beginObject() { _beginContainer('{'); }
 
-void cli::JsonWriter::beginObject(const std::string_view key)
+void cli::JsonWriter::beginObject(std::string_view key)
 {
     _beginContainer(key, '{');
 }
@@ -137,14 +134,14 @@ void cli::JsonWriter::endObject() { _endContainer('}'); }
 
 void cli::JsonWriter::beginArray() { _beginContainer('['); }
 
-void cli::JsonWriter::beginArray(const std::string_view key)
+void cli::JsonWriter::beginArray(std::string_view key)
 {
     _beginContainer(key, '[');
 }
 
 void cli::JsonWriter::endArray() { _endContainer(']'); }
 
-void cli::JsonWriter::value(const std::string_view value)
+void cli::JsonWriter::value(std::string_view value)
 {
     _beforeValue();
     writeJsonString(_output, value);
@@ -155,13 +152,13 @@ void cli::JsonWriter::value(const char *value)
     this->value(std::string_view(value));
 }
 
-void cli::JsonWriter::value(const bool value)
+void cli::JsonWriter::value(bool value)
 {
     _beforeValue();
     _output << (value ? "true" : "false");
 }
 
-void cli::JsonWriter::value(const double value)
+void cli::JsonWriter::value(double value)
 {
     _beforeValue();
     _output << value;
@@ -175,34 +172,31 @@ void cli::JsonWriter::value(std::nullptr_t)
 
 // NOLINTBEGIN(bugprone-easily-swappable-parameters) -- here fine as it is the
 // specialized overload for string_view as second type
-void cli::JsonWriter::value(
-    const std::string_view key,
-    const std::string_view value
-)
+void cli::JsonWriter::value(std::string_view key, std::string_view value)
 {
     _beforeMember(key);
     writeJsonString(_output, value);
 }
 // NOLINTEND(bugprone-easily-swappable-parameters)
 
-void cli::JsonWriter::value(const std::string_view key, const char *value)
+void cli::JsonWriter::value(std::string_view key, const char *value)
 {
     this->value(key, std::string_view(value));
 }
 
-void cli::JsonWriter::value(const std::string_view key, const bool value)
+void cli::JsonWriter::value(std::string_view key, bool value)
 {
     _beforeMember(key);
     _output << (value ? "true" : "false");
 }
 
-void cli::JsonWriter::value(const std::string_view key, const double value)
+void cli::JsonWriter::value(std::string_view key, double value)
 {
     _beforeMember(key);
     _output << value;
 }
 
-void cli::JsonWriter::value(const std::string_view key, std::nullptr_t)
+void cli::JsonWriter::value(std::string_view key, std::nullptr_t)
 {
     _beforeMember(key);
     _output << "null";

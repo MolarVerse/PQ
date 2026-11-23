@@ -182,8 +182,8 @@ namespace pot
                 }
             }
         }
-        physicalData.setCoulombEnergy(totalCoulombEnergy);
-        physicalData.setNonCoulombEnergy(totalNonCoulombEnergy);
+        physicalData.set_coulombEnergy(totalCoulombEnergy);
+        physicalData.set_nonCoulombEnergy(totalNonCoulombEnergy);
     }
 
     /**
@@ -214,7 +214,7 @@ namespace pot
         const auto box = simulationBox.getBoxPtr();
         const auto isWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) !=
                    waterMolecules.end();
@@ -365,7 +365,7 @@ namespace pot
         const auto box = simulationBox.getBoxPtr();
         const auto isWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) !=
                    waterMolecules.end();
@@ -540,7 +540,7 @@ namespace pot
         const auto box = simulationBox.getBoxPtr();
         const auto isWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) !=
                    waterMolecules.end();
@@ -671,7 +671,7 @@ namespace pot
         const auto box = simulationBox.getBoxPtr();
         const auto isWaterMolecule =
             [](const std::vector<size_t> &waterMolecules,
-               const size_t               molIndex) -> bool
+               size_t                     molIndex) -> bool
         {
             return std::ranges::find(waterMolecules, molIndex) !=
                    waterMolecules.end();

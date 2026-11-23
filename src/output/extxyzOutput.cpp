@@ -53,7 +53,7 @@ namespace out
      * @param frame
      * @param step
      */
-    void ExtxyzOutput::write(const Frame &frame, const size_t step)
+    void ExtxyzOutput::write(const Frame &frame, size_t step)
     {
         using textFormat::FIXED_WIDTH;
         using textFormat::NAME_WIDTH;

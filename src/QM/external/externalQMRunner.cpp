@@ -73,7 +73,7 @@ namespace
  */
 // NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
 // linkage
-extern "C" void pqRecordQMCancelSignal(const int signalNumber)
+extern "C" void pqRecordQMCancelSignal(int signalNumber)
 {
     CancelState::flag = signalNumber;
 }
@@ -94,37 +94,40 @@ namespace
         std::array<struct sigaction, _nSignals> _previous{};
 
        public:
-        ScopedCancelSignals()
-        {
-            CancelState::flag = 0;
-
-            struct sigaction action{};
-            action.sa_handler = pqRecordQMCancelSignal;
-            ::sigemptyset(&action.sa_mask);
-
-            for (std::size_t i = 0; i < _signals.size(); ++i)
-            {
-                ::sigaction(_signals.at(i), &action, &_previous.at(i));
-
-                // keep signals ignored by the caller ignored
-                if (_previous.at(i).sa_handler == SIG_IGN)
-                {
-                    ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
-                }
-            }
-        }
-
-        ~ScopedCancelSignals()
-        {
-            for (std::size_t i = 0; i < _signals.size(); ++i)
-            {
-                ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
-            }
-        }
+        ScopedCancelSignals();
+        ~ScopedCancelSignals();
 
         MSTD_NO_COPY(ScopedCancelSignals);
         MSTD_NO_MOVE(ScopedCancelSignals);
     };
+
+    ScopedCancelSignals::ScopedCancelSignals()
+    {
+        CancelState::flag = 0;
+
+        struct sigaction action{};
+        action.sa_handler = pqRecordQMCancelSignal;
+        ::sigemptyset(&action.sa_mask);
+
+        for (std::size_t i = 0; i < _signals.size(); ++i)
+        {
+            ::sigaction(_signals.at(i), &action, &_previous.at(i));
+
+            // keep signals ignored by the caller ignored
+            if (_previous.at(i).sa_handler == SIG_IGN)
+            {
+                ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+            }
+        }
+    }
+
+    ScopedCancelSignals::~ScopedCancelSignals()
+    {
+        for (std::size_t i = 0; i < _signals.size(); ++i)
+        {
+            ::sigaction(_signals.at(i), &_previous.at(i), nullptr);
+        }
+    }
 
     /**
      * @brief terminates the process group of pid and reaps pid
@@ -138,9 +141,9 @@ namespace
      * @param pollInterval interval between checks whether pid exited
      */
     void stopProcessGroup(
-        const pid_t                     pid,
-        int                            &status,
-        const std::chrono::milliseconds pollInterval
+        pid_t                     pid,
+        int                      &status,
+        std::chrono::milliseconds pollInterval
     )
     {
         constexpr auto terminateGracePeriod = std::chrono::seconds(1);
@@ -343,7 +346,7 @@ namespace QM
             );
         }
 
-        physicalData.setQMEnergy(energy * hartree * avogadro_constant);
+        physicalData.set_qmEnergy(energy * hartree * avogadro_constant);
 
         auto readForces = [&forceFile, &forceFileName, &qmSettings](auto &atom)
         {
@@ -543,8 +546,8 @@ namespace QM
     }
 
     void ExternalQMRunner::_executeCommand(
-        const std::string_view command,
-        const std::string_view program
+        std::string_view command,
+        std::string_view program
     ) const
     {
 #if defined(_WIN32)
@@ -633,6 +636,27 @@ namespace QM
                 std::format("{} command failed with status {}", program, status)
             );
 #endif
+    }
+
+    /**
+     * @brief writes the point charge file; no point charges by default
+     */
+    void ExternalQMRunner::_writePointChargeFile(
+        const molsys::SimulationBox & /*simulationBox*/,
+        const std::string & /*pointChargeFileName*/
+    )
+    {
+    }
+
+    /**
+     * @brief reads the stress tensor; no stress tensor by default
+     */
+    void ExternalQMRunner::_readStressTensor(
+        const molsys::Box & /*box*/,
+        physicalData::PhysicalData & /*physicalData*/,
+        const std::string & /*stressFileName*/
+    )
+    {
     }
 
     /********************************

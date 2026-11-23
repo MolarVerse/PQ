@@ -137,42 +137,42 @@ namespace physicalData
      */
     void PhysicalData::updateAverages(const PhysicalData& other)
     {
-        _numberOfQMAtoms += other.getNumberOfActiveAtoms();
-        _loopTime        += other.getLoopTime();
+        _nQMAtoms += other._nQMAtoms;
+        _loopTime += other._loopTime;
 
-        _coulombEnergy         += other.getCoulombEnergy();
-        _nonCoulombEnergy      += other.getNonCoulombEnergy();
-        _intraCoulombEnergy    += other.getIntraCoulombEnergy();
-        _intraNonCoulombEnergy += other.getIntraNonCoulombEnergy();
+        _coulombEnergy         += other._coulombEnergy;
+        _nonCoulombEnergy      += other._nonCoulombEnergy;
+        _intraCoulombEnergy    += other._intraCoulombEnergy;
+        _intraNonCoulombEnergy += other._intraNonCoulombEnergy;
 
-        _bondEnergy     += other.getBondEnergy();
-        _angleEnergy    += other.getAngleEnergy();
-        _dihedralEnergy += other.getDihedralEnergy();
-        _improperEnergy += other.getImproperEnergy();
+        _bondEnergy     += other._bondEnergy;
+        _angleEnergy    += other._angleEnergy;
+        _dihedralEnergy += other._dihedralEnergy;
+        _improperEnergy += other._improperEnergy;
 
-        _temperature     += other.getTemperature().quantity_from_zero();
-        _kineticEnergy   += other.getKineticEnergy();
-        _volume          += other.getVolume();
-        _density         += other.getDensity();
-        _virial          += other.getVirial();
-        _pressure        += other.getPressure();
-        _coupledPressure += other.getCoupledPressure();
+        _temperature     += other._temperature.quantity_from_zero();
+        _kineticEnergy   += other._kineticEnergy;
+        _volume          += other._volume;
+        _density         += other._density;
+        _virial          += other._virial;
+        _pressure        += other._pressure;
+        _coupledPressure += other._coupledPressure;
 
-        _qmEnergy          += other.getQMEnergy();
-        _qmReferenceEnergy += other.getQMReferenceEnergy();
+        _qmEnergy          += other._qmEnergy;
+        _qmReferenceEnergy += other._qmReferenceEnergy;
 
-        _numberOfSmoothingMol += other.getNumberOfSmoothingMolecules();
+        _numberOfSmoothingMol += other._numberOfSmoothingMol;
 
-        _momentum        += other.getMomentum();
-        _angularMomentum += other.getAngularMomentum();
+        _momentum        += other._momentum;
+        _angularMomentum += other._angularMomentum;
 
-        _noseHooverMomentumEnergy += other.getNoseHooverMomentumEnergy();
-        _noseHooverFrictionEnergy += other.getNoseHooverFrictionEnergy();
+        _noseHooverMomentumEnergy += other._noseHooverMomentumEnergy;
+        _noseHooverFrictionEnergy += other._noseHooverFrictionEnergy;
 
-        _lowerDistanceConstraints += other.getLowerDistanceConstraints();
-        _upperDistanceConstraints += other.getUpperDistanceConstraints();
+        _lowerDistanceConstraints += other._lowerDistanceConstraints;
+        _upperDistanceConstraints += other._upperDistanceConstraints;
 
-        _ringPolymerEnergy += other.getRingPolymerEnergy();
+        _ringPolymerEnergy += other._ringPolymerEnergy;
 
         const auto& kinEnergyVirialTensor = other._kinEnergyVirialTensor;
 
@@ -185,10 +185,10 @@ namespace physicalData
      *
      * @param outputFrequency
      */
-    void PhysicalData::makeAverages(const double outputFrequency)
+    void PhysicalData::makeAverages(double outputFrequency)
     {
-        _numberOfQMAtoms /= outputFrequency;
-        _loopTime        /= outputFrequency;
+        _nQMAtoms /= outputFrequency;
+        _loopTime /= outputFrequency;
 
         _kineticEnergy         /= outputFrequency;
         _coulombEnergy         /= outputFrequency;
@@ -235,8 +235,8 @@ namespace physicalData
      */
     void PhysicalData::reset()
     {
-        _numberOfQMAtoms = 0.0;
-        _loopTime        = Time::zero();
+        _nQMAtoms = 0.0;
+        _loopTime = Time::zero();
 
         _volume          = Volume::zero();
         _density         = Density::zero();

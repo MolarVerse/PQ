@@ -27,8 +27,6 @@ target_include_directories(engine
     ${PROJECT_SOURCE_DIR}/include/engine
     ${PROJECT_SOURCE_DIR}/include/waterModels/intra
     ${PROJECT_SOURCE_DIR}/include/waterModels/inter
-    PRIVATE
-    ${PROJECT_SOURCE_DIR}/external/progressbar/include
 )
 
 if(BUILD_WITH_MPI)
@@ -64,6 +62,7 @@ target_link_libraries(engine
     QM
     interrupt
     serialWorker
+    utilities
     externalQM
 )
 

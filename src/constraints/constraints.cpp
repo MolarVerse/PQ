@@ -139,7 +139,7 @@ namespace constraints
 
             converged = std::ranges::all_of(
                 convergedVector,
-                [](const bool isConverged) { return isConverged; }
+                [](bool isConverged) { return isConverged; }
             );
 
             ++iter;
@@ -229,7 +229,7 @@ namespace constraints
 
             converged = std::ranges::all_of(
                 convergedVector,
-                [](const bool isConverged) { return isConverged; }
+                [](bool isConverged) { return isConverged; }
             );
 
             ++iter;
@@ -305,8 +305,8 @@ namespace constraints
             { upperEnergy += distanceConstraint.get_upperEnergy(); }
         );
 
-        physicalData.setLowerDistanceConstraints(lowerEnergy);
-        physicalData.setUpperDistanceConstraints(upperEnergy);
+        physicalData.set_lowerDistanceConstraints(lowerEnergy);
+        physicalData.set_upperDistanceConstraints(upperEnergy);
     }
 
     /************************

@@ -35,8 +35,8 @@
 #include "defaults.hpp"
 #include "externalQMScripts.hpp"
 #include "jsonOutput.hpp"
-#include "systemInfo.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 namespace
 {
@@ -58,9 +58,9 @@ namespace
     };
 
     void writeStringArray(
-        cli::JsonWriter                              &json,
-        const std::string_view                        key,
-        const std::initializer_list<std::string_view> values
+        cli::JsonWriter                        &json,
+        std::string_view                        key,
+        std::initializer_list<std::string_view> values
     )
     {
         json.beginArray(key);
@@ -69,9 +69,9 @@ namespace
     }
 
     void beginParameter(
-        cli::JsonWriter       &json,
-        const JsonParam       &param,
-        const std::string_view unit
+        cli::JsonWriter &json,
+        const JsonParam &param,
+        std::string_view unit
     )
     {
         json.beginObject(param.name);
@@ -405,7 +405,7 @@ void cli::writeCapabilities(std::ostream &output)
     json.beginObject();
     json.value("schema", "pq.capabilities");
     json.value("schema_version", 2);
-    json.value("version", sysinfo::VERSION);
+    json.value("version", CURRENT_VERSION.to_string());
     writeBuildCapabilities(json);
     writeCliCapabilities(json);
     writeInputCapabilities(json);
