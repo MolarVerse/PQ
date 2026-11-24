@@ -31,18 +31,28 @@ struct PotentialSettingsUtils
     static void setEnergyCutoff(
         PotentialSettings& settings,
         const InvDistance& energyCutoff
-    )
-    {
-        settings._coulombConfig.energyCutoff = energyCutoff;
-    }
+    );
 
     static void setForceCutoff(
         PotentialSettings&        settings,
         const InvDistanceSquared& forceCutoff
-    )
-    {
-        settings._coulombConfig.forceCutoff = forceCutoff;
-    }
+    );
 };
+
+inline void PotentialSettingsUtils::setEnergyCutoff(
+    PotentialSettings& settings,
+    const InvDistance& energyCutoff
+)
+{
+    settings._coulombConfig.energyCutoff = energyCutoff;
+}
+
+inline void PotentialSettingsUtils::setForceCutoff(
+    PotentialSettings&        settings,
+    const InvDistanceSquared& forceCutoff
+)
+{
+    settings._coulombConfig.forceCutoff = forceCutoff;
+}
 
 #endif   // TESTS__INCLUDE__PRIVATE_HELPER__POTENTIAL_SETTINGS_UTILS_HPP

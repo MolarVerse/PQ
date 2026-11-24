@@ -35,8 +35,8 @@
 #include "exceptions.hpp"
 #include "frame.hpp"
 #include "staticMatrix.hpp"
-#include "systemInfo.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 #ifdef WITH_HDF5
 #include "hdf5Wrapper.hpp"
@@ -130,7 +130,7 @@ namespace out
         hdf5::writeAttribute(
             creator.get(),
             "version",
-            std::string{COMPILE_VERSION_}
+            CURRENT_VERSION.to_string()
         );
     }
 

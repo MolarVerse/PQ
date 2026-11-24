@@ -44,7 +44,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(9.0 * angstrom);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(9.0 * angstrom);
     const auto reactionField =
         pot::CoulombReactionField(settings.potentialSettings, 78.0);
 

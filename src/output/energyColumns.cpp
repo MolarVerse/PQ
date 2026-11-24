@@ -30,9 +30,9 @@
 #include "manostatSettings.hpp"
 #include "physicalData.hpp"
 #include "settings.hpp"
-#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 namespace out
 {
@@ -291,7 +291,7 @@ namespace out
      */
     std::string energyFileMarker()
     {
-        return std::format("# PQ energy file {}", sysinfo::VERSION);
+        return std::format("# PQ energy file {}", CURRENT_VERSION.to_string());
     }
 
     /**

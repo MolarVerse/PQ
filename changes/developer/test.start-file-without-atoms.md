@@ -1,0 +1,1 @@
+- Add a unit test of the restart file reader and integration tests for the refusal of a start file without atoms (mm-md, mm-md with the Nose-Hoover chain, mm-opt, mm-hessian; box only, empty file, only a comment).

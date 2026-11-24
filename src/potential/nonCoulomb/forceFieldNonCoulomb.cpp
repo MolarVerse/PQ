@@ -95,7 +95,7 @@ namespace pot
      */
     void ForceFieldNonCoulomb::setupNonCoulombicCutoffs()
     {
-        auto setEnergyAndForceCutOff = [](auto &nonCoulombPair)
+        auto setEnergyAndForceCutoff = [](auto &nonCoulombPair)
         {
             const auto radialCutoff = nonCoulombPair->get_radialCutoff();
             const auto &[energy, force] =
@@ -105,7 +105,7 @@ namespace pot
             nonCoulombPair->set_forceCutoff(force);
         };
 
-        std::ranges::for_each(_nonCoulPairsVec, setEnergyAndForceCutOff);
+        std::ranges::for_each(_nonCoulPairsVec, setEnergyAndForceCutoff);
     }
 
     /**

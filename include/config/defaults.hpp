@@ -136,8 +136,6 @@ namespace defaults
         4.591e-5 /
         mstd::units::bar;   // in bar^-1 default value for berendsen manostat
 
-    static constexpr size_t DIMENSIONALITY_DEFAULT = 3;
-
     static constexpr TimeMs QM_LOOP_TIME_LIMIT_DEFAULT = 3600 * mstd::units::s;
     static constexpr Pos    VACUUM_BOX_DIMENSION = 1000 * mstd::units::angstrom;
 

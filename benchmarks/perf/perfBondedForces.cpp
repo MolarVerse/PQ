@@ -53,7 +53,7 @@ static constexpr std::uint64_t ITERATIONS = 20000;
 int main()
 {
     Settings settings;
-    settings.potentialSettings.setCoulombRadiusCutOffByUser(20.0 * angstrom);
+    settings.potentialSettings.setCoulombRadiusCutoffByUser(20.0 * angstrom);
     auto box = molsys::SimulationBox();
 
     molsys::OrthorhombicBox orthoBox{

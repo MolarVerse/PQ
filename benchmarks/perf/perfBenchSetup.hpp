@@ -59,19 +59,29 @@ namespace benchSetup
             std::size_t                  index1,
             std::size_t                  index2,
             const pot::LennardJonesPair& pair
-        )
-        {
-            nonCoulomb._nonCoulPairsMatPtr->matrix(index1, index2) =
-                std::make_shared<pot::LennardJonesPair>(pair);
-        }
+        );
 
         void setNonCoulombPairsMatrix(
             const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>& matrix
-        )
-        {
-            nonCoulomb._nonCoulPairsMatPtr->matrix = matrix;
-        }
+        );
     };
+
+    inline void BenchNonCoulombFFPot::setNonCoulombPairsMatrix(
+        std::size_t                  index1,
+        std::size_t                  index2,
+        const pot::LennardJonesPair& pair
+    )
+    {
+        nonCoulomb._nonCoulPairsMatPtr->matrix(index1, index2) =
+            std::make_shared<pot::LennardJonesPair>(pair);
+    }
+
+    inline void BenchNonCoulombFFPot::setNonCoulombPairsMatrix(
+        const linalg::Matrix<std::shared_ptr<pot::NonCoulombPair>>& matrix
+    )
+    {
+        nonCoulomb._nonCoulPairsMatPtr->matrix = matrix;
+    }
 
     /**
      * @brief Parameters for a molecule to be constructed by makeMolecule().

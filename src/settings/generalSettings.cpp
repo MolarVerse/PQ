@@ -71,16 +71,6 @@ void GeneralSettings::setIsRandomSeedSet(bool isRandomSeedSet)
 }
 
 /**
- * @brief sets the dimensionality
- *
- * @param dimensionality
- */
-void GeneralSettings::setDimensionality(size_t dimensionality)
-{
-    _dimensionality = dimensionality;
-}
-
-/**
  * @brief sets the virial type
  *
  * @param virialType
@@ -173,13 +163,6 @@ uint_fast32_t GeneralSettings::getRandomSeed() { return _randomSeed; }
  * @return bool
  */
 bool GeneralSettings::isRandomSeedSet() { return _isRandomSeedset; }
-
-/**
- * @brief get the dimensionality
- *
- * @return size_t
- */
-size_t GeneralSettings::getDimensionality() { return _dimensionality; }
 
 /**
  * @brief get the virial type

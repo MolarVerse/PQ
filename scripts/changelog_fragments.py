@@ -12,6 +12,7 @@ USER_SECTIONS = {
     "performance": "Performance",
     "compatibility": "Build and Compatibility",
     "documentation": "Documentation",
+    "deprecations": "Deprecations"
 }
 
 DEVELOPER_SECTIONS = {
