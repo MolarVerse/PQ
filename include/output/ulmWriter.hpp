@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <ostream>
 #include <span>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -105,21 +106,18 @@ namespace out::ulm
     };
 
     /**
-     * @brief builds the JSON text of one item like Python's json.dumps
+     * @brief JSON object of one item, written like Python's json.dumps
+     *
+     * @details every add appends one complete "key": value member; str()
+     * joins the members with ", "
      */
-    class JsonBuilder
+    class JsonObject
     {
        private:
-        TextBuffer _buffer;
-        bool       _needsComma = false;
+        std::vector<std::string> _members;
+        TextBuffer               _value;
 
        public:
-        void begin();
-        void end();
-        void beginObject(std::string_view key);
-        void beginChild(std::string_view key);
-        void endObject();
-
         void addString(std::string_view key, std::string_view text);
         void addInteger(std::string_view key, std::size_t value);
         void addNumber(std::string_view key, double value);
@@ -129,11 +127,13 @@ namespace out::ulm
             std::span<const double, MATRIX_SIZE> values
         );
         void addArray(std::string_view key, const Array &array);
+        void addObject(std::string_view key, const JsonObject &object);
+        void addChild(std::string_view key, const JsonObject &object);
 
-        [[nodiscard]] std::string_view view() const;
+        [[nodiscard]] std::string str() const;
 
        private:
-        void _key(std::string_view key);
+        void _add(std::string_view key);
         void _number(double value);
     };
 

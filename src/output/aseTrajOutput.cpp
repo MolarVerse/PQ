@@ -68,12 +68,12 @@ namespace out
     {
         _checkFrame(frame);
 
-        _json.begin();
+        ulm::JsonObject item;
 
         if (_writer.getNItems() == 0)
         {
             _writer.writeHeader(_getFilePointer());
-            _addSystem(frame);
+            _addSystem(item, frame);
         }
 
         _buffer.clear();
@@ -86,12 +86,12 @@ namespace out
                 {position[0], position[1], position[2]}
             );
         }
-        _addBuffer("positions", {_nAtoms, 3});
+        _addBuffer(item, "positions", {_nAtoms, 3});
 
         const auto cell = linalg::transpose(frame.box->getBoxMatrix())
                               .numerical_value_in(angstrom)
                               .toStdVector();
-        _json.addMatrix(
+        item.addMatrix(
             "cell",
             std::span<const double, ulm::MATRIX_SIZE>{cell}
         );
@@ -107,7 +107,7 @@ namespace out
                 );
             }
         }
-        _addBuffer("momenta", {_nAtoms, 3});
+        _addBuffer(item, "momenta", {_nAtoms, 3});
 
         _buffer.clear();
         for (const auto &atom : frame.atoms)
@@ -115,16 +115,15 @@ namespace out
             _buffer.push_back(atom.charge.numerical_value_in(elementary_charge)
             );
         }
-        _addBuffer("charges", {_nAtoms});
+        _addBuffer(item, "charges", {_nAtoms});
 
         const auto energy =
             frame.potentialEnergy / avogadro_constant;
 
-        _json.beginChild("calculator");
-        _json.addString("name", "pq");
-        _json.beginObject("parameters");
-        _json.endObject();
-        _json.addNumber("energy", energy.numerical_value_in(eV));
+        ulm::JsonObject calculator;
+        calculator.addString("name", "pq");
+        calculator.addObject("parameters", ulm::JsonObject{});
+        calculator.addNumber("energy", energy.numerical_value_in(eV));
 
         _buffer.clear();
         for (const auto &atom : frame.atoms)
@@ -135,15 +134,14 @@ namespace out
                 _buffer.push_back(force.numerical_value_in(eV / angstrom));
             }
         }
-        _addBuffer("forces", {_nAtoms, 3});
-        _json.endObject();
+        _addBuffer(calculator, "forces", {_nAtoms, 3});
+        item.addChild("calculator", calculator);
 
-        _json.beginObject("info");
-        _json.addInteger("step", step);
-        _json.endObject();
-        _json.end();
+        ulm::JsonObject info;
+        info.addInteger("step", step);
+        item.addObject("info", info);
 
-        _writer.writeItem(_getFilePointer(), _json.view());
+        _writer.writeItem(_getFilePointer(), item.str());
     }
 
     /**
@@ -180,9 +178,10 @@ namespace out
     /**
      * @brief atomic numbers, masses and pbc of the first frame
      *
+     * @param item
      * @param frame
      */
-    void AseTrajOutput::_addSystem(const Frame &frame)
+    void AseTrajOutput::_addSystem(ulm::JsonObject &item, const Frame &frame)
     {
         _numbers.clear();
         _buffer.clear();
@@ -192,28 +191,30 @@ namespace out
             _buffer.push_back(atom.mass.numerical_value_in(g_per_mol));
         }
 
-        _json.addInteger("version", 1);
-        _json.addString("ase_version", "3.29.0");
-        _json.addBools("pbc", std::array{true, true, true});
-        _json.addArray(
+        item.addInteger("version", 1);
+        item.addString("ase_version", "3.29.0");
+        item.addBools("pbc", std::array{true, true, true});
+        item.addArray(
             "numbers",
             _writer.writeArray(_getFilePointer(), _numbers, {_nAtoms})
         );
-        _addBuffer("masses", {_nAtoms});
+        _addBuffer(item, "masses", {_nAtoms});
     }
 
     /**
-     * @brief store the buffer as float64 array under key
+     * @brief store the buffer as float64 array under key of object
      *
+     * @param object
      * @param key
      * @param shape
      */
     void AseTrajOutput::_addBuffer(
+        ulm::JsonObject                &object,
         std::string_view                key,
         const std::vector<std::size_t> &shape
     )
     {
-        _json.addArray(
+        object.addArray(
             key,
             _writer.writeArray(_getFilePointer(), _buffer, shape)
         );

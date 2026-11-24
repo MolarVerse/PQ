@@ -27,8 +27,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <format>
 #include <ios>
 #include <ostream>
+#include <ranges>
 #include <span>
 #include <string>
 #include <string_view>
@@ -234,73 +236,26 @@ namespace out::ulm
     }
 
     /**
-     * @brief start the root object
-     */
-    void JsonBuilder::begin()
-    {
-        _buffer.clear();
-        _buffer.put('{');
-        _needsComma = false;
-    }
-
-    /**
-     * @brief close the root object
-     */
-    void JsonBuilder::end() { _buffer.put('}'); }
-
-    /**
-     * @brief start a nested object under key
-     *
-     * @param key
-     */
-    void JsonBuilder::beginObject(std::string_view key)
-    {
-        _key(key);
-        _buffer.put('{');
-        _needsComma = false;
-    }
-
-    /**
-     * @brief start a ULM child object, stored under key plus "."
-     *
-     * @param key
-     */
-    void JsonBuilder::beginChild(std::string_view key)
-    {
-        _key(std::string(key) + '.');
-        _buffer.put('{');
-        _needsComma = false;
-    }
-
-    /**
-     * @brief close a nested object
-     */
-    void JsonBuilder::endObject()
-    {
-        _buffer.put('}');
-        _needsComma = true;
-    }
-
-    /**
      * @brief "key": "text" with quotes and backslashes escaped
      *
      * @param key
      * @param text
      */
-    void JsonBuilder::addString(std::string_view key, std::string_view text)
+    void JsonObject::addString(std::string_view key, std::string_view text)
     {
-        _key(key);
-        _buffer.put('"');
+        _value.clear();
+        _value.put('"');
         for (const auto character : text)
         {
             if (character == '"' || character == '\\')
             {
-                _buffer.put('\\');
+                _value.put('\\');
             }
 
-            _buffer.put(character);
+            _value.put(character);
         }
-        _buffer.put('"');
+        _value.put('"');
+        _add(key);
     }
 
     /**
@@ -309,10 +264,11 @@ namespace out::ulm
      * @param key
      * @param value
      */
-    void JsonBuilder::addInteger(std::string_view key, std::size_t value)
+    void JsonObject::addInteger(std::string_view key, std::size_t value)
     {
-        _key(key);
-        _buffer.left(value, 0);
+        _value.clear();
+        _value.left(value, 0);
+        _add(key);
     }
 
     /**
@@ -321,10 +277,11 @@ namespace out::ulm
      * @param key
      * @param value
      */
-    void JsonBuilder::addNumber(std::string_view key, double value)
+    void JsonObject::addNumber(std::string_view key, double value)
     {
-        _key(key);
+        _value.clear();
         _number(value);
+        _add(key);
     }
 
     /**
@@ -333,23 +290,24 @@ namespace out::ulm
      * @param key
      * @param values
      */
-    void JsonBuilder::addBools(
+    void JsonObject::addBools(
         std::string_view      key,
         std::span<const bool> values
     )
     {
-        _key(key);
-        _buffer.put('[');
+        _value.clear();
+        _value.put('[');
         for (std::size_t index = 0; index < values.size(); ++index)
         {
             if (index > 0)
             {
-                _buffer.append(", ");
+                _value.append(", ");
             }
 
-            _buffer.append(values[index] ? "true" : "false");
+            _value.append(values[index] ? "true" : "false");
         }
-        _buffer.put(']');
+        _value.put(']');
+        _add(key);
     }
 
     /**
@@ -358,27 +316,28 @@ namespace out::ulm
      * @param key
      * @param values
      */
-    void JsonBuilder::addMatrix(
+    void JsonObject::addMatrix(
         std::string_view                     key,
         std::span<const double, MATRIX_SIZE> values
     )
     {
-        _key(key);
-        _buffer.put('[');
+        _value.clear();
+        _value.put('[');
         for (std::size_t index = 0; index < values.size(); ++index)
         {
             if (index % MATRIX_DIM == 0)
             {
-                _buffer.append(index == 0 ? "[" : "], [");
+                _value.append(index == 0 ? "[" : "], [");
             }
             else
             {
-                _buffer.append(", ");
+                _value.append(", ");
             }
 
             _number(values[index]);
         }
-        _buffer.append("]]");
+        _value.append("]]");
+        _add(key);
     }
 
     /**
@@ -387,45 +346,81 @@ namespace out::ulm
      * @param key
      * @param array
      */
-    void JsonBuilder::addArray(std::string_view key, const Array &array)
+    void JsonObject::addArray(std::string_view key, const Array &array)
     {
-        _key(std::string(key) + '.');
-        _buffer.append(R"({"ndarray": [[)");
+        _value.clear();
+        _value.append(R"({"ndarray": [[)");
         for (std::size_t dim = 0; dim < array.shape.size(); ++dim)
         {
             if (dim > 0)
             {
-                _buffer.append(", ");
+                _value.append(", ");
             }
 
-            _buffer.left(array.shape[dim], 0);
+            _value.left(array.shape[dim], 0);
         }
-        _buffer.append(R"(], ")").append(array.dtype).append(R"(", )");
-        _buffer.left(static_cast<std::size_t>(array.offset), 0);
-        _buffer.append("]}");
+        _value.append(R"(], ")").append(array.dtype).append(R"(", )");
+        _value.left(static_cast<std::size_t>(array.offset), 0);
+        _value.append("]}");
+        _add(std::string(key) + '.');
     }
 
     /**
-     * @brief the JSON text built so far
+     * @brief "key": {...} of a nested object
      *
-     * @return std::string_view
+     * @param key
+     * @param object
      */
-    std::string_view JsonBuilder::view() const { return _buffer.view(); }
+    void JsonObject::addObject(std::string_view key, const JsonObject &object)
+    {
+        _value.clear();
+        _value.append(object.str());
+        _add(key);
+    }
 
     /**
-     * @brief write the comma before every but the first key of an object
+     * @brief "key.": {...} of a ULM child object
+     *
+     * @param key
+     * @param object
+     */
+    void JsonObject::addChild(std::string_view key, const JsonObject &object)
+    {
+        addObject(std::string(key) + '.', object);
+    }
+
+    /**
+     * @brief the object with all members in the order they were added
+     *
+     * @return std::string
+     */
+    std::string JsonObject::str() const
+    {
+        std::string text{"{"};
+
+        if (!_members.empty())
+        {
+            text += _members.front();
+        }
+
+        for (const auto &member : _members | std::views::drop(1))
+        {
+            text += ", ";
+            text += member;
+        }
+
+        text += '}';
+        return text;
+    }
+
+    /**
+     * @brief store the value formatted in _value as member key
      *
      * @param key
      */
-    void JsonBuilder::_key(std::string_view key)
+    void JsonObject::_add(std::string_view key)
     {
-        if (_needsComma)
-        {
-            _buffer.append(", ");
-        }
-
-        _buffer.put('"').append(key).append(R"(": )");
-        _needsComma = true;
+        _members.push_back(std::format(R"("{}": {})", key, _value.view()));
     }
 
     /**
@@ -433,19 +428,19 @@ namespace out::ulm
      *
      * @param value
      */
-    void JsonBuilder::_number(double value)
+    void JsonObject::_number(double value)
     {
         if (std::isnan(value))
         {
-            _buffer.append("NaN");
+            _value.append("NaN");
         }
         else if (std::isinf(value))
         {
-            _buffer.append(value > 0.0 ? "Infinity" : "-Infinity");
+            _value.append(value > 0.0 ? "Infinity" : "-Infinity");
         }
         else
         {
-            _buffer.exactScientific(value, 0);
+            _value.exactScientific(value, 0);
         }
     }
 

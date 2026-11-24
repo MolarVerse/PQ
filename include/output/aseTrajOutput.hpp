@@ -47,7 +47,6 @@ namespace out
     {
        private:
         ulm::Writer               _writer;
-        ulm::JsonBuilder          _json;
         std::vector<double>       _buffer;
         std::vector<std::int64_t> _numbers;
         std::size_t               _nAtoms = 0;
@@ -63,8 +62,9 @@ namespace out
 
        private:
         void _checkFrame(const Frame &frame);
-        void _addSystem(const Frame &frame);
+        void _addSystem(ulm::JsonObject &item, const Frame &frame);
         void _addBuffer(
+            ulm::JsonObject                &object,
             std::string_view                key,
             const std::vector<std::size_t> &shape
         );

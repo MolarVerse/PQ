@@ -160,40 +160,51 @@ TEST(TestUlmWriter, growsTheOffsetsTable)
  */
 TEST(TestUlmWriter, buildsJson)
 {
-    out::ulm::JsonBuilder json;
-    const auto            flags = std::array{true, false};
+    const auto flags  = std::array{true, false};
     const auto matrix = std::array{1.0, 0.0, 0.0, 0.0, 2.5, 0.0, 0.0, 0.0, 0.1};
     const auto array =
         out::ulm::Array{.shape = {3, 3}, .dtype = "float64", .offset = 80};
 
-    json.begin();
-    json.addInteger("version", 1);
-    json.addString("name", R"(p"q\)");
-    json.addBools("pbc", flags);
-    json.addMatrix("cell", matrix);
-    json.addArray("positions", array);
-    json.beginChild("calculator");
-    json.beginObject("parameters");
-    json.endObject();
-    json.addNumber("energy", -1.5);
-    json.endObject();
-    json.beginObject("info");
-    json.addNumber("nan", std::numeric_limits<double>::quiet_NaN());
-    json.addNumber("inf", std::numeric_limits<double>::infinity());
-    json.addNumber("minf", -std::numeric_limits<double>::infinity());
-    json.endObject();
-    json.end();
+    out::ulm::JsonObject calculator;
+    calculator.addObject("parameters", out::ulm::JsonObject{});
+    calculator.addNumber("energy", -1.5);
+
+    out::ulm::JsonObject info;
+    info.addNumber("nan", std::numeric_limits<double>::quiet_NaN());
+    info.addNumber("inf", std::numeric_limits<double>::infinity());
+    info.addNumber("minf", -std::numeric_limits<double>::infinity());
+
+    out::ulm::JsonObject item;
+    item.addInteger("version", 1);
+    item.addString("name", R"(p"q\)");
+    item.addBools("pbc", flags);
+    item.addMatrix("cell", matrix);
+    item.addArray("positions", array);
+    item.addChild("calculator", calculator);
+    item.addObject("info", info);
 
     EXPECT_EQ(
-        json.view(),
+        item.str(),
         R"({"version": 1, "name": "p\"q\\", "pbc": [true, false], )"
         R"("cell": [[1e+00, 0e+00, 0e+00], [0e+00, 2.5e+00, 0e+00], [0e+00, 0e+00, 1e-01]], )"
         R"("positions.": {"ndarray": [[3, 3], "float64", 80]}, )"
         R"("calculator.": {"parameters": {}, "energy": -1.5e+00}, )"
         R"("info": {"nan": NaN, "inf": Infinity, "minf": -Infinity}})"
     );
+}
 
-    json.begin();
-    json.end();
-    EXPECT_EQ(json.view(), "{}");
+/**
+ * @brief separators come only between members, also for 0 and 1 members
+ *
+ */
+TEST(TestUlmWriter, joinsJsonMembers)
+{
+    out::ulm::JsonObject object;
+    EXPECT_EQ(object.str(), "{}");
+
+    object.addInteger("a", 1);
+    EXPECT_EQ(object.str(), R"({"a": 1})");
+
+    object.addInteger("b", 2);
+    EXPECT_EQ(object.str(), R"({"a": 1, "b": 2})");
 }
