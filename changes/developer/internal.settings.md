@@ -5,3 +5,4 @@
 - finish making `PotentialSettings` non-static
 - remove static access for jobtype
 - finish removing all static accesses of settings
+- add short macros for getter and setters in `Filesettings`, `ConvSettings` 
