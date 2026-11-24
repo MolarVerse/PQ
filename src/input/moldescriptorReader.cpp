@@ -110,7 +110,7 @@ namespace input::molDescriptor
 
             if (lineElements.size() > 1)
             {
-                auto &simBox = _engine.getSimulationBox();
+                auto &simBox = _engine.get_simulationBox();
 
                 const auto molStr =
                     utilities::toLowerAndReplaceDashesCopy(lineElements[0]);
@@ -155,7 +155,7 @@ namespace input::molDescriptor
     void MoldescriptorReader::_checkQMReferenceEnergies() const
     {
         const auto &moleculeTypes =
-            _engine.getSimulationBox().getMoleculeTypes();
+            _engine.get_simulationBox().getMoleculeTypes();
 
         const auto hasReference = [](const auto &moleculeType)
         { return moleculeType.hasQMReferenceEnergy(); };
@@ -218,7 +218,7 @@ namespace input::molDescriptor
             );
         }
 
-        auto                &simBox = _engine.getSimulationBox();
+        auto                &simBox = _engine.get_simulationBox();
         molsys::MoleculeType molecule(lineElements[0]);
 
         molecule.setNumberOfAtoms(stoul(lineElements[1]));

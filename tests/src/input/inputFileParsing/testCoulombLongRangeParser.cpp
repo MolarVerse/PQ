@@ -69,7 +69,7 @@ TEST_F(TestInputFileReader, testParseCoulombLongRange)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"long_range\" at line 0 in input "
-        "file. Allowed values: shifted, reaction_field, wolf, none"
+        "file. Allowed values: shifted (none), reaction_field, wolf"
     );
 }
 

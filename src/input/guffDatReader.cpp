@@ -168,7 +168,7 @@ namespace input::guffdat
      */
     void GuffDatReader::setupGuffMaps()
     {
-        auto        &simBox    = _engine.getSimulationBox();
+        auto        &simBox    = _engine.get_simulationBox();
         const size_t nMolTypes = simBox.getMoleculeTypes().size();
 
         auto &guffNonCoulomb = dynamic_cast<pot::GuffNonCoulomb &>(
@@ -241,7 +241,7 @@ namespace input::guffdat
         const MolType moltype1{stoul(lineCommands[0])};
         const MolType moltype2{stoul(lineCommands[2])};
 
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         if (bothMoltypesAreWaterType(moltype1, moltype2))
             return;
@@ -640,7 +640,7 @@ namespace input::guffdat
     {
         checkNecessaryGuffPairs();
         calculatePartialCharges();
-        _engine.getSimulationBox()
+        _engine.get_simulationBox()
             .setPartialChargesOfMoleculesFromMoleculeTypes();
 
         checkPartialCharges();
@@ -661,7 +661,7 @@ namespace input::guffdat
      */
     void GuffDatReader::calculatePartialCharges()
     {
-        auto      &simBox    = _engine.getSimulationBox();
+        auto      &simBox    = _engine.get_simulationBox();
         const auto nMolTypes = simBox.getMoleculeTypes().size();
         const auto waterType = simBox.getWaterType();
 
@@ -707,7 +707,7 @@ namespace input::guffdat
      */
     void GuffDatReader::checkPartialCharges()
     {
-        auto      &simBox    = _engine.getSimulationBox();
+        auto      &simBox    = _engine.get_simulationBox();
         const auto nMolTypes = simBox.getMoleculeTypes().size();
 
         for (size_t i = 0; i < nMolTypes; ++i)
@@ -798,7 +798,7 @@ namespace input::guffdat
      */
     void GuffDatReader::checkNecessaryGuffPairs()
     {
-        auto      &simBox                 = _engine.getSimulationBox();
+        auto      &simBox                 = _engine.get_simulationBox();
         const auto necessaryMoleculeTypes = simBox.findNecessaryMoleculeTypes();
 
         for (const auto &moleculeType1 : necessaryMoleculeTypes)
@@ -868,7 +868,7 @@ namespace input::guffdat
         MolType molType2
     )
     {
-        auto      &simBox    = _engine.getSimulationBox();
+        auto      &simBox    = _engine.get_simulationBox();
         const auto waterType = simBox.getWaterType();
 
         const auto isInterWaterModelSet =

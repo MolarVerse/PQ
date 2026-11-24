@@ -43,17 +43,17 @@ TEST_F(TestSetup, setupIntraNonBonded)
         {{{.atomIndex = AtomIndex{1}, .isScaled14 = true}}}
     );
 
-    const auto& intraNonBonded = _engine->getIntraNonBonded();
-    intraNonBonded->addIntraNonBondedContainer(intraNonBondedContainer);
-    _engine->getSimulationBox().addMolecule(molecule);
+    auto& intraNonBonded = _engine->get_intraNonBonded();
+    intraNonBonded.addIntraNonBondedContainer(intraNonBondedContainer);
+    _engine->get_simulationBox().addMolecule(molecule);
 
     GeneralSettings::deactivateIntraNonBonded();
     setup::setupIntraNonBonded(*_engine);
 
-    EXPECT_EQ(intraNonBonded->getIntraNonBondedMaps().size(), 0);
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps().size(), 0);
 
     GeneralSettings::activateIntraNonBonded();
     setup::setupIntraNonBonded(*_engine);
 
-    EXPECT_EQ(intraNonBonded->getIntraNonBondedMaps().size(), 1);
+    EXPECT_EQ(intraNonBonded.getIntraNonBondedMaps().size(), 1);
 }

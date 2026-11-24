@@ -42,16 +42,16 @@ TEST_F(TestTopologySection, processSectionShake)
     input::topology::ShakeSection shakeSection;
     shakeSection.processSection(lineElements, *_engine, 0);
 
-    const auto& constraints = _engine->getConstraints();
+    const auto& constraints = _engine->get_constraints();
 
-    EXPECT_EQ(constraints->getBondConstraints().size(), 1);
+    EXPECT_EQ(constraints.getBondConstraints().size(), 1);
 
-    const auto& bondConstraint0 = constraints->getBondConstraints()[0];
+    const auto& bondConstraint0 = constraints.getBondConstraints()[0];
     const auto& molecules       = bondConstraint0.get_molecules();
     const auto& atomIndices     = bondConstraint0.get_atomIndices();
 
-    EXPECT_EQ(molecules[0], _engine->getSimulationBox().getMolecules().data());
-    EXPECT_EQ(molecules[1], &(_engine->getSimulationBox().getMolecules()[1]));
+    EXPECT_EQ(molecules[0], _engine->get_simulationBox().getMolecules().data());
+    EXPECT_EQ(molecules[1], &(_engine->get_simulationBox().getMolecules()[1]));
     EXPECT_EQ(atomIndices[0], AtomIndex{0});
     EXPECT_EQ(atomIndices[1], AtomIndex{0});
     EXPECT_EQ(bondConstraint0.getTargetBondLength(), 1.0 * angstrom);

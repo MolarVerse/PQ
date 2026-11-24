@@ -66,8 +66,8 @@ inline void TestTopologyReader::SetUp()
     //       and works therefore for all derived classes
     _engine = std::make_unique<engine::MMMDEngine>(_settings);
 
-    _engine->getSimulationBox().addMolecule(molecule1);
-    _engine->getSimulationBox().addMolecule(molecule2);
+    _engine->get_simulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMolecule(molecule2);
 
     _settings.fileSettings.set_topologyFileByUser(
         "data/topologyReader/topology.top"

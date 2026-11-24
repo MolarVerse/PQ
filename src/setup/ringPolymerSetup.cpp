@@ -117,7 +117,7 @@ namespace setup
         for (size_t i = 0; i < nBeads; ++i)
         {
             molsys::SimulationBox bead;
-            bead.copy(_engine.getSimulationBox());
+            bead.copy(_engine.get_simulationBox());
 
             _engine.addRingPolymerBead(bead);
         }

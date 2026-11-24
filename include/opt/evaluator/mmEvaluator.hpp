@@ -39,7 +39,12 @@ namespace opt
         using Evaluator::Evaluator;
 
         [[nodiscard]] std::shared_ptr<Evaluator> clone() const override;
-        void evaluate(physicalData::PhysicalData& physicalData) override;
+
+        void evaluate(
+            physicalData::PhysicalData&     physicalData,
+            molsys::SimulationBox&          simulationBox,
+            intraNonBonded::IntraNonBonded& intraNonBonded
+        ) override;
     };
 
 }   // namespace opt

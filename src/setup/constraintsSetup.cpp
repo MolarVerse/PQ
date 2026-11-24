@@ -82,14 +82,14 @@ namespace setup
      */
     void ConstraintsSetup::setupMShake()
     {
-        const auto &constraints = _engine.getConstraints();
+        auto &constraints = _engine.get_constraints();
 
         if (!_engine.getSettings().constraintSettings.isMShakeActivated())
             return;
 
         input::mShake::readMShake(_engine);
 
-        constraints->initMShake();
+        constraints.initMShake();
     }
 
     /**
@@ -98,10 +98,10 @@ namespace setup
      */
     void ConstraintsSetup::setupRefBondLengths()
     {
-        const auto &constraints = _engine.getConstraints();
-        const auto &simBox      = _engine.getSimulationBox();
+        auto       &constraints = _engine.get_constraints();
+        const auto &simBox      = _engine.get_simulationBox();
 
-        constraints->calculateConstraintBondRefs(simBox);
+        constraints.calculateConstraintBondRefs(simBox);
     }
 
     /**
@@ -110,11 +110,11 @@ namespace setup
      */
     void ConstraintsSetup::setupDegreesOfFreedom()
     {
-        auto       &simBox      = _engine.getSimulationBox();
-        const auto &constraints = _engine.getConstraints();
+        auto &simBox      = _engine.get_simulationBox();
+        auto &constraints = _engine.get_constraints();
 
-        _shakeConstraints  = constraints->getNumberOfBondConstraints();
-        _mShakeConstraints = constraints->getNumberOfMShakeConstraints(simBox);
+        _shakeConstraints  = constraints.getNumberOfBondConstraints();
+        _mShakeConstraints = constraints.getNumberOfMShakeConstraints(simBox);
 
         auto dof  = simBox.getDegreesOfFreedom();
         dof      -= _shakeConstraints;
@@ -174,7 +174,7 @@ namespace setup
      */
     void ConstraintsSetup::writeDof()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         const auto totalDof = simBox.getDegreesOfFreedom();
 
@@ -238,15 +238,14 @@ namespace setup
      */
     void ConstraintsSetup::writeNConstraintBonds()
     {
-        const auto &constraints = _engine.getConstraints();
-        auto       &simBox      = _engine.getSimulationBox();
+        auto &constraints = _engine.get_constraints();
+        auto &simBox      = _engine.get_simulationBox();
 
-        const auto nShakeBonds  = constraints->getNumberOfBondConstraints();
-        const auto nMShakeTypes = constraints->getMShakeReferences().size();
-        const auto nMShakeMols =
-            constraints->getNumberOfMShakeMolecules(simBox);
+        const auto nShakeBonds  = constraints.getNumberOfBondConstraints();
+        const auto nMShakeTypes = constraints.getMShakeReferences().size();
+        const auto nMShakeMols = constraints.getNumberOfMShakeMolecules(simBox);
         const auto nMShakeBonds =
-            constraints->getNumberOfMShakeConstraints(simBox);
+            constraints.getNumberOfMShakeConstraints(simBox);
 
         const auto nShakeBondsMsg =
             std::format("Number of SHAKE bonds:       {}", nShakeBonds);

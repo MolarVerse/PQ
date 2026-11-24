@@ -132,7 +132,7 @@ namespace input::topology
 
         // the molecules do not change while the topology is read: every atom
         // index of the file is found by a binary search instead of a walk
-        const AtomIndexLookupGuard lookup(_engine.getSimulationBox());
+        const AtomIndexLookupGuard lookup(_engine.get_simulationBox());
 
         while (getline(_fp, line))
         {

@@ -121,7 +121,7 @@ namespace input::restartFile
             ++lineNumber;
         }
 
-        if (_engine.getSimulationBox().getNumberOfAtoms() == 0)
+        if (_engine.get_simulationBox().getNumberOfAtoms() == 0)
         {
             throw exc::RstFileException(
                 std::format(

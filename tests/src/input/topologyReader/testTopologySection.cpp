@@ -56,12 +56,12 @@ TEST_F(TestTopologySection, processShakeSection)
     size_t lineNumber = 1;
 
     EXPECT_NO_THROW(shakeSection.process(lineElements, *_engine, lineNumber));
-    const auto& constraints = _engine->getConstraints();
+    const auto& constraints = _engine->get_constraints();
 
-    EXPECT_EQ(constraints->getBondConstraints().size(), 2);
+    EXPECT_EQ(constraints.getBondConstraints().size(), 2);
 
-    const auto& bondConstraints = constraints->getBondConstraints();
-    const auto& simBox          = _engine->getSimulationBox();
+    const auto& bondConstraints = constraints.getBondConstraints();
+    const auto& simBox          = _engine->get_simulationBox();
 
     EXPECT_EQ(
         bondConstraints[0].get_molecules()[0],

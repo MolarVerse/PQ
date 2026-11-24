@@ -95,7 +95,7 @@ namespace setup
         setAtomicNumbers();
         calculateTotalCharge();
 
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         simBox.calculateTotalMass();
 
@@ -117,7 +117,7 @@ namespace setup
      */
     void SimulationBoxSetup::setAtomNames()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         auto setAtomNamesOfMolecule = [&simBox](auto &molecule)
         {
@@ -152,7 +152,7 @@ namespace setup
      */
     void SimulationBoxSetup::setAtomTypes()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         auto setAtomTypesOfMolecule = [&simBox](auto &molecule)
         {
@@ -182,7 +182,7 @@ namespace setup
      */
     void SimulationBoxSetup::setExternalVDWTypes()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         auto setExternalVDWTypesOfMolecule = [&simBox](auto &molecule)
         {
@@ -234,7 +234,7 @@ namespace setup
      */
     void SimulationBoxSetup::setPartialCharges()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         auto setPartialChargesOfMolecule = [&simBox](auto &molecule)
         {
@@ -272,7 +272,7 @@ namespace setup
             for (auto &atom : molecule.getAtoms()) atom->initMass();
         };
 
-        auto &molecules = _engine.getSimulationBox().getMolecules();
+        auto &molecules = _engine.get_simulationBox().getMolecules();
         std::ranges::for_each(molecules, setAtomMasses);
     }
 
@@ -302,7 +302,7 @@ namespace setup
             }
         };
 
-        auto &molecules = _engine.getSimulationBox().getMolecules();
+        auto &molecules = _engine.get_simulationBox().getMolecules();
         std::ranges::for_each(molecules, setAtomicNumbers);
     }
 
@@ -320,10 +320,10 @@ namespace setup
                 std::accumulate(charges.begin(), charges.end(), Charge::zero());
         };
 
-        auto &molecules = _engine.getSimulationBox().getMolecules();
+        auto &molecules = _engine.get_simulationBox().getMolecules();
         std::ranges::for_each(molecules, calcMolCharge);
 
-        _engine.getSimulationBox().setTotalCharge(totalCharge);
+        _engine.get_simulationBox().setTotalCharge(totalCharge);
     }
 
     /**
@@ -340,7 +340,7 @@ namespace setup
      */
     void SimulationBoxSetup::checkBoxSettings()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         const auto isDensitySet =
             _engine.getSettings().simulationBoxSettings.isDensitySetByUser();
@@ -393,7 +393,7 @@ namespace setup
      */
     void SimulationBoxSetup::checkRcCutoff()
     {
-        const auto &simBox = _engine.getSimulationBox();
+        const auto &simBox = _engine.get_simulationBox();
         const auto  coulombCutoff =
             _engine.getSettings().potentialSettings.getCoulombRadiusCutoff();
         const auto minDim = simBox.getMinimalBoxDimension();
@@ -419,7 +419,7 @@ namespace setup
     void SimulationBoxSetup::checkZeroVelocities()
     {
         constexpr auto epsilon    = 1e-10 * angstrom / s;
-        auto          &simBox     = _engine.getSimulationBox();
+        auto          &simBox     = _engine.get_simulationBox();
         const auto     velocities = simBox.getVelocities();
 
         if ((std::ranges::any_of(
@@ -454,7 +454,7 @@ namespace setup
 
         maxwellBoltzmann::MaxwellBoltzmann maxwellBoltzmann;
         maxwellBoltzmann.initializeVelocities(
-            _engine.getSimulationBox(),
+            _engine.get_simulationBox(),
             _engine.getSettings().kinetics.getStartTemperature()
         );
     }
@@ -466,7 +466,7 @@ namespace setup
     void SimulationBoxSetup::writeSetupInfo() const
     {
         auto &log    = _engine.getLogOutput();
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         const auto nAtoms = simBox.getNumberOfAtoms();
         const auto mass   = simBox.getTotalMass();

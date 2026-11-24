@@ -43,7 +43,7 @@ TEST_F(TestTopologySection, processSectionDihedral)
     dihedralSection.processSection(lineElements, *_engine, 0);
 
     const auto &dihedrals = _engine->getForceField()->getDihedrals();
-    const auto &molecules = _engine->getSimulationBox().getMolecules();
+    const auto &molecules = _engine->get_simulationBox().getMolecules();
 
     EXPECT_EQ(dihedrals.size(), 1);
     EXPECT_EQ(dihedrals[0].get_molecules()[0], molecules.data());

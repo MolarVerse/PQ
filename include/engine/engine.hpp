@@ -56,17 +56,17 @@ namespace engine
 
         EngineOutput _engineOutput;
 
-        physicalData::PhysicalData _averagePhysicalData;
-        physicalData::PhysicalData _physicalData;
-
-        std::shared_ptr<pot::Potential>                 _potential;
-        std::shared_ptr<molsys::SimulationBox>          _simulationBox;
-        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
-        std::shared_ptr<ff::ForceField>                 _forceField;
-        std::shared_ptr<constraints::Constraints>       _constraints;
+        physicalData::PhysicalData     _averagePhysicalData;
+        physicalData::PhysicalData     _physicalData;
+        molsys::SimulationBox          _simulationBox;
+        constraints::Constraints       _constraints;
+        intraNonBonded::IntraNonBonded _intraNonBonded;
 
         std::unique_ptr<waterModel::IntraWater> _intraWater;
         std::unique_ptr<waterModel::InterWater> _interWater;
+
+        std::shared_ptr<pot::Potential> _potential;
+        std::shared_ptr<ff::ForceField> _forceField;
 
         mstd::ConstRef<Settings> _settings;
 
@@ -97,22 +97,16 @@ namespace engine
         GETTER(_physicalData);
         GETTER(_averagePhysicalData);
 
-        [[nodiscard]]
-        const molsys::CellList &getCellList() const;
-        [[nodiscard]]
-        molsys::CellList &getCellList();
-        [[nodiscard]]
-        const std::shared_ptr<constraints::Constraints> &getConstraints() const;
-        [[nodiscard]]
-        const std::shared_ptr<
-            intraNonBonded::IntraNonBonded> &getIntraNonBonded() const;
+        GETTER(_simulationBox);
+        GETTER(_constraints);
+        GETTER(_intraNonBonded);
+
+        [[nodiscard]] const molsys::CellList &getCellList() const;
+        [[nodiscard]] molsys::CellList       &getCellList();
         [[nodiscard]]
         const std::shared_ptr<ff::ForceField> &getForceField() const;
         [[nodiscard]]
         const std::shared_ptr<pot::Potential> &getPotential() const;
-
-        [[nodiscard]] molsys::SimulationBox       &getSimulationBox();
-        [[nodiscard]] const molsys::SimulationBox &getSimulationBox() const;
 
         [[nodiscard]] const Settings &getSettings() const;
 
@@ -130,19 +124,6 @@ namespace engine
         [[nodiscard]] out::InfoOutput       &getInfoOutput();
         [[nodiscard]] out::EnergyOutput     &getEnergyOutput();
         [[nodiscard]] out::RstFileOutput    &getRstFileOutput();
-
-        /***********************
-         * get pointer methods *
-         ***********************/
-
-        [[nodiscard]] molsys::SimulationBox *getSimulationBoxPtr();
-
-        /******************************
-         * get shared pointer methods *
-         ******************************/
-
-        [[nodiscard]]
-        std::shared_ptr<molsys::SimulationBox> getSharedSimulationBox() const;
 
         /***************************
          * make unique_ptr methods *
@@ -162,15 +143,8 @@ namespace engine
         void setInterWater(std::unique_ptr<waterModel::InterWater> interWater);
 
        protected:
-        [[nodiscard]]
-        waterModel::InterWater &_getInterWater();
-        [[nodiscard]]
-        const waterModel::InterWater &_getInterWater() const;
-
-        [[nodiscard]]
-        waterModel::IntraWater &_getIntraWater();
-        [[nodiscard]]
-        const waterModel::IntraWater &_getIntraWater() const;
+        INTERNAL_GETTER_FROM_PTR(_intraWater);
+        INTERNAL_GETTER_FROM_PTR(_interWater);
 
         void _setStep(size_t step);
     };

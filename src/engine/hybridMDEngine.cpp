@@ -42,7 +42,7 @@ namespace engine
      */
     void HybridMDEngine::_combineInnerOuterForces()
     {
-        for (auto& atom : getSimulationBox().getAtoms())
+        for (auto& atom : get_simulationBox().getAtoms())
         {
             const auto innerForce = atom->getForceInner();
             const auto outerForce = atom->getForceOuter();
@@ -69,7 +69,7 @@ namespace engine
             atom->addForceInner(force);
         }
 
-        getSimulationBox().resetForces();
+        get_simulationBox().resetForces();
     }
 
     /**
@@ -97,7 +97,7 @@ namespace engine
             atom->addForceInner(force * globalSmF);
         }
 
-        getSimulationBox().resetForces();
+        get_simulationBox().resetForces();
     }
 
     /**
@@ -119,7 +119,7 @@ namespace engine
             atom->addForceOuter(force);
         }
 
-        getSimulationBox().resetForces();
+        get_simulationBox().resetForces();
     }
 
     /**
@@ -147,7 +147,7 @@ namespace engine
             atom->addForceOuter(force * globalSmF);
         }
 
-        getSimulationBox().resetForces();
+        get_simulationBox().resetForces();
     }
 
     /**
@@ -163,7 +163,7 @@ namespace engine
      */
     void HybridMDEngine::_scaleSmoothingMoleculeForcesInner()
     {
-        for (auto& mol : getSimulationBox().getMoleculesInsideZone(
+        for (auto& mol : get_simulationBox().getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
              ))
         {
@@ -185,7 +185,7 @@ namespace engine
      */
     void HybridMDEngine::_scaleSmoothingMoleculeForcesOuter()
     {
-        for (auto& mol : getSimulationBox().getMoleculesInsideZone(
+        for (auto& mol : get_simulationBox().getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
              ))
         {
@@ -273,7 +273,7 @@ namespace engine
         Quantity globalSmoothingFactor = 1;
 
         size_t index = 0;
-        for (const auto& mol : getSimulationBox().getMoleculesInsideZone(
+        for (const auto& mol : get_simulationBox().getMoleculesInsideZone(
                  molsys::HybridZone::SMOOTHING
              ))
         {
