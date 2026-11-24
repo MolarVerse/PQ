@@ -165,9 +165,7 @@ TEST(TestEngineOutputFrames, extxyzReplacesTheXyzFiles)
         content.find(
             std::string(".xyz:.vel:.force:.chrg:.rst:") +
             RestartFileMetaDataKeyWord + " " +
-            std::string(
-                RestartFileMetaDataMeta::toString(RestartFileMetaData::Version)
-            ) +
+            RestartFileMetaDataMeta::toString(RestartFileMetaData::Version) +
             " " + CURRENT_VERSION.to_string() + "\nStep"
         ),
         std::string::npos
