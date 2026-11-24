@@ -127,44 +127,8 @@ TEST_F(TestRstFileReader, startFileWithoutAtomsIsRefused)
             input::restartFile::readRestartFile(
                 *_engine,
                 _settings.noseHooverSettings,
-                _settings.timings
-            ),
-            exc::RstFileException,
-            "Start file \"start_file_without_atoms.rst\" contains no atoms - a "
-            "simulation needs at least one atom"
-        );
-    }
-
-    std::filesystem::remove(filename);
-}
-
-/**
- * @brief a start file without atoms is refused, whatever else it contains
- *
- */
-TEST_F(TestRstFileReader, startFileWithoutAtomsIsRefused)
-{
-    _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
-    _settings.timings.setTimeStepByUser(0.5 * fs);
-    _settings.timings.setNumberOfStepsByUser(100);
-
-    const std::string filename = "start_file_without_atoms.rst";
-
-    for (const char *content :
-         {"", "# only a comment\n\n", "Step 0\nBox 20.0 20.0 20.0\n"})
-    {
-        {
-            std::ofstream file(filename);
-            file << content;
-        }
-
-        _settings.fileSettings.setStartFileNameByUser(filename);
-
-        ASSERT_THROW_MSG(
-            input::restartFile::readRestartFile(
-                *_engine,
-                _settings.noseHooverSettings,
-                _settings.timings
+                _settings.timings,
+                _settings.generalSettings
             ),
             exc::RstFileException,
             "Start file \"start_file_without_atoms.rst\" contains no atoms - a "
@@ -317,7 +281,7 @@ TEST_F(TestRstFileReader, readsMetaData)
     );
     EXPECT_EQ(_settings.timings.getStartingStepCount(), 1232);
 
-    std::remove(filename.c_str());
+    ASSERT_TRUE(std::remove(filename.c_str()) == 0);
 }
 
 /**
@@ -377,5 +341,5 @@ TEST_F(TestRstFileReader, malformedMetaDataThrows)
         "Unrecognized metadata key 'colour' at line 1"
     );
 
-    std::remove(filename.c_str());
+    ASSERT_TRUE(std::remove(filename.c_str()) == 0);
 }
