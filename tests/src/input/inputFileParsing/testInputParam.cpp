@@ -218,7 +218,14 @@ TEST(TestInputKey, invalidDoubleSaysWhatIsExpected)
 {
     input::InputRegistry registry;
     registry.registerKey<double>(
-        input::KeyRegistry<double>{.metadata = {.name = "tau", .title = "Tau"}}
+        input::KeyRegistry<double>{
+            .metadata = {
+                .name        = "tau",
+                .title       = "Tau",
+                .description = "",
+                .unit        = ""
+            }
+        }
     );
 
     EXPECT_THROW_MSG(
