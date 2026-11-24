@@ -91,7 +91,7 @@ namespace out
         void _add(const EnergyColumn &column);
     };
 
-    inline constexpr std::string_view energyStepLabel = "SIMULATION-TIME[step]";
+    inline constexpr std::string_view energyStepLabel = "STEP[-]";
 
     [[nodiscard]] std::string energyColumnLabel(const EnergyColumn &column);
     [[nodiscard]] std::string energyFileMarker();
