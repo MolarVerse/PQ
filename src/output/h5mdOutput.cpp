@@ -323,10 +323,11 @@ namespace out
             std::span<const float>{buffer.data(), nAtoms}
         );
 
+        const auto energy = frame.potentialEnergy.numerical_value_in(kcal_per_mol);
         potentialEnergy->append(
             stepValue,
             time,
-            std::span<const double>{&frame.potentialEnergy, 1}
+            std::span<const double>{&energy, 1}
         );
 
         hdf5::check(H5Fflush(file.get(), H5F_SCOPE_LOCAL));

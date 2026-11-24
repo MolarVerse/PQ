@@ -68,7 +68,7 @@ namespace out
         std::unique_ptr<molsys::Box> box;
         std::vector<Atom>            atoms;
         std::vector<ChainLink>       noseHooverChain;
-        double                       potentialEnergy = 0.0;
+        EnergyPerMol                 potentialEnergy = EnergyPerMol::zero();
 
         explicit Frame(const molsys::SimulationBox &simulationBox);
         Frame(

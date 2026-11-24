@@ -375,7 +375,7 @@ namespace engine
      * @param simulationBox
      * @param thermostat
      * @param step
-     * @param potentialEnergy written to the extxyz file
+     * @param potentialEnergy written to the extxyz, H5MD and ASE files
      * @param finalTime
      *
      * @throw the first error of an earlier frame write
@@ -384,7 +384,7 @@ namespace engine
         const molsys::SimulationBox  &simulationBox,
         const thermostat::Thermostat &thermostat,
         size_t                        step,
-        double                        potentialEnergy,
+        const EnergyPerMol           &potentialEnergy,
         const std::optional<Time>    &finalTime
     )
     {

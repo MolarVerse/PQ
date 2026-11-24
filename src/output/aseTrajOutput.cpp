@@ -118,7 +118,7 @@ namespace out
         _addBuffer("charges", {_nAtoms});
 
         const auto energy =
-            frame.potentialEnergy * kcal_per_mol / avogadro_constant;
+            frame.potentialEnergy / avogadro_constant;
 
         _json.beginChild("calculator");
         _json.addString("name", "pq");

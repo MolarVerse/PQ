@@ -31,7 +31,6 @@
 #include "outputFileSettings.hpp"
 #include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
-#include "units.hpp"
 #include "velocityVerlet.hpp"
 
 #ifdef WITH_MPI
@@ -277,9 +276,7 @@ namespace engine
                 get_simulationBox(),
                 *_thermostat,
                 effStep,
-                get_physicalData().getPotentialEnergy().numerical_value_in(
-                    kcal_per_mol
-                ),
+                get_physicalData().getPotentialEnergy(),
                 calculateTotalSimulationTime(
                     timeStep,
                     getSettings().timings.getStartingTime()

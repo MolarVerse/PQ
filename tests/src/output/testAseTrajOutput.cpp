@@ -109,7 +109,7 @@ namespace
         simulationBox.addMolecule(molecule);
 
         auto frame            = out::Frame{simulationBox};
-        frame.potentialEnergy = -1.5;
+        frame.potentialEnergy = -1.5 * kcal_per_mol;
         return frame;
     }
 
