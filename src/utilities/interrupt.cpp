@@ -49,6 +49,7 @@ namespace utilities::detail
 // linkage
 extern "C" void pqOnInterrupt(int /*signalNumber*/)
 {
+    using utilities::detail::_exitCodeInterrupted;
     using utilities::detail::InterruptState;
 
     if (InterruptState::wakeOnly != 0)
@@ -58,7 +59,7 @@ extern "C" void pqOnInterrupt(int /*signalNumber*/)
     }
 
     if (InterruptState::interrupted != 0)
-        ::_exit(utilities::detail::_exitCodeInterrupted);
+        ::_exit(_exitCodeInterrupted);
 
     InterruptState::interrupted = 1;
 
