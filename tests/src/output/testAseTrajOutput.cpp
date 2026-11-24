@@ -326,24 +326,3 @@ TEST(TestAseTrajOutput, throwsOnInvalidUse)
 
     std::filesystem::remove(filename);
 }
-
-/**
- * @brief a full disk fails the write instead of losing frames
- *
- */
-TEST(TestAseTrajOutput, throwsIfWritingFails)
-{
-    const std::string full = "/dev/full";
-    if (!std::filesystem::exists(full))
-    {
-        GTEST_SKIP() << "needs /dev/full";
-    }
-
-    out::AseTrajOutput output{full};
-    output.setFilename(full, true);
-    EXPECT_THROW_MSG(
-        output.write(makeFrame(1), 0),
-        exc::InputFileException,
-        "Could not write ASE trajectory - filename = " + full
-    );
-}

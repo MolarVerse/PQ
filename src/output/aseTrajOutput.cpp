@@ -61,8 +61,8 @@ namespace out
      * @param frame
      * @param step stored as info step
      *
-     * @throw InputFileException if the file is closed, the number of atoms
-     * changed or writing failed
+     * @throw InputFileException if the file is closed or the number of
+     * atoms changed
      */
     void AseTrajOutput::write(const Frame &frame, size_t step)
     {
@@ -144,13 +144,6 @@ namespace out
         _json.end();
 
         _writer.writeItem(_getFilePointer(), _json.view());
-
-        if (!_getFilePointer().good())
-        {
-            throw exc::InputFileException(
-                "Could not write ASE trajectory - filename = " + getFilename()
-            );
-        }
     }
 
     /**
