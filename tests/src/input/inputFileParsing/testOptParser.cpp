@@ -119,7 +119,7 @@ TEST_F(TestInputFileReader, parserLearningRateStrategy)
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"learning-rate-strategy\" at line "
         "0 in input file. Allowed values: constant, constant_decay, "
-        "exponential_decay, linesearch_wolfe, linesearch"
+        "exponential_decay, linesearch_wolfe (linesearch)"
     )
 }
 

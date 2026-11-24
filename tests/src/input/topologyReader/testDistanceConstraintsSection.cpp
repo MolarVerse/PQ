@@ -42,13 +42,13 @@ TEST_F(TestTopologySection, processSectionDistanceConstraints)
     input::topology::DistanceConstraintsSection distanceConstraintsSection;
     distanceConstraintsSection.processSection(lineElements, *_engine, 0);
 
-    const auto& constraints           = _engine->getConstraints();
-    const auto& distanceConstraint    = constraints->getDistConstraints()[0];
-    const auto& simBox                = _engine->getSimulationBox();
+    const auto& constraints           = _engine->get_constraints();
+    const auto& distanceConstraint    = constraints.getDistConstraints()[0];
+    const auto& simBox                = _engine->get_simulationBox();
     const auto& constraintMolecules   = distanceConstraint.get_molecules();
     const auto& constraintAtomIndices = distanceConstraint.get_atomIndices();
 
-    EXPECT_EQ(constraints->getDistConstraints().size(), 1);
+    EXPECT_EQ(constraints.getDistConstraints().size(), 1);
     EXPECT_EQ(constraintMolecules[0], simBox.getMolecules().data());
     EXPECT_EQ(constraintMolecules[1], &(simBox.getMolecules()[1]));
     EXPECT_EQ(constraintAtomIndices[0], AtomIndex{0});

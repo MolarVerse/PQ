@@ -61,7 +61,7 @@ TEST_F(TestTopologySection, jCouplingSectionProcessFiveElements)
     const auto molecules = jCouplings.front().get_molecules();
     ASSERT_EQ(molecules.size(), 4U);
 
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
     EXPECT_EQ(molecules[0], &simBox.getMolecule(0));
     EXPECT_EQ(molecules[1], &simBox.getMolecule(1));
     EXPECT_EQ(molecules[2], &simBox.getMolecule(1));

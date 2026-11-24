@@ -35,26 +35,26 @@
 
 namespace
 {
-    std::shared_ptr<molsys::SimulationBox> makeBoxWithOneAtom(
+    molsys::SimulationBox makeBoxWithOneAtom(
         const Pos3D   &pos,
         const Force3D &force,
         const Pos3D   &boxDims
     )
     {
-        auto box = std::make_shared<molsys::SimulationBox>();
+        molsys::SimulationBox box;
 
         molsys::OrthorhombicBox orthoBox{boxDims};
-        box->setBox(orthoBox, false);
+        box.setBox(orthoBox, false);
 
         auto atom = std::make_shared<molsys::Atom>();
         atom->setPosition(pos);
         atom->setForce(force);
-        box->addAtom(atom);
+        box.addAtom(atom);
 
         return box;
     }
 
-    std::shared_ptr<molsys::SimulationBox> makeBoxWithOneAtom(
+    molsys::SimulationBox makeBoxWithOneAtom(
         const Pos3D   &pos,
         const Force3D &force
     )
@@ -102,13 +102,12 @@ TEST(TestAdam, updateAtStepOneReducesToLearningRateTimesSignOfForce)
     );
 
     opt::Adam adam(/*nAtoms=*/1U);
-    adam.setSimulationBox(box);
 
     const auto learningRate = 0.01;
-    adam.update(learningRate, 1U);
+    adam.update(learningRate, 1U, box);
 
     // Per-component direction is preserved (no aliasing across xyz in Adam).
-    const auto pos = box->getAtoms()[0]->getPosition();
+    const auto pos = box.getAtoms()[0]->getPosition();
     EXPECT_GT(
         pos[0].numerical_value_in(angstrom),
         0.0
@@ -150,11 +149,10 @@ TEST(TestAdam, updateStoresOldPosition)
     );
 
     opt::Adam adam(/*nAtoms=*/1U);
-    adam.setSimulationBox(box);
-    adam.update(0.01, 1U);
+    adam.update(0.01, 1U, box);
 
     EXPECT_EQ(
-        box->getAtoms()[0]->getPositionOld(),
+        box.getAtoms()[0]->getPositionOld(),
         linalg::Vec3D(3.0, 4.0, 5.0) * angstrom
     );
 }
@@ -172,12 +170,11 @@ TEST(TestAdam, updateAppliesPBCToNewPosition)
     );
 
     opt::Adam adam(/*nAtoms=*/1U);
-    adam.setSimulationBox(box);
-    adam.update(/*learningRate=*/0.5, /*step=*/1U);
+    adam.update(/*learningRate=*/0.5, /*step=*/1U, box);
 
     // After step pos[0] ≈ 9.99 + 0.5 ≈ 10.49 → wraps to ≈ 0.49.
-    EXPECT_LT(box->getAtoms()[0]->getPosition()[0], 1.0 * angstrom);
-    EXPECT_GE(box->getAtoms()[0]->getPosition()[0], 0.0 * angstrom);
+    EXPECT_LT(box.getAtoms()[0]->getPosition()[0], 1.0 * angstrom);
+    EXPECT_GE(box.getAtoms()[0]->getPosition()[0], 0.0 * angstrom);
 }
 
 TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
@@ -190,11 +187,10 @@ TEST(TestAdam, updateLeavesPositionUnchangedWhenForceIsZero)
     );
 
     opt::Adam adam(1U);
-    adam.setSimulationBox(box);
-    adam.update(0.1, 1U);
+    adam.update(0.1, 1U, box);
 
     EXPECT_EQ(
-        box->getAtoms()[0]->getPosition(),
+        box.getAtoms()[0]->getPosition(),
         linalg::Vec3D(1.0, 2.0, 3.0) * angstrom
     );
 }

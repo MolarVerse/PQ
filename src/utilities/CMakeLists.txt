@@ -65,3 +65,31 @@ endif()
 install(TARGETS interrupt
     DESTINATION lib
 )
+
+if(BUILD_WITH_PYBIND11)
+    add_library(embeddedPython
+        embeddedPython.cpp
+    )
+
+    target_include_directories(embeddedPython
+        PUBLIC
+        ${PROJECT_SOURCE_DIR}/include/utilities
+    )
+
+    target_compile_definitions(embeddedPython
+        PRIVATE
+        PQ_PYTHON_EXECUTABLE="${Python3_EXECUTABLE}"
+    )
+
+    target_link_libraries(embeddedPython
+        PUBLIC
+        pybind11::embed
+        PRIVATE
+        interrupt
+        utilities
+    )
+
+    install(TARGETS embeddedPython
+        DESTINATION lib
+    )
+endif()

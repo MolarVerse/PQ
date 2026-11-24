@@ -1,0 +1,1 @@
+- PQ no longer prints "Could not find platform dependent libraries <exec_prefix>"; MM runs do not start Python at all (#1264).
