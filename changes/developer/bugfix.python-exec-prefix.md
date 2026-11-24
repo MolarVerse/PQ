@@ -1,0 +1,2 @@
+- `utilities::startPython` starts the embedded interpreter only for ASE jobs, with `program_name` set to the `python3.X` on `PATH` or the build interpreter, and keeps PQ's SIGINT handler (#1264).
+- `utilities::isExecutableFile` and `utilities::findInSearchPath` (in `executablePath`) do the generic `PATH` lookup; `startPython` only adds the Python name and the build interpreter fallback.

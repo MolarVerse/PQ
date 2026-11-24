@@ -17,7 +17,7 @@ Legend used below: **yes** = a test runs it and compares the result; **partly** 
 setting that leaves relevant variants open (the note says which); **no** = no integration test.
 "Elsewhere" names the other place that exercises it: **unit** = `tests/src` (GoogleTest),
 **regression** = `tests/regression` (ctest, runs in every build job), **example** = `examples/`
-(documentation inputs; only `oh_mm_hessian` is also run here).
+(documentation inputs; only `oh_mm_hessian` and `h2o_mm` are also run here).
 
 ## How the tests work
 
@@ -83,6 +83,7 @@ setting that leaves relevant variants open (the note says which); **no** = no in
 | `qm-mm/*` (8 tests) | `run-01.in` in 8 directories | `qmmm-md` | one K ion + 2000 waters (6001 atoms), box 39 Å, 2 steps | DFTB+ as QM program, Berendsen thermostat; the 8 = smoothing `hotspot`/`exact` x `brute_force`/`cell_list` x (`force-field = bonded` with topology \| `force-field = off` with a water model) |
 | `oh_mm_hessian` (4 tests) | `run-01.in`, `run-02-no-opt.in` | `mm-hessian` | 2 atoms | optimisation then Hessian, Hessian alone, with and without `max-learning-rate`, and the error for a minimum learning rate not below the maximum |
 | `oh_mm_hessian` `test_start_file_without_atoms` (13 tests) | `mm-md`, `mm-md` with the Nose-Hoover chain, `mm-opt` and `mm-hessian` with a start file that has a box only, is empty or has only a comment | `mm-md`, `mm-opt`, `mm-hessian` | no atoms | PQ exits with status 1 and `Start file "..." contains no atoms` (issue #1238; before: zeros, a segmentation fault in `mm-opt`, NaN in the restart file with the Nose-Hoover chain); and the example start file is still accepted |
+| `mm_without_python` | `examples/h2o_mm/run-01.in`, 5 steps | `mm-md` | water | `PATH` without any Python: an MM run must not start the embedded Python, stderr stays empty (#1264) |
 | `hessian_bond` `test_numerical_hessian_equals_the_analytic_one` (6 tests) | `run.in` with `hessian_builder` central, forward, five_point and a stretched or an equilibrium start file | `mm-hessian` | one tilted O-H bond (harmonic, k = 500, r0 = 1 Å), `force-field = bonded` | the Hessian equals the analytic `k (u u^T + (1 - r0/r)(1 - u u^T))` blocks within the error of each stencil (central 4e-5, forward 0.1, five point 6e-11 at a displacement of 0.001 Å; the stretched bond must also not be *more* accurate than its stencil allows); symmetric; shifting both atoms costs no energy (except forward) |
 | `hessian_bond` `test_central_hessian_error_follows_the_displacement` | displacement 0.001 and 0.002 | `mm-hessian` | same | the central error grows as the displacement squared (ratio 3 to 5) |
 | `hessian_bond` `test_hessian_info_file_describes_the_run` | five_point | `mm-hessian` | same | builder, displacement, definition (-dF_i/dx_j) and unit (kcal/mol/Å²) of the info file |
