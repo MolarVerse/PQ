@@ -41,7 +41,10 @@ namespace thermostat
      * @details automatically calculates sigma from friction and target
      * temperature
      *
-     * @param friction
+     * @param friction The friction coefficient for the Langevin thermostat
+     * @param generalSettings The general settings object containing relevant
+     * configuration for the simulation, including random number generator
+     * settings.
      */
     LangevinThermostat::LangevinThermostat(
         const Frequency       &friction,

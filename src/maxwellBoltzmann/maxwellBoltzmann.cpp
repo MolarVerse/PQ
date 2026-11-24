@@ -40,7 +40,9 @@ namespace maxwellBoltzmann
     /**
      * @brief Construct a new MaxwellBoltzmann object
      *
-     * @param rng
+     * @param generalSettings The general settings used to configure the
+     * MaxwellBoltzmann object, such as computational resources and execution
+     * preferences.
      */
     MaxwellBoltzmann::MaxwellBoltzmann(const GeneralSettings &generalSettings)
         : _rng(rng::RandomNumberGenerator::create(generalSettings))

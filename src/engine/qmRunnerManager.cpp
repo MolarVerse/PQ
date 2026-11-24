@@ -59,8 +59,13 @@ namespace engine
      * for the DFTB+ runner
      * @param externalQMSettings The ExternalQMSettings object containing the
      * configuration for any external QM programs that may be used by the runner
+     * @param generalSettings The GeneralSettings object containing the
+     * configuration for general computational resources and execution
+     * preferences
+     *
      * @return std::shared_ptr<QM::QMRunner> Shared pointer to the created QM
      * runner
+     *
      * @throws InputFileException if the method is not supported
      */
     std::shared_ptr<QM::QMRunner> QMRunnerManager::createQMRunner(

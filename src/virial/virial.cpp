@@ -110,6 +110,9 @@ namespace virial
      * member state or PhysicalData.
      *
      * @param simulationBox simulation box containing molecules
+     * @param manostatSettings The settings object containing information about
+     * the virial calculation type and other relevant parameters.
+     *
      * @return linalg::tensor3D Intramolecular virial correction tensor
      */
     VirialPerMol intraMolecularVirialCorrection(

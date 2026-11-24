@@ -43,6 +43,9 @@ namespace QM
      * @param maceSettings The MACE-specific settings including model type,
      * model path, floating-point precision, dispersion correction, and
      * cuequivariance mode
+     * @param generalSettings The general settings used to configure the ASE
+     * Mace runner, including computational resources and execution
+     * preferences.
      *
      * @throw pybind11::error_already_set if the import of the mace module fails
      */

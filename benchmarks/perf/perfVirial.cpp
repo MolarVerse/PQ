@@ -36,7 +36,6 @@
 #define CALLGRIND_ZERO_STATS
 #endif
 
-#include "generalSettings.hpp"
 #include "perfAlloc.hpp"
 #include "perfBenchSetup.hpp"
 #include "physicalData.hpp"

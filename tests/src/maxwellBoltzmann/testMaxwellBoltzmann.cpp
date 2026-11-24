@@ -91,18 +91,25 @@ namespace
     // fixes the random seed for the lifetime of the guard
     struct SeedGuard
     {
-        mstd::Ref<GeneralSettings> _generalSettings;
+        mstd::Ref<GeneralSettings> generalSettings;
         MSTD_NO_MOVE(SeedGuard);
-        explicit SeedGuard(GeneralSettings &generalSettings, uint_fast32_t seed)
-            : _generalSettings(generalSettings)
-        {
-            _generalSettings->setRandomSeedByUser(seed);
-        }
+        explicit SeedGuard(
+            GeneralSettings &generalSettings,
+            uint_fast32_t    seed
+        );
 
-        ~SeedGuard() { *_generalSettings = GeneralSettings{}; }
+        ~SeedGuard();
 
         MSTD_NO_COPY(SeedGuard);
     };
+
+    SeedGuard::SeedGuard(GeneralSettings &generalSettings_, uint_fast32_t seed)
+        : generalSettings(generalSettings_)
+    {
+        generalSettings->setRandomSeedByUser(seed);
+    }
+
+    SeedGuard::~SeedGuard() { *generalSettings = GeneralSettings{}; }
 
     std::vector<Vel3D> velocitiesOf(molsys::SimulationBox &simulationBox)
     {

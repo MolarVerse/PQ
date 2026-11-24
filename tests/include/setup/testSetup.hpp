@@ -39,18 +39,20 @@ class TestSetup : public ::testing::Test
     std::unique_ptr<engine::Engine>   _engine;
     std::unique_ptr<engine::MDEngine> _mdEngine;
 
-    void SetUp() override
-    {
-        _settings = std::make_unique<Settings>();
-        // NOTE: here the MMOPTEngine is used as dummy engine
-        //       for testing the InputFileReader class
-        //       The mdEngine is used only for special cases
-        //       where optEngine is not supported
-        _engine   = std::make_unique<engine::OptEngine>(*_settings);
-        _mdEngine = std::make_unique<engine::MMMDEngine>(*_settings);
-
-        _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
-    }
+    void SetUp() override;
 };
+
+void TestSetup::SetUp()
+{
+    _settings = std::make_unique<Settings>();
+    // NOTE: here the MMOPTEngine is used as dummy engine
+    //       for testing the InputFileReader class
+    //       The mdEngine is used only for special cases
+    //       where optEngine is not supported
+    _engine   = std::make_unique<engine::OptEngine>(*_settings);
+    _mdEngine = std::make_unique<engine::MMMDEngine>(*_settings);
+
+    _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
+}
 
 #endif

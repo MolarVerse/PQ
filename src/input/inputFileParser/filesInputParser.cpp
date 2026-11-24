@@ -125,6 +125,9 @@ namespace input
      * @param validateFilePaths Flag indicating whether to validate file paths
      * @param fileSettings Reference to the FileSettings object to be used for
      * storing file names and managing the state of which files have been set.
+     * @param generalSettings Reference to the GeneralSettings object to be used
+     * for configuring general computational resources and execution
+     * preferences.
      *
      */
     FilesInputParser::FilesInputParser(

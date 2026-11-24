@@ -38,6 +38,9 @@ namespace QM
      * relevant computational options
      * @param fennolSettings The Fennol-specific settings including the model
      * path, GPU preprocessing flag, and any other relevant options
+     * @param generalSettings The general settings used to configure the ASE
+     * Fennol runner, including computational resources and execution
+     * preferences.
      *
      * @throw pybind11::error_already_set if the import of the fennol module
      * fails

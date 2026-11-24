@@ -39,7 +39,10 @@ namespace thermostat
      * @brief Construct a new Velocity Rescaling Thermostat:: Velocity Rescaling
      * Thermostat object
      *
-     * @param tau
+     * @param tau The relaxation time for the velocity rescaling thermostat
+     * @param generalSettings The general settings object containing relevant
+     * configuration for the simulation, including random number generator
+     * settings.
      */
     VelocityRescalingThermostat::VelocityRescalingThermostat(
         const Time            &tau,

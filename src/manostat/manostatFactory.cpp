@@ -36,6 +36,9 @@ namespace manostat
      * @brief Creates a Manostat instance based on the provided settings
      *
      * @param settings The settings used to configure the Manostat
+     * @param generalSettings The general settings to configure the Manostat
+     * with, such as computational resources and execution preferences.
+     *
      * @return std::unique_ptr<Manostat> A unique pointer to the created
      * Manostat instance
      */
@@ -107,6 +110,10 @@ namespace manostat
      * @brief setup stochastic rescaling manostat
      *
      * @param settings The settings used to configure the Manostat
+     * @param generalSettings The general settings to configure the stochastic
+     * rescaling Manostat with, such as computational resources and execution
+     * preferences.
+     *
      * @return std::unique_ptr<Manostat> A unique pointer to the created
      * Manostat instance
      */

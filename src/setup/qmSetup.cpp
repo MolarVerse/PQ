@@ -43,20 +43,9 @@ namespace setup
      *
      * @param qmCapableEngine The QM-capable engine used to perform QM
      * calculations
-     * @param qmSettings The QM settings used to configure the QM runner, which
-     * may include method-specific parameters and computational options
-     * @param maceSettings The Mace settings used to configure the MACE runner,
-     * which may include model-specific parameters and computational options
-     * @param fennolSettings The Fennol settings used to configure the Fennol
-     * runner, which may include model-specific parameters and computational
-     * options
-     * @param dftbSettings The DFTB settings used to configure the DFTB runner,
-     * which may include method-specific parameters and computational options
-     * @param xtbSettings The XTB settings used to configure the XTB runner,
-     * which may include method-specific parameters and computational options
-     * @param externalQMSettings The External QM settings used to configure the
-     * external QM runner, which may include method-specific parameters and
-     * computational options
+     * @param settings The settings object containing all relevant QM, MACE,
+     * Fennol, DFTB, XTB, external QM, and general settings required to
+     * configure the QM setup.
      *
      */
     QMSetup::QMSetup(
