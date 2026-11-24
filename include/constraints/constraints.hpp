@@ -90,6 +90,8 @@ namespace constraints
             const Time            &timeStep
         );
         void applyRattle(molsys::SimulationBox &simulationBox);
+        void applyShakeToPositions(molsys::SimulationBox &simulationBox);
+        void projectForces(molsys::SimulationBox &simulationBox);
         void applyDistanceConstraints(
             const molsys::SimulationBox &,
             physicalData::PhysicalData &,
@@ -142,6 +144,11 @@ namespace constraints
 
         void _applyRattle();
         void _applyMRattle(molsys::SimulationBox &simulationBox);
+
+        static void _setVelocities(
+            molsys::SimulationBox    &simulationBox,
+            const std::vector<Vel3D> &velocities
+        );
     };
 
     inline void Constraints::setStartTime(const Time &startTime)

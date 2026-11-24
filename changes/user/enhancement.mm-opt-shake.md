@@ -1,0 +1,1 @@
+- `mm-opt` now supports `shake = on`, also on all three distances of a water; the new `opt-rattle-timestep` (default 1 fs) sets how tightly the forces are projected (#1320, #1330).

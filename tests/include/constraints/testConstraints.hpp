@@ -25,17 +25,25 @@
 
 #include <gtest/gtest.h>
 
+#include <cmath>
+#include <cstddef>
 #include <memory>
+#include <numbers>
+#include <utility>
+#include <vector>
 
 #include "atom.hpp"
 #include "bondConstraint.hpp"
 #include "constraintSettings.hpp"
 #include "constraints.hpp"
+#include "enums/jobtype.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
+#include "referenceSettings.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "units.hpp"
+#include "waterModelSettings.hpp"
 
 /**
  * @class TestConstraints
@@ -65,6 +73,37 @@ class TestConstraints : public ::testing::Test
     void _addDefaultBondConstraints(
         constraints::Constraints &constraints
     ) const;
+
+    /**
+     * @brief a box with one molecule of two atoms (masses 1 and 3) at
+     * distance 1.1 Å along x, both with velocity (5, 5, 5) Å/s
+     *
+     * @return std::unique_ptr<molsys::SimulationBox>
+     */
+    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox> _makeDimerBox();
+
+    /**
+     * @brief a box with one water-like molecule (masses 16, 1, 1), O-H 1 Å and
+     * H-O-H 140°, constrained on all three distances
+     *
+     * @details a wide constraint triangle needs far more than 20 SHAKE or
+     * RATTLE passes
+     *
+     * @param constraints gets the three bond constraints
+     *
+     * @return std::unique_ptr<molsys::SimulationBox>
+     */
+    [[nodiscard]] static std::unique_ptr<molsys::SimulationBox> _makeWideTriangleBox(
+        constraints::Constraints &constraints
+    );
+
+    /**
+     * @brief SHAKE settings finalized for mm-opt, so they carry the mm-opt
+     * defaults of shake-iter and rattle-iter
+     *
+     * @return ConstraintSettings
+     */
+    [[nodiscard]] static ConstraintSettings _makeOptShakeSettings();
 };
 
 inline void TestConstraints::SetUp()
@@ -142,6 +181,109 @@ inline void TestConstraints::_addDefaultBondConstraints(
 
     constraints.addBondConstraint(bondConstraint1);
     constraints.addBondConstraint(bondConstraint2);
+}
+
+inline std::unique_ptr<molsys::SimulationBox> TestConstraints::_makeDimerBox()
+{
+    auto molecule = molsys::Molecule();
+
+    auto atom1 = std::make_shared<molsys::Atom>();
+    auto atom2 = std::make_shared<molsys::Atom>();
+
+    atom1->setPosition(linalg::Vec3D(1.0, 1.0, 1.0) * angstrom);
+    atom2->setPosition(linalg::Vec3D(2.1, 1.0, 1.0) * angstrom);
+    atom1->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
+    atom2->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
+    atom1->setMass(1.0 * g_per_mol);
+    atom2->setMass(3.0 * g_per_mol);
+
+    molecule.addAtom(atom1);
+    molecule.addAtom(atom2);
+
+    auto simulationBox = std::make_unique<molsys::SimulationBox>();
+    simulationBox->addMolecule(molecule);
+    simulationBox->addAtom(atom1);
+    simulationBox->addAtom(atom2);
+
+    molsys::OrthorhombicBox orthoBox{
+        {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+    };
+    simulationBox->setBox(orthoBox, false);
+
+    return simulationBox;
+}
+
+inline std::unique_ptr<molsys::SimulationBox> TestConstraints::
+    _makeWideTriangleBox(constraints::Constraints &constraints)
+{
+    const auto halfAngle = 70.0 * std::numbers::pi / 180.0;
+    const auto masses    = std::vector<double>{16.0, 1.0, 1.0};
+    const auto positions = std::vector<linalg::Vec3D>{
+        {5.0, 5.0, 5.0},
+        {5.0 + std::cos(halfAngle), 5.0 + std::sin(halfAngle), 5.0},
+        {5.0 + std::cos(halfAngle), 5.0 - std::sin(halfAngle), 5.0}
+    };
+
+    auto molecule = molsys::Molecule();
+    auto atoms    = std::vector<std::shared_ptr<molsys::Atom>>();
+
+    for (size_t index = 0; index < positions.size(); ++index)
+    {
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setPosition(positions[index] * angstrom);
+        atom->setVelocity(Vel3D::zero());
+        atom->setForce(Force3D::zero());
+        atom->setMass(masses[index] * g_per_mol);
+        molecule.addAtom(atom);
+        atoms.push_back(atom);
+    }
+
+    auto simulationBox = std::make_unique<molsys::SimulationBox>();
+    simulationBox->addMolecule(molecule);
+
+    for (const auto &atom : atoms)
+    {
+        simulationBox->addAtom(atom);
+    }
+
+    simulationBox->setBox(
+        molsys::OrthorhombicBox{
+            {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
+        },
+        false
+    );
+
+    auto *moleculePtr = simulationBox->getMolecules().data();
+
+    for (const auto &[first, second] :
+         std::vector<std::pair<size_t, size_t>>{{0, 1}, {0, 2}, {1, 2}})
+    {
+        constraints.addBondConstraint(
+            constraints::BondConstraint(
+                moleculePtr,
+                moleculePtr,
+                AtomIndex{first},
+                AtomIndex{second},
+                norm(positions[first] - positions[second]) * angstrom
+            )
+        );
+    }
+
+    constraints.calculateConstraintBondRefs(*simulationBox);
+
+    return simulationBox;
+}
+
+inline ConstraintSettings TestConstraints::_makeOptShakeSettings()
+{
+    ConstraintSettings settings;
+    settings.activateShakeByUser();
+
+    ReferenceSettings  referenceSettings;
+    WaterModelSettings waterModelSettings;
+    settings.finalize(referenceSettings, waterModelSettings, JobType::MM_OPT);
+
+    return settings;
 }
 
 #endif   // TESTS__INCLUDE__CONSTRAINTS__TEST_CONSTRAINTS_HPP

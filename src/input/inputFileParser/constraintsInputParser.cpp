@@ -62,6 +62,7 @@ namespace input
         addRattleToleranceKeyword();
         addMShakeToleranceKeyword();
         addMShakeIterationKeyword();
+        addOptRattleTimeStepKeyword();
         addDistanceConstraintActivatedKeyword();
     }
 
@@ -290,6 +291,44 @@ namespace input
         );
 
         addKeyword("mshake-tolerance", adapt(key), false);
+    }
+
+    /**
+     * @brief adding the geometry optimization RATTLE time step keyword
+     *
+     * @details default value is 1.0 fs
+     */
+    void ConstraintsInputParser::addOptRattleTimeStepKeyword()
+    {
+        const auto metaData = KeyMetadata{
+            .name  = "opt-rattle-timestep",
+            .title = "Optimization RATTLE time step",
+            .description =
+                "Keyword to set the time step that turns the forces into the "
+                "velocities RATTLE projects in a geometry optimization",
+            .unit = "fs"
+        };
+
+        const auto defaultValue = 1.0;
+
+        const RangeValidator<double, Greater::GT> rangeValidator{
+            0.0,
+            std::nullopt
+        };
+
+        const auto setValue = [this](auto value)
+        { _constraintSettings->setOptRattleTimeStepByUser(value * fs); };
+
+        auto &key = _getRegistry().registerKey(
+            KeyRegistry<double>{
+                .metadata     = metaData,
+                .defaultValue = defaultValue,
+                .onSet        = setValue,
+                .validators   = {makeShared(rangeValidator)}
+            }
+        );
+
+        addKeyword("opt-rattle-timestep", adapt(key), false);
     }
 
     /**

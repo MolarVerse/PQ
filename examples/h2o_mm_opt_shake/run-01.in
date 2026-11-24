@@ -1,0 +1,13 @@
+# Geometry optimization of one water molecule, O-H bonds kept by SHAKE
+jobtype = mm-opt;
+force-field = bonded;
+shake = on;
+rcoulomb = 9.0;
+start_file = start.rst;
+topology_file = h2o.top;
+parameter_file = h2o.param;
+file_prefix = h2o-opt;
+nstep = 1000;
+optimizer = steepest-descent;
+learning-rate-strategy = constant;
+initial-learning-rate = 0.002;

@@ -41,7 +41,8 @@ ConstraintSettings::ConstraintSettings()
       _mshakeMaxIter(defaults::MSHAKE_MAX_ITER_DEFAULT),
       _shakeTolerance(defaults::SHAKE_TOLERANCE_DEFAULT),
       _rattleTolerance(defaults::RATTLE_TOLERANCE_DEFAULT),
-      _mshakeTolerance(defaults::MSHAKE_TOLERANCE_DEFAULT)
+      _mshakeTolerance(defaults::MSHAKE_TOLERANCE_DEFAULT),
+      _optRattleTimeStep(defaults::OPT_RATTLE_TIME_STEP_DEFAULT)
 {
 }
 
@@ -49,11 +50,18 @@ ConstraintSettings::ConstraintSettings()
  * @brief finalize the constraint settings
  *
  * Ensures that the shake-only-water-model flag is consistent with the shake
- * activation state.
+ * activation state. Geometry optimizations project the full force in each
+ * step, so shake-iter and rattle-iter get larger defaults there unless the
+ * user sets them.
+ *
+ * @param referenceSettings
+ * @param waterModelSettings
+ * @param jobType
  */
 void ConstraintSettings::finalize(
     ReferenceSettings&        referenceSettings,
-    const WaterModelSettings& waterModelSettings
+    const WaterModelSettings& waterModelSettings,
+    JobType                   jobType
 )
 {
     const auto rigidWaterGeometry = waterModelSettings.getRigidWaterGeometry();
@@ -63,6 +71,19 @@ void ConstraintSettings::finalize(
 
     if (_shakeActive.get())
         referenceSettings.addReferenceFile(ReferenceFiles::RATTLE_FILE);
+
+    if (isOptJobType(jobType))
+    {
+        if (!_shakeMaxIter.isSetByUser())
+        {
+            _shakeMaxIter.setBySystem(defaults::SHAKE_MAX_ITER_OPT_DEFAULT);
+        }
+
+        if (!_rattleMaxIter.isSetByUser())
+        {
+            _rattleMaxIter.setBySystem(defaults::RATTLE_MAX_ITER_OPT_DEFAULT);
+        }
+    }
 }
 
 /**
@@ -261,6 +282,17 @@ double ConstraintSettings::getMShakeTolerance() const
     return _mshakeTolerance.get();
 }
 
+/**
+ * @brief get the time step that turns forces into the velocities RATTLE
+ * projects in a geometry optimization
+ *
+ * @return the time step
+ */
+const Time& ConstraintSettings::getOptRattleTimeStep() const
+{
+    return _optRattleTimeStep.get();
+}
+
 /*****************************
  *                           *
  * standard setter methods   *
@@ -327,4 +359,17 @@ void ConstraintSettings::setRattleToleranceByUser(
 void ConstraintSettings::setMShakeToleranceByUser(double mshakeTolerance)
 {
     _mshakeTolerance.setByUser(mshakeTolerance);
+}
+
+/**
+ * @brief set the time step that turns forces into the velocities RATTLE
+ * projects in a geometry optimization
+ *
+ * @param optRattleTimeStep
+ */
+void ConstraintSettings::setOptRattleTimeStepByUser(
+    const Time& optRattleTimeStep
+)
+{
+    _optRattleTimeStep.setByUser(optRattleTimeStep);
 }

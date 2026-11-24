@@ -1,0 +1,1 @@
+- `OptEngine` applies SHAKE after each step and projects the forces with RATTLE; in `mm-opt`, `ConstraintSettings::finalize` sets `shake-iter` and `rattle-iter` to 1000 unless the user sets them (#1320, #1330).

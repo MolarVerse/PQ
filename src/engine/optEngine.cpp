@@ -24,11 +24,14 @@
 
 #include <format>
 
+#include "constraintSettings.hpp"
+#include "constraints.hpp"
 #include "exceptions.hpp"
 #include "frame.hpp"
 #include "globalTimer.hpp"
 #include "interrupt.hpp"
 #include "outputFileSettings.hpp"
+#include "simulationBox.hpp"
 #include "terminalProgressBar.hpp"
 #include "timingsSettings.hpp"
 
@@ -40,15 +43,9 @@ namespace engine
      */
     void OptEngine::run()
     {
-        _evaluator->evaluate(
-            get_physicalData(),
-            get_simulationBox(),
-            get_intraNonBonded()
-        );
-        _optimizer->updateHistory(
-            get_physicalData().getTotalEnergy(),
-            get_simulationBox()
-        );
+        get_simulationBox().updateOldPositions();
+        get_constraints().applyShakeToPositions(get_simulationBox());
+        _evaluate();
 
         const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
@@ -202,17 +199,9 @@ namespace engine
             getStep(),
             get_simulationBox()
         );
+        get_constraints().applyShakeToPositions(get_simulationBox());
 
-        _evaluator->evaluate(
-            get_physicalData(),
-            get_simulationBox(),
-            get_intraNonBonded()
-        );
-
-        _optimizer->updateHistory(
-            get_physicalData().getTotalEnergy(),
-            get_simulationBox()
-        );
+        _evaluate();
 
         _converged = _optimizer->hasConverged();
 
@@ -246,6 +235,32 @@ namespace engine
         }
 
         _setStep(getStep() + 1);
+    }
+
+    /**
+     * @brief evaluate the forces and add the energy to the optimizer history
+     *
+     * @details with SHAKE or M-SHAKE the forces are projected onto the
+     * constraint surface, so the convergence checks see the constrained forces
+     */
+    void OptEngine::_evaluate()
+    {
+        _evaluator->evaluate(
+            get_physicalData(),
+            get_simulationBox(),
+            get_intraNonBonded()
+        );
+
+        if (getSettings().constraintSettings.isShakeLikeActive())
+        {
+            get_constraints().calculateConstraintBondRefs(get_simulationBox());
+            get_constraints().projectForces(get_simulationBox());
+        }
+
+        _optimizer->updateHistory(
+            get_physicalData().getTotalEnergy(),
+            get_simulationBox()
+        );
     }
 
     /**
