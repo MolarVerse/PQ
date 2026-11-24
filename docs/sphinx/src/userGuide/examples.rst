@@ -62,6 +62,9 @@ be run from its own directory so relative setup-file paths resolve as intended.
     * - ``examples/h2o_mm_opt_shake``
       - MM-OPT with SHAKE
       - Geometry optimization of one water molecule with SHAKE on the O-H bonds.
+    * - ``examples/h2o_mm_opt_mshake``
+      - MM-OPT with M-SHAKE
+      - Geometry optimization of a rigid TIP3P water dimer with M-SHAKE (``mshake.top``).
     * - ``examples/orca``
       - ORCA QM-MD
       - HF, DFT and RI-MP2 with the bundled ORCA drivers; needs ORCA, see the ``README.md`` in the folder.

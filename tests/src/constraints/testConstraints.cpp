@@ -25,11 +25,15 @@
 #include <gtest/gtest.h>
 
 #include <cstddef>
+#include <memory>
+#include <numbers>
 #include <utility>
 #include <vector>
 
 #include "exceptions.hpp"
 #include "gmock/gmock.h"
+#include "mShakeReference.hpp"
+#include "moleculeType.hpp"
 #include "testSettings.hpp"
 #include "throwWithMessage.hpp"
 #include "unit_types.hpp"
@@ -196,6 +200,101 @@ TEST_F(TestConstraints, projectForcesRemovesTheBondComponent)
             testing::ElementsAre(5.0, 5.0, 5.0)
         );
     }
+}
+
+TEST_F(TestConstraints, projectForcesWithMShakeKeepsTheMoleculeRigid)
+{
+    const auto settings =
+        testSettings::make<ConstraintSettings>()
+            .apply([](auto &config) { config.activateMShakeByUser(); })
+            .build();
+    constraints::Constraints constraints(settings);
+
+    const auto positions = std::vector<Pos3D>{
+        linalg::Vec3D{0.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{1.0, 0.0, 0.0} * angstrom,
+        linalg::Vec3D{0.5, std::numbers::sqrt3 / 2.0, 0.0} * angstrom
+    };
+
+    auto moltype = molsys::MoleculeType();
+    moltype.setMoltype(MolType{1});
+    moltype.setNumberOfAtoms(3);
+
+    auto refAtoms = std::vector<molsys::Atom>(3);
+    auto molecule = molsys::Molecule();
+    molecule.setMoltype(MolType{1});
+
+    for (size_t index = 0; index < positions.size(); ++index)
+    {
+        refAtoms[index].setName("H");
+        refAtoms[index].setPosition(positions[index]);
+
+        auto atom = std::make_shared<molsys::Atom>();
+        atom->setName("H");
+        atom->initMass();
+        atom->setPosition(positions[index]);
+        atom->setVelocity(linalg::Vec3D(5.0, 5.0, 5.0) * angstrom / s);
+        molecule.addAtom(atom);
+    }
+
+    auto mShakeRef = constraints::MShakeReference();
+    mShakeRef.setMoleculeType(moltype);
+    mShakeRef.setAtoms(refAtoms);
+    constraints.addMShakeReference(mShakeRef);
+    constraints.initMShake();
+
+    auto simulationBox = molsys::SimulationBox();
+    simulationBox.setBox(
+        molsys::OrthorhombicBox{
+            {100.0 * angstrom, 100.0 * angstrom, 100.0 * angstrom}
+        },
+        false
+    );
+    simulationBox.addMolecule(molecule);
+
+    auto &atoms = simulationBox.getMolecules()[0].getAtoms();
+    atoms[0]->setForce(linalg::Vec3D(1.0, 0.0, 0.0) * kcal_per_mol / angstrom);
+    atoms[1]->setForce(Force3D::zero());
+    atoms[2]->setForce(Force3D::zero());
+    for (const auto &atom : atoms)
+    {
+        simulationBox.addAtom(atom);
+    }
+
+    constraints.projectForces(simulationBox);
+
+    auto totalForce = Force3D::zero();
+    for (size_t first = 0; first < atoms.size(); ++first)
+    {
+        totalForce += atoms[first]->getForce();
+
+        for (size_t second = first + 1; second < atoms.size(); ++second)
+        {
+            const auto dForce =
+                atoms[first]->getForce() - atoms[second]->getForce();
+            const auto bond = positions[first] - positions[second];
+
+            EXPECT_NEAR(
+                dot(dForce, bond).numerical_value_in(kcal_per_mol),
+                0.0,
+                1e-9
+            );
+        }
+    }
+
+    EXPECT_THAT(
+        totalForce.numerical_value_in(kcal_per_mol / angstrom),
+        testing::ElementsAre(
+            testing::DoubleNear(1.0, 1e-9),
+            testing::DoubleNear(0.0, 1e-9),
+            testing::DoubleNear(0.0, 1e-9)
+        )
+    );
+
+    EXPECT_THAT(
+        atoms[1]->getVelocity().numerical_value_in(angstrom / s),
+        testing::ElementsAre(5.0, 5.0, 5.0)
+    );
 }
 
 TEST_F(TestConstraints, projectForcesWithoutShakeKeepsTheForces)

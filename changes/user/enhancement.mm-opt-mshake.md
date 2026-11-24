@@ -1,0 +1,1 @@
+- `mm-opt` now supports `shake = mshake`, for example to optimize rigid water (#1321).
