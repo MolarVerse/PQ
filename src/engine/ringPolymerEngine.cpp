@@ -93,7 +93,7 @@ namespace engine
             if (mpi::MPI::isRoot())
 #endif
             {
-                const out::Frame frame{getSimulationBox(), getThermostat()};
+                const out::Frame frame{get_simulationBox(), getThermostat()};
 
                 getEngineOutput().writeXyzFile(frame, effStep);
                 getEngineOutput().writeVelFile(frame, effStep);
@@ -252,7 +252,7 @@ namespace engine
         const auto numberOfBeads = _ringPolymerBeads.size();
 
         std::ranges::for_each(
-            getSimulationBox().getAtoms(),
+            get_simulationBox().getAtoms(),
             [](auto &atom)
             {
                 atom->setPosition(Pos3D::zero());
@@ -272,9 +272,9 @@ namespace engine
                 const auto vel   = atom.getVelocity() / nBeads;
                 const auto force = atom.getForce() / nBeads;
 
-                getSimulationBox().getAtom(i).addPosition(pos);
-                getSimulationBox().getAtom(i).addVelocity(vel);
-                getSimulationBox().getAtom(i).addForce(force);
+                get_simulationBox().getAtom(i).addPosition(pos);
+                get_simulationBox().getAtom(i).addVelocity(vel);
+                get_simulationBox().getAtom(i).addForce(force);
             }
         };
 

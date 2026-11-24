@@ -94,7 +94,7 @@ namespace input::topology
         }
         // NOLINTEND(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-        auto &simBox = engine.getSimulationBox();
+        auto &simBox = engine.get_simulationBox();
 
         const auto [molecule1, idx1] =
             simBox.findMoleculeByGlobalAtomIndex(atom1);

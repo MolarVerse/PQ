@@ -121,7 +121,7 @@ namespace input::topology
             );
         }
 
-        auto &simBox = engine.getSimulationBox();
+        auto &simBox = engine.get_simulationBox();
 
         const auto [mol1, idx1] = simBox.findMoleculeByGlobalAtomIndex(atom1);
         const auto [mol2, idx2] = simBox.findMoleculeByGlobalAtomIndex(atom2);

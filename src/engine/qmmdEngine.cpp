@@ -31,7 +31,7 @@ namespace engine
     void QMMDEngine::calculateForces()
     {
         getQMRunner()->run(
-            getSimulationBox(),
+            get_simulationBox(),
             get_physicalData(),
             getSettings().fileSettings,
             getSettings().hybridSettings

@@ -43,7 +43,7 @@ TEST_F(TestTopologySection, processSectionImproperDihedral)
 
     const auto &improperDihedrals =
         _engine->getForceField()->getImproperDihedrals();
-    const auto &molecules = _engine->getSimulationBox().getMolecules();
+    const auto &molecules = _engine->get_simulationBox().getMolecules();
 
     EXPECT_EQ(improperDihedrals.size(), 1);
     EXPECT_EQ(improperDihedrals[0].get_molecules()[0], molecules.data());

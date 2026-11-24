@@ -128,13 +128,13 @@ TEST_F(TestMoldescriptorReader, moldescriptorReader)
 TEST_F(TestMoldescriptorReader, specialTypes)
 {
     auto engine = _makeEngine(*_settings);
-    ASSERT_EQ(engine->getSimulationBox().getWaterType(), std::nullopt);
+    ASSERT_EQ(engine->get_simulationBox().getWaterType(), std::nullopt);
     _settings->fileSettings.setMolDescriptorFileNameByUser(
         "examples/setup/moldescriptor.dat"
     );
     input::molDescriptor::readMolDescriptor(*engine);
-    ASSERT_EQ(engine->getSimulationBox().getWaterType(), MolType{1});
-    ASSERT_EQ(engine->getSimulationBox().getAmmoniaType(), MolType{2});
+    ASSERT_EQ(engine->get_simulationBox().getWaterType(), MolType{1});
+    ASSERT_EQ(engine->get_simulationBox().getAmmoniaType(), MolType{2});
 }
 
 /**
@@ -196,7 +196,7 @@ TEST_F(TestMoldescriptorReader, qmReferenceEnergy)
     );
     input::molDescriptor::readMolDescriptor(*engine);
 
-    auto &simBox = engine->getSimulationBox();
+    auto &simBox = engine->get_simulationBox();
     EXPECT_DOUBLE_EQ(
         simBox.findMoleculeType(MolType{1})
             .getQMReferenceEnergy()

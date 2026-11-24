@@ -63,7 +63,7 @@ inline void TestBoxSection::SetUp()
 
 inline bool TestBoxSection::_wasBoxSetViaStartFile() const
 {
-    return _engine->getSimulationBox().wasBoxSetViaStartFile();
+    return _engine->get_simulationBox().wasBoxSetViaStartFile();
 }
 
 /**

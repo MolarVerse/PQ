@@ -101,7 +101,7 @@ namespace setup
      */
     std::shared_ptr<opt::Optimizer> OptimizerSetup::setupEmptyOptimizer()
     {
-        const auto simBox = _optEngine.getSimulationBox();
+        const auto simBox = _optEngine.get_simulationBox();
         const auto optimizerType =
             _optEngine.getSettings().optimizerSettings.getOptimizer();
 
@@ -134,8 +134,6 @@ namespace setup
                 )
             );
         }
-
-        optimizer->setSimulationBox(_optEngine.getSharedSimulationBox());
 
         return optimizer;
     }
@@ -235,12 +233,8 @@ namespace setup
         }
 
         evaluator->setCellList(_optEngine.getCellList());
-        evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
         evaluator->setPotential(_optEngine.getPotential());
         evaluator->setForceField(_optEngine.getForceField());
-        evaluator->setConstraints(_optEngine.getConstraints());
-        evaluator->setIntraNonBonded(_optEngine.getIntraNonBonded());
-        evaluator->setSimulationBox(_optEngine.getSharedSimulationBox());
 
         return evaluator;
     }
