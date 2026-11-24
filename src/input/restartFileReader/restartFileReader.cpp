@@ -121,6 +121,17 @@ namespace input::restartFile
             ++lineNumber;
         }
 
+        if (_engine.getSimulationBox().getNumberOfAtoms() == 0)
+        {
+            throw exc::RstFileException(
+                std::format(
+                    "Start file \"{}\" contains no atoms - a simulation needs "
+                    "at least one atom",
+                    _fileName
+                )
+            );
+        }
+
         const auto stepCount = _timingsSettings->getStartingStepCount();
 
         if (isMDJobType(_engine.getSettings().generalSettings.getJobtype()))

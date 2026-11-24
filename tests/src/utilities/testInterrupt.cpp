@@ -24,6 +24,8 @@
 
 #include <csignal>
 #include <cstdlib>
+#include <stdexcept>
+#include <string>
 
 #include "interrupt.hpp"
 
@@ -119,6 +121,47 @@ TEST(TestInterruptDeathTest, wakeIsNoCtrlC)
             utilities::wakePythonThread(::pthread_self());
             static_cast<void>(std::raise(SIGINT));
             std::exit(0);
+        },
+        testing::ExitedWithCode(0),
+        ""
+    );
+}
+
+TEST(TestInterruptDeathTest, ctrlCWithoutPythonStopsRun)
+{
+    EXPECT_EXIT(
+        {
+            utilities::installInterruptHandler();
+            utilities::throwIfInterrupted();
+            static_cast<void>(std::raise(SIGINT));
+
+            try
+            {
+                utilities::throwIfInterrupted();
+            }
+            catch (const std::runtime_error &error)
+            {
+                std::exit(
+                    std::string(error.what()) == "KeyboardInterrupt" ? 0 : 1
+                );
+            }
+
+            std::exit(1);
+        },
+        testing::ExitedWithCode(0),
+        ""
+    );
+}
+
+TEST(TestInterruptDeathTest, handlerIsReportedAsInstalled)
+{
+    EXPECT_EXIT(
+        {
+            static_cast<void>(std::signal(SIGINT, SIG_DFL));
+            const auto before = utilities::isInterruptHandlerInstalled();
+            utilities::installInterruptHandler();
+            const auto after = utilities::isInterruptHandlerInstalled();
+            std::exit(!before && after ? 0 : 1);
         },
         testing::ExitedWithCode(0),
         ""
