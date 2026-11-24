@@ -165,7 +165,7 @@ namespace benchInputReaders
             );
             input::topology::readTopologyFile(engine);
 
-            atoms = engine.getSimulationBox().getNumberOfAtoms();
+            atoms = engine.get_simulationBox().getNumberOfAtoms();
         }
 
         std::filesystem::remove_all(directory);

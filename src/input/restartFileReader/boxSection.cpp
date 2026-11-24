@@ -152,12 +152,12 @@ namespace input::restartFile
                 boxAngles,
                 isFullAnisotropic
             };
-            engine.getSimulationBox().setBox(box, true);
+            engine.get_simulationBox().setBox(box, true);
         }
         else
         {
             molsys::OrthorhombicBox box(boxDimensions);
-            engine.getSimulationBox().setBox(box, true);
+            engine.get_simulationBox().setBox(box, true);
         }
     }
 

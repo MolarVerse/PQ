@@ -23,6 +23,7 @@
 #include "inputConverter.hpp"
 
 #include <algorithm>
+#include <format>
 #include <ranges>
 #include <string>
 #include <unordered_map>
@@ -198,6 +199,23 @@ namespace input
         selectionVec.erase(ret.begin(), ret.end());
 
         return SelectionTag{.indices = std::move(selectionVec)};
+    }
+
+    /**
+     * @brief describes the domain of valid double inputs
+     *
+     * @return a string describing the domain
+     */
+    std::string Converter<double>::describeDomain(
+        const std::vector<double>& notAllowed
+    )
+    {
+        std::string message = "Value must be a number";
+
+        for (const auto& value : notAllowed)
+            message += std::format(", not allowed: {}", value);
+
+        return message;
     }
 
     /**

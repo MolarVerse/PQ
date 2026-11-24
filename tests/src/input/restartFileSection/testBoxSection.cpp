@@ -67,26 +67,26 @@ TEST_F(TestBoxSection, testProcess)
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
     _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxDimensions().numerical_value_in(
+        _engine->get_simulationBox().getBoxDimensions().numerical_value_in(
             angstrom
         ),
         testing::ElementsAre(1.0, 2.0, 3.0)
     );
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxAngles().numerical_value_in(deg),
+        _engine->get_simulationBox().getBoxAngles().numerical_value_in(deg),
         testing::ElementsAre(90.0, 90.0, 90.0)
     );
 
     line = {"box", "1.0", "2.0", "3.0", "90.0", "90.0", "70.0"};
     _section->process(line, *_engine, lineNumber);
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxDimensions().numerical_value_in(
+        _engine->get_simulationBox().getBoxDimensions().numerical_value_in(
             angstrom
         ),
         testing::ElementsAre(1.0, 2.0, 3.0)
     );
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxAngles().numerical_value_in(deg),
+        _engine->get_simulationBox().getBoxAngles().numerical_value_in(deg),
         testing::ElementsAre(90.0, 90.0, 70.0)
     );
 
@@ -125,17 +125,17 @@ TEST_F(TestBoxSection, testFullAnisotropicManostatNeedsABoxThatCanShear)
     std::vector<std::string> line = {"box", "1.0", "2.0", "3.0"};
     _section->process(line, *_engine, lineNumber);
 
-    const auto &box = _engine->getSimulationBox().getBox();
+    const auto &box = _engine->get_simulationBox().getBox();
     EXPECT_FALSE(box.isOrthorhombic());
     EXPECT_TRUE(box.allowChangeOfAngles());
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxDimensions().numerical_value_in(
+        _engine->get_simulationBox().getBoxDimensions().numerical_value_in(
             angstrom
         ),
         testing::ElementsAre(1.0, 2.0, 3.0)
     );
     ASSERT_THAT(
-        _engine->getSimulationBox().getBoxAngles().numerical_value_in(deg),
+        _engine->get_simulationBox().getBoxAngles().numerical_value_in(deg),
         testing::ElementsAre(90.0, 90.0, 90.0)
     );
 }
@@ -149,12 +149,12 @@ TEST_F(TestBoxSection, testOtherManostatSettingsKeepAnOrthorhombicBox)
     _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _settings.manostatSettings.setIsotropyByUser(Isotropy::ANISOTROPIC);
     _section->process(line, *_engine, lineNumber);
-    EXPECT_TRUE(_engine->getSimulationBox().getBox().isOrthorhombic());
+    EXPECT_TRUE(_engine->get_simulationBox().getBox().isOrthorhombic());
 
     _settings.manostatSettings.setManostatTypeByUser(ManostatType::NONE);
     _settings.manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
     _section->process(line, *_engine, lineNumber);
-    EXPECT_TRUE(_engine->getSimulationBox().getBox().isOrthorhombic());
+    EXPECT_TRUE(_engine->get_simulationBox().getBox().isOrthorhombic());
 }
 
 TEST_F(TestBoxSection, testTriclinicBoxMayChangeItsAnglesOnlyForFullAnisotropy)
@@ -165,13 +165,13 @@ TEST_F(TestBoxSection, testTriclinicBoxMayChangeItsAnglesOnlyForFullAnisotropy)
     line.insert(line.end(), {"75", "80", "70"});
 
     _section->process(line, *_engine, lineNumber);
-    EXPECT_FALSE(_engine->getSimulationBox().getBox().isOrthorhombic());
-    EXPECT_FALSE(_engine->getSimulationBox().getBox().allowChangeOfAngles());
+    EXPECT_FALSE(_engine->get_simulationBox().getBox().isOrthorhombic());
+    EXPECT_FALSE(_engine->get_simulationBox().getBox().allowChangeOfAngles());
 
     _settings.manostatSettings.setManostatTypeByUser(ManostatType::BERENDSEN);
     _settings.manostatSettings.setIsotropyByUser(Isotropy::FULL_ANISOTROPIC);
     _section->process(line, *_engine, lineNumber);
-    EXPECT_TRUE(_engine->getSimulationBox().getBox().allowChangeOfAngles());
+    EXPECT_TRUE(_engine->get_simulationBox().getBox().allowChangeOfAngles());
 }
 
 TEST_F(TestBoxSection, testMMMDRefusesATriclinicBox)

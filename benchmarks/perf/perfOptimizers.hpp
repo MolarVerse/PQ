@@ -39,16 +39,13 @@ namespace benchOptimizers
 {
     inline constexpr double SPACING = 2.0;
 
-    inline std::shared_ptr<molsys::SimulationBox> makeBox(
-        std::size_t atoms,
-        std::size_t perSide
-    )
+    inline molsys::SimulationBox makeBox(std::size_t atoms, std::size_t perSide)
     {
-        auto box = std::make_shared<molsys::SimulationBox>();
+        molsys::SimulationBox box;
 
         const auto length = SPACING * static_cast<double>(perSide) * angstrom;
         molsys::OrthorhombicBox orthoBox{{length, length, length}};
-        box->setBox(orthoBox, false);
+        box.setBox(orthoBox, false);
 
         for (std::size_t i = 0; i < atoms; ++i)
         {
@@ -70,7 +67,7 @@ namespace benchOptimizers
                 linalg::Vec3D{0.5 + phase, -0.25 * phase, 0.1 - phase} *
                 kcal_per_mol / angstrom
             );
-            box->addAtom(atom);
+            box.addAtom(atom);
         }
 
         return box;

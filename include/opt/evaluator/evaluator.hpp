@@ -30,13 +30,15 @@
 #include "constraints.hpp"
 #include "forceFieldClass.hpp"
 #include "hessianBuilder.hpp"
-#include "intraNonBonded.hpp"
 #include "physicalData.hpp"
 #include "potential.hpp"
-#include "simulationBox.hpp"
-#include "virial.hpp"
 
 struct Settings;
+
+namespace intraNonBonded
+{
+    class IntraNonBonded;
+}   // namespace intraNonBonded
 
 namespace opt
 {
@@ -50,20 +52,22 @@ namespace opt
     class Evaluator
     {
        private:
-        mstd::ConstRef<Settings>                        _settings;
-        molsys::CellList*                               _cellList;
-        std::shared_ptr<pot::Potential>                 _potential;
-        std::shared_ptr<molsys::SimulationBox>          _simulationBox;
-        std::shared_ptr<constraints::Constraints>       _constraints;
-        std::shared_ptr<ff::ForceField>                 _forceField;
-        std::shared_ptr<intraNonBonded::IntraNonBonded> _intraNonBonded;
+        mstd::ConstRef<Settings>        _settings;
+        molsys::CellList*               _cellList;
+        std::shared_ptr<pot::Potential> _potential;
+        std::shared_ptr<ff::ForceField> _forceField;
 
        public:
         explicit Evaluator(const Settings& settings);
         virtual ~Evaluator();
 
-        [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const  = 0;
-        virtual void evaluate(physicalData::PhysicalData& physicalData) = 0;
+        [[nodiscard]] virtual std::shared_ptr<Evaluator> clone() const = 0;
+
+        virtual void evaluate(
+            physicalData::PhysicalData&     physicalData,
+            molsys::SimulationBox&          simulationBox,
+            intraNonBonded::IntraNonBonded& intraNonBonded
+        ) = 0;
 
         [[nodiscard]] virtual bool    supportsAnalyticHessian() const;
         [[nodiscard]] virtual Hessian calculateAnalyticHessian();
@@ -74,20 +78,10 @@ namespace opt
 
         void setPotential(const std::shared_ptr<pot::Potential>&);
         void setCellList(molsys::CellList&);
-        void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
-        void setConstraints(const std::shared_ptr<constraints::Constraints>&);
 
         void setForceField(const std::shared_ptr<ff::ForceField>&);
-        void setIntraNonBonded(
-            const std::shared_ptr<intraNonBonded::IntraNonBonded>&
-        );
 
        protected:
-        [[nodiscard]]
-        molsys::SimulationBox& _getSimulationBox();
-        [[nodiscard]]
-        const molsys::SimulationBox& _getSimulationBox() const;
-
         [[nodiscard]]
         molsys::CellList& _getCellList();
         [[nodiscard]]
@@ -102,16 +96,6 @@ namespace opt
         ff::ForceField& _getForceField();
         [[nodiscard]]
         const ff::ForceField& _getForceField() const;
-
-        [[nodiscard]]
-        constraints::Constraints& _getConstraints();
-        [[nodiscard]]
-        const constraints::Constraints& _getConstraints() const;
-
-        [[nodiscard]]
-        intraNonBonded::IntraNonBonded& _getIntraNonBonded();
-        [[nodiscard]]
-        const intraNonBonded::IntraNonBonded& _getIntraNonBonded() const;
 
         [[nodiscard]]
         const Settings& _getSettings() const;
