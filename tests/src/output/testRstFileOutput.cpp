@@ -45,7 +45,6 @@
 #include "throwWithMessage.hpp"
 #include "unit_types.hpp"
 #include "units.hpp"
-#include "version.hpp"
 
 /**
  * @brief tests writing the restart file
@@ -62,7 +61,7 @@ TEST_F(TestRstFileOutput, write)
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
-    skipMetaData(file);
+    _skipMetaData(file);
     getline(file, line);
     EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
@@ -121,7 +120,7 @@ TEST_F(TestRstFileOutput, writeWithNoseHoover)
     _rstFileOutput->close();
     std::ifstream file("default.rst");
     std::string   line;
-    skipMetaData(file);
+    _skipMetaData(file);
     getline(file, line);
     EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
     getline(file, line);
@@ -185,7 +184,7 @@ TEST_F(TestRstFileOutput, failedWriteKeepsPreviousFile)
 
     std::ifstream file("default.rst");
     std::string   line;
-    skipMetaData(file);
+    _skipMetaData(file);
     getline(file, line);
     EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
 }
@@ -217,7 +216,7 @@ TEST_F(TestRstFileOutput, boxIsWrittenWithoutLosingDigits)
 
     std::ifstream file("default.rst");
     std::string   line;
-    skipMetaData(file);
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
 
@@ -331,7 +330,7 @@ TEST_F(TestRstFileOutput, atomValuesAreWrittenExactly)
 
     std::ifstream file("default.rst");
     std::string   line;
-    skipMetaData(file);
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
 
@@ -386,7 +385,7 @@ TEST_F(TestRstFileOutput, noseHooverChainIsWrittenExactly)
 
     std::ifstream file("default.rst");
     std::string   line;
-    skipMetaData(file);
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
 
@@ -453,7 +452,7 @@ TEST_F(TestRstFileOutput, subnormalValuesAreWrittenAsZero)
 
     std::ifstream file("default.rst");
     std::string   line;
-    skipMetaData(file);
+    _skipMetaData(file);
     getline(file, line);
     getline(file, line);
     getline(file, line);
@@ -492,7 +491,7 @@ TEST_F(TestRstFileOutput, metaDataIsWrittenFirst)
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, expectedMetaDataLine());
+    EXPECT_EQ(line, _expectedMetaDataLine());
 
     getline(file, line);
     EXPECT_EQ(line, "Step 10 Simulation_Time 0.1");
@@ -516,7 +515,7 @@ TEST_F(TestRstFileOutput, metaDataIsWrittenWithoutFinalTime)
     std::ifstream file("default.rst");
     std::string   line;
     getline(file, line);
-    EXPECT_EQ(line, expectedMetaDataLine());
+    EXPECT_EQ(line, _expectedMetaDataLine());
 
     getline(file, line);
     EXPECT_EQ(line, "Step 5");

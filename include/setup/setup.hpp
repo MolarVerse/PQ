@@ -29,7 +29,7 @@ namespace engine
     class Engine;   // forward declaration
 }   // namespace engine
 
-class Settings;
+struct Settings;
 
 namespace timings
 {

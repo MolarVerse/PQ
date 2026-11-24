@@ -54,8 +54,8 @@ class TestRstFileOutput : public ::testing::Test
 
     void TearDown() override;
 
-    [[nodiscard]] static std::string expectedMetaDataLine();
-    static void                      skipMetaData(std::ifstream &file);
+    [[nodiscard]] static std::string _expectedMetaDataLine();
+    static void                      _skipMetaData(std::ifstream &file);
 };
 
 inline void TestRstFileOutput::SetUp()
@@ -103,7 +103,7 @@ inline void TestRstFileOutput::SetUp()
     _simulationBox->addMolecule(molecule2);
 }
 
-inline std::string TestRstFileOutput::expectedMetaDataLine()
+inline std::string TestRstFileOutput::_expectedMetaDataLine()
 {
     const auto key =
         RestartFileMetaDataMeta::toString(RestartFileMetaData::Version);
@@ -112,11 +112,11 @@ inline std::string TestRstFileOutput::expectedMetaDataLine()
            " " + CURRENT_VERSION.to_string();
 }
 
-inline void TestRstFileOutput::skipMetaData(std::ifstream &file)
+inline void TestRstFileOutput::_skipMetaData(std::ifstream &file)
 {
     std::string line;
     getline(file, line);
-    EXPECT_EQ(line, expectedMetaDataLine());
+    EXPECT_EQ(line, _expectedMetaDataLine());
 }
 
 inline void TestRstFileOutput::TearDown()
