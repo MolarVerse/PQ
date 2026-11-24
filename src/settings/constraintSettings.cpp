@@ -50,9 +50,9 @@ ConstraintSettings::ConstraintSettings()
  * @brief finalize the constraint settings
  *
  * Ensures that the shake-only-water-model flag is consistent with the shake
- * activation state. Geometry optimizations project the full force in each
- * step, so shake-iter and rattle-iter get larger defaults there unless the
- * user sets them.
+ * activation state. Geometry optimizations, also the mm-hessian
+ * pre-optimization, project the full force in each step, so shake-iter and
+ * rattle-iter get larger defaults there unless the user sets them.
  *
  * @param referenceSettings
  * @param waterModelSettings
@@ -72,7 +72,10 @@ void ConstraintSettings::finalize(
     if (_shakeActive.get())
         referenceSettings.addReferenceFile(ReferenceFiles::RATTLE_FILE);
 
-    if (isOptJobType(jobType))
+    const auto optimizes = isOptJobType(jobType) ||
+                           (jobType & JobType::HESSIAN) == JobType::HESSIAN;
+
+    if (optimizes)
     {
         if (!_shakeMaxIter.isSetByUser())
         {
