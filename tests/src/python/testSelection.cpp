@@ -20,7 +20,7 @@
 <GPL_HEADER>
 ******************************************************************************/
 
-#ifdef WITH_WITH_PYTHON_BINDINGS
+#ifdef WITH_PYTHON_BINDINGS
 
 #include <gtest/gtest.h>
 
@@ -56,4 +56,4 @@ TEST(TestPythonSelection, selectsAtomsFromRestartFile)
     std::filesystem::remove(restartFile);
 }
 
-#endif   // WITH_WITH_PYTHON_BINDINGS
+#endif   // WITH_PYTHON_BINDINGS

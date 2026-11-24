@@ -32,24 +32,24 @@ namespace pot
      *
      * @param vanDerWaalsType1
      * @param vanDerWaalsType2
-     * @param cutOff
+     * @param cutoff
      */
     NonCoulombPair::NonCoulombPair(
         ExtVdwType vanDerWaalsType1,
         ExtVdwType vanDerWaalsType2,
-        const Pos& cutOff
+        const Pos& cutoff
     )
         : _vanDerWaalsTypes{vanDerWaalsType1, vanDerWaalsType2},
-          _radialCutoff(cutOff)
+          _radialCutoff(cutoff)
     {
     }
 
     /**
      * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object
      *
-     * @param cutOff
+     * @param cutoff
      */
-    NonCoulombPair::NonCoulombPair(const Pos& cutOff) : _radialCutoff(cutOff) {}
+    NonCoulombPair::NonCoulombPair(const Pos& cutoff) : _radialCutoff(cutoff) {}
 
     /**
      * @brief Construct a new Non Coulomb Pair:: Non Coulomb Pair object

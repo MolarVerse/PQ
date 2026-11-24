@@ -31,8 +31,8 @@
 #include "commandLineArgs.hpp"
 #include "driver.hpp"
 #include "interrupt.hpp"
-#include "systemInfo.hpp"
 #include "validation.hpp"
+#include "version.hpp"
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 
     if (CommandLineAction::VERSION == commandLineArgs.getAction())
     {
-        std::cout << "PQ " << sysinfo::VERSION << '\n';
+        std::cout << "PQ " << CURRENT_VERSION.to_string() << '\n';
         return EXIT_SUCCESS;
     }
 

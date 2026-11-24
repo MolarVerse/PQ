@@ -78,7 +78,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const Distance            &rncCutOff
+            const Distance            &rncCutoff
         );
         void addLennardJonesPair(
             MolType                    molType1,
@@ -86,7 +86,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const Distance            &rncCutOff
+            const Distance            &rncCutoff
         );
         void addBuckinghamPair(
             MolType                    molType1,
@@ -94,7 +94,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const Distance            &rncCutOff
+            const Distance            &rncCutoff
         );
         void addMorsePair(
             MolType                    molType1,
@@ -102,7 +102,7 @@ namespace input::guffdat
             AtomType                   atomType1,
             AtomType                   atomType2,
             const std::vector<double> &coefficients,
-            const Distance            &rncCutOff
+            const Distance            &rncCutoff
         );
         void addGuffPair(
             MolType  molType1,
@@ -111,7 +111,7 @@ namespace input::guffdat
             AtomType atomType2,
             const std::array<double, defaults::NUM_GUFF_COEFFICIENTS>
                            &coefficients,
-            const Distance &rncCutOff
+            const Distance &rncCutoff
         );
 
         /********************

@@ -363,12 +363,12 @@ TEST_F(TestCellList, addMoleculesToCellsRejectsUninitializedCells)
  */
 TEST_F(TestCellList, updateCellList)
 {
-    const auto coulombRadiusCutOff = 4.0 * angstrom;
+    const auto coulombRadiusCutoff = 4.0 * angstrom;
     _cellList->setNumberOfCells(11);
     _cellList->resizeCells();
 
     EXPECT_NO_THROW(
-        _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff)
+        _cellList->updateCellList(*_simulationBox, coulombRadiusCutoff)
     );
     GeneralSettings::activateCellList();
 
@@ -385,7 +385,7 @@ TEST_F(TestCellList, updateCellList)
 
     _simulationBox->addMolecule(molecule);
 
-    _cellList->setup(*_simulationBox, coulombRadiusCutOff);
+    _cellList->setup(*_simulationBox, coulombRadiusCutoff);
     auto cellSizeOld = _cellList->getCellSize();
 
     molsys::OrthorhombicBox orthoBox{
@@ -393,12 +393,12 @@ TEST_F(TestCellList, updateCellList)
     };
     _simulationBox->setBox(orthoBox, false);
 
-    _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff);
+    _cellList->updateCellList(*_simulationBox, coulombRadiusCutoff);
 
     EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
 
     cellSizeOld = _cellList->getCellSize();
-    _cellList->updateCellList(*_simulationBox, coulombRadiusCutOff);
+    _cellList->updateCellList(*_simulationBox, coulombRadiusCutoff);
 
     EXPECT_EQ(_cellList->getCellSize(), cellSizeOld);
 }

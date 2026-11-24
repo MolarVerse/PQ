@@ -1,0 +1,1 @@
+- Rename the `WITH_WITH_PYTHON_BINDINGS` guard macro to `WITH_PYTHON_BINDINGS` (#1314).

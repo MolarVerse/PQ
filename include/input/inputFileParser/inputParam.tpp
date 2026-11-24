@@ -29,6 +29,7 @@
 #include "exceptions.hpp"
 #include "inputConverter.hpp"
 #include "inputParam.hpp"
+#include "stdoutOutput.hpp"
 
 namespace input
 {
@@ -66,6 +67,38 @@ namespace input
         size_t                          lineNumber
     )
     {
+        if (_metadata.lifecycle)
+        {
+            // should not be possible to reach this point if the key has been
+            // properly defined and the input file parser is functioning
+            // correctly. This check ensures that removed keys are not processed
+            // further, providing an early exit with a clear error message.
+            if (_metadata.lifecycle->status() == LifecycleStatus::Removed)
+            {
+                throw exc::InputFileException(
+                    std::format(
+                        "{}\n Key \"{}\" at line {} in input file has been "
+                        "removed",
+                        _metadata.lifecycle->message,
+                        _metadata.name,
+                        lineNumber
+                    )
+                );
+            }
+
+            if (_metadata.lifecycle->status() == LifecycleStatus::Deprecated)
+            {
+                const auto msg = std::format(
+                    "Key \"{}\" at line {} in input file "
+                    "is deprecated: {}",
+                    _metadata.name,
+                    lineNumber,
+                    _metadata.lifecycle->message
+                );
+                out::StdoutOutput::writeSetupWarning(msg);
+            }
+        }
+
         const auto rawElements = std::vector<std::string>(
             lineElements.begin() + 2,
             lineElements.end()
@@ -82,7 +115,8 @@ namespace input
             throw exc::InputFileException(
                 _metadata.errorMessage
                     ? std::format(
-                          "Invalid value \"{}\" for key \"{}\" at line {} in "
+                          "Invalid value \"{}\" for key \"{}\" at line {} "
+                          "in "
                           "input file: {}",
                           raw,
                           _metadata.name,
@@ -125,7 +159,8 @@ namespace input
                 {
                     throw exc::InputFileException(
                         std::format(
-                            "Invalid value \"{}\" for key \"{}\" at line {} in "
+                            "Invalid value \"{}\" for key \"{}\" at line "
+                            "{} in "
                             "input file: failed validation with message {}",
                             raw,
                             _metadata.name,

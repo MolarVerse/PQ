@@ -193,7 +193,7 @@ TEST_F(TestGuffDatReader, parseLine)
     EXPECT_EQ(
         pair,
         pot::LennardJonesPair(
-            _settings.potentialSettings.getCoulombRadiusCutOff(),
+            _settings.potentialSettings.getCoulombRadiusCutoff(),
             LJParams{
                 2.0 * kcal_per_mol * angstrom6,
                 3.0 * kcal_per_mol * angstrom12
@@ -827,7 +827,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 
     EXPECT_EQ(
         pair.get_radialCutoff(),
-        _settings.potentialSettings.getCoulombRadiusCutOff()
+        _settings.potentialSettings.getCoulombRadiusCutoff()
     );
 }
 
