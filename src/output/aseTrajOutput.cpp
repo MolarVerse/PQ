@@ -40,15 +40,6 @@
 
 namespace out
 {
-    // ASE units: eV, Angstrom, amu, time Angstrom * sqrt(amu / eV)
-    constexpr auto ASE_VELOCITY = sqrt(eV / amu);
-    constexpr auto ASE_FORCE    = eV / angstrom;
-
-    constexpr std::size_t      ASE_ITEM_VERSION = 1;
-    constexpr std::string_view ASE_VERSION      = "3.29.0";
-    constexpr std::string_view CALCULATOR_NAME  = "pq";
-    constexpr std::array       PBC              = {true, true, true};
-
     /**
      * @brief ASE trajectory written to filename once setFilename opens it
      *
@@ -112,7 +103,7 @@ namespace out
             for (std::size_t dim = 0; dim < 3; ++dim)
             {
                 _buffer.push_back(
-                    mass * atom.velocity[dim].numerical_value_in(ASE_VELOCITY)
+                    mass * atom.velocity[dim].numerical_value_in(sqrt(eV / amu))
                 );
             }
         }
@@ -130,7 +121,7 @@ namespace out
             frame.potentialEnergy * kcal_per_mol / avogadro_constant;
 
         _json.beginChild("calculator");
-        _json.addString("name", CALCULATOR_NAME);
+        _json.addString("name", "pq");
         _json.beginObject("parameters");
         _json.endObject();
         _json.addNumber("energy", energy.numerical_value_in(eV));
@@ -141,7 +132,7 @@ namespace out
             for (std::size_t dim = 0; dim < 3; ++dim)
             {
                 const auto force = atom.force[dim] / avogadro_constant;
-                _buffer.push_back(force.numerical_value_in(ASE_FORCE));
+                _buffer.push_back(force.numerical_value_in(eV / angstrom));
             }
         }
         _addBuffer("forces", {_nAtoms, 3});
@@ -208,9 +199,9 @@ namespace out
             _buffer.push_back(atom.mass.numerical_value_in(g_per_mol));
         }
 
-        _json.addInteger("version", ASE_ITEM_VERSION);
-        _json.addString("ase_version", ASE_VERSION);
-        _json.addBools("pbc", PBC);
+        _json.addInteger("version", 1);
+        _json.addString("ase_version", "3.29.0");
+        _json.addBools("pbc", std::array{true, true, true});
         _json.addArray(
             "numbers",
             _writer.writeArray(_getFilePointer(), _numbers, {_nAtoms})
