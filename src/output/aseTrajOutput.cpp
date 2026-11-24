@@ -91,10 +91,7 @@ namespace out
         const auto cell = linalg::transpose(frame.box->getBoxMatrix())
                               .numerical_value_in(angstrom)
                               .toStdVector();
-        item.addMatrix(
-            "cell",
-            std::span<const double, ulm::MATRIX_SIZE>{cell}
-        );
+        item.addMatrix("cell", std::span<const double, ulm::MATRIX_SIZE>{cell});
 
         _buffer.clear();
         for (const auto &atom : frame.atoms)
@@ -117,8 +114,7 @@ namespace out
         }
         _addBuffer(item, "charges", {_nAtoms});
 
-        const auto energy =
-            frame.potentialEnergy / avogadro_constant;
+        const auto energy = frame.potentialEnergy / avogadro_constant;
 
         ulm::JsonObject calculator;
         calculator.addString("name", "pq");

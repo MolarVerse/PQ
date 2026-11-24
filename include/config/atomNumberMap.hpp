@@ -104,12 +104,7 @@ const std::map<std::string, AtomNumber> atomNumberMap = {
 /**
  * @brief special atom names of atomNumberMap that are no chemical element
  */
-const std::set<std::string> nonElementAtomNames = {
-    "q",
-    "x",
-    "cav",
-    "sup",
-    "dum"
-};
+const std::set<std::string> nonElementAtomNames =
+    {"q", "x", "cav", "sup", "dum"};
 
 #endif   // CONFIG__ATOM_NUMBER_MAP_HPP
