@@ -66,9 +66,9 @@ void GeneralSettings::setRandomSeedByUser(uint_fast32_t randomSeed)
  *
  * @param integratorType
  */
-void GeneralSettings::setIntegratorType(IntegratorType integratorType)
+void GeneralSettings::setIntegratorTypeByUser(IntegratorType integratorType)
 {
-    _integrator = integratorType;
+    _integrator.setByUser(integratorType);
 }
 
 /**
@@ -76,9 +76,9 @@ void GeneralSettings::setIntegratorType(IntegratorType integratorType)
  *
  * @param numberOfCells
  */
-void GeneralSettings::setNumberOfCells(size_t numberOfCells)
+void GeneralSettings::setNumberOfCellsByUser(size_t numberOfCells)
 {
-    _numberOfCells = numberOfCells;
+    _numberOfCells.setByUser(numberOfCells);
 }
 
 /**
@@ -86,7 +86,10 @@ void GeneralSettings::setNumberOfCells(size_t numberOfCells)
  *
  * @return size_t
  */
-size_t GeneralSettings::getNumberOfCells() { return _numberOfCells; }
+size_t GeneralSettings::getNumberOfCells() const
+{
+    return _numberOfCells.get();
+}
 
 /***************************
  *                         *
@@ -162,7 +165,10 @@ bool GeneralSettings::isRandomSeedSetByUser() const
  *
  * @return IntegratorType
  */
-IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
+IntegratorType GeneralSettings::getIntegratorType() const
+{
+    return _integrator.get();
+}
 
 /******************************
  *                            *
@@ -176,7 +182,10 @@ IntegratorType GeneralSettings::getIntegratorType() { return _integrator; }
  * @return true/false
  *
  */
-bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
+bool GeneralSettings::isCellListActivated() const
+{
+    return _isCellListActivated.get();
+}
 
 /**
  * @brief Returns true if the intra non-bonded interactions are activated
@@ -184,9 +193,9 @@ bool GeneralSettings::isCellListActivated() { return _isCellListActivated; }
  * @return true/false
  *
  */
-bool GeneralSettings::isIntraNonBondedActivated()
+bool GeneralSettings::isIntraNonBondedActivated() const
 {
-    return _isIntraNonBondedActivated;
+    return _isIntraNonBondedActivated.get();
 }
 
 /*****************************
@@ -199,28 +208,34 @@ bool GeneralSettings::isIntraNonBondedActivated()
  * @brief activate cell list
  *
  */
-void GeneralSettings::activateCellList() { _isCellListActivated = true; }
+void GeneralSettings::activateCellListByUser()
+{
+    _isCellListActivated.setByUser(true);
+}
 
 /**
  * @brief deactivate cell list
  *
  */
-void GeneralSettings::deactivateCellList() { _isCellListActivated = false; }
+void GeneralSettings::deactivateCellListByUser()
+{
+    _isCellListActivated.setByUser(false);
+}
 
 /**
  * @brief activate intra non-bonded interactions
  *
  */
-void GeneralSettings::activateIntraNonBonded()
+void GeneralSettings::activateIntraNonBondedByUser()
 {
-    _isIntraNonBondedActivated = true;
+    _isIntraNonBondedActivated.setByUser(true);
 }
 
 /**
  * @brief deactivate intra non-bonded interactions
  *
  */
-void GeneralSettings::deactivateIntraNonBonded()
+void GeneralSettings::deactivateIntraNonBondedByUser()
 {
-    _isIntraNonBondedActivated = false;
+    _isIntraNonBondedActivated.setByUser(false);
 }

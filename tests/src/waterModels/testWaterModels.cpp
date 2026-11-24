@@ -519,19 +519,23 @@ namespace
     }
 
     molsys::CellList makeCellList(
-        molsys::SimulationBox    &simulationBox,
-        const WaterModelSettings &waterModelSettings
+        molsys::SimulationBox &simulationBox,
+        Settings              &settings
     )
     {
-        GeneralSettings::activateCellList();
+        settings.generalSettings.activateCellListByUser();
 
         molsys::CellList cellList;
         cellList.setNumberOfCells(3);
         cellList.resizeCells();
         cellList.setup(simulationBox, kCutoff);
-        cellList.updateCellList(simulationBox, kCutoff);
+        cellList
+            .updateCellList(simulationBox, kCutoff, settings.generalSettings);
         cellList.assignMoleculeHybridZoneIndices();
-        cellList.assignWaterMoleculeIndices(simulationBox, waterModelSettings);
+        cellList.assignWaterMoleculeIndices(
+            simulationBox,
+            settings.waterModelSettings
+        );
         return cellList;
     }
 
@@ -1013,7 +1017,7 @@ TEST(InterWater, BruteForceAndCellListStrategiesExerciseHybridWaterRegions)
         WaterInterModel::SPC_E
     );
     auto simBoxCellList = makeHybridWaterBox();
-    auto cellList = makeCellList(simBoxCellList, settings.waterModelSettings);
+    auto cellList       = makeCellList(simBoxCellList, settings);
     physicalData::PhysicalData cellListData;
     waterModel::InterWater     cellListWater(
         waterModel::makeInterWaterState<waterModel::SPCEInterParam>(),
@@ -1182,7 +1186,7 @@ namespace
                           Strategy,
                           waterModel::InterWaterStrategyCellList>)
         {
-            cellList = makeCellList(simulationBox, settings.waterModelSettings);
+            cellList = makeCellList(simulationBox, settings);
         }
 
         waterModel::InterWater water(
@@ -1443,7 +1447,7 @@ namespace
 
         if constexpr (std::is_same_v<Strategy, pot::PotentialCellList>)
         {
-            cellList = makeCellList(simulationBox, settings.waterModelSettings);
+            cellList = makeCellList(simulationBox, settings);
         }
 
         Strategy potential(hybridSettings);
@@ -1613,7 +1617,7 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     );
 
     auto simBoxCellList = makeHybridWaterBox();
-    auto cellList = makeCellList(simBoxCellList, settings.waterModelSettings);
+    auto cellList       = makeCellList(simBoxCellList, settings);
     physicalData::PhysicalData cellListData;
     pot::PotentialCellList     cellListPotential{hybridSettings};
     cellListPotential.makeCoulombPotential(
@@ -1654,9 +1658,8 @@ TEST(PotentialStrategies, HybridRegionsExerciseBruteForceAndCellList)
     settings.waterModelSettings.setWaterInterModelByUser(
         WaterInterModel::SPC_E
     );
-    auto filteredBox = makeHybridWaterBox();
-    auto filteredCellList =
-        makeCellList(filteredBox, settings.waterModelSettings);
+    auto filteredBox      = makeHybridWaterBox();
+    auto filteredCellList = makeCellList(filteredBox, settings);
     physicalData::PhysicalData filteredData;
     cellListPotential.calculateQMMMForces(
         filteredBox,

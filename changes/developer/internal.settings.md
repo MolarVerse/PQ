@@ -4,3 +4,4 @@
 - start making `PotentialSettings` non-static - additionally use a single source of truth for coulomb cutoff
 - finish making `PotentialSettings` non-static
 - remove static access for jobtype
+- finish removing all static accesses of settings

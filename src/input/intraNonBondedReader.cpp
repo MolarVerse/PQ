@@ -42,20 +42,13 @@ namespace input::intraNonBondedReader
 {
 
     /**
-     * @brief checks if the intra non bonded interactions are needed
-     *
-     * @return bool
-     */
-    bool isNeeded() { return GeneralSettings::isIntraNonBondedActivated(); }
-
-    /**
      * @brief construct IntraNonBondedReader object and read the file
      *
      * @param engine
      */
     void readIntraNonBondedFile(engine::Engine &engine)
     {
-        if (!isNeeded())
+        if (!engine.getSettings().generalSettings.isIntraNonBondedActivated())
             return;
 
         auto       &log          = engine.getLogOutput();

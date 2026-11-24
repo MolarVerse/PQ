@@ -139,7 +139,8 @@ namespace engine
         _getHybridConfigurator().calculateSmoothingFactors(getSimulationBox());
         getCellList().updateCellList(
             getSimulationBox(),
-            getSettings().potentialSettings.getCoulombRadiusCutoff()
+            getSettings().potentialSettings.getCoulombRadiusCutoff(),
+            getSettings().generalSettings
         );
         get_physicalData().set_numberOfSmoothingMol(
             static_cast<double>(std::ranges::distance(
@@ -267,7 +268,7 @@ namespace engine
                 getSimulationBox()
             );
 
-            if (GeneralSettings::isCellListActivated())
+            if (getSettings().generalSettings.isCellListActivated())
             {
                 getCellList().assignMoleculeHybridZoneIndices();
                 getCellList().assignWaterMoleculeIndices(
@@ -395,7 +396,7 @@ namespace engine
             getSimulationBox()
         );
 
-        if (GeneralSettings::isCellListActivated())
+        if (getSettings().generalSettings.isCellListActivated())
         {
             getCellList().assignMoleculeHybridZoneIndices();
             getCellList().assignWaterMoleculeIndices(

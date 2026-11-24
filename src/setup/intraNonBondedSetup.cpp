@@ -36,7 +36,7 @@ namespace setup
      */
     void setupIntraNonBonded(engine::Engine &engine)
     {
-        if (!GeneralSettings::isIntraNonBondedActivated())
+        if (!engine.getSettings().generalSettings.isIntraNonBondedActivated())
             return;
 
         out::StdoutOutput::writeSetup("Intra Non-Bonded Interactions");

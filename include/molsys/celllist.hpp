@@ -61,8 +61,9 @@ namespace molsys
             const Distance      &coulombRadiusCutoff
         );
         void updateCellList(
-            SimulationBox  &simulationBox,
-            const Distance &coulombRadiusCutoff
+            SimulationBox         &simulationBox,
+            const Distance        &coulombRadiusCutoff,
+            const GeneralSettings &generalSettings
         );
 
         void determineCellSize(const Pos3D &box);

@@ -51,8 +51,6 @@ class TestSetup : public ::testing::Test
 
         _settings->generalSettings.setJobtypeByUser(JobType::MM_MD);
     }
-
-    void TearDown() override { GeneralSettings::deactivateCellList(); }
 };
 
 #endif

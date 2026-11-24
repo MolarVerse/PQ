@@ -261,11 +261,12 @@ namespace molsys
      * check for interactions beyond the specified cut-off
      */
     void CellList::updateCellList(
-        SimulationBox  &simulationBox,
-        const Distance &coulombRadiusCutoff
+        SimulationBox         &simulationBox,
+        const Distance        &coulombRadiusCutoff,
+        const GeneralSettings &generalSettings
     )
     {
-        if (!GeneralSettings::isCellListActivated())
+        if (!generalSettings.isCellListActivated())
             return;
 
         auto _ = scopedTimer(TimerId::CellList, "Update");

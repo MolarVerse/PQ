@@ -36,7 +36,8 @@ namespace engine
     {
         getCellList().updateCellList(
             getSimulationBox(),
-            getSettings().potentialSettings.getCoulombRadiusCutoff()
+            getSettings().potentialSettings.getCoulombRadiusCutoff(),
+            getSettings().generalSettings
         );
 
         getPotential()->calculateForces(

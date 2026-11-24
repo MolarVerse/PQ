@@ -50,14 +50,19 @@ class GeneralSettings
     // compatibility until 0.7.0 it was not necessary to specify the
     // integrator type in the input file, so we set it to velocity verlet by
     // default
-    static inline IntegratorType _integrator = IntegratorType::VELOCITY_VERLET;
+    Setting<IntegratorType, "IntegratorType"> _integrator{
+        IntegratorType::VELOCITY_VERLET
+    };
 
-    static inline bool _isCellListActivated =
-        defaults::CELL_LIST_IS_ACTIVE_DEFAULT;
+    Setting<bool, "CellListActivated"> _isCellListActivated{
+        defaults::CELL_LIST_IS_ACTIVE_DEFAULT
+    };
 
-    static inline size_t _numberOfCells = defaults::NUMBER_OF_CELLS_DEFAULT;
+    Setting<size_t, "NumberOfCells"> _numberOfCells{
+        defaults::NUMBER_OF_CELLS_DEFAULT
+    };
 
-    static inline bool _isIntraNonBondedActivated = false;
+    Setting<bool, "IntraNonBondedActivated"> _isIntraNonBondedActivated{false};
 
    public:
     /***************************
@@ -69,9 +74,8 @@ class GeneralSettings
     void setFloatingPointTypeByUser(FPType);
     void setRandomSeedByUser(uint_fast32_t randomSeed);
 
-    static void setIntegratorType(IntegratorType integratorType);
-
-    static void setNumberOfCells(size_t numberOfCells);
+    void setIntegratorTypeByUser(IntegratorType integratorType);
+    void setNumberOfCellsByUser(size_t numberOfCells);
 
     /***************************
      * standard getter methods *
@@ -86,20 +90,20 @@ class GeneralSettings
     [[nodiscard]] uint_fast32_t getRandomSeed() const;
     [[nodiscard]] bool          isRandomSeedSetByUser() const;
 
-    [[nodiscard]] static IntegratorType getIntegratorType();
-    [[nodiscard]] static size_t         getNumberOfCells();
+    [[nodiscard]] IntegratorType getIntegratorType() const;
+    [[nodiscard]] size_t         getNumberOfCells() const;
 
     /******************************
      * standard is-active methods *
      ******************************/
 
-    static void activateCellList();
-    static void deactivateCellList();
-    static void activateIntraNonBonded();
-    static void deactivateIntraNonBonded();
+    void activateCellListByUser();
+    void deactivateCellListByUser();
+    void activateIntraNonBondedByUser();
+    void deactivateIntraNonBondedByUser();
 
-    [[nodiscard]] static bool isCellListActivated();
-    [[nodiscard]] static bool isIntraNonBondedActivated();
+    [[nodiscard]] bool isCellListActivated() const;
+    [[nodiscard]] bool isIntraNonBondedActivated() const;
 };
 
 #endif   // SETTINGS__GENERAL_SETTINGS_HPP
