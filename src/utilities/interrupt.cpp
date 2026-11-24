@@ -22,6 +22,8 @@
 
 #include "interrupt.hpp"
 
+#include "interruptDetail.hpp"
+
 #ifdef WITH_PYBIND11
 #include <pybind11/pybind11.h>
 #endif
@@ -31,16 +33,10 @@
 
 #include <csignal>
 
-namespace
+namespace utilities::detail
 {
-    struct InterruptState
-    {
-        static inline volatile std::sig_atomic_t interrupted = 0;
-        static inline volatile std::sig_atomic_t wakeOnly    = 0;
-    };
-
     constexpr int _exitCodeInterrupted = 128 + SIGINT;
-}   // namespace
+}   // namespace utilities::detail
 
 /**
  * @brief the first Ctrl-C stops PQ at the next step, the second one exits at
@@ -50,8 +46,10 @@ namespace
  */
 // NOLINTNEXTLINE(misc-use-internal-linkage): C linkage requires external
 // linkage
-extern "C" void pqOnInterrupt(const int /*signalNumber*/)
+extern "C" void pqOnInterrupt(int /*signalNumber*/)
 {
+    using utilities::detail::InterruptState;
+
     if (InterruptState::wakeOnly != 0)
     {
         InterruptState::wakeOnly = 0;
@@ -59,7 +57,7 @@ extern "C" void pqOnInterrupt(const int /*signalNumber*/)
     }
 
     if (InterruptState::interrupted != 0)
-        ::_exit(_exitCodeInterrupted);
+        ::_exit(utilities::detail::_exitCodeInterrupted);
 
     InterruptState::interrupted = 1;
 
@@ -109,7 +107,7 @@ namespace utilities
             return;
 
         if (current.sa_handler == pqOnInterrupt)
-            InterruptState::wakeOnly = 1;
+            detail::InterruptState::wakeOnly = 1;
 
         ::pthread_kill(thread, SIGINT);
     }

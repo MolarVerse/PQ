@@ -39,28 +39,12 @@
 #include "shakeSection.hpp"
 #include "simulationBox.hpp"
 #include "stringUtilities.hpp"
+#include "topologyReaderDetail.hpp"
 
 namespace input::topology
 {
-    namespace
+    namespace detail
     {
-        /**
-         * @brief builds the atom index lookup of the simulation box and clears
-         * it again when the topology file is read (or reading throws)
-         */
-        class AtomIndexLookupGuard
-        {
-            MSTD_RAII_NO_MOVE(AtomIndexLookupGuard);
-
-           private:
-            mstd::Ref<molsys::SimulationBox> _simulationBox;
-
-           public:
-            explicit AtomIndexLookupGuard(molsys::SimulationBox &simulationBox);
-
-            ~AtomIndexLookupGuard();
-        };
-
         /**
          * @brief constructs the atom index lookup guard
          *
@@ -85,7 +69,7 @@ namespace input::topology
         {
             _simulationBox->clearAtomIndexLookup();
         }
-    }   // namespace
+    }   // namespace detail
 
     /**
      * @brief constructor
@@ -132,7 +116,7 @@ namespace input::topology
 
         // the molecules do not change while the topology is read: every atom
         // index of the file is found by a binary search instead of a walk
-        const AtomIndexLookupGuard lookup(_engine.getSimulationBox());
+        const detail::AtomIndexLookupGuard lookup(_engine.getSimulationBox());
 
         while (getline(_fp, line))
         {

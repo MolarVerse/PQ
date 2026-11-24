@@ -41,6 +41,7 @@
 #include "generalSettings.hpp"
 #include "globalTimer.hpp"
 #include "hessianBuilder.hpp"
+#include "hessianEngineDetail.hpp"
 #include "hessianSettings.hpp"
 #include "interrupt.hpp"
 #include "logOutput.hpp"
@@ -59,14 +60,14 @@
 namespace engine
 {
 
-    namespace
+    namespace detail
     {
         /**
-         * @brief write the hessian matrix to a file
+         * @brief setup the hessian builder based on user input
          *
-         * @param hessian
+         * @param hessianSettings
+         * @return std::shared_ptr<opt::HessianBuilder>
          */
-        [[nodiscard]]
         std::shared_ptr<opt::HessianBuilder> setupHessianBuilder(
             const HessianSettings &hessianSettings
         )
@@ -80,9 +81,9 @@ namespace engine
         /**
          * @brief setup the learning rate strategy based on user input
          *
+         * @param settings
          * @return std::shared_ptr<opt::LearningRateStrategy>
          */
-        [[nodiscard]]
         std::shared_ptr<opt::LearningRateStrategy> setupLearningRateStrategy(
             const OptimizerSettings &settings
         )
@@ -135,6 +136,7 @@ namespace engine
          * strategy
          *
          * @param learningRate
+         * @param settings
          */
         void setupMinMaxLearningRate(
             std::shared_ptr<opt::LearningRateStrategy> &learningRate,
@@ -154,6 +156,7 @@ namespace engine
          * @brief setup the convergence criteria for the optimizer
          *
          * @param optimizer
+         * @param settings
          */
         void setupConvergence(
             std::shared_ptr<opt::Optimizer> &optimizer,
@@ -187,6 +190,9 @@ namespace engine
 
         /**
          * @brief write the hessian matrix to the file
+         *
+         * @param hessian
+         * @param hessianSettings
          */
         void writeHessian(
             const Hessian         &hessian,
@@ -223,6 +229,7 @@ namespace engine
          * @brief write the hessian info file
          *
          * @param hessian
+         * @param hessianSettings
          */
         void writeHessianInfo(
             const Hessian         &hessian,
@@ -254,7 +261,7 @@ namespace engine
             file << "columns = " << (hessian.empty() ? 0 : hessian[0].size())
                  << '\n';
         }
-    }   // namespace
+    }   // namespace detail
 
     void HessianEngine::run()
     {
@@ -267,13 +274,13 @@ namespace engine
             _runOptimization();
         }
 
-        auto builder = setupHessianBuilder(hessianSettings);
+        auto builder = detail::setupHessianBuilder(hessianSettings);
 
         const auto hessian =
             builder->build(*evaluator, getSimulationBox(), get_physicalData());
 
-        writeHessian(hessian, hessianSettings);
-        writeHessianInfo(hessian, hessianSettings);
+        detail::writeHessian(hessian, hessianSettings);
+        detail::writeHessianInfo(hessian, hessianSettings);
 
         timings::GlobalTimer::get().stopSimulationTimer();
 
@@ -386,11 +393,15 @@ namespace engine
     {
         const auto optimizerSettings = getSettings().optimizerSettings;
         _evaluator                   = evaluator;
-        _learningRateStrategy = setupLearningRateStrategy(optimizerSettings);
-        _optimizer            = _setupEmptyOptimizer();
+        _learningRateStrategy =
+            detail::setupLearningRateStrategy(optimizerSettings);
+        _optimizer = _setupEmptyOptimizer();
 
-        setupConvergence(_optimizer, getSettings().convSettings);
-        setupMinMaxLearningRate(_learningRateStrategy, optimizerSettings);
+        detail::setupConvergence(_optimizer, getSettings().convSettings);
+        detail::setupMinMaxLearningRate(
+            _learningRateStrategy,
+            optimizerSettings
+        );
 
         _learningRateStrategy->setEvaluator(evaluator);
         _learningRateStrategy->setOptimizer(_optimizer);
