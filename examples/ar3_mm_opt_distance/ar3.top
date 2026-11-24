@@ -1,0 +1,4 @@
+# atom_1 atom_2 lower upper force_constant dforce_constant_dt (unused in mm-opt)
+DIST_CONSTRAINTS
+1 2 4.5 4.5 100.0 0.0
+END

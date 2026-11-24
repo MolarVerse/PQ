@@ -27,7 +27,10 @@
 
 #include "exceptions.hpp"
 #include "optEngine.hpp"
+#include "physicalData.hpp"
 #include "throwWithMessage.hpp"
+#include "unit_types.hpp"
+#include "units.hpp"
 
 TEST(TestOptEngine, aConvergedRunDoesNotThrow)
 {
@@ -96,5 +99,20 @@ TEST(TestOptEngine, theNotConvergedMessageNamesTheEpochLimit)
     EXPECT_EQ(
         engine::OptEngine::notConvergedMessage(25),
         "Optimizer did not converge after 25 epochs."
+    );
+}
+
+TEST(TestOptEngine, theOptimizedEnergyAddsTheDistanceConstraintPenalties)
+{
+    physicalData::PhysicalData physicalData;
+    physicalData.addBondEnergy(1.0 * kcal_per_mol);
+    physicalData.set_lowerDistanceConstraints(0.25 * kcal_per_mol);
+    physicalData.set_upperDistanceConstraints(0.5 * kcal_per_mol);
+
+    EXPECT_NEAR(
+        engine::OptEngine::optimizedEnergy(physicalData)
+            .numerical_value_in(kcal_per_mol),
+        1.75,
+        1e-12
     );
 }

@@ -1,0 +1,1 @@
+- `OptEngine` adds `Constraints::applyStaticDistanceConstraints` to the evaluated energy and forces, and `regression_mm_opt_constraints` runs the new `ar3_mm_opt_distance` example (#1322).

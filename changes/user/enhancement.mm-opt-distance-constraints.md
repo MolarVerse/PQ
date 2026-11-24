@@ -1,0 +1,1 @@
+- `mm-opt` now supports `distance-constraints`: their penalty is added with the static force constant (#1322).

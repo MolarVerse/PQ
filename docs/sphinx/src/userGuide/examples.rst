@@ -65,6 +65,9 @@ be run from its own directory so relative setup-file paths resolve as intended.
     * - ``examples/h2o_mm_opt_mshake``
       - MM-OPT with M-SHAKE
       - Geometry optimization of a rigid TIP3P water dimer with M-SHAKE (``mshake.top``).
+    * - ``examples/ar3_mm_opt_distance``
+      - MM-OPT with a distance constraint
+      - Argon trimer in which a distance constraint pulls two atoms to 4.5 Å.
     * - ``examples/orca``
       - ORCA QM-MD
       - HF, DFT and RI-MP2 with the bundled ORCA drivers; needs ORCA, see the ``README.md`` in the folder.

@@ -7,6 +7,9 @@
 3. ``h2o_mm_opt_mshake``: both waters of the dimer stay rigid with M-SHAKE.
 4. The dimer with SHAKE on all three distances of each water reaches the same
    energy with the mm-opt defaults of shake-iter and rattle-iter.
+5. ``ar3_mm_opt_distance``: a distance constraint pulls atoms 1 and 2 from
+   4.2 Å to its target of 4.5 Å; the argon attraction keeps them slightly
+   closer.
 """
 
 import argparse
@@ -130,6 +133,11 @@ def check_rigid_dimer(positions, energy):
     return problems + expect({"E": energy}, {"E": DIMER_ENERGY}, 1e-4)
 
 
+def check_distance(positions, _energy):
+    distance = {"Ar1-Ar2": math.dist(positions[0], positions[1])}
+    return expect(distance, {"Ar1-Ar2": 4.5}, 2e-3)
+
+
 CASES = [
     ("shake", "h2o_mm_opt_shake", {}, {}, "h2o-opt", check_shake),
     (
@@ -155,6 +163,14 @@ CASES = [
         {"shake.top": RIGID_SHAKE},
         "h2o-dimer-opt",
         check_rigid_dimer,
+    ),
+    (
+        "distance constraint",
+        "ar3_mm_opt_distance",
+        {},
+        {},
+        "ar3-dist-opt",
+        check_distance,
     ),
 ]
 
