@@ -1,4 +1,5 @@
 add_library(pq_python
+    pythonError.cpp
     selection.cpp
 )
 
