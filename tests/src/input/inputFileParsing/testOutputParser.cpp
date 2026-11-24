@@ -320,7 +320,7 @@ TEST_F(TestInputFileReader, testAseTrajFilename)
 
     const auto &parseFunc = funcMap.at("ase_traj_file");
 
-    _fileName                             = "traj.traj";
+    _fileName                             = "traj.ase.traj";
     std::vector<std::string> lineElements = {"ase_traj_file", "=", _fileName};
     parseFunc(lineElements, 0);
     EXPECT_EQ(outputFileSettings.getAseTrajFileName(), _fileName);

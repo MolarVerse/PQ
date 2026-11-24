@@ -177,7 +177,7 @@ TEST(TestEngineOutputFrames, aseTrajReplacesTheXyzFiles)
     {
         engine::EngineOutput output{outputFileSettings, referenceSettings};
         output.getRstFileOutput().setFilename(prefix + ".rst", true);
-        output.openAseTrajOutput(prefix + ".traj", true);
+        output.openAseTrajOutput(prefix + ".ase.traj", true);
 
         const auto                   simulationBox = makeSimulationBox();
         const thermostat::Thermostat thermostat{};
@@ -190,7 +190,7 @@ TEST(TestEngineOutputFrames, aseTrajReplacesTheXyzFiles)
         output.waitForFrames();
     }
 
-    const auto   content = readFile(prefix + ".traj");
+    const auto   content = readFile(prefix + ".ase.traj");
     std::int64_t nItems  = 0;
     std::memcpy(&nItems, content.substr(32, 8).data(), sizeof(nItems));
 
@@ -202,7 +202,7 @@ TEST(TestEngineOutputFrames, aseTrajReplacesTheXyzFiles)
         EXPECT_FALSE(std::filesystem::exists(prefix + suffix)) << suffix;
     }
 
-    std::filesystem::remove(prefix + ".traj");
+    std::filesystem::remove(prefix + ".ase.traj");
     std::filesystem::remove(prefix + ".rst");
 }
 

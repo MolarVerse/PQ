@@ -38,7 +38,7 @@ namespace out
     struct Frame;   // forward declaration
 
     /**
-     * @brief ASE trajectory (.traj) with positions, cell, momenta, charges,
+     * @brief ASE trajectory (.ase.traj) with positions, cell, momenta, charges,
      * energy and forces of each frame in ASE units
      *
      * @details readable with ase.io.read without PQ

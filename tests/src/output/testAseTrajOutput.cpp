@@ -192,7 +192,7 @@ namespace
  */
 TEST(TestAseTrajOutput, writesUlmFramesInAseUnits)
 {
-    const std::string filename = "testAseTrajOutput.traj";
+    const std::string filename = "testAseTrajOutput.ase.traj";
 
     {
         out::AseTrajOutput output{filename};
@@ -277,7 +277,7 @@ TEST(TestAseTrajOutput, writesUlmFramesInAseUnits)
  */
 TEST(TestAseTrajOutput, writesNothingBeforeTheFirstFrame)
 {
-    const std::string filename = "testAseTrajOutputEmpty.traj";
+    const std::string filename = "testAseTrajOutputEmpty.ase.traj";
 
     {
         out::AseTrajOutput output{filename};
@@ -295,7 +295,7 @@ TEST(TestAseTrajOutput, writesNothingBeforeTheFirstFrame)
  */
 TEST(TestAseTrajOutput, throwsOnInvalidUse)
 {
-    const std::string filename = "testAseTrajOutputErrors.traj";
+    const std::string filename = "testAseTrajOutputErrors.ase.traj";
 
     {
         out::AseTrajOutput output{filename};

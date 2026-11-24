@@ -102,7 +102,7 @@ void OutputFileSettings::_replaceDefaultValues(const std::string& prefix)
 
     if (!_aseTrajFile.isSetByUser())
     {
-        _aseTrajFile.setBySystem(prefix + ".traj");
+        _aseTrajFile.setBySystem(prefix + ".ase.traj");
     }
 
     if (!_hybridCenterFile.isSetByUser())

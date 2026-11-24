@@ -644,7 +644,7 @@ namespace input
             .name  = "ase_traj_file",
             .title = "ASE trajectory filename",
             .description =
-                "Filename for the ASE trajectory (.traj), written if "
+                "Filename for the ASE trajectory (.ase.traj), written if "
                 "traj_format = ase"
         };
 

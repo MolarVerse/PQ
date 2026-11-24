@@ -71,9 +71,9 @@ Every ``value`` dataset has a ``unit`` attribute. The values are in PQ units (Å
 ASE Trajectory File
 *******************
 
-**File Type:** ``.traj`` (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``ase``)
+**File Type:** ``.ase.traj`` (written instead of the xyz, velocity, force and charge files if :ref:`trajformatkey` is ``ase``)
 
-Stores every frame as an `ASE <https://wiki.fysik.dtu.dk/ase/>`_ trajectory (ULM format of ASE 3.29), which ``ase.io.read("default.traj", index=":")`` reads without PQ:
+Stores every frame as an `ASE <https://wiki.fysik.dtu.dk/ase/>`_ trajectory (ULM format of ASE 3.29), which ``ase.io.read("default.ase.traj", index=":")`` reads without PQ:
 
     - positions (wrapped into the box), cell (box vectors as rows), pbc and momenta
     - atomic numbers (0 for atoms without element) and masses, written once in the first frame

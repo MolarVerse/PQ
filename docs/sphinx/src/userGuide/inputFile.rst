@@ -403,7 +403,7 @@ ASE Trajectory File
 .. admonition:: Key
     :class: tip
 
-    ase_traj_file = {file} -> "default.traj"
+    ase_traj_file = {file} -> "default.ase.traj"
 
 The ``ase_traj_file`` keyword sets the name of the :ref:`aseTrajFile`, which is written if ``traj_format = ase``. Like the other output files, it follows ``file_prefix``.
 

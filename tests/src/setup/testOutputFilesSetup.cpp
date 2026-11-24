@@ -55,7 +55,7 @@ namespace
             ".vir",        ".stress",     ".box",        ".rpmd.rst",
             ".rpmd.xyz",   ".rpmd.vel",   ".rpmd.force", ".rpmd.chrg",
             ".rpmd.en",    ".opt",        ".ref",        ".extxyz",
-            ".h5md",       ".traj"
+            ".h5md",       ".ase.traj"
         };
 
         for (const auto &suffix : suffixes)
@@ -242,7 +242,7 @@ TEST_F(TestSetup, setupOutputFilesMDPathAseReplacesTrajectoryFiles)
     EXPECT_NO_THROW(setup.setup());
 
     const std::string prefix = PREFIX;
-    EXPECT_TRUE(std::filesystem::exists(prefix + ".traj"));
+    EXPECT_TRUE(std::filesystem::exists(prefix + ".ase.traj"));
 
     for (const auto *suffix : {".xyz", ".vel", ".force", ".chrg"})
     {
