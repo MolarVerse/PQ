@@ -55,7 +55,7 @@ namespace out
      * @param filename
      */
     AseTrajOutput::AseTrajOutput(std::string filename)
-        : Output(std::move(filename)), _writer(_getFilePointer())
+        : Output(std::move(filename))
     {
     }
 
@@ -81,7 +81,7 @@ namespace out
 
         if (_writer.getNItems() == 0)
         {
-            _writer.writeHeader();
+            _writer.writeHeader(_getFilePointer());
             _addSystem(frame);
         }
 
@@ -152,7 +152,7 @@ namespace out
         _json.endObject();
         _json.end();
 
-        _writer.writeItem(_json.view());
+        _writer.writeItem(_getFilePointer(), _json.view());
 
         if (!_getFilePointer().good())
         {
@@ -211,7 +211,10 @@ namespace out
         _json.addInteger("version", ASE_ITEM_VERSION);
         _json.addString("ase_version", ASE_VERSION);
         _json.addBools("pbc", PBC);
-        _json.addArray("numbers", _writer.writeArray(_numbers, {_nAtoms}));
+        _json.addArray(
+            "numbers",
+            _writer.writeArray(_getFilePointer(), _numbers, {_nAtoms})
+        );
         _addBuffer("masses", {_nAtoms});
     }
 
@@ -221,9 +224,15 @@ namespace out
      * @param key
      * @param shape
      */
-    void AseTrajOutput::_addBuffer(std::string_view key, ulm::Shape shape)
+    void AseTrajOutput::_addBuffer(
+        std::string_view                key,
+        const std::vector<std::size_t> &shape
+    )
     {
-        _json.addArray(key, _writer.writeArray(_buffer, std::move(shape)));
+        _json.addArray(
+            key,
+            _writer.writeArray(_getFilePointer(), _buffer, shape)
+        );
     }
 
 }   // namespace out

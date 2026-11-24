@@ -32,7 +32,7 @@
 #include <span>
 #include <string>
 #include <string_view>
-#include <utility>
+#include <vector>
 
 static_assert(
     std::endian::native == std::endian::little,
@@ -42,61 +42,60 @@ static_assert(
 namespace out::ulm
 {
     /**
-     * @brief writer of a ULM file on stream
+     * @brief write the header of a file without items
      *
      * @param stream an empty output stream that supports seeking
      */
-    Writer::Writer(std::ostream &stream) : _stream(stream) {}
-
-    Writer::~Writer() = default;
-
-    /**
-     * @brief write the header of a file without items
-     */
-    void Writer::writeHeader()
+    void Writer::writeHeader(std::ostream &stream)
     {
-        _stream.write(
+        stream.write(
             FILE_TAG.data(),
             static_cast<std::streamsize>(FILE_TAG.size())
         );
-        _writeInt(FORMAT_VERSION);
-        _writeInt(static_cast<std::int64_t>(_nItems));
-        _writeInt(_offsetsPosition);
-        _writeRaw(std::span<const std::int64_t>{_offsets});
+        _writeInt(stream, FORMAT_VERSION);
+        _writeInt(stream, static_cast<std::int64_t>(_nItems));
+        _writeInt(stream, _offsetsPosition);
+        _writeRaw(stream, std::span<const std::int64_t>{_offsets});
     }
 
     /**
      * @brief write a float64 array at the next 8-byte boundary
      *
+     * @param stream
      * @param values in C order
      * @param shape
      * @return Array
      */
-    Array Writer::writeArray(std::span<const double> values, Shape shape)
+    Array Writer::writeArray(
+        std::ostream                   &stream,
+        std::span<const double>         values,
+        const std::vector<std::size_t> &shape
+    )
     {
-        const auto offset = _align();
-        _writeRaw(values);
+        const auto offset = _align(stream);
+        _writeRaw(stream, values);
 
-        return {
-            .shape  = std::move(shape),
-            .dtype  = "float64",
-            .offset = offset
-        };
+        return {.shape = shape, .dtype = "float64", .offset = offset};
     }
 
     /**
      * @brief write an int64 array at the next 8-byte boundary
      *
+     * @param stream
      * @param values in C order
      * @param shape
      * @return Array
      */
-    Array Writer::writeArray(std::span<const std::int64_t> values, Shape shape)
+    Array Writer::writeArray(
+        std::ostream                   &stream,
+        std::span<const std::int64_t>   values,
+        const std::vector<std::size_t> &shape
+    )
     {
-        const auto offset = _align();
-        _writeRaw(values);
+        const auto offset = _align(stream);
+        _writeRaw(stream, values);
 
-        return {.shape = std::move(shape), .dtype = "int64", .offset = offset};
+        return {.shape = shape, .dtype = "int64", .offset = offset};
     }
 
     /**
@@ -105,35 +104,41 @@ namespace out::ulm
      * @details a full offsets table is copied to the end of the file with
      * OFFSETS_GROWTH_FACTOR times its size
      *
+     * @param stream
      * @param json
      */
-    void Writer::writeItem(std::string_view json)
+    void Writer::writeItem(std::ostream &stream, std::string_view json)
     {
-        const auto jsonPosition = _position();
-        _writeInt(static_cast<std::int64_t>(json.size()));
-        _stream.write(json.data(), static_cast<std::streamsize>(json.size()));
+        const auto jsonPosition = _getPosition(stream);
+        _writeInt(stream, static_cast<std::int64_t>(json.size()));
+        stream.write(json.data(), static_cast<std::streamsize>(json.size()));
 
         if (_nItems >= _offsets.size())
         {
             _offsets.resize(_offsets.size() * OFFSETS_GROWTH_FACTOR, 0);
-            _offsetsPosition = _align();
-            _writeRaw(std::span<const std::int64_t>{_offsets});
-            _writeIntAt(_offsetsPosition, OFFSETS_POINTER_POSITION);
+            _offsetsPosition = _align(stream);
+            _writeRaw(stream, std::span<const std::int64_t>{_offsets});
+            _writeIntAt(stream, _offsetsPosition, OFFSETS_POINTER_POSITION);
         }
 
         const auto index  = static_cast<std::int64_t>(_nItems);
         _offsets[_nItems] = jsonPosition;
         _writeIntAt(
+            stream,
             jsonPosition,
             _offsetsPosition +
                 (index * static_cast<std::int64_t>(sizeof(index)))
         );
 
         ++_nItems;
-        _writeIntAt(static_cast<std::int64_t>(_nItems), ITEM_COUNT_POSITION);
+        _writeIntAt(
+            stream,
+            static_cast<std::int64_t>(_nItems),
+            ITEM_COUNT_POSITION
+        );
 
-        _stream.flush();
-        _stream.seekp(0, std::ios::end);
+        stream.flush();
+        stream.seekp(0, std::ios::end);
     }
 
     /**
@@ -146,21 +151,23 @@ namespace out::ulm
     /**
      * @brief current write position
      *
+     * @param stream
      * @return std::int64_t
      */
-    std::int64_t Writer::_position()
+    std::int64_t Writer::_getPosition(std::ostream &stream)
     {
-        return static_cast<std::int64_t>(_stream.tellp());
+        return static_cast<std::int64_t>(stream.tellp());
     }
 
     /**
      * @brief pad with '#' to the next multiple of ALIGNMENT bytes
      *
+     * @param stream
      * @return std::int64_t the aligned position
      */
-    std::int64_t Writer::_align()
+    std::int64_t Writer::_align(std::ostream &stream)
     {
-        const auto position = _position();
+        const auto position = _getPosition(stream);
         const auto rest     = position % ALIGNMENT;
 
         if (rest == 0)
@@ -172,7 +179,7 @@ namespace out::ulm
             static_cast<std::size_t>(ALIGNMENT - rest),
             '#'
         );
-        _stream.write(
+        stream.write(
             padding.data(),
             static_cast<std::streamsize>(padding.size())
         );
@@ -183,37 +190,44 @@ namespace out::ulm
     /**
      * @brief write an int64 at the current position
      *
+     * @param stream
      * @param value
      */
-    void Writer::_writeInt(std::int64_t value)
+    void Writer::_writeInt(std::ostream &stream, std::int64_t value)
     {
-        _writeRaw(std::span<const std::int64_t>{&value, 1});
+        _writeRaw(stream, std::span<const std::int64_t>{&value, 1});
     }
 
     /**
      * @brief overwrite an int64 at position
      *
+     * @param stream
      * @param value
      * @param position
      */
-    void Writer::_writeIntAt(std::int64_t value, std::int64_t position)
+    void Writer::_writeIntAt(
+        std::ostream &stream,
+        std::int64_t  value,
+        std::int64_t  position
+    )
     {
-        _stream.seekp(position);
-        _writeInt(value);
+        stream.seekp(position);
+        _writeInt(stream, value);
     }
 
     /**
      * @brief write values as raw bytes
      *
      * @tparam T
+     * @param stream
      * @param values
      */
     template <typename T>
-    void Writer::_writeRaw(std::span<const T> values)
+    void Writer::_writeRaw(std::ostream &stream, std::span<const T> values)
     {
         _bytes.resize(values.size_bytes());
         std::memcpy(_bytes.data(), values.data(), values.size_bytes());
-        _stream.write(
+        stream.write(
             _bytes.data(),
             static_cast<std::streamsize>(_bytes.size())
         );

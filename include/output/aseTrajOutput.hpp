@@ -64,7 +64,10 @@ namespace out
        private:
         void _checkFrame(const Frame &frame);
         void _addSystem(const Frame &frame);
-        void _addBuffer(std::string_view key, ulm::Shape shape);
+        void _addBuffer(
+            std::string_view                key,
+            const std::vector<std::size_t> &shape
+        );
     };
 
 }   // namespace out

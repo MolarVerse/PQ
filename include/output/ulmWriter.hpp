@@ -25,7 +25,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <mstd/utils.hpp>
 #include <ostream>
 #include <span>
 #include <string_view>
@@ -40,8 +39,6 @@
  */
 namespace out::ulm
 {
-    using Shape = std::vector<std::size_t>;
-
     inline constexpr std::string_view FILE_TAG = "- of UlmASE-Trajectory  ";
     inline constexpr std::int64_t     FORMAT_VERSION           = 3;
     inline constexpr std::int64_t     ITEM_COUNT_POSITION      = 32;
@@ -58,53 +55,53 @@ namespace out::ulm
      */
     struct Array
     {
-        Shape            shape;
-        std::string_view dtype;
-        std::int64_t     offset;
+        std::vector<std::size_t> shape;
+        std::string_view         dtype;
+        std::int64_t             offset;
     };
 
     /**
      * @brief writes the header, aligned arrays and JSON items of one file
+     * to the stream given to each call
      */
     class Writer
     {
        private:
-        std::ostream             &_stream;
         std::vector<std::int64_t> _offsets{-1};
         std::vector<char>         _bytes;
         std::int64_t              _offsetsPosition = HEADER_SIZE;
         std::size_t               _nItems          = 0;
 
        public:
-        explicit Writer(std::ostream &stream);
-        ~Writer();
-
-        MSTD_NO_COPY(Writer)
-        MSTD_NO_MOVE(Writer)
-
-        void writeHeader();
-        void writeItem(std::string_view json);
+        void writeHeader(std::ostream &stream);
+        void writeItem(std::ostream &stream, std::string_view json);
 
         [[nodiscard]] Array writeArray(
-            std::span<const double> values,
-            Shape                   shape
+            std::ostream                   &stream,
+            std::span<const double>         values,
+            const std::vector<std::size_t> &shape
         );
         [[nodiscard]] Array writeArray(
-            std::span<const std::int64_t> values,
-            Shape                         shape
+            std::ostream                   &stream,
+            std::span<const std::int64_t>   values,
+            const std::vector<std::size_t> &shape
         );
 
         [[nodiscard]] std::size_t getNItems() const;
 
        private:
-        [[nodiscard]] std::int64_t _position();
-        [[nodiscard]] std::int64_t _align();
+        [[nodiscard]] static std::int64_t _getPosition(std::ostream &stream);
+        [[nodiscard]] static std::int64_t _align(std::ostream &stream);
 
-        void _writeInt(std::int64_t value);
-        void _writeIntAt(std::int64_t value, std::int64_t position);
+        void _writeInt(std::ostream &stream, std::int64_t value);
+        void _writeIntAt(
+            std::ostream &stream,
+            std::int64_t  value,
+            std::int64_t  position
+        );
 
         template <typename T>
-        void _writeRaw(std::span<const T> values);
+        void _writeRaw(std::ostream &stream, std::span<const T> values);
     };
 
     /**

@@ -74,9 +74,9 @@ namespace
 TEST(TestUlmWriter, writesHeaderArraysAndItems)
 {
     std::stringstream stream;
-    out::ulm::Writer  writer{stream};
+    out::ulm::Writer  writer;
 
-    writer.writeHeader();
+    writer.writeHeader(stream);
     auto data = stream.str();
     EXPECT_EQ(data.size(), static_cast<std::size_t>(out::ulm::HEADER_SIZE + 8));
     EXPECT_EQ(data.substr(0, 24), out::ulm::FILE_TAG);
@@ -91,20 +91,20 @@ TEST(TestUlmWriter, writesHeaderArraysAndItems)
     const auto numbers = std::vector<std::int64_t>{8, 1};
     const auto values  = std::vector<double>{1.5, -2.25, 3.0};
 
-    const auto intArray    = writer.writeArray(numbers, {2});
-    const auto doubleArray = writer.writeArray(values, {1, 3});
+    const auto intArray    = writer.writeArray(stream, numbers, {2});
+    const auto doubleArray = writer.writeArray(stream, values, {1, 3});
     stream.write("x", 1);
-    const auto aligned = writer.writeArray(values, {3});
+    const auto aligned = writer.writeArray(stream, values, {3});
 
     EXPECT_EQ(intArray.offset, 56);
     EXPECT_EQ(intArray.dtype, "int64");
     EXPECT_EQ(doubleArray.offset, 72);
     EXPECT_EQ(doubleArray.dtype, "float64");
-    EXPECT_EQ(doubleArray.shape, (out::ulm::Shape{1, 3}));
+    EXPECT_EQ(doubleArray.shape, (std::vector<std::size_t>{1, 3}));
     EXPECT_EQ(aligned.offset, 104);
 
-    writer.writeItem(R"({"a": 1})");
-    writer.writeItem(R"({"b": 2})");
+    writer.writeItem(stream, R"({"a": 1})");
+    writer.writeItem(stream, R"({"b": 2})");
     EXPECT_EQ(writer.getNItems(), 2);
 
     data = stream.str();
@@ -126,13 +126,13 @@ TEST(TestUlmWriter, writesHeaderArraysAndItems)
 TEST(TestUlmWriter, growsTheOffsetsTable)
 {
     std::stringstream stream;
-    out::ulm::Writer  writer{stream};
-    writer.writeHeader();
+    out::ulm::Writer  writer;
+    writer.writeHeader(stream);
 
     constexpr std::int64_t nItems = 44;
     for (std::int64_t index = 0; index < nItems; ++index)
     {
-        writer.writeItem("{}");
+        writer.writeItem(stream, "{}");
     }
 
     const auto data    = stream.str();
