@@ -89,7 +89,6 @@ namespace out
      * @brief Write the metadata section of the restart file
      *
      * @param buffer the output stream to write to
-     * @param generalSettings the general settings containing the metadata
      */
     void RstFileOutput::_writeMetaData(std::ostringstream &buffer)
     {
