@@ -24,6 +24,7 @@
 #define CONFIG__ATOM_NUMBER_MAP_HPP
 
 #include <map>
+#include <set>
 #include <string>
 
 #include "strongTypes.hpp"
@@ -98,6 +99,17 @@ const std::map<std::string, AtomNumber> atomNumberMap = {
     {"lr", AtomNumber{103}},      {"q", AtomNumber{999}},
     {"x", AtomNumber{999}},       {"cav", AtomNumber{1000}},
     {"sup", AtomNumber{1000000}}, {"dum", AtomNumber{1}}
+};
+
+/**
+ * @brief special atom names of atomNumberMap that are no chemical element
+ */
+const std::set<std::string> nonElementAtomNames = {
+    "q",
+    "x",
+    "cav",
+    "sup",
+    "dum"
 };
 
 #endif   // CONFIG__ATOM_NUMBER_MAP_HPP

@@ -34,5 +34,9 @@ TEST(TestAtomicNumber, atomicNumber)
     EXPECT_EQ(out::atomicNumber("h"), 1);
     EXPECT_EQ(out::atomicNumber("dum"), 0);
     EXPECT_EQ(out::atomicNumber("cav"), 0);
+    EXPECT_EQ(out::atomicNumber("sup"), 0);
+    EXPECT_EQ(out::atomicNumber("Q"), 0);
+    EXPECT_EQ(out::atomicNumber("x"), 0);
+    EXPECT_EQ(out::atomicNumber("lr"), 103);
     EXPECT_EQ(out::atomicNumber("notAnElement"), 0);
 }

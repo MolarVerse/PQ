@@ -29,10 +29,6 @@
 
 namespace out
 {
-    // atoms without an element (dummy and virtual atoms)
-    constexpr int NO_ELEMENT  = 0;
-    constexpr int MAX_ELEMENT = 118;
-
     /**
      * @brief atomic number of an atom for trajectory files, 0 for atoms
      * without an element (dummy and virtual atoms)
@@ -44,18 +40,12 @@ namespace out
     {
         const auto key = utilities::toLowerCopy(name);
 
-        if (!atomNumberMap.contains(key) || key == "dum")
+        if (!atomNumberMap.contains(key) || nonElementAtomNames.contains(key))
         {
-            return NO_ELEMENT;
+            return 0;
         }
 
-        const auto number = atomNumberMap.at(key).get();
-        if (number > MAX_ELEMENT)
-        {
-            return NO_ELEMENT;
-        }
-
-        return static_cast<int>(number);
+        return static_cast<int>(atomNumberMap.at(key).get());
     }
 
 }   // namespace out
