@@ -49,21 +49,25 @@ class TestEnergyOutput : public ::testing::Test
     std::unique_ptr<physicalData::PhysicalData> _physicalData;
     std::unique_ptr<Settings>                   _settings;
 
-    void SetUp() override
-    {
-        _infoOutput     = std::make_unique<out::InfoOutput>("default.info");
-        _energyOutput   = std::make_unique<out::EnergyOutput>("default.en");
-        _momentumOutput = std::make_unique<out::MomentumOutput>("default.mom");
-        _physicalData   = std::make_unique<physicalData::PhysicalData>();
-        _settings       = std::make_unique<Settings>();
-    }
+    void SetUp() override;
 
-    void TearDown() override
-    {
-        static_cast<void>(std::filesystem::remove("default.info"));
-        static_cast<void>(std::filesystem::remove("default.en"));
-        static_cast<void>(std::filesystem::remove("default.mom"));
-    }
+    void TearDown() override;
 };
+
+inline void TestEnergyOutput::SetUp()
+{
+    _infoOutput     = std::make_unique<out::InfoOutput>("default.info");
+    _energyOutput   = std::make_unique<out::EnergyOutput>("default.en");
+    _momentumOutput = std::make_unique<out::MomentumOutput>("default.mom");
+    _physicalData   = std::make_unique<physicalData::PhysicalData>();
+    _settings       = std::make_unique<Settings>();
+}
+
+inline void TestEnergyOutput::TearDown()
+{
+    static_cast<void>(std::filesystem::remove("default.info"));
+    static_cast<void>(std::filesystem::remove("default.en"));
+    static_cast<void>(std::filesystem::remove("default.mom"));
+}
 
 #endif   // TESTS__INCLUDE__OUTPUT__TEST_ENERGY_OUTPUT_HPP

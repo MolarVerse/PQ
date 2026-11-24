@@ -68,18 +68,18 @@ TEST_F(TestSetup, setAtomNames)
     moleculeType.addAtomName("H");
     moleculeType.addAtomName("H");
 
-    _engine->getSimulationBox().addMolecule(molecule);
-    _engine->getSimulationBox().addMolecule(qmMolecule);
-    _engine->getSimulationBox().addMoleculeType(moleculeType);
+    _engine->get_simulationBox().addMolecule(molecule);
+    _engine->get_simulationBox().addMolecule(qmMolecule);
+    _engine->get_simulationBox().addMoleculeType(moleculeType);
 
-    _engine->getSimulationBox().addAtom(atom1);
-    _engine->getSimulationBox().addAtom(atom2);
-    _engine->getSimulationBox().addAtom(atom3);
+    _engine->get_simulationBox().addAtom(atom1);
+    _engine->get_simulationBox().addAtom(atom2);
+    _engine->get_simulationBox().addAtom(atom3);
 
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomNames();
 
-    const auto molceule = _engine->getSimulationBox().getMolecules()[0];
+    const auto molceule = _engine->get_simulationBox().getMolecules()[0];
     EXPECT_EQ(molceule.getAtomName(AtomIndex{0}), "Zn");
     EXPECT_EQ(molceule.getAtomName(AtomIndex{1}), "H");
     EXPECT_EQ(molceule.getAtomName(AtomIndex{2}), "H");
@@ -106,18 +106,18 @@ TEST_F(TestSetup, setAtomTypes)
     moleculeType.addExternalAtomType(ExtAtomType{1});
     moleculeType.addExternalAtomType(ExtAtomType{2});
 
-    _engine->getSimulationBox().addMolecule(molecule);
-    _engine->getSimulationBox().addMolecule(qmMolecule);
-    _engine->getSimulationBox().addMoleculeType(moleculeType);
+    _engine->get_simulationBox().addMolecule(molecule);
+    _engine->get_simulationBox().addMolecule(qmMolecule);
+    _engine->get_simulationBox().addMoleculeType(moleculeType);
 
-    _engine->getSimulationBox().addAtom(atom1);
-    _engine->getSimulationBox().addAtom(atom2);
-    _engine->getSimulationBox().addAtom(atom3);
+    _engine->get_simulationBox().addAtom(atom1);
+    _engine->get_simulationBox().addAtom(atom2);
+    _engine->get_simulationBox().addAtom(atom3);
 
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomTypes();
 
-    auto molecule2 = _engine->getSimulationBox().getMolecules()[0];
+    auto molecule2 = _engine->get_simulationBox().getMolecules()[0];
     EXPECT_EQ(molecule2.getAtomType(AtomIndex{0}), AtomType{0});
     EXPECT_EQ(molecule2.getAtomType(AtomIndex{1}), AtomType{1});
     EXPECT_EQ(molecule2.getAtomType(AtomIndex{2}), AtomType{2});
@@ -153,18 +153,18 @@ TEST_F(TestSetup, setExternalVDWTypes)
     moleculeType.addExternalGlobalVDWType(ExtVdwType{1});
     moleculeType.addExternalGlobalVDWType(ExtVdwType{2});
 
-    _engine->getSimulationBox().addMolecule(molecule);
-    _engine->getSimulationBox().addMolecule(qmMolecule);
-    _engine->getSimulationBox().addMoleculeType(moleculeType);
+    _engine->get_simulationBox().addMolecule(molecule);
+    _engine->get_simulationBox().addMolecule(qmMolecule);
+    _engine->get_simulationBox().addMoleculeType(moleculeType);
 
-    _engine->getSimulationBox().addAtom(atom1);
-    _engine->getSimulationBox().addAtom(atom2);
-    _engine->getSimulationBox().addAtom(atom3);
+    _engine->get_simulationBox().addAtom(atom1);
+    _engine->get_simulationBox().addAtom(atom2);
+    _engine->get_simulationBox().addAtom(atom3);
 
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setExternalVDWTypes();
 
-    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+    const auto &moleculeResult = _engine->get_simulationBox().getMolecules()[0];
 
     EXPECT_EQ(moleculeResult.getExternalGlobalVDWTypes()[0], ExtVdwType{0});
     EXPECT_EQ(moleculeResult.getExternalGlobalVDWTypes()[1], ExtVdwType{1});
@@ -189,18 +189,18 @@ TEST_F(TestSetup, setPartialCharges)
     moleculeType.addPartialCharge(1.0 * elementary_charge);
     moleculeType.addPartialCharge(2.0 * elementary_charge);
 
-    _engine->getSimulationBox().addMolecule(molecule);
-    _engine->getSimulationBox().addMolecule(qmMolecule);
-    _engine->getSimulationBox().addMoleculeType(moleculeType);
+    _engine->get_simulationBox().addMolecule(molecule);
+    _engine->get_simulationBox().addMolecule(qmMolecule);
+    _engine->get_simulationBox().addMoleculeType(moleculeType);
 
-    _engine->getSimulationBox().addAtom(atom1);
-    _engine->getSimulationBox().addAtom(atom2);
-    _engine->getSimulationBox().addAtom(atom3);
+    _engine->get_simulationBox().addAtom(atom1);
+    _engine->get_simulationBox().addAtom(atom2);
+    _engine->get_simulationBox().addAtom(atom3);
 
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setPartialCharges();
 
-    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+    const auto &moleculeResult = _engine->get_simulationBox().getMolecules()[0];
 
     EXPECT_EQ(moleculeResult.getPartialCharges()[0], 0.0 * elementary_charge);
     EXPECT_EQ(moleculeResult.getPartialCharges()[1], 1.0 * elementary_charge);
@@ -220,11 +220,11 @@ TEST_F(TestSetup, testSetAtomMasses)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule);
+    _engine->get_simulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomMasses();
 
-    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+    const auto &moleculeResult = _engine->get_simulationBox().getMolecules()[0];
 
     EXPECT_DOUBLE_EQ(
         moleculeResult.getAtomMass(AtomIndex{0}).numerical_value_in(g_per_mol),
@@ -253,7 +253,7 @@ TEST_F(TestSetup, testSetAtomMassesThrowsError)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule);
+    _engine->get_simulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW_MSG(
         simulationBoxSetup.setAtomMasses(),
@@ -275,11 +275,11 @@ TEST_F(TestSetup, testSetAtomicNumbers)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule);
+    _engine->get_simulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomicNumbers();
 
-    const auto &moleculeResult = _engine->getSimulationBox().getMolecules()[0];
+    const auto &moleculeResult = _engine->get_simulationBox().getMolecules()[0];
 
     EXPECT_EQ(moleculeResult.getAtomicNumber(AtomIndex{0}), AtomNumber{6});
     EXPECT_EQ(moleculeResult.getAtomicNumber(AtomIndex{1}), AtomNumber{1});
@@ -299,7 +299,7 @@ TEST_F(TestSetup, testSetAtomicNumbersThrowsError)
     molecule.addAtom(atom2);
     molecule.addAtom(atom3);
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule);
+    _engine->get_simulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     ASSERT_THROW_MSG(
         simulationBoxSetup.setAtomicNumbers(),
@@ -329,13 +329,13 @@ TEST_F(TestSetup, testSetMolMass)
     molecule2.addAtom(atom4);
     molecule2.addAtom(atom5);
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule1);
-    _engine->getSimulationBox().getMolecules().push_back(molecule2);
+    _engine->get_simulationBox().getMolecules().push_back(molecule1);
+    _engine->get_simulationBox().getMolecules().push_back(molecule2);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.setAtomMasses();
 
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox()
+        _engine->get_simulationBox()
             .getMolecules()[0]
             .getMolMass()
             .numerical_value_in(g_per_mol),
@@ -362,12 +362,12 @@ TEST_F(TestSetup, testSetTotalCharge)
          -0.4 * elementary_charge}
     );
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule);
+    _engine->get_simulationBox().getMolecules().push_back(molecule);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.calculateTotalCharge();
 
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getTotalCharge().numerical_value_in(
+        _engine->get_simulationBox().getTotalCharge().numerical_value_in(
             elementary_charge
         ),
         -0.1
@@ -386,23 +386,23 @@ TEST_F(TestSetup, noDensityNoBox)
 
 TEST_F(TestSetup, noDensity)
 {
-    _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
+    _engine->get_simulationBox().setTotalMass(6000 * g_per_mol);
 
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
     };
-    _engine->getSimulationBox().setBox(orthoBox, true);
+    _engine->get_simulationBox().setBox(orthoBox, true);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getVolume().numerical_value_in(
+        _engine->get_simulationBox().getVolume().numerical_value_in(
             angstrom * angstrom * angstrom
         ),
         6000.0
     );
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getDensity().numerical_value_in(
+        _engine->get_simulationBox().getDensity().numerical_value_in(
             kg_per_litre
         ),
         (1.0 * g_per_mol / angstrom3 / avogadro_constant)
@@ -412,7 +412,7 @@ TEST_F(TestSetup, noDensity)
 
 TEST_F(TestSetup, testNoBox)
 {
-    _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
+    _engine->get_simulationBox().setTotalMass(6000 * g_per_mol);
     _settings->simulationBoxSettings.setDensityByUser(
         1.0 * g_per_mol / angstrom3 / avogadro_constant
     );
@@ -420,13 +420,13 @@ TEST_F(TestSetup, testNoBox)
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getVolume().numerical_value_in(
+        _engine->get_simulationBox().getVolume().numerical_value_in(
             angstrom * angstrom * angstrom
         ),
         6000.0
     );
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getBoxDimensions()[2].numerical_value_in(
+        _engine->get_simulationBox().getBoxDimensions()[2].numerical_value_in(
             angstrom
         ),
         cbrt(6000.0)
@@ -435,27 +435,27 @@ TEST_F(TestSetup, testNoBox)
 
 TEST_F(TestSetup, testBoxAndDensitySet)
 {
-    _engine->getSimulationBox().setTotalMass(6000 * g_per_mol);
-    _engine->getSimulationBox().setDensity(
+    _engine->get_simulationBox().setTotalMass(6000 * g_per_mol);
+    _engine->get_simulationBox().setDensity(
         12341243.1234 * kg_per_litre
     );   // this should be ignored
 
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
     };
-    _engine->getSimulationBox().setBox(orthoBox, true);
+    _engine->get_simulationBox().setBox(orthoBox, true);
     _settings->simulationBoxSettings.setDensityByUser(0.0 * kg_per_litre);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     simulationBoxSetup.checkBoxSettings();
 
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getVolume().numerical_value_in(
+        _engine->get_simulationBox().getVolume().numerical_value_in(
             angstrom * angstrom * angstrom
         ),
         6000.0
     );
     EXPECT_DOUBLE_EQ(
-        _engine->getSimulationBox().getDensity().numerical_value_in(
+        _engine->get_simulationBox().getDensity().numerical_value_in(
             kg_per_litre
         ),
         (1.0 * g_per_mol / angstrom3 / avogadro_constant)
@@ -468,8 +468,8 @@ TEST_F(TestSetup, testCheckRcCutoff)
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
     };
-    _engine->getSimulationBox().setBox(orthoBox, false);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(14.0 * angstrom);
+    _engine->get_simulationBox().setBox(orthoBox, false);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(14.0 * angstrom);
     setup::SimulationBoxSetup simulationBoxSetup(*_engine);
     EXPECT_THROW_MSG(
         simulationBoxSetup.checkRcCutoff(),
@@ -478,14 +478,14 @@ TEST_F(TestSetup, testCheckRcCutoff)
     );
 
     setup::SimulationBoxSetup simulationBox2Setup(*_engine);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
     EXPECT_NO_THROW(simulationBox2Setup.checkRcCutoff());
 }
 
 TEST_F(TestSetup, testCheckZeroVelocities)
 {
     setup::SimulationBoxSetup simBoxSetup(*_engine);
-    auto                     &simBox = _engine->getSimulationBox();
+    auto                     &simBox = _engine->get_simulationBox();
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -548,8 +548,8 @@ TEST_F(TestSetup, testFullSetup)
         {0.1 * elementary_charge, 0.2 * elementary_charge}
     );
 
-    _engine->getSimulationBox().getMolecules().push_back(molecule1);
-    _engine->getSimulationBox().getMolecules().push_back(molecule2);
+    _engine->get_simulationBox().getMolecules().push_back(molecule1);
+    _engine->get_simulationBox().getMolecules().push_back(molecule2);
 
     auto moleculeType1 = molsys::MoleculeType(MolType{1});
     auto moleculeType2 = molsys::MoleculeType(MolType{2});
@@ -583,11 +583,11 @@ TEST_F(TestSetup, testFullSetup)
     moleculeType2.addExternalGlobalVDWType(ExtVdwType{0});
     moleculeType2.addExternalGlobalVDWType(ExtVdwType{1});
 
-    _engine->getSimulationBox().addMoleculeType(moleculeType1);
-    _engine->getSimulationBox().addMoleculeType(moleculeType2);
+    _engine->get_simulationBox().addMoleculeType(moleculeType1);
+    _engine->get_simulationBox().addMoleculeType(moleculeType2);
 
-    _engine->getSimulationBox().setTotalMass(33.0 * g_per_mol);
-    _engine->getSimulationBox().setDensity(
+    _engine->get_simulationBox().setTotalMass(33.0 * g_per_mol);
+    _engine->get_simulationBox().setDensity(
         12341243.1234 * kg_per_litre
     );   // this should be ignored
 
@@ -595,8 +595,8 @@ TEST_F(TestSetup, testFullSetup)
         {10.0 * angstrom, 20.0 * angstrom, 30.0 * angstrom}
     };
     _settings->fileSettings.setStartFileNameByUser("input.rst");
-    _engine->getSimulationBox().setBox(orthoBox, true);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(4.0 * angstrom);
+    _engine->get_simulationBox().setBox(orthoBox, true);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(4.0 * angstrom);
 
     EXPECT_NO_THROW(setup::setupSimulationBox(*_engine));
 }
@@ -604,7 +604,7 @@ TEST_F(TestSetup, testFullSetup)
 TEST_F(TestSetup, testWriteSetupInfo)
 {
     _engine->getEngineOutput().getLogOutput().setFilename("default.log", false);
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();
@@ -621,7 +621,7 @@ TEST_F(TestSetup, testWriteSetupInfo)
         {5.73 * angstrom, 9.93 * angstrom, 11.14 * angstrom}
     };
     simBox.setBox(orthoBox, false);
-    _settings->potentialSettings.setCoulombRadiusCutOffByUser(5.79 * angstrom);
+    _settings->potentialSettings.setCoulombRadiusCutoffByUser(5.79 * angstrom);
     _settings->fileSettings.setStartFileNameByUser("input.rst");
     setup::SimulationBoxSetup::setZeroVelocities(false);
 
@@ -812,7 +812,7 @@ TEST_F(TestZeroVelocityWarning, SilentWithInitOn)
 
 TEST_F(TestZeroVelocityWarning, SilentWithNonZeroVelocity)
 {
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
 
     const auto atom1 = std::make_shared<::molsys::Atom>();
     const auto atom2 = std::make_shared<::molsys::Atom>();

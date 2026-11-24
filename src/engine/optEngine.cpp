@@ -40,8 +40,15 @@ namespace engine
      */
     void OptEngine::run()
     {
-        _evaluator->evaluate(get_physicalData());
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _evaluator->evaluate(
+            get_physicalData(),
+            get_simulationBox(),
+            get_intraNonBonded()
+        );
+        _optimizer->updateHistory(
+            get_physicalData().getTotalEnergy(),
+            get_simulationBox()
+        );
 
         const auto nEpochs = getSettings().timings.getNumberOfSteps();
 
@@ -190,11 +197,22 @@ namespace engine
      */
     void OptEngine::takeStep()
     {
-        _optimizer->update(_learningRateStrategy->getLearningRate(), getStep());
+        _optimizer->update(
+            _learningRateStrategy->getLearningRate(),
+            getStep(),
+            get_simulationBox()
+        );
 
-        _evaluator->evaluate(get_physicalData());
+        _evaluator->evaluate(
+            get_physicalData(),
+            get_simulationBox(),
+            get_intraNonBonded()
+        );
 
-        _optimizer->updateHistory(get_physicalData().getTotalEnergy());
+        _optimizer->updateHistory(
+            get_physicalData().getTotalEnergy(),
+            get_simulationBox()
+        );
 
         _converged = _optimizer->hasConverged();
 
@@ -265,11 +283,11 @@ namespace engine
 
         if (0 == getStep() % outputFreq)
         {
-            const out::Frame frame{getSimulationBox()};
+            const out::Frame frame{get_simulationBox()};
 
             getEngineOutput().writeXyzFile(frame, effStep);
             getEngineOutput().writeForceFile(frame, effStep);
-            getEngineOutput().writeOptRstFile(getSimulationBox(), effStep);
+            getEngineOutput().writeOptRstFile(get_simulationBox(), effStep);
             getEngineOutput().writeOptFile(getStep(), *_optimizer);
         }
 

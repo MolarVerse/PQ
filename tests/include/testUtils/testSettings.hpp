@@ -76,12 +76,7 @@ namespace testSettings
          * @param value the value, converted to the parameter type of the setter
          */
         template <typename Class, typename Argument, typename Value>
-        Builder &with(void (Class::*setter)(Argument), Value &&value)
-        {
-            (_settings.*
-             setter)(static_cast<Argument>(std::forward<Value>(value)));
-            return *this;
-        }
+        Builder &with(void (Class::*setter)(Argument), Value &&value);
 
         /**
          * @brief change the settings with any callable, for everything that
@@ -90,21 +85,39 @@ namespace testSettings
          * @param callable called with a reference to the settings struct
          */
         template <typename Callable>
-        Builder &apply(Callable &&callable)
-        {
-            std::forward<Callable>(callable)(_settings);
-            return *this;
-        }
+        Builder &apply(Callable &&callable);
 
         /**
          * @brief the settings built so far (a copy, the builder can be reused)
          */
         [[nodiscard]]
-        SettingsT build() const
-        {
-            return _settings;
-        }
+        SettingsT build() const;
     };
+
+    template <typename SettingsT>
+    template <typename Class, typename Argument, typename Value>
+    Builder<SettingsT> &Builder<SettingsT>::with(
+        void (Class::*setter)(Argument),
+        Value &&value
+    )
+    {
+        (_settings.*setter)(static_cast<Argument>(std::forward<Value>(value)));
+        return *this;
+    }
+
+    template <typename SettingsT>
+    template <typename Callable>
+    Builder<SettingsT> &Builder<SettingsT>::apply(Callable &&callable)
+    {
+        std::forward<Callable>(callable)(_settings);
+        return *this;
+    }
+
+    template <typename SettingsT>
+    SettingsT Builder<SettingsT>::build() const
+    {
+        return _settings;
+    }
 
     /**
      * @brief start a builder for the settings struct SettingsT

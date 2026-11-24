@@ -35,42 +35,42 @@ namespace engine
     void MMMDEngine::calculateForces()
     {
         getCellList().updateCellList(
-            getSimulationBox(),
-            getSettings().potentialSettings.getCoulombRadiusCutOff()
+            get_simulationBox(),
+            getSettings().potentialSettings.getCoulombRadiusCutoff()
         );
 
         getPotential()->calculateForces(
-            getSimulationBox(),
+            get_simulationBox(),
             get_physicalData(),
             getCellList(),
             getSettings().waterModelSettings,
             getSettings().potentialSettings
         );
 
-        _getInterWater().calculate(
-            getSimulationBox(),
+        _get_interWater().calculate(
+            get_simulationBox(),
             get_physicalData(),
             getPotential()->getCoulombPotSharedPtr(),
             getCellList(),
             getSettings().potentialSettings
         );
 
-        getIntraNonBonded()->calculate(
-            getSimulationBox(),
+        get_intraNonBonded().calculate(
+            get_simulationBox(),
             get_physicalData(),
             getSettings().potentialSettings
         );
 
-        const auto virial = virial::calculateVirial(getSimulationBox());
+        const auto virial = virial::calculateVirial(get_simulationBox());
         get_physicalData().set_virial(virial);
 
         getForceField()->calculateBondedInteractions(
-            getSimulationBox(),
+            get_simulationBox(),
             get_physicalData(),
             getSettings().potentialSettings
         );
 
-        _getIntraWater().calculate(getSimulationBox(), get_physicalData());
+        _get_intraWater().calculate(get_simulationBox(), get_physicalData());
     }
 
 }   // namespace engine

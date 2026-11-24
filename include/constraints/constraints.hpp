@@ -128,7 +128,7 @@ namespace constraints
          * standard setter methods *
          ***************************/
 
-        void setStartTime(const Time &startTime) { _startTime = startTime; }
+        void setStartTime(const Time &startTime);
 
        private:
         void _applyShake(
@@ -143,6 +143,11 @@ namespace constraints
         void _applyRattle();
         void _applyMRattle(molsys::SimulationBox &simulationBox);
     };
+
+    inline void Constraints::setStartTime(const Time &startTime)
+    {
+        _startTime = startTime;
+    }
 
 }   // namespace constraints
 

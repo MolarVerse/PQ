@@ -44,29 +44,31 @@ class TestParameterFileReader : public ::testing::Test
     std::unique_ptr<input::parameterFile::ParameterFileReader>
         _parameterFileReader;
 
-    void SetUp() override
-    {
-        auto molecule1 = molsys::Molecule();
-        auto molecule2 = molsys::Molecule();
-
-        // NOTE: use dummy engine for testing
-        //       this is implemented by base class Engine
-        //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-
-        _engine->getSimulationBox().addMolecule(molecule1);
-        _engine->getSimulationBox().addMolecule(molecule2);
-
-        _settings.fileSettings.setParameterFileNameByUser(
-            "data/parameterFileReader/param.param"
-        );
-        _parameterFileReader =
-            std::make_unique<input::parameterFile::ParameterFileReader>(
-                "data/parameterFileReader/param.param",
-                *_engine,
-                _settings.potentialSettings
-            );
-    }
+    void SetUp() override;
 };
+
+inline void TestParameterFileReader::SetUp()
+{
+    auto molecule1 = molsys::Molecule();
+    auto molecule2 = molsys::Molecule();
+
+    // NOTE: use dummy engine for testing
+    //       this is implemented by base class Engine
+    //       and works therefore for all derived classes
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+
+    _engine->get_simulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMolecule(molecule2);
+
+    _settings.fileSettings.setParameterFileNameByUser(
+        "data/parameterFileReader/param.param"
+    );
+    _parameterFileReader =
+        std::make_unique<input::parameterFile::ParameterFileReader>(
+            "data/parameterFileReader/param.param",
+            *_engine,
+            _settings.potentialSettings
+        );
+}
 
 #endif   // TESTS__INCLUDE__INPUT__TEST_PARAMETER_FILE_READER_HPP

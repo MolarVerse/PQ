@@ -34,6 +34,9 @@ namespace utilities
 #if defined(WITH_PYBIND11) && !defined(_WIN32)
     void installInterruptHandler();
     void wakePythonThread(pthread_t thread);
+
+    [[nodiscard]]
+    bool isInterruptHandlerInstalled();
 #endif
 }   // namespace utilities
 

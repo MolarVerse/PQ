@@ -1,0 +1,1 @@
+- the key `ndim` is now deprecated and will be removed with version `2.0.0`

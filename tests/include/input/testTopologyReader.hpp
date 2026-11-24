@@ -45,35 +45,37 @@ class TestTopologyReader : public ::testing::Test
     std::unique_ptr<engine::Engine>                  _engine;
     std::unique_ptr<input::topology::TopologyReader> _topologyReader;
 
-    void SetUp() override
-    {
-        molsys::Molecule molecule1;
-        molsys::Molecule molecule2;
-
-        molsys::Atom atom1_1;
-        molsys::Atom atom2_1;
-        molsys::Atom atom2_2;
-
-        molecule1.addAtom(std::make_shared<molsys::Atom>(atom1_1));
-        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_1));
-        molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_2));
-
-        // NOTE: use dummy engine for testing
-        //       this is implemented by base class Engine
-        //       and works therefore for all derived classes
-        _engine = std::make_unique<engine::MMMDEngine>(_settings);
-
-        _engine->getSimulationBox().addMolecule(molecule1);
-        _engine->getSimulationBox().addMolecule(molecule2);
-
-        _settings.fileSettings.setTopologyFileNameByUser(
-            "data/topologyReader/topology.top"
-        );
-        _topologyReader = std::make_unique<input::topology::TopologyReader>(
-            _settings.fileSettings.getTopologyFileName(),
-            *_engine
-        );
-    }
+    void SetUp() override;
 };
+
+inline void TestTopologyReader::SetUp()
+{
+    molsys::Molecule molecule1;
+    molsys::Molecule molecule2;
+
+    molsys::Atom atom1_1;
+    molsys::Atom atom2_1;
+    molsys::Atom atom2_2;
+
+    molecule1.addAtom(std::make_shared<molsys::Atom>(atom1_1));
+    molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_1));
+    molecule2.addAtom(std::make_shared<molsys::Atom>(atom2_2));
+
+    // NOTE: use dummy engine for testing
+    //       this is implemented by base class Engine
+    //       and works therefore for all derived classes
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+
+    _engine->get_simulationBox().addMolecule(molecule1);
+    _engine->get_simulationBox().addMolecule(molecule2);
+
+    _settings.fileSettings.setTopologyFileNameByUser(
+        "data/topologyReader/topology.top"
+    );
+    _topologyReader = std::make_unique<input::topology::TopologyReader>(
+        _settings.fileSettings.getTopologyFileName(),
+        *_engine
+    );
+}
 
 #endif   // TESTS__INCLUDE__INPUT__TEST_TOPOLOGY_READER_HPP

@@ -71,16 +71,10 @@ namespace input
 
        protected:
         [[nodiscard]]
-        const std::string &_getKey() const
-        {
-            return _key;
-        }
+        const std::string &_getKey() const;
 
         [[nodiscard]]
-        const std::string &_getRaw() const
-        {
-            return _raw;
-        }
+        const std::string &_getRaw() const;
     };
 
     /**
@@ -109,6 +103,11 @@ namespace input
 
         [[nodiscard]]
         static std::optional<double> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain(
+            const std::vector<double> &notAllowed
+        );
     };
 
     /**
@@ -145,6 +144,9 @@ namespace input
 
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain(const std::vector<T> &notAllowed);
     };
 
     /**

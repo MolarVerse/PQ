@@ -53,22 +53,18 @@ namespace engine
      */
     Engine::Engine(const Settings &settings)
         : _engineOutput(settings.outputFiles, settings.referenceSettings),
-          _potential{std::make_shared<pot::PotentialBruteForce>(
-              settings.hybridSettings
-          )},
-          _simulationBox{std::make_shared<molsys::SimulationBox>()},
-          _intraNonBonded{std::make_shared<intraNonBonded::IntraNonBonded>()},
-          _forceField{std::make_shared<ff::ForceField>(settings.hybridSettings
-          )},
-          _constraints{std::make_shared<constraints::Constraints>(
-              settings.constraintSettings
-          )},
+          _constraints{settings.constraintSettings},
           _intraWater{
               std::make_unique<waterModel::IntraWater>(settings.hybridSettings)
           },
           _interWater{
               std::make_unique<waterModel::InterWater>(settings.hybridSettings)
           },
+          _potential{std::make_shared<pot::PotentialBruteForce>(
+              settings.hybridSettings
+          )},
+          _forceField{std::make_shared<ff::ForceField>(settings.hybridSettings
+          )},
           _settings{settings},
           _impl{std::make_unique<Impl>()}
     {
@@ -109,26 +105,6 @@ namespace engine
     }
 
     /**
-     * @brief get the reference to the simulation box
-     *
-     * @return SimulationBox&
-     */
-    molsys::SimulationBox &Engine::getSimulationBox()
-    {
-        return *_simulationBox;
-    }
-
-    /**
-     * @brief get the reference to the simulation box (const)
-     *
-     * @return const SimulationBox&
-     */
-    const molsys::SimulationBox &Engine::getSimulationBox() const
-    {
-        return *_simulationBox;
-    }
-
-    /**
      * @brief get the reference to the force field
      *
      * @return const std::shared_ptr<ff::ForceField>&
@@ -136,17 +112,6 @@ namespace engine
     const std::shared_ptr<ff::ForceField> &Engine::getForceField() const
     {
         return _forceField;
-    }
-
-    /**
-     * @brief get the reference to the intra non bonded interactions
-     *
-     * @return const std::shared_ptr<intraNonBonded::IntraNonBonded>&
-     */
-    const std::shared_ptr<intraNonBonded::IntraNonBonded> &Engine::
-        getIntraNonBonded() const
-    {
-        return _intraNonBonded;
     }
 
     /**
@@ -158,17 +123,6 @@ namespace engine
     {
         return _potential;
     }
-
-    /**
-     * @brief get the pointer to the simulation box
-     *
-     * @return SimulationBox*
-     */
-    molsys::SimulationBox *Engine::getSimulationBoxPtr()
-    {
-        return _simulationBox.get();
-    }
-
     /**
      * @brief set the inter-water interactions handler
      *
@@ -275,17 +229,6 @@ namespace engine
      ******************************/
 
     /**
-     * @brief get the shared pointer to the simulation box
-     *
-     * @return std::shared_ptr<SimulationBox>
-     */
-    std::shared_ptr<molsys::SimulationBox> Engine::getSharedSimulationBox(
-    ) const
-    {
-        return _simulationBox;
-    }
-
-    /**
      * @brief get the shared pointer to the cell list
      *
      * @return const molsys::CellList&
@@ -301,51 +244,6 @@ namespace engine
      * @return molsys::CellList&
      */
     molsys::CellList &Engine::getCellList() { return _impl->cellList; }
-
-    /**
-     * @brief get the shared pointer to the constraints
-     *
-     * @return const std::shared_ptr<Constraints>&
-     */
-    const std::shared_ptr<constraints::Constraints> &Engine::getConstraints(
-    ) const
-    {
-        return _constraints;
-    }
-
-    /**
-     * @brief get the reference to the inter water model
-     *
-     * @return waterModel::InterWater&
-     */
-    waterModel::InterWater &Engine::_getInterWater() { return *_interWater; }
-
-    /**
-     * @brief get the reference to the inter water model (const)
-     *
-     * @return const waterModel::InterWater&
-     */
-    const waterModel::InterWater &Engine::_getInterWater() const
-    {
-        return *_interWater;
-    }
-
-    /**
-     * @brief get the reference to the intra water model
-     *
-     * @return waterModel::IntraWater&
-     */
-    waterModel::IntraWater &Engine::_getIntraWater() { return *_intraWater; }
-
-    /**
-     * @brief get the reference to the intra water model (const)
-     *
-     * @return const waterModel::IntraWater&
-     */
-    const waterModel::IntraWater &Engine::_getIntraWater() const
-    {
-        return *_intraWater;
-    }
 
     /**
      * @brief set the current step

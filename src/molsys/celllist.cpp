@@ -71,12 +71,12 @@ namespace molsys
      * 4) add neighbouring cells
      *
      * @param simulationBox
-     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
      */
     void CellList::setup(
         const SimulationBox &simulationBox,
-        const Distance      &coulombRadiusCutOff
+        const Distance      &coulombRadiusCutoff
     )
     {
         _oldBoxDimensions = simulationBox.getBoxDimensions();
@@ -84,11 +84,11 @@ namespace molsys
 
         determineCellSize(simulationBox.getBoxDimensions());
 
-        checkCoulombCutoff(coulombRadiusCutOff);
+        checkCoulombCutoff(coulombRadiusCutoff);
 
         determineCellBoundaries(simulationBox.getBoxDimensions());
 
-        addNeighbouringCells(coulombRadiusCutOff);
+        addNeighbouringCells(coulombRadiusCutoff);
     }
 
     /**
@@ -257,12 +257,12 @@ namespace molsys
      * new positions
      *
      * @param simulationBox
-     * @param coulombRadiusCutOff The Coulomb radius cut-off distance used to
+     * @param coulombRadiusCutoff The Coulomb radius cut-off distance used to
      * check for interactions beyond the specified cut-off
      */
     void CellList::updateCellList(
         SimulationBox  &simulationBox,
-        const Distance &coulombRadiusCutOff
+        const Distance &coulombRadiusCutoff
     )
     {
         if (!GeneralSettings::isCellListActivated())
@@ -274,7 +274,7 @@ namespace molsys
         {
             _cells.clear();
             resizeCells();
-            setup(simulationBox, coulombRadiusCutOff);
+            setup(simulationBox, coulombRadiusCutoff);
         }
 
         auto clearMoleculesAndAtoms = [](auto &cell)

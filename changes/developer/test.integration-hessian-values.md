@@ -1,0 +1,1 @@
+- Add integration tests that compare the MM Hessian of a harmonic O-H bond with the analytic result for the central, forward and five-point builders (error order and scaling with the displacement included), plus its info file and the refusal of the analytic builder.

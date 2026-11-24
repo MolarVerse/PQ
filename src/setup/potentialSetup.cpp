@@ -196,7 +196,7 @@ namespace setup
     void PotentialSetup::setupNonCoulombicPairs()
     {
         const auto &pot    = _engine.getPotential();
-        auto       &simBox = _engine.getSimulationBox();
+        auto       &simBox = _engine.get_simulationBox();
 
         auto &nonCoulPot = dynamic_cast<pot::ForceFieldNonCoulomb &>(
             pot->getNonCoulombPotential()
@@ -266,7 +266,7 @@ namespace setup
         log.writeEmptyLine();
 
         const auto coulRCut =
-            _engine.getSettings().potentialSettings.getCoulombRadiusCutOff();
+            _engine.getSettings().potentialSettings.getCoulombRadiusCutoff();
         InvDistance wolfParam = InvDistance::zero();
         auto        rfEpsilon = 0.0;
 
@@ -308,7 +308,7 @@ namespace setup
 
         if (_engine.getSettings().forceFieldSettings.isNonCoulombicActive())
         {
-            auto      &simBox = _engine.getSimulationBox();
+            auto      &simBox = _engine.get_simulationBox();
             const auto nGlobalVdwTypes =
                 simBox.getExternalGlobalVdwTypes().size();
 

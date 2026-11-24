@@ -25,6 +25,8 @@
 #include <pybind11/embed.h>
 
 #include <chrono>
+#include <cstdlib>
+#include <exception>
 #include <memory>
 
 #include "aseFennolRunner.hpp"
@@ -86,55 +88,69 @@ class AseQMRunnerTest : public ::testing::Test
     physicalData::PhysicalData _physicalData;
 
    public:
-    static void SetUpTestSuite()
-    {
-        Python::guard = std::make_unique<pybind11::scoped_interpreter>();
-    }
+    static void SetUpTestSuite();
 
-    static void TearDownTestSuite() { Python::guard.reset(); }
+    static void TearDownTestSuite();
 
    protected:
-    void SetUp() override
-    {
-        const auto types = pybind11::module_::import("types");
-        const auto sys   = pybind11::module_::import("sys");
+    void SetUp() override;
 
-        auto aseModule             = types.attr("ModuleType")("ase");
-        auto aseAtoms              = types.attr("ModuleType")("ase.atoms");
-        aseModule.attr("__path__") = pybind11::list();
-        aseModule.attr("atoms")    = aseAtoms;
-
-        pybind11::exec(fakeAseAtoms, aseAtoms.attr("__dict__"));
-
-        auto fennolModule             = types.attr("ModuleType")("fennol");
-        fennolModule.attr("__path__") = pybind11::list();
-        fennolModule.attr("ase")      = aseAtoms;
-
-        sys.attr("modules")["ase"]        = aseModule;
-        sys.attr("modules")["ase.atoms"]  = aseAtoms;
-        sys.attr("modules")["fennol"]     = fennolModule;
-        sys.attr("modules")["fennol.ase"] = aseAtoms;
-
-        constexpr auto          boxEdge = 10.0 * angstrom;
-        molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
-        _simulationBox.setBox(box, false);
-    }
-
-    static QM::AseFennolRunner _runner(const QMSettings &settings, double delay)
-    {
-        pybind11::module_::import("sys")
-            .attr("modules")["ase.atoms"]
-            .attr("FENNIXCalculator")
-            .attr("delay") = delay;
-
-        FennolSettings fennolSettings;
-        fennolSettings.setFennolModelPathByUser("model.fnx");
-        fennolSettings.setUseGPUPreprocessingByUser(false);
-        GeneralSettings::setFloatingPointType(FPType::DOUBLE);
-
-        return QM::AseFennolRunner{settings, fennolSettings};
-    }
+    static QM::AseFennolRunner _runner(
+        const QMSettings &settings,
+        double            delay
+    );
 };
+
+void AseQMRunnerTest::SetUpTestSuite()
+{
+    Python::guard = std::make_unique<pybind11::scoped_interpreter>();
+}
+
+void AseQMRunnerTest::TearDownTestSuite() { Python::guard.reset(); }
+
+void AseQMRunnerTest::SetUp()
+{
+    const auto types = pybind11::module_::import("types");
+    const auto sys   = pybind11::module_::import("sys");
+
+    auto aseModule             = types.attr("ModuleType")("ase");
+    auto aseAtoms              = types.attr("ModuleType")("ase.atoms");
+    aseModule.attr("__path__") = pybind11::list();
+    aseModule.attr("atoms")    = aseAtoms;
+
+    pybind11::exec(fakeAseAtoms, aseAtoms.attr("__dict__"));
+
+    auto fennolModule             = types.attr("ModuleType")("fennol");
+    fennolModule.attr("__path__") = pybind11::list();
+    fennolModule.attr("ase")      = aseAtoms;
+
+    sys.attr("modules")["ase"]        = aseModule;
+    sys.attr("modules")["ase.atoms"]  = aseAtoms;
+    sys.attr("modules")["fennol"]     = fennolModule;
+    sys.attr("modules")["fennol.ase"] = aseAtoms;
+
+    constexpr auto          boxEdge = 10.0 * angstrom;
+    molsys::OrthorhombicBox box{{boxEdge, boxEdge, boxEdge}};
+    _simulationBox.setBox(box, false);
+}
+
+QM::AseFennolRunner AseQMRunnerTest::_runner(
+    const QMSettings &settings,
+    double            delay
+)
+{
+    pybind11::module_::import("sys")
+        .attr("modules")["ase.atoms"]
+        .attr("FENNIXCalculator")
+        .attr("delay") = delay;
+
+    FennolSettings fennolSettings;
+    fennolSettings.setFennolModelPathByUser("model.fnx");
+    fennolSettings.setUseGPUPreprocessingByUser(false);
+    GeneralSettings::setFloatingPointType(FPType::DOUBLE);
+
+    return QM::AseFennolRunner{settings, fennolSettings};
+}
 
 TEST_F(AseQMRunnerTest, timeoutInterruptsPythonAndThrows)
 {
@@ -194,4 +210,39 @@ TEST_F(AseQMRunnerTest, finishedStepWithinTimeLimitDoesNotThrow)
         settings.fileSettings,
         settings.hybridSettings
     ));
+}
+
+namespace
+{
+    /**
+     * @brief exit code 0 if building a runner started Python
+     */
+    [[noreturn]] void constructRunnerAndExit()
+    {
+        Settings       settings;
+        FennolSettings fennolSettings;
+        settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
+        const auto exitCode = [] { return ::Py_IsInitialized() != 0 ? 0 : 1; };
+
+        try
+        {
+            const QM::AseFennolRunner runner(
+                settings.qmSettings,
+                fennolSettings
+            );
+        }
+        catch (const std::exception &)
+        {
+            // ase or fennol may be missing
+            std::exit(exitCode());
+        }
+
+        std::exit(exitCode());
+    }
+}   // namespace
+
+// death tests run first, in a child process without an interpreter
+TEST(AseQMRunnerDeathTest, constructorStartsPython)
+{
+    EXPECT_EXIT(constructRunnerAndExit(), testing::ExitedWithCode(0), "");
 }

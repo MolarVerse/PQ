@@ -193,7 +193,7 @@ TEST_F(TestGuffDatReader, parseLine)
     EXPECT_EQ(
         pair,
         pot::LennardJonesPair(
-            _settings.potentialSettings.getCoulombRadiusCutOff(),
+            _settings.potentialSettings.getCoulombRadiusCutoff(),
             LJParams{
                 2.0 * kcal_per_mol * angstrom6,
                 3.0 * kcal_per_mol * angstrom12
@@ -686,11 +686,11 @@ TEST_F(TestGuffDatReader, checkNecessaryGuffPairs)
     moleculeType3.addExternalAtomType(ExtAtomType{2});
     moleculeType3.setNumberOfAtoms(3);
 
-    engine.getSimulationBox().addMolecule(molecule1);
-    engine.getSimulationBox().addMolecule(molecule2);
-    engine.getSimulationBox().addMoleculeType(moleculeType1);
-    engine.getSimulationBox().addMoleculeType(moleculeType2);
-    engine.getSimulationBox().addMoleculeType(moleculeType3);
+    engine.get_simulationBox().addMolecule(molecule1);
+    engine.get_simulationBox().addMolecule(molecule2);
+    engine.get_simulationBox().addMoleculeType(moleculeType1);
+    engine.get_simulationBox().addMoleculeType(moleculeType2);
+    engine.get_simulationBox().addMoleculeType(moleculeType3);
 
     input::guffdat::GuffDatReader guffDatReader(engine);
 
@@ -796,9 +796,9 @@ TEST_F(TestGuffDatReader, calculatePartialCharges)
 
     _guffDatReader->calculatePartialCharges();
 
-    // EXPECT_EQ(_engine->getSimulationBox().getMolecule(0).getPartialCharges()[0],
+    // EXPECT_EQ(_engine->get_simulationBox().getMolecule(0).getPartialCharges()[0],
     // 0.5);
-    // EXPECT_EQ(_engine->getSimulationBox().getMolecule(0).getPartialCharges()[1],
+    // EXPECT_EQ(_engine->get_simulationBox().getMolecule(0).getPartialCharges()[1],
     // -0.25);
 }
 
@@ -827,7 +827,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
 
     EXPECT_EQ(
         pair.get_radialCutoff(),
-        _settings.potentialSettings.getCoulombRadiusCutOff()
+        _settings.potentialSettings.getCoulombRadiusCutoff()
     );
 }
 

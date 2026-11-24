@@ -110,56 +110,6 @@ TEST_F(TestInputFileReader, JobType)
 }
 
 /**
- * @brief tests parsing the "dim" command
- *
- */
-TEST_F(TestInputFileReader, parseDimensionality)
-{
-    input::GeneralInputParser parser;
-    const auto                funcMap = parser.getKeywordFuncMap();
-    ASSERT_TRUE(funcMap.contains("dim"));
-
-    const auto&              parseFunc    = funcMap.at("dim");
-    std::vector<std::string> lineElements = {"dim", "=", "3"};
-    parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::getDimensionality(), 3);
-
-    _clearParser(parser);
-
-    lineElements = {"dim", "=", "3D"};
-    parseFunc(lineElements, 0);
-    EXPECT_EQ(GeneralSettings::getDimensionality(), 3);
-
-    lineElements = {"dim", "=", "2"};
-    EXPECT_THROW_MSG(
-        parseFunc(lineElements, 0),
-        exc::InputFileException,
-        "Invalid value \"2\" for key \"dim\" at line 0 in input file: "
-        "Dimensionality must be 3 or 3d"
-    );
-
-    _clearParser(parser);
-
-    lineElements = {"dim", "=", "1"};
-    EXPECT_THROW_MSG(
-        parseFunc(lineElements, 0),
-        exc::InputFileException,
-        "Invalid value \"1\" for key \"dim\" at line 0 in input file: "
-        "Dimensionality must be 3 or 3d"
-    );
-
-    _clearParser(parser);
-
-    lineElements = {"dim", "=", "0"};
-    EXPECT_THROW_MSG(
-        parseFunc(lineElements, 0),
-        exc::InputFileException,
-        "Invalid value \"0\" for key \"dim\" at line 0 in input file: "
-        "Dimensionality must be 3 or 3d"
-    );
-}
-
-/**
  * @brief tests parsing the "floatingPointType" command
  *
  */

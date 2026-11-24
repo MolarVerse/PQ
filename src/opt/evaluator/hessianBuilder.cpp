@@ -67,17 +67,18 @@ namespace opt
          */
         [[nodiscard]]
         std::vector<Force> evaluateForces(
-            Evaluator                  &evaluator,
-            molsys::SimulationBox      &simulationBox,
-            physicalData::PhysicalData &physicalData,
-            size_t                      coordinateIndex,
-            const Pos                  &displacement
+            Evaluator                      &evaluator,
+            molsys::SimulationBox          &simulationBox,
+            physicalData::PhysicalData     &physicalData,
+            intraNonBonded::IntraNonBonded &intraNonBonded,
+            size_t                          coordinateIndex,
+            const Pos                      &displacement
         )
         {
             utilities::throwIfInterrupted();
 
             displaceCoordinate(simulationBox, coordinateIndex, displacement);
-            evaluator.evaluate(physicalData);
+            evaluator.evaluate(physicalData, simulationBox, intraNonBonded);
             const auto forces = simulationBox.flattenForces();
             displaceCoordinate(simulationBox, coordinateIndex, -displacement);
 
@@ -139,11 +140,13 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      * @param physicalData
+     * @param intraNonBonded
      */
     Hessian CentralForceDifferenceHessianBuilder::build(
-        Evaluator                  &evaluator,
-        molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        Evaluator                      &evaluator,
+        molsys::SimulationBox          &simulationBox,
+        physicalData::PhysicalData     &physicalData,
+        intraNonBonded::IntraNonBonded &intraNonBonded
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -164,6 +167,7 @@ namespace opt
                 evaluator,
                 simulationBox,
                 physicalData,
+                intraNonBonded,
                 col,
                 displacement
             );
@@ -171,6 +175,7 @@ namespace opt
                 evaluator,
                 simulationBox,
                 physicalData,
+                intraNonBonded,
                 col,
                 -displacement
             );
@@ -182,7 +187,7 @@ namespace opt
             _restorePositions(simulationBox, originalPositions);
         }
 
-        evaluator.evaluate(physicalData);
+        evaluator.evaluate(physicalData, simulationBox, intraNonBonded);
         symmetrize(hessian);
 
         return hessian;
@@ -195,11 +200,14 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      * @param physicalData
+     * @param intraNonBonded The intra-non-bonded interactions to be considered
+     * during the Hessian evaluation.
      */
     Hessian ForwardForceDifferenceHessianBuilder::build(
-        Evaluator                  &evaluator,
-        molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        Evaluator                      &evaluator,
+        molsys::SimulationBox          &simulationBox,
+        physicalData::PhysicalData     &physicalData,
+        intraNonBonded::IntraNonBonded &intraNonBonded
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -212,7 +220,7 @@ namespace opt
         );
 
         const auto originalPositions = simulationBox.getPositions();
-        evaluator.evaluate(physicalData);
+        evaluator.evaluate(physicalData, simulationBox, intraNonBonded);
         const auto forces0 = simulationBox.flattenForces();
 
         const auto displacement = _getDisplacement();
@@ -223,6 +231,7 @@ namespace opt
                 evaluator,
                 simulationBox,
                 physicalData,
+                intraNonBonded,
                 col,
                 displacement
             );
@@ -233,7 +242,7 @@ namespace opt
             _restorePositions(simulationBox, originalPositions);
         }
 
-        evaluator.evaluate(physicalData);
+        evaluator.evaluate(physicalData, simulationBox, intraNonBonded);
         symmetrize(hessian);
 
         return hessian;
@@ -246,11 +255,14 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      * @param physicalData
+     * @param intraNonBonded The intra-non-bonded interactions to be considered
+     * during the Hessian evaluation.
      */
     Hessian FivePointForceDifferenceHessianBuilder::build(
-        Evaluator                  &evaluator,
-        molsys::SimulationBox      &simulationBox,
-        physicalData::PhysicalData &physicalData
+        Evaluator                      &evaluator,
+        molsys::SimulationBox          &simulationBox,
+        physicalData::PhysicalData     &physicalData,
+        intraNonBonded::IntraNonBonded &intraNonBonded
     ) const
     {
         const auto numberOfCoordinates = 3 * simulationBox.getNumberOfAtoms();
@@ -272,6 +284,7 @@ namespace opt
                 evaluator,
                 simulationBox,
                 physicalData,
+                intraNonBonded,
                 col,
                 displacement
             );
@@ -279,6 +292,7 @@ namespace opt
                 evaluator,
                 simulationBox,
                 physicalData,
+                intraNonBonded,
                 col,
                 -displacement
             );
@@ -286,6 +300,7 @@ namespace opt
                 evaluator,
                 simulationBox,
                 physicalData,
+                intraNonBonded,
                 col,
                 2.0 * displacement
             );
@@ -293,6 +308,7 @@ namespace opt
                 evaluator,
                 simulationBox,
                 physicalData,
+                intraNonBonded,
                 col,
                 -2.0 * displacement
             );
@@ -309,7 +325,7 @@ namespace opt
             _restorePositions(simulationBox, originalPositions);
         }
 
-        evaluator.evaluate(physicalData);
+        evaluator.evaluate(physicalData, simulationBox, intraNonBonded);
         symmetrize(hessian);
 
         return hessian;
@@ -322,7 +338,8 @@ namespace opt
     Hessian AnalyticHessianBuilder::build(
         Evaluator &evaluator,
         molsys::SimulationBox & /*simulationBox*/,
-        physicalData::PhysicalData & /*physicalData*/
+        physicalData::PhysicalData & /*physicalData*/,
+        intraNonBonded::IntraNonBonded & /*intraNonBonded*/
     ) const
     {
         if (!evaluator.supportsAnalyticHessian())

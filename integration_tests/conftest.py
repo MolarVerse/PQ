@@ -117,7 +117,7 @@ class PQRunError(subprocess.CalledProcessError):
             self.cmd, self.returncode, self.stdout, self.stderr)
 
 
-def execute_pq(input_file):
+def execute_pq(input_file, env=None):
 
     # Path to the pq executable
     folder_path = pathlib.Path(__file__).parent.absolute()
@@ -133,7 +133,8 @@ def execute_pq(input_file):
     # Run the pq executable with the input file
     command = [pq_executable, input_file]
     process = subprocess.run(
-        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+        command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+        env=env)
     stdout = process.stdout
     stderr = process.stderr
 

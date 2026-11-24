@@ -23,7 +23,7 @@
 #ifndef CONFIG__SYSTEM_INFO_HPP
 #define CONFIG__SYSTEM_INFO_HPP
 
-#define COMPILE_VERSION_ _COMPILE_VERSION_
+#include <mstd/types/semver/semver.hpp>
 
 namespace sysinfo
 {
@@ -35,7 +35,6 @@ namespace sysinfo
 
     static constexpr auto* EMAIL        = "97gamjak@gmail.com";
     static constexpr auto* COMPILE_DATE = __DATE__ " " __TIME__;
-    static constexpr auto* VERSION      = COMPILE_VERSION_;
 
 }   // namespace sysinfo
 

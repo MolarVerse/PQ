@@ -35,10 +35,10 @@
 #include "forceFieldSettings.hpp"
 #include "generalSettings.hpp"
 #include "manostatSettings.hpp"
-#include "systemInfo.hpp"
 #include "thermostatSettings.hpp"
 #include "units.hpp"
 #include "vector3d.hpp"
+#include "version.hpp"
 
 /**
  * @brief tests writing timestep metadata
@@ -74,11 +74,14 @@ TEST_F(TestEnergyOutput, columnHeader)
     std::ifstream file("default.en");
     std::string   line;
     std::getline(file, line);
-    EXPECT_EQ(line, std::format("# PQ energy file {}", sysinfo::VERSION));
+    EXPECT_EQ(
+        line,
+        std::format("# PQ energy file {}", CURRENT_VERSION.to_string())
+    );
     std::getline(file, line);
     EXPECT_EQ(
         line,
-        "#SIMULATION-TIME[step] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] "
+        "#STEP[-] TEMPERATURE[K] PRESSURE[bar] E(TOT)[kcal/mol] "
         "E(KIN)[kcal/mol] E(INTRA)[kcal/mol] E(COUL)[kcal/mol] "
         "E(NON-COUL)[kcal/mol] MOMENTUM[amuA/fs] LOOPTIME[s]"
     );
@@ -110,7 +113,7 @@ TEST_F(TestEnergyOutput, columnHeaderOnceAfterMetadata)
     ASSERT_EQ(lines.size(), 5);
     EXPECT_EQ(lines[0], out::energyFileMarker());
     EXPECT_EQ(lines[1], "# timestep = 0.5 fs");
-    EXPECT_TRUE(lines[2].starts_with("#SIMULATION-TIME[step] TEMPERATURE[K] "));
+    EXPECT_TRUE(lines[2].starts_with("#STEP[-] TEMPERATURE[K] "));
     EXPECT_TRUE(lines[3].starts_with("         1\t"));
     EXPECT_TRUE(lines[4].starts_with("         2\t"));
 }
@@ -160,7 +163,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
     std::getline(enFile, header);
     std::getline(enFile, data);
 
-    ASSERT_TRUE(header.starts_with("#SIMULATION-TIME[step] "));
+    ASSERT_TRUE(header.starts_with("#STEP[-] "));
     const auto tokens = splitWords(header.substr(1));
 
     EXPECT_EQ(tokens.size(), splitWords(data).size());
@@ -190,7 +193,7 @@ TEST_F(TestEnergyOutput, columnHeaderMatchesDataAndInfo)
     }
 
     ASSERT_EQ(tokens.size(), infoLabels.size());
-    EXPECT_EQ(tokens[0], "SIMULATION-TIME[step]");
+    EXPECT_EQ(tokens[0], "STEP[-]");
     EXPECT_EQ(infoLabels[0], "SIMULATION-TIME[ps]");
 
     for (std::size_t index = 1; index < tokens.size(); ++index)

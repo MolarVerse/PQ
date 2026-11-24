@@ -1,0 +1,1 @@
+- Turn on the `noInClassMemberDefinition` devops check and define member functions outside their class.

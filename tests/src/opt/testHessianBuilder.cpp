@@ -31,6 +31,7 @@
 #include "evaluator.hpp"
 #include "exceptions.hpp"
 #include "hessianBuilder.hpp"
+#include "intraNonBonded.hpp"
 #include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
@@ -53,64 +54,88 @@ namespace
             const Settings                   &settings,
             const std::vector<ForceConstant> &forceConstants,
             bool                              analyticSupported
-        )
-            : opt::Evaluator(settings),
-              _forceConstants(forceConstants),
-              _analyticSupported(analyticSupported)
-        {
-        }
+        );
         explicit HarmonicEvaluator(
             const Settings                   &settings,
             const std::vector<ForceConstant> &forceConstants
-        )
-            : HarmonicEvaluator(settings, forceConstants, false)
-        {
-        }
+        );
 
         [[nodiscard]]
-        std::shared_ptr<Evaluator> clone() const override
-        {
-            return std::make_shared<HarmonicEvaluator>(*this);
-        }
+        std::shared_ptr<Evaluator> clone() const override;
 
-        void evaluate(physicalData::PhysicalData & /*physicalData*/) override
-        {
-            auto &simulationBox = _getSimulationBox();
+        void evaluate(
+            physicalData::PhysicalData & /*physicalData*/,
+            molsys::SimulationBox & /*simulationBox*/,
+            intraNonBonded::IntraNonBonded & /*intraNonBonded*/
+        ) override;
 
-            for (size_t atomIndex = 0;
-                 atomIndex < simulationBox.getNumberOfAtoms();
-                 ++atomIndex)
-            {
-                auto      &atom     = simulationBox.getAtom(atomIndex);
-                const auto position = atom.getPosition();
-                const auto offset   = 3 * atomIndex;
-                atom.setForce(
-                    {-_forceConstants[offset] * position[0],
-                     -_forceConstants[offset + 1] * position[1],
-                     -_forceConstants[offset + 2] * position[2]}
-                );
-            }
-        }
+        [[nodiscard]] bool supportsAnalyticHessian() const override;
 
-        [[nodiscard]] bool supportsAnalyticHessian() const override
-        {
-            return _analyticSupported;
-        }
-
-        [[nodiscard]] Hessian calculateAnalyticHessian() override
-        {
-            return {
-                {2.0 * kcal_per_mol / angstrom / angstrom,
-                 4.0 * kcal_per_mol / angstrom / angstrom},
-                {6.0 * kcal_per_mol / angstrom / angstrom,
-                 8.0 * kcal_per_mol / angstrom / angstrom}
-            };
-        }
+        [[nodiscard]] Hessian calculateAnalyticHessian() override;
     };
 
-    std::shared_ptr<molsys::SimulationBox> makeSimulationBox()
+    HarmonicEvaluator::HarmonicEvaluator(
+        const Settings                   &settings,
+        const std::vector<ForceConstant> &forceConstants,
+        bool                              analyticSupported
+    )
+        : opt::Evaluator(settings),
+          _forceConstants(forceConstants),
+          _analyticSupported(analyticSupported)
     {
-        auto box = std::make_shared<molsys::SimulationBox>();
+    }
+
+    HarmonicEvaluator::HarmonicEvaluator(
+        const Settings                   &settings,
+        const std::vector<ForceConstant> &forceConstants
+    )
+        : HarmonicEvaluator(settings, forceConstants, false)
+    {
+    }
+
+    std::shared_ptr<opt::Evaluator> HarmonicEvaluator::clone() const
+    {
+        return std::make_shared<HarmonicEvaluator>(*this);
+    }
+
+    void HarmonicEvaluator::evaluate(
+        physicalData::PhysicalData & /*physicalData*/,
+        molsys::SimulationBox &simulationBox,
+        intraNonBonded::IntraNonBonded & /*intraNonBonded*/
+    )
+    {
+        for (size_t atomIndex = 0; atomIndex < simulationBox.getNumberOfAtoms();
+             ++atomIndex)
+        {
+            auto      &atom     = simulationBox.getAtom(atomIndex);
+            const auto position = atom.getPosition();
+            const auto offset   = 3 * atomIndex;
+            atom.setForce(
+                {-_forceConstants[offset] * position[0],
+                 -_forceConstants[offset + 1] * position[1],
+                 -_forceConstants[offset + 2] * position[2]}
+            );
+        }
+    }
+
+    bool HarmonicEvaluator::supportsAnalyticHessian() const
+    {
+        return _analyticSupported;
+    }
+
+    Hessian HarmonicEvaluator::calculateAnalyticHessian()
+    {
+        return {
+            {2.0 * kcal_per_mol / angstrom / angstrom,
+             4.0 * kcal_per_mol / angstrom / angstrom},
+            {6.0 * kcal_per_mol / angstrom / angstrom,
+             8.0 * kcal_per_mol / angstrom / angstrom}
+        };
+    }
+
+    molsys::SimulationBox makeSimulationBox()
+    {
+        molsys::SimulationBox box;
 
         auto atom0 = std::make_shared<molsys::Atom>();
         atom0->setPosition(linalg::Vec3D{1.0, -2.0, 3.0} * angstrom);
@@ -118,8 +143,8 @@ namespace
         auto atom1 = std::make_shared<molsys::Atom>();
         atom1->setPosition(linalg::Vec3D{-4.0, 5.0, -6.0} * angstrom);
 
-        box->addAtom(atom0);
-        box->addAtom(atom1);
+        box.addAtom(atom0);
+        box.addAtom(atom1);
 
         return box;
     }
@@ -196,22 +221,23 @@ TEST(TestHessianBuilder, forceDifferenceBuildersRecoverHarmonicHessian)
              ),
          })
     {
-        auto              box = makeSimulationBox();
-        Settings          settings;
-        HarmonicEvaluator evaluator(settings, diagonal);
-        evaluator.setSimulationBox(box);
+        auto                           box = makeSimulationBox();
+        Settings                       settings;
+        HarmonicEvaluator              evaluator(settings, diagonal);
+        intraNonBonded::IntraNonBonded intraNonBonded;
 
         physicalData::PhysicalData physicalData;
-        const auto hessian = builder->build(evaluator, *box, physicalData);
+        const auto                 hessian =
+            builder->build(evaluator, box, physicalData, intraNonBonded);
 
         expectDiagonalHessian(hessian, diagonal);
-        expectPositionsRestored(*box);
+        expectPositionsRestored(box);
         EXPECT_EQ(
-            box->getAtom(0).getForce(),
+            box.getAtom(0).getForce(),
             linalg::Vec3D(-1.0, 4.0, -9.0) * kcal_per_mol / angstrom
         );
         EXPECT_EQ(
-            box->getAtom(1).getForce(),
+            box.getAtom(1).getForce(),
             linalg::Vec3D(16.0, -25.0, 36.0) * kcal_per_mol / angstrom
         );
     }
@@ -222,19 +248,19 @@ TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
 {
     const pybind11::scoped_interpreter guard{};
 
-    auto                       box = makeSimulationBox();
-    Settings                   settings;
-    physicalData::PhysicalData physicalData;
-    HarmonicEvaluator          evaluator(
+    auto                           box = makeSimulationBox();
+    Settings                       settings;
+    physicalData::PhysicalData     physicalData;
+    intraNonBonded::IntraNonBonded intraNonBonded;
+    HarmonicEvaluator              evaluator(
         settings,
         {1.0 * kcal_per_mol / angstrom / angstrom,
-                  2.0 * kcal_per_mol / angstrom / angstrom,
-                  3.0 * kcal_per_mol / angstrom / angstrom,
-                  4.0 * kcal_per_mol / angstrom / angstrom,
-                  5.0 * kcal_per_mol / angstrom / angstrom,
-                  6.0 * kcal_per_mol / angstrom / angstrom}
+                      2.0 * kcal_per_mol / angstrom / angstrom,
+                      3.0 * kcal_per_mol / angstrom / angstrom,
+                      4.0 * kcal_per_mol / angstrom / angstrom,
+                      5.0 * kcal_per_mol / angstrom / angstrom,
+                      6.0 * kcal_per_mol / angstrom / angstrom}
     );
-    evaluator.setSimulationBox(box);
 
     const auto builder =
         opt::CentralForceDifferenceHessianBuilder(1.0e-4 * angstrom);
@@ -243,7 +269,9 @@ TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
 
     try
     {
-        static_cast<void>(builder.build(evaluator, *box, physicalData));
+        static_cast<void>(
+            builder.build(evaluator, box, physicalData, intraNonBonded)
+        );
         FAIL() << "pending SIGINT was not reported";
     }
     catch (const pybind11::error_already_set &error)
@@ -251,29 +279,29 @@ TEST(TestHessianBuilder, pendingSigintStopsForceDifferenceBuilder)
         EXPECT_TRUE(error.matches(PyExc_KeyboardInterrupt));
     }
 
-    expectPositionsRestored(*box);
+    expectPositionsRestored(box);
 }
 #endif
 
 TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 {
-    auto                       box = makeSimulationBox();
-    Settings                   settings;
-    physicalData::PhysicalData physicalData;
-    HarmonicEvaluator          evaluator(
+    auto                           box = makeSimulationBox();
+    Settings                       settings;
+    physicalData::PhysicalData     physicalData;
+    intraNonBonded::IntraNonBonded intraNonBonded;
+    HarmonicEvaluator              evaluator(
         settings,
         {1.0 * kcal_per_mol / angstrom / angstrom,
-                  2.0 * kcal_per_mol / angstrom / angstrom,
-                  3.0 * kcal_per_mol / angstrom / angstrom,
-                  4.0 * kcal_per_mol / angstrom / angstrom,
-                  5.0 * kcal_per_mol / angstrom / angstrom,
-                  6.0 * kcal_per_mol / angstrom / angstrom}
+                      2.0 * kcal_per_mol / angstrom / angstrom,
+                      3.0 * kcal_per_mol / angstrom / angstrom,
+                      4.0 * kcal_per_mol / angstrom / angstrom,
+                      5.0 * kcal_per_mol / angstrom / angstrom,
+                      6.0 * kcal_per_mol / angstrom / angstrom}
     );
-    evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
     EXPECT_THROW_MSG(
-        (void) builder.build(evaluator, *box, physicalData),
+        (void) builder.build(evaluator, box, physicalData, intraNonBonded),
         exc::UserInputException,
         "The selected evaluator does not support analytic Hessians."
     );
@@ -281,23 +309,24 @@ TEST(TestHessianBuilder, analyticBuilderRequiresEvaluatorSupport)
 
 TEST(TestHessianBuilder, analyticBuilderSymmetrizesEvaluatorHessian)
 {
-    auto                       box = makeSimulationBox();
-    Settings                   settings;
-    physicalData::PhysicalData physicalData;
-    HarmonicEvaluator          evaluator(
+    auto                           box = makeSimulationBox();
+    Settings                       settings;
+    physicalData::PhysicalData     physicalData;
+    intraNonBonded::IntraNonBonded intraNonBonded;
+    HarmonicEvaluator              evaluator(
         settings,
         {1.0 * kcal_per_mol / angstrom / angstrom,
-                  2.0 * kcal_per_mol / angstrom / angstrom,
-                  3.0 * kcal_per_mol / angstrom / angstrom,
-                  4.0 * kcal_per_mol / angstrom / angstrom,
-                  5.0 * kcal_per_mol / angstrom / angstrom,
-                  6.0 * kcal_per_mol / angstrom / angstrom},
+                      2.0 * kcal_per_mol / angstrom / angstrom,
+                      3.0 * kcal_per_mol / angstrom / angstrom,
+                      4.0 * kcal_per_mol / angstrom / angstrom,
+                      5.0 * kcal_per_mol / angstrom / angstrom,
+                      6.0 * kcal_per_mol / angstrom / angstrom},
         true
     );
-    evaluator.setSimulationBox(box);
     opt::AnalyticHessianBuilder builder;
 
-    const auto hessian = builder.build(evaluator, *box, physicalData);
+    const auto hessian =
+        builder.build(evaluator, box, physicalData, intraNonBonded);
 
     ASSERT_EQ(hessian.size(), 2U);
     ASSERT_EQ(hessian[0].size(), 2U);
