@@ -110,32 +110,59 @@ namespace input
     {
         using Meta = mstd::enum_meta_t<T>;
 
+        const auto  names  = Meta::names();
+        const auto  values = Meta::values_view();
+        const auto& table  = Meta::aliases();
+
         std::vector<std::string> allowed;
-        for (const auto& spelling : Meta::spellings())
+        for (std::size_t index = 0; index < Meta::size; ++index)
         {
-            const auto& name  = spelling.text;
-            const auto& value = spelling.value;
+            const auto value = values[index];
 
             if (std::ranges::find(notAllowed, value) != notAllowed.end())
                 continue;
 
-            const auto lowerName = utilities::toLowerCopy(name);
+            // the name of the value; every other accepted spelling (the
+            // enumerator itself if a name overrides it, and the aliases)
+            // follows in parentheses
+            auto entry = utilities::toLowerCopy(std::string(names[index]));
 
-            if (std::ranges::find(allowed, lowerName) != allowed.end())
-                continue;
+            std::vector<std::string> others;
+            const auto addOther = [&entry, &others](std::string_view text)
+            {
+                auto lower = utilities::toLowerCopy(std::string(text));
 
-            allowed.push_back(lowerName);
+                if (lower != entry &&
+                    std::ranges::find(others, lower) == others.end())
+                    others.push_back(std::move(lower));
+            };
+
+            addOther(Meta::originalNames[index]);
+            for (const auto& alias : table)
+                if (alias.value == value)
+                    addOther(alias.text);
+
+            if (!others.empty())
+                entry += " (" + mstd::join(others, ", ") + ")";
+
+            allowed.push_back(entry);
         }
 
         return "Allowed values: " + mstd::join(allowed, ", ");
     }
 
-    /**
-     * @brief describes the valid domain of the unsigned integral type for error
-     * messages
-     *
-     * @return a string describing the valid domain
-     */
+    template <std::signed_integral T>
+    requires(!std::same_as<T, bool>)
+    std::string Converter<T>::describeDomain(const std::vector<T>& notAllowed)
+    {
+        std::string message = "Value must be an integer";
+
+        for (const auto& value : notAllowed)
+            message += ", not allowed: " + std::to_string(value);
+
+        return message;
+    }
+
     template <std::unsigned_integral T>
     requires(!std::same_as<T, bool>)
     std::string Converter<T>::describeDomain(const std::vector<T>& notAllowed)
@@ -163,8 +190,8 @@ namespace input
     /**
      * @brief describes the valid domain of T for error messages
      *
-     * @details falls back to a generic placeholder for types without a
-     * describeDomain() (i.e. everything except has_enum_meta<T>)
+     * @details falls back to a generic sentence for types without a
+     * describeDomain() of their own
      *
      * @tparam T
      */
@@ -173,7 +200,7 @@ namespace input
         const std::vector<T>& notAllowed
     )
     {
-        std::string message = "<value>";
+        std::string message = "Value has an invalid format";
         for (const auto& value : notAllowed)
             message += std::format(", not allowed: {}", value);
 

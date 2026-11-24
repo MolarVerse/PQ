@@ -103,6 +103,11 @@ namespace input
 
         [[nodiscard]]
         static std::optional<double> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain(
+            const std::vector<double> &notAllowed
+        );
     };
 
     /**
@@ -139,6 +144,9 @@ namespace input
 
         [[nodiscard]]
         static std::optional<T> tryParse(std::string_view raw);
+
+        [[nodiscard]]
+        static std::string describeDomain(const std::vector<T> &notAllowed);
     };
 
     /**

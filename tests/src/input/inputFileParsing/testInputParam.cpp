@@ -22,8 +22,10 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <cstdint>
 #include <mstd/enum.hpp>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -42,6 +44,33 @@
     X(qm)                \
     X(md)
 MSTD_ENUM(TestJobType, std::uint8_t, TESTENUM_LIST);
+
+// A second test enum with aliases for two of its values and a name that
+// overrides an enumerator (as SlakosType does with "3ob").
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define TESTALIASED_LIST(X) \
+    X(NONE)                 \
+    X(THREEOB)              \
+    X(VERLET)               \
+    X(OTHER)
+MSTD_ENUM(TestAliased, std::uint8_t, TESTALIASED_LIST);
+
+template <>
+struct mstd::EnumAliases<TestAliased>
+{
+    static constexpr auto value = mstd::makeAliases<TestAliased>(
+        {{"v_verlet", TestAliased::VERLET},
+         {"VV", TestAliased::VERLET},
+         {"nada", TestAliased::NONE}}
+    );
+};
+
+template <>
+struct mstd::EnumNames<TestAliased>
+{
+    static constexpr auto value =
+        mstd::makeNames<TestAliased>({{TestAliased::THREEOB, "3ob"}});
+};
 
 /**
  * @brief tests Converter<double>::tryParse
@@ -88,6 +117,116 @@ TEST(TestConverter, tryParseEnum)
     EXPECT_EQ(input::Converter<TestJobType>::tryParse("mm"), TestJobType::mm);
     EXPECT_EQ(input::Converter<TestJobType>::tryParse("qm"), TestJobType::qm);
     EXPECT_EQ(input::Converter<TestJobType>::tryParse("bogus"), std::nullopt);
+}
+
+/**
+ * @brief the aliases of a value are listed in parentheses behind its name, the
+ * enumerator that a name overrides is one of them
+ *
+ */
+TEST(TestConverter, describeDomainGroupsTheAliasesOfAValue)
+{
+    EXPECT_EQ(
+        input::Converter<TestAliased>::describeDomain({}),
+        "Allowed values: none (nada), 3ob (threeob), verlet (v_verlet, vv), "
+        "other"
+    );
+}
+
+/**
+ * @brief an enum without aliases is a plain list
+ *
+ */
+TEST(TestConverter, describeDomainWithoutAliasesIsAPlainList)
+{
+    EXPECT_EQ(
+        input::Converter<TestJobType>::describeDomain({}),
+        "Allowed values: mm, qm, md"
+    );
+}
+
+/**
+ * @brief a value that is not allowed disappears with its aliases
+ *
+ */
+TEST(TestConverter, describeDomainLeavesOutValuesThatAreNotAllowed)
+{
+    EXPECT_EQ(
+        input::Converter<TestAliased>::describeDomain({TestAliased::VERLET}),
+        "Allowed values: none (nada), 3ob (threeob), other"
+    );
+}
+
+/**
+ * @brief every spelling that the message lists is accepted by the parser, and
+ * the message lists every accepted spelling
+ *
+ */
+TEST(TestConverter, describeDomainListsExactlyTheAcceptedSpellings)
+{
+    const auto message = input::Converter<TestAliased>::describeDomain({});
+
+    auto text = message.substr(std::string("Allowed values: ").size());
+    for (const char separator : {'(', ')', ','})
+        std::ranges::replace(text, separator, ' ');
+
+    std::istringstream stream(text);
+    std::string        spelling;
+    size_t             count = 0;
+
+    while (stream >> spelling)
+    {
+        EXPECT_TRUE(input::Converter<TestAliased>::tryParse(spelling))
+            << spelling;
+        ++count;
+    }
+
+    // 4 values, 1 overridden name, 3 aliases
+    EXPECT_EQ(count, 4 + 1 + 3);
+}
+
+/**
+ * @brief the messages for numbers say what is expected instead of a
+ * placeholder
+ *
+ */
+TEST(TestConverter, describeDomainOfNumbers)
+{
+    EXPECT_EQ(
+        input::Converter<double>::describeDomain({}),
+        "Value must be a number"
+    );
+    EXPECT_EQ(
+        input::Converter<double>::describeDomain({0.0, 2.5}),
+        "Value must be a number, not allowed: 0, not allowed: 2.5"
+    );
+    EXPECT_EQ(
+        input::Converter<int>::describeDomain({}),
+        "Value must be an integer"
+    );
+    EXPECT_EQ(
+        input::Converter<int>::describeDomain({-1}),
+        "Value must be an integer, not allowed: -1"
+    );
+}
+
+/**
+ * @brief a value of the wrong type for a double key gets the same message
+ *
+ */
+TEST(TestInputKey, invalidDoubleSaysWhatIsExpected)
+{
+    input::InputRegistry registry;
+    registry.registerKey<double>(
+        input::KeyRegistry<double>{.metadata = {.name = "tau", .title = "Tau"}}
+    );
+
+    EXPECT_THROW_MSG(
+        registry.parseLine({"tau", "=", "abc"}, 3),
+        exc::InputFileException,
+        "Invalid value \"abc\" for key \"tau\" at line 3 in input file. "
+        "Value must be a number"
+    );
 }
 
 /**

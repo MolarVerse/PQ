@@ -256,9 +256,9 @@ TEST_F(TestInputFileReader, ParseIsotropy)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"isotropy\" at line 0 in input "
-        "file. Allowed values: isotropic, semi_isotropic_xy, "
-        "semi_isotropic_xz, semi_isotropic_yz, anisotropic, full_anisotropic, "
-        "xy, yx, xz, zx, yz, zy"
+        "file. Allowed values: isotropic, semi_isotropic_xy (xy, yx), "
+        "semi_isotropic_xz (xz, zx), semi_isotropic_yz (yz, zy), anisotropic, "
+        "full_anisotropic"
     );
 }
 
@@ -352,6 +352,7 @@ TEST_F(TestInputFileReader, ParseFixedAxis)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"fixed_axis\" at line 0 in input "
-        "file. Allowed values: none, x, y, z, xy, xz, yz, all, yx, zx, zy, xyz"
+        "file. Allowed values: none, x, y, z, xy (yx), xz (zx), yz (zy), all "
+        "(xyz)"
     );
 }
