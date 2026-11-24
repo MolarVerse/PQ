@@ -196,9 +196,7 @@ TEST_F(TestMShakeReader, testProcessAtomLines)
 
 TEST_F(TestMShakeReader, testReadMemberFunction)
 {
-    _settings.fileSettings.setMShakeFileNameByUser(
-        "data/mshakeReader/mshake.dat"
-    );
+    _settings.fileSettings.set_mShakeFileByUser("data/mshakeReader/mshake.dat");
 
     auto molType = molsys::MoleculeType(MolType{1});
     molType.addAtomName("H");
