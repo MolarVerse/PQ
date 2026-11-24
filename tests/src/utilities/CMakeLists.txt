@@ -9,6 +9,10 @@ set(source_files
     testSystemMemory.cpp
 )
 
+if(BUILD_WITH_PYBIND11)
+    list(APPEND source_files testEmbeddedPython.cpp)
+endif()
+
 foreach(source_file ${source_files})
     get_filename_component(test_name ${source_file} NAME_WE)
     add_executable(${test_name} ${source_file})
@@ -33,6 +37,14 @@ foreach(source_file ${source_files})
 endforeach()
 
 target_link_libraries(testInterrupt PRIVATE interrupt)
+
+if(BUILD_WITH_PYBIND11)
+    target_link_libraries(testEmbeddedPython PRIVATE embeddedPython interrupt)
+    target_compile_definitions(testEmbeddedPython
+        PRIVATE
+        PQ_PYTHON_EXECUTABLE="${Python3_EXECUTABLE}"
+    )
+endif()
 target_link_libraries(testSerialWorker PRIVATE serialWorker)
 target_link_libraries(testMathUtilities PRIVATE config_headers)
 

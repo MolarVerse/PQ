@@ -24,12 +24,20 @@
 #define UTILITIES__EXECUTABLE_PATH_HPP
 
 #include <filesystem>
+#include <optional>
+#include <string_view>
 
 namespace utilities
 {
     [[nodiscard]] std::filesystem::path executablePath();
     [[nodiscard]] std::filesystem::path installedDataPath(
         const std::filesystem::path &relativePath
+    );
+
+    [[nodiscard]] bool isExecutableFile(const std::filesystem::path &path);
+    [[nodiscard]] std::optional<std::filesystem::path> findInSearchPath(
+        std::string_view             searchPath,
+        const std::filesystem::path &programName
     );
 }   // namespace utilities
 
