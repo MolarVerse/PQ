@@ -164,8 +164,8 @@ namespace QM
             charge,
             reset ? 1 : 0,
             usePointCharges,
-            utilities::shellQuote(fileSettings.getOrcaFileName()),
-            utilities::shellQuote(fileSettings.getPointChargeFileName())
+            utilities::shellQuote(fileSettings.get_orcaFile()),
+            utilities::shellQuote(fileSettings.get_pointChargeFile())
         );
         _executeCommand(command, "ORCA");
 

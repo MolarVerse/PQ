@@ -811,9 +811,7 @@ TEST_F(TestGuffDatReader, readGuffDat)
     _guffDatReader->setFilename("data/guffDatReader/guff.dat");
     _settings.generalSettings.setJobtypeByUser(JobType::MM_MD);
     _settings.forceFieldSettings.setTypeByUser(ForceFieldType::OFF);
-    _settings.fileSettings.setGuffDatFileNameByUser(
-        "data/guffDatReader/guff.dat"
-    );
+    _settings.fileSettings.set_guffDatFileByUser("data/guffDatReader/guff.dat");
     EXPECT_NO_THROW(input::guffdat::readGuffDat(*_engine));
 
     auto &potential = dynamic_cast<pot::GuffNonCoulomb &>(

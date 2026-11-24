@@ -196,7 +196,7 @@ namespace input::topology
                 "Topology file needed for requested simulation setup"
             );
 
-        const auto filename = fileSettings.getTopologyFileName();
+        const auto filename = fileSettings.get_topologyFile();
 
         out::StdoutOutput::writeRead("Topology File", filename);
         engine.getLogOutput().writeRead("Topology File", filename);

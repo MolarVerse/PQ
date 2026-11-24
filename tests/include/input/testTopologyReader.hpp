@@ -69,11 +69,11 @@ inline void TestTopologyReader::SetUp()
     _engine->getSimulationBox().addMolecule(molecule1);
     _engine->getSimulationBox().addMolecule(molecule2);
 
-    _settings.fileSettings.setTopologyFileNameByUser(
+    _settings.fileSettings.set_topologyFileByUser(
         "data/topologyReader/topology.top"
     );
     _topologyReader = std::make_unique<input::topology::TopologyReader>(
-        _settings.fileSettings.getTopologyFileName(),
+        _settings.fileSettings.get_topologyFile(),
         *_engine
     );
 }

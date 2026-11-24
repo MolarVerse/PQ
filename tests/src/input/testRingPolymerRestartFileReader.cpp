@@ -89,7 +89,7 @@ class TestRingPolymerRestartFileReader : public ::testing::Test
             JobType::RING_POLYMER_QM_MD
         );
         _settings->ringPolymerSettings.setNumberOfBeadsByUser(2);
-        _settings->fileSettings.setRingPolymerStartFileNameByUser(FILE_NAME);
+        _settings->fileSettings.set_rpmdStartFileByUser(FILE_NAME);
         _settings->timings.setNumberOfStepsByUser(1);
 
         _settings->finalize();

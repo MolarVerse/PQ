@@ -179,7 +179,7 @@ TEST_F(TestSetup, constraintsSetupComputesRefBondLengthsForShake)
 TEST_F(TestSetup, constraintsSetupRunsMShakeAndReducesDegreesOfFreedom)
 {
     _settings->constraintSettings.activateMShakeByUser();
-    _settings->fileSettings.setMShakeFileNameByUser(
+    _settings->fileSettings.set_mShakeFileByUser(
         "data/constraintsSetup/mshake.dat"
     );
 

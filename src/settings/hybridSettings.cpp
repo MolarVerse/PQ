@@ -90,8 +90,8 @@ void HybridSettings::finalize(const FileSettings &fileSettings, JobType jobType)
 #ifdef PYTHON_ENABLED
     auto selection = pq_python::select(
         expression,
-        fileSettings.getStartFileName(),
-        fileSettings.getMolDescriptorFileName()
+        fileSettings.get_startFile(),
+        fileSettings.get_molDescriptorFile()
     );
 
     std::ranges::sort(selection);

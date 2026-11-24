@@ -196,8 +196,7 @@ namespace setup
                         "Requesting the use of the \"{}\" intramolecular water "
                         "type model expects the molecules of this moltype not "
                         "to appear in the topology file.",
-                        _engine.getSettings().fileSettings.getTopologyFileName(
-                        ),
+                        _engine.getSettings().fileSettings.get_topologyFile(),
                         bondIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()
@@ -235,8 +234,7 @@ namespace setup
                         "expects the molecules of this moltype not to appear "
                         "in "
                         "the topology file.",
-                        _engine.getSettings().fileSettings.getTopologyFileName(
-                        ),
+                        _engine.getSettings().fileSettings.get_topologyFile(),
                         angleIndex,
                         WaterIntraModelMeta::toString(
                             waterModelSettings.getWaterIntraModel()

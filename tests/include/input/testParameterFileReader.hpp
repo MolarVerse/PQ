@@ -60,7 +60,7 @@ inline void TestParameterFileReader::SetUp()
     _engine->getSimulationBox().addMolecule(molecule1);
     _engine->getSimulationBox().addMolecule(molecule2);
 
-    _settings.fileSettings.setParameterFileNameByUser(
+    _settings.fileSettings.set_parameterFileByUser(
         "data/parameterFileReader/param.param"
     );
     _parameterFileReader =
