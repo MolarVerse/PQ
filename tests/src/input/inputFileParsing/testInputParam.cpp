@@ -217,17 +217,14 @@ TEST(TestConverter, describeDomainOfNumbers)
 TEST(TestInputKey, invalidDoubleSaysWhatIsExpected)
 {
     input::InputRegistry registry;
-    registry.registerKey<double>(
-        input::KeyRegistry<double>{
-            .metadata =
-                input::KeyMetadata{
-                    .name        = "tau",
-                    .title       = "Tau",
-                    .description = "",
-                    .unit        = ""
-                }
+    registry.registerKey<double>(input::KeyRegistry<double>{
+        .metadata = input::KeyMetadata{
+            .name        = "tau",
+            .title       = "Tau",
+            .description = "",
+            .unit        = ""
         }
-    );
+    });
 
     EXPECT_THROW_MSG(
         registry.parseLine({"tau", "=", "abc"}, 3),
