@@ -167,7 +167,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.fennolSettings,
             settings.dftbSettings,
             settings.xtbSettings,
-            settings.externalQMSettings
+            settings.externalQMSettings,
+            settings.generalSettings
         ),
         exc::CompileTimeException,
         "The ASE xTB QM method was requested but ASE was not enabled at "
@@ -182,7 +183,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.fennolSettings,
             settings.dftbSettings,
             settings.xtbSettings,
-            settings.externalQMSettings
+            settings.externalQMSettings,
+            settings.generalSettings
         ),
         exc::CompileTimeException,
         "A MACE type QM method was requested but ASE was not enabled at "
@@ -197,7 +199,8 @@ TEST(TestQMRunnerManager, aseMethodsNeedAseAtCompileTime)
             settings.fennolSettings,
             settings.dftbSettings,
             settings.xtbSettings,
-            settings.externalQMSettings
+            settings.externalQMSettings,
+            settings.generalSettings
         ),
         exc::CompileTimeException,
         "The ASE FeNNol QM method was requested but ASE was not enabled at "
