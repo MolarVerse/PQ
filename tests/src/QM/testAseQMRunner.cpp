@@ -219,8 +219,7 @@ namespace
      */
     [[noreturn]] void constructRunnerAndExit()
     {
-        Settings       settings;
-        FennolSettings fennolSettings;
+        Settings settings;
         settings.qmSettings.setQMMethodByUser(QMMethod::FENNOL);
         const auto exitCode = [] { return ::Py_IsInitialized() != 0 ? 0 : 1; };
 
@@ -228,7 +227,8 @@ namespace
         {
             const QM::AseFennolRunner runner(
                 settings.qmSettings,
-                fennolSettings
+                settings.fennolSettings,
+                settings.generalSettings
             );
         }
         catch (const std::exception &)
