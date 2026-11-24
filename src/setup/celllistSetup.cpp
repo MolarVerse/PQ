@@ -77,7 +77,7 @@ namespace setup
             );
             cellList.resizeCells();
             cellList.setup(
-                _engine.getSimulationBox(),
+                _engine.get_simulationBox(),
                 _engine.getSettings().potentialSettings.getCoulombRadiusCutoff()
             );
             _engine.makePotential(

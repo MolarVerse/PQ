@@ -53,8 +53,8 @@ namespace
         molecule.setMoltype(molType);
         molecule.addAtom(atom);
 
-        engine.getSimulationBox().addAtom(atom);
-        engine.getSimulationBox().addMolecule(molecule);
+        engine.get_simulationBox().addAtom(atom);
+        engine.get_simulationBox().addMolecule(molecule);
     }
 
     void configureValidHybridSettings(
@@ -78,7 +78,7 @@ namespace
         molsys::OrthorhombicBox orthoBox{
             {40.0 * angstrom, 40.0 * angstrom, 40.0 * angstrom}
         };
-        engine.getSimulationBox().setBox(orthoBox, false);
+        engine.get_simulationBox().setBox(orthoBox, false);
     }
 
 }   // namespace
@@ -131,9 +131,9 @@ TEST_F(TestSetup, setupHybridConfiguresExplicitLists)
     addSingleAtomMolecule(*_engine, MolType{3});
 
     EXPECT_NO_THROW(setup::HybridSetup{*_engine}.setup());
-    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(0).isForcedCore());
-    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(1).isForcedLayer());
-    EXPECT_TRUE(_engine->getSimulationBox().getMolecule(2).isForcedOuter());
+    EXPECT_TRUE(_engine->get_simulationBox().getMolecule(0).isForcedCore());
+    EXPECT_TRUE(_engine->get_simulationBox().getMolecule(1).isForcedLayer());
+    EXPECT_TRUE(_engine->get_simulationBox().getMolecule(2).isForcedOuter());
 }
 
 TEST_F(TestSetup, hybridSetupRejectsUnsupportedQmMethods)
@@ -170,7 +170,7 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
     molsys::OrthorhombicBox orthoBox{
         {40.0 * angstrom, 40.0 * angstrom, 40.0 * angstrom}
     };
-    _engine->getSimulationBox().setBox(orthoBox, false);
+    _engine->get_simulationBox().setBox(orthoBox, false);
     setup::HybridSetup setup{*_engine};
 
     _settings->hybridSettings.setCoreRadiusByUser(5.0 * angstrom);
@@ -223,7 +223,7 @@ TEST_F(TestSetup, hybridSetupValidatesZoneRadii)
 
 TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
 {
-    _engine->getSimulationBox().addMoleculeType(
+    _engine->get_simulationBox().addMoleculeType(
         molsys::MoleculeType(MolType{0})
     );
     _settings->hybridSettings.setUseQMChargesByUser(false);
@@ -244,7 +244,7 @@ TEST_F(TestSetup, hybridSetupRejectsMmChargesForMoltypeZero)
 
 TEST_F(TestSetup, hybridSetupRejectsMoltypeZeroWithReferenceEnergies)
 {
-    auto &simBox = _engine->getSimulationBox();
+    auto &simBox = _engine->get_simulationBox();
     simBox.addMoleculeType(molsys::MoleculeType(MolType{0}));
     setup::HybridSetup setup{*_engine};
 

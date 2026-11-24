@@ -226,7 +226,7 @@ namespace input::restartFile
         size_t                   &lineNumber
     )
     {
-        auto &simulationBox = engine.getSimulationBox();
+        auto &simulationBox = engine.get_simulationBox();
 
         _checkNumberOfLineArguments(lineElements, lineNumber);
 

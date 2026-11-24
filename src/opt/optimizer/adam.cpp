@@ -76,11 +76,15 @@ namespace opt
      *
      * @param learningRate
      * @param step
+     * @param simulationBox The simulation box containing the atoms to be
+     * updated during this optimization step.
      */
-    void Adam::update(double learningRate, size_t step)
+    void Adam::update(
+        double                 learningRate,
+        size_t                 step,
+        molsys::SimulationBox& simulationBox
+    )
     {
-        auto& simulationBox = _getSimulationBox();
-
         for (size_t i = 0; i < simulationBox.getNumberOfAtoms(); ++i)
         {
             auto&      atom  = simulationBox.getAtoms()[i];

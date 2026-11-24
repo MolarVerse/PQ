@@ -23,14 +23,9 @@
 #include "evaluator.hpp"
 
 #include "celllist.hpp"
-#include "constraints.hpp"
 #include "exceptions.hpp"
 #include "forceFieldClass.hpp"
-#include "intraNonBonded.hpp"
-#include "physicalData.hpp"
 #include "potential.hpp"
-#include "simulationBox.hpp"
-#include "virial.hpp"
 
 namespace opt
 {
@@ -94,30 +89,6 @@ namespace opt
     }
 
     /**
-     * @brief set the simulation box as shared pointer
-     *
-     * @param simulationBox - std::shared_ptr<SimulationBox>
-     */
-    void Evaluator::setSimulationBox(
-        const std::shared_ptr<molsys::SimulationBox>& simulationBox
-    )
-    {
-        _simulationBox = simulationBox;
-    }
-
-    /**
-     * @brief set the constraints as shared pointer
-     *
-     * @param constraints - std::shared_ptr<Constraints>
-     */
-    void Evaluator::setConstraints(
-        const std::shared_ptr<constraints::Constraints>& constraints
-    )
-    {
-        _constraints = constraints;
-    }
-
-    /**
      * @brief set the force field as shared pointer
      *
      * @param forceField - std::shared_ptr<ForceField>
@@ -127,18 +98,6 @@ namespace opt
     )
     {
         _forceField = forceField;
-    }
-
-    /**
-     * @brief set the intra non bonded as shared pointer
-     *
-     * @param intraNonBonded - std::shared_ptr<IntraNonBonded>
-     */
-    void Evaluator::setIntraNonBonded(
-        const std::shared_ptr<intraNonBonded::IntraNonBonded>& intraNonBonded
-    )
-    {
-        _intraNonBonded = intraNonBonded;
     }
 
     /**
@@ -156,46 +115,6 @@ namespace opt
     const ff::ForceField& Evaluator::_getForceField() const
     {
         return *_forceField;
-    }
-
-    /**
-     * @brief Get the intra non bonded as a reference
-     *
-     * @return intraNonBonded::IntraNonBonded&
-     */
-    intraNonBonded::IntraNonBonded& Evaluator::_getIntraNonBonded()
-    {
-        return *_intraNonBonded;
-    }
-
-    /**
-     * @brief Get the intra non bonded as a const reference
-     *
-     * @return const intraNonBonded::IntraNonBonded&
-     */
-    const intraNonBonded::IntraNonBonded& Evaluator::_getIntraNonBonded() const
-    {
-        return *_intraNonBonded;
-    }
-
-    /**
-     * @brief Get the simulation box as a reference
-     *
-     * @return molsys::SimulationBox&
-     */
-    molsys::SimulationBox& Evaluator::_getSimulationBox()
-    {
-        return *_simulationBox;
-    }
-
-    /**
-     * @brief Get the simulation box as a const reference
-     *
-     * @return const molsys::SimulationBox&
-     */
-    const molsys::SimulationBox& Evaluator::_getSimulationBox() const
-    {
-        return *_simulationBox;
     }
 
     /**

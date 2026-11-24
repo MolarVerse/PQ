@@ -44,7 +44,11 @@ namespace opt
 
         [[nodiscard]] size_t maxHistoryLength() const override;
 
-        void update(double learningRate, size_t /*step*/) override;
+        void update(
+            double learningRate,
+            size_t /*step*/,
+            molsys::SimulationBox& simulationBox
+        ) override;
     };
 
 }   // namespace opt

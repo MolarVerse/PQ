@@ -137,7 +137,7 @@ TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);
 
     const auto container =
-        _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
+        _engine->get_intraNonBonded().getIntraNonBondedContainers()[0];
     EXPECT_EQ(container.getMolType(), MolType{0});
     const auto &partners = container.getPartners();
 
@@ -166,7 +166,7 @@ TEST_F(TestIntraNonBondedReader, scaledPartnerAtomOne)
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);
 
     const auto container =
-        _engine->getIntraNonBonded()->getIntraNonBondedContainers()[0];
+        _engine->get_intraNonBonded().getIntraNonBondedContainers()[0];
     const auto &partners = container.getPartners();
 
     using intraNonBonded::IntraNonBondedPartners;

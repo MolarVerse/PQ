@@ -45,12 +45,12 @@ namespace
     // evaluate() to walk through all of its calls without throwing.
     void wireUp(opt::MMEvaluator& eval, molsys::CellList& cellList)
     {
-        auto box = std::make_shared<molsys::SimulationBox>();
+        molsys::SimulationBox box;
 
         molsys::OrthorhombicBox orthoBox{
             {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
         };
-        box->setBox(orthoBox, false);
+        box.setBox(orthoBox, false);
 
         // One molecule with two atoms so the brute-force inter-molecular loop
         // simply has no pairs to iterate.
@@ -68,11 +68,10 @@ namespace
         mol.addAtom(atom1);
         mol.addAtom(atom2);
 
-        box->addMolecule(mol);
-        box->addAtom(atom1);
-        box->addAtom(atom2);
+        box.addMolecule(mol);
+        box.addAtom(atom1);
+        box.addAtom(atom2);
 
-        eval.setSimulationBox(box);
         eval.setCellList(cellList);
         Settings settings;
         eval.setPotential(
@@ -80,16 +79,6 @@ namespace
         );
         eval.setForceField(
             std::make_shared<ff::ForceField>(settings.hybridSettings)
-        );
-        eval.setIntraNonBonded(
-
-            std::make_shared<intraNonBonded::IntraNonBonded>()
-
-        );
-        eval.setConstraints(
-            std::make_shared<constraints::Constraints>(
-                settings.constraintSettings
-            )
         );
 
         settings.manostatSettings.setVirialTypeByUser(VirialType::MOLECULAR);
@@ -112,7 +101,9 @@ TEST(TestMMEvaluator, evaluateRunsWithMinimalDependencies)
     opt::MMEvaluator           eval{settings};
     molsys::CellList           cellList;
     wireUp(eval, cellList);
-    EXPECT_NO_THROW(eval.evaluate(physicalData));
+    molsys::SimulationBox          box;
+    intraNonBonded::IntraNonBonded intraNonBonded;
+    EXPECT_NO_THROW(eval.evaluate(physicalData, box, intraNonBonded));
 }
 
 TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
@@ -125,21 +116,22 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     molsys::CellList cellList;
     wireUp(eval, cellList);
 
-    physicalData::PhysicalData physicalData;
+    physicalData::PhysicalData     physicalData;
+    intraNonBonded::IntraNonBonded intraNonBonded;
+
+    // We can't reach the box pointer through opt::MMEvaluator's public API, so
+    // re-wire a fresh evaluator with a known shared box and check the box.
+    molsys::SimulationBox box;
 
     // Borrow the wired-up simulation box back from a fresh setup by re-wiring
     // a second evaluator on the same shared structures isn't trivial, so test
     // the post-condition via the evaluator's own evaluate() exit state.
-    eval.evaluate(physicalData);
-
-    // We can't reach the box pointer through opt::MMEvaluator's public API, so
-    // re-wire a fresh evaluator with a known shared box and check the box.
-    auto box = std::make_shared<molsys::SimulationBox>();
+    eval.evaluate(physicalData, box, intraNonBonded);
 
     molsys::OrthorhombicBox orthoBox{
         {10.0 * angstrom, 10.0 * angstrom, 10.0 * angstrom}
     };
-    box->setBox(orthoBox, false);
+    box.setBox(orthoBox, false);
 
     auto molecule = molsys::Molecule();
 
@@ -149,13 +141,12 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     atom->setMass(1.0 * g_per_mol);
     molecule.addAtom(atom);
 
-    box->addMolecule(molecule);
-    box->addAtom(atom);
+    box.addMolecule(molecule);
+    box.addAtom(atom);
 
     Settings         settings2;
     opt::MMEvaluator eval2{settings2};
     molsys::CellList cellList2;
-    eval2.setSimulationBox(box);
     eval2.setCellList(cellList2);
     eval2.setPotential(
         std::make_shared<pot::PotentialBruteForce>(settings.hybridSettings)
@@ -163,15 +154,10 @@ TEST(TestMMEvaluator, evaluateZeroesForcesAtomically)
     eval2.setForceField(
         std::make_shared<ff::ForceField>(settings.hybridSettings)
     );
-    eval2.setIntraNonBonded(std::make_shared<intraNonBonded::IntraNonBonded>());
-    ConstraintSettings constraintSettings;
-    eval2.setConstraints(
-        std::make_shared<constraints::Constraints>(constraintSettings)
-    );
 
     settings.manostatSettings.setVirialTypeByUser(VirialType::MOLECULAR);
 
-    eval2.evaluate(physicalData);
+    eval2.evaluate(physicalData, box, intraNonBonded);
 
-    EXPECT_EQ(box->getAtoms()[0]->getForce(), Force3D::zero());
+    EXPECT_EQ(box.getAtoms()[0]->getForce(), Force3D::zero());
 }

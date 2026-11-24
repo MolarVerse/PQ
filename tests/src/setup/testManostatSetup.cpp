@@ -410,7 +410,7 @@ TEST_F(TestSetup, setupMolecularManostatsWarnForAtomicVirial)
         atom->setMass(1.0 * g_per_mol);
         molecule.addAtom(atom);
     }
-    _mdEngine->getSimulationBox().addMolecule(molecule);
+    _mdEngine->get_simulationBox().addMolecule(molecule);
     _settings->manostatSettings.setVirialTypeByUser(VirialType::ATOMIC);
     _settings->manostatSettings.setIsotropyByUser(Isotropy::ISOTROPIC);
     _settings->manostatSettings.setFixedAxisByUser(FixedAxis::NONE);

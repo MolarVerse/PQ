@@ -99,7 +99,7 @@ namespace input::mShake
 
             processAtomLines(atomLines, mShakeReference);
 
-            _engine.getConstraints()->addMShakeReference(mShakeReference);
+            _engine.get_constraints().addMShakeReference(mShakeReference);
         }
     }
 
@@ -140,7 +140,7 @@ namespace input::mShake
                 const auto molType = std::stoi(configElements[2]);
                 try
                 {
-                    auto  simBox       = _engine.getSimulationBox();
+                    auto  simBox       = _engine.get_simulationBox();
                     auto &moleculeType = simBox.findMoleculeType(
                         MolType{static_cast<size_t>(molType)}
                     );
