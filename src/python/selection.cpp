@@ -44,24 +44,92 @@ namespace
 
     PyObjectPtr own(PyObject *object) { return {object, &::Py_DecRef}; }
 
-    std::string takePythonError()
+    struct PythonError
+    {
+        std::string description;
+        std::string missingModule;
+    };
+
+    PythonError takePythonError()
     {
         const auto error = own(::PyErr_GetRaisedException());
         if (error == nullptr)
         {
-            return "unknown Python error";
+            return {
+                .description   = "no Python exception was set",
+                .missingModule = ""
+            };
         }
+
+        PythonError result{
+            .description   = Py_TYPE(error.get())->tp_name,
+            .missingModule = "",
+        };
 
         const auto  text = own(::PyObject_Str(error.get()));
         const char *utf8 =
             text == nullptr ? nullptr : ::PyUnicode_AsUTF8(text.get());
-        if (utf8 == nullptr)
+        if (utf8 != nullptr)
         {
-            ::PyErr_Clear();
-            return Py_TYPE(error.get())->tp_name;
+            result.description =
+                std::format("{}: {}", result.description, utf8);
         }
 
-        return std::format("{}: {}", Py_TYPE(error.get())->tp_name, utf8);
+        if (::PyErr_GivenExceptionMatches(
+                error.get(),
+                ::PyExc_ModuleNotFoundError
+            ) != 0)
+        {
+            const auto name =
+                own(::PyObject_GetAttrString(error.get(), "name"));
+            const char *nameUtf8 =
+                name == nullptr || ::PyUnicode_Check(name.get()) == 0
+                    ? nullptr
+                    : ::PyUnicode_AsUTF8(name.get());
+            if (nameUtf8 != nullptr)
+            {
+                result.missingModule = nameUtf8;
+            }
+        }
+
+        ::PyErr_Clear();
+        return result;
+    }
+
+    std::string importErrorMessage(
+        const std::string &selection,
+        const PythonError &pythonError
+    )
+    {
+        if (pythonError.missingModule == "PQAnalysis")
+        {
+            return std::format(
+                "Selection \"{}\" needs the Python package PQAnalysis, which "
+                "is not installed ({}). Install it for the Python that PQ was "
+                "built with: pip install PQAnalysis",
+                selection,
+                pythonError.description
+            );
+        }
+
+        if (!pythonError.missingModule.empty())
+        {
+            return std::format(
+                "Selection \"{}\" could not import \"{}\" because the Python "
+                "module \"{}\" was not found ({})",
+                selection,
+                SELECTION_MODULE,
+                pythonError.missingModule,
+                pythonError.description
+            );
+        }
+
+        return std::format(
+            "Selection \"{}\" could not import \"{}\" ({})",
+            selection,
+            SELECTION_MODULE,
+            pythonError.description
+        );
     }
 }   // namespace
 
@@ -73,8 +141,8 @@ namespace
  * @param moldescriptorFileName
  * @return std::vector<int>
  *
- * @throw exc::InputFileException if PQAnalysis cannot be imported or the
- * selection fails
+ * @throw exc::InputFileException with the failed step and the Python
+ * exception if the selection cannot be run
  */
 std::vector<int> pq_python::select(
     const std::string &selection,
@@ -93,30 +161,34 @@ std::vector<int> pq_python::select(
     if (module == nullptr)
     {
         throw exc::InputFileException(
-            std::format(
-                "Selection \"{}\" needs the Python package PQAnalysis, but "
-                "\"{}\" could not be imported ({}). Install it into the "
-                "Python PQ was built with: pip install PQAnalysis",
-                selection,
-                SELECTION_MODULE,
-                takePythonError()
-            )
+            importErrorMessage(selection, takePythonError())
         );
     }
 
     const auto function =
         own(::PyObject_GetAttrString(module.get(), SELECTION_FUNCTION));
-    if (function == nullptr || ::PyCallable_Check(function.get()) == 0)
+    if (function == nullptr)
     {
-        const auto reason =
-            function == nullptr ? takePythonError() : "not a callable object";
         throw exc::InputFileException(
             std::format(
-                "\"{}.{}\" is not usable ({}). Update PQAnalysis in the "
-                "Python PQ was built with: pip install --upgrade PQAnalysis",
+                "Selection \"{}\" could not load \"{}\" from \"{}\" ({})",
+                selection,
+                SELECTION_FUNCTION,
+                SELECTION_MODULE,
+                takePythonError().description
+            )
+        );
+    }
+    if (::PyCallable_Check(function.get()) == 0)
+    {
+        throw exc::InputFileException(
+            std::format(
+                "Selection \"{}\" could not call \"{}.{}\": it is a \"{}\", "
+                "not a function",
+                selection,
                 SELECTION_MODULE,
                 SELECTION_FUNCTION,
-                reason
+                Py_TYPE(function.get())->tp_name
             )
         );
     }
@@ -146,21 +218,33 @@ std::vector<int> pq_python::select(
             std::format(
                 "Could not pass selection \"{}\" to Python ({})",
                 selection,
-                takePythonError()
+                takePythonError().description
             )
         );
     }
 
     const auto value = own(::PyObject_CallObject(function.get(), args.get()));
-    const auto iter =
-        value == nullptr ? own(nullptr) : own(::PyObject_GetIter(value.get()));
+    if (value == nullptr)
+    {
+        throw exc::InputFileException(
+            std::format(
+                "Selection \"{}\" failed in \"{}.{}\" ({})",
+                selection,
+                SELECTION_MODULE,
+                SELECTION_FUNCTION,
+                takePythonError().description
+            )
+        );
+    }
+
+    const auto iter = own(::PyObject_GetIter(value.get()));
     if (iter == nullptr)
     {
         throw exc::InputFileException(
             std::format(
-                "Selection \"{}\" failed in PQAnalysis ({})",
+                "Selection \"{}\" returned no list of atom indices ({})",
                 selection,
-                takePythonError()
+                takePythonError().description
             )
         );
     }
@@ -182,7 +266,7 @@ std::vector<int> pq_python::select(
             std::format(
                 "Selection \"{}\" returned an invalid atom index list ({})",
                 selection,
-                takePythonError()
+                takePythonError().description
             )
         );
     }

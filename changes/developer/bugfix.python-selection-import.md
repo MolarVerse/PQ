@@ -1,1 +1,1 @@
-- `pq_python::select` checks every Python C-API result and throws `InputFileException` with the Python error; `testSelection` covers a blocked PQAnalysis import (#1334).
+- `pq_python::select` checks every Python C-API result and throws `InputFileException` with the failed step and the Python exception (`ModuleNotFoundError.name` for missing modules); `testSelection` blocks PQAnalysis and its dependency `lark` with an import hook (#1334).

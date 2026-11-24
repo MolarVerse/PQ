@@ -26,7 +26,9 @@
 #include <gtest/gtest.h>
 
 #include <filesystem>
+#include <format>
 #include <fstream>
+#include <string>
 #include <vector>
 
 #include "exceptions.hpp"
@@ -59,47 +61,98 @@ TEST(TestPythonSelection, selectsAtomsFromRestartFile)
     std::filesystem::remove(restartFile);
 }
 
-TEST(TestPythonSelection, missingPQAnalysisThrows)
+namespace
 {
-    if (::Py_IsInitialized() == 0)
+    void blockImport(const std::string &blocked, const std::string &error)
     {
-        ::Py_Initialize();
-    }
+        if (::Py_IsInitialized() == 0)
+        {
+            ::Py_Initialize();
+        }
 
-    ASSERT_EQ(
-        ::PyRun_SimpleString(
+        const auto code = std::format(
             "import sys\n"
+            "_pqRoots = ('PQAnalysis', '{0}')\n"
             "class _PQBlocker:\n"
             "    def find_spec(self, name, path=None, target=None):\n"
-            "        if name.split('.')[0] == 'PQAnalysis':\n"
-            "            raise ImportError('PQAnalysis blocked by test')\n"
+            "        if name.split('.')[0] == '{0}':\n"
+            "            raise {1}\n"
             "_pqBlocker = _PQBlocker()\n"
-            "_pqSavedModules = {name: module for name, module in "
-            "sys.modules.items() if name.split('.')[0] == 'PQAnalysis'}\n"
+            "_pqSavedModules = {{name: module for name, module in "
+            "sys.modules.items() if name.split('.')[0] in _pqRoots}}\n"
             "for _pqName in _pqSavedModules:\n"
             "    del sys.modules[_pqName]\n"
-            "sys.meta_path.insert(0, _pqBlocker)\n"
-        ),
-        0
+            "sys.meta_path.insert(0, _pqBlocker)\n",
+            blocked,
+            error
+        );
+        ASSERT_EQ(::PyRun_SimpleString(code.c_str()), 0);
+    }
+
+    void unblockImport()
+    {
+        ASSERT_EQ(
+            ::PyRun_SimpleString(
+                "sys.meta_path.remove(_pqBlocker)\n"
+                "for _pqName in [name for name in sys.modules "
+                "if name.split('.')[0] in _pqRoots]:\n"
+                "    del sys.modules[_pqName]\n"
+                "sys.modules.update(_pqSavedModules)\n"
+            ),
+            0
+        );
+    }
+}   // namespace
+
+TEST(TestPythonSelection, missingPQAnalysisThrows)
+{
+    blockImport(
+        "PQAnalysis",
+        "ModuleNotFoundError(f\"No module named '{name}'\", name=name)"
     );
 
     EXPECT_THROW_MSG(
         pq_python::select("O", "missing.rst", ""),
         exc::InputFileException,
-        "Selection \"O\" needs the Python package PQAnalysis, but "
-        "\"PQAnalysis.topology.api\" could not be imported "
-        "(ImportError: PQAnalysis blocked by test). Install it into the "
-        "Python PQ was built with: "
+        "Selection \"O\" needs the Python package PQAnalysis, which is not "
+        "installed (ModuleNotFoundError: No module named 'PQAnalysis'). "
+        "Install it for the Python that PQ was built with: "
         "pip install PQAnalysis"
     );
 
-    ASSERT_EQ(
-        ::PyRun_SimpleString(
-            "sys.meta_path.remove(_pqBlocker)\n"
-            "sys.modules.update(_pqSavedModules)\n"
-        ),
-        0
+    unblockImport();
+}
+
+TEST(TestPythonSelection, missingDependencyThrows)
+{
+    blockImport(
+        "lark",
+        "ModuleNotFoundError(f\"No module named '{name}'\", name=name)"
     );
+
+    EXPECT_THROW_MSG(
+        pq_python::select("O", "missing.rst", ""),
+        exc::InputFileException,
+        "Selection \"O\" could not import \"PQAnalysis.topology.api\" "
+        "because the Python module \"lark\" was not found "
+        "(ModuleNotFoundError: No module named 'lark')"
+    );
+
+    unblockImport();
+}
+
+TEST(TestPythonSelection, failingImportThrows)
+{
+    blockImport("PQAnalysis", "ImportError('broken by test')");
+
+    EXPECT_THROW_MSG(
+        pq_python::select("O", "missing.rst", ""),
+        exc::InputFileException,
+        "Selection \"O\" could not import \"PQAnalysis.topology.api\" "
+        "(ImportError: broken by test)"
+    );
+
+    unblockImport();
 }
 
 #endif   // WITH_PYTHON_BINDINGS
