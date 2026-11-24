@@ -41,7 +41,9 @@ namespace opt
     /**
      * @brief update the optimizer
      *
-     * @param learningRate
+     * @param learningRate The learning rate to be used for the update step.
+     * @param simulationBox The simulation box containing the atoms to be
+     * updated during this optimization step.
      */
     void SteepestDescent::update(
         double learningRate,

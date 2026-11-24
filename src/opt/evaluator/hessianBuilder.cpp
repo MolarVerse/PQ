@@ -140,6 +140,7 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      * @param physicalData
+     * @param intraNonBonded
      */
     Hessian CentralForceDifferenceHessianBuilder::build(
         Evaluator                      &evaluator,
@@ -199,6 +200,8 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      * @param physicalData
+     * @param intraNonBonded The intra-non-bonded interactions to be considered
+     * during the Hessian evaluation.
      */
     Hessian ForwardForceDifferenceHessianBuilder::build(
         Evaluator                      &evaluator,
@@ -252,6 +255,8 @@ namespace opt
      * @param evaluator
      * @param simulationBox
      * @param physicalData
+     * @param intraNonBonded The intra-non-bonded interactions to be considered
+     * during the Hessian evaluation.
      */
     Hessian FivePointForceDifferenceHessianBuilder::build(
         Evaluator                      &evaluator,

@@ -76,6 +76,8 @@ namespace opt
      *
      * @param learningRate
      * @param step
+     * @param simulationBox The simulation box containing the atoms to be
+     * updated during this optimization step.
      */
     void Adam::update(
         double                 learningRate,
