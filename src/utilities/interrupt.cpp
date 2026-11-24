@@ -32,6 +32,7 @@
 #include <unistd.h>
 
 #include <csignal>
+#include <stdexcept>
 
 namespace utilities::detail
 {
@@ -69,15 +70,29 @@ extern "C" void pqOnInterrupt(int /*signalNumber*/)
 namespace utilities
 {
     /**
-     * @brief throw if a signal recorded by embedded Python is pending
+     * @brief throw if a signal recorded by embedded Python or, without
+     * Python, a Ctrl-C is pending
      *
      * @throw pybind11::error_already_set e.g. KeyboardInterrupt
+     * @throw std::runtime_error on Ctrl-C while Python is not running
      */
     void throwIfInterrupted()
     {
 #ifdef WITH_PYBIND11
-        if (::Py_IsInitialized() != 0 && ::PyErr_CheckSignals() != 0)
-            throw pybind11::error_already_set();
+        if (::Py_IsInitialized() != 0)
+        {
+            if (::PyErr_CheckSignals() != 0)
+            {
+                throw pybind11::error_already_set();
+            }
+            return;
+        }
+#if !defined(_WIN32)
+        if (InterruptState::interrupted != 0)
+        {
+            throw std::runtime_error("KeyboardInterrupt");
+        }
+#endif
 #endif
     }
 
@@ -92,6 +107,22 @@ namespace utilities
         action.sa_handler = pqOnInterrupt;
         ::sigemptyset(&action.sa_mask);
         ::sigaction(SIGINT, &action, nullptr);
+
+        if (InterruptState::interrupted != 0 && ::Py_IsInitialized() != 0)
+        {
+            ::PyErr_SetInterrupt();
+        }
+    }
+
+    /**
+     * @brief true if PQ's SIGINT handler is the current one
+     */
+    bool isInterruptHandlerInstalled()
+    {
+        struct sigaction current{};
+        ::sigaction(SIGINT, nullptr, &current);
+
+        return current.sa_handler == pqOnInterrupt;
     }
 
     /**

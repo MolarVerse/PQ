@@ -22,6 +22,10 @@
 
 #include "executablePath.hpp"
 
+#include <ranges>
+#include <string_view>
+#include <system_error>
+
 #if defined(_WIN32)
 #include <windows.h>
 
@@ -31,9 +35,16 @@
 
 #include <cstdint>
 #include <vector>
-#elif defined(__linux__)
-#include <system_error>
 #endif
+
+namespace
+{
+#if defined(_WIN32)
+    constexpr char _pathSeparator = ';';
+#else
+    constexpr char _pathSeparator = ':';
+#endif
+}   // namespace
 
 std::filesystem::path utilities::executablePath()
 {
@@ -78,4 +89,57 @@ std::filesystem::path utilities::installedDataPath(
 
     return executable.parent_path().parent_path() / "share" / "PQ" /
            relativePath;
+}
+
+/**
+ * @brief true if path is a regular file that someone may execute
+ *
+ * @param path candidate file
+ */
+bool utilities::isExecutableFile(const std::filesystem::path &path)
+{
+    auto       error  = std::error_code{};
+    const auto status = std::filesystem::status(path, error);
+
+    if (error || !std::filesystem::is_regular_file(status))
+    {
+        return false;
+    }
+
+    constexpr auto anyExec = std::filesystem::perms::owner_exec |
+                             std::filesystem::perms::group_exec |
+                             std::filesystem::perms::others_exec;
+
+    return (status.permissions() & anyExec) != std::filesystem::perms::none;
+}
+
+/**
+ * @brief first executable programName in the directories of searchPath, like
+ * the shell resolves a command from PATH
+ *
+ * @param searchPath directory list in the format of PATH
+ * @param programName file name to look for
+ * @return std::nullopt if no directory holds an executable programName
+ */
+std::optional<std::filesystem::path> utilities::findInSearchPath(
+    std::string_view             searchPath,
+    const std::filesystem::path &programName
+)
+{
+    for (const auto entry : searchPath | std::views::split(_pathSeparator))
+    {
+        const auto directory = std::string_view(entry.begin(), entry.end());
+        if (directory.empty())
+        {
+            continue;
+        }
+
+        auto candidate = std::filesystem::path(directory) / programName;
+        if (isExecutableFile(candidate))
+        {
+            return candidate;
+        }
+    }
+
+    return std::nullopt;
 }

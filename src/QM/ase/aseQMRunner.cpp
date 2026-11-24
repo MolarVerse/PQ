@@ -40,6 +40,7 @@
 #endif
 
 #include "box.hpp"
+#include "embeddedPython.hpp"
 #include "exceptions.hpp"
 #include "globalTimer.hpp"
 #include "interrupt.hpp"
@@ -310,9 +311,18 @@ namespace QM
      *
      * @throw pybind11::error_already_set if the import of the ase.atoms module
      * fails
+     * @throw std::runtime_error if Python cannot be started
      */
     AseQMRunner::AseQMRunner(const QMSettings &settings)
-        : QMRunner(settings), _ase(std::make_unique<AseInterface>())
+        : QMRunner(settings),
+          // AseInterface holds numpy objects, so Python must run first
+          _ase(
+              []
+              {
+                  utilities::startPython();
+                  return std::make_unique<AseInterface>();
+              }()
+          )
     {
         try
         {
