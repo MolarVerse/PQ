@@ -430,11 +430,18 @@ namespace engine
 
             _takeOptimizationStep();
 
-            if (_converged || _optStopped)
+            if (_optStopped)
+            {
                 break;
+            }
 
             writeOutput(jobType, outputFileSettings);
             deleteTmpFiles();
+
+            if (_converged)
+            {
+                break;
+            }
         }
 
         OptEngine::throwOnFailure(
