@@ -88,7 +88,7 @@ namespace utilities
             return;
         }
 #if !defined(_WIN32)
-        if (InterruptState::interrupted != 0)
+        if (detail::InterruptState::interrupted != 0)
         {
             throw std::runtime_error("KeyboardInterrupt");
         }
@@ -108,7 +108,8 @@ namespace utilities
         ::sigemptyset(&action.sa_mask);
         ::sigaction(SIGINT, &action, nullptr);
 
-        if (InterruptState::interrupted != 0 && ::Py_IsInitialized() != 0)
+        if (detail::InterruptState::interrupted != 0 &&
+            ::Py_IsInitialized() != 0)
         {
             ::PyErr_SetInterrupt();
         }
