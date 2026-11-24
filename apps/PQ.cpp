@@ -31,8 +31,8 @@
 #include "commandLineArgs.hpp"
 #include "driver.hpp"
 #include "interrupt.hpp"
-#include "systemInfo.hpp"
 #include "validation.hpp"
+#include "version.hpp"
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -41,7 +41,7 @@
 #endif
 
 #ifdef WITH_PYBIND11
-#include <pybind11/embed.h>
+#include "embeddedPython.hpp"
 #endif
 namespace
 {
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 
     if (CommandLineAction::VERSION == commandLineArgs.getAction())
     {
-        std::cout << "PQ " << sysinfo::VERSION << '\n';
+        std::cout << "PQ " << CURRENT_VERSION.to_string() << '\n';
         return EXIT_SUCCESS;
     }
 
@@ -138,11 +138,8 @@ int main(int argc, char *argv[])
     mpi::MPI::init(&argc, &argv);
 #endif
 
-#ifdef WITH_PYBIND11
-    pybind11::scoped_interpreter guard{};
-#if !defined(_WIN32)
+#if defined(WITH_PYBIND11) && !defined(_WIN32)
     utilities::installInterruptHandler();
-#endif
 #endif
 
     try
@@ -170,6 +167,10 @@ int main(int argc, char *argv[])
 
 #ifdef WITH_MPI
     mpi::MPI::finalize();
+#endif
+
+#ifdef WITH_PYBIND11
+    utilities::stopPython();
 #endif
 
     return exitCode;

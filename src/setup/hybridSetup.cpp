@@ -121,7 +121,7 @@ namespace setup
     void HybridSetup::setupInnerRegionCenter()
     {
         const auto numberOfAtoms =
-            _engine.getSimulationBox().getNumberOfAtoms();
+            _engine.get_simulationBox().getNumberOfAtoms();
 
         for (const auto index :
              _engine.getSettings().hybridSettings.getInnerRegionCenter())
@@ -144,7 +144,7 @@ namespace setup
      */
     void HybridSetup::setupForcedCoreList()
     {
-        _engine.getSimulationBox().setupForcedCoreMolecules(
+        _engine.get_simulationBox().setupForcedCoreMolecules(
             _engine.getSettings().hybridSettings.getForcedCoreList()
         );
     }
@@ -155,7 +155,7 @@ namespace setup
      */
     void HybridSetup::setupForcedLayerList()
     {
-        _engine.getSimulationBox().setupForcedLayerMolecules(
+        _engine.get_simulationBox().setupForcedLayerMolecules(
             _engine.getSettings().hybridSettings.getForcedLayerList()
         );
     }
@@ -166,7 +166,7 @@ namespace setup
      */
     void HybridSetup::setupForcedOuterList()
     {
-        _engine.getSimulationBox().setupForcedOuterMolecules(
+        _engine.get_simulationBox().setupForcedOuterMolecules(
             _engine.getSettings().hybridSettings.getForcedOuterList()
         );
     }
@@ -195,7 +195,7 @@ namespace setup
         const auto pointChargeThickness =
             _engine.getSettings().hybridSettings.getPointChargeThickness();
         const auto minimalBoxDimension =
-            _engine.getSimulationBox().getMinimalBoxDimension();
+            _engine.get_simulationBox().getMinimalBoxDimension();
 
         if (coreRadius > layerRadius)
         {
@@ -270,7 +270,7 @@ namespace setup
         const auto mmChargesRequested =
             !_engine.getSettings().hybridSettings.getUseQMCharges();
         const auto qmAtomsPresent =
-            _engine.getSimulationBox().moleculeTypeExists(MolType{0});
+            _engine.get_simulationBox().moleculeTypeExists(MolType{0});
 
         if (mmChargesRequested && qmAtomsPresent)
         {
@@ -294,7 +294,7 @@ namespace setup
      */
     void HybridSetup::validateQMReferenceEnergies()
     {
-        auto &simBox = _engine.getSimulationBox();
+        auto &simBox = _engine.get_simulationBox();
 
         const auto hasReference = [](const auto &moleculeType)
         { return moleculeType.hasQMReferenceEnergy(); };

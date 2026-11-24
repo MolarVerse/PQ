@@ -145,6 +145,6 @@ TEST_F(TestInputFileReader, testParseNonCoulombType)
         parseNonCoulombFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"noncoulomb\" at line 0 in input "
-        "file. Allowed values: none, lj, buckingham, morse, guff, buck"
+        "file. Allowed values: none, lj, buckingham (buck), morse, guff"
     );
 }

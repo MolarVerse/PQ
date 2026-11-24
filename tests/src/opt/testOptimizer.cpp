@@ -49,7 +49,7 @@ namespace
     // updateHistory(). Used to seed the optimizer's deques deterministically.
     void pushSample(opt::SteepestDescent &opt, const Sample &sample)
     {
-        auto box     = std::make_shared<molsys::SimulationBox>();
+        molsys::SimulationBox box;
         auto physDat = std::make_shared<physicalData::PhysicalData>();
 
         auto atom1 = std::make_shared<molsys::Atom>();
@@ -60,13 +60,12 @@ namespace
         atom1->setForce(sample.force0);
         atom2->setForce(sample.force1);
 
-        box->addAtom(atom1);
-        box->addAtom(atom2);
+        box.addAtom(atom1);
+        box.addAtom(atom2);
 
         physDat->set_kineticEnergy(sample.energy);
 
-        opt.setSimulationBox(box);
-        opt.updateHistory(physDat->getTotalEnergy());
+        opt.updateHistory(physDat->getTotalEnergy(), box);
     }
 }   // namespace
 
@@ -74,7 +73,7 @@ namespace
 
 TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
 {
-    const opt::SteepestDescent opt;
+    const opt::SteepestDescent opt{};
     EXPECT_EQ(opt.maxHistoryLength(), 2U);
 }
 
@@ -82,7 +81,7 @@ TEST(TestOptimizer, maxHistoryLengthIsTwoForSteepestDescent)
 
 TEST(TestOptimizer, getHistoryIndexThrowsOnNonNegativeOffset)
 {
-    const opt::SteepestDescent opt;
+    const opt::SteepestDescent opt{};
     EXPECT_THROW_MSG(
         (void) opt.getHistoryIndex(0),
         exc::OptException,

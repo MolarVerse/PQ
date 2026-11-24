@@ -43,7 +43,7 @@ TEST_F(TestTopologySection, processSectionAngle)
     angleSection.processSection(lineElements, *_engine, 0);
 
     const auto& angles = _engine->getForceField()->getAngles();
-    const auto& simBox = _engine->getSimulationBox();
+    const auto& simBox = _engine->get_simulationBox();
 
     EXPECT_EQ(angles.size(), 1);
     EXPECT_EQ(angles[0].get_molecules()[0], simBox.getMolecules().data());

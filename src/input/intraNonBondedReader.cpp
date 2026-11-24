@@ -142,7 +142,7 @@ namespace input::intraNonBondedReader
      */
     MolType IntraNonBondedReader::findMoleculeType(const std::string &id) const
     {
-        auto &simBox            = _engine.getSimulationBox();
+        auto &simBox            = _engine.get_simulationBox();
         auto  molTypeFromString = simBox.findMoleculeTypeByString(id);
 
         if (molTypeFromString.has_value())
@@ -207,7 +207,7 @@ namespace input::intraNonBondedReader
         auto        endedNormal = false;
 
         auto &molType =
-            _engine.getSimulationBox().findMoleculeType(moleculeType);
+            _engine.get_simulationBox().findMoleculeType(moleculeType);
 
         const auto nAtoms = molType.getNumberOfAtoms();
 
@@ -293,7 +293,7 @@ namespace input::intraNonBondedReader
         const auto container =
             intraNonBonded::IntraNonBondedContainer(moleculeType, partners);
 
-        _engine.getIntraNonBonded()->addIntraNonBondedContainer(container);
+        _engine.get_intraNonBonded().addIntraNonBondedContainer(container);
     }
 
     /**
@@ -305,9 +305,8 @@ namespace input::intraNonBondedReader
      */
     void IntraNonBondedReader::checkDuplicates() const
     {
-        const auto &intraNonBonded = _engine.getIntraNonBonded();
-        const auto  nonBondedCont =
-            intraNonBonded->getIntraNonBondedContainers();
+        const auto &intraNonBonded = _engine.get_intraNonBonded();
+        const auto nonBondedCont = intraNonBonded.getIntraNonBondedContainers();
 
         auto transform = [](const auto &container)
         { return container.getMolType(); };

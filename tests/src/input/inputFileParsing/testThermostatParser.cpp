@@ -197,8 +197,8 @@ TEST_F(TestInputFileReader, testParseThermostat)
         parseFunc(lineElements, 0),
         exc::InputFileException,
         "Invalid value \"notValid\" for key \"thermostat\" at line 0 in input "
-        "file. Allowed values: none, berendsen, velocity_rescaling, langevin, "
-        "nose_hoover, nh_chain, rescale"
+        "file. Allowed values: none, berendsen, velocity_rescaling (rescale), "
+        "langevin, nose_hoover (nh_chain)"
     );
 }
 

@@ -25,7 +25,6 @@
 
 #include <cstddef>
 #include <deque>
-#include <memory>
 
 #include "convergence.hpp"
 #include "unit_types.hpp"
@@ -59,18 +58,17 @@ namespace opt
         std::deque<std::vector<Force3D>> _forceHistory;
         std::deque<std::vector<Pos3D>>   _positionHistory;
 
-        struct Impl;
-        std::unique_ptr<Impl> _impl;
-
        public:
-        Optimizer();
-        virtual ~Optimizer();
+        virtual ~Optimizer() = default;
 
-        virtual void update(double, size_t) = 0;
+        virtual void update(double, size_t, molsys::SimulationBox&) = 0;
         [[nodiscard]]
         virtual size_t maxHistoryLength() const = 0;
 
-        void               updateHistory(const EnergyPerMol& totalEnergy);
+        void updateHistory(
+            const EnergyPerMol&          totalEnergy,
+            const molsys::SimulationBox& simulationBox
+        );
         [[nodiscard]] bool hasConverged();
 
         /***************************
@@ -78,8 +76,6 @@ namespace opt
          ***************************/
 
         void setConvergence(opt::Convergence);
-
-        void setSimulationBox(const std::shared_ptr<molsys::SimulationBox>&);
 
         /***************************
          * standard getter methods *
@@ -108,10 +104,6 @@ namespace opt
 
         [[nodiscard]] opt::Convergence& getConvergence();
         [[nodiscard]] opt::Convergence  getConvergence() const;
-
-       protected:
-        [[nodiscard]]
-        molsys::SimulationBox& _getSimulationBox() const;
     };
 
 }   // namespace opt

@@ -142,7 +142,8 @@ TEST_F(TestInputFileReader, parseQMMethod)
         exc::InputFileException,
         "Invalid value \"notAMethod\" for key \"qm_prog\" at line 0 in input "
         "file. Allowed values: dftbplus, ase_dftbplus, ase_xtb, pyscf, "
-        "turbomole, orca, mace, fennol, mace_mp, mace_off, mace_anicc, mace_ani"
+        "turbomole, orca, mace (mace_mp, mace_off, mace_anicc, mace_ani), "
+        "fennol"
     )
 }
 
@@ -593,7 +594,7 @@ TEST_F(TestInputFileReader, parseSlakosType)
         parseFunc({"slakos", "=", "notASlakosType"}, 0),
         exc::InputFileException,
         "Invalid value \"notASlakosType\" for key \"slakos\" at line 0 in "
-        "input file. Allowed values: threeob, matsci, custom, 3ob"
+        "input file. Allowed values: 3ob (threeob), matsci, custom"
     )
 }
 
@@ -824,8 +825,8 @@ TEST_F(TestInputFileReader, parseXtbMethod)
         xtbMethodParseFunc({"xtb_method", "=", "notAnXtbMethod"}, 0),
         exc::InputFileException,
         "Invalid value \"notAnXtbMethod\" for key \"xtb_method\" at line 0 in "
-        "input file. Allowed values: gfn1, gfn2, ipea1, gfn1-xtb, gfn2-xtb, "
-        "ipea1-xtb, gfn1_xtb, gfn2_xtb, ipea1_xtb"
+        "input file. Allowed values: gfn1-xtb (gfn1, gfn1_xtb), gfn2-xtb "
+        "(gfn2, gfn2_xtb), ipea1-xtb (ipea1, ipea1_xtb)"
     );
 }
 

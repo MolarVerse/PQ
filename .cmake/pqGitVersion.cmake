@@ -24,7 +24,8 @@ if(GIT_EXECUTABLE)
         set(GIT_VERSION "v0.0.0")
     else()
         string(STRIP ${GIT_VERSION} GIT_VERSION)
-        string(REGEX REPLACE "-[0-9]+-g" "-" GIT_VERSION ${GIT_VERSION})
+        # v1.1.0-67-g67380c03  ->  v1.1.0+67380c03
+        string(REGEX REPLACE "-[0-9]+-g" "+" GIT_VERSION ${GIT_VERSION})
     endif()
 
     # A release is prepared on the branch release/vX.Y.Z, which exists before

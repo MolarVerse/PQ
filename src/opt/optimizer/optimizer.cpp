@@ -22,8 +22,6 @@
 
 #include "optimizer.hpp"
 
-#include <memory>
-
 #include "exceptions.hpp"
 #include "physicalData.hpp"
 #include "simulationBox.hpp"
@@ -32,30 +30,20 @@ namespace opt
 {
 
     /**
-     * @brief Implementation struct for the Optimizer class (PIMPL idiom)
-     *
-     */
-    struct Optimizer::Impl
-    {
-        std::shared_ptr<molsys::SimulationBox> simulationBox;
-    };
-
-    Optimizer::Optimizer() : _impl(std::make_unique<Impl>()) {}
-
-    Optimizer::~Optimizer() = default;
-
-    /**
      * @brief update the optimizer history
      *
      */
-    void Optimizer::updateHistory(const EnergyPerMol& totalEnergy)
+    void Optimizer::updateHistory(
+        const EnergyPerMol&          totalEnergy,
+        const molsys::SimulationBox& simulationBox
+    )
     {
         _energyHistory.push_back(totalEnergy);
-        _forceHistory.push_back(_impl->simulationBox->getForces());
-        _positionHistory.push_back(_impl->simulationBox->getPositions());
+        _forceHistory.push_back(simulationBox.getForces());
+        _positionHistory.push_back(simulationBox.getPositions());
 
-        const auto rmsForce = rms(_impl->simulationBox->getForces());
-        const auto maxForce = max(_impl->simulationBox->getForces());
+        const auto rmsForce = rms(simulationBox.getForces());
+        const auto maxForce = max(simulationBox.getForces());
 
         _rmsForceHistory.push_back(rmsForce);
         _maxForceHistory.push_back(maxForce);
@@ -103,18 +91,6 @@ namespace opt
     void Optimizer::setConvergence(Convergence convergence)
     {
         _convergence = convergence;
-    }
-
-    /**
-     * @brief set simulation box shared pointer
-     *
-     * @param simulationBox
-     */
-    void Optimizer::setSimulationBox(
-        const std::shared_ptr<molsys::SimulationBox>& simulationBox
-    )
-    {
-        _impl->simulationBox = simulationBox;
     }
 
     /***************************
@@ -274,15 +250,5 @@ namespace opt
      * @return opt::Convergence
      */
     Convergence& Optimizer::getConvergence() { return _convergence; }
-
-    /**
-     * @brief get the simulation box member
-     *
-     * @return SimulationBox&
-     */
-    molsys::SimulationBox& Optimizer::_getSimulationBox() const
-    {
-        return *_impl->simulationBox;
-    }
 
 }   // namespace opt
