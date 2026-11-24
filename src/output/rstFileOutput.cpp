@@ -29,8 +29,10 @@
 #include <ostream>
 #include <sstream>
 
+#include "enums/rstMetaData.hpp"
 #include "frame.hpp"
 #include "units.hpp"
+#include "version.hpp"
 
 namespace out
 {
@@ -84,6 +86,26 @@ namespace out
     }   // namespace
 
     /**
+     * @brief Write the metadata section of the restart file
+     *
+     * @param buffer the output stream to write to
+     * @param generalSettings the general settings containing the metadata
+     */
+    void RstFileOutput::_writeMetaData(std::ostringstream &buffer)
+    {
+        if (isValid(CURRENT_VERSION))
+        {
+            const auto key =
+                RestartFileMetaDataMeta::toString(RestartFileMetaData::Version);
+
+            const auto version = CURRENT_VERSION.to_string();
+
+            buffer << RestartFileMetaDataKeyWord << " " << key << " " << version
+                   << "\n";
+        }
+    }
+
+    /**
      * @brief Write the restart file
      *
      * @param frame
@@ -102,6 +124,8 @@ namespace out
         using textFormat::NAME_WIDTH;
 
         std::ostringstream buffer;
+
+        _writeMetaData(buffer);
 
         buffer << "Step " << step;
         if (finalTime.has_value())

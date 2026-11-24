@@ -63,19 +63,10 @@ namespace setup
      * @brief setup the engine
      *
      * @param engine The engine to set up.
-     * @param nhSettings Reference to the NoseHooverSettings object used to
-     * configure the thermostat if applicable.
-     * @param timingsSettings Timings settings object used to configure the
-     * simulation timing parameters.
-     * @param potentialSettings Reference to the PotentialSettings object used
-     * to configure interaction cutoffs and other potential-related parameters
+     * @param settings Reference to the Settings object containing all necessary
+     * simulation settings.
      */
-    void setupRequestedJob(
-        engine::Engine&     engine,
-        NoseHooverSettings& nhSettings,
-        TimingsSettings&    timingsSettings,
-        PotentialSettings&  potentialSettings
-    )
+    void setupRequestedJob(engine::Engine& engine, Settings& settings)
     {
         auto _ = scopedTimer(TimerId::Setup, "TotalSetup");
 
@@ -94,7 +85,7 @@ namespace setup
         if (isMMActivated(engine.getSettings().generalSettings.getJobtype()))
             setupNonCoulombPotentialType(engine);
 
-        readFiles(engine, nhSettings, timingsSettings, potentialSettings);
+        readFiles(engine, settings);
 
         setupEngine(engine);
 
@@ -125,31 +116,26 @@ namespace setup
      * @brief reads all the files needed for the simulation
      *
      * @param engine
-     * @param nhSettings Nose-Hoover thermostat settings object used to
-     * configure the thermostat if applicable.
-     * @param timingsSettings Timings settings object used to configure the
-     * simulation timing parameters.
-     * @param potentialSettings Reference to the PotentialSettings object used
-     * to configure interaction cutoffs and other potential-related parameters
+     * @param settings Reference to the Settings object containing all necessary
+     * simulation settings.
      */
-    void readFiles(
-        engine::Engine&     engine,
-        NoseHooverSettings& nhSettings,
-        TimingsSettings&    timingsSettings,
-        PotentialSettings&  potentialSettings
-    )
+    void readFiles(engine::Engine& engine, Settings& settings)
     {
         input::molDescriptor::readMolDescriptor(engine);
 
         input::restartFile::readRestartFile(
             engine,
-            nhSettings,
-            timingsSettings
+            settings.noseHooverSettings,
+            settings.timings,
+            settings.generalSettings
         );
 
         input::topology::readTopologyFile(engine);
 
-        input::parameterFile::readParameterFile(engine, potentialSettings);
+        input::parameterFile::readParameterFile(
+            engine,
+            settings.potentialSettings
+        );
 
         input::intraNonBondedReader::readIntraNonBondedFile(engine);
     }

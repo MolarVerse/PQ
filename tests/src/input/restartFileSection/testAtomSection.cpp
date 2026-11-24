@@ -50,12 +50,6 @@
 TEST_F(TestAtomSection, keyword) { EXPECT_EQ(_section->keyword(), ""); }
 
 /**
- * @brief tests the isHeader function
- *
- */
-TEST_F(TestAtomSection, isHeader) { EXPECT_FALSE(_section->isHeader()); }
-
-/**
  * @brief tests the numberOfArguments function
  *
  */

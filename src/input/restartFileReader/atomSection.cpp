@@ -388,11 +388,4 @@ namespace input::restartFile
      */
     std::string AtomSection::keyword() { return ""; }
 
-    /**
-     * @brief returns if the section is a header
-     *
-     * @return bool
-     */
-    bool AtomSection::isHeader() { return false; }
-
 }   // namespace input::restartFile

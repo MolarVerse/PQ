@@ -36,6 +36,7 @@ namespace engine
 
 class NoseHooverSettings;   // forward declaration
 class TimingsSettings;      // forward declaration
+class GeneralSettings;      // forward declaration
 
 namespace input::restartFile
 {
@@ -44,7 +45,8 @@ namespace input::restartFile
     void readRestartFile(
         engine::Engine &,
         NoseHooverSettings &,
-        TimingsSettings &
+        TimingsSettings &,
+        GeneralSettings &
     );
 
     /**
@@ -69,7 +71,8 @@ namespace input::restartFile
             const std::string &,
             engine::Engine &,
             NoseHooverSettings &,
-            TimingsSettings &timingsSettings
+            TimingsSettings &timingsSettings,
+            GeneralSettings &generalSettings
         );
 
         void                read();

@@ -45,7 +45,6 @@ namespace input::restartFile
         ) override;
 
         [[nodiscard]] std::string keyword() override;
-        [[nodiscard]] bool        isHeader() override;
     };
 
 }   // namespace input::restartFile

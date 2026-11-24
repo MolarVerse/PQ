@@ -28,6 +28,7 @@
 #include "mmmdEngine.hpp"
 #include "restartFileReader/atomSection.hpp"
 #include "restartFileReader/boxSection.hpp"
+#include "restartFileReader/metaDataSection.hpp"
 #include "restartFileReader/noseHooverSection.hpp"
 #include "restartFileReader/restartFileSection.hpp"
 #include "restartFileReader/stepCountSection.hpp"
@@ -173,6 +174,34 @@ inline void TestAtomSection::_processQMAtomLine(
 inline void TestAtomSection::SetUp()
 {
     _section = std::make_unique<input::restartFile::AtomSection>();
+
+    // NOTE: use dummy engine for testing
+    //       this is implemented by base class Engine
+    //       and works therefore for all derived classes
+    _engine = std::make_unique<engine::MMMDEngine>(_settings);
+}
+
+/**
+ * @class TestMetaDataSection
+ *
+ * @brief Test fixture for testing the MetaDataSection class.
+ *
+ */
+class TestMetaDataSection : public ::testing::Test
+{
+   protected:
+    Settings                                                _settings;
+    std::unique_ptr<input::restartFile::RestartFileSection> _section;
+    std::unique_ptr<engine::Engine>                         _engine;
+
+    void SetUp() override;
+};
+
+inline void TestMetaDataSection::SetUp()
+{
+    _section = std::make_unique<input::restartFile::MetaDataSection>(
+        _settings.generalSettings
+    );
 
     // NOTE: use dummy engine for testing
     //       this is implemented by base class Engine

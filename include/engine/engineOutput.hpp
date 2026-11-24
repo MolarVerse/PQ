@@ -244,7 +244,7 @@ namespace engine
        private:
         void _startFrameWriter(std::size_t nAtoms);
         void _writeFrame(
-            const out::Frame &,
+            const out::Frame          &frame,
             size_t                     step,
             bool                       metadata,
             const std::optional<Time> &finalTime

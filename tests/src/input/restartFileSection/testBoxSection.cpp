@@ -39,8 +39,6 @@
 
 TEST_F(TestBoxSection, testKeyword) { EXPECT_EQ(_section->keyword(), "box"); }
 
-TEST_F(TestBoxSection, testIsHeader) { EXPECT_TRUE(_section->isHeader()); }
-
 TEST_F(TestBoxSection, testNumberOfArguments)
 {
     size_t lineNumber = 0;

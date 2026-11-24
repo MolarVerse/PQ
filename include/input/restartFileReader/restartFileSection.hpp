@@ -48,13 +48,13 @@ namespace input::restartFile
        public:
         virtual ~RestartFileSection() = default;
 
-        virtual std::string keyword()  = 0;
-        virtual bool        isHeader() = 0;
-        virtual void        process(
-                   std::vector<std::string> &lineElements,
-                   engine::Engine           &engine,
-                   size_t                   &lineNumber
-               ) = 0;
+        virtual std::string keyword() = 0;
+
+        virtual void process(
+            std::vector<std::string> &lineElements,
+            engine::Engine           &engine,
+            size_t                   &lineNumber
+        ) = 0;
 
         void setFilePointer(std::ifstream *file);
 

@@ -160,7 +160,8 @@ namespace benchInputReaders
             input::restartFile::readRestartFile(
                 engine,
                 settings.noseHooverSettings,
-                settings.timings
+                settings.timings,
+                settings.generalSettings
             );
             input::topology::readTopologyFile(engine);
 

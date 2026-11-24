@@ -38,11 +38,6 @@ TEST_F(TestStepCountSection, testKeyword)
     EXPECT_EQ(_section->keyword(), "step");
 }
 
-TEST_F(TestStepCountSection, testIsHeader)
-{
-    EXPECT_TRUE(_section->isHeader());
-}
-
 TEST_F(TestStepCountSection, testNumberOfArguments)
 {
     size_t lineNumber = 0;

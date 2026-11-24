@@ -32,6 +32,7 @@
 #include "exceptions.hpp"
 #include "fileSettings.hpp"
 #include "generalSettings.hpp"
+#include "metaDataSection.hpp"
 #include "noseHooverSection.hpp"
 #include "stepCountSection.hpp"
 #include "stringUtilities.hpp"
@@ -53,12 +54,14 @@ namespace input::restartFile
      * @param engine
      * @param noseHooverSettings Reference to the NoseHooverSettings object
      * @param timingsSettings Reference to the TimingsSettings object
+     * @param generalSettings Reference to the GeneralSettings object
      */
     RestartFileReader::RestartFileReader(
         const std::string  &filename,
         engine::Engine     &engine,
         NoseHooverSettings &noseHooverSettings,
-        TimingsSettings    &timingsSettings
+        TimingsSettings    &timingsSettings,
+        GeneralSettings    &generalSettings
     )
         : _fileName(filename),
           _fp(filename),
@@ -73,6 +76,7 @@ namespace input::restartFile
         _sections.push_back(
             std::make_unique<StepCountSection>(timingsSettings)
         );
+        _sections.push_back(std::make_unique<MetaDataSection>(generalSettings));
     }
 
     /**
@@ -173,11 +177,13 @@ namespace input::restartFile
      * @param engine Reference to the Engine object
      * @param noseHooverSettings Reference to the NoseHooverSettings object
      * @param timingsSettings Reference to the TimingsSettings object
+     * @param generalSettings Reference to the GeneralSettings object
      */
     void readRestartFile(
         engine::Engine     &engine,
         NoseHooverSettings &noseHooverSettings,
-        TimingsSettings    &timingsSettings
+        TimingsSettings    &timingsSettings,
+        GeneralSettings    &generalSettings
     )
     {
         const auto &fileSettings = engine.getSettings().fileSettings;
@@ -197,7 +203,8 @@ namespace input::restartFile
             filename,
             engine,
             noseHooverSettings,
-            timingsSettings
+            timingsSettings,
+            generalSettings
         );
         rstFileReader.read();
     }
