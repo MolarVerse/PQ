@@ -1,0 +1,1 @@
+- A start file without atoms is refused with `Start file "..." contains no atoms` for every job type. Before, `mm-opt` crashed with a segmentation fault, the Nose-Hoover chain wrote NaN into the restart file, and the thermostats stopped with a misleading message about a zero-temperature system.

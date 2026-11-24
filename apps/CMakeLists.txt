@@ -50,6 +50,7 @@ endif()
 if(BUILD_WITH_PYBIND11)
   target_link_libraries(PQ
     PRIVATE
+    embeddedPython
     pybind11::embed
     pybind11::module
   )
