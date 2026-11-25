@@ -52,7 +52,6 @@ namespace input::restartFile
      *
      *
      * @param filename
-     * @param generalSettings Reference to the GeneralSettings object
      */
     RestartFileReader::RestartFileReader(const std::string &filename)
         : _fileName(filename),

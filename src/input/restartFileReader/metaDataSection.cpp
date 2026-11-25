@@ -47,8 +47,10 @@ namespace input::restartFile
      * @brief Processes the metadata section of the restart file.
      *
      * @param lineElements The elements of the current line.
-     * @param engine The engine object (unused).
      * @param lineNumber The current line number in the restart file.
+     * @param settings The settings object where parsed metadata values will be
+     * stored.
+     * @param simulationBox The simulation box object (unused in this context).
      *
      * @throws exc::RstFileException if the metadata section is malformed or
      * contains unrecognized or duplicate keys.
@@ -119,6 +121,8 @@ namespace input::restartFile
      *
      * @param version The version string, e.g. "v1.2.3".
      * @param lineNumber The current line number in the restart file.
+     * @param settings The settings object where the parsed version will be
+     * stored.
      *
      * @throws exc::RstFileException if the version string is not a valid
      * version.
