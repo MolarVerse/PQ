@@ -64,10 +64,7 @@ TEST_F(TestInputFileReader, testParseTopologyFilename)
 
     lineElements = {"topology_file", "=", "data/topologyReader/topology.top"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings.getTopologyFileName(),
-        "data/topologyReader/topology.top"
-    );
+    EXPECT_EQ(settings.get_topologyFile(), "data/topologyReader/topology.top");
 }
 
 /**
@@ -106,7 +103,7 @@ TEST_F(TestInputFileReader, testParseParameterFilename)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.getParameterFileName(),
+        settings.get_parameterFile(),
         "data/parameterFileReader/param.param"
     );
 }
@@ -144,7 +141,7 @@ TEST_F(TestInputFileReader, parseIntraNonBondedFile)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.getIntraNonBondedFileName(),
+        settings.get_intraNonBondedFile(),
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
 }
@@ -173,7 +170,7 @@ TEST_F(TestInputFileReader, testStartFileName)
 
     lineElements = {"start_file", "=", "data/atomSection/testProcess.rst"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getStartFileName(), "data/atomSection/testProcess.rst");
+    EXPECT_EQ(settings.get_startFile(), "data/atomSection/testProcess.rst");
 }
 
 /**
@@ -210,7 +207,7 @@ TEST_F(TestInputFileReader, testMoldescriptorFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.getMolDescriptorFileName(),
+        settings.get_molDescriptorFile(),
         "data/moldescriptorReader/moldescriptor.dat"
     );
 }
@@ -259,7 +256,7 @@ TEST_F(TestInputFileReader, guffDatFilename)
 
     lineElements = {"guff_file", "=", "data/guffDatReader/guff.dat"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getGuffDatFileName(), "data/guffDatReader/guff.dat");
+    EXPECT_EQ(settings.get_guffDatFile(), "data/guffDatReader/guff.dat");
 }
 
 /**
@@ -294,7 +291,7 @@ TEST_F(TestInputFileReader, testRpmdStartFileName)
     };
     parseFunc(lineElements, 0);
     EXPECT_EQ(
-        settings.getRingPolymerStartFileName(),
+        settings.get_rpmdStartFile(),
         "data/inputFileReader/inputFile.txt"
     );
 }
@@ -323,7 +320,7 @@ TEST_F(TestInputFileReader, testMShakeFileName)
 
     lineElements = {"mshake_file", "=", "data/mshakeReader/mshake.dat"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getMShakeFileName(), "data/mshakeReader/mshake.dat");
+    EXPECT_EQ(settings.get_mShakeFile(), "data/mshakeReader/mshake.dat");
 }
 
 /**
@@ -354,7 +351,7 @@ TEST_F(TestInputFileReader, testDFTBFileName)
 
     lineElements = {"dftb_file", "=", "data/dftbReader/dftb_in.template"};
     parseFunc(lineElements, 0);
-    EXPECT_EQ(settings.getDFTBFileName(), "data/dftbReader/dftb_in.template");
+    EXPECT_EQ(settings.get_dftbFile(), "data/dftbReader/dftb_in.template");
 }
 
 /**
@@ -389,10 +386,7 @@ TEST_F(TestInputFileReader, testTMFileName)
         "data/turbomoleReader/tm_define.template"
     };
     parseFunc(lineElements, 0);
-    EXPECT_EQ(
-        settings.getTMFileName(),
-        "data/turbomoleReader/tm_define.template"
-    );
+    EXPECT_EQ(settings.get_tmFile(), "data/turbomoleReader/tm_define.template");
 }
 
 TEST_F(TestInputFileReader, testOrcaFileName)
@@ -409,13 +403,13 @@ TEST_F(TestInputFileReader, testOrcaFileName)
     );
     _clearParser(parser);
     parse({"orca_file", "=", "data/atomSection/testProcess.rst"}, 0);
-    EXPECT_EQ(settings.getOrcaFileName(), "data/atomSection/testProcess.rst");
+    EXPECT_EQ(settings.get_orcaFile(), "data/atomSection/testProcess.rst");
     input::FilesInputParser portable{false, settings};
     portable.getKeywordFuncMap().at("orca_file")(
         {"orca_file", "=", "no-such-orca-template"},
         0
     );
-    EXPECT_EQ(settings.getOrcaFileName(), "no-such-orca-template");
+    EXPECT_EQ(settings.get_orcaFile(), "no-such-orca-template");
 }
 
 /**
@@ -434,57 +428,57 @@ TEST_F(TestInputFileReader, fileKeywordsWithoutPathValidationAcceptAnyName)
         Case{
             .keyword = "intra-nonBonded_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getIntraNonBondedFileName(); }
+            { return settings.get_intraNonBondedFile(); }
         },
         Case{
             .keyword = "topology_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getTopologyFileName(); }
+            { return settings.get_topologyFile(); }
         },
         Case{
             .keyword = "parameter_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getParameterFileName(); }
+            { return settings.get_parameterFile(); }
         },
         Case{
             .keyword = "start_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getStartFileName(); }
+            { return settings.get_startFile(); }
         },
         Case{
             .keyword = "rpmd_start_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getRingPolymerStartFileName(); }
+            { return settings.get_rpmdStartFile(); }
         },
         Case{
             .keyword = "moldescriptor_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getMolDescriptorFileName(); }
+            { return settings.get_molDescriptorFile(); }
         },
         Case{
             .keyword = "guff_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getGuffDatFileName(); }
+            { return settings.get_guffDatFile(); }
         },
         Case{
             .keyword = "mshake_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getMShakeFileName(); }
+            { return settings.get_mShakeFile(); }
         },
         Case{
             .keyword = "dftb_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getDFTBFileName(); }
+            { return settings.get_dftbFile(); }
         },
         Case{
             .keyword = "turbomole_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getTMFileName(); }
+            { return settings.get_tmFile(); }
         },
         Case{
             .keyword = "orca_file",
             .getter  = [](const FileSettings &settings)
-            { return settings.getOrcaFileName(); }
+            { return settings.get_orcaFile(); }
         },
     };
 
@@ -536,7 +530,7 @@ TEST_F(TestInputFileReader, intraNonBondedKeywordActivatesInteractions)
 
         EXPECT_TRUE(GeneralSettings::isIntraNonBondedActivated()) << validate;
         EXPECT_EQ(
-            settings.getIntraNonBondedFileName(),
+            settings.get_intraNonBondedFile(),
             "data/intraNonBondedReader/intraNonBonded.dat"
         ) << validate;
     }

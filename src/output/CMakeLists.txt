@@ -4,6 +4,9 @@ add_library(output
     textBuffer.cpp
     extxyzOutput.cpp
     h5mdOutput.cpp
+    aseTrajOutput.cpp
+    atomicNumber.cpp
+    ulmWriter.cpp
     outputMessages.cpp
 
     energyColumns.cpp

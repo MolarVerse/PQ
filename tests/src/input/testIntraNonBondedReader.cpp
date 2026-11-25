@@ -131,7 +131,7 @@ TEST_F(TestIntraNonBondedReader, moltypeDefinedMultipleTimes)
 
 TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 {
-    _settings.fileSettings.setIntraNonBondedFileNameByUser(
+    _settings.fileSettings.set_intraNonBondedFileByUser(
         "data/intraNonBondedReader/intraNonBonded.dat"
     );
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);
@@ -160,7 +160,7 @@ TEST_F(TestIntraNonBondedReader, readIntraNonBondedFile)
 
 TEST_F(TestIntraNonBondedReader, scaledPartnerAtomOne)
 {
-    _settings.fileSettings.setIntraNonBondedFileNameByUser(
+    _settings.fileSettings.set_intraNonBondedFileByUser(
         "data/intraNonBondedReader/scaledPartnerAtomOne.dat"
     );
     input::intraNonBondedReader::readIntraNonBondedFile(*_engine);

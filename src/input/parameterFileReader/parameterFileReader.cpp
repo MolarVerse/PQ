@@ -172,7 +172,7 @@ namespace input::parameterFile
                 "Parameter file needed for requested simulation setup"
             );
 
-        const auto filename = settings.fileSettings.getParameterFileName();
+        const auto filename = settings.fileSettings.get_parameterFile();
 
         out::StdoutOutput::writeRead("Parameter File", filename);
         engine.getLogOutput().writeRead("Parameter File", filename);

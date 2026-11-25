@@ -27,53 +27,53 @@
 TEST(FileSettingsTest, MolDescriptorRoundTrip)
 {
     FileSettings settings;
-    settings.setMolDescriptorFileNameByUser("mol.dat");
-    EXPECT_EQ(settings.getMolDescriptorFileName(), "mol.dat");
+    settings.set_molDescriptorFileByUser("mol.dat");
+    EXPECT_EQ(settings.get_molDescriptorFile(), "mol.dat");
 }
 
 TEST(FileSettingsTest, GuffDatRoundTrip)
 {
     FileSettings settings;
-    settings.setGuffDatFileNameByUser("guff.dat");
-    EXPECT_EQ(settings.getGuffDatFileName(), "guff.dat");
+    settings.set_guffDatFileByUser("guff.dat");
+    EXPECT_EQ(settings.get_guffDatFile(), "guff.dat");
 }
 
 TEST(FileSettingsTest, TopologyAndParameterRoundTrip)
 {
     FileSettings settings;
-    settings.setTopologyFileNameByUser("topology.top");
-    EXPECT_EQ(settings.getTopologyFileName(), "topology.top");
+    settings.set_topologyFileByUser("topology.top");
+    EXPECT_EQ(settings.get_topologyFile(), "topology.top");
 
-    settings.setParameterFileNameByUser("parameter.par");
-    EXPECT_EQ(settings.getParameterFileName(), "parameter.par");
+    settings.set_parameterFileByUser("parameter.par");
+    EXPECT_EQ(settings.get_parameterFile(), "parameter.par");
 }
 
 TEST(FileSettingsTest, StartAndRingPolymerRoundTrip)
 {
     FileSettings settings;
-    settings.setStartFileNameByUser("start.rst");
-    EXPECT_EQ(settings.getStartFileName(), "start.rst");
+    settings.set_startFileByUser("start.rst");
+    EXPECT_EQ(settings.get_startFile(), "start.rst");
 
-    settings.setRingPolymerStartFileNameByUser("rp_start.rst");
-    EXPECT_EQ(settings.getRingPolymerStartFileName(), "rp_start.rst");
+    settings.set_rpmdStartFileByUser("rp_start.rst");
+    EXPECT_EQ(settings.get_rpmdStartFile(), "rp_start.rst");
 }
 
 TEST(FileSettingsTest, MShakeAndDFTBRoundTrip)
 {
     FileSettings settings;
-    settings.setMShakeFileNameByUser("mshake.dat");
-    EXPECT_EQ(settings.getMShakeFileName(), "mshake.dat");
+    settings.set_mShakeFileByUser("mshake.dat");
+    EXPECT_EQ(settings.get_mShakeFile(), "mshake.dat");
 
-    settings.setDFTBFileNameByUser("dftb_in.hsd");
-    EXPECT_EQ(settings.getDFTBFileName(), "dftb_in.hsd");
+    settings.set_dftbFileByUser("dftb_in.hsd");
+    EXPECT_EQ(settings.get_dftbFile(), "dftb_in.hsd");
 
-    settings.setTMFileNameByUser("tm_in.hsd");
-    EXPECT_EQ(settings.getTMFileName(), "tm_in.hsd");
+    settings.set_tmFileByUser("tm_in.hsd");
+    EXPECT_EQ(settings.get_tmFile(), "tm_in.hsd");
 }
 
 TEST(FileSettingsTest, IntraNonBondedRoundTrip)
 {
     FileSettings settings;
-    settings.setIntraNonBondedFileNameByUser("intra.dat");
-    EXPECT_EQ(settings.getIntraNonBondedFileName(), "intra.dat");
+    settings.set_intraNonBondedFileByUser("intra.dat");
+    EXPECT_EQ(settings.get_intraNonBondedFile(), "intra.dat");
 }
