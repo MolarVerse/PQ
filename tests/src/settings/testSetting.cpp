@@ -125,14 +125,14 @@ namespace
 
     TYPED_TEST(SettingTypedTest, notSetByDefault)
     {
-        const Setting<TypeParam> setting;
+        const Setting<TypeParam, "Test Setting"> setting;
 
         EXPECT_FALSE(setting.isSetBySomeone());
     }
 
     TYPED_TEST(SettingTypedTest, isSetAfterSet)
     {
-        Setting<TypeParam> setting;
+        Setting<TypeParam, "Test Setting"> setting;
 
         setting.setByUser(SampleValues<TypeParam>::first());
 
@@ -141,7 +141,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, getReturnsSetValue)
     {
-        Setting<TypeParam> setting;
+        Setting<TypeParam, "Test Setting"> setting;
 
         setting.setByUser(SampleValues<TypeParam>::first());
 
@@ -150,7 +150,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, setOverwritesPreviousValue)
     {
-        Setting<TypeParam> setting;
+        Setting<TypeParam, "Test Setting"> setting;
 
         setting.setByUser(SampleValues<TypeParam>::first());
         setting.setByUser(SampleValues<TypeParam>::second());
@@ -162,7 +162,7 @@ namespace
     // isSet() tracks "was set", not "differs from the type's zero value"
     TYPED_TEST(SettingTypedTest, settingZeroValueStillCountsAsSet)
     {
-        Setting<TypeParam> setting;
+        Setting<TypeParam, "Test Setting"> setting;
 
         setting.setByUser(SampleValues<TypeParam>::zero());
 
@@ -172,7 +172,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, settingSameValueTwiceKeepsIsSet)
     {
-        Setting<TypeParam> setting;
+        Setting<TypeParam, "Test Setting"> setting;
 
         setting.setBySystem(SampleValues<TypeParam>::first());
         setting.setBySystem(SampleValues<TypeParam>::first());
@@ -183,7 +183,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, copyPreservesStateAndValue)
     {
-        Setting<TypeParam> original;
+        Setting<TypeParam, "Test Setting"> original;
         original.setByUser(SampleValues<TypeParam>::first());
 
         const auto copy = original;
@@ -194,7 +194,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, copyOfUnsetSettingIsUnset)
     {
-        const Setting<TypeParam> original;
+        const Setting<TypeParam, "Test Setting"> original;
 
         const auto copy = original;
 
@@ -203,7 +203,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, copiesAreIndependent)
     {
-        Setting<TypeParam> original;
+        Setting<TypeParam, "Test Setting"> original;
         original.setByUser(SampleValues<TypeParam>::first());
 
         auto copy = original;
@@ -219,28 +219,36 @@ namespace
 
     TYPED_TEST(SettingTypedTest, constructedWithDefaultIsNotSet)
     {
-        const Setting<TypeParam> setting(SampleValues<TypeParam>::first());
+        const Setting<TypeParam, "Test Setting"> setting(
+            SampleValues<TypeParam>::first()
+        );
 
         EXPECT_FALSE(setting.isSetBySomeone());
     }
 
     TYPED_TEST(SettingTypedTest, getReturnsDefaultWhenNotSet)
     {
-        const Setting<TypeParam> setting(SampleValues<TypeParam>::first());
+        const Setting<TypeParam, "Test Setting"> setting(
+            SampleValues<TypeParam>::first()
+        );
 
         EXPECT_EQ(setting.get(), SampleValues<TypeParam>::first());
     }
 
     TYPED_TEST(SettingTypedTest, getDoesNotThrowWhenOnlyDefaultAvailable)
     {
-        const Setting<TypeParam> setting(SampleValues<TypeParam>::first());
+        const Setting<TypeParam, "Test Setting"> setting(
+            SampleValues<TypeParam>::first()
+        );
 
         EXPECT_NO_THROW(static_cast<void>(setting.get()));
     }
 
     TYPED_TEST(SettingTypedTest, setValueTakesPrecedenceOverDefault)
     {
-        Setting<TypeParam> setting(SampleValues<TypeParam>::first());
+        Setting<TypeParam, "Test Setting"> setting(
+            SampleValues<TypeParam>::first()
+        );
 
         setting.setByUser(SampleValues<TypeParam>::second());
 
@@ -251,7 +259,9 @@ namespace
     // isSet() tracks "was explicitly set", even if the value equals the default
     TYPED_TEST(SettingTypedTest, settingValueEqualToDefaultCountsAsSet)
     {
-        Setting<TypeParam> setting(SampleValues<TypeParam>::first());
+        Setting<TypeParam, "Test Setting"> setting(
+            SampleValues<TypeParam>::first()
+        );
 
         setting.setByUser(SampleValues<TypeParam>::first());
 
@@ -261,7 +271,9 @@ namespace
 
     TYPED_TEST(SettingTypedTest, copyPreservesDefault)
     {
-        const Setting<TypeParam> original(SampleValues<TypeParam>::first());
+        const Setting<TypeParam, "Test Setting"> original(
+            SampleValues<TypeParam>::first()
+        );
 
         const auto copy = original;
 
@@ -271,7 +283,9 @@ namespace
 
     TYPED_TEST(SettingTypedTest, copyOfSetSettingWithDefaultKeepsSetValue)
     {
-        Setting<TypeParam> original(SampleValues<TypeParam>::first());
+        Setting<TypeParam, "Test Setting"> original(
+            SampleValues<TypeParam>::first()
+        );
         original.setByUser(SampleValues<TypeParam>::second());
 
         const auto copy = original;
@@ -286,7 +300,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, getWithoutValueAndWithoutDefaultThrows)
     {
-        const Setting<TypeParam> setting;
+        const Setting<TypeParam, "Test Setting"> setting;
 
         EXPECT_THROW_MSG(
             static_cast<void>(setting.get()),
@@ -304,7 +318,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, getDoesNotThrowOnceValueIsSet)
     {
-        Setting<TypeParam> setting;
+        Setting<TypeParam, "Test Setting"> setting;
 
         setting.setByUser(SampleValues<TypeParam>::first());
 
@@ -313,7 +327,7 @@ namespace
 
     TYPED_TEST(SettingTypedTest, copyOfSettingWithoutValueAndDefaultThrows)
     {
-        const Setting<TypeParam> original;
+        const Setting<TypeParam, "Test Setting"> original;
 
         const auto copy = original;
 
@@ -330,15 +344,18 @@ namespace
 
     TEST(SettingTest, getReturnsConstReference)
     {
-        static_assert(std::is_same_v<
-                      decltype(std::declval<const Setting<int>&>().get()),
-                      const int&>);
+        static_assert(
+            std::is_same_v<
+                decltype(std::declval<const Setting<int, "Test Setting">&>()
+                             .get()),
+                const int&>
+        );
         SUCCEED();
     }
 
     TEST(SettingTest, readAccessorsCallableOnConstObject)
     {
-        Setting<int> setting;
+        Setting<int, "Test Setting"> setting;
         setting.setByUser(5);
 
         const auto& constRef = setting;
@@ -349,7 +366,7 @@ namespace
 
     TEST(SettingTest, getReferenceTracksLaterSet)
     {
-        Setting<int> setting;
+        Setting<int, "Test Setting"> setting;
         setting.setBySystem(1);
 
         const int& ref = setting.get();
@@ -365,8 +382,8 @@ namespace
 
     TEST(SettingTest, differentInstancesAreIndependent)
     {
-        Setting<int> settingsA;
-        Setting<int> settingsB;
+        Setting<int, "Test Setting A"> settingsA;
+        Setting<int, "Test Setting B"> settingsB;
 
         settingsA.setBySystem(10);
 

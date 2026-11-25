@@ -39,11 +39,11 @@
 class HessianSettings
 {
    private:
-    Setting<std::string>        _hessianFile;
-    Setting<std::string>        _hessianInfoFile;
-    Setting<Pos>                _displacement;
-    Setting<bool>               _optimizeBeforeHessian;
-    Setting<HessianBuilderType> _builder;
+    Setting<std::string, "Hessian File">                _hessianFile;
+    Setting<std::string, "Hessian Info File">           _hessianInfoFile;
+    Setting<Pos, "Displacement">                        _displacement;
+    Setting<bool, "Optimize Before Hessian">            _optimizeBeforeHessian;
+    Setting<HessianBuilderType, "Hessian Builder Type"> _builder;
 
    public:
     HessianSettings();
