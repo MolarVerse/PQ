@@ -98,7 +98,9 @@ namespace input
         : _fileName(fileName)
     {
         // TODO(97gamjak): https://github.com/MolarVerse/PQ/issues/909
-        _parsers.push_back(std::make_unique<CellListInputParser>());
+        _parsers.push_back(
+            std::make_unique<CellListInputParser>(settings.generalSettings)
+        );
         _parsers.push_back(
             std::make_unique<ConstraintsInputParser>(settings.constraintSettings
             )
@@ -111,7 +113,8 @@ namespace input
         _parsers.push_back(
             std::make_unique<FilesInputParser>(
                 validateFilePaths,
-                settings.fileSettings
+                settings.fileSettings,
+                settings.generalSettings
             )
         );
         _parsers.push_back(
@@ -121,7 +124,9 @@ namespace input
                 settings.potentialSettings
             )
         );
-        _parsers.push_back(std::make_unique<GeneralInputParser>());
+        _parsers.push_back(
+            std::make_unique<GeneralInputParser>(settings.generalSettings)
+        );
         _parsers.push_back(
             std::make_unique<HessianInputParser>(settings.hessianSettings)
         );
@@ -156,7 +161,9 @@ namespace input
         _parsers.push_back(
             std::make_unique<TimingsInputParser>(settings.timings)
         );
-        _parsers.push_back(std::make_unique<VirialInputParser>());
+        _parsers.push_back(
+            std::make_unique<VirialInputParser>(settings.manostatSettings)
+        );
         _parsers.push_back(
             std::make_unique<HybridInputParser>(settings.hybridSettings)
         );

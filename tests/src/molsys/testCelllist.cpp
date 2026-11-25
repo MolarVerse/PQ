@@ -32,6 +32,7 @@
 #include "generalSettings.hpp"
 #include "molecule.hpp"
 #include "orthorhombicBox.hpp"
+#include "settings.hpp"
 #include "simulationBox.hpp"
 #include "throwWithMessage.hpp"
 #include "units.hpp"
@@ -288,7 +289,8 @@ TEST_F(TestCellList, clonePreservesNumberOfCellsAndNeighbourCells)
 {
     _cellList->setNumberOfCells(4);
     _cellList->setNumberOfNeighbourCells(2);
-    GeneralSettings::activateCellList();
+    Settings settings;
+    settings.generalSettings.activateCellListByUser();
 
     const auto cloned = _cellList->clone();
 
@@ -367,10 +369,13 @@ TEST_F(TestCellList, updateCellList)
     _cellList->setNumberOfCells(11);
     _cellList->resizeCells();
 
-    EXPECT_NO_THROW(
-        _cellList->updateCellList(*_simulationBox, coulombRadiusCutoff)
-    );
-    GeneralSettings::activateCellList();
+    Settings settings;
+    settings.generalSettings.activateCellListByUser();
+    EXPECT_NO_THROW(_cellList->updateCellList(
+        *_simulationBox,
+        coulombRadiusCutoff,
+        settings.generalSettings
+    ));
 
     auto molecule = molsys::Molecule();
 
@@ -393,12 +398,20 @@ TEST_F(TestCellList, updateCellList)
     };
     _simulationBox->setBox(orthoBox, false);
 
-    _cellList->updateCellList(*_simulationBox, coulombRadiusCutoff);
+    _cellList->updateCellList(
+        *_simulationBox,
+        coulombRadiusCutoff,
+        settings.generalSettings
+    );
 
     EXPECT_NE(_cellList->getCellSize(), cellSizeOld);
 
     cellSizeOld = _cellList->getCellSize();
-    _cellList->updateCellList(*_simulationBox, coulombRadiusCutoff);
+    _cellList->updateCellList(
+        *_simulationBox,
+        coulombRadiusCutoff,
+        settings.generalSettings
+    );
 
     EXPECT_EQ(_cellList->getCellSize(), cellSizeOld);
 }

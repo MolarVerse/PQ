@@ -23,7 +23,11 @@
 #ifndef INPUT__INPUT_FILE_PARSER__CELL_LIST_INPUT_PARSER_HPP
 #define INPUT__INPUT_FILE_PARSER__CELL_LIST_INPUT_PARSER_HPP
 
+#include <mstd/types.hpp>
+
 #include "inputFileParser.hpp"
+
+class GeneralSettings;
 
 namespace input
 {
@@ -35,8 +39,10 @@ namespace input
      */
     class CellListInputParser : public InputFileParser
     {
+        mstd::Ref<GeneralSettings> _generalSettings;
+
        public:
-        explicit CellListInputParser();
+        explicit CellListInputParser(GeneralSettings &generalSettings);
 
         void addCellListActivated();
         void addNumberOfCells();

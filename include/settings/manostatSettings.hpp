@@ -24,6 +24,7 @@
 #define SETTINGS__MANOSTAT_SETTINGS_HPP
 
 #include "enums/manostat.hpp"
+#include "enums/virial.hpp"
 #include "setting.hpp"
 #include "unit_types.hpp"
 
@@ -47,6 +48,8 @@ class ManostatSettings
     Setting<Time>            _tau;
     Setting<Compressibility> _compressibility;
 
+    Setting<VirialType, "VirialType"> _virial{VirialType::MOLECULAR};
+
    public:
     ManostatSettings();
 
@@ -65,6 +68,8 @@ class ManostatSettings
     void setTauByUser(const Time& tau);
     void setCompressibilityByUser(const Compressibility& compressibility);
 
+    void setVirialTypeByUser(VirialType virialType);
+
     /***************************
      * standard getter methods *
      ***************************/
@@ -77,6 +82,8 @@ class ManostatSettings
     [[nodiscard]] const Pressure&        getTargetPressure() const;
     [[nodiscard]] const Time&            getTau() const;
     [[nodiscard]] const Compressibility& getCompressibility() const;
+
+    [[nodiscard]] VirialType getVirialType() const;
 
    private:
     void _addReferenceFile(ReferenceSettings& referenceSettings);

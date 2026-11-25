@@ -125,13 +125,19 @@ namespace input
      * @param validateFilePaths Flag indicating whether to validate file paths
      * @param fileSettings Reference to the FileSettings object to be used for
      * storing file names and managing the state of which files have been set.
+     * @param generalSettings Reference to the GeneralSettings object to be used
+     * for configuring general computational resources and execution
+     * preferences.
      *
      */
     FilesInputParser::FilesInputParser(
-        bool          validateFilePaths,
-        FileSettings &fileSettings
+        bool             validateFilePaths,
+        FileSettings    &fileSettings,
+        GeneralSettings &generalSettings
     )
-        : _validateFilePaths(validateFilePaths), _fileSettings(fileSettings)
+        : _validateFilePaths(validateFilePaths),
+          _fileSettings(fileSettings),
+          _generalSettings(generalSettings)
     {
         addIntraNonBondedFileKey();
         addTopologyFileKey();
@@ -162,7 +168,7 @@ namespace input
 
         const auto setValue = [this]<typename T>(const T &value) -> void
         {
-            GeneralSettings::activateIntraNonBonded();
+            _generalSettings->activateIntraNonBondedByUser();
 
             if constexpr (std::is_same_v<T, std::string>)
                 _fileSettings->set_intraNonBondedFileByUser(value);

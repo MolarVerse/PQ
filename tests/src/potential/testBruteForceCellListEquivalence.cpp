@@ -233,7 +233,7 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
         settings.potentialSettings
     );
 
-    GeneralSettings::activateCellList();
+    settings.generalSettings.activateCellListByUser();
 
     molsys::CellList cellList;
     cellList.setNumberOfCells(kCellsPerSide);
@@ -244,7 +244,8 @@ TEST(PotentialEquivalence, BruteForceMatchesCellList)
     );
     cellList.updateCellList(
         simBoxCL,
-        settings.potentialSettings.getCoulombRadiusCutoff()
+        settings.potentialSettings.getCoulombRadiusCutoff(),
+        settings.generalSettings
     );
     cellListPotential.calculateForces(
         simBoxCL,
